@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CBOR")]
-[assembly: AssemblyCopyright("Copyright 2013")]
+[assembly: AssemblyCopyright("Written by Peter O. in 2013. Any copyright is dedicated to the Public Domain. <http://creativecommons.org/publicdomain/zero/1.0/>")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
