@@ -80,6 +80,7 @@ namespace PeterO
 					try {
 						j=j.AddHours(10);
 					} catch(ArgumentOutOfRangeException){
+						// Can't add more hours, so break
 						break;
 					}
 				}
