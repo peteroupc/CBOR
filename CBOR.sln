@@ -4,6 +4,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # SharpDevelop 4.3
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBOR", "CBOR.csproj", "{3A85B4B0-5FF0-47F3-8D3E-8DC5F398041F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBORTest", "CBORTest\CBORTest.csproj", "{8FE63143-541E-448D-8337-A98D1FA51541}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,5 +16,9 @@ Global
 		{3A85B4B0-5FF0-47F3-8D3E-8DC5F398041F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3A85B4B0-5FF0-47F3-8D3E-8DC5F398041F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3A85B4B0-5FF0-47F3-8D3E-8DC5F398041F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FE63143-541E-448D-8337-A98D1FA51541}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FE63143-541E-448D-8337-A98D1FA51541}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FE63143-541E-448D-8337-A98D1FA51541}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FE63143-541E-448D-8337-A98D1FA51541}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 EndGlobal
