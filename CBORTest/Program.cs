@@ -9,6 +9,7 @@
 using System;
 using System.Globalization;
 using System.Numerics;
+
 using NUnit.Framework;
 
 namespace PeterO
