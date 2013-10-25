@@ -17,7 +17,7 @@ namespace PeterO
 {
 	/// <summary>
 	/// Represents an object in Compact Binary Object
-	/// Notation (CBOR) and contains methods for reading
+	/// Representation (CBOR) and contains methods for reading
 	/// and writing CBOR data.  CBOR is defined in
 	/// RFC 7049.
 	/// </summary>
@@ -123,7 +123,10 @@ namespace PeterO
 			}
 		}
 
-		
+		/// <summary>
+		/// Gets or sets the value of a CBOR object in this
+		/// array.
+		/// </summary>
 		public CBORObject this[int index]{
 			get {
 				if(itemtype== CBORObjectType.Array){
@@ -132,10 +135,74 @@ namespace PeterO
 					throw new InvalidOperationException("Not an array");
 				}
 			}
+			set {
+				if(itemtype== CBORObjectType.Array){
+					((IList<CBORObject>)item)[index]=value;
+				} else {
+					throw new InvalidOperationException("Not an array");
+				}
+			}
 		}
 		
-		public static CBORObject Read(Stream s){
-			return Read(s,0,false,-1);
+		/// <summary>
+		/// Converts this object to a 64-bit floating point
+		/// number.
+		/// </summary>
+		/// <returns>The closest 64-bit floating point number 
+		/// to this object.</returns>
+		/// <exception cref="System.InvalidOperationException">
+		/// This object's type is not an integer
+		/// or a floating-point number.</exception>
+		public double AsDouble(){
+			if(itemtype== CBORObjectType.UInteger)
+				return (double)(ulong)item;
+			else if(itemtype== CBORObjectType.SInteger)
+				return (double)(long)item;
+			else if(itemtype== CBORObjectType.BigInteger)
+				return (double)(BigInteger)item;
+			else if(itemtype== CBORObjectType.Single)
+				return (double)(float)item;
+			else if(itemtype== CBORObjectType.Double)
+				return (double)item;
+			else
+				throw new InvalidOperationException("Not a number type");
+		}
+		
+		/// <summary>
+		/// Converts this object to an arbitrary-length
+		/// integer.  Floating point values are truncated
+		/// to an integer.
+		/// </summary>
+		/// <returns>The closest big integer
+		/// to this object.</returns>
+		/// <exception cref="System.InvalidOperationException">
+		/// This object's type is not an integer
+		/// or a floating-point number.</exception>
+		public BigInteger AsBigInteger(){
+			if(itemtype== CBORObjectType.UInteger)
+				return (BigInteger)(ulong)item;
+			else if(itemtype== CBORObjectType.SInteger)
+				return (BigInteger)(long)item;
+			else if(itemtype== CBORObjectType.BigInteger)
+				return (BigInteger)(BigInteger)item;
+			else if(itemtype== CBORObjectType.Single)
+				return (BigInteger)(float)item;
+			else if(itemtype== CBORObjectType.Double)
+				return (BigInteger)item;
+			else
+				throw new InvalidOperationException("Not a number type");
+		}
+
+		/// <summary>
+		/// Reads an object in CBOR format from a data
+		/// stream.
+		/// </summary>
+		/// <param name="stream">A readable data stream.</param>
+		/// <returns>a CBOR object that was read.</returns>
+		/// <exception cref="System.ArgumentNullException">
+		/// <paramref name="stream"/> is null.</exception>
+		public static CBORObject Read(Stream stream){
+			return Read(stream,0,false,-1);
 		}
 		
 		private static void WriteObjectArray(
@@ -193,6 +260,11 @@ namespace PeterO
 				s.WriteByte((byte)(value&0xFF));
 			}
 		}
+		/// <summary>
+		/// Writes a string in CBOR format to a data stream.
+		/// </summary>
+		/// <param name="str"></param>
+		/// <param name="s"></param>
 		public static void Write(String str, Stream s){
 			ArgumentAssert.NotNull(s,"s");
 			if(str==null){
@@ -221,13 +293,18 @@ namespace PeterO
 			return sb.ToString();
 		}
 		
-		public static void Write(DateTime bi, Stream s){
-			ArgumentAssert.NotNull(s,"s");
-			s.WriteByte(0xC0);
-			Write(DateTimeToString(bi),s);
+		/// <summary>
+		/// Writes a date and time in CBOR format to a data stream
+		/// </summary>
+		/// <param name="bi"></param>
+		/// <param name="s"></param>
+		public static void Write(DateTime bi, Stream stream){
+			ArgumentAssert.NotNull(stream,"s");
+			stream.WriteByte(0xC0);
+			Write(DateTimeToString(bi),stream);
 		}
 		/// <summary>
-		/// Writes a big integer as a CBOR data stream.
+		/// Writes a big integer in CBOR format to a data stream.
 		/// </summary>
 		/// <param name="bi">Big integer to write.</param>
 		/// <param name="s">Stream to write to.</param>
@@ -257,6 +334,10 @@ namespace PeterO
 			}
 		}
 		
+		/// <summary>
+		/// Writes this CBOR object to a data stream.
+		/// </summary>
+		/// <param name="s">A readable data stream.</param>
 		public void Write(Stream s){
 			ArgumentAssert.NotNull(s,"s");
 			if(tagged)
@@ -495,6 +576,7 @@ namespace PeterO
 			if(value==null)return CBORObject.Null;
 			return new CBORObject(CBORObjectType.ByteString,value);
 		}
+		
 		public static CBORObject FromObject<T>(IList<T> value){
 			if(value==null)return CBORObject.Null;
 			IList<CBORObject> list=new List<CBORObject>();
