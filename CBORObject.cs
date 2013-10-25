@@ -7,11 +7,11 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using System.Collections.Generic;
 using System.Numerics;
+using System.Text;
 
 namespace PeterO
 {
@@ -264,15 +264,9 @@ namespace PeterO
 			if(itemtype==0){
 				WriteUInt64(0,(ulong)item,s);
 			} else if(itemtype== CBORObjectType.SInteger){
-				if(((long)item)>=0){
-					WriteUInt64(0,(ulong)(long)item,s);
-				} else {
-					long ov=(((long)item)+1);
-					WriteUInt64(1,(ulong)(-ov),s);
-				}
+				Write((long)item,s);
 			} else if(itemtype== CBORObjectType.BigInteger){
-				BigInteger bi=(BigInteger)item;
-				Write(bi,s);
+				Write((BigInteger)item,s);
 			} else if(itemtype== CBORObjectType.ByteString ||
 			          itemtype== CBORObjectType.TextString ){
 				if(item is String && itemtype== CBORObjectType.TextString){
@@ -390,9 +384,6 @@ namespace PeterO
 			ArgumentAssert.NotNull(s,"s");
 			if(o==null){
 				s.WriteByte(0xf6);
-			}
-			else if(o is CBORObject){
-				((CBORObject)o).Write(s);
 			} else if(o is byte[]){
 				byte[] data=(byte[])o;
 				WriteUInt64(3,(ulong)data.Length,s);
@@ -416,27 +407,11 @@ namespace PeterO
 			} else if(o is IList<CBORObject[]>){
 				WriteObjectMap((IList<CBORObject[]>)o,s);
 			} else {
-				if(o is long)Write((long)o,s);
-				else if(o is int)Write((int)o,s);
-				else if(o is short)Write((short)o,s);
-				else if(o is sbyte)Write((sbyte)o,s);
-				else if(o is bool)Write((bool)o,s);
-				else if(o is char)Write((char)o,s);
-				else if(o is ulong)Write((ulong)o,s);
-				else if(o is uint)Write((uint)o,s);
-				else if(o is ushort)Write((ushort)o,s);
-				else if(o is byte)Write((byte)o,s);
-				else if(o is float)Write((float)o,s);
-				else if(o is double)Write((double)o,s);
-				else if(o is BigInteger)Write((BigInteger)o,s);
-				else if(o is DateTime)Write((DateTime)o,s);
-				else if(o is String)Write((String)o,s);
-				throw new ArgumentException();
+				FromObject(o).Write(s);
 			}
 		}
 		
 		//-----------------------------------------------------------
-		
 		public static CBORObject FromObject(long value){
 			if(((long)value)>=0){
 				return new CBORObject(CBORObjectType.UInteger,(ulong)(long)value);
@@ -492,66 +467,82 @@ namespace PeterO
 		public static CBORObject FromObject(DateTime value){
 			return new CBORObject(CBORObjectType.TextString,0,
 			                      DateTimeToString(value));
-			
 		}
 		public static CBORObject FromObject(double value){
 			return new CBORObject(CBORObjectType.Double,value);
 		}
-		
-		public static CBORObject FromObject(Object o){
-			if(o==null){
-				return CBORObject.Null;
-			} else if(o is CBORObject){
-				return (CBORObject)o;
-			} else if(o is byte[]){
-				return new CBORObject(CBORObjectType.ByteString,o);
-			} else if(o is IList<CBORObject>){
-				foreach(var i in (IList<CBORObject>)o){
-					if(i!=null && i.IsBreak)
-						throw new ArgumentException();
-				}
-				return new CBORObject(CBORObjectType.Array,o);
-			} else if(o is IDictionary<CBORObject,CBORObject>){
-				IDictionary<CBORObject,CBORObject> dic=
-					(IDictionary<CBORObject,CBORObject>)o;
-				IList<CBORObject[]> list=new List<CBORObject[]>();
-				foreach(var i in dic.Keys){
-					if(i!=null && i.IsBreak)
-						throw new ArgumentException();
-					var value=dic[i];
-					if(value!=null && value.IsBreak)
-						throw new ArgumentException();
-					list.Add(new CBORObject[]{i,value});
-				}
-				return new CBORObject(CBORObjectType.Map,list);
-			} else if(o is IList<CBORObject[]>){
-				foreach(var i in (IList<CBORObject[]>)o){
-					if(i==null || i.Length<2)
-						throw new ArgumentException();
-					if(i[0]!=null && i[0].IsBreak)
-						throw new ArgumentException();
-					if(i[1]!=null && i[1].IsBreak)
-						throw new ArgumentException();
-				}
-				return new CBORObject(CBORObjectType.Map,o);
-			} else {
-				if(o is long)return FromObject((long)o);
-				else if(o is int)return FromObject((int)o);
-				else if(o is short)return FromObject((short)o);
-				else if(o is sbyte)return FromObject((sbyte)o);
-				else if(o is bool)return FromObject((bool)o);
-				else if(o is char)return FromObject((char)o);
-				else if(o is ulong)return FromObject((ulong)o);
-				else if(o is uint)return FromObject((uint)o);
-				else if(o is ushort)return FromObject((ushort)o);
-				else if(o is byte)return FromObject((byte)o);
-				else if(o is float)return FromObject((float)o);
-				else if(o is double)return FromObject((double)o);
-				else if(o is BigInteger)return FromObject((BigInteger)o);
-				else if(o is DateTime)return FromObject((DateTime)o);
-				else if(o is String)return FromObject((String)o);
-				throw new ArgumentException();
+		public static CBORObject FromObject(IList<CBORObject[]> value){
+			if(value==null)return CBORObject.Null;
+			foreach(var i in value){
+				if(i==null || i.Length<2)
+					throw new ArgumentException();
+				if(i[0]!=null && i[0].IsBreak)
+					throw new ArgumentException();
+				if(i[1]!=null && i[1].IsBreak)
+					throw new ArgumentException();
 			}
+			return new CBORObject(CBORObjectType.Map,value);
+		}
+		public static CBORObject FromObject(IList<CBORObject> value){
+			if(value==null)return CBORObject.Null;
+			foreach(var i in (IList<CBORObject>)value){
+				if(i!=null && i.IsBreak)
+					throw new ArgumentException();
+			}
+			return new CBORObject(CBORObjectType.Array,value);
+		}
+		public static CBORObject FromObject(byte[] value){
+			if(value==null)return CBORObject.Null;
+			return new CBORObject(CBORObjectType.ByteString,value);
+		}
+		public static CBORObject FromObject<T>(IList<T> value){
+			if(value==null)return CBORObject.Null;
+			IList<CBORObject> list=new List<CBORObject>();
+			foreach(var i in (IList<CBORObject>)value){
+				list.Add(FromObject(i));
+			}
+			return FromObject(list);
+		}
+		public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey, TValue> dic){
+			if(dic==null)return CBORObject.Null;
+			IList<CBORObject[]> list=new List<CBORObject[]>();
+			foreach(var i in dic.Keys){
+				var key=FromObject(i);
+				if(key!=null && key.IsBreak)
+					throw new ArgumentException();
+				var value=FromObject(dic[i]);
+				if(value!=null && value.IsBreak)
+					throw new ArgumentException();
+				list.Add(new CBORObject[]{key,value});
+			}
+			return new CBORObject(CBORObjectType.Map,list);
+		}
+		public static CBORObject FromObject(Object o){
+			if(o==null)return CBORObject.Null;
+			if(o is long)return FromObject((long)o);
+			if(o is CBORObject)return FromObject((CBORObject)o);
+			if(o is BigInteger)return FromObject((BigInteger)o);
+			if(o is String)return FromObject((String)o);
+			if(o is int)return FromObject((int)o);
+			if(o is short)return FromObject((short)o);
+			if(o is char)return FromObject((char)o);
+			if(o is bool)return FromObject((bool)o);
+			if(o is sbyte)return FromObject((sbyte)o);
+			if(o is ulong)return FromObject((ulong)o);
+			if(o is uint)return FromObject((uint)o);
+			if(o is ushort)return FromObject((ushort)o);
+			if(o is byte)return FromObject((byte)o);
+			if(o is float)return FromObject((float)o);
+			if(o is DateTime)return FromObject((DateTime)o);
+			if(o is double)return FromObject((double)o);
+			if(o is IList<CBORObject>)return FromObject((IList<CBORObject>)o);
+			if(o is IList<CBORObject[]>)return FromObject((IList<CBORObject[]>)o);
+			if(o is byte[])return FromObject((byte[])o);
+			if(o is IDictionary<CBORObject,CBORObject>)return FromObject(
+				(IDictionary<CBORObject,CBORObject>)o);
+			if(o is IDictionary<string,CBORObject>)return FromObject(
+				(IDictionary<string,CBORObject>)o);
+			throw new ArgumentException();
 		}
 		
 		//-----------------------------------------------------------
@@ -800,7 +791,7 @@ namespace PeterO
 			} else if(type==2 || // Byte string
 			          type==3 // Text string
 			         ){
-				if(additional==31){ 
+				if(additional==31){
 					// Streaming byte string or
 					// text string
 					using(MemoryStream ms=new MemoryStream()){
