@@ -26,7 +26,8 @@ namespace PeterO
 		enum CBORObjectType {
 			UInteger,
 			SInteger,
-			BigInteger,
+			BigInteger, // Big integer decoded from a byte array
+			BigIntegerType1, // Big integer decoded from major type 1
 			ByteString,
 			TextString,
 			Array,
@@ -185,7 +186,7 @@ namespace PeterO
 				return (double)(ulong)item;
 			else if(itemtype== CBORObjectType.SInteger)
 				return (double)(long)item;
-			else if(itemtype== CBORObjectType.BigInteger)
+			else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1)
 				return (double)(BigInteger)item;
 			else if(itemtype== CBORObjectType.Single)
 				return (double)(float)item;
@@ -222,7 +223,7 @@ namespace PeterO
 				return (float)(ulong)item;
 			else if(itemtype== CBORObjectType.SInteger)
 				return (float)(long)item;
-			else if(itemtype== CBORObjectType.BigInteger)
+			else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1)
 				return (float)(BigInteger)item;
 			else if(itemtype== CBORObjectType.Single)
 				return (float)item;
@@ -259,7 +260,7 @@ namespace PeterO
 				return (BigInteger)(ulong)item;
 			else if(itemtype== CBORObjectType.SInteger)
 				return (BigInteger)(long)item;
-			else if(itemtype== CBORObjectType.BigInteger)
+			else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1)
 				return (BigInteger)item;
 			else if(itemtype== CBORObjectType.Single)
 				return (BigInteger)(float)item;
@@ -303,7 +304,7 @@ namespace PeterO
 				if((long)item>Int32.MaxValue || (long)item<Int32.MinValue)
 					throw new OverflowException();
 				return (int)(long)item;
-			} else if(itemtype== CBORObjectType.BigInteger){
+			} else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1){
 				if((BigInteger)item>Int32.MaxValue || (BigInteger)item<Int32.MinValue)
 					throw new OverflowException();
 				return (int)(BigInteger)item;
@@ -354,7 +355,7 @@ namespace PeterO
 		/// <exception cref="System.ArgumentNullException">
 		/// <paramref name="stream"/> is null.</exception>
 		public static CBORObject Read(Stream stream){
-			return Read(stream,0,false,-1,null);
+			return Read(stream,0,false,-1);
 		}
 		
 		private static void WriteObjectArray(
@@ -505,7 +506,7 @@ namespace PeterO
 				WriteUInt64(0,(ulong)item,s);
 			} else if(itemtype== CBORObjectType.SInteger){
 				Write((long)item,s);
-			} else if(itemtype== CBORObjectType.BigInteger){
+			} else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1){
 				Write((BigInteger)item,s);
 			} else if(itemtype== CBORObjectType.ByteString ||
 			          itemtype== CBORObjectType.TextString ){
@@ -1110,7 +1111,7 @@ namespace PeterO
 			} else if(itemtype== CBORObjectType.SInteger){
 				return String.Format(CultureInfo.InvariantCulture,
 				                     "{0}",(long)item);
-			} else if(itemtype== CBORObjectType.BigInteger){
+			} else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1){
 				return String.Format(CultureInfo.InvariantCulture,
 				                     "{0}",(BigInteger)item);
 			} else {
@@ -1165,7 +1166,7 @@ namespace PeterO
 			} else if(itemtype== CBORObjectType.SInteger){
 				sb.Append(String.Format(CultureInfo.InvariantCulture,
 				                        "{0}",(long)item));
-			} else if(itemtype== CBORObjectType.BigInteger){
+			} else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1){
 				sb.Append(String.Format(CultureInfo.InvariantCulture,
 				                        "{0}",(BigInteger)item));
 			} else if(itemtype== CBORObjectType.ByteString){
@@ -1235,12 +1236,38 @@ namespace PeterO
 			}
 		}
 		
+		private int MajorType {
+			get {
+				switch(itemtype){
+					case CBORObjectType.UInteger:
+						return 0;
+					case CBORObjectType.SInteger:
+					case CBORObjectType.BigIntegerType1:
+						return 1;
+					case CBORObjectType.BigInteger:
+					case CBORObjectType.ByteString:
+						return 2;
+					case CBORObjectType.TextString:
+						return 3;
+					case CBORObjectType.Array:
+						return 4;
+					case CBORObjectType.Map:
+						return 5;
+					case CBORObjectType.SimpleValue:
+					case CBORObjectType.Single:
+					case CBORObjectType.Double:
+						return 7;
+					default:
+						throw new InvalidOperationException();
+				}
+			}
+		}
+		
 		private static CBORObject Read(
 			Stream s,
 			int depth,
 			bool allowBreak,
-			int allowOnlyType,
-			int[] typeRead){
+			int allowOnlyType){
 			if(depth>1000)
 				throw new IOException();
 			int c=s.ReadByte();
@@ -1248,9 +1275,6 @@ namespace PeterO
 				throw new IOException();
 			int type=(c>>5)&0x07;
 			int additional=(c&0x1F);
-			if(typeRead!=null){
-				typeRead[0]=type;
-			}
 			if(c==0xFF){
 				if(allowBreak)return Break;
 				throw new FormatException();
@@ -1347,18 +1371,14 @@ namespace PeterO
 				} else {
 					BigInteger bi=new BigInteger(-1);
 					bi-=new BigInteger(uadditional);
-					return new CBORObject(CBORObjectType.BigInteger,
+					return new CBORObject(CBORObjectType.BigIntegerType1,
 					                      bi);
 				}
 			} else if(type==6){ // Tagged item
-				int[] oType=new int[1];
-				CBORObject o=Read(s,depth+1,allowBreak,-1,oType);
-				if(typeRead!=null){
-					typeRead[0]=oType[0];
-				}
+					CBORObject o=Read(s,depth+1,allowBreak,-1);
 				if(uadditional==2 || uadditional==3){
 					// Big number
-					if(oType[0]!=2) // Requires major type 2 (byte string)
+					if(o.MajorType!=2) // Requires major type 2 (byte string)
 						throw new FormatException();
 					byte[] data=(byte[])o.item;
 					BigInteger bi=0;
@@ -1371,10 +1391,17 @@ namespace PeterO
 					}
 					return new CBORObject(CBORObjectType.BigInteger,
 					                      bi);
-				}
-				if(uadditional==4){
-					// TODO: Decimal fractions
-					if(oType[0]!=4) // Requires major type 4 (array)
+				} else if(uadditional==4){
+					if(o.MajorType!=4) // Requires major type 4 (array)
+						throw new FormatException();
+					if(o.Count!=2) // Requires 2 items
+						throw new FormatException();
+					// check type of exponent
+					if(o[0].MajorType!=0 && o[0].MajorType!=1)
+						throw new FormatException();
+					// check type of mantissa
+					if(o[1].MajorType!=0 && o[1].MajorType!=1 && 
+					   o.itemtype!=CBORObjectType.BigInteger)
 						throw new FormatException();
 				}
 				return new CBORObject(o.itemtype,
@@ -1387,12 +1414,11 @@ namespace PeterO
 					// text string
 					using(MemoryStream ms=new MemoryStream()){
 						byte[] data;
-						int[] oType=new int[1];
 						while(true){
-							CBORObject o=Read(s,depth+1,true,type,oType);
+							CBORObject o=Read(s,depth+1,true,type);
 							if(o.IsBreak)
 								break;
-							if(oType[0]!=type) // Requires same type as this one
+							if(o.MajorType!=type) // Requires same type as this one
 								throw new FormatException();
 							if(o.item is String)
 								data=utf8.GetBytes((string)o.item);
@@ -1429,7 +1455,7 @@ namespace PeterO
 				IList<CBORObject> list=new List<CBORObject>();
 				if(additional==31){
 					while(true){
-						CBORObject o=Read(s,depth+1,true,-1,null);
+						CBORObject o=Read(s,depth+1,true,-1);
 						if(o.IsBreak)
 							break;
 						list.Add(o);
@@ -1440,7 +1466,7 @@ namespace PeterO
 						throw new IOException();
 					}
 					for(ulong i=0;i<uadditional;i++){
-						list.Add(Read(s,depth+1,false,-1,null));
+						list.Add(Read(s,depth+1,false,-1));
 					}
 					return new CBORObject(CBORObjectType.Array,list);
 				}
@@ -1448,10 +1474,10 @@ namespace PeterO
 				IList<CBORObject[]> list=new List<CBORObject[]>();
 				if(additional==31){
 					while(true){
-						CBORObject key=Read(s,depth+1,true,-1,null);
+						CBORObject key=Read(s,depth+1,true,-1);
 						if(key.IsBreak)
 							break;
-						CBORObject value=Read(s,depth+1,false,-1,null);
+						CBORObject value=Read(s,depth+1,false,-1);
 						list.Add(new CBORObject[]{key,value});
 					}
 					return new CBORObject(CBORObjectType.Map,list);
@@ -1460,8 +1486,8 @@ namespace PeterO
 						throw new IOException();
 					}
 					for(ulong i=0;i<uadditional;i++){
-						CBORObject key=Read(s,depth+1,false,-1,null);
-						CBORObject value=Read(s,depth+1,false,-1,null);
+						CBORObject key=Read(s,depth+1,false,-1);
+						CBORObject value=Read(s,depth+1,false,-1);
 						list.Add(new CBORObject[]{key,value});
 					}
 					return new CBORObject(CBORObjectType.Map,list);

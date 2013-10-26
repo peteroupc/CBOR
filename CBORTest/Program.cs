@@ -34,8 +34,6 @@ namespace PeterO
 			o=CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
 			Assert.AreEqual("[4([-1, 15]), 4([-1, 26]), 4([-1, 37]), 4, 4([-2, 22222])]",
 			                o.ToString());
-			//Console.WriteLine("{0}",o);
-			//Console.WriteLine("{0}",o[0].AsDouble());
 		}
 		
 		[Test]
