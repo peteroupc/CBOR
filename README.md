@@ -16,7 +16,7 @@ text to CBOR objects.  It defines the following methods.
   AsInt64(), AsSByte(), AsSingle(), AsString(), AsUInt16, AsUInt32(), AsUInt64():
   Converts the CBOR object to different data types.  Throws OverflowException if
   the value is out of range, or InvalidOperationException if the object's type is not
-  a number type.
+  appropriate for conversion.
 - Equals(object other): Compares two CBORObject objects. 
   This doesn't always correspond
   to value equality, however.
@@ -36,7 +36,7 @@ text to CBOR objects.  It defines the following methods.
 - ToString(): Returns this CBOR object in string form.
    The format is intended to be human-readable, not machine-
    parsable, and the format may change at any time.
-- Write(System.IO.Stream): Writes this CBOR object to a data stream.
+- WriteTo(System.IO.Stream): Writes this CBOR object to a data stream.
 - Tag - Returns this object's tag, or 0 if it has no tag.
 - obj[int] - Gets or sets a value in this CBOR array. Valid only for arrays.
 - CBORObject.Write(object, System.IO.Stream) - Writes an arbitrary object in

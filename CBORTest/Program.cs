@@ -19,19 +19,36 @@ namespace PeterO
 	class CBORTest
 	{
 		private static CultureInfo Inv=System.Globalization.CultureInfo.InvariantCulture;
-		
+		public static void AssertEqualsHashCode(CBORObject o, CBORObject o2){
+			if(o.Equals(o2)){
+				Assert.IsTrue(o2.Equals(o),
+				              "{0} equals {1}, but {1} does not equal {0}",o,o2);
+				// Test for the guarantee that equal objects
+				// must have equal hash codes
+				Assert.AreEqual(o2.GetHashCode(),o.GetHashCode(),
+				                "{0} and {1} don't have equal hash codes",o,o2);
+			} else {
+				Assert.IsFalse(o2.Equals(o),
+				              "{0} does not equal {1}, but {1} equals {0}",o,o2);				
+			}
+		}
 		public static void AssertSer(CBORObject o, String s){
 			Assert.AreEqual(s,o.ToString());
 			CBORObject o2=CBORObject.FromBytes(o.ToBytes());
 			Assert.AreEqual(s,o2.ToString());
+			AssertEqualsHashCode(o,o2);
 		}
 		
 		[Test]
 		public static void TestJSON(){
 			CBORObject o;
 			o=CBORObject.FromJSONString("[1,2,3]");
-			Assert.AreEqual("[1, 2, 3]",o.ToString());
+			Assert.AreEqual(3,o.Count);
+			Assert.AreEqual(1,o[0].AsInt32());
+			Assert.AreEqual(2,o[1].AsInt32());
+			Assert.AreEqual(3,o[2].AsInt32());
 			o=CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
+			Assert.AreEqual(1.5,o[0].AsDouble());
 			Assert.AreEqual("[4([-1, 15]), 4([-1, 26]), 4([-1, 37]), 4, 4([-2, 22222])]",
 			                o.ToString());
 		}
@@ -98,6 +115,94 @@ namespace PeterO
 		}
 
 		[Test]
+		public static void TestArray(){
+			var cbor=CBORObject.FromJSONString("[]");
+			cbor.Add(CBORObject.FromObject(3));
+			cbor.Add(CBORObject.FromObject(4));
+			var bytes=cbor.ToBytes();
+			Assert.AreEqual(
+				new byte[]{(byte)(0x80|2),3,4},bytes);
+		}
+		[Test]
+		public static void TestMap(){
+			var cbor=CBORObject.FromJSONString("{\"a\":2,\"b\":4}");
+			Assert.AreEqual(2,cbor.Count);
+			AssertEqualsHashCode(
+				CBORObject.FromObject(2),
+				cbor[CBORObject.FromObject("a")]);
+			AssertEqualsHashCode(
+				CBORObject.FromObject(4),
+				cbor[CBORObject.FromObject("b")]);
+			Assert.AreEqual(2,cbor[CBORObject.FromObject("a")].AsInt32());
+			Assert.AreEqual(4,cbor[CBORObject.FromObject("b")].AsInt32());
+		}
+		
+		[Test]
+		public static void TestTextStringStream(){
+			var cbor=CBORObject.FromBytes(
+				new byte[]{0x7F,0x61,0x20,0x61,0x20,0xFF});
+			Assert.AreEqual("  ",cbor.AsString());
+			// Test streaming of long strings
+			var longString=new String('x',200000);
+			CBORObject cbor2;
+			cbor=CBORObject.FromObject(longString);
+			cbor2=CBORObject.FromBytes(cbor.ToBytes());
+			AssertEqualsHashCode(cbor,cbor2);
+			Assert.AreEqual(longString,cbor2.AsString());
+			longString=new String('\u00e0',200000);
+			cbor=CBORObject.FromObject(longString);
+			cbor2=CBORObject.FromBytes(cbor.ToBytes());
+			AssertEqualsHashCode(cbor,cbor2);
+			Assert.AreEqual(longString,cbor2.AsString());
+			longString=new String('\u3000',200000);
+			cbor=CBORObject.FromObject(longString);
+			cbor2=CBORObject.FromBytes(cbor.ToBytes());
+			AssertEqualsHashCode(cbor,cbor2);
+			Assert.AreEqual(longString,cbor2.AsString());
+			System.Text.StringBuilder b=new System.Text.StringBuilder();
+			for(var i=0;i<200000;i++){
+				b.Append("\ud800\udc00");
+			}
+			longString=b.ToString();
+			cbor=CBORObject.FromObject(longString);
+			cbor2=CBORObject.FromBytes(cbor.ToBytes());
+			AssertEqualsHashCode(cbor,cbor2);
+			Assert.AreEqual(longString,cbor2.AsString());
+		}
+
+		[Test]
+		[ExpectedException(typeof(FormatException))]
+		public static void TestTextStringStreamNoTagsBeforeDefinite(){
+			CBORObject.FromBytes(
+				new byte[]{0x7F,0x61,0x20,0xC0,0x61,0x20,0xFF});
+		}
+
+		[Test]
+		[ExpectedException(typeof(FormatException))]
+		public static void TestTextStringStreamNoIndefiniteWithinDefinite(){
+			CBORObject.FromBytes(
+				new byte[]{0x7F,0x61,0x20,0x7F,0x61,0x20,0xFF,0xFF});
+		}
+		[Test]
+		public static void TestByteStringStream(){
+			var cbor=CBORObject.FromBytes(
+				new byte[]{0x5F,0x41,0x20,0x41,0x20,0xFF});
+		}
+		[Test]
+		[ExpectedException(typeof(FormatException))]
+		public static void TestByteStringStreamNoTagsBeforeDefinite(){
+			CBORObject.FromBytes(
+				new byte[]{0x5F,0x41,0x20,0xC2,0x41,0x20,0xFF});
+		}
+
+		[Test]
+		[ExpectedException(typeof(FormatException))]
+		public static void TestByteStringStreamNoIndefiniteWithinDefinite(){
+			CBORObject.FromBytes(
+				new byte[]{0x5F,0x41,0x20,0x5F,0x41,0x20,0xFF,0xFF});
+		}
+		
+		[Test]
 		public static void TestShort(){
 			for(int i=Int16.MinValue;i<=Int16.MaxValue;i++){
 				AssertSer(
@@ -146,7 +251,7 @@ namespace PeterO
 			for(int i=-65539;i<=65539;i++){
 				AssertSer(
 					CBORObject.FromObject((float)i),
-						String.Format(Inv,"{0}",i));
+					String.Format(Inv,"{0}",i));
 			}
 		}
 		
@@ -171,7 +276,7 @@ namespace PeterO
 			for(int i=-65539;i<=65539;i++){
 				AssertSer(
 					CBORObject.FromObject((double)i),
-						String.Format(Inv,"{0}",i));
+					String.Format(Inv,"{0}",i));
 			}
 		}
 
@@ -203,8 +308,9 @@ namespace PeterO
 					String.Format(Inv,"{0}",i));
 			}
 		}
-		public static void Main(string[] args)
-		{
+		
+		public static void Main(){
+			
 		}
 	}
 }
