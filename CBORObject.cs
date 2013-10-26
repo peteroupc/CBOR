@@ -311,6 +311,14 @@ namespace PeterO
 		}
 
 		[CLSCompliant(false)]
+		public uint AsUInt32(){
+			int v=AsUInt64();
+			if(v>UInt32.MaxValue)
+				throw new OverflowException();
+			return (uint)v;
+		}
+
+		[CLSCompliant(false)]
 		public sbyte AsSByte(){
 			int v=AsInt32();
 			if(v>Byte.MaxValue || v<Byte.MinValue)
