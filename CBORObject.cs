@@ -16,7 +16,7 @@ using System.Text;
 namespace PeterO
 {
 	/// <summary>
-	/// Represents an object in Compact Binary Object
+	/// Represents an object in Concise Binary Object
 	/// Representation (CBOR) and contains methods for reading
 	/// and writing CBOR data.  CBOR is defined in
 	/// RFC 7049.
