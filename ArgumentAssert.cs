@@ -14,7 +14,7 @@ using System.Globalization;
 namespace PeterO
 {
 	[DebuggerStepThrough]
-	public static class ArgumentAssert {
+	internal static class ArgumentAssertInternal {
 		public static void Fail(object value, string message){
 			throw new ArgumentException(
 				String.Format(CultureInfo.CurrentCulture,"{0} [Value={1}]",message,value));
@@ -71,8 +71,8 @@ namespace PeterO
 		}
 		public static void CheckIndex(string buffer, int index,
 		                              string bufferName, string offsetName){
-			ArgumentAssert.NotNull(buffer,bufferName);
-			ArgumentAssert.GreaterOrEqual(index,0,offsetName);
+			ArgumentAssertInternal.NotNull(buffer,bufferName);
+			ArgumentAssertInternal.GreaterOrEqual(index,0,offsetName);
 			if(index>=buffer.Length){
 				throw new ArgumentOutOfRangeException(
 					String.Format(CultureInfo.CurrentCulture,
@@ -83,8 +83,8 @@ namespace PeterO
 		}
 		public static void CheckIndex<T>(IList<T> buffer, int index,
 		                                  string bufferName, string offsetName){
-			ArgumentAssert.NotNull(buffer,bufferName);
-			ArgumentAssert.GreaterOrEqual(index,0,offsetName);
+			ArgumentAssertInternal.NotNull(buffer,bufferName);
+			ArgumentAssertInternal.GreaterOrEqual(index,0,offsetName);
 			if(index>=buffer.Count){
 				throw new ArgumentOutOfRangeException(
 					String.Format(CultureInfo.CurrentCulture,
@@ -95,9 +95,9 @@ namespace PeterO
 		}
 		public static void CheckBuffer<T>(IList<T> buffer, int offset, int count,
 		                                  string bufferName, string offsetName, string countName){
-			ArgumentAssert.NotNull(buffer,bufferName);
-			ArgumentAssert.GreaterOrEqual(offset,0,offsetName);
-			ArgumentAssert.GreaterOrEqual(count,0,countName);
+			ArgumentAssertInternal.NotNull(buffer,bufferName);
+			ArgumentAssertInternal.GreaterOrEqual(offset,0,offsetName);
+			ArgumentAssertInternal.GreaterOrEqual(count,0,countName);
 			if(offset+count>buffer.Count){
 				throw new ArgumentOutOfRangeException(
 					String.Format(CultureInfo.CurrentCulture,
