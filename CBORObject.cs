@@ -318,7 +318,24 @@ namespace PeterO
 			return (sbyte)v;
 		}
 		
-				/// <summary>
+		private static bool IsValidString(string s){
+			if(s==null)return false;
+			for(int i=0;i<s.Length;i++){
+				int c=s[i];
+				if(c<=0xD7FF || c>=0xE000) {
+					continue;
+				} else if(c<=0xDBFF){ // UTF-16 low surrogate
+					i++;
+					if(i>=s.Length || s[i]<0xDC00 || s[i]>0xDFFF)
+						return false;
+				} else
+					return false;
+			}
+			return true;
+		}
+
+		
+		/// <summary>
 		/// Converts this object to a 64-bit signed
 		/// integer.  Floating point values are truncated
 		/// to an integer.
@@ -374,7 +391,7 @@ namespace PeterO
 				throw new InvalidOperationException("Not a number type");
 		}
 		
-				/// <summary>
+		/// <summary>
 		/// Converts this object to a 64-bit signed
 		/// integer.  Floating point values are truncated
 		/// to an integer.
@@ -483,10 +500,7 @@ namespace PeterO
 		}
 		public string AsString(){
 			if(itemtype== CBORObjectType.TextString){
-				if(item is string)
-					return (string)item;
-				else
-					return utf8.GetString((byte[])item);
+				return (string)item;
 			} else {
 				throw new InvalidOperationException("Not a string type");
 			}
@@ -653,15 +667,12 @@ namespace PeterO
 				Write((long)item,s);
 			} else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1){
 				Write((BigInteger)item,s);
-			} else if(itemtype== CBORObjectType.ByteString ||
-			          itemtype== CBORObjectType.TextString ){
-				if(item is string && itemtype== CBORObjectType.TextString){
-					Write((string)item,s);
-				} else {
-					WriteUInt64((itemtype== CBORObjectType.ByteString) ? 2 : 3,
-					            (ulong)((byte[])item).Length,s);
-					s.Write(((byte[])item),0,((byte[])item).Length);
-				}
+			} else if(itemtype== CBORObjectType.ByteString){
+				WriteUInt64((itemtype== CBORObjectType.ByteString) ? 2 : 3,
+				            (ulong)((byte[])item).Length,s);
+				s.Write(((byte[])item),0,((byte[])item).Length);
+			} else if(itemtype== CBORObjectType.TextString ){
+				Write((string)item,s);
 			} else if(itemtype== CBORObjectType.Array){
 				WriteObjectArray((IList<CBORObject>)item,s);
 			} else if(itemtype== CBORObjectType.Map){
@@ -1102,6 +1113,84 @@ namespace PeterO
 			}
 		}
 
+		private static string ReadUtf8(Stream stream, int byteLength)  {
+			StringBuilder builder=new StringBuilder();
+			int cp=0;
+			int bytesSeen=0;
+			int bytesNeeded=0;
+			int lower=0x80;
+			int upper=0xBF;
+			int pointer=0;
+			int markedPointer=-1;
+			while(pointer<byteLength || byteLength<0){
+				int b=stream.ReadByte();
+				if(b<0 && bytesNeeded!=0){
+					bytesNeeded=0;
+					throw new FormatException("Invalid UTF-8");
+				} else if(b<0){
+					if(byteLength>0 && pointer>=byteLength)
+						throw new FormatException("Premature end of stream");
+					break; // end of stream
+				}
+				if(byteLength>0) {
+					pointer++;
+				}
+				if(bytesNeeded==0){
+					if(b<0x80){
+						builder.Append((char)b);
+					}
+					else if(b>=0xc2 && b<=0xdf){
+						markedPointer=pointer;
+						bytesNeeded=1;
+						cp=b-0xc0;
+					} else if(b>=0xe0 && b<=0xef){
+						markedPointer=pointer;
+						lower=(b==0xe0) ? 0xa0 : 0x80;
+						upper=(b==0xed) ? 0x9f : 0xbf;
+						bytesNeeded=2;
+						cp=b-0xe0;
+					} else if(b>=0xf0 && b<=0xf4){
+						markedPointer=pointer;
+						lower=(b==0xf0) ? 0x90 : 0x80;
+						upper=(b==0xf4) ? 0x8f : 0xbf;
+						bytesNeeded=3;
+						cp=b-0xf0;
+					} else
+						throw new FormatException("Invalid UTF-8");
+					cp<<=(6*bytesNeeded);
+					continue;
+				}
+				if(b<lower || b>upper){
+					cp=bytesNeeded=bytesSeen=0;
+					lower=0x80;
+					upper=0xbf;
+					throw new FormatException("Invalid UTF-8");
+				}
+				lower=0x80;
+				upper=0xbf;
+				bytesSeen++;
+				cp+=(b-0x80)<<(6*(bytesNeeded-bytesSeen));
+				markedPointer=pointer;
+				if(bytesSeen!=bytesNeeded) {
+					continue;
+				}
+				int ret=cp;
+				cp=0;
+				bytesSeen=0;
+				bytesNeeded=0;
+				if(ret<=0xFFFF){
+					builder.Append((char)ret);
+				} else {
+					int ch=ret-0x10000;
+					int lead=ch/0x400+0xd800;
+					int trail=(ch&0x3FF)+0xdc00;
+					builder.Append((char)lead);
+					builder.Append((char)trail);
+				}
+			}
+			return builder.ToString();
+		}
+		
 		
 		//-----------------------------------------------------------
 		public static CBORObject FromObject(long value){
@@ -1120,6 +1209,8 @@ namespace PeterO
 		}
 		public static CBORObject FromObject(string value){
 			if(value==null)return CBORObject.Null;
+			if(!IsValidString(value))
+				throw new ArgumentException("String contains an unpaired surrogate code point.");
 			return new CBORObject(CBORObjectType.TextString,value);
 		}
 		public static CBORObject FromObject(int value){
@@ -1331,10 +1422,7 @@ namespace PeterO
 				sb.Append("'");
 			} else if(itemtype== CBORObjectType.TextString){
 				sb.Append("\"");
-				if(item is string)
-					sb.Append((string)item);
-				else
-					sb.Append(utf8.GetString((byte[])item));
+				sb.Append((string)item);
 				sb.Append("\"");
 			} else if(itemtype== CBORObjectType.Array){
 				bool first=true;
@@ -1558,12 +1646,9 @@ namespace PeterO
 				}
 				return new CBORObject(o.itemtype,
 				                      uadditional,o.item);
-			} else if(type==2 || // Byte string
-			          type==3 // Text string
-			         ){
+			} else if(type==2){ // Byte string
 				if(additional==31){
-					// Streaming byte string or
-					// text string
+					// Streaming byte string
 					using(MemoryStream ms=new MemoryStream()){
 						byte[] data;
 						while(true){
@@ -1572,10 +1657,7 @@ namespace PeterO
 								break;
 							if(o.MajorType!=type) // Requires same type as this one
 								throw new FormatException();
-							if(o.item is string)
-								data=utf8.GetBytes((string)o.item);
-							else
-								data=(byte[])o.item;
+							data=(byte[])o.item;
 							ms.Write(data,0,data.Length);
 						}
 						if(ms.Position>Int32.MaxValue)
@@ -1584,8 +1666,7 @@ namespace PeterO
 						ms.Position=0;
 						ms.Read(data,0,data.Length);
 						return new CBORObject(
-							(type==2) ? CBORObjectType.ByteString :
-							CBORObjectType.TextString,
+							CBORObjectType.ByteString,
 							data);
 					}
 				} else {
@@ -1595,13 +1676,31 @@ namespace PeterO
 					byte[] data=new byte[uadditional];
 					if(s.Read(data,0,data.Length)!=data.Length)
 						throw new IOException();
-					if(type==3){
-						// Check string for UTF-8
-						utf8.GetString(data);
+					return new CBORObject(
+						CBORObjectType.ByteString,
+						data);
+				}
+			} else if(type==3){ // Text string
+				if(additional==31){
+					// Streaming text string
+					StringBuilder builder=new StringBuilder();
+					while(true){
+						CBORObject o=Read(s,depth+1,true,type);
+						if(o.IsBreak)
+							break;
+						if(o.MajorType!=type) // Requires same type as this one
+							throw new FormatException();
+						builder.Append((string)o.item);
 					}
 					return new CBORObject(
-						(type==2) ? CBORObjectType.ByteString : CBORObjectType.TextString,
-						data);
+						CBORObjectType.TextString,
+						builder.ToString());
+				} else {
+					if(uadditional>Int32.MaxValue){
+						throw new IOException();
+					}
+					string str=ReadUtf8(s,(int)uadditional);
+					return new CBORObject(CBORObjectType.TextString,str);
 				}
 			} else if(type==4){ // Array
 				IList<CBORObject> list=new List<CBORObject>();
