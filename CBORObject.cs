@@ -312,7 +312,7 @@ namespace PeterO
 
 		[CLSCompliant(false)]
 		public uint AsUInt32(){
-			int v=AsUInt64();
+			ulong v=AsUInt64();
 			if(v>UInt32.MaxValue)
 				throw new OverflowException();
 			return (uint)v;
