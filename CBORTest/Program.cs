@@ -21,9 +21,21 @@ namespace PeterO
 		private static CultureInfo Inv=System.Globalization.CultureInfo.InvariantCulture;
 		
 		public static void AssertSer(CBORObject o, String s){
-			Assert.AreEqual(o.ToString(),s);
+			Assert.AreEqual(s,o.ToString());
 			CBORObject o2=CBORObject.FromBytes(o.ToBytes());
-			Assert.AreEqual(o2.ToString(),s);
+			Assert.AreEqual(s,o2.ToString());
+		}
+		
+		[Test]
+		public static void TestJSON(){
+			CBORObject o;
+			o=CBORObject.FromJSONString("[1,2,3]");
+			Assert.AreEqual("[1, 2, 3]",o.ToString());
+			o=CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
+			Assert.AreEqual("[4([-1, 15]), 4([-1, 26]), 4([-1, 37]), 4, 4([-2, 22222])]",
+			                o.ToString());
+			//Console.WriteLine("{0}",o);
+			//Console.WriteLine("{0}",o[0].AsDouble());
 		}
 		
 		[Test]

@@ -52,6 +52,7 @@
     <Compile Include="ArgumentAssert.cs" />
     <Compile Include="CBORObject.cs" />
     <Compile Include="Converter.cs" />
+    <Compile Include="JSONTokener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
