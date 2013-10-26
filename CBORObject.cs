@@ -281,7 +281,152 @@ namespace PeterO
 			else
 				throw new InvalidOperationException("Not a number type");
 		}
+		
+		public bool AsBoolean(){
+			if(this.IsTrue)
+				return true;
+			return false;
+		}
+		
+		public short AsInt16(){
+			int v=AsInt32();
+			if(v>Int16.MaxValue || v<Int16.MinValue)
+				throw new OverflowException();
+			return (short)v;
+		}
+		
+		public short AsByte(){
+			int v=AsInt32();
+			if(v>Byte.MaxValue || v<Byte.MinValue)
+				throw new OverflowException();
+			return (byte)v;
+		}
 
+		[CLSCompliant(false)]
+		public ushort AsUInt16(){
+			int v=AsInt32();
+			if(v>UInt16.MaxValue || v<UInt16.MinValue)
+				throw new OverflowException();
+			return (ushort)v;
+		}
+
+		[CLSCompliant(false)]
+		public sbyte AsSByte(){
+			int v=AsInt32();
+			if(v>Byte.MaxValue || v<Byte.MinValue)
+				throw new OverflowException();
+			return (sbyte)v;
+		}
+		
+				/// <summary>
+		/// Converts this object to a 64-bit signed
+		/// integer.  Floating point values are truncated
+		/// to an integer.
+		/// </summary>
+		/// <returns>The closest big integer
+		/// to this object.</returns>
+		/// <exception cref="System.InvalidOperationException">
+		/// This object's type is not an integer
+		/// or a floating-point number.</exception>
+		/// <exception cref="System.OverflowException">
+		/// This object's value exceeds the range of a 64-bit
+		/// signed integer.</exception>
+		[CLSCompliant(false)]
+		public ulong AsUInt64(){
+			if(itemtype== CBORObjectType.UInteger){
+				if((ulong)item>UInt64.MaxValue)
+					throw new OverflowException();
+				return item;
+			} else if(itemtype== CBORObjectType.SInteger){
+				if((long)item<UInt64.MinValue || (long)item>UInt64.MaxValue)
+					throw new OverflowException();
+				return (ulong)(long)item;
+			} else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1){
+				if((BigInteger)item>UInt64.MaxValue || (BigInteger)item<UInt64.MinValue)
+					throw new OverflowException();
+				return (ulong)(BigInteger)item;
+			} else if(itemtype== CBORObjectType.Single){
+				if(Single.IsNaN((float)item) ||
+				   (float)item>UInt64.MaxValue || (float)item<UInt64.MinValue)
+					throw new OverflowException();
+				return (ulong)(float)item;
+			} else if(itemtype== CBORObjectType.Double){
+				if(Double.IsNaN((double)item) ||
+				   (double)item>UInt64.MinValue || (double)item<UInt64.MinValue)
+					throw new OverflowException();
+				return (ulong)(double)item;
+			} else if(this.Tag==4 && itemtype== CBORObjectType.Array &&
+			          this.Count==2){
+				StringBuilder sb=new StringBuilder();
+				sb.Append(this[1].IntegerToString());
+				sb.Append("e");
+				sb.Append(this[0].IntegerToString());
+				BigInteger bi=BigInteger.Parse(
+					sb.ToString(),
+					NumberStyles.AllowLeadingSign|
+					NumberStyles.AllowDecimalPoint|
+					NumberStyles.AllowExponent,
+					CultureInfo.InvariantCulture);
+				if(bi>UInt64.MaxValue || bi<UInt64.MinValue)
+					throw new OverflowException();
+				return (ulong)bi;
+			} else
+				throw new InvalidOperationException("Not a number type");
+		}
+		
+				/// <summary>
+		/// Converts this object to a 64-bit signed
+		/// integer.  Floating point values are truncated
+		/// to an integer.
+		/// </summary>
+		/// <returns>The closest big integer
+		/// to this object.</returns>
+		/// <exception cref="System.InvalidOperationException">
+		/// This object's type is not an integer
+		/// or a floating-point number.</exception>
+		/// <exception cref="System.OverflowException">
+		/// This object's value exceeds the range of a 64-bit
+		/// signed integer.</exception>
+		public long AsInt64(){
+			if(itemtype== CBORObjectType.UInteger){
+				if((ulong)item>Int64.MaxValue)
+					throw new OverflowException();
+				return (long)(ulong)item;
+			} else if(itemtype== CBORObjectType.SInteger){
+				return (long)item;
+			} else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1){
+				if((BigInteger)item>Int64.MaxValue || (BigInteger)item<Int64.MinValue)
+					throw new OverflowException();
+				return (long)(BigInteger)item;
+			} else if(itemtype== CBORObjectType.Single){
+				if(Single.IsNaN((float)item) ||
+				   (float)item>Int64.MaxValue || (float)item<Int64.MinValue)
+					throw new OverflowException();
+				return (long)(float)item;
+			} else if(itemtype== CBORObjectType.Double){
+				if(Double.IsNaN((double)item) ||
+				   (double)item>Int64.MinValue || (double)item<Int64.MinValue)
+					throw new OverflowException();
+				return (long)(double)item;
+			} else if(this.Tag==4 && itemtype== CBORObjectType.Array &&
+			          this.Count==2){
+				StringBuilder sb=new StringBuilder();
+				sb.Append(this[1].IntegerToString());
+				sb.Append("e");
+				sb.Append(this[0].IntegerToString());
+				BigInteger bi=BigInteger.Parse(
+					sb.ToString(),
+					NumberStyles.AllowLeadingSign|
+					NumberStyles.AllowDecimalPoint|
+					NumberStyles.AllowExponent,
+					CultureInfo.InvariantCulture);
+				if(bi>Int64.MaxValue || bi<Int64.MinValue)
+					throw new OverflowException();
+				return (long)bi;
+			} else
+				throw new InvalidOperationException("Not a number type");
+		}
+		
 		/// <summary>
 		/// Converts this object to a 32-bit signed
 		/// integer.  Floating point values are truncated
@@ -338,8 +483,8 @@ namespace PeterO
 		}
 		public string AsString(){
 			if(itemtype== CBORObjectType.TextString){
-				if(item is String)
-					return (String)item;
+				if(item is string)
+					return (string)item;
 				else
 					return utf8.GetString((byte[])item);
 			} else {
@@ -418,7 +563,7 @@ namespace PeterO
 		/// </summary>
 		/// <param name="str"></param>
 		/// <param name="s"></param>
-		public static void Write(String str, Stream s){
+		public static void Write(string str, Stream s){
 			ArgumentAssert.NotNull(s,"s");
 			if(str==null){
 				s.WriteByte(0xf6); // Write null instead of string
@@ -429,7 +574,7 @@ namespace PeterO
 			}
 		}
 		
-		private static String DateTimeToString(DateTime bi){
+		private static string DateTimeToString(DateTime bi){
 			DateTime dt=bi.ToUniversalTime();
 			System.Text.StringBuilder sb=new System.Text.StringBuilder();
 			sb.Append(String.Format(
@@ -510,7 +655,7 @@ namespace PeterO
 				Write((BigInteger)item,s);
 			} else if(itemtype== CBORObjectType.ByteString ||
 			          itemtype== CBORObjectType.TextString ){
-				if(item is String && itemtype== CBORObjectType.TextString){
+				if(item is string && itemtype== CBORObjectType.TextString){
 					Write((string)item,s);
 				} else {
 					WriteUInt64((itemtype== CBORObjectType.ByteString) ? 2 : 3,
@@ -559,19 +704,19 @@ namespace PeterO
 		public static void Write(bool value, Stream s){
 			s.WriteByte(value ? (byte)0xf5 : (byte)0xf4);
 		}
-		//[CLSCompliantAttribute(false)]
+		[CLSCompliant(false)]
 		public static void Write(sbyte value, Stream s){
 			Write((long)value,s);
 		}
-		//[CLSCompliantAttribute(false)]
+		[CLSCompliant(false)]
 		public static void Write(ulong value, Stream s){
 			WriteUInt64(0,(ulong)value,s);
 		}
-		//[CLSCompliantAttribute(false)]
+		[CLSCompliant(false)]
 		public static void Write(uint value, Stream s){
 			WriteUInt64(0,(ulong)value,s);
 		}
-		//[CLSCompliantAttribute(false)]
+		[CLSCompliant(false)]
 		public static void Write(ushort value, Stream s){
 			WriteUInt64(0,(ulong)value,s);
 		}
@@ -973,7 +1118,7 @@ namespace PeterO
 		public static CBORObject FromObject(BigInteger value){
 			return new CBORObject(CBORObjectType.BigInteger,value);
 		}
-		public static CBORObject FromObject(String value){
+		public static CBORObject FromObject(string value){
 			if(value==null)return CBORObject.Null;
 			return new CBORObject(CBORObjectType.TextString,value);
 		}
@@ -989,19 +1134,19 @@ namespace PeterO
 		public static CBORObject FromObject(bool value){
 			return (value ? CBORObject.True : CBORObject.False);
 		}
-		//[CLSCompliantAttribute(false)]
+		[CLSCompliant(false)]
 		public static CBORObject FromObject(sbyte value){
 			return FromObject((long)value);
 		}
-		//[CLSCompliantAttribute(false)]
+		[CLSCompliant(false)]
 		public static CBORObject FromObject(ulong value){
 			return new CBORObject(CBORObjectType.UInteger,(ulong)value);
 		}
-		//[CLSCompliantAttribute(false)]
+		[CLSCompliant(false)]
 		public static CBORObject FromObject(uint value){
 			return new CBORObject(CBORObjectType.UInteger,(ulong)value);
 		}
-		//[CLSCompliantAttribute(false)]
+		[CLSCompliant(false)]
 		public static CBORObject FromObject(ushort value){
 			return new CBORObject(CBORObjectType.UInteger,(ulong)value);
 		}
@@ -1074,7 +1219,7 @@ namespace PeterO
 			if(o is long)return FromObject((long)o);
 			if(o is CBORObject)return FromObject((CBORObject)o);
 			if(o is BigInteger)return FromObject((BigInteger)o);
-			if(o is String)return FromObject((String)o);
+			if(o is string)return FromObject((string)o);
 			if(o is int)return FromObject((int)o);
 			if(o is short)return FromObject((short)o);
 			if(o is char)return FromObject((char)o);
@@ -1104,7 +1249,7 @@ namespace PeterO
 		
 		//-----------------------------------------------------------
 		
-		private String IntegerToString(){
+		private string IntegerToString(){
 			if(itemtype== CBORObjectType.UInteger){
 				return String.Format(CultureInfo.InvariantCulture,
 				                     "{0}",(ulong)item);
@@ -1125,7 +1270,7 @@ namespace PeterO
 		/// parsable, and the format may change at any time.
 		/// </summary>
 		/// <returns>A text representation of this object.</returns>
-		public override String ToString(){
+		public override string ToString(){
 			StringBuilder sb=new StringBuilder();
 			if(tagged){
 				sb.Append(String.Format(CultureInfo.InvariantCulture,"{0}(",tag));
@@ -1179,8 +1324,8 @@ namespace PeterO
 				sb.Append("'");
 			} else if(itemtype== CBORObjectType.TextString){
 				sb.Append("\"");
-				if(item is String)
-					sb.Append((String)item);
+				if(item is string)
+					sb.Append((string)item);
 				else
 					sb.Append(utf8.GetString((byte[])item));
 				sb.Append("\"");
@@ -1375,7 +1520,7 @@ namespace PeterO
 					                      bi);
 				}
 			} else if(type==6){ // Tagged item
-					CBORObject o=Read(s,depth+1,allowBreak,-1);
+				CBORObject o=Read(s,depth+1,allowBreak,-1);
 				if(uadditional==2 || uadditional==3){
 					// Big number
 					if(o.MajorType!=2) // Requires major type 2 (byte string)
@@ -1400,7 +1545,7 @@ namespace PeterO
 					if(o[0].MajorType!=0 && o[0].MajorType!=1)
 						throw new FormatException();
 					// check type of mantissa
-					if(o[1].MajorType!=0 && o[1].MajorType!=1 && 
+					if(o[1].MajorType!=0 && o[1].MajorType!=1 &&
 					   o.itemtype!=CBORObjectType.BigInteger)
 						throw new FormatException();
 				}
@@ -1420,7 +1565,7 @@ namespace PeterO
 								break;
 							if(o.MajorType!=type) // Requires same type as this one
 								throw new FormatException();
-							if(o.item is String)
+							if(o.item is string)
 								data=utf8.GetBytes((string)o.item);
 							else
 								data=(byte[])o.item;
