@@ -447,7 +447,7 @@ class JSONTokener {
    * Make a FormatException to signal a syntax error.
    *
    * @param message The error message.
-   * @return  A FormatException _object, suitable for throwing
+   * @return  A FormatException object, suitable for throwing
    */
   public FormatException syntaxError(string message) {
     return new FormatException(message + ToString());
@@ -455,7 +455,7 @@ class JSONTokener {
 
 
   /**
-   * Make a printable _string of this JSONTokener.
+   * Make a printable string of this JSONTokener.
    *
    * @return " at character [myIndex] of [mySource]"
    */

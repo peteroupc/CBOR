@@ -37,6 +37,8 @@ text to CBOR objects.  It defines the following methods.
    The format is intended to be human-readable, not machine-
    parsable, and the format may change at any time.
 - Write(System.IO.Stream): Writes this CBOR object to a data stream.
+- Tag - Returns this object's tag, or 0 if it has no tag.
+- obj[int] - Gets or sets a value in this CBOR array. Valid only for arrays.
 - CBORObject.Write(object, System.IO.Stream) - Writes an arbitrary object in
   the CBOR format to a data stream.  Not all objects are supported; for 
   unsupported types, throws ArgumentException.
@@ -53,8 +55,6 @@ text to CBOR objects.  It defines the following methods.
 - CBORObject.IsFalse - Returns true if this is false.
 - CBORObject.IsUndefined - Returns true if this is the undefined value.
 - CBORObject.IsTagged - Returns true if this object has a tag.
-- CBORObject.Tag - Returns this object's tag, or 0 if it has no tag.
-- CBORObject[int] - Gets or sets a value in this CBOR array. Valid only for arrays.
 
   
    
