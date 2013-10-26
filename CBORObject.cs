@@ -59,17 +59,17 @@ namespace PeterO
 			this.item=item;
 		}
 		
-		public bool IsBreak{
+		public bool IsBreak {
 			get {
 				return itemtype==CBORObjectType.SimpleValue && (int)item==31;
 			}
 		}
-		public bool IsTrue{
+		public bool IsTrue {
 			get {
 				return itemtype==CBORObjectType.SimpleValue && (int)item==21;
 			}
 		}
-		public bool IsFalse{
+		public bool IsFalse {
 			get {
 				return itemtype==CBORObjectType.SimpleValue && (int)item==20;
 			}
@@ -84,6 +84,31 @@ namespace PeterO
 				return itemtype==CBORObjectType.SimpleValue && (int)item==23;
 			}
 		}
+		
+		#region Equals and GetHashCode implementation
+		public override bool Equals(object obj)
+		{
+			CBORObject other = obj as CBORObject;
+			if (other == null)
+				return false;
+			return object.Equals(this.item, other.item) && this.itemtype == other.itemtype && this.tagged == other.tagged && this.tag == other.tag;
+		}
+		
+		public override int GetHashCode()
+		{
+			int hashCode = 0;
+			unchecked {
+				if (item != null)
+					hashCode += 1000000007 * item.GetHashCode();
+				hashCode += 1000000009 * itemtype.GetHashCode();
+				hashCode += 1000000021 * tagged.GetHashCode();
+				hashCode += 1000000033 * tag.GetHashCode();
+			}
+			return hashCode;
+		}
+		#endregion
+
+		
 		public static CBORObject FromBytes(byte[] data){
 			using(MemoryStream ms=new MemoryStream(data)){
 				CBORObject o=Read(ms);
@@ -137,6 +162,8 @@ namespace PeterO
 			}
 			set {
 				if(itemtype== CBORObjectType.Array){
+					if(this.Tag==4)
+						throw new InvalidOperationException("Read-only array");
 					((IList<CBORObject>)item)[index]=value;
 				} else {
 					throw new InvalidOperationException("Not an array");
@@ -148,7 +175,7 @@ namespace PeterO
 		/// Converts this object to a 64-bit floating point
 		/// number.
 		/// </summary>
-		/// <returns>The closest 64-bit floating point number 
+		/// <returns>The closest 64-bit floating point number
 		/// to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
 		/// This object's type is not an integer
@@ -164,10 +191,59 @@ namespace PeterO
 				return (double)(float)item;
 			else if(itemtype== CBORObjectType.Double)
 				return (double)item;
+			else if(this.Tag==4 && itemtype== CBORObjectType.Array &&
+			        this.Count==2){
+				StringBuilder sb=new StringBuilder();
+				sb.Append(this[1].IntegerToString());
+				sb.Append("e");
+				sb.Append(this[0].IntegerToString());
+				return Double.Parse(sb.ToString(),
+				                    NumberStyles.AllowLeadingSign|
+				                    NumberStyles.AllowDecimalPoint|
+				                    NumberStyles.AllowExponent,
+				                    CultureInfo.InvariantCulture);
+			}
 			else
 				throw new InvalidOperationException("Not a number type");
 		}
 		
+
+		/// <summary>
+		/// Converts this object to a 32-bit floating point
+		/// number.
+		/// </summary>
+		/// <returns>The closest 32-bit floating point number
+		/// to this object.</returns>
+		/// <exception cref="System.InvalidOperationException">
+		/// This object's type is not an integer
+		/// or a floating-point number.</exception>
+		public float AsSingle(){
+			if(itemtype== CBORObjectType.UInteger)
+				return (float)(ulong)item;
+			else if(itemtype== CBORObjectType.SInteger)
+				return (float)(long)item;
+			else if(itemtype== CBORObjectType.BigInteger)
+				return (float)(BigInteger)item;
+			else if(itemtype== CBORObjectType.Single)
+				return (float)item;
+			else if(itemtype== CBORObjectType.Double)
+				return (float)(double)item;
+			else if(this.Tag==4 && itemtype== CBORObjectType.Array &&
+			        this.Count==2){
+				StringBuilder sb=new StringBuilder();
+				sb.Append(this[1].IntegerToString());
+				sb.Append("e");
+				sb.Append(this[0].IntegerToString());
+				return Single.Parse(sb.ToString(),
+				                    NumberStyles.AllowLeadingSign|
+				                    NumberStyles.AllowDecimalPoint|
+				                    NumberStyles.AllowExponent,
+				                    CultureInfo.InvariantCulture);
+			}
+			else
+				throw new InvalidOperationException("Not a number type");
+		}
+
 		/// <summary>
 		/// Converts this object to an arbitrary-length
 		/// integer.  Floating point values are truncated
@@ -184,15 +260,91 @@ namespace PeterO
 			else if(itemtype== CBORObjectType.SInteger)
 				return (BigInteger)(long)item;
 			else if(itemtype== CBORObjectType.BigInteger)
-				return (BigInteger)(BigInteger)item;
+				return (BigInteger)item;
 			else if(itemtype== CBORObjectType.Single)
 				return (BigInteger)(float)item;
 			else if(itemtype== CBORObjectType.Double)
-				return (BigInteger)item;
+				return (BigInteger)(double)item;
+			else if(this.Tag==4 && itemtype== CBORObjectType.Array &&
+			        this.Count==2){
+				StringBuilder sb=new StringBuilder();
+				sb.Append(this[1].IntegerToString());
+				sb.Append("e");
+				sb.Append(this[0].IntegerToString());
+				return BigInteger.Parse(sb.ToString(),
+				                        NumberStyles.AllowLeadingSign|
+				                        NumberStyles.AllowDecimalPoint|
+				                        NumberStyles.AllowExponent,
+				                        CultureInfo.InvariantCulture);
+			}
 			else
 				throw new InvalidOperationException("Not a number type");
 		}
 
+		/// <summary>
+		/// Converts this object to a 32-bit signed
+		/// integer.  Floating point values are truncated
+		/// to an integer.
+		/// </summary>
+		/// <returns>The closest big integer
+		/// to this object.</returns>
+		/// <exception cref="System.InvalidOperationException">
+		/// This object's type is not an integer
+		/// or a floating-point number.</exception>
+		/// <exception cref="System.OverflowException">
+		/// This object's value exceeds the range of a 32-bit
+		/// signed integer.</exception>
+		public int AsInt32(){
+			if(itemtype== CBORObjectType.UInteger){
+				if((ulong)item>Int32.MaxValue)
+					throw new OverflowException();
+				return (int)(ulong)item;
+			} else if(itemtype== CBORObjectType.SInteger){
+				if((long)item>Int32.MaxValue || (long)item<Int32.MinValue)
+					throw new OverflowException();
+				return (int)(long)item;
+			} else if(itemtype== CBORObjectType.BigInteger){
+				if((BigInteger)item>Int32.MaxValue || (BigInteger)item<Int32.MinValue)
+					throw new OverflowException();
+				return (int)(BigInteger)item;
+			} else if(itemtype== CBORObjectType.Single){
+				if(Single.IsNaN((float)item) ||
+				   (float)item>Int32.MaxValue || (float)item<Int32.MinValue)
+					throw new OverflowException();
+				return (int)(float)item;
+			} else if(itemtype== CBORObjectType.Double){
+				if(Double.IsNaN((double)item) ||
+				   (double)item>Int32.MinValue || (double)item<Int32.MinValue)
+					throw new OverflowException();
+				return (int)(double)item;
+			} else if(this.Tag==4 && itemtype== CBORObjectType.Array &&
+			          this.Count==2){
+				StringBuilder sb=new StringBuilder();
+				sb.Append(this[1].IntegerToString());
+				sb.Append("e");
+				sb.Append(this[0].IntegerToString());
+				BigInteger bi=BigInteger.Parse(
+					sb.ToString(),
+					NumberStyles.AllowLeadingSign|
+					NumberStyles.AllowDecimalPoint|
+					NumberStyles.AllowExponent,
+					CultureInfo.InvariantCulture);
+				if(bi>Int32.MaxValue || bi<Int32.MinValue)
+					throw new OverflowException();
+				return (int)bi;
+			} else
+				throw new InvalidOperationException("Not a number type");
+		}
+		public string AsString(){
+			if(itemtype== CBORObjectType.TextString){
+				if(item is String)
+					return (String)item;
+				else
+					return utf8.GetString((byte[])item);
+			} else {
+				throw new InvalidOperationException("Not a string type");
+			}
+		}
 		/// <summary>
 		/// Reads an object in CBOR format from a data
 		/// stream.
@@ -202,7 +354,7 @@ namespace PeterO
 		/// <exception cref="System.ArgumentNullException">
 		/// <paramref name="stream"/> is null.</exception>
 		public static CBORObject Read(Stream stream){
-			return Read(stream,0,false,-1);
+			return Read(stream,0,false,-1,null);
 		}
 		
 		private static void WriteObjectArray(
@@ -276,7 +428,6 @@ namespace PeterO
 			}
 		}
 		
-		
 		private static String DateTimeToString(DateTime bi){
 			DateTime dt=bi.ToUniversalTime();
 			System.Text.StringBuilder sb=new System.Text.StringBuilder();
@@ -303,6 +454,11 @@ namespace PeterO
 			stream.WriteByte(0xC0);
 			Write(DateTimeToString(bi),stream);
 		}
+		
+		private static BigInteger LowestNegativeBigInt=
+			BigInteger.Parse("-18446744073709551616",NumberStyles.AllowLeadingSign,
+			                 CultureInfo.InvariantCulture);
+		
 		/// <summary>
 		/// Writes a big integer in CBOR format to a data stream.
 		/// </summary>
@@ -315,7 +471,10 @@ namespace PeterO
 				bi+=1;
 				bi=-bi;
 			}
-			if(bi<=Int64.MaxValue){
+			if(bi<=UInt64.MaxValue){
+				// If the big integer is representable in
+				// major type 0 or 1, write that major type
+				// instead of as a bignum
 				ulong ui=(ulong)bi;
 				WriteUInt64(datatype,ui,s);
 			} else {
@@ -493,6 +652,312 @@ namespace PeterO
 		}
 		
 		//-----------------------------------------------------------
+		
+		/// <summary>
+		/// Generates a CBOR object from a string in JavaScript Object
+		/// Notation (JSON) format.
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns></returns>
+		public static CBORObject FromJSONString(string str){
+			JSONTokener tokener=new JSONTokener(str,0);
+			return parseJSONObject(tokener);
+		}
+		
+		private static CBORObject ParseJSONNumber(string str){
+			if(String.IsNullOrEmpty(str))
+				return null;
+			char c=str[0];
+			bool negative=false;
+			int index=0;
+			if(index>=str.Length)
+				return null;
+			c=str[index];
+			if(c=='-'){
+				negative=true;
+				index++;
+			}
+			int numberStart=index;
+			if(index>=str.Length)
+				return null;
+			c=str[index];
+			index++;
+			int numberEnd=index;
+			int fracStart=-1;
+			int fracEnd=-1;
+			bool negExp=false;
+			int expStart=-1;
+			int expEnd=-1;
+			if(c>='1' && c<='9'){
+				while(index<str.Length){
+					c=str[index];
+					if(c>='0' && c<='9'){
+						index++;
+						numberEnd=index;
+					} else {
+						break;
+					}
+				}
+			} else if(c!='0'){
+				return null;
+			}
+			if(index<str.Length && str[index]=='.'){
+				// Fraction
+				index++;
+				fracStart=index;
+				if(index>=str.Length)
+					return null;
+				c=str[index];
+				index++;
+				fracEnd=index;
+				if(c>='0' && c<='9'){
+					while(index<str.Length){
+						c=str[index];
+						if(c>='0' && c<='9'){
+							index++;
+							fracEnd=index;
+						} else {
+							break;
+						}
+					}
+				} else {
+					// Not a fraction
+					return null;
+				}
+			}
+			if(index<str.Length && (str[index]=='e' || str[index]=='E')){
+				// Exponent
+				index++;
+				if(index>=str.Length)
+					return null;
+				c=str[index];
+				if(c=='-'){
+					negative=true;
+					index++;
+				}
+				if(c=='+')index++;
+				expStart=index;
+				if(index>=str.Length)
+					return null;
+				c=str[index];
+				index++;
+				expEnd=index;
+				if(c>='0' && c<='9'){
+					while(index<str.Length){
+						c=str[index];
+						if(c>='0' && c<='9'){
+							index++;
+							expEnd=index;
+						} else {
+							break;
+						}
+					}
+				} else {
+					// Not an exponent
+					return null;
+				}
+			}
+			if(fracStart<0 && expStart<0 && (numberEnd-numberStart)<=9){
+				// Common case: small integer
+				int value=Int32.Parse(str.Substring(numberStart,numberEnd-numberStart),
+				                      NumberStyles.None,
+				                      CultureInfo.InvariantCulture);
+				if(negative)value=-value;
+				return FromObject(value);
+			} else if(fracStart<0 && expStart<0){
+				// Bigger integer
+				BigInteger value=BigInteger.Parse(
+					str.Substring(numberStart,numberEnd-numberStart),
+					NumberStyles.None,
+					CultureInfo.InvariantCulture);
+				if(negative)value=-value;
+				return FromObject(value);
+			} else {
+				BigInteger fracpart=(fracStart<0) ? BigInteger.Zero : BigInteger.Parse(
+					str.Substring(fracStart,fracEnd-fracStart),
+					NumberStyles.None,
+					CultureInfo.InvariantCulture);
+				// Intval consists of the whole and fractional part
+				BigInteger intval=BigInteger.Parse(
+					str.Substring(numberStart,numberEnd-numberStart)+
+					(fracpart.IsZero ? String.Empty : str.Substring(fracStart,fracEnd-fracStart)),
+					NumberStyles.None,
+					CultureInfo.InvariantCulture);
+				if(negative)intval=-intval;
+				if(fracpart.IsZero && expStart<0){
+					// Zero fractional part and no exponent;
+					// this is easy, just return the integer
+					return FromObject(intval);
+				}
+				BigInteger exp=(expStart<0) ? BigInteger.Zero : BigInteger.Parse(
+					str.Substring(expStart,expEnd-expStart),
+					NumberStyles.None,
+					CultureInfo.InvariantCulture);
+				if(negExp)exp=-exp;
+				if(!fracpart.IsZero){
+					// If there is a nonzero fractional part,
+					// decrease the exponent by that part's length
+					exp-=(fracEnd-fracStart);
+				}
+				if(exp.IsZero){
+					// If exponent is 0, this is also easy,
+					// just return the integer
+					return FromObject(intval);
+				}
+				if(exp>UInt64.MaxValue || exp<LowestNegativeBigInt){
+					// Exponent is lower than the lowest representable
+					// integer of major type 1, or higher than the
+					// highest representable integer of major type 0
+					if(intval.IsZero){
+						return FromObject(0);
+					} else {
+						return null;
+					}
+				}
+				// Represent the CBOR object as a decimal fraction
+				return FromObjectAndTag(new CBORObject[]{
+				                        	FromObject(exp),FromObject(intval)},4);
+			}
+		}
+		
+		// Based on the json.org implementation for JSONTokener
+		private static CBORObject NextJSONValue(JSONTokener tokener)  {
+			int c = tokener.nextClean();
+			string s;
+			if (c == '"' || c == '\'')
+				return FromObject(tokener.nextString(c));
+			if (c == '{') {
+				tokener.back();
+				return parseJSONObject(tokener);
+			}
+			if (c == '[') {
+				tokener.back();
+				return parseJSONArray(tokener);
+			}
+			StringBuilder sb = new StringBuilder();
+			int b = c;
+			while (c >= ' ' && c != ':' && c != ',' && c != ']' && c != '}' &&
+			       c != '/') {
+				sb.Append((char)c);
+				c = tokener.next();
+			}
+			tokener.back();
+			s = JSONTokener.trimSpaces(sb.ToString());
+			if (s.Equals("true"))
+				return CBORObject.True;
+			if (s.Equals("false"))
+				return CBORObject.False;
+			if (s.Equals("null"))
+				return CBORObject.Null;
+			if ((b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+') {
+				CBORObject obj=ParseJSONNumber(s);
+				if(obj==null)
+					throw tokener.syntaxError("JSON number can't be parsed.");
+				return obj;
+			}
+			if (s.Length == 0)
+				throw tokener.syntaxError("Missing value.");
+			return FromObject(s);
+		}
+
+		// Based on the json.org implementation for JSONObject
+		private static CBORObject parseJSONObject(JSONTokener x) {
+			int c;
+			string key;
+			CBORObject obj;
+			c=x.nextClean();
+			if(c=='['){
+				x.back();
+				return parseJSONArray(x);
+			}
+			var myHashMap=new Dictionary<string,CBORObject>();
+			if (c != '{')
+				throw x.syntaxError("A JSONObject must begin with '{'");
+			while (true) {
+				c = x.nextClean();
+				switch (c) {
+					case -1:
+						throw x.syntaxError("A JSONObject must end with '}'");
+					case '}':
+						return FromObject(myHashMap);
+					default:
+						x.back();
+						obj=NextJSONValue(x);
+						if(obj.itemtype!= CBORObjectType.TextString)
+							throw x.syntaxError("Expected a string as a key");
+						key = obj.AsString();
+						if((x.getOptions() & JSONTokener.OPTION_NO_DUPLICATES)!=0 &&
+						   myHashMap.ContainsKey(key)){
+							throw x.syntaxError("Key already exists: "+key);
+						}
+						break;
+				}
+				
+				if (x.nextClean() != ':')
+					throw x.syntaxError("Expected a ':' after a key");
+				// NOTE: Will overwrite existing value. --Peter O.
+				myHashMap.Add(key, NextJSONValue(x));
+				switch (x.nextClean()) {
+					case ',':
+						if (x.nextClean() == '}'){
+							if((x.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS)==0){
+								// 2013-05-24 -- Peter O. Disallow trailing comma.
+								throw x.syntaxError("Trailing comma");
+							} else {
+								return FromObject(myHashMap);
+							}
+						}
+						x.back();
+						break;
+					case '}':
+						return FromObject(myHashMap);
+					default:
+						throw x.syntaxError("Expected a ',' or '}'");
+				}
+			}
+		}
+
+		// Based on the json.org implementation for JSONArray
+		private static CBORObject parseJSONArray(JSONTokener x){
+			var myArrayList=new List<CBORObject>();
+			if (x.nextClean() != '[')
+				throw x.syntaxError("A JSONArray must start with '['");
+			if (x.nextClean() == ']')
+				return FromObject(myArrayList);
+			x.back();
+			while (true) {
+				if (x.nextClean() == ',') {
+					if((x.getOptions() & JSONTokener.OPTION_EMPTY_ARRAY_ELEMENTS)==0){
+						throw x.syntaxError("Two commas one after the other");
+					}
+					x.back();
+					myArrayList.Add(CBORObject.Null);
+				} else {
+					x.back();
+					myArrayList.Add(NextJSONValue(x));
+				}
+				switch (x.nextClean()) {
+					case ',':
+						if (x.nextClean() == ']'){
+							if((x.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS)==0){
+								// 2013-05-24 -- Peter O. Disallow trailing comma.
+								throw x.syntaxError("Trailing comma");
+							} else {
+								return FromObject(myArrayList);
+							}
+						}
+						x.back();
+						break;
+					case ']':
+						return FromObject(myArrayList);
+					default:
+						throw x.syntaxError("Expected a ',' or ']'");
+				}
+			}
+		}
+
+		
+		//-----------------------------------------------------------
 		public static CBORObject FromObject(long value){
 			if(((long)value)>=0){
 				return new CBORObject(CBORObjectType.UInteger,(ulong)(long)value);
@@ -554,6 +1019,8 @@ namespace PeterO
 		}
 		public static CBORObject FromObject(IList<CBORObject[]> value){
 			if(value==null)return CBORObject.Null;
+			if(!(value is List<CBORObject[]>))
+				value=new List<CBORObject[]>(value);
 			foreach(var i in value){
 				if(i==null || i.Length<2)
 					throw new ArgumentException();
@@ -566,6 +1033,8 @@ namespace PeterO
 		}
 		public static CBORObject FromObject(IList<CBORObject> value){
 			if(value==null)return CBORObject.Null;
+			if(!(value is List<CBORObject>))
+				value=new List<CBORObject>(value);
 			foreach(var i in (IList<CBORObject>)value){
 				if(i!=null && i.IsBreak)
 					throw new ArgumentException();
@@ -627,8 +1096,34 @@ namespace PeterO
 			throw new ArgumentException();
 		}
 		
+		public static CBORObject FromObjectAndTag(Object o, ulong tag){
+			CBORObject c=FromObject(o);
+			return new CBORObject(c.itemtype,tag,c.item);
+		}
+		
 		//-----------------------------------------------------------
 		
+		private String IntegerToString(){
+			if(itemtype== CBORObjectType.UInteger){
+				return String.Format(CultureInfo.InvariantCulture,
+				                     "{0}",(ulong)item);
+			} else if(itemtype== CBORObjectType.SInteger){
+				return String.Format(CultureInfo.InvariantCulture,
+				                     "{0}",(long)item);
+			} else if(itemtype== CBORObjectType.BigInteger){
+				return String.Format(CultureInfo.InvariantCulture,
+				                     "{0}",(BigInteger)item);
+			} else {
+				throw new InvalidOperationException();
+			}
+		}
+		
+		/// <summary>
+		/// Returns this CBOR object in string form.
+		/// The format is intended to be human-readable, not machine-
+		/// parsable, and the format may change at any time.
+		/// </summary>
+		/// <returns>A text representation of this object.</returns>
 		public override String ToString(){
 			StringBuilder sb=new StringBuilder();
 			if(tagged){
@@ -691,7 +1186,7 @@ namespace PeterO
 			} else if(itemtype== CBORObjectType.Array){
 				bool first=true;
 				sb.Append("[");
-				foreach(var i in (List<CBORObject>)item){
+				foreach(var i in (IList<CBORObject>)item){
 					if(!first)sb.Append(", ");
 					sb.Append(i);
 					first=false;
@@ -700,7 +1195,7 @@ namespace PeterO
 			} else if(itemtype== CBORObjectType.Map){
 				bool first=true;
 				sb.Append("{");
-				foreach(var i in (List<CBORObject[]>)item){
+				foreach(var i in (IList<CBORObject[]>)item){
 					if(!first)sb.Append(", ");
 					sb.Append(i[0]);
 					sb.Append(": ");
@@ -740,10 +1235,12 @@ namespace PeterO
 			}
 		}
 		
-		private static CBORObject Read(Stream s,
-		                               int depth,
-		                               bool allowBreak,
-		                               int allowOnlyType){
+		private static CBORObject Read(
+			Stream s,
+			int depth,
+			bool allowBreak,
+			int allowOnlyType,
+			int[] typeRead){
 			if(depth>1000)
 				throw new IOException();
 			int c=s.ReadByte();
@@ -751,6 +1248,9 @@ namespace PeterO
 				throw new IOException();
 			int type=(c>>5)&0x07;
 			int additional=(c&0x1F);
+			if(typeRead!=null){
+				typeRead[0]=type;
+			}
 			if(c==0xFF){
 				if(allowBreak)return Break;
 				throw new FormatException();
@@ -851,10 +1351,14 @@ namespace PeterO
 					                      bi);
 				}
 			} else if(type==6){ // Tagged item
-				CBORObject o=Read(s,depth+1,allowBreak,-1);
+				int[] oType=new int[1];
+				CBORObject o=Read(s,depth+1,allowBreak,-1,oType);
+				if(typeRead!=null){
+					typeRead[0]=oType[0];
+				}
 				if(uadditional==2 || uadditional==3){
 					// Big number
-					if(o.itemtype!=CBORObjectType.ByteString)
+					if(oType[0]!=2) // Requires major type 2 (byte string)
 						throw new FormatException();
 					byte[] data=(byte[])o.item;
 					BigInteger bi=0;
@@ -868,6 +1372,11 @@ namespace PeterO
 					return new CBORObject(CBORObjectType.BigInteger,
 					                      bi);
 				}
+				if(uadditional==4){
+					// TODO: Decimal fractions
+					if(oType[0]!=4) // Requires major type 4 (array)
+						throw new FormatException();
+				}
 				return new CBORObject(o.itemtype,
 				                      uadditional,o.item);
 			} else if(type==2 || // Byte string
@@ -878,13 +1387,12 @@ namespace PeterO
 					// text string
 					using(MemoryStream ms=new MemoryStream()){
 						byte[] data;
+						int[] oType=new int[1];
 						while(true){
-							CBORObject o=Read(s,depth+1,true,type);
+							CBORObject o=Read(s,depth+1,true,type,oType);
 							if(o.IsBreak)
 								break;
-							if(type==2 && o.itemtype!= CBORObjectType.ByteString)
-								throw new FormatException();
-							if(type==3 && o.itemtype!= CBORObjectType.TextString)
+							if(oType[0]!=type) // Requires same type as this one
 								throw new FormatException();
 							if(o.item is String)
 								data=utf8.GetBytes((string)o.item);
@@ -921,7 +1429,7 @@ namespace PeterO
 				IList<CBORObject> list=new List<CBORObject>();
 				if(additional==31){
 					while(true){
-						CBORObject o=Read(s,depth+1,true,-1);
+						CBORObject o=Read(s,depth+1,true,-1,null);
 						if(o.IsBreak)
 							break;
 						list.Add(o);
@@ -932,7 +1440,7 @@ namespace PeterO
 						throw new IOException();
 					}
 					for(ulong i=0;i<uadditional;i++){
-						list.Add(Read(s,depth+1,false,-1));
+						list.Add(Read(s,depth+1,false,-1,null));
 					}
 					return new CBORObject(CBORObjectType.Array,list);
 				}
@@ -940,10 +1448,10 @@ namespace PeterO
 				IList<CBORObject[]> list=new List<CBORObject[]>();
 				if(additional==31){
 					while(true){
-						CBORObject key=Read(s,depth+1,true,-1);
+						CBORObject key=Read(s,depth+1,true,-1,null);
 						if(key.IsBreak)
 							break;
-						CBORObject value=Read(s,depth+1,false,-1);
+						CBORObject value=Read(s,depth+1,false,-1,null);
 						list.Add(new CBORObject[]{key,value});
 					}
 					return new CBORObject(CBORObjectType.Map,list);
@@ -952,8 +1460,8 @@ namespace PeterO
 						throw new IOException();
 					}
 					for(ulong i=0;i<uadditional;i++){
-						CBORObject key=Read(s,depth+1,false,-1);
-						CBORObject value=Read(s,depth+1,false,-1);
+						CBORObject key=Read(s,depth+1,false,-1,null);
+						CBORObject value=Read(s,depth+1,false,-1,null);
 						list.Add(new CBORObject[]{key,value});
 					}
 					return new CBORObject(CBORObjectType.Map,list);
