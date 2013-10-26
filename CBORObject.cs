@@ -336,9 +336,9 @@ namespace PeterO
 			if(itemtype== CBORObjectType.UInteger){
 				if((ulong)item>UInt64.MaxValue)
 					throw new OverflowException();
-				return item;
+				return (ulong)item;
 			} else if(itemtype== CBORObjectType.SInteger){
-				if((long)item<UInt64.MinValue || (long)item>UInt64.MaxValue)
+				if((long)item<0)
 					throw new OverflowException();
 				return (ulong)(long)item;
 			} else if(itemtype== CBORObjectType.BigInteger || itemtype== CBORObjectType.BigIntegerType1){
@@ -564,7 +564,7 @@ namespace PeterO
 		/// <param name="str"></param>
 		/// <param name="s"></param>
 		public static void Write(string str, Stream s){
-			ArgumentAssert.NotNull(s,"s");
+			ArgumentAssertInternal.NotNull(s,"s");
 			if(str==null){
 				s.WriteByte(0xf6); // Write null instead of string
 			} else {
@@ -596,7 +596,7 @@ namespace PeterO
 		/// <param name="bi"></param>
 		/// <param name="s"></param>
 		public static void Write(DateTime bi, Stream stream){
-			ArgumentAssert.NotNull(stream,"s");
+			ArgumentAssertInternal.NotNull(stream,"s");
 			stream.WriteByte(0xC0);
 			Write(DateTimeToString(bi),stream);
 		}
@@ -611,7 +611,7 @@ namespace PeterO
 		/// <param name="bi">Big integer to write.</param>
 		/// <param name="s">Stream to write to.</param>
 		public static void Write(BigInteger bi, Stream s){
-			ArgumentAssert.NotNull(s,"s");
+			ArgumentAssertInternal.NotNull(s,"s");
 			int datatype=(bi<0) ? 1 : 0;
 			if(bi<0){
 				bi+=1;
@@ -644,7 +644,7 @@ namespace PeterO
 		/// </summary>
 		/// <param name="s">A readable data stream.</param>
 		public void Write(Stream s){
-			ArgumentAssert.NotNull(s,"s");
+			ArgumentAssertInternal.NotNull(s,"s");
 			if(tagged)
 				WriteUInt64(6,tag,s);
 			if(itemtype==0){
@@ -684,7 +684,7 @@ namespace PeterO
 		}
 		
 		public static void Write(long value, Stream s){
-			ArgumentAssert.NotNull(s,"s");
+			ArgumentAssertInternal.NotNull(s,"s");
 			if(((long)value)>=0){
 				WriteUInt64(0,(ulong)(long)value,s);
 			} else {
@@ -724,8 +724,8 @@ namespace PeterO
 			WriteUInt64(0,(ulong)value,s);
 		}
 		public static void Write(float value, Stream s){
-			ArgumentAssert.NotNull(s,"s");
-			int bits=Converter.SingleToInt32Bits(
+			ArgumentAssertInternal.NotNull(s,"s");
+			int bits=ConverterInternal.SingleToInt32Bits(
 				value);
 			ulong v=(ulong)unchecked((uint)bits);
 			s.WriteByte(0xFA);
@@ -735,7 +735,7 @@ namespace PeterO
 			s.WriteByte((byte)(v&0xFF));
 		}
 		public static void Write(double value, Stream s){
-			long bits=Converter.DoubleToInt64Bits(
+			long bits=ConverterInternal.DoubleToInt64Bits(
 				(double)value);
 			ulong v=unchecked((ulong)bits);
 			s.WriteByte(0xFB);
@@ -767,7 +767,7 @@ namespace PeterO
 		}
 		
 		public static void Write(Object o, Stream s){
-			ArgumentAssert.NotNull(s,"s");
+			ArgumentAssertInternal.NotNull(s,"s");
 			if(o==null){
 				s.WriteByte(0xf6);
 			} else if(o is byte[]){
@@ -807,7 +807,7 @@ namespace PeterO
 		/// <returns></returns>
 		public static CBORObject FromJSONString(string str){
 			JSONTokener tokener=new JSONTokener(str,0);
-			return parseJSONObject(tokener);
+			return ParseJSONObject(tokener);
 		}
 		
 		private static CBORObject ParseJSONNumber(string str){
@@ -974,11 +974,11 @@ namespace PeterO
 				return FromObject(tokener.nextString(c));
 			if (c == '{') {
 				tokener.back();
-				return parseJSONObject(tokener);
+				return ParseJSONObject(tokener);
 			}
 			if (c == '[') {
 				tokener.back();
-				return parseJSONArray(tokener);
+				return ParseJSONArray(tokener);
 			}
 			StringBuilder sb = new StringBuilder();
 			int b = c;
@@ -1007,14 +1007,14 @@ namespace PeterO
 		}
 
 		// Based on the json.org implementation for JSONObject
-		private static CBORObject parseJSONObject(JSONTokener x) {
+		private static CBORObject ParseJSONObject(JSONTokener x) {
 			int c;
 			string key;
 			CBORObject obj;
 			c=x.nextClean();
 			if(c=='['){
 				x.back();
-				return parseJSONArray(x);
+				return ParseJSONArray(x);
 			}
 			var myHashMap=new Dictionary<string,CBORObject>();
 			if (c != '{')
@@ -1064,7 +1064,7 @@ namespace PeterO
 		}
 
 		// Based on the json.org implementation for JSONArray
-		private static CBORObject parseJSONArray(JSONTokener x){
+		private static CBORObject ParseJSONArray(JSONTokener x){
 			var myArrayList=new List<CBORObject>();
 			if (x.nextClean() != '[')
 				throw x.syntaxError("A JSONArray must start with '['");
@@ -1242,9 +1242,16 @@ namespace PeterO
 			throw new ArgumentException();
 		}
 		
+		[CLSCompliant(false)]
 		public static CBORObject FromObjectAndTag(Object o, ulong tag){
 			CBORObject c=FromObject(o);
 			return new CBORObject(c.itemtype,tag,c.item);
+		}
+
+		public static CBORObject FromObjectAndTag(Object o, int tag){
+			ArgumentAssertInternal.GreaterOrEqual(tag,0,"tag");
+			CBORObject c=FromObject(o);
+			return new CBORObject(c.itemtype,(ulong)tag,c.item);
 		}
 		
 		//-----------------------------------------------------------
@@ -1360,13 +1367,13 @@ namespace PeterO
 			int negvalue=(value>=0x8000) ? (1<<31) : 0;
 			value&=0x7FFF;
 			if(value>=0x7C00){
-				return Converter.Int32BitsToSingle(
+				return ConverterInternal.Int32BitsToSingle(
 					(0x3FC00|(value&0x3FF))<<13|negvalue);
 			} else if(value>0x400){
-				return Converter.Int32BitsToSingle(
+				return ConverterInternal.Int32BitsToSingle(
 					((value+0x1c000)<<13)|negvalue);
 			} else if((value&0x400)==value){
-				return Converter.Int32BitsToSingle(
+				return ConverterInternal.Int32BitsToSingle(
 					((value==0) ? 0 : 0x38800000)|negvalue);
 			} else {
 				// denormalized
@@ -1376,7 +1383,7 @@ namespace PeterO
 					value-=0x400;
 					m<<=1;
 				}
-				return Converter.Int32BitsToSingle(
+				return ConverterInternal.Int32BitsToSingle(
 					((value|(m&0x3FF))<<13)|negvalue);
 			}
 		}
@@ -1461,11 +1468,11 @@ namespace PeterO
 							unchecked((int)x));
 						return new CBORObject(CBORObjectType.Single,f);
 					} else if(additional==26){
-						float f=Converter.Int32BitsToSingle(
+						float f=ConverterInternal.Int32BitsToSingle(
 							unchecked((int)x));
 						return new CBORObject(CBORObjectType.Single,f);
 					} else if(additional==27){
-						double f=Converter.Int64BitsToDouble(
+						double f=ConverterInternal.Int64BitsToDouble(
 							unchecked((long)x));
 						return new CBORObject(CBORObjectType.Double,f);
 					}

@@ -13,7 +13,7 @@ namespace PeterO
 	/// <summary>
 	/// Contains static methods for converting between different representations of data types.
 	/// </summary>
-	public static class Converter
+	internal static class ConverterInternal
 	{
 		/// <summary>
 		/// Converts a single-precision floating point number to its bit form as a 32-bit integer.
