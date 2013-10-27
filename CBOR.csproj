@@ -49,7 +49,6 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArgumentAssert.cs" />
     <Compile Include="CBORObject.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="JSONTokener.cs" />

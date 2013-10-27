@@ -17,9 +17,7 @@ text to CBOR objects.  It defines the following methods.
   Converts the CBOR object to different data types.  Throws OverflowException if
   the value is out of range, or InvalidOperationException if the object's type is not
   appropriate for conversion.
-- Equals(object other): Compares two CBORObject objects. 
-  This doesn't always correspond
-  to value equality, however.
+- Equals(object other): Compares two CBORObject objects for equality.
 - GetHashCode(): Calculates the hash code of a CBORObject object.
 - CBORObject.FromHashBytes(object): Generates a CBOR object from CBOR binary
    data.  Throws FormatException if not all of the bytes represent a CBOR object.

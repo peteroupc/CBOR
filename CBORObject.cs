@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -66,16 +66,22 @@ namespace PeterO
 			this.tagged=true;
 		}
 		private CBORObject(CBORObjectType type, Object item){
-			#if DEBUG
 			// Check range in debug mode to ensure that PositiveInteger, NegativeInteger, and BigInteger
 			// are unambiguous
-			if(type== CBORObjectType.NegativeInteger && ((long)item)>=0)
-				throw new InvalidOperationException("Expected negative number for CBORObjectType.NegativeInteger");
+			if(type== CBORObjectType.NegativeInteger && ((long)item)>=0){
+				#if DEBUG
+				if(!(false))throw new ArgumentException("Expected negative number for CBORObjectType.NegativeInteger");
+				#endif
+
+			}
 			if((type== CBORObjectType.BigInteger || type== CBORObjectType.BigIntegerType1) &&
 			   ((BigInteger)item)>=Int64.MinValue &&
-			   ((BigInteger)item)<=UInt64.MaxValue)
-				throw new InvalidOperationException("Big integer is within range for PositiveInteger or NegativeInteger");
-			#endif
+			   ((BigInteger)item)<=UInt64.MaxValue){
+				#if DEBUG
+				if(!(false))throw new ArgumentException("Big integer is within range for PositiveInteger or NegativeInteger");
+				#endif
+
+			}
 			this.itemtype_=type;
 			this.item=item;
 		}
@@ -466,14 +472,14 @@ namespace PeterO
 		
 		public short AsInt16(){
 			int v=AsInt32();
-			if(v>Int16.MaxValue || v<Int16.MinValue)
+			if(v>Int16.MaxValue || v<0)
 				throw new OverflowException();
 			return (short)v;
 		}
 		
-		public short AsByte(){
+		public byte AsByte(){
 			int v=AsInt32();
-			if(v>Byte.MaxValue || v<Byte.MinValue)
+			if(v<0 || v>255)
 				throw new OverflowException();
 			return (byte)v;
 		}
@@ -481,7 +487,7 @@ namespace PeterO
 		[CLSCompliant(false)]
 		public ushort AsUInt16(){
 			int v=AsInt32();
-			if(v>UInt16.MaxValue || v<UInt16.MinValue)
+			if(v>UInt16.MaxValue || v<0)
 				throw new OverflowException();
 			return (ushort)v;
 		}
@@ -543,17 +549,17 @@ namespace PeterO
 					throw new OverflowException();
 				return (ulong)(long)item;
 			} else if(this.ItemType== CBORObjectType.BigInteger){
-				if((BigInteger)item>UInt64.MaxValue || (BigInteger)item<UInt64.MinValue)
+				if((BigInteger)item>UInt64.MaxValue || (BigInteger)item<0)
 					throw new OverflowException();
 				return (ulong)(BigInteger)item;
 			} else if(this.ItemType== CBORObjectType.Single){
 				if(Single.IsNaN((float)item) ||
-				   (float)item>UInt64.MaxValue || (float)item<UInt64.MinValue)
+				   (float)item>UInt64.MaxValue || (float)item<0)
 					throw new OverflowException();
 				return (ulong)(float)item;
 			} else if(this.ItemType== CBORObjectType.Double){
 				if(Double.IsNaN((double)item) ||
-				   (double)item>UInt64.MinValue || (double)item<UInt64.MinValue)
+				   (double)item>UInt64.MinValue || (double)item<0)
 					throw new OverflowException();
 				return (ulong)(double)item;
 			} else if(this.Tag==4 && ItemType== CBORObjectType.Array &&
@@ -568,7 +574,7 @@ namespace PeterO
 					NumberStyles.AllowDecimalPoint|
 					NumberStyles.AllowExponent,
 					CultureInfo.InvariantCulture);
-				if(bi>UInt64.MaxValue || bi<UInt64.MinValue)
+				if(bi>UInt64.MaxValue || bi<0)
 					throw new OverflowException();
 				return (ulong)bi;
 			} else
@@ -837,7 +843,7 @@ namespace PeterO
 		/// <param name="str"></param>
 		/// <param name="s"></param>
 		public static void Write(string str, Stream s){
-			ArgumentAssertInternal.NotNull(s,"s");
+			if((s)==null)throw new ArgumentNullException("s");
 			if(str==null){
 				s.WriteByte(0xf6); // Write null instead of string
 			} else {
@@ -867,7 +873,7 @@ namespace PeterO
 		/// <param name="bi"></param>
 		/// <param name="s"></param>
 		public static void Write(DateTime bi, Stream stream){
-			ArgumentAssertInternal.NotNull(stream,"s");
+			if((stream)==null)throw new ArgumentNullException("s");
 			stream.WriteByte(0xC0);
 			Write(DateTimeToString(bi),stream);
 		}
@@ -882,7 +888,7 @@ namespace PeterO
 		/// <param name="bi">Big integer to write.</param>
 		/// <param name="s">Stream to write to.</param>
 		public static void Write(BigInteger bi, Stream s){
-			ArgumentAssertInternal.NotNull(s,"s");
+			if((s)==null)throw new ArgumentNullException("s");
 			int datatype=(bi<0) ? 1 : 0;
 			if(bi<0){
 				bi+=1;
@@ -919,7 +925,7 @@ namespace PeterO
 		/// </summary>
 		/// <param name="s">A readable data stream.</param>
 		public void WriteTo(Stream s){
-			ArgumentAssertInternal.NotNull(s,"s");
+			if((s)==null)throw new ArgumentNullException("s");
 			if(tagged)
 				WriteUInt64(6,tag,s);
 			if(this.ItemType==0){
@@ -956,7 +962,7 @@ namespace PeterO
 		}
 		
 		public static void Write(long value, Stream s){
-			ArgumentAssertInternal.NotNull(s,"s");
+			if((s)==null)throw new ArgumentNullException("s");
 			if(((long)value)>=0){
 				WriteUInt64(0,(ulong)(long)value,s);
 			} else {
@@ -996,7 +1002,7 @@ namespace PeterO
 			WriteUInt64(0,(ulong)value,s);
 		}
 		public static void Write(float value, Stream s){
-			ArgumentAssertInternal.NotNull(s,"s");
+			if((s)==null)throw new ArgumentNullException("s");
 			int bits=ConverterInternal.SingleToInt32Bits(
 				value);
 			ulong v=(ulong)unchecked((uint)bits);
@@ -1039,7 +1045,7 @@ namespace PeterO
 		}
 		
 		public static void Write(Object o, Stream s){
-			ArgumentAssertInternal.NotNull(s,"s");
+			if((s)==null)throw new ArgumentNullException("s");
 			if(o==null){
 				s.WriteByte(0xf6);
 			} else if(o is byte[]){
@@ -1083,7 +1089,6 @@ namespace PeterO
 		
 		private static string Base64URL="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 		private static string Base64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-		//private static string Base32="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 		private static void ToBase64(StringBuilder str, byte[] data, string alphabet, bool padding){
 			var length = data.Length;
 			var i=0;
@@ -1093,10 +1098,11 @@ namespace PeterO
 				str.Append(alphabet[((data[i+1] & 15) << 2) + (data[i+2] >> 6)]);
 				str.Append(alphabet[data[i+2] & 63]);
 			}
-			if ((length%3)!=0) {
-				i = length - (length%3);
+			var lenmod3=(length%3);
+			if (lenmod3!=0) {
+				i = length - lenmod3;
 				str.Append(alphabet[data[i] >> 2]);
-				if ((length%3) == 2) {
+				if (lenmod3 == 2) {
 					str.Append(alphabet[((data[i] & 3) << 4) + (data[i+1] >> 4)]);
 					str.Append(alphabet[(data[i+1] & 15) << 2]);
 					if(padding)str.Append("=");
@@ -1114,57 +1120,59 @@ namespace PeterO
 				str.Append(alphabet[data[i]&15]);
 			}
 		}
-		private static void ToBase32(StringBuilder str, byte[] data, string alphabet, bool padding){
-			var length = data.Length;
-			var i=0;
-			for (i = 0; i < (length - 4); i += 5) {
-				// high 5 bits
-				str.Append(alphabet[data[i] >> 3]);
-				// low 3 bits, then high 2 bits
-				str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
-				// next 5 bits
-				str.Append(alphabet[((data[i+1]>>1) & 31)]);
-				// low 1 bit, then high 4 bits
-				str.Append(alphabet[((data[i+1]<<4) & 31) + ((data[i+2] >> 4) & 31)]);
-				// low 4 bits, then high 1 bit
-				str.Append(alphabet[((data[i+2]<<1) & 31) + ((data[i+3] >> 7) & 31)]);
-				// next 5 bits
-				str.Append(alphabet[((data[i+3]>>2) & 31)]);
-				// low 2 bits, then high 3 bits
-				str.Append(alphabet[((data[i+3]<<3) & 31) + ((data[i+4] >> 5) & 31)]);
-				// low 5 bits
-				str.Append(alphabet[((data[i+4]) & 31)]);
-			}
-			if ((length%5)!=0) {
-				i = length - (length%5);
-				str.Append(alphabet[data[i] >> 3]);
-				int lenmod5=length%5;
-				if(lenmod5==4){
-					str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
-					str.Append(alphabet[((data[i+1]>>1) & 31)]);
-					str.Append(alphabet[((data[i+1]<<4) & 31) + ((data[i+2] >> 4) & 31)]);
-					str.Append(alphabet[((data[i+2]<<1) & 31) + ((data[i+3] >> 7) & 31)]);
-					str.Append(alphabet[((data[i+3]>>2) & 31)]);
-					str.Append(alphabet[((data[i+3]<<3) & 31)]);
-					if(padding)str.Append("=");
-				} else if(lenmod5==3){
-					str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
-					str.Append(alphabet[((data[i+1]>>1) & 31)]);
-					str.Append(alphabet[((data[i+1]<<4) & 31) + ((data[i+2] >> 4) & 31)]);
-					str.Append(alphabet[((data[i+2]<<1) & 31)]);
-					if(padding)str.Append("===");
-				} else if (lenmod5 == 2) {
-					str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
-					str.Append(alphabet[((data[i+1]>>1) & 31)]);
-					str.Append(alphabet[((data[i+1]<<4) & 31)]);
-					if(padding)str.Append("====");
-				} else {
-					str.Append(alphabet[((data[i]<<2) & 31)]);
-					if(padding)str.Append("======");
-				}
-			}
-		}
-		
+		/*
+    private static string Base32="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    private static void ToBase32(StringBuilder str, byte[] data, string alphabet, bool padding){
+      var length = data.Length;
+      var i=0;
+      for (i = 0; i < (length - 4); i += 5) {
+        // high 5 bits
+        str.Append(alphabet[data[i] >> 3]);
+        // low 3 bits, then high 2 bits
+        str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
+        // next 5 bits
+        str.Append(alphabet[((data[i+1]>>1) & 31)]);
+        // low 1 bit, then high 4 bits
+        str.Append(alphabet[((data[i+1]<<4) & 31) + ((data[i+2] >> 4) & 31)]);
+        // low 4 bits, then high 1 bit
+        str.Append(alphabet[((data[i+2]<<1) & 31) + ((data[i+3] >> 7) & 31)]);
+        // next 5 bits
+        str.Append(alphabet[((data[i+3]>>2) & 31)]);
+        // low 2 bits, then high 3 bits
+        str.Append(alphabet[((data[i+3]<<3) & 31) + ((data[i+4] >> 5) & 31)]);
+        // low 5 bits
+        str.Append(alphabet[((data[i+4]) & 31)]);
+      }
+      if ((length%5)!=0) {
+        i = length - (length%5);
+        str.Append(alphabet[data[i] >> 3]);
+        int lenmod5=length%5;
+        if(lenmod5==4){
+          str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
+          str.Append(alphabet[((data[i+1]>>1) & 31)]);
+          str.Append(alphabet[((data[i+1]<<4) & 31) + ((data[i+2] >> 4) & 31)]);
+          str.Append(alphabet[((data[i+2]<<1) & 31) + ((data[i+3] >> 7) & 31)]);
+          str.Append(alphabet[((data[i+3]>>2) & 31)]);
+          str.Append(alphabet[((data[i+3]<<3) & 31)]);
+          if(padding)str.Append("=");
+        } else if(lenmod5==3){
+          str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
+          str.Append(alphabet[((data[i+1]>>1) & 31)]);
+          str.Append(alphabet[((data[i+1]<<4) & 31) + ((data[i+2] >> 4) & 31)]);
+          str.Append(alphabet[((data[i+2]<<1) & 31)]);
+          if(padding)str.Append("===");
+        } else if (lenmod5 == 2) {
+          str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
+          str.Append(alphabet[((data[i+1]>>1) & 31)]);
+          str.Append(alphabet[((data[i+1]<<4) & 31)]);
+          if(padding)str.Append("====");
+        } else {
+          str.Append(alphabet[((data[i]<<2) & 31)]);
+          if(padding)str.Append("======");
+        }
+      }
+    }
+		 */
 		private static string StringToJSONString(string str){
 			StringBuilder sb=new StringBuilder();
 			sb.Append("\"");
@@ -1588,7 +1596,6 @@ namespace PeterO
 			int lower=0x80;
 			int upper=0xBF;
 			int pointer=0;
-			int markedPointer=-1;
 			while(pointer<byteLength || byteLength<0){
 				int b=stream.ReadByte();
 				if(b<0 && bytesNeeded!=0){
@@ -1607,17 +1614,14 @@ namespace PeterO
 						builder.Append((char)b);
 					}
 					else if(b>=0xc2 && b<=0xdf){
-						markedPointer=pointer;
 						bytesNeeded=1;
 						cp=b-0xc0;
 					} else if(b>=0xe0 && b<=0xef){
-						markedPointer=pointer;
 						lower=(b==0xe0) ? 0xa0 : 0x80;
 						upper=(b==0xed) ? 0x9f : 0xbf;
 						bytesNeeded=2;
 						cp=b-0xe0;
 					} else if(b>=0xf0 && b<=0xf4){
-						markedPointer=pointer;
 						lower=(b==0xf0) ? 0x90 : 0x80;
 						upper=(b==0xf4) ? 0x8f : 0xbf;
 						bytesNeeded=3;
@@ -1637,7 +1641,6 @@ namespace PeterO
 				upper=0xbf;
 				bytesSeen++;
 				cp+=(b-0x80)<<(6*(bytesNeeded-bytesSeen));
-				markedPointer=pointer;
 				if(bytesSeen!=bytesNeeded) {
 					continue;
 				}
@@ -1719,14 +1722,14 @@ namespace PeterO
 		}
 		[CLSCompliant(false)]
 		public static CBORObject FromObject(uint value){
-			return new CBORObject(CBORObjectType.PositiveInteger,(ulong)value);
+			return FromObject((ulong)value);
 		}
 		[CLSCompliant(false)]
 		public static CBORObject FromObject(ushort value){
-			return new CBORObject(CBORObjectType.PositiveInteger,(ulong)value);
+			return FromObject((ulong)value);
 		}
 		public static CBORObject FromObject(byte value){
-			return new CBORObject(CBORObjectType.PositiveInteger,(ulong)value);
+			return FromObject((ulong)value);
 		}
 		public static CBORObject FromObject(float value){
 			return new CBORObject(CBORObjectType.Single,value);
@@ -1816,7 +1819,7 @@ namespace PeterO
 		}
 
 		public static CBORObject FromObjectAndTag(Object o, int tag){
-			ArgumentAssertInternal.GreaterOrEqual(tag,0,"tag");
+			if((tag)<0)throw new ArgumentOutOfRangeException("tag"+" not greater or equal to "+"0"+" ("+Convert.ToString(tag,System.Globalization.CultureInfo.InvariantCulture)+")");
 			CBORObject c=FromObject(o);
 			return new CBORObject(c.ItemType,(ulong)tag,c.item);
 		}
@@ -2076,7 +2079,7 @@ namespace PeterO
 				throw new FormatException();
 			}
 			if(type==0){
-				return new CBORObject(CBORObjectType.PositiveInteger,uadditional);
+				return FromObject(uadditional);
 			} else if(type==1){
 				if(uadditional<=Int64.MaxValue){
 					return FromObject(((long)-1-(long)uadditional));
