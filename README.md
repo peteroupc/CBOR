@@ -32,10 +32,18 @@ text to CBOR objects.  It defines the following methods.
   registry](http://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml).
 - CBORObject.Read(System.IO.Stream): Generates a CBOR object by reading it
   from a byte stream.
+- Add(CBORObject):  Adds a CBOR object to this array.
+- Add(CBORObject, CBORObject):  Adds a CBOR object to this map. 
+  Throws ArgumentException if the key already exists.
+- ContainsKey(CBORObject): Returns true if the key exists in this map; otherwise, false.
 - ToBytes(): Converts the CBOR object to its binary representation.
 - ToString(): Returns this CBOR object in string form.
    The format is intended to be human-readable, not machine-
    parsable, and the format may change at any time.
+- ToJSONString() - Converts this object to a JSON string.  This function
+    not only accepts arrays and maps (the only proper
+		JSON objects under RFC 4627), but also integers,
+		strings, byte arrays, and other JSON data types.
 - WriteTo(System.IO.Stream): Writes this CBOR object to a data stream.
 - Tag - Returns this object's tag, or 0 if it has no tag.
 - obj[int] - Gets or sets a value in this CBOR array. Valid only for arrays.

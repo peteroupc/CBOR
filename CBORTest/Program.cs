@@ -219,6 +219,26 @@ namespace PeterO
 					String.Format(Inv,"{0}",bi));
 				bi*=-7;
 			}
+			BigInteger[] ranges=new BigInteger[]{
+				(BigInteger)Int64.MinValue-(BigInteger)65539,
+				(BigInteger)Int64.MinValue+(BigInteger)65539,
+				(BigInteger)UInt64.MinValue-(BigInteger)65539,
+				(BigInteger)UInt64.MinValue+(BigInteger)65539,
+				(BigInteger)Int64.MaxValue-(BigInteger)65539,
+				(BigInteger)Int64.MaxValue+(BigInteger)65539,
+				(BigInteger)UInt64.MaxValue-(BigInteger)65539,
+				(BigInteger)UInt64.MaxValue+(BigInteger)65539,
+			};
+			for(int i=0;i<ranges.Length;i+=2){
+				BigInteger j=ranges[i];
+				while(true){
+					AssertSer(
+						CBORObject.FromObject(j),
+						String.Format(Inv,"{0}",j));
+					if(j==ranges[i+1])break;
+					j++;
+				}
+			}
 		}
 		[Test]
 		public static void TestLong(){
@@ -234,6 +254,9 @@ namespace PeterO
 					AssertSer(
 						CBORObject.FromObject(j),
 						String.Format(Inv,"{0}",j));
+					Assert.AreEqual(
+						CBORObject.FromObject(j),
+						CBORObject.FromObject((BigInteger)j));
 					if(j==ranges[i+1])break;
 					j++;
 				}
@@ -294,6 +317,10 @@ namespace PeterO
 					AssertSer(
 						CBORObject.FromObject(j),
 						String.Format(Inv,"{0}",j));
+					Assert.AreEqual(
+						CBORObject.FromObject(j),
+						CBORObject.FromObject((BigInteger)j));
+						
 					if(j==ranges[i+1])break;
 					j++;
 				}

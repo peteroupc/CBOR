@@ -71,7 +71,7 @@ namespace PeterO
 			// are unambiguous
 			if(type== CBORObjectType.NegativeInteger && ((long)item)>=0)
 				throw new InvalidOperationException("Expected negative number for CBORObjectType.NegativeInteger");
-			if((type== CBORObjectType.BigInteger || type== CBORObjectType.BigIntegerType1) && 
+			if((type== CBORObjectType.BigInteger || type== CBORObjectType.BigIntegerType1) &&
 			   ((BigInteger)item)>=Int64.MinValue &&
 			   ((BigInteger)item)<=UInt64.MaxValue)
 				throw new InvalidOperationException("Big integer is within range for PositiveInteger or NegativeInteger");
@@ -1081,6 +1081,213 @@ namespace PeterO
 			return ParseJSONObject(tokener);
 		}
 		
+		private static string Base64URL="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+		private static string Base64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+		//private static string Base32="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+		private static void ToBase64(StringBuilder str, byte[] data, string alphabet, bool padding){
+			var length = data.Length;
+			var i=0;
+			for (i = 0; i < (length - 2); i += 3) {
+				str.Append(alphabet[data[i] >> 2]);
+				str.Append(alphabet[((data[i] & 3) << 4) + (data[i+1] >> 4)]);
+				str.Append(alphabet[((data[i+1] & 15) << 2) + (data[i+2] >> 6)]);
+				str.Append(alphabet[data[i+2] & 63]);
+			}
+			if ((length%3)!=0) {
+				i = length - (length%3);
+				str.Append(alphabet[data[i] >> 2]);
+				if ((length%3) == 2) {
+					str.Append(alphabet[((data[i] & 3) << 4) + (data[i+1] >> 4)]);
+					str.Append(alphabet[(data[i+1] & 15) << 2]);
+					if(padding)str.Append("=");
+				} else {
+					str.Append(alphabet[(data[i] & 3) << 4]);
+					if(padding)str.Append("==");
+				}
+			}
+		}
+		private static void ToBase16(StringBuilder str, byte[] data){
+			var alphabet="0123456789ABCDEF";
+			var length = data.Length;
+			for (var i = 0; i < length;i++) {
+				str.Append(alphabet[data[i]>>4]);
+				str.Append(alphabet[data[i]&15]);
+			}
+		}
+		private static void ToBase32(StringBuilder str, byte[] data, string alphabet, bool padding){
+			var length = data.Length;
+			var i=0;
+			for (i = 0; i < (length - 4); i += 5) {
+				// high 5 bits
+				str.Append(alphabet[data[i] >> 3]);
+				// low 3 bits, then high 2 bits
+				str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
+				// next 5 bits
+				str.Append(alphabet[((data[i+1]>>1) & 31)]);
+				// low 1 bit, then high 4 bits
+				str.Append(alphabet[((data[i+1]<<4) & 31) + ((data[i+2] >> 4) & 31)]);
+				// low 4 bits, then high 1 bit
+				str.Append(alphabet[((data[i+2]<<1) & 31) + ((data[i+3] >> 7) & 31)]);
+				// next 5 bits
+				str.Append(alphabet[((data[i+3]>>2) & 31)]);
+				// low 2 bits, then high 3 bits
+				str.Append(alphabet[((data[i+3]<<3) & 31) + ((data[i+4] >> 5) & 31)]);
+				// low 5 bits
+				str.Append(alphabet[((data[i+4]) & 31)]);
+			}
+			if ((length%5)!=0) {
+				i = length - (length%5);
+				str.Append(alphabet[data[i] >> 3]);
+				int lenmod5=length%5;
+				if(lenmod5==4){
+					str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
+					str.Append(alphabet[((data[i+1]>>1) & 31)]);
+					str.Append(alphabet[((data[i+1]<<4) & 31) + ((data[i+2] >> 4) & 31)]);
+					str.Append(alphabet[((data[i+2]<<1) & 31) + ((data[i+3] >> 7) & 31)]);
+					str.Append(alphabet[((data[i+3]>>2) & 31)]);
+					str.Append(alphabet[((data[i+3]<<3) & 31)]);
+					if(padding)str.Append("=");
+				} else if(lenmod5==3){
+					str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
+					str.Append(alphabet[((data[i+1]>>1) & 31)]);
+					str.Append(alphabet[((data[i+1]<<4) & 31) + ((data[i+2] >> 4) & 31)]);
+					str.Append(alphabet[((data[i+2]<<1) & 31)]);
+					if(padding)str.Append("===");
+				} else if (lenmod5 == 2) {
+					str.Append(alphabet[((data[i]<<2) & 31) + ((data[i+1] >> 6) & 31)]);
+					str.Append(alphabet[((data[i+1]>>1) & 31)]);
+					str.Append(alphabet[((data[i+1]<<4) & 31)]);
+					if(padding)str.Append("====");
+				} else {
+					str.Append(alphabet[((data[i]<<2) & 31)]);
+					if(padding)str.Append("======");
+				}
+			}
+		}
+		
+		private static string StringToJSONString(string str){
+			StringBuilder sb=new StringBuilder();
+			sb.Append("\"");
+			// Surrogates were already verified when this
+			// string was added to the CBOR object; that check
+			// is not repeated here
+			for(int i=0;i<str.Length;i++){
+				char c=str[i];
+				if(c=='\\' || c=='"' || c<0x20){
+					sb.Append('\\');
+				}
+				sb.Append(c);
+			}
+			sb.Append("\"");
+			return sb.ToString();
+		}
+		
+		/// <summary>
+		/// Converts this object to a JSON string.  This function
+		/// not only accepts arrays and maps (the only proper
+		/// JSON objects under RFC 4627), but also integers,
+		/// strings, byte arrays, and other JSON data types.
+		/// </summary>
+		public string ToJSONString(){
+			if(this.ItemType== CBORObjectType.SimpleValue){
+				if(this.IsTrue)return "true";
+				else if(this.IsFalse)return "false";
+				else if(this.IsNull)return "null";
+				else return "null";
+			} else if(this.ItemType== CBORObjectType.Single){
+				float f=(float)item;
+				if(Single.IsNegativeInfinity(f) ||
+				   Single.IsPositiveInfinity(f) ||
+				   Single.IsNaN(f)) return "null";
+				else
+					return String.Format(CultureInfo.InvariantCulture,"{0}",f);
+			} else if(this.ItemType== CBORObjectType.Double){
+				double f=(double)item;
+				if(Double.IsNegativeInfinity(f) ||
+				   Double.IsPositiveInfinity(f) ||
+				   Double.IsNaN(f)) return "null";
+				else
+					return String.Format(CultureInfo.InvariantCulture,"{0}",f);
+			} else if(this.ItemType== CBORObjectType.PositiveInteger){
+				return String.Format(CultureInfo.InvariantCulture,
+				                     "{0}",(ulong)item);
+			} else if(this.ItemType== CBORObjectType.NegativeInteger){
+				return String.Format(CultureInfo.InvariantCulture,
+				                     "{0}",(long)item);
+			} else if(this.ItemType== CBORObjectType.BigInteger){
+				return String.Format(CultureInfo.InvariantCulture,
+				                     "{0}",(BigInteger)item);
+			} else if(this.ItemType== CBORObjectType.ByteString){
+				StringBuilder sb=new StringBuilder();
+				sb.Append('\"');
+				if(this.Tag==22){
+					ToBase64(sb,(byte[])item,Base64,false);
+				} else if(this.Tag==23){
+					ToBase16(sb,(byte[])item);
+				} else {
+					ToBase64(sb,(byte[])item,Base64URL,false);
+				}
+				sb.Append('\"');
+				return sb.ToString();
+			} else if(this.ItemType== CBORObjectType.TextString){
+				return StringToJSONString((string)item);
+			} else if(this.ItemType== CBORObjectType.Array){
+				if(this.Tag==4 && this.Count==2){
+					BigInteger exponent=this[0].AsBigInteger();
+					string mantissa=this[1].IntegerToString();
+					StringBuilder sb=new StringBuilder();
+					if(exponent<0 && mantissa.Length+exponent>0){
+						int pos=(int)(mantissa.Length+exponent);
+						sb.Append(mantissa.Substring(0,pos));
+						sb.Append(".");
+						sb.Append(mantissa.Substring(pos));
+					} else if(exponent<0 && mantissa.Length+exponent==0){
+						sb.Append("0.");
+						sb.Append(mantissa);
+					} else {
+						sb.Append(this[1].IntegerToString());
+						if(!exponent.IsZero){
+							sb.Append("e");
+							sb.Append(this[0].IntegerToString());
+						}
+					}
+					return sb.ToString();
+				} else {
+					StringBuilder sb=new StringBuilder();
+					bool first=true;
+					sb.Append("[");
+					foreach(var i in (IList<CBORObject>)item){
+						if(!first)sb.Append(", ");
+						sb.Append(i.ToJSONString());
+						first=false;
+					}
+					sb.Append("]");
+					return sb.ToString();
+				}
+			} else if(this.ItemType== CBORObjectType.Map){
+				var dict=new Dictionary<string,CBORObject>();
+				StringBuilder sb=new StringBuilder();
+				bool first=true;
+				foreach(var key in ((IDictionary<CBORObject,CBORObject>)item).Keys){
+					var str=(key.ItemType== CBORObjectType.TextString) ?
+						key.AsString() : key.ToJSONString();
+					dict[str]=(((IDictionary<CBORObject,CBORObject>)item)[key]);
+				}
+				sb.Append("{");
+				foreach(var key in dict.Keys){
+					if(!first)sb.Append(", ");
+					sb.Append(StringToJSONString(key));
+					sb.Append(':');
+					sb.Append(dict[key].ToJSONString());
+					first=false;
+				}
+				sb.Append("}");
+				return sb.ToString();
+			} else {
+				throw new InvalidOperationException();
+			}
+		}
+		
 		private static CBORObject ParseJSONNumber(string str){
 			if(String.IsNullOrEmpty(str))
 				return null;
@@ -1872,9 +2079,7 @@ namespace PeterO
 				return new CBORObject(CBORObjectType.PositiveInteger,uadditional);
 			} else if(type==1){
 				if(uadditional<=Int64.MaxValue){
-					return new CBORObject(
-						CBORObjectType.NegativeInteger,
-						(long)((long)-1-(long)uadditional));
+					return FromObject(((long)-1-(long)uadditional));
 				} else {
 					BigInteger bi=new BigInteger(-1);
 					bi-=new BigInteger(uadditional);
