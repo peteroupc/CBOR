@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CBORObject.cs" />
+    <Compile Include="CBORObjectExtra.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="JSONTokener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

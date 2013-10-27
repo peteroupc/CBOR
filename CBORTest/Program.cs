@@ -203,6 +203,29 @@ namespace PeterO
 		}
 		
 		[Test]
+		public static void TestDecimalFrac(){
+			CBORObject.FromBytes(
+				new byte[]{0xc4,0x82,0x3,0x1a,1,2,3,4});
+		}
+		[Test]
+		[ExpectedException(typeof(FormatException))]
+		public static void TestDecimalFracExponentMustNotBeBignum(){
+			CBORObject.FromBytes(
+				new byte[]{0xc4,0x82,0xc2,0x41,1,0x1a,1,2,3,4});
+		}
+		[Test]
+		[ExpectedException(typeof(FormatException))]
+		public static void TestDecimalFracExactlyTwoElements(){
+			CBORObject.FromBytes(
+				new byte[]{0xc4,0x82,0xc2,0x41,1});
+		}
+		[Test]
+		public static void TestDecimalFracMantissaMayBeBignum(){
+			CBORObject.FromBytes(
+				new byte[]{0xc4,0x82,0x3,0xc2,0x41,1});
+		}
+		
+		[Test]
 		public static void TestShort(){
 			for(int i=Int16.MinValue;i<=Int16.MaxValue;i++){
 				AssertSer(
