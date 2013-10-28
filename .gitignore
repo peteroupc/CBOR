@@ -2,3 +2,7 @@ bin/
 obj/
 CBORTest/bin/
 CBORTest/obj/
+CBORTest/ProfilingSessions/
+.project
+.classpath
+*.class
