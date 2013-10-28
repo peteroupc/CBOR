@@ -145,5 +145,40 @@ namespace PeterO
 		public static CBORObject FromObjectAndTag(Object o, ulong tag){
 			return FromObjectAndTag(o,(BigInteger)tag);
 		}
+		
+		
+		// .NET-specific
+		
+		private static string DateTimeToString(DateTime bi){
+			DateTime dt=bi.ToUniversalTime();
+			System.Text.StringBuilder sb=new System.Text.StringBuilder();
+			sb.Append(String.Format(
+				CultureInfo.InvariantCulture,
+				"{0:d4}-{1:d2}-{2:d2}T{3:d2}:{4:d2}:{5:d2}",
+				dt.Year,dt.Month,dt.Day,dt.Hour,
+				dt.Minute,dt.Second));
+			if(dt.Millisecond>0){
+				sb.Append(String.Format(CultureInfo.InvariantCulture,
+				                        ".{0:d3}",dt.Millisecond));
+			}
+			sb.Append("Z");
+			return sb.ToString();
+		}
+		
+		public static CBORObject FromObject(DateTime value){
+			return new CBORObject(CBORObjectType.TextString,0,0,
+			                      DateTimeToString(value));
+		}
+		/// <summary>
+		/// Writes a date and time in CBOR format to a data stream
+		/// </summary>
+		/// <param name="bi"></param>
+		/// <param name="s"></param>
+		public static void Write(DateTime bi, Stream stream){
+			if((stream)==null)throw new ArgumentNullException("s");
+			stream.WriteByte(0xC0);
+			Write(DateTimeToString(bi),stream);
+		}
+		
 	}
 }
