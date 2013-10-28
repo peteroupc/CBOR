@@ -1,8 +1,8 @@
 CBOR
 ====
 
-A C# implementation of Concise Binary Object Representation (RFC 7049).  CBOR
-is a general-purpose binary data format designed by Carsten 
+A C# and Java implementation of Concise Binary Object Representation (RFC 7049).  
+CBOR is a general-purpose binary data format designed by Carsten 
 Bormann, and its data model "is an extended version of the JSON data model",
 supporting many more types of data than JSON. "CBOR was inspired by 
 MessagePack", but "is not intended as a version of or replacement for 
@@ -11,6 +11,10 @@ MessagePack."
 This library defines one class, called CBORObject, that allows you to read and
 write CBOR objects to and from data streams and byte arrays, and to convert JSON
 text to CBOR objects.  It defines the following methods.
+
+Note:  The methods below are included in the C# version of this library.  The Java
+version was translated from the original C#, and some of the methods shown here
+may be missing from the Java version.
 
 - AsBigInteger(), AsBoolean(), AsByte(), AsDouble(), AsInt16(), AsInt32(),
   AsInt64(), AsSByte(), AsSingle(), AsString(), AsUInt16, AsUInt32(), AsUInt64():
@@ -61,6 +65,3 @@ text to CBOR objects.  It defines the following methods.
 - CBORObject.IsFalse - Returns true if this is false.
 - CBORObject.IsUndefined - Returns true if this is the undefined value.
 - CBORObject.IsTagged - Returns true if this object has a tag.
-
-  
-   
