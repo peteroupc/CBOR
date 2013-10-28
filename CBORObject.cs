@@ -267,10 +267,18 @@ namespace PeterO
 		public BigInteger Tag {
 			get {
 				if(tagged){
-					BigInteger bi=(BigInteger)((tagHigh>>16)&0xFFFF);
-					bi<<=16;
-					bi|=(BigInteger)((tagHigh)&0xFFFF);
-					bi<<=16;
+					if(tagHigh==0 && tagLow>=0 && tagLow<0x10000){
+						return (BigInteger)tagLow;
+					}
+					BigInteger bi;
+					if(tagHigh!=0){
+						bi=(BigInteger)((tagHigh>>16)&0xFFFF);
+						bi<<=16;
+						bi|=(BigInteger)((tagHigh)&0xFFFF);
+						bi<<=16;
+					} else {
+						bi=BigInteger.Zero;
+					}
 					bi|=(BigInteger)((tagLow>>16)&0xFFFF);
 					bi<<=16;
 					bi|=(BigInteger)((tagLow)&0xFFFF);
@@ -795,12 +803,13 @@ namespace PeterO
 		}
 		
 		
-		private static BigInteger LowestNegativeBigInt=
+		private static BigInteger LowestMajorType1=
 			BigInteger.Parse("-18446744073709551616",NumberStyles.AllowLeadingSign,
 			                 CultureInfo.InvariantCulture);
 		private static BigInteger UInt64MaxValue=
 			BigInteger.Parse("18446744073709551615",NumberStyles.AllowLeadingSign,
 			                 CultureInfo.InvariantCulture);
+		private static BigInteger FiftySixBitMask=(BigInteger)0xFFFFFFFFFFFFFFL;
 		
 		/// <summary>
 		/// Writes a big integer in CBOR format to a data stream.
@@ -809,8 +818,8 @@ namespace PeterO
 		/// <param name="s">Stream to write to.</param>
 		public static void Write(BigInteger bigint, Stream s){
 			if((s)==null)throw new ArgumentNullException("s");
-			int datatype=(bigint<0) ? 1 : 0;
-			if(bigint<0){
+			int datatype=(bigint.Sign<0) ? 1 : 0;
+			if(bigint.Sign<0){
 				bigint+=(BigInteger)BigInteger.One;
 				bigint=-(BigInteger)bigint;
 			}
@@ -822,34 +831,60 @@ namespace PeterO
 				WritePositiveInt64(datatype,ui,s);
 			} else {
 				using(MemoryStream ms=new MemoryStream()){
+					long tmp=0;
+					byte[] buffer=new byte[10];
 					while(bigint.Sign>0){
-						BigInteger tmpbigint=bigint&(BigInteger)0xFF;
-						ms.WriteByte((byte)(int)tmpbigint);
-						bigint>>=8;
+						// To reduce the number of big integer
+						// operations, extract the big int 56 bits at a time
+						// (not 64, to avoid negative numbers)
+						BigInteger tmpbigint=bigint&(BigInteger)FiftySixBitMask;
+						tmp=(long)(BigInteger)tmpbigint;
+						bigint>>=56;
+						bool isNowZero=(bigint.IsZero);
+						int bufferindex=0;
+						for(int i=0;i<7 && (!isNowZero || tmp>0);i++){
+							buffer[bufferindex]=(byte)(tmp&0xFF);
+							tmp>>=8;
+							bufferindex++;
+						}
+						ms.Write(buffer,0,bufferindex);
 					}
 					byte[] bytes=ms.ToArray();
 					switch(bytes.Length){
-						case 1:
-							s.WriteByte((byte)((datatype<<5)|24));
-							s.WriteByte(bytes[0]);
+						case 1: // Fits in 1 byte (won't normally happen though)
+							buffer[0]=(byte)((datatype<<5)|24);
+							buffer[1]=bytes[0];
+							s.Write(buffer,0,2);
 							break;
-						case 2:
-							s.WriteByte((byte)((datatype<<5)|25));
-							s.WriteByte(bytes[1]);
-							s.WriteByte(bytes[0]);
+						case 2: // Fits in 2 bytes (won't normally happen though)
+							buffer[0]=(byte)((datatype<<5)|25);
+							buffer[1]=bytes[1];
+							buffer[2]=bytes[0];
+							s.Write(buffer,0,3);
 							break;
 						case 3:
-							s.WriteByte((byte)((datatype<<5)|26));
-							s.WriteByte(bytes[2]);
-							s.WriteByte(bytes[1]);
-							s.WriteByte(bytes[0]);
-							break;
 						case 4:
-							s.WriteByte((byte)((datatype<<5)|27));
-							s.WriteByte(bytes[3]);
-							s.WriteByte(bytes[2]);
-							s.WriteByte(bytes[1]);
-							s.WriteByte(bytes[0]);
+							buffer[0]=(byte)((datatype<<5)|26);
+							buffer[1]=(bytes.Length>3) ? bytes[3] : (byte)0;
+							buffer[2]=bytes[2];
+							buffer[3]=bytes[1];
+							buffer[4]=bytes[0];
+							s.Write(buffer,0,5);
+							break;
+						case 5:
+						case 6:
+						case 7:
+						case 8:
+							buffer[0]=(byte)((datatype<<5)|27);
+							buffer[1]=(bytes.Length>7) ? bytes[7] : (byte)0;
+							buffer[2]=(bytes.Length>6) ? bytes[6] : (byte)0;
+							buffer[3]=(bytes.Length>5) ? bytes[5] : (byte)0;
+							buffer[4]=bytes[4];
+							buffer[5]=bytes[3];
+							buffer[6]=bytes[2];
+							buffer[7]=bytes[1];
+							buffer[8]=bytes[0];
+							s.Write(buffer,0,9);
 							break;
 						default:
 							s.WriteByte((datatype==0) ?
@@ -1348,7 +1383,7 @@ namespace PeterO
 					return FromObject(intval);
 				}
 				if(exp.CompareTo(UInt64MaxValue)>0 ||
-				   exp.CompareTo(LowestNegativeBigInt)<0){
+				   exp.CompareTo(LowestMajorType1)<0){
 					// Exponent is lower than the lowest representable
 					// integer of major type 1, or higher than the
 					// highest representable integer of major type 0
@@ -1688,20 +1723,26 @@ namespace PeterO
 			throw new ArgumentException();
 		}
 		
+		private static BigInteger BigInt65536=(BigInteger)65536;
 
 		public static CBORObject FromObjectAndTag(Object o, BigInteger bigintTag){
 			if((bigintTag).Sign<0)throw new ArgumentOutOfRangeException("tag"+" not greater or equal to 0 ("+Convert.ToString(bigintTag,System.Globalization.CultureInfo.InvariantCulture)+")");
 			if((bigintTag).CompareTo(UInt64MaxValue)>0)throw new ArgumentOutOfRangeException("tag"+" not less or equal to 18446744073709551615 ("+Convert.ToString(bigintTag,System.Globalization.CultureInfo.InvariantCulture)+")");
 			CBORObject c=FromObject(o);
-			BigInteger tmpbigint=bigintTag&(BigInteger)0xFFFF;
-			int low=unchecked((int)tmpbigint);
-			tmpbigint=(bigintTag>>16)&(BigInteger)0xFFFF;
-			low=unchecked((int)tmpbigint)<<16;
-			tmpbigint=(bigintTag>>32)&(BigInteger)0xFFFF;
-			int high=unchecked((int)tmpbigint);
-			tmpbigint=(bigintTag>>48)&(BigInteger)0xFFFF;
-			high=unchecked((int)tmpbigint)<<16;
-			return new CBORObject(c.ItemType,low,high,c.item);
+			if(bigintTag.CompareTo(BigInt65536)<0){
+				// Low-numbered, commonly used tags
+				return new CBORObject(c.ItemType,(int)bigintTag,0,c.item);
+			} else {
+				BigInteger tmpbigint=bigintTag&(BigInteger)0xFFFF;
+				int low=unchecked((int)tmpbigint);
+				tmpbigint=(bigintTag>>16)&(BigInteger)0xFFFF;
+				low=unchecked((int)tmpbigint)<<16;
+				tmpbigint=(bigintTag>>32)&(BigInteger)0xFFFF;
+				int high=unchecked((int)tmpbigint);
+				tmpbigint=(bigintTag>>48)&(BigInteger)0xFFFF;
+				high=unchecked((int)tmpbigint)<<16;
+				return new CBORObject(c.ItemType,low,high,c.item);
+			}
 		}
 
 		public static CBORObject FromObjectAndTag(Object o, int intTag){
@@ -1787,7 +1828,7 @@ namespace PeterO
 				sb.Append("[");
 				foreach(CBORObject i in AsList()){
 					if(!first)sb.Append(", ");
-					sb.Append(i);
+					sb.Append(i.ToString());
 					first=false;
 				}
 				sb.Append("]");
@@ -1797,9 +1838,9 @@ namespace PeterO
 				IDictionary<CBORObject,CBORObject> map=AsMap();
 				foreach(CBORObject key in map.Keys){
 					if(!first)sb.Append(", ");
-					sb.Append(key);
+					sb.Append(key.ToString());
 					sb.Append(": ");
-					sb.Append(map[key]);
+					sb.Append(map[key].ToString());
 					first=false;
 				}
 				sb.Append("}");
@@ -1948,12 +1989,16 @@ namespace PeterO
 					// remain unsigned, so convert to
 					// big integer
 					hasBigAdditional=true;
-					// bigintAdditional already set to 0
-					for(int i=0;i<cs.Length;i++){
-						bigintAdditional<<=8;
-						int x2=((int)cs[i])&0xFF;
-						bigintAdditional|=(BigInteger)x2;
-					}
+					// Get low 7 bytes and convert to BigInteger,
+					// to reduce the number of big integer
+					// operations
+					x&=0xFFFFFFFFFFFFFFL;
+					bigintAdditional=(BigInteger)x;
+					// Include the first and highest byte
+					int firstByte=((int)cs[0])&0xFF;
+					BigInteger bigintTemp=(BigInteger)firstByte;
+					bigintTemp<<=56;
+					bigintAdditional|=(BigInteger)bigintTemp;
 				} else {
 					uadditional=x;
 				}
@@ -2124,6 +2169,9 @@ namespace PeterO
 				}
 				if(hasBigAdditional){
 					return FromObjectAndTag(o,bigintAdditional);
+				} else if(uadditional<65536){
+					return FromObjectAndTag(
+						o,(int)uadditional);
 				} else {
 					return FromObjectAndTag(
 						o,(BigInteger)uadditional);

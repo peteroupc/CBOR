@@ -277,7 +277,7 @@ namespace PeterO
 					AssertSer(
 						CBORObject.FromObject(j),
 						String.Format(Inv,"{0}",j));
-					if(j==ranges[i+1])break;
+					if(j.Equals(ranges[i+1]))break;
 					j++;
 				}
 			}
