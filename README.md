@@ -8,6 +8,9 @@ supporting many more types of data than JSON. "CBOR was inspired by
 MessagePack", but "is not intended as a version of or replacement for 
 MessagePack."
 
+Documentation
+------------
+
 This library defines one class, called CBORObject, that allows you to read and
 write CBOR objects to and from data streams and byte arrays, and to convert JSON
 text to CBOR objects.  It defines the following methods.
@@ -65,3 +68,14 @@ may be missing from the Java version.
 - CBORObject.IsFalse - Returns true if this is false.
 - CBORObject.IsUndefined - Returns true if this is the undefined value.
 - CBORObject.IsTagged - Returns true if this object has a tag.
+
+About
+-----------
+
+Written in 2013 by Peter O.
+
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
