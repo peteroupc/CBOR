@@ -64,16 +64,16 @@ namespace PeterO
 			this.tagged=true;
 		}
 		private CBORObject(CBORObjectType type, Object item){
+				#if DEBUG
 			// Check range in debug mode to ensure that Integer and BigInteger
 			// are unambiguous
 			if((type== CBORObjectType.BigInteger) &&
 			   ((BigInteger)item).CompareTo(Int64MinValue)>=0 &&
 			   ((BigInteger)item).CompareTo(Int64MaxValue)<=0){
-				#if DEBUG
 				if(!(false))throw new ArgumentException("Big integer is within range for Integer");
-				#endif
 
 			}
+				#endif
 			this.itemtype_=type;
 			this.item=item;
 		}

@@ -63,16 +63,7 @@ public final class CBORObject
 		this.tagged=true;
 	}
 	private CBORObject(CBORObjectType type, Object item){
-		// Check range in debug mode to ensure that Integer and BigInteger
-		// are unambiguous
-		if((type== CBORObjectType.BigInteger) &&
-				((BigInteger)item).compareTo(Int64MinValue)>=0 &&
-				((BigInteger)item).compareTo(Int64MaxValue)<=0){
 
-			if(!(false))throw new IllegalArgumentException("Big integer is within range for Integer");
-
-
-		}
 		this.itemtype_=type;
 		this.item=item;
 	}
@@ -163,8 +154,8 @@ public final class CBORObject
 		// the map as the basis for the hash code.  More complicated
 		// hash code calculation would generally involve defining
 		// how CBORObjects ought to be compared (since a stable
-				// sort order is necessary for two equal maps to have the
-				// same hash code), which is much
+		// sort order is necessary for two equal maps to have the
+		// same hash code), which is much
 		// too difficult for this version.
 		return (a.size()*19);
 	}
@@ -491,8 +482,8 @@ public final class CBORObject
 				continue;
 			} else if(c<=0xDBFF){ // UTF-16 low surrogate
 				i++;
-			if(i>=str.length() || str.charAt(i)<0xDC00 || str.charAt(i)>0xDFFF)
-				return false;
+				if(i>=str.length() || str.charAt(i)<0xDC00 || str.charAt(i)>0xDFFF)
+					return false;
 			} else
 				return false;
 		}
@@ -700,7 +691,7 @@ public final class CBORObject
 					str.charAt(index+1)>=0xDC00 && str.charAt(index+1)<=0xDFFF){
 				// Get the Unicode code point for the surrogate pair
 				c=0x10000+(c-0xD800)*0x400+(str.charAt(index+1)-0xDC00);
-						index++;
+				index++;
 			} else if(c>=0xD800 && c<=0xDFFF){
 				// unpaired surrogate, write U+FFFD instead
 				c=0xFFFD;
