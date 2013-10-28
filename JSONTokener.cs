@@ -62,12 +62,12 @@ class JSONTokener {
     return -1;
   }
 
-  public static string trimSpaces(string s){
-    if(s==null || s.Length==0)return s;
+  public static string trimSpaces(string str){
+    if(str==null || str.Length==0)return str;
     int index=0;
-    int sLength=s.Length;
+    int sLength=str.Length;
     while(index<sLength){
-      char c=s[index];
+      char c=str[index];
       if(c!=0x09 && c!=0x0a && c!=0x0c && c!=0x0d && c!=0x20){
         break;
       }
@@ -77,9 +77,9 @@ class JSONTokener {
     int startIndex=index;
     index=sLength-1;
     while(index>=0){
-      char c=s[index];
+      char c=str[index];
       if(c!=0x09 && c!=0x0a && c!=0x0c && c!=0x0d && c!=0x20)
-        return s.Substring(startIndex,(index+1)-(startIndex));
+        return str.Substring(startIndex,(index+1)-(startIndex));
       index--;
     }
     return "";
