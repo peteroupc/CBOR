@@ -169,14 +169,13 @@ public final class CBORObject
 		return (a.size()*19);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override public boolean equals(Object obj)
-	{
+	@Override @SuppressWarnings("unchecked")
+	public boolean equals(Object obj) {
 		CBORObject other = ((obj instanceof CBORObject) ? (CBORObject)obj : null);
 		if (other == null)
 			return false;
-		if(item instanceof Byte[]){
-			if(!ByteArrayEquals((byte[])item,((other.item instanceof Byte[]) ? (byte[])other.item : null)))
+		if(item instanceof byte[]){
+			if(!ByteArrayEquals((byte[])item,((other.item instanceof byte[]) ? (byte[])other.item : null)))
 				return false;
 		} else if(item instanceof List<?>){
 			if(!CBORArrayEquals(AsList(),((other.item instanceof List<?>) ? (List<CBORObject>)other.item : null)))
@@ -194,13 +193,12 @@ public final class CBORObject
 				this.tagHigh == other.tagHigh;
 	}
 
-	@Override public int hashCode()
-	{
+	@Override public int hashCode() {
 		int hashCode_ = 0;
 		{
 			if (item != null){
 				int itemHashCode=0;
-				if(item instanceof Byte[])
+				if(item instanceof byte[])
 					itemHashCode=ByteArrayHashCode((byte[])item);
 				else if(item instanceof List<?>)
 					itemHashCode=CBORArrayHashCode(AsList());
@@ -281,7 +279,7 @@ public final class CBORObject
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<CBORObject,CBORObject> AsMap(){
+	private Map<CBORObject,CBORObject> AsMap() {
 		return (Map<CBORObject,CBORObject>)item;
 	}
 
@@ -1750,7 +1748,7 @@ public final class CBORObject
 	/// parsable, and the format may change at any time.
 	/// </summary>
 	/// <returns>A text representation of this Object.</returns>
-	@Override public String toString(){
+	@Override public String toString() {
 		StringBuilder sb=new StringBuilder();
 		if(tagged){
 			sb.append(this.getTag().toString());
