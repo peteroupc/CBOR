@@ -6,3 +6,4 @@ CBORTest/ProfilingSessions/
 .project
 .classpath
 *.class
+.pmd

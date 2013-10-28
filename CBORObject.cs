@@ -57,6 +57,9 @@ namespace PeterO
 		public static readonly CBORObject True=new CBORObject(CBORObjectType.SimpleValue,21);
 		public static readonly CBORObject Null=new CBORObject(CBORObjectType.SimpleValue,22);
 		public static readonly CBORObject Undefined=new CBORObject(CBORObjectType.SimpleValue,23);
+		
+		private CBORObject(){}
+		
 		private CBORObject(CBORObjectType type, int tagLow, int tagHigh, Object item) : this(type,item) {
 			this.itemtype_=type;
 			this.tagLow=tagLow;
