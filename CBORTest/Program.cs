@@ -21,21 +21,26 @@ namespace PeterO
 		private static CultureInfo Inv=System.Globalization.CultureInfo.InvariantCulture;
 		public static void AssertEqualsHashCode(CBORObject o, CBORObject o2){
 			if(o.Equals(o2)){
-				Assert.IsTrue(o2.Equals(o),
-				              "{0} equals {1}, but {1} does not equal {0}",o,o2);
+				if(!o2.Equals(o))
+					Assert.Fail("{0} equals {1}, but {1} does not equal {0}",o,o2);
 				// Test for the guarantee that equal objects
 				// must have equal hash codes
-				Assert.AreEqual(o2.GetHashCode(),o.GetHashCode(),
-				                "{0} and {1} don't have equal hash codes",o,o2);
+				if(o2.GetHashCode()!=o.GetHashCode()){
+					// Don't use Assert.AreEqual directly because it has
+					// quite a lot of overhead
+					Assert.Fail("{0} and {1} don't have equal hash codes",o,o2);
+				}
 			} else {
 				Assert.IsFalse(o2.Equals(o),
 				               "{0} does not equal {1}, but {1} equals {0}",o,o2);
 			}
 		}
 		public static void AssertSer(CBORObject o, String s){
-			Assert.AreEqual(s,o.ToString());
+			if(!s.Equals(o.ToString()))
+				Assert.AreEqual(s,o.ToString());
 			CBORObject o2=CBORObject.FromBytes(o.ToBytes());
-			Assert.AreEqual(s,o2.ToString());
+			if(!s.Equals(o2.ToString()))
+				Assert.AreEqual(s,o2.ToString());
 			AssertEqualsHashCode(o,o2);
 		}
 		
@@ -71,19 +76,49 @@ namespace PeterO
 			}
 		}
 		
-		public static String DateTimeToString(DateTime bi){
+		
+		private static string DateTimeToString(DateTime bi){
 			DateTime dt=bi.ToUniversalTime();
 			System.Text.StringBuilder sb=new System.Text.StringBuilder();
-			sb.Append(String.Format(
-				CultureInfo.InvariantCulture,
-				"{0:d4}-{1:d2}-{2:d2}T{3:d2}:{4:d2}:{5:d2}",
-				dt.Year,dt.Month,dt.Day,dt.Hour,
-				dt.Minute,dt.Second));
-			if(dt.Millisecond>0){
-				sb.Append(String.Format(CultureInfo.InvariantCulture,
-				                        ".{0:d3}",dt.Millisecond));
+			int year=dt.Year;
+			int month=dt.Month;
+			int day=dt.Day;
+			int hour=dt.Hour;
+			int minute=dt.Minute;
+			int second=dt.Second;
+			sb.Append(
+				new char[]{
+					(char)('0'+((year/1000)%10)),
+					(char)('0'+((year/100)%10)),
+					(char)('0'+((year/10)%10)),
+					(char)('0'+((year)%10)),
+					'-',
+					(char)('0'+((month/10)%10)),
+					(char)('0'+((month)%10)),
+					'-',
+					(char)('0'+((day/10)%10)),
+					(char)('0'+((day)%10)),
+					'T',
+					(char)('0'+((hour/10)%10)),
+					(char)('0'+((hour)%10)),
+					':',
+					(char)('0'+((minute/10)%10)),
+					(char)('0'+((minute)%10)),
+					':',
+					(char)('0'+((second/10)%10)),
+					(char)('0'+((second)%10))
+				},0,19);
+			int millisecond=dt.Millisecond;
+			if(millisecond>0){
+				sb.Append(
+					new char[]{
+						'.',
+						(char)('0'+((millisecond/100)%10)),
+						(char)('0'+((millisecond/10)%10)),
+						(char)('0'+((millisecond)%10))
+					},0,4);
 			}
-			sb.Append("Z");
+			sb.Append('Z');
 			return sb.ToString();
 		}
 		
