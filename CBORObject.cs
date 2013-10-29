@@ -1240,7 +1240,10 @@ namespace PeterO
 		/// <returns></returns>
 		public static CBORObject FromJSONString(string str){
 			JSONTokener tokener=new JSONTokener(str,0);
-			return ParseJSONObject(tokener);
+			CBORObject obj=ParseJSONObject(tokener);
+			if(tokener.nextClean()!=-1)
+				throw tokener.syntaxError("End of string not reached");
+			return obj;
 		}
 		
 		private static string Base64URL="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
@@ -1285,8 +1288,12 @@ namespace PeterO
 			// is not repeated here
 			for(int i=0;i<str.Length;i++){
 				char c=str[i];
-				if(c=='\\' || c=='"' || c<0x20){
+				if(c=='\\' || c=='"'){
 					sb.Append('\\');
+				} else if(c<0x20){
+					sb.Append("\\u00");
+					sb.Append((char)('0'+(int)(c>>4)));
+					sb.Append((char)('0'+(int)(c&15)));
 				}
 				sb.Append(c);
 			}
@@ -1507,6 +1514,10 @@ namespace PeterO
 					return null;
 				}
 			}
+			if(index!=str.Length){
+				// End of the string wasn't reached, so isn't a number
+				return null;
+			}
 			if(fracStart<0 && expStart<0 && (numberEnd-numberStart)<=9){
 				// Common case: small integer
 				int value=Int32.Parse(str.Substring(numberStart,numberEnd-numberStart),
@@ -1576,7 +1587,7 @@ namespace PeterO
 		private static CBORObject NextJSONValue(JSONTokener tokener)  {
 			int c = tokener.nextClean();
 			string str;
-			if (c == '"' || c == '\'')
+			if (c == '"' || (c == '\'' && ((tokener.getOptions()&JSONTokener.OPTION_SINGLE_QUOTES)!=0)))
 				return FromObject(tokener.nextString(c));
 			if (c == '{') {
 				tokener.back();
@@ -1609,7 +1620,8 @@ namespace PeterO
 			}
 			if (str.Length == 0)
 				throw tokener.syntaxError("Missing value.");
-			return FromObject(str);
+			// Value is unparseable
+			throw tokener.syntaxError("Value can't be parsed.");
 		}
 
 		// Based on the json.org implementation for JSONObject
