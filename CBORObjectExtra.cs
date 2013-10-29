@@ -57,25 +57,25 @@ namespace PeterO
 		/// unsigned integer.</exception>
 		[CLSCompliant(false)]
 		public ulong AsUInt64(){
-			if(this.ItemType== CBORObjectType.Integer){
+			if(this.ItemType== CBORObjectType_Integer){
 				if((long)item<0)
 					throw new OverflowException();
 				return (ulong)(long)item;
-			} else if(this.ItemType== CBORObjectType.BigInteger){
+			} else if(this.ItemType== CBORObjectType_BigInteger){
 				if((BigInteger)item>UInt64.MaxValue || (BigInteger)item<0)
 					throw new OverflowException();
 				return (ulong)(BigInteger)item;
-			} else if(this.ItemType== CBORObjectType.Single){
+			} else if(this.ItemType== CBORObjectType_Single){
 				if(Single.IsNaN((float)item) ||
 				   (float)item>UInt64.MaxValue || (float)item<0)
 					throw new OverflowException();
 				return (ulong)(float)item;
-			} else if(this.ItemType== CBORObjectType.Double){
+			} else if(this.ItemType== CBORObjectType_Double){
 				if(Double.IsNaN((double)item) ||
 				   (double)item>UInt64.MinValue || (double)item<0)
 					throw new OverflowException();
 				return (ulong)(double)item;
-			} else if(this.Tag==4 && ItemType== CBORObjectType.Array &&
+			} else if(this.Tag==4 && ItemType== CBORObjectType_Array &&
 			          this.Count==2){
 				StringBuilder sb=new StringBuilder();
 				sb.Append(this[1].IntegerToString());
@@ -112,7 +112,7 @@ namespace PeterO
 				s.WriteByte((byte)((value>>24)&0xFF));
 				s.WriteByte((byte)((value>>16)&0xFF));
 				s.WriteByte((byte)((value>>8)&0xFF));
-				s.WriteByte((byte)(value&0xFF));				
+				s.WriteByte((byte)(value&0xFF));
 			}
 		}
 		[CLSCompliant(false)]
@@ -152,21 +152,50 @@ namespace PeterO
 		private static string DateTimeToString(DateTime bi){
 			DateTime dt=bi.ToUniversalTime();
 			System.Text.StringBuilder sb=new System.Text.StringBuilder();
-			sb.Append(String.Format(
-				CultureInfo.InvariantCulture,
-				"{0:d4}-{1:d2}-{2:d2}T{3:d2}:{4:d2}:{5:d2}",
-				dt.Year,dt.Month,dt.Day,dt.Hour,
-				dt.Minute,dt.Second));
-			if(dt.Millisecond>0){
-				sb.Append(String.Format(CultureInfo.InvariantCulture,
-				                        ".{0:d3}",dt.Millisecond));
+			int year=dt.Year;
+			int month=dt.Month;
+			int day=dt.Day;
+			int hour=dt.Hour;
+			int minute=dt.Minute;
+			int second=dt.Second;
+			sb.Append(
+				new char[]{
+					(char)('0'+((year/1000)%10)),
+					(char)('0'+((year/100)%10)),
+					(char)('0'+((year/10)%10)),
+					(char)('0'+((year)%10)),
+					'-',
+					(char)('0'+((month/10)%10)),
+					(char)('0'+((month)%10)),
+					'-',
+					(char)('0'+((day/10)%10)),
+					(char)('0'+((day)%10)),
+					'T',
+					(char)('0'+((hour/10)%10)),
+					(char)('0'+((hour)%10)),
+					':',
+					(char)('0'+((minute/10)%10)),
+					(char)('0'+((minute)%10)),
+					':',
+					(char)('0'+((second/10)%10)),
+					(char)('0'+((second)%10))
+				},0,19);
+			int millisecond=dt.Millisecond;
+			if(millisecond>0){
+				sb.Append(
+					new char[]{
+						'.',
+						(char)('0'+((millisecond/100)%10)),
+						(char)('0'+((millisecond/10)%10)),
+						(char)('0'+((millisecond)%10))
+					},0,4);
 			}
-			sb.Append("Z");
+			sb.Append('Z');
 			return sb.ToString();
 		}
 		
 		public static CBORObject FromObject(DateTime value){
-			return new CBORObject(CBORObjectType.TextString,0,0,
+			return new CBORObject(CBORObjectType_TextString,0,0,
 			                      DateTimeToString(value));
 		}
 		/// <summary>
