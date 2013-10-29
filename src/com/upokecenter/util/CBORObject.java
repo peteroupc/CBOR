@@ -1222,7 +1222,10 @@ public static void Write(Object o, OutputStream s) throws IOException {
 		/// <returns></returns>
 		public static CBORObject FromJSONString(String str) {
 			JSONTokener tokener=new JSONTokener(str,0);
-			return ParseJSONObject(tokener);
+			CBORObject obj=ParseJSONObject(tokener);
+			if(tokener.nextClean()!=-1)
+				throw tokener.syntaxError("End of String not reached");
+			return obj;
 		}
 		
 		private static String Base64URL="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
@@ -1267,8 +1270,12 @@ public static void Write(Object o, OutputStream s) throws IOException {
 			// is not repeated here
 			for(int i=0;i<str.length();i++){
 				char c=str.charAt(i);
-				if(c=='\\' || c=='"' || c<0x20){
+				if(c=='\\' || c=='"'){
 					sb.append('\\');
+				} else if(c<0x20){
+					sb.append("\\u00");
+					sb.append((char)('0'+(int)(c>>4)));
+					sb.append((char)('0'+(int)(c&15)));
 				}
 				sb.append(c);
 			}
@@ -1483,6 +1490,10 @@ public static void Write(Object o, OutputStream s) throws IOException {
 					return null;
 				}
 			}
+			if(index!=str.length()){
+				// End of the String wasn't reached, so isn't a number
+				return null;
+			}
 			if(fracStart<0 && expStart<0 && (numberEnd-numberStart)<=9){
 				// Common case: small integer
 				int value=Integer.parseInt(str.substring(numberStart,(numberStart)+(numberEnd-numberStart)));
@@ -1542,7 +1553,7 @@ public static void Write(Object o, OutputStream s) throws IOException {
 		private static CBORObject NextJSONValue(JSONTokener tokener) {
 			int c = tokener.nextClean();
 			String str;
-			if (c == '"' || c == '\'')
+			if (c == '"' || (c == '\'' && ((tokener.getOptions()&JSONTokener.OPTION_SINGLE_QUOTES)!=0)))
 				return FromObject(tokener.nextString(c));
 			if (c == '{') {
 				tokener.back();
@@ -1575,7 +1586,8 @@ public static void Write(Object o, OutputStream s) throws IOException {
 			}
 			if (str.length() == 0)
 				throw tokener.syntaxError("Missing value.");
-			return FromObject(str);
+			// Value is unparseable
+			throw tokener.syntaxError("Value can't be parsed.");
 		}
 
 		// Based on the json.org implementation for JSONObject
