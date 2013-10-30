@@ -50,7 +50,8 @@ may be missing from the Java version.
 		JSON objects under RFC 4627), but also integers,
 		strings, byte arrays, and other JSON data types.
 - WriteTo(System.IO.Stream): Writes this CBOR object to a data stream.
-- Tag - Returns this object's tag, or 0 if it has no tag.
+- InnermostTag - Returns this object's last defined tag, or 0 if it has no tag.
+- Type - Returns this object's type (type is PeterO.CBORType).
 - obj[int] - Gets or sets a value in this CBOR array. Valid only for arrays.
 - CBORObject.Write(object, System.IO.Stream) - Writes an arbitrary object in
   the CBOR format to a data stream.  Not all objects are supported; for 
