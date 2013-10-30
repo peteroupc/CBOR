@@ -250,6 +250,10 @@ public class TestCBORObject {
 				Assert.assertEquals(
 						CBORObject.FromObject(j),
 						CBORObject.FromObject(BigInteger.valueOf(j)));
+				CBORObject obj=CBORObject.FromJSONString(
+						String.format("[%s]",j));
+				AssertSer(obj,
+						String.format("[%s]",j));
 				if(j==ranges[i+1])break;
 				j++;
 			}
