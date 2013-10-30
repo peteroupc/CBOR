@@ -37,10 +37,10 @@ namespace PeterO
 		}
 		public static void AssertSer(CBORObject o, String s){
 			if(!s.Equals(o.ToString()))
-				Assert.AreEqual(s,o.ToString());
+				Assert.AreEqual(s,o.ToString(),"o is not equal to s");
 			CBORObject o2=CBORObject.FromBytes(o.ToBytes());
 			if(!s.Equals(o2.ToString()))
-				Assert.AreEqual(s,o2.ToString());
+				Assert.AreEqual(s,o2.ToString(),"o2 is not equal to s");
 			AssertEqualsHashCode(o,o2);
 		}
 		
@@ -79,47 +79,43 @@ namespace PeterO
 		
 		private static string DateTimeToString(DateTime bi){
 			DateTime dt=bi.ToUniversalTime();
-			System.Text.StringBuilder sb=new System.Text.StringBuilder();
 			int year=dt.Year;
 			int month=dt.Month;
 			int day=dt.Day;
 			int hour=dt.Hour;
 			int minute=dt.Minute;
 			int second=dt.Second;
-			sb.Append(
-				new char[]{
-					(char)('0'+((year/1000)%10)),
-					(char)('0'+((year/100)%10)),
-					(char)('0'+((year/10)%10)),
-					(char)('0'+((year)%10)),
-					'-',
-					(char)('0'+((month/10)%10)),
-					(char)('0'+((month)%10)),
-					'-',
-					(char)('0'+((day/10)%10)),
-					(char)('0'+((day)%10)),
-					'T',
-					(char)('0'+((hour/10)%10)),
-					(char)('0'+((hour)%10)),
-					':',
-					(char)('0'+((minute/10)%10)),
-					(char)('0'+((minute)%10)),
-					':',
-					(char)('0'+((second/10)%10)),
-					(char)('0'+((second)%10))
-				},0,19);
 			int millisecond=dt.Millisecond;
+			char[] charbuf=new char[millisecond>0 ? 24 : 20];
+			charbuf[0]=(char)('0'+((year/1000)%10));
+			charbuf[1]=(char)('0'+((year/100)%10));
+			charbuf[2]=(char)('0'+((year/10)%10));
+			charbuf[3]=(char)('0'+((year)%10));
+			charbuf[4]='-';
+			charbuf[5]=(char)('0'+((month/10)%10));
+			charbuf[6]=(char)('0'+((month)%10));
+			charbuf[7]='-';
+			charbuf[8]=(char)('0'+((day/10)%10));
+			charbuf[9]=(char)('0'+((day)%10));
+			charbuf[10]='T';
+			charbuf[11]=(char)('0'+((hour/10)%10));
+			charbuf[12]=(char)('0'+((hour)%10));
+			charbuf[13]=':';
+			charbuf[14]=(char)('0'+((minute/10)%10));
+			charbuf[15]=(char)('0'+((minute)%10));
+			charbuf[16]=':';
+			charbuf[17]=(char)('0'+((second/10)%10));
+			charbuf[18]=(char)('0'+((second)%10));
 			if(millisecond>0){
-				sb.Append(
-					new char[]{
-						'.',
-						(char)('0'+((millisecond/100)%10)),
-						(char)('0'+((millisecond/10)%10)),
-						(char)('0'+((millisecond)%10))
-					},0,4);
+				charbuf[19]='.';
+				charbuf[20]=(char)('0'+((millisecond/100)%10));
+				charbuf[21]=(char)('0'+((millisecond/10)%10));
+				charbuf[22]=(char)('0'+((millisecond)%10));
+				charbuf[23]='Z';
+			} else {
+				charbuf[19]='Z';
 			}
-			sb.Append('Z');
-			return sb.ToString();
+			return new String(charbuf);
 		}
 		
 		[Test]
@@ -334,6 +330,10 @@ namespace PeterO
 					Assert.AreEqual(
 						CBORObject.FromObject(j),
 						CBORObject.FromObject((BigInteger)j));
+					CBORObject obj=CBORObject.FromJSONString(
+						String.Format(Inv,"[{0}]",j));
+					AssertSer(obj,
+					          String.Format(Inv,"[{0}]",j));
 					if(j==ranges[i+1])break;
 					j++;
 				}
@@ -381,6 +381,51 @@ namespace PeterO
 		}
 
 		[Test]
+		public void TestTags(){
+			BigInteger maxuint=(BigInteger)UInt64.MaxValue;
+			BigInteger[] ranges=new BigInteger[]{
+				(BigInteger)5,
+				(BigInteger)65539,
+				(BigInteger)Int32.MaxValue-(BigInteger)500,
+				(BigInteger)Int32.MaxValue+(BigInteger)500,
+				(BigInteger)Int64.MaxValue-(BigInteger)500,
+				(BigInteger)Int64.MaxValue+(BigInteger)500,
+				(BigInteger)UInt64.MaxValue-(BigInteger)500,
+				maxuint,
+			};
+			for(int i=0;i<ranges.Length;i+=2){
+				BigInteger j=ranges[i];
+				while(true){
+					CBORObject obj=CBORObject.FromObjectAndTag(0,j);
+					Assert.IsTrue(obj.IsTagged,"obj not tagged");
+					if(!obj.InnermostTag.Equals(j))
+						Assert.AreEqual(j,obj.InnermostTag,"obj tag doesn't match: {0}",obj);
+					AssertSer(
+						obj,
+						String.Format(Inv,"{0}(0)",j));
+					if(j!=maxuint){
+						// Test multiple tags
+						CBORObject obj2=CBORObject.FromObjectAndTag(obj,j+1);
+						BigInteger[] bi=obj2.GetTags();
+						if(bi.Length!=2)
+							Assert.AreEqual(bi.Length,2,"Expected 2 tags: {0}",obj2);
+						if(bi[0]!=j+1)
+							Assert.AreEqual(j+1,bi[0],"Outer tag doesn't match: {0}",obj2);
+						if(bi[1]!=j)
+							Assert.AreEqual(j,bi[1],"Inner tag doesn't match: {0}",obj2);
+						if(obj2.InnermostTag!=j)
+							Assert.AreEqual(j,bi[0],"Innermost tag doesn't match: {0}",obj2);
+						AssertSer(
+							obj2,
+							String.Format(Inv,"{0}({1}(0))",j+1,j));
+					}
+					if(j==ranges[i+1])break;
+					j=j+1;
+				}
+			}
+		}
+
+		[Test]
 		public void TestULong(){
 			ulong[] ranges=new ulong[]{
 				0,65539,
@@ -413,30 +458,5 @@ namespace PeterO
 			}
 		}
 		
-		public static void Main(){
-			var test=new CBORTest();
-			foreach(var method in test.GetType().GetMethods()){
-				if(method.Name.StartsWith("Test")){
-					Console.WriteLine(method.Name);
-					Type exctype=null;
-					foreach(var a in method.GetCustomAttributes(false)){
-						if(a is ExpectedExceptionAttribute){
-							exctype=((ExpectedExceptionAttribute)a).ExpectedException;
-							break;
-						}
-					}
-					if(exctype==null){
-						method.Invoke(test,new object[]{});
-					} else {
-						try {
-							method.Invoke(test,new object[]{});
-						} catch(System.Reflection.TargetInvocationException e){
-							if(!e.InnerException.GetType().Equals(exctype))
-								throw;
-						}
-					}
-				}
-			}
-		}
 	}
 }
