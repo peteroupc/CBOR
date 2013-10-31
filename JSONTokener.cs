@@ -100,33 +100,6 @@ namespace PeterO {
 			return "";
 		}
 
-
-		/**
-		 * Convert <code>%</code><i>hh</i> sequences to single characters, and convert plus to space.
-		 * @param s A _string that may contain <code>+</code>&nbsp;<small>(plus)</small> and <code>%</code><i>hh</i> sequences.
-		 * @return The unescaped _string.
-		 */
-		public static string unescape(string s) {
-			int len = s.Length;
-			StringBuilder b = new StringBuilder();
-			for (int i = 0; i < len; ++i) {
-				char c = s[i];
-				if (c == '+') {
-					c = ' ';
-				} else if (c == '%' && i + 2 < len) {
-					int d = dehexchar(s[i + 1]);
-					int e = dehexchar(s[i + 2]);
-					if (d >= 0 && e >= 0) {
-						c = (char)(d * 16 + e);
-						i += 2;
-					}
-				}
-				b.Append(c);
-			}
-			return b.ToString();
-		}
-
-
 		/**
 		 * The index of the next character.
 		 */
@@ -492,15 +465,6 @@ namespace PeterO {
 		 */
 		public override string ToString() {
 			return " at character " + myIndex + " of " + mySource;
-		}
-
-		/**
-		 * Unescape the source text. Convert <code>%</code><i>hh</i> sequences to single characters,
-		 * and convert plus to space. There are Web transport systems that insist on
-		 * doing unnecessary URL encoding. This provides a way to undo it.
-		 */
-		internal void unescape() {
-			mySource = unescape(mySource);
 		}
 	}
 }
