@@ -35,8 +35,6 @@ public class TestCBORObject {
 		Assert.assertEquals(3,o.get(2).AsInt32());
 		o=CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
 		Assert.assertEquals(1.5,o.get(0).AsDouble(),0.01);
-		Assert.assertEquals("[4([-1, 15]), 4([-1, 26]), 4([-1, 37]), 4, 4([-2, 22222])]",
-				o.toString());
 	}
 
 	@Test
