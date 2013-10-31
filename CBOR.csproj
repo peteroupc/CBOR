@@ -49,6 +49,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CBORException.cs" />
     <Compile Include="CBORObject.cs" />
     <Compile Include="CBORObjectExtra.cs" />
     <Compile Include="CBORType.cs" />

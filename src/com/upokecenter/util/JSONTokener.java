@@ -1,5 +1,6 @@
 package com.upokecenter.util;
-// Modified by Peter O. to use generics and
+// Modified by Peter O. from the 2002 public domain
+// code from json.org, to use generics and
 // to use int and -1 as the terminating
 // value rather than char and 0, among
 // other things; also moved from org.json.
@@ -480,8 +481,8 @@ package com.upokecenter.util;
 		 * @param message The error message.
 		 * @return  A NumberFormatException Object, suitable for throwing
 		 */
-		public NumberFormatException syntaxError(String message) {
-			return new NumberFormatException(message + toString());
+		public CBORException syntaxError(String message) {
+			return new CBORException(message + toString());
 		}
 
 

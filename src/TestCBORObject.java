@@ -1,6 +1,5 @@
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 import org.junit.Assert;
@@ -19,7 +18,7 @@ public class TestCBORObject {
 			Assert.assertTrue(!o2.equals(o));				
 		}
 	}
-	public void AssertSer(CBORObject o, String s) throws IOException{
+	public void AssertSer(CBORObject o, String s) {
 		Assert.assertEquals(s,o.toString());
 		CBORObject o2=CBORObject.FromBytes(o.ToBytes());
 		Assert.assertEquals(s,o2.toString());
@@ -41,7 +40,7 @@ public class TestCBORObject {
 	}
 
 	@Test
-	public void TestByte() throws IOException{
+	public void TestByte() {
 		for(int i=0;i<=Byte.MAX_VALUE;i++){
 			AssertSer(
 					CBORObject.FromObject((byte)i),
@@ -50,7 +49,7 @@ public class TestCBORObject {
 	}
 
 	@Test
-	public void TestArray() throws IOException{
+	public void TestArray() {
 		CBORObject cbor=CBORObject.FromJSONString("[]");
 		cbor.Add(CBORObject.FromObject(3));
 		cbor.Add(CBORObject.FromObject(4));
@@ -89,7 +88,7 @@ public class TestCBORObject {
 		return sb.toString();
 	}
 	@Test
-	public void TestTextStringStream() throws IOException{
+	public void TestTextStringStream() {
 		CBORObject cbor=CBORObject.FromBytes(
 				new byte[]{0x7F,0x61,0x20,0x61,0x20,(byte)0xFF});
 		Assert.assertEquals("  ",cbor.AsString());
@@ -122,56 +121,56 @@ public class TestCBORObject {
 	}
 
 	@Test
-	public void TestTextStringStreamNoTagsBeforeDefinite() throws IOException{
+	public void TestTextStringStreamNoTagsBeforeDefinite() {
 		try {
 			CBORObject.FromBytes(
 					new byte[]{0x7F,0x61,0x20,(byte)0xC0,0x61,0x20,(byte)0xFF});
-		} catch(NumberFormatException ex){return;}
+		} catch(CBORException ex){return;}
 		fail("Expected exception");		}
 
 	@Test
-	public void TestTextStringStreamNoIndefiniteWithinDefinite() throws IOException{
+	public void TestTextStringStreamNoIndefiniteWithinDefinite() {
 		try {
 			CBORObject.FromBytes(
 					new byte[]{0x7F,0x61,0x20,0x7F,0x61,0x20,(byte)0xFF,(byte)0xFF});
-		} catch(NumberFormatException ex){return;}
+		} catch(CBORException ex){return;}
 		fail("Expected exception");
 	}
 	@Test
-	public void TestByteStringStream() throws IOException{
+	public void TestByteStringStream() {
 		CBORObject.FromBytes(
 				new byte[]{0x5F,0x41,0x20,0x41,0x20,(byte)0xFF});
 	}
 	@Test
-	public void TestByteStringStreamNoTagsBeforeDefinite() throws IOException{
+	public void TestByteStringStreamNoTagsBeforeDefinite() {
 		try {
 			CBORObject.FromBytes(
 					new byte[]{0x5F,0x41,0x20,(byte)0xc2,0x41,0x20,(byte)0xFF});
-		} catch(NumberFormatException ex){return;}
+		} catch(CBORException ex){return;}
 		fail("Expected exception");
 	}
 
 	@Test
-	public void TestByteStringStreamNoIndefiniteWithinDefinite() throws IOException{
+	public void TestByteStringStreamNoIndefiniteWithinDefinite() {
 		try {
 			CBORObject.FromBytes(
 					new byte[]{0x5F,0x41,0x20,0x5F,0x41,0x20,(byte)0xFF,(byte)0xFF});
-		} catch(NumberFormatException ex){return;}
+		} catch(CBORException ex){return;}
 		fail("Expected exception");
 	}
 
 	@Test
-	public void TestDecimalFrac() throws IOException{
+	public void TestDecimalFrac() {
 		CBORObject.FromBytes(
 				new byte[]{(byte)0xc4,(byte)0x82,0x3,0x1a,1,2,3,4});
 	}
 	@Test
-	public void TestDecimalFracExponentMustNotBeBignum() throws IOException{
+	public void TestDecimalFracExponentMustNotBeBignum() {
 		try {
 			CBORObject.FromBytes(
 					new byte[]{(byte) (byte)0xc4,(byte) 
 							(byte)0x82,(byte) (byte)0xc2,0x41,1,0x1a,1,2,3,4});
-		} catch(NumberFormatException ex){return;}
+		} catch(CBORException ex){return;}
 		fail("Expected exception");
 	}
 
@@ -182,21 +181,21 @@ public class TestCBORObject {
 	}
 
 	@Test
-	public void TestDecimalFracExactlyTwoElements() throws IOException{
+	public void TestDecimalFracExactlyTwoElements() {
 		try {
 			CBORObject.FromBytes(
 					new byte[]{(byte)(byte)0xc4,(byte)(byte)0x82,(byte)(byte)0xc2,0x41,1});
-		} catch(NumberFormatException ex){return;}
+		} catch(CBORException ex){return;}
 		fail("Expected exception");
 	}
 	@Test
-	public void TestDecimalFracMantissaMayBeBignum() throws IOException{
+	public void TestDecimalFracMantissaMayBeBignum() {
 		CBORObject.FromBytes(
 				new byte[]{(byte)(byte)0xc4,(byte)(byte)0x82,0x3,(byte)(byte)0xc2,0x41,1});
 	}
 
 	@Test
-	public void TestShort() throws IOException{
+	public void TestShort() {
 		for(int i=Short.MIN_VALUE;i<=Short.MAX_VALUE;i++){
 			AssertSer(
 					CBORObject.FromObject((short)i),
@@ -204,7 +203,7 @@ public class TestCBORObject {
 		}
 	}
 	@Test
-	public void TestBigInteger() throws IOException{
+	public void TestBigInteger() {
 		BigInteger bi=BigInteger.valueOf(3);
 		for(int i=0;i<500;i++){
 			AssertSer(
@@ -234,7 +233,7 @@ public class TestCBORObject {
 		}
 	}
 	@Test
-	public void TestLong() throws IOException{
+	public void TestLong() {
 		long[] ranges=new long[]{
 				-65539,65539,
 				0xFFFFF000L,0x100000400L,
@@ -261,7 +260,7 @@ public class TestCBORObject {
 	}
 
 	@Test
-	public void TestFloat() throws IOException{
+	public void TestFloat() {
 		AssertSer(CBORObject.FromObject(Float.POSITIVE_INFINITY),
 				"Infinity");
 		AssertSer(CBORObject.FromObject(Float.NEGATIVE_INFINITY),
@@ -276,7 +275,7 @@ public class TestCBORObject {
 	}
 
 	@Test
-	public void TestSimpleValues() throws IOException{
+	public void TestSimpleValues() {
 		AssertSer(CBORObject.FromObject(true),
 				"true");
 		AssertSer(CBORObject.FromObject(false),
@@ -286,7 +285,7 @@ public class TestCBORObject {
 	}
 
 	@Test
-	public void TestDouble() throws IOException{
+	public void TestDouble() {
 		AssertSer(CBORObject.FromObject(Double.POSITIVE_INFINITY),
 				"Infinity");
 		AssertSer(CBORObject.FromObject(Double.NEGATIVE_INFINITY),

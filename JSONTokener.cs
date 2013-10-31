@@ -1,4 +1,5 @@
-// Modified by Peter O. to use generics and
+// Modified by Peter O. from the 2002 public domain
+// code from json.org, to use generics and
 // to use int and -1 as the terminating
 // value rather than char and 0, among
 // other things; also moved from org.json.
@@ -479,8 +480,8 @@ namespace PeterO {
 		 * @param message The error message.
 		 * @return  A FormatException object, suitable for throwing
 		 */
-		public FormatException syntaxError(string message) {
-			return new FormatException(message + ToString());
+		public CBORException syntaxError(string message) {
+			return new CBORException(message + ToString());
 		}
 
 

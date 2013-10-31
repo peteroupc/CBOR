@@ -16,7 +16,8 @@ using System.Text;
 namespace PeterO
 {
 	// Contains extra methods placed separately
-	// because they are not CLS-compliant.
+	// because they are not CLS-compliant or they
+	// are specific to the .NET framework.
 	public sealed partial class CBORObject
 	{
 		[CLSCompliant(false)]
@@ -42,6 +43,52 @@ namespace PeterO
 				throw new OverflowException();
 			return (sbyte)v;
 		}
+		
+		/// <summary>
+		/// Converts this object to a .NET decimal.
+		/// </summary>
+		/// <returns>The closest big integer
+		/// to this object.</returns>
+		/// <exception cref="System.InvalidOperationException">
+		/// This object's type is not an integer
+		/// or a floating-point number.</exception>
+		/// <exception cref="System.OverflowException">
+		/// This object's value exceeds the range of a 
+		/// .NET decimal.</exception>
+		[CLSCompliant(false)]
+		public decimal AsDecimal(){
+			if(this.ItemType== CBORObjectType_Integer){
+				return (decimal)(long)item;
+			} else if(this.ItemType== CBORObjectType_BigInteger){
+				if((BigInteger)item>(BigInteger)Decimal.MaxValue || (BigInteger)item<(BigInteger)Decimal.MinValue)
+					throw new OverflowException();
+				return (decimal)(BigInteger)item;
+			} else if(this.ItemType== CBORObjectType_Single){
+				if(Single.IsNaN((float)item) ||
+				   (float)item>(float)Decimal.MaxValue || (float)item<(float)Decimal.MinValue)
+					throw new OverflowException();
+				return (decimal)(float)item;
+			} else if(this.ItemType== CBORObjectType_Double){
+				if(Double.IsNaN((double)item) ||
+				   (double)item>(double)Decimal.MinValue || (double)item<(double)Decimal.MinValue)
+					throw new OverflowException();
+				return (decimal)(double)item;
+			} else if(this.InnermostTag==4 && ItemType== CBORObjectType_Array &&
+			          this.Count==2){
+				StringBuilder sb=new StringBuilder();
+				sb.Append(this[1].IntegerToString());
+				sb.Append("e");
+				sb.Append(this[0].IntegerToString());
+				return Decimal.Parse(
+					sb.ToString(),
+					NumberStyles.AllowLeadingSign|
+					NumberStyles.AllowDecimalPoint|
+					NumberStyles.AllowExponent,
+					CultureInfo.InvariantCulture);
+			} else
+				throw new InvalidOperationException("Not a number type");
+		}
+		
 		/// <summary>
 		/// Converts this object to a 64-bit unsigned
 		/// integer.  Floating point values are truncated
@@ -113,6 +160,35 @@ namespace PeterO
 				s.WriteByte((byte)((value>>16)&0xFF));
 				s.WriteByte((byte)((value>>8)&0xFF));
 				s.WriteByte((byte)(value&0xFF));
+			}
+		}
+		
+		public static CBORObject FromObject(decimal value){
+			if(Math.Round(value)==value){
+				// This is an integer
+				if(value>=0 && value<=UInt64.MaxValue){
+					return FromObject((ulong)value);
+				} else if(value>=Int64.MinValue && value<=Int64.MaxValue){
+					return FromObject((long)value);
+				} else {
+					return FromObject((BigInteger)value);
+				}
+			} else {
+				int[] v=Decimal.GetBits(value);
+				uint low=unchecked((uint)v[0]);
+				ulong mid=(ulong)unchecked((uint)v[1]);
+				ulong high=(ulong)unchecked((uint)v[2]);
+				bool negative=(v[3]>>31)!=0;
+				int scale=(v[3]>>16)&0xFF;
+				BigInteger mantissa=high|mid;
+				mantissa<<=32;
+				mantissa|=low;
+				if(negative)mantissa=-mantissa;
+				return FromObjectAndTag(
+					new CBORObject[]{
+						FromObject(-scale),
+						FromObject(mantissa)
+					},4);
 			}
 		}
 		[CLSCompliant(false)]
@@ -195,7 +271,7 @@ namespace PeterO
 			                      DateTimeToString(value));
 		}
 		/// <summary>
-		/// Writes a date and time in CBOR format to a data stream
+		/// Writes a date and time in CBOR format to a data stream.
 		/// </summary>
 		/// <param name="bi"></param>
 		/// <param name="s"></param>
