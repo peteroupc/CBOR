@@ -314,14 +314,14 @@ namespace PeterO
 			if(actualLength<expectedLength)
 				throw new CBORException("Premature end of data");
 			else if(actualLength>expectedLength)
-				throw new CBORException("Too few bytes");
+				throw new CBORException("Too many bytes");
 		}
 
 		private static void CheckCBORLength(int expectedLength, int actualLength){
 			if(actualLength<expectedLength)
 				throw new CBORException("Premature end of data");
 			else if(actualLength>expectedLength)
-				throw new CBORException("Too few bytes");
+				throw new CBORException("Too many bytes");
 		}
 		
 		private static string GetOptimizedStringIfShortAscii(
@@ -354,6 +354,157 @@ namespace PeterO
 			return null;
 		}
 		
+		private static CBORObject[] FixedObjects=InitializeFixedObjects();
+		
+		// Initialize fixed values for certain
+		// head bytes
+		private static CBORObject[] InitializeFixedObjects(){
+			FixedObjects=new CBORObject[256];
+			for(int i=0;i<0x18;i++){
+				FixedObjects[i]=new CBORObject(CBORObjectType_Integer,(long)i);
+			}
+			for(int i=0x20;i<0x38;i++){
+				FixedObjects[i]=new CBORObject(CBORObjectType_Integer,
+				                               (long)(-1-(i-0x20)));
+			}
+			FixedObjects[0x60]=new CBORObject(CBORObjectType_TextString,String.Empty);
+			for(int i=0xE0;i<0xf8;i++){
+				FixedObjects[i]=new CBORObject(CBORObjectType_SimpleValue,(int)(i-0xe0));
+			}
+			return FixedObjects;
+		}
+		
+		// Expected lengths for each head byte.
+		// 0 means length varies. -1 means invalid.
+		private static int[] ExpectedLengths=new int[]{
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, // major type 0
+			1,1,1,1,1,1,1,1, 2,3,5,9,-1,-1,-1,-1,
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, // major type 1
+			1,1,1,1,1,1,1,1, 2,3,5,9,-1,-1,-1,-1,
+			1,2,3,4,5,6,7,8, 9,10,11,12,13,14,15,16, // major type 2
+			17,18,19,20,21,22,23,24,  0,0,0,0,-1,-1,-1,0,
+			1,2,3,4,5,6,7,8, 9,10,11,12,13,14,15,16, // major type 3
+			17,18,19,20,21,22,23,24,  0,0,0,0,-1,-1,-1,0,
+			1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, // major type 4
+			0,0,0,0,0,0,0,0, 0,0,0,0,-1,-1,-1,0,
+			1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, // major type 5
+			0,0,0,0,0,0,0,0, 0,0,0,0,-1,-1,-1,0,
+			0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, // major type 6
+			0,0,0,0,0,0,0,0, 0,0,0,0,-1,-1,-1,0,
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, // major type 7
+			1,1,1,1,1,1,1,1, 2,3,5,9,-1,-1,-1,-1
+		};
+		
+		// Generate a CBOR object for head bytes with fixed length.
+		// Note that this function assumes that the length of the data
+		// was already checked.
+		private static CBORObject GetFixedLengthObject(int firstbyte, byte[] data){
+			CBORObject fixedObj=FixedObjects[firstbyte];
+			if(fixedObj!=null)
+				return fixedObj;
+			int majortype=(firstbyte>>5);
+			if(firstbyte>=0x61 && firstbyte<0x78){
+				// text string length 1 to 23
+				String s=GetOptimizedStringIfShortAscii(data,0);
+				if(s!=null)return new CBORObject(CBORObjectType_TextString,s);
+			}
+			if(((firstbyte&0x1C)==0x18)){
+				// contains 1 to 8 extra bytes of additional information
+				long uadditional=0;
+				switch(firstbyte&0x1F){
+					case 24:
+						uadditional=((int)(data[1]&(int)0xFF));
+						break;
+					case 25:
+						uadditional=(((long)(data[1]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[2]&(long)0xFF)));
+						break;
+					case 26:
+						uadditional=(((long)(data[1]&(long)0xFF))<<24);
+						uadditional|=(((long)(data[2]&(long)0xFF))<<16);
+						uadditional|=(((long)(data[3]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[4]&(long)0xFF)));
+						break;
+					case 27:
+						uadditional=(((long)(data[1]&(long)0xFF))<<56);
+						uadditional|=(((long)(data[2]&(long)0xFF))<<48);
+						uadditional|=(((long)(data[3]&(long)0xFF))<<40);
+						uadditional|=(((long)(data[4]&(long)0xFF))<<32);
+						uadditional|=(((long)(data[5]&(long)0xFF))<<24);
+						uadditional|=(((long)(data[6]&(long)0xFF))<<16);
+						uadditional|=(((long)(data[7]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[8]&(long)0xFF)));
+						break;
+					default:
+						throw new CBORException("Unexpected data encountered");
+				}
+				switch(majortype){
+					case 0:
+						if((uadditional>>63)==0){
+							// use only if additional's top bit isn't set
+							// (additional is a signed long)
+							return new CBORObject(CBORObjectType_Integer,uadditional);
+						} else {
+							long lowAdditional=uadditional&0xFFFFFFFFFFFFFFL;
+							long highAdditional=(uadditional>>56)&0xFF;
+							BigInteger bigintAdditional=(BigInteger)highAdditional;
+							bigintAdditional<<=56;
+							bigintAdditional|=(BigInteger)lowAdditional;
+							return FromObject(bigintAdditional);
+						}
+					case 1:
+						if((uadditional>>63)==0){
+							// use only if additional's top bit isn't set
+							// (additional is a signed long)
+							return new CBORObject(CBORObjectType_Integer,-1-uadditional);
+						} else {
+							long lowAdditional=uadditional&0xFFFFFFFFFFFFFFL;
+							long highAdditional=(uadditional>>56)&0xFF;
+							BigInteger bigintAdditional=(BigInteger)highAdditional;
+							bigintAdditional<<=56;
+							bigintAdditional|=(BigInteger)lowAdditional;
+							bigintAdditional=(BigInteger.MinusOne)-(BigInteger)bigintAdditional;
+							return FromObject(bigintAdditional);
+						}
+					case 7:
+						if(firstbyte==0xf9)
+							return new CBORObject(
+								CBORObjectType_Single,HalfPrecisionToSingle((int)uadditional));
+						else if(firstbyte==0xfa)
+							return new CBORObject(
+								CBORObjectType_Single,
+								ConverterInternal.Int32BitsToSingle((int)uadditional));
+						else if(firstbyte==0xfb)
+							return new CBORObject(
+								CBORObjectType_Double,
+								ConverterInternal.Int64BitsToDouble(uadditional));
+						else if(firstbyte==0xf8)
+							return new CBORObject(
+								CBORObjectType_SimpleValue,(int)uadditional);
+						else
+							throw new CBORException("Unexpected data encountered");
+					default:
+						throw new CBORException("Unexpected data encountered");
+				}
+			}
+			else if(majortype==2){ // short byte string
+				byte[] ret=new byte[firstbyte-0x40];
+				Array.Copy(data,1,ret,0,firstbyte-0x40);
+				return new CBORObject(CBORObjectType_ByteString,ret);
+			}
+			else if(majortype==3){ // short text string
+				StringBuilder ret=new StringBuilder(firstbyte-0x60);
+				ReadUtf8FromBytes(data,1,firstbyte-0x60,ret);
+				return new CBORObject(CBORObjectType_TextString,ret.ToString());
+			}
+			else if(firstbyte==0x80) // empty array
+				return FromObject(new List<CBORObject>());
+			else if(firstbyte==0xA0) // empty map
+				return FromObject(new Dictionary<CBORObject,CBORObject>());
+			else
+				throw new CBORException("Unexpected data encountered");
+		}
+		
 		/// <summary>
 		/// Generates a CBOR object from an array of CBOR-encoded
 		/// bytes.
@@ -364,113 +515,18 @@ namespace PeterO
 			if((data)==null)throw new ArgumentNullException("data");
 			if((data).Length==0)throw new ArgumentException("data is empty.");
 			int firstbyte=((int)(data[0]&(int)0xFF));
-			int length=data.Length;
-			// Check for simple cases
-			if(firstbyte<0x18){
-				CheckCBORLength(1,length);
-				return new CBORObject(CBORObjectType_Integer,(long)firstbyte);
-			}
-			else if(firstbyte>=0x20 && firstbyte<0x38){
-				CheckCBORLength(1,length);
-				return new CBORObject(
-					CBORObjectType_Integer,(long)(-1-(firstbyte-0x20)));
-			}
-			else if(firstbyte==56 || firstbyte==24){
-				CheckCBORLength(2,length);
-				int nextbyte=((int)(data[1]&(int)0xFF));
-				return new CBORObject(
-					CBORObjectType_Integer,
-					(firstbyte==24) ? (long)nextbyte : (long)(-1-(nextbyte)));
-			}
-			else if(firstbyte==57 || firstbyte==25){
-				CheckCBORLength(3,length);
-				int v=(((int)(data[1]&(int)0xFF))<<8);
-				v|=(((int)(data[2]&(int)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Integer,
-					(firstbyte==25) ? (long)v : (long)(-1-v));
-			}
-			else if(firstbyte==58 || firstbyte==26){
-				CheckCBORLength(5,length);
-				long v=(((long)(data[1]&(long)0xFF))<<24);
-				v|=(((long)(data[2]&(long)0xFF))<<16);
-				v|=(((long)(data[3]&(long)0xFF))<<8);
-				v|=(((long)(data[4]&(long)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Integer,
-					(firstbyte==26) ? (long)v : (long)(-1-v));
-			}
-			else if(firstbyte==59 || firstbyte==27){
-				CheckCBORLength(9,length);
-				int topbyte=((int)(data[1]&(int)0xFF));
-				if(topbyte==0){
-					// Nonzero top bytes indicate that more
-					// complicated processing may be necessary
-					// for this integer; if the top byte is 0,
-					// on the other hand, the whole integer
-					// can fit comfortably in the type LONG.
-					long v=(((long)(data[2]&(long)0xFF))<<48);
-					v|=(((long)(data[3]&(long)0xFF))<<40);
-					v|=(((long)(data[4]&(long)0xFF))<<32);
-					v|=(((long)(data[5]&(long)0xFF))<<24);
-					v|=(((long)(data[6]&(long)0xFF))<<16);
-					v|=(((long)(data[7]&(long)0xFF))<<8);
-					v|=(((long)(data[8]&(long)0xFF)));
-					return new CBORObject(
-						CBORObjectType_Integer,
-						(firstbyte==27) ? (long)v : (long)(-1-v));
-				}
-			}
-			else if(firstbyte>=0x60 && firstbyte<0x78){
-				String s=GetOptimizedStringIfShortAscii(data,0);
-				if(s!=null)return new CBORObject(CBORObjectType_TextString,s);
-			}
-			else if(firstbyte==0xc0){
+			int expectedLength=ExpectedLengths[firstbyte];
+			if(expectedLength==-1) // if invalid
+				throw new CBORException("Unexpected data encountered");
+			else if(expectedLength!=0) // if fixed length
+				CheckCBORLength(expectedLength,data.Length);
+			if(firstbyte==0xc0){
+				// value with tag 0
 				String s=GetOptimizedStringIfShortAscii(data,1);
 				if(s!=null)return new CBORObject(CBORObjectType_TextString,0,0,s);
 			}
-			else if(firstbyte==0xF4){
-				CheckCBORLength(1,length);
-				return CBORObject.False;
-			}
-			else if(firstbyte==0xF5){
-				CheckCBORLength(1,length);
-				return CBORObject.True;
-			}
-			else if(firstbyte==0xF6){
-				CheckCBORLength(1,length);
-				return CBORObject.Null;
-			}
-			else if(firstbyte==0xF7){
-				CheckCBORLength(1,length);
-				return CBORObject.Undefined;
-			}
-			else if(firstbyte==0xf9){
-				CheckCBORLength(3,length);
-				int v=(((int)(data[1]&(int)0xFF))<<8);
-				v|=(((int)(data[2]&(int)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Single,HalfPrecisionToSingle(v));
-			} else if(firstbyte==0xfa){
-				CheckCBORLength(5,length);
-				int v=(((int)(data[1]&(int)0xFF))<<24);
-				v|=(((int)(data[2]&(int)0xFF))<<16);
-				v|=(((int)(data[3]&(int)0xFF))<<8);
-				v|=(((int)(data[4]&(int)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Single,ConverterInternal.Int32BitsToSingle(v));
-			} else if(firstbyte==0xfb){
-				CheckCBORLength(9,length);
-				long v=(((long)(data[1]&(long)0xFF))<<56);
-				v|=(((long)(data[2]&(long)0xFF))<<48);
-				v|=(((long)(data[3]&(long)0xFF))<<40);
-				v|=(((long)(data[4]&(long)0xFF))<<32);
-				v|=(((long)(data[5]&(long)0xFF))<<24);
-				v|=(((long)(data[6]&(long)0xFF))<<16);
-				v|=(((long)(data[7]&(long)0xFF))<<8);
-				v|=(((long)(data[8]&(long)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Double,ConverterInternal.Int64BitsToDouble(v));
+			if(expectedLength!=0){
+				return GetFixedLengthObject(firstbyte, data);
 			}
 			// For complex cases, such as arrays and maps,
 			// read the object as though
@@ -2082,6 +2138,70 @@ namespace PeterO
 			}
 		}
 
+		private static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength, StringBuilder builder)  {
+			int cp=0;
+			int bytesSeen=0;
+			int bytesNeeded=0;
+			int lower=0x80;
+			int upper=0xBF;
+			int pointer=offset;
+			int endpointer=offset+byteLength;
+			while(pointer<endpointer){
+				int b=data[pointer];
+				pointer++;
+				if(bytesNeeded==0){
+					if(b<0x80){
+						builder.Append((char)b);
+					} else if(b>=0xc2 && b<=0xdf){
+						bytesNeeded=1;
+						cp=(b-0xc0)<<6;
+					} else if(b>=0xe0 && b<=0xef){
+						lower=(b==0xe0) ? 0xa0 : 0x80;
+						upper=(b==0xed) ? 0x9f : 0xbf;
+						bytesNeeded=2;
+						cp=(b-0xe0)<<12;
+					} else if(b>=0xf0 && b<=0xf4){
+						lower=(b==0xf0) ? 0x90 : 0x80;
+						upper=(b==0xf4) ? 0x8f : 0xbf;
+						bytesNeeded=3;
+						cp=(b-0xf0)<<18;
+					} else
+						return -1;
+					continue;
+				}
+				if(b<lower || b>upper){
+					cp=bytesNeeded=bytesSeen=0;
+					lower=0x80;
+					upper=0xbf;
+					return -1;
+				}
+				lower=0x80;
+				upper=0xbf;
+				bytesSeen++;
+				cp+=(b-0x80)<<(6*(bytesNeeded-bytesSeen));
+				if(bytesSeen!=bytesNeeded) {
+					continue;
+				}
+				int ret=cp;
+				cp=0;
+				bytesSeen=0;
+				bytesNeeded=0;
+				if(ret<=0xFFFF){
+					builder.Append((char)ret);
+				} else {
+					int ch=ret-0x10000;
+					int lead=ch/0x400+0xd800;
+					int trail=(ch&0x3FF)+0xdc00;
+					builder.Append((char)lead);
+					builder.Append((char)trail);
+				}
+			}
+			if(bytesNeeded!=0)
+				return -1;
+			return 0;
+		}
+
+
 		private static int ReadUtf8(Stream stream, int byteLength, StringBuilder builder)  {
 			int cp=0;
 			int bytesSeen=0;
@@ -2272,8 +2392,10 @@ namespace PeterO
 		private static BigInteger BigInt65536=(BigInteger)65536;
 
 		public static CBORObject FromObjectAndTag(Object o, BigInteger bigintTag){
-			if((bigintTag).Sign<0)throw new ArgumentOutOfRangeException("tag"+" not greater or equal to 0 ("+Convert.ToString(bigintTag,System.Globalization.CultureInfo.InvariantCulture)+")");
-			if((bigintTag).CompareTo(UInt64MaxValue)>0)throw new ArgumentOutOfRangeException("tag"+" not less or equal to 18446744073709551615 ("+Convert.ToString(bigintTag,System.Globalization.CultureInfo.InvariantCulture)+")");
+			if((bigintTag).Sign<0)throw new ArgumentOutOfRangeException(
+				"tag not greater or equal to 0 ("+Convert.ToString(bigintTag,System.Globalization.CultureInfo.InvariantCulture)+")");
+			if((bigintTag).CompareTo(UInt64MaxValue)>0)throw new ArgumentOutOfRangeException(
+				"tag not less or equal to 18446744073709551615 ("+Convert.ToString(bigintTag,System.Globalization.CultureInfo.InvariantCulture)+")");
 			CBORObject c=FromObject(o);
 			if(bigintTag.CompareTo(BigInt65536)<0){
 				// Low-numbered, commonly used tags
@@ -2539,23 +2661,29 @@ namespace PeterO
 		){
 			if(depth>1000)
 				throw new CBORException("Too deeply nested");
-			int c=s.ReadByte();
-			if(c<0)
+			int firstbyte=s.ReadByte();
+			if(firstbyte<0)
 				throw new CBORException("Premature end of data");
-			int type=(c>>5)&0x07;
-			int additional=(c&0x1F);
-			if(c==0xFF){
+			if(firstbyte==0xFF){
 				if(allowBreak)return null;
 				throw new CBORException("Unexpected break code encountered");
 			}
-			if(allowOnlyType>=0 && (allowOnlyType!=type)){
-				throw new CBORException("Expected major type "+
-				                        Convert.ToString((int)allowOnlyType,CultureInfo.InvariantCulture)+
-				                        ", instead got type "+
-				                        Convert.ToString((int)type,CultureInfo.InvariantCulture));
-			}
-			if(allowOnlyType>=0 && additional>=28){
+			int type=(firstbyte>>5)&0x07;
+			int additional=(firstbyte&0x1F);
+			int expectedLength=ExpectedLengths[firstbyte];
+			// Data checks
+			if(expectedLength==-1) // if the head byte is invalid
 				throw new CBORException("Unexpected data encountered");
+			if(allowOnlyType>=0){
+				if(allowOnlyType!=type){
+					throw new CBORException("Expected major type "+
+					                        Convert.ToString((int)allowOnlyType,CultureInfo.InvariantCulture)+
+					                        ", instead got type "+
+					                        Convert.ToString((int)type,CultureInfo.InvariantCulture));
+				}
+				if(additional>=28){
+					throw new CBORException("Unexpected data encountered");
+				}
 			}
 			if(validTypeFlags!=null){
 				// Check for valid major types if asked
@@ -2563,122 +2691,78 @@ namespace PeterO
 					throw new CBORException("Unexpected data type encountered");
 				}
 			}
-			if(type==7){
-				if(additional==20)return False;
-				if(additional==21)return True;
-				if(additional==22)return Null;
-				if(additional==23)return Undefined;
-				if(additional<20){
-					return new CBORObject(CBORObjectType_SimpleValue,additional);
-				}
-				if(additional==24){
-					c=s.ReadByte();
-					if(c<0)
-						throw new CBORException("Premature end of data");
-					return new CBORObject(CBORObjectType_SimpleValue,c);
-				}
-				if(additional==25 || additional==26 ||
-				   additional==27){
-					int cslength=(additional==25) ? 2 :
-						((additional==26) ? 4 : 8);
-					byte[] cs=new byte[cslength];
-					if(s.Read(cs,0,cs.Length)!=cs.Length)
-						throw new CBORException("Premature end of data");
-					long x=0;
-					for(int i=0;i<cs.Length;i++){
-						x<<=8;
-						x|=((long)cs[i])&0xFF;
-					}
-					if(additional==25){
-						float f=HalfPrecisionToSingle(
-							unchecked((int)x));
-						return new CBORObject(CBORObjectType_Single,f);
-					} else if(additional==26){
-						float f=ConverterInternal.Int32BitsToSingle(
-							unchecked((int)x));
-						return new CBORObject(CBORObjectType_Single,f);
-					} else if(additional==27){
-						double f=ConverterInternal.Int64BitsToDouble(
-							unchecked(x));
-						return new CBORObject(CBORObjectType_Double,f);
-					}
-				}
-				throw new CBORException("Unexpected data encountered");
+			// Check if this represents a fixed object
+			CBORObject fixedObject=FixedObjects[firstbyte];
+			if(fixedObject!=null)
+				return fixedObject;
+			// Read fixed-length data
+			byte[] data=null;
+			if(expectedLength!=0){
+				data=new byte[expectedLength];
+				// include the first byte because this function
+				// will assume it exists for some head bytes
+				data[0]=unchecked((byte)firstbyte);
+				if(expectedLength>1 &&
+				   s.Read(data,1,expectedLength-1)!=expectedLength-1)
+					throw new CBORException("Premature end of data");
+				return GetFixedLengthObject(firstbyte,data);
 			}
-			long uadditional=0;
+			long uadditional=(long)additional;
 			BigInteger bigintAdditional=BigInteger.Zero;
 			bool hasBigAdditional=false;
-			if(additional<=23){
-				uadditional=(long)additional;
-			} else if(additional==24){
-				int c1=s.ReadByte();
-				if(c1<0)
-					throw new CBORException("Premature end of data");
-				uadditional=(long)c1;
-			} else if(additional==25 || additional==26){
-				byte[] cs=new byte[(additional==25) ? 2 : 4];
-				if(s.Read(cs,0,cs.Length)!=cs.Length)
-					throw new CBORException("Premature end of data");
-				long x=0;
-				for(int i=0;i<cs.Length;i++){
-					x<<=8;
-					x|=((long)cs[i])&0xFF;
-				}
-				uadditional=x;
-			} else if(additional==27){
-				byte[] cs=new byte[8];
-				if(s.Read(cs,0,cs.Length)!=cs.Length)
-					throw new CBORException("Premature end of data");
-				long x=0;
-				for(int i=0;i<cs.Length;i++){
-					x<<=8;
-					x|=((long)cs[i])&0xFF;
-				}
-				if(((x>>63)&1)!=0){
-					// uadditional requires 64 bits to
-					// remain unsigned, so convert to
-					// big integer
-					hasBigAdditional=true;
-					// Get low 7 bytes and convert to BigInteger,
-					// to reduce the number of big integer
-					// operations
-					x&=0xFFFFFFFFFFFFFFL;
-					bigintAdditional=(BigInteger)x;
-					// Include the first and highest byte
-					int firstByte=((int)cs[0])&0xFF;
-					BigInteger bigintTemp=(BigInteger)firstByte;
-					bigintTemp<<=56;
-					bigintAdditional|=(BigInteger)bigintTemp;
-				} else {
-					uadditional=x;
-				}
-			} else if(additional==28 || additional==29 ||
-			          additional==30){
-				throw new CBORException("Unexpected data encountered");
-			} else if(additional==31 && type<2){
-				throw new CBORException("Unexpected data encountered");
+			data=new byte[8];
+			switch(firstbyte&0x1F){
+					case 24:{
+						int tmp=s.ReadByte();
+						if(tmp<0)
+							throw new CBORException("Premature end of data");
+						uadditional=tmp;
+						break;
+					}
+					case 25:{
+						if(s.Read(data,0,2)!=2)
+							throw new CBORException("Premature end of data");
+						uadditional=(((long)(data[0]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[1]&(long)0xFF)));
+						break;
+					}
+					case 26:{
+						if(s.Read(data,0,4)!=4)
+							throw new CBORException("Premature end of data");
+						uadditional=(((long)(data[0]&(long)0xFF))<<24);
+						uadditional|=(((long)(data[1]&(long)0xFF))<<16);
+						uadditional|=(((long)(data[2]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[3]&(long)0xFF)));
+						break;
+					}
+					case 27:{
+						if(s.Read(data,0,8)!=8)
+							throw new CBORException("Premature end of data");
+						uadditional=(((long)(data[0]&(long)0xFF))<<56);
+						uadditional|=(((long)(data[1]&(long)0xFF))<<48);
+						uadditional|=(((long)(data[2]&(long)0xFF))<<40);
+						uadditional|=(((long)(data[3]&(long)0xFF))<<32);
+						uadditional|=(((long)(data[4]&(long)0xFF))<<24);
+						uadditional|=(((long)(data[5]&(long)0xFF))<<16);
+						uadditional|=(((long)(data[6]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[7]&(long)0xFF)));
+						if((uadditional>>63)!=0){
+							long lowAdditional=uadditional&0xFFFFFFFFFFFFFFL;
+							long highAdditional=(uadditional>>56)&0xFF;
+							hasBigAdditional=true;
+							bigintAdditional=(BigInteger)highAdditional;
+							bigintAdditional<<=56;
+							bigintAdditional|=(BigInteger)lowAdditional;
+						}
+						break;
+					}
+				default:
+					break;
 			}
-			if(type==0){
-				if(hasBigAdditional)
-					return FromObject(bigintAdditional);
-				else
-					return FromObject(uadditional);
-			} else if(type==1){
-				if(hasBigAdditional){
-					bigintAdditional=BigInteger.MinusOne-(BigInteger)bigintAdditional;
-					return FromObject(bigintAdditional);
-				} else if(uadditional<=Int64.MaxValue){
-					return FromObject(((long)-1-(long)uadditional));
-				} else {
-					BigInteger bi=BigInteger.MinusOne;
-					bi-=(BigInteger)(uadditional);
-					return FromObject(bi);
-				}
-			} else if(type==2){ // Byte string
+			if(type==2){ // Byte string
 				if(additional==31){
 					// Streaming byte string
 					using(MemoryStream ms=new MemoryStream()){
-						byte[] data;
 						// Requires same type as this one
 						int[] subFlags=new int[]{(1<<type)};
 						while(true){
@@ -2704,7 +2788,7 @@ namespace PeterO
 						                        Convert.ToString((long)uadditional,CultureInfo.InvariantCulture)+
 						                        " is bigger than supported");
 					}
-					byte[] data=null;
+					data=null;
 					if(uadditional<=0x10000){
 						// Simple case: small size
 						data=new byte[(int)uadditional];
@@ -2817,7 +2901,7 @@ namespace PeterO
 					}
 					return new CBORObject(CBORObjectType_Map,dict);
 				}
-			} else { // Tagged item
+			} else if(type==6){ // Tagged item
 				CBORObject o;
 				if(!hasBigAdditional){
 					if(uadditional==0){
@@ -2829,7 +2913,7 @@ namespace PeterO
 						// Requires a byte string
 						int[] subFlags=new int[]{(1<<2)};
 						o=Read(s,depth+1,false,-1,subFlags,0);
-						byte[] data=(byte[])o.item;
+						data=(byte[])o.item;
 						BigInteger bi=BigInteger.Zero;
 						for(int i=0;i<data.Length;i++){
 							bi<<=8;
@@ -2871,6 +2955,8 @@ namespace PeterO
 					return FromObjectAndTag(
 						o,(BigInteger)uadditional);
 				}
+			} else {
+				throw new CBORException("Unexpected data encountered");
 			}
 		}
 	}

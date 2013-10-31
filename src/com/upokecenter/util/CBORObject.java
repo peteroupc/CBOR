@@ -141,7 +141,7 @@ import java.math.*;
 		
 
 		
-		private boolean ByteArrayEquals(byte[] a, byte[] b) {
+		private boolean ByteArrayEquals(byte.charAt() a, byte.charAt() b){
 			if(a==null)return (b==null);
 			if(b==null)return false;
 			if(a.length!=b.length)return false;
@@ -151,7 +151,7 @@ import java.math.*;
 			return true;
 		}
 		
-		private int ByteArrayHashCode(byte[] a) {
+		private int ByteArrayHashCode(byte.charAt() a){
 			if(a==null)return 0;
 			int ret=19;
 			{
@@ -250,8 +250,8 @@ public boolean equals(Object obj) {
 			CBORObject other = ((obj instanceof CBORObject) ? (CBORObject)obj : null);
 			if (other == null)
 				return false;
-			if(item instanceof byte[]){
-				if(!ByteArrayEquals((byte[])item,((other.item instanceof byte[]) ? (byte[])other.item : null)))
+			if(item instanceof Byte.charAt()){
+				if(!ByteArrayEquals((byte.charAt())item,other.item as byte.charAt()))
 					return false;
 			} else if(item instanceof List<?>){
 				if(!CBORArrayEquals(AsList(),((other.item instanceof List<?>) ? (List<CBORObject>)other.item : null)))
@@ -272,8 +272,8 @@ public boolean equals(Object obj) {
 			{
 				if (item != null){
 					int itemHashCode=0;
-					if(item instanceof byte[])
-						itemHashCode=ByteArrayHashCode((byte[])item);
+					if(item instanceof Byte.charAt())
+						itemHashCode=ByteArrayHashCode((byte.charAt())item);
 					else if(item instanceof List<?>)
 						itemHashCode=CBORArrayHashCode(AsList());
 					else if(item instanceof Map<?,?>)
@@ -293,19 +293,19 @@ public boolean equals(Object obj) {
 			if(actualLength<expectedLength)
 				throw new CBORException("Premature end of data");
 			else if(actualLength>expectedLength)
-				throw new CBORException("Too few bytes");
+				throw new CBORException("Too many bytes");
 		}
 
 		private static void CheckCBORLength(int expectedLength, int actualLength) {
 			if(actualLength<expectedLength)
 				throw new CBORException("Premature end of data");
 			else if(actualLength>expectedLength)
-				throw new CBORException("Too few bytes");
+				throw new CBORException("Too many bytes");
 		}
 		
 		private static String GetOptimizedStringIfShortAscii(
-			byte[] data, int offset
-		) {
+			byte.charAt() data, int offset
+		){
 			int length=data.length;
 			if(length>offset){
 				int nextbyte=((int)(data[offset]&(int)0xFF));
@@ -333,123 +333,179 @@ public boolean equals(Object obj) {
 			return null;
 		}
 		
+		private static CBORObject[] FixedObjects=InitializeFixedObjects();
+		
+		// Initialize fixed values for certain
+		// head bytes
+		private static CBORObject[] InitializeFixedObjects() {
+			FixedObjects=new CBORObject[256];
+			for(int i=0;i<0x18;i++){
+				FixedObjects[i]=new CBORObject(CBORObjectType_Integer,(long)i);
+			}
+			for(int i=0x20;i<0x38;i++){
+				FixedObjects[i]=new CBORObject(CBORObjectType_Integer,
+				                               (long)(-1-(i-0x20)));
+			}
+			FixedObjects[0x60]=new CBORObject(CBORObjectType_TextString,"");
+			for(int i=0xE0;i<0xf8;i++){
+				FixedObjects[i]=new CBORObject(CBORObjectType_SimpleValue,(int)(i-0xe0));
+			}
+			return FixedObjects;
+		}
+		
+		// Expected lengths for each head byte.
+		// 0 means length varies. -1 means invalid.
+		private static int[] ExpectedLengths=new int[]{
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, // major type 0
+			1,1,1,1,1,1,1,1, 2,3,5,9,-1,-1,-1,-1,
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, // major type 1
+			1,1,1,1,1,1,1,1, 2,3,5,9,-1,-1,-1,-1,
+			1,2,3,4,5,6,7,8, 9,10,11,12,13,14,15,16, // major type 2
+			17,18,19,20,21,22,23,24,  0,0,0,0,-1,-1,-1,0,
+			1,2,3,4,5,6,7,8, 9,10,11,12,13,14,15,16, // major type 3
+			17,18,19,20,21,22,23,24,  0,0,0,0,-1,-1,-1,0,
+			1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, // major type 4
+			0,0,0,0,0,0,0,0, 0,0,0,0,-1,-1,-1,0,
+			1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, // major type 5
+			0,0,0,0,0,0,0,0, 0,0,0,0,-1,-1,-1,0,
+			0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, // major type 6
+			0,0,0,0,0,0,0,0, 0,0,0,0,-1,-1,-1,0,
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, // major type 7
+			1,1,1,1,1,1,1,1, 2,3,5,9,-1,-1,-1,-1
+		};
+		
+		// Generate a CBOR Object for head bytes with fixed length.
+		// Note that this function assumes that the length of the data
+		// was already checked.
+		private static CBORObject GetFixedLengthObject(int firstbyte, byte.charAt() data){
+			CBORObject fixedObj=FixedObjects[firstbyte];
+			if(fixedObj!=null)
+				return fixedObj;
+			int majortype=(firstbyte>>5);
+			if(firstbyte>=0x61 && firstbyte<0x78){
+				// text String length 1 to 23
+				String s=GetOptimizedStringIfShortAscii(data,0);
+				if(s!=null)return new CBORObject(CBORObjectType_TextString,s);
+			}
+			if(((firstbyte&0x1C)==0x18)){
+				// contains 1 to 8 extra bytes of additional information
+				long uadditional=0;
+				switch(firstbyte&0x1F){
+					case 24:
+						uadditional=((int)(data[1]&(int)0xFF));
+						break;
+					case 25:
+						uadditional=(((long)(data[1]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[2]&(long)0xFF)));
+						break;
+					case 26:
+						uadditional=(((long)(data[1]&(long)0xFF))<<24);
+						uadditional|=(((long)(data[2]&(long)0xFF))<<16);
+						uadditional|=(((long)(data[3]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[4]&(long)0xFF)));
+						break;
+					case 27:
+						uadditional=(((long)(data[1]&(long)0xFF))<<56);
+						uadditional|=(((long)(data[2]&(long)0xFF))<<48);
+						uadditional|=(((long)(data[3]&(long)0xFF))<<40);
+						uadditional|=(((long)(data[4]&(long)0xFF))<<32);
+						uadditional|=(((long)(data[5]&(long)0xFF))<<24);
+						uadditional|=(((long)(data[6]&(long)0xFF))<<16);
+						uadditional|=(((long)(data[7]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[8]&(long)0xFF)));
+						break;
+					default:
+						throw new CBORException("Unexpected data encountered");
+				}
+				switch(majortype){
+					case 0:
+						if((uadditional>>63)==0){
+							// use only if additional's top bit isn't set
+							// (additional is a signed long)
+							return new CBORObject(CBORObjectType_Integer,uadditional);
+						} else {
+							long lowAdditional=uadditional&0xFFFFFFFFFFFFFFL;
+							long highAdditional=(uadditional>>56)&0xFF;
+							BigInteger bigintAdditional=BigInteger.valueOf(highAdditional);
+							bigintAdditional=bigintAdditional.shiftLeft(56);
+							bigintAdditional=bigintAdditional.or(BigInteger.valueOf(lowAdditional));
+							return FromObject(bigintAdditional);
+						}
+					case 1:
+						if((uadditional>>63)==0){
+							// use only if additional's top bit isn't set
+							// (additional is a signed long)
+							return new CBORObject(CBORObjectType_Integer,-1-uadditional);
+						} else {
+							long lowAdditional=uadditional&0xFFFFFFFFFFFFFFL;
+							long highAdditional=(uadditional>>56)&0xFF;
+							BigInteger bigintAdditional=BigInteger.valueOf(highAdditional);
+							bigintAdditional=bigintAdditional.shiftLeft(56);
+							bigintAdditional=bigintAdditional.or(BigInteger.valueOf(lowAdditional));
+							bigintAdditional=(BigInteger.valueOf(-1)).subtract(bigintAdditional);
+							return FromObject(bigintAdditional);
+						}
+					case 7:
+						if(firstbyte==0xf9)
+							return new CBORObject(
+								CBORObjectType_Single,HalfPrecisionToSingle((int)uadditional));
+						else if(firstbyte==0xfa)
+							return new CBORObject(
+								CBORObjectType_Single,
+								Float.intBitsToFloat((int)uadditional));
+						else if(firstbyte==0xfb)
+							return new CBORObject(
+								CBORObjectType_Double,
+								Double.longBitsToDouble(uadditional));
+						else if(firstbyte==0xf8)
+							return new CBORObject(
+								CBORObjectType_SimpleValue,(int)uadditional);
+						else
+							throw new CBORException("Unexpected data encountered");
+					default:
+						throw new CBORException("Unexpected data encountered");
+				}
+			}
+			else if(majortype==2){ // short byte String
+				byte.charAt() ret=new byte.charAt(firstbyte-0x40);
+				System.arraycopy(data,1,ret,0,firstbyte-0x40);
+				return new CBORObject(CBORObjectType_ByteString,ret);
+			}
+			else if(majortype==3){ // short text String
+				StringBuilder ret=new StringBuilder(firstbyte-0x60);
+				ReadUtf8FromBytes(data,1,firstbyte-0x60,ret);
+				return new CBORObject(CBORObjectType_TextString,ret.toString());
+			}
+			else if(firstbyte==0x80) // empty array
+				return FromObject(new ArrayList<CBORObject>());
+			else if(firstbyte==0xA0) // empty map
+				return FromObject(new HashMap<CBORObject,CBORObject>());
+			else
+				throw new CBORException("Unexpected data encountered");
+		}
+		
 		/// <summary>
 		/// Generates a CBOR Object from an array of CBOR-encoded
 		/// bytes.
 		/// </summary>
 		/// <param name="data"></param>
 		/// <returns></returns>
-		public static CBORObject FromBytes(byte[] data) {
+		public static CBORObject FromBytes(byte.charAt() data){
 			if((data)==null)throw new NullPointerException("data");
 			if((data).length==0)throw new IllegalArgumentException("data is empty.");
 			int firstbyte=((int)(data[0]&(int)0xFF));
-			int length=data.length;
-			// Check for simple cases
-			if(firstbyte<0x18){
-				CheckCBORLength(1,length);
-				return new CBORObject(CBORObjectType_Integer,(long)firstbyte);
-			}
-			else if(firstbyte>=0x20 && firstbyte<0x38){
-				CheckCBORLength(1,length);
-				return new CBORObject(
-					CBORObjectType_Integer,(long)(-1-(firstbyte-0x20)));
-			}
-			else if(firstbyte==56 || firstbyte==24){
-				CheckCBORLength(2,length);
-				int nextbyte=((int)(data[1]&(int)0xFF));
-				return new CBORObject(
-					CBORObjectType_Integer,
-					(firstbyte==24) ? (long)nextbyte : (long)(-1-(nextbyte)));
-			}
-			else if(firstbyte==57 || firstbyte==25){
-				CheckCBORLength(3,length);
-				int v=(((int)(data[1]&(int)0xFF))<<8);
-				v|=(((int)(data[2]&(int)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Integer,
-					(firstbyte==25) ? (long)v : (long)(-1-v));
-			}
-			else if(firstbyte==58 || firstbyte==26){
-				CheckCBORLength(5,length);
-				long v=(((long)(data[1]&(long)0xFF))<<24);
-				v|=(((long)(data[2]&(long)0xFF))<<16);
-				v|=(((long)(data[3]&(long)0xFF))<<8);
-				v|=(((long)(data[4]&(long)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Integer,
-					(firstbyte==26) ? (long)v : (long)(-1-v));
-			}
-			else if(firstbyte==59 || firstbyte==27){
-				CheckCBORLength(9,length);
-				int topbyte=((int)(data[1]&(int)0xFF));
-				if(topbyte==0){
-					// Nonzero top bytes indicate that more
-					// complicated processing may be necessary
-					// for this integer; if the top byte is 0,
-					// on the other hand, the whole integer
-					// can fit comfortably in the type LONG.
-					long v=(((long)(data[2]&(long)0xFF))<<48);
-					v|=(((long)(data[3]&(long)0xFF))<<40);
-					v|=(((long)(data[4]&(long)0xFF))<<32);
-					v|=(((long)(data[5]&(long)0xFF))<<24);
-					v|=(((long)(data[6]&(long)0xFF))<<16);
-					v|=(((long)(data[7]&(long)0xFF))<<8);
-					v|=(((long)(data[8]&(long)0xFF)));
-					return new CBORObject(
-						CBORObjectType_Integer,
-						(firstbyte==27) ? (long)v : (long)(-1-v));
-				}
-			}
-			else if(firstbyte>=0x60 && firstbyte<0x78){
-				String s=GetOptimizedStringIfShortAscii(data,0);
-				if(s!=null)return new CBORObject(CBORObjectType_TextString,s);
-			}
-			else if(firstbyte==0xc0){
+			int expectedLength=ExpectedLengths[firstbyte];
+			if(expectedLength==-1) // if invalid
+				throw new CBORException("Unexpected data encountered");
+			else if(expectedLength!=0) // if fixed length
+				CheckCBORLength(expectedLength,data.length);
+			if(firstbyte==0xc0){
+				// value with tag 0
 				String s=GetOptimizedStringIfShortAscii(data,1);
 				if(s!=null)return new CBORObject(CBORObjectType_TextString,0,0,s);
 			}
-			else if(firstbyte==0xF4){
-				CheckCBORLength(1,length);
-				return CBORObject.False;
-			}
-			else if(firstbyte==0xF5){
-				CheckCBORLength(1,length);
-				return CBORObject.True;
-			}
-			else if(firstbyte==0xF6){
-				CheckCBORLength(1,length);
-				return CBORObject.Null;
-			}
-			else if(firstbyte==0xF7){
-				CheckCBORLength(1,length);
-				return CBORObject.Undefined;
-			}
-			else if(firstbyte==0xf9){
-				CheckCBORLength(3,length);
-				int v=(((int)(data[1]&(int)0xFF))<<8);
-				v|=(((int)(data[2]&(int)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Single,HalfPrecisionToSingle(v));
-			} else if(firstbyte==0xfa){
-				CheckCBORLength(5,length);
-				int v=(((int)(data[1]&(int)0xFF))<<24);
-				v|=(((int)(data[2]&(int)0xFF))<<16);
-				v|=(((int)(data[3]&(int)0xFF))<<8);
-				v|=(((int)(data[4]&(int)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Single,Float.intBitsToFloat(v));
-			} else if(firstbyte==0xfb){
-				CheckCBORLength(9,length);
-				long v=(((long)(data[1]&(long)0xFF))<<56);
-				v|=(((long)(data[2]&(long)0xFF))<<48);
-				v|=(((long)(data[3]&(long)0xFF))<<40);
-				v|=(((long)(data[4]&(long)0xFF))<<32);
-				v|=(((long)(data[5]&(long)0xFF))<<24);
-				v|=(((long)(data[6]&(long)0xFF))<<16);
-				v|=(((long)(data[7]&(long)0xFF))<<8);
-				v|=(((long)(data[8]&(long)0xFF)));
-				return new CBORObject(
-					CBORObjectType_Double,Double.longBitsToDouble(v));
+			if(expectedLength!=0){
+				return GetFixedLengthObject(firstbyte, data);
 			}
 			// For complex cases, such as arrays and maps,
 			// read the Object as though
@@ -960,19 +1016,19 @@ public void set(CBORObject key, CBORObject value) {
 			}
 		}
 
-		private static byte[] GetPositiveIntBytes(int type, int value) {
+		private static byte.charAt() GetPositiveIntBytes(int type, int value){
 			if((value)<0)throw new IllegalArgumentException("value"+" not greater or equal to "+"0"+" ("+Integer.toString((int)value)+")");
 			if(value<24){
-				return new byte[]{(byte)((byte)value|(byte)(type<<5))};
+				return new byte.charAt(){(byte)((byte)value|(byte)(type<<5))};
 			} else if(value<=0xFF){
-				return new byte[]{(byte)(24|(type<<5)),
+				return new byte.charAt(){(byte)(24|(type<<5)),
 					(byte)(value&0xFF)};
 			} else if(value<=0xFFFF){
-				return new byte[]{(byte)(25|(type<<5)),
+				return new byte.charAt(){(byte)(25|(type<<5)),
 					(byte)((value>>8)&0xFF),
 					(byte)(value&0xFF)};
 			} else {
-				return new byte[]{(byte)(26|(type<<5)),
+				return new byte.charAt(){(byte)(26|(type<<5)),
 					(byte)((value>>24)&0xFF),
 					(byte)((value>>16)&0xFF),
 					(byte)((value>>8)&0xFF),
@@ -981,29 +1037,29 @@ public void set(CBORObject key, CBORObject value) {
 		}
 
 		private static void WritePositiveInt(int type, int value, OutputStream s) throws IOException {
-			byte[] bytes=GetPositiveIntBytes(type,value);
+			byte.charAt() bytes=GetPositiveIntBytes(type,value);
 			s.write(bytes,0,bytes.length);
 		}
 		
-		private static byte[] GetPositiveInt64Bytes(int type, long value) {
+		private static byte.charAt() GetPositiveInt64Bytes(int type, long value){
 			if((value)<0)throw new IllegalArgumentException("value"+" not greater or equal to "+"0"+" ("+Long.toString((long)value)+")");
 			if(value<24){
-				return new byte[]{(byte)((byte)value|(byte)(type<<5))};
+				return new byte.charAt(){(byte)((byte)value|(byte)(type<<5))};
 			} else if(value<=0xFF){
-				return new byte[]{(byte)(24|(type<<5)),
+				return new byte.charAt(){(byte)(24|(type<<5)),
 					(byte)(value&0xFF)};
 			} else if(value<=0xFFFF){
-				return new byte[]{(byte)(25|(type<<5)),
+				return new byte.charAt(){(byte)(25|(type<<5)),
 					(byte)((value>>8)&0xFF),
 					(byte)(value&0xFF)};
 			} else if(value<=0xFFFFFFFF){
-				return new byte[]{(byte)(26|(type<<5)),
+				return new byte.charAt(){(byte)(26|(type<<5)),
 					(byte)((value>>24)&0xFF),
 					(byte)((value>>16)&0xFF),
 					(byte)((value>>8)&0xFF),
 					(byte)(value&0xFF)};
 			} else {
-				return new byte[]{(byte)(27|(type<<5)),
+				return new byte.charAt(){(byte)(27|(type<<5)),
 					(byte)((value>>56)&0xFF),
 					(byte)((value>>48)&0xFF),
 					(byte)((value>>40)&0xFF),
@@ -1015,20 +1071,20 @@ public void set(CBORObject key, CBORObject value) {
 			}
 		}
 		private static void WritePositiveInt64(int type, long value, OutputStream s) throws IOException {
-			byte[] bytes=GetPositiveInt64Bytes(type,value);
+			byte.charAt() bytes=GetPositiveInt64Bytes(type,value);
 			s.write(bytes,0,bytes.length);
 		}
 		
 		private static final int StreamedStringBufferLength=4096;
 		
 		public static void WriteStreamedString(String str, OutputStream stream) throws IOException {
-			byte[] bytes;
+			byte.charAt() bytes;
 			bytes=GetOptimizedBytesIfShortAscii(str,-1);
 			if(bytes!=null){
 				stream.write(bytes,0,bytes.length);
 				return;
 			}
-			bytes=new byte[StreamedStringBufferLength];
+			bytes=new byte.charAt(StreamedStringBufferLength);
 			int byteIndex=0;
 			boolean streaming=false;
 			for(int index=0;index<str.length();index++){
@@ -1149,7 +1205,7 @@ try {
 ms=new ByteArrayOutputStream();
 
 					long tmp=0;
-					byte[] buffer=new byte[10];
+					byte.charAt() buffer=new byte.charAt(10);
 					while(bigint.signum()>0){
 						// To reduce the number of big integer
 						// operations, extract the big int 56 bits at a time
@@ -1166,7 +1222,7 @@ ms=new ByteArrayOutputStream();
 						}
 						ms.write(buffer,0,bufferindex);
 					}
-					byte[] bytes=ms.toByteArray();
+					byte.charAt() bytes=ms.toByteArray();
 					switch(bytes.length){
 						case 1: // Fits in 1 byte (won't normally happen though)
 							buffer[0]=(byte)((datatype<<5)|24);
@@ -1233,8 +1289,8 @@ if(ms!=null)ms.close();
 				Write((BigInteger)item,s);
 			} else if(this.getItemType()== CBORObjectType_ByteString){
 				WritePositiveInt((this.getItemType()== CBORObjectType_ByteString) ? 2 : 3,
-				                 ((byte[])item).length,s);
-				s.write(((byte[])item),0,((byte[])item).length);
+				                 ((byte.charAt())item).length,s);
+				s.write(((byte.charAt())item),0,((byte.charAt())item).length);
 			} else if(this.getItemType()== CBORObjectType_TextString ){
 				Write((String)item,s);
 			} else if(this.getItemType()== CBORObjectType_Array){
@@ -1327,7 +1383,7 @@ if(ms!=null)ms.close();
 			if((s)==null)throw new NullPointerException("s");
 			int bits=Float.floatToRawIntBits(
 				value);
-			byte[] data=new byte[]{(byte)0xFA,
+			byte.charAt() data=new byte.charAt(){(byte)0xFA,
 				(byte)((bits>>24)&0xFF),
 				(byte)((bits>>16)&0xFF),
 				(byte)((bits>>8)&0xFF),
@@ -1342,7 +1398,7 @@ if(ms!=null)ms.close();
 		public static void Write(double value, OutputStream s) throws IOException {
 			long bits=Double.doubleToRawLongBits(
 				(double)value);
-			byte[] data=new byte[]{(byte)0xFB,
+			byte.charAt() data=new byte.charAt(){(byte)0xFB,
 				(byte)((bits>>56)&0xFF),
 				(byte)((bits>>48)&0xFF),
 				(byte)((bits>>40)&0xFF),
@@ -1354,8 +1410,8 @@ if(ms!=null)ms.close();
 			s.write(data,0,9);
 		}
 		
-		private static byte[] GetOptimizedBytesIfShortAscii(String str, int tagbyte) {
-			byte[] bytes;
+		private static byte.charAt() GetOptimizedBytesIfShortAscii(String str, int tagbyte){
+			byte.charAt() bytes;
 			if(str.length()<=255){
 				// The strings will usually be short ASCII strings, so
 				// use this optimization
@@ -1363,7 +1419,7 @@ if(ms!=null)ms.close();
 				int length=str.length();
 				int extra=(length<24) ? 1 : 2;
 				if(tagbyte>=0)extra++;
-				bytes=new byte[length+extra];
+				bytes=new byte.charAt(length+extra);
 				if(tagbyte>=0){
 					bytes[offset]=((byte)(tagbyte));
 					offset++;
@@ -1397,7 +1453,7 @@ if(ms!=null)ms.close();
 		/// data item.
 		/// </summary>
 		/// <returns>A byte array in CBOR format.</returns>
-		public byte[] ToBytes() {
+		public byte.charAt() ToBytes(){
 			// For some types, a memory stream is a lot of
 			// overhead since the amount of memory they
 			// use is fixed and small
@@ -1416,13 +1472,13 @@ if(ms!=null)ms.close();
 			}
 			if(!hasComplexTag){
 				if(this.getItemType()== CBORObjectType_TextString){
-					byte[] ret=GetOptimizedBytesIfShortAscii(
+					byte.charAt() ret=GetOptimizedBytesIfShortAscii(
 						(String)item,
 						tagged ? (((int)tagbyte)&0xFF) : -1);
 					if(ret!=null)return ret;
 				} else if(this.getItemType()== CBORObjectType_Integer){
 					long value=((Long)item).longValue();
-					byte[] ret=null;
+					byte.charAt() ret=null;
 					if(value>=0){
 						ret=GetPositiveInt64Bytes(0,value);
 					} else {
@@ -1431,7 +1487,7 @@ if(ms!=null)ms.close();
 						ret=GetPositiveInt64Bytes(1,value);
 					}
 					if(!tagged)return ret;
-					byte[] ret2=new byte[ret.length+1];
+					byte.charAt() ret2=new byte.charAt(ret.length+1);
 					System.arraycopy(ret,0,ret2,1,ret.length);
 					ret2[0]=tagbyte;
 					return ret2;
@@ -1439,12 +1495,12 @@ if(ms!=null)ms.close();
 					int bits=Float.floatToRawIntBits(
 						((Float)item).floatValue());
 					return tagged ?
-						new byte[]{tagbyte,(byte)0xFA,
+						new byte.charAt(){tagbyte,(byte)0xFA,
 						(byte)((bits>>24)&0xFF),
 						(byte)((bits>>16)&0xFF),
 						(byte)((bits>>8)&0xFF),
 						(byte)(bits&0xFF)} :
-						new byte[]{(byte)0xFA,
+						new byte.charAt(){(byte)0xFA,
 						(byte)((bits>>24)&0xFF),
 						(byte)((bits>>16)&0xFF),
 						(byte)((bits>>8)&0xFF),
@@ -1453,7 +1509,7 @@ if(ms!=null)ms.close();
 					long bits=Double.doubleToRawLongBits(
 						((Double)item).doubleValue());
 					return tagged ?
-						new byte[]{tagbyte,(byte)0xFB,
+						new byte.charAt(){tagbyte,(byte)0xFB,
 						(byte)((bits>>56)&0xFF),
 						(byte)((bits>>48)&0xFF),
 						(byte)((bits>>40)&0xFF),
@@ -1462,7 +1518,7 @@ if(ms!=null)ms.close();
 						(byte)((bits>>16)&0xFF),
 						(byte)((bits>>8)&0xFF),
 						(byte)(bits&0xFF)} :
-						new byte[]{(byte)0xFB,
+						new byte.charAt(){(byte)0xFB,
 						(byte)((bits>>56)&0xFF),
 						(byte)((bits>>48)&0xFF),
 						(byte)((bits>>40)&0xFF),
@@ -1499,8 +1555,8 @@ public static void Write(Object o, OutputStream s) throws IOException {
 			if((s)==null)throw new NullPointerException("s");
 			if(o==null){
 				s.write(0xf6);
-			} else if(o instanceof byte[]){
-				byte[] data=(byte[])o;
+			} else if(o instanceof Byte.charAt()){
+				byte.charAt() data=(byte.charAt())o;
 				WritePositiveInt(3,data.length,s);
 				s.write(data,0,data.length);
 			} else if(o instanceof List<?>){
@@ -1538,7 +1594,7 @@ public static void Write(Object o, OutputStream s) throws IOException {
 		
 		private static String Base64URL="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 		private static String Base64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-		private static void ToBase64(StringBuilder str, byte[] data, String alphabet, boolean padding) {
+		private static void ToBase64(StringBuilder str, byte.charAt() data, String alphabet, boolean padding){
 			int length = data.length;
 			int i=0;
 			for (i = 0; i < (length - 2); i += 3) {
@@ -1561,7 +1617,7 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				}
 			}
 		}
-		private static void ToBase16(StringBuilder str, byte[] data) {
+		private static void ToBase16(StringBuilder str, byte.charAt() data){
 			String alphabet="0123456789ABCDEF";
 			int length = data.length;
 			for (int i = 0; i < length;i++) {
@@ -1659,11 +1715,11 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				StringBuilder sb=new StringBuilder();
 				sb.append('\"');
 				if(this.HasTag(22)){
-					ToBase64(sb,(byte[])item,Base64,false);
+					ToBase64(sb,(byte.charAt())item,Base64,false);
 				} else if(this.HasTag(23)){
-					ToBase16(sb,(byte[])item);
+					ToBase16(sb,(byte.charAt())item);
 				} else {
-					ToBase64(sb,(byte[])item,Base64URL,false);
+					ToBase64(sb,(byte.charAt())item,Base64URL,false);
 				}
 				sb.append('\"');
 				return sb.toString();
@@ -2039,6 +2095,70 @@ public static void Write(Object o, OutputStream s) throws IOException {
 			}
 		}
 
+		private static int ReadUtf8FromBytes(byte.charAt() data, int offset, int byteLength, StringBuilder builder)  {
+			int cp=0;
+			int bytesSeen=0;
+			int bytesNeeded=0;
+			int lower=0x80;
+			int upper=0xBF;
+			int pointer=offset;
+			int endpointer=offset+byteLength;
+			while(pointer<endpointer){
+				int b=data[pointer];
+				pointer++;
+				if(bytesNeeded==0){
+					if(b<0x80){
+						builder.append((char)b);
+					} else if(b>=0xc2 && b<=0xdf){
+						bytesNeeded=1;
+						cp=(b-0xc0)<<6;
+					} else if(b>=0xe0 && b<=0xef){
+						lower=(b==0xe0) ? 0xa0 : 0x80;
+						upper=(b==0xed) ? 0x9f : 0xbf;
+						bytesNeeded=2;
+						cp=(b-0xe0)<<12;
+					} else if(b>=0xf0 && b<=0xf4){
+						lower=(b==0xf0) ? 0x90 : 0x80;
+						upper=(b==0xf4) ? 0x8f : 0xbf;
+						bytesNeeded=3;
+						cp=(b-0xf0)<<18;
+					} else
+						return -1;
+					continue;
+				}
+				if(b<lower || b>upper){
+					cp=bytesNeeded=bytesSeen=0;
+					lower=0x80;
+					upper=0xbf;
+					return -1;
+				}
+				lower=0x80;
+				upper=0xbf;
+				bytesSeen++;
+				cp+=(b-0x80)<<(6*(bytesNeeded-bytesSeen));
+				if(bytesSeen!=bytesNeeded) {
+					continue;
+				}
+				int ret=cp;
+				cp=0;
+				bytesSeen=0;
+				bytesNeeded=0;
+				if(ret<=0xFFFF){
+					builder.append((char)ret);
+				} else {
+					int ch=ret-0x10000;
+					int lead=ch/0x400+0xd800;
+					int trail=(ch&0x3FF)+0xdc00;
+					builder.append((char)lead);
+					builder.append((char)trail);
+				}
+			}
+			if(bytesNeeded!=0)
+				return -1;
+			return 0;
+		}
+
+
 		private static int ReadUtf8(InputStream stream, int byteLength, StringBuilder builder) throws IOException {
 			int cp=0;
 			int bytesSeen=0;
@@ -2164,7 +2284,7 @@ public static void Write(Object o, OutputStream s) throws IOException {
 		public static CBORObject FromObject(double value) {
 			return new CBORObject(CBORObjectType_Double,value);
 		}
-		public static CBORObject FromObject(byte[] value) {
+		public static CBORObject FromObject(byte.charAt() value){
 			if(value==null)return CBORObject.Null;
 			return new CBORObject(CBORObjectType_ByteString,value);
 		}
@@ -2218,7 +2338,7 @@ public static CBORObject FromObject(Object o) {
 			
 			if(o instanceof Double)return FromObject(((Double)o).doubleValue());
 			if(o instanceof List<?>)return FromObject((List<CBORObject>)o);
-			if(o instanceof byte[])return FromObject((byte[])o);
+			if(o instanceof Byte.charAt())return FromObject((byte.charAt())o);
 			if(o instanceof CBORObject[])return FromObject((CBORObject[])o);
 			if(o instanceof Map<?,?>)return FromObject(
 				(Map<CBORObject,CBORObject>)o);
@@ -2230,8 +2350,10 @@ public static CBORObject FromObject(Object o) {
 		private static BigInteger BigInt65536=BigInteger.valueOf(65536);
 
 		public static CBORObject FromObjectAndTag(Object o, BigInteger bigintTag) {
-			if((bigintTag).signum()<0)throw new IllegalArgumentException("tag"+" not greater or equal to 0 ("+bigintTag.toString()+")");
-			if((bigintTag).compareTo(UInt64MaxValue)>0)throw new IllegalArgumentException("tag"+" not less or equal to 18446744073709551615 ("+bigintTag.toString()+")");
+			if((bigintTag).signum()<0)throw new IllegalArgumentException(
+				"tag not greater or equal to 0 ("+bigintTag.toString()+")");
+			if((bigintTag).compareTo(UInt64MaxValue)>0)throw new IllegalArgumentException(
+				"tag not less or equal to 18446744073709551615 ("+bigintTag.toString()+")");
 			CBORObject c=FromObject(o);
 			if(bigintTag.compareTo(BigInt65536)<0){
 				// Low-numbered, commonly used tags
@@ -2298,7 +2420,7 @@ public static CBORObject FromObject(Object o) {
 					WritePositiveInt64(6,value,s);
 				} else {
 					s.write(
-						new byte[]{(byte)(0xDB),
+						new byte.charAt(){(byte)(0xDB),
 							(byte)((high>>24)&0xFF),
 							(byte)((high>>16)&0xFF),
 							(byte)((high>>8)&0xFF),
@@ -2410,7 +2532,7 @@ public static CBORObject FromObject(Object o) {
 			} else if(this.getItemType()== CBORObjectType_ByteString){
 				if(sb==null)sb=new StringBuilder();
 				sb.append("h'");
-				byte[] data=(byte[])item;
+				byte.charAt() data=(byte.charAt())item;
 				ToBase16(sb,data);
 				sb.append("'");
 			} else if(this.getItemType()== CBORObjectType_TextString){
@@ -2497,23 +2619,29 @@ public static CBORObject FromObject(Object o) {
 		) throws IOException {
 			if(depth>1000)
 				throw new CBORException("Too deeply nested");
-			int c=s.read();
-			if(c<0)
+			int firstbyte=s.read();
+			if(firstbyte<0)
 				throw new CBORException("Premature end of data");
-			int type=(c>>5)&0x07;
-			int additional=(c&0x1F);
-			if(c==0xFF){
+			if(firstbyte==0xFF){
 				if(allowBreak)return null;
 				throw new CBORException("Unexpected break code encountered");
 			}
-			if(allowOnlyType>=0 && (allowOnlyType!=type)){
-				throw new CBORException("Expected major type "+
-				                        Integer.toString((int)allowOnlyType)+
-				                        ", instead got type "+
-				                        Integer.toString((int)type));
-			}
-			if(allowOnlyType>=0 && additional>=28){
+			int type=(firstbyte>>5)&0x07;
+			int additional=(firstbyte&0x1F);
+			int expectedLength=ExpectedLengths[firstbyte];
+			// Data checks
+			if(expectedLength==-1) // if the head byte is invalid
 				throw new CBORException("Unexpected data encountered");
+			if(allowOnlyType>=0){
+				if(allowOnlyType!=type){
+					throw new CBORException("Expected major type "+
+					                        Integer.toString((int)allowOnlyType)+
+					                        ", instead got type "+
+					                        Integer.toString((int)type));
+				}
+				if(additional>=28){
+					throw new CBORException("Unexpected data encountered");
+				}
 			}
 			if(validTypeFlags!=null){
 				// Check for valid major types if asked
@@ -2521,131 +2649,87 @@ public static CBORObject FromObject(Object o) {
 					throw new CBORException("Unexpected data type encountered");
 				}
 			}
-			if(type==7){
-				if(additional==20)return False;
-				if(additional==21)return True;
-				if(additional==22)return Null;
-				if(additional==23)return Undefined;
-				if(additional<20){
-					return new CBORObject(CBORObjectType_SimpleValue,additional);
-				}
-				if(additional==24){
-					c=s.read();
-					if(c<0)
-						throw new CBORException("Premature end of data");
-					return new CBORObject(CBORObjectType_SimpleValue,c);
-				}
-				if(additional==25 || additional==26 ||
-				   additional==27){
-					int cslength=(additional==25) ? 2 :
-						((additional==26) ? 4 : 8);
-					byte[] cs=new byte[cslength];
-					if(s.read(cs,0,cs.length)!=cs.length)
-						throw new CBORException("Premature end of data");
-					long x=0;
-					for(int i=0;i<cs.length;i++){
-						x<<=8;
-						x|=((long)cs[i])&0xFF;
-					}
-					if(additional==25){
-						float f=HalfPrecisionToSingle(
-							((int)x));
-						return new CBORObject(CBORObjectType_Single,f);
-					} else if(additional==26){
-						float f=Float.intBitsToFloat(
-							((int)x));
-						return new CBORObject(CBORObjectType_Single,f);
-					} else if(additional==27){
-						double f=Double.longBitsToDouble(
-							(x));
-						return new CBORObject(CBORObjectType_Double,f);
-					}
-				}
-				throw new CBORException("Unexpected data encountered");
+			// Check if this represents a fixed Object
+			CBORObject fixedObject=FixedObjects[firstbyte];
+			if(fixedObject!=null)
+				return fixedObject;
+			// Read fixed-length data
+			byte.charAt() data=null;
+			if(expectedLength!=0){
+				data=new byte.charAt(expectedLength);
+				// include the first byte because this function
+				// will assume it exists for some head bytes
+				data[0]=((byte)firstbyte);
+				if(expectedLength>1 &&
+				   s.read(data,1,expectedLength-1)!=expectedLength-1)
+					throw new CBORException("Premature end of data");
+				return GetFixedLengthObject(firstbyte,data);
 			}
-			long uadditional=0;
+			long uadditional=(long)additional;
 			BigInteger bigintAdditional=BigInteger.ZERO;
 			boolean hasBigAdditional=false;
-			if(additional<=23){
-				uadditional=(long)additional;
-			} else if(additional==24){
-				int c1=s.read();
-				if(c1<0)
-					throw new CBORException("Premature end of data");
-				uadditional=(long)c1;
-			} else if(additional==25 || additional==26){
-				byte[] cs=new byte[(additional==25) ? 2 : 4];
-				if(s.read(cs,0,cs.length)!=cs.length)
-					throw new CBORException("Premature end of data");
-				long x=0;
-				for(int i=0;i<cs.length;i++){
-					x<<=8;
-					x|=((long)cs[i])&0xFF;
-				}
-				uadditional=x;
-			} else if(additional==27){
-				byte[] cs=new byte[8];
-				if(s.read(cs,0,cs.length)!=cs.length)
-					throw new CBORException("Premature end of data");
-				long x=0;
-				for(int i=0;i<cs.length;i++){
-					x<<=8;
-					x|=((long)cs[i])&0xFF;
-				}
-				if(((x>>63)&1)!=0){
-					// uadditional requires 64 bits to
-					// remain unsigned, so convert to
-					// big integer
-					hasBigAdditional=true;
-					// Get low 7 bytes and convert to BigInteger,
-					// to reduce the number of big integer
-					// operations
-					x&=0xFFFFFFFFFFFFFFL;
-					bigintAdditional=BigInteger.valueOf(x);
-					// Include the first and highest byte
-					int firstByte=((int)cs[0])&0xFF;
-					BigInteger bigintTemp=BigInteger.valueOf(firstByte);
-					bigintTemp=bigintTemp.shiftLeft(56);
-					bigintAdditional=bigintAdditional.or(bigintTemp);
-				} else {
-					uadditional=x;
-				}
-			} else if(additional==28 || additional==29 ||
-			          additional==30){
-				throw new CBORException("Unexpected data encountered");
-			} else if(additional==31 && type<2){
-				throw new CBORException("Unexpected data encountered");
+			data=new byte.charAt(8);
+			switch(firstbyte&0x1F){
+					case 24:{
+						int tmp=s.read();
+						if(tmp<0)
+							throw new CBORException("Premature end of data");
+						uadditional=tmp;
+						break;
+					}
+					case 25:{
+						if(s.read(data,0,2)!=2)
+							throw new CBORException("Premature end of data");
+						uadditional=(((long)(data[0]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[1]&(long)0xFF)));
+						break;
+					}
+					case 26:{
+						if(s.read(data,0,4)!=4)
+							throw new CBORException("Premature end of data");
+						uadditional=(((long)(data[0]&(long)0xFF))<<24);
+						uadditional|=(((long)(data[1]&(long)0xFF))<<16);
+						uadditional|=(((long)(data[2]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[3]&(long)0xFF)));
+						break;
+					}
+					case 27:{
+						if(s.read(data,0,8)!=8)
+							throw new CBORException("Premature end of data");
+						uadditional=(((long)(data[0]&(long)0xFF))<<56);
+						uadditional|=(((long)(data[1]&(long)0xFF))<<48);
+						uadditional|=(((long)(data[2]&(long)0xFF))<<40);
+						uadditional|=(((long)(data[3]&(long)0xFF))<<32);
+						uadditional|=(((long)(data[4]&(long)0xFF))<<24);
+						uadditional|=(((long)(data[5]&(long)0xFF))<<16);
+						uadditional|=(((long)(data[6]&(long)0xFF))<<8);
+						uadditional|=(((long)(data[7]&(long)0xFF)));
+						if((uadditional>>63)!=0){
+							long lowAdditional=uadditional&0xFFFFFFFFFFFFFFL;
+							long highAdditional=(uadditional>>56)&0xFF;
+							hasBigAdditional=true;
+							bigintAdditional=BigInteger.valueOf(highAdditional);
+							bigintAdditional=bigintAdditional.shiftLeft(56);
+							bigintAdditional=bigintAdditional.or(BigInteger.valueOf(lowAdditional));
+						}
+						break;
+					}
+				default:
+					break;
 			}
-			if(type==0){
-				if(hasBigAdditional)
-					return FromObject(bigintAdditional);
-				else
-					return FromObject(uadditional);
-			} else if(type==1){
-				if(hasBigAdditional){
-					bigintAdditional=BigInteger.valueOf(-1).subtract(bigintAdditional);
-					return FromObject(bigintAdditional);
-				} else if(uadditional<=Long.MAX_VALUE){
-					return FromObject(((long)-1-(long)uadditional));
-				} else {
-					BigInteger bi=BigInteger.valueOf(-1);
-					bi=bi.subtract(BigInteger.valueOf((uadditional)));
-					return FromObject(bi);
-				}
-			} else if(type==2){ // Byte String
+			if(type==2){ // Byte String
 				if(additional==31){
 					// Streaming byte String
 					java.io.ByteArrayOutputStream ms=null;
 try {
 ms=new ByteArrayOutputStream();
 
-						byte[] data;
 						// Requires same type as this one
 						int[] subFlags=new int[]{(1<<type)};
 						while(true){
 							CBORObject o=Read(s,depth+1,true,type,subFlags,0);
 							if(o==null)break;//break if the "break" code was read
-							data=(byte[])o.item;
+							data=(byte.charAt())o.item;
 							ms.write(data,0,data.length);
 						}
 						if(ms.size()>Integer.MAX_VALUE)
@@ -2668,14 +2752,14 @@ if(ms!=null)ms.close();
 						                        Long.toString((long)uadditional)+
 						                        " is bigger than supported");
 					}
-					byte[] data=null;
+					data=null;
 					if(uadditional<=0x10000){
 						// Simple case: small size
-						data=new byte[(int)uadditional];
+						data=new byte.charAt((int)uadditional);
 						if(s.read(data,0,data.length)!=data.length)
 							throw new CBORException("Premature end of stream");
 					} else {
-						byte[] tmpdata=new byte[0x10000];
+						byte.charAt() tmpdata=new byte.charAt(0x10000);
 						int total=(int)uadditional;
 						java.io.ByteArrayOutputStream ms=null;
 try {
@@ -2787,7 +2871,7 @@ if(ms!=null)ms.close();
 					}
 					return new CBORObject(CBORObjectType_Map,dict);
 				}
-			} else { // Tagged item
+			} else if(type==6){ // Tagged item
 				CBORObject o;
 				if(!hasBigAdditional){
 					if(uadditional==0){
@@ -2799,7 +2883,7 @@ if(ms!=null)ms.close();
 						// Requires a byte String
 						int[] subFlags=new int[]{(1<<2)};
 						o=Read(s,depth+1,false,-1,subFlags,0);
-						byte[] data=(byte[])o.item;
+						data=(byte.charAt())o.item;
 						BigInteger bi=BigInteger.ZERO;
 						for(int i=0;i<data.length;i++){
 							bi=bi.shiftLeft(8);
@@ -2841,6 +2925,8 @@ if(ms!=null)ms.close();
 					return FromObjectAndTag(
 						o,BigInteger.valueOf(uadditional));
 				}
+			} else {
+				throw new CBORException("Unexpected data encountered");
 			}
 		}
 	}

@@ -68,8 +68,8 @@ namespace PeterO
 		[Test]
 		public void TestRandomCBOR(){
 			Random r=new Random();
-			for(int i=0;i<2000;i++){
-				byte[] bytes=new byte[r.Next(100000)+2];
+			for(int i=0;i<5000;i++){
+				byte[] bytes=new byte[r.Next(32)+2];
 				for(int j=0;j<bytes.Length;j++){
 					bytes[j]=(byte)r.Next(256);
 				}
