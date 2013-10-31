@@ -56,7 +56,6 @@ may be missing from the Java version.
 - CBORObject.Write(object, System.IO.Stream) - Writes an arbitrary object in
   the CBOR format to a data stream.  Not all objects are supported; for 
   unsupported types, throws ArgumentException.
-- CBORObject.Break - CBOR object for the break value.
 - CBORObject.Null - CBOR object for null.
 - CBORObject.True - CBOR object for true.
 - CBORObject.False - CBOR object for false.

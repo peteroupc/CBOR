@@ -38,11 +38,72 @@ namespace PeterO
 		public static void AssertSer(CBORObject o, String s){
 			if(!s.Equals(o.ToString()))
 				Assert.AreEqual(s,o.ToString(),"o is not equal to s");
+			// Test round-tripping
 			CBORObject o2=CBORObject.FromBytes(o.ToBytes());
 			if(!s.Equals(o2.ToString()))
 				Assert.AreEqual(s,o2.ToString(),"o2 is not equal to s");
 			AssertEqualsHashCode(o,o2);
 		}
+		
+		private static string BytesToString(byte[] bytes){
+			System.Text.StringBuilder sb=new System.Text.StringBuilder();
+			string hex="0123456789ABCDEF";
+			sb.Append("new byte[]{");
+			for(int j=0;j<bytes.Length;j++){
+				if(j>0)sb.Append(',');
+				sb.Append("0x");
+				sb.Append(hex[(int)((bytes[j]>>4)&15)]);
+				sb.Append(hex[(int)(bytes[j]&15)]);
+			}
+			sb.Append("},");
+			return sb.ToString();
+		}
+		
+		[Test]
+		[ExpectedException(typeof(CBORException))]
+		public void TestTagThenBreak(){
+			CBORObject.FromBytes(new byte[]{0xD1,0xFF});
+		}
+		
+		[Test]
+		public void TestRandomCBOR(){
+			Random r=new Random();
+			for(int i=0;i<2000;i++){
+				byte[] bytes=new byte[r.Next(100000)+2];
+				for(int j=0;j<bytes.Length;j++){
+					bytes[j]=(byte)r.Next(256);
+				}
+				CBORObject o=null;
+				try {
+					o=CBORObject.FromBytes(bytes);
+				} catch(CBORException){
+				}
+				if(o!=null){
+					//	if(bytes.Length>1)Console.WriteLine(BytesToString(bytes));
+					AssertSer(o,o.ToString());
+				} else {
+					try {
+						using(var ms=new System.IO.MemoryStream(bytes)){
+							o=CBORObject.Read(ms);
+						}
+					} catch(CBORException){
+					}
+					if(o!=null){
+						byte[] oldbytes=bytes;
+						bytes=o.ToBytes();
+						try {
+							o=CBORObject.FromBytes(bytes);
+						} catch(CBORException){
+							Assert.Fail("Old: {0} New: {1}",
+							            BytesToString(oldbytes),BytesToString(bytes));
+						}
+						//		if(bytes.Length>1)Console.WriteLine(BytesToString(bytes));
+						AssertSer(o,o.ToString());
+					}
+				}
+			}
+		}
+		
 		
 		[Test]
 		public void TestJSON(){
@@ -54,8 +115,6 @@ namespace PeterO
 			Assert.AreEqual(3,o[2].AsInt32());
 			o=CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
 			Assert.AreEqual(1.5,o[0].AsDouble());
-			Assert.AreEqual("[4([-1, 15]), 4([-1, 26]), 4([-1, 37]), 4, 4([-2, 22222])]",
-			                o.ToString());
 		}
 		
 		[Test]
@@ -215,14 +274,14 @@ namespace PeterO
 		}
 
 		[Test]
-		[ExpectedException(typeof(FormatException))]
+		[ExpectedException(typeof(CBORException))]
 		public void TestTextStringStreamNoTagsBeforeDefinite(){
 			CBORObject.FromBytes(
 				new byte[]{0x7F,0x61,0x20,0xC0,0x61,0x20,0xFF});
 		}
 
 		[Test]
-		[ExpectedException(typeof(FormatException))]
+		[ExpectedException(typeof(CBORException))]
 		public void TestTextStringStreamNoIndefiniteWithinDefinite(){
 			CBORObject.FromBytes(
 				new byte[]{0x7F,0x61,0x20,0x7F,0x61,0x20,0xFF,0xFF});
@@ -233,14 +292,14 @@ namespace PeterO
 				new byte[]{0x5F,0x41,0x20,0x41,0x20,0xFF});
 		}
 		[Test]
-		[ExpectedException(typeof(FormatException))]
+		[ExpectedException(typeof(CBORException))]
 		public void TestByteStringStreamNoTagsBeforeDefinite(){
 			CBORObject.FromBytes(
 				new byte[]{0x5F,0x41,0x20,0xC2,0x41,0x20,0xFF});
 		}
 
 		[Test]
-		[ExpectedException(typeof(FormatException))]
+		[ExpectedException(typeof(CBORException))]
 		public void TestByteStringStreamNoIndefiniteWithinDefinite(){
 			CBORObject.FromBytes(
 				new byte[]{0x5F,0x41,0x20,0x5F,0x41,0x20,0xFF,0xFF});
@@ -252,7 +311,7 @@ namespace PeterO
 				new byte[]{0xc4,0x82,0x3,0x1a,1,2,3,4});
 		}
 		[Test]
-		[ExpectedException(typeof(FormatException))]
+		[ExpectedException(typeof(CBORException))]
 		public void TestDecimalFracExponentMustNotBeBignum(){
 			CBORObject.FromBytes(
 				new byte[]{0xc4,0x82,0xc2,0x41,1,0x1a,1,2,3,4});
@@ -264,7 +323,7 @@ namespace PeterO
 		}
 		
 		[Test]
-		[ExpectedException(typeof(FormatException))]
+		[ExpectedException(typeof(CBORException))]
 		public void TestDecimalFracExactlyTwoElements(){
 			CBORObject.FromBytes(
 				new byte[]{0xc4,0x82,0xc2,0x41,1});
@@ -377,6 +436,27 @@ namespace PeterO
 				AssertSer(
 					CBORObject.FromObject((double)i),
 					String.Format(Inv,"{0}",i));
+			}
+		}
+
+		[Test]
+		public void TestDecimal(){
+			AssertSer(
+				CBORObject.FromObject(Decimal.MinValue),
+				String.Format(Inv,"{0}",Decimal.MinValue));
+			AssertSer(
+				CBORObject.FromObject(Decimal.MaxValue),
+				String.Format(Inv,"{0}",Decimal.MaxValue));
+			for(int i=-100;i<=100;i++){
+				AssertSer(
+					CBORObject.FromObject((decimal)i),
+					String.Format(Inv,"{0}",i));
+				AssertSer(
+					CBORObject.FromObject((decimal)i+0.1m),
+					String.Format(Inv,"{0}",(decimal)i+0.1m));
+				AssertSer(
+					CBORObject.FromObject((decimal)i+0.1111m),
+					String.Format(Inv,"{0}",(decimal)i+0.1111m));
 			}
 		}
 

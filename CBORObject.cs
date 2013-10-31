@@ -22,13 +22,12 @@ namespace PeterO
 	/// RFC 7049.
 	/// <para>
 	/// Thread Safety:
-	/// CBOR objects that are integers, floating point numbers,
-	/// "simple values", and text strings are immutable (their
+	/// CBOR objects that are numbers, "simple values", and text
+	/// strings are immutable (their
 	/// values can't be changed), so they are inherently safe
-	/// for use by multiple threads.  Arrays acting as decimal
-	/// fractions are also immutable.
+	/// for use by multiple threads.
 	/// CBOR objects that are arrays, maps, and byte strings
-	/// are mutable, but this class doesn't attempt to synchrionize
+	/// are mutable, but this class doesn't attempt to synchronize
 	/// reads and writes to those objects by multiple threads, so
 	/// those objects are not thread safe without such
 	/// synchronization.
@@ -44,8 +43,11 @@ namespace PeterO
 		}
 		
 		int itemtype_;
-		private const int CBORObjectType_Integer=0;
-		private const int CBORObjectType_BigInteger=1;
+		Object item;
+		int[] tagArray=null;
+		
+		private const int CBORObjectType_Integer=0; // -(2^63) .. (2^63-1)
+		private const int CBORObjectType_BigInteger=1; // all other integers
 		private const int CBORObjectType_ByteString=2;
 		private const int CBORObjectType_TextString=3;
 		private const int CBORObjectType_Array=4;
@@ -53,12 +55,8 @@ namespace PeterO
 		private const int CBORObjectType_SimpleValue=6;
 		private const int CBORObjectType_Single=7;
 		private const int CBORObjectType_Double=8;
-		Object item;
-		int[] tagArray=null;
-		
 		private static readonly BigInteger Int64MaxValue=(BigInteger)Int64.MaxValue;
 		private static readonly BigInteger Int64MinValue=(BigInteger)Int64.MinValue;
-		public static readonly CBORObject Break=new CBORObject(CBORObjectType_SimpleValue,31);
 		public static readonly CBORObject False=new CBORObject(CBORObjectType_SimpleValue,20);
 		public static readonly CBORObject True=new CBORObject(CBORObjectType_SimpleValue,21);
 		public static readonly CBORObject Null=new CBORObject(CBORObjectType_SimpleValue,22);
@@ -97,12 +95,6 @@ namespace PeterO
 			this.item=item;
 		}
 		
-		public bool IsBreak {
-			get {
-				return this.ItemType==CBORObjectType_SimpleValue && (int)item==31;
-			}
-		}
-		
 		/// <summary>
 		/// Gets the general data type of this CBOR object.
 		/// </summary>
@@ -129,7 +121,7 @@ namespace PeterO
 					case CBORObjectType_TextString:
 						return CBORType.TextString;
 					default:
-						throw new InvalidOperationException();
+						throw new InvalidOperationException("Unexpected data type");
 				}
 			}
 		}
@@ -318,17 +310,31 @@ namespace PeterO
 		}
 		#endregion
 		
+		private static void CheckCBORLength(long expectedLength, long actualLength){
+			if(actualLength<expectedLength)
+				throw new CBORException("Premature end of data");
+			else if(actualLength>expectedLength)
+				throw new CBORException("Too few bytes");
+		}
+
+		private static void CheckCBORLength(int expectedLength, int actualLength){
+			if(actualLength<expectedLength)
+				throw new CBORException("Premature end of data");
+			else if(actualLength>expectedLength)
+				throw new CBORException("Too few bytes");
+		}
+		
 		private static string GetOptimizedStringIfShortAscii(
 			byte[] data, int offset
 		){
 			int length=data.Length;
 			if(length>offset){
-				int nextbyte=((int)(data[1]&(int)0xFF));
-				int offsetp1=1+offset;
+				int nextbyte=((int)(data[offset]&(int)0xFF));
 				if(nextbyte>=0x60 && nextbyte<0x78){
+					int offsetp1=1+offset;
 					// Check for type 3 string of short length
-					if(length!=offsetp1+(nextbyte-0x60))
-						throw new FormatException();
+					int rightLength=offsetp1+(nextbyte-0x60);
+					CheckCBORLength(rightLength,length);
 					// Check for all ASCII text
 					for(int i=offsetp1;i<length;i++){
 						if((data[i]&((byte)0x80))!=0){
@@ -348,28 +354,36 @@ namespace PeterO
 			return null;
 		}
 		
+		/// <summary>
+		/// Generates a CBOR object from an array of CBOR-encoded
+		/// bytes.
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
 		public static CBORObject FromBytes(byte[] data){
 			if((data)==null)throw new ArgumentNullException("data");
-			if((data).Length==0)throw new FormatException("data is empty.");
+			if((data).Length==0)throw new ArgumentException("data is empty.");
 			int firstbyte=((int)(data[0]&(int)0xFF));
 			int length=data.Length;
 			// Check for simple cases
-			if(firstbyte<0x18 && length==1){
+			if(firstbyte<0x18){
+				CheckCBORLength(1,length);
 				return new CBORObject(CBORObjectType_Integer,(long)firstbyte);
 			}
-			else if(firstbyte>=0x20 && firstbyte<0x38 && length==1){
+			else if(firstbyte>=0x20 && firstbyte<0x38){
+				CheckCBORLength(1,length);
 				return new CBORObject(
 					CBORObjectType_Integer,(long)(-1-(firstbyte-0x20)));
 			}
 			else if(firstbyte==56 || firstbyte==24){
-				if(length!=2)throw new FormatException();
+				CheckCBORLength(2,length);
 				int nextbyte=((int)(data[1]&(int)0xFF));
 				return new CBORObject(
 					CBORObjectType_Integer,
 					(firstbyte==24) ? (long)nextbyte : (long)(-1-(nextbyte)));
 			}
 			else if(firstbyte==57 || firstbyte==25){
-				if(length!=3)throw new FormatException();
+				CheckCBORLength(3,length);
 				int v=(((int)(data[1]&(int)0xFF))<<8);
 				v|=(((int)(data[2]&(int)0xFF)));
 				return new CBORObject(
@@ -377,7 +391,7 @@ namespace PeterO
 					(firstbyte==25) ? (long)v : (long)(-1-v));
 			}
 			else if(firstbyte==58 || firstbyte==26){
-				if(length!=5)throw new FormatException();
+				CheckCBORLength(5,length);
 				long v=(((long)(data[1]&(long)0xFF))<<24);
 				v|=(((long)(data[2]&(long)0xFF))<<16);
 				v|=(((long)(data[3]&(long)0xFF))<<8);
@@ -387,7 +401,7 @@ namespace PeterO
 					(firstbyte==26) ? (long)v : (long)(-1-v));
 			}
 			else if(firstbyte==59 || firstbyte==27){
-				if(length!=9)throw new FormatException();
+				CheckCBORLength(9,length);
 				int topbyte=((int)(data[1]&(int)0xFF));
 				if(topbyte==0){
 					// Nonzero top bytes indicate that more
@@ -415,18 +429,30 @@ namespace PeterO
 				String s=GetOptimizedStringIfShortAscii(data,1);
 				if(s!=null)return new CBORObject(CBORObjectType_TextString,0,0,s);
 			}
-			else if(firstbyte==0xF4 && length==1)return CBORObject.False;
-			else if(firstbyte==0xF5 && length==1)return CBORObject.True;
-			else if(firstbyte==0xF6 && length==1)return CBORObject.Null;
-			else if(firstbyte==0xF7 && length==1)return CBORObject.Undefined;
+			else if(firstbyte==0xF4){
+				CheckCBORLength(1,length);
+				return CBORObject.False;
+			}
+			else if(firstbyte==0xF5){
+				CheckCBORLength(1,length);
+				return CBORObject.True;
+			}
+			else if(firstbyte==0xF6){
+				CheckCBORLength(1,length);
+				return CBORObject.Null;
+			}
+			else if(firstbyte==0xF7){
+				CheckCBORLength(1,length);
+				return CBORObject.Undefined;
+			}
 			else if(firstbyte==0xf9){
-				if(length!=3)throw new FormatException();
+				CheckCBORLength(3,length);
 				int v=(((int)(data[1]&(int)0xFF))<<8);
 				v|=(((int)(data[2]&(int)0xFF)));
 				return new CBORObject(
 					CBORObjectType_Single,HalfPrecisionToSingle(v));
 			} else if(firstbyte==0xfa){
-				if(length!=5)throw new FormatException();
+				CheckCBORLength(5,length);
 				int v=(((int)(data[1]&(int)0xFF))<<24);
 				v|=(((int)(data[2]&(int)0xFF))<<16);
 				v|=(((int)(data[3]&(int)0xFF))<<8);
@@ -434,7 +460,7 @@ namespace PeterO
 				return new CBORObject(
 					CBORObjectType_Single,ConverterInternal.Int32BitsToSingle(v));
 			} else if(firstbyte==0xfb){
-				if(length!=9)throw new FormatException();
+				CheckCBORLength(9,length);
 				long v=(((long)(data[1]&(long)0xFF))<<56);
 				v|=(((long)(data[2]&(long)0xFF))<<48);
 				v|=(((long)(data[3]&(long)0xFF))<<40);
@@ -449,12 +475,14 @@ namespace PeterO
 			// For complex cases, such as arrays and maps,
 			// read the object as though
 			// the byte array were a stream
-			using(MemoryStream ms=new MemoryStream(data)){
-				CBORObject o=Read(ms);
-				if(ms.Position!=data.Length){
-					throw new FormatException();
+			try {
+				using(MemoryStream ms=new MemoryStream(data)){
+					CBORObject o=Read(ms);
+					CheckCBORLength((long)data.Length,(long)ms.Position);
+					return o;
 				}
-				return o;
+			} catch(IOException ex){
+				throw new CBORException("I/O error occurred.",ex);
 			}
 		}
 		public int Count {
@@ -480,7 +508,8 @@ namespace PeterO
 
 		private bool HasTag(int tagValue){
 			if(tagArray==null)return false;
-			if(tagValue<0)throw new ArgumentException();
+			if((tagValue)<0)throw new ArgumentOutOfRangeException(
+				"tagValue"+" not greater or equal to "+"0"+" ("+Convert.ToString((int)tagValue,System.Globalization.CultureInfo.InvariantCulture)+")");
 			int length=tagArray.Length;
 			for(int i=0;i<length;i+=2){
 				int low=(int)tagArray[i];
@@ -615,6 +644,21 @@ namespace PeterO
 					map[key]=value;
 				} else {
 					throw new InvalidOperationException("Not a map");
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Returns the simple value ID of this object, or -1
+		/// if this object is not a simple value (including if
+		/// the value is a floating-point number).
+		/// </summary>
+		public int SimpleValue {
+			get {
+				if(this.ItemType== CBORObjectType_SimpleValue){
+					return (int)item;
+				} else {
+					return -1;
 				}
 			}
 		}
@@ -925,15 +969,17 @@ namespace PeterO
 		/// <exception cref="System.ArgumentNullException">
 		/// <paramref name="stream"/> is null.</exception>
 		public static CBORObject Read(Stream stream){
-			return Read(stream,0,false,-1,null,0);
+			try {
+				return Read(stream,0,false,-1,null,0);
+			} catch(IOException ex){
+				throw new CBORException("I/O error occurred.",ex);
+			}
 		}
 		
 		private static void WriteObjectArray(
 			IList<CBORObject> list, Stream s){
 			WritePositiveInt(4,list.Count,s);
 			foreach(CBORObject i in list){
-				if(i!=null && i.IsBreak)
-					throw new ArgumentException();
 				Write(i,s);
 			}
 		}
@@ -942,19 +988,14 @@ namespace PeterO
 			IDictionary<CBORObject,CBORObject> map, Stream s){
 			WritePositiveInt(5,map.Count,s);
 			foreach(CBORObject key in map.Keys){
-				if(key!=null && key.IsBreak)
-					throw new ArgumentException();
 				CBORObject value=map[key];
-				if(value!=null && value.IsBreak)
-					throw new ArgumentException();
 				Write(key,s);
 				Write(value,s);
 			}
 		}
 
 		private static byte[] GetPositiveIntBytes(int type, int value){
-			if(value<0)
-				throw new ArgumentException();
+			if((value)<0)throw new ArgumentOutOfRangeException("value"+" not greater or equal to "+"0"+" ("+Convert.ToString((int)value,System.Globalization.CultureInfo.InvariantCulture)+")");
 			if(value<24){
 				return new byte[]{(byte)((byte)value|(byte)(type<<5))};
 			} else if(value<=0xFF){
@@ -979,8 +1020,7 @@ namespace PeterO
 		}
 		
 		private static byte[] GetPositiveInt64Bytes(int type, long value){
-			if(value<0)
-				throw new ArgumentException();
+			if((value)<0)throw new ArgumentOutOfRangeException("value"+" not greater or equal to "+"0"+" ("+Convert.ToString((long)value,System.Globalization.CultureInfo.InvariantCulture)+")");
 			if(value<24){
 				return new byte[]{(byte)((byte)value|(byte)(type<<5))};
 			} else if(value<=0xFF){
@@ -1233,7 +1273,7 @@ namespace PeterO
 				WriteObjectMap(AsMap(),s);
 			} else if(this.ItemType== CBORObjectType_SimpleValue){
 				int value=(int)item;
-				if(value<24 || value==31){
+				if(value<24){
 					s.WriteByte((byte)(0xE0+value));
 				} else {
 					s.WriteByte(0xF8);
@@ -1244,7 +1284,7 @@ namespace PeterO
 			} else if(this.ItemType== CBORObjectType_Double){
 				Write((double)item,s);
 			} else {
-				throw new ArgumentException();
+				throw new ArgumentException("Unexpected data type");
 			}
 		}
 		
@@ -1463,11 +1503,13 @@ namespace PeterO
 						(byte)(bits&0xFF)};
 				}
 			}
-			using(MemoryStream ms=new MemoryStream()){
-				WriteTo(ms);
-				if(ms.Position>Int32.MaxValue)
-					throw new OutOfMemoryException();
-				return ms.ToArray();
+			try {
+				using(MemoryStream ms=new MemoryStream()){
+					WriteTo(ms);
+					return ms.ToArray();
+				}
+			} catch(IOException ex){
+				throw new CBORException("I/O Error occurred",ex);
 			}
 		}
 		
@@ -1491,11 +1533,7 @@ namespace PeterO
 					(IDictionary<CBORObject,CBORObject>)o;
 				WritePositiveInt(5,dic.Count,s);
 				foreach(CBORObject i in dic.Keys){
-					if(i!=null && i.IsBreak)
-						throw new ArgumentException();
 					CBORObject value=dic[i];
-					if(value!=null && value.IsBreak)
-						throw new ArgumentException();
 					Write(i,s);
 					Write(value,s);
 				}
@@ -1588,6 +1626,10 @@ namespace PeterO
 			BigInteger exponent=ex.AsBigInteger();
 			string mantissa=ma.IntegerToString();
 			StringBuilder sb=new StringBuilder();
+			if(mantissa.Length>0 && mantissa[0]=='-'){
+				sb.Append('-');
+				mantissa=mantissa.Substring(1);
+			}
 			BigInteger decimalPoint=(BigInteger)(mantissa.Length);
 			decimalPoint+=(BigInteger)exponent;
 			if(exponent.Sign<0 &&
@@ -1692,7 +1734,7 @@ namespace PeterO
 				sb.Append("}");
 				return sb.ToString();
 			} else {
-				throw new InvalidOperationException();
+				throw new InvalidOperationException("Unexpected data type");
 			}
 		}
 		
@@ -1812,8 +1854,8 @@ namespace PeterO
 				string strsub=(numberStart==0 && numberEnd==str.Length) ? str :
 					str.Substring(numberStart,numberEnd-numberStart);
 				long value=Int64.Parse(strsub,
-					NumberStyles.None,
-					CultureInfo.InvariantCulture);
+				                       NumberStyles.None,
+				                       CultureInfo.InvariantCulture);
 				if(negative)value=-value;
 				return FromObject(value);
 			} else if(fracStart>=0 && expStart<0 &&
@@ -1846,10 +1888,11 @@ namespace PeterO
 				                        	FromObject(exp),FromObject(int32val)},4);
 			} else if(fracStart<0 && expStart<0){
 				// Bigger integer
-				BigInteger bigintValue=BigInteger.Parse(
-					str.Substring(numberStart,numberEnd-numberStart),
-					NumberStyles.None,
-					CultureInfo.InvariantCulture);
+				string strsub=(numberStart==0 && numberEnd==str.Length) ? str :
+					str.Substring(numberStart,numberEnd-numberStart);
+				BigInteger bigintValue=BigInteger.Parse(strsub,
+				                                        NumberStyles.None,
+				                                        CultureInfo.InvariantCulture);
 				if(negative)bigintValue=-(BigInteger)bigintValue;
 				return FromObject(bigintValue);
 			} else {
@@ -2039,8 +2082,7 @@ namespace PeterO
 			}
 		}
 
-		private static string ReadUtf8(Stream stream, int byteLength)  {
-			StringBuilder builder=new StringBuilder();
+		private static int ReadUtf8(Stream stream, int byteLength, StringBuilder builder)  {
 			int cp=0;
 			int bytesSeen=0;
 			int bytesNeeded=0;
@@ -2052,10 +2094,10 @@ namespace PeterO
 				if(b<0){
 					if(bytesNeeded!=0){
 						bytesNeeded=0;
-						throw new FormatException("Invalid UTF-8");
+						return -1;
 					} else {
 						if(byteLength>0 && pointer>=byteLength)
-							throw new FormatException("Premature end of stream");
+							return -2;
 						break; // end of stream
 					}
 				}
@@ -2079,14 +2121,14 @@ namespace PeterO
 						bytesNeeded=3;
 						cp=(b-0xf0)<<18;
 					} else
-						throw new FormatException("Invalid UTF-8");
+						return -1;
 					continue;
 				}
 				if(b<lower || b>upper){
 					cp=bytesNeeded=bytesSeen=0;
 					lower=0x80;
 					upper=0xbf;
-					throw new FormatException("Invalid UTF-8");
+					return -1;
 				}
 				lower=0x80;
 				upper=0xbf;
@@ -2109,7 +2151,7 @@ namespace PeterO
 					builder.Append((char)trail);
 				}
 			}
-			return builder.ToString();
+			return 0;
 		}
 		
 		
@@ -2130,6 +2172,14 @@ namespace PeterO
 				return new CBORObject(CBORObjectType_BigInteger,bigintValue);
 			}
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="stringValue">A string value.  Can be null.</param>
+		/// <returns>A CBOR object representing the string, or CBORObject.Null
+		/// if stringValue is null.</returns>
+		/// <exception cref="System.ArgumentException">The string contains an unpaired
+		/// surrogate code point.</exception>
 		public static CBORObject FromObject(string stringValue){
 			if(stringValue==null)return CBORObject.Null;
 			if(!IsValidString(stringValue))
@@ -2165,10 +2215,7 @@ namespace PeterO
 			if(array==null)return CBORObject.Null;
 			IList<CBORObject> list=new List<CBORObject>();
 			foreach(CBORObject i in array){
-				CBORObject obj=FromObject(i);
-				if(obj!=null && obj.IsBreak)
-					throw new ArgumentException();
-				list.Add(obj);
+				list.Add(FromObject(i));
 			}
 			return new CBORObject(CBORObjectType_Array,list);
 		}
@@ -2177,8 +2224,6 @@ namespace PeterO
 			IList<CBORObject> list=new List<CBORObject>();
 			foreach(T i in (IList<T>)value){
 				CBORObject obj=FromObject(i);
-				if(obj!=null && obj.IsBreak)
-					throw new ArgumentException();
 				list.Add(obj);
 			}
 			return new CBORObject(CBORObjectType_Array,list);
@@ -2188,11 +2233,7 @@ namespace PeterO
 			var map=new Dictionary<CBORObject,CBORObject>();
 			foreach(TKey i in dic.Keys){
 				CBORObject key=FromObject(i);
-				if(key!=null && key.IsBreak)
-					throw new ArgumentException();
 				CBORObject value=FromObject(dic[i]);
-				if(value!=null && value.IsBreak)
-					throw new ArgumentException();
 				map[key]=value;
 			}
 			return new CBORObject(CBORObjectType_Map,map);
@@ -2214,6 +2255,7 @@ namespace PeterO
 			if(o is ulong)return FromObject((ulong)o);
 			if(o is uint)return FromObject((uint)o);
 			if(o is ushort)return FromObject((ushort)o);
+			if(o is decimal)return FromObject((decimal)o);
 			if(o is DateTime)return FromObject((DateTime)o);
 			
 			if(o is double)return FromObject((double)o);
@@ -2224,7 +2266,7 @@ namespace PeterO
 				(IDictionary<CBORObject,CBORObject>)o);
 			if(o is IDictionary<string,CBORObject>)return FromObject(
 				(IDictionary<string,CBORObject>)o);
-			throw new ArgumentException();
+			throw new ArgumentException("Unsupported object type.");
 		}
 		
 		private static BigInteger BigInt65536=(BigInteger)65536;
@@ -2267,7 +2309,7 @@ namespace PeterO
 			} else if(this.ItemType== CBORObjectType_BigInteger){
 				return ((BigInteger)item).ToString(CultureInfo.InvariantCulture);
 			} else {
-				throw new InvalidOperationException();
+				throw new InvalidOperationException("Unsupported data type");
 			}
 		}
 		
@@ -2343,7 +2385,7 @@ namespace PeterO
 						// The default capacity of StringBuilder may be too small
 						// for many strings, so set a suggested capacity
 						// explicitly
-            string str=(string)item;
+						string str=(string)item;
 						sb=new StringBuilder(Math.Min(str.Length,4096)+16);
 					} else {
 						sb=new StringBuilder();
@@ -2352,10 +2394,7 @@ namespace PeterO
 				AppendOpeningTags(sb);
 			}
 			if(this.ItemType== CBORObjectType_SimpleValue){
-				if(this.IsBreak){
-					simvalue="break";
-				}
-				else if(this.IsTrue){
+				if(this.IsTrue){
 					simvalue="true";
 				}
 				else if(this.IsFalse){
@@ -2425,6 +2464,9 @@ namespace PeterO
 					sb.Append('\"');
 				}
 			} else if(this.ItemType== CBORObjectType_Array){
+				if(this.HasTag(4)){
+					return ToJSONString();
+				}
 				if(sb==null)sb=new StringBuilder();
 				bool first=true;
 				sb.Append("[");
@@ -2496,24 +2538,29 @@ namespace PeterO
 			int validTypeIndex
 		){
 			if(depth>1000)
-				throw new IOException();
+				throw new CBORException("Too deeply nested");
 			int c=s.ReadByte();
 			if(c<0)
-				throw new IOException();
+				throw new CBORException("Premature end of data");
 			int type=(c>>5)&0x07;
 			int additional=(c&0x1F);
 			if(c==0xFF){
-				if(allowBreak)return Break;
-				throw new FormatException();
+				if(allowBreak)return null;
+				throw new CBORException("Unexpected break code encountered");
 			}
-			if(allowOnlyType>=0 &&
-			   (allowOnlyType!=type || additional>=28)){
-				throw new FormatException();
+			if(allowOnlyType>=0 && (allowOnlyType!=type)){
+				throw new CBORException("Expected major type "+
+				                        Convert.ToString((int)allowOnlyType,CultureInfo.InvariantCulture)+
+				                        ", instead got type "+
+				                        Convert.ToString((int)type,CultureInfo.InvariantCulture));
+			}
+			if(allowOnlyType>=0 && additional>=28){
+				throw new CBORException("Unexpected data encountered");
 			}
 			if(validTypeFlags!=null){
 				// Check for valid major types if asked
 				if(!CheckMajorTypeIndex(type,validTypeIndex,validTypeFlags)){
-					throw new FormatException();
+					throw new CBORException("Unexpected data type encountered");
 				}
 			}
 			if(type==7){
@@ -2527,7 +2574,7 @@ namespace PeterO
 				if(additional==24){
 					c=s.ReadByte();
 					if(c<0)
-						throw new IOException();
+						throw new CBORException("Premature end of data");
 					return new CBORObject(CBORObjectType_SimpleValue,c);
 				}
 				if(additional==25 || additional==26 ||
@@ -2536,7 +2583,7 @@ namespace PeterO
 						((additional==26) ? 4 : 8);
 					byte[] cs=new byte[cslength];
 					if(s.Read(cs,0,cs.Length)!=cs.Length)
-						throw new IOException();
+						throw new CBORException("Premature end of data");
 					long x=0;
 					for(int i=0;i<cs.Length;i++){
 						x<<=8;
@@ -2556,7 +2603,7 @@ namespace PeterO
 						return new CBORObject(CBORObjectType_Double,f);
 					}
 				}
-				throw new FormatException();
+				throw new CBORException("Unexpected data encountered");
 			}
 			long uadditional=0;
 			BigInteger bigintAdditional=BigInteger.Zero;
@@ -2566,12 +2613,12 @@ namespace PeterO
 			} else if(additional==24){
 				int c1=s.ReadByte();
 				if(c1<0)
-					throw new IOException();
+					throw new CBORException("Premature end of data");
 				uadditional=(long)c1;
 			} else if(additional==25 || additional==26){
 				byte[] cs=new byte[(additional==25) ? 2 : 4];
 				if(s.Read(cs,0,cs.Length)!=cs.Length)
-					throw new IOException();
+					throw new CBORException("Premature end of data");
 				long x=0;
 				for(int i=0;i<cs.Length;i++){
 					x<<=8;
@@ -2581,7 +2628,7 @@ namespace PeterO
 			} else if(additional==27){
 				byte[] cs=new byte[8];
 				if(s.Read(cs,0,cs.Length)!=cs.Length)
-					throw new IOException();
+					throw new CBORException("Premature end of data");
 				long x=0;
 				for(int i=0;i<cs.Length;i++){
 					x<<=8;
@@ -2607,9 +2654,9 @@ namespace PeterO
 				}
 			} else if(additional==28 || additional==29 ||
 			          additional==30){
-				throw new FormatException();
+				throw new CBORException("Unexpected data encountered");
 			} else if(additional==31 && type<2){
-				throw new FormatException();
+				throw new CBORException("Unexpected data encountered");
 			}
 			if(type==0){
 				if(hasBigAdditional)
@@ -2636,25 +2683,47 @@ namespace PeterO
 						int[] subFlags=new int[]{(1<<type)};
 						while(true){
 							CBORObject o=Read(s,depth+1,true,type,subFlags,0);
-							if(o.IsBreak)
-								break;
+							if(o==null)break;//break if the "break" code was read
 							data=(byte[])o.item;
 							ms.Write(data,0,data.Length);
 						}
 						if(ms.Position>Int32.MaxValue)
-							throw new IOException();
+							throw new CBORException("Length of bytes to be streamed is bigger than supported");
 						data=ms.ToArray();
 						return new CBORObject(
 							CBORObjectType_ByteString,
 							data);
 					}
 				} else {
-					if(hasBigAdditional || uadditional>Int32.MaxValue){
-						throw new IOException();
+					if(hasBigAdditional){
+						throw new CBORException("Length of "+
+						                        bigintAdditional.ToString(CultureInfo.InvariantCulture)+
+						                        " is bigger than supported");
+					} else if(uadditional>Int32.MaxValue){
+						throw new CBORException("Length of "+
+						                        Convert.ToString((long)uadditional,CultureInfo.InvariantCulture)+
+						                        " is bigger than supported");
 					}
-					byte[] data=new byte[(int)uadditional];
-					if(s.Read(data,0,data.Length)!=data.Length)
-						throw new IOException();
+					byte[] data=null;
+					if(uadditional<=0x10000){
+						// Simple case: small size
+						data=new byte[(int)uadditional];
+						if(s.Read(data,0,data.Length)!=data.Length)
+							throw new CBORException("Premature end of stream");
+					} else {
+						byte[] tmpdata=new byte[0x10000];
+						int total=(int)uadditional;
+						using(var ms=new MemoryStream()){
+							while(total>0){
+								int bufsize=Math.Min(tmpdata.Length,total);
+								if(s.Read(tmpdata,0,bufsize)!=bufsize)
+									throw new CBORException("Premature end of stream");
+								ms.Write(tmpdata,0,bufsize);
+								total-=bufsize;
+							}
+							data=ms.ToArray();
+						}
+					}
 					return new CBORObject(
 						CBORObjectType_ByteString,
 						data);
@@ -2667,19 +2736,32 @@ namespace PeterO
 					int[] subFlags=new int[]{(1<<type)};
 					while(true){
 						CBORObject o=Read(s,depth+1,true,type,subFlags,0);
-						if(o.IsBreak)
-							break;
+						if(o==null)break;//break if the "break" code was read
 						builder.Append((string)o.item);
 					}
 					return new CBORObject(
 						CBORObjectType_TextString,
 						builder.ToString());
 				} else {
-					if(hasBigAdditional || uadditional>=Int32.MaxValue){
-						throw new IOException();
+					if(hasBigAdditional){
+						throw new CBORException("Length of "+
+						                        bigintAdditional.ToString(CultureInfo.InvariantCulture)+
+						                        " is bigger than supported");
+					} else if(uadditional>Int32.MaxValue){
+						throw new CBORException("Length of "+
+						                        Convert.ToString((long)uadditional,CultureInfo.InvariantCulture)+
+						                        " is bigger than supported");
 					}
-					string str=ReadUtf8(s,(int)uadditional);
-					return new CBORObject(CBORObjectType_TextString,str);
+					StringBuilder builder=new StringBuilder();
+					switch(ReadUtf8(s,(int)uadditional,builder)){
+						case -1:
+							throw new CBORException("Invalid UTF-8");
+						case -2:
+							throw new CBORException("Premature end of data");
+						default: // No error
+							break;
+					}
+					return new CBORObject(CBORObjectType_TextString,builder.ToString());
 				}
 			} else if(type==4){ // Array
 				IList<CBORObject> list=new List<CBORObject>();
@@ -2687,15 +2769,20 @@ namespace PeterO
 				if(additional==31){
 					while(true){
 						CBORObject o=Read(s,depth+1,true,-1,validTypeFlags,vtindex);
-						if(o.IsBreak)
-							break;
+						if(o==null)break;//break if the "break" code was read
 						list.Add(o);
 						vtindex++;
 					}
 					return new CBORObject(CBORObjectType_Array,list);
 				} else {
-					if(hasBigAdditional || uadditional>=Int32.MaxValue){
-						throw new IOException();
+					if(hasBigAdditional){
+						throw new CBORException("Length of "+
+						                        bigintAdditional.ToString(CultureInfo.InvariantCulture)+
+						                        " is bigger than supported");
+					} else if(uadditional>Int32.MaxValue){
+						throw new CBORException("Length of "+
+						                        Convert.ToString((long)uadditional,CultureInfo.InvariantCulture)+
+						                        " is bigger than supported");
 					}
 					for(long i=0;i<uadditional;i++){
 						list.Add(Read(s,depth+1,false,-1,validTypeFlags,vtindex));
@@ -2708,15 +2795,20 @@ namespace PeterO
 				if(additional==31){
 					while(true){
 						CBORObject key=Read(s,depth+1,true,-1,null,0);
-						if(key.IsBreak)
-							break;
+						if(key==null)break;//break if the "break" code was read
 						CBORObject value=Read(s,depth+1,false,-1,null,0);
 						dict[key]=value;
 					}
 					return new CBORObject(CBORObjectType_Map,dict);
 				} else {
-					if(hasBigAdditional || uadditional>=Int32.MaxValue){
-						throw new IOException();
+					if(hasBigAdditional){
+						throw new CBORException("Length of "+
+						                        bigintAdditional.ToString(CultureInfo.InvariantCulture)+
+						                        " is bigger than supported");
+					} else if(uadditional>Int32.MaxValue){
+						throw new CBORException("Length of "+
+						                        Convert.ToString((long)uadditional,CultureInfo.InvariantCulture)+
+						                        " is bigger than supported");
 					}
 					for(long i=0;i<uadditional;i++){
 						CBORObject key=Read(s,depth+1,false,-1,null,0);
@@ -2731,12 +2823,12 @@ namespace PeterO
 					if(uadditional==0){
 						// Requires a text string
 						int[] subFlags=new int[]{(1<<3)};
-						o=Read(s,depth+1,allowBreak,-1,subFlags,0);
+						o=Read(s,depth+1,false,-1,subFlags,0);
 					} else if(uadditional==2 || uadditional==3){
 						// Big number
 						// Requires a byte string
 						int[] subFlags=new int[]{(1<<2)};
-						o=Read(s,depth+1,allowBreak,-1,subFlags,0);
+						o=Read(s,depth+1,false,-1,subFlags,0);
 						byte[] data=(byte[])o.item;
 						BigInteger bi=BigInteger.Zero;
 						for(int i=0;i<data.Length;i++){
@@ -2756,19 +2848,19 @@ namespace PeterO
 							(1<<0)|(1<<1), // exponent
 							(1<<0)|(1<<1)|(1<<6) // mantissa
 						};
-						o=Read(s,depth+1,allowBreak,-1,subFlags,0);
+						o=Read(s,depth+1,false,-1,subFlags,0);
 						if(o.Count!=2) // Requires 2 items
-							throw new FormatException();
+							throw new CBORException("Decimal fraction requires exactly 2 items");
 						// check type of mantissa
 						IList<CBORObject> list=o.AsList();
 						if(list[1].ItemType!=CBORObjectType_Integer &&
 						   list[1].ItemType!=CBORObjectType_BigInteger)
-							throw new FormatException();
+							throw new CBORException("Decimal fraction requires mantissa to be an integer or big integer");
 					} else {
-						o=Read(s,depth+1,allowBreak,-1,null,0);
+						o=Read(s,depth+1,false,-1,null,0);
 					}
 				} else {
-					o=Read(s,depth+1,allowBreak,-1,null,0);
+					o=Read(s,depth+1,false,-1,null,0);
 				}
 				if(hasBigAdditional){
 					return FromObjectAndTag(o,bigintAdditional);
