@@ -10,42 +10,36 @@ at: http://upokecenter.com/d/
 
 
 
-	/// <summary>
-	/// Represents a type that a CBOR Object can have.
-	/// </summary>
-	/// 
+	/**
+	 * Represents a type that a CBOR Object can have.
+	 */
 	public enum CBORType {
-		/// <summary>
-		/// A number of any kind, including integers,
-		/// big integers, floating point numbers,
-		/// and decimal fractions.  The floating-point
-		/// value Not-a-Number is also included in the
-		/// Number type.
-		/// </summary>
+		/**
+		 * A number of any kind, including integers, big integers, floating point numbers, and decimal fractions.  The floating-point value Not-a-Number is also included in the Number type.
+		 */
 		Number,
-		/// <summary>
-		/// The simple values true and false.
-		/// </summary>
+		/**
+		 * The simple values true and false.
+		 */
 		Boolean,
-		/// <summary>
-		/// A "simple value" other than floating point
-		/// values, true, and false.
-		/// </summary>
+		/**
+		 * A "simple value" other than floating point values, true, and false.
+		 */
 		SimpleValue,
-		/// <summary>
-		/// An array of bytes.
-		/// </summary>
+		/**
+		 * An array of bytes.
+		 */
 		ByteString,
-		/// <summary>
-		/// A text String.
-		/// </summary>
+		/**
+		 * A text String.
+		 */
 		TextString,
-		/// <summary>
-		/// An array of CBOR objects.
-		/// </summary>
+		/**
+		 * An array of CBOR objects.
+		 */
 		Array,
-		/// <summary>
-		/// A map of CBOR objects.
-		/// </summary>
+		/**
+		 * A map of CBOR objects.
+		 */
 		Map
 	}

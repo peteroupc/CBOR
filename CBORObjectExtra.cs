@@ -50,8 +50,8 @@ namespace PeterO
 		/// <returns>The closest big integer
 		/// to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
-		/// This object's type is not an integer
-		/// or a floating-point number.</exception>
+		/// This object's type is not a number type.
+		/// </exception>
 		/// <exception cref="System.OverflowException">
 		/// This object's value exceeds the range of a 
 		/// .NET decimal.</exception>
@@ -97,8 +97,8 @@ namespace PeterO
 		/// <returns>The closest big integer
 		/// to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
-		/// This object's type is not an integer
-		/// or a floating-point number.</exception>
+		/// This object's type is not a number type.
+		/// </exception>
 		/// <exception cref="System.OverflowException">
 		/// This object's value exceeds the range of a 64-bit
 		/// unsigned integer.</exception>
