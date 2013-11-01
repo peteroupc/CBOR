@@ -79,3 +79,8 @@ http://creativecommons.org/publicdomain/zero/1.0/
 
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
+
+Acknowledgments
+-----------
+
+Carsten Bormann reviewed this library and gave helpful suggestions.

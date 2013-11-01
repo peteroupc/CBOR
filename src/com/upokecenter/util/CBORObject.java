@@ -21,12 +21,26 @@ import java.math.*;
 	public final class CBORObject
 	{
 		private int getItemType() {
-				return itemtype_;
+				CBORObject curobject=this;
+				while(curobject.itemtype_==CBORObjectType_Tagged) {
+					curobject=((CBORObject)curobject.item_);
+				}
+				return curobject.itemtype_;
 			}
-		
+
+		private Object getThisItem() {
+				CBORObject curobject=this;
+				while(curobject.itemtype_==CBORObjectType_Tagged) {
+					curobject=((CBORObject)curobject.item_);
+				}
+				return curobject.item_;
+			}
+
+
 		int itemtype_;
-		Object item;
-		int[] tagArray=null;
+		Object item_;
+		int tagLow;
+		int tagHigh;
 		
 		private static final int CBORObjectType_Integer=0; // -(2^63) .. (2^63-1)
 		private static final int CBORObjectType_BigInteger=1; // all other integers
@@ -37,6 +51,7 @@ import java.math.*;
 		private static final int CBORObjectType_SimpleValue=6;
 		private static final int CBORObjectType_Single=7;
 		private static final int CBORObjectType_Double=8;
+		private static final int CBORObjectType_Tagged=9;
 		private static final BigInteger Int64MaxValue=BigInteger.valueOf(Long.MAX_VALUE);
 		private static final BigInteger Int64MinValue=BigInteger.valueOf(Long.MIN_VALUE);
 		/**
@@ -58,28 +73,15 @@ import java.math.*;
 		
 		private CBORObject(){}
 		
-		private CBORObject(int type, int tagLow, int tagHigh, Object item){
- this(type,item);
-			tagArray=new int[]{tagLow,tagHigh};
-		}
 		private CBORObject(CBORObject obj, int tagLow, int tagHigh){
- this(obj.itemtype_,obj.item);
-			if(obj.tagArray!=null){
-				tagArray=new int[2+obj.tagArray.length];
-				tagArray[0]=tagLow;
-				tagArray[1]=tagHigh;
-				
-				for(int i=0;i<obj.tagArray.length;i++){
-					tagArray[i+2]=obj.tagArray[i];
-				}
-			} else {
-				tagArray=new int[]{tagLow,tagHigh};
-			}
+ this(CBORObjectType_Tagged,obj);
+			this.tagLow=tagLow;
+			this.tagHigh=tagHigh;
 		}
 		private CBORObject(int type, Object item){
 			
 			this.itemtype_=type;
-			this.item=item;
+			this.item_=item;
 		}
 		
 		/**
@@ -93,7 +95,7 @@ import java.math.*;
 					case CBORObjectType_Double:
 						return CBORType.Number;
 					case CBORObjectType_SimpleValue:
-						if(((Integer)item).intValue()==21 || ((Integer)item).intValue()==20){
+						if(((Integer)this.getThisItem()).intValue()==21 || ((Integer)this.getThisItem()).intValue()==20){
 							return CBORType.Boolean;
 						}
 						return CBORType.SimpleValue;
@@ -115,25 +117,25 @@ import java.math.*;
 		 * Gets whether this value is a CBOR true value.
 		 */
 		public boolean isTrue() {
-				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)item).intValue()==21;
+				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue()==21;
 			}
 		/**
 		 * Gets whether this value is a CBOR false value.
 		 */
 		public boolean isFalse() {
-				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)item).intValue()==20;
+				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue()==20;
 			}
 		/**
 		 * Gets whether this value is a CBOR null value.
 		 */
 		public boolean isNull() {
-				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)item).intValue()==22;
+				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue()==22;
 			}
 		/**
 		 * Gets whether this value is a CBOR undefined value.
 		 */
 		public boolean isUndefined() {
-				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)item).intValue()==23;
+				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue()==23;
 			}
 		
 
@@ -185,34 +187,7 @@ import java.math.*;
 			}
 			return ret;
 		}
-
-		private boolean TagListEquals(
-			int[] arrayA,
-			int[] arrayB
-		) {
-			if(arrayA==null)return (arrayB==null);
-			if(arrayB==null)return false;
-			if(arrayA.length!=arrayB.length)return false;
-			int count=arrayA.length;
-			for(int i=0;i<count;i++){
-				if(arrayA[i]!=arrayB[i])return false;
-			}
-			return true;
-		}
-
-		private int TagListHashCode(int[] array) {
-			if(array==null)return 0;
-			int ret=19;
-			{
-				int count=array.length;
-				ret=ret*31+count;
-				for(int i=0;i<count;i++){
-					ret=ret*31+(int)array[i];
-				}
-			}
-			return ret;
-		}
-
+		
 		private boolean CBORMapEquals(
 			Map<CBORObject,CBORObject> mapA,
 			Map<CBORObject,CBORObject> mapB
@@ -252,21 +227,23 @@ public boolean equals(Object obj) {
 			CBORObject other = ((obj instanceof CBORObject) ? (CBORObject)obj : null);
 			if (other == null)
 				return false;
-			if(item instanceof byte[]){
-				if(!ByteArrayEquals((byte[])item,((other.item instanceof byte[]) ? (byte[])other.item : null)))
+			if(item_ instanceof byte[]){
+				if(!ByteArrayEquals((byte[])this.getThisItem(),((other.item_ instanceof byte[]) ? (byte[])other.item_ : null)))
 					return false;
-			} else if(item instanceof List<?>){
-				if(!CBORArrayEquals(AsList(),((other.item instanceof List<?>) ? (List<CBORObject>)other.item : null)))
+			} else if(item_ instanceof List<?>){
+				if(!CBORArrayEquals(AsList(),((other.item_ instanceof List<?>) ? (List<CBORObject>)other.item_ : null)))
 					return false;
-			} else if(item instanceof Map<?,?>){
+			} else if(item_ instanceof Map<?,?>){
 				if(!CBORMapEquals(AsMap(),
-				                  ((other.item instanceof Map<?,?>) ? (Map<CBORObject,CBORObject>)other.item : null)))
+				                  ((other.item_ instanceof Map<?,?>) ? (Map<CBORObject,CBORObject>)other.item_ : null)))
 					return false;
 			} else {
-				if(!(((this.item)==null) ? ((other.item)==null) : (this.item).equals(other.item)))
+				if(!(((this.item_)==null) ? ((other.item_)==null) : (this.item_).equals(other.item_)))
 					return false;
 			}
-			return this.getItemType() == other.getItemType() && TagListEquals(tagArray,other.tagArray);
+			return this.getItemType() == other.getItemType() &&
+				this.tagLow == other.tagLow &&
+				this.tagHigh == other.tagHigh;
 		}
 		
 		/**
@@ -275,20 +252,21 @@ public boolean equals(Object obj) {
 		@Override public int hashCode() {
 			int hashCode_ = 0;
 			{
-				if (item != null){
+				if (item_ != null){
 					int itemHashCode=0;
-					if(item instanceof byte[])
-						itemHashCode=ByteArrayHashCode((byte[])item);
-					else if(item instanceof List<?>)
+					if(item_ instanceof byte[])
+						itemHashCode=ByteArrayHashCode((byte[])this.getThisItem());
+					else if(item_ instanceof List<?>)
 						itemHashCode=CBORArrayHashCode(AsList());
-					else if(item instanceof Map<?,?>)
+					else if(item_ instanceof Map<?,?>)
 						itemHashCode=CBORMapHashCode(AsMap());
 					else
-						itemHashCode=item.hashCode();
+						itemHashCode=item_.hashCode();
 					hashCode_ += 1000000007 * itemHashCode;
 				}
 				hashCode_ += 1000000009 * this.getItemType();
-				hashCode_ += 1000000009 * TagListHashCode(this.tagArray);
+				hashCode_ += 1000000009 * this.tagLow;
+				hashCode_ += 1000000009 * this.tagHigh;
 			}
 			return hashCode_;
 		}
@@ -508,7 +486,7 @@ public boolean equals(Object obj) {
 			if(firstbyte==0xc0){
 				// value with tag 0
 				String s=GetOptimizedStringIfShortAscii(data,1);
-				if(s!=null)return new CBORObject(CBORObjectType_TextString,0,0,s);
+				if(s!=null)return new CBORObject(FromObject(s),0,0);
 			}
 			if(expectedLength!=0){
 				return GetFixedLengthObject(firstbyte, data);
@@ -551,20 +529,13 @@ if(ms!=null)ms.close();
 		 * Gets whether this data item has at least one tag.
 		 */
 		public boolean isTagged() {
-				return tagArray!=null && tagArray.length>0;
+				return this.itemtype_==CBORObjectType_Tagged;
 			}
 
 		private boolean HasTag(int tagValue) {
-			if(tagArray==null)return false;
-			if((tagValue)<0)throw new IllegalArgumentException(
-				"tagValue"+" not greater or equal to "+"0"+" ("+Integer.toString((int)tagValue)+")");
-			int length=tagArray.length;
-			for(int i=0;i<length;i+=2){
-				int low=(int)tagArray[i];
-				int high=(int)tagArray[i+1];
-				if(high==0 && tagValue==low)return true;
-			}
-			return false;
+			if(!this.isTagged())return false;
+			if(tagHigh==0 && tagValue==tagLow)return true;
+			return ((CBORObject)item_).HasTag(tagValue);
 		}
 		
 		private BigInteger LowHighToBigInteger(int tagLow, int tagHigh) {
@@ -591,39 +562,49 @@ if(ms!=null)ms.close();
 		 */
 		public BigInteger[] GetTags() {
 			if(!this.isTagged())return EmptyTags;
-			BigInteger[] ret=new BigInteger[tagArray.length/2];
-			for(int i=0;i<tagArray.length;i+=2){
-				int tagLow=(int)tagArray[i];
-				int tagHigh=(int)tagArray[i+1];
-				ret[i/2]=LowHighToBigInteger(tagLow,tagHigh);
+			CBORObject curitem=this;
+			if(curitem.isTagged()){
+				ArrayList<BigInteger> list=new ArrayList<BigInteger>();
+				while(curitem.isTagged()){
+					list.add(LowHighToBigInteger(
+						curitem.tagLow,curitem.tagHigh));
+					curitem=((CBORObject)curitem.item_);
+				}
+				return list.toArray(new BigInteger[]{});
+			} else {
+				return new BigInteger[]{LowHighToBigInteger(tagLow,tagHigh)};
 			}
-			return ret;
 		}
 		
 		/**
 		 * Gets the last defined tag for this CBOR data item, or 0 if the item is untagged.
 		 */
 		public BigInteger getInnermostTag() {
-				if(this.isTagged()){
-					int tagLow=(int)tagArray[tagArray.length-2];
-					int tagHigh=(int)tagArray[tagArray.length-1];
-					if(tagHigh==0 && tagLow>=0 && tagLow<0x10000){
-						return BigInteger.valueOf(tagLow);
-					}
-					return LowHighToBigInteger(tagLow,tagHigh);
-				} else {
-					return BigInteger.ZERO;
+				if(!this.isTagged())return BigInteger.ZERO;
+				CBORObject previtem=this;
+				CBORObject curitem=((CBORObject)item_);
+				while(curitem.isTagged()){
+					previtem=curitem;
+					curitem=((CBORObject)curitem.item_);
 				}
+				if(previtem.tagHigh==0 &&
+				   previtem.tagLow>=0 &&
+				   previtem.tagLow<0x10000){
+					return BigInteger.valueOf(previtem.tagLow);
+				}
+				return LowHighToBigInteger(
+					previtem.tagLow,
+					previtem.tagHigh);
 			}
 
 		@SuppressWarnings("unchecked")
 private Map<CBORObject,CBORObject> AsMap() {
-			return (Map<CBORObject,CBORObject>)item;
+			return (Map<CBORObject,CBORObject>)this.getThisItem();
 		}
 		
 		@SuppressWarnings("unchecked")
 private List<CBORObject> AsList() {
-			return (List<CBORObject>)item;
+			return (List<CBORObject>)this.getThisItem();
 		}
 		
 		/**
@@ -732,7 +713,7 @@ public void set(String key, CBORObject value) {
 		 */
 		public int getSimpleValue() {
 				if(this.getItemType()== CBORObjectType_SimpleValue){
-					return ((Integer)item).intValue();
+					return ((Integer)this.getThisItem()).intValue();
 				} else {
 					return -1;
 				}
@@ -826,13 +807,13 @@ public void set(String key, CBORObject value) {
 		 */
 		public double AsDouble() {
 			if(this.getItemType()== CBORObjectType_Integer)
-				return ((Long)item).doubleValue();
+				return ((Long)this.getThisItem()).doubleValue();
 			else if(this.getItemType()== CBORObjectType_BigInteger)
-				return ((BigInteger)item).doubleValue();
+				return ((BigInteger)this.getThisItem()).doubleValue();
 			else if(this.getItemType()== CBORObjectType_Single)
-				return ((Float)item).doubleValue();
+				return ((Float)this.getThisItem()).doubleValue();
 			else if(this.getItemType()== CBORObjectType_Double)
-				return ((Double)item).doubleValue();
+				return ((Double)this.getThisItem()).doubleValue();
 			else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&
 			        this.size()==2){
 				StringBuilder sb=new StringBuilder();
@@ -853,13 +834,13 @@ public void set(String key, CBORObject value) {
 		 */
 		public float AsSingle() {
 			if(this.getItemType()== CBORObjectType_Integer)
-				return ((Long)item).floatValue();
+				return ((Long)this.getThisItem()).floatValue();
 			else if(this.getItemType()== CBORObjectType_BigInteger)
-				return ((BigInteger)item).floatValue();
+				return ((BigInteger)this.getThisItem()).floatValue();
 			else if(this.getItemType()== CBORObjectType_Single)
-				return ((Float)item).floatValue();
+				return ((Float)this.getThisItem()).floatValue();
 			else if(this.getItemType()== CBORObjectType_Double)
-				return ((Double)item).floatValue();
+				return ((Double)this.getThisItem()).floatValue();
 			else if(this.HasTag(4) &&
 			        this.getItemType()== CBORObjectType_Array &&
 			        this.size()==2){
@@ -880,13 +861,13 @@ public void set(String key, CBORObject value) {
 		 */
 		public BigInteger AsBigInteger() {
 			if(this.getItemType()== CBORObjectType_Integer)
-				return BigInteger.valueOf(((Long)item).longValue());
+				return BigInteger.valueOf(((Long)this.getThisItem()).longValue());
 			else if(this.getItemType()== CBORObjectType_BigInteger)
-				return (BigInteger)item;
+				return (BigInteger)this.getThisItem();
 			else if(this.getItemType()== CBORObjectType_Single)
-				return new BigDecimal(((Float)item).floatValue()).toBigInteger();
+				return new BigDecimal(((Float)this.getThisItem()).floatValue()).toBigInteger();
 			else if(this.getItemType()== CBORObjectType_Double)
-				return new BigDecimal(((Double)item).doubleValue()).toBigInteger();
+				return new BigDecimal(((Double)this.getThisItem()).doubleValue()).toBigInteger();
 			else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&
 			        this.size()==2){
 				StringBuilder sb=new StringBuilder();
@@ -959,22 +940,22 @@ public void set(String key, CBORObject value) {
 		 */
 		public long AsInt64() {
 			if(this.getItemType()== CBORObjectType_Integer){
-				return ((Long)item).longValue();
+				return ((Long)this.getThisItem()).longValue();
 			} else if(this.getItemType()== CBORObjectType_BigInteger){
-				if(((BigInteger)item).compareTo(Int64MaxValue)>0 ||
-				   ((BigInteger)item).compareTo(Int64MinValue)<0)
+				if(((BigInteger)this.getThisItem()).compareTo(Int64MaxValue)>0 ||
+				   ((BigInteger)this.getThisItem()).compareTo(Int64MinValue)<0)
 					throw new ArithmeticException();
-				return ((BigInteger)item).longValue();
+				return ((BigInteger)this.getThisItem()).longValue();
 			} else if(this.getItemType()== CBORObjectType_Single){
-				if(Float.isNaN(((Float)item).floatValue()) ||
-				   ((Float)item).floatValue()>Long.MAX_VALUE || ((Float)item).floatValue()<Long.MIN_VALUE)
+				if(Float.isNaN(((Float)this.getThisItem()).floatValue()) ||
+				   ((Float)this.getThisItem()).floatValue()>Long.MAX_VALUE || ((Float)this.getThisItem()).floatValue()<Long.MIN_VALUE)
 					throw new ArithmeticException();
-				return ((Float)item).longValue();
+				return ((Float)this.getThisItem()).longValue();
 			} else if(this.getItemType()== CBORObjectType_Double){
-				if(Double.isNaN(((Double)item).doubleValue()) ||
-				   ((Double)item).doubleValue()>Long.MIN_VALUE || ((Double)item).doubleValue()<Long.MIN_VALUE)
+				if(Double.isNaN(((Double)this.getThisItem()).doubleValue()) ||
+				   ((Double)this.getThisItem()).doubleValue()>Long.MIN_VALUE || ((Double)this.getThisItem()).doubleValue()<Long.MIN_VALUE)
 					throw new ArithmeticException();
-				return ((Double)item).longValue();
+				return ((Double)this.getThisItem()).longValue();
 			} else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&
 			          this.size()==2){
 				StringBuilder sb=new StringBuilder();
@@ -997,25 +978,26 @@ public void set(String key, CBORObject value) {
 		 * @throws java.lang.ArithmeticException This object's value exceeds the range of a 32-bit signed integer.
 		 */
 		public int AsInt32() {
+      Object thisItem=this.getThisItem();
 			if(this.getItemType()== CBORObjectType_Integer){
-				if(((Long)item).longValue()>Integer.MAX_VALUE || ((Long)item).longValue()<Integer.MIN_VALUE)
+				if(((Long)thisItem).longValue()>Integer.MAX_VALUE || ((Long)thisItem).longValue()<Integer.MIN_VALUE)
 					throw new ArithmeticException();
-				return ((Long)item).intValue();
+				return ((Long)thisItem).intValue();
 			} else if(this.getItemType()== CBORObjectType_BigInteger){
-				if(((BigInteger)item).compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0 ||
-				   ((BigInteger)item).compareTo(BigInteger.valueOf(Integer.MIN_VALUE))<0)
+				if(((BigInteger)thisItem).compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0 ||
+				   ((BigInteger)thisItem).compareTo(BigInteger.valueOf(Integer.MIN_VALUE))<0)
 					throw new ArithmeticException();
-				return ((BigInteger)item).intValue();
+				return ((BigInteger)thisItem).intValue();
 			} else if(this.getItemType()== CBORObjectType_Single){
-				if(Float.isNaN(((Float)item).floatValue()) ||
-				   ((Float)item).floatValue()>Integer.MAX_VALUE || ((Float)item).floatValue()<Integer.MIN_VALUE)
+				if(Float.isNaN(((Float)thisItem).floatValue()) ||
+				   ((Float)thisItem).floatValue()>Integer.MAX_VALUE || ((Float)thisItem).floatValue()<Integer.MIN_VALUE)
 					throw new ArithmeticException();
-				return ((Float)item).intValue();
+				return ((Float)thisItem).intValue();
 			} else if(this.getItemType()== CBORObjectType_Double){
-				if(Double.isNaN(((Double)item).doubleValue()) ||
-				   ((Double)item).doubleValue()>Integer.MIN_VALUE || ((Double)item).doubleValue()<Integer.MIN_VALUE)
+				if(Double.isNaN(((Double)thisItem).doubleValue()) ||
+				   ((Double)thisItem).doubleValue()>Integer.MIN_VALUE || ((Double)thisItem).doubleValue()<Integer.MIN_VALUE)
 					throw new ArithmeticException();
-				return ((Double)item).intValue();
+				return ((Double)thisItem).intValue();
 			} else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&
 			          this.size()==2){
 				StringBuilder sb=new StringBuilder();
@@ -1037,7 +1019,7 @@ public void set(String key, CBORObject value) {
 		 */
 		public String AsString() {
 			if(this.getItemType()== CBORObjectType_TextString){
-				return (String)item;
+				return (String)this.getThisItem();
 			} else {
 				throw new IllegalStateException("Not a String type");
 			}
@@ -1348,21 +1330,21 @@ if(ms!=null)ms.close();
 			if((s)==null)throw new NullPointerException("s");
 			WriteTags(s);
 			if(this.getItemType()==CBORObjectType_Integer){
-				Write(((Long)item).longValue(),s);
+				Write(((Long)this.getThisItem()).longValue(),s);
 			} else if(this.getItemType()== CBORObjectType_BigInteger){
-				Write((BigInteger)item,s);
+				Write((BigInteger)this.getThisItem(),s);
 			} else if(this.getItemType()== CBORObjectType_ByteString){
 				WritePositiveInt((this.getItemType()== CBORObjectType_ByteString) ? 2 : 3,
-				                 ((byte[])item).length,s);
-				s.write(((byte[])item),0,((byte[])item).length);
+				                 ((byte[])this.getThisItem()).length,s);
+				s.write(((byte[])this.getThisItem()),0,((byte[])this.getThisItem()).length);
 			} else if(this.getItemType()== CBORObjectType_TextString ){
-				Write((String)item,s);
+				Write(this.AsString(),s);
 			} else if(this.getItemType()== CBORObjectType_Array){
 				WriteObjectArray(AsList(),s);
 			} else if(this.getItemType()== CBORObjectType_Map){
 				WriteObjectMap(AsMap(),s);
 			} else if(this.getItemType()== CBORObjectType_SimpleValue){
-				int value=((Integer)item).intValue();
+				int value=((Integer)this.getThisItem()).intValue();
 				if(value<24){
 					s.write((byte)(0xE0+value));
 				} else {
@@ -1370,9 +1352,9 @@ if(ms!=null)ms.close();
 					s.write((byte)value);
 				}
 			} else if(this.getItemType()== CBORObjectType_Single){
-				Write(((Float)item).floatValue(),s);
+				Write(((Float)this.getThisItem()).floatValue(),s);
 			} else if(this.getItemType()== CBORObjectType_Double){
-				Write(((Double)item).doubleValue(),s);
+				Write(((Double)this.getThisItem()).doubleValue(),s);
 			} else {
 				throw new IllegalArgumentException("Unexpected data type");
 			}
@@ -1542,23 +1524,24 @@ if(ms!=null)ms.close();
 			byte tagbyte=0;
 			boolean tagged=this.isTagged();
 			if(this.isTagged()){
-				if(this.tagArray.length>2 ||
-				   (int)this.tagArray[1]!=0 ||
-				   (((int)this.tagArray[0])>>16)!=0 ||
-				   this.tagArray[0]>=24){
+				CBORObject taggedItem=(CBORObject)item_;
+				if(taggedItem.isTagged() ||
+				   this.tagHigh!=0 ||
+				   ((this.tagLow)>>16)!=0 ||
+				   this.tagLow>=24){
 					hasComplexTag=true;
 				} else {
-					tagbyte=(byte)(0xC0+(int)this.tagArray[0]);
+					tagbyte=(byte)(0xC0+(int)this.tagLow);
 				}
 			}
 			if(!hasComplexTag){
 				if(this.getItemType()== CBORObjectType_TextString){
 					byte[] ret=GetOptimizedBytesIfShortAscii(
-						(String)item,
+						this.AsString(),
 						tagged ? (((int)tagbyte)&0xFF) : -1);
 					if(ret!=null)return ret;
 				} else if(this.getItemType()== CBORObjectType_Integer){
-					long value=((Long)item).longValue();
+					long value=((Long)this.getThisItem()).longValue();
 					byte[] ret=null;
 					if(value>=0){
 						ret=GetPositiveInt64Bytes(0,value);
@@ -1574,7 +1557,7 @@ if(ms!=null)ms.close();
 					return ret2;
 				} else if(this.getItemType()==CBORObjectType_Single){
 					int bits=Float.floatToRawIntBits(
-						((Float)item).floatValue());
+						((Float)this.getThisItem()).floatValue());
 					return tagged ?
 						new byte[]{tagbyte,(byte)0xFA,
 						(byte)((bits>>24)&0xFF),
@@ -1588,7 +1571,7 @@ if(ms!=null)ms.close();
 						(byte)(bits&0xFF)};
 				} else if(this.getItemType()==CBORObjectType_Double){
 					long bits=Double.doubleToRawLongBits(
-						((Double)item).doubleValue());
+						((Double)this.getThisItem()).doubleValue());
 					return tagged ?
 						new byte[]{tagbyte,(byte)0xFB,
 						(byte)((bits>>56)&0xFF),
@@ -1769,37 +1752,37 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				else if(this.isNull())return "null";
 				else return "null";
 			} else if(this.getItemType()== CBORObjectType_Single){
-				float f=((Float)item).floatValue();
+				float f=((Float)this.getThisItem()).floatValue();
 				if(((f)==Float.NEGATIVE_INFINITY) ||
 				   ((f)==Float.POSITIVE_INFINITY) ||
 				   Float.isNaN(f)) return "null";
 				else
 					return Float.toString((float)f);
 			} else if(this.getItemType()== CBORObjectType_Double){
-				double f=((Double)item).doubleValue();
+				double f=((Double)this.getThisItem()).doubleValue();
 				if(((f)==Double.NEGATIVE_INFINITY) ||
 				   ((f)==Double.POSITIVE_INFINITY) ||
 				   Double.isNaN(f)) return "null";
 				else
 					return Double.toString((double)f);
 			} else if(this.getItemType()== CBORObjectType_Integer){
-				return Long.toString(((Long)item).longValue());
+				return Long.toString(((Long)this.getThisItem()).longValue());
 			} else if(this.getItemType()== CBORObjectType_BigInteger){
-				return ((BigInteger)item).toString();
+				return ((BigInteger)this.getThisItem()).toString();
 			} else if(this.getItemType()== CBORObjectType_ByteString){
 				StringBuilder sb=new StringBuilder();
 				sb.append('\"');
 				if(this.HasTag(22)){
-					ToBase64(sb,(byte[])item,Base64,false);
+					ToBase64(sb,(byte[])this.getThisItem(),Base64,false);
 				} else if(this.HasTag(23)){
-					ToBase16(sb,(byte[])item);
+					ToBase16(sb,(byte[])this.getThisItem());
 				} else {
-					ToBase64(sb,(byte[])item,Base64URL,false);
+					ToBase64(sb,(byte[])this.getThisItem(),Base64URL,false);
 				}
 				sb.append('\"');
 				return sb.toString();
 			} else if(this.getItemType()== CBORObjectType_TextString){
-				return StringToJSONString((String)item);
+				return StringToJSONString(this.AsString());
 			} else if(this.getItemType()== CBORObjectType_Array){
 				if(this.HasTag(4) && this.size()==2){
 					return ExponentAndMantissaToString(this.get(0),this.get(1));
@@ -2549,30 +2532,28 @@ public static CBORObject FromObject(Object obj) {
 		
 		private String IntegerToString() {
 			if(this.getItemType()== CBORObjectType_Integer){
-				long v=((Long)item).longValue();
+				long v=((Long)this.getThisItem()).longValue();
 				return Long.toString((long)v);
 			} else if(this.getItemType()== CBORObjectType_BigInteger){
-				return ((BigInteger)item).toString();
+				return ((BigInteger)this.getThisItem()).toString();
 			} else {
 				throw new IllegalStateException("Unsupported data type");
 			}
 		}
 		
 		private void AppendClosingTags(StringBuilder sb) {
-			if(this.tagArray==null)return;
-			int count=this.tagArray.length;
-			for(int i=0;i<count;i+=2){
+			CBORObject curobject=this;
+			while(curobject.isTagged()) {
 				sb.append(')');
+				curobject=((CBORObject)(curobject.item_));
 			}
 		}
 		
 		private void WriteTags(OutputStream s) throws IOException {
-			if(this.tagArray==null)return;
-			int count=this.tagArray.length;
-			// Tags are ordered from top to bottom
-			for(int i=0;i<count;i+=2){
-				int low=this.tagArray[i];
-				int high=this.tagArray[i+1];
+			CBORObject curobject=this;
+			while(curobject.isTagged()) {
+				int low=curobject.tagLow;
+				int high=curobject.tagHigh;
 				if(high==0 && (low>>16)==0){
 					WritePositiveInt(6,low,s);
 				} else if(high==0){
@@ -2595,16 +2576,15 @@ public static CBORObject FromObject(Object obj) {
 							(byte)((low>>8)&0xFF),
 							(byte)(low&0xFF)},0,9);
 				}
+				curobject=((CBORObject)(curobject.item_));
 			}
 		}
 
 		private void AppendOpeningTags(StringBuilder sb) {
-			if(this.tagArray==null)return;
-			int count=this.tagArray.length;
-			// Tags are ordered from top to bottom
-			for(int i=0;i<count;i+=2){
-				int low=this.tagArray[i];
-				int high=this.tagArray[i+1];
+			CBORObject curobject=this;
+			while(curobject.isTagged()) {
+				int low=curobject.tagLow;
+				int high=curobject.tagHigh;
 				if(high==0 && (low>>16)==0){
 					sb.append(Integer.toString((int)low));
 				} else {
@@ -2612,6 +2592,7 @@ public static CBORObject FromObject(Object obj) {
 					sb.append(bi.toString());
 				}
 				sb.append('(');
+				curobject=((CBORObject)(curobject.item_));
 			}
 		}
 		
@@ -2628,7 +2609,7 @@ public static CBORObject FromObject(Object obj) {
 						// The default capacity of StringBuilder may be too small
 						// for many strings, so set a suggested capacity
 						// explicitly
-						String str=(String)item;
+						String str=this.AsString();
 						sb=new StringBuilder(Math.min(str.length(),4096)+16);
 					} else {
 						sb=new StringBuilder();
@@ -2652,7 +2633,7 @@ public static CBORObject FromObject(Object obj) {
 				else {
 					if(sb==null)sb=new StringBuilder();
 					sb.append("simple(");
-					sb.append(Integer.toString(((Integer)item).intValue()));
+					sb.append(Integer.toString(((Integer)this.getThisItem()).intValue()));
 					sb.append(")");
 				}
 				if(simvalue!=null){
@@ -2660,7 +2641,7 @@ public static CBORObject FromObject(Object obj) {
 					sb.append(simvalue);
 				}
 			} else if(this.getItemType()== CBORObjectType_Single){
-				float f=((Float)item).floatValue();
+				float f=((Float)this.getThisItem()).floatValue();
 				if(((f)==Float.NEGATIVE_INFINITY))
 					simvalue=("-Infinity");
 				else if(((f)==Float.POSITIVE_INFINITY))
@@ -2672,7 +2653,7 @@ public static CBORObject FromObject(Object obj) {
 				if(sb==null)return simvalue;
 				sb.append(simvalue);
 			} else if(this.getItemType()== CBORObjectType_Double){
-				double f=((Double)item).doubleValue();
+				double f=((Double)this.getThisItem()).doubleValue();
 				if(((f)==Double.NEGATIVE_INFINITY))
 					simvalue=("-Infinity");
 				else if(((f)==Double.POSITIVE_INFINITY))
@@ -2684,26 +2665,26 @@ public static CBORObject FromObject(Object obj) {
 				if(sb==null)return simvalue;
 				sb.append(simvalue);
 			} else if(this.getItemType()== CBORObjectType_Integer){
-				long v=((Long)item).longValue();
+				long v=((Long)this.getThisItem()).longValue();
 				simvalue=(Long.toString((long)v));
 				if(sb==null)return simvalue;
 				sb.append(simvalue);
 			} else if(this.getItemType()== CBORObjectType_BigInteger){
-				simvalue=(((BigInteger)item).toString());
+				simvalue=(((BigInteger)this.getThisItem()).toString());
 				if(sb==null)return simvalue;
 				sb.append(simvalue);
 			} else if(this.getItemType()== CBORObjectType_ByteString){
 				if(sb==null)sb=new StringBuilder();
 				sb.append("h'");
-				byte[] data=(byte[])item;
+				byte[] data=(byte[])this.getThisItem();
 				ToBase16(sb,data);
 				sb.append("'");
 			} else if(this.getItemType()== CBORObjectType_TextString){
 				if(sb==null){
-					return "\""+((String)item)+"\"";
+					return "\""+(this.AsString())+"\"";
 				} else {
 					sb.append('\"');
-					sb.append((String)item);
+					sb.append(this.AsString());
 					sb.append('\"');
 				}
 			} else if(this.getItemType()== CBORObjectType_Array){
@@ -2800,7 +2781,7 @@ public static CBORObject FromObject(Object obj) {
 					throw new CBORException("Expected major type "+
 					                        Integer.toString((int)allowOnlyType)+
 					                        ", instead got type "+
-					                        Integer.toString((int)type));
+					                        Integer.toString(((Integer)type).intValue()));
 				}
 				if(additional>=28){
 					throw new CBORException("Unexpected data encountered");
@@ -2892,7 +2873,7 @@ ms=new ByteArrayOutputStream();
 						while(true){
 							CBORObject o=Read(s,depth+1,true,type,subFlags,0);
 							if(o==null)break;//break if the "break" code was read
-							data=(byte[])o.item;
+							data=(byte[])o.getThisItem();
 							ms.write(data,0,data.length);
 						}
 						if(ms.size()>Integer.MAX_VALUE)
@@ -2954,7 +2935,7 @@ if(ms!=null)ms.close();
 					while(true){
 						CBORObject o=Read(s,depth+1,true,type,subFlags,0);
 						if(o==null)break;//break if the "break" code was read
-						builder.append((String)o.item);
+						builder.append((String)o.getThisItem());
 					}
 					return new CBORObject(
 						CBORObjectType_TextString,
@@ -3046,7 +3027,7 @@ if(ms!=null)ms.close();
 						// Requires a byte String
 						int[] subFlags=new int[]{(1<<2)};
 						o=Read(s,depth+1,false,-1,subFlags,0);
-						data=(byte[])o.item;
+						data=(byte[])o.getThisItem();
 						BigInteger bi=BigInteger.ZERO;
 						for(int i=0;i<data.length;i++){
 							bi=bi.shiftLeft(8);
