@@ -720,6 +720,30 @@ namespace PeterO
 		}
 		
 		/// <summary>
+		/// Gets or sets the value of a CBOR object in this
+		/// map, using a string as the key.
+		/// </summary>
+		/// <exception cref="System.ArgumentNullException">The key is null.
+		/// </exception>.
+		public CBORObject this[string key]{
+			get {
+				if((key)==null)throw new ArgumentNullException("key");
+				CBORObject objkey=CBORObject.FromObject(key);
+				return this[objkey];
+			}
+			set {
+				if((key)==null)throw new ArgumentNullException("key");
+				CBORObject objkey=CBORObject.FromObject(key);
+				if(this.ItemType== CBORObjectType_Map){
+					IDictionary<CBORObject,CBORObject> map=AsMap();
+					map[objkey]=value;
+				} else {
+					throw new InvalidOperationException("Not a map");
+				}
+			}
+		}
+
+		/// <summary>
 		/// Returns the simple value ID of this object, or -1
 		/// if this object is not a simple value (including if
 		/// the value is a floating-point number).
@@ -743,12 +767,19 @@ namespace PeterO
 			}
 		}
 
-		public void ContainsKey(CBORObject key){
+		/// <summary>
+		/// Determines whether a value of the given key exists in
+		/// this object.
+		/// </summary>
+		/// <param name="key">An object that serves as the key.</param>
+		/// <returns>True if the given key is found, or false if the
+		/// given key is not found or this object is not a map.</returns>
+		public bool ContainsKey(CBORObject key){
 			if(this.ItemType== CBORObjectType_Map){
 				IDictionary<CBORObject,CBORObject> map=AsMap();
-				map.ContainsKey(key);
+				return map.ContainsKey(key);
 			} else {
-				throw new InvalidOperationException("Not a map");
+				return false;
 			}
 		}
 
@@ -763,6 +794,20 @@ namespace PeterO
 			}
 		}
 		
+		public void Remove(CBORObject obj){
+			if(this.ItemType== CBORObjectType_Map){
+				IDictionary<CBORObject,CBORObject> dict=AsMap();
+				dict.Remove(obj);
+			} else if(this.ItemType== CBORObjectType_Array){
+				if(this.HasTag(4))
+					throw new InvalidOperationException("Read-only array");
+				IList<CBORObject> list=AsList();
+				list.Remove(obj);
+			} else {
+				throw new InvalidOperationException("Not a map or array");
+			}
+		}
+
 		/// <summary>
 		/// Converts this object to a 64-bit floating point
 		/// number.

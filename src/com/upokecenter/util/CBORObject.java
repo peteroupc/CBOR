@@ -673,6 +673,26 @@ public void set(CBORObject key, CBORObject value) {
 			}
 		
 		/**
+		 * Gets or sets the value of a CBOR Object in this map, using a String as the key.
+		 * @throws java.lang.NullPointerException The key is null.
+		 */
+		public CBORObject get(String key) {
+				if((key)==null)throw new NullPointerException("key");
+				CBORObject objkey=CBORObject.FromObject(key);
+				return this.get(objkey);
+			}
+public void set(String key, CBORObject value) {
+				if((key)==null)throw new NullPointerException("key");
+				CBORObject objkey=CBORObject.FromObject(key);
+				if(this.getItemType()== CBORObjectType_Map){
+					Map<CBORObject,CBORObject> map=AsMap();
+					map.put(objkey,value);
+				} else {
+					throw new IllegalStateException("Not a map");
+				}
+			}
+
+		/**
 		 * Returns the simple value ID of this Object, or -1 if this Object is not a simple value (including if the value is a floating-point number).
 		 */
 		public int getSimpleValue() {
@@ -692,12 +712,17 @@ public void set(CBORObject key, CBORObject value) {
 			}
 		}
 
-		public void ContainsKey(CBORObject key) {
+		/**
+		 * Determines whether a value of the given key exists in this Object.
+		 * @param key An Object that serves as the key.
+		 * @return True if the given key is found, or false if the given key is not found or this Object is not a map.
+		 */
+		public boolean ContainsKey(CBORObject key) {
 			if(this.getItemType()== CBORObjectType_Map){
 				Map<CBORObject,CBORObject> map=AsMap();
-				map.containsKey(key);
+				return map.containsKey(key);
 			} else {
-				throw new IllegalStateException("Not a map");
+				return false;
 			}
 		}
 
@@ -712,6 +737,20 @@ public void set(CBORObject key, CBORObject value) {
 			}
 		}
 		
+		public void Remove(CBORObject obj) {
+			if(this.getItemType()== CBORObjectType_Map){
+				Map<CBORObject,CBORObject> dict=AsMap();
+				dict.remove(obj);
+			} else if(this.getItemType()== CBORObjectType_Array){
+				if(this.HasTag(4))
+					throw new IllegalStateException("Read-only array");
+				List<CBORObject> list=AsList();
+				list.remove(obj);
+			} else {
+				throw new IllegalStateException("Not a map or array");
+			}
+		}
+
 		/**
 		 * Converts this Object to a 64-bit floating point number.
 		 * @return The closest 64-bit floating point number to this Object.
