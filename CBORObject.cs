@@ -32,7 +32,6 @@ namespace PeterO
 	/// those objects are not thread safe without such
 	/// synchronization.
 	/// </para>
-	///
 	/// </summary>
 	public sealed partial class CBORObject
 	{
@@ -57,9 +56,21 @@ namespace PeterO
 		private const int CBORObjectType_Double=8;
 		private static readonly BigInteger Int64MaxValue=(BigInteger)Int64.MaxValue;
 		private static readonly BigInteger Int64MinValue=(BigInteger)Int64.MinValue;
+		/// <summary>
+		/// Represents the value false.
+		/// </summary>
 		public static readonly CBORObject False=new CBORObject(CBORObjectType_SimpleValue,20);
+		/// <summary>
+		/// Represents the value true.
+		/// </summary>
 		public static readonly CBORObject True=new CBORObject(CBORObjectType_SimpleValue,21);
+		/// <summary>
+		/// Represents the value null.
+		/// </summary>
 		public static readonly CBORObject Null=new CBORObject(CBORObjectType_SimpleValue,22);
+		/// <summary>
+		/// Represents the value undefined.
+		/// </summary>
 		public static readonly CBORObject Undefined=new CBORObject(CBORObjectType_SimpleValue,23);
 		
 		private CBORObject(){}
@@ -390,7 +401,7 @@ namespace PeterO
 			1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, // major type 5
 			0,0,0,0,0,0,0,0, 0,0,0,0,-1,-1,-1,0,
 			0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, // major type 6
-			0,0,0,0,0,0,0,0, 0,0,0,0,-1,-1,-1,0,
+			0,0,0,0,0,0,0,0, 0,0,0,0,-1,-1,-1,-1,
 			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, // major type 7
 			1,1,1,1,1,1,1,1, 2,3,5,9,-1,-1,-1,-1
 		};
@@ -510,7 +521,10 @@ namespace PeterO
 		/// bytes.
 		/// </summary>
 		/// <param name="data"></param>
-		/// <returns></returns>
+		/// <returns>A CBOR object corresponding to the data.</returns>
+		/// <exception cref="System.ArgumentException">data is null or empty.</exception>
+		/// <exception cref="CBORException">There was an
+		/// error in reading or parsing the data.</exception>
 		public static CBORObject FromBytes(byte[] data){
 			if((data)==null)throw new ArgumentNullException("data");
 			if((data).Length==0)throw new ArgumentException("data is empty.");
@@ -528,7 +542,7 @@ namespace PeterO
 			if(expectedLength!=0){
 				return GetFixedLengthObject(firstbyte, data);
 			}
-			// For complex cases, such as arrays and maps,
+			// For objects with variable length,
 			// read the object as though
 			// the byte array were a stream
 			try {
@@ -755,8 +769,8 @@ namespace PeterO
 		/// <returns>The closest 64-bit floating point number
 		/// to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
-		/// This object's type is not an integer
-		/// or a floating-point number.</exception>
+		/// This object's type is not a number type.
+		/// </exception>
 		public double AsDouble(){
 			if(this.ItemType== CBORObjectType_Integer)
 				return (double)(long)item;
@@ -790,8 +804,8 @@ namespace PeterO
 		/// <returns>The closest 32-bit floating point number
 		/// to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
-		/// This object's type is not an integer
-		/// or a floating-point number.</exception>
+		/// This object's type is not a number type.
+		/// </exception>
 		public float AsSingle(){
 			if(this.ItemType== CBORObjectType_Integer)
 				return (float)(long)item;
@@ -826,8 +840,8 @@ namespace PeterO
 		/// <returns>The closest big integer
 		/// to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
-		/// This object's type is not an integer
-		/// or a floating-point number.</exception>
+		/// This object's type is not a number type.
+		/// </exception>
 		public BigInteger AsBigInteger(){
 			if(this.ItemType== CBORObjectType_Integer)
 				return (BigInteger)(long)item;
@@ -850,7 +864,8 @@ namespace PeterO
 		}
 		
 		/// <summary>
-		/// Returns false if this object isFalse, Null, or Undefined;
+		/// Returns false if this object is
+		/// False, Null, or Undefined;
 		/// otherwise, true.</summary>
 		public bool AsBoolean(){
 			if(this.IsFalse || this.IsNull || this.IsUndefined)
@@ -866,8 +881,8 @@ namespace PeterO
 		/// <returns>The closest 16-bit signed
 		/// integer to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
-		/// This object's type is not an integer
-		/// or a floating-point number.</exception>
+		/// This object's type is not a number type.
+		/// </exception>
 		/// <exception cref="System.OverflowException">
 		/// This object's value exceeds the range of a 16-bit
 		/// signed integer.</exception>
@@ -886,8 +901,8 @@ namespace PeterO
 		/// <returns>The closest byte-sized
 		/// integer to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
-		/// This object's type is not an integer
-		/// or a floating-point number.</exception>
+		/// This object's type is not a number type.
+		/// </exception>
 		/// <exception cref="System.OverflowException">
 		/// This object's value exceeds the range of a byte (is
 		/// less than 0 or would be greater than 255 when truncated
@@ -924,8 +939,8 @@ namespace PeterO
 		/// <returns>The closest  64-bit signed
 		/// integer to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
-		/// This object's type is not an integer
-		/// or a floating-point number.</exception>
+		/// This object's type is not a number type.
+		/// </exception>
 		/// <exception cref="System.OverflowException">
 		/// This object's value exceeds the range of a 64-bit
 		/// signed integer.</exception>
@@ -970,8 +985,8 @@ namespace PeterO
 		/// <returns>The closest big integer
 		/// to this object.</returns>
 		/// <exception cref="System.InvalidOperationException">
-		/// This object's type is not an integer
-		/// or a floating-point number.</exception>
+		/// This object's type is not a number type.
+		/// </exception>
 		/// <exception cref="System.OverflowException">
 		/// This object's value exceeds the range of a 32-bit
 		/// signed integer.</exception>
@@ -1023,7 +1038,9 @@ namespace PeterO
 		/// <param name="stream">A readable data stream.</param>
 		/// <returns>a CBOR object that was read.</returns>
 		/// <exception cref="System.ArgumentNullException">
-		/// <paramref name="stream"/> is null.</exception>
+		/// "stream" is null.</exception>
+		/// <exception cref="CBORException">There was an
+		/// error in reading or parsing the data.</exception>
 		public static CBORObject Read(Stream stream){
 			try {
 				return Read(stream,0,false,-1,null,0);
@@ -1111,7 +1128,7 @@ namespace PeterO
 		
 		private const int StreamedStringBufferLength=4096;
 		
-		public static void WriteStreamedString(String str, Stream stream){
+		private static void WriteStreamedString(String str, Stream stream){
 			byte[] bytes;
 			bytes=GetOptimizedBytesIfShortAscii(str,-1);
 			if(bytes!=null){
@@ -2358,34 +2375,43 @@ namespace PeterO
 			}
 			return new CBORObject(CBORObjectType_Map,map);
 		}
-		public static CBORObject FromObject(Object o){
-			if(o==null)return CBORObject.Null;
-			if(o is long)return FromObject((long)o);
-			if(o is CBORObject)return FromObject((CBORObject)o);
-			if(o is BigInteger)return FromObject((BigInteger)o);
-			if(o is string)return FromObject((string)o);
-			if(o is int)return FromObject((int)o);
-			if(o is short)return FromObject((short)o);
-			if(o is char)return FromObject((char)o);
-			if(o is bool)return FromObject((bool)o);
-			if(o is byte)return FromObject((byte)o);
-			if(o is float)return FromObject((float)o);
+		
+		/// <summary>
+		/// Generates a CBORObject from an arbitrary object.
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns>A CBOR object corresponding to the given object.
+		/// Returns CBORObject.Null if the object is null.</returns>
+		/// <exception cref="System.ArgumentException">The object's type
+		/// is not supported.</exception>
+		public static CBORObject FromObject(Object obj){
+			if(obj==null)return CBORObject.Null;
+			if(obj is long)return FromObject((long)obj);
+			if(obj is CBORObject)return FromObject((CBORObject)obj);
+			if(obj is BigInteger)return FromObject((BigInteger)obj);
+			if(obj is string)return FromObject((string)obj);
+			if(obj is int)return FromObject((int)obj);
+			if(obj is short)return FromObject((short)obj);
+			if(obj is char)return FromObject((char)obj);
+			if(obj is bool)return FromObject((bool)obj);
+			if(obj is byte)return FromObject((byte)obj);
+			if(obj is float)return FromObject((float)obj);
 			
-			if(o is sbyte)return FromObject((sbyte)o);
-			if(o is ulong)return FromObject((ulong)o);
-			if(o is uint)return FromObject((uint)o);
-			if(o is ushort)return FromObject((ushort)o);
-			if(o is decimal)return FromObject((decimal)o);
-			if(o is DateTime)return FromObject((DateTime)o);
+			if(obj is sbyte)return FromObject((sbyte)obj);
+			if(obj is ulong)return FromObject((ulong)obj);
+			if(obj is uint)return FromObject((uint)obj);
+			if(obj is ushort)return FromObject((ushort)obj);
+			if(obj is decimal)return FromObject((decimal)obj);
+			if(obj is DateTime)return FromObject((DateTime)obj);
 			
-			if(o is double)return FromObject((double)o);
-			if(o is IList<CBORObject>)return FromObject((IList<CBORObject>)o);
-			if(o is byte[])return FromObject((byte[])o);
-			if(o is CBORObject[])return FromObject((CBORObject[])o);
-			if(o is IDictionary<CBORObject,CBORObject>)return FromObject(
-				(IDictionary<CBORObject,CBORObject>)o);
-			if(o is IDictionary<string,CBORObject>)return FromObject(
-				(IDictionary<string,CBORObject>)o);
+			if(obj is double)return FromObject((double)obj);
+			if(obj is IList<CBORObject>)return FromObject((IList<CBORObject>)obj);
+			if(obj is byte[])return FromObject((byte[])obj);
+			if(obj is CBORObject[])return FromObject((CBORObject[])obj);
+			if(obj is IDictionary<CBORObject,CBORObject>)return FromObject(
+				(IDictionary<CBORObject,CBORObject>)obj);
+			if(obj is IDictionary<string,CBORObject>)return FromObject(
+				(IDictionary<string,CBORObject>)obj);
 			throw new ArgumentException("Unsupported object type.");
 		}
 		

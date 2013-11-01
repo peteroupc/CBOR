@@ -68,5 +68,9 @@
       <Name>CBOR</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="ProfilingSessions\Session20131031_193319.sdps" />
+    <Content Include="ProfilingSessions\Session20131031_195710.sdps" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

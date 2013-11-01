@@ -11,9 +11,9 @@ at: http://upokecenter.com/d/
 
 
 
-	/// <summary>
-	/// Description of CBORException.
-	/// </summary>
+	/**
+	 * Description of CBORException.
+	 */
 	public class CBORException extends RuntimeException
 	{
 		public CBORException()
