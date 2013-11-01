@@ -11,7 +11,7 @@ at: http://upokecenter.com/d/
 
 
 	/**
-	 * Represents a type that a CBOR Object can have.
+	 * Represents a type that a CBOR object can have.
 	 */
 	public enum CBORType {
 		/**
@@ -31,7 +31,7 @@ at: http://upokecenter.com/d/
 		 */
 		ByteString,
 		/**
-		 * A text String.
+		 * A text string.
 		 */
 		TextString,
 		/**
