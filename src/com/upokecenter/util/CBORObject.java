@@ -68,8 +68,9 @@ import java.math.*;
 				tagArray=new int[2+obj.tagArray.length];
 				tagArray[0]=tagLow;
 				tagArray[1]=tagHigh;
+				
 				for(int i=0;i<obj.tagArray.length;i++){
-					tagArray[i+2]=((Integer)obj).intValue().tagArray[i];
+					tagArray[i+2]=obj.tagArray[i];
 				}
 			} else {
 				tagArray=new int[]{tagLow,tagHigh};
@@ -2168,6 +2169,22 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				}
 			}
 			return 0;
+		}
+		
+		/**
+		 * Creates a new empty CBOR array.
+		 * @return A new CBOR array.
+		 */
+		public static CBORObject NewArray() {
+			return FromObject(new ArrayList<CBORObject>());
+		}
+		
+		/**
+		 * Creates a new empty CBOR map.
+		 * @return A new CBOR map.
+		 */
+		public static CBORObject NewMap() {
+			return FromObject(new HashMap<CBORObject,CBORObject>());
 		}
 		
 		
