@@ -84,8 +84,9 @@ namespace PeterO
 				tagArray=new int[2+obj.tagArray.Length];
 				tagArray[0]=tagLow;
 				tagArray[1]=tagHigh;
+				
 				for(int i=0;i<obj.tagArray.Length;i++){
-					tagArray[i+2]=(int)obj.tagArray[i];
+					tagArray[i+2]=obj.tagArray[i];
 				}
 			} else {
 				tagArray=new int[]{tagLow,tagHigh};
@@ -2289,6 +2290,22 @@ namespace PeterO
 				}
 			}
 			return 0;
+		}
+		
+		/// <summary>
+		/// Creates a new empty CBOR array.
+		/// </summary>
+		/// <returns>A new CBOR array.</returns>
+		public static CBORObject NewArray(){
+			return FromObject(new List<CBORObject>());
+		}
+		
+		/// <summary>
+		/// Creates a new empty CBOR map.
+		/// </summary>
+		/// <returns>A new CBOR map.</returns>
+		public static CBORObject NewMap(){
+			return FromObject(new Dictionary<CBORObject,CBORObject>());
 		}
 		
 		
