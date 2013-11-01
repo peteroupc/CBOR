@@ -512,7 +512,7 @@ namespace PeterO
 						CBORObject obj2=CBORObject.FromObjectAndTag(obj,j+1);
 						BigInteger[] bi=obj2.GetTags();
 						if(bi.Length!=2)
-							Assert.AreEqual(bi.Length,2,"Expected 2 tags: {0}",obj2);
+							Assert.AreEqual(2,bi.Length,"Expected 2 tags: {0}",obj2);
 						if(bi[0]!=j+1)
 							Assert.AreEqual(j+1,bi[0],"Outer tag doesn't match: {0}",obj2);
 						if(bi[1]!=j)

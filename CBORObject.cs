@@ -37,13 +37,29 @@ namespace PeterO
 	{
 		private int ItemType {
 			get {
-				return itemtype_;
+				CBORObject curobject=this;
+				while(curobject.itemtype_==CBORObjectType_Tagged) {
+					curobject=((CBORObject)curobject.item_);
+				}
+				return curobject.itemtype_;
 			}
 		}
-		
+
+		private Object ThisItem {
+			get {
+				CBORObject curobject=this;
+				while(curobject.itemtype_==CBORObjectType_Tagged) {
+					curobject=((CBORObject)curobject.item_);
+				}
+				return curobject.item_;
+			}
+		}
+
+
 		int itemtype_;
-		Object item;
-		int[] tagArray=null;
+		Object item_;
+		int tagLow;
+		int tagHigh;
 		
 		private const int CBORObjectType_Integer=0; // -(2^63) .. (2^63-1)
 		private const int CBORObjectType_BigInteger=1; // all other integers
@@ -54,6 +70,7 @@ namespace PeterO
 		private const int CBORObjectType_SimpleValue=6;
 		private const int CBORObjectType_Single=7;
 		private const int CBORObjectType_Double=8;
+		private const int CBORObjectType_Tagged=9;
 		private static readonly BigInteger Int64MaxValue=(BigInteger)Int64.MaxValue;
 		private static readonly BigInteger Int64MinValue=(BigInteger)Int64.MinValue;
 		/// <summary>
@@ -75,22 +92,10 @@ namespace PeterO
 		
 		private CBORObject(){}
 		
-		private CBORObject(int type, int tagLow, int tagHigh, Object item) : this(type,item) {
-			tagArray=new int[]{tagLow,tagHigh};
-		}
 		private CBORObject(CBORObject obj, int tagLow, int tagHigh) :
-			this(obj.itemtype_,obj.item) {
-			if(obj.tagArray!=null){
-				tagArray=new int[2+obj.tagArray.Length];
-				tagArray[0]=tagLow;
-				tagArray[1]=tagHigh;
-				
-				for(int i=0;i<obj.tagArray.Length;i++){
-					tagArray[i+2]=obj.tagArray[i];
-				}
-			} else {
-				tagArray=new int[]{tagLow,tagHigh};
-			}
+			this(CBORObjectType_Tagged,obj) {
+			this.tagLow=tagLow;
+			this.tagHigh=tagHigh;
 		}
 		private CBORObject(int type, Object item){
 			#if DEBUG
@@ -104,7 +109,7 @@ namespace PeterO
 			}
 			#endif
 			this.itemtype_=type;
-			this.item=item;
+			this.item_=item;
 		}
 		
 		/// <summary>
@@ -119,7 +124,7 @@ namespace PeterO
 					case CBORObjectType_Double:
 						return CBORType.Number;
 					case CBORObjectType_SimpleValue:
-						if((int)item==21 || (int)item==20){
+						if((int)this.ThisItem==21 || (int)this.ThisItem==20){
 							return CBORType.Boolean;
 						}
 						return CBORType.SimpleValue;
@@ -143,7 +148,7 @@ namespace PeterO
 		/// </summary>
 		public bool IsTrue {
 			get {
-				return this.ItemType==CBORObjectType_SimpleValue && (int)item==21;
+				return this.ItemType==CBORObjectType_SimpleValue && (int)this.ThisItem==21;
 			}
 		}
 		/// <summary>
@@ -151,7 +156,7 @@ namespace PeterO
 		/// </summary>
 		public bool IsFalse {
 			get {
-				return this.ItemType==CBORObjectType_SimpleValue && (int)item==20;
+				return this.ItemType==CBORObjectType_SimpleValue && (int)this.ThisItem==20;
 			}
 		}
 		/// <summary>
@@ -159,7 +164,7 @@ namespace PeterO
 		/// </summary>
 		public bool IsNull {
 			get {
-				return this.ItemType==CBORObjectType_SimpleValue && (int)item==22;
+				return this.ItemType==CBORObjectType_SimpleValue && (int)this.ThisItem==22;
 			}
 		}
 		/// <summary>
@@ -167,7 +172,7 @@ namespace PeterO
 		/// </summary>
 		public bool IsUndefined {
 			get {
-				return this.ItemType==CBORObjectType_SimpleValue && (int)item==23;
+				return this.ItemType==CBORObjectType_SimpleValue && (int)this.ThisItem==23;
 			}
 		}
 		
@@ -220,34 +225,7 @@ namespace PeterO
 			}
 			return ret;
 		}
-
-		private bool TagListEquals(
-			int[] arrayA,
-			int[] arrayB
-		){
-			if(arrayA==null)return (arrayB==null);
-			if(arrayB==null)return false;
-			if(arrayA.Length!=arrayB.Length)return false;
-			int count=arrayA.Length;
-			for(int i=0;i<count;i++){
-				if(arrayA[i]!=arrayB[i])return false;
-			}
-			return true;
-		}
-
-		private int TagListHashCode(int[] array){
-			if(array==null)return 0;
-			int ret=19;
-			unchecked {
-				int count=array.Length;
-				ret=ret*31+count;
-				for(int i=0;i<count;i++){
-					ret=ret*31+(int)array[i];
-				}
-			}
-			return ret;
-		}
-
+		
 		private bool CBORMapEquals(
 			IDictionary<CBORObject,CBORObject> mapA,
 			IDictionary<CBORObject,CBORObject> mapB
@@ -287,21 +265,23 @@ namespace PeterO
 			CBORObject other = obj as CBORObject;
 			if (other == null)
 				return false;
-			if(item is byte[]){
-				if(!ByteArrayEquals((byte[])item,other.item as byte[]))
+			if(item_ is byte[]){
+				if(!ByteArrayEquals((byte[])this.ThisItem,other.item_ as byte[]))
 					return false;
-			} else if(item is IList<CBORObject>){
-				if(!CBORArrayEquals(AsList(),other.item as IList<CBORObject>))
+			} else if(item_ is IList<CBORObject>){
+				if(!CBORArrayEquals(AsList(),other.item_ as IList<CBORObject>))
 					return false;
-			} else if(item is IDictionary<CBORObject,CBORObject>){
+			} else if(item_ is IDictionary<CBORObject,CBORObject>){
 				if(!CBORMapEquals(AsMap(),
-				                  other.item as IDictionary<CBORObject,CBORObject>))
+				                  other.item_ as IDictionary<CBORObject,CBORObject>))
 					return false;
 			} else {
-				if(!object.Equals(this.item, other.item))
+				if(!object.Equals(this.item_, other.item_))
 					return false;
 			}
-			return this.ItemType == other.ItemType && TagListEquals(tagArray,other.tagArray);
+			return this.ItemType == other.ItemType &&
+				this.tagLow == other.tagLow &&
+				this.tagHigh == other.tagHigh;
 		}
 		
 		/// <summary>
@@ -311,20 +291,21 @@ namespace PeterO
 		{
 			int hashCode = 0;
 			unchecked {
-				if (item != null){
+				if (item_ != null){
 					int itemHashCode=0;
-					if(item is byte[])
-						itemHashCode=ByteArrayHashCode((byte[])item);
-					else if(item is IList<CBORObject>)
+					if(item_ is byte[])
+						itemHashCode=ByteArrayHashCode((byte[])this.ThisItem);
+					else if(item_ is IList<CBORObject>)
 						itemHashCode=CBORArrayHashCode(AsList());
-					else if(item is IDictionary<CBORObject,CBORObject>)
+					else if(item_ is IDictionary<CBORObject,CBORObject>)
 						itemHashCode=CBORMapHashCode(AsMap());
 					else
-						itemHashCode=item.GetHashCode();
+						itemHashCode=item_.GetHashCode();
 					hashCode += 1000000007 * itemHashCode;
 				}
 				hashCode += 1000000009 * this.ItemType.GetHashCode();
-				hashCode += 1000000009 * TagListHashCode(this.tagArray);
+				hashCode += 1000000009 * this.tagLow;
+				hashCode += 1000000009 * this.tagHigh;
 			}
 			return hashCode;
 		}
@@ -546,7 +527,7 @@ namespace PeterO
 			if(firstbyte==0xc0){
 				// value with tag 0
 				String s=GetOptimizedStringIfShortAscii(data,1);
-				if(s!=null)return new CBORObject(CBORObjectType_TextString,0,0,s);
+				if(s!=null)return new CBORObject(FromObject(s),0,0);
 			}
 			if(expectedLength!=0){
 				return GetFixedLengthObject(firstbyte, data);
@@ -587,21 +568,14 @@ namespace PeterO
 		/// </summary>
 		public bool IsTagged {
 			get {
-				return tagArray!=null && tagArray.Length>0;
+				return this.itemtype_==CBORObjectType_Tagged;
 			}
 		}
 
 		private bool HasTag(int tagValue){
-			if(tagArray==null)return false;
-			if((tagValue)<0)throw new ArgumentOutOfRangeException(
-				"tagValue"+" not greater or equal to "+"0"+" ("+Convert.ToString((int)tagValue,System.Globalization.CultureInfo.InvariantCulture)+")");
-			int length=tagArray.Length;
-			for(int i=0;i<length;i+=2){
-				int low=(int)tagArray[i];
-				int high=(int)tagArray[i+1];
-				if(high==0 && tagValue==low)return true;
-			}
-			return false;
+			if(!this.IsTagged)return false;
+			if(tagHigh==0 && tagValue==tagLow)return true;
+			return ((CBORObject)item_).HasTag(tagValue);
 		}
 		
 		private BigInteger LowHighToBigInteger(int tagLow, int tagHigh){
@@ -628,13 +602,18 @@ namespace PeterO
 		/// </summary>
 		public BigInteger[] GetTags(){
 			if(!this.IsTagged)return EmptyTags;
-			BigInteger[] ret=new BigInteger[tagArray.Length/2];
-			for(int i=0;i<tagArray.Length;i+=2){
-				int tagLow=(int)tagArray[i];
-				int tagHigh=(int)tagArray[i+1];
-				ret[i/2]=LowHighToBigInteger(tagLow,tagHigh);
+			CBORObject curitem=this;
+			if(curitem.IsTagged){
+				var list=new List<BigInteger>();
+				while(curitem.IsTagged){
+					list.Add(LowHighToBigInteger(
+						curitem.tagLow,curitem.tagHigh));
+					curitem=((CBORObject)curitem.item_);
+				}
+				return (BigInteger[])list.ToArray();
+			} else {
+				return new BigInteger[]{LowHighToBigInteger(tagLow,tagHigh)};
 			}
-			return ret;
 		}
 		
 		/// <summary>
@@ -643,25 +622,30 @@ namespace PeterO
 		/// </summary>
 		public BigInteger InnermostTag {
 			get {
-				if(this.IsTagged){
-					int tagLow=(int)tagArray[tagArray.Length-2];
-					int tagHigh=(int)tagArray[tagArray.Length-1];
-					if(tagHigh==0 && tagLow>=0 && tagLow<0x10000){
-						return (BigInteger)tagLow;
-					}
-					return LowHighToBigInteger(tagLow,tagHigh);
-				} else {
-					return BigInteger.Zero;
+				if(!this.IsTagged)return BigInteger.Zero;
+				CBORObject previtem=this;
+				CBORObject curitem=((CBORObject)item_);
+				while(curitem.IsTagged){
+					previtem=curitem;
+					curitem=((CBORObject)curitem.item_);
 				}
+				if(previtem.tagHigh==0 &&
+				   previtem.tagLow>=0 &&
+				   previtem.tagLow<0x10000){
+					return (BigInteger)previtem.tagLow;
+				}
+				return LowHighToBigInteger(
+					previtem.tagLow,
+					previtem.tagHigh);
 			}
 		}
 
 		private IDictionary<CBORObject,CBORObject> AsMap(){
-			return (IDictionary<CBORObject,CBORObject>)item;
+			return (IDictionary<CBORObject,CBORObject>)this.ThisItem;
 		}
 		
 		private IList<CBORObject> AsList(){
-			return (IList<CBORObject>)item;
+			return (IList<CBORObject>)this.ThisItem;
 		}
 		
 		/// <summary>
@@ -800,7 +784,7 @@ namespace PeterO
 		public int SimpleValue {
 			get {
 				if(this.ItemType== CBORObjectType_SimpleValue){
-					return (int)item;
+					return (int)this.ThisItem;
 				} else {
 					return -1;
 				}
@@ -909,13 +893,13 @@ namespace PeterO
 		/// </exception>
 		public double AsDouble(){
 			if(this.ItemType== CBORObjectType_Integer)
-				return (double)(long)item;
+				return (double)(long)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_BigInteger)
-				return (double)(BigInteger)item;
+				return (double)(BigInteger)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Single)
-				return (double)(float)item;
+				return (double)(float)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Double)
-				return (double)item;
+				return (double)this.ThisItem;
 			else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
 			        this.Count==2){
 				StringBuilder sb=new StringBuilder();
@@ -944,13 +928,13 @@ namespace PeterO
 		/// </exception>
 		public float AsSingle(){
 			if(this.ItemType== CBORObjectType_Integer)
-				return (float)(long)item;
+				return (float)(long)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_BigInteger)
-				return (float)(BigInteger)item;
+				return (float)(BigInteger)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Single)
-				return (float)item;
+				return (float)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Double)
-				return (float)(double)item;
+				return (float)(double)this.ThisItem;
 			else if(this.HasTag(4) &&
 			        this.ItemType== CBORObjectType_Array &&
 			        this.Count==2){
@@ -980,13 +964,13 @@ namespace PeterO
 		/// </exception>
 		public BigInteger AsBigInteger(){
 			if(this.ItemType== CBORObjectType_Integer)
-				return (BigInteger)(long)item;
+				return (BigInteger)(long)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_BigInteger)
-				return (BigInteger)item;
+				return (BigInteger)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Single)
-				return (BigInteger)(float)item;
+				return (BigInteger)(float)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Double)
-				return (BigInteger)(double)item;
+				return (BigInteger)(double)this.ThisItem;
 			else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
 			        this.Count==2){
 				StringBuilder sb=new StringBuilder();
@@ -1082,22 +1066,22 @@ namespace PeterO
 		/// signed integer.</exception>
 		public long AsInt64(){
 			if(this.ItemType== CBORObjectType_Integer){
-				return (long)item;
+				return (long)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_BigInteger){
-				if(((BigInteger)item).CompareTo(Int64MaxValue)>0 ||
-				   ((BigInteger)item).CompareTo(Int64MinValue)<0)
+				if(((BigInteger)this.ThisItem).CompareTo(Int64MaxValue)>0 ||
+				   ((BigInteger)this.ThisItem).CompareTo(Int64MinValue)<0)
 					throw new OverflowException();
-				return (long)(BigInteger)item;
+				return (long)(BigInteger)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Single){
-				if(Single.IsNaN((float)item) ||
-				   (float)item>Int64.MaxValue || (float)item<Int64.MinValue)
+				if(Single.IsNaN((float)this.ThisItem) ||
+				   (float)this.ThisItem>Int64.MaxValue || (float)this.ThisItem<Int64.MinValue)
 					throw new OverflowException();
-				return (long)(float)item;
+				return (long)(float)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Double){
-				if(Double.IsNaN((double)item) ||
-				   (double)item>Int64.MinValue || (double)item<Int64.MinValue)
+				if(Double.IsNaN((double)this.ThisItem) ||
+				   (double)this.ThisItem>Int64.MinValue || (double)this.ThisItem<Int64.MinValue)
 					throw new OverflowException();
-				return (long)(double)item;
+				return (long)(double)this.ThisItem;
 			} else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
 			          this.Count==2){
 				StringBuilder sb=new StringBuilder();
@@ -1127,25 +1111,26 @@ namespace PeterO
 		/// This object's value exceeds the range of a 32-bit
 		/// signed integer.</exception>
 		public int AsInt32(){
+			Object thisItem=this.ThisItem;
 			if(this.ItemType== CBORObjectType_Integer){
-				if((long)item>Int32.MaxValue || (long)item<Int32.MinValue)
+				if((long)thisItem>Int32.MaxValue || (long)thisItem<Int32.MinValue)
 					throw new OverflowException();
-				return (int)(long)item;
+				return (int)(long)thisItem;
 			} else if(this.ItemType== CBORObjectType_BigInteger){
-				if(((BigInteger)item).CompareTo((BigInteger)Int32.MaxValue)>0 ||
-				   ((BigInteger)item).CompareTo((BigInteger)Int32.MinValue)<0)
+				if(((BigInteger)thisItem).CompareTo((BigInteger)Int32.MaxValue)>0 ||
+				   ((BigInteger)thisItem).CompareTo((BigInteger)Int32.MinValue)<0)
 					throw new OverflowException();
-				return (int)(BigInteger)item;
+				return (int)(BigInteger)thisItem;
 			} else if(this.ItemType== CBORObjectType_Single){
-				if(Single.IsNaN((float)item) ||
-				   (float)item>Int32.MaxValue || (float)item<Int32.MinValue)
+				if(Single.IsNaN((float)thisItem) ||
+				   (float)thisItem>Int32.MaxValue || (float)thisItem<Int32.MinValue)
 					throw new OverflowException();
-				return (int)(float)item;
+				return (int)(float)thisItem;
 			} else if(this.ItemType== CBORObjectType_Double){
-				if(Double.IsNaN((double)item) ||
-				   (double)item>Int32.MinValue || (double)item<Int32.MinValue)
+				if(Double.IsNaN((double)thisItem) ||
+				   (double)thisItem>Int32.MinValue || (double)thisItem<Int32.MinValue)
 					throw new OverflowException();
-				return (int)(double)item;
+				return (int)(double)thisItem;
 			} else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
 			          this.Count==2){
 				StringBuilder sb=new StringBuilder();
@@ -1168,7 +1153,7 @@ namespace PeterO
 		/// This object's type is not a string.</exception>
 		public string AsString(){
 			if(this.ItemType== CBORObjectType_TextString){
-				return (string)item;
+				return (string)this.ThisItem;
 			} else {
 				throw new InvalidOperationException("Not a string type");
 			}
@@ -1478,21 +1463,21 @@ namespace PeterO
 			if((s)==null)throw new ArgumentNullException("s");
 			WriteTags(s);
 			if(this.ItemType==CBORObjectType_Integer){
-				Write((long)item,s);
+				Write((long)this.ThisItem,s);
 			} else if(this.ItemType== CBORObjectType_BigInteger){
-				Write((BigInteger)item,s);
+				Write((BigInteger)this.ThisItem,s);
 			} else if(this.ItemType== CBORObjectType_ByteString){
 				WritePositiveInt((this.ItemType== CBORObjectType_ByteString) ? 2 : 3,
-				                 ((byte[])item).Length,s);
-				s.Write(((byte[])item),0,((byte[])item).Length);
+				                 ((byte[])this.ThisItem).Length,s);
+				s.Write(((byte[])this.ThisItem),0,((byte[])this.ThisItem).Length);
 			} else if(this.ItemType== CBORObjectType_TextString ){
-				Write((string)item,s);
+				Write(this.AsString(),s);
 			} else if(this.ItemType== CBORObjectType_Array){
 				WriteObjectArray(AsList(),s);
 			} else if(this.ItemType== CBORObjectType_Map){
 				WriteObjectMap(AsMap(),s);
 			} else if(this.ItemType== CBORObjectType_SimpleValue){
-				int value=(int)item;
+				int value=(int)this.ThisItem;
 				if(value<24){
 					s.WriteByte((byte)(0xE0+value));
 				} else {
@@ -1500,9 +1485,9 @@ namespace PeterO
 					s.WriteByte((byte)value);
 				}
 			} else if(this.ItemType== CBORObjectType_Single){
-				Write((float)item,s);
+				Write((float)this.ThisItem,s);
 			} else if(this.ItemType== CBORObjectType_Double){
-				Write((double)item,s);
+				Write((double)this.ThisItem,s);
 			} else {
 				throw new ArgumentException("Unexpected data type");
 			}
@@ -1681,23 +1666,24 @@ namespace PeterO
 			byte tagbyte=0;
 			bool tagged=this.IsTagged;
 			if(this.IsTagged){
-				if(this.tagArray.Length>2 ||
-				   (int)this.tagArray[1]!=0 ||
-				   (((int)this.tagArray[0])>>16)!=0 ||
-				   this.tagArray[0]>=24){
+				CBORObject taggedItem=(CBORObject)item_;
+				if(taggedItem.IsTagged ||
+				   this.tagHigh!=0 ||
+				   ((this.tagLow)>>16)!=0 ||
+				   this.tagLow>=24){
 					hasComplexTag=true;
 				} else {
-					tagbyte=(byte)(0xC0+(int)this.tagArray[0]);
+					tagbyte=(byte)(0xC0+(int)this.tagLow);
 				}
 			}
 			if(!hasComplexTag){
 				if(this.ItemType== CBORObjectType_TextString){
 					byte[] ret=GetOptimizedBytesIfShortAscii(
-						(string)item,
+						this.AsString(),
 						tagged ? (((int)tagbyte)&0xFF) : -1);
 					if(ret!=null)return ret;
 				} else if(this.ItemType== CBORObjectType_Integer){
-					long value=(long)item;
+					long value=(long)this.ThisItem;
 					byte[] ret=null;
 					if(value>=0){
 						ret=GetPositiveInt64Bytes(0,value);
@@ -1713,7 +1699,7 @@ namespace PeterO
 					return ret2;
 				} else if(this.ItemType==CBORObjectType_Single){
 					int bits=ConverterInternal.SingleToInt32Bits(
-						(float)item);
+						(float)this.ThisItem);
 					return tagged ?
 						new byte[]{tagbyte,(byte)0xFA,
 						(byte)((bits>>24)&0xFF),
@@ -1727,7 +1713,7 @@ namespace PeterO
 						(byte)(bits&0xFF)};
 				} else if(this.ItemType==CBORObjectType_Double){
 					long bits=ConverterInternal.DoubleToInt64Bits(
-						(double)item);
+						(double)this.ThisItem);
 					return tagged ?
 						new byte[]{tagbyte,(byte)0xFB,
 						(byte)((bits>>56)&0xFF),
@@ -1910,7 +1896,7 @@ namespace PeterO
 				else if(this.IsNull)return "null";
 				else return "null";
 			} else if(this.ItemType== CBORObjectType_Single){
-				float f=(float)item;
+				float f=(float)this.ThisItem;
 				if(Single.IsNegativeInfinity(f) ||
 				   Single.IsPositiveInfinity(f) ||
 				   Single.IsNaN(f)) return "null";
@@ -1918,7 +1904,7 @@ namespace PeterO
 					return Convert.ToString((float)f,
 					                        CultureInfo.InvariantCulture);
 			} else if(this.ItemType== CBORObjectType_Double){
-				double f=(double)item;
+				double f=(double)this.ThisItem;
 				if(Double.IsNegativeInfinity(f) ||
 				   Double.IsPositiveInfinity(f) ||
 				   Double.IsNaN(f)) return "null";
@@ -1926,23 +1912,23 @@ namespace PeterO
 					return Convert.ToString((double)f,
 					                        CultureInfo.InvariantCulture);
 			} else if(this.ItemType== CBORObjectType_Integer){
-				return Convert.ToString((long)item,CultureInfo.InvariantCulture);
+				return Convert.ToString((long)this.ThisItem,CultureInfo.InvariantCulture);
 			} else if(this.ItemType== CBORObjectType_BigInteger){
-				return ((BigInteger)item).ToString(CultureInfo.InvariantCulture);
+				return ((BigInteger)this.ThisItem).ToString(CultureInfo.InvariantCulture);
 			} else if(this.ItemType== CBORObjectType_ByteString){
 				StringBuilder sb=new StringBuilder();
 				sb.Append('\"');
 				if(this.HasTag(22)){
-					ToBase64(sb,(byte[])item,Base64,false);
+					ToBase64(sb,(byte[])this.ThisItem,Base64,false);
 				} else if(this.HasTag(23)){
-					ToBase16(sb,(byte[])item);
+					ToBase16(sb,(byte[])this.ThisItem);
 				} else {
-					ToBase64(sb,(byte[])item,Base64URL,false);
+					ToBase64(sb,(byte[])this.ThisItem,Base64URL,false);
 				}
 				sb.Append('\"');
 				return sb.ToString();
 			} else if(this.ItemType== CBORObjectType_TextString){
-				return StringToJSONString((string)item);
+				return StringToJSONString(this.AsString());
 			} else if(this.ItemType== CBORObjectType_Array){
 				if(this.HasTag(4) && this.Count==2){
 					return ExponentAndMantissaToString(this[0],this[1]);
@@ -2730,30 +2716,28 @@ namespace PeterO
 		
 		private string IntegerToString(){
 			if(this.ItemType== CBORObjectType_Integer){
-				long v=(long)item;
+				long v=(long)this.ThisItem;
 				return Convert.ToString((long)v,CultureInfo.InvariantCulture);
 			} else if(this.ItemType== CBORObjectType_BigInteger){
-				return ((BigInteger)item).ToString(CultureInfo.InvariantCulture);
+				return ((BigInteger)this.ThisItem).ToString(CultureInfo.InvariantCulture);
 			} else {
 				throw new InvalidOperationException("Unsupported data type");
 			}
 		}
 		
 		private void AppendClosingTags(StringBuilder sb){
-			if(this.tagArray==null)return;
-			int count=this.tagArray.Length;
-			for(int i=0;i<count;i+=2){
+			CBORObject curobject=this;
+			while(curobject.IsTagged) {
 				sb.Append(')');
+				curobject=((CBORObject)(curobject.item_));
 			}
 		}
 		
 		private void WriteTags(Stream s){
-			if(this.tagArray==null)return;
-			int count=this.tagArray.Length;
-			// Tags are ordered from top to bottom
-			for(int i=0;i<count;i+=2){
-				int low=this.tagArray[i];
-				int high=this.tagArray[i+1];
+			CBORObject curobject=this;
+			while(curobject.IsTagged) {
+				int low=curobject.tagLow;
+				int high=curobject.tagHigh;
 				if(high==0 && (low>>16)==0){
 					WritePositiveInt(6,low,s);
 				} else if(high==0){
@@ -2776,16 +2760,15 @@ namespace PeterO
 							(byte)((low>>8)&0xFF),
 							(byte)(low&0xFF)},0,9);
 				}
+				curobject=((CBORObject)(curobject.item_));
 			}
 		}
 
 		private void AppendOpeningTags(StringBuilder sb){
-			if(this.tagArray==null)return;
-			int count=this.tagArray.Length;
-			// Tags are ordered from top to bottom
-			for(int i=0;i<count;i+=2){
-				int low=this.tagArray[i];
-				int high=this.tagArray[i+1];
+			CBORObject curobject=this;
+			while(curobject.IsTagged) {
+				int low=curobject.tagLow;
+				int high=curobject.tagHigh;
 				if(high==0 && (low>>16)==0){
 					sb.Append(Convert.ToString((int)low,CultureInfo.InvariantCulture));
 				} else {
@@ -2793,6 +2776,7 @@ namespace PeterO
 					sb.Append(bi.ToString(CultureInfo.InvariantCulture));
 				}
 				sb.Append('(');
+				curobject=((CBORObject)(curobject.item_));
 			}
 		}
 		
@@ -2811,7 +2795,7 @@ namespace PeterO
 						// The default capacity of StringBuilder may be too small
 						// for many strings, so set a suggested capacity
 						// explicitly
-						string str=(string)item;
+						string str=this.AsString();
 						sb=new StringBuilder(Math.Min(str.Length,4096)+16);
 					} else {
 						sb=new StringBuilder();
@@ -2835,7 +2819,7 @@ namespace PeterO
 				else {
 					if(sb==null)sb=new StringBuilder();
 					sb.Append("simple(");
-					sb.Append(Convert.ToString((int)item,CultureInfo.InvariantCulture));
+					sb.Append(Convert.ToString((int)this.ThisItem,CultureInfo.InvariantCulture));
 					sb.Append(")");
 				}
 				if(simvalue!=null){
@@ -2843,7 +2827,7 @@ namespace PeterO
 					sb.Append(simvalue);
 				}
 			} else if(this.ItemType== CBORObjectType_Single){
-				float f=(float)item;
+				float f=(float)this.ThisItem;
 				if(Single.IsNegativeInfinity(f))
 					simvalue=("-Infinity");
 				else if(Single.IsPositiveInfinity(f))
@@ -2855,7 +2839,7 @@ namespace PeterO
 				if(sb==null)return simvalue;
 				sb.Append(simvalue);
 			} else if(this.ItemType== CBORObjectType_Double){
-				double f=(double)item;
+				double f=(double)this.ThisItem;
 				if(Double.IsNegativeInfinity(f))
 					simvalue=("-Infinity");
 				else if(Double.IsPositiveInfinity(f))
@@ -2867,26 +2851,26 @@ namespace PeterO
 				if(sb==null)return simvalue;
 				sb.Append(simvalue);
 			} else if(this.ItemType== CBORObjectType_Integer){
-				long v=(long)item;
+				long v=(long)this.ThisItem;
 				simvalue=(Convert.ToString((long)v,CultureInfo.InvariantCulture));
 				if(sb==null)return simvalue;
 				sb.Append(simvalue);
 			} else if(this.ItemType== CBORObjectType_BigInteger){
-				simvalue=(((BigInteger)item).ToString(CultureInfo.InvariantCulture));
+				simvalue=(((BigInteger)this.ThisItem).ToString(CultureInfo.InvariantCulture));
 				if(sb==null)return simvalue;
 				sb.Append(simvalue);
 			} else if(this.ItemType== CBORObjectType_ByteString){
 				if(sb==null)sb=new StringBuilder();
 				sb.Append("h'");
-				byte[] data=(byte[])item;
+				byte[] data=(byte[])this.ThisItem;
 				ToBase16(sb,data);
 				sb.Append("'");
 			} else if(this.ItemType== CBORObjectType_TextString){
 				if(sb==null){
-					return "\""+((string)item)+"\"";
+					return "\""+(this.AsString())+"\"";
 				} else {
 					sb.Append('\"');
-					sb.Append((string)item);
+					sb.Append(this.AsString());
 					sb.Append('\"');
 				}
 			} else if(this.ItemType== CBORObjectType_Array){
@@ -3072,7 +3056,7 @@ namespace PeterO
 						while(true){
 							CBORObject o=Read(s,depth+1,true,type,subFlags,0);
 							if(o==null)break;//break if the "break" code was read
-							data=(byte[])o.item;
+							data=(byte[])o.ThisItem;
 							ms.Write(data,0,data.Length);
 						}
 						if(ms.Position>Int32.MaxValue)
@@ -3125,7 +3109,7 @@ namespace PeterO
 					while(true){
 						CBORObject o=Read(s,depth+1,true,type,subFlags,0);
 						if(o==null)break;//break if the "break" code was read
-						builder.Append((string)o.item);
+						builder.Append((string)o.ThisItem);
 					}
 					return new CBORObject(
 						CBORObjectType_TextString,
@@ -3217,7 +3201,7 @@ namespace PeterO
 						// Requires a byte string
 						int[] subFlags=new int[]{(1<<2)};
 						o=Read(s,depth+1,false,-1,subFlags,0);
-						data=(byte[])o.item;
+						data=(byte[])o.ThisItem;
 						BigInteger bi=BigInteger.Zero;
 						for(int i=0;i<data.Length;i++){
 							bi<<=8;

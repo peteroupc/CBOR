@@ -58,21 +58,24 @@ namespace PeterO
 		[CLSCompliant(false)]
 		public decimal AsDecimal(){
 			if(this.ItemType== CBORObjectType_Integer){
-				return (decimal)(long)item;
+				return (decimal)(long)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_BigInteger){
-				if((BigInteger)item>(BigInteger)Decimal.MaxValue || (BigInteger)item<(BigInteger)Decimal.MinValue)
+				if((BigInteger)this.ThisItem>(BigInteger)Decimal.MaxValue || 
+				   (BigInteger)this.ThisItem<(BigInteger)Decimal.MinValue)
 					throw new OverflowException();
-				return (decimal)(BigInteger)item;
+				return (decimal)(BigInteger)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Single){
-				if(Single.IsNaN((float)item) ||
-				   (float)item>(float)Decimal.MaxValue || (float)item<(float)Decimal.MinValue)
+				if(Single.IsNaN((float)this.ThisItem) ||
+				   (float)this.ThisItem>(float)Decimal.MaxValue || 
+				   (float)this.ThisItem<(float)Decimal.MinValue)
 					throw new OverflowException();
-				return (decimal)(float)item;
+				return (decimal)(float)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Double){
-				if(Double.IsNaN((double)item) ||
-				   (double)item>(double)Decimal.MinValue || (double)item<(double)Decimal.MinValue)
+				if(Double.IsNaN((double)this.ThisItem) ||
+				   (double)this.ThisItem>(double)Decimal.MinValue || 
+				   (double)this.ThisItem<(double)Decimal.MinValue)
 					throw new OverflowException();
-				return (decimal)(double)item;
+				return (decimal)(double)this.ThisItem;
 			} else if(this.InnermostTag==4 && ItemType== CBORObjectType_Array &&
 			          this.Count==2){
 				StringBuilder sb=new StringBuilder();
@@ -105,23 +108,23 @@ namespace PeterO
 		[CLSCompliant(false)]
 		public ulong AsUInt64(){
 			if(this.ItemType== CBORObjectType_Integer){
-				if((long)item<0)
+				if((long)this.ThisItem<0)
 					throw new OverflowException();
-				return (ulong)(long)item;
+				return (ulong)(long)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_BigInteger){
-				if((BigInteger)item>UInt64.MaxValue || (BigInteger)item<0)
+				if((BigInteger)this.ThisItem>UInt64.MaxValue || (BigInteger)this.ThisItem<0)
 					throw new OverflowException();
-				return (ulong)(BigInteger)item;
+				return (ulong)(BigInteger)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Single){
-				if(Single.IsNaN((float)item) ||
-				   (float)item>UInt64.MaxValue || (float)item<0)
+				if(Single.IsNaN((float)this.ThisItem) ||
+				   (float)this.ThisItem>UInt64.MaxValue || (float)this.ThisItem<0)
 					throw new OverflowException();
-				return (ulong)(float)item;
+				return (ulong)(float)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Double){
-				if(Double.IsNaN((double)item) ||
-				   (double)item>UInt64.MinValue || (double)item<0)
+				if(Double.IsNaN((double)this.ThisItem) ||
+				   (double)this.ThisItem>UInt64.MinValue || (double)this.ThisItem<0)
 					throw new OverflowException();
-				return (ulong)(double)item;
+				return (ulong)(double)this.ThisItem;
 			} else if(this.InnermostTag==4 && ItemType== CBORObjectType_Array &&
 			          this.Count==2){
 				StringBuilder sb=new StringBuilder();
@@ -165,7 +168,7 @@ namespace PeterO
 		
 		public byte[] GetByteString(){
 			if(this.itemtype_==CBORObjectType_ByteString)
-				return ((byte[])item);
+				return ((byte[])this.ThisItem);
 			else
 				throw new InvalidOperationException("Not a byte string");
 		}
@@ -274,8 +277,8 @@ namespace PeterO
 		}
 		
 		public static CBORObject FromObject(DateTime value){
-			return new CBORObject(CBORObjectType_TextString,0,0,
-			                      DateTimeToString(value));
+			return new CBORObject(
+				FromObject(DateTimeToString(value)),0,0);
 		}
 		/// <summary>
 		/// Writes a date and time in CBOR format to a data stream.
