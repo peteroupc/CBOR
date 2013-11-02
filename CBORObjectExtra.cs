@@ -166,13 +166,6 @@ namespace PeterO
 			}
 		}
 		
-		public byte[] GetByteString(){
-			if(this.itemtype_==CBORObjectType_ByteString)
-				return ((byte[])this.ThisItem);
-			else
-				throw new InvalidOperationException("Not a byte string");
-		}
-		
 		public static CBORObject FromObject(decimal value){
 			if(Math.Round(value)==value){
 				// This is an integer
