@@ -10,6 +10,7 @@ using System;
 using System.Globalization;
 using System.Numerics;
 using System.IO;
+using System.Text;
 
 using NUnit.Framework;
 
@@ -125,7 +126,7 @@ namespace PeterO
 					}
 				}
 			}
-			*/
+			 */
 		}
 		
 		
@@ -228,6 +229,109 @@ namespace PeterO
 			}
 		}
 
+		
+		private static string ToBase16(byte[] data){
+			StringBuilder str=new StringBuilder();
+			string alphabet="0123456789ABCDEF";
+			int length = data.Length;
+			for (int i = 0; i < length;i++) {
+				str.Append(alphabet[(data[i]>>4)&15]);
+				str.Append(alphabet[data[i]&15]);
+			}
+			return str.ToString();
+		}
+		public void DoTestReadUtf8(byte[] bytes,
+		                           int expectedRet, string expectedString,
+		                           int noReplaceRet, string noReplaceString
+		                          ){
+			DoTestReadUtf8(bytes,bytes.Length,expectedRet,expectedString,
+			               noReplaceRet,noReplaceString);
+		}
+
+		public void DoTestReadUtf8(byte[] bytes,int length,
+		                           int expectedRet, string expectedString,
+		                           int noReplaceRet, string noReplaceString
+		                          ){
+			StringBuilder builder=new StringBuilder();
+			int ret=0;
+			using(MemoryStream ms=new MemoryStream(bytes)){
+				ret=CBORDataUtilities.ReadUtf8(ms,length,builder,true);
+				Assert.AreEqual(expectedRet,ret);
+				if(expectedRet==0){
+					Assert.AreEqual(expectedString,builder.ToString());
+				}
+				ms.Position=0;
+				builder.Clear();
+				ret=CBORDataUtilities.ReadUtf8(ms,length,builder,false);
+				Assert.AreEqual(noReplaceRet,ret);
+				if(noReplaceRet==0){
+					Assert.AreEqual(noReplaceString,builder.ToString());
+				}
+			}
+			if(bytes.Length>=length){
+				builder.Clear();
+				ret=CBORDataUtilities.ReadUtf8FromBytes(bytes,0,length,builder,true);
+				Assert.AreEqual(expectedRet,ret);
+				if(expectedRet==0){
+					Assert.AreEqual(expectedString,builder.ToString());
+				}
+				builder.Clear();
+				ret=CBORDataUtilities.ReadUtf8FromBytes(bytes,0,length,builder,false);
+				Assert.AreEqual(noReplaceRet,ret);
+				if(noReplaceRet==0){
+					Assert.AreEqual(noReplaceString,builder.ToString());
+				}
+			}
+		}
+		
+		[Test]
+		public void TestReadUtf8(){
+			DoTestReadUtf8(new byte[]{0x20,0x20,0x20},
+			               0,"   ",0,"   ");
+			DoTestReadUtf8(new byte[]{0x20,0xc2,0x80},
+			               0," \u0080",0," \u0080");
+			DoTestReadUtf8(new byte[]{0x20,0xc2,0x80,0x20},
+			               0," \u0080 ",0," \u0080 ");
+			DoTestReadUtf8(new byte[]{0x20,0xc2,0x80,0xc2},
+			               0," \u0080\ufffd",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xc2,0x20,0x20},
+			               0," \ufffd  ",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xc2,0xff,0x20},
+			               0," \ufffd\ufffd ",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xe0,0xa0,0x80},
+			               0," \u0800",0," \u0800");
+			DoTestReadUtf8(new byte[]{0x20,0xe0,0xa0,0x80,0x20},
+			               0," \u0800 ",0," \u0800 ");
+			DoTestReadUtf8(new byte[]{0x20,0xf0,0x90,0x80,0x80},
+			               0," \ud800\udc00",0," \ud800\udc00");
+			DoTestReadUtf8(new byte[]{0x20,0xf0,0x90,0x80,0x80},3,
+			               0," \ufffd",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xf0,0x90},5,
+			               -2,null,-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0x20,0x20},5,
+			               -2,null,-2,null);
+			DoTestReadUtf8(new byte[]{0x20,0xf0,0x90,0x80,0x80,0x20},
+			               0," \ud800\udc00 ",0," \ud800\udc00 ");
+			DoTestReadUtf8(new byte[]{0x20,0xf0,0x90,0x80,0x20},
+			               0," \ufffd ",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xf0,0x90,0x20},
+			               0," \ufffd ",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xf0,0x90,0x80,0xff},
+			               0," \ufffd\ufffd",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xf0,0x90,0xff},
+			               0," \ufffd\ufffd",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xe0,0xa0,0x20},
+			               0," \ufffd ",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xe0,0x20},
+			               0," \ufffd ",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xe0,0xa0,0xff},
+			               0," \ufffd\ufffd",-1,null);
+			DoTestReadUtf8(new byte[]{0x20,0xe0,0xff},
+			               0," \ufffd\ufffd",-1,null);
+			Console.WriteLine(ToBase16(Encoding.UTF8.GetBytes("\u0800")));
+			Console.WriteLine(ToBase16(Encoding.UTF8.GetBytes("\ud800\udc00")));
+		}
+		
 		[Test]
 		public void TestArray(){
 			var cbor=CBORObject.FromJSONString("[]");

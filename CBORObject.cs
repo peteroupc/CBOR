@@ -133,6 +133,8 @@ namespace PeterO
 							return CBORType.Number;
 						}
 						return CBORType.Array;
+					case CBORObjectType_Map:
+						return CBORType.Map;
 					case CBORObjectType_ByteString:
 						return CBORType.ByteString;
 					case CBORObjectType_TextString:
@@ -250,8 +252,7 @@ namespace PeterO
 			// hash code calculation would generally involve defining
 			// how CBORObjects ought to be compared (since a stable
 			// sort order is necessary for two equal maps to have the
-			// same hash code), which is much
-			// too difficult for this version.
+			// same hash code), which is much too difficult to do.
 			return unchecked(a.Count.GetHashCode()*19);
 		}
 
@@ -495,7 +496,7 @@ namespace PeterO
 			}
 			else if(majortype==3){ // short text string
 				StringBuilder ret=new StringBuilder(firstbyte-0x60);
-				ReadUtf8FromBytes(data,1,firstbyte-0x60,ret);
+				CBORDataUtilities.ReadUtf8FromBytes(data,1,firstbyte-0x60,ret,false);
 				return new CBORObject(CBORObjectType_TextString,ret.ToString());
 			}
 			else if(firstbyte==0x80) // empty array
@@ -571,6 +572,21 @@ namespace PeterO
 				return this.itemtype_==CBORObjectType_Tagged;
 			}
 		}
+		
+		/// <summary>
+		/// Gets the byte array used in this object, if this object
+		/// is a byte string.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">
+		/// This object is not a byte string.</exception>
+		public byte[] GetByteString(){
+			if(this.itemtype_==CBORObjectType_ByteString)
+				return ((byte[])this.ThisItem);
+			else
+				throw new InvalidOperationException("Not a byte string");
+		}
+		
+
 
 		private bool HasTag(int tagValue){
 			if(!this.IsTagged)return false;
@@ -1355,9 +1371,6 @@ namespace PeterO
 		}
 		
 		
-		private static BigInteger LowestMajorType1=
-			BigInteger.Parse("-18446744073709551616",NumberStyles.AllowLeadingSign,
-			                 CultureInfo.InvariantCulture);
 		private static BigInteger UInt64MaxValue=
 			BigInteger.Parse("18446744073709551615",NumberStyles.AllowLeadingSign,
 			                 CultureInfo.InvariantCulture);
@@ -1969,212 +1982,6 @@ namespace PeterO
 			}
 		}
 		
-		private static CBORObject ParseJSONNumber(string str){
-			if(String.IsNullOrEmpty(str))
-				return null;
-			char c=str[0];
-			bool negative=false;
-			int index=0;
-			if(index>=str.Length)
-				return null;
-			c=str[index];
-			if(c=='-'){
-				negative=true;
-				index++;
-			}
-			int numberStart=index;
-			if(index>=str.Length)
-				return null;
-			c=str[index];
-			index++;
-			int numberEnd=index;
-			int fracStart=-1;
-			int fracEnd=-1;
-			bool negExp=false;
-			int expStart=-1;
-			int expEnd=-1;
-			int smallNumber=0; // for small numbers (9 digits or less)
-			int smallNumberCount=0;
-			if(c>='1' && c<='9'){
-				smallNumber=(int)(c-'0');
-				smallNumberCount++;
-				while(index<str.Length){
-					c=str[index];
-					if(c>='0' && c<='9'){
-						index++;
-						numberEnd=index;
-						if(smallNumberCount<9){
-							smallNumber*=10;
-							smallNumber+=(int)(c-'0');
-							smallNumberCount++;
-						}
-					} else {
-						break;
-					}
-				}
-			} else if(c!='0'){
-				return null;
-			}
-			if(index<str.Length && str[index]=='.'){
-				// Fraction
-				index++;
-				fracStart=index;
-				if(index>=str.Length)
-					return null;
-				c=str[index];
-				index++;
-				fracEnd=index;
-				if(c>='0' && c<='9'){
-					while(index<str.Length){
-						c=str[index];
-						if(c>='0' && c<='9'){
-							index++;
-							fracEnd=index;
-						} else {
-							break;
-						}
-					}
-				} else {
-					// Not a fraction
-					return null;
-				}
-			}
-			if(index<str.Length && (str[index]=='e' || str[index]=='E')){
-				// Exponent
-				index++;
-				if(index>=str.Length)
-					return null;
-				c=str[index];
-				if(c=='-'){
-					negative=true;
-					index++;
-				}
-				if(c=='+')index++;
-				expStart=index;
-				if(index>=str.Length)
-					return null;
-				c=str[index];
-				index++;
-				expEnd=index;
-				if(c>='0' && c<='9'){
-					while(index<str.Length){
-						c=str[index];
-						if(c>='0' && c<='9'){
-							index++;
-							expEnd=index;
-						} else {
-							break;
-						}
-					}
-				} else {
-					// Not an exponent
-					return null;
-				}
-			}
-			if(index!=str.Length){
-				// End of the string wasn't reached, so isn't a number
-				return null;
-			}
-			if(fracStart<0 && expStart<0 && (numberEnd-numberStart)<=9){
-				// Common case: small integer
-				int value=smallNumber;
-				if(negative)value=-value;
-				return FromObject(value);
-			} if(fracStart<0 && expStart<0 && (numberEnd-numberStart)<=18){
-				// Common case: long-sized integer
-				string strsub=(numberStart==0 && numberEnd==str.Length) ? str :
-					str.Substring(numberStart,numberEnd-numberStart);
-				long value=Int64.Parse(strsub,
-				                       NumberStyles.None,
-				                       CultureInfo.InvariantCulture);
-				if(negative)value=-value;
-				return FromObject(value);
-			} else if(fracStart>=0 && expStart<0 &&
-			          (numberEnd-numberStart)+(fracEnd-fracStart)<=9){
-				// Small whole part and small fractional part
-				int fracpart=(fracStart<0) ? 0 : Int32.Parse(
-					str.Substring(fracStart,fracEnd-fracStart),
-					NumberStyles.None,
-					CultureInfo.InvariantCulture);
-				// Intval consists of the whole and fractional part
-				string intvalString=str.Substring(numberStart,numberEnd-numberStart)+
-					(fracpart==0 ? String.Empty : str.Substring(fracStart,fracEnd-fracStart));
-				int int32val=Int32.Parse(
-					intvalString,
-					NumberStyles.None,
-					CultureInfo.InvariantCulture);
-				if(negative)int32val=-int32val;
-				int exp=0;
-				if(fracpart!=0){
-					// If there is a nonzero fractional part,
-					// decrease the exponent by that part's length
-					exp-=(int)(fracEnd-fracStart);
-				}
-				if(exp==0){
-					// If exponent is 0, just return the integer
-					return FromObject(int32val);
-				}
-				// Represent the CBOR object as a decimal fraction
-				return FromObjectAndTag(new CBORObject[]{
-				                        	FromObject(exp),FromObject(int32val)},4);
-			} else if(fracStart<0 && expStart<0){
-				// Bigger integer
-				string strsub=(numberStart==0 && numberEnd==str.Length) ? str :
-					str.Substring(numberStart,numberEnd-numberStart);
-				BigInteger bigintValue=BigInteger.Parse(strsub,
-				                                        NumberStyles.None,
-				                                        CultureInfo.InvariantCulture);
-				if(negative)bigintValue=-(BigInteger)bigintValue;
-				return FromObject(bigintValue);
-			} else {
-				BigInteger fracpart=(fracStart<0) ? BigInteger.Zero : BigInteger.Parse(
-					str.Substring(fracStart,fracEnd-fracStart),
-					NumberStyles.None,
-					CultureInfo.InvariantCulture);
-				// Intval consists of the whole and fractional part
-				string intvalString=str.Substring(numberStart,numberEnd-numberStart)+
-					(fracpart.IsZero ? String.Empty : str.Substring(fracStart,fracEnd-fracStart));
-				BigInteger intval=BigInteger.Parse(
-					intvalString,
-					NumberStyles.None,
-					CultureInfo.InvariantCulture);
-				if(negative)intval=-intval;
-				if(fracpart.IsZero && expStart<0){
-					// Zero fractional part and no exponent;
-					// this is easy, just return the integer
-					return FromObject(intval);
-				}
-				BigInteger exp=(expStart<0) ? BigInteger.Zero : BigInteger.Parse(
-					str.Substring(expStart,expEnd-expStart),
-					NumberStyles.None,
-					CultureInfo.InvariantCulture);
-				if(negExp)exp=-exp;
-				if(!fracpart.IsZero){
-					// If there is a nonzero fractional part,
-					// decrease the exponent by that part's length
-					exp-=(BigInteger)(fracEnd-fracStart);
-				}
-				if(exp.IsZero){
-					// If exponent is 0, this is also easy,
-					// just return the integer
-					return FromObject(intval);
-				}
-				if(exp.CompareTo(UInt64MaxValue)>0 ||
-				   exp.CompareTo(LowestMajorType1)<0){
-					// Exponent is lower than the lowest representable
-					// integer of major type 1, or higher than the
-					// highest representable integer of major type 0
-					if(intval.IsZero){
-						return FromObject(0);
-					} else {
-						return null;
-					}
-				}
-				// Represent the CBOR object as a decimal fraction
-				return FromObjectAndTag(new CBORObject[]{
-				                        	FromObject(exp),FromObject(intval)},4);
-			}
-		}
 		
 		// Based on the json.org implementation for JSONTokener
 		private static CBORObject NextJSONValue(JSONTokener tokener)  {
@@ -2206,7 +2013,7 @@ namespace PeterO
 			if (str.Equals("null"))
 				return CBORObject.Null;
 			if ((b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+') {
-				CBORObject obj=ParseJSONNumber(str);
+				CBORObject obj=CBORDataUtilities.ParseJSONNumber(str,false,false);
 				if(obj==null)
 					throw tokener.syntaxError("JSON number can't be parsed.");
 				return obj;
@@ -2313,141 +2120,6 @@ namespace PeterO
 			}
 		}
 
-		private static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength, StringBuilder builder)  {
-			int cp=0;
-			int bytesSeen=0;
-			int bytesNeeded=0;
-			int lower=0x80;
-			int upper=0xBF;
-			int pointer=offset;
-			int endpointer=offset+byteLength;
-			while(pointer<endpointer){
-				int b=data[pointer];
-				pointer++;
-				if(bytesNeeded==0){
-					if(b<0x80){
-						builder.Append((char)b);
-					} else if(b>=0xc2 && b<=0xdf){
-						bytesNeeded=1;
-						cp=(b-0xc0)<<6;
-					} else if(b>=0xe0 && b<=0xef){
-						lower=(b==0xe0) ? 0xa0 : 0x80;
-						upper=(b==0xed) ? 0x9f : 0xbf;
-						bytesNeeded=2;
-						cp=(b-0xe0)<<12;
-					} else if(b>=0xf0 && b<=0xf4){
-						lower=(b==0xf0) ? 0x90 : 0x80;
-						upper=(b==0xf4) ? 0x8f : 0xbf;
-						bytesNeeded=3;
-						cp=(b-0xf0)<<18;
-					} else
-						return -1;
-					continue;
-				}
-				if(b<lower || b>upper){
-					cp=bytesNeeded=bytesSeen=0;
-					lower=0x80;
-					upper=0xbf;
-					return -1;
-				}
-				lower=0x80;
-				upper=0xbf;
-				bytesSeen++;
-				cp+=(b-0x80)<<(6*(bytesNeeded-bytesSeen));
-				if(bytesSeen!=bytesNeeded) {
-					continue;
-				}
-				int ret=cp;
-				cp=0;
-				bytesSeen=0;
-				bytesNeeded=0;
-				if(ret<=0xFFFF){
-					builder.Append((char)ret);
-				} else {
-					int ch=ret-0x10000;
-					int lead=ch/0x400+0xd800;
-					int trail=(ch&0x3FF)+0xdc00;
-					builder.Append((char)lead);
-					builder.Append((char)trail);
-				}
-			}
-			if(bytesNeeded!=0)
-				return -1;
-			return 0;
-		}
-
-
-		private static int ReadUtf8(Stream stream, int byteLength, StringBuilder builder)  {
-			int cp=0;
-			int bytesSeen=0;
-			int bytesNeeded=0;
-			int lower=0x80;
-			int upper=0xBF;
-			int pointer=0;
-			while(pointer<byteLength || byteLength<0){
-				int b=stream.ReadByte();
-				if(b<0){
-					if(bytesNeeded!=0){
-						bytesNeeded=0;
-						return -1;
-					} else {
-						if(byteLength>0 && pointer>=byteLength)
-							return -2;
-						break; // end of stream
-					}
-				}
-				if(byteLength>0) {
-					pointer++;
-				}
-				if(bytesNeeded==0){
-					if(b<0x80){
-						builder.Append((char)b);
-					} else if(b>=0xc2 && b<=0xdf){
-						bytesNeeded=1;
-						cp=(b-0xc0)<<6;
-					} else if(b>=0xe0 && b<=0xef){
-						lower=(b==0xe0) ? 0xa0 : 0x80;
-						upper=(b==0xed) ? 0x9f : 0xbf;
-						bytesNeeded=2;
-						cp=(b-0xe0)<<12;
-					} else if(b>=0xf0 && b<=0xf4){
-						lower=(b==0xf0) ? 0x90 : 0x80;
-						upper=(b==0xf4) ? 0x8f : 0xbf;
-						bytesNeeded=3;
-						cp=(b-0xf0)<<18;
-					} else
-						return -1;
-					continue;
-				}
-				if(b<lower || b>upper){
-					cp=bytesNeeded=bytesSeen=0;
-					lower=0x80;
-					upper=0xbf;
-					return -1;
-				}
-				lower=0x80;
-				upper=0xbf;
-				bytesSeen++;
-				cp+=(b-0x80)<<(6*(bytesNeeded-bytesSeen));
-				if(bytesSeen!=bytesNeeded) {
-					continue;
-				}
-				int ret=cp;
-				cp=0;
-				bytesSeen=0;
-				bytesNeeded=0;
-				if(ret<=0xFFFF){
-					builder.Append((char)ret);
-				} else {
-					int ch=ret-0x10000;
-					int lead=ch/0x400+0xd800;
-					int trail=(ch&0x3FF)+0xdc00;
-					builder.Append((char)lead);
-					builder.Append((char)trail);
-				}
-			}
-			return 0;
-		}
 		
 		/// <summary>
 		/// Creates a new empty CBOR array.
@@ -3125,7 +2797,7 @@ namespace PeterO
 						                        " is bigger than supported");
 					}
 					StringBuilder builder=new StringBuilder();
-					switch(ReadUtf8(s,(int)uadditional,builder)){
+					switch(CBORDataUtilities.ReadUtf8(s,(int)uadditional,builder,false)){
 						case -1:
 							throw new CBORException("Invalid UTF-8");
 						case -2:
