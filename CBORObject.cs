@@ -1911,16 +1911,16 @@ namespace PeterO
 				   Single.IsPositiveInfinity(f) ||
 				   Single.IsNaN(f)) return "null";
 				else
-					return Convert.ToString((float)f,
-					                        CultureInfo.InvariantCulture);
+					return TrimDotZero(Convert.ToString((float)f,
+					                                    CultureInfo.InvariantCulture));
 			} else if(this.ItemType== CBORObjectType_Double){
 				double f=(double)this.ThisItem;
 				if(Double.IsNegativeInfinity(f) ||
 				   Double.IsPositiveInfinity(f) ||
 				   Double.IsNaN(f)) return "null";
 				else
-					return Convert.ToString((double)f,
-					                        CultureInfo.InvariantCulture);
+					return TrimDotZero(Convert.ToString((double)f,
+					                                    CultureInfo.InvariantCulture));
 			} else if(this.ItemType== CBORObjectType_Integer){
 				return Convert.ToString((long)this.ThisItem,CultureInfo.InvariantCulture);
 			} else if(this.ItemType== CBORObjectType_BigInteger){
