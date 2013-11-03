@@ -504,22 +504,18 @@ public boolean equals(Object obj) {
 			// For objects with variable length,
 			// read the Object as though
 			// the byte array were a stream
-			try {
-				java.io.ByteArrayInputStream ms=null;
+			java.io.ByteArrayInputStream ms=null;
 try {
 ms=new ByteArrayInputStream(data);
 int startingAvailable=ms.available();
 
-					CBORObject o=Read(ms);
-					CheckCBORLength((long)data.length,(long)(startingAvailable-ms.available()));
-					return o;
+				CBORObject o=Read(ms);
+				CheckCBORLength((long)data.length,(long)(startingAvailable-ms.available()));
+				return o;
 }
 finally {
-if(ms!=null)ms.close();
+try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
-			} catch(IOException ex){
-				throw new CBORException("I/O error occurred.",ex);
-			}
 		}
 		
 		/**
@@ -1375,7 +1371,7 @@ ms=new ByteArrayOutputStream();
 					}
 }
 finally {
-if(ms!=null)ms.close();
+try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
 			}
 		}
@@ -1394,9 +1390,10 @@ if(ms!=null)ms.close();
 			} else if(this.getItemType()== CBORObjectType_BigInteger){
 				Write((BigInteger)this.getThisItem(),s);
 			} else if(this.getItemType()== CBORObjectType_ByteString){
+				byte[] arr=(byte[])this.getThisItem();
 				WritePositiveInt((this.getItemType()== CBORObjectType_ByteString) ? 2 : 3,
-				                 ((byte[])this.getThisItem()).length,s);
-				s.write(((byte[])this.getThisItem()),0,((byte[])this.getThisItem()).length);
+				                 arr.length,s);
+				s.write(arr,0,arr.length);
 			} else if(this.getItemType()== CBORObjectType_TextString ){
 				Write(this.AsString(),s);
 			} else if(this.getItemType()== CBORObjectType_Array){
@@ -1662,7 +1659,7 @@ ms=new ByteArrayOutputStream();
 					return ms.toByteArray();
 }
 finally {
-if(ms!=null)ms.close();
+try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
 			} catch(IOException ex){
 				throw new CBORException("I/O Error occurred",ex);
@@ -2317,8 +2314,7 @@ public static CBORObject FromObject(Object obj) {
 					value|=(highValue<<32);
 					WritePositiveInt64(6,value,s);
 				} else {
-					s.write(
-						new byte[]{(byte)(0xDB),
+					byte[] arrayToWrite=new byte[]{(byte)(0xDB),
 							(byte)((high>>24)&0xFF),
 							(byte)((high>>16)&0xFF),
 							(byte)((high>>8)&0xFF),
@@ -2326,7 +2322,8 @@ public static CBORObject FromObject(Object obj) {
 							(byte)((low>>24)&0xFF),
 							(byte)((low>>16)&0xFF),
 							(byte)((low>>8)&0xFF),
-							(byte)(low&0xFF)},0,9);
+							(byte)(low&0xFF)};
+					s.write(arrayToWrite,0,9);
 				}
 				curobject=((CBORObject)(curobject.item_));
 			}
@@ -2346,6 +2343,13 @@ public static CBORObject FromObject(Object obj) {
 				sb.append('(');
 				curobject=((CBORObject)(curobject.item_));
 			}
+		}
+		
+		private static String TrimDotZero(String str) {
+			if(str.length()>2 && str.charAt(str.length()-1)=='0' && str.charAt(str.length()-2)=='.'){
+				return str.substring(0,str.length()-2);
+			}
+			return str;
 		}
 		
 		/**
@@ -2403,7 +2407,8 @@ public static CBORObject FromObject(Object obj) {
 				else if(Float.isNaN(f))
 					simvalue=("NaN");
 				else
-					simvalue=(Float.toString((float)f));
+					simvalue=(TrimDotZero(
+						Float.toString((float)f)));
 				if(sb==null)return simvalue;
 				sb.append(simvalue);
 			} else if(this.getItemType()== CBORObjectType_Double){
@@ -2415,7 +2420,8 @@ public static CBORObject FromObject(Object obj) {
 				else if(Double.isNaN(f))
 					simvalue=("NaN");
 				else
-					simvalue=(Double.toString((double)f));
+					simvalue=(TrimDotZero(
+						Double.toString((double)f)));
 				if(sb==null)return simvalue;
 				sb.append(simvalue);
 			} else if(this.getItemType()== CBORObjectType_Integer){
@@ -2638,7 +2644,7 @@ ms=new ByteArrayOutputStream();
 							data);
 }
 finally {
-if(ms!=null)ms.close();
+try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
 				} else {
 					if(hasBigAdditional){
@@ -2673,7 +2679,7 @@ ms=new ByteArrayOutputStream();
 							data=ms.toByteArray();
 }
 finally {
-if(ms!=null)ms.close();
+try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
 					}
 					return new CBORObject(

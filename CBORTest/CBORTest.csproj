@@ -58,9 +58,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="BEncoding.cs" />
+    <Compile Include="BEncodingTest.cs" />
+    <Compile Include="CBORExtraTest.cs" />
+    <Compile Include="CBORTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner.cs" />
+    <Compile Include="TestCommon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CBOR.csproj">

@@ -536,14 +536,10 @@ namespace PeterO
 			// For objects with variable length,
 			// read the object as though
 			// the byte array were a stream
-			try {
-				using(MemoryStream ms=new MemoryStream(data)){
-					CBORObject o=Read(ms);
-					CheckCBORLength((long)data.Length,(long)ms.Position);
-					return o;
-				}
-			} catch(IOException ex){
-				throw new CBORException("I/O error occurred.",ex);
+			using(MemoryStream ms=new MemoryStream(data)){
+				CBORObject o=Read(ms);
+				CheckCBORLength((long)data.Length,(long)ms.Position);
+				return o;
 			}
 		}
 		
@@ -1480,9 +1476,10 @@ namespace PeterO
 			} else if(this.ItemType== CBORObjectType_BigInteger){
 				Write((BigInteger)this.ThisItem,s);
 			} else if(this.ItemType== CBORObjectType_ByteString){
+				byte[] arr=(byte[])this.ThisItem;
 				WritePositiveInt((this.ItemType== CBORObjectType_ByteString) ? 2 : 3,
-				                 ((byte[])this.ThisItem).Length,s);
-				s.Write(((byte[])this.ThisItem),0,((byte[])this.ThisItem).Length);
+				                 arr.Length,s);
+				s.Write(arr,0,arr.Length);
 			} else if(this.ItemType== CBORObjectType_TextString ){
 				Write(this.AsString(),s);
 			} else if(this.ItemType== CBORObjectType_Array){
@@ -2421,8 +2418,7 @@ namespace PeterO
 					value|=(highValue<<32);
 					WritePositiveInt64(6,value,s);
 				} else {
-					s.Write(
-						new byte[]{(byte)(0xDB),
+					byte[] arrayToWrite=new byte[]{(byte)(0xDB),
 							(byte)((high>>24)&0xFF),
 							(byte)((high>>16)&0xFF),
 							(byte)((high>>8)&0xFF),
@@ -2430,7 +2426,8 @@ namespace PeterO
 							(byte)((low>>24)&0xFF),
 							(byte)((low>>16)&0xFF),
 							(byte)((low>>8)&0xFF),
-							(byte)(low&0xFF)},0,9);
+							(byte)(low&0xFF)};
+					s.Write(arrayToWrite,0,9);
 				}
 				curobject=((CBORObject)(curobject.item_));
 			}
@@ -2450,6 +2447,13 @@ namespace PeterO
 				sb.Append('(');
 				curobject=((CBORObject)(curobject.item_));
 			}
+		}
+		
+		private static string TrimDotZero(string str){
+			if(str.Length>2 && str[str.Length-1]=='0' && str[str.Length-2]=='.'){
+				return str.Substring(0,str.Length-2);
+			}
+			return str;
 		}
 		
 		/// <summary>
@@ -2507,7 +2511,8 @@ namespace PeterO
 				else if(Single.IsNaN(f))
 					simvalue=("NaN");
 				else
-					simvalue=(Convert.ToString((float)f,CultureInfo.InvariantCulture));
+					simvalue=(TrimDotZero(
+						Convert.ToString((float)f,CultureInfo.InvariantCulture)));
 				if(sb==null)return simvalue;
 				sb.Append(simvalue);
 			} else if(this.ItemType== CBORObjectType_Double){
@@ -2519,7 +2524,8 @@ namespace PeterO
 				else if(Double.IsNaN(f))
 					simvalue=("NaN");
 				else
-					simvalue=(Convert.ToString((double)f,CultureInfo.InvariantCulture));
+					simvalue=(TrimDotZero(
+						Convert.ToString((double)f,CultureInfo.InvariantCulture)));
 				if(sb==null)return simvalue;
 				sb.Append(simvalue);
 			} else if(this.ItemType== CBORObjectType_Integer){

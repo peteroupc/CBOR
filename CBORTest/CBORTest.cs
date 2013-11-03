@@ -19,70 +19,14 @@ namespace Test
 {
 	
 	[TestFixture]
-	class CBORTest
-	{		
-		private static CultureInfo Inv=System.Globalization.CultureInfo.InvariantCulture;
-		private static string BytesToString(byte[] bytes){
-			System.Text.StringBuilder sb=new System.Text.StringBuilder();
-			string hex="0123456789ABCDEF";
-			sb.Append("new byte[]{");
-			for(int j=0;j<bytes.Length;j++){
-				if(j>0)sb.Append(',');
-				sb.Append("0x");
-				sb.Append(hex[(int)((bytes[j]>>4)&15)]);
-				sb.Append(hex[(int)(bytes[j]&15)]);
-			}
-			sb.Append("},");
-			return sb.ToString();
-		}
+	public class CBORTest
+	{
 		
 		[Test]
 		[ExpectedException(typeof(CBORException))]
 		public void TestTagThenBreak(){
 			TestCommon.FromBytesTestAB(new byte[]{0xD1,0xFF});
 		}
-		
-		[Test]
-		public void TestRandomCBOR(){
-			/*
-			Random r=new Random();
-			for(int i=0;i<5000;i++){
-				byte[] bytes=new byte[r.Next(32)+2];
-				for(int j=0;j<bytes.Length;j++){
-					bytes[j]=(byte)r.Next(256);
-				}
-				CBORObject o=null;
-				try {
-					o=TestCommon.FromBytesTestAB(bytes);
-				} catch(CBORException){
-				}
-				if(o!=null){
-					//	if(bytes.Length>1)Console.WriteLine(BytesToString(bytes));
-					TestCommon.AssertSer(o,o.ToString());
-				} else {
-					try {
-						using(var ms=new System.IO.MemoryStream(bytes)){
-							o=CBORObject.Read(ms);
-						}
-					} catch(CBORException){
-					}
-					if(o!=null){
-						byte[] oldbytes=bytes;
-						bytes=o.ToBytes();
-						try {
-							o=TestCommon.FromBytesTestAB(bytes);
-						} catch(CBORException){
-							Assert.Fail("Old: {0} New: {1}",
-							            BytesToString(oldbytes),BytesToString(bytes));
-						}
-						//		if(bytes.Length>1)Console.WriteLine(BytesToString(bytes));
-						TestCommon.AssertSer(o,o.ToString());
-					}
-				}
-			}
-			 */
-		}
-		
 		
 		[Test]
 		public void TestJSON(){
@@ -93,7 +37,8 @@ namespace Test
 			Assert.AreEqual(2,o[1].AsInt32());
 			Assert.AreEqual(3,o[2].AsInt32());
 			o=CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
-			Assert.AreEqual(1.5,o[0].AsDouble());
+			double actual=o[0].AsDouble();
+			Assert.AreEqual((double)1.5,actual);
 		}
 		
 		[Test]
@@ -101,20 +46,10 @@ namespace Test
 			for(int i=0;i<=255;i++){
 				TestCommon.AssertSer(
 					CBORObject.FromObject((byte)i),
-					String.Format(Inv,"{0}",i));
+					String.Format(CultureInfo.InvariantCulture,"{0}",i));
 			}
 		}
 		
-		private static string ToBase16(byte[] data){
-			StringBuilder str=new StringBuilder();
-			string alphabet="0123456789ABCDEF";
-			int length = data.Length;
-			for (int i = 0; i < length;i++) {
-				str.Append(alphabet[(data[i]>>4)&15]);
-				str.Append(alphabet[data[i]&15]);
-			}
-			return str.ToString();
-		}
 		public void DoTestReadUtf8(byte[] bytes,
 		                           int expectedRet, string expectedString,
 		                           int noReplaceRet, string noReplaceString
@@ -127,6 +62,7 @@ namespace Test
 		                           int expectedRet, string expectedString,
 		                           int noReplaceRet, string noReplaceString
 		                          ){
+			try {
 			StringBuilder builder=new StringBuilder();
 			int ret=0;
 			using(MemoryStream ms=new MemoryStream(bytes)){
@@ -156,6 +92,9 @@ namespace Test
 				if(noReplaceRet==0){
 					Assert.AreEqual(noReplaceString,builder.ToString());
 				}
+			}
+			} catch(IOException ex){
+				throw new CBORException("",ex);
 			}
 		}
 		
@@ -203,22 +142,20 @@ namespace Test
 			               0," \ufffd\ufffd",-1,null);
 			DoTestReadUtf8(new byte[]{0x20,0xe0,0xff},
 			               0," \ufffd\ufffd",-1,null);
-			Console.WriteLine(ToBase16(Encoding.UTF8.GetBytes("\u0800")));
-			Console.WriteLine(ToBase16(Encoding.UTF8.GetBytes("\ud800\udc00")));
 		}
 		
 		[Test]
 		public void TestArray(){
-			var cbor=CBORObject.FromJSONString("[]");
+			CBORObject cbor=CBORObject.FromJSONString("[]");
 			cbor.Add(CBORObject.FromObject(3));
 			cbor.Add(CBORObject.FromObject(4));
-			var bytes=cbor.ToBytes();
+			byte[] bytes=cbor.ToBytes();
 			Assert.AreEqual(
 				new byte[]{(byte)(0x80|2),3,4},bytes);
 		}
 		[Test]
 		public void TestMap(){
-			var cbor=CBORObject.FromJSONString("{\"a\":2,\"b\":4}");
+			CBORObject cbor=CBORObject.FromJSONString("{\"a\":2,\"b\":4}");
 			Assert.AreEqual(2,cbor.Count);
 			TestCommon.AssertEqualsHashCode(
 				CBORObject.FromObject(2),
@@ -249,11 +186,11 @@ namespace Test
 		
 		[Test]
 		public void TestTextStringStream(){
-			var cbor=TestCommon.FromBytesTestAB(
+			CBORObject cbor=TestCommon.FromBytesTestAB(
 				new byte[]{0x7F,0x61,0x20,0x61,0x20,0xFF});
 			Assert.AreEqual("  ",cbor.AsString());
 			// Test streaming of long strings
-			var longString=Repeat('x',200000);
+			string longString=Repeat('x',200000);
 			CBORObject cbor2;
 			cbor=CBORObject.FromObject(longString);
 			cbor2=TestCommon.FromBytesTestAB(cbor.ToBytes());
@@ -291,7 +228,7 @@ namespace Test
 		}
 		[Test]
 		public void TestByteStringStream(){
-			var cbor=TestCommon.FromBytesTestAB(
+			TestCommon.FromBytesTestAB(
 				new byte[]{0x5F,0x41,0x20,0x41,0x20,0xFF});
 		}
 		[Test]
@@ -341,18 +278,19 @@ namespace Test
 		public void TestShort(){
 			for(int i=Int16.MinValue;i<=Int16.MaxValue;i++){
 				TestCommon.AssertSer(
-					CBORObject.FromObject((Int16)i),
-					String.Format(Inv,"{0}",i));
+					CBORObject.FromObject((short)i),
+					String.Format(CultureInfo.InvariantCulture,"{0}",i));
 			}
 		}
 		[Test]
 		public void TestBigInteger(){
-			BigInteger bi=3;
+			BigInteger bi=(BigInteger)3;
+			BigInteger negseven=(BigInteger)(-7);
 			for(int i=0;i<500;i++){
 				TestCommon.AssertSer(
 					CBORObject.FromObject(bi),
-					String.Format(Inv,"{0}",bi));
-				bi*=-7;
+					String.Format(CultureInfo.InvariantCulture,"{0}",bi));
+				bi*=(BigInteger)negseven;
 			}
 			BigInteger[] ranges=new BigInteger[]{
 				(BigInteger)Int64.MinValue-(BigInteger)512,
@@ -365,13 +303,13 @@ namespace Test
 				(BigInteger)UInt64.MaxValue+(BigInteger)512,
 			};
 			for(int i=0;i<ranges.Length;i+=2){
-				BigInteger j=ranges[i];
+				BigInteger bigintTemp=ranges[i];
 				while(true){
 					TestCommon.AssertSer(
-						CBORObject.FromObject(j),
-						String.Format(Inv,"{0}",j));
-					if(j.Equals(ranges[i+1]))break;
-					j++;
+						CBORObject.FromObject(bigintTemp),
+						String.Format(CultureInfo.InvariantCulture,"{0}",bigintTemp));
+					if(bigintTemp.Equals(ranges[i+1]))break;
+					bigintTemp=bigintTemp+BigInteger.One;
 				}
 			}
 		}
@@ -388,14 +326,14 @@ namespace Test
 				while(true){
 					TestCommon.AssertSer(
 						CBORObject.FromObject(j),
-						String.Format(Inv,"{0}",j));
+						String.Format(CultureInfo.InvariantCulture,"{0}",j));
 					Assert.AreEqual(
 						CBORObject.FromObject(j),
 						CBORObject.FromObject((BigInteger)j));
 					CBORObject obj=CBORObject.FromJSONString(
-						String.Format(Inv,"[{0}]",j));
+						String.Format(CultureInfo.InvariantCulture,"[{0}]",j));
 					TestCommon.AssertSer(obj,
-					          String.Format(Inv,"[{0}]",j));
+					                     String.Format(CultureInfo.InvariantCulture,"[{0}]",j));
 					if(j==ranges[i+1])break;
 					j++;
 				}
@@ -405,40 +343,40 @@ namespace Test
 		[Test]
 		public void TestFloat(){
 			TestCommon.AssertSer(CBORObject.FromObject(Single.PositiveInfinity),
-			          "Infinity");
+			                     "Infinity");
 			TestCommon.AssertSer(CBORObject.FromObject(Single.NegativeInfinity),
-			          "-Infinity");
+			                     "-Infinity");
 			TestCommon.AssertSer(CBORObject.FromObject(Single.NaN),
-			          "NaN");
+			                     "NaN");
 			for(int i=-65539;i<=65539;i++){
 				TestCommon.AssertSer(
 					CBORObject.FromObject((float)i),
-					String.Format(Inv,"{0}",i));
+					String.Format(CultureInfo.InvariantCulture,"{0}",i));
 			}
 		}
 		
 		[Test]
 		public void TestSimpleValues(){
 			TestCommon.AssertSer(CBORObject.FromObject(true),
-			          "true");
+			                     "true");
 			TestCommon.AssertSer(CBORObject.FromObject(false),
-			          "false");
+			                     "false");
 			TestCommon.AssertSer(CBORObject.FromObject((Object)null),
-			          "null");
+			                     "null");
 		}
 		
 		[Test]
 		public void TestDouble(){
 			TestCommon.AssertSer(CBORObject.FromObject(Double.PositiveInfinity),
-			          "Infinity");
+			                     "Infinity");
 			TestCommon.AssertSer(CBORObject.FromObject(Double.NegativeInfinity),
-			          "-Infinity");
+			                     "-Infinity");
 			TestCommon.AssertSer(CBORObject.FromObject(Double.NaN),
-			          "NaN");
+			                     "NaN");
 			for(int i=-65539;i<=65539;i++){
 				TestCommon.AssertSer(
 					CBORObject.FromObject((double)i),
-					String.Format(Inv,"{0}",i));
+					String.Format(CultureInfo.InvariantCulture,"{0}",i));
 			}
 		}
 
@@ -457,33 +395,44 @@ namespace Test
 				maxuint,
 			};
 			for(int i=0;i<ranges.Length;i+=2){
-				BigInteger j=ranges[i];
+				BigInteger bigintTemp=ranges[i];
 				while(true){
-					CBORObject obj=CBORObject.FromObjectAndTag(0,j);
+					CBORObject obj=CBORObject.FromObjectAndTag(0,bigintTemp);
 					Assert.IsTrue(obj.IsTagged,"obj not tagged");
-					if(!obj.InnermostTag.Equals(j))
-						Assert.AreEqual(j,obj.InnermostTag,"obj tag doesn't match: {0}",obj);
+					if(!obj.InnermostTag.Equals(bigintTemp))
+						Assert.AreEqual(bigintTemp,obj.InnermostTag,
+						                String.Format(CultureInfo.InvariantCulture,
+						                              "obj tag doesn't match: {0}",obj));
 					TestCommon.AssertSer(
 						obj,
-						String.Format(Inv,"{0}(0)",j));
-					if(j!=maxuint){
+						String.Format(CultureInfo.InvariantCulture,"{0}(0)",bigintTemp));
+					if(!(bigintTemp.Equals(maxuint))){
 						// Test multiple tags
-						CBORObject obj2=CBORObject.FromObjectAndTag(obj,j+1);
+						CBORObject obj2=CBORObject.FromObjectAndTag(obj,bigintTemp+BigInteger.One);
 						BigInteger[] bi=obj2.GetTags();
 						if(bi.Length!=2)
-							Assert.AreEqual(2,bi.Length,"Expected 2 tags: {0}",obj2);
-						if(bi[0]!=j+1)
-							Assert.AreEqual(j+1,bi[0],"Outer tag doesn't match: {0}",obj2);
-						if(bi[1]!=j)
-							Assert.AreEqual(j,bi[1],"Inner tag doesn't match: {0}",obj2);
-						if(obj2.InnermostTag!=j)
-							Assert.AreEqual(j,bi[0],"Innermost tag doesn't match: {0}",obj2);
+							Assert.AreEqual(2,bi.Length,
+							                String.Format(CultureInfo.InvariantCulture,
+							                              "Expected 2 tags: {0}",obj2));
+						if(!bi[0].Equals((BigInteger)bigintTemp+BigInteger.One))
+							Assert.AreEqual(bigintTemp+BigInteger.One,bi[0],
+							                String.Format(CultureInfo.InvariantCulture,
+							                              "Outer tag doesn't match: {0}",obj2));
+						if(!(bi[1]==(BigInteger)bigintTemp))
+							Assert.AreEqual(bigintTemp,bi[1],
+							                String.Format(CultureInfo.InvariantCulture,
+							                              "Inner tag doesn't match: {0}",obj2));
+						if(!(obj2.InnermostTag==(BigInteger)bigintTemp))
+							Assert.AreEqual(bigintTemp,bi[0],
+							                String.Format(CultureInfo.InvariantCulture,
+							                              "Innermost tag doesn't match: {0}",obj2));
 						TestCommon.AssertSer(
 							obj2,
-							String.Format(Inv,"{0}({1}(0))",j+1,j));
+							String.Format(CultureInfo.InvariantCulture,"{0}({1}(0))",
+							              bigintTemp+BigInteger.One,bigintTemp));
 					}
-					if(j==ranges[i+1])break;
-					j=j+1;
+					if(bigintTemp.Equals(ranges[i+1]))break;
+					bigintTemp=bigintTemp+BigInteger.One;
 				}
 			}
 		}
