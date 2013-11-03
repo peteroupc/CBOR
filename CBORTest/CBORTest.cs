@@ -258,6 +258,22 @@ namespace Test
 		}
 		
 		[Test]
+		public void TestDoubleToOther(){
+			CBORObject dbl1=CBORObject.FromObject((double)Int32.MinValue);
+			CBORObject dbl2=CBORObject.FromObject((double)Int32.MaxValue);
+			Assert.Throws(typeof(OverflowException),()=>dbl1.AsInt16());
+			Assert.Throws(typeof(OverflowException),()=>dbl1.AsByte());
+			Assert.DoesNotThrow(()=>dbl1.AsInt32());
+			Assert.DoesNotThrow(()=>dbl1.AsInt64());
+			Assert.DoesNotThrow(()=>dbl1.AsBigInteger());
+			Assert.Throws(typeof(OverflowException),()=>dbl2.AsInt16());
+			Assert.Throws(typeof(OverflowException),()=>dbl2.AsByte());
+			Assert.DoesNotThrow(()=>dbl2.AsInt32());
+			Assert.DoesNotThrow(()=>dbl2.AsInt64());
+			Assert.DoesNotThrow(()=>dbl2.AsBigInteger());
+		}
+		
+		[Test]
 		public void TestBigTag(){
 			CBORObject.FromObjectAndTag(CBORObject.Null,(BigInteger)UInt64.MaxValue);
 		}

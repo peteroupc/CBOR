@@ -1007,7 +1007,7 @@ public void set(String key, CBORObject value) {
 				return ((Float)this.getThisItem()).longValue();
 			} else if(this.getItemType()== CBORObjectType_Double){
 				if(Double.isNaN(((Double)this.getThisItem()).doubleValue()) ||
-				   ((Double)this.getThisItem()).doubleValue()>Long.MIN_VALUE || ((Double)this.getThisItem()).doubleValue()<Long.MIN_VALUE)
+				   ((Double)this.getThisItem()).doubleValue()>Long.MAX_VALUE || ((Double)this.getThisItem()).doubleValue()<Long.MIN_VALUE)
 					throw new ArithmeticException();
 				return ((Double)this.getThisItem()).longValue();
 			} else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&
@@ -1052,7 +1052,7 @@ public void set(String key, CBORObject value) {
 				return ((Float)thisItem).intValue();
 			} else if(this.getItemType()== CBORObjectType_Double){
 				if(Double.isNaN(((Double)thisItem).doubleValue()) ||
-				   ((Double)thisItem).doubleValue()>Integer.MIN_VALUE || ((Double)thisItem).doubleValue()<Integer.MIN_VALUE)
+				   ((Double)thisItem).doubleValue()>Integer.MAX_VALUE || ((Double)thisItem).doubleValue()<Integer.MIN_VALUE)
 					throw new ArithmeticException();
 				return ((Double)thisItem).intValue();
 			} else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&

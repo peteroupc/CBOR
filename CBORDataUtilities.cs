@@ -150,6 +150,7 @@ namespace PeterO
 			if((str)==null)throw new ArgumentNullException("str");
 			if((stream)==null)throw new ArgumentNullException("stream");
 			byte[] bytes;
+			int retval=0;
 			bytes=new byte[StreamedStringBufferLength];
 			int byteIndex=0;
 			for(int index=0;index<str.Length;index++){
@@ -177,7 +178,10 @@ namespace PeterO
 						index++;
 					} else if(c>=0xD800 && c<=0xDFFF){
 						// unpaired surrogate
-						if(!replace)return -1;
+						if(!replace){
+							retval=-1;
+							break; // write bytes read so far
+						}
 						c=0xFFFD;
 					}
 					if(c<=0xFFFF){
@@ -203,7 +207,7 @@ namespace PeterO
 				}
 			}
 			stream.Write(bytes,0,byteIndex);
-			return 0;
+			return retval;
 		}
 		
 		/// <summary>

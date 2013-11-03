@@ -294,6 +294,22 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 }
 		
 		@Test
+		public void TestDoubleToOther(){
+			CBORObject dbl1=CBORObject.FromObject((double)Integer.MIN_VALUE);
+			CBORObject dbl2=CBORObject.FromObject((double)Integer.MAX_VALUE);
+			try { dbl1.AsInt16(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl1.AsByte(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl1.AsInt32(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl1.AsInt64(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl1.AsBigInteger(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl2.AsInt16(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl2.AsByte(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl2.AsInt32(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl2.AsInt64(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl2.AsBigInteger(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
+		}
+		
+		@Test
 		public void TestBigTag(){
 			CBORObject.FromObjectAndTag(CBORObject.Null,new BigInteger("18446744073709551615"));
 		}

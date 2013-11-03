@@ -1091,7 +1091,7 @@ namespace PeterO
 				return (long)(float)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Double){
 				if(Double.IsNaN((double)this.ThisItem) ||
-				   (double)this.ThisItem>Int64.MinValue || (double)this.ThisItem<Int64.MinValue)
+				   (double)this.ThisItem>Int64.MaxValue || (double)this.ThisItem<Int64.MinValue)
 					throw new OverflowException();
 				return (long)(double)this.ThisItem;
 			} else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
@@ -1140,7 +1140,7 @@ namespace PeterO
 				return (int)(float)thisItem;
 			} else if(this.ItemType== CBORObjectType_Double){
 				if(Double.IsNaN((double)thisItem) ||
-				   (double)thisItem>Int32.MinValue || (double)thisItem<Int32.MinValue)
+				   (double)thisItem>Int32.MaxValue || (double)thisItem<Int32.MinValue)
 					throw new OverflowException();
 				return (int)(double)thisItem;
 			} else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
