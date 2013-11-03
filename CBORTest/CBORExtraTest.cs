@@ -94,7 +94,7 @@ namespace Test
 			}
 		}
 		
-				[Test]
+		[Test]
 		public void TestDecimal(){
 			TestCommon.AssertSer(
 				CBORObject.FromObject(Decimal.MinValue),
@@ -123,6 +123,21 @@ namespace Test
 					String.Format(CultureInfo.InvariantCulture,"{0}",i));
 			}
 		}
+		
+		[Test]
+		public void TestDoubleToOtherII(){
+			CBORObject dbl1=CBORObject.FromObject((double)Int32.MinValue);
+			CBORObject dbl2=CBORObject.FromObject((double)Int32.MaxValue);
+			Assert.Throws(typeof(OverflowException),()=>dbl1.AsUInt16());
+			Assert.Throws(typeof(OverflowException),()=>dbl1.AsSByte());
+			Assert.Throws(typeof(OverflowException),()=>dbl1.AsUInt32());
+			Assert.Throws(typeof(OverflowException),()=>dbl1.AsUInt64());
+			Assert.Throws(typeof(OverflowException),()=>dbl2.AsUInt16());
+			Assert.Throws(typeof(OverflowException),()=>dbl2.AsSByte());
+			Assert.DoesNotThrow(()=>dbl2.AsUInt32());
+			Assert.DoesNotThrow(()=>dbl2.AsUInt64());
+		}
+
 		
 		[Test]
 		public void TestDateTime(){

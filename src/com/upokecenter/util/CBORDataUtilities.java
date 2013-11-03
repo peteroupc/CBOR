@@ -150,9 +150,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 			if((str)==null)throw new NullPointerException("str");
 			if((stream)==null)throw new NullPointerException("stream");
 			byte[] bytes;
+			int retval=0;
 			bytes=new byte[StreamedStringBufferLength];
 			int byteIndex=0;
-			int retval=0;
 			for(int index=0;index<str.length();index++){
 				int c=str.charAt(index);
 				if(c<=0x7F){
@@ -179,8 +179,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 					} else if(c>=0xD800 && c<=0xDFFF){
 						// unpaired surrogate
 						if(!replace){
-							retval=-1; //break to write bytes already read so far
-							break;
+							retval=-1;
+							break; // write bytes read so far
 						}
 						c=0xFFFD;
 					}

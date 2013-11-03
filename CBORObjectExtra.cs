@@ -72,7 +72,7 @@ namespace PeterO
 				return (decimal)(float)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Double){
 				if(Double.IsNaN((double)this.ThisItem) ||
-				   (double)this.ThisItem>(double)Decimal.MinValue || 
+				   (double)this.ThisItem>(double)Decimal.MaxValue || 
 				   (double)this.ThisItem<(double)Decimal.MinValue)
 					throw new OverflowException();
 				return (decimal)(double)this.ThisItem;
@@ -122,7 +122,7 @@ namespace PeterO
 				return (ulong)(float)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Double){
 				if(Double.IsNaN((double)this.ThisItem) ||
-				   (double)this.ThisItem>UInt64.MinValue || (double)this.ThisItem<0)
+				   (double)this.ThisItem>UInt64.MaxValue || (double)this.ThisItem<0)
 					throw new OverflowException();
 				return (ulong)(double)this.ThisItem;
 			} else if(this.InnermostTag==4 && ItemType== CBORObjectType_Array &&
