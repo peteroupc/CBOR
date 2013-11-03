@@ -29,6 +29,74 @@ private CBORDataUtilities(){}
 		private static int StreamedStringBufferLength=4096;
 		
 		/**
+		 * Generates a text string from a UTF-8 byte array.
+		 * @param bytes A byte array containing text encoded in UTF-8.
+		 * @param replace If true, replaces invalid encoding with the replacement
+		 * character (U+FFFD). If false, stops processing when invalid UTF-8
+		 * is seen.
+		 * @return A string represented by the UTF-8 byte array.
+		 * @throws java.lang.NullPointerException "bytes" is null.
+		 * @throws java.lang.IllegalArgumentException The string is not valid UTF-8
+		 * and "replace" is false
+		 */
+		public static String GetUtf8String(byte[] bytes, boolean replace) {
+			StringBuilder b=new StringBuilder();
+			if(ReadUtf8FromBytes(bytes,0,bytes.length,b,replace)!=0)
+				throw new IllegalArgumentException("Invalid UTF-8");
+			return b.toString();
+		}
+
+		/**
+		 * Generates a text string from a portion of a UTF-8 byte array.
+		 * @param bytes A byte array containing text encoded in UTF-8.
+		 * @param offset Offset into the byte array to start reading
+		 * @param byteLength Length, in bytes, of the UTF-8 string
+		 * @param replace If true, replaces invalid encoding with the replacement
+		 * character (U+FFFD). If false, stops processing when invalid UTF-8
+		 * is seen.
+		 * @return A string represented by the UTF-8 byte array.
+		 * @throws java.lang.NullPointerException "bytes" is null.
+		 * @throws java.lang.IllegalArgumentException The portion of the byte array
+		 * is not valid UTF-8 and "replace" is false
+		 */
+		public static String GetUtf8String(byte[] bytes, int offset, int byteLength, boolean replace) {
+			StringBuilder b=new StringBuilder();
+			if(ReadUtf8FromBytes(bytes,offset,byteLength,b,replace)!=0)
+				throw new IllegalArgumentException("Invalid UTF-8");
+			return b.toString();
+		}
+		
+		/**
+		 * Encodes a string in UTF-8 as a byte array.
+		 * @param str A text string.
+		 * @param replace If true, replaces unpaired surrogate code points
+		 * with the replacement character (U+FFFD). If false, stops processing
+		 * when an unpaired surrogate code point is seen.
+		 * @return The string encoded in UTF-8.
+		 * @throws java.lang.NullPointerException "str" is null.
+		 * @throws java.lang.IllegalArgumentException The string contains an unpaired
+		 * surrogate code point and "replace" is false, or an internal error
+		 * occurred.
+		 */
+		public static byte[] GetUtf8Bytes(String str, boolean replace) {
+			try {
+				java.io.ByteArrayOutputStream ms=null;
+try {
+ms=new ByteArrayOutputStream();
+
+					if(WriteUtf8(str,ms,replace)!=0)
+						throw new IllegalArgumentException("Unpaired surrogate code point");
+					return ms.toByteArray();
+}
+finally {
+try { if(ms!=null)ms.close(); } catch(IOException ex){}
+}
+			} catch(IOException ex){
+				throw new IllegalArgumentException("I/O error occurred",ex);
+			}
+		}
+		
+		/**
 		 * Calculates the number of bytes needed to encode a string in UTF-8.
 		 * @param s A Unicode string.
 		 * @param replace If true, treats unpaired surrogate code points as
@@ -84,6 +152,7 @@ private CBORDataUtilities(){}
 			byte[] bytes;
 			bytes=new byte[StreamedStringBufferLength];
 			int byteIndex=0;
+			int retval=0;
 			for(int index=0;index<str.length();index++){
 				int c=str.charAt(index);
 				if(c<=0x7F){
@@ -109,7 +178,10 @@ private CBORDataUtilities(){}
 						index++;
 					} else if(c>=0xD800 && c<=0xDFFF){
 						// unpaired surrogate
-						if(!replace)return -1;
+						if(!replace){
+							retval=-1; //break to write bytes already read so far
+							break;
+						}
 						c=0xFFFD;
 					}
 					if(c<=0xFFFF){
@@ -135,7 +207,7 @@ private CBORDataUtilities(){}
 				}
 			}
 			stream.write(bytes,0,byteIndex);
-			return 0;
+			return retval;
 		}
 		
 		/**
@@ -146,8 +218,8 @@ private CBORDataUtilities(){}
 		 * @param builder A string builder object where the resulting string
 		 * will be stored.
 		 * @param replace If true, replaces invalid encoding with the replacement
-		 * character (U+FFFD). If false, stops processing when an unpaired
-		 * surrogate code point is seen.
+		 * character (U+FFFD). If false, stops processing when invalid UTF-8
+		 * is seen.
 		 * @return 0 if the entire string was read without errors, or -1 if the
 		 * string is not valid UTF-8 and "replace" is false.
 		 * @throws java.lang.NullPointerException "data" is null or "builder"
@@ -173,7 +245,7 @@ private CBORDataUtilities(){}
 			int pointer=offset;
 			int endpointer=offset+byteLength;
 			while(pointer<endpointer){
-				int b=data[pointer];
+				int b=(data[pointer]&(int)0xFF);
 				pointer++;
 				if(bytesNeeded==0){
 					if(b<0x80){
