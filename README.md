@@ -15,6 +15,8 @@ This library defines one class, called CBORObject, that allows you to read and
 write CBOR objects to and from data streams and byte arrays, and to convert JSON
 text to CBOR objects.  It defines the following methods.
 
+See also the [Wiki](https://github.com/peteroupc/CBOR/wiki).
+
 Note:  The methods below are included in the C# version of this library.  The Java
 version was translated from the original C#, and some of the methods shown here
 may be missing from the Java version.
