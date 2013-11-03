@@ -1817,14 +1817,14 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				   ((f)==Float.POSITIVE_INFINITY) ||
 				   Float.isNaN(f)) return "null";
 				else
-					return Float.toString((float)f);
+					return TrimDotZero(Float.toString((float)f));
 			} else if(this.getItemType()== CBORObjectType_Double){
 				double f=((Double)this.getThisItem()).doubleValue();
 				if(((f)==Double.NEGATIVE_INFINITY) ||
 				   ((f)==Double.POSITIVE_INFINITY) ||
 				   Double.isNaN(f)) return "null";
 				else
-					return Double.toString((double)f);
+					return TrimDotZero(Double.toString((double)f));
 			} else if(this.getItemType()== CBORObjectType_Integer){
 				return Long.toString(((Long)this.getThisItem()).longValue());
 			} else if(this.getItemType()== CBORObjectType_BigInteger){
