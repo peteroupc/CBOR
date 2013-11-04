@@ -601,8 +601,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 					// decrease the exponent by that part's length
 					exp-=(int)(fracEnd-fracStart);
 				}
-				if(exp==0){
-					// If exponent is 0, just return the integer
+				if(exp==0 || int32val==0){
+					// If exponent is 0, or mantissa is 0,
+					// just return the integer
 					return CBORObject.FromObject(int32val);
 				}
 				// Represent the CBOR Object as a decimal fraction
@@ -629,6 +630,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 					// this is easy, just return the integer
 					return CBORObject.FromObject(intval);
 				}
+				if(intval.equals(BigInteger.ZERO)){
+					// Mantissa is 0, return 0 regardless of exponent
+					return CBORObject.FromObject(0);
+				}
 				BigInteger exp=(expStart<0) ? BigInteger.ZERO : new BigInteger(
 					str.substring(expStart,(expStart)+(expEnd-expStart)));
 				if(negExp)exp=exp.negate();
@@ -641,17 +646,12 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 					// If exponent is 0, this is also easy,
 					// just return the integer
 					return CBORObject.FromObject(intval);
-				}
-				if(exp.compareTo(UInt64MaxValue)>0 ||
+				} else if(exp.compareTo(UInt64MaxValue)>0 ||
 				   exp.compareTo(LowestMajorType1)<0){
 					// Exponent is lower than the lowest representable
 					// integer of major type 1, or higher than the
 					// highest representable integer of major type 0
-					if(intval.equals(BigInteger.ZERO)){
-						return CBORObject.FromObject(0);
-					} else {
-						return null;
-					}
+					return null;
 				}
 				// Represent the CBOR Object as a decimal fraction
 				return CBORObject.FromObjectAndTag(new CBORObject[]{

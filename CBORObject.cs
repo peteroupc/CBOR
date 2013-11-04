@@ -55,7 +55,6 @@ namespace PeterO
 			}
 		}
 
-
 		int itemtype_;
 		Object item_;
 		int tagLow;
@@ -70,7 +69,8 @@ namespace PeterO
 		private const int CBORObjectType_SimpleValue=6;
 		private const int CBORObjectType_Single=7;
 		private const int CBORObjectType_Double=8;
-		private const int CBORObjectType_Tagged=9;
+		private const int CBORObjectType_DecimalFraction=9;
+		private const int CBORObjectType_Tagged=10;
 		private static readonly BigInteger Int64MaxValue=(BigInteger)Int64.MaxValue;
 		private static readonly BigInteger Int64MinValue=(BigInteger)Int64.MinValue;
 		/// <summary>
@@ -97,6 +97,9 @@ namespace PeterO
 			this.tagLow=tagLow;
 			this.tagHigh=tagHigh;
 		}
+		
+		
+		
 		private CBORObject(int type, Object item){
 			#if DEBUG
 			// Check range in debug mode to ensure that Integer and BigInteger
@@ -122,6 +125,7 @@ namespace PeterO
 					case CBORObjectType_BigInteger:
 					case CBORObjectType_Single:
 					case CBORObjectType_Double:
+					case CBORObjectType_DecimalFraction:
 						return CBORType.Number;
 					case CBORObjectType_SimpleValue:
 						if((int)this.ThisItem==21 || (int)this.ThisItem==20){
@@ -129,9 +133,6 @@ namespace PeterO
 						}
 						return CBORType.SimpleValue;
 					case CBORObjectType_Array:
-						if(this.Count==2 && this.HasTag(4)){
-							return CBORType.Number;
-						}
 						return CBORType.Array;
 					case CBORObjectType_Map:
 						return CBORType.Map;
@@ -178,6 +179,118 @@ namespace PeterO
 			}
 		}
 		
+		
+		private int CompareTo(CBORObject other){
+			if(other==null)throw new ArgumentNullException("other");
+			int typeA=this.ItemType;
+			int typeB=other.ItemType;
+			Object objA=this.ThisItem;
+			Object objB=other.ThisItem;
+			if(typeA==CBORObjectType_SimpleValue){
+				if((int)objA==20 || (int)objA==22 || (int)objA==23){
+					// Treat false, null, and undefined
+					// as the number 0
+					objA=(long)0;
+					typeA=CBORObjectType_Integer;
+				}
+				else if((int)objA==21){
+					// Treat true as the number 1
+					objA=(long)1;
+					typeA=CBORObjectType_Integer;
+				}
+			}
+			if(typeB==CBORObjectType_SimpleValue){
+				if((int)objB==20 || (int)objB==22 || (int)objB==23){
+					// Treat false, null, and undefined
+					// as the number 0
+					objA=(long)0;
+					typeA=CBORObjectType_Integer;
+				}
+				else if((int)objB==21){
+					// Treat true as the number 1
+					objA=(long)1;
+					typeA=CBORObjectType_Integer;
+				}
+			}
+			if(typeA==typeB){
+				switch(typeA){
+						case CBORObjectType_Integer:{
+							long a=(long)this.ThisItem;
+							long b=(long)other.ThisItem;
+							if(a==b)return 0;
+							return (a<b) ? -1 : 1;
+						}
+						case CBORObjectType_Single:{
+							float a=(float)this.ThisItem;
+							float b=(float)other.ThisItem;
+							if(Single.IsNaN(a)){
+								return (Single.IsNaN(b)) ? 1 : 0;
+							}
+							if(Single.IsNaN(b)){
+								return -1;
+							}
+							if(a==b)return 0;
+							return (a<b) ? -1 : 1;
+						}
+						case CBORObjectType_BigInteger:{
+							BigInteger bigintA=(BigInteger)this.ThisItem;
+							BigInteger bigintB=(BigInteger)other.ThisItem;
+							return bigintA.CompareTo(bigintB);
+						}
+						case CBORObjectType_Double:{
+							double a=(double)this.ThisItem;
+							double b=(double)other.ThisItem;
+							if(Double.IsNaN(a)){
+								return (Double.IsNaN(b)) ? 1 : 0;
+							}
+							if(Double.IsNaN(b)){
+								return -1;
+							}
+							if(a==b)return 0;
+							return (a<b) ? -1 : 1;
+						}
+						case CBORObjectType_DecimalFraction:{
+							return ((DecimalFraction)objA).CompareTo(
+								((DecimalFraction)objB));
+						}
+						case CBORObjectType_ByteString:{
+							return ByteArrayCompare((byte[])objA,(byte[])objB);
+						}
+						case CBORObjectType_TextString:{
+							throw new NotImplementedException();
+						}
+						case CBORObjectType_Array:{
+							return ListCompare((List<CBORObject>)objA,
+							                   (List<CBORObject>)objB);
+						}
+						case CBORObjectType_Map:{
+							return 0;
+						}
+						case CBORObjectType_SimpleValue:{
+							int valueA=(int)objA;
+							int valueB=(int)objB;
+							if(valueA==valueB)return 0;
+							return (valueA<valueB) ? -1 : 1;
+						}
+					default:
+						throw new ArgumentException("Unexpected data type");
+				}
+			} else {
+				int combo=(typeA<<4)|typeB;
+				switch(combo){
+						case (CBORObjectType_Integer<<4)|CBORObjectType_BigInteger:{
+							BigInteger bigint=(BigInteger)(long)objA;
+							return bigint.CompareTo((BigInteger)objB);
+						}
+						case (CBORObjectType_BigInteger<<4)|CBORObjectType_Integer:{
+							BigInteger bigint=(BigInteger)(long)objB;
+							return ((BigInteger)(long)objA).CompareTo(bigint);
+						}
+					default:
+						throw new NotImplementedException();
+				}
+			}
+		}
 
 		#region Equals and GetHashCode implementation
 		private bool ByteArrayEquals(byte[] a, byte[] b){
@@ -190,6 +303,29 @@ namespace PeterO
 			return true;
 		}
 		
+		private int ByteArrayCompare(byte[] a, byte[] b){
+			if(a==null)return (b==null) ? 0 : -1;
+			if(b==null)return 1;
+			if(a.Length!=b.Length)
+				return (a.Length<b.Length) ? -1 : 1;
+			for(int i=0;i<a.Length;i++){
+				if(a[i]!=b[i])
+					return (a[i]<b[i]) ? -1 : 1;
+			}
+			return 0;
+		}
+		
+		private int ListCompare(List<CBORObject> listA, List<CBORObject> listB){
+			if(listA==null)return (listB==null) ? 0 : -1;
+			if(listB==null)return 1;
+			if(listA.Count!=listB.Count)
+				return (listA.Count<listB.Count) ? -1 : 1;
+			for(int i=0;i<listA.Count;i++){
+				int cmp=listA[i].CompareTo(listB[i]);
+				if(cmp!=0)return cmp;
+			}
+			return 0;
+		}
 		private int ByteArrayHashCode(byte[] a){
 			if(a==null)return 0;
 			int ret=19;
@@ -686,8 +822,6 @@ namespace PeterO
 			set {
 				if(this.ItemType== CBORObjectType_Array){
 					if((value)==null)throw new ArgumentNullException("value");
-					if(this.HasTag(4))
-						throw new InvalidOperationException("Read-only array");
 					IList<CBORObject> list=AsList();
 					list[index]=value;
 				} else {
@@ -854,8 +988,6 @@ namespace PeterO
 		public void Add(CBORObject obj){
 			if((obj)==null)throw new ArgumentNullException("obj");
 			if(this.ItemType== CBORObjectType_Array){
-				if(this.HasTag(4))
-					throw new InvalidOperationException("Read-only array");
 				IList<CBORObject> list=AsList();
 				list.Add(obj);
 			} else {
@@ -885,8 +1017,6 @@ namespace PeterO
 				}
 				return false;
 			} else if(this.ItemType== CBORObjectType_Array){
-				if(this.HasTag(4))
-					throw new InvalidOperationException("Read-only array");
 				IList<CBORObject> list=AsList();
 				return list.Remove(obj);
 			} else {
@@ -912,13 +1042,8 @@ namespace PeterO
 				return (double)(float)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Double)
 				return (double)this.ThisItem;
-			else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
-			        this.Count==2){
-				StringBuilder sb=new StringBuilder();
-				sb.Append(this[1].IntegerToString());
-				sb.Append("e");
-				sb.Append(this[0].IntegerToString());
-				return Double.Parse(sb.ToString(),
+			else if(this.ItemType==CBORObjectType_DecimalFraction){
+				return Double.Parse(((DecimalFraction)this.ThisItem).ToPlainString(),
 				                    NumberStyles.AllowLeadingSign|
 				                    NumberStyles.AllowDecimalPoint|
 				                    NumberStyles.AllowExponent,
@@ -947,14 +1072,8 @@ namespace PeterO
 				return (float)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Double)
 				return (float)(double)this.ThisItem;
-			else if(this.HasTag(4) &&
-			        this.ItemType== CBORObjectType_Array &&
-			        this.Count==2){
-				StringBuilder sb=new StringBuilder();
-				sb.Append(this[1].IntegerToString());
-				sb.Append("e");
-				sb.Append(this[0].IntegerToString());
-				return Single.Parse(sb.ToString(),
+			else if(this.ItemType== CBORObjectType_DecimalFraction){
+				return Single.Parse(((DecimalFraction)this.ThisItem).ToPlainString(),
 				                    NumberStyles.AllowLeadingSign|
 				                    NumberStyles.AllowDecimalPoint|
 				                    NumberStyles.AllowExponent,
@@ -965,7 +1084,7 @@ namespace PeterO
 		}
 
 		/// <summary>
-		/// Converts this object to an arbitrary-length
+		/// Converts this object to an arbitrary-precision
 		/// integer.  Floating point values are truncated
 		/// to an integer.
 		/// </summary>
@@ -983,13 +1102,8 @@ namespace PeterO
 				return (BigInteger)(float)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Double)
 				return (BigInteger)(double)this.ThisItem;
-			else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
-			        this.Count==2){
-				StringBuilder sb=new StringBuilder();
-				sb.Append(this[1].IntegerToString());
-				sb.Append("e");
-				sb.Append(this[0].IntegerToString());
-				return ParseBigIntegerWithExponent(sb.ToString());
+			else if(this.ItemType== CBORObjectType_DecimalFraction){
+				return ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToPlainString());
 			}
 			else
 				throw new InvalidOperationException("Not a number type");
@@ -1094,13 +1208,8 @@ namespace PeterO
 				   (double)this.ThisItem>Int64.MaxValue || (double)this.ThisItem<Int64.MinValue)
 					throw new OverflowException();
 				return (long)(double)this.ThisItem;
-			} else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
-			          this.Count==2){
-				StringBuilder sb=new StringBuilder();
-				sb.Append(this[1].IntegerToString());
-				sb.Append("e");
-				sb.Append(this[0].IntegerToString());
-				BigInteger bi=ParseBigIntegerWithExponent(sb.ToString());
+			} else if(this.ItemType== CBORObjectType_DecimalFraction){
+				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToPlainString());
 				if(bi.CompareTo(Int64MaxValue)>0 ||
 				   bi.CompareTo(Int64MinValue)<0)
 					throw new OverflowException();
@@ -1143,13 +1252,8 @@ namespace PeterO
 				   (double)thisItem>Int32.MaxValue || (double)thisItem<Int32.MinValue)
 					throw new OverflowException();
 				return (int)(double)thisItem;
-			} else if(this.HasTag(4) && this.ItemType== CBORObjectType_Array &&
-			          this.Count==2){
-				StringBuilder sb=new StringBuilder();
-				sb.Append(this[1].IntegerToString());
-				sb.Append("e");
-				sb.Append(this[0].IntegerToString());
-				BigInteger bi=ParseBigIntegerWithExponent(sb.ToString());
+			} else if(this.ItemType== CBORObjectType_DecimalFraction){
+				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToPlainString());
 				if(bi.CompareTo((BigInteger)Int32.MaxValue)>0 ||
 				   bi.CompareTo((BigInteger)Int32.MinValue)<0)
 					throw new OverflowException();
@@ -1484,6 +1588,16 @@ namespace PeterO
 				Write(this.AsString(),s);
 			} else if(this.ItemType== CBORObjectType_Array){
 				WriteObjectArray(AsList(),s);
+			} else if(this.ItemType== CBORObjectType_DecimalFraction){
+				DecimalFraction dec=(DecimalFraction)this.ThisItem;
+				if(dec.Exponent==0){
+					Write(dec.Mantissa,s);
+				} else {
+					s.WriteByte(0xC4); // tag 4
+					s.WriteByte(0x82); // array, length 2
+					Write(dec.Exponent,s);
+					Write(dec.Mantissa,s);
+				}
 			} else if(this.ItemType== CBORObjectType_Map){
 				WriteObjectMap(AsMap(),s);
 			} else if(this.ItemType== CBORObjectType_SimpleValue){
@@ -1939,21 +2053,19 @@ namespace PeterO
 				return sb.ToString();
 			} else if(this.ItemType== CBORObjectType_TextString){
 				return StringToJSONString(this.AsString());
+			} else if(this.ItemType== CBORObjectType_DecimalFraction){
+				return ((DecimalFraction)this.ThisItem).ToPlainString();
 			} else if(this.ItemType== CBORObjectType_Array){
-				if(this.HasTag(4) && this.Count==2){
-					return ExponentAndMantissaToString(this[0],this[1]);
-				} else {
-					StringBuilder sb=new StringBuilder();
-					bool first=true;
-					sb.Append("[");
-					foreach(CBORObject i in AsList()){
-						if(!first)sb.Append(",");
-						sb.Append(i.ToJSONString());
-						first=false;
-					}
-					sb.Append("]");
-					return sb.ToString();
+				StringBuilder sb=new StringBuilder();
+				bool first=true;
+				sb.Append("[");
+				foreach(CBORObject i in AsList()){
+					if(!first)sb.Append(",");
+					sb.Append(i.ToJSONString());
+					first=false;
 				}
+				sb.Append("]");
+				return sb.ToString();
 			} else if(this.ItemType== CBORObjectType_Map){
 				var dict=new Dictionary<string,CBORObject>();
 				StringBuilder sb=new StringBuilder();
@@ -2349,6 +2461,12 @@ namespace PeterO
 			if(bigintTag.CompareTo(BigInt65536)<0){
 				// Low-numbered, commonly used tags
 				return new CBORObject(c,(int)bigintTag,0);
+			} else if(bigintTag.CompareTo((BigInteger)2)==0){
+				return ConvertToBigNum(c,false);
+			} else if(bigintTag.CompareTo((BigInteger)3)==0){
+				return ConvertToBigNum(c,true);
+			} else if(bigintTag.CompareTo((BigInteger)4)==0){
+				return ConvertToDecimalFrac(c);
 			} else {
 				long tagLow=0;
 				long tagHigh=0;
@@ -2378,6 +2496,12 @@ namespace PeterO
 				"tag not greater or equal to 0 ("+
 				Convert.ToString((int)intTag,System.Globalization.CultureInfo.InvariantCulture)+")");
 			CBORObject c=FromObject(o);
+			if(intTag==2 || intTag==3){
+				return ConvertToBigNum(c,intTag==3);
+			}
+			if(intTag==4){
+				return ConvertToDecimalFrac(c);
+			}
 			return new CBORObject(c,intTag,0);
 		}
 		
@@ -2419,14 +2543,14 @@ namespace PeterO
 					WritePositiveInt64(6,value,s);
 				} else {
 					byte[] arrayToWrite=new byte[]{(byte)(0xDB),
-							(byte)((high>>24)&0xFF),
-							(byte)((high>>16)&0xFF),
-							(byte)((high>>8)&0xFF),
-							(byte)(high&0xFF),
-							(byte)((low>>24)&0xFF),
-							(byte)((low>>16)&0xFF),
-							(byte)((low>>8)&0xFF),
-							(byte)(low&0xFF)};
+						(byte)((high>>24)&0xFF),
+						(byte)((high>>16)&0xFF),
+						(byte)((high>>8)&0xFF),
+						(byte)(high&0xFF),
+						(byte)((low>>24)&0xFF),
+						(byte)((low>>16)&0xFF),
+						(byte)((low>>8)&0xFF),
+						(byte)(low&0xFF)};
 					s.Write(arrayToWrite,0,9);
 				}
 				curobject=((CBORObject)(curobject.item_));
@@ -2551,10 +2675,9 @@ namespace PeterO
 					sb.Append(this.AsString());
 					sb.Append('\"');
 				}
+			} else if(this.ItemType== CBORObjectType_DecimalFraction){
+				return ToJSONString();
 			} else if(this.ItemType== CBORObjectType_Array){
-				if(this.HasTag(4)){
-					return ToJSONString();
-				}
 				if(sb==null)sb=new StringBuilder();
 				bool first=true;
 				sb.Append("[");
@@ -2609,6 +2732,62 @@ namespace PeterO
 			}
 		}
 
+		private static CBORObject ConvertToBigNum(CBORObject o, bool negative){
+			if(o.ItemType!=CBORObjectType_ByteString)
+				throw new CBORException("Byte array expected");
+			byte[] data=(byte[])o.ThisItem;
+			BigInteger bi=BigInteger.Zero;
+			for(int i=0;i<data.Length;i++){
+				bi<<=8;
+				int x=((int)data[i])&0xFF;
+				bi|=(BigInteger)x;
+			}
+			if(negative){
+				bi=BigInteger.MinusOne-(BigInteger)bi; // Convert to a negative
+			}
+			// TODO: Use tags from this object
+			return FromObject(bi);
+		}
+		
+		private bool IsZero(){
+			switch(this.ItemType){
+				case CBORObjectType_Integer:
+					return ((long)this.ThisItem)==0;
+				case CBORObjectType_BigInteger:
+					return ((BigInteger)this.ThisItem).IsZero;
+				case CBORObjectType_Single:
+					return ((float)this.ThisItem)==0;
+				case CBORObjectType_Double:
+					return ((double)this.ThisItem)==0;
+				case CBORObjectType_DecimalFraction:
+					return ((DecimalFraction)this.ThisItem).IsZero;
+				default:
+					return false;
+			}
+		}
+		
+		private static CBORObject ConvertToDecimalFrac(CBORObject o){
+			if(o.ItemType!=CBORObjectType_Array)
+				throw new CBORException("Decimal fraction must be an array");
+			if(o.Count!=2) // Requires 2 items
+				throw new CBORException("Decimal fraction requires exactly 2 items");
+			IList<CBORObject> list=o.AsList();
+			// TODO: Compare exponent
+			// check type of mantissa
+			if(list[1].ItemType!=CBORObjectType_Integer &&
+			   list[1].ItemType!=CBORObjectType_BigInteger)
+				throw new CBORException("Decimal fraction requires mantissa to be an integer or big integer");
+			if(list[0].IsZero() && !o.IsTagged){
+				// Exponent is 0, so return mantissa instead
+				return list[1];
+			}
+			// TODO: Use tags from this object
+			// TODO: Modify DecimalFraction to accept bigger exponents
+			return new CBORObject(
+				CBORObjectType_DecimalFraction,
+				new DecimalFraction(list[0].AsInt64(),list[1].AsBigInteger()));
+		}
+		
 		private static bool CheckMajorTypeIndex(int type, int index, int[] validTypeFlags){
 			if(validTypeFlags==null || index<0 || index>=validTypeFlags.Length)
 				return false;
@@ -2879,17 +3058,7 @@ namespace PeterO
 						// Requires a byte string
 						int[] subFlags=new int[]{(1<<2)};
 						o=Read(s,depth+1,false,-1,subFlags,0);
-						data=(byte[])o.ThisItem;
-						BigInteger bi=BigInteger.Zero;
-						for(int i=0;i<data.Length;i++){
-							bi<<=8;
-							int x=((int)data[i])&0xFF;
-							bi|=(BigInteger)x;
-						}
-						if(uadditional==3){
-							bi=BigInteger.MinusOne-(BigInteger)bi; // Convert to a negative
-						}
-						return FromObject(bi);
+						return ConvertToBigNum(o,uadditional==3);
 					} else if(uadditional==4){
 						// Requires an array with two elements of
 						// a valid type
@@ -2899,13 +3068,7 @@ namespace PeterO
 							(1<<0)|(1<<1)|(1<<6) // mantissa
 						};
 						o=Read(s,depth+1,false,-1,subFlags,0);
-						if(o.Count!=2) // Requires 2 items
-							throw new CBORException("Decimal fraction requires exactly 2 items");
-						// check type of mantissa
-						IList<CBORObject> list=o.AsList();
-						if(list[1].ItemType!=CBORObjectType_Integer &&
-						   list[1].ItemType!=CBORObjectType_BigInteger)
-							throw new CBORException("Decimal fraction requires mantissa to be an integer or big integer");
+						return ConvertToDecimalFrac(o);
 					} else {
 						o=Read(s,depth+1,false,-1,null,0);
 					}

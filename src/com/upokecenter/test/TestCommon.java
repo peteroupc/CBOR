@@ -18,7 +18,7 @@ import java.io.*;
 	final class TestCommon {
 private TestCommon(){}
 		private static CBORObject FromBytesA(byte[] b) {
-			return CBORObject.FromBytes(b);
+			return CBORObject.DecodeFromBytes(b);
 		}
 		
 		private static CBORObject FromBytesB(byte[] b) {
@@ -69,7 +69,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 			if(!s.equals(o.toString()))
 				Assert.assertEquals("o is not equal to s",s,o.toString());
 			// Test round-tripping
-			CBORObject o2=FromBytesTestAB(o.ToBytes());
+			CBORObject o2=FromBytesTestAB(o.EncodeToBytes());
 			if(!s.equals(o2.toString()))
 				Assert.assertEquals("o2 is not equal to s",s,o2.toString());
 			AssertEqualsHashCode(o,o2);
