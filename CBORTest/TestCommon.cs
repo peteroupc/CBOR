@@ -17,7 +17,7 @@ namespace Test
 	static class TestCommon
 	{
 		private static CBORObject FromBytesA(byte[] b){
-			return CBORObject.FromBytes(b);
+			return CBORObject.DecodeFromBytes(b);
 		}
 		
 		private static CBORObject FromBytesB(byte[] b){
@@ -64,7 +64,7 @@ namespace Test
 			if(!s.Equals(o.ToString()))
 				Assert.AreEqual(s,o.ToString(),"o is not equal to s");
 			// Test round-tripping
-			CBORObject o2=FromBytesTestAB(o.ToBytes());
+			CBORObject o2=FromBytesTestAB(o.EncodeToBytes());
 			if(!s.Equals(o2.ToString()))
 				Assert.AreEqual(s,o2.ToString(),"o2 is not equal to s");
 			AssertEqualsHashCode(o,o2);

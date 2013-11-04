@@ -610,8 +610,9 @@ namespace PeterO
 					// decrease the exponent by that part's length
 					exp-=(int)(fracEnd-fracStart);
 				}
-				if(exp==0){
-					// If exponent is 0, just return the integer
+				if(exp==0 || int32val==0){
+					// If exponent is 0, or mantissa is 0,
+					// just return the integer
 					return CBORObject.FromObject(int32val);
 				}
 				// Represent the CBOR object as a decimal fraction
@@ -644,6 +645,10 @@ namespace PeterO
 					// this is easy, just return the integer
 					return CBORObject.FromObject(intval);
 				}
+				if(intval.IsZero){
+					// Mantissa is 0, return 0 regardless of exponent
+					return CBORObject.FromObject(0);
+				}
 				BigInteger exp=(expStart<0) ? BigInteger.Zero : BigInteger.Parse(
 					str.Substring(expStart,expEnd-expStart),
 					NumberStyles.None,
@@ -658,17 +663,12 @@ namespace PeterO
 					// If exponent is 0, this is also easy,
 					// just return the integer
 					return CBORObject.FromObject(intval);
-				}
-				if(exp.CompareTo(UInt64MaxValue)>0 ||
+				} else if(exp.CompareTo(UInt64MaxValue)>0 ||
 				   exp.CompareTo(LowestMajorType1)<0){
 					// Exponent is lower than the lowest representable
 					// integer of major type 1, or higher than the
 					// highest representable integer of major type 0
-					if(intval.IsZero){
-						return CBORObject.FromObject(0);
-					} else {
-						return null;
-					}
+					return null;
 				}
 				// Represent the CBOR object as a decimal fraction
 				return CBORObject.FromObjectAndTag(new CBORObject[]{

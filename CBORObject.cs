@@ -516,7 +516,7 @@ namespace PeterO
 		/// <exception cref="System.ArgumentException">data is null or empty.</exception>
 		/// <exception cref="CBORException">There was an
 		/// error in reading or parsing the data.</exception>
-		public static CBORObject FromBytes(byte[] data){
+		public static CBORObject DecodeFromBytes(byte[] data){
 			if((data)==null)throw new ArgumentNullException("data");
 			if((data).Length==0)throw new ArgumentException("data is empty.");
 			int firstbyte=((int)(data[0]&(int)0xFF));
@@ -1668,7 +1668,7 @@ namespace PeterO
 		/// data item.
 		/// </summary>
 		/// <returns>A byte array in CBOR format.</returns>
-		public byte[] ToBytes(){
+		public byte[] EncodeToBytes(){
 			// For some types, a memory stream is a lot of
 			// overhead since the amount of memory the types
 			// use is fixed and small

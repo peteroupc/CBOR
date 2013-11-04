@@ -149,7 +149,7 @@ namespace Test
 			CBORObject cbor=CBORObject.FromJSONString("[]");
 			cbor.Add(CBORObject.FromObject(3));
 			cbor.Add(CBORObject.FromObject(4));
-			byte[] bytes=cbor.ToBytes();
+			byte[] bytes=cbor.EncodeToBytes();
 			Assert.AreEqual(
 				new byte[]{(byte)(0x80|2),3,4},bytes);
 		}
@@ -193,22 +193,22 @@ namespace Test
 			string longString=Repeat('x',200000);
 			CBORObject cbor2;
 			cbor=CBORObject.FromObject(longString);
-			cbor2=TestCommon.FromBytesTestAB(cbor.ToBytes());
+			cbor2=TestCommon.FromBytesTestAB(cbor.EncodeToBytes());
 			TestCommon.AssertEqualsHashCode(cbor,cbor2);
 			Assert.AreEqual(longString,cbor2.AsString());
 			longString=Repeat('\u00e0',200000);
 			cbor=CBORObject.FromObject(longString);
-			cbor2=TestCommon.FromBytesTestAB(cbor.ToBytes());
+			cbor2=TestCommon.FromBytesTestAB(cbor.EncodeToBytes());
 			TestCommon.AssertEqualsHashCode(cbor,cbor2);
 			Assert.AreEqual(longString,cbor2.AsString());
 			longString=Repeat('\u3000',200000);
 			cbor=CBORObject.FromObject(longString);
-			cbor2=TestCommon.FromBytesTestAB(cbor.ToBytes());
+			cbor2=TestCommon.FromBytesTestAB(cbor.EncodeToBytes());
 			TestCommon.AssertEqualsHashCode(cbor,cbor2);
 			Assert.AreEqual(longString,cbor2.AsString());
 			longString=Repeat("\ud800\udc00",200000);
 			cbor=CBORObject.FromObject(longString);
-			cbor2=TestCommon.FromBytesTestAB(cbor.ToBytes());
+			cbor2=TestCommon.FromBytesTestAB(cbor.EncodeToBytes());
 			TestCommon.AssertEqualsHashCode(cbor,cbor2);
 			Assert.AreEqual(longString,cbor2.AsString());
 		}
