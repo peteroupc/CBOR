@@ -43,6 +43,11 @@ namespace PeterO
 			this.mantissa=mantissa;
 		}
 
+		public DecimalFraction(BigInteger mantissa){
+			this.exponent=0;
+			this.mantissa=mantissa;
+		}
+
 		public BigInteger
 			RescaleByExponentDiff(BigInteger mantissa, long e1, long e2){
 			bool negative=(mantissa.Sign<0);

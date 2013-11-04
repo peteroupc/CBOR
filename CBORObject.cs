@@ -33,7 +33,7 @@ namespace PeterO
 	/// synchronization.
 	/// </para>
 	/// </summary>
-	public sealed partial class CBORObject
+	public sealed partial class CBORObject : IComparable<CBORObject>
 	{
 		private int ItemType {
 			get {
@@ -180,8 +180,30 @@ namespace PeterO
 		}
 		
 		
-		private int CompareTo(CBORObject other){
-			if(other==null)throw new ArgumentNullException("other");
+		/// <summary>
+		/// Compares two CBOR objects.
+		/// <para>In this implementation:</para>
+		/// <list type="">
+		/// <item>If either value is true, it is treated as the
+		/// number 1.</item>
+		/// <item>If either value is false, null, or the undefined
+		/// value, it is treated as the number 0.</item>
+		/// <item>If both objects are numbers, their mathematical
+		/// values are compared.</item>
+		/// <item>If both objects are arrays, each element
+		/// is compared.  If one array is shorter than the other
+		/// and the other array begins with that array (for the
+		/// purposes of comparison), the shorter array is considered
+		/// less than the longer array.</item>
+		/// <item>If both objects are maps, returns 0.</item>
+		/// </list>
+		/// </summary>
+		/// <param name="other">A value to compare with.</param>
+		/// <returns>Less than 0, if this value is less than the other object;
+		/// or 0, if both values are equal; or greater than 0, if this value
+		/// is less than the other object or if the other object is null.</returns>
+		public int CompareTo(CBORObject other){
+			if(other==null)return 1;
 			int typeA=this.ItemType;
 			int typeB=other.ItemType;
 			Object objA=this.ThisItem;
@@ -306,24 +328,26 @@ namespace PeterO
 		private int ByteArrayCompare(byte[] a, byte[] b){
 			if(a==null)return (b==null) ? 0 : -1;
 			if(b==null)return 1;
-			if(a.Length!=b.Length)
-				return (a.Length<b.Length) ? -1 : 1;
-			for(int i=0;i<a.Length;i++){
+			int c=Math.Min(a.Length,b.Length);
+			for(int i=0;i<c;i++){
 				if(a[i]!=b[i])
 					return (a[i]<b[i]) ? -1 : 1;
 			}
+			if(a.Length!=b.Length)
+				return (a.Length<b.Length) ? -1 : 1;
 			return 0;
 		}
 		
 		private int ListCompare(List<CBORObject> listA, List<CBORObject> listB){
 			if(listA==null)return (listB==null) ? 0 : -1;
 			if(listB==null)return 1;
-			if(listA.Count!=listB.Count)
-				return (listA.Count<listB.Count) ? -1 : 1;
-			for(int i=0;i<listA.Count;i++){
+			int c=Math.Min(listA.Count,listB.Count);
+			for(int i=0;i<c;i++){
 				int cmp=listA[i].CompareTo(listB[i]);
 				if(cmp!=0)return cmp;
 			}
+			if(listA.Count!=listB.Count)
+				return (listA.Count<listB.Count) ? -1 : 1;
 			return 0;
 		}
 		private int ByteArrayHashCode(byte[] a){
@@ -1471,6 +1495,9 @@ namespace PeterO
 		}
 		
 		
+		private static BigInteger LowestMajorType1=
+			BigInteger.Parse("-18446744073709551616",NumberStyles.AllowLeadingSign,
+			                 CultureInfo.InvariantCulture);
 		private static BigInteger UInt64MaxValue=
 			BigInteger.Parse("18446744073709551615",NumberStyles.AllowLeadingSign,
 			                 CultureInfo.InvariantCulture);
@@ -2745,8 +2772,7 @@ namespace PeterO
 			if(negative){
 				bi=BigInteger.MinusOne-(BigInteger)bi; // Convert to a negative
 			}
-			// TODO: Use tags from this object
-			return FromObject(bi);
+			return RewrapObject(o,FromObject(bi));
 		}
 		
 		private bool IsZero(){
@@ -2766,13 +2792,55 @@ namespace PeterO
 			}
 		}
 		
+		private bool CanFitInTypeZeroOrOne(){
+			switch(this.ItemType){
+				case CBORObjectType_Integer:
+					return true;
+					case CBORObjectType_BigInteger:{
+						BigInteger bigint=(BigInteger)this.ThisItem;
+						return bigint.CompareTo(LowestMajorType1)>=0 &&
+							bigint.CompareTo(UInt64MaxValue)<=0;
+					}
+					case CBORObjectType_Single:{
+						float value=(float)this.ThisItem;
+						return value>=-18446744073709551616.0f &&
+							value<=18446742974197923840.0f; // Highest float less or eq. to UInt64.MaxValue
+					}
+					case CBORObjectType_Double:{
+						double value=(double)this.ThisItem;
+						return value>=-18446744073709551616.0 &&
+							value<=18446744073709549568.0; // Highest double less or eq. to UInt64.MaxValue
+					}
+					case CBORObjectType_DecimalFraction:{
+						DecimalFraction value=(DecimalFraction)this.ThisItem;
+						return value.CompareTo(new DecimalFraction(LowestMajorType1))>=0 &&
+							value.CompareTo(new DecimalFraction(UInt64MaxValue))<=0;
+					}
+				default:
+					return false;
+			}
+		}
+		
+		// Wrap a new object in another one to retain its tags
+		private static CBORObject RewrapObject(CBORObject original, CBORObject newObject){
+			if(!original.IsTagged)
+				return newObject;
+			BigInteger[] tags=original.GetTags();
+			for(int i=tags.Length-1;i>=0;i++){
+				newObject=FromObjectAndTag(newObject,tags[i]);
+			}
+			return newObject;
+		}
+
+
 		private static CBORObject ConvertToDecimalFrac(CBORObject o){
 			if(o.ItemType!=CBORObjectType_Array)
 				throw new CBORException("Decimal fraction must be an array");
 			if(o.Count!=2) // Requires 2 items
 				throw new CBORException("Decimal fraction requires exactly 2 items");
 			IList<CBORObject> list=o.AsList();
-			// TODO: Compare exponent
+			if(!list[1].CanFitInTypeZeroOrOne())
+				throw new CBORException("Exponent is too big");
 			// check type of mantissa
 			if(list[1].ItemType!=CBORObjectType_Integer &&
 			   list[1].ItemType!=CBORObjectType_BigInteger)
@@ -2781,11 +2849,10 @@ namespace PeterO
 				// Exponent is 0, so return mantissa instead
 				return list[1];
 			}
-			// TODO: Use tags from this object
 			// TODO: Modify DecimalFraction to accept bigger exponents
-			return new CBORObject(
+			return RewrapObject(o,new CBORObject(
 				CBORObjectType_DecimalFraction,
-				new DecimalFraction(list[0].AsInt64(),list[1].AsBigInteger()));
+				new DecimalFraction(list[0].AsInt64(),list[1].AsBigInteger())));
 		}
 		
 		private static bool CheckMajorTypeIndex(int type, int index, int[] validTypeFlags){
@@ -2825,6 +2892,9 @@ namespace PeterO
 					                        Convert.ToString((int)allowOnlyType,CultureInfo.InvariantCulture)+
 					                        ", instead got type "+
 					                        Convert.ToString((int)type,CultureInfo.InvariantCulture));
+				}
+				if(additional==31){
+					throw new CBORException("Indefinite-length data not allowed here");
 				}
 				if(additional>=28){
 					throw new CBORException("Unexpected data encountered");
