@@ -44,7 +44,6 @@ import java.math.*;
 				return curobject.item_;
 			}
 
-
 		int itemtype_;
 		Object item_;
 		int tagLow;
@@ -59,7 +58,8 @@ import java.math.*;
 		private static final int CBORObjectType_SimpleValue=6;
 		private static final int CBORObjectType_Single=7;
 		private static final int CBORObjectType_Double=8;
-		private static final int CBORObjectType_Tagged=9;
+		private static final int CBORObjectType_DecimalFraction=9;
+		private static final int CBORObjectType_Tagged=10;
 		private static final BigInteger Int64MaxValue=BigInteger.valueOf(Long.MAX_VALUE);
 		private static final BigInteger Int64MinValue=BigInteger.valueOf(Long.MIN_VALUE);
 		/**
@@ -86,6 +86,9 @@ import java.math.*;
 			this.tagLow=tagLow;
 			this.tagHigh=tagHigh;
 		}
+		
+		
+		
 		private CBORObject(int type, Object item){
 			
 			this.itemtype_=type;
@@ -101,6 +104,7 @@ import java.math.*;
 					case CBORObjectType_BigInteger:
 					case CBORObjectType_Single:
 					case CBORObjectType_Double:
+					case CBORObjectType_DecimalFraction:
 						return CBORType.Number;
 					case CBORObjectType_SimpleValue:
 						if(((Integer)this.getThisItem()).intValue()==21 || ((Integer)this.getThisItem()).intValue()==20){
@@ -108,9 +112,6 @@ import java.math.*;
 						}
 						return CBORType.SimpleValue;
 					case CBORObjectType_Array:
-						if(this.size()==2 && this.HasTag(4)){
-							return CBORType.Number;
-						}
 						return CBORType.Array;
 					case CBORObjectType_Map:
 						return CBORType.Map;
@@ -148,6 +149,119 @@ import java.math.*;
 				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue()==23;
 			}
 		
+		
+		@SuppressWarnings("unchecked")
+private int CompareTo(CBORObject other) {
+			if(other==null)throw new NullPointerException("other");
+			int typeA=this.getItemType();
+			int typeB=other.getItemType();
+			Object objA=this.getThisItem();
+			Object objB=other.getThisItem();
+			if(typeA==CBORObjectType_SimpleValue){
+				if(((Integer)objA).intValue()==20 || ((Integer)objA).intValue()==22 || ((Integer)objA).intValue()==23){
+					// Treat false, null, and undefined
+					// as the number 0
+					objA=(long)0;
+					typeA=CBORObjectType_Integer;
+				}
+				else if(((Integer)objA).intValue()==21){
+					// Treat true as the number 1
+					objA=(long)1;
+					typeA=CBORObjectType_Integer;
+				}
+			}
+			if(typeB==CBORObjectType_SimpleValue){
+				if(((Integer)objB).intValue()==20 || ((Integer)objB).intValue()==22 || ((Integer)objB).intValue()==23){
+					// Treat false, null, and undefined
+					// as the number 0
+					objA=(long)0;
+					typeA=CBORObjectType_Integer;
+				}
+				else if(((Integer)objB).intValue()==21){
+					// Treat true as the number 1
+					objA=(long)1;
+					typeA=CBORObjectType_Integer;
+				}
+			}
+			if(typeA==typeB){
+				switch(typeA){
+						case CBORObjectType_Integer:{
+							long a=((Long)this.getThisItem()).longValue();
+							long b=(long)other.getThisItem();
+							if(a==b)return 0;
+							return (a<b) ? -1 : 1;
+						}
+						case CBORObjectType_Single:{
+							float a=((Float)this.getThisItem()).floatValue();
+							float b=(float)other.getThisItem();
+							if(Float.isNaN(a)){
+								return (Float.isNaN(b)) ? 1 : 0;
+							}
+							if(Float.isNaN(b)){
+								return -1;
+							}
+							if(a==b)return 0;
+							return (a<b) ? -1 : 1;
+						}
+						case CBORObjectType_BigInteger:{
+							BigInteger bigintA=(BigInteger)this.getThisItem();
+							BigInteger bigintB=BigInteger.valueOf(other.getThisItem)();
+							return bigintA.compareTo(bigintB);
+						}
+						case CBORObjectType_Double:{
+							double a=((Double)this.getThisItem()).doubleValue();
+							double b=(double)other.getThisItem();
+							if(Double.isNaN(a)){
+								return (Double.isNaN(b)) ? 1 : 0;
+							}
+							if(Double.isNaN(b)){
+								return -1;
+							}
+							if(a==b)return 0;
+							return (a<b) ? -1 : 1;
+						}
+						case CBORObjectType_DecimalFraction:{
+							return ((DecimalFraction)objA).compareTo(
+								((DecimalFraction)objB));
+						}
+						case CBORObjectType_ByteString:{
+							return ByteArrayCompare((byte[])objA,(byte[])objB);
+						}
+						case CBORObjectType_TextString:{
+							throw new UnsupportedOperationException();
+						}
+						case CBORObjectType_Array:{
+							return ListCompare((ArrayList<CBORObject>)objA,
+							                   (ArrayList<CBORObject>)objB);
+						}
+						case CBORObjectType_Map:{
+							return 0;
+						}
+						case CBORObjectType_SimpleValue:{
+							int valueA=((Integer)objA).intValue();
+							int valueB=((Integer)objB).intValue();
+							if(valueA==valueB)return 0;
+							return (valueA<valueB) ? -1 : 1;
+						}
+					default:
+						throw new IllegalArgumentException("Unexpected data type");
+				}
+			} else {
+				int combo=(typeA<<4)|typeB;
+				switch(combo){
+						case (CBORObjectType_Integer<<4)|CBORObjectType_BigInteger:{
+							BigInteger bigint=BigInteger.valueOf(((Long)objA).longValue());
+							return bigint.compareTo((BigInteger)objB);
+						}
+						case (CBORObjectType_BigInteger<<4)|CBORObjectType_Integer:{
+							BigInteger bigint=BigInteger.valueOf(((Long)objB).longValue());
+							return (BigInteger.valueOf(((Long)objA).longValue())).compareTo(bigint);
+						}
+					default:
+						throw new UnsupportedOperationException();
+				}
+			}
+		}
 
 		
 		private boolean ByteArrayEquals(byte[] a, byte[] b) {
@@ -160,6 +274,29 @@ import java.math.*;
 			return true;
 		}
 		
+		private int ByteArrayCompare(byte[] a, byte[] b) {
+			if(a==null)return (b==null) ? 0 : -1;
+			if(b==null)return 1;
+			if(a.length!=b.length)
+				return (a.length<b.length) ? -1 : 1;
+			for(int i=0;i<a.length;i++){
+				if(a[i]!=b[i])
+					return (a[i]<b[i]) ? -1 : 1;
+			}
+			return 0;
+		}
+		
+		private int ListCompare(ArrayList<CBORObject> listA, ArrayList<CBORObject> listB) {
+			if(listA==null)return (listB==null) ? 0 : -1;
+			if(listB==null)return 1;
+			if(listA.size()!=listB.size())
+				return (listA.size()<listB.size()) ? -1 : 1;
+			for(int i=0;i<listA.size();i++){
+				int cmp=listA.get(i).compareTo(listB.get(i));
+				if(cmp!=0)return cmp;
+			}
+			return 0;
+		}
 		private int ByteArrayHashCode(byte[] a) {
 			if(a==null)return 0;
 			int ret=19;
@@ -484,7 +621,7 @@ public boolean equals(Object obj) {
 		 * @throws CBORException There was an error in reading or parsing the
 		 * data.
 		 */
-		public static CBORObject FromBytes(byte[] data) {
+		public static CBORObject DecodeFromBytes(byte[] data) {
 			if((data)==null)throw new NullPointerException("data");
 			if((data).length==0)throw new IllegalArgumentException("data is empty.");
 			int firstbyte=((int)(data[0]&(int)0xFF));
@@ -651,8 +788,6 @@ private List<CBORObject> AsList() {
 public void set(int index, CBORObject value) {
 				if(this.getItemType()== CBORObjectType_Array){
 					if((value)==null)throw new NullPointerException("value");
-					if(this.HasTag(4))
-						throw new IllegalStateException("Read-only array");
 					List<CBORObject> list=AsList();
 					list.set(index,value);
 				} else {
@@ -799,8 +934,6 @@ public void set(String key, CBORObject value) {
 		public void Add(CBORObject obj) {
 			if((obj)==null)throw new NullPointerException("obj");
 			if(this.getItemType()== CBORObjectType_Array){
-				if(this.HasTag(4))
-					throw new IllegalStateException("Read-only array");
 				List<CBORObject> list=AsList();
 				list.add(obj);
 			} else {
@@ -830,8 +963,6 @@ public void set(String key, CBORObject value) {
 				}
 				return false;
 			} else if(this.getItemType()== CBORObjectType_Array){
-				if(this.HasTag(4))
-					throw new IllegalStateException("Read-only array");
 				List<CBORObject> list=AsList();
 				return list.remove(obj);
 			} else {
@@ -854,13 +985,12 @@ public void set(String key, CBORObject value) {
 				return ((Float)this.getThisItem()).doubleValue();
 			else if(this.getItemType()== CBORObjectType_Double)
 				return ((Double)this.getThisItem()).doubleValue();
-			else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&
-			        this.size()==2){
-				StringBuilder sb=new StringBuilder();
-				sb.append(this.get(1).IntegerToString());
-				sb.append("e");
-				sb.append(this.get(0).IntegerToString());
-				return Double.parseDouble(sb.toString());
+			else if(this.getItemType()==CBORObjectType_DecimalFraction){
+				return Double.Parse(((DecimalFraction)this.getThisItem()).ToPlainString(),
+				                    NumberStyles.AllowLeadingSign|
+				                    NumberStyles.AllowDecimalPoint|
+				                    NumberStyles.AllowExponent,
+				                    CultureInfo.InvariantCulture);
 			}
 			else
 				throw new IllegalStateException("Not a number type");
@@ -882,22 +1012,20 @@ public void set(String key, CBORObject value) {
 				return ((Float)this.getThisItem()).floatValue();
 			else if(this.getItemType()== CBORObjectType_Double)
 				return ((Double)this.getThisItem()).floatValue();
-			else if(this.HasTag(4) &&
-			        this.getItemType()== CBORObjectType_Array &&
-			        this.size()==2){
-				StringBuilder sb=new StringBuilder();
-				sb.append(this.get(1).IntegerToString());
-				sb.append("e");
-				sb.append(this.get(0).IntegerToString());
-				return Float.parseFloat(sb.toString());
+			else if(this.getItemType()== CBORObjectType_DecimalFraction){
+				return Single.Parse(((DecimalFraction)this.getThisItem()).ToPlainString(),
+				                    NumberStyles.AllowLeadingSign|
+				                    NumberStyles.AllowDecimalPoint|
+				                    NumberStyles.AllowExponent,
+				                    CultureInfo.InvariantCulture);
 			}
 			else
 				throw new IllegalStateException("Not a number type");
 		}
 
 		/**
-		 * Converts this object to an arbitrary-length integer. Floating point
-		 * values are truncated to an integer.
+		 * Converts this object to an arbitrary-precision integer. Floating
+		 * point values are truncated to an integer.
 		 * @return The closest big integer to this object.
 		 * @throws java.lang.IllegalStateException This object's type is
 		 * not a number type.
@@ -911,13 +1039,8 @@ public void set(String key, CBORObject value) {
 				return new BigDecimal(((Float)this.getThisItem()).floatValue()).toBigInteger();
 			else if(this.getItemType()== CBORObjectType_Double)
 				return new BigDecimal(((Double)this.getThisItem()).doubleValue()).toBigInteger();
-			else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&
-			        this.size()==2){
-				StringBuilder sb=new StringBuilder();
-				sb.append(this.get(1).IntegerToString());
-				sb.append("e");
-				sb.append(this.get(0).IntegerToString());
-				return ParseBigIntegerWithExponent(sb.toString());
+			else if(this.getItemType()== CBORObjectType_DecimalFraction){
+				return ParseBigIntegerWithExponent(((DecimalFraction)this.getThisItem()).ToPlainString());
 			}
 			else
 				throw new IllegalStateException("Not a number type");
@@ -1010,13 +1133,8 @@ public void set(String key, CBORObject value) {
 				   ((Double)this.getThisItem()).doubleValue()>Long.MAX_VALUE || ((Double)this.getThisItem()).doubleValue()<Long.MIN_VALUE)
 					throw new ArithmeticException();
 				return ((Double)this.getThisItem()).longValue();
-			} else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&
-			          this.size()==2){
-				StringBuilder sb=new StringBuilder();
-				sb.append(this.get(1).IntegerToString());
-				sb.append("e");
-				sb.append(this.get(0).IntegerToString());
-				BigInteger bi=ParseBigIntegerWithExponent(sb.toString());
+			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
+				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.getThisItem()).ToPlainString());
 				if(bi.compareTo(Int64MaxValue)>0 ||
 				   bi.compareTo(Int64MinValue)<0)
 					throw new ArithmeticException();
@@ -1055,13 +1173,8 @@ public void set(String key, CBORObject value) {
 				   ((Double)thisItem).doubleValue()>Integer.MAX_VALUE || ((Double)thisItem).doubleValue()<Integer.MIN_VALUE)
 					throw new ArithmeticException();
 				return ((Double)thisItem).intValue();
-			} else if(this.HasTag(4) && this.getItemType()== CBORObjectType_Array &&
-			          this.size()==2){
-				StringBuilder sb=new StringBuilder();
-				sb.append(this.get(1).IntegerToString());
-				sb.append("e");
-				sb.append(this.get(0).IntegerToString());
-				BigInteger bi=ParseBigIntegerWithExponent(sb.toString());
+			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
+				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.getThisItem()).ToPlainString());
 				if(bi.compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0 ||
 				   bi.compareTo(BigInteger.valueOf(Integer.MIN_VALUE))<0)
 					throw new ArithmeticException();
@@ -1398,6 +1511,16 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 				Write(this.AsString(),s);
 			} else if(this.getItemType()== CBORObjectType_Array){
 				WriteObjectArray(AsList(),s);
+			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
+				DecimalFraction dec=(DecimalFraction)this.getThisItem();
+				if(dec.getExponent()==0){
+					Write(dec.getMantissa(),s);
+				} else {
+					s.write(0xC4); // tag 4
+					s.write(0x82); // array, length 2
+					Write(dec.getExponent(),s);
+					Write(dec.getMantissa(),s);
+				}
 			} else if(this.getItemType()== CBORObjectType_Map){
 				WriteObjectMap(AsMap(),s);
 			} else if(this.getItemType()== CBORObjectType_SimpleValue){
@@ -1573,7 +1696,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 		 * Gets the binary representation of this data item.
 		 * @return A byte array in CBOR format.
 		 */
-		public byte[] ToBytes() {
+		public byte[] EncodeToBytes() {
 			// For some types, a memory stream is a lot of
 			// overhead since the amount of memory the types
 			// use is fixed and small
@@ -1843,21 +1966,19 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				return sb.toString();
 			} else if(this.getItemType()== CBORObjectType_TextString){
 				return StringToJSONString(this.AsString());
+			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
+				return ((DecimalFraction)this.getThisItem()).ToPlainString();
 			} else if(this.getItemType()== CBORObjectType_Array){
-				if(this.HasTag(4) && this.size()==2){
-					return ExponentAndMantissaToString(this.get(0),this.get(1));
-				} else {
-					StringBuilder sb=new StringBuilder();
-					boolean first=true;
-					sb.append("[");
-					for(CBORObject i : AsList()){
-						if(!first)sb.append(",");
-						sb.append(i.ToJSONString());
-						first=false;
-					}
-					sb.append("]");
-					return sb.toString();
+				StringBuilder sb=new StringBuilder();
+				boolean first=true;
+				sb.append("[");
+				for(CBORObject i : AsList()){
+					if(!first)sb.append(",");
+					sb.append(i.ToJSONString());
+					first=false;
 				}
+				sb.append("]");
+				return sb.toString();
 			} else if(this.getItemType()== CBORObjectType_Map){
 				HashMap<String,CBORObject> dict=new HashMap<String,CBORObject>();
 				StringBuilder sb=new StringBuilder();
@@ -2245,6 +2366,12 @@ public static CBORObject FromObject(Object obj) {
 			if(bigintTag.compareTo(BigInt65536)<0){
 				// Low-numbered, commonly used tags
 				return new CBORObject(c,bigintTag.intValue(),0);
+			} else if(bigintTag.compareTo(BigInteger.valueOf(2))==0){
+				return ConvertToBigNum(c,false);
+			} else if(bigintTag.compareTo(BigInteger.valueOf(3))==0){
+				return ConvertToBigNum(c,true);
+			} else if(bigintTag.compareTo(BigInteger.valueOf(4))==0){
+				return ConvertToDecimalFrac(c);
 			} else {
 				long tagLow=0;
 				long tagHigh=0;
@@ -2274,6 +2401,12 @@ public static CBORObject FromObject(Object obj) {
 				"tag not greater or equal to 0 ("+
 				Integer.toString((int)intTag)+")");
 			CBORObject c=FromObject(o);
+			if(intTag==2 || intTag==3){
+				return ConvertToBigNum(c,intTag==3);
+			}
+			if(intTag==4){
+				return ConvertToDecimalFrac(c);
+			}
 			return new CBORObject(c,intTag,0);
 		}
 		
@@ -2315,14 +2448,14 @@ public static CBORObject FromObject(Object obj) {
 					WritePositiveInt64(6,value,s);
 				} else {
 					byte[] arrayToWrite=new byte[]{(byte)(0xDB),
-							(byte)((high>>24)&0xFF),
-							(byte)((high>>16)&0xFF),
-							(byte)((high>>8)&0xFF),
-							(byte)(high&0xFF),
-							(byte)((low>>24)&0xFF),
-							(byte)((low>>16)&0xFF),
-							(byte)((low>>8)&0xFF),
-							(byte)(low&0xFF)};
+						(byte)((high>>24)&0xFF),
+						(byte)((high>>16)&0xFF),
+						(byte)((high>>8)&0xFF),
+						(byte)(high&0xFF),
+						(byte)((low>>24)&0xFF),
+						(byte)((low>>16)&0xFF),
+						(byte)((low>>8)&0xFF),
+						(byte)(low&0xFF)};
 					s.write(arrayToWrite,0,9);
 				}
 				curobject=((CBORObject)(curobject.item_));
@@ -2447,10 +2580,9 @@ public static CBORObject FromObject(Object obj) {
 					sb.append(this.AsString());
 					sb.append('\"');
 				}
+			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
+				return ToJSONString();
 			} else if(this.getItemType()== CBORObjectType_Array){
-				if(this.HasTag(4)){
-					return ToJSONString();
-				}
 				if(sb==null)sb=new StringBuilder();
 				boolean first=true;
 				sb.append("[");
@@ -2505,6 +2637,62 @@ public static CBORObject FromObject(Object obj) {
 			}
 		}
 
+		private static CBORObject ConvertToBigNum(CBORObject o, boolean negative) {
+			if(o.getItemType()!=CBORObjectType_ByteString)
+				throw new CBORException("Byte array expected");
+			byte[] data=(byte[])o.getThisItem();
+			BigInteger bi=BigInteger.ZERO;
+			for(int i=0;i<data.length;i++){
+				bi=bi.shiftLeft(8);
+				int x=((int)data[i])&0xFF;
+				bi=bi.or(BigInteger.valueOf(x));
+			}
+			if(negative){
+				bi=BigInteger.valueOf(-1).subtract(bi); // Convert to a negative
+			}
+			// TODO: Use tags from this Object
+			return FromObject(bi);
+		}
+		
+		private boolean IsZero() {
+			switch(this.getItemType()){
+				case CBORObjectType_Integer:
+					return (((Long)this.getThisItem()).longValue())==0;
+				case CBORObjectType_BigInteger:
+					return ((BigInteger)this.getThisItem()).equals(BigInteger.ZERO);
+				case CBORObjectType_Single:
+					return (((Float)this.getThisItem()).floatValue())==0;
+				case CBORObjectType_Double:
+					return (((Double)this.getThisItem()).doubleValue())==0;
+				case CBORObjectType_DecimalFraction:
+					return ((DecimalFraction)this.getThisItem()).equals(BigInteger.ZERO);
+				default:
+					return false;
+			}
+		}
+		
+		private static CBORObject ConvertToDecimalFrac(CBORObject o) {
+			if(o.getItemType()!=CBORObjectType_Array)
+				throw new CBORException("Decimal fraction must be an array");
+			if(o.size()!=2) // Requires 2 items
+				throw new CBORException("Decimal fraction requires exactly 2 items");
+			List<CBORObject> list=o.AsList();
+			// TODO: Compare exponent
+			// check type of mantissa
+			if(list.get(1).getItemType()!=CBORObjectType_Integer &&
+			   list.get(1).getItemType()!=CBORObjectType_BigInteger)
+				throw new CBORException("Decimal fraction requires mantissa to be an integer or big integer");
+			if(list.get(0).equals(BigInteger.ZERO)() && !o.isTagged()){
+				// Exponent is 0, so return mantissa instead
+				return list.get(1);
+			}
+			// TODO: Use tags from this Object
+			// TODO: Modify DecimalFraction to accept bigger exponents
+			return new CBORObject(
+				CBORObjectType_DecimalFraction,
+				new DecimalFraction(list.get(0).AsInt64(),list.get(1).AsBigInteger()));
+		}
+		
 		private static boolean CheckMajorTypeIndex(int type, int index, int[] validTypeFlags) {
 			if(validTypeFlags==null || index<0 || index>=validTypeFlags.length)
 				return false;
@@ -2787,17 +2975,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 						// Requires a byte String
 						int[] subFlags=new int[]{(1<<2)};
 						o=Read(s,depth+1,false,-1,subFlags,0);
-						data=(byte[])o.getThisItem();
-						BigInteger bi=BigInteger.ZERO;
-						for(int i=0;i<data.length;i++){
-							bi=bi.shiftLeft(8);
-							int x=((int)data[i])&0xFF;
-							bi=bi.or(BigInteger.valueOf(x));
-						}
-						if(uadditional==3){
-							bi=BigInteger.valueOf(-1).subtract(bi); // Convert to a negative
-						}
-						return FromObject(bi);
+						return ConvertToBigNum(o,uadditional==3);
 					} else if(uadditional==4){
 						// Requires an array with two elements of
 						// a valid type
@@ -2807,13 +2985,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 							(1<<0)|(1<<1)|(1<<6) // mantissa
 						};
 						o=Read(s,depth+1,false,-1,subFlags,0);
-						if(o.size()!=2) // Requires 2 items
-							throw new CBORException("Decimal fraction requires exactly 2 items");
-						// check type of mantissa
-						List<CBORObject> list=o.AsList();
-						if(list.get(1).getItemType()!=CBORObjectType_Integer &&
-						   list.get(1).getItemType()!=CBORObjectType_BigInteger)
-							throw new CBORException("Decimal fraction requires mantissa to be an integer or big integer");
+						return ConvertToDecimalFrac(o);
 					} else {
 						o=Read(s,depth+1,false,-1,null,0);
 					}
