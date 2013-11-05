@@ -448,6 +448,18 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 		}
 		
 		/**
+		 * Parses a number whose format follows the JSON specification See #ParseJSONNumber(str,
+		 * integersOnly, parseOnly) for more information.
+		 * @param str A string to parse.
+		 * @return A CBOR object that represents the parsed number, or null if
+		 * the exponent is less than -(2^64) or greater than 2^64-1 or if the entire
+		 * string does not represent a valid number.
+		 */
+		public static CBORObject ParseJSONNumber(String str) {
+			return ParseJSONNumber(str,false,false);
+		}
+		
+		/**
 		 * Parses a number whose format follows the JSON specification (RFC
 		 * 4627). Roughly speaking, a valid number consists of an optional minus
 		 * sign, one or more digits (starting with 1 to 9 unless the only digit
@@ -542,7 +554,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 						return null;
 					c=str.charAt(index);
 					if(c=='-'){
-						negative=true;
+						negExp=true;
 						index++;
 					}
 					if(c=='+')index++;
@@ -613,6 +625,13 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 				// Bigger integer
 				String strsub=(numberStart==0 && numberEnd==str.length()) ? str :
 					str.substring(numberStart,(numberStart)+(numberEnd-numberStart));
+				if(str.length()==19 && strsub.charAt(0)>='0' && strsub.charAt(0)<'9'){
+					// Can fit in a 64-bit long (cases with 18 digits
+					// or less are already handled above)
+					long value=Long.parseLong(strsub);
+					if(negative)value=-value;
+					return CBORObject.FromObject(value);
+				}
 				BigInteger bigintValue=new BigInteger(strsub);
 				if(negative)bigintValue=(bigintValue).negate();
 				return CBORObject.FromObject(bigintValue);
@@ -647,7 +666,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 					// just return the integer
 					return CBORObject.FromObject(intval);
 				} else if(exp.compareTo(UInt64MaxValue)>0 ||
-				   exp.compareTo(LowestMajorType1)<0){
+				          exp.compareTo(LowestMajorType1)<0){
 					// Exponent is lower than the lowest representable
 					// integer of major type 1, or higher than the
 					// highest representable integer of major type 0
@@ -655,7 +674,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 				}
 				// Represent the CBOR Object as a decimal fraction
 				return CBORObject.FromObjectAndTag(new CBORObject[]{
-				                                   	CBORObject.FromObject(exp),CBORObject.FromObject(intval)},4);
+				                                   	CBORObject.FromObject(exp),
+				                                   	CBORObject.FromObject(intval)},4);
 			}
 		}
 	}

@@ -1,17 +1,21 @@
 ﻿
 using System;
+using System.Text;
 using System.Numerics;
 
 namespace PeterO
-{	
-	class DecimalFraction
+{
+	/// <summary>
+	/// Represents an arbitrary-precision decimal floating-point number.
+	/// </summary>
+	public class DecimalFraction : IComparable<DecimalFraction>
 	{
-		long exponent;
+		BigInteger exponent;
+		BigInteger mantissa;
 		
-		public long Exponent {
+		public BigInteger Exponent {
 			get { return exponent; }
 		}
-		BigInteger mantissa;
 		
 		public BigInteger Mantissa {
 			get { return mantissa; }
@@ -23,7 +27,8 @@ namespace PeterO
 			DecimalFraction other = obj as DecimalFraction;
 			if (other == null)
 				return false;
-			return this.exponent == other.exponent && this.mantissa == other.mantissa;
+			return this.exponent.Equals(other.exponent) && 
+				this.mantissa.Equals(other.mantissa);
 		}
 		
 		public override int GetHashCode()
@@ -38,29 +43,41 @@ namespace PeterO
 		#endregion
 
 		
-		public DecimalFraction(long exponent, BigInteger mantissa){
+		public DecimalFraction(BigInteger exponent, BigInteger mantissa){
 			this.exponent=exponent;
 			this.mantissa=mantissa;
 		}
 
-		public DecimalFraction(BigInteger mantissa){
-			this.exponent=0;
+		public DecimalFraction(long exponentLong, BigInteger mantissa){
+			this.exponent=(BigInteger)exponentLong;
 			this.mantissa=mantissa;
 		}
 
+		public DecimalFraction(BigInteger mantissa){
+			this.exponent=BigInteger.Zero;
+			this.mantissa=mantissa;
+		}
+
+		public DecimalFraction(long mantissaLong){
+			this.exponent=BigInteger.Zero;
+			this.mantissa=(BigInteger)mantissaLong;
+		}
+
 		public BigInteger
-			RescaleByExponentDiff(BigInteger mantissa, long e1, long e2){
+			RescaleByExponentDiff(BigInteger mantissa,
+			                      BigInteger e1,
+			                      BigInteger e2){
 			bool negative=(mantissa.Sign<0);
 			if(negative)mantissa=-mantissa;
-			if(e1>e2){
-				while(e1>e2){
-					mantissa*=10;
-					e1--;
+			if(e1.CompareTo(e2)>0){
+				while(e1.CompareTo(e2)>0){
+					mantissa*=(BigInteger)10;
+					e1=e1-BigInteger.One;
 				}
 			} else {
-				while(e1<e2){
-					mantissa*=10;
-					e1++;
+				while(e1.CompareTo(e2)<0){
+					mantissa*=(BigInteger)10;
+					e1=e1+BigInteger.One;
 				}
 			}
 			if(negative)mantissa=-mantissa;
@@ -68,10 +85,11 @@ namespace PeterO
 		}
 		
 		public DecimalFraction Add(DecimalFraction decfrac){
-			if(exponent==decfrac.exponent){
+			int expcmp=exponent.CompareTo((BigInteger)decfrac.exponent);
+			if(expcmp==0){
 				return new DecimalFraction(
 					exponent,mantissa+(BigInteger)decfrac.mantissa);
-			} else if(exponent>decfrac.exponent){
+			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
@@ -85,10 +103,11 @@ namespace PeterO
 		}
 
 		public DecimalFraction Subtract(DecimalFraction decfrac){
-			if(exponent==decfrac.exponent){
+			int expcmp=exponent.CompareTo((BigInteger)decfrac.exponent);
+			if(expcmp==0){
 				return new DecimalFraction(
 					exponent,mantissa-(BigInteger)decfrac.mantissa);
-			} else if(exponent>decfrac.exponent){
+			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
@@ -102,8 +121,9 @@ namespace PeterO
 		}
 		
 		public DecimalFraction Multiply(DecimalFraction decfrac){
-			long newexp=checked(this.exponent+decfrac.exponent);
-			return new DecimalFraction(newexp,mantissa*decfrac.mantissa);
+			BigInteger newexp=(this.exponent+(BigInteger)decfrac.exponent);
+			return new DecimalFraction(
+				newexp,mantissa*(BigInteger)decfrac.mantissa);
 		}
 
 		public int Sign {
@@ -126,99 +146,172 @@ namespace PeterO
 			return decfrac.Subtract(this).Sign;
 		}
 		
+		private bool InsertString(StringBuilder builder, BigInteger index, char c){
+			if(index.CompareTo((BigInteger)Int32.MaxValue)>0){
+				throw new NotSupportedException();
+			}
+			int iindex=(int)(BigInteger)index;
+			builder.Insert(iindex,c);
+			return true;
+		}
+
+		private bool InsertString(StringBuilder builder, BigInteger index, char c, BigInteger count){
+			if(count.CompareTo((BigInteger)Int32.MaxValue)>0){
+				throw new NotSupportedException();
+			}
+			if(index.CompareTo((BigInteger)Int32.MaxValue)>0){
+				throw new NotSupportedException();
+			}
+			int icount=(int)(BigInteger)count;
+			int iindex=(int)(BigInteger)index;
+			for(int i=icount-1;i>=0;i--){
+				builder.Insert(iindex,c);
+			}
+			return true;
+		}
+
+		private bool AppendString(StringBuilder builder, char c, BigInteger count){
+			if(count.CompareTo((BigInteger)Int32.MaxValue)>0){
+				throw new NotSupportedException();
+			}
+			int icount=(int)(BigInteger)count;
+			for(int i=icount-1;i>=0;i--){
+				builder.Append(c);
+			}
+			return true;
+		}
+
+		private bool InsertString(StringBuilder builder, BigInteger index, string c){
+			if(index.CompareTo((BigInteger)Int32.MaxValue)>0){
+				throw new NotSupportedException();
+			}
+			int iindex=(int)(BigInteger)index;
+			builder.Insert(iindex,c);
+			return true;
+		}
+		
 		private string ToStringInternal(int mode)
 		{
-			// Using Java's rules for converting BigDecimal values to a string
-			System.Text.StringBuilder sb=new System.Text.StringBuilder();
-			sb.Append(this.mantissa.ToString(System.Globalization.CultureInfo.InvariantCulture));
-			long adjustedExponent=this.exponent;
-			long scale=-this.exponent;
-			long sbLength=sb.Length;
-			long negaPos=0;
-			if(sb[0]=='-'){
-				sbLength--;
-				negaPos=1;
+			// Using Java's rules for converting DecimalFraction
+			// values to a string
+			System.Text.StringBuilder builder=new System.Text.StringBuilder();
+			builder.Append(this.mantissa.ToString(
+				System.Globalization.CultureInfo.InvariantCulture));
+			BigInteger adjustedExponent=this.exponent;
+			BigInteger scale=-(BigInteger)this.exponent;
+			BigInteger sbLength=(BigInteger)(builder.Length);
+			BigInteger negaPos=BigInteger.Zero;
+			if(builder[0]=='-'){
+				sbLength=sbLength-BigInteger.One;
+				negaPos=BigInteger.One;
 			}
 			bool iszero=(this.mantissa.IsZero);
 			if(mode==2 && iszero && scale<0){
 				// special case for zero in plain
-				return sb.ToString();
+				return builder.ToString();
 			}
-			adjustedExponent+=sbLength-1;
-			int decimalPointAdjust=1;
-			int threshold=-6;
+			adjustedExponent=adjustedExponent+(BigInteger)sbLength;
+			adjustedExponent=adjustedExponent-BigInteger.One;
+			BigInteger decimalPointAdjust=BigInteger.One;
+			BigInteger threshold=(BigInteger)(-6);
 			if(mode==1){ // engineering string adjustments
-				long newExponent=adjustedExponent;
-				if(iszero && (adjustedExponent<-6 || scale<0)){
-					if((Math.Abs(adjustedExponent)%3)==1){
-						decimalPointAdjust+=(adjustedExponent<0) ? 1 : 2;
-						newExponent-=(adjustedExponent<0) ? -1 : -2;
-					} else if((Math.Abs(adjustedExponent)%3)==2){
-						decimalPointAdjust+=(adjustedExponent<0) ? 2 : 1;
-						newExponent-=(adjustedExponent<0) ? -2 : -1;
+				BigInteger newExponent=adjustedExponent;
+				bool adjExponentNegative=(adjustedExponent.Sign<0);
+				BigInteger phase=BigInteger.Abs(adjustedExponent)%(BigInteger)3;
+				int intphase=(int)(BigInteger)phase;
+				if(iszero && (adjustedExponent.CompareTo(threshold)<0 ||
+				              scale.Sign<0)){
+					if(intphase==1){
+						if(adjExponentNegative){
+							decimalPointAdjust+=BigInteger.One;
+							newExponent+=BigInteger.One;
+						} else {
+							decimalPointAdjust+=(BigInteger)2;
+							newExponent+=(BigInteger)2;
+						}
+					} else if(intphase==2){
+						if(!adjExponentNegative){
+							decimalPointAdjust+=BigInteger.One;
+							newExponent+=BigInteger.One;
+						} else {
+							decimalPointAdjust+=(BigInteger)2;
+							newExponent+=(BigInteger)2;
+						}
 					}
-					threshold+=1;
-					
+					threshold+=BigInteger.One;
 				} else {
-					if((Math.Abs(adjustedExponent)%3)==1){
-						decimalPointAdjust+=(adjustedExponent<0) ? 2 : 1;
-						newExponent-=(adjustedExponent<0) ? 2 : 1;
-					} else if((Math.Abs(adjustedExponent)%3)==2){
-						decimalPointAdjust+=(adjustedExponent<0) ? 1 : 2;
-						newExponent-=(adjustedExponent<0) ? 1 : 2;
+					if(intphase==1){
+						if(!adjExponentNegative){
+							decimalPointAdjust+=BigInteger.One;
+							newExponent-=BigInteger.One;
+						} else {
+							decimalPointAdjust+=(BigInteger)2;
+							newExponent-=(BigInteger)2;
+						}
+					} else if(intphase==2){
+						if(adjExponentNegative){
+							decimalPointAdjust+=BigInteger.One;
+							newExponent-=BigInteger.One;
+						} else {
+							decimalPointAdjust+=(BigInteger)2;
+							newExponent-=(BigInteger)2;
+						}
 					}
 				}
 				adjustedExponent=newExponent;
 			}
-			if(mode==2 || ((adjustedExponent>=threshold && scale>=0))){
-				long decimalPoint=sbLength-scale+negaPos;
-				if(scale>0){
-					if(decimalPoint<negaPos){
-						sb.Insert((int)negaPos,"0",(int)(negaPos-decimalPoint));
-						sb.Insert((int)negaPos,"0.");
-					} else if(decimalPoint==negaPos){
-						sb.Insert((int)decimalPoint,"0.");
-					} else if(decimalPoint>sb.Length+negaPos){
-						sb.Insert((int)(sbLength+negaPos),".");
-						sb.Insert((int)(sbLength+negaPos),"0",(int)(decimalPoint-sb.Length));
+			if(mode==2 || ((adjustedExponent.CompareTo(threshold)>=0 && 
+			                scale.Sign>=0))){
+				BigInteger decimalPoint=-(BigInteger)scale;
+				decimalPoint+=(BigInteger)negaPos;
+				decimalPoint+=(BigInteger)sbLength;
+				if(scale.Sign>0){
+					int cmp=decimalPoint.CompareTo(negaPos);
+					if(cmp<0){
+						InsertString(builder,negaPos,'0',(negaPos-(BigInteger)decimalPoint));
+						InsertString(builder,negaPos,"0.");
+					} else if(cmp==0){
+						InsertString(builder,decimalPoint,"0.");
+					} else if(decimalPoint.CompareTo(
+						((BigInteger)(builder.Length)+(BigInteger)negaPos))>0){
+						InsertString(builder,(sbLength+(BigInteger)negaPos),'.');
+						InsertString(builder,(sbLength+(BigInteger)negaPos),'0',
+						             (decimalPoint-(BigInteger)(builder.Length)));
 					} else {
-						sb.Insert((int)decimalPoint,".");
+						InsertString(builder,decimalPoint,'.');
 					}
 				}
-				if(mode==2 && scale<0){
-					for(long i=0;i<-scale;i++){
-						sb.Append('0');
-					}
+				if(mode==2 && scale.Sign<0){
+					BigInteger negscale=-(BigInteger)scale;
+					AppendString(builder,'0',negscale);
 				}
-				return sb.ToString();
+				return builder.ToString();
 			} else {
-				if(mode==1 && iszero && decimalPointAdjust>1){
-					sb.Append(".");
-					sb.Append('0',decimalPointAdjust-1);
+				if(mode==1 && iszero && decimalPointAdjust.CompareTo(BigInteger.One)>0){
+					builder.Append('.');
+					AppendString(builder,'0',(decimalPointAdjust-BigInteger.One));
 				} else {
-					if(negaPos+decimalPointAdjust>sb.Length){
-						sb.Append('0',(int)((negaPos+decimalPointAdjust)-sb.Length));
+					BigInteger tmp=negaPos+(BigInteger)decimalPointAdjust;
+					int cmp=tmp.CompareTo((BigInteger)(builder.Length));
+					if(cmp>0){
+						AppendString(builder,'0',(tmp-(BigInteger)(builder.Length)));
 					}
-					if((negaPos+decimalPointAdjust<sb.Length)){
-						sb.Insert((int)negaPos+decimalPointAdjust,".");
-					}
-				}
-				if(adjustedExponent!=0){
-					sb.Append("E");
-					sb.Append(adjustedExponent<0 ? "-" : "+");
-					int sbPos=sb.Length;
-					if(adjustedExponent<0)
-						adjustedExponent=-adjustedExponent;
-					if(adjustedExponent==0){
-						sb.Append("0");
-					} else {
-						while(adjustedExponent>0){
-							sb.Insert(sbPos,(char)('0'+(int)(adjustedExponent%10)));
-							adjustedExponent/=10;
-						}
+					if(cmp<0){
+						InsertString(builder,tmp,'.');
 					}
 				}
-				return sb.ToString();
+				if(!adjustedExponent.IsZero){
+					builder.Append('E');
+					builder.Append(adjustedExponent<0 ? '-' : '+');
+					BigInteger sbPos=(BigInteger)(builder.Length);
+					adjustedExponent=BigInteger.Abs(adjustedExponent);
+					while(!adjustedExponent.IsZero){
+						BigInteger digit=(adjustedExponent%(BigInteger)10);
+						InsertString(builder,sbPos,(char)('0'+(int)digit));
+						adjustedExponent/=(BigInteger)10;
+					}
+				}
+				return builder.ToString();
 			}
 		}
 		///<summary>
@@ -239,7 +332,7 @@ namespace PeterO
 		///
 		///</returns>
 		///<remarks>
-		///The format of the return value is exactly the same as that of the java.math.BigDecimal.toEngineeringString() method.</remarks>
+		///The format of the return value follows the format of the java.math.BigDecimal.toEngineeringString() method.</remarks>
 		public string ToEngineeringString()
 		{
 			return ToStringInternal(1);
@@ -251,7 +344,7 @@ namespace PeterO
 		///
 		///</returns>
 		///<remarks>
-		///The format of the return value is exactly the same as that of the java.math.BigDecimal.toPlainString() method.</remarks>
+		///The format of the return value follows the format of the java.math.BigDecimal.toPlainString() method.</remarks>
 		public string ToPlainString()
 		{
 			return ToStringInternal(2);

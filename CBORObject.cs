@@ -308,6 +308,26 @@ namespace PeterO
 							BigInteger bigint=(BigInteger)(long)objB;
 							return ((BigInteger)(long)objA).CompareTo(bigint);
 						}
+						case (CBORObjectType_Integer<<4)|CBORObjectType_DecimalFraction:{
+							DecimalFraction xa=new DecimalFraction((long)objA);
+							DecimalFraction xb=(DecimalFraction)objB;
+							return xa.CompareTo(xb);
+						}
+						case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_Integer:{
+							DecimalFraction xb=new DecimalFraction((long)objB);
+							DecimalFraction xa=(DecimalFraction)objA;
+							return xa.CompareTo(xb);
+						}
+						case (CBORObjectType_BigInteger<<4)|CBORObjectType_DecimalFraction:{
+							DecimalFraction xa=new DecimalFraction((BigInteger)objA);
+							DecimalFraction xb=(DecimalFraction)objB;
+							return xa.CompareTo(xb);
+						}
+						case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_BigInteger:{
+							DecimalFraction xb=new DecimalFraction((BigInteger)objB);
+							DecimalFraction xa=(DecimalFraction)objA;
+							return xa.CompareTo(xb);
+						}
 					default:
 						throw new NotImplementedException();
 				}
@@ -631,11 +651,13 @@ namespace PeterO
 					case 7:
 						if(firstbyte==0xf9)
 							return new CBORObject(
-								CBORObjectType_Single,HalfPrecisionToSingle((int)uadditional));
+								CBORObjectType_Single,HalfPrecisionToSingle(
+									unchecked((int)uadditional)));
 						else if(firstbyte==0xfa)
 							return new CBORObject(
 								CBORObjectType_Single,
-								ConverterInternal.Int32BitsToSingle((int)uadditional));
+								ConverterInternal.Int32BitsToSingle(
+									unchecked((int)uadditional)));
 						else if(firstbyte==0xfb)
 							return new CBORObject(
 								CBORObjectType_Double,
@@ -1067,7 +1089,8 @@ namespace PeterO
 			else if(this.ItemType== CBORObjectType_Double)
 				return (double)this.ThisItem;
 			else if(this.ItemType==CBORObjectType_DecimalFraction){
-				return Double.Parse(((DecimalFraction)this.ThisItem).ToPlainString(),
+				string decstring=((DecimalFraction)this.ThisItem).ToString();
+				return Double.Parse(decstring,
 				                    NumberStyles.AllowLeadingSign|
 				                    NumberStyles.AllowDecimalPoint|
 				                    NumberStyles.AllowExponent,
@@ -1077,6 +1100,30 @@ namespace PeterO
 				throw new InvalidOperationException("Not a number type");
 		}
 		
+		
+		/// <summary>
+		/// Converts this object to a decimal fraction.
+		/// </summary>
+		/// <returns>A decimal fraction for this object's
+		/// value.</returns>
+		/// <exception cref="System.InvalidOperationException">
+		/// This object's type is not a number type.
+		/// </exception>
+		public DecimalFraction AsDecimalFraction(){
+			if(this.ItemType== CBORObjectType_Integer)
+				return new DecimalFraction((long)this.ThisItem);
+			else if(this.ItemType== CBORObjectType_BigInteger)
+				return new DecimalFraction((BigInteger)this.ThisItem);
+			else if(this.ItemType== CBORObjectType_Single)
+				throw new NotImplementedException();
+			else if(this.ItemType== CBORObjectType_Double)
+				throw new NotImplementedException();
+			else if(this.ItemType== CBORObjectType_DecimalFraction){
+				return (DecimalFraction)this.ThisItem;
+			}
+			else
+				throw new InvalidOperationException("Not a number type");
+		}
 
 		/// <summary>
 		/// Converts this object to a 32-bit floating point
@@ -1097,7 +1144,8 @@ namespace PeterO
 			else if(this.ItemType== CBORObjectType_Double)
 				return (float)(double)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_DecimalFraction){
-				return Single.Parse(((DecimalFraction)this.ThisItem).ToPlainString(),
+				string decstring=((DecimalFraction)this.ThisItem).ToString();
+				return Single.Parse(decstring,
 				                    NumberStyles.AllowLeadingSign|
 				                    NumberStyles.AllowDecimalPoint|
 				                    NumberStyles.AllowExponent,
@@ -1127,7 +1175,7 @@ namespace PeterO
 			else if(this.ItemType== CBORObjectType_Double)
 				return (BigInteger)(double)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_DecimalFraction){
-				return ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToPlainString());
+				return ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToString());
 			}
 			else
 				throw new InvalidOperationException("Not a number type");
@@ -1233,7 +1281,7 @@ namespace PeterO
 					throw new OverflowException();
 				return (long)(double)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_DecimalFraction){
-				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToPlainString());
+				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToString());
 				if(bi.CompareTo(Int64MaxValue)>0 ||
 				   bi.CompareTo(Int64MinValue)<0)
 					throw new OverflowException();
@@ -1277,7 +1325,7 @@ namespace PeterO
 					throw new OverflowException();
 				return (int)(double)thisItem;
 			} else if(this.ItemType== CBORObjectType_DecimalFraction){
-				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToPlainString());
+				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToString());
 				if(bi.CompareTo((BigInteger)Int32.MaxValue)>0 ||
 				   bi.CompareTo((BigInteger)Int32.MinValue)<0)
 					throw new OverflowException();
@@ -1327,8 +1375,9 @@ namespace PeterO
 		private static void WriteObjectMap(
 			IDictionary<CBORObject,CBORObject> map, Stream s){
 			WritePositiveInt(5,map.Count,s);
-			foreach(CBORObject key in map.Keys){
-				CBORObject value=map[key];
+			foreach(KeyValuePair<CBORObject,CBORObject> entry in map){
+				CBORObject key=entry.Key;
+				CBORObject value=entry.Value;
 				Write(key,s);
 				Write(value,s);
 			}
@@ -1617,7 +1666,8 @@ namespace PeterO
 				WriteObjectArray(AsList(),s);
 			} else if(this.ItemType== CBORObjectType_DecimalFraction){
 				DecimalFraction dec=(DecimalFraction)this.ThisItem;
-				if(dec.Exponent==0){
+				BigInteger exponent=dec.Exponent;
+				if(exponent.IsZero){
 					Write(dec.Mantissa,s);
 				} else {
 					s.WriteByte(0xC4); // tag 4
@@ -1912,15 +1962,6 @@ namespace PeterO
 			} else if(o is IList<CBORObject>){
 				WriteObjectArray((IList<CBORObject>)o,s);
 			} else if(o is IDictionary<CBORObject,CBORObject>){
-				IDictionary<CBORObject,CBORObject> dic=
-					(IDictionary<CBORObject,CBORObject>)o;
-				WritePositiveInt(5,dic.Count,s);
-				foreach(CBORObject i in dic.Keys){
-					CBORObject value=dic[i];
-					Write(i,s);
-					Write(value,s);
-				}
-			} else if(o is IDictionary<CBORObject,CBORObject>){
 				WriteObjectMap((IDictionary<CBORObject,CBORObject>)o,s);
 			} else {
 				FromObject(o).WriteTo(s);
@@ -2004,36 +2045,6 @@ namespace PeterO
 			                        CultureInfo.InvariantCulture);
 		}
 		
-		private string ExponentAndMantissaToString(CBORObject ex, CBORObject ma){
-			BigInteger exponent=ex.AsBigInteger();
-			string mantissa=ma.IntegerToString();
-			StringBuilder sb=new StringBuilder();
-			if(mantissa.Length>0 && mantissa[0]=='-'){
-				sb.Append('-');
-				mantissa=mantissa.Substring(1);
-			}
-			BigInteger decimalPoint=(BigInteger)(mantissa.Length);
-			decimalPoint+=(BigInteger)exponent;
-			if(exponent.Sign<0 &&
-			   decimalPoint.Sign>0){
-				int pos=(int)decimalPoint;
-				sb.Append(mantissa.Substring(0,pos));
-				sb.Append(".");
-				sb.Append(mantissa.Substring(pos));
-			} else if(exponent.Sign<0 &&
-			          decimalPoint.Sign==0){
-				sb.Append("0.");
-				sb.Append(mantissa);
-			} else {
-				sb.Append(this[1].IntegerToString());
-				if(!exponent.IsZero){
-					sb.Append("e");
-					sb.Append(this[0].IntegerToString());
-				}
-			}
-			return sb.ToString();
-		}
-		
 		/// <summary>
 		/// Converts this object to a JSON string.  This function
 		/// works not only with arrays and maps (the only proper
@@ -2081,7 +2092,7 @@ namespace PeterO
 			} else if(this.ItemType== CBORObjectType_TextString){
 				return StringToJSONString(this.AsString());
 			} else if(this.ItemType== CBORObjectType_DecimalFraction){
-				return ((DecimalFraction)this.ThisItem).ToPlainString();
+				return ((DecimalFraction)this.ThisItem).ToString();
 			} else if(this.ItemType== CBORObjectType_Array){
 				StringBuilder sb=new StringBuilder();
 				bool first=true;
@@ -2094,25 +2105,51 @@ namespace PeterO
 				sb.Append("]");
 				return sb.ToString();
 			} else if(this.ItemType== CBORObjectType_Map){
-				var dict=new Dictionary<string,CBORObject>();
-				StringBuilder sb=new StringBuilder();
+				StringBuilder builder=new StringBuilder();
 				bool first=true;
-				IDictionary<CBORObject,CBORObject> dictitem=AsMap();
-				foreach(CBORObject key in dictitem.Keys){
-					string str=(key.ItemType== CBORObjectType_TextString) ?
-						key.AsString() : key.ToJSONString();
-					dict[str]=dictitem[key];
-				}
-				sb.Append("{");
-				foreach(string key in dict.Keys){
-					if(!first)sb.Append(",");
-					sb.Append(StringToJSONString(key));
-					sb.Append(':');
-					sb.Append(dict[key].ToJSONString());
+				bool hasNonStringKeys=false;
+				IDictionary<CBORObject,CBORObject> objMap=AsMap();
+				builder.Append('{');
+				foreach(KeyValuePair<CBORObject,CBORObject> entry in objMap){
+					CBORObject key=entry.Key;
+					CBORObject value=entry.Value;
+					if(key.ItemType!=CBORObjectType_TextString){
+						hasNonStringKeys=true;
+						break;
+					}
+					if(!first)builder.Append(",");
+					builder.Append(StringToJSONString(key.AsString()));
+					builder.Append(':');
+					builder.Append(value.ToJSONString());
 					first=false;
 				}
-				sb.Append("}");
-				return sb.ToString();
+				if(hasNonStringKeys){
+					builder.Clear();
+					var sMap=new Dictionary<String,CBORObject>();
+					// Copy to a map with String keys, since 
+					// some keys could be duplicates
+					// when serialized to strings
+					foreach(KeyValuePair<CBORObject,CBORObject> entry in objMap){
+						CBORObject key=entry.Key;
+						CBORObject value=entry.Value;
+						string str=(key.ItemType== CBORObjectType_TextString) ?
+							key.AsString() : key.ToJSONString();
+						sMap[str]=value;
+					}
+					first=true;
+					foreach(KeyValuePair<string,CBORObject> entry in sMap){
+						string key=entry.Key;
+						CBORObject value=entry.Value;
+						sMap[key]=value;
+						if(!first)builder.Append(",");
+						builder.Append(StringToJSONString(key));
+						builder.Append(':');
+						builder.Append(value.ToJSONString());
+						first=false;
+					}
+				}
+				builder.Append('}');
+				return builder.ToString();
 			} else {
 				throw new InvalidOperationException("Unexpected data type");
 			}
@@ -2123,8 +2160,13 @@ namespace PeterO
 		private static CBORObject NextJSONValue(JSONTokener tokener)  {
 			int c = tokener.nextClean();
 			string str;
-			if (c == '"' || (c == '\'' && ((tokener.getOptions()&JSONTokener.OPTION_SINGLE_QUOTES)!=0)))
-				return FromObject(tokener.nextString(c));
+			if (c == '"' || (c == '\'' && ((tokener.getOptions()&JSONTokener.OPTION_SINGLE_QUOTES)!=0))){
+				// The tokenizer already checked the string for invalid
+				// surrogate pairs, so just call the CBORObject
+				// constructor directly
+				return new CBORObject(CBORObjectType_TextString,
+				                      tokener.nextString(c));
+			}
 			if (c == '{') {
 				tokener.back();
 				return ParseJSONObject(tokener);
@@ -2163,14 +2205,14 @@ namespace PeterO
 		// Based on the json.org implementation for JSONObject
 		private static CBORObject ParseJSONObject(JSONTokener x) {
 			int c;
-			string key;
+			CBORObject key;
 			CBORObject obj;
 			c=x.nextClean();
 			if(c=='['){
 				x.back();
 				return ParseJSONArray(x);
 			}
-			var myHashMap=new Dictionary<string,CBORObject>();
+			var myHashMap=new Dictionary<CBORObject,CBORObject>();
 			if (c != '{')
 				throw x.syntaxError("A JSONObject must begin with '{' or '['");
 			while (true) {
@@ -2179,15 +2221,15 @@ namespace PeterO
 					case -1:
 						throw x.syntaxError("A JSONObject must end with '}'");
 					case '}':
-						return FromObject(myHashMap);
+						return new CBORObject(CBORObjectType_Map,myHashMap);
 					default:
 						x.back();
 						obj=NextJSONValue(x);
 						if(obj.ItemType!= CBORObjectType_TextString)
 							throw x.syntaxError("Expected a string as a key");
-						key = obj.AsString();
+						key=obj;
 						if((x.getOptions() & JSONTokener.OPTION_NO_DUPLICATES)!=0 &&
-						   myHashMap.ContainsKey(key)){
+						   myHashMap.ContainsKey(obj)){
 							throw x.syntaxError("Key already exists: "+key);
 						}
 						break;
@@ -2196,7 +2238,7 @@ namespace PeterO
 				if (x.nextClean() != ':')
 					throw x.syntaxError("Expected a ':' after a key");
 				// NOTE: Will overwrite existing value. --Peter O.
-				myHashMap.Add(key, NextJSONValue(x));
+				myHashMap[key]=NextJSONValue(x);
 				switch (x.nextClean()) {
 					case ',':
 						if (x.nextClean() == '}'){
@@ -2204,13 +2246,13 @@ namespace PeterO
 								// 2013-05-24 -- Peter O. Disallow trailing comma.
 								throw x.syntaxError("Trailing comma");
 							} else {
-								return FromObject(myHashMap);
+								return new CBORObject(CBORObjectType_Map,myHashMap);
 							}
 						}
 						x.back();
 						break;
 					case '}':
-						return FromObject(myHashMap);
+						return new CBORObject(CBORObjectType_Map,myHashMap);
 					default:
 						throw x.syntaxError("Expected a ',' or '}'");
 				}
@@ -2420,9 +2462,9 @@ namespace PeterO
 		public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey, TValue> dic){
 			if(dic==null)return CBORObject.Null;
 			var map=new Dictionary<CBORObject,CBORObject>();
-			foreach(TKey i in dic.Keys){
-				CBORObject key=FromObject(i);
-				CBORObject value=FromObject(dic[i]);
+			foreach(KeyValuePair<TKey,TValue> entry in dic){
+				CBORObject key=FromObject(entry.Key);
+				CBORObject value=FromObject(entry.Value);
 				map[key]=value;
 			}
 			return new CBORObject(CBORObjectType_Map,map);
@@ -2533,17 +2575,6 @@ namespace PeterO
 		}
 		
 		//-----------------------------------------------------------
-		
-		private string IntegerToString(){
-			if(this.ItemType== CBORObjectType_Integer){
-				long v=(long)this.ThisItem;
-				return Convert.ToString((long)v,CultureInfo.InvariantCulture);
-			} else if(this.ItemType== CBORObjectType_BigInteger){
-				return ((BigInteger)this.ThisItem).ToString(CultureInfo.InvariantCulture);
-			} else {
-				throw new InvalidOperationException("Unsupported data type");
-			}
-		}
 		
 		private void AppendClosingTags(StringBuilder sb){
 			CBORObject curobject=this;
@@ -2719,11 +2750,13 @@ namespace PeterO
 				bool first=true;
 				sb.Append("{");
 				IDictionary<CBORObject,CBORObject> map=AsMap();
-				foreach(CBORObject key in map.Keys){
+				foreach(KeyValuePair<CBORObject,CBORObject> entry in map){
+					CBORObject key=entry.Key;
+					CBORObject value=entry.Value;
 					if(!first)sb.Append(", ");
 					sb.Append(key.ToString());
 					sb.Append(": ");
-					sb.Append(map[key].ToString());
+					sb.Append(value.ToString());
 					first=false;
 				}
 				sb.Append("}");
@@ -2849,10 +2882,9 @@ namespace PeterO
 				// Exponent is 0, so return mantissa instead
 				return list[1];
 			}
-			// TODO: Modify DecimalFraction to accept bigger exponents
 			return RewrapObject(o,new CBORObject(
 				CBORObjectType_DecimalFraction,
-				new DecimalFraction(list[0].AsInt64(),list[1].AsBigInteger())));
+				new DecimalFraction(list[0].AsBigInteger(),list[1].AsBigInteger())));
 		}
 		
 		private static bool CheckMajorTypeIndex(int type, int index, int[] validTypeFlags){

@@ -450,6 +450,20 @@ namespace PeterO
 		
 		/// <summary>
 		/// Parses a number whose format follows the JSON specification
+		/// See #ParseJSONNumber(str, integersOnly, parseOnly)
+		/// for more information.
+		/// </summary>
+		/// <param name="str">A string to parse.</param>
+		/// <returns>A CBOR object that represents the parsed
+		/// number, or null if the exponent is less than -(2^64)
+		/// or greater than 2^64-1 or if the entire string does
+		/// not represent a valid number.</returns>
+		public static CBORObject ParseJSONNumber(string str){
+			return ParseJSONNumber(str,false,false);
+		}
+		
+		/// <summary>
+		/// Parses a number whose format follows the JSON specification
 		/// (RFC 4627).  Roughly speaking, a valid number consists of
 		/// an optional minus sign, one or more digits (starting
 		/// with 1 to 9 unless the only digit is 0), an optional
@@ -545,7 +559,7 @@ namespace PeterO
 						return null;
 					c=str[index];
 					if(c=='-'){
-						negative=true;
+						negExp=true;
 						index++;
 					}
 					if(c=='+')index++;
@@ -622,6 +636,15 @@ namespace PeterO
 				// Bigger integer
 				string strsub=(numberStart==0 && numberEnd==str.Length) ? str :
 					str.Substring(numberStart,numberEnd-numberStart);
+				if(str.Length==19 && strsub[0]>='0' && strsub[0]<'9'){
+					// Can fit in a 64-bit long (cases with 18 digits
+					// or less are already handled above)
+					long value=Int64.Parse(strsub,
+					                       NumberStyles.None,
+					                       CultureInfo.InvariantCulture);
+					if(negative)value=-value;
+					return CBORObject.FromObject(value);
+				}
 				BigInteger bigintValue=BigInteger.Parse(strsub,
 				                                        NumberStyles.None,
 				                                        CultureInfo.InvariantCulture);
@@ -664,7 +687,7 @@ namespace PeterO
 					// just return the integer
 					return CBORObject.FromObject(intval);
 				} else if(exp.CompareTo(UInt64MaxValue)>0 ||
-				   exp.CompareTo(LowestMajorType1)<0){
+				          exp.CompareTo(LowestMajorType1)<0){
 					// Exponent is lower than the lowest representable
 					// integer of major type 1, or higher than the
 					// highest representable integer of major type 0
@@ -672,7 +695,8 @@ namespace PeterO
 				}
 				// Represent the CBOR object as a decimal fraction
 				return CBORObject.FromObjectAndTag(new CBORObject[]{
-				                                   	CBORObject.FromObject(exp),CBORObject.FromObject(intval)},4);
+				                                   	CBORObject.FromObject(exp),
+				                                   	CBORObject.FromObject(intval)},4);
 			}
 		}
 	}
