@@ -355,6 +355,8 @@ package com.upokecenter.util;
 		public String nextString(int quote) {
 			int c;
 			StringBuilder sb = new StringBuilder();
+			boolean surrogate=false;
+				boolean escaped=false;
 			while (true) {
 				c = next();
 				if(c==-1 || c<0x20)
@@ -362,51 +364,72 @@ package com.upokecenter.util;
 				switch (c) {
 					case '\\':
 						c = next();
+						escaped=true;
 						switch (c) {
 							case '\\':
-								sb.append('\\');
+								c=('\\');
 								break;
 							case '/':
 								if((options & JSONTokener.OPTION_ESCAPED_SLASHES)!=0){
 									// For compatibility (some JSON texts
 									// encode dates with an escaped slash),
 									// even though this is not allowed by RFC 4627
-									sb.append('/');
+									c=('/');
 								} else {
 									throw this.syntaxError("Invalid escaped character");
 								}
 								break;
 							case '\"':
-								sb.append('\"');
+								c=('\"');
 								break;
 							case 'b':
-								sb.append('\b');
+								c=('\b');
 								break;
 							case 't':
-								sb.append('\t');
+								c=('\t');
 								break;
 							case 'n':
-								sb.append('\n');
+								c=('\n');
 								break;
 							case 'f':
-								sb.append('\f');
+								c=('\f');
 								break;
 							case 'r':
-								sb.append('\r');
+								c=('\r');
 								break;
-							case 'u':
-								sb.append((char)Integer.parseInt(next(4),16));
-								break;
+								case 'u':{ // Unicode escape
+									String next4=next(4);
+									int c1=dehexchar(next4.charAt(0));
+									int c2=dehexchar(next4.charAt(1));
+									int c3=dehexchar(next4.charAt(2));
+									int c4=dehexchar(next4.charAt(3));
+									if(c1<0 || c2<0 || c3<0 || c4<0)
+										throw this.syntaxError("Invalid Unicode escaped character");
+									c=(c4|(c3<<4)|(c2<<8)|(c1<<12));
+									break;
+								}
 							default:
 								throw this.syntaxError("Invalid escaped character");
 						}
 						break;
 					default:
-						if (c == quote)
-							return sb.toString();
-						sb.append((char)c);
+						escaped=false;
 						break;
 				}
+				if(surrogate){
+					if((c&0xFC00)!=0xDC00){
+						// Note: this includes the ending quote
+						throw this.syntaxError("Unpaired surrogate code point");
+					}
+					surrogate=false;
+				} else if((c&0xFC00)==0xD800){
+					surrogate=true;
+				} else if((c&0xFC00)==0xDC00){
+					throw this.syntaxError("Unpaired surrogate code point");
+				}
+				if (c == quote && !escaped) // End quote reached
+					return sb.toString();
+				sb.append((char)c);
 			}
 		}
 

@@ -1,15 +1,19 @@
 package com.upokecenter.util;
 
 
+
 import java.math.*;
 
-	
-	class DecimalFraction
+
+	/**
+	 * Represents an arbitrary-precision decimal floating-point number.
+	 */
+	public class DecimalFraction implements Comparable<DecimalFraction>
 	{
-		long exponent;
-		
-		public long getExponent() { return exponent; }
+		BigInteger exponent;
 		BigInteger mantissa;
+		
+		public BigInteger getExponent() { return exponent; }
 		
 		public BigInteger getMantissa() { return mantissa; }
 		
@@ -18,13 +22,14 @@ import java.math.*;
 			DecimalFraction other = ((obj instanceof DecimalFraction) ? (DecimalFraction)obj : null);
 			if (other == null)
 				return false;
-			return this.exponent == other.exponent && this.mantissa == other.mantissa;
+			return this.exponent.equals(other.exponent) && 
+				this.mantissa.equals(other.mantissa);
 		}
 		
 		@Override public int hashCode() {
 			int hashCode_ = 0;
 			{
-				hashCode_ += 1000000007 * ((Object)exponent).hashCode();
+				hashCode_ += 1000000007 * exponent.hashCode();
 				hashCode_ += 1000000009 * mantissa.hashCode();
 			}
 			return hashCode_;
@@ -32,23 +37,40 @@ import java.math.*;
 		
 
 		
-		public DecimalFraction(long exponent, BigInteger mantissa){
+		public DecimalFraction(BigInteger exponent, BigInteger mantissa){
 			this.exponent=exponent;
 			this.mantissa=mantissa;
 		}
 
-		public BigInteger RescaleByExponentDiff(BigInteger mantissa, long e1, long e2) {
+		public DecimalFraction(long exponentLong, BigInteger mantissa){
+			this.exponent=BigInteger.valueOf(exponentLong);
+			this.mantissa=mantissa;
+		}
+
+		public DecimalFraction(BigInteger mantissa){
+			this.exponent=BigInteger.ZERO;
+			this.mantissa=mantissa;
+		}
+
+		public DecimalFraction(long mantissaLong){
+			this.exponent=BigInteger.ZERO;
+			this.mantissa=BigInteger.valueOf(mantissaLong);
+		}
+
+		public BigInteger RescaleByExponentDiff(BigInteger mantissa,
+			                      BigInteger e1,
+			                      BigInteger e2) {
 			boolean negative=(mantissa.signum()<0);
 			if(negative)mantissa=mantissa.negate();
-			if(e1>e2){
-				while(e1>e2){
-					mantissa*=10;
-					e1--;
+			if(e1.compareTo(e2)>0){
+				while(e1.compareTo(e2)>0){
+					mantissa=mantissa.multiply(BigInteger.valueOf(10));
+					e1=e1.subtract(BigInteger.ONE);
 				}
 			} else {
-				while(e1<e2){
-					mantissa*=10;
-					e1++;
+				while(e1.compareTo(e2)<0){
+					mantissa=mantissa.multiply(BigInteger.valueOf(10));
+					e1=e1.add(BigInteger.ONE);
 				}
 			}
 			if(negative)mantissa=mantissa.negate();
@@ -56,45 +78,48 @@ import java.math.*;
 		}
 		
 		public DecimalFraction Add(DecimalFraction decfrac) {
-			if(exponent==decfrac.exponent){
+			int expcmp=exponent.compareTo(decfrac.exponent);
+			if(expcmp==0){
 				return new DecimalFraction(
-					exponent,mantissa+BigInteger.valueOf(decfrac.mantissa));
-			} else if(exponent>decfrac.exponent){
+					exponent,mantissa.add(decfrac.mantissa));
+			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					decfrac.exponent,newmant+BigInteger.valueOf(decfrac.mantissa));
+					decfrac.exponent,newmant.add(decfrac.mantissa));
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					exponent,mantissa+newmant);
+					exponent,mantissa.add(newmant));
 			}
 		}
 
 		public DecimalFraction Subtract(DecimalFraction decfrac) {
-			if(exponent==decfrac.exponent){
+			int expcmp=exponent.compareTo(decfrac.exponent);
+			if(expcmp==0){
 				return new DecimalFraction(
-					exponent,mantissa-BigInteger.valueOf(decfrac.mantissa));
-			} else if(exponent>decfrac.exponent){
+					exponent,mantissa.subtract(decfrac.mantissa));
+			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					decfrac.exponent,newmant-BigInteger.valueOf(decfrac.mantissa));
+					decfrac.exponent,newmant.subtract(decfrac.mantissa));
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					exponent,mantissa-newmant);
+					exponent,mantissa.subtract(newmant));
 			}
 		}
 		
 		public DecimalFraction Multiply(DecimalFraction decfrac) {
-			long newexp=checked(this.exponent+decfrac.exponent);
-			return new DecimalFraction(newexp,mantissa*decfrac.mantissa);
+			BigInteger newexp=(this.exponent.add(decfrac.exponent));
+			return new DecimalFraction(
+				newexp,mantissa.multiply(decfrac.mantissa));
 		}
 
-		public int getSign() {
+		public int signum() {
 				return mantissa.signum();
 			}
 		
@@ -102,7 +127,7 @@ import java.math.*;
 				return mantissa.equals(BigInteger.ZERO);
 			}
 
-		public int CompareTo(DecimalFraction decfrac) {
+		public int compareTo(DecimalFraction decfrac) {
 			if(decfrac==null)return 1;
 			int s=this.signum();
 			int ds=decfrac.signum();
@@ -110,98 +135,170 @@ import java.math.*;
 			return decfrac.Subtract(this).signum();
 		}
 		
+		private boolean InsertString(StringBuilder builder, BigInteger index, char c) {
+			if(index.compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0){
+				throw new UnsupportedOperationException();
+			}
+			int iindex=index.intValue();
+			builder.insert(iindex,c);
+			return true;
+		}
+
+		private boolean InsertString(StringBuilder builder, BigInteger index, char c, BigInteger count) {
+			if(count.compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0){
+				throw new UnsupportedOperationException();
+			}
+			if(index.compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0){
+				throw new UnsupportedOperationException();
+			}
+			int icount=count.intValue();
+			int iindex=index.intValue();
+			for(int i=icount-1;i>=0;i--){
+				builder.insert(iindex,c);
+			}
+			return true;
+		}
+
+		private boolean AppendString(StringBuilder builder, char c, BigInteger count) {
+			if(count.compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0){
+				throw new UnsupportedOperationException();
+			}
+			int icount=count.intValue();
+			for(int i=icount-1;i>=0;i--){
+				builder.append(c);
+			}
+			return true;
+		}
+
+		private boolean InsertString(StringBuilder builder, BigInteger index, String c) {
+			if(index.compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0){
+				throw new UnsupportedOperationException();
+			}
+			int iindex=index.intValue();
+			builder.insert(iindex,c);
+			return true;
+		}
+		
 		private String ToStringInternal(int mode) {
-			// Using Java's rules for converting BigDecimal values to a String
-			StringBuilder sb=new StringBuilder();
-			sb.append(this.mantissa.toString());
-			long adjustedExponent=this.exponent;
-			long scale=-this.exponent;
-			long sbLength=sb.length;
-			long negaPos=0;
-			if(sb.set(0,='-'){
-				sbLength--);
-				negaPos=1;
+			// Using Java's rules for converting DecimalFraction
+			// values to a String
+			StringBuilder builder=new StringBuilder();
+			builder.append(this.mantissa.toString());
+			BigInteger adjustedExponent=this.exponent;
+			BigInteger scale=(this.exponent).negate();
+			BigInteger sbLength=BigInteger.valueOf((builder.length()));
+			BigInteger negaPos=BigInteger.ZERO;
+			if(builder.charAt(0)=='-'){
+				sbLength=sbLength.subtract(BigInteger.ONE);
+				negaPos=BigInteger.ONE;
 			}
 			boolean iszero=(this.mantissa.equals(BigInteger.ZERO));
-			if(mode==2 && iszero && scale<0){
+			if(mode==2 && iszero && scale.signum()<0){
 				// special case for zero in plain
-				return sb.toString();
+				return builder.toString();
 			}
-			adjustedExponent+=sbLength-1;
-			int decimalPointAdjust=1;
-			int threshold=-6;
+			adjustedExponent=adjustedExponent.add(sbLength);
+			adjustedExponent=adjustedExponent.subtract(BigInteger.ONE);
+			BigInteger decimalPointAdjust=BigInteger.ONE;
+			BigInteger threshold=BigInteger.valueOf((-6));
 			if(mode==1){ // engineering String adjustments
-				long newExponent=adjustedExponent;
-				if(iszero && (adjustedExponent<-6 || scale<0)){
-					if((Math.Abs(adjustedExponent)%3)==1){
-						decimalPointAdjust+=(adjustedExponent<0) ? 1 : 2;
-						newExponent-=(adjustedExponent<0) ? -1 : -2;
-					} else if((Math.Abs(adjustedExponent)%3)==2){
-						decimalPointAdjust+=(adjustedExponent<0) ? 2 : 1;
-						newExponent-=(adjustedExponent<0) ? -2 : -1;
+				BigInteger newExponent=adjustedExponent;
+				boolean adjExponentNegative=(adjustedExponent.signum()<0);
+				BigInteger phase=(adjustedExponent).abs().remainder(BigInteger.valueOf(3));
+				int intphase=phase.intValue();
+				if(iszero && (adjustedExponent.compareTo(threshold)<0 ||
+				              scale.signum()<0)){
+					if(intphase==1){
+						if(adjExponentNegative){
+							decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
+							newExponent=newExponent.add(BigInteger.ONE);
+						} else {
+							decimalPointAdjust=decimalPointAdjust.add(BigInteger.valueOf(2));
+							newExponent=newExponent.add(BigInteger.valueOf(2));
+						}
+					} else if(intphase==2){
+						if(!adjExponentNegative){
+							decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
+							newExponent=newExponent.add(BigInteger.ONE);
+						} else {
+							decimalPointAdjust=decimalPointAdjust.add(BigInteger.valueOf(2));
+							newExponent=newExponent.add(BigInteger.valueOf(2));
+						}
 					}
-					threshold+=1;
-					
+					threshold=threshold.add(BigInteger.ONE);
 				} else {
-					if((Math.Abs(adjustedExponent)%3)==1){
-						decimalPointAdjust+=(adjustedExponent<0) ? 2 : 1;
-						newExponent-=(adjustedExponent<0) ? 2 : 1;
-					} else if((Math.Abs(adjustedExponent)%3)==2){
-						decimalPointAdjust+=(adjustedExponent<0) ? 1 : 2;
-						newExponent-=(adjustedExponent<0) ? 1 : 2;
+					if(intphase==1){
+						if(!adjExponentNegative){
+							decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
+							newExponent=newExponent.subtract(BigInteger.ONE);
+						} else {
+							decimalPointAdjust=decimalPointAdjust.add(BigInteger.valueOf(2));
+							newExponent=newExponent.subtract(BigInteger.valueOf(2));
+						}
+					} else if(intphase==2){
+						if(adjExponentNegative){
+							decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
+							newExponent=newExponent.subtract(BigInteger.ONE);
+						} else {
+							decimalPointAdjust=decimalPointAdjust.add(BigInteger.valueOf(2));
+							newExponent=newExponent.subtract(BigInteger.valueOf(2));
+						}
 					}
 				}
 				adjustedExponent=newExponent;
 			}
-			if(mode==2 || ((adjustedExponent>=threshold && scale>=0))){
-				long decimalPoint=sbLength-scale+negaPos;
-				if(scale>0){
-					if(decimalPoint<negaPos){
-						sb.Insert((int)negaPos,"0",(int)(negaPos-decimalPoint));
-						sb.Insert((int)negaPos,"0.");
-					} else if(decimalPoint==negaPos){
-						sb.Insert((int)decimalPoint,"0.");
-					} else if(decimalPoint>sb.length+negaPos){
-						sb.Insert((int)(sbLength+negaPos),".");
-						sb.Insert((int)(sbLength+negaPos),"0",(int)(decimalPoint-sb.length));
+			if(mode==2 || ((adjustedExponent.compareTo(threshold)>=0 && 
+			                scale.signum()>=0))){
+				BigInteger decimalPoint=(scale).negate();
+				decimalPoint=decimalPoint.add(negaPos);
+				decimalPoint=decimalPoint.add(sbLength);
+				if(scale.signum()>0){
+					int cmp=decimalPoint.compareTo(negaPos);
+					if(cmp<0){
+						InsertString(builder,negaPos,'0',(negaPos.subtract(decimalPoint)));
+						InsertString(builder,negaPos,"0.");
+					} else if(cmp==0){
+						InsertString(builder,decimalPoint,"0.");
+					} else if(decimalPoint.compareTo(
+						(BigInteger.valueOf((builder.length())).add(negaPos)))>0){
+						InsertString(builder,(sbLength.add(negaPos)),'.');
+						InsertString(builder,(sbLength.add(negaPos)),'0',
+						             (decimalPoint.subtract(BigInteger.valueOf((builder.length())))));
 					} else {
-						sb.Insert((int)decimalPoint,".");
+						InsertString(builder,decimalPoint,'.');
 					}
 				}
-				if(mode==2 && scale<0){
-					for(long i=0;i<-scale;i++){
-						sb.append('0');
-					}
+				if(mode==2 && scale.signum()<0){
+					BigInteger negscale=(scale).negate();
+					AppendString(builder,'0',negscale);
 				}
-				return sb.toString();
+				return builder.toString();
 			} else {
-				if(mode==1 && iszero && decimalPointAdjust>1){
-					sb.append(".");
-					sb.append('0',decimalPointAdjust-1);
+				if(mode==1 && iszero && decimalPointAdjust.compareTo(BigInteger.ONE)>0){
+					builder.append('.');
+					AppendString(builder,'0',(decimalPointAdjust.subtract(BigInteger.ONE)));
 				} else {
-					if(negaPos+decimalPointAdjust>sb.length){
-						sb.append('0',(int)((negaPos+decimalPointAdjust)-sb.length));
+					BigInteger tmp=negaPos.add(decimalPointAdjust);
+					int cmp=tmp.compareTo(BigInteger.valueOf((builder.length())));
+					if(cmp>0){
+						AppendString(builder,'0',(tmp.subtract(BigInteger.valueOf((builder.length())))));
 					}
-					if((negaPos+decimalPointAdjust<sb.length)){
-						sb.Insert((int)negaPos+decimalPointAdjust,".");
-					}
-				}
-				if(adjustedExponent!=0){
-					sb.append("E");
-					sb.append(adjustedExponent<0 ? "-" : "+");
-					int sbPos=sb.length;
-					if(adjustedExponent<0)
-						adjustedExponent=-adjustedExponent;
-					if(adjustedExponent==0){
-						sb.append("0");
-					} else {
-						while(adjustedExponent>0){
-							sb.Insert(sbPos,(char)('0'+(int)(adjustedExponent%10)));
-							adjustedExponent/=10;
-						}
+					if(cmp<0){
+						InsertString(builder,tmp,'.');
 					}
 				}
-				return sb.toString();
+				if(!adjustedExponent.equals(BigInteger.ZERO)){
+					builder.append('E');
+					builder.append(adjustedExponent.signum()<0 ? '-' : '+');
+					BigInteger sbPos=BigInteger.valueOf((builder.length()));
+					adjustedExponent=(adjustedExponent).abs();
+					while(!adjustedExponent.equals(BigInteger.ZERO)){
+						BigInteger digit=(adjustedExponent.remainder(BigInteger.valueOf(10)));
+						InsertString(builder,sbPos,(char)('0'+digit.intValue()));
+						adjustedExponent=adjustedExponent.divide(BigInteger.valueOf(10));
+					}
+				}
+				return builder.toString();
 			}
 		}
 		/**

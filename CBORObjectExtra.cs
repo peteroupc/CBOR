@@ -76,14 +76,9 @@ namespace PeterO
 				   (double)this.ThisItem<(double)Decimal.MinValue)
 					throw new OverflowException();
 				return (decimal)(double)this.ThisItem;
-			} else if(this.InnermostTag==4 && ItemType== CBORObjectType_Array &&
-			          this.Count==2){
-				StringBuilder sb=new StringBuilder();
-				sb.Append(this[1].IntegerToString());
-				sb.Append("e");
-				sb.Append(this[0].IntegerToString());
-				return Decimal.Parse(
-					sb.ToString(),
+			} else if(this.ItemType== CBORObjectType_DecimalFraction){
+				string str=((DecimalFraction)this.ThisItem).ToString();
+				return Decimal.Parse(str,
 					NumberStyles.AllowLeadingSign|
 					NumberStyles.AllowDecimalPoint|
 					NumberStyles.AllowExponent,
@@ -125,18 +120,8 @@ namespace PeterO
 				   (double)this.ThisItem>UInt64.MaxValue || (double)this.ThisItem<0)
 					throw new OverflowException();
 				return (ulong)(double)this.ThisItem;
-			} else if(this.InnermostTag==4 && ItemType== CBORObjectType_Array &&
-			          this.Count==2){
-				StringBuilder sb=new StringBuilder();
-				sb.Append(this[1].IntegerToString());
-				sb.Append("e");
-				sb.Append(this[0].IntegerToString());
-				BigInteger bi=BigInteger.Parse(
-					sb.ToString(),
-					NumberStyles.AllowLeadingSign|
-					NumberStyles.AllowDecimalPoint|
-					NumberStyles.AllowExponent,
-					CultureInfo.InvariantCulture);
+			} else if(this.ItemType== CBORObjectType_DecimalFraction){
+				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToString());
 				if(bi>UInt64.MaxValue || bi<0)
 					throw new OverflowException();
 				return (ulong)bi;

@@ -8,6 +8,7 @@ at: http://upokecenter.com/d/
  */
 
 using System;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace PeterO
@@ -17,14 +18,37 @@ namespace PeterO
 	/// </summary>
 	public class Runner
 	{
-		public static void Main(){
-			var test=new Test.CBORTest();
-			var setup=test.GetType().GetMethod("SetUp");
-			if(setup!=null){
-				setup.Invoke(test,new object[]{});
+		private static bool HasAttribute(Type mi, Type t){
+			foreach(object a in mi.GetCustomAttributes(false)){
+				if(t.IsAssignableFrom(a.GetType())){
+					return true;
+				}
 			}
-			foreach(var method in test.GetType().GetMethods()){
-				if(method.Name.StartsWith("Test")){
+			return false;
+		}
+		private static bool HasAttribute(MethodInfo mi, Type t){
+			foreach(object a in mi.GetCustomAttributes(false)){
+				if(t.IsAssignableFrom(a.GetType())){
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public static void Main(){
+			// Run all the NUnit tests in this assembly
+			foreach(var type in Assembly.GetExecutingAssembly().GetTypes()){
+				if(!HasAttribute(type,typeof(TestFixtureAttribute)))continue;
+				Console.WriteLine("-------");
+				Console.WriteLine(type.FullName);
+				Console.WriteLine("-------");
+				object test=Activator.CreateInstance(type);
+				var setup=type.GetMethod("SetUp");
+				if(setup!=null){
+					setup.Invoke(test,new object[]{});
+				}
+				foreach(var method in test.GetType().GetMethods()){
+					if(!HasAttribute(method,typeof(TestAttribute)))continue;
 					Console.WriteLine(method.Name);
 					Type exctype=null;
 					foreach(var a in method.GetCustomAttributes(false)){
@@ -33,14 +57,15 @@ namespace PeterO
 							break;
 						}
 					}
-					if(exctype==null){
+					try {
 						method.Invoke(test,new object[]{});
-					} else {
-						try {
-							method.Invoke(test,new object[]{});
-						} catch(System.Reflection.TargetInvocationException e){
-							if(!e.InnerException.GetType().Equals(exctype))
-								throw;
+					} catch(System.Reflection.TargetInvocationException e){
+						if(exctype==null || !e.InnerException.GetType().Equals(exctype)){
+							Console.WriteLine(e.GetType().FullName);
+							string message=e.Message;
+							if(message.Length>140)
+								message=message.Substring(0,140);
+							Console.WriteLine(message);
 						}
 					}
 				}

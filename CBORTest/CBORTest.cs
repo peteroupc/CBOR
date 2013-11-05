@@ -63,36 +63,36 @@ namespace Test
 		                           int noReplaceRet, string noReplaceString
 		                          ){
 			try {
-			StringBuilder builder=new StringBuilder();
-			int ret=0;
-			using(MemoryStream ms=new MemoryStream(bytes)){
-				ret=CBORDataUtilities.ReadUtf8(ms,length,builder,true);
-				Assert.AreEqual(expectedRet,ret);
-				if(expectedRet==0){
-					Assert.AreEqual(expectedString,builder.ToString());
+				StringBuilder builder=new StringBuilder();
+				int ret=0;
+				using(MemoryStream ms=new MemoryStream(bytes)){
+					ret=CBORDataUtilities.ReadUtf8(ms,length,builder,true);
+					Assert.AreEqual(expectedRet,ret);
+					if(expectedRet==0){
+						Assert.AreEqual(expectedString,builder.ToString());
+					}
+					ms.Position=0;
+					builder.Clear();
+					ret=CBORDataUtilities.ReadUtf8(ms,length,builder,false);
+					Assert.AreEqual(noReplaceRet,ret);
+					if(noReplaceRet==0){
+						Assert.AreEqual(noReplaceString,builder.ToString());
+					}
 				}
-				ms.Position=0;
-				builder.Clear();
-				ret=CBORDataUtilities.ReadUtf8(ms,length,builder,false);
-				Assert.AreEqual(noReplaceRet,ret);
-				if(noReplaceRet==0){
-					Assert.AreEqual(noReplaceString,builder.ToString());
+				if(bytes.Length>=length){
+					builder.Clear();
+					ret=CBORDataUtilities.ReadUtf8FromBytes(bytes,0,length,builder,true);
+					Assert.AreEqual(expectedRet,ret);
+					if(expectedRet==0){
+						Assert.AreEqual(expectedString,builder.ToString());
+					}
+					builder.Clear();
+					ret=CBORDataUtilities.ReadUtf8FromBytes(bytes,0,length,builder,false);
+					Assert.AreEqual(noReplaceRet,ret);
+					if(noReplaceRet==0){
+						Assert.AreEqual(noReplaceString,builder.ToString());
+					}
 				}
-			}
-			if(bytes.Length>=length){
-				builder.Clear();
-				ret=CBORDataUtilities.ReadUtf8FromBytes(bytes,0,length,builder,true);
-				Assert.AreEqual(expectedRet,ret);
-				if(expectedRet==0){
-					Assert.AreEqual(expectedString,builder.ToString());
-				}
-				builder.Clear();
-				ret=CBORDataUtilities.ReadUtf8FromBytes(bytes,0,length,builder,false);
-				Assert.AreEqual(noReplaceRet,ret);
-				if(noReplaceRet==0){
-					Assert.AreEqual(noReplaceString,builder.ToString());
-				}
-			}
 			} catch(IOException ex){
 				throw new CBORException("",ex);
 			}
@@ -238,6 +238,117 @@ namespace Test
 				new byte[]{0x5F,0x41,0x20,0xC2,0x41,0x20,0xFF});
 		}
 
+		public static void AssertDecimalsEquivalent(string a, string b){
+			CBORObject ca=CBORDataUtilities.ParseJSONNumber(a);
+			CBORObject cb=CBORDataUtilities.ParseJSONNumber(b);
+			Assert.AreEqual(0,ca.CompareTo(cb),a+" not equal to "+b);
+		}
+		
+		[Test]
+		public void TestDecimalsEquivalent()
+		{
+			AssertDecimalsEquivalent("1.310E-7","131.0E-9");
+			AssertDecimalsEquivalent("0.001231","123.1E-5");
+			AssertDecimalsEquivalent("3.0324E+6","303.24E4");
+			AssertDecimalsEquivalent("3.726E+8","372.6E6");
+			AssertDecimalsEquivalent("2663.6","266.36E1");
+			AssertDecimalsEquivalent("34.24","342.4E-1");
+			AssertDecimalsEquivalent("3492.5","349.25E1");
+			AssertDecimalsEquivalent("0.31919","319.19E-3");
+			AssertDecimalsEquivalent("2.936E-7","293.6E-9");
+			AssertDecimalsEquivalent("6.735E+10","67.35E9");
+			AssertDecimalsEquivalent("7.39E+10","7.39E10");
+			AssertDecimalsEquivalent("0.0020239","202.39E-5");
+			AssertDecimalsEquivalent("1.6717E+6","167.17E4");
+			AssertDecimalsEquivalent("1.7632E+9","176.32E7");
+			AssertDecimalsEquivalent("39.526","395.26E-1");
+			AssertDecimalsEquivalent("0.002939","29.39E-4");
+			AssertDecimalsEquivalent("0.3165","316.5E-3");
+			AssertDecimalsEquivalent("3.7910E-7","379.10E-9");
+			AssertDecimalsEquivalent("0.000016035","160.35E-7");
+			AssertDecimalsEquivalent("0.001417","141.7E-5");
+			AssertDecimalsEquivalent("7.337E+5","73.37E4");
+			AssertDecimalsEquivalent("3.4232E+12","342.32E10");
+			AssertDecimalsEquivalent("2.828E+8","282.8E6");
+			AssertDecimalsEquivalent("4.822E-7","48.22E-8");
+			AssertDecimalsEquivalent("2.6328E+9","263.28E7");
+			AssertDecimalsEquivalent("2.9911E+8","299.11E6");
+			AssertDecimalsEquivalent("3.636E+9","36.36E8");
+			AssertDecimalsEquivalent("0.20031","200.31E-3");
+			AssertDecimalsEquivalent("1.922E+7","19.22E6");
+			AssertDecimalsEquivalent("3.0924E+8","309.24E6");
+			AssertDecimalsEquivalent("2.7236E+7","272.36E5");
+			AssertDecimalsEquivalent("0.01645","164.5E-4");
+			AssertDecimalsEquivalent("0.000292","29.2E-5");
+			AssertDecimalsEquivalent("1.9939","199.39E-2");
+			AssertDecimalsEquivalent("2.7929E+9","279.29E7");
+			AssertDecimalsEquivalent("1.213E+7","121.3E5");
+			AssertDecimalsEquivalent("2.765E+6","276.5E4");
+			AssertDecimalsEquivalent("270.11","270.11E0");
+			AssertDecimalsEquivalent("0.017718","177.18E-4");
+			AssertDecimalsEquivalent("0.003607","360.7E-5");
+			AssertDecimalsEquivalent("0.00038618","386.18E-6");
+			AssertDecimalsEquivalent("0.0004230","42.30E-5");
+			AssertDecimalsEquivalent("1.8410E+5","184.10E3");
+			AssertDecimalsEquivalent("0.00030427","304.27E-6");
+			AssertDecimalsEquivalent("6.513E+6","65.13E5");
+			AssertDecimalsEquivalent("0.06717","67.17E-3");
+			AssertDecimalsEquivalent("0.00031123","311.23E-6");
+			AssertDecimalsEquivalent("0.0031639","316.39E-5");
+			AssertDecimalsEquivalent("1.146E+5","114.6E3");
+			AssertDecimalsEquivalent("0.00039937","399.37E-6");
+			AssertDecimalsEquivalent("3.3817","338.17E-2");
+			AssertDecimalsEquivalent("0.00011128","111.28E-6");
+			AssertDecimalsEquivalent("7.818E+7","78.18E6");
+			AssertDecimalsEquivalent("2.6417E-7","264.17E-9");
+			AssertDecimalsEquivalent("1.852E+9","185.2E7");
+			AssertDecimalsEquivalent("0.0016216","162.16E-5");
+			AssertDecimalsEquivalent("2.2813E+6","228.13E4");
+			AssertDecimalsEquivalent("3.078E+12","307.8E10");
+			AssertDecimalsEquivalent("0.00002235","22.35E-6");
+			AssertDecimalsEquivalent("0.0032827","328.27E-5");
+			AssertDecimalsEquivalent("1.334E+9","133.4E7");
+			AssertDecimalsEquivalent("34.022","340.22E-1");
+			AssertDecimalsEquivalent("7.19E+6","7.19E6");
+			AssertDecimalsEquivalent("35.311","353.11E-1");
+			AssertDecimalsEquivalent("3.4330E+6","343.30E4");
+			AssertDecimalsEquivalent("0.000022923","229.23E-7");
+			AssertDecimalsEquivalent("2.899E+4","289.9E2");
+			AssertDecimalsEquivalent("0.00031","3.1E-4");
+			AssertDecimalsEquivalent("2.0418E+5","204.18E3");
+			AssertDecimalsEquivalent("3.3412E+11","334.12E9");
+			AssertDecimalsEquivalent("1.717E+10","171.7E8");
+			AssertDecimalsEquivalent("2.7024E+10","270.24E8");
+			AssertDecimalsEquivalent("1.0219E+9","102.19E7");
+			AssertDecimalsEquivalent("15.13","151.3E-1");
+			AssertDecimalsEquivalent("91.23","91.23E0");
+			AssertDecimalsEquivalent("3.4114E+6","341.14E4");
+			AssertDecimalsEquivalent("33.832","338.32E-1");
+			AssertDecimalsEquivalent("0.19234","192.34E-3");
+			AssertDecimalsEquivalent("16835","168.35E2");
+			AssertDecimalsEquivalent("0.00038610","386.10E-6");
+			AssertDecimalsEquivalent("1.6624E+9","166.24E7");
+			AssertDecimalsEquivalent("2.351E+9","235.1E7");
+			AssertDecimalsEquivalent("0.03084","308.4E-4");
+			AssertDecimalsEquivalent("0.00429","42.9E-4");
+			AssertDecimalsEquivalent("9.718E-8","97.18E-9");
+			AssertDecimalsEquivalent("0.00003121","312.1E-7");
+			AssertDecimalsEquivalent("3.175E+4","317.5E2");
+			AssertDecimalsEquivalent("376.6","376.6E0");
+			AssertDecimalsEquivalent("0.0000026110","261.10E-8");
+			AssertDecimalsEquivalent("7.020E+11","70.20E10");
+			AssertDecimalsEquivalent("2.1533E+9","215.33E7");
+			AssertDecimalsEquivalent("3.8113E+7","381.13E5");
+			AssertDecimalsEquivalent("7.531","75.31E-1");
+			AssertDecimalsEquivalent("991.0","99.10E1");
+			AssertDecimalsEquivalent("2.897E+8","289.7E6");
+			AssertDecimalsEquivalent("0.0000033211","332.11E-8");
+			AssertDecimalsEquivalent("0.03169","316.9E-4");
+			AssertDecimalsEquivalent("2.7321E+12","273.21E10");
+			AssertDecimalsEquivalent("394.38","394.38E0");
+			AssertDecimalsEquivalent("5.912E+7","59.12E6");
+		}
+		
 		[Test]
 		[ExpectedException(typeof(CBORException))]
 		public void TestByteStringStreamNoIndefiniteWithinDefinite(){
