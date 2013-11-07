@@ -1,4 +1,11 @@
-﻿
+﻿/*
+Written in 2013 by Peter O.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
+ */
 using System;
 using System.Text;
 using System.Numerics;
@@ -7,8 +14,11 @@ namespace PeterO
 {
 	/// <summary>
 	/// Represents an arbitrary-precision decimal floating-point number.
+	/// Consists of a integer mantissa and an integer exponent,
+	/// both arbitrary-precision.  The value of the number is equal
+	/// to mantissa * 10^exponent.
 	/// </summary>
-	public class DecimalFraction : IComparable<DecimalFraction>
+	public sealed class DecimalFraction : IComparable<DecimalFraction>, IEquatable<DecimalFraction>
 	{
 		BigInteger exponent;
 		BigInteger mantissa;
@@ -22,13 +32,18 @@ namespace PeterO
 		}
 		
 		#region Equals and GetHashCode implementation
-		public override bool Equals(object obj)
+		public bool Equals(DecimalFraction obj)
 		{
 			DecimalFraction other = obj as DecimalFraction;
 			if (other == null)
 				return false;
-			return this.exponent.Equals(other.exponent) && 
+			return this.exponent.Equals(other.exponent) &&
 				this.mantissa.Equals(other.mantissa);
+		}
+		
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as DecimalFraction);
 		}
 		
 		public override int GetHashCode()
@@ -63,7 +78,7 @@ namespace PeterO
 			this.mantissa=(BigInteger)mantissaLong;
 		}
 
-		public BigInteger
+		private BigInteger
 			RescaleByExponentDiff(BigInteger mantissa,
 			                      BigInteger e1,
 			                      BigInteger e2){
@@ -189,7 +204,6 @@ namespace PeterO
 			builder.Insert(iindex,c);
 			return true;
 		}
-		
 		private string ToStringInternal(int mode)
 		{
 			// Using Java's rules for converting DecimalFraction
@@ -260,7 +274,7 @@ namespace PeterO
 				}
 				adjustedExponent=newExponent;
 			}
-			if(mode==2 || ((adjustedExponent.CompareTo(threshold)>=0 && 
+			if(mode==2 || ((adjustedExponent.CompareTo(threshold)>=0 &&
 			                scale.Sign>=0))){
 				BigInteger decimalPoint=-(BigInteger)scale;
 				decimalPoint+=(BigInteger)negaPos;
@@ -314,6 +328,172 @@ namespace PeterO
 				return builder.ToString();
 			}
 		}
+		
+		public BigInteger ToBigInteger(){
+			if(this.Exponent==0){
+				return BigInteger.Zero;
+			} else if(this.Exponent>0){
+				BigInteger curexp=this.Exponent;
+				BigInteger bigmantissa=this.Mantissa;
+				bool neg=(bigmantissa.Sign<0);
+				if(neg)bigmantissa=-bigmantissa;
+				while(curexp>0 && !bigmantissa.IsZero){
+					bigmantissa*=(BigInteger)10;
+					curexp-=BigInteger.One;
+				}
+				if(neg)bigmantissa=-bigmantissa;
+				return bigmantissa;
+			} else {
+				BigInteger curexp=this.Exponent;
+				BigInteger bigmantissa=this.Mantissa;
+				bool neg=(bigmantissa.Sign<0);
+				if(neg)bigmantissa=-bigmantissa;
+				while(curexp<0 && !bigmantissa.IsZero){
+					bigmantissa/=(BigInteger)10;
+					curexp+=BigInteger.One;
+				}
+				if(neg)bigmantissa=-bigmantissa;
+				return bigmantissa;
+			}
+		}
+		
+		public float ToSingle(){
+			return BigFloat.FromDecimalFraction(this).ToSingle();
+		}
+		
+		public double ToDouble(){
+			return BigFloat.FromDecimalFraction(this).ToDouble();
+		}
+
+		public static DecimalFraction FromSingle(float flt){
+			int value=ConverterInternal.SingleToInt32Bits(flt);
+			int fpExponent=(int)((value>>23) & 0xFF);
+			if(fpExponent==255)
+				throw new OverflowException("Value is infinity or NaN");
+			int fpMantissa=value & 0x7FFFFF;
+			if (fpExponent==0)fpExponent++;
+			else fpMantissa|=(1<<23);
+			if(fpMantissa==0)return new DecimalFraction(0);
+			fpExponent-=150;
+			while((fpMantissa&1)==0){
+				fpExponent++;
+				fpMantissa>>=1;
+			}
+			bool neg=((value>>31)!=0);
+			if(fpExponent==0){
+				if(neg)fpMantissa=-fpMantissa;
+				return new DecimalFraction(fpMantissa);
+			} else if(fpExponent>0){
+				// Value is an integer
+				BigInteger bigmantissa=(BigInteger)fpMantissa;
+				bigmantissa<<=fpExponent;
+				if(neg)bigmantissa=-(BigInteger)bigmantissa;
+				return new DecimalFraction(bigmantissa);
+			} else {
+				// Value has a fractional part
+				BigInteger bigmantissa=(BigInteger)fpMantissa;
+				long scale=fpExponent;
+				int exp=-fpExponent;
+				for(int i=0;i<exp;i++){
+					bigmantissa*=(BigInteger)5;
+				}
+				if(neg)bigmantissa=-(BigInteger)bigmantissa;
+				return new DecimalFraction(scale,bigmantissa);
+			}
+		}
+
+		public static DecimalFraction FromDouble(double dbl){
+			long value=ConverterInternal.DoubleToInt64Bits(dbl);
+			int fpExponent=(int)((value>>52) & 0x7ffL);
+			if(fpExponent==2047)
+				throw new OverflowException("Value is infinity or NaN");
+			long fpMantissa=value & 0xFFFFFFFFFFFFFL;
+			if (fpExponent==0)fpExponent++;
+			else fpMantissa|=(1L<<52);
+			if(fpMantissa==0)return new DecimalFraction(0);
+			fpExponent-=1075;
+			while((fpMantissa&1)==0){
+				fpExponent++;
+				fpMantissa>>=1;
+			}
+			bool neg=((value>>63)!=0);
+			if(fpExponent==0){
+				if(neg)fpMantissa=-fpMantissa;
+				return new DecimalFraction(fpMantissa);
+			} else if(fpExponent>0){
+				// Value is an integer
+				BigInteger bigmantissa=(BigInteger)fpMantissa;
+				bigmantissa<<=fpExponent;
+				if(neg)bigmantissa=-(BigInteger)bigmantissa;
+				return new DecimalFraction(bigmantissa);
+			} else {
+				// Value has a fractional part
+				BigInteger bigmantissa=(BigInteger)fpMantissa;
+				long scale=fpExponent;
+				int exp=-fpExponent;
+				for(int i=0;i<exp;i++){
+					bigmantissa*=(BigInteger)5;
+				}
+				if(neg)bigmantissa=-(BigInteger)bigmantissa;
+				return new DecimalFraction(scale,bigmantissa);
+			}
+		}
+		
+		private static BigInteger BigInt5=(BigInteger)5;
+		private static BigInteger BigInt10=(BigInteger)10;
+		private static BigInteger BigInt20=(BigInteger)20;
+		private static BigInteger BigIntNeg5=(BigInteger)(-5);
+		private static BigInteger BigIntNeg10=(BigInteger)(-10);
+		private static BigInteger BigIntNeg20=(BigInteger)(-20);
+		private static BigInteger BigInt5Pow5=(BigInteger)3125;
+		private static BigInteger BigInt5Pow10=(BigInteger)9765625;
+		private static BigInteger BigInt5Pow20=(BigInteger)(95367431640625L);
+		
+		public static DecimalFraction FromBigFloat(BigFloat bigfloat){
+			BigInteger bigintExp=bigfloat.Exponent;
+			BigInteger bigintMant=bigfloat.Mantissa;
+			if(bigintExp.IsZero){
+				// Integer
+				return new DecimalFraction(bigintMant);
+			} else if(bigintExp>0){
+				// Scaled integer
+				BigInteger curexp=bigintExp;
+				BigInteger bigmantissa=bigintMant;
+				bool neg=(bigmantissa.Sign<0);
+				if(neg)bigmantissa=-(BigInteger)bigmantissa;
+				while(curexp>0){
+					int shift=64;
+					if(curexp.CompareTo((BigInteger)64)<0){
+						shift=(int)curexp;
+					}
+					bigmantissa<<=shift;
+					curexp-=(BigInteger)shift;
+				}
+				if(neg)bigmantissa=-(BigInteger)bigmantissa;
+				return new DecimalFraction(bigmantissa);
+			} else {
+				// Fractional number
+				BigInteger bigmantissa=bigintMant;
+				BigInteger curexp=bigintExp;
+				while(curexp.Sign<0){
+					if(curexp.CompareTo(BigIntNeg20)<=0){
+						bigmantissa*=(BigInteger)BigInt5Pow20;
+						curexp+=(BigInteger)BigInt20;
+					} else if(curexp.CompareTo(BigIntNeg10)<=0){
+						bigmantissa*=(BigInteger)BigInt5Pow10;
+						curexp+=(BigInteger)BigInt10;
+					} else if(curexp.CompareTo(BigIntNeg5)<=0){
+						bigmantissa*=(BigInteger)BigInt5Pow5;
+						curexp+=(BigInteger)BigInt5;
+					} else {
+						bigmantissa*=(BigInteger)BigInt5;
+						curexp+=BigInteger.One;
+					}
+				}
+				return new DecimalFraction(bigintExp,bigmantissa);
+			}
+		}
+		
 		///<summary>
 		/// </summary>
 		///<returns>

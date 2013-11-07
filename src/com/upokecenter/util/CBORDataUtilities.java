@@ -119,10 +119,13 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 					size+=2;
 				} else if(c<=0xD7FF || c>=0xE000) {
 					size+=3;
-				} else if(c<=0xDBFF){ // UTF-16 low surrogate
+				} else if(c<=0xDBFF){ // UTF-16 leading surrogate
 					i++;
 					if(i>=s.length() || s.charAt(i)<0xDC00 || s.charAt(i)>0xDFFF){
-						if(replace)size+=3;
+						if(replace){
+							size+=3;
+							i--;
+						}
 						else return -1;
 					} else {
 						size+=4;
@@ -133,6 +136,61 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 				}
 			}
 			return size;
+		}
+
+		
+		/**
+		 * Compares two strings in Unicode code point order. Unpaired surrogates
+		 * are treated as individual code points.
+		 * @param a The first string.
+		 * @param b The second string.
+		 * @return A value indicating which string is "less" or "greater". 0:
+		 * Both strings are equal or null. Less than 0: a is null and b isn't; or
+		 * the first code point that's different is less in A than in B; or b starts
+		 * with a and is longer than a. Greater than 0: b is null and a isn't; or the
+		 * first code point that's different is greater in A than in B; or a starts
+		 * with b and is longer than b.
+		 */
+		public static int CodePointCompare(String strA, String strB) {
+			if(strA==null)return (strB==null) ? 0 : -1;
+			if(strB==null)return 1;
+			int len=Math.min(strA.length(),strB.length());
+			for(int i=0;i<len;i++){
+				int ca=strA.charAt(i);
+				int cb=strB.charAt(i);
+				if(ca==cb){
+					// normal code units and illegal surrogates
+					// are treated as single code points
+					if((ca&0xF800)!=0xD800) {
+						continue;
+					}
+					boolean incindex=false;
+					if(i+1<strA.length() && strA.charAt(i+1)>=0xDC00 && strA.charAt(i+1)<=0xDFFF){
+						ca=0x10000+(ca-0xD800)*0x400+(strA.charAt(i+1)-0xDC00);
+						incindex=true;
+					}
+					if(i+1<strB.length() && strB.charAt(i+1)>=0xDC00 && strB.charAt(i+1)<=0xDFFF){
+						cb=0x10000+(cb-0xD800)*0x400+(strB.charAt(i+1)-0xDC00);
+						incindex=true;
+					}
+					if(ca!=cb)return ca-cb;
+					if(incindex) {
+						i++;
+					}
+				} else {
+					if((ca&0xF800)!=0xD800 && (cb&0xF800)!=0xD800)
+						return ca-cb;
+					if(ca>=0xd800 && ca<=0xdbff && i+1<strA.length() && strA.charAt(i+1)>=0xDC00 && strA.charAt(i+1)<=0xDFFF){
+						ca=0x10000+(ca-0xD800)*0x400+(strA.charAt(i+1)-0xDC00);
+					}
+					if(cb>=0xd800 && cb<=0xdbff && i+1<strB.length() && strB.charAt(i+1)>=0xDC00 && strB.charAt(i+1)<=0xDFFF){
+						cb=0x10000+(cb-0xD800)*0x400+(strB.charAt(i+1)-0xDC00);
+					}
+					return ca-cb;
+				}
+			}
+			if(strA.length()==strB.length())return 0;
+			return (strA.length()<strB.length()) ? -1 : 1;
 		}
 
 		
@@ -599,28 +657,28 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 			} else if(fracStart>=0 && expStart<0 &&
 			          (numberEnd-numberStart)+(fracEnd-fracStart)<=9){
 				// Small whole part and small fractional part
-				int fracpart=(fracStart<0) ? 0 : Integer.parseInt(
+				int int32fracpart=(fracStart<0) ? 0 : Integer.parseInt(
 					str.substring(fracStart,(fracStart)+(fracEnd-fracStart)));
 				// Intval consists of the whole and fractional part
 				String intvalString=str.substring(numberStart,(numberStart)+(numberEnd-numberStart))+
-					(fracpart==0 ? "" : str.substring(fracStart,(fracStart)+(fracEnd-fracStart)));
+					(int32fracpart==0 ? "" : str.substring(fracStart,(fracStart)+(fracEnd-fracStart)));
 				int int32val=Integer.parseInt(
 					intvalString);
 				if(negative)int32val=-int32val;
-				int exp=0;
-				if(fracpart!=0){
+				int int32exp=0;
+				if(int32fracpart!=0){
 					// If there is a nonzero fractional part,
 					// decrease the exponent by that part's length
-					exp-=(int)(fracEnd-fracStart);
+					int32exp-=(int)(fracEnd-fracStart);
 				}
-				if(exp==0 || int32val==0){
+				if(int32exp==0 || int32val==0){
 					// If exponent is 0, or mantissa is 0,
 					// just return the integer
 					return CBORObject.FromObject(int32val);
 				}
 				// Represent the CBOR Object as a decimal fraction
 				return CBORObject.FromObjectAndTag(new CBORObject[]{
-				                                   	CBORObject.FromObject(exp),CBORObject.FromObject(int32val)},4);
+				                                   	CBORObject.FromObject(int32exp),CBORObject.FromObject(int32val)},4);
 			} else if(fracStart<0 && expStart<0){
 				// Bigger integer
 				String strsub=(numberStart==0 && numberEnd==str.length()) ? str :
@@ -640,28 +698,28 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 					str.substring(fracStart,(fracStart)+(fracEnd-fracStart)));
 				// Intval consists of the whole and fractional part
 				String intvalString=str.substring(numberStart,(numberStart)+(numberEnd-numberStart))+
-					(fracpart.equals(BigInteger.ZERO) ? "" : str.substring(fracStart,(fracStart)+(fracEnd-fracStart)));
+					(fracpart.signum()==0 ? "" : str.substring(fracStart,(fracStart)+(fracEnd-fracStart)));
 				BigInteger intval=new BigInteger(
 					intvalString);
 				if(negative)intval=intval.negate();
-				if(fracpart.equals(BigInteger.ZERO) && expStart<0){
+				if(fracpart.signum()==0 && expStart<0){
 					// Zero fractional part and no exponent;
 					// this is easy, just return the integer
 					return CBORObject.FromObject(intval);
 				}
-				if(intval.equals(BigInteger.ZERO)){
+				if(intval.signum()==0){
 					// Mantissa is 0, return 0 regardless of exponent
 					return CBORObject.FromObject(0);
 				}
 				BigInteger exp=(expStart<0) ? BigInteger.ZERO : new BigInteger(
 					str.substring(expStart,(expStart)+(expEnd-expStart)));
 				if(negExp)exp=exp.negate();
-				if(!fracpart.equals(BigInteger.ZERO)){
+				if(fracpart.signum()!=0){
 					// If there is a nonzero fractional part,
 					// decrease the exponent by that part's length
 					exp=exp.subtract(BigInteger.valueOf((fracEnd-fracStart)));
 				}
-				if(exp.equals(BigInteger.ZERO)){
+				if(exp.signum()==0){
 					// If exponent is 0, this is also easy,
 					// just return the integer
 					return CBORObject.FromObject(intval);

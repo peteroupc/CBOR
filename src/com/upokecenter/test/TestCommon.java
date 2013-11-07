@@ -43,7 +43,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 		public static CBORObject FromBytesTestAB(byte[] b) {
 			CBORObject oa=FromBytesA(b);
 			CBORObject ob=FromBytesB(b);
-			Assert.assertEquals(oa,ob);
+			if(!oa.equals(ob))
+				Assert.assertEquals(oa,ob);
 			return oa;
 		}
 		
@@ -61,10 +62,19 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 						String.format(java.util.Locale.US,"%s and %s don't have equal hash codes",o,o2));
 				}
 			} else {
-				if(o2.equals(o))Assert.fail(
+				if(o2.equals(o))
+					Assert.fail(
 				               String.format(java.util.Locale.US,"%s does not equal %s, but not vice versa",o,o2));
 			}
 		}
+		public static void AssertRoundTrip(CBORObject o) {
+			CBORObject o2=FromBytesTestAB(o.EncodeToBytes());
+			if(!o.toString().equals(o2.toString()))
+				Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
+			AssertEqualsHashCode(o,o2);
+		}
+
+
 		public static void AssertSer(CBORObject o, String s) {
 			if(!s.equals(o.toString()))
 				Assert.assertEquals("o is not equal to s",s,o.toString());

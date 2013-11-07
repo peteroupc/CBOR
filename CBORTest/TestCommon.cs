@@ -35,7 +35,8 @@ namespace Test
 		public static CBORObject FromBytesTestAB(byte[] b){
 			CBORObject oa=FromBytesA(b);
 			CBORObject ob=FromBytesB(b);
-			Assert.AreEqual(oa,ob);
+			if(!oa.Equals(ob))
+				Assert.AreEqual(oa,ob);
 			return oa;
 		}
 		
@@ -55,11 +56,20 @@ namespace Test
 						              "{0} and {1} don't have equal hash codes",o,o2));
 				}
 			} else {
-				Assert.IsFalse(o2.Equals(o),
+				if(o2.Equals(o))
+					Assert.Fail(
 				               String.Format(CultureInfo.InvariantCulture,
 				                             "{0} does not equal {1}, but not vice versa",o,o2));
 			}
 		}
+		public static void AssertRoundTrip(CBORObject o){
+			CBORObject o2=FromBytesTestAB(o.EncodeToBytes());
+			if(!o.ToString().Equals(o2.ToString()))
+				Assert.AreEqual(o.ToString(),o2.ToString(),"o2 is not equal to o");
+			AssertEqualsHashCode(o,o2);
+		}
+
+
 		public static void AssertSer(CBORObject o, String s){
 			if(!s.Equals(o.ToString()))
 				Assert.AreEqual(s,o.ToString(),"o is not equal to s");

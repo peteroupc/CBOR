@@ -43,6 +43,62 @@ namespace PeterO
 				throw new OverflowException();
 			return (sbyte)v;
 		}
+		private decimal EncodeDecimal(BigInteger bigmant,
+		                              int scale, bool neg){
+			if(scale<0 || scale>28)
+				throw new ArgumentOutOfRangeException("scale");
+			int a=unchecked((int)(long)(bigmant&0xFFFFFFFFL));
+			int b=unchecked((int)(long)((bigmant>>32)&0xFFFFFFFFL));
+			int c=unchecked((int)(long)((bigmant>>64)&0xFFFFFFFFL));
+			int d=(scale<<16);
+			if(neg)d|=(1<<31);
+			return new Decimal(new int[]{a,b,c,d});
+		}
+		
+		private decimal DecimalFractionToDecimal(DecimalFraction decfrac){
+			BigInteger bigexp=decfrac.Exponent;
+			BigInteger bigmant=decfrac.Mantissa;
+			BigInteger decmax=(BigInteger)Decimal.MaxValue;
+			BigInteger decmin=(BigInteger)Decimal.MinValue;
+			bool neg=(bigmant<0);
+			if(neg)bigmant=-bigmant;
+			if(bigexp==0){
+				if(bigmant>decmax)
+					throw new OverflowException();
+				return (decimal)bigmant;
+			} else if(bigexp>0){
+				while(bigexp>0){
+					bigmant*=10;
+					if(bigmant>decmax)
+						throw new OverflowException();
+					bigexp-=BigInteger.One;
+				}
+				return (decimal)bigmant;
+			} else {
+				int lastDigit=0;
+				while(bigexp<0){
+					if(bigexp>=-28 && bigmant<=decmax){
+						if(lastDigit>=5){
+							bigmant++; // round half-up
+						}
+						if(bigmant<=decmax){
+							return EncodeDecimal(bigmant,-((int)bigexp),neg);
+						} else if(lastDigit>=5){
+							bigmant--; // undo rounding
+						}
+					}
+					lastDigit=(int)(bigmant%10);
+					bigmant/=10;
+					bigexp-=BigInteger.One;
+				}
+				if(lastDigit>=5){
+					bigmant++;
+				}
+				if(bigmant>decmax)
+					throw new OverflowException();
+				return EncodeDecimal(bigmant,0,neg);
+			}
+		}
 		
 		/// <summary>
 		/// Converts this object to a .NET decimal.
@@ -53,36 +109,34 @@ namespace PeterO
 		/// This object's type is not a number type.
 		/// </exception>
 		/// <exception cref="System.OverflowException">
-		/// This object's value exceeds the range of a 
+		/// This object's value exceeds the range of a
 		/// .NET decimal.</exception>
 		[CLSCompliant(false)]
 		public decimal AsDecimal(){
 			if(this.ItemType== CBORObjectType_Integer){
 				return (decimal)(long)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_BigInteger){
-				if((BigInteger)this.ThisItem>(BigInteger)Decimal.MaxValue || 
+				if((BigInteger)this.ThisItem>(BigInteger)Decimal.MaxValue ||
 				   (BigInteger)this.ThisItem<(BigInteger)Decimal.MinValue)
 					throw new OverflowException();
 				return (decimal)(BigInteger)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Single){
 				if(Single.IsNaN((float)this.ThisItem) ||
-				   (float)this.ThisItem>(float)Decimal.MaxValue || 
+				   (float)this.ThisItem>(float)Decimal.MaxValue ||
 				   (float)this.ThisItem<(float)Decimal.MinValue)
 					throw new OverflowException();
 				return (decimal)(float)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_Double){
 				if(Double.IsNaN((double)this.ThisItem) ||
-				   (double)this.ThisItem>(double)Decimal.MaxValue || 
+				   (double)this.ThisItem>(double)Decimal.MaxValue ||
 				   (double)this.ThisItem<(double)Decimal.MinValue)
 					throw new OverflowException();
 				return (decimal)(double)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_DecimalFraction){
-				string str=((DecimalFraction)this.ThisItem).ToString();
-				return Decimal.Parse(str,
-					NumberStyles.AllowLeadingSign|
-					NumberStyles.AllowDecimalPoint|
-					NumberStyles.AllowExponent,
-					CultureInfo.InvariantCulture);
+				return DecimalFractionToDecimal((DecimalFraction)this.ThisItem);
+			} else if(this.ItemType== CBORObjectType_BigFloat){
+				return DecimalFractionToDecimal(
+					DecimalFraction.FromBigFloat((BigFloat)this.ThisItem));
 			} else
 				throw new InvalidOperationException("Not a number type");
 		}
@@ -121,7 +175,12 @@ namespace PeterO
 					throw new OverflowException();
 				return (ulong)(double)this.ThisItem;
 			} else if(this.ItemType== CBORObjectType_DecimalFraction){
-				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.ThisItem).ToString());
+				BigInteger bi=((DecimalFraction)this.ThisItem).ToBigInteger();
+				if(bi>UInt64.MaxValue || bi<0)
+					throw new OverflowException();
+				return (ulong)bi;
+			} else if(this.ItemType== CBORObjectType_BigFloat){
+				BigInteger bi=((BigFloat)this.ThisItem).ToBigInteger();
 				if(bi>UInt64.MaxValue || bi<0)
 					throw new OverflowException();
 				return (ulong)bi;
@@ -168,6 +227,7 @@ namespace PeterO
 				ulong high=(ulong)unchecked((uint)v[2]);
 				bool negative=(v[3]>>31)!=0;
 				int scale=(v[3]>>16)&0xFF;
+				high<<=32;
 				BigInteger mantissa=high|mid;
 				mantissa<<=32;
 				mantissa|=low;
