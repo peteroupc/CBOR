@@ -21,6 +21,80 @@ namespace Test
 	[TestFixture]
 	public class CBORTest
 	{
+		private void TestBigFloatDoubleCore(double d, string s){
+			double oldd=d;
+			BigFloat bf=BigFloat.FromDouble(d);
+			if(s!=null){
+				Assert.AreEqual(s,bf.ToString());
+			}
+			d=bf.ToDouble();
+			Assert.AreEqual((double)oldd,d);
+			TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
+			TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
+		}
+		
+		private void TestBigFloatSingleCore(float d, string s){
+			float oldd=d;
+			BigFloat bf=BigFloat.FromSingle(d);
+			if(s!=null){
+				Assert.AreEqual(s,bf.ToString());
+			}
+			d=bf.ToSingle();
+			Assert.AreEqual((float)oldd,d);
+			TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
+			TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
+		}
+
+		private double RandomDouble(System.Random rand, int exponent){
+			long r=rand.Next(0x10000);
+			r|=((long)rand.Next(0x10000))<<16;
+			if(rand.Next(2)==0){
+				r|=((long)rand.Next(0x10000))<<32;
+				if(rand.Next(2)==0){
+					r|=((long)rand.Next(0x10000))<<48;
+				}
+			}
+			r&=~0x7FF0000000000000L; // clear exponent
+			r|=((long)exponent)<<52; // set exponent
+			return ConverterInternal.Int64BitsToDouble(r);
+		}
+		
+		private float RandomSingle(System.Random rand, int exponent){
+			int r=rand.Next(0x10000);
+			if(rand.Next(2)==0){
+				r|=((int)rand.Next(0x10000))<<16;
+			}
+			r&=~0x7F800000; // clear exponent
+			r|=((int)exponent)<<23; // set exponent
+			return ConverterInternal.Int32BitsToSingle(r);
+		}
+
+		[Test]
+		public void TestBigFloatSingle(){
+			System.Random rand=new System.Random();
+			for(int i=0;i<255;i++){ // Try a random float with a given exponent
+				TestBigFloatSingleCore(RandomSingle(rand,i),null);
+				TestBigFloatSingleCore(RandomSingle(rand,i),null);
+				TestBigFloatSingleCore(RandomSingle(rand,i),null);
+				TestBigFloatSingleCore(RandomSingle(rand,i),null);
+			}
+		}
+
+		[Test]
+		public void TestBigFloatDouble(){
+			TestBigFloatDoubleCore(3.5,"3.5");
+			TestBigFloatDoubleCore(7,"7");
+			TestBigFloatDoubleCore(1.75,"1.75");
+			TestBigFloatDoubleCore(3.5,"3.5");
+			System.Random rand=new System.Random();
+			for(int i=0;i<2047;i++){ // Try a random double with a given exponent
+				TestBigFloatDoubleCore(RandomDouble(rand,i),null);
+				TestBigFloatDoubleCore(RandomDouble(rand,i),null);
+				TestBigFloatDoubleCore(RandomDouble(rand,i),null);
+				TestBigFloatDoubleCore(RandomDouble(rand,i),null);
+			}
+		}
+		
 		
 		[Test]
 		[ExpectedException(typeof(CBORException))]
@@ -96,6 +170,44 @@ namespace Test
 			} catch(IOException ex){
 				throw new CBORException("",ex);
 			}
+		}
+		
+		[Test]
+		public void TestFPToBigInteger(){
+			Assert.AreEqual("0",CBORObject.FromObject((float)0.75).AsBigInteger().ToString());
+			Assert.AreEqual("0",CBORObject.FromObject((float)0.99).AsBigInteger().ToString());
+			Assert.AreEqual("0",CBORObject.FromObject((float)0.0000000000000001).AsBigInteger().ToString());
+			Assert.AreEqual("0",CBORObject.FromObject((float)0.5).AsBigInteger().ToString());
+			Assert.AreEqual("1",CBORObject.FromObject((float)1.5).AsBigInteger().ToString());
+			Assert.AreEqual("2",CBORObject.FromObject((float)2.5).AsBigInteger().ToString());
+			Assert.AreEqual("328323",CBORObject.FromObject((float)328323f).AsBigInteger().ToString());
+			Assert.AreEqual("0",CBORObject.FromObject((double)0.75).AsBigInteger().ToString());
+			Assert.AreEqual("0",CBORObject.FromObject((double)0.99).AsBigInteger().ToString());
+			Assert.AreEqual("0",CBORObject.FromObject((double)0.0000000000000001).AsBigInteger().ToString());
+			Assert.AreEqual("0",CBORObject.FromObject((double)0.5).AsBigInteger().ToString());
+			Assert.AreEqual("1",CBORObject.FromObject((double)1.5).AsBigInteger().ToString());
+			Assert.AreEqual("2",CBORObject.FromObject((double)2.5).AsBigInteger().ToString());
+			Assert.AreEqual("328323",CBORObject.FromObject((double)328323).AsBigInteger().ToString());
+			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.PositiveInfinity).AsBigInteger());
+			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.NegativeInfinity).AsBigInteger());
+			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.NaN).AsBigInteger());
+			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.PositiveInfinity).AsBigInteger());
+			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger());
+			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.NaN).AsBigInteger());
+		}
+		
+		[Test]
+		public void TestDecFracFP(){
+			Assert.AreEqual("0.75",DecimalFraction.FromDouble(0.75).ToString());
+			Assert.AreEqual("0.5",DecimalFraction.FromDouble(0.5).ToString());
+			Assert.AreEqual("0.25",DecimalFraction.FromDouble(0.25).ToString());
+			Assert.AreEqual("0.875",DecimalFraction.FromDouble(0.875).ToString());
+			Assert.AreEqual("0.125",DecimalFraction.FromDouble(0.125).ToString());
+			Assert.AreEqual("0.75",DecimalFraction.FromSingle(0.75f).ToString());
+			Assert.AreEqual("0.5",DecimalFraction.FromSingle(0.5f).ToString());
+			Assert.AreEqual("0.25",DecimalFraction.FromSingle(0.25f).ToString());
+			Assert.AreEqual("0.875",DecimalFraction.FromSingle(0.875f).ToString());
+			Assert.AreEqual("0.125",DecimalFraction.FromSingle(0.125f).ToString());
 		}
 		
 		[Test]
@@ -356,6 +468,27 @@ namespace Test
 				new byte[]{0x5F,0x41,0x20,0x5F,0x41,0x20,0xFF,0xFF});
 		}
 		
+		
+		[Test]
+		public void TestBigFloatDecFrac(){
+			BigFloat bf;
+			bf=new BigFloat(20);
+			Assert.AreEqual("20",DecimalFraction.FromBigFloat(bf).ToString());
+			bf=new BigFloat(-1,(BigInteger)3);
+			Assert.AreEqual("1.5",DecimalFraction.FromBigFloat(bf).ToString());
+			bf=new BigFloat(-1,(BigInteger)(-3));
+			Assert.AreEqual("-1.5",DecimalFraction.FromBigFloat(bf).ToString());
+			DecimalFraction df;
+			df=new DecimalFraction(20);
+			Assert.AreEqual("20",BigFloat.FromDecimalFraction(df).ToString());
+			df=new DecimalFraction(-20);
+			Assert.AreEqual("-20",BigFloat.FromDecimalFraction(df).ToString());
+			df=new DecimalFraction(-1,(BigInteger)15);
+			Assert.AreEqual("1.5",BigFloat.FromDecimalFraction(df).ToString());
+			df=new DecimalFraction(-1,(BigInteger)(-15));
+			Assert.AreEqual("-1.5",BigFloat.FromDecimalFraction(df).ToString());
+		}
+		
 		[Test]
 		public void TestDecimalFrac(){
 			TestCommon.FromBytesTestAB(
@@ -408,6 +541,12 @@ namespace Test
 					CBORObject.FromObject((short)i),
 					String.Format(CultureInfo.InvariantCulture,"{0}",i));
 			}
+		}
+		
+		[Test]
+		public void TestByteArray(){
+			TestCommon.AssertSer(
+				CBORObject.FromObject(new byte[]{0x20,0x78}),"h'2078'");
 		}
 		[Test]
 		public void TestBigInteger(){
@@ -483,6 +622,15 @@ namespace Test
 		}
 		
 		[Test]
+		public void TestCodePointCompare(){
+			Assert.AreEqual(0,Math.Sign(CBORDataUtilities.CodePointCompare("abc","abc")));
+			Assert.AreEqual(0,Math.Sign(CBORDataUtilities.CodePointCompare("\ud800\udc00","\ud800\udc00")));
+			Assert.AreEqual(-1,Math.Sign(CBORDataUtilities.CodePointCompare("abc","\ud800\udc00")));
+			Assert.AreEqual(-1,Math.Sign(CBORDataUtilities.CodePointCompare("\uf000","\ud800\udc00")));
+			Assert.AreEqual(1,Math.Sign(CBORDataUtilities.CodePointCompare("\uf000","\ud800")));
+		}
+		
+		[Test]
 		public void TestSimpleValues(){
 			TestCommon.AssertSer(CBORObject.FromObject(true),
 			                     "true");
@@ -493,6 +641,15 @@ namespace Test
 		}
 		
 		[Test]
+		public void TestGetUtf8Length(){
+			Assert.Throws(typeof(ArgumentNullException),()=>CBORDataUtilities.GetUtf8Length(null,true));
+			Assert.Throws(typeof(ArgumentNullException),()=>CBORDataUtilities.GetUtf8Length(null,false));
+			Assert.AreEqual(3,CBORDataUtilities.GetUtf8Length("abc",true));
+			Assert.AreEqual(6,CBORDataUtilities.GetUtf8Length("\ud800\ud800",true));
+			Assert.AreEqual(-1,CBORDataUtilities.GetUtf8Length("\ud800\ud800",false));
+		}
+		
+		[Test]
 		public void TestDouble(){
 			TestCommon.AssertSer(CBORObject.FromObject(Double.PositiveInfinity),
 			                     "Infinity");
@@ -500,10 +657,16 @@ namespace Test
 			                     "-Infinity");
 			TestCommon.AssertSer(CBORObject.FromObject(Double.NaN),
 			                     "NaN");
+			CBORObject oldobj=null;
 			for(int i=-65539;i<=65539;i++){
-				TestCommon.AssertSer(
-					CBORObject.FromObject((double)i),
-					String.Format(CultureInfo.InvariantCulture,"{0}",i));
+				CBORObject o=CBORObject.FromObject((double)i);
+				TestCommon.AssertSer(o,
+				                     String.Format(CultureInfo.InvariantCulture,"{0}",i));
+				if(oldobj!=null){
+					Assert.AreEqual(1,o.CompareTo(oldobj));
+					Assert.AreEqual(-1,oldobj.CompareTo(o));
+				}
+				oldobj=o;
 			}
 		}
 
@@ -512,7 +675,7 @@ namespace Test
 		public void TestTags(){
 			BigInteger maxuint=(BigInteger)UInt64.MaxValue;
 			BigInteger[] ranges=new BigInteger[]{
-				(BigInteger)5,
+				(BigInteger)6,
 				(BigInteger)65539,
 				(BigInteger)Int32.MaxValue-(BigInteger)500,
 				(BigInteger)Int32.MaxValue+(BigInteger)500,
@@ -526,6 +689,9 @@ namespace Test
 				while(true){
 					CBORObject obj=CBORObject.FromObjectAndTag(0,bigintTemp);
 					Assert.IsTrue(obj.IsTagged,"obj not tagged");
+					BigInteger[] tags=obj.GetTags();
+					Assert.AreEqual(1,tags.Length);
+					Assert.AreEqual(bigintTemp,tags[0]);
 					if(!obj.InnermostTag.Equals(bigintTemp))
 						Assert.AreEqual(bigintTemp,obj.InnermostTag,
 						                String.Format(CultureInfo.InvariantCulture,

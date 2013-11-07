@@ -60,6 +60,7 @@ import java.math.*;
 		private static final int CBORObjectType_Double=8;
 		private static final int CBORObjectType_DecimalFraction=9;
 		private static final int CBORObjectType_Tagged=10;
+		private static final int CBORObjectType_BigFloat=11;
 		private static final BigInteger Int64MaxValue=BigInteger.valueOf(Long.MAX_VALUE);
 		private static final BigInteger Int64MinValue=BigInteger.valueOf(Long.MIN_VALUE);
 		/**
@@ -105,6 +106,7 @@ import java.math.*;
 					case CBORObjectType_Single:
 					case CBORObjectType_Double:
 					case CBORObjectType_DecimalFraction:
+					case CBORObjectType_BigFloat:
 						return CBORType.Number;
 					case CBORObjectType_SimpleValue:
 						if(((Integer)this.getThisItem()).intValue()==21 || ((Integer)this.getThisItem()).intValue()==20){
@@ -159,7 +161,11 @@ import java.math.*;
 		 * is compared. If one array is shorter than the other and the other array
 		 * begins with that array (for the purposes of comparison), the shorter
 		 * array is considered less than the longer array.</li> <li>If both
-		 * objects are maps, returns 0.</li> </ul>
+		 * objects are strings, compares each string code-point by code-point.</li>
+		 * <li>If both objects are maps, returns 0.</li> <li>If each object
+		 * is a different type, then they are sorted by their type number, in the
+		 * order given for the CBORType enumeration.</li> <p>This method is
+		 * not consistent with the Equals method.</p> </ul>
 		 * @param other A value to compare with.
 		 * @return Less than 0, if this value is less than the other object; or
 		 * 0, if both values are equal; or greater than 0, if this value is less
@@ -189,13 +195,13 @@ public int compareTo(CBORObject other) {
 				if(((Integer)objB).intValue()==20 || ((Integer)objB).intValue()==22 || ((Integer)objB).intValue()==23){
 					// Treat false, null, and undefined
 					// as the number 0
-					objA=(long)0;
-					typeA=CBORObjectType_Integer;
+					objB=(long)0;
+					typeB=CBORObjectType_Integer;
 				}
 				else if(((Integer)objB).intValue()==21){
 					// Treat true as the number 1
-					objA=(long)1;
-					typeA=CBORObjectType_Integer;
+					objB=(long)1;
+					typeB=CBORObjectType_Integer;
 				}
 			}
 			if(typeA==typeB){
@@ -209,8 +215,9 @@ public int compareTo(CBORObject other) {
 						case CBORObjectType_Single:{
 							float a=((Float)this.getThisItem()).floatValue();
 							float b=((Float)other.getThisItem()).floatValue();
+							// Treat NaN as greater than all other numbers
 							if(Float.isNaN(a)){
-								return (Float.isNaN(b)) ? 1 : 0;
+								return (Float.isNaN(b)) ? 0 : 1;
 							}
 							if(Float.isNaN(b)){
 								return -1;
@@ -226,8 +233,9 @@ public int compareTo(CBORObject other) {
 						case CBORObjectType_Double:{
 							double a=((Double)this.getThisItem()).doubleValue();
 							double b=((Double)other.getThisItem()).doubleValue();
+							// Treat NaN as greater than all other numbers
 							if(Double.isNaN(a)){
-								return (Double.isNaN(b)) ? 1 : 0;
+								return (Double.isNaN(b)) ? 0 : 1;
 							}
 							if(Double.isNaN(b)){
 								return -1;
@@ -239,11 +247,16 @@ public int compareTo(CBORObject other) {
 							return ((DecimalFraction)objA).compareTo(
 								((DecimalFraction)objB));
 						}
+						case CBORObjectType_BigFloat:{
+							return ((BigFloat)objA).compareTo(
+								((BigFloat)objB));
+						}
 						case CBORObjectType_ByteString:{
 							return ByteArrayCompare((byte[])objA,(byte[])objB);
 						}
 						case CBORObjectType_TextString:{
-							throw new UnsupportedOperationException();
+							return CBORDataUtilities.CodePointCompare(
+								(String)objA,(String)objB);
 						}
 						case CBORObjectType_Array:{
 							return ListCompare((ArrayList<CBORObject>)objA,
@@ -265,21 +278,59 @@ public int compareTo(CBORObject other) {
 				int combo=(typeA<<4)|typeB;
 				switch(combo){
 						case (CBORObjectType_Integer<<4)|CBORObjectType_BigInteger:{
-							BigInteger bigint=BigInteger.valueOf(((Long)objA).longValue());
-							return bigint.compareTo((BigInteger)objB);
+							BigInteger xa=BigInteger.valueOf(((Long)objA).longValue());
+							BigInteger xb=(BigInteger)objB;
+							return xa.compareTo(xb);
 						}
-						case (CBORObjectType_BigInteger<<4)|CBORObjectType_Integer:{
-							BigInteger bigint=BigInteger.valueOf(((Long)objB).longValue());
-							return (BigInteger.valueOf(((Long)objA).longValue())).compareTo(bigint);
+						case (CBORObjectType_Integer<<4)|CBORObjectType_Single:{
+							float sf=((Float)objB).floatValue();
+							if(sf==Float.NEGATIVE_INFINITY)return -1;
+							if(sf==Float.POSITIVE_INFINITY)return 1;
+							if(Float.isNaN(sf))return 1;
+							DecimalFraction xa=new DecimalFraction(((Long)objA).longValue());
+							DecimalFraction xb=DecimalFraction.FromSingle(sf);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_Integer<<4)|CBORObjectType_Double:{
+							double sf=((Double)objB).doubleValue();
+							if(sf==Double.NEGATIVE_INFINITY)return -1;
+							if(sf==Double.POSITIVE_INFINITY)return 1;
+							if(Double.isNaN(sf))return 1;
+							DecimalFraction xa=new DecimalFraction(((Long)objA).longValue());
+							DecimalFraction xb=DecimalFraction.FromDouble(sf);
+							return xa.compareTo(xb);
 						}
 						case (CBORObjectType_Integer<<4)|CBORObjectType_DecimalFraction:{
 							DecimalFraction xa=new DecimalFraction(((Long)objA).longValue());
 							DecimalFraction xb=(DecimalFraction)objB;
 							return xa.compareTo(xb);
 						}
-						case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_Integer:{
-							DecimalFraction xb=new DecimalFraction(((Long)objB).longValue());
-							DecimalFraction xa=(DecimalFraction)objA;
+						case (CBORObjectType_Integer<<4)|CBORObjectType_BigFloat:{
+							BigFloat xa=new BigFloat(((Long)objA).longValue());
+							BigFloat xb=(BigFloat)objB;
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_BigInteger<<4)|CBORObjectType_Integer:{
+							BigInteger xa=(BigInteger)objA;
+							BigInteger xb=BigInteger.valueOf(((Long)objB).longValue());
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_BigInteger<<4)|CBORObjectType_Single:{
+							float sf=((Float)objB).floatValue();
+							if(sf==Float.NEGATIVE_INFINITY)return -1;
+							if(sf==Float.POSITIVE_INFINITY)return 1;
+							if(Float.isNaN(sf))return 1;
+							DecimalFraction xa=new DecimalFraction((BigInteger)objA);
+							DecimalFraction xb=DecimalFraction.FromSingle(sf);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_BigInteger<<4)|CBORObjectType_Double:{
+							double sf=((Double)objB).doubleValue();
+							if(sf==Double.NEGATIVE_INFINITY)return -1;
+							if(sf==Double.POSITIVE_INFINITY)return 1;
+							if(Double.isNaN(sf))return 1;
+							DecimalFraction xa=new DecimalFraction((BigInteger)objA);
+							DecimalFraction xb=DecimalFraction.FromDouble(sf);
 							return xa.compareTo(xb);
 						}
 						case (CBORObjectType_BigInteger<<4)|CBORObjectType_DecimalFraction:{
@@ -287,13 +338,261 @@ public int compareTo(CBORObject other) {
 							DecimalFraction xb=(DecimalFraction)objB;
 							return xa.compareTo(xb);
 						}
-						case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_BigInteger:{
-							DecimalFraction xb=new DecimalFraction((BigInteger)objB);
-							DecimalFraction xa=(DecimalFraction)objA;
+						case (CBORObjectType_BigInteger<<4)|CBORObjectType_BigFloat:{
+							BigFloat xa=new BigFloat((BigInteger)objA);
+							BigFloat xb=(BigFloat)objB;
 							return xa.compareTo(xb);
 						}
+						case (CBORObjectType_Single<<4)|CBORObjectType_Integer:{
+							float sf=((Float)objA).floatValue();
+							if(sf==Float.NEGATIVE_INFINITY)return -1;
+							if(sf==Float.POSITIVE_INFINITY)return 1;
+							if(Float.isNaN(sf))return 1;
+							DecimalFraction xa=DecimalFraction.FromSingle(sf);
+							DecimalFraction xb=new DecimalFraction(((Long)objB).longValue());
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_Single<<4)|CBORObjectType_BigInteger:{
+							float sf=((Float)objA).floatValue();
+							if(sf==Float.NEGATIVE_INFINITY)return -1;
+							if(sf==Float.POSITIVE_INFINITY)return 1;
+							if(Float.isNaN(sf))return 1;
+							DecimalFraction xa=DecimalFraction.FromSingle(sf);
+							DecimalFraction xb=new DecimalFraction((BigInteger)objB);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_Single<<4)|CBORObjectType_Double:{
+							double a=((Float)objA).doubleValue();
+							double b=((Double)objB).doubleValue();
+							// Treat NaN as greater than all other numbers
+							if(Double.isNaN(a)){
+								return (Double.isNaN(b)) ? 0 : 1;
+							}
+							if(Double.isNaN(b)){
+								return -1;
+							}
+							if(a==b)return 0;
+							return (a<b) ? -1 : 1;
+						}
+						case (CBORObjectType_Single<<4)|CBORObjectType_DecimalFraction:{
+							float sf=((Float)objA).floatValue();
+							if(sf==Float.NEGATIVE_INFINITY)return -1;
+							if(sf==Float.POSITIVE_INFINITY)return 1;
+							if(Float.isNaN(sf))return 1;
+							DecimalFraction xa=DecimalFraction.FromSingle(sf);
+							DecimalFraction xb=(DecimalFraction)objB;
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_Single<<4)|CBORObjectType_BigFloat:{
+							float sf=((Float)objA).floatValue();
+							if(sf==Float.NEGATIVE_INFINITY)return -1;
+							if(sf==Float.POSITIVE_INFINITY)return 1;
+							if(Float.isNaN(sf))return 1;
+							BigFloat xa=BigFloat.FromSingle(sf);
+							BigFloat xb=(BigFloat)objB;
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_Double<<4)|CBORObjectType_Integer:{
+							double sf=((Double)objA).doubleValue();
+							if(sf==Double.NEGATIVE_INFINITY)return -1;
+							if(sf==Double.POSITIVE_INFINITY)return 1;
+							if(Double.isNaN(sf))return 1;
+							DecimalFraction xa=DecimalFraction.FromDouble(sf);
+							DecimalFraction xb=new DecimalFraction(((Long)objB).longValue());
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_Double<<4)|CBORObjectType_BigInteger:{
+							double sf=((Double)objA).doubleValue();
+							if(sf==Double.NEGATIVE_INFINITY)return -1;
+							if(sf==Double.POSITIVE_INFINITY)return 1;
+							if(Double.isNaN(sf))return 1;
+							DecimalFraction xa=DecimalFraction.FromDouble(sf);
+							DecimalFraction xb=new DecimalFraction((BigInteger)objB);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_Double<<4)|CBORObjectType_Single:{
+							double a=((Double)objA).doubleValue();
+							double b=((Float)objB).doubleValue();
+							// Treat NaN as greater than all other numbers
+							if(Double.isNaN(a)){
+								return (Double.isNaN(b)) ? 0 : 1;
+							}
+							if(Double.isNaN(b)){
+								return -1;
+							}
+							if(a==b)return 0;
+							return (a<b) ? -1 : 1;
+						}
+						case (CBORObjectType_Double<<4)|CBORObjectType_DecimalFraction:{
+							double sf=((Double)objA).doubleValue();
+							if(sf==Double.NEGATIVE_INFINITY)return -1;
+							if(sf==Double.POSITIVE_INFINITY)return 1;
+							if(Double.isNaN(sf))return 1;
+							DecimalFraction xa=DecimalFraction.FromDouble(sf);
+							DecimalFraction xb=(DecimalFraction)objB;
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_Double<<4)|CBORObjectType_BigFloat:{
+							double sf=((Double)objA).doubleValue();
+							if(sf==Double.NEGATIVE_INFINITY)return -1;
+							if(sf==Double.POSITIVE_INFINITY)return 1;
+							if(Double.isNaN(sf))return 1;
+							BigFloat xa=BigFloat.FromDouble(sf);
+							BigFloat xb=(BigFloat)objB;
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_Integer:{
+							DecimalFraction xa=(DecimalFraction)objA;
+							DecimalFraction xb=new DecimalFraction(((Long)objB).longValue());
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_BigInteger:{
+							DecimalFraction xa=(DecimalFraction)objA;
+							DecimalFraction xb=new DecimalFraction((BigInteger)objB);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_Single:{
+							float sf=((Float)objB).floatValue();
+							if(sf==Float.NEGATIVE_INFINITY)return -1;
+							if(sf==Float.POSITIVE_INFINITY)return 1;
+							if(Float.isNaN(sf))return 1;
+							DecimalFraction xa=(DecimalFraction)objA;
+							DecimalFraction xb=DecimalFraction.FromSingle(sf);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_Double:{
+							double sf=((Double)objB).doubleValue();
+							if(sf==Double.NEGATIVE_INFINITY)return -1;
+							if(sf==Double.POSITIVE_INFINITY)return 1;
+							if(Double.isNaN(sf))return 1;
+							DecimalFraction xa=(DecimalFraction)objA;
+							DecimalFraction xb=DecimalFraction.FromDouble(sf);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_BigFloat:{
+							DecimalFraction xa=(DecimalFraction)objA;
+							DecimalFraction xb=DecimalFraction.FromBigFloat((BigFloat)objB);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_BigFloat<<4)|CBORObjectType_Integer:{
+							BigFloat xa=(BigFloat)objA;
+							BigFloat xb=new BigFloat(((Long)objB).longValue());
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_BigFloat<<4)|CBORObjectType_BigInteger:{
+							BigFloat xa=(BigFloat)objA;
+							BigFloat xb=new BigFloat((BigInteger)objB);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_BigFloat<<4)|CBORObjectType_Single:{
+							float sf=((Float)objB).floatValue();
+							if(sf==Float.NEGATIVE_INFINITY)return -1;
+							if(sf==Float.POSITIVE_INFINITY)return 1;
+							if(Float.isNaN(sf))return 1;
+							BigFloat xa=(BigFloat)objA;
+							BigFloat xb=BigFloat.FromSingle(sf);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_BigFloat<<4)|CBORObjectType_Double:{
+							double sf=((Double)objB).doubleValue();
+							if(sf==Double.NEGATIVE_INFINITY)return -1;
+							if(sf==Double.POSITIVE_INFINITY)return 1;
+							if(Double.isNaN(sf))return 1;
+							BigFloat xa=(BigFloat)objA;
+							BigFloat xb=BigFloat.FromDouble(sf);
+							return xa.compareTo(xb);
+						}
+						case (CBORObjectType_BigFloat<<4)|CBORObjectType_DecimalFraction:{
+							DecimalFraction xa=DecimalFraction.FromBigFloat((BigFloat)objA);
+							DecimalFraction xb=(DecimalFraction)objB;
+							return xa.compareTo(xb);
+						}
+					case (CBORObjectType_BigFloat<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_BigFloat<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_BigFloat<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_BigFloat<<4)|CBORObjectType_Array:
+					case (CBORObjectType_BigFloat<<4)|CBORObjectType_Map:
+						return -1;
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_BigFloat:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_BigFloat:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_BigFloat:
+					case (CBORObjectType_Array<<4)|CBORObjectType_BigFloat:
+					case (CBORObjectType_Map<<4)|CBORObjectType_BigFloat:
+						return 1;
+					case (CBORObjectType_Integer<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_Integer<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_Integer<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_Integer<<4)|CBORObjectType_Array:
+					case (CBORObjectType_Integer<<4)|CBORObjectType_Map:
+					case (CBORObjectType_BigInteger<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_BigInteger<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_BigInteger<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_BigInteger<<4)|CBORObjectType_Array:
+					case (CBORObjectType_BigInteger<<4)|CBORObjectType_Map:
+					case (CBORObjectType_Single<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_Single<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_Single<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_Single<<4)|CBORObjectType_Array:
+					case (CBORObjectType_Single<<4)|CBORObjectType_Map:
+					case (CBORObjectType_Double<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_Double<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_Double<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_Double<<4)|CBORObjectType_Array:
+					case (CBORObjectType_Double<<4)|CBORObjectType_Map:
+					case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_Array:
+					case (CBORObjectType_DecimalFraction<<4)|CBORObjectType_Map:
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_Array:
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_Map:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_Array:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_Map:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_Array:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_Map:
+					case (CBORObjectType_Array<<4)|CBORObjectType_Map:
+						return -1;
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_Integer:
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_BigInteger:
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_Single:
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_Double:
+					case (CBORObjectType_SimpleValue<<4)|CBORObjectType_DecimalFraction:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_Integer:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_BigInteger:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_Single:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_Double:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_DecimalFraction:
+					case (CBORObjectType_ByteString<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_Integer:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_BigInteger:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_Single:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_Double:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_DecimalFraction:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_TextString<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_Array<<4)|CBORObjectType_Integer:
+					case (CBORObjectType_Array<<4)|CBORObjectType_BigInteger:
+					case (CBORObjectType_Array<<4)|CBORObjectType_Single:
+					case (CBORObjectType_Array<<4)|CBORObjectType_Double:
+					case (CBORObjectType_Array<<4)|CBORObjectType_DecimalFraction:
+					case (CBORObjectType_Array<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_Array<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_Array<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_Map<<4)|CBORObjectType_Integer:
+					case (CBORObjectType_Map<<4)|CBORObjectType_BigInteger:
+					case (CBORObjectType_Map<<4)|CBORObjectType_Single:
+					case (CBORObjectType_Map<<4)|CBORObjectType_Double:
+					case (CBORObjectType_Map<<4)|CBORObjectType_DecimalFraction:
+					case (CBORObjectType_Map<<4)|CBORObjectType_SimpleValue:
+					case (CBORObjectType_Map<<4)|CBORObjectType_ByteString:
+					case (CBORObjectType_Map<<4)|CBORObjectType_TextString:
+					case (CBORObjectType_Map<<4)|CBORObjectType_Array:
+						return 1;
 					default:
-						throw new UnsupportedOperationException();
+						throw new IllegalArgumentException("Unexpected data type");
 				}
 			}
 		}
@@ -400,13 +699,18 @@ public int compareTo(CBORObject other) {
 			return (a.size()*19);
 		}
 
+		@Override public boolean equals(Object obj) {
+			return equals(((obj instanceof CBORObject) ? (CBORObject)obj : null));
+		}
+
+		
 		/**
 		 * Compares the equality of two CBOR objects.
 		 * @param obj The object to compare
 		 * @return true if the objects are equal; otherwise, false.
 		 */
-		@Override @SuppressWarnings("unchecked")
-public boolean equals(Object obj) {
+		@SuppressWarnings("unchecked")
+public boolean equals(CBORObject obj) {
 			CBORObject other = ((obj instanceof CBORObject) ? (CBORObject)obj : null);
 			if (other == null)
 				return false;
@@ -1025,8 +1329,9 @@ public void set(String key, CBORObject value) {
 			else if(this.getItemType()== CBORObjectType_Double)
 				return ((Double)this.getThisItem()).doubleValue();
 			else if(this.getItemType()==CBORObjectType_DecimalFraction){
-				String decstring=((DecimalFraction)this.getThisItem()).toString();
-				return Double.parseDouble(decstring);
+				return ((DecimalFraction)this.getThisItem()).ToDouble();
+			} else if(this.getItemType()==CBORObjectType_BigFloat){
+				return ((BigFloat)this.getThisItem()).ToDouble();
 			}
 			else
 				throw new IllegalStateException("Not a number type");
@@ -1045,11 +1350,41 @@ public void set(String key, CBORObject value) {
 			else if(this.getItemType()== CBORObjectType_BigInteger)
 				return new DecimalFraction((BigInteger)this.getThisItem());
 			else if(this.getItemType()== CBORObjectType_Single)
-				throw new UnsupportedOperationException();
+				return DecimalFraction.FromSingle(((Float)this.getThisItem()).floatValue());
 			else if(this.getItemType()== CBORObjectType_Double)
-				throw new UnsupportedOperationException();
-			else if(this.getItemType()== CBORObjectType_DecimalFraction){
+				return DecimalFraction.FromDouble(((Double)this.getThisItem()).doubleValue());
+			else if(this.getItemType()== CBORObjectType_DecimalFraction)
 				return (DecimalFraction)this.getThisItem();
+			else if(this.getItemType()== CBORObjectType_BigFloat){
+				return DecimalFraction.FromBigFloat((BigFloat)this.getThisItem());
+			}
+			else
+				throw new IllegalStateException("Not a number type");
+		}
+
+		/**
+		 * Converts this object to an arbitrary-precision binary floating
+		 * point number.
+		 * @return An arbitrary-precision binary floating point number for
+		 * this object's value. Note that if this object is a decimal fraction
+		 * with a fractional part, the conversion may lose information depending
+		 * on the number.
+		 * @throws java.lang.IllegalStateException This object's type is
+		 * not a number type.
+		 */
+		public BigFloat AsBigFloat() {
+			if(this.getItemType()== CBORObjectType_Integer)
+				return new BigFloat(((Long)this.getThisItem()).longValue());
+			else if(this.getItemType()== CBORObjectType_BigInteger)
+				return new BigFloat((BigInteger)this.getThisItem());
+			else if(this.getItemType()== CBORObjectType_Single)
+				return BigFloat.FromSingle(((Float)this.getThisItem()).floatValue());
+			else if(this.getItemType()== CBORObjectType_Double)
+				return BigFloat.FromDouble(((Double)this.getThisItem()).doubleValue());
+			else if(this.getItemType()== CBORObjectType_DecimalFraction)
+				return BigFloat.FromDecimalFraction((DecimalFraction)this.getThisItem());
+			else if(this.getItemType()== CBORObjectType_BigFloat){
+				return (BigFloat)this.getThisItem();
 			}
 			else
 				throw new IllegalStateException("Not a number type");
@@ -1071,16 +1406,87 @@ public void set(String key, CBORObject value) {
 			else if(this.getItemType()== CBORObjectType_Double)
 				return ((Double)this.getThisItem()).floatValue();
 			else if(this.getItemType()== CBORObjectType_DecimalFraction){
-				String decstring=((DecimalFraction)this.getThisItem()).toString();
-				return Float.parseFloat(decstring);
+				return ((DecimalFraction)this.getThisItem()).ToSingle();
+			}
+			else if(this.getItemType()== CBORObjectType_BigFloat){
+				return ((BigFloat)this.getThisItem()).ToSingle();
 			}
 			else
 				throw new IllegalStateException("Not a number type");
 		}
+		
+		private static BigInteger BigIntegerFromSingle(float flt) {
+			int value=Float.floatToRawIntBits(flt);
+			int fpexponent=(int)((value>>23) & 0xFF);
+			if(fpexponent==255)
+				throw new ArithmeticException("Value is infinity or NaN");
+			int mantissa = value & 0x7FFFFF;
+			if (fpexponent==0)fpexponent++;
+			else mantissa|=(1<<23);
+			if(mantissa==0)return BigInteger.ZERO;
+			fpexponent-=150;
+			while((mantissa&1)==0){
+				fpexponent++;
+				mantissa>>=1;
+			}
+			boolean neg=((value>>31)!=0);
+			if(fpexponent==0){
+				if(neg)mantissa=-mantissa;
+				return BigInteger.valueOf(mantissa);
+			} else if(fpexponent>0){
+				// Value is an integer
+				BigInteger bigmantissa=BigInteger.valueOf(mantissa);
+				bigmantissa=bigmantissa.shiftLeft(fpexponent);
+				if(neg)bigmantissa=(bigmantissa).negate();
+				return bigmantissa;
+			} else {
+				// Value has a fractional part
+				int exp=-fpexponent;
+				for(int i=0;i<exp && mantissa!=0;i++){
+					mantissa>>=1;
+				}
+				return BigInteger.valueOf(mantissa);
+			}
+		}
+
+		private static BigInteger BigIntegerFromDouble(double dbl) {
+			long value=Double.doubleToRawLongBits(dbl);
+			int fpexponent=(int)((value>>52) & 0x7ffL);
+			if(fpexponent==2047)
+				throw new ArithmeticException("Value is infinity or NaN");
+			long mantissa = value & 0xFFFFFFFFFFFFFL;
+			if (fpexponent==0)fpexponent++;
+			else mantissa|=(1L<<52);
+			if(mantissa==0)return BigInteger.ZERO;
+			fpexponent-=1075;
+			while((mantissa&1)==0){
+				fpexponent++;
+				mantissa>>=1;
+			}
+			boolean neg=((value>>63)!=0);
+			if(fpexponent==0){
+				if(neg)mantissa=-mantissa;
+				return BigInteger.valueOf(mantissa);
+			} else if(fpexponent>0){
+				// Value is an integer
+				BigInteger bigmantissa=BigInteger.valueOf(mantissa);
+				bigmantissa=bigmantissa.shiftLeft(fpexponent);
+				if(neg)bigmantissa=(bigmantissa).negate();
+				return bigmantissa;
+			} else {
+				// Value has a fractional part
+				int exp=-fpexponent;
+				for(int i=0;i<exp && mantissa!=0;i++){
+					mantissa>>=1;
+				}
+				return BigInteger.valueOf(mantissa);
+			}
+		}
+		
 
 		/**
-		 * Converts this object to an arbitrary-precision integer. Floating
-		 * point values are truncated to an integer.
+		 * Converts this object to an arbitrary-precision integer. Fractional
+		 * values are truncated to an integer.
 		 * @return The closest big integer to this object.
 		 * @throws java.lang.IllegalStateException This object's type is
 		 * not a number type.
@@ -1091,11 +1497,14 @@ public void set(String key, CBORObject value) {
 			else if(this.getItemType()== CBORObjectType_BigInteger)
 				return (BigInteger)this.getThisItem();
 			else if(this.getItemType()== CBORObjectType_Single)
-				return new BigDecimal(((Float)this.getThisItem()).floatValue()).toBigInteger();
+				return BigIntegerFromSingle(((Float)this.getThisItem()).floatValue());
 			else if(this.getItemType()== CBORObjectType_Double)
-				return new BigDecimal(((Double)this.getThisItem()).doubleValue()).toBigInteger();
+				return BigIntegerFromDouble(((Double)this.getThisItem()).doubleValue());
 			else if(this.getItemType()== CBORObjectType_DecimalFraction){
-				return ParseBigIntegerWithExponent(((DecimalFraction)this.getThisItem()).toString());
+				return ((DecimalFraction)this.getThisItem()).ToBigInteger();
+			}
+			else if(this.getItemType()== CBORObjectType_BigFloat){
+				return ((BigFloat)this.getThisItem()).ToBigInteger();
 			}
 			else
 				throw new IllegalStateException("Not a number type");
@@ -1189,7 +1598,13 @@ public void set(String key, CBORObject value) {
 					throw new ArithmeticException();
 				return ((Double)this.getThisItem()).longValue();
 			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
-				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.getThisItem()).toString());
+				BigInteger bi=((DecimalFraction)this.getThisItem()).ToBigInteger();
+				if(bi.compareTo(Int64MaxValue)>0 ||
+				   bi.compareTo(Int64MinValue)<0)
+					throw new ArithmeticException();
+				return bi.longValue();
+			} else if(this.getItemType()== CBORObjectType_BigFloat){
+				BigInteger bi=((BigFloat)this.getThisItem()).ToBigInteger();
 				if(bi.compareTo(Int64MaxValue)>0 ||
 				   bi.compareTo(Int64MinValue)<0)
 					throw new ArithmeticException();
@@ -1229,7 +1644,13 @@ public void set(String key, CBORObject value) {
 					throw new ArithmeticException();
 				return ((Double)thisItem).intValue();
 			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
-				BigInteger bi=ParseBigIntegerWithExponent(((DecimalFraction)this.getThisItem()).toString());
+				BigInteger bi=((DecimalFraction)this.getThisItem()).ToBigInteger();
+				if(bi.compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0 ||
+				   bi.compareTo(BigInteger.valueOf(Integer.MIN_VALUE))<0)
+					throw new ArithmeticException();
+				return bi.intValue();
+			} else if(this.getItemType()== CBORObjectType_BigFloat){
+				BigInteger bi=((BigFloat)this.getThisItem()).ToBigInteger();
 				if(bi.compareTo(BigInteger.valueOf(Integer.MAX_VALUE))>0 ||
 				   bi.compareTo(BigInteger.valueOf(Integer.MIN_VALUE))<0)
 					throw new ArithmeticException();
@@ -1484,7 +1905,7 @@ ms=new ByteArrayOutputStream();
 						BigInteger tmpbigint=bigint.and(FiftySixBitMask);
 						tmp=tmpbigint.longValue();
 						bigint=bigint.shiftRight(56);
-						boolean isNowZero=(bigint.equals(BigInteger.ZERO));
+						boolean isNowZero=(bigint.signum()==0);
 						int bufferindex=0;
 						for(int i=0;i<7 && (!isNowZero || tmp>0);i++){
 							buffer[bufferindex]=(byte)(tmp&0xFF);
@@ -1572,10 +1993,21 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
 				DecimalFraction dec=(DecimalFraction)this.getThisItem();
 				BigInteger exponent=dec.getExponent();
-				if(exponent.equals(BigInteger.ZERO)){
+				if(exponent.signum()==0){
 					Write(dec.getMantissa(),s);
 				} else {
 					s.write(0xC4); // tag 4
+					s.write(0x82); // array, length 2
+					Write(dec.getExponent(),s);
+					Write(dec.getMantissa(),s);
+				}
+			} else if(this.getItemType()== CBORObjectType_BigFloat){
+				BigFloat dec=(BigFloat)this.getThisItem();
+				BigInteger exponent=dec.getExponent();
+				if(exponent.signum()==0){
+					Write(dec.getMantissa(),s);
+				} else {
+					s.write(0xC5); // tag 5
 					s.write(0x82); // array, length 2
 					Write(dec.getExponent(),s);
 					Write(dec.getMantissa(),s);
@@ -1939,10 +2371,6 @@ public static void Write(Object o, OutputStream s) throws IOException {
 			return sb.toString();
 		}
 		
-		private BigInteger ParseBigIntegerWithExponent(String str) {
-			return new BigDecimal(str).toBigInteger();
-		}
-		
 		/**
 		 * Converts this object to a JSON string. This function works not only
 		 * with arrays and maps (the only proper JSON objects under RFC 4627),
@@ -1988,6 +2416,8 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				return StringToJSONString(this.AsString());
 			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
 				return ((DecimalFraction)this.getThisItem()).toString();
+			} else if(this.getItemType()== CBORObjectType_BigFloat){
+				return ((BigFloat)this.getThisItem()).toString();
 			} else if(this.getItemType()== CBORObjectType_Array){
 				StringBuilder sb=new StringBuilder();
 				boolean first=true;
@@ -2021,7 +2451,7 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				if(hasNonStringKeys){
 					builder.setLength(0);
 					HashMap<String,CBORObject> sMap=new HashMap<String,CBORObject>();
-					// Copy to a map with String keys, since 
+					// Copy to a map with String keys, since
 					// some keys could be duplicates
 					// when serialized to strings
 					for(Map.Entry<CBORObject,CBORObject> entry : objMap.entrySet()){
@@ -2234,11 +2664,47 @@ public static void Write(Object o, OutputStream s) throws IOException {
 		 * @return A CBOR number object.
 		 */
 		public static CBORObject FromObject(BigInteger bigintValue) {
+			if((Object)bigintValue==(Object)null)
+				return CBORObject.Null;
 			if(bigintValue.compareTo(Int64MinValue)>=0 &&
 			   bigintValue.compareTo(Int64MaxValue)<=0){
 				return new CBORObject(CBORObjectType_Integer,bigintValue.longValue());
 			} else {
 				return new CBORObject(CBORObjectType_BigInteger,bigintValue);
+			}
+		}
+
+		/**
+		 * Generates a CBOR object from an arbitrary-precision binary floating-point
+		 * number.
+		 * @param bigintValue An arbitrary-precision binary floating-point
+		 * number.
+		 * @return A CBOR number object.
+		 */
+		public static CBORObject FromObject(BigFloat decfrac) {
+			if((Object)decfrac==(Object)null)
+				return CBORObject.Null;
+			BigInteger bigintExponent=decfrac.getExponent();
+			if(bigintExponent.signum()==0){
+				return FromObject(decfrac.getMantissa());
+			} else {
+				return new CBORObject(CBORObjectType_BigFloat,decfrac);
+			}
+		}
+
+		/**
+		 * Generates a CBOR object from a decimal fraction.
+		 * @param bigintValue An arbitrary-precision decimal number.
+		 * @return A CBOR number object.
+		 */
+		public static CBORObject FromObject(DecimalFraction decfrac) {
+			if((Object)decfrac==(Object)null)
+				return CBORObject.Null;
+			BigInteger bigintExponent=decfrac.getExponent();
+			if(bigintExponent.signum()==0){
+				return FromObject(decfrac.getMantissa());
+			} else {
+				return new CBORObject(CBORObjectType_DecimalFraction,decfrac);
 			}
 		}
 		/**
@@ -2298,16 +2764,17 @@ public static void Write(Object o, OutputStream s) throws IOException {
 			return new CBORObject(CBORObjectType_Double,value);
 		}
 		/**
-		 * Generates a CBOR object from a byte array. The byte array is not copied.
+		 * Generates a CBOR object from a byte array. The byte array is copied
+		 * to a new byte array.
 		 * @param stringValue A byte array. Can be null.
-		 * @return A CBOR object that uses the byte array, or CBORObject.Null
-		 * if stringValue is null.
-		 * @throws java.lang.IllegalArgumentException The string contains an unpaired
-		 * surrogate code point.
+		 * @return A CBOR object where each byte of the given byte array is copied
+		 * to a new array, or CBORObject.Null if "bytes" is null.
 		 */
-		public static CBORObject FromObject(byte[] value) {
-			if(value==null)return CBORObject.Null;
-			return new CBORObject(CBORObjectType_ByteString,value);
+		public static CBORObject FromObject(byte[] bytes) {
+			if(bytes==null)return CBORObject.Null;
+			byte[] newvalue=new byte[bytes.length];
+			System.arraycopy(bytes,0,newvalue,0,bytes.length);
+			return new CBORObject(CBORObjectType_ByteString,bytes);
 		}
 		/**
 		 * Generates a CBOR object from an array of CBOR objects.
@@ -2370,6 +2837,8 @@ public static CBORObject FromObject(Object obj) {
 			if(obj instanceof Long)return FromObject(((Long)obj).longValue());
 			if(obj instanceof CBORObject)return FromObject((CBORObject)obj);
 			if(obj instanceof BigInteger)return FromObject((BigInteger)obj);
+			if(obj instanceof DecimalFraction)return FromObject((DecimalFraction)obj);
+			if(obj instanceof BigFloat)return FromObject((BigFloat)obj);
 			if(obj instanceof String)return FromObject((String)obj);
 			if(obj instanceof Integer)return FromObject(((Integer)obj).intValue());
 			if(obj instanceof Short)return FromObject(((Short)obj).shortValue());
@@ -2422,7 +2891,9 @@ public static CBORObject FromObject(Object obj) {
 			} else if(bigintTag.compareTo(BigInteger.valueOf(3))==0){
 				return ConvertToBigNum(c,true);
 			} else if(bigintTag.compareTo(BigInteger.valueOf(4))==0){
-				return ConvertToDecimalFrac(c);
+				return ConvertToDecimalFrac(c,true);
+			} else if(bigintTag.compareTo(BigInteger.valueOf(5))==0){
+				return ConvertToDecimalFrac(c,false);
 			} else {
 				long tagLow=0;
 				long tagHigh=0;
@@ -2455,8 +2926,8 @@ public static CBORObject FromObject(Object obj) {
 			if(intTag==2 || intTag==3){
 				return ConvertToBigNum(c,intTag==3);
 			}
-			if(intTag==4){
-				return ConvertToDecimalFrac(c);
+			if(intTag==4 || intTag==5){
+				return ConvertToDecimalFrac(c,intTag==4);
 			}
 			return new CBORObject(c,intTag,0);
 		}
@@ -2622,6 +3093,8 @@ public static CBORObject FromObject(Object obj) {
 				}
 			} else if(this.getItemType()== CBORObjectType_DecimalFraction){
 				return ToJSONString();
+			} else if(this.getItemType()== CBORObjectType_BigFloat){
+				return ToJSONString();
 			} else if(this.getItemType()== CBORObjectType_Array){
 				if(sb==null)sb=new StringBuilder();
 				boolean first=true;
@@ -2700,13 +3173,15 @@ public static CBORObject FromObject(Object obj) {
 				case CBORObjectType_Integer:
 					return (((Long)this.getThisItem()).longValue())==0;
 				case CBORObjectType_BigInteger:
-					return ((BigInteger)this.getThisItem()).equals(BigInteger.ZERO);
+					return ((BigInteger)this.getThisItem()).signum()==0;
 				case CBORObjectType_Single:
 					return (((Float)this.getThisItem()).floatValue())==0;
 				case CBORObjectType_Double:
 					return (((Double)this.getThisItem()).doubleValue())==0;
 				case CBORObjectType_DecimalFraction:
-					return ((DecimalFraction)this.getThisItem()).equals(BigInteger.ZERO);
+					return ((DecimalFraction)this.getThisItem()).signum()==0;
+				case CBORObjectType_BigFloat:
+					return ((BigFloat)this.getThisItem()).signum()==0;
 				default:
 					return false;
 			}
@@ -2736,6 +3211,11 @@ public static CBORObject FromObject(Object obj) {
 						return value.compareTo(new DecimalFraction(LowestMajorType1))>=0 &&
 							value.compareTo(new DecimalFraction(UInt64MaxValue))<=0;
 					}
+					case CBORObjectType_BigFloat:{
+						BigFloat value=(BigFloat)this.getThisItem();
+						return value.compareTo(new BigFloat(LowestMajorType1))>=0 &&
+							value.compareTo(new BigFloat(UInt64MaxValue))<=0;
+					}
 				default:
 					return false;
 			}
@@ -2753,25 +3233,32 @@ public static CBORObject FromObject(Object obj) {
 		}
 
 
-		private static CBORObject ConvertToDecimalFrac(CBORObject o) {
+		private static CBORObject ConvertToDecimalFrac(CBORObject o, Boolean isDecimal) {
 			if(o.getItemType()!=CBORObjectType_Array)
-				throw new CBORException("Decimal fraction must be an array");
+				throw new CBORException("Big fraction must be an array");
 			if(o.size()!=2) // Requires 2 items
-				throw new CBORException("Decimal fraction requires exactly 2 items");
+				throw new CBORException("Big fraction requires exactly 2 items");
 			List<CBORObject> list=o.AsList();
-			if(!list.get(1).CanFitInTypeZeroOrOne())
+			if(!list.get(0).CanFitInTypeZeroOrOne())
 				throw new CBORException("Exponent is too big");
 			// check type of mantissa
 			if(list.get(1).getItemType()!=CBORObjectType_Integer &&
 			   list.get(1).getItemType()!=CBORObjectType_BigInteger)
-				throw new CBORException("Decimal fraction requires mantissa to be an integer or big integer");
+				throw new CBORException("Big fraction requires mantissa to be an integer or big integer");
 			if(list.get(0).IsZero() && !o.isTagged()){
 				// Exponent is 0, so return mantissa instead
 				return list.get(1);
 			}
-			return RewrapObject(o,new CBORObject(
-				CBORObjectType_DecimalFraction,
-				new DecimalFraction(list.get(0).AsBigInteger(),list.get(1).AsBigInteger())));
+			if(isDecimal){
+				return RewrapObject(o,new CBORObject(
+					CBORObjectType_DecimalFraction,
+					new DecimalFraction(list.get(0).AsBigInteger(),list.get(1).AsBigInteger())));
+				
+			} else {
+				return RewrapObject(o,new CBORObject(
+					CBORObjectType_BigFloat,
+					new BigFloat(list.get(0).AsBigInteger(),list.get(1).AsBigInteger())));
+			}
 		}
 		
 		private static boolean CheckMajorTypeIndex(int type, int index, int[] validTypeFlags) {
@@ -3060,7 +3547,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 						int[] subFlags=new int[]{(1<<2)};
 						o=Read(s,depth+1,false,-1,subFlags,0);
 						return ConvertToBigNum(o,uadditional==3);
-					} else if(uadditional==4){
+					} else if(uadditional==4 || uadditional==5){
 						// Requires an array with two elements of
 						// a valid type
 						int[] subFlags=new int[]{
@@ -3069,7 +3556,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 							(1<<0)|(1<<1)|(1<<6) // mantissa
 						};
 						o=Read(s,depth+1,false,-1,subFlags,0);
-						return ConvertToDecimalFrac(o);
+						return ConvertToDecimalFrac(o,uadditional==4);
 					} else {
 						o=Read(s,depth+1,false,-1,null,0);
 					}

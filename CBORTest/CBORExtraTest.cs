@@ -18,6 +18,42 @@ namespace Test
 	public class CBORExtraTest
 	{
 		
+		private decimal RandomDecimal(System.Random rand, int exponent){
+			int[] x=new int[4];
+			int r=rand.Next(0x10000);
+			r|=((int)rand.Next(0x10000))<<16;
+			x[0]=r;
+			if(rand.Next(2)==0){
+				r=rand.Next(0x10000);
+				r|=((int)rand.Next(0x10000))<<16;
+				x[1]=r;
+				if(rand.Next(2)==0){
+					r=rand.Next(0x10000);
+					r|=((int)rand.Next(0x10000))<<16;
+					x[2]=r;
+				}
+			}
+			x[3]=(exponent<<16);
+			if(rand.Next(2)==0){
+				x[3]|=(1<<31);
+			}
+			return new Decimal(x);
+		}
+
+		[Test]
+		public void TestCBORObjectDecimal(){
+			System.Random rand=new System.Random();
+			for(int i=0;i<=28;i++){ // Try a random decimal with a given exponent
+				for(int j=0;j<8;j++){
+					decimal d=RandomDecimal(rand,i);
+					CBORObject obj=CBORObject.FromObject(d);
+					TestCommon.AssertRoundTrip(obj);
+					Assert.AreEqual(d,obj.AsDecimal());
+				}
+			}
+		}
+
+		
 		[Test]
 		public void TestSByte(){
 			for(int i=SByte.MinValue;i<=SByte.MaxValue;i++){
@@ -93,6 +129,31 @@ namespace Test
 				}
 			}
 		}
+		
+		[Test]
+		public void TestUInt(){
+			uint[] ranges=new uint[]{
+				0,65539,
+				0x7FFFF000U,0x80000400U,
+				UInt32.MaxValue-1000,UInt32.MaxValue
+			};
+			for(int i=0;i<ranges.Length;i+=2){
+				uint j=ranges[i];
+				while(true){
+					TestCommon.AssertSer(
+						CBORObject.FromObject(j),
+						String.Format(CultureInfo.InvariantCulture,"{0}",j));
+					Assert.AreEqual(
+						CBORObject.FromObject(j),
+						CBORObject.FromObject((BigInteger)j));
+					
+					if(j==ranges[i+1])break;
+					j++;
+				}
+			}
+		}
+
+		
 		
 		[Test]
 		public void TestDecimal(){

@@ -22,6 +22,80 @@ import org.junit.Test;
 	
 	public class CBORTest
 	{
+		private void TestBigFloatDoubleCore(double d, String s){
+			double oldd=d;
+			BigFloat bf=BigFloat.FromDouble(d);
+			if(s!=null){
+				Assert.assertEquals(s,bf.toString());
+			}
+			d=bf.ToDouble();
+			Assert.assertEquals((double)oldd,d,0);
+			TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
+			TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
+		}
+		
+		private void TestBigFloatSingleCore(float d, String s){
+			float oldd=d;
+			BigFloat bf=BigFloat.FromSingle(d);
+			if(s!=null){
+				Assert.assertEquals(s,bf.toString());
+			}
+			d=bf.ToSingle();
+			Assert.assertEquals((float)oldd,d,0f);
+			TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
+			TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
+		}
+
+		private double RandomDouble(java.util.Random rand, int exponent){
+			long r=rand.nextInt(0x10000);
+			r|=((long)rand.nextInt(0x10000))<<16;
+			if(rand.nextInt(2)==0){
+				r|=((long)rand.nextInt(0x10000))<<32;
+				if(rand.nextInt(2)==0){
+					r|=((long)rand.nextInt(0x10000))<<48;
+				}
+			}
+			r&=~0x7FF0000000000000L; // clear exponent
+			r|=((long)exponent)<<52; // set exponent
+			return Double.longBitsToDouble(r);
+		}
+		
+		private float RandomSingle(java.util.Random rand, int exponent){
+			int r=rand.nextInt(0x10000);
+			if(rand.nextInt(2)==0){
+				r|=((int)rand.nextInt(0x10000))<<16;
+			}
+			r&=~0x7F800000; // clear exponent
+			r|=((int)exponent)<<23; // set exponent
+			return Float.intBitsToFloat(r);
+		}
+
+		@Test
+		public void TestBigFloatSingle(){
+			java.util.Random rand=new java.util.Random();
+			for(int i=0;i<255;i++){ // Try a random float with a given exponent
+				TestBigFloatSingleCore(RandomSingle(rand,i),null);
+				TestBigFloatSingleCore(RandomSingle(rand,i),null);
+				TestBigFloatSingleCore(RandomSingle(rand,i),null);
+				TestBigFloatSingleCore(RandomSingle(rand,i),null);
+			}
+		}
+
+		@Test
+		public void TestBigFloatDouble(){
+			TestBigFloatDoubleCore(3.5,"3.5");
+			TestBigFloatDoubleCore(7,"7");
+			TestBigFloatDoubleCore(1.75,"1.75");
+			TestBigFloatDoubleCore(3.5,"3.5");
+			java.util.Random rand=new java.util.Random();
+			for(int i=0;i<2047;i++){ // Try a random double with a given exponent
+				TestBigFloatDoubleCore(RandomDouble(rand,i),null);
+				TestBigFloatDoubleCore(RandomDouble(rand,i),null);
+				TestBigFloatDoubleCore(RandomDouble(rand,i),null);
+				TestBigFloatDoubleCore(RandomDouble(rand,i),null);
+			}
+		}
+		
 		
 		@Test
 		public void TestTagThenBreak() {
@@ -108,6 +182,44 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 			} catch(IOException ex){
 				throw new CBORException("",ex);
 			}
+		}
+		
+		@Test
+		public void TestFPToBigInteger(){
+			Assert.assertEquals("0",CBORObject.FromObject((float)0.75).AsBigInteger().toString());
+			Assert.assertEquals("0",CBORObject.FromObject((float)0.99).AsBigInteger().toString());
+			Assert.assertEquals("0",CBORObject.FromObject((float)0.0000000000000001).AsBigInteger().toString());
+			Assert.assertEquals("0",CBORObject.FromObject((float)0.5).AsBigInteger().toString());
+			Assert.assertEquals("1",CBORObject.FromObject((float)1.5).AsBigInteger().toString());
+			Assert.assertEquals("2",CBORObject.FromObject((float)2.5).AsBigInteger().toString());
+			Assert.assertEquals("328323",CBORObject.FromObject((float)328323f).AsBigInteger().toString());
+			Assert.assertEquals("0",CBORObject.FromObject((double)0.75).AsBigInteger().toString());
+			Assert.assertEquals("0",CBORObject.FromObject((double)0.99).AsBigInteger().toString());
+			Assert.assertEquals("0",CBORObject.FromObject((double)0.0000000000000001).AsBigInteger().toString());
+			Assert.assertEquals("0",CBORObject.FromObject((double)0.5).AsBigInteger().toString());
+			Assert.assertEquals("1",CBORObject.FromObject((double)1.5).AsBigInteger().toString());
+			Assert.assertEquals("2",CBORObject.FromObject((double)2.5).AsBigInteger().toString());
+			Assert.assertEquals("328323",CBORObject.FromObject((double)328323).AsBigInteger().toString());
+			try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.NaN).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.NaN).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+		}
+		
+		@Test
+		public void TestDecFracFP(){
+			Assert.assertEquals("0.75",DecimalFraction.FromDouble(0.75).toString());
+			Assert.assertEquals("0.5",DecimalFraction.FromDouble(0.5).toString());
+			Assert.assertEquals("0.25",DecimalFraction.FromDouble(0.25).toString());
+			Assert.assertEquals("0.875",DecimalFraction.FromDouble(0.875).toString());
+			Assert.assertEquals("0.125",DecimalFraction.FromDouble(0.125).toString());
+			Assert.assertEquals("0.75",DecimalFraction.FromSingle(0.75f).toString());
+			Assert.assertEquals("0.5",DecimalFraction.FromSingle(0.5f).toString());
+			Assert.assertEquals("0.25",DecimalFraction.FromSingle(0.25f).toString());
+			Assert.assertEquals("0.875",DecimalFraction.FromSingle(0.875f).toString());
+			Assert.assertEquals("0.125",DecimalFraction.FromSingle(0.125f).toString());
 		}
 		
 		@Test
@@ -387,6 +499,27 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 }
 }
 		
+		
+		@Test
+		public void TestBigFloatDecFrac(){
+			BigFloat bf;
+			bf=new BigFloat(20);
+			Assert.assertEquals("20",DecimalFraction.FromBigFloat(bf).toString());
+			bf=new BigFloat(-1,BigInteger.valueOf(3));
+			Assert.assertEquals("1.5",DecimalFraction.FromBigFloat(bf).toString());
+			bf=new BigFloat(-1,BigInteger.valueOf((-3)));
+			Assert.assertEquals("-1.5",DecimalFraction.FromBigFloat(bf).toString());
+			DecimalFraction df;
+			df=new DecimalFraction(20);
+			Assert.assertEquals("20",BigFloat.FromDecimalFraction(df).toString());
+			df=new DecimalFraction(-20);
+			Assert.assertEquals("-20",BigFloat.FromDecimalFraction(df).toString());
+			df=new DecimalFraction(-1,BigInteger.valueOf(15));
+			Assert.assertEquals("1.5",BigFloat.FromDecimalFraction(df).toString());
+			df=new DecimalFraction(-1,BigInteger.valueOf((-15)));
+			Assert.assertEquals("-1.5",BigFloat.FromDecimalFraction(df).toString());
+		}
+		
 		@Test
 		public void TestDecimalFrac(){
 			TestCommon.FromBytesTestAB(
@@ -449,6 +582,12 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 					CBORObject.FromObject((short)i),
 					String.format(java.util.Locale.US,"%s",i));
 			}
+		}
+		
+		@Test
+		public void TestByteArray() {
+			TestCommon.AssertSer(
+				CBORObject.FromObject(new byte[]{0x20,0x78}),"h'2078'");
 		}
 		@Test
 		public void TestBigInteger() {
@@ -524,6 +663,15 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 		}
 		
 		@Test
+		public void TestCodePointCompare() {
+			Assert.assertEquals(0,(int)Math.signum(CBORDataUtilities.CodePointCompare("abc","abc")));
+			Assert.assertEquals(0,(int)Math.signum(CBORDataUtilities.CodePointCompare("\ud800\udc00","\ud800\udc00")));
+			Assert.assertEquals(-1,(int)Math.signum(CBORDataUtilities.CodePointCompare("abc","\ud800\udc00")));
+			Assert.assertEquals(-1,(int)Math.signum(CBORDataUtilities.CodePointCompare("\uf000","\ud800\udc00")));
+			Assert.assertEquals(1,(int)Math.signum(CBORDataUtilities.CodePointCompare("\uf000","\ud800")));
+		}
+		
+		@Test
 		public void TestSimpleValues() {
 			TestCommon.AssertSer(CBORObject.FromObject(true),
 			                     "true");
@@ -534,6 +682,15 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 		}
 		
 		@Test
+		public void TestGetUtf8Length() {
+			try { CBORDataUtilities.GetUtf8Length(null,true); } catch(NullPointerException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORDataUtilities.GetUtf8Length(null,false); } catch(NullPointerException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			Assert.assertEquals(3,CBORDataUtilities.GetUtf8Length("abc",true));
+			Assert.assertEquals(6,CBORDataUtilities.GetUtf8Length("\ud800\ud800",true));
+			Assert.assertEquals(-1,CBORDataUtilities.GetUtf8Length("\ud800\ud800",false));
+		}
+		
+		@Test
 		public void TestDouble() {
 			TestCommon.AssertSer(CBORObject.FromObject(Double.POSITIVE_INFINITY),
 			                     "Infinity");
@@ -541,10 +698,16 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 			                     "-Infinity");
 			TestCommon.AssertSer(CBORObject.FromObject(Double.NaN),
 			                     "NaN");
+			CBORObject oldobj=null;
 			for(int i=-65539;i<=65539;i++){
-				TestCommon.AssertSer(
-					CBORObject.FromObject((double)i),
-					String.format(java.util.Locale.US,"%s",i));
+				CBORObject o=CBORObject.FromObject((double)i);
+				TestCommon.AssertSer(o,
+				                     String.format(java.util.Locale.US,"%s",i));
+				if(oldobj!=null){
+					Assert.assertEquals(1,o.compareTo(oldobj));
+					Assert.assertEquals(-1,oldobj.compareTo(o));
+				}
+				oldobj=o;
 			}
 		}
 
@@ -553,7 +716,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 		public void TestTags() {
 			BigInteger maxuint=new BigInteger("18446744073709551615");
 			BigInteger[] ranges=new BigInteger[]{
-				BigInteger.valueOf(5),
+				BigInteger.valueOf(6),
 				BigInteger.valueOf(65539),
 				BigInteger.valueOf(Integer.MAX_VALUE).subtract(BigInteger.valueOf(500)),
 				BigInteger.valueOf(Integer.MAX_VALUE).add(BigInteger.valueOf(500)),
@@ -567,6 +730,9 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 				while(true){
 					CBORObject obj=CBORObject.FromObjectAndTag(0,bigintTemp);
 					if(!(obj.isTagged()))Assert.fail("obj not tagged");
+					BigInteger[] tags=obj.GetTags();
+					Assert.assertEquals(1,tags.length);
+					Assert.assertEquals(bigintTemp,tags[0]);
 					if(!obj.getInnermostTag().equals(bigintTemp))
 						Assert.assertEquals(String.format(java.util.Locale.US,"obj tag doesn't match: %s",obj),bigintTemp,obj.getInnermostTag());
 					TestCommon.AssertSer(
