@@ -1537,8 +1537,8 @@ public void set(String key, CBORObject value) {
 		}
 		
 		/**
-		 * Converts this object to a byte. Floating point values are truncated
-		 * to an integer.
+		 * Converts this object to a byte (0 to 255). Floating point values are
+		 * truncated to an integer.
 		 * @return The closest byte-sized integer to this object.
 		 * @throws java.lang.IllegalStateException This object's type is
 		 * not a number type.
@@ -2090,7 +2090,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 			s.write(value ? (byte)0xf5 : (byte)0xf4);
 		}
 		/**
-		 * Writes a byte in CBOR format to a data stream.
+		 * Writes a byte (0 to 255) in CBOR format to a data stream.
 		 * @param value The value to write
 		 * @param s A writable data stream.
 		 * @throws java.lang.NullPointerException s is null.
@@ -2746,7 +2746,7 @@ public static void Write(Object o, OutputStream s) throws IOException {
 			return (value ? CBORObject.True : CBORObject.False);
 		}
 		/**
-		 * Generates a CBOR object from a byte.
+		 * Generates a CBOR object from a byte (0 to 255).
 		 */
 		public static CBORObject FromObject(byte value) {
 			return FromObject(((int)value)&0xFF);

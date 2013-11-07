@@ -12,7 +12,7 @@ at: http://upokecenter.com/d/
 
 
 	/**
-	 * Description of CBORException.
+	 * Exception thrown for errors involving CBOR data.
 	 */
 	public class CBORException extends RuntimeException
 	{

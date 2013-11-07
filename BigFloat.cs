@@ -23,15 +23,25 @@ namespace PeterO
 		BigInteger exponent;
 		BigInteger mantissa;
 		
+		/// <summary>
+		/// Gets this object's exponent.  This object's value will be an integer
+		/// if the exponent is positive or zero.
+		/// </summary>
 		public BigInteger Exponent {
 			get { return exponent; }
 		}
 		
+		/// <summary>
+		/// Gets this object's unscaled value.
+		/// </summary>
 		public BigInteger Mantissa {
 			get { return mantissa; }
 		}
 		
 		#region Equals and GetHashCode implementation
+		/// <summary>
+		/// Determines whether this object is equal to another object.
+		/// </summary>
 		public bool Equals(BigFloat obj)
 		{
 			BigFloat other = obj as BigFloat;
@@ -41,11 +51,18 @@ namespace PeterO
 				this.mantissa.Equals(other.mantissa);
 		}
 		
+		/// <summary>
+		/// Determines whether this object is equal to another object.
+		/// </summary>
 		public override bool Equals(object obj)
 		{
 			return Equals(obj as BigFloat);
 		}
 
+		/// <summary>
+		/// Calculates this object's hash code.
+		/// </summary>
+		/// <returns>This object's hash code.</returns>
 		public override int GetHashCode()
 		{
 			int hashCode = 0;
@@ -57,22 +74,39 @@ namespace PeterO
 		}
 		#endregion
 
-		
+		/// <summary>
+		/// Creates a bigfloat with the value exponent*2^mantissa.
+		/// </summary>
+		/// <param name="exponent">The binary exponent.</param>
+		/// <param name="mantissa">The unscaled value.</param>
 		public BigFloat(BigInteger exponent, BigInteger mantissa){
 			this.exponent=exponent;
 			this.mantissa=mantissa;
 		}
 
+		/// <summary>
+		/// Creates a bigfloat with the value exponentLong*2^mantissa.
+		/// </summary>
+		/// <param name="exponentLong">The binary exponent.</param>
+		/// <param name="mantissa">The unscaled value.</param>
 		public BigFloat(long exponentLong, BigInteger mantissa){
 			this.exponent=(BigInteger)exponentLong;
 			this.mantissa=mantissa;
 		}
 
+		/// <summary>
+		/// Creates a bigfloat with the given mantissa and an exponent of 0.
+		/// </summary>
+		/// <param name="mantissa">The desired value of the bigfloat</param>
 		public BigFloat(BigInteger mantissa){
 			this.exponent=BigInteger.Zero;
 			this.mantissa=mantissa;
 		}
 
+		/// <summary>
+		/// Creates a bigfloat with the given mantissa and an exponent of 0.
+		/// </summary>
+		/// <param name="mantissaLong">The desired value of the bigfloat</param>
 		public BigFloat(long mantissaLong){
 			this.exponent=BigInteger.Zero;
 			this.mantissa=(BigInteger)mantissaLong;
@@ -99,6 +133,11 @@ namespace PeterO
 			return mantissa;
 		}
 		
+		/// <summary>
+		/// Finds the sum of this object and another bigfloat.
+		/// The result's exponent is set to the lower of the exponents
+		/// of the two operands.
+		/// </summary>
 		public BigFloat Add(BigFloat decfrac){
 			int expcmp=exponent.CompareTo((BigInteger)decfrac.exponent);
 			if(expcmp==0){
@@ -117,6 +156,11 @@ namespace PeterO
 			}
 		}
 
+		/// <summary>
+		/// Finds the difference between this object and another bigfloat.
+		/// The result's exponent is set to the lower of the exponents
+		/// of the two operands.
+		/// </summary>
 		public BigFloat Subtract(BigFloat decfrac){
 			int expcmp=exponent.CompareTo((BigInteger)decfrac.exponent);
 			if(expcmp==0){
@@ -135,30 +179,49 @@ namespace PeterO
 			}
 		}
 		
+		/// <summary>
+		/// Multiplies two bigfloats.  The resulting scale will be the sum
+		/// of the scales of the two bigfloats.
+		/// </summary>
+		/// <param name="decfrac">Another bigfloat.</param>
+		/// <returns>The product of the two bigfloats.</returns>
 		public BigFloat Multiply(BigFloat decfrac){
 			BigInteger newexp=(this.exponent+(BigInteger)decfrac.exponent);
 			return new BigFloat(
 				newexp,mantissa*(BigInteger)decfrac.mantissa);
 		}
 
+		/// <summary>
+		/// Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+		/// </summary>
 		public int Sign {
 			get {
 				return mantissa.Sign;
 			}
 		}
 		
+		/// <summary>
+		/// Gets whether this object's value equals 0.
+		/// </summary>
 		public bool IsZero {
 			get {
 				return mantissa.IsZero;
 			}
 		}
 
-		public int CompareTo(BigFloat decfrac){
-			if(decfrac==null)return 1;
+		/// <summary>
+		/// Compares two bigfloats.
+		/// </summary>
+		/// <param name="other">Another bigfloat.</param>
+		/// <returns>Less than 0 if this value is less than the other
+		/// value, or greater than 0 if this value is greater than the other
+		/// value or if "other" is null, or 0 if both values are equal.</returns>
+		public int CompareTo(BigFloat other){
+			if(other==null)return 1;
 			int s=this.Sign;
-			int ds=decfrac.Sign;
+			int ds=other.Sign;
 			if(s!=ds)return (s<ds) ? -1 : 1;
-			return decfrac.Subtract(this).Sign;
+			return other.Subtract(this).Sign;
 		}
 		
 		
@@ -204,6 +267,11 @@ namespace PeterO
 			};
 		}
 		
+		/// <summary>
+		/// Creates a bigfloat from an arbitrary-precision decimal fraction.
+		/// Note that if the decimal fraction contains a negative exponent,
+		/// the resulting value might not be exact.
+		/// </summary>
 		public static BigFloat FromDecimalFraction(DecimalFraction decfrac){
 			BigInteger bigintExp=decfrac.Exponent;
 			BigInteger bigintMant=decfrac.Mantissa;
@@ -248,6 +316,12 @@ namespace PeterO
 			}
 		}
 		
+		/// <summary>
+		/// Creates a bigfloat from a 32-bit floating-point number.
+		/// </summary>
+		/// <param name="dbl">A 32-bit floating-point number.</param>
+		/// <returns>A bigfloat with the same value as "flt".</returns>
+		/// <exception cref="OverflowException">"flt" is infinity or not-a-number.</exception>
 		public static BigFloat FromSingle(float flt){
 			int value=ConverterInternal.SingleToInt32Bits(flt);
 			int fpExponent=(int)((value>>23) & 0xFF);
@@ -267,6 +341,12 @@ namespace PeterO
 			return new BigFloat(fpExponent-150,(BigInteger)fpMantissa);
 		}
 
+		/// <summary>
+		/// Creates a bigfloat from a 64-bit floating-point number.
+		/// </summary>
+		/// <param name="dbl">A 64-bit floating-point number.</param>
+		/// <returns>A bigfloat with the same value as "dbl"</returns>
+		/// <exception cref="OverflowException">"dbl" is infinity or not-a-number.</exception>
 		public static BigFloat FromDouble(double dbl){
 			long value=ConverterInternal.DoubleToInt64Bits(dbl);
 			int fpExponent=(int)((value>>52) & 0x7ffL);
@@ -286,6 +366,11 @@ namespace PeterO
 			return new BigFloat(fpExponent-1075,(BigInteger)fpMantissa);
 		}
 
+		/// <summary>
+		/// Converts this value to an arbitrary-precision integer.
+		/// Any fractional part in this value will be discarded when
+		/// converting to a big integer.
+		/// </summary>
 		public BigInteger ToBigInteger(){
 			if(this.Exponent==0){
 				return BigInteger.Zero;
@@ -458,36 +543,28 @@ namespace PeterO
 		}
 		
 		///<summary>
+		/// Converts this value to a string.
+		///The format of the return value is exactly the same as that of the java.math.BigDecimal.toString() method.
 		/// </summary>
-		///<returns>
-		///
-		///</returns>
-		///<remarks>
-		///The format of the return value is exactly the same as that of the java.math.BigDecimal.toString() method.</remarks>
 		public override string ToString()
 		{
 			return DecimalFraction.FromBigFloat(this).ToString();
 		}
 
 		///<summary>
+		/// Same as toString(), except that when an exponent is used it will be a multiple of 3.
+		/// The format of the return value follows the format of the java.math.BigDecimal.toEngineeringString() method.
 		/// </summary>
-		///<returns>
-		///
-		///</returns>
-		///<remarks>
-		///The format of the return value follows the format of the java.math.BigDecimal.toEngineeringString() method.</remarks>
 		public string ToEngineeringString()
 		{
 			return DecimalFraction.FromBigFloat(this).ToEngineeringString();
 		}
 
 		///<summary>
+		/// Converts this value to a string, but without an exponent part.
+		///The format of the return value follows the format of the java.math.BigDecimal.toPlainString() 
+		/// method.
 		/// </summary>
-		///<returns>
-		///
-		///</returns>
-		///<remarks>
-		///The format of the return value follows the format of the java.math.BigDecimal.toPlainString() method.</remarks>
 		public string ToPlainString()
 		{
 			return DecimalFraction.FromBigFloat(this).ToPlainString();
