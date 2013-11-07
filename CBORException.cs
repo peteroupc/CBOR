@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 namespace PeterO
 {
 	/// <summary>
-	/// Description of CBORException.
+	/// Exception thrown for errors involving CBOR data.
 	/// </summary>
 	public class CBORException : Exception, ISerializable
 	{

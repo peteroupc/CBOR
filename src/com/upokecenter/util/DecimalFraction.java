@@ -21,12 +21,21 @@ import java.math.*;
 	{
 		BigInteger exponent;
 		BigInteger mantissa;
-		
+		/**
+		 * Gets this object's exponent. This object's value will be an integer
+		 * if the exponent is positive or zero.
+		 */
 		public BigInteger getExponent() { return exponent; }
 		
+		/**
+		 * Gets this object's unscaled value.
+		 */
 		public BigInteger getMantissa() { return mantissa; }
 		
 		
+		/**
+		 * Determines whether this object is equal to another object.
+		 */
 		public boolean equals(DecimalFraction obj) {
 			DecimalFraction other = ((obj instanceof DecimalFraction) ? (DecimalFraction)obj : null);
 			if (other == null)
@@ -35,10 +44,17 @@ import java.math.*;
 				this.mantissa.equals(other.mantissa);
 		}
 		
+		/**
+		 * Determines whether this object is equal to another object.
+		 */
 		@Override public boolean equals(Object obj) {
 			return equals(((obj instanceof DecimalFraction) ? (DecimalFraction)obj : null));
 		}
 		
+		/**
+		 * Calculates this object's hash code.
+		 * @return This object's hash code.
+		 */
 		@Override public int hashCode() {
 			int hashCode_ = 0;
 			{
@@ -50,21 +66,42 @@ import java.math.*;
 		
 
 		
+		
+		/**
+		 * Creates a decimal fraction with the value exponent*10^mantissa.
+		 * @param exponent The decimal exponent.
+		 * @param mantissa The unscaled value.
+		 */
 		public DecimalFraction(BigInteger exponent, BigInteger mantissa){
 			this.exponent=exponent;
 			this.mantissa=mantissa;
 		}
 
+		/**
+		 * Creates a decimal fraction with the value exponentLong*10^mantissa.
+		 * @param exponentLong The decimal exponent.
+		 * @param mantissa The unscaled value.
+		 */
 		public DecimalFraction(long exponentLong, BigInteger mantissa){
 			this.exponent=BigInteger.valueOf(exponentLong);
 			this.mantissa=mantissa;
 		}
 
+		/**
+		 * Creates a decimal fraction with the given mantissa and an exponent
+		 * of 0.
+		 * @param mantissa The desired value of the bigfloat
+		 */
 		public DecimalFraction(BigInteger mantissa){
 			this.exponent=BigInteger.ZERO;
 			this.mantissa=mantissa;
 		}
 
+		/**
+		 * Creates a decimal fraction with the given mantissa and an exponent
+		 * of 0.
+		 * @param mantissaLong The desired value of the bigfloat
+		 */
 		public DecimalFraction(long mantissaLong){
 			this.exponent=BigInteger.ZERO;
 			this.mantissa=BigInteger.valueOf(mantissaLong);
@@ -90,6 +127,10 @@ import java.math.*;
 			return mantissa;
 		}
 		
+		/**
+		 * Finds the sum of this object and another decimal fraction. The result's
+		 * exponent is set to the lower of the exponents of the two operands.
+		 */
 		public DecimalFraction Add(DecimalFraction decfrac) {
 			int expcmp=exponent.compareTo(decfrac.exponent);
 			if(expcmp==0){
@@ -108,6 +149,11 @@ import java.math.*;
 			}
 		}
 
+		/**
+		 * Finds the difference between this object and another decimal fraction.
+		 * The result's exponent is set to the lower of the exponents of the two
+		 * operands.
+		 */
 		public DecimalFraction Subtract(DecimalFraction decfrac) {
 			int expcmp=exponent.compareTo(decfrac.exponent);
 			if(expcmp==0){
@@ -126,20 +172,39 @@ import java.math.*;
 			}
 		}
 		
+		/**
+		 * Multiplies two decimal fractions. The resulting scale will be the
+		 * sum of the scales of the two decimal fractions.
+		 * @param decfrac Another decimal fraction.
+		 * @return The product of the two decimal fractions.
+		 */
 		public DecimalFraction Multiply(DecimalFraction decfrac) {
 			BigInteger newexp=(this.exponent.add(decfrac.exponent));
 			return new DecimalFraction(
 				newexp,mantissa.multiply(decfrac.mantissa));
 		}
 
+		/**
+		 * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+		 */
 		public int signum() {
 				return mantissa.signum();
 			}
 		
+		/**
+		 * Gets whether this object's value equals 0.
+		 */
 		public boolean isZero() {
 				return mantissa.signum()==0;
 			}
 
+		/**
+		 * Compares two decimal fractions.
+		 * @param other Another decimal fractions.
+		 * @return Less than 0 if this value is less than the other value, or greater
+		 * than 0 if this value is greater than the other value or if "other" is
+		 * null, or 0 if both values are equal.
+		 */
 		public int compareTo(DecimalFraction decfrac) {
 			if(decfrac==null)return 1;
 			int s=this.signum();
@@ -314,6 +379,10 @@ import java.math.*;
 			}
 		}
 		
+		/**
+		 * Converts this value to an arbitrary-precision integer. Any fractional
+		 * part in this value will be discarded when converting to a big integer.
+		 */
 		public BigInteger ToBigInteger() {
 			if(this.getExponent().signum()==0){
 				return BigInteger.ZERO;
@@ -342,14 +411,30 @@ import java.math.*;
 			}
 		}
 		
+		/**
+		 * Converts this value to a 32-bit floating-point number. The half-up
+		 * rounding mode is used.
+		 * @return The closest 32-bit floating-point number to this value.
+		 */
 		public float ToSingle() {
 			return BigFloat.FromDecimalFraction(this).ToSingle();
 		}
 		
+		/**
+		 * Converts this value to a 64-bit floating-point number. The half-up
+		 * rounding mode is used.
+		 * @return The closest 64-bit floating-point number to this value.
+		 */
 		public double ToDouble() {
 			return BigFloat.FromDecimalFraction(this).ToDouble();
 		}
 
+		/**
+		 * Creates a bigfloat from a 32-bit floating-point number.
+		 * @param dbl A 32-bit floating-point number.
+		 * @return A bigfloat with the same value as "flt".
+		 * @throws ArithmeticException "flt" is infinity or not-a-number.
+		 */
 		public static DecimalFraction FromSingle(float flt) {
 			int value=Float.floatToRawIntBits(flt);
 			int fpExponent=(int)((value>>23) & 0xFF);
@@ -387,6 +472,12 @@ import java.math.*;
 			}
 		}
 
+		/**
+		 * Creates a bigfloat from a 64-bit floating-point number.
+		 * @param dbl A 64-bit floating-point number.
+		 * @return A bigfloat with the same value as "dbl"
+		 * @throws ArithmeticException "dbl" is infinity or not-a-number.
+		 */
 		public static DecimalFraction FromDouble(double dbl) {
 			long value=Double.doubleToRawLongBits(dbl);
 			int fpExponent=(int)((value>>52) & 0x7ffL);
@@ -434,6 +525,11 @@ import java.math.*;
 		private static BigInteger BigInt5Pow10=BigInteger.valueOf(9765625);
 		private static BigInteger BigInt5Pow20=BigInteger.valueOf((95367431640625L));
 		
+		/**
+		 * Creates a decimal fraction from an arbitrary-precision binary floating-point
+		 * number.
+		 * @param bigfloat A bigfloat.
+		 */
 		public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
 			BigInteger bigintExp=bigfloat.getExponent();
 			BigInteger bigintMant=bigfloat.getMantissa();
@@ -480,21 +576,27 @@ import java.math.*;
 		}
 		
 		/**
-		 * 
+		 * Converts this value to a string. The format of the return value is exactly
+		 * the same as that of the java.math.BigDecimal.toString() method.
 		 */
 		@Override public String toString() {
 			return ToStringInternal(0);
 		}
 
+
 		/**
-		 * 
+		 * Same as toString(), except that when an exponent is used it will be
+		 * a multiple of 3. The format of the return value follows the format of
+		 * the java.math.BigDecimal.toEngineeringString() method.
 		 */
 		public String ToEngineeringString() {
 			return ToStringInternal(1);
 		}
 
 		/**
-		 * 
+		 * Converts this value to a string, but without an exponent part. The
+		 * format of the return value follows the format of the java.math.BigDecimal.toPlainString()
+		 * method.
 		 */
 		public String ToPlainString() {
 			return ToStringInternal(2);

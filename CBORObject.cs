@@ -1617,7 +1617,7 @@ namespace PeterO
 		}
 		
 		/// <summary>
-		/// Converts this object to a byte.
+		/// Converts this object to a byte (0 to 255).
 		/// Floating point values are truncated
 		/// to an integer.
 		/// </summary>
@@ -2186,7 +2186,7 @@ namespace PeterO
 			s.WriteByte(value ? (byte)0xf5 : (byte)0xf4);
 		}
 		/// <summary>
-		/// Writes a byte in CBOR format to
+		/// Writes a byte (0 to 255) in CBOR format to
 		/// a data stream.
 		/// </summary>
 		/// <param name="value">The value to write</param>
@@ -2845,7 +2845,7 @@ namespace PeterO
 			return (value ? CBORObject.True : CBORObject.False);
 		}
 		/// <summary>
-		/// Generates a CBOR object from a byte.
+		/// Generates a CBOR object from a byte (0 to 255).
 		/// </summary>
 		public static CBORObject FromObject(byte value){
 			return FromObject(((int)value)&0xFF);
