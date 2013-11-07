@@ -109,6 +109,17 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 }
 		
 		@Test
+		public void TestJSONEscapedChars(){
+			CBORObject o=CBORObject.FromJSONString(
+				"[\"\\r\\n\\u0006\\\\\\\"\"]");
+			Assert.assertEquals(1,o.size());
+			Assert.assertEquals("\r\n\u0006\\\"",o.get(0).AsString());
+			Assert.assertEquals("[\"\\r\\n\\u0006\\\\\\\"\"]",
+			                o.ToJSONString());
+			TestCommon.AssertRoundTrip(o);
+		}
+		
+		@Test
 		public void TestJSON(){
 			CBORObject o;
 			o=CBORObject.FromJSONString("[1,2,3]");
