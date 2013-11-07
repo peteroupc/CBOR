@@ -103,6 +103,17 @@ namespace Test
 		}
 		
 		[Test]
+		public void TestJSONEscapedChars(){
+			CBORObject o=CBORObject.FromJSONString(
+				"[\"\\r\\n\\u0006\\\\\\\"\"]");
+			Assert.AreEqual(1,o.Count);
+			Assert.AreEqual("\r\n\u0006\\\"",o[0].AsString());
+			Assert.AreEqual("[\"\\r\\n\\u0006\\\\\\\"\"]",
+			                o.ToJSONString());
+			TestCommon.AssertRoundTrip(o);
+		}
+		
+		[Test]
 		public void TestJSON(){
 			CBORObject o;
 			o=CBORObject.FromJSONString("[1,2,3]");

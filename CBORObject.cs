@@ -2454,12 +2454,24 @@ namespace PeterO
 				char c=str[i];
 				if(c=='\\' || c=='"'){
 					sb.Append('\\');
+   				sb.Append(c);
+        } else if(c==0x0d){
+					sb.Append("\\r");
+        } else if(c==0x0a){
+					sb.Append("\\n");
+        } else if(c==0x0c){
+					sb.Append("\\b");
+        } else if(c==0x0c){
+					sb.Append("\\f");
+        } else if(c==0x09){
+					sb.Append("\\t");
 				} else if(c<0x20){
 					sb.Append("\\u00");
 					sb.Append((char)('0'+(int)(c>>4)));
 					sb.Append((char)('0'+(int)(c&15)));
-				}
-				sb.Append(c);
+				} else {
+   				sb.Append(c);
+        }
 			}
 			sb.Append("\"");
 			return sb.ToString();

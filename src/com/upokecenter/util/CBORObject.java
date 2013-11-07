@@ -2360,12 +2360,24 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				char c=str.charAt(i);
 				if(c=='\\' || c=='"'){
 					sb.append('\\');
+   				sb.append(c);
+        } else if(c==0x0d){
+					sb.append("\\r");
+        } else if(c==0x0a){
+					sb.append("\\n");
+        } else if(c==0x0c){
+					sb.append("\\b");
+        } else if(c==0x0c){
+					sb.append("\\f");
+        } else if(c==0x09){
+					sb.append("\\t");
 				} else if(c<0x20){
 					sb.append("\\u00");
 					sb.append((char)('0'+(int)(c>>4)));
 					sb.append((char)('0'+(int)(c&15)));
-				}
-				sb.append(c);
+				} else {
+   				sb.append(c);
+        }
 			}
 			sb.append("\"");
 			return sb.toString();
