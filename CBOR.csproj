@@ -54,6 +54,7 @@
     <Compile Include="CBORObject.cs" />
     <Compile Include="CBORObjectExtra.cs" />
     <Compile Include="CBORDataUtilities.cs" />
+    <Compile Include="CBORObjectMath.cs" />
     <Compile Include="CBORType.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="DecimalFraction.cs" />

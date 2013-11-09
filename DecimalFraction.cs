@@ -113,6 +113,94 @@ namespace PeterO
 			this.mantissa=(BigInteger)mantissaLong;
 		}
 
+		
+		///<summary>
+		/// Creates a decimal fraction from a string that represents a number. 
+		/// <para>
+		///The format of the string generally consists of:<list type=''>
+		/// <item>
+		///An optional '-' or '+' character (if '-', the value is negative.)</item>
+		/// <item>
+		///One or more digits, with a single optional decimal point after the first digit and before the last digit.</item>
+		/// <item>
+		///Optionally, E+ (positive exponent) or E- (negative exponent) plus one or more digits specifying the exponent.</item>
+		/// </list>
+		///</para>
+		/// <para>The format generally follows the definition in java.math.BigDecimal(),
+		/// except that the digits must be ASCII digits ('0' through '9').</para>
+		/// </summary>
+		///<param name='s'>
+		///A string that represents a number.</param>
+		public static DecimalFraction FromString(String s){
+			if(s==null)
+				throw new ArgumentNullException("s");
+			if(s.Length==0)
+				throw new FormatException();
+			int offset=0;
+			bool negative=false;
+			if(s[0]=='+' || s[0]=='-'){
+				negative=(s[0]=='-');
+				offset++;
+			}
+			BigInteger bigint=BigInteger.Zero;
+			bool haveDecimalPoint=false;
+			bool haveDigits=false;
+			bool haveExponent=false;
+			BigInteger newScale=BigInteger.Zero;
+			int i=offset;
+			for(;i<s.Length;i++){
+				if(s[i]>='0' && s[i]<='9'){
+					bigint*=(BigInteger)10;
+					int thisdigit=(int)(s[i]-'0');
+					bigint+=(BigInteger)((long)thisdigit);
+					haveDigits=true;
+					if(haveDecimalPoint){
+						newScale-=BigInteger.One;
+					}
+				} else if(s[i]=='.'){
+					if(haveDecimalPoint)
+						throw new FormatException();
+					haveDecimalPoint=true;
+				} else if(s[i]=='E' || s[i]=='e'){
+					haveExponent=true;
+					i++;
+					break;
+				} else {
+					throw new FormatException();
+				}
+			}
+			if(!haveDigits)
+				throw new FormatException();
+			if(haveExponent){
+				BigInteger exponent=BigInteger.Zero;
+				offset=1;
+				haveDigits=false;
+				if(i==s.Length)throw new FormatException();
+				if(s[i]=='+' || s[i]=='-'){
+					if(s[i]=='-')offset=-1;
+					i++;
+				}
+				for(;i<s.Length;i++){
+					if(s[i]>='0' && s[i]<='9'){
+						haveDigits=true;
+						exponent*=(BigInteger)10;
+						int thisdigit=(int)(s[i]-'0')*offset;
+						exponent+=(BigInteger)((long)thisdigit);
+					} else {
+						throw new FormatException();
+					}
+				}
+				if(!haveDigits)
+					throw new FormatException();
+				newScale+=(BigInteger)exponent;
+			} else if(i!=s.Length){
+				throw new FormatException();
+			}
+			if(negative)
+				bigint=-(BigInteger)bigint;
+			return new DecimalFraction(newScale,bigint);
+		}
+		
 		private BigInteger
 			RescaleByExponentDiff(BigInteger mantissa,
 			                      BigInteger e1,
@@ -132,6 +220,27 @@ namespace PeterO
 			}
 			if(negative)mantissa=-mantissa;
 			return mantissa;
+		}
+		
+        /// <summary>
+        /// Gets an object with the same value as this one, but
+        /// with the sign reversed.
+        /// </summary>
+		public DecimalFraction Negate(){
+			BigInteger neg=-(BigInteger)this.mantissa;
+			return new DecimalFraction(this.exponent,neg);
+		}
+
+        /// <summary>
+        /// Gets the absolute value of this object.
+        /// </summary>
+		public DecimalFraction Abs(){
+			if(this.Sign<0){
+				BigInteger neg=-(BigInteger)this.mantissa;
+				return new DecimalFraction(this.exponent,neg);
+			} else {
+				return this;
+			}
 		}
 		
 		/// <summary>
@@ -268,6 +377,7 @@ namespace PeterO
 			builder.Insert(iindex,c);
 			return true;
 		}
+		
 		private string ToStringInternal(int mode)
 		{
 			// Using Java's rules for converting DecimalFraction
@@ -447,10 +557,10 @@ namespace PeterO
 		}
 
 		/// <summary>
-		/// Creates a bigfloat from a 32-bit floating-point number.
+		/// Creates a decimal fraction from a 32-bit floating-point number.
 		/// </summary>
 		/// <param name="dbl">A 32-bit floating-point number.</param>
-		/// <returns>A bigfloat with the same value as "flt".</returns>
+		/// <returns>A decimal fraction with the same value as "flt".</returns>
 		/// <exception cref="OverflowException">"flt" is infinity or not-a-number.</exception>
 		public static DecimalFraction FromSingle(float flt){
 			int value=ConverterInternal.SingleToInt32Bits(flt);
@@ -490,10 +600,10 @@ namespace PeterO
 		}
 
 		/// <summary>
-		/// Creates a bigfloat from a 64-bit floating-point number.
+		/// Creates a decimal fraction from a 64-bit floating-point number.
 		/// </summary>
 		/// <param name="dbl">A 64-bit floating-point number.</param>
-		/// <returns>A bigfloat with the same value as "dbl"</returns>
+		/// <returns>A decimal fraction with the same value as "dbl"</returns>
 		/// <exception cref="OverflowException">"dbl" is infinity or not-a-number.</exception>
 		public static DecimalFraction FromDouble(double dbl){
 			long value=ConverterInternal.DoubleToInt64Bits(dbl);
@@ -613,7 +723,7 @@ namespace PeterO
 
 		///<summary>
 		/// Converts this value to a string, but without an exponent part.
-		///The format of the return value follows the format of the java.math.BigDecimal.toPlainString() 
+		///The format of the return value follows the format of the java.math.BigDecimal.toPlainString()
 		/// method.
 		/// </summary>
 		public string ToPlainString()

@@ -107,6 +107,89 @@ import java.math.*;
 			this.mantissa=BigInteger.valueOf(mantissaLong);
 		}
 
+		
+		/**
+		 * Creates a decimal fraction from a string that represents a number.
+		 * <p> The format of the string generally consists of:<ul> <li> An optional
+		 * '-' or '+' character (if '-', the value is negative.)</li> <li> One
+		 * or more digits, with a single optional decimal point after the first
+		 * digit and before the last digit.</li> <li> Optionally, E+ (positive
+		 * exponent) or E- (negative exponent) plus one or more digits specifying
+		 * the exponent.</li> </ul> </p> <p>The format generally follows the
+		 * definition in java.math.BigDecimal(), except that the digits must
+		 * be ASCII digits ('0' through '9').</p>
+		 * @param s A string that represents a number.
+		 */
+		public static DecimalFraction FromString(String s) {
+			if(s==null)
+				throw new NullPointerException("s");
+			if(s.length()==0)
+				throw new NumberFormatException();
+			int offset=0;
+			boolean negative=false;
+			if(s.charAt(0)=='+' || s.charAt(0)=='-'){
+				negative=(s.charAt(0)=='-');
+				offset++;
+			}
+			BigInteger bigint=BigInteger.ZERO;
+			boolean haveDecimalPoint=false;
+			boolean haveDigits=false;
+			boolean haveExponent=false;
+			BigInteger newScale=BigInteger.ZERO;
+			int i=offset;
+			for(;i<s.length();i++){
+				if(s.charAt(i)>='0' && s.charAt(i)<='9'){
+					bigint=bigint.multiply(BigInteger.TEN);
+					int thisdigit=(int)(s.charAt(i)-'0');
+					bigint=bigint.add(BigInteger.valueOf(((long)thisdigit)));
+					haveDigits=true;
+					if(haveDecimalPoint){
+						newScale=newScale.subtract(BigInteger.ONE);
+					}
+				} else if(s.charAt(i)=='.'){
+					if(haveDecimalPoint)
+						throw new NumberFormatException();
+					haveDecimalPoint=true;
+				} else if(s.charAt(i)=='E' || s.charAt(i)=='e'){
+					haveExponent=true;
+					i++;
+					break;
+				} else {
+					throw new NumberFormatException();
+				}
+			}
+			if(!haveDigits)
+				throw new NumberFormatException();
+			if(haveExponent){
+				BigInteger exponent=BigInteger.ZERO;
+				offset=1;
+				haveDigits=false;
+				if(i==s.length())throw new NumberFormatException();
+				if(s.charAt(i)=='+' || s.charAt(i)=='-'){
+					if(s.charAt(i)=='-')offset=-1;
+					i++;
+				}
+				for(;i<s.length();i++){
+					if(s.charAt(i)>='0' && s.charAt(i)<='9'){
+						haveDigits=true;
+						exponent=exponent.multiply(BigInteger.TEN);
+						int thisdigit=(int)(s.charAt(i)-'0')*offset;
+						exponent=exponent.add(BigInteger.valueOf(((long)thisdigit)));
+					} else {
+						throw new NumberFormatException();
+					}
+				}
+				if(!haveDigits)
+					throw new NumberFormatException();
+				newScale=newScale.add(exponent);
+			} else if(i!=s.length()){
+				throw new NumberFormatException();
+			}
+			if(negative)
+				bigint=(bigint).negate();
+			return new DecimalFraction(newScale,bigint);
+		}
+		
 		private BigInteger RescaleByExponentDiff(BigInteger mantissa,
 			                      BigInteger e1,
 			                      BigInteger e2) {
@@ -125,6 +208,26 @@ import java.math.*;
 			}
 			if(negative)mantissa=mantissa.negate();
 			return mantissa;
+		}
+		
+        /**
+         * Gets an object with the same value as this one, but with the sign reversed.
+         */
+		public DecimalFraction Negate() {
+			BigInteger neg=(this.mantissa).negate();
+			return new DecimalFraction(this.exponent,neg);
+		}
+
+        /**
+         * Gets the absolute value of this object.
+         */
+		public DecimalFraction Abs() {
+			if(this.signum()<0){
+				BigInteger neg=(this.mantissa).negate();
+				return new DecimalFraction(this.exponent,neg);
+			} else {
+				return this;
+			}
 		}
 		
 		/**
@@ -256,6 +359,7 @@ import java.math.*;
 			builder.insert(iindex,c);
 			return true;
 		}
+		
 		private String ToStringInternal(int mode) {
 			// Using Java's rules for converting DecimalFraction
 			// values to a String
@@ -430,9 +534,9 @@ import java.math.*;
 		}
 
 		/**
-		 * Creates a bigfloat from a 32-bit floating-point number.
+		 * Creates a decimal fraction from a 32-bit floating-point number.
 		 * @param dbl A 32-bit floating-point number.
-		 * @return A bigfloat with the same value as "flt".
+		 * @return A decimal fraction with the same value as "flt".
 		 * @throws ArithmeticException "flt" is infinity or not-a-number.
 		 */
 		public static DecimalFraction FromSingle(float flt) {
@@ -473,9 +577,9 @@ import java.math.*;
 		}
 
 		/**
-		 * Creates a bigfloat from a 64-bit floating-point number.
+		 * Creates a decimal fraction from a 64-bit floating-point number.
 		 * @param dbl A 64-bit floating-point number.
-		 * @return A bigfloat with the same value as "dbl"
+		 * @return A decimal fraction with the same value as "dbl"
 		 * @throws ArithmeticException "dbl" is infinity or not-a-number.
 		 */
 		public static DecimalFraction FromDouble(double dbl) {
