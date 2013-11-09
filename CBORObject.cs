@@ -34,7 +34,7 @@ namespace PeterO
 	/// </summary>
 	public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject>
 	{
-		private int ItemType {
+		internal int ItemType {
 			get {
 				CBORObject curobject=this;
 				while(curobject.itemtype_==CBORObjectType_Tagged) {
@@ -44,7 +44,7 @@ namespace PeterO
 			}
 		}
 
-		private Object ThisItem {
+		internal Object ThisItem {
 			get {
 				CBORObject curobject=this;
 				while(curobject.itemtype_==CBORObjectType_Tagged) {
@@ -59,18 +59,18 @@ namespace PeterO
 		int tagLow;
 		int tagHigh;
 		
-		private const int CBORObjectType_Integer=0; // -(2^63) .. (2^63-1)
-		private const int CBORObjectType_BigInteger=1; // all other integers
-		private const int CBORObjectType_ByteString=2;
-		private const int CBORObjectType_TextString=3;
-		private const int CBORObjectType_Array=4;
-		private const int CBORObjectType_Map=5;
-		private const int CBORObjectType_SimpleValue=6;
-		private const int CBORObjectType_Single=7;
-		private const int CBORObjectType_Double=8;
-		private const int CBORObjectType_DecimalFraction=9;
-		private const int CBORObjectType_Tagged=10;
-		private const int CBORObjectType_BigFloat=11;
+		internal const int CBORObjectType_Integer=0; // -(2^63) .. (2^63-1)
+		internal const int CBORObjectType_BigInteger=1; // all other integers
+		internal const int CBORObjectType_ByteString=2;
+		internal const int CBORObjectType_TextString=3;
+		internal const int CBORObjectType_Array=4;
+		internal const int CBORObjectType_Map=5;
+		internal const int CBORObjectType_SimpleValue=6;
+		internal const int CBORObjectType_Single=7;
+		internal const int CBORObjectType_Double=8;
+		internal const int CBORObjectType_DecimalFraction=9;
+		internal const int CBORObjectType_Tagged=10;
+		internal const int CBORObjectType_BigFloat=11;
 		private static readonly BigInteger Int64MaxValue=(BigInteger)Int64.MaxValue;
 		private static readonly BigInteger Int64MinValue=(BigInteger)Int64.MinValue;
 		/// <summary>
@@ -180,6 +180,57 @@ namespace PeterO
 			}
 		}
 		
+				/// <summary>
+		/// Gets whether this object's value equals 0.
+		/// </summary>
+		public bool IsZero {
+			get {
+				switch(this.ItemType){
+					case CBORObject.CBORObjectType_Integer:
+						return ((long)this.ThisItem)==0;
+					case CBORObject.CBORObjectType_BigInteger:
+						return ((BigInteger)this.ThisItem).IsZero;
+					case CBORObject.CBORObjectType_Single:
+						return ((float)this.ThisItem)==0;
+					case CBORObject.CBORObjectType_Double:
+						return ((double)this.ThisItem)==0;
+					case CBORObject.CBORObjectType_DecimalFraction:
+						return ((DecimalFraction)this.ThisItem).IsZero;
+					case CBORObject.CBORObjectType_BigFloat:
+						return ((BigFloat)this.ThisItem).IsZero;
+					default:
+						return false;
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">This object's type is not a number type.</exception>
+		public int Sign {
+			get {
+				switch(this.ItemType){
+						case CBORObject.CBORObjectType_Integer:{
+							long value=((long)this.ThisItem);
+							return (value==0) ? 0 : ((value<0) ? -1 : 1);
+						}
+					case CBORObject.CBORObjectType_BigInteger:
+						return ((BigInteger)this.ThisItem).Sign;
+					case CBORObject.CBORObjectType_Single:
+						return Math.Sign((float)this.ThisItem);
+					case CBORObject.CBORObjectType_Double:
+						return Math.Sign((double)this.ThisItem);
+					case CBORObject.CBORObjectType_DecimalFraction:
+						return ((DecimalFraction)this.ThisItem).Sign;
+					case CBORObject.CBORObjectType_BigFloat:
+						return ((BigFloat)this.ThisItem).Sign;
+					default:
+						throw new ArgumentException("This object has no sign.");
+				}
+			}
+		}
+
 		
 		/// <summary>
 		/// Compares two CBOR objects.
@@ -1970,12 +2021,67 @@ namespace PeterO
 		private static BigInteger FiftySixBitMask=(BigInteger)0xFFFFFFFFFFFFFFL;
 		
 		/// <summary>
+		/// Writes a bigfloat in CBOR format to a data stream.
+		/// </summary>
+		/// <param name="bi">Bigfloat to write.</param>
+		/// <param name="s">Stream to write to.</param>
+		/// <exception cref="System.ArgumentNullException">s is null.</exception>
+		/// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
+		public static void Write(BigFloat bignum, Stream s){
+			if((s)==null)throw new ArgumentNullException("s");
+			if(bignum==null){
+				s.WriteByte(0xf6);
+				return;
+			}
+			BigInteger exponent=bignum.Exponent;
+			if(exponent.IsZero){
+				Write(bignum.Mantissa,s);
+			} else if(bignum.CanConvertToDouble()){
+				// Write double version instead
+				Write(bignum.ToDouble(),s);
+			} else {
+				s.WriteByte(0xC5); // tag 5
+				s.WriteByte(0x82); // array, length 2
+				Write(bignum.Exponent,s);
+				Write(bignum.Mantissa,s);
+			}
+		}
+		/// <summary>
+		/// Writes a bigfloat in CBOR format to a data stream.
+		/// </summary>
+		/// <param name="bi">Decimal fraction to write.</param>
+		/// <param name="s">Stream to write to.</param>
+		/// <exception cref="System.ArgumentNullException">s is null.</exception>
+		/// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
+		public static void Write(DecimalFraction bignum, Stream s){
+			if((s)==null)throw new ArgumentNullException("s");
+			if(bignum==null){
+				s.WriteByte(0xf6);
+				return;
+			}
+			BigInteger exponent=bignum.Exponent;
+			if(exponent.IsZero){
+				Write(bignum.Mantissa,s);
+			} else {
+				s.WriteByte(0xC4); // tag 4
+				s.WriteByte(0x82); // array, length 2
+				Write(bignum.Exponent,s);
+				Write(bignum.Mantissa,s);
+			}
+		}
+		/// <summary>
 		/// Writes a big integer in CBOR format to a data stream.
 		/// </summary>
 		/// <param name="bi">Big integer to write.</param>
 		/// <param name="s">Stream to write to.</param>
+		/// <exception cref="System.ArgumentNullException">s is null.</exception>
+		/// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
 		public static void Write(BigInteger bigint, Stream s){
 			if((s)==null)throw new ArgumentNullException("s");
+			if((object)bigint==(object)null){
+				s.WriteByte(0xf6);
+				return;
+			}
 			int datatype=0;
 			if(bigint.Sign<0){
 				datatype=1;
@@ -2083,26 +2189,10 @@ namespace PeterO
 				WriteObjectArray(AsList(),s);
 			} else if(this.ItemType== CBORObjectType_DecimalFraction){
 				DecimalFraction dec=(DecimalFraction)this.ThisItem;
-				BigInteger exponent=dec.Exponent;
-				if(exponent.IsZero){
-					Write(dec.Mantissa,s);
-				} else {
-					s.WriteByte(0xC4); // tag 4
-					s.WriteByte(0x82); // array, length 2
-					Write(dec.Exponent,s);
-					Write(dec.Mantissa,s);
-				}
+				Write(dec,s);
 			} else if(this.ItemType== CBORObjectType_BigFloat){
 				BigFloat dec=(BigFloat)this.ThisItem;
-				BigInteger exponent=dec.Exponent;
-				if(exponent.IsZero){
-					Write(dec.Mantissa,s);
-				} else {
-					s.WriteByte(0xC5); // tag 5
-					s.WriteByte(0x82); // array, length 2
-					Write(dec.Exponent,s);
-					Write(dec.Mantissa,s);
-				}
+				Write(dec,s);
 			} else if(this.ItemType== CBORObjectType_Map){
 				WriteObjectMap(AsMap(),s);
 			} else if(this.ItemType== CBORObjectType_SimpleValue){
@@ -2169,8 +2259,12 @@ namespace PeterO
 		/// <param name="value">The value to write</param>
 		/// <param name="s">A writable data stream.</param>
 		/// <exception cref="System.ArgumentNullException">s is null.</exception>
+		/// <exception cref="System.ArgumentException">"s" is a surrogate code point.  </exception>
 		/// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
 		public static void Write(char value, Stream s){
+			if(value>=0xd800 && value<0xe000){
+				throw new ArgumentException("Value is a surrogate code point.");
+			}
 			Write(new String(new char[]{value}),s);
 		}
 		/// <summary>
@@ -2281,6 +2375,8 @@ namespace PeterO
 			}
 			return null;
 		}
+
+
 		
 		/// <summary>
 		/// Gets the binary representation of this
@@ -2375,6 +2471,20 @@ namespace PeterO
 		}
 		
 		/// <summary>
+		/// Writes a CBOR object to a CBOR data stream.
+		/// </summary>
+		/// <param name="value">The value to write</param>
+		/// <param name="s">A writable data stream.</param>
+		public static void Write(CBORObject o, Stream s){
+			if((s)==null)throw new ArgumentNullException("s");
+			if(o==null){
+				s.WriteByte(0xf6);
+			} else {
+				o.WriteTo(s);
+			}
+		}
+		
+		/// <summary>
 		/// Writes an arbitrary object to a CBOR data stream.
 		/// </summary>
 		/// <param name="value">The value to write</param>
@@ -2454,24 +2564,24 @@ namespace PeterO
 				char c=str[i];
 				if(c=='\\' || c=='"'){
 					sb.Append('\\');
-   				sb.Append(c);
-        } else if(c==0x0d){
+					sb.Append(c);
+				} else if(c==0x0d){
 					sb.Append("\\r");
-        } else if(c==0x0a){
+				} else if(c==0x0a){
 					sb.Append("\\n");
-        } else if(c==0x0c){
+				} else if(c==0x0c){
 					sb.Append("\\b");
-        } else if(c==0x0c){
+				} else if(c==0x0c){
 					sb.Append("\\f");
-        } else if(c==0x09){
+				} else if(c==0x09){
 					sb.Append("\\t");
 				} else if(c<0x20){
 					sb.Append("\\u00");
 					sb.Append((char)('0'+(int)(c>>4)));
 					sb.Append((char)('0'+(int)(c&15)));
 				} else {
-   				sb.Append(c);
-        }
+					sb.Append(c);
+				}
 			}
 			sb.Append("\"");
 			return sb.ToString();
@@ -2732,6 +2842,33 @@ namespace PeterO
 			}
 		}
 
+		/// <summary>
+		/// Finds the sum of two CBOR number objects.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">Either or both operands are not 
+		/// numbers (as opposed to Not-a-Number, NaN).</exception>
+		public static CBORObject Addition(CBORObject a, CBORObject b){
+			return CBORObjectMath.Addition(a,b);
+		}
+		
+		/// <summary>
+		/// Finds the difference between two CBOR number objects.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">Either or both operands are not 
+		/// numbers (as opposed to Not-a-Number, NaN).</exception>
+		public static CBORObject Subtract(CBORObject a, CBORObject b){
+			return CBORObjectMath.Subtract(a,b);
+		}
+		
+		
+		/// <summary>
+		/// Multiplies two CBOR number objects.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">Either or both operands are not 
+		/// numbers (as opposed to Not-a-Number, NaN).</exception>
+		public static CBORObject Multiply(CBORObject a, CBORObject b){
+			return CBORObjectMath.Multiply(a,b);
+		}
 		
 		/// <summary>
 		/// Creates a new empty CBOR array.
@@ -2797,6 +2934,8 @@ namespace PeterO
 			BigInteger bigintExponent=decfrac.Exponent;
 			if(bigintExponent.IsZero){
 				return FromObject(decfrac.Mantissa);
+			} else if(decfrac.CanConvertToDouble()){
+				return FromObject(decfrac.ToDouble());
 			} else {
 				return new CBORObject(CBORObjectType_BigFloat,decfrac);
 			}
@@ -2881,7 +3020,7 @@ namespace PeterO
 		/// array is copied to a new byte array.
 		/// </summary>
 		/// <param name="stringValue">A byte array.  Can be null.</param>
-		/// <returns>A CBOR object where each byte of the given byte
+		/// <returns>A CBOR byte string object where each byte of the given byte
 		/// array is copied to a new array, or CBORObject.Null
 		/// if "bytes" is null.</returns>
 		public static CBORObject FromObject(byte[] bytes){
@@ -2901,6 +3040,36 @@ namespace PeterO
 			if(array==null)return CBORObject.Null;
 			IList<CBORObject> list=new List<CBORObject>();
 			foreach(CBORObject i in array){
+				list.Add(FromObject(i));
+			}
+			return new CBORObject(CBORObjectType_Array,list);
+		}
+		/// <summary>
+		/// Generates a CBOR object from an array of 32-bit integers.
+		/// </summary>
+		/// <param name="array">An array of 32-bit integers.</param>
+		/// <returns>A CBOR array object where each element of the given
+		/// array is copied to a new array, or CBORObject.Null if "array"
+		/// is null.</returns>
+		public static CBORObject FromObject(int[] array){
+			if(array==null)return CBORObject.Null;
+			IList<CBORObject> list=new List<CBORObject>();
+			foreach(int i in array){
+				list.Add(FromObject(i));
+			}
+			return new CBORObject(CBORObjectType_Array,list);
+		}
+		/// <summary>
+		/// Generates a CBOR object from an array of 64-bit integers.
+		/// </summary>
+		/// <param name="array">An array of 64-bit integers.</param>
+		/// <returns>A CBOR array object where each element of the given
+		/// array is copied to a new array, or CBORObject.Null if "array"
+		/// is null.</returns>
+		public static CBORObject FromObject(long[] array){
+			if(array==null)return CBORObject.Null;
+			IList<CBORObject> list=new List<CBORObject>();
+			foreach(long i in array){
 				list.Add(FromObject(i));
 			}
 			return new CBORObject(CBORObjectType_Array,list);
@@ -2974,6 +3143,8 @@ namespace PeterO
 			if(obj is double)return FromObject((double)obj);
 			if(obj is IList<CBORObject>)return FromObject((IList<CBORObject>)obj);
 			if(obj is byte[])return FromObject((byte[])obj);
+			if(obj is int[])return FromObject((int[])obj);
+			if(obj is long[])return FromObject((long[])obj);
 			if(obj is CBORObject[])return FromObject((CBORObject[])obj);
 			if(obj is IDictionary<CBORObject,CBORObject>)return FromObject(
 				(IDictionary<CBORObject,CBORObject>)obj);
@@ -3285,24 +3456,6 @@ namespace PeterO
 			return RewrapObject(o,FromObject(bi));
 		}
 		
-		private bool IsZero(){
-			switch(this.ItemType){
-				case CBORObjectType_Integer:
-					return ((long)this.ThisItem)==0;
-				case CBORObjectType_BigInteger:
-					return ((BigInteger)this.ThisItem).IsZero;
-				case CBORObjectType_Single:
-					return ((float)this.ThisItem)==0;
-				case CBORObjectType_Double:
-					return ((double)this.ThisItem)==0;
-				case CBORObjectType_DecimalFraction:
-					return ((DecimalFraction)this.ThisItem).IsZero;
-				case CBORObjectType_BigFloat:
-					return ((BigFloat)this.ThisItem).IsZero;
-				default:
-					return false;
-			}
-		}
 		
 		private bool CanFitInTypeZeroOrOne(){
 			switch(this.ItemType){
@@ -3362,7 +3515,7 @@ namespace PeterO
 			if(list[1].ItemType!=CBORObjectType_Integer &&
 			   list[1].ItemType!=CBORObjectType_BigInteger)
 				throw new CBORException("Big fraction requires mantissa to be an integer or big integer");
-			if(list[0].IsZero() && !o.IsTagged){
+			if(list[0].IsZero && !o.IsTagged){
 				// Exponent is 0, so return mantissa instead
 				return list[1];
 			}
@@ -3437,7 +3590,7 @@ namespace PeterO
 			byte[] data=null;
 			if(expectedLength!=0){
 				data=new byte[expectedLength];
-				// include the first byte because this function
+				// include the first byte because GetFixedLengthObject
 				// will assume it exists for some head bytes
 				data[0]=unchecked((byte)firstbyte);
 				if(expectedLength>1 &&

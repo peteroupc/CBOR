@@ -120,12 +120,12 @@ namespace PeterO
 			if(negative)mantissa=-mantissa;
 			if(e1.CompareTo(e2)>0){
 				while(e1.CompareTo(e2)>0){
-					mantissa>>=1;
+					mantissa<<=1;
 					e1=e1-BigInteger.One;
 				}
 			} else {
 				while(e1.CompareTo(e2)<0){
-					mantissa>>=1;
+					mantissa<<=1;
 					e1=e1+BigInteger.One;
 				}
 			}
@@ -133,6 +133,27 @@ namespace PeterO
 			return mantissa;
 		}
 		
+		/// <summary>
+		/// Gets an object with the same value as this one, but
+		/// with the sign reversed.
+		/// </summary>
+		public BigFloat Negate(){
+			BigInteger neg=-(BigInteger)this.mantissa;
+			return new BigFloat(this.exponent,neg);
+		}
+
+		/// <summary>
+		/// Gets the absolute value of this object.
+		/// </summary>
+		public BigFloat Abs(){
+			if(this.Sign<0){
+				BigInteger neg=-(BigInteger)this.mantissa;
+				return new BigFloat(this.exponent,neg);
+			} else {
+				return this;
+			}
+		}
+
 		/// <summary>
 		/// Finds the sum of this object and another bigfloat.
 		/// The result's exponent is set to the lower of the exponents
@@ -178,6 +199,7 @@ namespace PeterO
 					exponent,mantissa-(BigInteger)newmant);
 			}
 		}
+		
 		
 		/// <summary>
 		/// Multiplies two bigfloats.  The resulting scale will be the sum
@@ -297,7 +319,7 @@ namespace PeterO
 				bool neg=(bigmantissa.Sign<0);
 				if(neg)bigmantissa=-(BigInteger)bigmantissa;
 				while(curexp<0){
-					if(curexp<=-10){						
+					if(curexp<=-10){
 						BigInteger[] results=DivideWithPrecision(bigmantissa,9765625,20);
 						bigmantissa=results[0]; // quotient
 						BigInteger newscale=results[2];
@@ -396,6 +418,89 @@ namespace PeterO
 				}
 				if(neg)bigmantissa=-bigmantissa;
 				return bigmantissa;
+			}
+		}
+		
+		/// <summary>
+		/// Returns whether this value can be converted
+		/// to a 64-bit floating-point number without
+		/// rounding.
+		/// </summary>
+		public bool CanConvertToDouble(){
+			int lastRoundedBit=0;
+			if(this.mantissa.IsZero){
+				return true;
+			}
+			BigInteger bigmant=BigInteger.Abs(this.mantissa);
+			BigInteger bigexponent=this.exponent;
+			while(bigmant.CompareTo((BigInteger)(1L<<52))<0){
+				return false;
+			}
+			while(bigmant.CompareTo((BigInteger)(1L<<53))>=0){
+				BigInteger bigsticky=bigmant&(BigInteger)1;
+				lastRoundedBit=(int)bigsticky;
+				if(lastRoundedBit==1)return false;
+				bigmant>>=1;
+				bigexponent+=BigInteger.One;
+			}
+		
+			if(bigexponent>971){
+				return false;
+			} else if(bigexponent<-1074){
+				// subnormal
+				while(bigexponent<-1074){
+					BigInteger bigsticky=bigmant&(BigInteger)1;
+					lastRoundedBit=(int)bigsticky;
+					if(lastRoundedBit==1)return false;
+					bigmant>>=1;
+					bigexponent+=BigInteger.One;
+				}
+			}
+			if(bigexponent<-1074){
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
+		/// <summary>
+		/// Returns whether this value can be converted
+		/// to a 32-bit floating-point number without
+		/// rounding.
+		/// </summary>
+		public bool CanConvertToSingle(){
+			int lastRoundedBit=0;
+			if(this.mantissa.IsZero){
+				return true;
+			}
+			BigInteger bigmant=BigInteger.Abs(this.mantissa);
+			BigInteger bigexponent=this.exponent;
+			while(bigmant.CompareTo((BigInteger)(1L<<23))<0){
+				return false;
+			}
+			while(bigmant.CompareTo((BigInteger)(1L<<24))>=0){
+				BigInteger bigsticky=bigmant&(BigInteger)1;
+				lastRoundedBit=(int)bigsticky;
+				if(lastRoundedBit==1)return false;
+				bigmant>>=1;
+				bigexponent+=BigInteger.One;
+			}
+			if(bigexponent>104){
+				return false;
+			} else if(bigexponent<-149){
+				// subnormal
+				while(bigexponent<-149){
+					BigInteger bigsticky=bigmant&BigInteger.One;
+					lastRoundedBit=(int)bigsticky;
+					if(lastRoundedBit==1)return false;
+					bigmant>>=1;
+					bigexponent+=BigInteger.One;
+				}
+			}
+			if(bigexponent<-149){
+				return false;
+			} else {
+				return true;
 			}
 		}
 		
@@ -562,7 +667,7 @@ namespace PeterO
 
 		///<summary>
 		/// Converts this value to a string, but without an exponent part.
-		///The format of the return value follows the format of the java.math.BigDecimal.toPlainString() 
+		///The format of the return value follows the format of the java.math.BigDecimal.toPlainString()
 		/// method.
 		/// </summary>
 		public string ToPlainString()

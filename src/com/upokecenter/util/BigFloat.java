@@ -111,12 +111,12 @@ import java.math.*;
 			if(negative)mantissa=mantissa.negate();
 			if(e1.compareTo(e2)>0){
 				while(e1.compareTo(e2)>0){
-					mantissa=mantissa.shiftRight(1);
+					mantissa=mantissa.shiftLeft(1);
 					e1=e1.subtract(BigInteger.ONE);
 				}
 			} else {
 				while(e1.compareTo(e2)<0){
-					mantissa=mantissa.shiftRight(1);
+					mantissa=mantissa.shiftLeft(1);
 					e1=e1.add(BigInteger.ONE);
 				}
 			}
@@ -124,6 +124,26 @@ import java.math.*;
 			return mantissa;
 		}
 		
+		/**
+		 * Gets an object with the same value as this one, but with the sign reversed.
+		 */
+		public BigFloat Negate() {
+			BigInteger neg=(this.mantissa).negate();
+			return new BigFloat(this.exponent,neg);
+		}
+
+		/**
+		 * Gets the absolute value of this object.
+		 */
+		public BigFloat Abs() {
+			if(this.signum()<0){
+				BigInteger neg=(this.mantissa).negate();
+				return new BigFloat(this.exponent,neg);
+			} else {
+				return this;
+			}
+		}
+
 		/**
 		 * Finds the sum of this object and another bigfloat. The result's exponent
 		 * is set to the lower of the exponents of the two operands.
@@ -167,6 +187,7 @@ import java.math.*;
 					exponent,mantissa.subtract(newmant));
 			}
 		}
+		
 		
 		/**
 		 * Multiplies two bigfloats. The resulting scale will be the sum of the
@@ -282,7 +303,7 @@ import java.math.*;
 				boolean neg=(bigmantissa.signum()<0);
 				if(neg)bigmantissa=(bigmantissa).negate();
 				while(curexp.signum()<0){
-					if(curexp.compareTo(BigInteger.valueOf(-10))<=0){						
+					if(curexp.compareTo(BigInteger.valueOf(-10))<=0){
 						BigInteger[] results=DivideWithPrecision(bigmantissa,9765625,20);
 						bigmantissa=results[0]; // quotient
 						BigInteger newscale=results[2];
@@ -380,6 +401,87 @@ import java.math.*;
 				}
 				if(neg)bigmantissa=bigmantissa.negate();
 				return bigmantissa;
+			}
+		}
+		
+		/**
+		 * Returns whether this value can be converted to a 64-bit floating-point
+		 * number without rounding.
+		 */
+		public boolean CanConvertToDouble() {
+			int lastRoundedBit=0;
+			if(this.mantissa.signum()==0){
+				return true;
+			}
+			BigInteger bigmant=(this.mantissa).abs();
+			BigInteger bigexponent=this.exponent;
+			while(bigmant.compareTo(BigInteger.valueOf((1L<<52)))<0){
+				return false;
+			}
+			while(bigmant.compareTo(BigInteger.valueOf((1L<<53)))>=0){
+				BigInteger bigsticky=bigmant.and(BigInteger.ONE);
+				lastRoundedBit=bigsticky.intValue();
+				if(lastRoundedBit==1)return false;
+				bigmant=bigmant.shiftRight(1);
+				bigexponent=bigexponent.add(BigInteger.ONE);
+			}
+		
+			if(bigexponent.compareTo(BigInteger.valueOf(971))>0){
+				return false;
+			} else if(bigexponent.compareTo(BigInteger.valueOf(-1074))<0){
+				// subnormal
+				while(bigexponent.compareTo(BigInteger.valueOf(-1074))<0){
+					BigInteger bigsticky=bigmant.and(BigInteger.ONE);
+					lastRoundedBit=bigsticky.intValue();
+					if(lastRoundedBit==1)return false;
+					bigmant=bigmant.shiftRight(1);
+					bigexponent=bigexponent.add(BigInteger.ONE);
+				}
+			}
+			if(bigexponent.compareTo(BigInteger.valueOf(-1074))<0){
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
+		/**
+		 * Returns whether this value can be converted to a 32-bit floating-point
+		 * number without rounding.
+		 */
+		public boolean CanConvertToSingle() {
+			int lastRoundedBit=0;
+			if(this.mantissa.signum()==0){
+				return true;
+			}
+			BigInteger bigmant=(this.mantissa).abs();
+			BigInteger bigexponent=this.exponent;
+			while(bigmant.compareTo(BigInteger.valueOf((1L<<23)))<0){
+				return false;
+			}
+			while(bigmant.compareTo(BigInteger.valueOf((1L<<24)))>=0){
+				BigInteger bigsticky=bigmant.and(BigInteger.ONE);
+				lastRoundedBit=bigsticky.intValue();
+				if(lastRoundedBit==1)return false;
+				bigmant=bigmant.shiftRight(1);
+				bigexponent=bigexponent.add(BigInteger.ONE);
+			}
+			if(bigexponent.compareTo(BigInteger.valueOf(104))>0){
+				return false;
+			} else if(bigexponent.compareTo(BigInteger.valueOf(-149))<0){
+				// subnormal
+				while(bigexponent.compareTo(BigInteger.valueOf(-149))<0){
+					BigInteger bigsticky=bigmant.and(BigInteger.ONE);
+					lastRoundedBit=bigsticky.intValue();
+					if(lastRoundedBit==1)return false;
+					bigmant=bigmant.shiftRight(1);
+					bigexponent=bigexponent.add(BigInteger.ONE);
+				}
+			}
+			if(bigexponent.compareTo(BigInteger.valueOf(-149))<0){
+				return false;
+			} else {
+				return true;
 			}
 		}
 		

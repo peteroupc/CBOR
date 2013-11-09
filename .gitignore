@@ -2,9 +2,11 @@ bin/
 obj/
 CBORTest/bin/
 CBORTest/obj/
+CBORTest/OpenCover/
 ProfilingSessions/
 CBORTest/ProfilingSessions/
 .project
 .classpath
 *.class
+*.suo
 .pmd
