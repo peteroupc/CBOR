@@ -78,20 +78,20 @@ import java.math.*;
 		
 		/**
 		 * Creates a decimal fraction with the value exponent*10^mantissa.
-		 * @param exponent The decimal exponent.
 		 * @param mantissa The unscaled value.
+		 * @param exponent The decimal exponent.
 		 */
-		public DecimalFraction(BigInteger exponent, BigInteger mantissa){
+		public DecimalFraction(BigInteger mantissa, BigInteger exponent){
 			this.exponent=exponent;
 			this.mantissa=mantissa;
 		}
 
 		/**
 		 * Creates a decimal fraction with the value exponentLong*10^mantissa.
-		 * @param exponentLong The decimal exponent.
 		 * @param mantissa The unscaled value.
+		 * @param exponentLong The decimal exponent.
 		 */
-		public DecimalFraction(long exponentLong, BigInteger mantissa){
+		public DecimalFraction(BigInteger mantissa, long exponentLong){
 			this.exponent=BigInteger.valueOf(exponentLong);
 			this.mantissa=mantissa;
 		}
@@ -196,7 +196,7 @@ import java.math.*;
 			}
 			if(negative)
 				bigint=(bigint).negate();
-			return new DecimalFraction(newScale,bigint);
+			return new DecimalFraction(bigint,newScale);
 		}
 		
 		private BigInteger RescaleByExponentDiff(BigInteger mantissa,
@@ -224,7 +224,7 @@ import java.math.*;
          */
 		public DecimalFraction Negate() {
 			BigInteger neg=(this.mantissa).negate();
-			return new DecimalFraction(this.exponent,neg);
+			return new DecimalFraction(neg,this.exponent);
 		}
 
         /**
@@ -232,8 +232,7 @@ import java.math.*;
          */
 		public DecimalFraction Abs() {
 			if(this.signum()<0){
-				BigInteger neg=(this.mantissa).negate();
-				return new DecimalFraction(this.exponent,neg);
+        		return Negate();
 			} else {
 				return this;
 			}
@@ -265,17 +264,17 @@ import java.math.*;
 			int expcmp=exponent.compareTo(decfrac.exponent);
 			if(expcmp==0){
 				return new DecimalFraction(
-					exponent,mantissa.add(decfrac.mantissa));
+					mantissa.add(decfrac.mantissa),exponent);
 			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					decfrac.exponent,newmant.add(decfrac.mantissa));
+					newmant.add(decfrac.mantissa),decfrac.exponent);
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					exponent,mantissa.add(newmant));
+					newmant.add(this.mantissa),exponent);
 			}
 		}
 
@@ -288,17 +287,17 @@ import java.math.*;
 			int expcmp=exponent.compareTo(decfrac.exponent);
 			if(expcmp==0){
 				return new DecimalFraction(
-					exponent,mantissa.subtract(decfrac.mantissa));
+					mantissa.subtract(decfrac.mantissa),exponent);
 			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					decfrac.exponent,newmant.subtract(decfrac.mantissa));
+					newmant.subtract(decfrac.mantissa),decfrac.exponent);
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					exponent,mantissa.subtract(newmant));
+					this.mantissa.subtract(newmant),exponent);
 			}
 		}
 		
@@ -310,8 +309,7 @@ import java.math.*;
 		 */
 		public DecimalFraction Multiply(DecimalFraction decfrac) {
 			BigInteger newexp=(this.exponent.add(decfrac.exponent));
-			return new DecimalFraction(
-				newexp,mantissa.multiply(decfrac.mantissa));
+			return new DecimalFraction(mantissa.multiply(decfrac.mantissa),newexp);
 		}
 
 		/**
@@ -547,6 +545,8 @@ import java.math.*;
 		 * Converts this value to a 32-bit floating-point number. The half-up
 		 * rounding mode is used.
 		 * @return The closest 32-bit floating-point number to this value.
+		 * The return value can be positive infinity or negative infinity if
+		 * this value exceeds the range of a 32-bit floating point number.
 		 */
 		public float ToSingle() {
 			return BigFloat.FromDecimalFraction(this).ToSingle();
@@ -556,6 +556,8 @@ import java.math.*;
 		 * Converts this value to a 64-bit floating-point number. The half-up
 		 * rounding mode is used.
 		 * @return The closest 64-bit floating-point number to this value.
+		 * The return value can be positive infinity or negative infinity if
+		 * this value exceeds the range of a 64-bit floating point number.
 		 */
 		public double ToDouble() {
 			return BigFloat.FromDecimalFraction(this).ToDouble();
@@ -611,7 +613,7 @@ import java.math.*;
 					}
 				}
 				if(neg)bigmantissa=(bigmantissa).negate();
-				return new DecimalFraction(scale,bigmantissa);
+				return new DecimalFraction(bigmantissa,scale);
 			}
 		}
 
@@ -665,7 +667,7 @@ import java.math.*;
 					}
 				}
 				if(neg)bigmantissa=(bigmantissa).negate();
-				return new DecimalFraction(scale,bigmantissa);
+				return new DecimalFraction(bigmantissa,scale);
 			}
 		}
 		
@@ -734,20 +736,18 @@ import java.math.*;
 						curexp=curexp.add(BigInteger.ONE);
 					}
 				}
-				return new DecimalFraction(bigintExp,bigmantissa);
+				return new DecimalFraction(bigmantissa,bigintExp);
 			}
 		}
 		/*
 		internal DecimalFraction MovePointLeft(BigInteger steps){
 			if(steps.signum()==0)return this;
-			return new DecimalFraction(this.getExponent()-(BigInteger)steps,
-			                           this.getMantissa());
+			return new DecimalFraction(this.getMantissa(),this.getExponent().subtract(steps));
 		}
 		
 		internal DecimalFraction MovePointRight(BigInteger steps){
 			if(steps.signum()==0)return this;
-			return new DecimalFraction(this.getExponent()+(BigInteger)steps,
-			                           this.getMantissa());
+			return new DecimalFraction(this.getMantissa(),this.getExponent().add(steps));
 		}
 
 		internal DecimalFraction Rescale(BigInteger scale)
@@ -772,7 +772,7 @@ import java.math.*;
 				changed=true;
 			}
 			if(!changed)return this;
-			return new DecimalFraction(exp,mant);
+			return new DecimalFraction(mant,exp);
 		}
 		*/
 		

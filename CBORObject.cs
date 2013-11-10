@@ -3464,12 +3464,12 @@ namespace PeterO
 			if(isDecimal){
 				return RewrapObject(o,new CBORObject(
 					CBORObjectType_DecimalFraction,
-					new DecimalFraction(list[0].AsBigInteger(),list[1].AsBigInteger())));
+					new DecimalFraction(list[1].AsBigInteger(),list[0].AsBigInteger())));
 				
 			} else {
 				return RewrapObject(o,new CBORObject(
 					CBORObjectType_BigFloat,
-					new BigFloat(list[0].AsBigInteger(),list[1].AsBigInteger())));
+					new BigFloat(list[1].AsBigInteger(),list[0].AsBigInteger())));
 			}
 		}
 		

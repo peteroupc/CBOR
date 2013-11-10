@@ -1623,18 +1623,18 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 			BigFloat bf;
 			bf=new BigFloat(20);
 			Assert.assertEquals("20",DecimalFraction.FromBigFloat(bf).toString());
-			bf=new BigFloat(-1,BigInteger.valueOf(3));
+			bf=new BigFloat(BigInteger.valueOf(3),-1);
 			Assert.assertEquals("1.5",DecimalFraction.FromBigFloat(bf).toString());
-			bf=new BigFloat(-1,BigInteger.valueOf((-3)));
+			bf=new BigFloat(BigInteger.valueOf((-3)),-1);
 			Assert.assertEquals("-1.5",DecimalFraction.FromBigFloat(bf).toString());
 			DecimalFraction df;
 			df=new DecimalFraction(20);
 			Assert.assertEquals("20",BigFloat.FromDecimalFraction(df).toString());
 			df=new DecimalFraction(-20);
 			Assert.assertEquals("-20",BigFloat.FromDecimalFraction(df).toString());
-			df=new DecimalFraction(-1,BigInteger.valueOf(15));
+			df=new DecimalFraction(BigInteger.valueOf(15),-1);
 			Assert.assertEquals("1.5",BigFloat.FromDecimalFraction(df).toString());
-			df=new DecimalFraction(-1,BigInteger.valueOf((-15)));
+			df=new DecimalFraction(BigInteger.valueOf((-15)),-1);
 			Assert.assertEquals("-1.5",BigFloat.FromDecimalFraction(df).toString());
 		}
 		

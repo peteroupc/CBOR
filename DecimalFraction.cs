@@ -90,9 +90,9 @@ namespace PeterO
 		/// <summary>
 		/// Creates a decimal fraction with the value exponent*10^mantissa.
 		/// </summary>
-		/// <param name="exponent">The decimal exponent.</param>
 		/// <param name="mantissa">The unscaled value.</param>
-		public DecimalFraction(BigInteger exponent, BigInteger mantissa){
+		/// <param name="exponent">The decimal exponent.</param>
+		public DecimalFraction(BigInteger mantissa, BigInteger exponent){
 			this.exponent=exponent;
 			this.mantissa=mantissa;
 		}
@@ -100,9 +100,9 @@ namespace PeterO
 		/// <summary>
 		/// Creates a decimal fraction with the value exponentLong*10^mantissa.
 		/// </summary>
-		/// <param name="exponentLong">The decimal exponent.</param>
 		/// <param name="mantissa">The unscaled value.</param>
-		public DecimalFraction(long exponentLong, BigInteger mantissa){
+		/// <param name="exponentLong">The decimal exponent.</param>
+		public DecimalFraction(BigInteger mantissa, long exponentLong){
 			this.exponent=(BigInteger)exponentLong;
 			this.mantissa=mantissa;
 		}
@@ -210,7 +210,7 @@ namespace PeterO
 			}
 			if(negative)
 				bigint=-(BigInteger)bigint;
-			return new DecimalFraction(newScale,bigint);
+			return new DecimalFraction(bigint,newScale);
 		}
 		
 		private BigInteger
@@ -240,7 +240,7 @@ namespace PeterO
         /// </summary>
 		public DecimalFraction Negate(){
 			BigInteger neg=-(BigInteger)this.mantissa;
-			return new DecimalFraction(this.exponent,neg);
+			return new DecimalFraction(neg,this.exponent);
 		}
 
         /// <summary>
@@ -248,8 +248,7 @@ namespace PeterO
         /// </summary>
 		public DecimalFraction Abs(){
 			if(this.Sign<0){
-				BigInteger neg=-(BigInteger)this.mantissa;
-				return new DecimalFraction(this.exponent,neg);
+        		return Negate();
 			} else {
 				return this;
 			}
@@ -282,17 +281,17 @@ namespace PeterO
 			int expcmp=exponent.CompareTo((BigInteger)decfrac.exponent);
 			if(expcmp==0){
 				return new DecimalFraction(
-					exponent,mantissa+(BigInteger)decfrac.mantissa);
+					mantissa+(BigInteger)decfrac.mantissa,exponent);
 			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					decfrac.exponent,newmant+(BigInteger)decfrac.mantissa);
+					newmant+(BigInteger)decfrac.mantissa,decfrac.exponent);
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					exponent,mantissa+(BigInteger)newmant);
+					newmant+(BigInteger)this.mantissa,exponent);
 			}
 		}
 
@@ -305,17 +304,17 @@ namespace PeterO
 			int expcmp=exponent.CompareTo((BigInteger)decfrac.exponent);
 			if(expcmp==0){
 				return new DecimalFraction(
-					exponent,mantissa-(BigInteger)decfrac.mantissa);
+					mantissa-(BigInteger)decfrac.mantissa,exponent);
 			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					decfrac.exponent,newmant-(BigInteger)decfrac.mantissa);
+					newmant-(BigInteger)decfrac.mantissa,decfrac.exponent);
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new DecimalFraction(
-					exponent,mantissa-(BigInteger)newmant);
+					this.mantissa-(BigInteger)newmant,exponent);
 			}
 		}
 		
@@ -327,8 +326,7 @@ namespace PeterO
 		/// <returns>The product of the two decimal fractions.</returns>
 		public DecimalFraction Multiply(DecimalFraction decfrac){
 			BigInteger newexp=(this.exponent+(BigInteger)decfrac.exponent);
-			return new DecimalFraction(
-				newexp,mantissa*(BigInteger)decfrac.mantissa);
+			return new DecimalFraction(mantissa*(BigInteger)decfrac.mantissa,newexp);
 		}
 
 		/// <summary>
@@ -572,7 +570,9 @@ namespace PeterO
 		/// The half-up rounding mode is used.
 		/// </summary>
 		/// <returns>The closest 32-bit floating-point number
-		/// to this value.</returns>
+		/// to this value. The return value can be positive
+		/// infinity or negative infinity if this value exceeds the
+		/// range of a 32-bit floating point number.</returns>
 		public float ToSingle(){
 			return BigFloat.FromDecimalFraction(this).ToSingle();
 		}
@@ -582,7 +582,9 @@ namespace PeterO
 		/// The half-up rounding mode is used.
 		/// </summary>
 		/// <returns>The closest 64-bit floating-point number
-		/// to this value.</returns>
+		/// to this value. The return value can be positive
+		/// infinity or negative infinity if this value exceeds the
+		/// range of a 64-bit floating point number.</returns>
 		public double ToDouble(){
 			return BigFloat.FromDecimalFraction(this).ToDouble();
 		}
@@ -637,7 +639,7 @@ namespace PeterO
 					}
 				}
 				if(neg)bigmantissa=-(BigInteger)bigmantissa;
-				return new DecimalFraction(scale,bigmantissa);
+				return new DecimalFraction(bigmantissa,scale);
 			}
 		}
 
@@ -691,7 +693,7 @@ namespace PeterO
 					}
 				}
 				if(neg)bigmantissa=-(BigInteger)bigmantissa;
-				return new DecimalFraction(scale,bigmantissa);
+				return new DecimalFraction(bigmantissa,scale);
 			}
 		}
 		
@@ -760,20 +762,18 @@ namespace PeterO
 						curexp+=BigInteger.One;
 					}
 				}
-				return new DecimalFraction(bigintExp,bigmantissa);
+				return new DecimalFraction(bigmantissa,bigintExp);
 			}
 		}
 		/*
 		internal DecimalFraction MovePointLeft(BigInteger steps){
 			if(steps.IsZero)return this;
-			return new DecimalFraction(this.Exponent-(BigInteger)steps,
-			                           this.Mantissa);
+			return new DecimalFraction(this.Mantissa,this.Exponent-(BigInteger)steps);
 		}
 		
 		internal DecimalFraction MovePointRight(BigInteger steps){
 			if(steps.IsZero)return this;
-			return new DecimalFraction(this.Exponent+(BigInteger)steps,
-			                           this.Mantissa);
+			return new DecimalFraction(this.Mantissa,this.Exponent+(BigInteger)steps);
 		}
 
 		internal DecimalFraction Rescale(BigInteger scale)
@@ -798,7 +798,7 @@ namespace PeterO
 				changed=true;
 			}
 			if(!changed)return this;
-			return new DecimalFraction(exp,mant);
+			return new DecimalFraction(mant,exp);
 		}
 		*/
 		

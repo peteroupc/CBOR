@@ -89,9 +89,9 @@ namespace PeterO
 		/// <summary>
 		/// Creates a bigfloat with the value exponent*2^mantissa.
 		/// </summary>
-		/// <param name="exponent">The binary exponent.</param>
 		/// <param name="mantissa">The unscaled value.</param>
-		public BigFloat(BigInteger exponent, BigInteger mantissa){
+		/// <param name="exponent">The binary exponent.</param>
+		public BigFloat(BigInteger mantissa,BigInteger exponent){
 			this.exponent=exponent;
 			this.mantissa=mantissa;
 		}
@@ -99,9 +99,9 @@ namespace PeterO
 		/// <summary>
 		/// Creates a bigfloat with the value exponentLong*2^mantissa.
 		/// </summary>
-		/// <param name="exponentLong">The binary exponent.</param>
 		/// <param name="mantissa">The unscaled value.</param>
-		public BigFloat(long exponentLong, BigInteger mantissa){
+		/// <param name="exponentLong">The binary exponent.</param>
+		public BigFloat(BigInteger mantissa, long exponentLong){
 			this.exponent=(BigInteger)exponentLong;
 			this.mantissa=mantissa;
 		}
@@ -166,7 +166,7 @@ namespace PeterO
 		/// </summary>
 		public BigFloat Negate(){
 			BigInteger neg=-(BigInteger)this.mantissa;
-			return new BigFloat(this.exponent,neg);
+			return new BigFloat(neg,this.exponent);
 		}
 
 		/// <summary>
@@ -174,8 +174,7 @@ namespace PeterO
 		/// </summary>
 		public BigFloat Abs(){
 			if(this.Sign<0){
-				BigInteger neg=-(BigInteger)this.mantissa;
-				return new BigFloat(this.exponent,neg);
+				return Negate();
 			} else {
 				return this;
 			}
@@ -208,17 +207,17 @@ namespace PeterO
 			int expcmp=exponent.CompareTo((BigInteger)decfrac.exponent);
 			if(expcmp==0){
 				return new BigFloat(
-					exponent,mantissa+(BigInteger)decfrac.mantissa);
+					mantissa+(BigInteger)decfrac.mantissa,exponent);
 			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new BigFloat(
-					decfrac.exponent,newmant+(BigInteger)decfrac.mantissa);
+					newmant+(BigInteger)decfrac.mantissa,decfrac.exponent);
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new BigFloat(
-					exponent,mantissa+(BigInteger)newmant);
+					newmant+(BigInteger)this.mantissa,exponent);
 			}
 		}
 
@@ -231,17 +230,17 @@ namespace PeterO
 			int expcmp=exponent.CompareTo((BigInteger)decfrac.exponent);
 			if(expcmp==0){
 				return new BigFloat(
-					exponent,mantissa-(BigInteger)decfrac.mantissa);
+					this.mantissa-(BigInteger)decfrac.mantissa,exponent);
 			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new BigFloat(
-					decfrac.exponent,newmant-(BigInteger)decfrac.mantissa);
+					newmant-(BigInteger)decfrac.mantissa,decfrac.exponent);
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new BigFloat(
-					exponent,mantissa-(BigInteger)newmant);
+					this.mantissa-(BigInteger)newmant,exponent);
 			}
 		}
 		
@@ -255,7 +254,7 @@ namespace PeterO
 		public BigFloat Multiply(BigFloat decfrac){
 			BigInteger newexp=(this.exponent+(BigInteger)decfrac.exponent);
 			return new BigFloat(
-				newexp,mantissa*(BigInteger)decfrac.mantissa);
+				mantissa*(BigInteger)decfrac.mantissa,newexp);
 		}
 
 		/// <summary>
@@ -380,7 +379,7 @@ namespace PeterO
 					}
 				}
 				if(neg)bigmantissa=-(BigInteger)bigmantissa;
-				return new BigFloat(scale,bigmantissa);
+				return new BigFloat(bigmantissa,scale);
 			}
 		}
 		
@@ -406,7 +405,7 @@ namespace PeterO
 				if((value>>31)!=0)
 					fpMantissa=-fpMantissa;
 			}
-			return new BigFloat(fpExponent-150,(BigInteger)fpMantissa);
+			return new BigFloat((BigInteger)((long)fpMantissa),fpExponent-150);
 		}
 
 		/// <summary>
@@ -431,7 +430,7 @@ namespace PeterO
 				if((value>>63)!=0)
 					fpMantissa=-fpMantissa;
 			}
-			return new BigFloat(fpExponent-1075,(BigInteger)fpMantissa);
+			return new BigFloat((BigInteger)((long)fpMantissa),fpExponent-1075);
 		}
 
 		/// <summary>
@@ -471,7 +470,9 @@ namespace PeterO
 		/// The half-up rounding mode is used.
 		/// </summary>
 		/// <returns>The closest 32-bit floating-point number
-		/// to this value.</returns>
+		/// to this value. The return value can be positive
+		/// infinity or negative infinity if this value exceeds the
+		/// range of a 32-bit floating point number.</returns>
 		public float ToSingle(){
 			BigInteger bigmant=BigInteger.Abs(this.mantissa);
 			BigInteger bigexponent=this.exponent;
@@ -543,7 +544,9 @@ namespace PeterO
 		/// The half-up rounding mode is used.
 		/// </summary>
 		/// <returns>The closest 64-bit floating-point number
-		/// to this value.</returns>
+		/// to this value. The return value can be positive
+		/// infinity or negative infinity if this value exceeds the
+		/// range of a 64-bit floating point number.</returns>
 		public double ToDouble(){
 			BigInteger bigmant=BigInteger.Abs(this.mantissa);
 			BigInteger bigexponent=this.exponent;

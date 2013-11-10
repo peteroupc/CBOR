@@ -3350,12 +3350,12 @@ public static CBORObject FromObject(Object obj) {
 			if(isDecimal){
 				return RewrapObject(o,new CBORObject(
 					CBORObjectType_DecimalFraction,
-					new DecimalFraction(list.get(0).AsBigInteger(),list.get(1).AsBigInteger())));
+					new DecimalFraction(list.get(1).AsBigInteger(),list.get(0).AsBigInteger())));
 				
 			} else {
 				return RewrapObject(o,new CBORObject(
 					CBORObjectType_BigFloat,
-					new BigFloat(list.get(0).AsBigInteger(),list.get(1).AsBigInteger())));
+					new BigFloat(list.get(1).AsBigInteger(),list.get(0).AsBigInteger())));
 			}
 		}
 		

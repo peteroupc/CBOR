@@ -1586,18 +1586,18 @@ namespace Test
 			BigFloat bf;
 			bf=new BigFloat(20);
 			Assert.AreEqual("20",DecimalFraction.FromBigFloat(bf).ToString());
-			bf=new BigFloat(-1,(BigInteger)3);
+			bf=new BigFloat((BigInteger)3,-1);
 			Assert.AreEqual("1.5",DecimalFraction.FromBigFloat(bf).ToString());
-			bf=new BigFloat(-1,(BigInteger)(-3));
+			bf=new BigFloat((BigInteger)(-3),-1);
 			Assert.AreEqual("-1.5",DecimalFraction.FromBigFloat(bf).ToString());
 			DecimalFraction df;
 			df=new DecimalFraction(20);
 			Assert.AreEqual("20",BigFloat.FromDecimalFraction(df).ToString());
 			df=new DecimalFraction(-20);
 			Assert.AreEqual("-20",BigFloat.FromDecimalFraction(df).ToString());
-			df=new DecimalFraction(-1,(BigInteger)15);
+			df=new DecimalFraction((BigInteger)15,-1);
 			Assert.AreEqual("1.5",BigFloat.FromDecimalFraction(df).ToString());
-			df=new DecimalFraction(-1,(BigInteger)(-15));
+			df=new DecimalFraction((BigInteger)(-15),-1);
 			Assert.AreEqual("-1.5",BigFloat.FromDecimalFraction(df).ToString());
 		}
 		
