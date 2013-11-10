@@ -15,7 +15,16 @@ import java.math.*;
 	/**
 	 * Represents an arbitrary-precision decimal floating-point number.
 	 * Consists of a integer mantissa and an integer exponent, both arbitrary-precision.
-	 * The value of the number is equal to mantissa * 10^exponent.
+	 * The value of the number is equal to mantissa * 10^exponent. <p> Note:
+	 * This class doesn't yet implement certain operations, notably division,
+	 * that require results to be rounded. That's because I haven't decided
+	 * yet how to incorporate rounding into the API, since the results of
+	 * some divisions can't be represented exactly in a decimal fraction
+	 * (for example, 1/3). Should I include precision and rounding mode,
+	 * as is done in Java's Big Decimal class, or should I also include minimum
+	 * and maximum exponent in the rounding parameters, for better support
+	 * when converting to other decimal number formats? Or is there a better
+	 * approach to supporting rounding? </p>
 	 */
 	public final class DecimalFraction implements Comparable<DecimalFraction>
 	{
@@ -229,6 +238,24 @@ import java.math.*;
 				return this;
 			}
 		}
+        	
+        /**
+         * Gets the greater value between two DecimalFraction values.
+         */
+		public DecimalFraction Max(DecimalFraction a, DecimalFraction b) {
+			if(a==null)throw new NullPointerException("a");
+			if(b==null)throw new NullPointerException("b");
+			return a.compareTo(b)>0 ? a : b;
+		}
+		
+		/**
+		 * Gets the lesser value between two DecimalFraction values.
+		 */
+		public DecimalFraction Min(DecimalFraction a, DecimalFraction b) {
+			if(a==null)throw new NullPointerException("a");
+			if(b==null)throw new NullPointerException("b");
+			return a.compareTo(b)>0 ? b : a;
+		}
 		
 		/**
 		 * Finds the sum of this object and another decimal fraction. The result's
@@ -302,8 +329,9 @@ import java.math.*;
 			}
 
 		/**
-		 * Compares two decimal fractions.
-		 * @param other Another decimal fractions.
+		 * Compares two decimal fractions. <p>This method is not consistent
+		 * with the Equals method.</p>
+		 * @param other Another decimal fraction.
 		 * @return Less than 0 if this value is less than the other value, or greater
 		 * than 0 if this value is greater than the other value or if "other" is
 		 * null, or 0 if both values are equal.
@@ -567,9 +595,20 @@ import java.math.*;
 				// Value has a fractional part
 				BigInteger bigmantissa=BigInteger.valueOf(fpMantissa);
 				long scale=fpExponent;
-				int exp=-fpExponent;
-				for(int i=0;i<exp;i++){
-					bigmantissa=bigmantissa.multiply(BigInteger.valueOf(5));
+				while(fpExponent<0){
+					if(fpExponent<=-20){
+						bigmantissa=bigmantissa.multiply(BigInt5Pow20);
+						fpExponent+=20;
+					} else if(fpExponent<=-10){
+						bigmantissa=bigmantissa.multiply(BigInt5Pow10);
+						fpExponent+=10;
+					} else if(fpExponent<=-5){
+						bigmantissa=bigmantissa.multiply(BigInt5Pow5);
+						fpExponent+=5;
+					} else {
+						bigmantissa=bigmantissa.multiply(BigInt5);
+						fpExponent+=1;
+					}
 				}
 				if(neg)bigmantissa=(bigmantissa).negate();
 				return new DecimalFraction(scale,bigmantissa);
@@ -610,9 +649,20 @@ import java.math.*;
 				// Value has a fractional part
 				BigInteger bigmantissa=BigInteger.valueOf(fpMantissa);
 				long scale=fpExponent;
-				int exp=-fpExponent;
-				for(int i=0;i<exp;i++){
-					bigmantissa=bigmantissa.multiply(BigInteger.valueOf(5));
+				while(fpExponent<0){
+					if(fpExponent<=-20){
+						bigmantissa=bigmantissa.multiply(BigInt5Pow20);
+						fpExponent+=20;
+					} else if(fpExponent<=-10){
+						bigmantissa=bigmantissa.multiply(BigInt5Pow10);
+						fpExponent+=10;
+					} else if(fpExponent<=-5){
+						bigmantissa=bigmantissa.multiply(BigInt5Pow5);
+						fpExponent+=5;
+					} else {
+						bigmantissa=bigmantissa.multiply(BigInt5);
+						fpExponent+=1;
+					}
 				}
 				if(neg)bigmantissa=(bigmantissa).negate();
 				return new DecimalFraction(scale,bigmantissa);
@@ -670,6 +720,15 @@ import java.math.*;
 					} else if(curexp.compareTo(BigIntNeg5)<=0){
 						bigmantissa=bigmantissa.multiply(BigInt5Pow5);
 						curexp=curexp.add(BigInt5);
+					} else if(curexp.compareTo(BigInteger.valueOf((-4)))<=0){
+						bigmantissa=bigmantissa.multiply(BigInteger.valueOf(625));
+						curexp=curexp.add(BigInteger.valueOf(4));
+					} else if(curexp.compareTo(BigInteger.valueOf((-3)))<=0){
+						bigmantissa=bigmantissa.multiply(BigInteger.valueOf(125));
+						curexp=curexp.add(BigInteger.valueOf(3));
+					} else if(curexp.compareTo(BigInteger.valueOf((-2)))<=0){
+						bigmantissa=bigmantissa.multiply(BigInteger.valueOf(25));
+						curexp=curexp.add(BigInteger.valueOf(2));
 					} else {
 						bigmantissa=bigmantissa.multiply(BigInt5);
 						curexp=curexp.add(BigInteger.ONE);
@@ -678,6 +737,44 @@ import java.math.*;
 				return new DecimalFraction(bigintExp,bigmantissa);
 			}
 		}
+		/*
+		internal DecimalFraction MovePointLeft(BigInteger steps){
+			if(steps.signum()==0)return this;
+			return new DecimalFraction(this.getExponent()-(BigInteger)steps,
+			                           this.getMantissa());
+		}
+		
+		internal DecimalFraction MovePointRight(BigInteger steps){
+			if(steps.signum()==0)return this;
+			return new DecimalFraction(this.getExponent()+(BigInteger)steps,
+			                           this.getMantissa());
+		}
+
+		internal DecimalFraction Rescale(BigInteger scale)
+		{
+			throw new UnsupportedOperationException();
+		}
+ 
+		internal DecimalFraction RoundToIntegralValue(BigInteger scale)
+		{
+			return Rescale(BigInteger.ZERO);
+		}
+		internal DecimalFraction Normalize()
+		{
+			if(this.getMantissa().signum()==0)
+				return new DecimalFraction(0);
+			BigInteger mant=this.getMantissa();
+			BigInteger exp=this.getExponent();
+			boolean changed=false;
+			while((mant.remainder(BigInteger.TEN))==0){
+				mant=mant.divide(BigInteger.TEN);
+				exp=exp.add(BigInteger.ONE);
+				changed=true;
+			}
+			if(!changed)return this;
+			return new DecimalFraction(exp,mant);
+		}
+		*/
 		
 		/**
 		 * Converts this value to a string. The format of the return value is exactly

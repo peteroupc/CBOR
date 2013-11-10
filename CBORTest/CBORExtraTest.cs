@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Created by SharpDevelop.
  * User: Peter
  * Date: 11/2/2013
@@ -189,12 +189,12 @@ namespace Test
 		public void TestDoubleToOtherII(){
 			CBORObject dbl1=CBORObject.FromObject((double)Int32.MinValue);
 			CBORObject dbl2=CBORObject.FromObject((double)Int32.MaxValue);
-			Assert.Throws(typeof(OverflowException),()=>dbl1.AsUInt16());
-			Assert.Throws(typeof(OverflowException),()=>dbl1.AsSByte());
-			Assert.Throws(typeof(OverflowException),()=>dbl1.AsUInt32());
-			Assert.Throws(typeof(OverflowException),()=>dbl1.AsUInt64());
-			Assert.Throws(typeof(OverflowException),()=>dbl2.AsUInt16());
-			Assert.Throws(typeof(OverflowException),()=>dbl2.AsSByte());
+			try { dbl1.AsUInt16(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { dbl1.AsSByte(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { dbl1.AsUInt32(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { dbl1.AsUInt64(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { dbl2.AsUInt16(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { dbl2.AsSByte(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
 			Assert.DoesNotThrow(()=>dbl2.AsUInt32());
 			Assert.DoesNotThrow(()=>dbl2.AsUInt64());
 		}

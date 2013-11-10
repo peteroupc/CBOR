@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -58,8 +58,8 @@ namespace PeterO
 		private decimal DecimalFractionToDecimal(DecimalFraction decfrac){
 			BigInteger bigexp=decfrac.Exponent;
 			BigInteger bigmant=decfrac.Mantissa;
-			BigInteger decmax=(BigInteger)Decimal.MaxValue;
-			BigInteger decmin=(BigInteger)Decimal.MinValue;
+			BigInteger decmax=(BigInteger)Decimal.MaxValue; // equals (2^96-1)
+			BigInteger decmin=(BigInteger)Decimal.MinValue; // equals -(2^96-1)
 			bool neg=(bigmant<0);
 			if(neg)bigmant=-bigmant;
 			if(bigexp==0){

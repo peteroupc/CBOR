@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -17,6 +17,18 @@ namespace PeterO
 	/// Consists of a integer mantissa and an integer exponent,
 	/// both arbitrary-precision.  The value of the number is equal
 	/// to mantissa * 2^exponent.
+	/// <para>
+	/// Note:  This class doesn't yet implement certain operations,
+	/// notably division, that require results to be rounded.  That's
+	/// because I haven't decided yet how to incorporate rounding into
+	/// the API, since the results of some divisions can't be represented
+	/// exactly in a bigfloat (for example, 1/10).  Should I include
+	/// precision and rounding mode, as is done in Java's Big Decimal class,
+	/// or should I also include minimum and maximum exponent in the
+	/// rounding parameters, for better support when converting to other
+	/// decimal number formats?  Or is there a better approach to supporting
+	/// rounding?
+	/// </para>
 	/// </summary>
 	public sealed class BigFloat : IComparable<BigFloat>, IEquatable<BigFloat>
 	{
@@ -112,21 +124,36 @@ namespace PeterO
 			this.mantissa=(BigInteger)mantissaLong;
 		}
 
+		private BigInteger FastMaxExponent=(BigInteger)2000;
+		private BigInteger FastMinExponent=(BigInteger)(-2000);
+		
 		private BigInteger
 			RescaleByExponentDiff(BigInteger mantissa,
 			                      BigInteger e1,
 			                      BigInteger e2){
 			bool negative=(mantissa.Sign<0);
 			if(negative)mantissa=-mantissa;
-			if(e1.CompareTo(e2)>0){
-				while(e1.CompareTo(e2)>0){
-					mantissa<<=1;
-					e1=e1-BigInteger.One;
+			if(e1.CompareTo(FastMinExponent)>=0 &&
+			   e1.CompareTo(FastMaxExponent)<=0 &&
+			   e2.CompareTo(FastMinExponent)>=0 &&
+			   e2.CompareTo(FastMaxExponent)<=0){
+				int e1long=(int)(BigInteger)e1;
+				int e2long=(int)(BigInteger)e2;
+				e1long=Math.Abs(e1long-e2long);
+				if(e1long!=0){
+					mantissa<<=e1long;
 				}
 			} else {
-				while(e1.CompareTo(e2)<0){
-					mantissa<<=1;
-					e1=e1+BigInteger.One;
+				if(e1.CompareTo(e2)>0){
+					while(e1.CompareTo(e2)>0){
+						mantissa<<=1;
+						e1=e1-BigInteger.One;
+					}
+				} else {
+					while(e1.CompareTo(e2)<0){
+						mantissa<<=1;
+						e1=e1+BigInteger.One;
+					}
 				}
 			}
 			if(negative)mantissa=-mantissa;
@@ -152,6 +179,24 @@ namespace PeterO
 			} else {
 				return this;
 			}
+		}
+
+		/// <summary>
+		/// Gets the greater value between two BigFloat values.
+		/// </summary>
+		public BigFloat Max(BigFloat a, BigFloat b){
+			if(a==null)throw new ArgumentNullException("a");
+			if(b==null)throw new ArgumentNullException("b");
+			return a.CompareTo(b)>0 ? a : b;
+		}
+		
+		/// <summary>
+		/// Gets the lesser value between two BigFloat values.
+		/// </summary>
+		public BigFloat Min(BigFloat a, BigFloat b){
+			if(a==null)throw new ArgumentNullException("a");
+			if(b==null)throw new ArgumentNullException("b");
+			return a.CompareTo(b)>0 ? b : a;
 		}
 
 		/// <summary>
@@ -233,6 +278,7 @@ namespace PeterO
 
 		/// <summary>
 		/// Compares two bigfloats.
+		/// <para>This method is not consistent with the Equals method.</para>
 		/// </summary>
 		/// <param name="other">Another bigfloat.</param>
 		/// <returns>Less than 0 if this value is less than the other
@@ -420,90 +466,6 @@ namespace PeterO
 				return bigmantissa;
 			}
 		}
-		
-		/// <summary>
-		/// Returns whether this value can be converted
-		/// to a 64-bit floating-point number without
-		/// rounding.
-		/// </summary>
-		public bool CanConvertToDouble(){
-			int lastRoundedBit=0;
-			if(this.mantissa.IsZero){
-				return true;
-			}
-			BigInteger bigmant=BigInteger.Abs(this.mantissa);
-			BigInteger bigexponent=this.exponent;
-			while(bigmant.CompareTo((BigInteger)(1L<<52))<0){
-				return false;
-			}
-			while(bigmant.CompareTo((BigInteger)(1L<<53))>=0){
-				BigInteger bigsticky=bigmant&(BigInteger)1;
-				lastRoundedBit=(int)bigsticky;
-				if(lastRoundedBit==1)return false;
-				bigmant>>=1;
-				bigexponent+=BigInteger.One;
-			}
-		
-			if(bigexponent>971){
-				return false;
-			} else if(bigexponent<-1074){
-				// subnormal
-				while(bigexponent<-1074){
-					BigInteger bigsticky=bigmant&(BigInteger)1;
-					lastRoundedBit=(int)bigsticky;
-					if(lastRoundedBit==1)return false;
-					bigmant>>=1;
-					bigexponent+=BigInteger.One;
-				}
-			}
-			if(bigexponent<-1074){
-				return false;
-			} else {
-				return true;
-			}
-		}
-		
-		/// <summary>
-		/// Returns whether this value can be converted
-		/// to a 32-bit floating-point number without
-		/// rounding.
-		/// </summary>
-		public bool CanConvertToSingle(){
-			int lastRoundedBit=0;
-			if(this.mantissa.IsZero){
-				return true;
-			}
-			BigInteger bigmant=BigInteger.Abs(this.mantissa);
-			BigInteger bigexponent=this.exponent;
-			while(bigmant.CompareTo((BigInteger)(1L<<23))<0){
-				return false;
-			}
-			while(bigmant.CompareTo((BigInteger)(1L<<24))>=0){
-				BigInteger bigsticky=bigmant&(BigInteger)1;
-				lastRoundedBit=(int)bigsticky;
-				if(lastRoundedBit==1)return false;
-				bigmant>>=1;
-				bigexponent+=BigInteger.One;
-			}
-			if(bigexponent>104){
-				return false;
-			} else if(bigexponent<-149){
-				// subnormal
-				while(bigexponent<-149){
-					BigInteger bigsticky=bigmant&BigInteger.One;
-					lastRoundedBit=(int)bigsticky;
-					if(lastRoundedBit==1)return false;
-					bigmant>>=1;
-					bigexponent+=BigInteger.One;
-				}
-			}
-			if(bigexponent<-149){
-				return false;
-			} else {
-				return true;
-			}
-		}
-		
 		/// <summary>
 		/// Converts this value to a 32-bit floating-point number.
 		/// The half-up rounding mode is used.

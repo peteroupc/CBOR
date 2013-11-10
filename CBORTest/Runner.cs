@@ -36,6 +36,8 @@ namespace PeterO
 		}
 		
 		public static void Main(){
+			new Test.CBORTest().TestRandomData();
+			return;
 			// Run all the NUnit tests in this assembly
 			foreach(var type in Assembly.GetExecutingAssembly().GetTypes()){
 				if(!HasAttribute(type,typeof(TestFixtureAttribute)))continue;

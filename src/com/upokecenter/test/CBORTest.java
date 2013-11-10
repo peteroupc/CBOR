@@ -46,6 +46,88 @@ import org.junit.Test;
 			TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
 		}
 
+		
+		public static String RandomDecimalString(java.util.Random r){
+			int count=r.nextInt(20)+1;
+			StringBuilder sb=new StringBuilder();
+			if(r.nextInt(2)==0)sb.append('-');
+			for(int i=0;i<count;i++){
+				if(i==0)
+					sb.append((char)('1'+r.nextInt(9)));
+				else
+					sb.append((char)('0'+r.nextInt(10)));
+			}
+			if(r.nextInt(2)==0){
+				sb.append('.');
+				count=r.nextInt(20)+1;
+				for(int i=0;i<count;i++){
+					sb.append((char)('0'+r.nextInt(10)));
+				}
+			}
+			if(r.nextInt(2)==0){
+				sb.append('E');
+				count=r.nextInt(20);
+				if(count!=0){
+					sb.append(r.nextInt(2)==0 ? '+' : '-');
+				}
+				sb.append(Integer.toString((int)count));
+			}
+			return sb.toString();
+		}
+		
+		private void TestDecimalString(String r){
+			CBORObject o=CBORObject.FromObject(DecimalFraction.FromString(r));
+			CBORObject o2=CBORDataUtilities.ParseJSONNumber(r);
+			if(o.compareTo(o2)!=0){
+				Assert.fail("Expected: "+o+"\n was: "+o2);
+			}
+		}
+
+		@Test
+		public void TestParseDecimalStrings(){
+			java.util.Random rand=new java.util.Random();
+			for(int i=0;i<2000;i++){
+				String r=RandomDecimalString(rand);
+				TestDecimalString(r);
+			}
+		}
+		
+		@Test
+		public void TestRandomData(){
+			java.util.Random rand=new java.util.Random();
+			for(int i=0;i<200;i++){
+				byte[] array=new byte[rand.nextInt(1000000)+1];
+				for(int j=0;j<array.length;j++){
+					if(j+3<=array.length){
+						int r=rand.nextInt(0x1000000);
+						array[j]=(byte)((r)&0xFF);
+						array[j+1]=(byte)((r>>8)&0xFF);
+						array[j+2]=(byte)((r>>16)&0xFF);
+						j+=2;
+					} else {
+						array[j]=(byte)rand.nextInt(256);
+					}
+				}
+				java.io.ByteArrayInputStream ms=null;
+try {
+ms=new ByteArrayInputStream(array);
+int startingAvailable=ms.available();
+
+					while((startingAvailable-ms.available())!=startingAvailable){
+						try {
+							CBORObject o=CBORObject.Read(ms);
+							if(o==null)Assert.fail("Object read is null");
+						} catch(CBORException ex){
+							// Expected exception
+						}
+					}
+}
+finally {
+try { if(ms!=null)ms.close(); } catch(IOException ex){}
+}
+			}
+		}
+
 		private double RandomDouble(java.util.Random rand, int exponent){
 			long r=rand.nextInt(0x10000);
 			r|=((long)rand.nextInt(0x10000))<<16;
@@ -133,10 +215,10 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 		public void TestJSON(){
 			CBORObject o;
 			o=CBORObject.FromJSONString("[1,2,3]");
-			try { CBORObject.FromJSONString("[\"\\d800\"]"); } catch(CBORException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromJSONString("[1,2,"); } catch(CBORException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromJSONString("[1,2,3"); } catch(CBORException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromJSONString("[\""); } catch(CBORException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromJSONString("[\"\\d800\"]"); } catch(CBORException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromJSONString("[1,2,"); } catch(CBORException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromJSONString("[1,2,3"); } catch(CBORException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromJSONString("[\""); } catch(CBORException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
 			Assert.assertEquals(3,o.size());
 			Assert.assertEquals(1,o.get(0).AsInt32());
 			Assert.assertEquals(2,o.get(1).AsInt32());
@@ -214,18 +296,18 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 		
 		@Test
 		public void TestDecFracOverflow(){
-			try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Float.NaN).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Double.NaN).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Float.NaN).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Double.NaN).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.NaN).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.NaN).AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.NaN).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.NaN).AsBigFloat(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
 		}
 		
 		@Test
@@ -244,12 +326,12 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 			Assert.assertEquals("1",CBORObject.FromObject((double)1.5).AsBigInteger().toString());
 			Assert.assertEquals("2",CBORObject.FromObject((double)2.5).AsBigInteger().toString());
 			Assert.assertEquals("328323",CBORObject.FromObject((double)328323).AsBigInteger().toString());
-			try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Float.NaN).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORObject.FromObject(Double.NaN).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Float.NaN).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORObject.FromObject(Double.NaN).AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
 		}
 		
 		@Test
@@ -479,7 +561,8 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 		public static void AssertDecimalsEquivalent(String a, String b){
 			CBORObject ca=CBORDataUtilities.ParseJSONNumber(a);
 			CBORObject cb=CBORDataUtilities.ParseJSONNumber(b);
-			Assert.assertEquals(a+" not equal to "+b,0,ca.compareTo(cb));
+			if(ca.compareTo(cb)!=0)
+				Assert.fail(a+" not equal to "+b);
 			TestCommon.AssertRoundTrip(ca);
 			TestCommon.AssertRoundTrip(cb);
 		}
@@ -995,7 +1078,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 			Assert.assertEquals("-32538.87666",DecimalFraction.FromString("123.34E-3").Subtract(DecimalFraction.FromString("325.39E2")).toString());
 		}
 
-@Test
+		@Test
 		public void MultiplyTest()
 		{
 			Assert.assertEquals("1.23885300E+9",DecimalFraction.FromString("51.15E8").Multiply(DecimalFraction.FromString("242.20E-3")).toString());
@@ -1099,7 +1182,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 			Assert.assertEquals("14.674005",DecimalFraction.FromString("139.5E3").Multiply(DecimalFraction.FromString("105.19E-6")).toString());
 			Assert.assertEquals("3469019.40",DecimalFraction.FromString("160.38E2").Multiply(DecimalFraction.FromString("216.30E0")).toString());
 		}
-				
+		
 
 		@Test
 		public void FromDoubleTest()
@@ -1576,13 +1659,13 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 		public void TestDoubleToOther(){
 			CBORObject dbl1=CBORObject.FromObject((double)Integer.MIN_VALUE);
 			CBORObject dbl2=CBORObject.FromObject((double)Integer.MAX_VALUE);
-			try { dbl1.AsInt16(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { dbl1.AsByte(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl1.AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { dbl1.AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
 			try { dbl1.AsInt32(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
 			try { dbl1.AsInt64(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
 			try { dbl1.AsBigInteger(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { dbl2.AsInt16(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { dbl2.AsByte(); } catch(ArithmeticException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { dbl2.AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { dbl2.AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
 			try { dbl2.AsInt32(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
 			try { dbl2.AsInt64(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
 			try { dbl2.AsBigInteger(); } catch(Throwable ex){ Assert.fail(ex.toString()); }
@@ -1718,8 +1801,8 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 		
 		@Test
 		public void TestGetUtf8Length() {
-			try { CBORDataUtilities.GetUtf8Length(null,true); } catch(NullPointerException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
-			try { CBORDataUtilities.GetUtf8Length(null,false); } catch(NullPointerException ex){ } catch(Throwable ex){ Assert.fail(ex.toString()); }
+			try { CBORDataUtilities.GetUtf8Length(null,true); } catch(NullPointerException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+			try { CBORDataUtilities.GetUtf8Length(null,false); } catch(NullPointerException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
 			Assert.assertEquals(3,CBORDataUtilities.GetUtf8Length("abc",true));
 			Assert.assertEquals(4,CBORDataUtilities.GetUtf8Length("\u0300\u0300",true));
 			Assert.assertEquals(6,CBORDataUtilities.GetUtf8Length("\u3000\u3000",true));

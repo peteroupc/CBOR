@@ -21,10 +21,8 @@ import java.math.*;
 	 */
 	public final class CBORDataUtilities {
 private CBORDataUtilities(){}
-		private static BigInteger LowestMajorType1=
-			new BigInteger("-18446744073709551616");
-		private static BigInteger UInt64MaxValue=
-			new BigInteger("18446744073709551615");
+		private static BigInteger LowestMajorType1=BigInteger.ZERO.subtract(BigInteger.ONE.shiftLeft(64));
+		private static BigInteger UInt64MaxValue=(BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
 		private static int StreamedStringBufferLength=4096;
 		
@@ -506,8 +504,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 		}
 		
 		/**
-		 * Parses a number whose format follows the JSON specification See #ParseJSONNumber(str,
-		 * integersOnly, parseOnly) for more information.
+		 * Parses a number whose format follows the JSON specification. See
+		 * #ParseJSONNumber(str, integersOnly, parseOnly) for more information.
 		 * @param str A string to parse.
 		 * @return A CBOR object that represents the parsed number, or null if
 		 * the exponent is less than -(2^64) or greater than 2^64-1 or if the entire
@@ -524,8 +522,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 		 * is 0), an optional decimal point with one or more digits, and an optional
 		 * letter E or e with one or more digits (the exponent).
 		 * @param str A string to parse.
-		 * @param integersOnly If true, no decimal points are allowed in the
-		 * string.
+		 * @param integersOnly If true, no decimal points or exponents are allowed
+		 * in the string.
 		 * @param positiveOnly If true, only positive numbers are allowed (the
 		 * leading minus is disallowed).
 		 * @return A CBOR object that represents the parsed number, or null if

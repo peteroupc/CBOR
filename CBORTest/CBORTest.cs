@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -43,6 +43,82 @@ namespace Test
 			Assert.AreEqual((float)oldd,d);
 			TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
 			TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
+		}
+
+		
+		public static String RandomDecimalString(System.Random r){
+			int count=r.Next(20)+1;
+			StringBuilder sb=new StringBuilder();
+			if(r.Next(2)==0)sb.Append('-');
+			for(int i=0;i<count;i++){
+				if(i==0)
+					sb.Append((char)('1'+r.Next(9)));
+				else
+					sb.Append((char)('0'+r.Next(10)));
+			}
+			if(r.Next(2)==0){
+				sb.Append('.');
+				count=r.Next(20)+1;
+				for(int i=0;i<count;i++){
+					sb.Append((char)('0'+r.Next(10)));
+				}
+			}
+			if(r.Next(2)==0){
+				sb.Append('E');
+				count=r.Next(20);
+				if(count!=0){
+					sb.Append(r.Next(2)==0 ? '+' : '-');
+				}
+				sb.Append(Convert.ToString(
+					(int)count,CultureInfo.InvariantCulture));
+			}
+			return sb.ToString();
+		}
+		
+		private void TestDecimalString(String r){
+			CBORObject o=CBORObject.FromObject(DecimalFraction.FromString(r));
+			CBORObject o2=CBORDataUtilities.ParseJSONNumber(r);
+			if(o.CompareTo(o2)!=0){
+				Assert.Fail("Expected: "+o+"\n was: "+o2);
+			}
+		}
+
+		[Test]
+		public void TestParseDecimalStrings(){
+			System.Random rand=new System.Random();
+			for(int i=0;i<2000;i++){
+				string r=RandomDecimalString(rand);
+				TestDecimalString(r);
+			}
+		}
+		
+		[Test]
+		public void TestRandomData(){
+			System.Random rand=new System.Random();
+			for(int i=0;i<200;i++){
+				byte[] array=new byte[rand.Next(1000000)+1];
+				for(int j=0;j<array.Length;j++){
+					if(j+3<=array.Length){
+						int r=rand.Next(0x1000000);
+						array[j]=(byte)((r)&0xFF);
+						array[j+1]=(byte)((r>>8)&0xFF);
+						array[j+2]=(byte)((r>>16)&0xFF);
+						j+=2;
+					} else {
+						array[j]=(byte)rand.Next(256);
+					}
+				}
+				using(MemoryStream ms=new MemoryStream(array)){
+					while(ms.Position!=ms.Length){
+						try {
+							CBORObject o=CBORObject.Read(ms);
+							if(o==null)Assert.Fail("object read is null");
+						} catch(CBORException){
+							// Expected exception
+						}
+					}
+				}
+			}
 		}
 
 		private double RandomDouble(System.Random rand, int exponent){
@@ -127,10 +203,10 @@ namespace Test
 		public void TestJSON(){
 			CBORObject o;
 			o=CBORObject.FromJSONString("[1,2,3]");
-			Assert.Throws(typeof(CBORException),()=>CBORObject.FromJSONString("[\"\\d800\"]"));
-			Assert.Throws(typeof(CBORException),()=>CBORObject.FromJSONString("[1,2,"));
-			Assert.Throws(typeof(CBORException),()=>CBORObject.FromJSONString("[1,2,3"));
-			Assert.Throws(typeof(CBORException),()=>CBORObject.FromJSONString("[\""));
+			try { CBORObject.FromJSONString("[\"\\d800\"]"); } catch(CBORException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromJSONString("[1,2,"); } catch(CBORException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromJSONString("[1,2,3"); } catch(CBORException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromJSONString("[\""); } catch(CBORException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
 			Assert.AreEqual(3,o.Count);
 			Assert.AreEqual(1,o[0].AsInt32());
 			Assert.AreEqual(2,o[1].AsInt32());
@@ -202,18 +278,18 @@ namespace Test
 		
 		[Test]
 		public void TestDecFracOverflow(){
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.PositiveInfinity).AsDecimalFraction());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.NegativeInfinity).AsDecimalFraction());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.NaN).AsDecimalFraction());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.PositiveInfinity).AsDecimalFraction());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.NegativeInfinity).AsDecimalFraction());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.NaN).AsDecimalFraction());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.PositiveInfinity).AsBigFloat());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.NegativeInfinity).AsBigFloat());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.NaN).AsBigFloat());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.PositiveInfinity).AsBigFloat());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.NegativeInfinity).AsBigFloat());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.NaN).AsBigFloat());
+			try { CBORObject.FromObject(Single.PositiveInfinity).AsDecimalFraction(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Single.NegativeInfinity).AsDecimalFraction(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Single.NaN).AsDecimalFraction(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Double.PositiveInfinity).AsDecimalFraction(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Double.NegativeInfinity).AsDecimalFraction(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Double.NaN).AsDecimalFraction(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Single.PositiveInfinity).AsBigFloat(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Single.NegativeInfinity).AsBigFloat(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Single.NaN).AsBigFloat(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Double.PositiveInfinity).AsBigFloat(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Double.NegativeInfinity).AsBigFloat(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Double.NaN).AsBigFloat(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
 		}
 		
 		[Test]
@@ -232,12 +308,12 @@ namespace Test
 			Assert.AreEqual("1",CBORObject.FromObject((double)1.5).AsBigInteger().ToString());
 			Assert.AreEqual("2",CBORObject.FromObject((double)2.5).AsBigInteger().ToString());
 			Assert.AreEqual("328323",CBORObject.FromObject((double)328323).AsBigInteger().ToString());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.PositiveInfinity).AsBigInteger());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.NegativeInfinity).AsBigInteger());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Single.NaN).AsBigInteger());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.PositiveInfinity).AsBigInteger());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger());
-			Assert.Throws(typeof(OverflowException),()=>CBORObject.FromObject(Double.NaN).AsBigInteger());
+			try { CBORObject.FromObject(Single.PositiveInfinity).AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Single.NegativeInfinity).AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Single.NaN).AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Double.PositiveInfinity).AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORObject.FromObject(Double.NaN).AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
 		}
 		
 		[Test]
@@ -453,7 +529,8 @@ namespace Test
 		public static void AssertDecimalsEquivalent(string a, string b){
 			CBORObject ca=CBORDataUtilities.ParseJSONNumber(a);
 			CBORObject cb=CBORDataUtilities.ParseJSONNumber(b);
-			Assert.AreEqual(0,ca.CompareTo(cb),a+" not equal to "+b);
+			if(ca.CompareTo(cb)!=0)
+				Assert.Fail(a+" not equal to "+b);
 			TestCommon.AssertRoundTrip(ca);
 			TestCommon.AssertRoundTrip(cb);
 		}
@@ -969,7 +1046,7 @@ namespace Test
 			Assert.AreEqual("-32538.87666",DecimalFraction.FromString("123.34E-3").Subtract(DecimalFraction.FromString("325.39E2")).ToString());
 		}
 
-[Test]
+		[Test]
 		public void MultiplyTest()
 		{
 			Assert.AreEqual("1.23885300E+9",DecimalFraction.FromString("51.15E8").Multiply(DecimalFraction.FromString("242.20E-3")).ToString());
@@ -1073,7 +1150,7 @@ namespace Test
 			Assert.AreEqual("14.674005",DecimalFraction.FromString("139.5E3").Multiply(DecimalFraction.FromString("105.19E-6")).ToString());
 			Assert.AreEqual("3469019.40",DecimalFraction.FromString("160.38E2").Multiply(DecimalFraction.FromString("216.30E0")).ToString());
 		}
-				
+		
 
 		[Test]
 		public void FromDoubleTest()
@@ -1540,13 +1617,13 @@ namespace Test
 		public void TestDoubleToOther(){
 			CBORObject dbl1=CBORObject.FromObject((double)Int32.MinValue);
 			CBORObject dbl2=CBORObject.FromObject((double)Int32.MaxValue);
-			Assert.Throws(typeof(OverflowException),()=>dbl1.AsInt16());
-			Assert.Throws(typeof(OverflowException),()=>dbl1.AsByte());
+			try { dbl1.AsInt16(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { dbl1.AsByte(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
 			Assert.DoesNotThrow(()=>dbl1.AsInt32());
 			Assert.DoesNotThrow(()=>dbl1.AsInt64());
 			Assert.DoesNotThrow(()=>dbl1.AsBigInteger());
-			Assert.Throws(typeof(OverflowException),()=>dbl2.AsInt16());
-			Assert.Throws(typeof(OverflowException),()=>dbl2.AsByte());
+			try { dbl2.AsInt16(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { dbl2.AsByte(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
 			Assert.DoesNotThrow(()=>dbl2.AsInt32());
 			Assert.DoesNotThrow(()=>dbl2.AsInt64());
 			Assert.DoesNotThrow(()=>dbl2.AsBigInteger());
@@ -1677,8 +1754,8 @@ namespace Test
 		
 		[Test]
 		public void TestGetUtf8Length(){
-			Assert.Throws(typeof(ArgumentNullException),()=>CBORDataUtilities.GetUtf8Length(null,true));
-			Assert.Throws(typeof(ArgumentNullException),()=>CBORDataUtilities.GetUtf8Length(null,false));
+			try { CBORDataUtilities.GetUtf8Length(null,true); } catch(ArgumentNullException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+			try { CBORDataUtilities.GetUtf8Length(null,false); } catch(ArgumentNullException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
 			Assert.AreEqual(3,CBORDataUtilities.GetUtf8Length("abc",true));
 			Assert.AreEqual(4,CBORDataUtilities.GetUtf8Length("\u0300\u0300",true));
 			Assert.AreEqual(6,CBORDataUtilities.GetUtf8Length("\u3000\u3000",true));

@@ -151,9 +151,9 @@ import java.math.*;
 				return this.getItemType()==CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue()==23;
 			}
 		
-				/**
-				 * Gets whether this object's value equals 0.
-				 */
+		/**
+		 * Gets whether this object's value equals 0.
+		 */
 		public boolean isZero() {
 				switch(this.getItemType()){
 					case CBORObject.CBORObjectType_Integer:
@@ -174,9 +174,38 @@ import java.math.*;
 			}
 		
 		/**
+		 * Gets this object's value with the sign reversed.
+		 * @throws java.lang.IllegalStateException This object's type is
+		 * not a number type.
+		 */
+		public CBORObject Negate() {
+			switch(this.getItemType()){
+				case CBORObject.CBORObjectType_Integer:
+					if(((((Long)this.getThisItem()).longValue()))==Long.MIN_VALUE)
+						return CBORObject.FromObject(OneShift63);
+					return CBORObject.FromObject(-((((Long)this.getThisItem()).longValue())));
+					case CBORObject.CBORObjectType_BigInteger:{
+						BigInteger bigint=(BigInteger)this.getThisItem();
+						bigint=bigint.negate();
+						return CBORObject.FromObject(bigint);
+					}
+				case CBORObject.CBORObjectType_Single:
+					return CBORObject.FromObject(-(((Float)this.getThisItem()).floatValue()));
+				case CBORObject.CBORObjectType_Double:
+					return CBORObject.FromObject(-(((Double)this.getThisItem()).doubleValue()));
+				case CBORObject.CBORObjectType_DecimalFraction:
+					return CBORObject.FromObject(((DecimalFraction)this.getThisItem()).Negate());
+				case CBORObject.CBORObjectType_BigFloat:
+					return CBORObject.FromObject(((BigFloat)this.getThisItem()).Negate());
+				default:
+					throw new IllegalStateException("This Object is not a number.");
+			}
+		}
+		
+		/**
 		 * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
-		 * @throws java.lang.IllegalArgumentException This object's type is not a number
-		 * type.
+		 * @throws java.lang.IllegalStateException This object's type is
+		 * not a number type.
 		 */
 		public int signum() {
 				switch(this.getItemType()){
@@ -195,25 +224,68 @@ import java.math.*;
 					case CBORObject.CBORObjectType_BigFloat:
 						return ((BigFloat)this.getThisItem()).signum();
 					default:
-						throw new IllegalArgumentException("This Object has no sign.");
+						throw new IllegalStateException("This Object is not a number.");
 				}
 			}
 
 		
 		/**
+		 * Gets whether this CBOR object represents positive infinity.
+		 */
+		public boolean IsPositiveInfinity() {
+			switch(this.getItemType()){
+				case CBORObject.CBORObjectType_Single:
+					return (((Float)this.getThisItem()).floatValue())==Float.POSITIVE_INFINITY;
+				case CBORObject.CBORObjectType_Double:
+					return (((Double)this.getThisItem()).doubleValue())==Double.POSITIVE_INFINITY;
+				default:
+					return false;
+			}
+		}
+		
+		/**
+		 * Gets whether this CBOR object represents negative infinity.
+		 */
+		public boolean IsNegativeInfinity() {
+			switch(this.getItemType()){
+				case CBORObject.CBORObjectType_Single:
+					return (((Float)this.getThisItem()).floatValue())==Float.NEGATIVE_INFINITY;
+				case CBORObject.CBORObjectType_Double:
+					return (((Double)this.getThisItem()).doubleValue())==Double.NEGATIVE_INFINITY;
+				default:
+					return false;
+			}
+		}
+
+		/**
+		 * Gets whether this CBOR object represents a not-a-number value (as
+		 * opposed to whether this object's type is not a number type).
+		 */
+		public boolean IsNaN() {
+			switch(this.getItemType()){
+				case CBORObject.CBORObjectType_Single:
+					return Float.isNaN(((Float)this.getThisItem()).floatValue());
+				case CBORObject.CBORObjectType_Double:
+					return Double.isNaN(((Double)this.getThisItem()).doubleValue());
+				default:
+					return false;
+			}
+		}
+
+		/**
 		 * Compares two CBOR objects. <p>In this implementation:</p> <ul>
 		 * <li>If either value is true, it is treated as the number 1.</li> <li>If
-		 * either value is false, null, or the undefined value, it is treated
-		 * as the number 0.</li> <li>If both objects are numbers, their mathematical
-		 * values are compared.</li> <li>If both objects are arrays, each element
-		 * is compared. If one array is shorter than the other and the other array
-		 * begins with that array (for the purposes of comparison), the shorter
-		 * array is considered less than the longer array.</li> <li>If both
-		 * objects are strings, compares each string code-point by code-point.</li>
-		 * <li>If both objects are maps, returns 0.</li> <li>If each object
-		 * is a different type, then they are sorted by their type number, in the
-		 * order given for the CBORType enumeration.</li> <p>This method is
-		 * not consistent with the Equals method.</p> </ul>
+		 * either value is false, CBORObject.Null, or the undefined value,
+		 * it is treated as the number 0.</li> <li>If both objects are numbers,
+		 * their mathematical values are compared.</li> <li>If both objects
+		 * are arrays, each element is compared. If one array is shorter than
+		 * the other and the other array begins with that array (for the purposes
+		 * of comparison), the shorter array is considered less than the longer
+		 * array.</li> <li>If both objects are strings, compares each string
+		 * code-point by code-point.</li> <li>If both objects are maps, returns
+		 * 0.</li> <li>If each object is a different type, then they are sorted
+		 * by their type number, in the order given for the CBORType enumeration.</li>
+		 * <p>This method is not consistent with the Equals method.</p> </ul>
 		 * @param other A value to compare with.
 		 * @return Less than 0, if this value is less than the other object; or
 		 * 0, if both values are equal; or greater than 0, if this value is less
@@ -966,7 +1038,7 @@ public boolean equals(CBORObject obj) {
 					case 7:
 						if(firstbyte==0xf9)
 							return new CBORObject(
-								CBORObjectType_Single,HalfPrecisionToSingle(
+								CBORObjectType_Single,CBORUtilities.HalfPrecisionToSingle(
 									((int)uadditional)));
 						else if(firstbyte==0xfa)
 							return new CBORObject(
@@ -1463,74 +1535,6 @@ public void set(String key, CBORObject value) {
 				throw new IllegalStateException("Not a number type");
 		}
 		
-		private static BigInteger BigIntegerFromSingle(float flt) {
-			int value=Float.floatToRawIntBits(flt);
-			int fpexponent=(int)((value>>23) & 0xFF);
-			if(fpexponent==255)
-				throw new ArithmeticException("Value is infinity or NaN");
-			int mantissa = value & 0x7FFFFF;
-			if (fpexponent==0)fpexponent++;
-			else mantissa|=(1<<23);
-			if(mantissa==0)return BigInteger.ZERO;
-			fpexponent-=150;
-			while((mantissa&1)==0){
-				fpexponent++;
-				mantissa>>=1;
-			}
-			boolean neg=((value>>31)!=0);
-			if(fpexponent==0){
-				if(neg)mantissa=-mantissa;
-				return BigInteger.valueOf(mantissa);
-			} else if(fpexponent>0){
-				// Value is an integer
-				BigInteger bigmantissa=BigInteger.valueOf(mantissa);
-				bigmantissa=bigmantissa.shiftLeft(fpexponent);
-				if(neg)bigmantissa=(bigmantissa).negate();
-				return bigmantissa;
-			} else {
-				// Value has a fractional part
-				int exp=-fpexponent;
-				for(int i=0;i<exp && mantissa!=0;i++){
-					mantissa>>=1;
-				}
-				return BigInteger.valueOf(mantissa);
-			}
-		}
-
-		private static BigInteger BigIntegerFromDouble(double dbl) {
-			long value=Double.doubleToRawLongBits(dbl);
-			int fpexponent=(int)((value>>52) & 0x7ffL);
-			if(fpexponent==2047)
-				throw new ArithmeticException("Value is infinity or NaN");
-			long mantissa = value & 0xFFFFFFFFFFFFFL;
-			if (fpexponent==0)fpexponent++;
-			else mantissa|=(1L<<52);
-			if(mantissa==0)return BigInteger.ZERO;
-			fpexponent-=1075;
-			while((mantissa&1)==0){
-				fpexponent++;
-				mantissa>>=1;
-			}
-			boolean neg=((value>>63)!=0);
-			if(fpexponent==0){
-				if(neg)mantissa=-mantissa;
-				return BigInteger.valueOf(mantissa);
-			} else if(fpexponent>0){
-				// Value is an integer
-				BigInteger bigmantissa=BigInteger.valueOf(mantissa);
-				bigmantissa=bigmantissa.shiftLeft(fpexponent);
-				if(neg)bigmantissa=(bigmantissa).negate();
-				return bigmantissa;
-			} else {
-				// Value has a fractional part
-				int exp=-fpexponent;
-				for(int i=0;i<exp && mantissa!=0;i++){
-					mantissa>>=1;
-				}
-				return BigInteger.valueOf(mantissa);
-			}
-		}
-		
 
 		/**
 		 * Converts this object to an arbitrary-precision integer. Fractional
@@ -1545,9 +1549,9 @@ public void set(String key, CBORObject value) {
 			else if(this.getItemType()== CBORObjectType_BigInteger)
 				return (BigInteger)this.getThisItem();
 			else if(this.getItemType()== CBORObjectType_Single)
-				return BigIntegerFromSingle(((Float)this.getThisItem()).floatValue());
+				return CBORUtilities.BigIntegerFromSingle(((Float)this.getThisItem()).floatValue());
 			else if(this.getItemType()== CBORObjectType_Double)
-				return BigIntegerFromDouble(((Double)this.getThisItem()).doubleValue());
+				return CBORUtilities.BigIntegerFromDouble(((Double)this.getThisItem()).doubleValue());
 			else if(this.getItemType()== CBORObjectType_DecimalFraction){
 				return ((DecimalFraction)this.getThisItem()).ToBigInteger();
 			}
@@ -1601,21 +1605,6 @@ public void set(String key, CBORObject value) {
 			return (byte)v;
 		}
 
-		private static boolean IsValidString(String str) {
-			if(str==null)return false;
-			for(int i=0;i<str.length();i++){
-				int c=str.charAt(i);
-				if(c<=0xD7FF || c>=0xE000) {
-					continue;
-				} else if(c<=0xDBFF){ // UTF-16 low surrogate
-					i++;
-					if(i>=str.length() || str.charAt(i)<0xDC00 || str.charAt(i)>0xDFFF)
-						return false;
-				} else
-					return false;
-			}
-			return true;
-		}
 
 		
 		/**
@@ -1914,11 +1903,10 @@ public void set(String key, CBORObject value) {
 		}
 		
 		
-		private static BigInteger LowestMajorType1=
-			new BigInteger("-18446744073709551616");
-		private static BigInteger UInt64MaxValue=
-			new BigInteger("18446744073709551615");
+		private static BigInteger OneShift63=(BigInteger.ONE.shiftLeft(63));
 		private static BigInteger FiftySixBitMask=BigInteger.valueOf(0xFFFFFFFFFFFFFFL);
+		private static BigInteger LowestMajorType1=BigInteger.ZERO.subtract(BigInteger.ONE.shiftLeft(64));
+		private static BigInteger UInt64MaxValue=(BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 		
 		/**
 		 * Writes a bigfloat in CBOR format to a data stream.
@@ -1936,9 +1924,6 @@ public void set(String key, CBORObject value) {
 			BigInteger exponent=bignum.getExponent();
 			if(exponent.signum()==0){
 				Write(bignum.getMantissa(),s);
-			} else if(bignum.CanConvertToDouble()){
-				// Write double version instead
-				Write(bignum.ToDouble(),s);
 			} else {
 				s.write(0xC5); // tag 5
 				s.write(0x82); // array, length 2
@@ -1989,85 +1974,47 @@ public void set(String key, CBORObject value) {
 				bigint=(bigint).negate();
 			}
 			if(bigint.compareTo(Int64MaxValue)<=0){
-				// If the big integer is representable in
+				// If the big integer is representable as a long and in
 				// major type 0 or 1, write that major type
 				// instead of as a bignum
 				long ui=bigint.longValue();
 				WritePositiveInt64(datatype,ui,s);
 			} else {
-				java.io.ByteArrayOutputStream ms=null;
-try {
-ms=new ByteArrayOutputStream();
-
-					long tmp=0;
-					byte[] buffer=new byte[10];
-					while(bigint.signum()>0){
-						// To reduce the number of big integer
-						// operations, extract the big int 56 bits at a time
-						// (not 64, to avoid negative numbers)
-						BigInteger tmpbigint=bigint.and(FiftySixBitMask);
-						tmp=tmpbigint.longValue();
-						bigint=bigint.shiftRight(56);
-						boolean isNowZero=(bigint.signum()==0);
-						int bufferindex=0;
-						for(int i=0;i<7 && (!isNowZero || tmp>0);i++){
-							buffer[bufferindex]=(byte)(tmp&0xFF);
-							tmp>>=8;
-							bufferindex++;
-						}
-						ms.write(buffer,0,bufferindex);
-					}
-					byte[] bytes=ms.toByteArray();
-					switch(bytes.length){
-						case 1: // Fits in 1 byte (won't normally happen though)
-							buffer[0]=(byte)((datatype<<5)|24);
-							buffer[1]=bytes[0];
-							s.write(buffer,0,2);
-							break;
-						case 2: // Fits in 2 bytes (won't normally happen though)
-							buffer[0]=(byte)((datatype<<5)|25);
-							buffer[1]=bytes[1];
-							buffer[2]=bytes[0];
-							s.write(buffer,0,3);
-							break;
-						case 3:
-						case 4:
-							buffer[0]=(byte)((datatype<<5)|26);
-							buffer[1]=(bytes.length>3) ? bytes[3] : (byte)0;
-							buffer[2]=bytes[2];
-							buffer[3]=bytes[1];
-							buffer[4]=bytes[0];
-							s.write(buffer,0,5);
-							break;
-						case 5:
-						case 6:
-						case 7:
-						case 8:
-							buffer[0]=(byte)((datatype<<5)|27);
-							buffer[1]=(bytes.length>7) ? bytes[7] : (byte)0;
-							buffer[2]=(bytes.length>6) ? bytes[6] : (byte)0;
-							buffer[3]=(bytes.length>5) ? bytes[5] : (byte)0;
-							buffer[4]=bytes[4];
-							buffer[5]=bytes[3];
-							buffer[6]=bytes[2];
-							buffer[7]=bytes[1];
-							buffer[8]=bytes[0];
-							s.write(buffer,0,9);
-							break;
-						default:
-							s.write((datatype==0) ?
-							            (byte)0xC2 :
-							            (byte)0xC3);
-							WritePositiveInt(2,bytes.length,s);
-							for(int i=bytes.length-1;i>=0;i--){
-								s.write(bytes[i]);
-							}
-							break;
-					}
-}
-finally {
-try { if(ms!=null)ms.close(); } catch(IOException ex){}
-}
+				// Get a byte array of the big integer's value,
+				// since shifting and doing AND operations is
+				// slow with large BigIntegers
+				byte[] bytes=ReverseBytes(bigint.toByteArray());
+				int byteCount=bytes.length;
+				while(byteCount>0 && bytes[byteCount-1]==0){
+					// Ignore trailing zero bytes
+					byteCount--;
+				}
+				if(byteCount==0){
+					WritePositiveInt64(datatype,0,s);
+					return;
+				}
+				int half=byteCount>>1;
+				int right=byteCount-1;
+				for(int i=0;i<half;i++,right--){
+					byte value=bytes[i];
+					bytes[i]=bytes[right];
+					bytes[right]=value;
+				}
+				if(byteCount==1)
+					s.write((byte)((datatype<<5)|24));
+				else if(byteCount==2)
+					s.write((byte)((datatype<<5)|25));
+				else if(byteCount==3)
+					s.write((byte)((datatype<<5)|26));
+				else if(byteCount==4)
+					s.write((byte)((datatype<<5)|27));
+				else {
+					s.write((datatype==0) ?
+					            (byte)0xC2 :
+					            (byte)0xC3);
+					WritePositiveInt(2,byteCount,s);
+				}
+				s.write(bytes,0,byteCount);
 			}
 		}
 		
@@ -2304,6 +2251,18 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 						this.AsString(),
 						tagged ? (((int)tagbyte)&0xFF) : -1);
 					if(ret!=null)return ret;
+				} else if(this.getItemType()== CBORObjectType_SimpleValue){
+					if(tagged){
+						if(this.isFalse())return new byte[]{tagbyte,(byte)0xf4};
+						if(this.isTrue())return new byte[]{tagbyte,(byte)0xf5};
+						if(this.isNull())return new byte[]{tagbyte,(byte)0xf6};
+						if(this.isUndefined())return new byte[]{tagbyte,(byte)0xf7};
+					} else {
+						if(this.isFalse())return new byte[]{(byte)0xf4};
+						if(this.isTrue())return new byte[]{(byte)0xf5};
+						if(this.isNull())return new byte[]{(byte)0xf6};
+						if(this.isUndefined())return new byte[]{(byte)0xf7};
+					}
 				} else if(this.getItemType()== CBORObjectType_Integer){
 					long value=(((Long)this.getThisItem()).longValue());
 					byte[] ret=null;
@@ -2360,7 +2319,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 			try {
 				java.io.ByteArrayOutputStream ms=null;
 try {
-ms=new ByteArrayOutputStream();
+ms=new ByteArrayOutputStream(16);
 
 					WriteTo(ms);
 					return ms.toByteArray();
@@ -2423,39 +2382,6 @@ public static void Write(Object o, OutputStream s) throws IOException {
 			return obj;
 		}
 		
-		private static String Base64URL="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-		private static String Base64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-		private static void ToBase64(StringBuilder str, byte[] data, String alphabet, boolean padding) {
-			int length = data.length;
-			int i=0;
-			for (i = 0; i < (length - 2); i += 3) {
-				str.append(alphabet.charAt((data[i] >> 2)&63));
-				str.append(alphabet.charAt(((data[i] & 3) << 4) + ((data[i+1] >> 4)&63)));
-				str.append(alphabet.charAt(((data[i+1] & 15) << 2) + ((data[i+2] >> 6)&3)));
-				str.append(alphabet.charAt(data[i+2] & 63));
-			}
-			int lenmod3=(length%3);
-			if (lenmod3!=0) {
-				i = length - lenmod3;
-				str.append(alphabet.charAt((data[i] >> 2)&63));
-				if (lenmod3 == 2) {
-					str.append(alphabet.charAt(((data[i] & 3) << 4) + ((data[i+1] >> 4)&63)));
-					str.append(alphabet.charAt((data[i+1] & 15) << 2));
-					if(padding)str.append("=");
-				} else {
-					str.append(alphabet.charAt((data[i] & 3) << 4));
-					if(padding)str.append("==");
-				}
-			}
-		}
-		private static void ToBase16(StringBuilder str, byte[] data) {
-			String alphabet="0123456789ABCDEF";
-			int length = data.length;
-			for (int i = 0; i < length;i++) {
-				str.append(alphabet.charAt((data[i]>>4)&15));
-				str.append(alphabet.charAt(data[i]&15));
-			}
-		}
 		
 		private static String StringToJSONString(String str) {
 			StringBuilder sb=new StringBuilder();
@@ -2523,11 +2449,11 @@ public static void Write(Object o, OutputStream s) throws IOException {
 				StringBuilder sb=new StringBuilder();
 				sb.append('\"');
 				if(this.HasTag(22)){
-					ToBase64(sb,(byte[])this.getThisItem(),Base64,false);
+					CBORUtilities.ToBase64(sb,(byte[])this.getThisItem(),false);
 				} else if(this.HasTag(23)){
-					ToBase16(sb,(byte[])this.getThisItem());
+					CBORUtilities.ToBase16(sb,(byte[])this.getThisItem());
 				} else {
-					ToBase64(sb,(byte[])this.getThisItem(),Base64URL,false);
+					CBORUtilities.ToBase64URL(sb,(byte[])this.getThisItem(),false);
 				}
 				sb.append('\"');
 				return sb.toString();
@@ -2833,8 +2759,6 @@ public static void Write(Object o, OutputStream s) throws IOException {
 			BigInteger bigintExponent=decfrac.getExponent();
 			if(bigintExponent.signum()==0){
 				return FromObject(decfrac.getMantissa());
-			} else if(decfrac.CanConvertToDouble()){
-				return FromObject(decfrac.ToDouble());
 			} else {
 				return new CBORObject(CBORObjectType_BigFloat,decfrac);
 			}
@@ -2865,7 +2789,7 @@ public static void Write(Object o, OutputStream s) throws IOException {
 		 */
 		public static CBORObject FromObject(String stringValue) {
 			if(stringValue==null)return CBORObject.Null;
-			if(!IsValidString(stringValue))
+			if(CBORDataUtilities.GetUtf8Length(stringValue,false)<0)
 				throw new IllegalArgumentException("String contains an unpaired surrogate code point.");
 			return new CBORObject(CBORObjectType_TextString,stringValue);
 		}
@@ -3259,7 +3183,7 @@ public static CBORObject FromObject(Object obj) {
 				if(sb==null)sb=new StringBuilder();
 				sb.append("h'");
 				byte[] data=(byte[])this.getThisItem();
-				ToBase16(sb,data);
+				CBORUtilities.ToBase16(sb,data);
 				sb.append("'");
 			} else if(this.getItemType()== CBORObjectType_TextString){
 				if(sb==null){
@@ -3305,47 +3229,61 @@ public static CBORObject FromObject(Object obj) {
 			return sb.toString();
 		}
 
-		private static float HalfPrecisionToSingle(int value) {
-			int negvalue=(value>=0x8000) ? (1<<31) : 0;
-			value&=0x7FFF;
-			if(value>=0x7C00){
-				return Float.intBitsToFloat(
-					(0x3FC00|(value&0x3FF))<<13|negvalue);
-			} else if(value>0x400){
-				return Float.intBitsToFloat(
-					((value+0x1c000)<<13)|negvalue);
-			} else if((value&0x400)==value){
-				return Float.intBitsToFloat(
-					((value==0) ? 0 : 0x38800000)|negvalue);
-			} else {
-				// denormalized
-				int m=(value&0x3FF);
-				value=0x1c400;
-				while((m>>10)==0){
-					value-=0x400;
-					m<<=1;
-				}
-				return Float.intBitsToFloat(
-					((value|(m&0x3FF))<<13)|negvalue);
+		private static byte[] ReverseBytes(byte[] bytes) {
+			if((bytes)==null)throw new NullPointerException("bytes");
+			int half=bytes.length>>1;
+			int right=bytes.length-1;
+			for(int i=0;i<half;i++,right--){
+				byte value=bytes[i];
+				bytes[i]=bytes[right];
+				bytes[right]=value;
 			}
+			return bytes;
 		}
-
+		
 		private static CBORObject ConvertToBigNum(CBORObject o, boolean negative) {
 			if(o.getItemType()!=CBORObjectType_ByteString)
 				throw new CBORException("Byte array expected");
 			byte[] data=(byte[])o.getThisItem();
-			BigInteger bi=BigInteger.ZERO;
+			if(data.length<=7){
+				long x=0;
+				if(data.length>0)x|=(((long)data[0])&0xFF)<<48;
+				if(data.length>1)x|=(((long)data[1])&0xFF)<<40;
+				if(data.length>2)x|=(((long)data[2])&0xFF)<<32;
+				if(data.length>3)x|=(((long)data[3])&0xFF)<<24;
+				if(data.length>4)x|=(((long)data[4])&0xFF)<<16;
+				if(data.length>5)x|=(((long)data[5])&0xFF)<<8;
+				if(data.length>6)x|=(((long)data[6])&0xFF);
+				if(negative)x=-x;
+				return FromObject(x);
+			}
+			int neededLength=data.length;
+			byte[] bytes;
+			boolean extended=false;
+			if(((data[0]>>7)&1)!=0){
+				// Increase the needed length
+				// if the highest bit is set, to
+				// distinguish negative and positive
+				// values
+				neededLength+=1;
+				extended=true;
+			}
+			bytes=new byte[neededLength];
 			for(int i=0;i<data.length;i++){
-				bi=bi.shiftLeft(8);
-				int x=((int)data[i])&0xFF;
-				bi=bi.or(BigInteger.valueOf(x));
+				bytes[i]=data[data.length-1-i];
+				if(negative)
+					bytes[i]=(byte)((~((int)bytes[i]))&0xFF);
 			}
-			if(negative){
-				bi=BigInteger.valueOf(-1).subtract(bi); // Convert to a negative
+			if(extended){
+				if(negative){
+					bytes[bytes.length-1]=(byte)0xFF;
+				} else {
+					bytes[bytes.length-1]=0;
+				}
 			}
+			BigInteger bi=new BigInteger(ReverseBytes((byte[])bytes));
 			return RewrapObject(o,FromObject(bi));
 		}
-		
 		
 		private boolean CanFitInTypeZeroOrOne() {
 			switch(this.getItemType()){

@@ -180,7 +180,7 @@ namespace PeterO
 			}
 		}
 		
-				/// <summary>
+		/// <summary>
 		/// Gets whether this object's value equals 0.
 		/// </summary>
 		public bool IsZero {
@@ -205,9 +205,38 @@ namespace PeterO
 		}
 		
 		/// <summary>
+		/// Gets this object's value with the sign reversed.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">
+		/// This object's type is not a number type.</exception>
+		public CBORObject Negate(){
+			switch(this.ItemType){
+				case CBORObject.CBORObjectType_Integer:
+					if(((long)this.ThisItem)==Int64.MinValue)
+						return CBORObject.FromObject(OneShift63);
+					return CBORObject.FromObject(-((long)this.ThisItem));
+					case CBORObject.CBORObjectType_BigInteger:{
+						BigInteger bigint=(BigInteger)this.ThisItem;
+						bigint=-bigint;
+						return CBORObject.FromObject(bigint);
+					}
+				case CBORObject.CBORObjectType_Single:
+					return CBORObject.FromObject(-((float)this.ThisItem));
+				case CBORObject.CBORObjectType_Double:
+					return CBORObject.FromObject(-((double)this.ThisItem));
+				case CBORObject.CBORObjectType_DecimalFraction:
+					return CBORObject.FromObject(((DecimalFraction)this.ThisItem).Negate());
+				case CBORObject.CBORObjectType_BigFloat:
+					return CBORObject.FromObject(((BigFloat)this.ThisItem).Negate());
+				default:
+					throw new InvalidOperationException("This object is not a number.");
+			}
+		}
+		
+		/// <summary>
 		/// Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
 		/// </summary>
-		/// <exception cref="System.ArgumentException">This object's type is not a number type.</exception>
+		/// <exception cref="System.InvalidOperationException">This object's type is not a number type.</exception>
 		public int Sign {
 			get {
 				switch(this.ItemType){
@@ -226,19 +255,62 @@ namespace PeterO
 					case CBORObject.CBORObjectType_BigFloat:
 						return ((BigFloat)this.ThisItem).Sign;
 					default:
-						throw new ArgumentException("This object has no sign.");
+						throw new InvalidOperationException("This object is not a number.");
 				}
 			}
 		}
 
 		
 		/// <summary>
+		/// Gets whether this CBOR object represents positive infinity.
+		/// </summary>
+		public bool IsPositiveInfinity(){
+			switch(this.ItemType){
+				case CBORObject.CBORObjectType_Single:
+					return ((float)this.ThisItem)==Single.PositiveInfinity;
+				case CBORObject.CBORObjectType_Double:
+					return ((double)this.ThisItem)==Double.PositiveInfinity;
+				default:
+					return false;
+			}
+		}
+		
+		/// <summary>
+		/// Gets whether this CBOR object represents negative infinity.
+		/// </summary>
+		public bool IsNegativeInfinity(){
+			switch(this.ItemType){
+				case CBORObject.CBORObjectType_Single:
+					return ((float)this.ThisItem)==Single.NegativeInfinity;
+				case CBORObject.CBORObjectType_Double:
+					return ((double)this.ThisItem)==Double.NegativeInfinity;
+				default:
+					return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets whether this CBOR object represents a not-a-number value
+		/// (as opposed to whether this object's type is not a number type).
+		/// </summary>
+		public bool IsNaN(){
+			switch(this.ItemType){
+				case CBORObject.CBORObjectType_Single:
+					return Single.IsNaN((float)this.ThisItem);
+				case CBORObject.CBORObjectType_Double:
+					return Double.IsNaN((double)this.ThisItem);
+				default:
+					return false;
+			}
+		}
+
+		/// <summary>
 		/// Compares two CBOR objects.
 		/// <para>In this implementation:</para>
 		/// <list type="">
 		/// <item>If either value is true, it is treated as the
 		/// number 1.</item>
-		/// <item>If either value is false, null, or the undefined
+		/// <item>If either value is false, CBORObject.Null, or the undefined
 		/// value, it is treated as the number 0.</item>
 		/// <item>If both objects are numbers, their mathematical
 		/// values are compared.</item>
@@ -1008,7 +1080,7 @@ namespace PeterO
 					case 7:
 						if(firstbyte==0xf9)
 							return new CBORObject(
-								CBORObjectType_Single,HalfPrecisionToSingle(
+								CBORObjectType_Single,CBORUtilities.HalfPrecisionToSingle(
 									unchecked((int)uadditional)));
 						else if(firstbyte==0xfa)
 							return new CBORObject(
@@ -1539,74 +1611,6 @@ namespace PeterO
 				throw new InvalidOperationException("Not a number type");
 		}
 		
-		private static BigInteger BigIntegerFromSingle(float flt){
-			int value=ConverterInternal.SingleToInt32Bits(flt);
-			int fpexponent=(int)((value>>23) & 0xFF);
-			if(fpexponent==255)
-				throw new OverflowException("Value is infinity or NaN");
-			int mantissa = value & 0x7FFFFF;
-			if (fpexponent==0)fpexponent++;
-			else mantissa|=(1<<23);
-			if(mantissa==0)return BigInteger.Zero;
-			fpexponent-=150;
-			while((mantissa&1)==0){
-				fpexponent++;
-				mantissa>>=1;
-			}
-			bool neg=((value>>31)!=0);
-			if(fpexponent==0){
-				if(neg)mantissa=-mantissa;
-				return (BigInteger)mantissa;
-			} else if(fpexponent>0){
-				// Value is an integer
-				BigInteger bigmantissa=(BigInteger)mantissa;
-				bigmantissa<<=fpexponent;
-				if(neg)bigmantissa=-(BigInteger)bigmantissa;
-				return bigmantissa;
-			} else {
-				// Value has a fractional part
-				int exp=-fpexponent;
-				for(int i=0;i<exp && mantissa!=0;i++){
-					mantissa>>=1;
-				}
-				return (BigInteger)mantissa;
-			}
-		}
-
-		private static BigInteger BigIntegerFromDouble(double dbl){
-			long value=ConverterInternal.DoubleToInt64Bits(dbl);
-			int fpexponent=(int)((value>>52) & 0x7ffL);
-			if(fpexponent==2047)
-				throw new OverflowException("Value is infinity or NaN");
-			long mantissa = value & 0xFFFFFFFFFFFFFL;
-			if (fpexponent==0)fpexponent++;
-			else mantissa|=(1L<<52);
-			if(mantissa==0)return BigInteger.Zero;
-			fpexponent-=1075;
-			while((mantissa&1)==0){
-				fpexponent++;
-				mantissa>>=1;
-			}
-			bool neg=((value>>63)!=0);
-			if(fpexponent==0){
-				if(neg)mantissa=-mantissa;
-				return (BigInteger)mantissa;
-			} else if(fpexponent>0){
-				// Value is an integer
-				BigInteger bigmantissa=(BigInteger)mantissa;
-				bigmantissa<<=fpexponent;
-				if(neg)bigmantissa=-(BigInteger)bigmantissa;
-				return bigmantissa;
-			} else {
-				// Value has a fractional part
-				int exp=-fpexponent;
-				for(int i=0;i<exp && mantissa!=0;i++){
-					mantissa>>=1;
-				}
-				return (BigInteger)mantissa;
-			}
-		}
-		
 
 		/// <summary>
 		/// Converts this object to an arbitrary-precision
@@ -1624,9 +1628,9 @@ namespace PeterO
 			else if(this.ItemType== CBORObjectType_BigInteger)
 				return (BigInteger)this.ThisItem;
 			else if(this.ItemType== CBORObjectType_Single)
-				return BigIntegerFromSingle((float)this.ThisItem);
+				return CBORUtilities.BigIntegerFromSingle((float)this.ThisItem);
 			else if(this.ItemType== CBORObjectType_Double)
-				return BigIntegerFromDouble((double)this.ThisItem);
+				return CBORUtilities.BigIntegerFromDouble((double)this.ThisItem);
 			else if(this.ItemType== CBORObjectType_DecimalFraction){
 				return ((DecimalFraction)this.ThisItem).ToBigInteger();
 			}
@@ -1688,21 +1692,6 @@ namespace PeterO
 			return (byte)v;
 		}
 
-		private static bool IsValidString(string str){
-			if(str==null)return false;
-			for(int i=0;i<str.Length;i++){
-				int c=str[i];
-				if(c<=0xD7FF || c>=0xE000) {
-					continue;
-				} else if(c<=0xDBFF){ // UTF-16 low surrogate
-					i++;
-					if(i>=str.Length || str[i]<0xDC00 || str[i]>0xDFFF)
-						return false;
-				} else
-					return false;
-			}
-			return true;
-		}
 
 		
 		/// <summary>
@@ -2012,13 +2001,10 @@ namespace PeterO
 		}
 		
 		
-		private static BigInteger LowestMajorType1=
-			BigInteger.Parse("-18446744073709551616",NumberStyles.AllowLeadingSign,
-			                 CultureInfo.InvariantCulture);
-		private static BigInteger UInt64MaxValue=
-			BigInteger.Parse("18446744073709551615",NumberStyles.AllowLeadingSign,
-			                 CultureInfo.InvariantCulture);
+		private static BigInteger OneShift63=(BigInteger.One<<63);
 		private static BigInteger FiftySixBitMask=(BigInteger)0xFFFFFFFFFFFFFFL;
+		private static BigInteger LowestMajorType1=BigInteger.Zero-(BigInteger.One<<64);
+		private static BigInteger UInt64MaxValue=(BigInteger.One<<64)-BigInteger.One;
 		
 		/// <summary>
 		/// Writes a bigfloat in CBOR format to a data stream.
@@ -2036,9 +2022,6 @@ namespace PeterO
 			BigInteger exponent=bignum.Exponent;
 			if(exponent.IsZero){
 				Write(bignum.Mantissa,s);
-			} else if(bignum.CanConvertToDouble()){
-				// Write double version instead
-				Write(bignum.ToDouble(),s);
 			} else {
 				s.WriteByte(0xC5); // tag 5
 				s.WriteByte(0x82); // array, length 2
@@ -2089,79 +2072,47 @@ namespace PeterO
 				bigint=-(BigInteger)bigint;
 			}
 			if(bigint.CompareTo(Int64MaxValue)<=0){
-				// If the big integer is representable in
+				// If the big integer is representable as a long and in
 				// major type 0 or 1, write that major type
 				// instead of as a bignum
 				long ui=(long)(BigInteger)bigint;
 				WritePositiveInt64(datatype,ui,s);
 			} else {
-				using(MemoryStream ms=new MemoryStream()){
-					long tmp=0;
-					byte[] buffer=new byte[10];
-					while(bigint.Sign>0){
-						// To reduce the number of big integer
-						// operations, extract the big int 56 bits at a time
-						// (not 64, to avoid negative numbers)
-						BigInteger tmpbigint=bigint&(BigInteger)FiftySixBitMask;
-						tmp=(long)(BigInteger)tmpbigint;
-						bigint>>=56;
-						bool isNowZero=(bigint.IsZero);
-						int bufferindex=0;
-						for(int i=0;i<7 && (!isNowZero || tmp>0);i++){
-							buffer[bufferindex]=(byte)(tmp&0xFF);
-							tmp>>=8;
-							bufferindex++;
-						}
-						ms.Write(buffer,0,bufferindex);
-					}
-					byte[] bytes=ms.ToArray();
-					switch(bytes.Length){
-						case 1: // Fits in 1 byte (won't normally happen though)
-							buffer[0]=(byte)((datatype<<5)|24);
-							buffer[1]=bytes[0];
-							s.Write(buffer,0,2);
-							break;
-						case 2: // Fits in 2 bytes (won't normally happen though)
-							buffer[0]=(byte)((datatype<<5)|25);
-							buffer[1]=bytes[1];
-							buffer[2]=bytes[0];
-							s.Write(buffer,0,3);
-							break;
-						case 3:
-						case 4:
-							buffer[0]=(byte)((datatype<<5)|26);
-							buffer[1]=(bytes.Length>3) ? bytes[3] : (byte)0;
-							buffer[2]=bytes[2];
-							buffer[3]=bytes[1];
-							buffer[4]=bytes[0];
-							s.Write(buffer,0,5);
-							break;
-						case 5:
-						case 6:
-						case 7:
-						case 8:
-							buffer[0]=(byte)((datatype<<5)|27);
-							buffer[1]=(bytes.Length>7) ? bytes[7] : (byte)0;
-							buffer[2]=(bytes.Length>6) ? bytes[6] : (byte)0;
-							buffer[3]=(bytes.Length>5) ? bytes[5] : (byte)0;
-							buffer[4]=bytes[4];
-							buffer[5]=bytes[3];
-							buffer[6]=bytes[2];
-							buffer[7]=bytes[1];
-							buffer[8]=bytes[0];
-							s.Write(buffer,0,9);
-							break;
-						default:
-							s.WriteByte((datatype==0) ?
-							            (byte)0xC2 :
-							            (byte)0xC3);
-							WritePositiveInt(2,bytes.Length,s);
-							for(int i=bytes.Length-1;i>=0;i--){
-								s.WriteByte(bytes[i]);
-							}
-							break;
-					}
+				// Get a byte array of the big integer's value,
+				// since shifting and doing AND operations is
+				// slow with large BigIntegers
+				byte[] bytes=bigint.ToByteArray();
+				int byteCount=bytes.Length;
+				while(byteCount>0 && bytes[byteCount-1]==0){
+					// Ignore trailing zero bytes
+					byteCount--;
 				}
+				if(byteCount==0){
+					WritePositiveInt64(datatype,0,s);
+					return;
+				}
+				int half=byteCount>>1;
+				int right=byteCount-1;
+				for(int i=0;i<half;i++,right--){
+					byte value=bytes[i];
+					bytes[i]=bytes[right];
+					bytes[right]=value;
+				}
+				if(byteCount==1)
+					s.WriteByte((byte)((datatype<<5)|24));
+				else if(byteCount==2)
+					s.WriteByte((byte)((datatype<<5)|25));
+				else if(byteCount==3)
+					s.WriteByte((byte)((datatype<<5)|26));
+				else if(byteCount==4)
+					s.WriteByte((byte)((datatype<<5)|27));
+				else {
+					s.WriteByte((datatype==0) ?
+					            (byte)0xC2 :
+					            (byte)0xC3);
+					WritePositiveInt(2,byteCount,s);
+				}
+				s.Write(bytes,0,byteCount);
 			}
 		}
 		
@@ -2407,6 +2358,18 @@ namespace PeterO
 						this.AsString(),
 						tagged ? (((int)tagbyte)&0xFF) : -1);
 					if(ret!=null)return ret;
+				} else if(this.ItemType== CBORObjectType_SimpleValue){
+					if(tagged){
+						if(this.IsFalse)return new byte[]{tagbyte,(byte)0xf4};
+						if(this.IsTrue)return new byte[]{tagbyte,(byte)0xf5};
+						if(this.IsNull)return new byte[]{tagbyte,(byte)0xf6};
+						if(this.IsUndefined)return new byte[]{tagbyte,(byte)0xf7};
+					} else {
+						if(this.IsFalse)return new byte[]{(byte)0xf4};
+						if(this.IsTrue)return new byte[]{(byte)0xf5};
+						if(this.IsNull)return new byte[]{(byte)0xf6};
+						if(this.IsUndefined)return new byte[]{(byte)0xf7};
+					}
 				} else if(this.ItemType== CBORObjectType_Integer){
 					long value=(long)this.ThisItem;
 					byte[] ret=null;
@@ -2461,7 +2424,7 @@ namespace PeterO
 				}
 			}
 			try {
-				using(MemoryStream ms=new MemoryStream()){
+				using(MemoryStream ms=new MemoryStream(16)){
 					WriteTo(ms);
 					return ms.ToArray();
 				}
@@ -2520,39 +2483,6 @@ namespace PeterO
 			return obj;
 		}
 		
-		private static string Base64URL="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-		private static string Base64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-		private static void ToBase64(StringBuilder str, byte[] data, string alphabet, bool padding){
-			int length = data.Length;
-			int i=0;
-			for (i = 0; i < (length - 2); i += 3) {
-				str.Append(alphabet[(data[i] >> 2)&63]);
-				str.Append(alphabet[((data[i] & 3) << 4) + ((data[i+1] >> 4)&63)]);
-				str.Append(alphabet[((data[i+1] & 15) << 2) + ((data[i+2] >> 6)&3)]);
-				str.Append(alphabet[data[i+2] & 63]);
-			}
-			int lenmod3=(length%3);
-			if (lenmod3!=0) {
-				i = length - lenmod3;
-				str.Append(alphabet[(data[i] >> 2)&63]);
-				if (lenmod3 == 2) {
-					str.Append(alphabet[((data[i] & 3) << 4) + ((data[i+1] >> 4)&63)]);
-					str.Append(alphabet[(data[i+1] & 15) << 2]);
-					if(padding)str.Append("=");
-				} else {
-					str.Append(alphabet[(data[i] & 3) << 4]);
-					if(padding)str.Append("==");
-				}
-			}
-		}
-		private static void ToBase16(StringBuilder str, byte[] data){
-			string alphabet="0123456789ABCDEF";
-			int length = data.Length;
-			for (int i = 0; i < length;i++) {
-				str.Append(alphabet[(data[i]>>4)&15]);
-				str.Append(alphabet[data[i]&15]);
-			}
-		}
 		
 		private static string StringToJSONString(string str){
 			StringBuilder sb=new StringBuilder();
@@ -2623,11 +2553,11 @@ namespace PeterO
 				StringBuilder sb=new StringBuilder();
 				sb.Append('\"');
 				if(this.HasTag(22)){
-					ToBase64(sb,(byte[])this.ThisItem,Base64,false);
+					CBORUtilities.ToBase64(sb,(byte[])this.ThisItem,false);
 				} else if(this.HasTag(23)){
-					ToBase16(sb,(byte[])this.ThisItem);
+					CBORUtilities.ToBase16(sb,(byte[])this.ThisItem);
 				} else {
-					ToBase64(sb,(byte[])this.ThisItem,Base64URL,false);
+					CBORUtilities.ToBase64URL(sb,(byte[])this.ThisItem,false);
 				}
 				sb.Append('\"');
 				return sb.ToString();
@@ -2845,7 +2775,7 @@ namespace PeterO
 		/// <summary>
 		/// Finds the sum of two CBOR number objects.
 		/// </summary>
-		/// <exception cref="System.ArgumentException">Either or both operands are not 
+		/// <exception cref="System.ArgumentException">Either or both operands are not
 		/// numbers (as opposed to Not-a-Number, NaN).</exception>
 		public static CBORObject Addition(CBORObject a, CBORObject b){
 			return CBORObjectMath.Addition(a,b);
@@ -2854,7 +2784,7 @@ namespace PeterO
 		/// <summary>
 		/// Finds the difference between two CBOR number objects.
 		/// </summary>
-		/// <exception cref="System.ArgumentException">Either or both operands are not 
+		/// <exception cref="System.ArgumentException">Either or both operands are not
 		/// numbers (as opposed to Not-a-Number, NaN).</exception>
 		public static CBORObject Subtract(CBORObject a, CBORObject b){
 			return CBORObjectMath.Subtract(a,b);
@@ -2864,7 +2794,7 @@ namespace PeterO
 		/// <summary>
 		/// Multiplies two CBOR number objects.
 		/// </summary>
-		/// <exception cref="System.ArgumentException">Either or both operands are not 
+		/// <exception cref="System.ArgumentException">Either or both operands are not
 		/// numbers (as opposed to Not-a-Number, NaN).</exception>
 		public static CBORObject Multiply(CBORObject a, CBORObject b){
 			return CBORObjectMath.Multiply(a,b);
@@ -2934,8 +2864,6 @@ namespace PeterO
 			BigInteger bigintExponent=decfrac.Exponent;
 			if(bigintExponent.IsZero){
 				return FromObject(decfrac.Mantissa);
-			} else if(decfrac.CanConvertToDouble()){
-				return FromObject(decfrac.ToDouble());
 			} else {
 				return new CBORObject(CBORObjectType_BigFloat,decfrac);
 			}
@@ -2966,7 +2894,7 @@ namespace PeterO
 		/// surrogate code point.</exception>
 		public static CBORObject FromObject(string stringValue){
 			if(stringValue==null)return CBORObject.Null;
-			if(!IsValidString(stringValue))
+			if(CBORDataUtilities.GetUtf8Length(stringValue,false)<0)
 				throw new ArgumentException("String contains an unpaired surrogate code point.");
 			return new CBORObject(CBORObjectType_TextString,stringValue);
 		}
@@ -3369,7 +3297,7 @@ namespace PeterO
 				if(sb==null)sb=new StringBuilder();
 				sb.Append("h'");
 				byte[] data=(byte[])this.ThisItem;
-				ToBase16(sb,data);
+				CBORUtilities.ToBase16(sb,data);
 				sb.Append("'");
 			} else if(this.ItemType== CBORObjectType_TextString){
 				if(sb==null){
@@ -3415,47 +3343,61 @@ namespace PeterO
 			return sb.ToString();
 		}
 
-		private static float HalfPrecisionToSingle(int value){
-			int negvalue=(value>=0x8000) ? (1<<31) : 0;
-			value&=0x7FFF;
-			if(value>=0x7C00){
-				return ConverterInternal.Int32BitsToSingle(
-					(0x3FC00|(value&0x3FF))<<13|negvalue);
-			} else if(value>0x400){
-				return ConverterInternal.Int32BitsToSingle(
-					((value+0x1c000)<<13)|negvalue);
-			} else if((value&0x400)==value){
-				return ConverterInternal.Int32BitsToSingle(
-					((value==0) ? 0 : 0x38800000)|negvalue);
-			} else {
-				// denormalized
-				int m=(value&0x3FF);
-				value=0x1c400;
-				while((m>>10)==0){
-					value-=0x400;
-					m<<=1;
-				}
-				return ConverterInternal.Int32BitsToSingle(
-					((value|(m&0x3FF))<<13)|negvalue);
+		private static byte[] ReverseBytes(byte[] bytes){
+			if((bytes)==null)throw new ArgumentNullException("bytes");
+			int half=bytes.Length>>1;
+			int right=bytes.Length-1;
+			for(int i=0;i<half;i++,right--){
+				byte value=bytes[i];
+				bytes[i]=bytes[right];
+				bytes[right]=value;
 			}
+			return bytes;
 		}
-
+		
 		private static CBORObject ConvertToBigNum(CBORObject o, bool negative){
 			if(o.ItemType!=CBORObjectType_ByteString)
 				throw new CBORException("Byte array expected");
 			byte[] data=(byte[])o.ThisItem;
-			BigInteger bi=BigInteger.Zero;
+			if(data.Length<=7){
+				long x=0;
+				if(data.Length>0)x|=(((long)data[0])&0xFF)<<48;
+				if(data.Length>1)x|=(((long)data[1])&0xFF)<<40;
+				if(data.Length>2)x|=(((long)data[2])&0xFF)<<32;
+				if(data.Length>3)x|=(((long)data[3])&0xFF)<<24;
+				if(data.Length>4)x|=(((long)data[4])&0xFF)<<16;
+				if(data.Length>5)x|=(((long)data[5])&0xFF)<<8;
+				if(data.Length>6)x|=(((long)data[6])&0xFF);
+				if(negative)x=-x;
+				return FromObject(x);
+			}
+			int neededLength=data.Length;
+			byte[] bytes;
+			bool extended=false;
+			if(((data[0]>>7)&1)!=0){
+				// Increase the needed length
+				// if the highest bit is set, to
+				// distinguish negative and positive
+				// values
+				neededLength+=1;
+				extended=true;
+			}
+			bytes=new byte[neededLength];
 			for(int i=0;i<data.Length;i++){
-				bi<<=8;
-				int x=((int)data[i])&0xFF;
-				bi|=(BigInteger)x;
+				bytes[i]=data[data.Length-1-i];
+				if(negative)
+					bytes[i]=(byte)((~((int)bytes[i]))&0xFF);
 			}
-			if(negative){
-				bi=BigInteger.MinusOne-(BigInteger)bi; // Convert to a negative
+			if(extended){
+				if(negative){
+					bytes[bytes.Length-1]=(byte)0xFF;
+				} else {
+					bytes[bytes.Length-1]=0;
+				}
 			}
+			BigInteger bi=new BigInteger((byte[])bytes);
 			return RewrapObject(o,FromObject(bi));
 		}
-		
 		
 		private bool CanFitInTypeZeroOrOne(){
 			switch(this.ItemType){
