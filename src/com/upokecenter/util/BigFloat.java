@@ -15,7 +15,16 @@ import java.math.*;
 	/**
 	 * Represents an arbitrary-precision binary floating-point number.
 	 * Consists of a integer mantissa and an integer exponent, both arbitrary-precision.
-	 * The value of the number is equal to mantissa * 2^exponent.
+	 * The value of the number is equal to mantissa * 2^exponent. <p> Note:
+	 * This class doesn't yet implement certain operations, notably division,
+	 * that require results to be rounded. That's because I haven't decided
+	 * yet how to incorporate rounding into the API, since the results of
+	 * some divisions can't be represented exactly in a bigfloat (for example,
+	 * 1/10). Should I include precision and rounding mode, as is done in
+	 * Java's Big Decimal class, or should I also include minimum and maximum
+	 * exponent in the rounding parameters, for better support when converting
+	 * to other decimal number formats? Or is there a better approach to supporting
+	 * rounding? </p>
 	 */
 	public final class BigFloat implements Comparable<BigFloat>
 	{
@@ -104,20 +113,35 @@ import java.math.*;
 			this.mantissa=BigInteger.valueOf(mantissaLong);
 		}
 
+		private BigInteger FastMaxExponent=BigInteger.valueOf(2000);
+		private BigInteger FastMinExponent=BigInteger.valueOf((-2000));
+		
 		private BigInteger RescaleByExponentDiff(BigInteger mantissa,
 			                      BigInteger e1,
 			                      BigInteger e2) {
 			boolean negative=(mantissa.signum()<0);
 			if(negative)mantissa=mantissa.negate();
-			if(e1.compareTo(e2)>0){
-				while(e1.compareTo(e2)>0){
-					mantissa=mantissa.shiftLeft(1);
-					e1=e1.subtract(BigInteger.ONE);
+			if(e1.compareTo(FastMinExponent)>=0 &&
+			   e1.compareTo(FastMaxExponent)<=0 &&
+			   e2.compareTo(FastMinExponent)>=0 &&
+			   e2.compareTo(FastMaxExponent)<=0){
+				int e1long=e1.intValue();
+				int e2long=e2.intValue();
+				e1long=Math.abs(e1long-e2long);
+				if(e1long!=0){
+					mantissa=mantissa.shiftLeft(e1long);
 				}
 			} else {
-				while(e1.compareTo(e2)<0){
-					mantissa=mantissa.shiftLeft(1);
-					e1=e1.add(BigInteger.ONE);
+				if(e1.compareTo(e2)>0){
+					while(e1.compareTo(e2)>0){
+						mantissa=mantissa.shiftLeft(1);
+						e1=e1.subtract(BigInteger.ONE);
+					}
+				} else {
+					while(e1.compareTo(e2)<0){
+						mantissa=mantissa.shiftLeft(1);
+						e1=e1.add(BigInteger.ONE);
+					}
 				}
 			}
 			if(negative)mantissa=mantissa.negate();
@@ -142,6 +166,24 @@ import java.math.*;
 			} else {
 				return this;
 			}
+		}
+
+		/**
+		 * Gets the greater value between two BigFloat values.
+		 */
+		public BigFloat Max(BigFloat a, BigFloat b) {
+			if(a==null)throw new NullPointerException("a");
+			if(b==null)throw new NullPointerException("b");
+			return a.compareTo(b)>0 ? a : b;
+		}
+		
+		/**
+		 * Gets the lesser value between two BigFloat values.
+		 */
+		public BigFloat Min(BigFloat a, BigFloat b) {
+			if(a==null)throw new NullPointerException("a");
+			if(b==null)throw new NullPointerException("b");
+			return a.compareTo(b)>0 ? b : a;
 		}
 
 		/**
@@ -216,7 +258,8 @@ import java.math.*;
 			}
 
 		/**
-		 * Compares two bigfloats.
+		 * Compares two bigfloats. <p>This method is not consistent with the
+		 * Equals method.</p>
 		 * @param other Another bigfloat.
 		 * @return Less than 0 if this value is less than the other value, or greater
 		 * than 0 if this value is greater than the other value or if "other" is
@@ -403,88 +446,6 @@ import java.math.*;
 				return bigmantissa;
 			}
 		}
-		
-		/**
-		 * Returns whether this value can be converted to a 64-bit floating-point
-		 * number without rounding.
-		 */
-		public boolean CanConvertToDouble() {
-			int lastRoundedBit=0;
-			if(this.mantissa.signum()==0){
-				return true;
-			}
-			BigInteger bigmant=(this.mantissa).abs();
-			BigInteger bigexponent=this.exponent;
-			while(bigmant.compareTo(BigInteger.valueOf((1L<<52)))<0){
-				return false;
-			}
-			while(bigmant.compareTo(BigInteger.valueOf((1L<<53)))>=0){
-				BigInteger bigsticky=bigmant.and(BigInteger.ONE);
-				lastRoundedBit=bigsticky.intValue();
-				if(lastRoundedBit==1)return false;
-				bigmant=bigmant.shiftRight(1);
-				bigexponent=bigexponent.add(BigInteger.ONE);
-			}
-		
-			if(bigexponent.compareTo(BigInteger.valueOf(971))>0){
-				return false;
-			} else if(bigexponent.compareTo(BigInteger.valueOf(-1074))<0){
-				// subnormal
-				while(bigexponent.compareTo(BigInteger.valueOf(-1074))<0){
-					BigInteger bigsticky=bigmant.and(BigInteger.ONE);
-					lastRoundedBit=bigsticky.intValue();
-					if(lastRoundedBit==1)return false;
-					bigmant=bigmant.shiftRight(1);
-					bigexponent=bigexponent.add(BigInteger.ONE);
-				}
-			}
-			if(bigexponent.compareTo(BigInteger.valueOf(-1074))<0){
-				return false;
-			} else {
-				return true;
-			}
-		}
-		
-		/**
-		 * Returns whether this value can be converted to a 32-bit floating-point
-		 * number without rounding.
-		 */
-		public boolean CanConvertToSingle() {
-			int lastRoundedBit=0;
-			if(this.mantissa.signum()==0){
-				return true;
-			}
-			BigInteger bigmant=(this.mantissa).abs();
-			BigInteger bigexponent=this.exponent;
-			while(bigmant.compareTo(BigInteger.valueOf((1L<<23)))<0){
-				return false;
-			}
-			while(bigmant.compareTo(BigInteger.valueOf((1L<<24)))>=0){
-				BigInteger bigsticky=bigmant.and(BigInteger.ONE);
-				lastRoundedBit=bigsticky.intValue();
-				if(lastRoundedBit==1)return false;
-				bigmant=bigmant.shiftRight(1);
-				bigexponent=bigexponent.add(BigInteger.ONE);
-			}
-			if(bigexponent.compareTo(BigInteger.valueOf(104))>0){
-				return false;
-			} else if(bigexponent.compareTo(BigInteger.valueOf(-149))<0){
-				// subnormal
-				while(bigexponent.compareTo(BigInteger.valueOf(-149))<0){
-					BigInteger bigsticky=bigmant.and(BigInteger.ONE);
-					lastRoundedBit=bigsticky.intValue();
-					if(lastRoundedBit==1)return false;
-					bigmant=bigmant.shiftRight(1);
-					bigexponent=bigexponent.add(BigInteger.ONE);
-				}
-			}
-			if(bigexponent.compareTo(BigInteger.valueOf(-149))<0){
-				return false;
-			} else {
-				return true;
-			}
-		}
-		
 		/**
 		 * Converts this value to a 32-bit floating-point number. The half-up
 		 * rounding mode is used.

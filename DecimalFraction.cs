@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -17,6 +17,18 @@ namespace PeterO
 	/// Consists of a integer mantissa and an integer exponent,
 	/// both arbitrary-precision.  The value of the number is equal
 	/// to mantissa * 10^exponent.
+	/// <para>
+	/// Note:  This class doesn't yet implement certain operations,
+	/// notably division, that require results to be rounded.  That's
+	/// because I haven't decided yet how to incorporate rounding into
+	/// the API, since the results of some divisions can't be represented
+	/// exactly in a decimal fraction (for example, 1/3).  Should I include
+	/// precision and rounding mode, as is done in Java's Big Decimal class,
+	/// or should I also include minimum and maximum exponent in the
+	/// rounding parameters, for better support when converting to other
+	/// decimal number formats?  Or is there a better approach to supporting
+	/// rounding?
+	/// </para>
 	/// </summary>
 	public sealed class DecimalFraction : IComparable<DecimalFraction>, IEquatable<DecimalFraction>
 	{
@@ -242,6 +254,24 @@ namespace PeterO
 				return this;
 			}
 		}
+        	
+        /// <summary>
+		/// Gets the greater value between two DecimalFraction values.
+		/// </summary>
+		public DecimalFraction Max(DecimalFraction a, DecimalFraction b){
+			if(a==null)throw new ArgumentNullException("a");
+			if(b==null)throw new ArgumentNullException("b");
+			return a.CompareTo(b)>0 ? a : b;
+		}
+		
+		/// <summary>
+		/// Gets the lesser value between two DecimalFraction values.
+		/// </summary>
+		public DecimalFraction Min(DecimalFraction a, DecimalFraction b){
+			if(a==null)throw new ArgumentNullException("a");
+			if(b==null)throw new ArgumentNullException("b");
+			return a.CompareTo(b)>0 ? b : a;
+		}
 		
 		/// <summary>
 		/// Finds the sum of this object and another decimal fraction.
@@ -321,8 +351,9 @@ namespace PeterO
 
 		/// <summary>
 		/// Compares two decimal fractions.
+		/// <para>This method is not consistent with the Equals method.</para>
 		/// </summary>
-		/// <param name="other">Another decimal fractions.</param>
+		/// <param name="other">Another decimal fraction.</param>
 		/// <returns>Less than 0 if this value is less than the other
 		/// value, or greater than 0 if this value is greater than the other
 		/// value or if "other" is null, or 0 if both values are equal.</returns>
@@ -590,9 +621,20 @@ namespace PeterO
 				// Value has a fractional part
 				BigInteger bigmantissa=(BigInteger)fpMantissa;
 				long scale=fpExponent;
-				int exp=-fpExponent;
-				for(int i=0;i<exp;i++){
-					bigmantissa*=(BigInteger)5;
+				while(fpExponent<0){
+					if(fpExponent<=-20){
+						bigmantissa*=(BigInteger)BigInt5Pow20;
+						fpExponent+=20;
+					} else if(fpExponent<=-10){
+						bigmantissa*=(BigInteger)BigInt5Pow10;
+						fpExponent+=10;
+					} else if(fpExponent<=-5){
+						bigmantissa*=(BigInteger)BigInt5Pow5;
+						fpExponent+=5;
+					} else {
+						bigmantissa*=(BigInteger)BigInt5;
+						fpExponent+=1;
+					}
 				}
 				if(neg)bigmantissa=-(BigInteger)bigmantissa;
 				return new DecimalFraction(scale,bigmantissa);
@@ -633,9 +675,20 @@ namespace PeterO
 				// Value has a fractional part
 				BigInteger bigmantissa=(BigInteger)fpMantissa;
 				long scale=fpExponent;
-				int exp=-fpExponent;
-				for(int i=0;i<exp;i++){
-					bigmantissa*=(BigInteger)5;
+				while(fpExponent<0){
+					if(fpExponent<=-20){
+						bigmantissa*=(BigInteger)BigInt5Pow20;
+						fpExponent+=20;
+					} else if(fpExponent<=-10){
+						bigmantissa*=(BigInteger)BigInt5Pow10;
+						fpExponent+=10;
+					} else if(fpExponent<=-5){
+						bigmantissa*=(BigInteger)BigInt5Pow5;
+						fpExponent+=5;
+					} else {
+						bigmantissa*=(BigInteger)BigInt5;
+						fpExponent+=1;
+					}
 				}
 				if(neg)bigmantissa=-(BigInteger)bigmantissa;
 				return new DecimalFraction(scale,bigmantissa);
@@ -693,6 +746,15 @@ namespace PeterO
 					} else if(curexp.CompareTo(BigIntNeg5)<=0){
 						bigmantissa*=(BigInteger)BigInt5Pow5;
 						curexp+=(BigInteger)BigInt5;
+					} else if(curexp.CompareTo((BigInteger)(-4))<=0){
+						bigmantissa*=(BigInteger)625;
+						curexp+=(BigInteger)4;
+					} else if(curexp.CompareTo((BigInteger)(-3))<=0){
+						bigmantissa*=(BigInteger)125;
+						curexp+=(BigInteger)3;
+					} else if(curexp.CompareTo((BigInteger)(-2))<=0){
+						bigmantissa*=(BigInteger)25;
+						curexp+=(BigInteger)2;
 					} else {
 						bigmantissa*=(BigInteger)BigInt5;
 						curexp+=BigInteger.One;
@@ -701,6 +763,44 @@ namespace PeterO
 				return new DecimalFraction(bigintExp,bigmantissa);
 			}
 		}
+		/*
+		internal DecimalFraction MovePointLeft(BigInteger steps){
+			if(steps.IsZero)return this;
+			return new DecimalFraction(this.Exponent-(BigInteger)steps,
+			                           this.Mantissa);
+		}
+		
+		internal DecimalFraction MovePointRight(BigInteger steps){
+			if(steps.IsZero)return this;
+			return new DecimalFraction(this.Exponent+(BigInteger)steps,
+			                           this.Mantissa);
+		}
+
+		internal DecimalFraction Rescale(BigInteger scale)
+		{
+			throw new NotImplementedException();
+		}
+ 
+		internal DecimalFraction RoundToIntegralValue(BigInteger scale)
+		{
+			return Rescale(BigInteger.Zero);
+		}
+		internal DecimalFraction Normalize()
+		{
+			if(this.Mantissa.IsZero)
+				return new DecimalFraction(0);
+			BigInteger mant=this.Mantissa;
+			BigInteger exp=this.Exponent;
+			bool changed=false;
+			while((mant%(BigInteger)10)==0){
+				mant/=(BigInteger)10;
+				exp+=BigInteger.One;
+				changed=true;
+			}
+			if(!changed)return this;
+			return new DecimalFraction(exp,mant);
+		}
+		*/
 		
 		///<summary>
 		/// Converts this value to a string.

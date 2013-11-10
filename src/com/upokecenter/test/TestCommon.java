@@ -39,7 +39,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 
 		//
 		//  Tests the equivalence of the FromBytes and Read methods.
-		//		
+		//
 		public static CBORObject FromBytesTestAB(byte[] b) {
 			CBORObject oa=FromBytesA(b);
 			CBORObject ob=FromBytesB(b);
@@ -64,13 +64,17 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 			} else {
 				if(o2.equals(o))
 					Assert.fail(
-				               String.format(java.util.Locale.US,"%s does not equal %s, but not vice versa",o,o2));
+						String.format(java.util.Locale.US,"%s does not equal %s, but not vice versa",o,o2));
 			}
 		}
 		public static void AssertRoundTrip(CBORObject o) {
 			CBORObject o2=FromBytesTestAB(o.EncodeToBytes());
-			if(!o.toString().equals(o2.toString()))
-				Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
+			if(o2.getType()== CBORType.Map && o.getType()== CBORType.Map){
+				// Skip because key order may be different
+			} else {
+				if(!o.toString().equals(o2.toString()))
+					Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
+			}
 			AssertEqualsHashCode(o,o2);
 		}
 

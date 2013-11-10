@@ -21,12 +21,8 @@ namespace PeterO
 	/// </summary>
 	public static class CBORDataUtilities
 	{
-		private static BigInteger LowestMajorType1=
-			BigInteger.Parse("-18446744073709551616",NumberStyles.AllowLeadingSign,
-			                 CultureInfo.InvariantCulture);
-		private static BigInteger UInt64MaxValue=
-			BigInteger.Parse("18446744073709551615",NumberStyles.AllowLeadingSign,
-			                 CultureInfo.InvariantCulture);
+		private static BigInteger LowestMajorType1=BigInteger.Zero-(BigInteger.One<<64);
+		private static BigInteger UInt64MaxValue=(BigInteger.One<<64)-BigInteger.One;
 
 		private static int StreamedStringBufferLength=4096;
 		
@@ -506,7 +502,7 @@ namespace PeterO
 		}
 		
 		/// <summary>
-		/// Parses a number whose format follows the JSON specification
+		/// Parses a number whose format follows the JSON specification.
 		/// See #ParseJSONNumber(str, integersOnly, parseOnly)
 		/// for more information.
 		/// </summary>
@@ -529,7 +525,7 @@ namespace PeterO
 		/// </summary>
 		/// <param name="str">A string to parse.</param>
 		/// <param name="integersOnly">If true, no decimal points
-		/// are allowed in the string.</param>
+		/// or exponents are allowed in the string.</param>
 		/// <param name="positiveOnly">If true, only positive numbers
 		/// are allowed (the leading minus is disallowed).</param>
 		/// <returns>A CBOR object that represents the parsed
