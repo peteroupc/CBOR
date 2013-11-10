@@ -77,20 +77,20 @@ import java.math.*;
 
 		/**
 		 * Creates a bigfloat with the value exponent*2^mantissa.
-		 * @param exponent The binary exponent.
 		 * @param mantissa The unscaled value.
+		 * @param exponent The binary exponent.
 		 */
-		public BigFloat(BigInteger exponent, BigInteger mantissa){
+		public BigFloat(BigInteger mantissa,BigInteger exponent){
 			this.exponent=exponent;
 			this.mantissa=mantissa;
 		}
 
 		/**
 		 * Creates a bigfloat with the value exponentLong*2^mantissa.
-		 * @param exponentLong The binary exponent.
 		 * @param mantissa The unscaled value.
+		 * @param exponentLong The binary exponent.
 		 */
-		public BigFloat(long exponentLong, BigInteger mantissa){
+		public BigFloat(BigInteger mantissa, long exponentLong){
 			this.exponent=BigInteger.valueOf(exponentLong);
 			this.mantissa=mantissa;
 		}
@@ -153,7 +153,7 @@ import java.math.*;
 		 */
 		public BigFloat Negate() {
 			BigInteger neg=(this.mantissa).negate();
-			return new BigFloat(this.exponent,neg);
+			return new BigFloat(neg,this.exponent);
 		}
 
 		/**
@@ -161,8 +161,7 @@ import java.math.*;
 		 */
 		public BigFloat Abs() {
 			if(this.signum()<0){
-				BigInteger neg=(this.mantissa).negate();
-				return new BigFloat(this.exponent,neg);
+				return Negate();
 			} else {
 				return this;
 			}
@@ -194,17 +193,17 @@ import java.math.*;
 			int expcmp=exponent.compareTo(decfrac.exponent);
 			if(expcmp==0){
 				return new BigFloat(
-					exponent,mantissa.add(decfrac.mantissa));
+					mantissa.add(decfrac.mantissa),exponent);
 			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new BigFloat(
-					decfrac.exponent,newmant.add(decfrac.mantissa));
+					newmant.add(decfrac.mantissa),decfrac.exponent);
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new BigFloat(
-					exponent,mantissa.add(newmant));
+					newmant.add(this.mantissa),exponent);
 			}
 		}
 
@@ -216,17 +215,17 @@ import java.math.*;
 			int expcmp=exponent.compareTo(decfrac.exponent);
 			if(expcmp==0){
 				return new BigFloat(
-					exponent,mantissa.subtract(decfrac.mantissa));
+					this.mantissa.subtract(decfrac.mantissa),exponent);
 			} else if(expcmp>0){
 				BigInteger newmant=RescaleByExponentDiff(
 					mantissa,exponent,decfrac.exponent);
 				return new BigFloat(
-					decfrac.exponent,newmant.subtract(decfrac.mantissa));
+					newmant.subtract(decfrac.mantissa),decfrac.exponent);
 			} else {
 				BigInteger newmant=RescaleByExponentDiff(
 					decfrac.mantissa,exponent,decfrac.exponent);
 				return new BigFloat(
-					exponent,mantissa.subtract(newmant));
+					this.mantissa.subtract(newmant),exponent);
 			}
 		}
 		
@@ -240,7 +239,7 @@ import java.math.*;
 		public BigFloat Multiply(BigFloat decfrac) {
 			BigInteger newexp=(this.exponent.add(decfrac.exponent));
 			return new BigFloat(
-				newexp,mantissa.multiply(decfrac.mantissa));
+				mantissa.multiply(decfrac.mantissa),newexp);
 		}
 
 		/**
@@ -361,7 +360,7 @@ import java.math.*;
 					}
 				}
 				if(neg)bigmantissa=(bigmantissa).negate();
-				return new BigFloat(scale,bigmantissa);
+				return new BigFloat(bigmantissa,scale);
 			}
 		}
 		
@@ -387,7 +386,7 @@ import java.math.*;
 				if((value>>31)!=0)
 					fpMantissa=-fpMantissa;
 			}
-			return new BigFloat(fpExponent-150,BigInteger.valueOf(fpMantissa));
+			return new BigFloat(BigInteger.valueOf(((long)fpMantissa)),fpExponent-150);
 		}
 
 		/**
@@ -412,7 +411,7 @@ import java.math.*;
 				if((value>>63)!=0)
 					fpMantissa=-fpMantissa;
 			}
-			return new BigFloat(fpExponent-1075,BigInteger.valueOf(fpMantissa));
+			return new BigFloat(BigInteger.valueOf(((long)fpMantissa)),fpExponent-1075);
 		}
 
 		/**
@@ -450,6 +449,8 @@ import java.math.*;
 		 * Converts this value to a 32-bit floating-point number. The half-up
 		 * rounding mode is used.
 		 * @return The closest 32-bit floating-point number to this value.
+		 * The return value can be positive infinity or negative infinity if
+		 * this value exceeds the range of a 32-bit floating point number.
 		 */
 		public float ToSingle() {
 			BigInteger bigmant=(this.mantissa).abs();
@@ -521,6 +522,8 @@ import java.math.*;
 		 * Converts this value to a 64-bit floating-point number. The half-up
 		 * rounding mode is used.
 		 * @return The closest 64-bit floating-point number to this value.
+		 * The return value can be positive infinity or negative infinity if
+		 * this value exceeds the range of a 64-bit floating point number.
 		 */
 		public double ToDouble() {
 			BigInteger bigmant=(this.mantissa).abs();
