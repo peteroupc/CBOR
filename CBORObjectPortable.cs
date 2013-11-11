@@ -15,139 +15,139 @@ using System.Text;
 
 namespace PeterO
 {
-	public sealed partial class CBORObject
-	{
-		private static void WritePortable(BigInteger bigint, Stream s){
-			if((s)==null)throw new ArgumentNullException("s");
-			if((object)bigint==(object)null){
-				s.WriteByte(0xf6);
-				return;
-			}
-			int datatype=0;
-			if(bigint.Sign<0){
-				datatype=1;
-				bigint+=(BigInteger)BigInteger.One;
-				bigint=-(BigInteger)bigint;
-			}
-			if(bigint.CompareTo(Int64MaxValue)<=0){
-				// If the big integer is representable as a long and in
-				// major type 0 or 1, write that major type
-				// instead of as a bignum
-				long ui=(long)(BigInteger)bigint;
-				WritePositiveInt64(datatype,ui,s);
-			} else {
-				using(MemoryStream ms=new MemoryStream()){
-					long tmp=0;
-					byte[] buffer=new byte[10];
-					while(bigint.Sign>0){
-						// To reduce the number of big integer
-						// operations, extract the big int 56 bits at a time
-						// (not 64, to avoid negative numbers)
-						BigInteger tmpbigint=bigint&(BigInteger)FiftySixBitMask;
-						tmp=(long)(BigInteger)tmpbigint;
-						bigint>>=56;
-						bool isNowZero=(bigint.IsZero);
-						int bufferindex=0;
-						for(int i=0;i<7 && (!isNowZero || tmp>0);i++){
-							buffer[bufferindex]=(byte)(tmp&0xFF);
-							tmp>>=8;
-							bufferindex++;
-						}
-						ms.Write(buffer,0,bufferindex);
-					}
-					byte[] bytes=ms.ToArray();
-					switch(bytes.Length){
-						case 1: // Fits in 1 byte (won't normally happen though)
-							buffer[0]=(byte)((datatype<<5)|24);
-							buffer[1]=bytes[0];
-							s.Write(buffer,0,2);
-							break;
-						case 2: // Fits in 2 bytes (won't normally happen though)
-							buffer[0]=(byte)((datatype<<5)|25);
-							buffer[1]=bytes[1];
-							buffer[2]=bytes[0];
-							s.Write(buffer,0,3);
-							break;
-						case 3:
-						case 4:
-							buffer[0]=(byte)((datatype<<5)|26);
-							buffer[1]=(bytes.Length>3) ? bytes[3] : (byte)0;
-							buffer[2]=bytes[2];
-							buffer[3]=bytes[1];
-							buffer[4]=bytes[0];
-							s.Write(buffer,0,5);
-							break;
-						case 5:
-						case 6:
-						case 7:
-						case 8:
-							buffer[0]=(byte)((datatype<<5)|27);
-							buffer[1]=(bytes.Length>7) ? bytes[7] : (byte)0;
-							buffer[2]=(bytes.Length>6) ? bytes[6] : (byte)0;
-							buffer[3]=(bytes.Length>5) ? bytes[5] : (byte)0;
-							buffer[4]=bytes[4];
-							buffer[5]=bytes[3];
-							buffer[6]=bytes[2];
-							buffer[7]=bytes[1];
-							buffer[8]=bytes[0];
-							s.Write(buffer,0,9);
-							break;
-						default:
-							s.WriteByte((datatype==0) ?
-							            (byte)0xC2 :
-							            (byte)0xC3);
-							WritePositiveInt(2,bytes.Length,s);
-							for(int i=bytes.Length-1;i>=0;i--){
-								s.WriteByte(bytes[i]);
-							}
-							break;
-					}
-				}
-			}
-		}
-		
-		// This is a more "portable" version of ConvertToBigNum,
-		// but it's much slower on relatively large BigIntegers.
-		private static CBORObject ConvertToBigNumPortable(CBORObject o, bool negative){
-			if(o.ItemType!=CBORObjectType_ByteString)
-				throw new CBORException("Byte array expected");
-			byte[] data=(byte[])o.ThisItem;
-			if(data.Length<=7){
-				long x=0;
-				if(data.Length>0)x|=(((long)data[0])&0xFF)<<48;
-				if(data.Length>1)x|=(((long)data[1])&0xFF)<<40;
-				if(data.Length>2)x|=(((long)data[2])&0xFF)<<32;
-				if(data.Length>3)x|=(((long)data[3])&0xFF)<<24;
-				if(data.Length>4)x|=(((long)data[4])&0xFF)<<16;
-				if(data.Length>5)x|=(((long)data[5])&0xFF)<<8;
-				if(data.Length>6)x|=(((long)data[6])&0xFF);
-				if(negative)x=-x;
-				return FromObject(x);
-			}
-			BigInteger bi=BigInteger.Zero;
-			for(int i=0;i<data.Length;i++){
-				if(i+7<=data.Length){
-					long x=(((long)data[i])&0xFF)<<48;
-					x|=(((long)data[i+1])&0xFF)<<40;
-					x|=(((long)data[i+2])&0xFF)<<32;
-					x|=(((long)data[i+3])&0xFF)<<24;
-					x|=(((long)data[i+4])&0xFF)<<16;
-					x|=(((long)data[i+5])&0xFF)<<8;
-					x|=(((long)data[i+6])&0xFF);
-					bi<<=56;
-					bi|=(BigInteger)x;
-					i+=6;
-				} else {
-					bi<<=8;
-					int x=((int)data[i])&0xFF;
-					bi|=(BigInteger)x;
-				}
-			}
-			if(negative){
-				bi=BigInteger.MinusOne-(BigInteger)bi; // Convert to a negative
-			}
-			return RewrapObject(o,FromObject(bi));
-		}
-		
-	}
+  public sealed partial class CBORObject
+  {
+    private static void WritePortable(BigInteger bigint, Stream s){
+      if((s)==null)throw new ArgumentNullException("s");
+      if((object)bigint==(object)null){
+        s.WriteByte(0xf6);
+        return;
+      }
+      int datatype=0;
+      if(bigint.Sign<0){
+        datatype=1;
+        bigint+=(BigInteger)BigInteger.One;
+        bigint=-(BigInteger)bigint;
+      }
+      if(bigint.CompareTo(Int64MaxValue)<=0){
+        // If the big integer is representable as a long and in
+        // major type 0 or 1, write that major type
+        // instead of as a bignum
+        long ui=(long)(BigInteger)bigint;
+        WritePositiveInt64(datatype,ui,s);
+      } else {
+        using(MemoryStream ms=new MemoryStream()){
+          long tmp=0;
+          byte[] buffer=new byte[10];
+          while(bigint.Sign>0){
+            // To reduce the number of big integer
+            // operations, extract the big int 56 bits at a time
+            // (not 64, to avoid negative numbers)
+            BigInteger tmpbigint=bigint&(BigInteger)FiftySixBitMask;
+            tmp=(long)(BigInteger)tmpbigint;
+            bigint>>=56;
+            bool isNowZero=(bigint.IsZero);
+            int bufferindex=0;
+            for(int i=0;i<7 && (!isNowZero || tmp>0);i++){
+              buffer[bufferindex]=(byte)(tmp&0xFF);
+              tmp>>=8;
+              bufferindex++;
+            }
+            ms.Write(buffer,0,bufferindex);
+          }
+          byte[] bytes=ms.ToArray();
+          switch(bytes.Length){
+            case 1: // Fits in 1 byte (won't normally happen though)
+              buffer[0]=(byte)((datatype<<5)|24);
+              buffer[1]=bytes[0];
+              s.Write(buffer,0,2);
+              break;
+            case 2: // Fits in 2 bytes (won't normally happen though)
+              buffer[0]=(byte)((datatype<<5)|25);
+              buffer[1]=bytes[1];
+              buffer[2]=bytes[0];
+              s.Write(buffer,0,3);
+              break;
+            case 3:
+            case 4:
+              buffer[0]=(byte)((datatype<<5)|26);
+              buffer[1]=(bytes.Length>3) ? bytes[3] : (byte)0;
+              buffer[2]=bytes[2];
+              buffer[3]=bytes[1];
+              buffer[4]=bytes[0];
+              s.Write(buffer,0,5);
+              break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+              buffer[0]=(byte)((datatype<<5)|27);
+              buffer[1]=(bytes.Length>7) ? bytes[7] : (byte)0;
+              buffer[2]=(bytes.Length>6) ? bytes[6] : (byte)0;
+              buffer[3]=(bytes.Length>5) ? bytes[5] : (byte)0;
+              buffer[4]=bytes[4];
+              buffer[5]=bytes[3];
+              buffer[6]=bytes[2];
+              buffer[7]=bytes[1];
+              buffer[8]=bytes[0];
+              s.Write(buffer,0,9);
+              break;
+            default:
+              s.WriteByte((datatype==0) ?
+                          (byte)0xC2 :
+                          (byte)0xC3);
+              WritePositiveInt(2,bytes.Length,s);
+              for(int i=bytes.Length-1;i>=0;i--){
+                s.WriteByte(bytes[i]);
+              }
+              break;
+          }
+        }
+      }
+    }
+    
+    // This is a more "portable" version of ConvertToBigNum,
+    // but it's much slower on relatively large BigIntegers.
+    private static CBORObject ConvertToBigNumPortable(CBORObject o, bool negative){
+      if(o.ItemType!=CBORObjectType_ByteString)
+        throw new CBORException("Byte array expected");
+      byte[] data=(byte[])o.ThisItem;
+      if(data.Length<=7){
+        long x=0;
+        if(data.Length>0)x|=(((long)data[0])&0xFF)<<48;
+        if(data.Length>1)x|=(((long)data[1])&0xFF)<<40;
+        if(data.Length>2)x|=(((long)data[2])&0xFF)<<32;
+        if(data.Length>3)x|=(((long)data[3])&0xFF)<<24;
+        if(data.Length>4)x|=(((long)data[4])&0xFF)<<16;
+        if(data.Length>5)x|=(((long)data[5])&0xFF)<<8;
+        if(data.Length>6)x|=(((long)data[6])&0xFF);
+        if(negative)x=-x;
+        return FromObject(x);
+      }
+      BigInteger bi=BigInteger.Zero;
+      for(int i=0;i<data.Length;i++){
+        if(i+7<=data.Length){
+          long x=(((long)data[i])&0xFF)<<48;
+          x|=(((long)data[i+1])&0xFF)<<40;
+          x|=(((long)data[i+2])&0xFF)<<32;
+          x|=(((long)data[i+3])&0xFF)<<24;
+          x|=(((long)data[i+4])&0xFF)<<16;
+          x|=(((long)data[i+5])&0xFF)<<8;
+          x|=(((long)data[i+6])&0xFF);
+          bi<<=56;
+          bi|=(BigInteger)x;
+          i+=6;
+        } else {
+          bi<<=8;
+          int x=((int)data[i])&0xFF;
+          bi|=(BigInteger)x;
+        }
+      }
+      if(negative){
+        bi=BigInteger.MinusOne-(BigInteger)bi; // Convert to a negative
+      }
+      return RewrapObject(o,FromObject(bi));
+    }
+    
+  }
 }
