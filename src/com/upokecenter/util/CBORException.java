@@ -11,23 +11,21 @@ at: http://upokecenter.com/d/
 
 
 
-	/**
-	 * Exception thrown for errors involving CBOR data.
-	 */
-	public class CBORException extends RuntimeException
-	{
-		public CBORException()
-		{
-		}
+  /**
+   * Exception thrown for errors involving CBOR data.
+   */
+  public class CBORException extends RuntimeException {
+    public CBORException() {
+    }
 
-	 	public CBORException(String message){
+    public CBORException(String message){
  super(message);
-		}
+    }
 
-		public CBORException(String message, Throwable innerException){
+    public CBORException(String message, Throwable innerException){
  super(message, innerException);
-		}
+    }
 
-		// This constructor is needed for serialization.
-		private static final long serialVersionUID=1;
-	}
+    // This is needed for serialization.
+    private static final long serialVersionUID=1;
+  }

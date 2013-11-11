@@ -9,28 +9,25 @@ at: http://upokecenter.com/d/
 using System;
 using System.Runtime.Serialization;
 
-namespace PeterO
-{
-	/// <summary>
-	/// Exception thrown for errors involving CBOR data.
-	/// </summary>
-	public class CBORException : Exception, ISerializable
-	{
-		public CBORException()
-		{
-		}
+namespace PeterO {
+  /// <summary>
+  /// Exception thrown for errors involving CBOR data.
+  /// </summary>
+  public class CBORException : Exception, ISerializable {
+    public CBORException() {
+    }
 
-	 	public CBORException(string message) : base(message)
-		{
-		}
+    public CBORException(string message)
+      : base(message) {
+    }
 
-		public CBORException(string message, Exception innerException) : base(message, innerException)
-		{
-		}
+    public CBORException(string message, Exception innerException)
+      : base(message, innerException) {
+    }
 
-		// This constructor is needed for serialization.
-		protected CBORException(SerializationInfo info, StreamingContext context) : base(info, context)
-		{
-		}
-	}
+    // This is needed for serialization.
+    protected CBORException(SerializationInfo info, StreamingContext context)
+      : base(info, context) {
+    }
+  }
 }

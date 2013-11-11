@@ -8,45 +8,44 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
-	/// <summary>
-	/// Represents a type that a CBOR object can have.
-	/// </summary>
-	/// 
-	public enum CBORType {
-		/// <summary>
-		/// A number of any kind, including integers,
-		/// big integers, floating point numbers,
-		/// and decimal fractions.  The floating-point
-		/// value Not-a-Number is also included in the
-		/// Number type.
-		/// </summary>
-		Number,
-		/// <summary>
-		/// The simple values true and false.
-		/// </summary>
-		Boolean,
-		/// <summary>
-		/// A "simple value" other than floating point
-		/// values, true, and false.
-		/// </summary>
-		SimpleValue,
-		/// <summary>
-		/// An array of bytes.
-		/// </summary>
-		ByteString,
-		/// <summary>
-		/// A text string.
-		/// </summary>
-		TextString,
-		/// <summary>
-		/// An array of CBOR objects.
-		/// </summary>
-		Array,
-		/// <summary>
-		/// A map of CBOR objects.
-		/// </summary>
-		Map
-	}
+namespace PeterO {
+  /// <summary>
+  /// Represents a type that a CBOR object can have.
+  /// </summary>
+  /// 
+  public enum CBORType {
+    /// <summary>
+    /// A number of any kind, including integers,
+    /// big integers, floating point numbers,
+    /// and decimal fractions.  The floating-point
+    /// value Not-a-Number is also included in the
+    /// Number type.
+    /// </summary>
+    Number,
+    /// <summary>
+    /// The simple values true and false.
+    /// </summary>
+    Boolean,
+    /// <summary>
+    /// A "simple value" other than floating point
+    /// values, true, and false.
+    /// </summary>
+    SimpleValue,
+    /// <summary>
+    /// An array of bytes.
+    /// </summary>
+    ByteString,
+    /// <summary>
+    /// A text string.
+    /// </summary>
+    TextString,
+    /// <summary>
+    /// An array of CBOR objects.
+    /// </summary>
+    Array,
+    /// <summary>
+    /// A map of CBOR objects.
+    /// </summary>
+    Map
+  }
 }
