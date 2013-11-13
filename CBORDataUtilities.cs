@@ -133,8 +133,8 @@ namespace PeterO {
 
     ///<summary>Compares two strings in Unicode code point order. Unpaired
     ///surrogates are treated as individual code points.</summary>
-    /// <param name="a">The first string.</param> 
-    /// <param name="b">The second string.</param> 
+    /// <param name="a">The first string.</param>
+    /// <param name="b">The second string.</param>
     /// <returns>A value indicating which string is "less" or "greater".
     /// 0: Both strings are equal or null.
     /// Less than 0: a is null and b isn't; or the first code point that's
@@ -171,12 +171,12 @@ namespace PeterO {
         } else {
           if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800)
             return ca - cb;
-          if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.Length && 
-            strA[i + 1] >= 0xDC00 && strA[i + 1] <= 0xDFFF) {
+          if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.Length &&
+              strA[i + 1] >= 0xDC00 && strA[i + 1] <= 0xDFFF) {
             ca = 0x10000 + (ca - 0xD800) * 0x400 + (strA[i + 1] - 0xDC00);
           }
-          if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.Length && 
-            strB[i + 1] >= 0xDC00 && strB[i + 1] <= 0xDFFF) {
+          if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.Length &&
+              strB[i + 1] >= 0xDC00 && strB[i + 1] <= 0xDFFF) {
             cb = 0x10000 + (cb - 0xD800) * 0x400 + (strB[i + 1] - 0xDC00);
           }
           return ca - cb;
@@ -209,11 +209,11 @@ namespace PeterO {
     public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
       if ((stream) == null) throw new ArgumentNullException("stream");
       if((str)==null)throw new ArgumentNullException("str");
-if((offset)<0)throw new ArgumentOutOfRangeException("offset"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(offset))+")");
-if((offset)>str.Length)throw new ArgumentOutOfRangeException("offset"+" not less or equal to "+Convert.ToString((long)(str.Length))+" ("+Convert.ToString((long)(offset))+")");
-if((length)<0)throw new ArgumentOutOfRangeException("length"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(length))+")");
-if((length)>str.Length)throw new ArgumentOutOfRangeException("length"+" not less or equal to "+Convert.ToString((long)(str.Length))+" ("+Convert.ToString((long)(length))+")");
-if(((str.Length-offset))<length)throw new ArgumentOutOfRangeException("str's length minus "+offset+" not greater or equal to "+Convert.ToString((long)(length))+" ("+Convert.ToString((long)((str.Length-offset)))+")");
+      if((offset)<0)throw new ArgumentOutOfRangeException("offset"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(offset))+")");
+      if((offset)>str.Length)throw new ArgumentOutOfRangeException("offset"+" not less or equal to "+Convert.ToString((long)(str.Length))+" ("+Convert.ToString((long)(offset))+")");
+      if((length)<0)throw new ArgumentOutOfRangeException("length"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(length))+")");
+      if((length)>str.Length)throw new ArgumentOutOfRangeException("length"+" not less or equal to "+Convert.ToString((long)(str.Length))+" ("+Convert.ToString((long)(length))+")");
+      if(((str.Length-offset))<length)throw new ArgumentOutOfRangeException("str's length minus "+offset+" not greater or equal to "+Convert.ToString((long)(length))+" ("+Convert.ToString((long)((str.Length-offset)))+")");
       byte[] bytes;
       int retval = 0;
       bytes = new byte[StreamedStringBufferLength];
@@ -238,7 +238,7 @@ if(((str.Length-offset))<length)throw new ArgumentOutOfRangeException("str's len
           bytes[byteIndex++] = ((byte)(0x80 | (c & 0x3F)));
         } else {
           if (c >= 0xD800 && c <= 0xDBFF && index + 1 < endIndex &&
-             str[index + 1] >= 0xDC00 && str[index + 1] <= 0xDFFF) {
+              str[index + 1] >= 0xDC00 && str[index + 1] <= 0xDFFF) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + (c - 0xD800) * 0x400 + (str[index + 1] - 0xDC00);
             index++;
@@ -316,11 +316,11 @@ if(((str.Length-offset))<length)throw new ArgumentOutOfRangeException("str's len
                                         StringBuilder builder,
                                         bool replace) {
       if((data)==null)throw new ArgumentNullException("data");
-if((offset)<0)throw new ArgumentOutOfRangeException("offset"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(offset))+")");
-if((offset)>data.Length)throw new ArgumentOutOfRangeException("offset"+" not less or equal to "+Convert.ToString((long)(data.Length))+" ("+Convert.ToString((long)(offset))+")");
-if((byteLength)<0)throw new ArgumentOutOfRangeException("byteLength"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(byteLength))+")");
-if((byteLength)>data.Length)throw new ArgumentOutOfRangeException("byteLength"+" not less or equal to "+Convert.ToString((long)(data.Length))+" ("+Convert.ToString((long)(byteLength))+")");
-if(((data.Length-offset))<byteLength)throw new ArgumentOutOfRangeException("data's length minus "+offset+" not greater or equal to "+Convert.ToString((long)(byteLength))+" ("+Convert.ToString((long)((data.Length-offset)))+")");
+      if((offset)<0)throw new ArgumentOutOfRangeException("offset"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(offset))+")");
+      if((offset)>data.Length)throw new ArgumentOutOfRangeException("offset"+" not less or equal to "+Convert.ToString((long)(data.Length))+" ("+Convert.ToString((long)(offset))+")");
+      if((byteLength)<0)throw new ArgumentOutOfRangeException("byteLength"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(byteLength))+")");
+      if((byteLength)>data.Length)throw new ArgumentOutOfRangeException("byteLength"+" not less or equal to "+Convert.ToString((long)(data.Length))+" ("+Convert.ToString((long)(byteLength))+")");
+      if(((data.Length-offset))<byteLength)throw new ArgumentOutOfRangeException("data's length minus "+offset+" not greater or equal to "+Convert.ToString((long)(byteLength))+" ("+Convert.ToString((long)((data.Length-offset)))+")");
       if ((builder) == null) throw new ArgumentNullException("builder");
       int cp = 0;
       int bytesSeen = 0;
@@ -592,20 +592,19 @@ if(((data.Length-offset))<byteLength)throw new ArgumentOutOfRangeException("data
       bool negExp = false;
       int expStart = -1;
       int expEnd = -1;
-      int smallNumber = 0; // for small numbers (9 digits or less)
-      int smallNumberCount = 0;
+      FastInteger smallNumber=new FastInteger();
+      FastInteger exponentAdjust=new FastInteger();
+      FastInteger smallExponent=new FastInteger();
       if (c >= '1' && c <= '9') {
-        smallNumber = (int)(c - '0');
-        smallNumberCount++;
+        smallNumber.Add((int)(c - '0'));
         while (index < str.Length) {
           c = str[index];
           if (c >= '0' && c <= '9') {
             index++;
             numberEnd = index;
-            if (smallNumberCount < 9) {
-              smallNumber *= 10;
-              smallNumber += (int)(c - '0');
-              smallNumberCount++;
+            if (smallNumber.CanFitInInt64()) {
+              smallNumber.Multiply(10);
+              smallNumber.Add((int)(c - '0'));
             }
           } else {
             break;
@@ -625,11 +624,25 @@ if(((data.Length-offset))<byteLength)throw new ArgumentOutOfRangeException("data
           index++;
           fracEnd = index;
           if (c >= '0' && c <= '9') {
+            // Adjust the exponent for this
+            // fractional digit
+            exponentAdjust.Add(-1);
+            if (smallNumber.CanFitInInt64()) {
+              smallNumber.Multiply(10);
+              smallNumber.Add((int)(c - '0'));
+            }
             while (index < str.Length) {
               c = str[index];
               if (c >= '0' && c <= '9') {
                 index++;
                 fracEnd = index;
+                // Adjust the exponent for this
+                // fractional digit
+                exponentAdjust.Add(-1);
+                if (smallNumber.CanFitInInt64()) {
+                  smallNumber.Multiply(10);
+                  smallNumber.Add((int)(c - '0'));
+                }
               } else {
                 break;
               }
@@ -657,11 +670,18 @@ if(((data.Length-offset))<byteLength)throw new ArgumentOutOfRangeException("data
           index++;
           expEnd = index;
           if (c >= '0' && c <= '9') {
+            if (smallExponent.CanFitInInt64()) {
+              smallExponent.Add((int)(c - '0'));
+            }
             while (index < str.Length) {
               c = str[index];
               if (c >= '0' && c <= '9') {
                 index++;
                 expEnd = index;
+                if (smallExponent.CanFitInInt64()) {
+                  smallExponent.Multiply(10);
+                  smallExponent.Add((int)(c - '0'));
+                }
               } else {
                 break;
               }
@@ -672,69 +692,31 @@ if(((data.Length-offset))<byteLength)throw new ArgumentOutOfRangeException("data
           }
         }
       }
+      if(negExp && smallExponent.CanFitInInt64())
+        smallExponent.Negate();
+      if(negative && smallNumber.CanFitInInt64())
+        smallNumber.Negate();
+      if(smallExponent.CanFitInInt64())
+        smallExponent.Add(exponentAdjust);
       if (index != str.Length) {
         // End of the string wasn't reached, so isn't a number
         return null;
       }
-      if (fracStart < 0 && expStart < 0 && (numberEnd - numberStart) <= 9) {
-        // Common case: small integer
-        int value = smallNumber;
-        if (negative) value = -value;
-        return CBORObject.FromObject(value);
-      } if (fracStart < 0 && expStart < 0 && (numberEnd - numberStart) <= 18) {
-        // Common case: long-sized integer
-        string strsub = (numberStart == 0 && numberEnd == str.Length) ? str :
-          str.Substring(numberStart, numberEnd - numberStart);
-        long value = Int64.Parse(strsub,
-                               NumberStyles.None,
-                               CultureInfo.InvariantCulture);
-        if (negative) value = -value;
-        return CBORObject.FromObject(value);
-      } else if (fracStart >= 0 && expStart < 0 &&
-                (numberEnd - numberStart) + (fracEnd - fracStart) <= 9) {
-        // Small whole part and small fractional part
-        int int32fracpart = (fracStart < 0) ? 0 : Int32.Parse(
-          str.Substring(fracStart, fracEnd - fracStart),
-          NumberStyles.None,
-          CultureInfo.InvariantCulture);
-        // Intval consists of the whole and fractional part
-        string intvalString = str.Substring(numberStart, numberEnd - numberStart) +
-          (int32fracpart == 0 ? String.Empty : str.Substring(fracStart, fracEnd - fracStart));
-        int int32val = Int32.Parse(
-          intvalString,
-          NumberStyles.None,
-          CultureInfo.InvariantCulture);
-        if (negative) int32val = -int32val;
-        int int32exp = 0;
-        if (int32fracpart != 0) {
-          // If there is a nonzero fractional part,
-          // decrease the exponent by that part's length
-          int32exp -= (int)(fracEnd - fracStart);
+      if (smallNumber.CanFitInInt64() && smallExponent.CanFitInInt64()){
+        // Small whole/fractional part and small exponent
+        long value = smallNumber.AsInt64();
+        long exponent = smallExponent.AsInt64();
+        if(exponent==0){
+          return CBORObject.FromObject(value);
         }
-        if (int32exp == 0 || int32val == 0) {
-          // If exponent is 0, or mantissa is 0,
-          // just return the integer
-          return CBORObject.FromObject(int32val);
-        }
-        // Represent the CBOR object as a decimal fraction
-        return CBORObject.FromObjectAndTag(new CBORObject[]{
-                                             CBORObject.FromObject(int32exp),CBORObject.FromObject(int32val)}, 4);
+        return CBORObject.FromObject(new DecimalFraction(value,exponent));
       } else if (fracStart < 0 && expStart < 0) {
         // Bigger integer
         string strsub = (numberStart == 0 && numberEnd == str.Length) ? str :
           str.Substring(numberStart, numberEnd - numberStart);
-        if (str.Length == 19 && strsub[0] >= '0' && strsub[0] < '9') {
-          // Can fit in a 64-bit long (cases with 18 digits
-          // or less are already handled above)
-          long value = Int64.Parse(strsub,
-                                 NumberStyles.None,
-                                 CultureInfo.InvariantCulture);
-          if (negative) value = -value;
-          return CBORObject.FromObject(value);
-        }
         BigInteger bigintValue = BigInteger.Parse(strsub,
-                                                NumberStyles.None,
-                                                CultureInfo.InvariantCulture);
+                                                  NumberStyles.None,
+                                                  CultureInfo.InvariantCulture);
         if (negative) bigintValue = -(BigInteger)bigintValue;
         return CBORObject.FromObject(bigintValue);
       } else {
@@ -774,7 +756,7 @@ if(((data.Length-offset))<byteLength)throw new ArgumentOutOfRangeException("data
           // just return the integer
           return CBORObject.FromObject(intval);
         } else if (exp.CompareTo(UInt64MaxValue) > 0 ||
-                  exp.CompareTo(LowestMajorType1) < 0) {
+                   exp.CompareTo(LowestMajorType1) < 0) {
           // Exponent is lower than the lowest representable
           // integer of major type 1, or higher than the
           // highest representable integer of major type 0

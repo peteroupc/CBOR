@@ -177,12 +177,12 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         } else {
           if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800)
             return ca - cb;
-          if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.length() && 
-            strA.charAt(i + 1) >= 0xDC00 && strA.charAt(i + 1) <= 0xDFFF) {
+          if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.length() &&
+              strA.charAt(i + 1) >= 0xDC00 && strA.charAt(i + 1) <= 0xDFFF) {
             ca = 0x10000 + (ca - 0xD800) * 0x400 + (strA.charAt(i + 1) - 0xDC00);
           }
-          if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.length() && 
-            strB.charAt(i + 1) >= 0xDC00 && strB.charAt(i + 1) <= 0xDFFF) {
+          if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.length() &&
+              strB.charAt(i + 1) >= 0xDC00 && strB.charAt(i + 1) <= 0xDFFF) {
             cb = 0x10000 + (cb - 0xD800) * 0x400 + (strB.charAt(i + 1) - 0xDC00);
           }
           return ca - cb;
@@ -215,11 +215,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
       if ((stream) == null) throw new NullPointerException("stream");
       if((str)==null)throw new NullPointerException("str");
-if((offset)<0)throw new IllegalArgumentException("offset"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(offset))+")");
-if((offset)>str.length())throw new IllegalArgumentException("offset"+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(offset))+")");
-if((length)<0)throw new IllegalArgumentException("length"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(length))+")");
-if((length)>str.length())throw new IllegalArgumentException("length"+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(length))+")");
-if(((str.length()-offset))<length)throw new IllegalArgumentException("str's length minus "+offset+" not greater or equal to "+Long.toString((long)(length))+" ("+Long.toString((long)((str.length()-offset)))+")");
+      if((offset)<0)throw new IllegalArgumentException("offset"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(offset))+")");
+      if((offset)>str.length())throw new IllegalArgumentException("offset"+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(offset))+")");
+      if((length)<0)throw new IllegalArgumentException("length"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(length))+")");
+      if((length)>str.length())throw new IllegalArgumentException("length"+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(length))+")");
+      if(((str.length()-offset))<length)throw new IllegalArgumentException("str's length minus "+offset+" not greater or equal to "+Long.toString((long)(length))+" ("+Long.toString((long)((str.length()-offset)))+")");
       byte[] bytes;
       int retval = 0;
       bytes = new byte[StreamedStringBufferLength];
@@ -244,7 +244,7 @@ if(((str.length()-offset))<length)throw new IllegalArgumentException("str's leng
           bytes[byteIndex++] = ((byte)(0x80 | (c & 0x3F)));
         } else {
           if (c >= 0xD800 && c <= 0xDBFF && index + 1 < endIndex &&
-             str.charAt(index + 1) >= 0xDC00 && str.charAt(index + 1) <= 0xDFFF) {
+              str.charAt(index + 1) >= 0xDC00 && str.charAt(index + 1) <= 0xDFFF) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + (c - 0xD800) * 0x400 + (str.charAt(index + 1) - 0xDC00);
             index++;
@@ -323,11 +323,11 @@ if(((str.length()-offset))<length)throw new IllegalArgumentException("str's leng
                                         StringBuilder builder,
                                         boolean replace) {
       if((data)==null)throw new NullPointerException("data");
-if((offset)<0)throw new IllegalArgumentException("offset"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(offset))+")");
-if((offset)>data.length)throw new IllegalArgumentException("offset"+" not less or equal to "+Long.toString((long)(data.length))+" ("+Long.toString((long)(offset))+")");
-if((byteLength)<0)throw new IllegalArgumentException("byteLength"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(byteLength))+")");
-if((byteLength)>data.length)throw new IllegalArgumentException("byteLength"+" not less or equal to "+Long.toString((long)(data.length))+" ("+Long.toString((long)(byteLength))+")");
-if(((data.length-offset))<byteLength)throw new IllegalArgumentException("data's length minus "+offset+" not greater or equal to "+Long.toString((long)(byteLength))+" ("+Long.toString((long)((data.length-offset)))+")");
+      if((offset)<0)throw new IllegalArgumentException("offset"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(offset))+")");
+      if((offset)>data.length)throw new IllegalArgumentException("offset"+" not less or equal to "+Long.toString((long)(data.length))+" ("+Long.toString((long)(offset))+")");
+      if((byteLength)<0)throw new IllegalArgumentException("byteLength"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(byteLength))+")");
+      if((byteLength)>data.length)throw new IllegalArgumentException("byteLength"+" not less or equal to "+Long.toString((long)(data.length))+" ("+Long.toString((long)(byteLength))+")");
+      if(((data.length-offset))<byteLength)throw new IllegalArgumentException("data's length minus "+offset+" not greater or equal to "+Long.toString((long)(byteLength))+" ("+Long.toString((long)((data.length-offset)))+")");
       if ((builder) == null) throw new NullPointerException("builder");
       int cp = 0;
       int bytesSeen = 0;
@@ -592,20 +592,19 @@ if(((data.length-offset))<byteLength)throw new IllegalArgumentException("data's 
       boolean negExp = false;
       int expStart = -1;
       int expEnd = -1;
-      int smallNumber = 0; // for small numbers (9 digits or less)
-      int smallNumberCount = 0;
+      FastInteger smallNumber=new FastInteger();
+      FastInteger exponentAdjust=new FastInteger();
+      FastInteger smallExponent=new FastInteger();
       if (c >= '1' && c <= '9') {
-        smallNumber = (int)(c - '0');
-        smallNumberCount++;
+        smallNumber.Add((int)(c - '0'));
         while (index < str.length()) {
           c = str.charAt(index);
           if (c >= '0' && c <= '9') {
             index++;
             numberEnd = index;
-            if (smallNumberCount < 9) {
-              smallNumber *= 10;
-              smallNumber += (int)(c - '0');
-              smallNumberCount++;
+            if (smallNumber.CanFitInInt64()) {
+              smallNumber.Multiply(10);
+              smallNumber.Add((int)(c - '0'));
             }
           } else {
             break;
@@ -625,11 +624,25 @@ if(((data.length-offset))<byteLength)throw new IllegalArgumentException("data's 
           index++;
           fracEnd = index;
           if (c >= '0' && c <= '9') {
+            // Adjust the exponent for this
+            // fractional digit
+            exponentAdjust.Add(-1);
+            if (smallNumber.CanFitInInt64()) {
+              smallNumber.Multiply(10);
+              smallNumber.Add((int)(c - '0'));
+            }
             while (index < str.length()) {
               c = str.charAt(index);
               if (c >= '0' && c <= '9') {
                 index++;
                 fracEnd = index;
+                // Adjust the exponent for this
+                // fractional digit
+                exponentAdjust.Add(-1);
+                if (smallNumber.CanFitInInt64()) {
+                  smallNumber.Multiply(10);
+                  smallNumber.Add((int)(c - '0'));
+                }
               } else {
                 break;
               }
@@ -657,11 +670,18 @@ if(((data.length-offset))<byteLength)throw new IllegalArgumentException("data's 
           index++;
           expEnd = index;
           if (c >= '0' && c <= '9') {
+            if (smallExponent.CanFitInInt64()) {
+              smallExponent.Add((int)(c - '0'));
+            }
             while (index < str.length()) {
               c = str.charAt(index);
               if (c >= '0' && c <= '9') {
                 index++;
                 expEnd = index;
+                if (smallExponent.CanFitInInt64()) {
+                  smallExponent.Multiply(10);
+                  smallExponent.Add((int)(c - '0'));
+                }
               } else {
                 break;
               }
@@ -672,58 +692,28 @@ if(((data.length-offset))<byteLength)throw new IllegalArgumentException("data's 
           }
         }
       }
+      if(negExp && smallExponent.CanFitInInt64())
+        smallExponent.Negate();
+      if(negative && smallNumber.CanFitInInt64())
+        smallNumber.Negate();
+      if(smallExponent.CanFitInInt64())
+        smallExponent.Add(exponentAdjust);
       if (index != str.length()) {
         // End of the String wasn't reached, so isn't a number
         return null;
       }
-      if (fracStart < 0 && expStart < 0 && (numberEnd - numberStart) <= 9) {
-        // Common case: small integer
-        int value = smallNumber;
-        if (negative) value = -value;
-        return CBORObject.FromObject(value);
-      } if (fracStart < 0 && expStart < 0 && (numberEnd - numberStart) <= 18) {
-        // Common case: long-sized integer
-        String strsub = (numberStart == 0 && numberEnd == str.length()) ? str :
-          str.substring(numberStart,(numberStart)+(numberEnd - numberStart));
-        long value = Long.parseLong(strsub);
-        if (negative) value = -value;
-        return CBORObject.FromObject(value);
-      } else if (fracStart >= 0 && expStart < 0 &&
-                (numberEnd - numberStart) + (fracEnd - fracStart) <= 9) {
-        // Small whole part and small fractional part
-        int int32fracpart = (fracStart < 0) ? 0 : Integer.parseInt(
-          str.substring(fracStart,(fracStart)+(fracEnd - fracStart)));
-        // Intval consists of the whole and fractional part
-        String intvalString = str.substring(numberStart,(numberStart)+(numberEnd - numberStart)) +
-          (int32fracpart == 0 ? "" : str.substring(fracStart,(fracStart)+(fracEnd - fracStart)));
-        int int32val = Integer.parseInt(
-          intvalString);
-        if (negative) int32val = -int32val;
-        int int32exp = 0;
-        if (int32fracpart != 0) {
-          // If there is a nonzero fractional part,
-          // decrease the exponent by that part's length
-          int32exp -= (int)(fracEnd - fracStart);
+      if (smallNumber.CanFitInInt64() && smallExponent.CanFitInInt64()){
+        // Small whole/fractional part and small exponent
+        long value = smallNumber.AsInt64();
+        long exponent = smallExponent.AsInt64();
+        if(exponent==0){
+          return CBORObject.FromObject(value);
         }
-        if (int32exp == 0 || int32val == 0) {
-          // If exponent is 0, or mantissa is 0,
-          // just return the integer
-          return CBORObject.FromObject(int32val);
-        }
-        // Represent the CBOR Object as a decimal fraction
-        return CBORObject.FromObjectAndTag(new CBORObject[]{
-                                             CBORObject.FromObject(int32exp),CBORObject.FromObject(int32val)}, 4);
+        return CBORObject.FromObject(new DecimalFraction(value,exponent));
       } else if (fracStart < 0 && expStart < 0) {
         // Bigger integer
         String strsub = (numberStart == 0 && numberEnd == str.length()) ? str :
           str.substring(numberStart,(numberStart)+(numberEnd - numberStart));
-        if (str.length() == 19 && strsub.charAt(0) >= '0' && strsub.charAt(0) < '9') {
-          // Can fit in a 64-bit long (cases with 18 digits
-          // or less are already handled above)
-          long value = Long.parseLong(strsub);
-          if (negative) value = -value;
-          return CBORObject.FromObject(value);
-        }
         BigInteger bigintValue = new BigInteger(strsub);
         if (negative) bigintValue=(bigintValue).negate();
         return CBORObject.FromObject(bigintValue);
@@ -758,7 +748,7 @@ if(((data.length-offset))<byteLength)throw new IllegalArgumentException("data's 
           // just return the integer
           return CBORObject.FromObject(intval);
         } else if (exp.compareTo(UInt64MaxValue) > 0 ||
-                  exp.compareTo(LowestMajorType1) < 0) {
+                   exp.compareTo(LowestMajorType1) < 0) {
           // Exponent is lower than the lowest representable
           // integer of major type 1, or higher than the
           // highest representable integer of major type 0
