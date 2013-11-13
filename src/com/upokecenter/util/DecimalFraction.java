@@ -409,9 +409,20 @@ import java.math.*;
           BigInteger valValue=val.getValue();
           return largeValue.compareTo(valValue);
         } else {
-          return (val.smallValue==smallValue) ? 0 : 
+          return (val.smallValue==smallValue) ? 0 :
             (smallValue<val.smallValue ? -1 : 1);
         }
+      }
+      public FastInteger Abs() {
+        return (this.signum()<0) ? Negate() : this;
+      }
+      public FastInteger Mod(int divisor) {
+        if(usingLarge){
+          largeValue=largeValue.remainder(BigInteger.valueOf(divisor));
+        } else {
+          smallValue%=divisor;
+        }
+        return this;
       }
       
       public int compareTo(long val) {
@@ -422,7 +433,7 @@ import java.math.*;
         }
       }
       
-      public void Multiply(int val) {
+      public FastInteger Multiply(int val) {
         if(val==0){
           smallValue=0;
           usingLarge=false;
@@ -445,9 +456,57 @@ import java.math.*;
             smallValue*=val;
           }
         }
+        return this;
       }
       
-      public void Add(FastInteger val) {
+      public FastInteger Negate() {
+        if(usingLarge){
+          largeValue=(largeValue).negate();
+        } else {
+          if(smallValue==Long.MIN_VALUE){
+            // would overflow, convert to large
+            largeValue=BigInteger.valueOf(smallValue);
+            usingLarge=true;
+            largeValue=(largeValue).negate();
+          } else {
+            smallValue=-smallValue;
+          }
+        }
+        return this;
+      }
+      
+      public FastInteger Subtract(FastInteger val) {
+        if(usingLarge || val.usingLarge){
+          BigInteger valValue=val.getValue();
+          largeValue=largeValue.subtract(valValue);
+        } else if(((long)val.smallValue < 0 && Long.MAX_VALUE + (long)val.smallValue < smallValue) ||
+                  ((long)val.smallValue > 0 && Long.MIN_VALUE + (long)val.smallValue > smallValue)){
+          // would overflow, convert to large
+          largeValue=BigInteger.valueOf(smallValue);
+          usingLarge=true;
+          largeValue=largeValue.subtract(BigInteger.valueOf(val.smallValue));
+        } else{
+          smallValue-=val.smallValue;
+        }
+        return this;
+      }
+
+      public FastInteger Subtract(int val) {
+        if(usingLarge){
+          largeValue=largeValue.subtract(BigInteger.valueOf(val));
+        } else if(((long)val < 0 && Long.MAX_VALUE + (long)val < smallValue) ||
+                  ((long)val > 0 && Long.MIN_VALUE + (long)val > smallValue)){
+          // would overflow, convert to large
+          largeValue=BigInteger.valueOf(smallValue);
+          usingLarge=true;
+          largeValue=largeValue.subtract(BigInteger.valueOf(val));
+        } else{
+          smallValue-=val;
+        }
+        return this;
+      }
+
+      public FastInteger Add(FastInteger val) {
         if(usingLarge || val.usingLarge){
           BigInteger valValue=val.getValue();
           largeValue=largeValue.add(valValue);
@@ -460,9 +519,26 @@ import java.math.*;
         } else{
           smallValue+=val.smallValue;
         }
+        return this;
       }
       
-      public void Add(int val) {
+      public FastInteger Divide(int divisor) {
+        if(divisor!=0){
+          if(usingLarge){
+            largeValue=largeValue.add(BigInteger.valueOf(divisor));
+          } else if(divisor==-1 && smallValue==Long.MIN_VALUE){
+            // would overflow, convert to large
+            largeValue=BigInteger.valueOf(smallValue);
+            usingLarge=true;
+            largeValue=largeValue.divide(BigInteger.valueOf(divisor));
+          } else{
+            smallValue/=divisor;
+          }
+        }
+        return this;
+      }
+
+      public FastInteger Add(int val) {
         if(val!=0){
           if(usingLarge){
             largeValue=largeValue.add(BigInteger.valueOf(val));
@@ -476,6 +552,7 @@ import java.math.*;
             smallValue+=val;
           }
         }
+        return this;
       }
       
       public int signum() {
@@ -529,6 +606,7 @@ bigrem=divrem[1];
           bigquotient=newquotient;
         else
           bigquotient=bigquotient.add(newquotient);
+        dividend = bigrem;
         if (scale.signum() >= 0 && bigrem.signum()==0) {
           break;
         }
@@ -536,23 +614,30 @@ bigrem=divrem[1];
           break;
         }
         scale.Add(1);
-        dividend = bigrem;
         bigquotient=bigquotient.multiply(bigintTen);
         dividend=dividend.multiply(bigintTen);
       }
-      if (bigrem.signum()!=0) {
-        // Round half-up
-        // TODO: Use half-even rounding instead
-        BigInteger halfdivisor = bigdivisor;
-        halfdivisor=halfdivisor.shiftRight(1);
-        if (bigrem.compareTo(halfdivisor) >= 0) {
-          bigrem=bigrem.add(BigInteger.ONE);
+      if (dividend.signum()!=0) {
+        // Use half-even rounding
+        BigInteger halfbigdivisor = bigdivisor;
+        halfbigdivisor=halfbigdivisor.shiftRight(1);
+        int cmp=dividend.compareTo(halfbigdivisor);
+        if (cmp > 0) {
+          // Greater than half
+          bigquotient=bigquotient.add(BigInteger.ONE);
+        } else if(cmp==0 && bigdivisor.testBit(0)==false){
+          // Exactly half
+          if(bigquotient.testBit(0)){
+            // Result is odd
+            bigquotient=bigquotient.add(BigInteger.ONE);
+          }
         }
+        
       }
       BigInteger scaleValue=scale.getValue();
       BigInteger negscale=(scaleValue).negate();
       return new BigInteger[]{
-        bigquotient,bigrem,negscale
+        bigquotient,dividend,negscale
       };
     }
     
@@ -603,7 +688,7 @@ digit=divrem[1];
           if(digitLeftmost>5 || (digitLeftmost==5 && digitsFollowingLeftmost!=0)){
             coeff=coeff.add(BigInteger.ONE);
             incremented=true;
-          } else if(digitLeftmost==5 && !coeff.testBit(0)){
+          } else if(digitLeftmost==5 && coeff.testBit(0)){
             coeff=coeff.add(BigInteger.ONE);
             incremented=true;
           }
@@ -740,46 +825,46 @@ digit=divrem[1];
       }
     }
 
-    private boolean InsertString(StringBuilder builder, BigInteger index, char c) {
-      if (index.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
+    private boolean InsertString(StringBuilder builder, FastInteger index, char c) {
+      if (index.compareTo(Integer.MAX_VALUE) > 0 || index.signum()<0) {
         throw new UnsupportedOperationException();
       }
-      int iindex = index.intValue();
+      int iindex = index.AsInt32();
       builder.insert(iindex, c);
       return true;
     }
 
-    private boolean InsertString(StringBuilder builder, BigInteger index, char c, BigInteger count) {
-      if (count.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
+    private boolean InsertString(StringBuilder builder, FastInteger index, char c, FastInteger count) {
+      if (count.compareTo(Integer.MAX_VALUE) > 0 || count.signum()<0) {
         throw new UnsupportedOperationException();
       }
-      if (index.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
+      if (index.compareTo(Integer.MAX_VALUE) > 0 || index.signum()<0) {
         throw new UnsupportedOperationException();
       }
-      int icount = count.intValue();
-      int iindex = index.intValue();
+      int icount = count.AsInt32();
+      int iindex = index.AsInt32();
       for (int i = icount - 1; i >= 0; i--) {
         builder.insert(iindex, c);
       }
       return true;
     }
 
-    private boolean AppendString(StringBuilder builder, char c, BigInteger count) {
-      if (count.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
+    private boolean AppendString(StringBuilder builder, char c, FastInteger count) {
+      if (count.compareTo(Integer.MAX_VALUE) > 0 || count.signum()<0) {
         throw new UnsupportedOperationException();
       }
-      int icount = count.intValue();
+      int icount = count.AsInt32();
       for (int i = icount - 1; i >= 0; i--) {
         builder.append(c);
       }
       return true;
     }
 
-    private boolean InsertString(StringBuilder builder, BigInteger index, String c) {
-      if (index.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
+    private boolean InsertString(StringBuilder builder, FastInteger index, String c) {
+      if (index.compareTo(Integer.MAX_VALUE) > 0 || index.signum()<0) {
         throw new UnsupportedOperationException();
       }
-      int iindex = index.intValue();
+      int iindex = index.AsInt32();
       builder.insert(iindex, c);
       return true;
     }
@@ -789,64 +874,62 @@ digit=divrem[1];
       // values to a String
       StringBuilder builder = new StringBuilder();
       builder.append(this.mantissa.toString());
-      BigInteger adjustedExponent = this.exponent;
-      BigInteger scale=(this.exponent).negate();
-      BigInteger sbLength = BigInteger.valueOf(builder.length());
-      BigInteger negaPos = BigInteger.ZERO;
+      FastInteger adjustedExponent=new FastInteger(this.exponent);
+      FastInteger scale=new FastInteger(this.exponent).Negate();
+      FastInteger sbLength=new FastInteger(builder.length());
+      FastInteger negaPos=new FastInteger(0);
       if (builder.charAt(0) == '-') {
-        sbLength = sbLength.subtract(BigInteger.ONE);
-        negaPos = BigInteger.ONE;
+        sbLength.Add(-1);
+        negaPos.Add(1);
       }
       boolean iszero = (this.mantissa.signum()==0);
-      if (mode == 2 && iszero && scale.signum()<0) {
+      if (mode == 2 && iszero && scale.signum() < 0) {
         // special case for zero in plain
         return builder.toString();
       }
-      adjustedExponent = adjustedExponent.add(sbLength);
-      adjustedExponent = adjustedExponent.subtract(BigInteger.ONE);
-      BigInteger decimalPointAdjust = BigInteger.ONE;
-      BigInteger threshold = BigInteger.valueOf(-6);
+      adjustedExponent.Add(sbLength).Add(-1);
+      FastInteger decimalPointAdjust = new FastInteger(1);
+      FastInteger threshold = new FastInteger(-6);
       if (mode == 1) { // engineering String adjustments
-        BigInteger newExponent = adjustedExponent;
+        FastInteger newExponent=new FastInteger(adjustedExponent);
         boolean adjExponentNegative = (adjustedExponent.signum() < 0);
-        BigInteger phase = (adjustedExponent).abs().remainder(BigInteger.valueOf(3));
-        int intphase = phase.intValue();
+        int intphase = new FastInteger(adjustedExponent).Abs().Mod(3).AsInt32();
         if (iszero && (adjustedExponent.compareTo(threshold) < 0 ||
                        scale.signum() < 0)) {
           if (intphase == 1) {
             if (adjExponentNegative) {
-              decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
-              newExponent=newExponent.add(BigInteger.ONE);
+              decimalPointAdjust.Add(1);
+              newExponent.Add(1);
             } else {
-              decimalPointAdjust=decimalPointAdjust.add(BigInt2);
-              newExponent=newExponent.add(BigInt2);
+              decimalPointAdjust.Add(2);
+              newExponent.Add(2);
             }
           } else if (intphase == 2) {
             if (!adjExponentNegative) {
-              decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
-              newExponent=newExponent.add(BigInteger.ONE);
+              decimalPointAdjust.Add(1);
+              newExponent.Add(1);
             } else {
-              decimalPointAdjust=decimalPointAdjust.add(BigInt2);
-              newExponent=newExponent.add(BigInt2);
+              decimalPointAdjust.Add(2);
+              newExponent.Add(2);
             }
           }
-          threshold=threshold.add(BigInteger.ONE);
+          threshold.Add(1);
         } else {
           if (intphase == 1) {
             if (!adjExponentNegative) {
-              decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
-              newExponent=newExponent.subtract(BigInteger.ONE);
+              decimalPointAdjust.Add(1);
+              newExponent.Add(-1);
             } else {
-              decimalPointAdjust=decimalPointAdjust.add(BigInt2);
-              newExponent=newExponent.subtract(BigInt2);
+              decimalPointAdjust.Add(2);
+              newExponent.Add(-2);
             }
           } else if (intphase == 2) {
             if (adjExponentNegative) {
-              decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
-              newExponent=newExponent.subtract(BigInteger.ONE);
+              decimalPointAdjust.Add(1);
+              newExponent.Add(-1);
             } else {
-              decimalPointAdjust=decimalPointAdjust.add(BigInt2);
-              newExponent=newExponent.subtract(BigInt2);
+              decimalPointAdjust.Add(2);
+              newExponent.Add(-2);
             }
           }
         }
@@ -854,60 +937,55 @@ digit=divrem[1];
       }
       if (mode == 2 || ((adjustedExponent.compareTo(threshold) >= 0 &&
                          scale.signum() >= 0))) {
-        BigInteger decimalPoint=(scale).negate();
-        decimalPoint=decimalPoint.add(negaPos);
-        decimalPoint=decimalPoint.add(sbLength);
+        FastInteger decimalPoint = new FastInteger(scale).Negate().Add(negaPos).Add(sbLength);
         if (scale.signum() > 0) {
           int cmp = decimalPoint.compareTo(negaPos);
           if (cmp < 0) {
-            InsertString(builder, negaPos, '0', (negaPos.subtract(decimalPoint)));
+            InsertString(builder, negaPos, '0', new FastInteger(negaPos).Subtract(decimalPoint));
             InsertString(builder, negaPos, "0.");
           } else if (cmp == 0) {
             InsertString(builder, decimalPoint, "0.");
-          } else if (decimalPoint.compareTo(
-            (BigInteger.valueOf(builder.length()).add(negaPos))) > 0) {
-            InsertString(builder, (sbLength.add(negaPos)), '.');
-            InsertString(builder, (sbLength.add(negaPos)), '0',
-                         (decimalPoint.subtract(BigInteger.valueOf(builder.length()))));
+          } else if (decimalPoint.compareTo(new FastInteger(negaPos).Add(builder.length())) > 0) {
+            InsertString(builder, new FastInteger(negaPos).Add(sbLength), '.');
+            InsertString(builder, new FastInteger(negaPos).Add(sbLength), '0',
+                         new FastInteger(decimalPoint).Subtract(builder.length()));
           } else {
             InsertString(builder, decimalPoint, '.');
           }
         }
         if (mode == 2 && scale.signum() < 0) {
-          BigInteger negscale=(scale).negate();
+          FastInteger negscale = new FastInteger(scale).Negate();
           AppendString(builder, '0', negscale);
         }
         return builder.toString();
       } else {
-        if (mode == 1 && iszero && decimalPointAdjust.compareTo(BigInteger.ONE) > 0) {
+        if (mode == 1 && iszero && decimalPointAdjust.compareTo(1) > 0) {
           builder.append('.');
-          AppendString(builder, '0', (decimalPointAdjust.subtract(BigInteger.ONE)));
+          AppendString(builder, '0', new FastInteger(decimalPointAdjust).Add(-1));
         } else {
-          BigInteger tmp = negaPos.add(decimalPointAdjust);
-          int cmp = tmp.compareTo(BigInteger.valueOf(builder.length()));
+          FastInteger tmp = new FastInteger(negaPos).Add(decimalPointAdjust);
+          int cmp = tmp.compareTo(builder.length());
           if (cmp > 0) {
-            AppendString(builder, '0', (tmp.subtract(BigInteger.valueOf(builder.length()))));
-          }
-          if (cmp < 0) {
+            tmp.Subtract(builder.length());
+            AppendString(builder, '0', tmp);
+          } else if (cmp < 0) {
             InsertString(builder, tmp, '.');
           }
         }
         if (adjustedExponent.signum()!=0) {
           builder.append('E');
-          builder.append(adjustedExponent.signum()<0 ? '-' : '+');
-          BigInteger sbPos = BigInteger.valueOf(builder.length());
-          adjustedExponent = (adjustedExponent).abs();
+          builder.append(adjustedExponent.signum() < 0 ? '-' : '+');
+          FastInteger sbPos = new FastInteger(builder.length());
+          adjustedExponent.Abs();
           while (adjustedExponent.signum()!=0) {
-            BigInteger digit = (adjustedExponent.remainder(BigInteger.TEN));
-            InsertString(builder, sbPos, (char)('0' + digit.intValue()));
-            adjustedExponent=adjustedExponent.divide(BigInteger.TEN);
+            int digit = new FastInteger(adjustedExponent).Mod(10).AsInt32();
+            InsertString(builder, sbPos, (char)('0' + digit));
+            adjustedExponent.Divide(10);
           }
         }
         return builder.toString();
       }
     }
-
-    private static BigInteger BigInt2 = BigInteger.valueOf(2);
     
     private static BigInteger[] BigIntPowersOfTen=new BigInteger[]{
       BigInteger.ONE, BigInteger.TEN, BigInteger.valueOf(100), BigInteger.valueOf(1000), BigInteger.valueOf(10000), BigInteger.valueOf(100000), BigInteger.valueOf(1000000), BigInteger.valueOf(10000000), BigInteger.valueOf(100000000), BigInteger.valueOf(1000000000),

@@ -420,9 +420,20 @@ namespace PeterO {
           BigInteger valValue=val.Value;
           return largeValue.CompareTo(valValue);
         } else {
-          return (val.smallValue==smallValue) ? 0 : 
+          return (val.smallValue==smallValue) ? 0 :
             (smallValue<val.smallValue ? -1 : 1);
         }
+      }
+      public FastInteger Abs(){
+        return (this.Sign<0) ? Negate() : this;
+      }
+      public FastInteger Mod(int divisor){
+        if(usingLarge){
+          largeValue=largeValue%(BigInteger)divisor;
+        } else {
+          smallValue%=divisor;
+        }
+        return this;
       }
       
       public int CompareTo(long val){
@@ -433,7 +444,7 @@ namespace PeterO {
         }
       }
       
-      public void Multiply(int val){
+      public FastInteger Multiply(int val){
         if(val==0){
           smallValue=0;
           usingLarge=false;
@@ -456,9 +467,57 @@ namespace PeterO {
             smallValue*=val;
           }
         }
+        return this;
       }
       
-      public void Add(FastInteger val){
+      public FastInteger Negate(){
+        if(usingLarge){
+          largeValue=-(BigInteger)largeValue;
+        } else {
+          if(smallValue==Int64.MinValue){
+            // would overflow, convert to large
+            largeValue=(BigInteger)smallValue;
+            usingLarge=true;
+            largeValue=-(BigInteger)largeValue;
+          } else {
+            smallValue=-smallValue;
+          }
+        }
+        return this;
+      }
+      
+      public FastInteger Subtract(FastInteger val){
+        if(usingLarge || val.usingLarge){
+          BigInteger valValue=val.Value;
+          largeValue-=(BigInteger)valValue;
+        } else if(((long)val.smallValue < 0 && Int64.MaxValue + (long)val.smallValue < smallValue) ||
+                  ((long)val.smallValue > 0 && Int64.MinValue + (long)val.smallValue > smallValue)){
+          // would overflow, convert to large
+          largeValue=(BigInteger)smallValue;
+          usingLarge=true;
+          largeValue-=(BigInteger)val.smallValue;
+        } else{
+          smallValue-=val.smallValue;
+        }
+        return this;
+      }
+
+      public FastInteger Subtract(int val){
+        if(usingLarge){
+          largeValue-=(BigInteger)val;
+        } else if(((long)val < 0 && Int64.MaxValue + (long)val < smallValue) ||
+                  ((long)val > 0 && Int64.MinValue + (long)val > smallValue)){
+          // would overflow, convert to large
+          largeValue=(BigInteger)smallValue;
+          usingLarge=true;
+          largeValue-=(BigInteger)val;
+        } else{
+          smallValue-=val;
+        }
+        return this;
+      }
+
+      public FastInteger Add(FastInteger val){
         if(usingLarge || val.usingLarge){
           BigInteger valValue=val.Value;
           largeValue+=(BigInteger)valValue;
@@ -471,9 +530,26 @@ namespace PeterO {
         } else{
           smallValue+=val.smallValue;
         }
+        return this;
       }
       
-      public void Add(int val){
+      public FastInteger Divide(int divisor){
+        if(divisor!=0){
+          if(usingLarge){
+            largeValue+=(BigInteger)divisor;
+          } else if(divisor==-1 && smallValue==Int64.MinValue){
+            // would overflow, convert to large
+            largeValue=(BigInteger)smallValue;
+            usingLarge=true;
+            largeValue/=(BigInteger)divisor;
+          } else{
+            smallValue/=divisor;
+          }
+        }
+        return this;
+      }
+
+      public FastInteger Add(int val){
         if(val!=0){
           if(usingLarge){
             largeValue+=(BigInteger)val;
@@ -487,6 +563,7 @@ namespace PeterO {
             smallValue+=val;
           }
         }
+        return this;
       }
       
       public int Sign {
@@ -544,6 +621,7 @@ namespace PeterO {
           bigquotient=newquotient;
         else
           bigquotient += (BigInteger)newquotient;
+        dividend = bigrem;
         if (scale.Sign >= 0 && bigrem.IsZero) {
           break;
         }
@@ -551,23 +629,30 @@ namespace PeterO {
           break;
         }
         scale.Add(1);
-        dividend = bigrem;
         bigquotient *= bigintTen;
         dividend *= bigintTen;
       }
-      if (!bigrem.IsZero) {
-        // Round half-up
-        // TODO: Use half-even rounding instead
-        BigInteger halfdivisor = bigdivisor;
-        halfdivisor >>= 1;
-        if (bigrem.CompareTo(halfdivisor) >= 0) {
-          bigrem += BigInteger.One;
+      if (!dividend.IsZero) {
+        // Use half-even rounding
+        BigInteger halfbigdivisor = bigdivisor;
+        halfbigdivisor >>= 1;
+        int cmp=dividend.CompareTo(halfbigdivisor);
+        if (cmp > 0) {
+          // Greater than half
+          bigquotient += BigInteger.One;
+        } else if(cmp==0 && bigdivisor.IsEven){
+          // Exactly half
+          if(!bigquotient.IsEven){
+            // Result is odd
+            bigquotient+=BigInteger.One;
+          }
         }
+        
       }
       BigInteger scaleValue=scale.Value;
       BigInteger negscale = -(BigInteger)scaleValue;
       return new BigInteger[]{
-        bigquotient,bigrem,negscale
+        bigquotient,dividend,negscale
       };
     }
     
@@ -757,46 +842,46 @@ namespace PeterO {
       }
     }
 
-    private bool InsertString(StringBuilder builder, BigInteger index, char c) {
-      if (index.CompareTo((BigInteger)Int32.MaxValue) > 0) {
+    private bool InsertString(StringBuilder builder, FastInteger index, char c) {
+      if (index.CompareTo(Int32.MaxValue) > 0 || index.Sign<0) {
         throw new NotSupportedException();
       }
-      int iindex = (int)(BigInteger)index;
+      int iindex = index.AsInt32();
       builder.Insert(iindex, c);
       return true;
     }
 
-    private bool InsertString(StringBuilder builder, BigInteger index, char c, BigInteger count) {
-      if (count.CompareTo((BigInteger)Int32.MaxValue) > 0) {
+    private bool InsertString(StringBuilder builder, FastInteger index, char c, FastInteger count) {
+      if (count.CompareTo(Int32.MaxValue) > 0 || count.Sign<0) {
         throw new NotSupportedException();
       }
-      if (index.CompareTo((BigInteger)Int32.MaxValue) > 0) {
+      if (index.CompareTo(Int32.MaxValue) > 0 || index.Sign<0) {
         throw new NotSupportedException();
       }
-      int icount = (int)(BigInteger)count;
-      int iindex = (int)(BigInteger)index;
+      int icount = count.AsInt32();
+      int iindex = index.AsInt32();
       for (int i = icount - 1; i >= 0; i--) {
         builder.Insert(iindex, c);
       }
       return true;
     }
 
-    private bool AppendString(StringBuilder builder, char c, BigInteger count) {
-      if (count.CompareTo((BigInteger)Int32.MaxValue) > 0) {
+    private bool AppendString(StringBuilder builder, char c, FastInteger count) {
+      if (count.CompareTo(Int32.MaxValue) > 0 || count.Sign<0) {
         throw new NotSupportedException();
       }
-      int icount = (int)(BigInteger)count;
+      int icount = count.AsInt32();
       for (int i = icount - 1; i >= 0; i--) {
         builder.Append(c);
       }
       return true;
     }
 
-    private bool InsertString(StringBuilder builder, BigInteger index, string c) {
-      if (index.CompareTo((BigInteger)Int32.MaxValue) > 0) {
+    private bool InsertString(StringBuilder builder, FastInteger index, string c) {
+      if (index.CompareTo(Int32.MaxValue) > 0 || index.Sign<0) {
         throw new NotSupportedException();
       }
-      int iindex = (int)(BigInteger)index;
+      int iindex = index.AsInt32();
       builder.Insert(iindex, c);
       return true;
     }
@@ -807,64 +892,62 @@ namespace PeterO {
       System.Text.StringBuilder builder = new System.Text.StringBuilder();
       builder.Append(this.mantissa.ToString(
         System.Globalization.CultureInfo.InvariantCulture));
-      BigInteger adjustedExponent = this.exponent;
-      BigInteger scale = -(BigInteger)this.exponent;
-      BigInteger sbLength = (BigInteger)(builder.Length);
-      BigInteger negaPos = BigInteger.Zero;
+      FastInteger adjustedExponent=new FastInteger(this.exponent);
+      FastInteger scale=new FastInteger(this.exponent).Negate();
+      FastInteger sbLength=new FastInteger(builder.Length);
+      FastInteger negaPos=new FastInteger(0);
       if (builder[0] == '-') {
-        sbLength = sbLength - BigInteger.One;
-        negaPos = BigInteger.One;
+        sbLength.Add(-1);
+        negaPos.Add(1);
       }
       bool iszero = (this.mantissa.IsZero);
-      if (mode == 2 && iszero && scale < 0) {
+      if (mode == 2 && iszero && scale.Sign < 0) {
         // special case for zero in plain
         return builder.ToString();
       }
-      adjustedExponent = adjustedExponent + (BigInteger)sbLength;
-      adjustedExponent = adjustedExponent - BigInteger.One;
-      BigInteger decimalPointAdjust = BigInteger.One;
-      BigInteger threshold = (BigInteger)(-6);
+      adjustedExponent.Add(sbLength).Add(-1);
+      FastInteger decimalPointAdjust = new FastInteger(1);
+      FastInteger threshold = new FastInteger(-6);
       if (mode == 1) { // engineering string adjustments
-        BigInteger newExponent = adjustedExponent;
+        FastInteger newExponent=new FastInteger(adjustedExponent);
         bool adjExponentNegative = (adjustedExponent.Sign < 0);
-        BigInteger phase = BigInteger.Abs(adjustedExponent) % (BigInteger)3;
-        int intphase = (int)(BigInteger)phase;
+        int intphase = new FastInteger(adjustedExponent).Abs().Mod(3).AsInt32();
         if (iszero && (adjustedExponent.CompareTo(threshold) < 0 ||
                        scale.Sign < 0)) {
           if (intphase == 1) {
             if (adjExponentNegative) {
-              decimalPointAdjust += BigInteger.One;
-              newExponent += BigInteger.One;
+              decimalPointAdjust.Add(1);
+              newExponent.Add(1);
             } else {
-              decimalPointAdjust += (BigInteger)BigInt2;
-              newExponent += (BigInteger)BigInt2;
+              decimalPointAdjust.Add(2);
+              newExponent.Add(2);
             }
           } else if (intphase == 2) {
             if (!adjExponentNegative) {
-              decimalPointAdjust += BigInteger.One;
-              newExponent += BigInteger.One;
+              decimalPointAdjust.Add(1);
+              newExponent.Add(1);
             } else {
-              decimalPointAdjust += (BigInteger)BigInt2;
-              newExponent += (BigInteger)BigInt2;
+              decimalPointAdjust.Add(2);
+              newExponent.Add(2);
             }
           }
-          threshold += BigInteger.One;
+          threshold.Add(1);
         } else {
           if (intphase == 1) {
             if (!adjExponentNegative) {
-              decimalPointAdjust += BigInteger.One;
-              newExponent -= BigInteger.One;
+              decimalPointAdjust.Add(1);
+              newExponent.Add(-1);
             } else {
-              decimalPointAdjust += (BigInteger)BigInt2;
-              newExponent -= (BigInteger)BigInt2;
+              decimalPointAdjust.Add(2);
+              newExponent.Add(-2);
             }
           } else if (intphase == 2) {
             if (adjExponentNegative) {
-              decimalPointAdjust += BigInteger.One;
-              newExponent -= BigInteger.One;
+              decimalPointAdjust.Add(1);
+              newExponent.Add(-1);
             } else {
-              decimalPointAdjust += (BigInteger)BigInt2;
-              newExponent -= (BigInteger)BigInt2;
+              decimalPointAdjust.Add(2);
+              newExponent.Add(-2);
             }
           }
         }
@@ -872,60 +955,55 @@ namespace PeterO {
       }
       if (mode == 2 || ((adjustedExponent.CompareTo(threshold) >= 0 &&
                          scale.Sign >= 0))) {
-        BigInteger decimalPoint = -(BigInteger)scale;
-        decimalPoint += (BigInteger)negaPos;
-        decimalPoint += (BigInteger)sbLength;
+        FastInteger decimalPoint = new FastInteger(scale).Negate().Add(negaPos).Add(sbLength);
         if (scale.Sign > 0) {
           int cmp = decimalPoint.CompareTo(negaPos);
           if (cmp < 0) {
-            InsertString(builder, negaPos, '0', (negaPos - (BigInteger)decimalPoint));
+            InsertString(builder, negaPos, '0', new FastInteger(negaPos).Subtract(decimalPoint));
             InsertString(builder, negaPos, "0.");
           } else if (cmp == 0) {
             InsertString(builder, decimalPoint, "0.");
-          } else if (decimalPoint.CompareTo(
-            ((BigInteger)(builder.Length) + (BigInteger)negaPos)) > 0) {
-            InsertString(builder, (sbLength + (BigInteger)negaPos), '.');
-            InsertString(builder, (sbLength + (BigInteger)negaPos), '0',
-                         (decimalPoint - (BigInteger)(builder.Length)));
+          } else if (decimalPoint.CompareTo(new FastInteger(negaPos).Add(builder.Length)) > 0) {
+            InsertString(builder, new FastInteger(negaPos).Add(sbLength), '.');
+            InsertString(builder, new FastInteger(negaPos).Add(sbLength), '0',
+                         new FastInteger(decimalPoint).Subtract(builder.Length));
           } else {
             InsertString(builder, decimalPoint, '.');
           }
         }
         if (mode == 2 && scale.Sign < 0) {
-          BigInteger negscale = -(BigInteger)scale;
+          FastInteger negscale = new FastInteger(scale).Negate();
           AppendString(builder, '0', negscale);
         }
         return builder.ToString();
       } else {
-        if (mode == 1 && iszero && decimalPointAdjust.CompareTo(BigInteger.One) > 0) {
+        if (mode == 1 && iszero && decimalPointAdjust.CompareTo(1) > 0) {
           builder.Append('.');
-          AppendString(builder, '0', (decimalPointAdjust - BigInteger.One));
+          AppendString(builder, '0', new FastInteger(decimalPointAdjust).Add(-1));
         } else {
-          BigInteger tmp = negaPos + (BigInteger)decimalPointAdjust;
-          int cmp = tmp.CompareTo((BigInteger)(builder.Length));
+          FastInteger tmp = new FastInteger(negaPos).Add(decimalPointAdjust);
+          int cmp = tmp.CompareTo(builder.Length);
           if (cmp > 0) {
-            AppendString(builder, '0', (tmp - (BigInteger)(builder.Length)));
-          }
-          if (cmp < 0) {
+            tmp.Subtract(builder.Length);
+            AppendString(builder, '0', tmp);
+          } else if (cmp < 0) {
             InsertString(builder, tmp, '.');
           }
         }
-        if (!adjustedExponent.IsZero) {
+        if (adjustedExponent.Sign!=0) {
           builder.Append('E');
-          builder.Append(adjustedExponent < 0 ? '-' : '+');
-          BigInteger sbPos = (BigInteger)(builder.Length);
-          adjustedExponent = BigInteger.Abs(adjustedExponent);
-          while (!adjustedExponent.IsZero) {
-            BigInteger digit = (adjustedExponent % (BigInteger)10);
-            InsertString(builder, sbPos, (char)('0' + (int)digit));
-            adjustedExponent /= (BigInteger)10;
+          builder.Append(adjustedExponent.Sign < 0 ? '-' : '+');
+          FastInteger sbPos = new FastInteger(builder.Length);
+          adjustedExponent.Abs();
+          while (adjustedExponent.Sign!=0) {
+            int digit = new FastInteger(adjustedExponent).Mod(10).AsInt32();
+            InsertString(builder, sbPos, (char)('0' + digit));
+            adjustedExponent.Divide(10);
           }
         }
         return builder.ToString();
       }
     }
-
-    private static BigInteger BigInt2 = (BigInteger)2;
     
     private static BigInteger[] BigIntPowersOfTen=new BigInteger[]{
       (BigInteger)1, (BigInteger)10, (BigInteger)100, (BigInteger)1000, (BigInteger)10000, (BigInteger)100000, (BigInteger)1000000, (BigInteger)10000000, (BigInteger)100000000, (BigInteger)1000000000,
