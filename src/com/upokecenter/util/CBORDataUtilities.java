@@ -192,25 +192,40 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       return (strA.length() < strB.length()) ? -1 : 1;
     }
 
-
     /**
-     * Writes a string in UTF-8 encoding to a data stream.
+     * Writes a portion of a string in UTF-8 encoding to a data stream.
      * @param str A string to write.
+     * @param offset The zero-based index where the string portion to write
+     * begins.
+     * @param length The length of the string portion to write.
      * @param stream A writable data stream.
      * @param replace If true, replaces unpaired surrogate code points
      * with the replacement character (U+FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
-     * @return 0 if the entire string was written; or -1 if the string contains
-     * an unpaired surrogate code point and "replace" is false.
+     * @return 0 if the entire string portion was written; or -1 if the string
+     * portion contains an unpaired surrogate code point and "replace"
+     * is false.
+     * @throws java.lang.NullPointerException "str" is null or "stream"
+     * is null.
+     * @throws java.lang.IllegalArgumentException "offset" is less than 0, "length"
+     * is less than 0, or "offset" plus "length" is greater than the string's
+     * length.
+     * @throws java.io.IOException An I/O error occurred.
      */
-    public static int WriteUtf8(String str, OutputStream stream, boolean replace) throws IOException {
-      if ((str) == null) throw new NullPointerException("str");
+    public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
       if ((stream) == null) throw new NullPointerException("stream");
+      if((str)==null)throw new NullPointerException("str");
+if((offset)<0)throw new IllegalArgumentException("offset"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(offset))+")");
+if((offset)>str.length())throw new IllegalArgumentException("offset"+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(offset))+")");
+if((length)<0)throw new IllegalArgumentException("length"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(length))+")");
+if((length)>str.length())throw new IllegalArgumentException("length"+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(length))+")");
+if(((str.length()-offset))<length)throw new IllegalArgumentException("str's length minus "+offset+" not greater or equal to "+Long.toString((long)(length))+" ("+Long.toString((long)((str.length()-offset)))+")");
       byte[] bytes;
       int retval = 0;
       bytes = new byte[StreamedStringBufferLength];
       int byteIndex = 0;
-      for (int index = 0; index < str.length(); index++) {
+      int endIndex=offset+length;
+      for (int index = offset; index < endIndex; index++) {
         int c = str.charAt(index);
         if (c <= 0x7F) {
           if (byteIndex + 1 > StreamedStringBufferLength) {
@@ -228,7 +243,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           bytes[byteIndex++] = ((byte)(0xC0 | ((c >> 6) & 0x1F)));
           bytes[byteIndex++] = ((byte)(0x80 | (c & 0x3F)));
         } else {
-          if (c >= 0xD800 && c <= 0xDBFF && index + 1 < str.length() &&
+          if (c >= 0xD800 && c <= 0xDBFF && index + 1 < endIndex &&
              str.charAt(index + 1) >= 0xDC00 && str.charAt(index + 1) <= 0xDFFF) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + (c - 0xD800) * 0x400 + (str.charAt(index + 1) - 0xDC00);
@@ -267,6 +282,25 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       return retval;
     }
 
+
+    /**
+     * Writes a string in UTF-8 encoding to a data stream.
+     * @param str A string to write.
+     * @param stream A writable data stream.
+     * @param replace If true, replaces unpaired surrogate code points
+     * with the replacement character (U+FFFD). If false, stops processing
+     * when an unpaired surrogate code point is seen.
+     * @return 0 if the entire string was written; or -1 if the string contains
+     * an unpaired surrogate code point and "replace" is false.
+     * @throws java.lang.NullPointerException "str" is null or "stream"
+     * is null.
+     * @throws java.io.IOException An I/O error occurred.
+     */
+    public static int WriteUtf8(String str, OutputStream stream, boolean replace) throws IOException {
+      if((str)==null)throw new NullPointerException("str");
+      return WriteUtf8(str,0,str.length(),stream,replace);
+    }
+
     /**
      * Reads a string in UTF-8 encoding from a byte array.
      * @param data A byte array containing a UTF-8 string
@@ -288,11 +322,12 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength,
                                         StringBuilder builder,
                                         boolean replace) {
-      if ((data) == null) throw new NullPointerException("data");
-      if ((offset) < 0) throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " (" + Integer.toString((int)offset) + ")");
-      if ((byteLength) < 0) throw new IllegalArgumentException("byteLength" + " not greater or equal to " + "0" + " (" + Integer.toString((int)byteLength) + ")");
-      if ((offset + byteLength) > data.length) throw new IllegalArgumentException(
-              "offset+byteLength not less or equal to " + Integer.toString((int)data.length) + " (" + Integer.toString((int)(offset + byteLength)) + ")");
+      if((data)==null)throw new NullPointerException("data");
+if((offset)<0)throw new IllegalArgumentException("offset"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(offset))+")");
+if((offset)>data.length)throw new IllegalArgumentException("offset"+" not less or equal to "+Long.toString((long)(data.length))+" ("+Long.toString((long)(offset))+")");
+if((byteLength)<0)throw new IllegalArgumentException("byteLength"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(byteLength))+")");
+if((byteLength)>data.length)throw new IllegalArgumentException("byteLength"+" not less or equal to "+Long.toString((long)(data.length))+" ("+Long.toString((long)(byteLength))+")");
+if(((data.length-offset))<byteLength)throw new IllegalArgumentException("data's length minus "+offset+" not greater or equal to "+Long.toString((long)(byteLength))+" ("+Long.toString((long)((data.length-offset)))+")");
       if ((builder) == null) throw new NullPointerException("builder");
       int cp = 0;
       int bytesSeen = 0;
@@ -716,7 +751,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         if (fracpart.signum()!=0) {
           // If there is a nonzero fractional part,
           // decrease the exponent by that part's length
-          exp=exp.subtract(BigInteger.valueOf((fracEnd - fracStart)));
+          exp=exp.subtract(BigInteger.valueOf(fracEnd - fracStart));
         }
         if (exp.signum()==0) {
           // If exponent is 0, this is also easy,

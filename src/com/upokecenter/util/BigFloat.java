@@ -115,7 +115,7 @@ import java.math.*;
     }
 
     private BigInteger FastMaxExponent = BigInteger.valueOf(2000);
-    private BigInteger FastMinExponent = BigInteger.valueOf((-2000));
+    private BigInteger FastMinExponent = BigInteger.valueOf(-2000);
 
     private BigInteger
       RescaleByExponentDiff(BigInteger mantissa,
@@ -274,66 +274,20 @@ import java.math.*;
       int s = this.signum();
       int ds = other.signum();
       if (s != ds) return (s < ds) ? -1 : 1;
-      return this.Subtract(other).signum();
-    }
-
-
-    private static BigInteger[] DivideWithPrecision(
-      BigInteger dividend, // NOTE: Assumes dividend is nonnegative
-      int divisor,
-      int maxIterations
-    ) {
-      BigInteger bigdivisor = BigInteger.valueOf(divisor);
-      BigInteger scale = BigInteger.ZERO;
-      if(dividend.compareTo(bigdivisor) < 0){
-        while (dividend.compareTo(bigdivisor) < 0) {
-          scale=scale.add(BigInteger.ONE);
-          dividend=dividend.multiply(BigInteger.TEN);
-        }
+      int expcmp = exponent.compareTo((BigInteger)other.exponent);
+      if (expcmp == 0) {
+        return mantissa.compareTo((BigInteger)other.mantissa);
+      } else if (expcmp > 0) {
+        BigInteger newmant = RescaleByExponentDiff(
+          mantissa, exponent, other.exponent);
+        return newmant.compareTo((BigInteger)other.mantissa);
       } else {
-        BigInteger divisormul;
-        divisormul=bigdivisor.multiply(BigInteger.valueOf(100000));
-        while (dividend.compareTo(divisormul) >= 0) {
-          scale=scale.subtract(BigInteger.valueOf(5));
-          bigdivisor=divisormul;
-          divisormul=bigdivisor.multiply(BigInteger.valueOf(100000));
-        }
-        divisormul=bigdivisor.multiply(BigInteger.TEN);
-        while (dividend.compareTo(divisormul) >= 0) {
-          scale=scale.subtract(BigInteger.ONE);
-          bigdivisor=divisormul;
-          divisormul=bigdivisor.multiply(BigInteger.TEN);
-        }
+        BigInteger newmant = RescaleByExponentDiff(
+          other.mantissa, exponent, other.exponent);
+        return this.mantissa.compareTo(newmant);
       }
-      BigInteger bigquotient = BigInteger.ZERO;
-      BigInteger bigrem = BigInteger.ZERO;
-      for (int i = 0; i < maxIterations; i++) {
-        BigInteger newquotient;
-BigInteger[] divrem=(dividend).divideAndRemainder(bigdivisor);
-newquotient=divrem[0];
-bigrem=divrem[1];
-        bigquotient=bigquotient.add(newquotient);
-        if (scale.signum() >= 0 && bigrem.signum()==0) {
-          break;
-        }
-        scale=scale.add(BigInteger.ONE);
-        bigquotient=bigquotient.multiply(BigInteger.TEN);
-        dividend=dividend.multiply(BigInteger.TEN);
-      }
-      if (bigrem.signum()!=0) {
-        // Round half-up
-        BigInteger halfdivisor = bigdivisor;
-        halfdivisor=halfdivisor.shiftRight(1);
-        if (bigrem.compareTo(halfdivisor) >= 0) {
-          bigrem=bigrem.add(BigInteger.ONE);
-        }
-      }
-      BigInteger negscale=(scale).negate();
-      return new BigInteger[]{
-        bigquotient,bigrem,negscale
-      };
     }
-
+    
     /**
      * Creates a bigfloat from an arbitrary-precision decimal fraction.
      * Note that if the decimal fraction contains a negative exponent, the
@@ -349,35 +303,25 @@ bigrem=divrem[1];
         return new BigFloat(bigintMant);
       } else if (bigintExp.signum() > 0) {
         // Scaled integer
-        BigInteger curexp = bigintExp;
         BigInteger bigmantissa = bigintMant;
-        while (curexp.signum() > 0) {
-          bigmantissa=bigmantissa.multiply(BigInteger.TEN);
-          curexp=curexp.subtract(BigInteger.ONE);
-        }
+        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfTen(bigintExp));
         return new BigFloat(bigmantissa);
       } else {
-        // Fractional number
-        BigInteger curexp = bigintExp;
-        BigInteger scale = curexp;
+        // Fractional number, keep dividing by
+        // 5 while the exponent is less than 0
+        BigInteger scale = bigintExp;
         BigInteger bigmantissa = bigintMant;
         boolean neg = (bigmantissa.signum() < 0);
+        // Make positive because DivideWithPrecision assumes the
+        // dividend is positive
         if (neg) bigmantissa=(bigmantissa).negate();
-        while (curexp.signum()<0) {
-          if (curexp.compareTo(BigInteger.valueOf(-10))<=0) {
-            BigInteger[] results = DivideWithPrecision(bigmantissa, 9765625, 20);
-            bigmantissa = results[0]; // quotient
-            BigInteger newscale = results[2];
-            scale = scale.add(newscale);
-            curexp=curexp.add(BigInteger.TEN);
-          } else {
-            BigInteger[] results = DivideWithPrecision(bigmantissa, 5, 20);
-            bigmantissa = results[0]; // quotient
-            BigInteger newscale = results[2];
-            scale = scale.add(newscale);
-            curexp=curexp.add(BigInteger.ONE);
-          }
-        }
+        BigInteger negbigintExp=(bigintExp).negate();
+        BigInteger[] results = DecimalFraction.DivideWithPrecision(
+          bigmantissa,
+          DecimalFraction.FindPowerOfFive(negbigintExp), 21);
+        bigmantissa = results[0]; // quotient
+        BigInteger newscale = results[2];
+        scale = scale.add(newscale);
         if (neg) bigmantissa=(bigmantissa).negate();
         return new BigFloat(bigmantissa, scale);
       }
@@ -405,7 +349,7 @@ bigrem=divrem[1];
         if ((value >> 31) != 0)
           fpMantissa = -fpMantissa;
       }
-      return new BigFloat(BigInteger.valueOf(((long)fpMantissa)), fpExponent - 150);
+      return new BigFloat(BigInteger.valueOf((long)fpMantissa), fpExponent - 150);
     }
 
     /**
@@ -430,7 +374,7 @@ bigrem=divrem[1];
         if ((value >> 63) != 0)
           fpMantissa = -fpMantissa;
       }
-      return new BigFloat(BigInteger.valueOf(((long)fpMantissa)), fpExponent - 1075);
+      return new BigFloat(BigInteger.valueOf((long)fpMantissa), fpExponent - 1075);
     }
 
     /**
@@ -470,7 +414,7 @@ bigrem=divrem[1];
         if (neg) bigmantissa=bigmantissa.negate();
         while(curexp.signum()<0 && bigmantissa.signum()!=0){
           int shift=1024;
-          if(curexp.compareTo(BigInteger.valueOf((-1024)))>0){
+          if(curexp.compareTo(BigInteger.valueOf(-1024))>0){
             shift=-(curexp.intValue());
           }
           bigmantissa=bigmantissa.shiftRight(shift);
@@ -480,6 +424,7 @@ bigrem=divrem[1];
         return bigmantissa;
       }
     }
+    
     /**
      * Converts this value to a 32-bit floating-point number. The half-up
      * rounding mode is used.
@@ -494,7 +439,7 @@ bigrem=divrem[1];
       if (this.mantissa.signum()==0) {
         return 0.0f;
       }
-      if(bigmant.compareTo(BigInteger.valueOf((1L << 23))) < 0){
+      if(bigmant.compareTo(BigInteger.valueOf(1L << 23)) < 0){
         long smallmant=bigmant.longValue();
         int exponentchange=0;
         while(smallmant<(1L<<23)){
@@ -505,14 +450,14 @@ bigrem=divrem[1];
         bigmant=BigInteger.valueOf(smallmant);
       } else {
         // Shift right 20 bits at a time
-        while (bigmant.compareTo(BigInteger.valueOf((1L << 43))) >= 0) {
+        while (bigmant.compareTo(BigInteger.valueOf(1L << 43)) >= 0) {
           BigInteger bigsticky = bigmant.and(BigInteger.valueOf(0xFFFFF));
           lastRoundedBit = (bigsticky.intValue())>>19;
           bigmant=bigmant.shiftRight(20);
           bigexponent=bigexponent.add(BigInteger.valueOf(20));
         }
         // Shift right 1 bit at a time
-        while (bigmant.compareTo(BigInteger.valueOf((1L << 24))) >= 0) {
+        while (bigmant.compareTo(BigInteger.valueOf(1L << 24)) >= 0) {
           BigInteger bigsticky = bigmant.and(BigInteger.ONE);
           lastRoundedBit = bigsticky.intValue();
           bigmant=bigmant.shiftRight(1);
@@ -521,7 +466,7 @@ bigrem=divrem[1];
       }
       if (lastRoundedBit == 1) { // Round half-up
         bigmant=bigmant.add(BigInteger.ONE);
-        if (bigmant.compareTo(BigInteger.valueOf((1L << 24))) == 0) {
+        if (bigmant.compareTo(BigInteger.valueOf(1L << 24)) == 0) {
           bigmant=bigmant.shiftRight(1);
           bigexponent=bigexponent.add(BigInteger.ONE);
         }
@@ -535,17 +480,33 @@ bigrem=divrem[1];
       } else if (bigexponent.compareTo(BigInteger.valueOf(-149))<0) {
         // subnormal
         subnormal = true;
+        // Shift 80 bits at a time while number
+        // remains subnormal
+        while (bigexponent.compareTo(BigInteger.valueOf(-228))<0) {
+          if(bigmant.signum()==0){
+            lastRoundedBit=0;
+            bigexponent=BigInteger.valueOf(-149);
+            break;
+          } else {
+            bigmant=bigmant.shiftRight(79);
+            BigInteger bigsticky = bigmant.and(BigInteger.ONE);
+            lastRoundedBit = bigsticky.intValue();
+            bigmant=bigmant.shiftRight(1);
+          }
+          bigexponent=bigexponent.add(BigInteger.valueOf(80));
+        }
         // Shift 20 bits at a time while number
         // remains subnormal
         while (bigexponent.compareTo(BigInteger.valueOf(-168))<0) {
           if(bigmant.signum()==0){
             lastRoundedBit=0;
-            bigexponent=BigInteger.valueOf((-149));
+            bigexponent=BigInteger.valueOf(-149);
             break;
           } else {
+            bigmant=bigmant.shiftRight(19);
             BigInteger bigsticky = bigmant.and(BigInteger.ONE);
             lastRoundedBit = bigsticky.intValue();
-            bigmant=bigmant.shiftRight(20);
+            bigmant=bigmant.shiftRight(1);
           }
           bigexponent=bigexponent.add(BigInteger.valueOf(20));
         }
@@ -554,7 +515,7 @@ bigrem=divrem[1];
         while (bigexponent.compareTo(BigInteger.valueOf(-149))<0) {
           if(bigmant.signum()==0){
             lastRoundedBit=0;
-            bigexponent=BigInteger.valueOf((-149));
+            bigexponent=BigInteger.valueOf(-149);
             break;
           } else {
             BigInteger bigsticky = bigmant.and(BigInteger.ONE);
@@ -565,14 +526,14 @@ bigrem=divrem[1];
         }
         if (lastRoundedBit == 1) { // Round half-up
           bigmant=bigmant.add(BigInteger.ONE);
-          if (bigmant.compareTo(BigInteger.valueOf((1L << 24))) == 0) {
+          if (bigmant.compareTo(BigInteger.valueOf(1L << 24)) == 0) {
             bigmant=bigmant.shiftRight(1);
             bigexponent=bigexponent.add(BigInteger.ONE);
           }
         }
       }
       if (bigexponent.compareTo(BigInteger.valueOf(-149))<0) {
-        // exponent too small
+        // exponent too small, so return zero
         return (this.mantissa.signum() < 0) ?
           Float.intBitsToFloat(1 << 31) :
           Float.intBitsToFloat(0);
@@ -604,7 +565,7 @@ bigrem=divrem[1];
       if (this.mantissa.signum()==0) {
         return 0.0;
       }
-      if(bigmant.compareTo(BigInteger.valueOf((1L << 52))) < 0){
+      if(bigmant.compareTo(BigInteger.valueOf(1L << 52)) < 0){
         long smallmant=bigmant.longValue();
         int exponentchange=0;
         while(smallmant<(1L<<52)){
@@ -617,13 +578,14 @@ bigrem=divrem[1];
         BigInteger OneShift72=BigInteger.ONE.shiftLeft(72);
         // Shift right 20 bits at a time
         while (bigmant.compareTo(OneShift72) >= 0) {
-          BigInteger bigsticky = bigmant.and(BigInteger.valueOf(0xFFFFF));
-          lastRoundedBit = (bigsticky.intValue())>>19;
-          bigmant=bigmant.shiftRight(20);
+          bigmant=bigmant.shiftRight(19);
+          BigInteger bigsticky = bigmant.and(BigInteger.ONE);
+          lastRoundedBit = bigsticky.intValue();
+          bigmant=bigmant.shiftRight(1);
           bigexponent=bigexponent.add(BigInteger.valueOf(20));
         }
         // Shift right 1 bit at a time
-        while (bigmant.compareTo(BigInteger.valueOf((1L << 53))) >= 0) {
+        while (bigmant.compareTo(BigInteger.valueOf(1L << 53)) >= 0) {
           BigInteger bigsticky = bigmant.and(BigInteger.ONE);
           lastRoundedBit = bigsticky.intValue();
           bigmant=bigmant.shiftRight(1);
@@ -632,7 +594,7 @@ bigrem=divrem[1];
       }
       if (lastRoundedBit == 1) { // Round half-up
         bigmant=bigmant.add(BigInteger.ONE);
-        if (bigmant.compareTo(BigInteger.valueOf((1L << 53))) == 0) {
+        if (bigmant.compareTo(BigInteger.valueOf(1L << 53)) == 0) {
           bigmant=bigmant.shiftRight(1);
           bigexponent=bigexponent.add(BigInteger.ONE);
         }
@@ -651,7 +613,7 @@ bigrem=divrem[1];
         while (bigexponent.compareTo(BigInteger.valueOf(-1093))<0) {
           if(bigmant.signum()==0){
             lastRoundedBit=0;
-            bigexponent=BigInteger.valueOf((-1074));
+            bigexponent=BigInteger.valueOf(-1074);
             break;
           } else {
             BigInteger bigsticky = bigmant.and(BigInteger.ONE);
@@ -665,7 +627,7 @@ bigrem=divrem[1];
         while (bigexponent.compareTo(BigInteger.valueOf(-1074))<0) {
           if(bigmant.signum()==0){
             lastRoundedBit=0;
-            bigexponent=BigInteger.valueOf((-1074));
+            bigexponent=BigInteger.valueOf(-1074);
             break;
           } else {
             BigInteger bigsticky = bigmant.and(BigInteger.ONE);
@@ -676,14 +638,14 @@ bigrem=divrem[1];
         }
         if (lastRoundedBit == 1) { // Round half-up
           bigmant=bigmant.add(BigInteger.ONE);
-          if (bigmant.compareTo(BigInteger.valueOf((1L << 53))) == 0) {
+          if (bigmant.compareTo(BigInteger.valueOf(1L << 53)) == 0) {
             bigmant=bigmant.shiftRight(1);
             bigexponent=bigexponent.add(BigInteger.ONE);
           }
         }
       }
       if (bigexponent.compareTo(BigInteger.valueOf(-1074))<0) {
-        // exponent too small
+        // exponent too small, so return zero
         return (this.mantissa.signum() < 0) ?
           Double.longBitsToDouble(1L << 63) :
           Double.longBitsToDouble(0);

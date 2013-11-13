@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -9,6 +9,7 @@ at: http://upokecenter.com/d/
 using System;
 using System.Text;
 using System.Globalization;
+using System.Collections.Generic;
 using System.IO;
 
 namespace PeterO {
@@ -152,20 +153,51 @@ namespace PeterO {
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(s, stream);
       } else if (obj.Type == CBORType.Map) {
-        stream.WriteByte(unchecked((byte)((byte)'d')));
+        bool hasNonStringKeys = false;
         foreach (CBORObject key in obj.Keys) {
-          string str = (key.Type == CBORType.TextString) ?
-            key.AsString() :
-            key.ToJSONString();
-          long length = CBORDataUtilities.GetUtf8Length(str, false);
-          if (length < 0)
-            throw new CBORException("invalid string");
-          writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
-          stream.WriteByte(unchecked((byte)((byte)':')));
-          writeUtf8(str, stream);
-          Write(obj[key], stream);
+          if (key.Type != CBORType.TextString) {
+            hasNonStringKeys = true;
+            break;
+          }
         }
-        stream.WriteByte(unchecked((byte)((byte)'e')));
+        if (hasNonStringKeys) {
+          var sMap = new Dictionary<String, CBORObject>();
+          // Copy to a map with String keys, since
+          // some keys could be duplicates
+          // when serialized to strings
+          foreach (CBORObject key in obj.Keys) {
+            CBORObject value = obj[key];
+            string str = (key.Type == CBORType.TextString) ?
+              key.AsString() : key.ToJSONString();
+            sMap[str] = value;
+          }
+          stream.WriteByte(unchecked((byte)((byte)'d')));
+          foreach (KeyValuePair<string, CBORObject> entry in sMap) {
+            string key = entry.Key;
+            CBORObject value = entry.Value;
+            long length = CBORDataUtilities.GetUtf8Length(key, false);
+            if (length < 0)
+              throw new CBORException("invalid string");
+            writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
+            stream.WriteByte(unchecked((byte)((byte)':')));
+            writeUtf8(key, stream);
+            Write(value, stream);
+          }
+          stream.WriteByte(unchecked((byte)((byte)'e')));
+        } else {
+          stream.WriteByte(unchecked((byte)((byte)'d')));
+          foreach (CBORObject key in obj.Keys) {
+            string str = key.AsString();
+            long length = CBORDataUtilities.GetUtf8Length(str, false);
+            if (length < 0)
+              throw new CBORException("invalid string");
+            writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
+            stream.WriteByte(unchecked((byte)((byte)':')));
+            writeUtf8(str, stream);
+            Write(obj[key], stream);
+          }
+          stream.WriteByte(unchecked((byte)((byte)'e')));
+        }
       } else if (obj.Type == CBORType.Array) {
         stream.WriteByte(unchecked((byte)((byte)'l')));
         for (int i = 0; i < obj.Count; i++) {

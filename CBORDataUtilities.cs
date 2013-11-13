@@ -186,26 +186,40 @@ namespace PeterO {
       return (strA.Length < strB.Length) ? -1 : 1;
     }
 
-
     /// <summary>
-    /// Writes a string in UTF-8 encoding to a data stream.
+    /// Writes a portion of a string in UTF-8 encoding to a data stream.
     /// </summary>
     /// <param name="str">A string to write.</param>
+    /// <param name="offset">The zero-based index where the string
+    /// portion to write begins.</param>
+    /// <param name="length">The length of the string portion to write.</param>
     /// <param name="stream">A writable data stream.</param>
     /// <param name="replace">If true, replaces unpaired surrogate
     /// code points with the replacement character (U+FFFD).  If false,
     /// stops processing when an unpaired surrogate code point is seen.</param>
-    /// <returns>0 if the entire string was written; or -1 if the
-    /// string contains an unpaired surrogate code point and "replace"
+    /// <returns>0 if the entire string portion was written; or -1 if the
+    /// string portion contains an unpaired surrogate code point and "replace"
     /// is false.</returns>
-    public static int WriteUtf8(String str, Stream stream, bool replace) {
-      if ((str) == null) throw new ArgumentNullException("str");
+    /// <exception cref="System.ArgumentNullException">"str" is null or "stream"
+    /// is null.</exception>
+    /// <exception cref="System.ArgumentException">"offset" is less than 0,
+    /// "length" is less than 0, or "offset" plus "length" is greater than
+    /// the string's length.</exception>
+    /// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
+    public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
       if ((stream) == null) throw new ArgumentNullException("stream");
+      if((str)==null)throw new ArgumentNullException("str");
+if((offset)<0)throw new ArgumentOutOfRangeException("offset"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(offset))+")");
+if((offset)>str.Length)throw new ArgumentOutOfRangeException("offset"+" not less or equal to "+Convert.ToString((long)(str.Length))+" ("+Convert.ToString((long)(offset))+")");
+if((length)<0)throw new ArgumentOutOfRangeException("length"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(length))+")");
+if((length)>str.Length)throw new ArgumentOutOfRangeException("length"+" not less or equal to "+Convert.ToString((long)(str.Length))+" ("+Convert.ToString((long)(length))+")");
+if(((str.Length-offset))<length)throw new ArgumentOutOfRangeException("str's length minus "+offset+" not greater or equal to "+Convert.ToString((long)(length))+" ("+Convert.ToString((long)((str.Length-offset)))+")");
       byte[] bytes;
       int retval = 0;
       bytes = new byte[StreamedStringBufferLength];
       int byteIndex = 0;
-      for (int index = 0; index < str.Length; index++) {
+      int endIndex=offset+length;
+      for (int index = offset; index < endIndex; index++) {
         int c = str[index];
         if (c <= 0x7F) {
           if (byteIndex + 1 > StreamedStringBufferLength) {
@@ -223,7 +237,7 @@ namespace PeterO {
           bytes[byteIndex++] = ((byte)(0xC0 | ((c >> 6) & 0x1F)));
           bytes[byteIndex++] = ((byte)(0x80 | (c & 0x3F)));
         } else {
-          if (c >= 0xD800 && c <= 0xDBFF && index + 1 < str.Length &&
+          if (c >= 0xD800 && c <= 0xDBFF && index + 1 < endIndex &&
              str[index + 1] >= 0xDC00 && str[index + 1] <= 0xDFFF) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + (c - 0xD800) * 0x400 + (str[index + 1] - 0xDC00);
@@ -262,6 +276,26 @@ namespace PeterO {
       return retval;
     }
 
+
+    /// <summary>
+    /// Writes a string in UTF-8 encoding to a data stream.
+    /// </summary>
+    /// <param name="str">A string to write.</param>
+    /// <param name="stream">A writable data stream.</param>
+    /// <param name="replace">If true, replaces unpaired surrogate
+    /// code points with the replacement character (U+FFFD).  If false,
+    /// stops processing when an unpaired surrogate code point is seen.</param>
+    /// <returns>0 if the entire string was written; or -1 if the
+    /// string contains an unpaired surrogate code point and "replace"
+    /// is false.</returns>
+    /// <exception cref="System.ArgumentNullException">"str" is null or "stream"
+    /// is null.</exception>
+    /// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
+    public static int WriteUtf8(String str, Stream stream, bool replace) {
+      if((str)==null)throw new ArgumentNullException("str");
+      return WriteUtf8(str,0,str.Length,stream,replace);
+    }
+
     /// <summary>
     /// Reads a string in UTF-8 encoding from a byte array.
     /// </summary>
@@ -281,11 +315,12 @@ namespace PeterO {
     public static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength,
                                         StringBuilder builder,
                                         bool replace) {
-      if ((data) == null) throw new ArgumentNullException("data");
-      if ((offset) < 0) throw new ArgumentOutOfRangeException("offset" + " not greater or equal to " + "0" + " (" + Convert.ToString((int)offset, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      if ((byteLength) < 0) throw new ArgumentOutOfRangeException("byteLength" + " not greater or equal to " + "0" + " (" + Convert.ToString((int)byteLength, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      if ((offset + byteLength) > data.Length) throw new ArgumentOutOfRangeException(
-              "offset+byteLength not less or equal to " + Convert.ToString((int)data.Length) + " (" + Convert.ToString((int)(offset + byteLength)) + ")");
+      if((data)==null)throw new ArgumentNullException("data");
+if((offset)<0)throw new ArgumentOutOfRangeException("offset"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(offset))+")");
+if((offset)>data.Length)throw new ArgumentOutOfRangeException("offset"+" not less or equal to "+Convert.ToString((long)(data.Length))+" ("+Convert.ToString((long)(offset))+")");
+if((byteLength)<0)throw new ArgumentOutOfRangeException("byteLength"+" not greater or equal to "+Convert.ToString((long)(0))+" ("+Convert.ToString((long)(byteLength))+")");
+if((byteLength)>data.Length)throw new ArgumentOutOfRangeException("byteLength"+" not less or equal to "+Convert.ToString((long)(data.Length))+" ("+Convert.ToString((long)(byteLength))+")");
+if(((data.Length-offset))<byteLength)throw new ArgumentOutOfRangeException("data's length minus "+offset+" not greater or equal to "+Convert.ToString((long)(byteLength))+" ("+Convert.ToString((long)((data.Length-offset)))+")");
       if ((builder) == null) throw new ArgumentNullException("builder");
       int cp = 0;
       int bytesSeen = 0;

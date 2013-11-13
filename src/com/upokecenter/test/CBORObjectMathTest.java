@@ -20,6 +20,13 @@ import java.math.*;
     @Test
     public void CBORMultiplyTest() {
       {
+        CBORObject a = CBORObject.FromObject(2.5268476f);
+        CBORObject b = CBORObject.FromObject(new BigInteger("-503285733164839762215"));
+        Assert.assertEquals("-1271726347433338951145.9595930576324462890625", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
+        TestCommon.AssertRoundTrip(a);
+        TestCommon.AssertRoundTrip(b);
+      }
+      {
         CBORObject a = CBORObject.FromObject(DecimalFraction.FromString("-634889541024E+14"));
         CBORObject b = CBORObject.FromObject(-0.39601803371455613d);
         Assert.assertEquals("25142770766226149794078868.282554140023421496152877807617187500000", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
@@ -37,13 +44,6 @@ import java.math.*;
         CBORObject a = CBORObject.FromObject(0.022119554f);
         CBORObject b = CBORObject.FromObject(DecimalFraction.FromString("-9970998242E-8"));
         Assert.assertEquals("-2.2055403165173435583710670471191406250", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
-        TestCommon.AssertRoundTrip(a);
-        TestCommon.AssertRoundTrip(b);
-      }
-      {
-        CBORObject a = CBORObject.FromObject(2.5268476f);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-503285733164839762215"));
-        Assert.assertEquals("-1271726347433338951145.9595930576324462890625", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }

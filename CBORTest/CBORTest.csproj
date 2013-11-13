@@ -67,6 +67,7 @@
     <Compile Include="CBORExtraTest.cs" />
     <Compile Include="CBORObjectMathTest.cs" />
     <Compile Include="CBORTest.cs" />
+    <Compile Include="FastRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="TestCommon.cs" />
@@ -79,6 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ProfilingSessions\Session20131112_134508.sdps" />
+    <Content Include="ProfilingSessions\Session20131112_203450.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

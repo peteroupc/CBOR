@@ -1156,16 +1156,16 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 
       BigInteger bi;
       if (tagHigh != 0) {
-        bi = BigInteger.valueOf(((tagHigh >> 16) & 0xFFFF));
+        bi = BigInteger.valueOf((tagHigh >> 16) & 0xFFFF);
         bi=bi.shiftLeft(16);
-        bi=bi.or(BigInteger.valueOf(((tagHigh) & 0xFFFF)));
+        bi=bi.or(BigInteger.valueOf((tagHigh) & 0xFFFF));
         bi=bi.shiftLeft(16);
       } else {
         bi = BigInteger.ZERO;
       }
-      bi=bi.or(BigInteger.valueOf(((tagLow >> 16) & 0xFFFF)));
+      bi=bi.or(BigInteger.valueOf((tagLow >> 16) & 0xFFFF));
       bi=bi.shiftLeft(16);
-      bi=bi.or(BigInteger.valueOf(((tagLow) & 0xFFFF)));
+      bi=bi.or(BigInteger.valueOf((tagLow) & 0xFFFF));
       return bi;
     }
 
@@ -1436,20 +1436,25 @@ public void set(String key, CBORObject value) {
      * not a number type.
      */
     public double AsDouble() {
-      if (this.getItemType() == CBORObjectType_Integer)
-        return ((Long)this.getThisItem()).doubleValue();
-      else if (this.getItemType() == CBORObjectType_BigInteger)
-        return ((BigInteger)this.getThisItem()).doubleValue();
-      else if (this.getItemType() == CBORObjectType_Single)
-        return ((Float)this.getThisItem()).doubleValue();
-      else if (this.getItemType() == CBORObjectType_Double)
-        return ((Double)this.getThisItem()).doubleValue();
-      else if (this.getItemType() == CBORObjectType_DecimalFraction) {
-        return ((DecimalFraction)this.getThisItem()).ToDouble();
-      } else if (this.getItemType() == CBORObjectType_BigFloat) {
-        return ((BigFloat)this.getThisItem()).ToDouble();
-      } else
-        throw new IllegalStateException("Not a number type");
+      int type=this.getItemType();
+      switch(type){
+        case CBORObjectType_Integer:
+          return ((Long)this.getThisItem()).doubleValue();
+        case CBORObjectType_BigInteger:
+          return ((BigInteger)this.getThisItem()).doubleValue();
+        case CBORObjectType_Single:
+          return ((Float)this.getThisItem()).doubleValue();
+        case CBORObjectType_Double:
+          return ((Double)this.getThisItem()).doubleValue();
+          case CBORObjectType_DecimalFraction:{
+            return ((DecimalFraction)this.getThisItem()).ToDouble();
+          }
+          case CBORObjectType_BigFloat:{
+            return ((BigFloat)this.getThisItem()).ToDouble();
+          }
+        default:
+          throw new IllegalStateException("Not a number type");
+      }
     }
 
 
@@ -1460,20 +1465,24 @@ public void set(String key, CBORObject value) {
      * not a number type.
      */
     public DecimalFraction AsDecimalFraction() {
-      if (this.getItemType() == CBORObjectType_Integer)
-        return new DecimalFraction((((Long)this.getThisItem()).longValue()));
-      else if (this.getItemType() == CBORObjectType_BigInteger)
-        return new DecimalFraction((BigInteger)this.getThisItem());
-      else if (this.getItemType() == CBORObjectType_Single)
-        return DecimalFraction.FromSingle(((Float)this.getThisItem()).floatValue());
-      else if (this.getItemType() == CBORObjectType_Double)
-        return DecimalFraction.FromDouble(((Double)this.getThisItem()).doubleValue());
-      else if (this.getItemType() == CBORObjectType_DecimalFraction)
-        return (DecimalFraction)this.getThisItem();
-      else if (this.getItemType() == CBORObjectType_BigFloat) {
-        return DecimalFraction.FromBigFloat((BigFloat)this.getThisItem());
-      } else
-        throw new IllegalStateException("Not a number type");
+      int type=this.getItemType();
+      switch(type){
+        case CBORObjectType_Integer:
+          return new DecimalFraction((((Long)this.getThisItem()).longValue()));
+        case CBORObjectType_BigInteger:
+          return new DecimalFraction((BigInteger)this.getThisItem());
+        case CBORObjectType_Single:
+          return DecimalFraction.FromSingle(((Float)this.getThisItem()).floatValue());
+        case CBORObjectType_Double:
+          return DecimalFraction.FromDouble(((Double)this.getThisItem()).doubleValue());
+        case CBORObjectType_DecimalFraction:
+          return (DecimalFraction)this.getThisItem();
+          case CBORObjectType_BigFloat:{
+            return DecimalFraction.FromBigFloat((BigFloat)this.getThisItem());
+          }
+        default:
+          throw new IllegalStateException("Not a number type");
+      }
     }
 
     /**
@@ -1487,20 +1496,24 @@ public void set(String key, CBORObject value) {
      * not a number type.
      */
     public BigFloat AsBigFloat() {
-      if (this.getItemType() == CBORObjectType_Integer)
-        return new BigFloat((((Long)this.getThisItem()).longValue()));
-      else if (this.getItemType() == CBORObjectType_BigInteger)
-        return new BigFloat((BigInteger)this.getThisItem());
-      else if (this.getItemType() == CBORObjectType_Single)
-        return BigFloat.FromSingle(((Float)this.getThisItem()).floatValue());
-      else if (this.getItemType() == CBORObjectType_Double)
-        return BigFloat.FromDouble(((Double)this.getThisItem()).doubleValue());
-      else if (this.getItemType() == CBORObjectType_DecimalFraction)
-        return BigFloat.FromDecimalFraction((DecimalFraction)this.getThisItem());
-      else if (this.getItemType() == CBORObjectType_BigFloat) {
-        return (BigFloat)this.getThisItem();
-      } else
-        throw new IllegalStateException("Not a number type");
+      int type=this.getItemType();
+      switch(type){
+        case CBORObjectType_Integer:
+          return new BigFloat((((Long)this.getThisItem()).longValue()));
+        case CBORObjectType_BigInteger:
+          return new BigFloat((BigInteger)this.getThisItem());
+        case CBORObjectType_Single:
+          return BigFloat.FromSingle(((Float)this.getThisItem()).floatValue());
+        case CBORObjectType_Double:
+          return BigFloat.FromDouble(((Double)this.getThisItem()).doubleValue());
+        case CBORObjectType_DecimalFraction:
+          return BigFloat.FromDecimalFraction((DecimalFraction)this.getThisItem());
+          case CBORObjectType_BigFloat:{
+            return (BigFloat)this.getThisItem();
+          }
+        default:
+          throw new IllegalStateException("Not a number type");
+      }
     }
 
     /**
@@ -1512,20 +1525,25 @@ public void set(String key, CBORObject value) {
      * not a number type.
      */
     public float AsSingle() {
-      if (this.getItemType() == CBORObjectType_Integer)
-        return ((Long)this.getThisItem()).floatValue();
-      else if (this.getItemType() == CBORObjectType_BigInteger)
-        return ((BigInteger)this.getThisItem()).floatValue();
-      else if (this.getItemType() == CBORObjectType_Single)
-        return ((Float)this.getThisItem()).floatValue();
-      else if (this.getItemType() == CBORObjectType_Double)
-        return ((Double)this.getThisItem()).floatValue();
-      else if (this.getItemType() == CBORObjectType_DecimalFraction) {
-        return ((DecimalFraction)this.getThisItem()).ToSingle();
-      } else if (this.getItemType() == CBORObjectType_BigFloat) {
-        return ((BigFloat)this.getThisItem()).ToSingle();
-      } else
-        throw new IllegalStateException("Not a number type");
+      int type=this.getItemType();
+      switch(type){
+        case CBORObjectType_Integer:
+          return ((Long)this.getThisItem()).floatValue();
+        case CBORObjectType_BigInteger:
+          return ((BigInteger)this.getThisItem()).floatValue();
+        case CBORObjectType_Single:
+          return ((Float)this.getThisItem()).floatValue();
+        case CBORObjectType_Double:
+          return ((Double)this.getThisItem()).floatValue();
+          case CBORObjectType_DecimalFraction:{
+            return ((DecimalFraction)this.getThisItem()).ToSingle();
+          }
+          case CBORObjectType_BigFloat:{
+            return ((BigFloat)this.getThisItem()).ToSingle();
+          }
+        default:
+          throw new IllegalStateException("Not a number type");
+      }
     }
 
 
@@ -1537,20 +1555,25 @@ public void set(String key, CBORObject value) {
      * not a number type.
      */
     public BigInteger AsBigInteger() {
-      if (this.getItemType() == CBORObjectType_Integer)
-        return BigInteger.valueOf((((Long)this.getThisItem()).longValue()));
-      else if (this.getItemType() == CBORObjectType_BigInteger)
-        return (BigInteger)this.getThisItem();
-      else if (this.getItemType() == CBORObjectType_Single)
-        return CBORUtilities.BigIntegerFromSingle(((Float)this.getThisItem()).floatValue());
-      else if (this.getItemType() == CBORObjectType_Double)
-        return CBORUtilities.BigIntegerFromDouble(((Double)this.getThisItem()).doubleValue());
-      else if (this.getItemType() == CBORObjectType_DecimalFraction) {
-        return ((DecimalFraction)this.getThisItem()).ToBigInteger();
-      } else if (this.getItemType() == CBORObjectType_BigFloat) {
-        return ((BigFloat)this.getThisItem()).ToBigInteger();
-      } else
-        throw new IllegalStateException("Not a number type");
+      int type=this.getItemType();
+      switch(type){
+        case CBORObjectType_Integer:
+          return BigInteger.valueOf((((Long)this.getThisItem()).longValue()));
+        case CBORObjectType_BigInteger:
+          return (BigInteger)this.getThisItem();
+        case CBORObjectType_Single:
+          return CBORUtilities.BigIntegerFromSingle(((Float)this.getThisItem()).floatValue());
+        case CBORObjectType_Double:
+          return CBORUtilities.BigIntegerFromDouble(((Double)this.getThisItem()).doubleValue());
+          case CBORObjectType_DecimalFraction:{
+            return ((DecimalFraction)this.getThisItem()).ToBigInteger();
+          }
+          case CBORObjectType_BigFloat:{
+            return ((BigFloat)this.getThisItem()).ToBigInteger();
+          }
+        default:
+          throw new IllegalStateException("Not a number type");
+      }
     }
 
     /**
@@ -1573,10 +1596,7 @@ public void set(String key, CBORObject value) {
      * the range of a 16-bit signed integer.
      */
     public short AsInt16() {
-      int v = AsInt32();
-      if (v > Short.MAX_VALUE || v < Short.MIN_VALUE)
-        throw new ArithmeticException("This Object's value is out of range");
-      return (short)v;
+      return (short)AsInt32(Short.MIN_VALUE,Short.MAX_VALUE);
     }
 
     /**
@@ -1590,10 +1610,7 @@ public void set(String key, CBORObject value) {
      * to an integer).
      */
     public byte AsByte() {
-      int v = AsInt32();
-      if (v < 0 || v > 255)
-        throw new ArithmeticException("This Object's value is out of range");
-      return (byte)v;
+      return (byte)AsInt32(0,255);
     }
 
 
@@ -1608,39 +1625,107 @@ public void set(String key, CBORObject value) {
      * the range of a 64-bit signed integer.
      */
     public long AsInt64() {
-      if (this.getItemType() == CBORObjectType_Integer) {
-        return (((Long)this.getThisItem()).longValue());
-      } else if (this.getItemType() == CBORObjectType_BigInteger) {
-        if (((BigInteger)this.getThisItem()).compareTo(Int64MaxValue) > 0 ||
-            ((BigInteger)this.getThisItem()).compareTo(Int64MinValue) < 0)
-          throw new ArithmeticException("This Object's value is out of range");
-        return ((BigInteger)this.getThisItem()).longValue();
-      } else if (this.getItemType() == CBORObjectType_Single) {
-        if (Float.isNaN(((Float)this.getThisItem()).floatValue()) ||
-            ((Float)this.getThisItem()).floatValue() > Long.MAX_VALUE || ((Float)this.getThisItem()).floatValue() < Long.MIN_VALUE)
-          throw new ArithmeticException("This Object's value is out of range");
-        return ((Float)this.getThisItem()).longValue();
-      } else if (this.getItemType() == CBORObjectType_Double) {
-        if (Double.isNaN(((Double)this.getThisItem()).doubleValue()) ||
-            ((Double)this.getThisItem()).doubleValue() > Long.MAX_VALUE || ((Double)this.getThisItem()).doubleValue() < Long.MIN_VALUE)
-          throw new ArithmeticException("This Object's value is out of range");
-        return ((Double)this.getThisItem()).longValue();
-      } else if (this.getItemType() == CBORObjectType_DecimalFraction) {
-        BigInteger bi = ((DecimalFraction)this.getThisItem()).ToBigInteger();
-        if (bi.compareTo(Int64MaxValue) > 0 ||
-            bi.compareTo(Int64MinValue) < 0)
-          throw new ArithmeticException("This Object's value is out of range");
-        return bi.longValue();
-      } else if (this.getItemType() == CBORObjectType_BigFloat) {
-        BigInteger bi = ((BigFloat)this.getThisItem()).ToBigInteger();
-        if (bi.compareTo(Int64MaxValue) > 0 ||
-            bi.compareTo(Int64MinValue) < 0)
-          throw new ArithmeticException("This Object's value is out of range");
-        return bi.longValue();
-      } else
-        throw new IllegalStateException("Not a number type");
+      int type=this.getItemType();
+      switch(type){
+          case CBORObjectType_Integer:{
+            return (((Long)this.getThisItem()).longValue());
+          }
+          case CBORObjectType_BigInteger:{
+            if (((BigInteger)this.getThisItem()).compareTo(Int64MaxValue) > 0 ||
+                ((BigInteger)this.getThisItem()).compareTo(Int64MinValue) < 0)
+              throw new ArithmeticException("This Object's value is out of range");
+            return ((BigInteger)this.getThisItem()).longValue();
+          }
+          case CBORObjectType_Single:{
+            float fltItem=((Float)this.getThisItem()).floatValue();
+            if (Float.isNaN(fltItem))
+              throw new ArithmeticException("This Object's value is out of range");
+            fltItem=(fltItem<0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
+            if(fltItem>=Long.MIN_VALUE && fltItem<=Long.MAX_VALUE)
+              return (long)fltItem;
+            throw new ArithmeticException("This Object's value is out of range");
+          }
+          case CBORObjectType_Double:{
+            double fltItem=((Double)this.getThisItem()).doubleValue();
+            if (Double.isNaN(fltItem))
+              throw new ArithmeticException("This Object's value is out of range");
+            fltItem=(fltItem<0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+            if(fltItem>=Long.MIN_VALUE && fltItem<=Long.MAX_VALUE)
+              return (long)fltItem;
+            throw new ArithmeticException("This Object's value is out of range");
+          }
+          case CBORObjectType_DecimalFraction:{
+            BigInteger bi = ((DecimalFraction)this.getThisItem()).ToBigInteger();
+            if (bi.compareTo(Int64MaxValue) > 0 ||
+                bi.compareTo(Int64MinValue) < 0)
+              throw new ArithmeticException("This Object's value is out of range");
+            return bi.longValue();
+          }
+          case CBORObjectType_BigFloat:{
+            BigInteger bi = ((BigFloat)this.getThisItem()).ToBigInteger();
+            if (bi.compareTo(Int64MaxValue) > 0 ||
+                bi.compareTo(Int64MinValue) < 0)
+              throw new ArithmeticException("This Object's value is out of range");
+            return bi.longValue();
+          }
+        default:
+          throw new IllegalStateException("Not a number type");
+      }
     }
 
+    private int AsInt32(int minValue, int maxValue) {
+      Object thisItem = this.getThisItem();
+      int type=this.getItemType();
+      switch(type){
+          case CBORObjectType_Integer:{
+            long longItem=(((Long)thisItem).longValue());
+            if (longItem > maxValue || longItem < minValue)
+              throw new ArithmeticException("This Object's value is out of range");
+            return (int)longItem;
+          }
+          case CBORObjectType_BigInteger:{
+            if (((BigInteger)thisItem).compareTo(BigInteger.valueOf(maxValue)) > 0 ||
+                ((BigInteger)thisItem).compareTo(BigInteger.valueOf(minValue)) < 0)
+              throw new ArithmeticException("This Object's value is out of range");
+            return ((BigInteger)thisItem).intValue();
+          }
+          case CBORObjectType_Single:{
+            float fltItem=((Float)thisItem).floatValue();
+            if (Float.isNaN(fltItem))
+              throw new ArithmeticException("This Object's value is out of range");
+            fltItem=(fltItem<0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
+            if(fltItem>=minValue && fltItem<=maxValue)
+              return (int)fltItem;
+            throw new ArithmeticException("This Object's value is out of range");
+          }
+          case CBORObjectType_Double:{
+            double fltItem=((Double)thisItem).doubleValue();
+            if (Double.isNaN(fltItem))
+              throw new ArithmeticException("This Object's value is out of range");
+            fltItem=(fltItem<0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+            if(fltItem>=minValue && fltItem<=maxValue)
+              return (int)fltItem;
+            throw new ArithmeticException("This Object's value is out of range");
+          }
+          case CBORObjectType_DecimalFraction:{
+            BigInteger bi = ((DecimalFraction)this.getThisItem()).ToBigInteger();
+            if (bi.compareTo(BigInteger.valueOf(maxValue)) > 0 ||
+                bi.compareTo(BigInteger.valueOf(minValue)) < 0)
+              throw new ArithmeticException("This Object's value is out of range");
+            return bi.intValue();
+          }
+          case CBORObjectType_BigFloat:{
+            BigInteger bi = ((BigFloat)this.getThisItem()).ToBigInteger();
+            if (bi.compareTo(BigInteger.valueOf(maxValue)) > 0 ||
+                bi.compareTo(BigInteger.valueOf(minValue)) < 0)
+              throw new ArithmeticException("This Object's value is out of range");
+            return bi.intValue();
+          }
+        default:
+          throw new IllegalStateException("Not a number type");
+      }
+    }
+    
     /**
      * Converts this object to a 32-bit signed integer. Floating point values
      * are truncated to an integer.
@@ -1651,40 +1736,7 @@ public void set(String key, CBORObject value) {
      * the range of a 32-bit signed integer.
      */
     public int AsInt32() {
-      Object thisItem = this.getThisItem();
-      if (this.getItemType() == CBORObjectType_Integer) {
-        if ((((Long)thisItem).longValue()) > Integer.MAX_VALUE || (((Long)thisItem).longValue()) < Integer.MIN_VALUE)
-          throw new ArithmeticException("This Object's value is out of range");
-        return ((Long)thisItem).intValue();
-      } else if (this.getItemType() == CBORObjectType_BigInteger) {
-        if (((BigInteger)thisItem).compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0 ||
-            ((BigInteger)thisItem).compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) < 0)
-          throw new ArithmeticException("This Object's value is out of range");
-        return ((BigInteger)thisItem).intValue();
-      } else if (this.getItemType() == CBORObjectType_Single) {
-        if (Float.isNaN(((Float)thisItem).floatValue()) ||
-            ((Float)thisItem).floatValue() > Integer.MAX_VALUE || ((Float)thisItem).floatValue() < Integer.MIN_VALUE)
-          throw new ArithmeticException("This Object's value is out of range");
-        return ((Float)thisItem).intValue();
-      } else if (this.getItemType() == CBORObjectType_Double) {
-        if (Double.isNaN(((Double)thisItem).doubleValue()) ||
-            ((Double)thisItem).doubleValue() > Integer.MAX_VALUE || ((Double)thisItem).doubleValue() < Integer.MIN_VALUE)
-          throw new ArithmeticException("This Object's value is out of range");
-        return ((Double)thisItem).intValue();
-      } else if (this.getItemType() == CBORObjectType_DecimalFraction) {
-        BigInteger bi = ((DecimalFraction)this.getThisItem()).ToBigInteger();
-        if (bi.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0 ||
-            bi.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) < 0)
-          throw new ArithmeticException("This Object's value is out of range");
-        return bi.intValue();
-      } else if (this.getItemType() == CBORObjectType_BigFloat) {
-        BigInteger bi = ((BigFloat)this.getThisItem()).ToBigInteger();
-        if (bi.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0 ||
-            bi.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) < 0)
-          throw new ArithmeticException("This Object's value is out of range");
-        return bi.intValue();
-      } else
-        throw new IllegalStateException("Not a number type");
+      return AsInt32(Integer.MIN_VALUE,Integer.MAX_VALUE);
     }
     /**
      * Gets the value of this object as a string object.
@@ -1692,10 +1744,13 @@ public void set(String key, CBORObject value) {
      * @throws IllegalStateException This object's type is not a string.
      */
     public String AsString() {
-      if (this.getItemType() == CBORObjectType_TextString) {
-        return (String)this.getThisItem();
-      } else {
-        throw new IllegalStateException("Not a String type");
+      int type=this.getItemType();
+      switch(type){
+          case CBORObjectType_TextString:{
+            return (String)this.getThisItem();
+          }
+        default:
+          throw new IllegalStateException("Not a String type");
       }
     }
     /**
@@ -2503,7 +2558,6 @@ public static void Write(Object o, OutputStream s) throws IOException {
           for(Map.Entry<String, CBORObject> entry : sMap.entrySet()) {
             String key = entry.getKey();
             CBORObject value = entry.getValue();
-            sMap.put(key,value);
             if (!first) builder.append(",");
             builder.append(StringToJSONString(key));
             builder.append(':');

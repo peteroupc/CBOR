@@ -141,20 +141,20 @@ import java.math.*;
         negative = (s.charAt(0) == '-');
         offset++;
       }
-      BigInteger bigint = BigInteger.ZERO;
+      FastInteger mant = new FastInteger();
       boolean haveDecimalPoint = false;
       boolean haveDigits = false;
       boolean haveExponent = false;
-      BigInteger newScale = BigInteger.ZERO;
+      FastInteger newScale = new FastInteger();
       int i = offset;
       for (; i < s.length(); i++) {
         if (s.charAt(i) >= '0' && s.charAt(i) <= '9') {
-          bigint=bigint.multiply(BigInteger.TEN);
           int thisdigit = (int)(s.charAt(i) - '0');
-          bigint=bigint.add(BigInteger.valueOf(((long)thisdigit)));
+          mant.Multiply(10);
+          mant.Add(thisdigit);
           haveDigits = true;
           if (haveDecimalPoint) {
-            newScale=newScale.subtract(BigInteger.ONE);
+            newScale.Add(-1);
           }
         } else if (s.charAt(i) == '.') {
           if (haveDecimalPoint)
@@ -171,7 +171,7 @@ import java.math.*;
       if (!haveDigits)
         throw new NumberFormatException();
       if (haveExponent) {
-        BigInteger exponent = BigInteger.ZERO;
+        FastInteger exp=new FastInteger();
         offset = 1;
         haveDigits = false;
         if (i == s.length()) throw new NumberFormatException();
@@ -182,22 +182,23 @@ import java.math.*;
         for (; i < s.length(); i++) {
           if (s.charAt(i) >= '0' && s.charAt(i) <= '9') {
             haveDigits = true;
-            exponent=exponent.multiply(BigInteger.TEN);
             int thisdigit = (int)(s.charAt(i) - '0') * offset;
-            exponent=exponent.add(BigInteger.valueOf(((long)thisdigit)));
+            exp.Multiply(10);
+            exp.Add(thisdigit);
           } else {
             throw new NumberFormatException();
           }
         }
         if (!haveDigits)
           throw new NumberFormatException();
-        newScale=newScale.add(exponent);
+        newScale.Add(exp);
       } else if (i != s.length()) {
         throw new NumberFormatException();
       }
+      BigInteger bigint=mant.getValue();
       if (negative)
         bigint=(bigint).negate();
-      return new DecimalFraction(bigint, newScale);
+      return new DecimalFraction(bigint, newScale.getValue());
     }
 
     private BigInteger
@@ -205,17 +206,11 @@ import java.math.*;
                             BigInteger e1,
                             BigInteger e2) {
       boolean negative = (mantissa.signum() < 0);
+      if(mantissa.signum()==0)return BigInteger.ZERO;
       if (negative) mantissa=mantissa.negate();
       BigInteger diff=e1.subtract(e2);
       diff=(diff).abs();
-      while(diff.compareTo(BigInt5)>0){
-        mantissa=mantissa.multiply(BigInteger.valueOf(100000));
-        diff=diff.subtract(BigInt5);
-      }
-      while(diff.signum()>0){
-        mantissa=mantissa.multiply(BigInteger.TEN);
-        diff=diff.subtract(BigInteger.ONE);
-      }
+      mantissa=mantissa.multiply(FindPowerOfTen(diff));
       if (negative) mantissa=mantissa.negate();
       return mantissa;
     }
@@ -249,6 +244,394 @@ import java.math.*;
       return a.compareTo(b) > 0 ? a : b;
     }
 
+    enum RoundingMode {
+      Down, Up,
+      HalfDown, HalfUp, HalfEven,
+      Ceiling, Floor
+    }
+
+    static BigInteger FindPowerOfFive(BigInteger diff){
+      if(diff.signum()<=0)return BigInteger.ONE;
+      BigInteger bigpow=BigInteger.ZERO;
+      FastInteger intcurexp=new FastInteger(diff);
+      if(intcurexp.compareTo(27)<=0){
+        return FindPowerOfFive(intcurexp.AsInt32());
+      }
+      BigInteger mantissa=BigInteger.ONE;
+      while (intcurexp.signum()>0) {
+        if(intcurexp.compareTo(27)<=0){
+          bigpow=FindPowerOfFive(intcurexp.AsInt32());
+          mantissa=mantissa.multiply(bigpow);
+          break;
+        } else if(intcurexp.compareTo(9999999)<=0){
+          bigpow=(FindPowerOfFive(1)).pow(intcurexp.AsInt32());
+          mantissa=mantissa.multiply(bigpow);
+          break;
+        } else {
+          if(bigpow.signum()==0)
+            bigpow=(FindPowerOfFive(1)).pow(9999999);
+          mantissa=mantissa.multiply(bigpow);
+          intcurexp.Add(-9999999);
+        }
+      }
+      return mantissa;
+    }
+    
+    static BigInteger FindPowerOfTen(BigInteger diff){
+      if(diff.signum()<=0)return BigInteger.ONE;
+      BigInteger bigpow=BigInteger.ZERO;
+      FastInteger intcurexp=new FastInteger(diff);
+      if(intcurexp.compareTo(18)<=0){
+        return FindPowerOfTen(intcurexp.AsInt32());
+      }
+      BigInteger mantissa=BigInteger.ONE;
+      while (intcurexp.signum()>0) {
+        if(intcurexp.compareTo(18)<=0){
+          bigpow=FindPowerOfTen(intcurexp.AsInt32());
+          mantissa=mantissa.multiply(bigpow);
+          break;
+        } else if(intcurexp.compareTo(9999999)<=0){
+          bigpow=(FindPowerOfTen(1)).pow(intcurexp.AsInt32());
+          mantissa=mantissa.multiply(bigpow);
+          break;
+        } else {
+          if(bigpow.signum()==0)
+            bigpow=(FindPowerOfTen(1)).pow(9999999);
+          mantissa=mantissa.multiply(bigpow);
+          intcurexp.Add(-9999999);
+        }
+      }
+      return mantissa;
+    }
+
+    static BigInteger FindPowerOfFive(long precision){
+      if(precision<=0)return BigInteger.ONE;
+      if(precision<BigIntPowersOfFive.length)
+        return BigIntPowersOfFive[(int)precision];
+      BigInteger ret=BigInteger.ONE;
+      BigInteger bigpow=BigInteger.ZERO;
+      while(precision>0){
+        if(precision<=27){
+          bigpow=BigIntPowersOfFive[(int)precision];
+          ret=ret.multiply(bigpow);
+          break;
+        } else if(precision<=9999999){
+          bigpow=(BigIntPowersOfFive[1]).pow((int)precision);
+          ret=ret.multiply(bigpow);
+          break;
+        } else {
+          if(bigpow.signum()==0)
+            bigpow=(BigIntPowersOfFive[1]).pow(9999999);
+          ret=ret.multiply(bigpow);
+          precision-=9999999;
+        }
+      }
+      return ret;
+    }
+    
+    static BigInteger FindPowerOfTen(long precision){
+      if(precision<=0)return BigInteger.ONE;
+      if(precision<BigIntPowersOfTen.length)
+        return BigIntPowersOfTen[(int)precision];
+      BigInteger ret=BigInteger.ONE;
+      BigInteger bigpow=BigInteger.ZERO;
+      while(precision>0){
+        if(precision<=18){
+          bigpow=BigIntPowersOfTen[(int)precision];
+          ret=ret.multiply(bigpow);
+          break;
+        } else if(precision<=9999999){
+          bigpow=(BigIntPowersOfTen[1]).pow((int)precision);
+          ret=ret.multiply(bigpow);
+          break;
+        } else {
+          if(bigpow.signum()==0)
+            bigpow=(BigIntPowersOfTen[1]).pow(9999999);
+          ret=ret.multiply(bigpow);
+          precision-=9999999;
+        }
+      }
+      return ret;
+    }
+    
+    /**
+     * A mutable integer class initially backed by a 64-bit integer, that
+     * only uses a big integer when arithmetic operations would overflow
+     * the 64-bit integer.
+     */
+    private static final class FastInteger {
+      long smallValue;
+      BigInteger largeValue;
+      boolean usingLarge;
+      
+      public FastInteger(){
+        smallValue=0;
+        usingLarge=false;
+        largeValue=BigInteger.ZERO;
+      }
+
+      public FastInteger(long value){
+        smallValue=value;
+        usingLarge=false;
+        largeValue=BigInteger.ZERO;
+      }
+      
+      public FastInteger(FastInteger value){
+        smallValue=value.smallValue;
+        usingLarge=value.usingLarge;
+        largeValue=value.largeValue;
+      }
+
+      // This constructor converts a big integer to a 64-bit one
+      // if it's small enough
+      public FastInteger(BigInteger bigintVal){
+        if(bigintVal.compareTo(BigInteger.valueOf(Long.MIN_VALUE))>=0 &&
+           bigintVal.compareTo(BigInteger.valueOf(Long.MAX_VALUE))<=0){
+          smallValue=bigintVal.longValue();
+          usingLarge=false;
+          largeValue=BigInteger.ZERO;
+        } else {
+          smallValue=0;
+          usingLarge=true;
+          largeValue=bigintVal;
+        }
+      }
+      
+      public int AsInt32() {
+        if(usingLarge){
+          return largeValue.intValue();
+        } else {
+          return ((int)smallValue);
+        }
+      }
+      public int compareTo(FastInteger val) {
+        if(usingLarge || val.usingLarge){
+          BigInteger valValue=val.getValue();
+          return largeValue.compareTo(valValue);
+        } else {
+          return (val.smallValue==smallValue) ? 0 : 
+            (smallValue<val.smallValue ? -1 : 1);
+        }
+      }
+      
+      public int compareTo(long val) {
+        if(usingLarge){
+          return largeValue.compareTo(BigInteger.valueOf(val));
+        } else {
+          return (val==smallValue) ? 0 : (smallValue<val ? -1 : 1);
+        }
+      }
+      
+      public void Multiply(int val) {
+        if(val==0){
+          smallValue=0;
+          usingLarge=false;
+        } else if(usingLarge){
+          largeValue=largeValue.multiply(BigInteger.valueOf(val));
+        } else {
+          boolean apos = (smallValue > 0L);
+          boolean bpos = (val > 0L);
+          if (
+            (apos && ((!bpos && (Long.MIN_VALUE / smallValue) > val) ||
+                      (bpos && smallValue > (Long.MAX_VALUE / val)))) ||
+            (!apos && ((!bpos && smallValue != 0L &&
+                        (Long.MAX_VALUE / smallValue) > val) ||
+                       (bpos && smallValue < (Long.MIN_VALUE / val))))) {
+            // would overflow, convert to large
+            largeValue=BigInteger.valueOf(smallValue);
+            usingLarge=true;
+            largeValue=largeValue.multiply(BigInteger.valueOf(val));
+          } else {
+            smallValue*=val;
+          }
+        }
+      }
+      
+      public void Add(FastInteger val) {
+        if(usingLarge || val.usingLarge){
+          BigInteger valValue=val.getValue();
+          largeValue=largeValue.add(valValue);
+        } else if((smallValue < 0 && (long)val.smallValue < Long.MIN_VALUE - smallValue) ||
+                  (smallValue > 0 && (long)val.smallValue > Long.MAX_VALUE - smallValue)){
+          // would overflow, convert to large
+          largeValue=BigInteger.valueOf(smallValue);
+          usingLarge=true;
+          largeValue=largeValue.add(BigInteger.valueOf(val.smallValue));
+        } else{
+          smallValue+=val.smallValue;
+        }
+      }
+      
+      public void Add(int val) {
+        if(val!=0){
+          if(usingLarge){
+            largeValue=largeValue.add(BigInteger.valueOf(val));
+          } else if((smallValue < 0 && (long)val < Long.MIN_VALUE - smallValue) ||
+                    (smallValue > 0 && (long)val > Long.MAX_VALUE - smallValue)){
+            // would overflow, convert to large
+            largeValue=BigInteger.valueOf(smallValue);
+            usingLarge=true;
+            largeValue=largeValue.add(BigInteger.valueOf(val));
+          } else{
+            smallValue+=val;
+          }
+        }
+      }
+      
+      public int signum() {
+          return usingLarge ? largeValue.signum() : (
+            (smallValue==0) ? 0 : (smallValue<0 ? -1 : 1));
+        }
+      
+      public BigInteger getValue() {
+          return usingLarge ? largeValue : BigInteger.valueOf(smallValue);
+        }
+    }
+    
+    static BigInteger[] DivideWithPrecision(
+      BigInteger dividend, // NOTE: Assumes dividend is nonnegative
+      BigInteger bigdivisor,
+      long minimumPrecision // in decimal digits
+    ) {
+      if(bigdivisor.signum()==0)
+        throw new ArithmeticException("division by zero");
+      BigInteger bigquotient = BigInteger.ZERO;
+      BigInteger bigrem = BigInteger.ZERO;
+      FastInteger scale = new FastInteger();
+      BigInteger minInclusive=FindPowerOfTen(minimumPrecision-1);
+      BigInteger bigintTen = FindPowerOfTen(1);
+      if(dividend.compareTo(bigdivisor) < 0){
+        while (dividend.compareTo(bigdivisor) < 0) {
+          scale.Add(1);
+          dividend=dividend.multiply(bigintTen);
+        }
+      } else {
+        BigInteger divisormul;
+        divisormul=bigdivisor.multiply(FindPowerOfTen(5));
+        while (dividend.compareTo(divisormul) >= 0) {
+          scale.Add(5);
+          bigdivisor=divisormul;
+          divisormul=bigdivisor.multiply(FindPowerOfTen(5));
+        }
+        divisormul=bigdivisor.multiply(FindPowerOfTen(1));
+        while (dividend.compareTo(divisormul) >= 0) {
+          scale.Add(1);
+          bigdivisor=divisormul;
+          divisormul=bigdivisor.multiply(FindPowerOfTen(1));
+        }
+      }
+      while(true) {
+        BigInteger newquotient;
+BigInteger[] divrem=(dividend).divideAndRemainder(bigdivisor);
+newquotient=divrem[0];
+bigrem=divrem[1];
+        if(bigquotient.signum()==0)
+          bigquotient=newquotient;
+        else
+          bigquotient=bigquotient.add(newquotient);
+        if (scale.signum() >= 0 && bigrem.signum()==0) {
+          break;
+        }
+        if(bigquotient.compareTo(minInclusive)>=0){
+          break;
+        }
+        scale.Add(1);
+        dividend = bigrem;
+        bigquotient=bigquotient.multiply(bigintTen);
+        dividend=dividend.multiply(bigintTen);
+      }
+      if (bigrem.signum()!=0) {
+        // Round half-up
+        // TODO: Use half-even rounding instead
+        BigInteger halfdivisor = bigdivisor;
+        halfdivisor=halfdivisor.shiftRight(1);
+        if (bigrem.compareTo(halfdivisor) >= 0) {
+          bigrem=bigrem.add(BigInteger.ONE);
+        }
+      }
+      BigInteger scaleValue=scale.getValue();
+      BigInteger negscale=(scaleValue).negate();
+      return new BigInteger[]{
+        bigquotient,bigrem,negscale
+      };
+    }
+    
+    static BigInteger[] Round(
+      BigInteger coeff,
+      BigInteger exponent,
+      long precision,
+      RoundingMode mode
+    ){
+      int sign=coeff.signum();
+      if(sign!=0){
+        BigInteger powerForPrecision=FindPowerOfTen(precision);
+        if(sign<0)coeff=coeff.negate();
+        int digitsFollowingLeftmost=0; // OR of all digits following the leftmost digit
+        int digitLeftmost=0;
+        int exponentChange=0;
+        while(coeff.compareTo(powerForPrecision)<0){
+          BigInteger digit;
+          BigInteger quotient;
+BigInteger[] divrem=(coeff).divideAndRemainder(FindPowerOfTen(1));
+quotient=divrem[0];
+digit=divrem[1];
+          coeff=quotient;
+          int intDigit=digit.intValue();
+          digitsFollowingLeftmost|=digitLeftmost;
+          digitLeftmost=intDigit;
+          exponentChange+=1;
+          if(exponentChange>=1000){
+            exponent=exponent.add(BigInteger.valueOf(exponentChange));
+            exponentChange=0;
+          }
+        }
+        if(exponentChange>0){
+          exponent=exponent.add(BigInteger.valueOf(exponentChange));
+        }
+        boolean incremented=false;
+        if(mode==RoundingMode.HalfUp){
+          if(digitLeftmost>=5){
+            coeff=coeff.add(BigInteger.ONE);
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.Up){
+          if((digitLeftmost|digitsFollowingLeftmost)!=0){
+            coeff=coeff.add(BigInteger.ONE);
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.HalfEven){
+          if(digitLeftmost>5 || (digitLeftmost==5 && digitsFollowingLeftmost!=0)){
+            coeff=coeff.add(BigInteger.ONE);
+            incremented=true;
+          } else if(digitLeftmost==5 && !coeff.testBit(0)){
+            coeff=coeff.add(BigInteger.ONE);
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.HalfDown){
+          if(digitLeftmost>5 || (digitLeftmost==5 && digitsFollowingLeftmost!=0)){
+            coeff=coeff.add(BigInteger.ONE);
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.Ceiling){
+          if((digitLeftmost|digitsFollowingLeftmost)!=0 && sign>0){
+            coeff=coeff.add(BigInteger.ONE);
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.Floor){
+          if((digitLeftmost|digitsFollowingLeftmost)!=0 && sign<0){
+            coeff=coeff.add(BigInteger.ONE);
+            incremented=true;
+          }
+        }
+        if(incremented && coeff.compareTo(powerForPrecision)>=0){
+          coeff=coeff.divide(FindPowerOfTen(1));
+          exponent=exponent.add(BigInteger.ONE);
+        }
+      }
+      if(sign<0)coeff=coeff.negate();
+      return new BigInteger[]{ coeff, exponent };
+    }
+    
     /**
      * Gets the lesser value between two DecimalFraction values.
      */
@@ -343,7 +726,18 @@ import java.math.*;
       int s = this.signum();
       int ds = decfrac.signum();
       if (s != ds) return (s < ds) ? -1 : 1;
-      return this.Subtract(decfrac).signum();
+      int expcmp = exponent.compareTo(decfrac.exponent);
+      if (expcmp == 0) {
+        return mantissa.compareTo(decfrac.mantissa);
+      } else if (expcmp > 0) {
+        BigInteger newmant = RescaleByExponentDiff(
+          mantissa, exponent, decfrac.exponent);
+        return newmant.compareTo(decfrac.mantissa);
+      } else {
+        BigInteger newmant = RescaleByExponentDiff(
+          decfrac.mantissa, exponent, decfrac.exponent);
+        return this.mantissa.compareTo(newmant);
+      }
     }
 
     private boolean InsertString(StringBuilder builder, BigInteger index, char c) {
@@ -397,7 +791,7 @@ import java.math.*;
       builder.append(this.mantissa.toString());
       BigInteger adjustedExponent = this.exponent;
       BigInteger scale=(this.exponent).negate();
-      BigInteger sbLength = BigInteger.valueOf((builder.length()));
+      BigInteger sbLength = BigInteger.valueOf(builder.length());
       BigInteger negaPos = BigInteger.ZERO;
       if (builder.charAt(0) == '-') {
         sbLength = sbLength.subtract(BigInteger.ONE);
@@ -411,7 +805,7 @@ import java.math.*;
       adjustedExponent = adjustedExponent.add(sbLength);
       adjustedExponent = adjustedExponent.subtract(BigInteger.ONE);
       BigInteger decimalPointAdjust = BigInteger.ONE;
-      BigInteger threshold = BigInteger.valueOf((-6));
+      BigInteger threshold = BigInteger.valueOf(-6);
       if (mode == 1) { // engineering String adjustments
         BigInteger newExponent = adjustedExponent;
         boolean adjExponentNegative = (adjustedExponent.signum() < 0);
@@ -424,16 +818,16 @@ import java.math.*;
               decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
               newExponent=newExponent.add(BigInteger.ONE);
             } else {
-              decimalPointAdjust=decimalPointAdjust.add(BigInteger.valueOf(2));
-              newExponent=newExponent.add(BigInteger.valueOf(2));
+              decimalPointAdjust=decimalPointAdjust.add(BigInt2);
+              newExponent=newExponent.add(BigInt2);
             }
           } else if (intphase == 2) {
             if (!adjExponentNegative) {
               decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
               newExponent=newExponent.add(BigInteger.ONE);
             } else {
-              decimalPointAdjust=decimalPointAdjust.add(BigInteger.valueOf(2));
-              newExponent=newExponent.add(BigInteger.valueOf(2));
+              decimalPointAdjust=decimalPointAdjust.add(BigInt2);
+              newExponent=newExponent.add(BigInt2);
             }
           }
           threshold=threshold.add(BigInteger.ONE);
@@ -443,16 +837,16 @@ import java.math.*;
               decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
               newExponent=newExponent.subtract(BigInteger.ONE);
             } else {
-              decimalPointAdjust=decimalPointAdjust.add(BigInteger.valueOf(2));
-              newExponent=newExponent.subtract(BigInteger.valueOf(2));
+              decimalPointAdjust=decimalPointAdjust.add(BigInt2);
+              newExponent=newExponent.subtract(BigInt2);
             }
           } else if (intphase == 2) {
             if (adjExponentNegative) {
               decimalPointAdjust=decimalPointAdjust.add(BigInteger.ONE);
               newExponent=newExponent.subtract(BigInteger.ONE);
             } else {
-              decimalPointAdjust=decimalPointAdjust.add(BigInteger.valueOf(2));
-              newExponent=newExponent.subtract(BigInteger.valueOf(2));
+              decimalPointAdjust=decimalPointAdjust.add(BigInt2);
+              newExponent=newExponent.subtract(BigInt2);
             }
           }
         }
@@ -471,10 +865,10 @@ import java.math.*;
           } else if (cmp == 0) {
             InsertString(builder, decimalPoint, "0.");
           } else if (decimalPoint.compareTo(
-            (BigInteger.valueOf((builder.length())).add(negaPos))) > 0) {
+            (BigInteger.valueOf(builder.length()).add(negaPos))) > 0) {
             InsertString(builder, (sbLength.add(negaPos)), '.');
             InsertString(builder, (sbLength.add(negaPos)), '0',
-                         (decimalPoint.subtract(BigInteger.valueOf((builder.length())))));
+                         (decimalPoint.subtract(BigInteger.valueOf(builder.length()))));
           } else {
             InsertString(builder, decimalPoint, '.');
           }
@@ -490,9 +884,9 @@ import java.math.*;
           AppendString(builder, '0', (decimalPointAdjust.subtract(BigInteger.ONE)));
         } else {
           BigInteger tmp = negaPos.add(decimalPointAdjust);
-          int cmp = tmp.compareTo(BigInteger.valueOf((builder.length())));
+          int cmp = tmp.compareTo(BigInteger.valueOf(builder.length()));
           if (cmp > 0) {
-            AppendString(builder, '0', (tmp.subtract(BigInteger.valueOf((builder.length())))));
+            AppendString(builder, '0', (tmp.subtract(BigInteger.valueOf(builder.length()))));
           }
           if (cmp < 0) {
             InsertString(builder, tmp, '.');
@@ -501,7 +895,7 @@ import java.math.*;
         if (adjustedExponent.signum()!=0) {
           builder.append('E');
           builder.append(adjustedExponent.signum()<0 ? '-' : '+');
-          BigInteger sbPos = BigInteger.valueOf((builder.length()));
+          BigInteger sbPos = BigInteger.valueOf(builder.length());
           adjustedExponent = (adjustedExponent).abs();
           while (adjustedExponent.signum()!=0) {
             BigInteger digit = (adjustedExponent.remainder(BigInteger.TEN));
@@ -513,39 +907,43 @@ import java.math.*;
       }
     }
 
+    private static BigInteger BigInt2 = BigInteger.valueOf(2);
+    
+    private static BigInteger[] BigIntPowersOfTen=new BigInteger[]{
+      BigInteger.ONE, BigInteger.TEN, BigInteger.valueOf(100), BigInteger.valueOf(1000), BigInteger.valueOf(10000), BigInteger.valueOf(100000), BigInteger.valueOf(1000000), BigInteger.valueOf(10000000), BigInteger.valueOf(100000000), BigInteger.valueOf(1000000000),
+      BigInteger.valueOf(10000000000L), BigInteger.valueOf(100000000000L), BigInteger.valueOf(1000000000000L), BigInteger.valueOf(10000000000000L),
+      BigInteger.valueOf(100000000000000L), BigInteger.valueOf(1000000000000000L), BigInteger.valueOf(10000000000000000L),
+      BigInteger.valueOf(100000000000000000L), BigInteger.valueOf(1000000000000000000L)
+    };
+    
+    private static BigInteger[] BigIntPowersOfFive=new BigInteger[]{
+      BigInteger.ONE, BigInteger.valueOf(5), BigInteger.valueOf(25), BigInteger.valueOf(125), BigInteger.valueOf(625), BigInteger.valueOf(3125), BigInteger.valueOf(15625), BigInteger.valueOf(78125), BigInteger.valueOf(390625),
+      BigInteger.valueOf(1953125), BigInteger.valueOf(9765625), BigInteger.valueOf(48828125), BigInteger.valueOf(244140625), BigInteger.valueOf(1220703125),
+      BigInteger.valueOf(6103515625L), BigInteger.valueOf(30517578125L), BigInteger.valueOf(152587890625L), BigInteger.valueOf(762939453125L),
+      BigInteger.valueOf(3814697265625L), BigInteger.valueOf(19073486328125L), BigInteger.valueOf(95367431640625L),
+      BigInteger.valueOf(476837158203125L), BigInteger.valueOf(2384185791015625L), BigInteger.valueOf(11920928955078125L),
+      BigInteger.valueOf(59604644775390625L), BigInteger.valueOf(298023223876953125L), BigInteger.valueOf(1490116119384765625L),
+      BigInteger.valueOf(7450580596923828125L)
+    };
+
+    
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      */
     public BigInteger ToBigInteger() {
-      if (this.getExponent().signum()==0) {
+      int sign=this.getExponent().signum();
+      if (sign==0) {
         return this.getMantissa();
-      } else if (this.getExponent().signum()>0) {
-        BigInteger curexp = this.getExponent();
+      } else if (sign>0) {
         BigInteger bigmantissa = this.getMantissa();
-        boolean neg = (bigmantissa.signum() < 0);
-        if (neg) bigmantissa=bigmantissa.negate();
-        while (curexp.signum()>0 && bigmantissa.signum()!=0) {
-          bigmantissa=bigmantissa.multiply(BigInteger.TEN);
-          curexp=curexp.subtract(BigInteger.ONE);
-        }
-        if (neg) bigmantissa=bigmantissa.negate();
+        bigmantissa=bigmantissa.multiply(FindPowerOfTen(this.getExponent()));
         return bigmantissa;
       } else {
-        BigInteger curexp = this.getExponent();
         BigInteger bigmantissa = this.getMantissa();
-        boolean neg = (bigmantissa.signum() < 0);
-        if (neg) bigmantissa=bigmantissa.negate();
-        while (curexp.signum()<0 && bigmantissa.signum()!=0) {
-          if (curexp.compareTo(BigIntNeg5)<=0) {
-            bigmantissa=bigmantissa.divide(BigInteger.valueOf(100000));
-            curexp=curexp.add(BigInt5);
-          } else {
-            bigmantissa=bigmantissa.divide(BigInteger.TEN);
-            curexp=curexp.add(BigInteger.ONE);
-          }
-        }
-        if (neg) bigmantissa=bigmantissa.negate();
+        BigInteger bigexponent=this.getExponent();
+        bigexponent=bigexponent.negate();
+        bigmantissa=bigmantissa.divide(FindPowerOfTen(bigexponent));
         return bigmantissa;
       }
     }
@@ -608,24 +1006,9 @@ import java.math.*;
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = BigInteger.valueOf(fpMantissa);
-        long scale = fpExponent;
-        while (fpExponent < 0) {
-          if (fpExponent <= -20) {
-            bigmantissa=bigmantissa.multiply(BigInt5Pow20);
-            fpExponent += 20;
-          } else if (fpExponent <= -10) {
-            bigmantissa=bigmantissa.multiply(BigInt5Pow10);
-            fpExponent += 10;
-          } else if (fpExponent <= -5) {
-            bigmantissa=bigmantissa.multiply(BigInt5Pow5);
-            fpExponent += 5;
-          } else {
-            bigmantissa=bigmantissa.multiply(BigInt5);
-            fpExponent += 1;
-          }
-        }
+        bigmantissa=bigmantissa.multiply(FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa=(bigmantissa).negate();
-        return new DecimalFraction(bigmantissa, scale);
+        return new DecimalFraction(bigmantissa, fpExponent);
       }
     }
 
@@ -665,37 +1048,12 @@ import java.math.*;
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = BigInteger.valueOf(fpMantissa);
-        long scale = fpExponent;
-        while (fpExponent < 0) {
-          if (fpExponent <= -20) {
-            bigmantissa=bigmantissa.multiply(BigInt5Pow20);
-            fpExponent += 20;
-          } else if (fpExponent <= -10) {
-            bigmantissa=bigmantissa.multiply(BigInt5Pow10);
-            fpExponent += 10;
-          } else if (fpExponent <= -5) {
-            bigmantissa=bigmantissa.multiply(BigInt5Pow5);
-            fpExponent += 5;
-          } else {
-            bigmantissa=bigmantissa.multiply(BigInt5);
-            fpExponent += 1;
-          }
-        }
+        bigmantissa=bigmantissa.multiply(FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa=(bigmantissa).negate();
-        return new DecimalFraction(bigmantissa, scale);
+        return new DecimalFraction(bigmantissa, fpExponent);
       }
     }
-
-    private static BigInteger BigInt5 = BigInteger.valueOf(5);
-    private static BigInteger BigInt10 = BigInteger.TEN;
-    private static BigInteger BigInt20 = BigInteger.valueOf(20);
-    private static BigInteger BigIntNeg5 = BigInteger.valueOf((-5));
-    private static BigInteger BigIntNeg10 = BigInteger.valueOf((-10));
-    private static BigInteger BigIntNeg20 = BigInteger.valueOf((-20));
-    private static BigInteger BigInt5Pow5 = BigInteger.valueOf(3125);
-    private static BigInteger BigInt5Pow10 = BigInteger.valueOf(9765625);
-    private static BigInteger BigInt5Pow20 = BigInteger.valueOf((95367431640625L));
-
+    
     /**
      * Creates a decimal fraction from an arbitrary-precision binary floating-point
      * number.
@@ -709,59 +1067,36 @@ import java.math.*;
         return new DecimalFraction(bigintMant);
       } else if (bigintExp.signum()>0) {
         // Scaled integer
-        BigInteger curexp = bigintExp;
+        FastInteger intcurexp=new FastInteger(bigintExp);
         BigInteger bigmantissa = bigintMant;
         boolean neg = (bigmantissa.signum() < 0);
         if (neg) bigmantissa=(bigmantissa).negate();
-        while (curexp.signum()>0) {
-          int shift = 64;
-          if (curexp.compareTo(BigInteger.valueOf(64)) < 0) {
-            shift = curexp.intValue();
+        while (intcurexp.signum() > 0) {
+          int shift = 512;
+          if (intcurexp.compareTo(512) < 0) {
+            shift = intcurexp.AsInt32();
           }
           bigmantissa=bigmantissa.shiftLeft(shift);
-          curexp=curexp.subtract(BigInteger.valueOf(shift));
+          intcurexp.Add(-shift);
         }
         if (neg) bigmantissa=(bigmantissa).negate();
         return new DecimalFraction(bigmantissa);
       } else {
         // Fractional number
         BigInteger bigmantissa = bigintMant;
-        BigInteger curexp = bigintExp;
-        while (curexp.signum() < 0) {
-          if (curexp.compareTo(BigIntNeg20) <= 0) {
-            bigmantissa=bigmantissa.multiply(BigInt5Pow20);
-            curexp=curexp.add(BigInt20);
-          } else if (curexp.compareTo(BigIntNeg10) <= 0) {
-            bigmantissa=bigmantissa.multiply(BigInt5Pow10);
-            curexp=curexp.add(BigInt10);
-          } else if (curexp.compareTo(BigIntNeg5) <= 0) {
-            bigmantissa=bigmantissa.multiply(BigInt5Pow5);
-            curexp=curexp.add(BigInt5);
-          } else if (curexp.compareTo(BigInteger.valueOf((-4))) <= 0) {
-            bigmantissa=bigmantissa.multiply(BigInteger.valueOf(625));
-            curexp=curexp.add(BigInteger.valueOf(4));
-          } else if (curexp.compareTo(BigInteger.valueOf((-3))) <= 0) {
-            bigmantissa=bigmantissa.multiply(BigInteger.valueOf(125));
-            curexp=curexp.add(BigInteger.valueOf(3));
-          } else if (curexp.compareTo(BigInteger.valueOf((-2))) <= 0) {
-            bigmantissa=bigmantissa.multiply(BigInteger.valueOf(25));
-            curexp=curexp.add(BigInteger.valueOf(2));
-          } else {
-            bigmantissa=bigmantissa.multiply(BigInt5);
-            curexp=curexp.add(BigInteger.ONE);
-          }
-        }
+        BigInteger negbigintExp=(bigintExp).negate();
+        bigmantissa=bigmantissa.multiply(FindPowerOfFive(negbigintExp));
         return new DecimalFraction(bigmantissa, bigintExp);
       }
     }
 
     /*
-    internal DecimalFraction MovePointLeft(BigInteger steps){
+    public DecimalFraction MovePointLeft(BigInteger steps) {
       if(steps.signum()==0)return this;
       return new DecimalFraction(this.getMantissa(),this.getExponent().subtract(steps));
     }
     
-    internal DecimalFraction MovePointRight(BigInteger steps){
+    public DecimalFraction MovePointRight(BigInteger steps) {
       if(steps.signum()==0)return this;
       return new DecimalFraction(this.getMantissa(),this.getExponent().add(steps));
     }
