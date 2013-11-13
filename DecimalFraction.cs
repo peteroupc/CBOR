@@ -11,6 +11,7 @@ using System.Text;
 using System.Numerics;
 
 namespace PeterO {
+  
   /// <summary>
   /// Represents an arbitrary-precision decimal floating-point number.
   /// Consists of a integer mantissa and an integer exponent,
@@ -120,10 +121,20 @@ namespace PeterO {
     /// <param name="mantissaLong">The desired value of the bigfloat</param>
     public DecimalFraction(long mantissaLong) {
       this.exponent = BigInteger.Zero;
-      this.mantissa = new BigInteger(mantissaLong);
+      this.mantissa = (BigInteger)mantissaLong;
     }
 
+    /// <summary>
+    /// Creates a decimal fraction with the given mantissa and an exponent of 0.
+    /// </summary>
+    /// <param name="mantissaLong">The unscaled value.</param>
+    /// <param name="exponentLong">The decimal exponent.</param>
+    public DecimalFraction(long mantissaLong, long exponentLong) {
+      this.exponent = (BigInteger)exponentLong;
+      this.mantissa = (BigInteger)mantissaLong;
+    }
 
+    
     ///<summary>
     /// Creates a decimal fraction from a string that represents a number.
     /// <para>
@@ -206,10 +217,8 @@ namespace PeterO {
       } else if (i != s.Length) {
         throw new FormatException();
       }
-      BigInteger bigint=mant.Value;
-      if (negative)
-        bigint = -(BigInteger)bigint;
-      return new DecimalFraction(bigint, newScale.Value);
+      if(negative)mant.Negate();
+      return new DecimalFraction(mant.AsBigInteger(), newScale.AsBigInteger());
     }
 
     private BigInteger
@@ -365,220 +374,6 @@ namespace PeterO {
       return ret;
     }
     
-    /// <summary>
-    /// A mutable integer class initially backed by a 64-bit integer,
-    /// that only uses a big integer when arithmetic operations would
-    /// overflow the 64-bit integer.
-    /// </summary>
-    private sealed class FastInteger {
-      long smallValue;
-      BigInteger largeValue;
-      bool usingLarge;
-      
-      public FastInteger(){
-        smallValue=0;
-        usingLarge=false;
-        largeValue=BigInteger.Zero;
-      }
-
-      public FastInteger(long value){
-        smallValue=value;
-        usingLarge=false;
-        largeValue=BigInteger.Zero;
-      }
-      
-      public FastInteger(FastInteger value){
-        smallValue=value.smallValue;
-        usingLarge=value.usingLarge;
-        largeValue=value.largeValue;
-      }
-
-      // This constructor converts a big integer to a 64-bit one
-      // if it's small enough
-      public FastInteger(BigInteger bigintVal){
-        if(bigintVal.CompareTo((BigInteger)Int64.MinValue)>=0 &&
-           bigintVal.CompareTo((BigInteger)Int64.MaxValue)<=0){
-          smallValue=(long)bigintVal;
-          usingLarge=false;
-          largeValue=BigInteger.Zero;
-        } else {
-          smallValue=0;
-          usingLarge=true;
-          largeValue=bigintVal;
-        }
-      }
-      
-      public int AsInt32(){
-        if(usingLarge){
-          return (int)largeValue;
-        } else {
-          return unchecked((int)smallValue);
-        }
-      }
-      public int CompareTo(FastInteger val){
-        if(usingLarge || val.usingLarge){
-          BigInteger valValue=val.Value;
-          return largeValue.CompareTo(valValue);
-        } else {
-          return (val.smallValue==smallValue) ? 0 :
-            (smallValue<val.smallValue ? -1 : 1);
-        }
-      }
-      public FastInteger Abs(){
-        return (this.Sign<0) ? Negate() : this;
-      }
-      public FastInteger Mod(int divisor){
-        if(usingLarge){
-          largeValue=largeValue%(BigInteger)divisor;
-        } else {
-          smallValue%=divisor;
-        }
-        return this;
-      }
-      
-      public int CompareTo(long val){
-        if(usingLarge){
-          return largeValue.CompareTo((BigInteger)val);
-        } else {
-          return (val==smallValue) ? 0 : (smallValue<val ? -1 : 1);
-        }
-      }
-      
-      public FastInteger Multiply(int val){
-        if(val==0){
-          smallValue=0;
-          usingLarge=false;
-        } else if(usingLarge){
-          largeValue*=(BigInteger)val;
-        } else {
-          bool apos = (smallValue > 0L);
-          bool bpos = (val > 0L);
-          if (
-            (apos && ((!bpos && (Int64.MinValue / smallValue) > val) ||
-                      (bpos && smallValue > (Int64.MaxValue / val)))) ||
-            (!apos && ((!bpos && smallValue != 0L &&
-                        (Int64.MaxValue / smallValue) > val) ||
-                       (bpos && smallValue < (Int64.MinValue / val))))) {
-            // would overflow, convert to large
-            largeValue=(BigInteger)smallValue;
-            usingLarge=true;
-            largeValue*=(BigInteger)val;
-          } else {
-            smallValue*=val;
-          }
-        }
-        return this;
-      }
-      
-      public FastInteger Negate(){
-        if(usingLarge){
-          largeValue=-(BigInteger)largeValue;
-        } else {
-          if(smallValue==Int64.MinValue){
-            // would overflow, convert to large
-            largeValue=(BigInteger)smallValue;
-            usingLarge=true;
-            largeValue=-(BigInteger)largeValue;
-          } else {
-            smallValue=-smallValue;
-          }
-        }
-        return this;
-      }
-      
-      public FastInteger Subtract(FastInteger val){
-        if(usingLarge || val.usingLarge){
-          BigInteger valValue=val.Value;
-          largeValue-=(BigInteger)valValue;
-        } else if(((long)val.smallValue < 0 && Int64.MaxValue + (long)val.smallValue < smallValue) ||
-                  ((long)val.smallValue > 0 && Int64.MinValue + (long)val.smallValue > smallValue)){
-          // would overflow, convert to large
-          largeValue=(BigInteger)smallValue;
-          usingLarge=true;
-          largeValue-=(BigInteger)val.smallValue;
-        } else{
-          smallValue-=val.smallValue;
-        }
-        return this;
-      }
-
-      public FastInteger Subtract(int val){
-        if(usingLarge){
-          largeValue-=(BigInteger)val;
-        } else if(((long)val < 0 && Int64.MaxValue + (long)val < smallValue) ||
-                  ((long)val > 0 && Int64.MinValue + (long)val > smallValue)){
-          // would overflow, convert to large
-          largeValue=(BigInteger)smallValue;
-          usingLarge=true;
-          largeValue-=(BigInteger)val;
-        } else{
-          smallValue-=val;
-        }
-        return this;
-      }
-
-      public FastInteger Add(FastInteger val){
-        if(usingLarge || val.usingLarge){
-          BigInteger valValue=val.Value;
-          largeValue+=(BigInteger)valValue;
-        } else if((smallValue < 0 && (long)val.smallValue < Int64.MinValue - smallValue) ||
-                  (smallValue > 0 && (long)val.smallValue > Int64.MaxValue - smallValue)){
-          // would overflow, convert to large
-          largeValue=(BigInteger)smallValue;
-          usingLarge=true;
-          largeValue+=(BigInteger)val.smallValue;
-        } else{
-          smallValue+=val.smallValue;
-        }
-        return this;
-      }
-      
-      public FastInteger Divide(int divisor){
-        if(divisor!=0){
-          if(usingLarge){
-            largeValue+=(BigInteger)divisor;
-          } else if(divisor==-1 && smallValue==Int64.MinValue){
-            // would overflow, convert to large
-            largeValue=(BigInteger)smallValue;
-            usingLarge=true;
-            largeValue/=(BigInteger)divisor;
-          } else{
-            smallValue/=divisor;
-          }
-        }
-        return this;
-      }
-
-      public FastInteger Add(int val){
-        if(val!=0){
-          if(usingLarge){
-            largeValue+=(BigInteger)val;
-          } else if((smallValue < 0 && (long)val < Int64.MinValue - smallValue) ||
-                    (smallValue > 0 && (long)val > Int64.MaxValue - smallValue)){
-            // would overflow, convert to large
-            largeValue=(BigInteger)smallValue;
-            usingLarge=true;
-            largeValue+=(BigInteger)val;
-          } else{
-            smallValue+=val;
-          }
-        }
-        return this;
-      }
-      
-      public int Sign {
-        get {
-          return usingLarge ? largeValue.Sign : (
-            (smallValue==0) ? 0 : (smallValue<0 ? -1 : 1));
-        }
-      }
-      
-      public BigInteger Value {
-        get {
-          return usingLarge ? largeValue : (BigInteger)smallValue;
-        }
-      }
-    }
     
     internal static BigInteger[] DivideWithPrecision(
       BigInteger dividend, // NOTE: Assumes dividend is nonnegative
@@ -649,7 +444,7 @@ namespace PeterO {
         }
         
       }
-      BigInteger scaleValue=scale.Value;
+      BigInteger scaleValue=scale.AsBigInteger();
       BigInteger negscale = -(BigInteger)scaleValue;
       return new BigInteger[]{
         bigquotient,dividend,negscale

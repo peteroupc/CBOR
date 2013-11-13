@@ -12,6 +12,7 @@ at: http://upokecenter.com/d/
 import java.math.*;
 
 
+  
   /**
    * Represents an arbitrary-precision decimal floating-point number.
    * Consists of a integer mantissa and an integer exponent, both arbitrary-precision.
@@ -117,7 +118,18 @@ import java.math.*;
       this.mantissa = BigInteger.valueOf(mantissaLong);
     }
 
+    /**
+     * Creates a decimal fraction with the given mantissa and an exponent
+     * of 0.
+     * @param mantissaLong The unscaled value.
+     * @param exponentLong The decimal exponent.
+     */
+    public DecimalFraction(long mantissaLong, long exponentLong) {
+      this.exponent = BigInteger.valueOf(exponentLong);
+      this.mantissa = BigInteger.valueOf(mantissaLong);
+    }
 
+    
     /**
      * Creates a decimal fraction from a string that represents a number.
      * <p> The format of the string generally consists of:<ul> <li> An optional
@@ -195,10 +207,8 @@ import java.math.*;
       } else if (i != s.length()) {
         throw new NumberFormatException();
       }
-      BigInteger bigint=mant.getValue();
-      if (negative)
-        bigint=(bigint).negate();
-      return new DecimalFraction(bigint, newScale.getValue());
+      if(negative)mant.Negate();
+      return new DecimalFraction(mant.AsBigInteger(), newScale.AsBigInteger());
     }
 
     private BigInteger
@@ -354,216 +364,6 @@ import java.math.*;
       return ret;
     }
     
-    /**
-     * A mutable integer class initially backed by a 64-bit integer, that
-     * only uses a big integer when arithmetic operations would overflow
-     * the 64-bit integer.
-     */
-    private static final class FastInteger {
-      long smallValue;
-      BigInteger largeValue;
-      boolean usingLarge;
-      
-      public FastInteger(){
-        smallValue=0;
-        usingLarge=false;
-        largeValue=BigInteger.ZERO;
-      }
-
-      public FastInteger(long value){
-        smallValue=value;
-        usingLarge=false;
-        largeValue=BigInteger.ZERO;
-      }
-      
-      public FastInteger(FastInteger value){
-        smallValue=value.smallValue;
-        usingLarge=value.usingLarge;
-        largeValue=value.largeValue;
-      }
-
-      // This constructor converts a big integer to a 64-bit one
-      // if it's small enough
-      public FastInteger(BigInteger bigintVal){
-        if(bigintVal.compareTo(BigInteger.valueOf(Long.MIN_VALUE))>=0 &&
-           bigintVal.compareTo(BigInteger.valueOf(Long.MAX_VALUE))<=0){
-          smallValue=bigintVal.longValue();
-          usingLarge=false;
-          largeValue=BigInteger.ZERO;
-        } else {
-          smallValue=0;
-          usingLarge=true;
-          largeValue=bigintVal;
-        }
-      }
-      
-      public int AsInt32() {
-        if(usingLarge){
-          return largeValue.intValue();
-        } else {
-          return ((int)smallValue);
-        }
-      }
-      public int compareTo(FastInteger val) {
-        if(usingLarge || val.usingLarge){
-          BigInteger valValue=val.getValue();
-          return largeValue.compareTo(valValue);
-        } else {
-          return (val.smallValue==smallValue) ? 0 :
-            (smallValue<val.smallValue ? -1 : 1);
-        }
-      }
-      public FastInteger Abs() {
-        return (this.signum()<0) ? Negate() : this;
-      }
-      public FastInteger Mod(int divisor) {
-        if(usingLarge){
-          largeValue=largeValue.remainder(BigInteger.valueOf(divisor));
-        } else {
-          smallValue%=divisor;
-        }
-        return this;
-      }
-      
-      public int compareTo(long val) {
-        if(usingLarge){
-          return largeValue.compareTo(BigInteger.valueOf(val));
-        } else {
-          return (val==smallValue) ? 0 : (smallValue<val ? -1 : 1);
-        }
-      }
-      
-      public FastInteger Multiply(int val) {
-        if(val==0){
-          smallValue=0;
-          usingLarge=false;
-        } else if(usingLarge){
-          largeValue=largeValue.multiply(BigInteger.valueOf(val));
-        } else {
-          boolean apos = (smallValue > 0L);
-          boolean bpos = (val > 0L);
-          if (
-            (apos && ((!bpos && (Long.MIN_VALUE / smallValue) > val) ||
-                      (bpos && smallValue > (Long.MAX_VALUE / val)))) ||
-            (!apos && ((!bpos && smallValue != 0L &&
-                        (Long.MAX_VALUE / smallValue) > val) ||
-                       (bpos && smallValue < (Long.MIN_VALUE / val))))) {
-            // would overflow, convert to large
-            largeValue=BigInteger.valueOf(smallValue);
-            usingLarge=true;
-            largeValue=largeValue.multiply(BigInteger.valueOf(val));
-          } else {
-            smallValue*=val;
-          }
-        }
-        return this;
-      }
-      
-      public FastInteger Negate() {
-        if(usingLarge){
-          largeValue=(largeValue).negate();
-        } else {
-          if(smallValue==Long.MIN_VALUE){
-            // would overflow, convert to large
-            largeValue=BigInteger.valueOf(smallValue);
-            usingLarge=true;
-            largeValue=(largeValue).negate();
-          } else {
-            smallValue=-smallValue;
-          }
-        }
-        return this;
-      }
-      
-      public FastInteger Subtract(FastInteger val) {
-        if(usingLarge || val.usingLarge){
-          BigInteger valValue=val.getValue();
-          largeValue=largeValue.subtract(valValue);
-        } else if(((long)val.smallValue < 0 && Long.MAX_VALUE + (long)val.smallValue < smallValue) ||
-                  ((long)val.smallValue > 0 && Long.MIN_VALUE + (long)val.smallValue > smallValue)){
-          // would overflow, convert to large
-          largeValue=BigInteger.valueOf(smallValue);
-          usingLarge=true;
-          largeValue=largeValue.subtract(BigInteger.valueOf(val.smallValue));
-        } else{
-          smallValue-=val.smallValue;
-        }
-        return this;
-      }
-
-      public FastInteger Subtract(int val) {
-        if(usingLarge){
-          largeValue=largeValue.subtract(BigInteger.valueOf(val));
-        } else if(((long)val < 0 && Long.MAX_VALUE + (long)val < smallValue) ||
-                  ((long)val > 0 && Long.MIN_VALUE + (long)val > smallValue)){
-          // would overflow, convert to large
-          largeValue=BigInteger.valueOf(smallValue);
-          usingLarge=true;
-          largeValue=largeValue.subtract(BigInteger.valueOf(val));
-        } else{
-          smallValue-=val;
-        }
-        return this;
-      }
-
-      public FastInteger Add(FastInteger val) {
-        if(usingLarge || val.usingLarge){
-          BigInteger valValue=val.getValue();
-          largeValue=largeValue.add(valValue);
-        } else if((smallValue < 0 && (long)val.smallValue < Long.MIN_VALUE - smallValue) ||
-                  (smallValue > 0 && (long)val.smallValue > Long.MAX_VALUE - smallValue)){
-          // would overflow, convert to large
-          largeValue=BigInteger.valueOf(smallValue);
-          usingLarge=true;
-          largeValue=largeValue.add(BigInteger.valueOf(val.smallValue));
-        } else{
-          smallValue+=val.smallValue;
-        }
-        return this;
-      }
-      
-      public FastInteger Divide(int divisor) {
-        if(divisor!=0){
-          if(usingLarge){
-            largeValue=largeValue.add(BigInteger.valueOf(divisor));
-          } else if(divisor==-1 && smallValue==Long.MIN_VALUE){
-            // would overflow, convert to large
-            largeValue=BigInteger.valueOf(smallValue);
-            usingLarge=true;
-            largeValue=largeValue.divide(BigInteger.valueOf(divisor));
-          } else{
-            smallValue/=divisor;
-          }
-        }
-        return this;
-      }
-
-      public FastInteger Add(int val) {
-        if(val!=0){
-          if(usingLarge){
-            largeValue=largeValue.add(BigInteger.valueOf(val));
-          } else if((smallValue < 0 && (long)val < Long.MIN_VALUE - smallValue) ||
-                    (smallValue > 0 && (long)val > Long.MAX_VALUE - smallValue)){
-            // would overflow, convert to large
-            largeValue=BigInteger.valueOf(smallValue);
-            usingLarge=true;
-            largeValue=largeValue.add(BigInteger.valueOf(val));
-          } else{
-            smallValue+=val;
-          }
-        }
-        return this;
-      }
-      
-      public int signum() {
-          return usingLarge ? largeValue.signum() : (
-            (smallValue==0) ? 0 : (smallValue<0 ? -1 : 1));
-        }
-      
-      public BigInteger getValue() {
-          return usingLarge ? largeValue : BigInteger.valueOf(smallValue);
-        }
-    }
     
     static BigInteger[] DivideWithPrecision(
       BigInteger dividend, // NOTE: Assumes dividend is nonnegative
@@ -634,7 +434,7 @@ bigrem=divrem[1];
         }
         
       }
-      BigInteger scaleValue=scale.getValue();
+      BigInteger scaleValue=scale.AsBigInteger();
       BigInteger negscale=(scaleValue).negate();
       return new BigInteger[]{
         bigquotient,dividend,negscale
