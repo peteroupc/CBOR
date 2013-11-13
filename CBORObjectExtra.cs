@@ -37,7 +37,7 @@ namespace PeterO {
     [CLSCompliant(false)]
     public sbyte AsSByte() {
       int v = AsInt32();
-      if (v > Byte.MaxValue || v < Byte.MinValue)
+      if (v > SByte.MaxValue || v < SByte.MinValue)
         throw new OverflowException("This object's value is out of range");
       return (sbyte)v;
     }
@@ -163,15 +163,21 @@ namespace PeterO {
           throw new OverflowException("This object's value is out of range");
         return (ulong)(BigInteger)this.ThisItem;
       } else if (this.ItemType == CBORObjectType_Single) {
-        if (Single.IsNaN((float)this.ThisItem) ||
-           (float)this.ThisItem > UInt64.MaxValue || (float)this.ThisItem < 0)
+        float fltItem = (float)this.ThisItem;
+        if (Single.IsNaN(fltItem))
           throw new OverflowException("This object's value is out of range");
-        return (ulong)(float)this.ThisItem;
+        fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+        if (fltItem >= 0 && fltItem <= UInt64.MaxValue)
+          return (ulong)fltItem;
+        throw new OverflowException("This object's value is out of range");
       } else if (this.ItemType == CBORObjectType_Double) {
-        if (Double.IsNaN((double)this.ThisItem) ||
-           (double)this.ThisItem > UInt64.MaxValue || (double)this.ThisItem < 0)
+        double fltItem = (double)this.ThisItem;
+        if (Double.IsNaN(fltItem))
           throw new OverflowException("This object's value is out of range");
-        return (ulong)(double)this.ThisItem;
+        fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+        if (fltItem >= 0 && fltItem <= UInt64.MaxValue)
+          return (ulong)fltItem;
+        throw new OverflowException("This object's value is out of range");
       } else if (this.ItemType == CBORObjectType_DecimalFraction) {
         BigInteger bi = ((DecimalFraction)this.ThisItem).ToBigInteger();
         if (bi > UInt64.MaxValue || bi < 0)

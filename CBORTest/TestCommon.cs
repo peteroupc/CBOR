@@ -64,15 +64,6 @@ namespace Test {
     
     public static void TestNumber(CBORObject o){
       if(o.Type!= CBORType.Number){
-        try { o.AsByte(); } catch(InvalidOperationException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsInt16(); } catch(InvalidOperationException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsInt32(); } catch(InvalidOperationException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsInt64(); } catch(InvalidOperationException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsSingle(); } catch(InvalidOperationException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsDouble(); } catch(InvalidOperationException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsBigFloat(); } catch(InvalidOperationException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsBigInteger(); } catch(InvalidOperationException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsDecimalFraction(); } catch(InvalidOperationException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
         return;
       }
       if(o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
@@ -93,30 +84,6 @@ namespace Test {
       try { o.AsBigFloat(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
       try { o.AsSingle(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
       try { o.AsDouble(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      if(df.CompareTo((BigInteger)0)>=0 &&
-         df.CompareTo((BigInteger)255)<=0){
-        try { o.AsByte(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      } else {
-        try { o.AsByte(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      }
-      if(df.CompareTo((BigInteger)Int16.MinValue)>=0 &&
-         df.CompareTo((BigInteger)Int16.MaxValue)<=0){
-        try { o.AsInt16(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      } else {
-        try { o.AsInt16(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      }
-      if(df.CompareTo((BigInteger)Int32.MinValue)>=0 &&
-         df.CompareTo((BigInteger)Int32.MaxValue)<=0){
-        try { o.AsInt32(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      } else {
-        try { o.AsInt32(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      }
-      if(df.CompareTo((BigInteger)Int64.MinValue)>=0 &&
-         df.CompareTo((BigInteger)Int64.MaxValue)<=0){
-        try { o.AsInt64(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      } else {
-        try { o.AsInt64(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      }
     }
     
     public static void AssertRoundTrip(CBORObject o) {

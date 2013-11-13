@@ -1500,21 +1500,26 @@ namespace PeterO {
     /// <exception cref="System.InvalidOperationException">
     /// This object's type is not a number type.
     /// </exception>
-    public double AsDouble() {
-      if (this.ItemType == CBORObjectType_Integer)
-        return (double)(long)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_BigInteger)
-        return (double)(BigInteger)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_Single)
-        return (double)(float)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_Double)
-        return (double)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_DecimalFraction) {
-        return ((DecimalFraction)this.ThisItem).ToDouble();
-      } else if (this.ItemType == CBORObjectType_BigFloat) {
-        return ((BigFloat)this.ThisItem).ToDouble();
-      } else
-        throw new InvalidOperationException("Not a number type");
+    public double AsDouble(){
+      int type=this.ItemType;
+      switch(type){
+        case CBORObjectType_Integer:
+          return (double)(long)this.ThisItem;
+        case CBORObjectType_BigInteger:
+          return (double)(BigInteger)this.ThisItem;
+        case CBORObjectType_Single:
+          return (double)(float)this.ThisItem;
+        case CBORObjectType_Double:
+          return (double)this.ThisItem;
+          case CBORObjectType_DecimalFraction:{
+            return ((DecimalFraction)this.ThisItem).ToDouble();
+          }
+          case CBORObjectType_BigFloat:{
+            return ((BigFloat)this.ThisItem).ToDouble();
+          }
+        default:
+          throw new InvalidOperationException("Not a number type");
+      }
     }
 
 
@@ -1526,21 +1531,25 @@ namespace PeterO {
     /// <exception cref="System.InvalidOperationException">
     /// This object's type is not a number type.
     /// </exception>
-    public DecimalFraction AsDecimalFraction() {
-      if (this.ItemType == CBORObjectType_Integer)
-        return new DecimalFraction((long)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_BigInteger)
-        return new DecimalFraction((BigInteger)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_Single)
-        return DecimalFraction.FromSingle((float)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_Double)
-        return DecimalFraction.FromDouble((double)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_DecimalFraction)
-        return (DecimalFraction)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_BigFloat) {
-        return DecimalFraction.FromBigFloat((BigFloat)this.ThisItem);
-      } else
-        throw new InvalidOperationException("Not a number type");
+    public DecimalFraction AsDecimalFraction(){
+      int type=this.ItemType;
+      switch(type){
+        case CBORObjectType_Integer:
+          return new DecimalFraction((long)this.ThisItem);
+        case CBORObjectType_BigInteger:
+          return new DecimalFraction((BigInteger)this.ThisItem);
+        case CBORObjectType_Single:
+          return DecimalFraction.FromSingle((float)this.ThisItem);
+        case CBORObjectType_Double:
+          return DecimalFraction.FromDouble((double)this.ThisItem);
+        case CBORObjectType_DecimalFraction:
+          return (DecimalFraction)this.ThisItem;
+          case CBORObjectType_BigFloat:{
+            return DecimalFraction.FromBigFloat((BigFloat)this.ThisItem);
+          }
+        default:
+          throw new InvalidOperationException("Not a number type");
+      }
     }
 
     /// <summary>
@@ -1555,21 +1564,25 @@ namespace PeterO {
     /// <exception cref="System.InvalidOperationException">
     /// This object's type is not a number type.
     /// </exception>
-    public BigFloat AsBigFloat() {
-      if (this.ItemType == CBORObjectType_Integer)
-        return new BigFloat((long)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_BigInteger)
-        return new BigFloat((BigInteger)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_Single)
-        return BigFloat.FromSingle((float)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_Double)
-        return BigFloat.FromDouble((double)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_DecimalFraction)
-        return BigFloat.FromDecimalFraction((DecimalFraction)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_BigFloat) {
-        return (BigFloat)this.ThisItem;
-      } else
-        throw new InvalidOperationException("Not a number type");
+    public BigFloat AsBigFloat(){
+      int type=this.ItemType;
+      switch(type){
+        case CBORObjectType_Integer:
+          return new BigFloat((long)this.ThisItem);
+        case CBORObjectType_BigInteger:
+          return new BigFloat((BigInteger)this.ThisItem);
+        case CBORObjectType_Single:
+          return BigFloat.FromSingle((float)this.ThisItem);
+        case CBORObjectType_Double:
+          return BigFloat.FromDouble((double)this.ThisItem);
+        case CBORObjectType_DecimalFraction:
+          return BigFloat.FromDecimalFraction((DecimalFraction)this.ThisItem);
+          case CBORObjectType_BigFloat:{
+            return (BigFloat)this.ThisItem;
+          }
+        default:
+          throw new InvalidOperationException("Not a number type");
+      }
     }
 
     /// <summary>
@@ -1583,21 +1596,26 @@ namespace PeterO {
     /// <exception cref="System.InvalidOperationException">
     /// This object's type is not a number type.
     /// </exception>
-    public float AsSingle() {
-      if (this.ItemType == CBORObjectType_Integer)
-        return (float)(long)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_BigInteger)
-        return (float)(BigInteger)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_Single)
-        return (float)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_Double)
-        return (float)(double)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_DecimalFraction) {
-        return ((DecimalFraction)this.ThisItem).ToSingle();
-      } else if (this.ItemType == CBORObjectType_BigFloat) {
-        return ((BigFloat)this.ThisItem).ToSingle();
-      } else
-        throw new InvalidOperationException("Not a number type");
+    public float AsSingle(){
+      int type=this.ItemType;
+      switch(type){
+        case CBORObjectType_Integer:
+          return (float)(long)this.ThisItem;
+        case CBORObjectType_BigInteger:
+          return (float)(BigInteger)this.ThisItem;
+        case CBORObjectType_Single:
+          return (float)this.ThisItem;
+        case CBORObjectType_Double:
+          return (float)(double)this.ThisItem;
+          case CBORObjectType_DecimalFraction:{
+            return ((DecimalFraction)this.ThisItem).ToSingle();
+          }
+          case CBORObjectType_BigFloat:{
+            return ((BigFloat)this.ThisItem).ToSingle();
+          }
+        default:
+          throw new InvalidOperationException("Not a number type");
+      }
     }
 
 
@@ -1611,28 +1629,33 @@ namespace PeterO {
     /// <exception cref="System.InvalidOperationException">
     /// This object's type is not a number type.
     /// </exception>
-    public BigInteger AsBigInteger() {
-      if (this.ItemType == CBORObjectType_Integer)
-        return (BigInteger)(long)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_BigInteger)
-        return (BigInteger)this.ThisItem;
-      else if (this.ItemType == CBORObjectType_Single)
-        return CBORUtilities.BigIntegerFromSingle((float)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_Double)
-        return CBORUtilities.BigIntegerFromDouble((double)this.ThisItem);
-      else if (this.ItemType == CBORObjectType_DecimalFraction) {
-        return ((DecimalFraction)this.ThisItem).ToBigInteger();
-      } else if (this.ItemType == CBORObjectType_BigFloat) {
-        return ((BigFloat)this.ThisItem).ToBigInteger();
-      } else
-        throw new InvalidOperationException("Not a number type");
+    public BigInteger AsBigInteger(){
+      int type=this.ItemType;
+      switch(type){
+        case CBORObjectType_Integer:
+          return (BigInteger)(long)this.ThisItem;
+        case CBORObjectType_BigInteger:
+          return (BigInteger)this.ThisItem;
+        case CBORObjectType_Single:
+          return CBORUtilities.BigIntegerFromSingle((float)this.ThisItem);
+        case CBORObjectType_Double:
+          return CBORUtilities.BigIntegerFromDouble((double)this.ThisItem);
+          case CBORObjectType_DecimalFraction:{
+            return ((DecimalFraction)this.ThisItem).ToBigInteger();
+          }
+          case CBORObjectType_BigFloat:{
+            return ((BigFloat)this.ThisItem).ToBigInteger();
+          }
+        default:
+          throw new InvalidOperationException("Not a number type");
+      }
     }
 
     /// <summary>
     /// Returns false if this object is
     /// False, Null, or Undefined;
     /// otherwise, true.</summary>
-    public bool AsBoolean() {
+    public bool AsBoolean(){
       if (this.IsFalse || this.IsNull || this.IsUndefined)
         return false;
       return true;
@@ -1651,11 +1674,8 @@ namespace PeterO {
     /// <exception cref="System.OverflowException">
     /// This object's value exceeds the range of a 16-bit
     /// signed integer.</exception>
-    public short AsInt16() {
-      int v = AsInt32();
-      if (v > Int16.MaxValue || v < Int16.MinValue)
-        throw new OverflowException("This object's value is out of range");
-      return (short)v;
+    public short AsInt16(){
+      return (short)AsInt32(Int16.MinValue,Int16.MaxValue);
     }
 
     /// <summary>
@@ -1672,11 +1692,8 @@ namespace PeterO {
     /// This object's value exceeds the range of a byte (is
     /// less than 0 or would be greater than 255 when truncated
     /// to an integer).</exception>
-    public byte AsByte() {
-      int v = AsInt32();
-      if (v < 0 || v > 255)
-        throw new OverflowException("This object's value is out of range");
-      return (byte)v;
+    public byte AsByte(){
+      return (byte)AsInt32(0,255);
     }
 
 
@@ -1694,40 +1711,108 @@ namespace PeterO {
     /// <exception cref="System.OverflowException">
     /// This object's value exceeds the range of a 64-bit
     /// signed integer.</exception>
-    public long AsInt64() {
-      if (this.ItemType == CBORObjectType_Integer) {
-        return (long)this.ThisItem;
-      } else if (this.ItemType == CBORObjectType_BigInteger) {
-        if (((BigInteger)this.ThisItem).CompareTo(Int64MaxValue) > 0 ||
-            ((BigInteger)this.ThisItem).CompareTo(Int64MinValue) < 0)
-          throw new OverflowException("This object's value is out of range");
-        return (long)(BigInteger)this.ThisItem;
-      } else if (this.ItemType == CBORObjectType_Single) {
-        if (Single.IsNaN((float)this.ThisItem) ||
-            (float)this.ThisItem > Int64.MaxValue || (float)this.ThisItem < Int64.MinValue)
-          throw new OverflowException("This object's value is out of range");
-        return (long)(float)this.ThisItem;
-      } else if (this.ItemType == CBORObjectType_Double) {
-        if (Double.IsNaN((double)this.ThisItem) ||
-            (double)this.ThisItem > Int64.MaxValue || (double)this.ThisItem < Int64.MinValue)
-          throw new OverflowException("This object's value is out of range");
-        return (long)(double)this.ThisItem;
-      } else if (this.ItemType == CBORObjectType_DecimalFraction) {
-        BigInteger bi = ((DecimalFraction)this.ThisItem).ToBigInteger();
-        if (bi.CompareTo(Int64MaxValue) > 0 ||
-            bi.CompareTo(Int64MinValue) < 0)
-          throw new OverflowException("This object's value is out of range");
-        return (long)bi;
-      } else if (this.ItemType == CBORObjectType_BigFloat) {
-        BigInteger bi = ((BigFloat)this.ThisItem).ToBigInteger();
-        if (bi.CompareTo(Int64MaxValue) > 0 ||
-            bi.CompareTo(Int64MinValue) < 0)
-          throw new OverflowException("This object's value is out of range");
-        return (long)bi;
-      } else
-        throw new InvalidOperationException("Not a number type");
+    public long AsInt64(){
+      int type=this.ItemType;
+      switch(type){
+          case CBORObjectType_Integer:{
+            return (long)this.ThisItem;
+          }
+          case CBORObjectType_BigInteger:{
+            if (((BigInteger)this.ThisItem).CompareTo(Int64MaxValue) > 0 ||
+                ((BigInteger)this.ThisItem).CompareTo(Int64MinValue) < 0)
+              throw new OverflowException("This object's value is out of range");
+            return (long)(BigInteger)this.ThisItem;
+          }
+          case CBORObjectType_Single:{
+            float fltItem=(float)this.ThisItem;
+            if (Single.IsNaN(fltItem))
+              throw new OverflowException("This object's value is out of range");
+            fltItem=(fltItem<0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+            if(fltItem>=Int64.MinValue && fltItem<=Int64.MaxValue)
+              return (long)fltItem;
+            throw new OverflowException("This object's value is out of range");
+          }
+          case CBORObjectType_Double:{
+            double fltItem=(double)this.ThisItem;
+            if (Double.IsNaN(fltItem))
+              throw new OverflowException("This object's value is out of range");
+            fltItem=(fltItem<0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+            if(fltItem>=Int64.MinValue && fltItem<=Int64.MaxValue)
+              return (long)fltItem;
+            throw new OverflowException("This object's value is out of range");
+          }
+          case CBORObjectType_DecimalFraction:{
+            BigInteger bi = ((DecimalFraction)this.ThisItem).ToBigInteger();
+            if (bi.CompareTo(Int64MaxValue) > 0 ||
+                bi.CompareTo(Int64MinValue) < 0)
+              throw new OverflowException("This object's value is out of range");
+            return (long)bi;
+          }
+          case CBORObjectType_BigFloat:{
+            BigInteger bi = ((BigFloat)this.ThisItem).ToBigInteger();
+            if (bi.CompareTo(Int64MaxValue) > 0 ||
+                bi.CompareTo(Int64MinValue) < 0)
+              throw new OverflowException("This object's value is out of range");
+            return (long)bi;
+          }
+        default:
+          throw new InvalidOperationException("Not a number type");
+      }
     }
 
+    private int AsInt32(int minValue, int maxValue){
+      Object thisItem = this.ThisItem;
+      int type=this.ItemType;
+      switch(type){
+          case CBORObjectType_Integer:{
+            long longItem=(long)thisItem;
+            if (longItem > maxValue || longItem < minValue)
+              throw new OverflowException("This object's value is out of range");
+            return (int)longItem;
+          }
+          case CBORObjectType_BigInteger:{
+            if (((BigInteger)thisItem).CompareTo((BigInteger)maxValue) > 0 ||
+                ((BigInteger)thisItem).CompareTo((BigInteger)minValue) < 0)
+              throw new OverflowException("This object's value is out of range");
+            return (int)(BigInteger)thisItem;
+          }
+          case CBORObjectType_Single:{
+            float fltItem=(float)thisItem;
+            if (Single.IsNaN(fltItem))
+              throw new OverflowException("This object's value is out of range");
+            fltItem=(fltItem<0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+            if(fltItem>=minValue && fltItem<=maxValue)
+              return (int)fltItem;
+            throw new OverflowException("This object's value is out of range");
+          }
+          case CBORObjectType_Double:{
+            double fltItem=(double)thisItem;
+            if (Double.IsNaN(fltItem))
+              throw new OverflowException("This object's value is out of range");
+            fltItem=(fltItem<0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+            if(fltItem>=minValue && fltItem<=maxValue)
+              return (int)fltItem;
+            throw new OverflowException("This object's value is out of range");
+          }
+          case CBORObjectType_DecimalFraction:{
+            BigInteger bi = ((DecimalFraction)this.ThisItem).ToBigInteger();
+            if (bi.CompareTo((BigInteger)maxValue) > 0 ||
+                bi.CompareTo((BigInteger)minValue) < 0)
+              throw new OverflowException("This object's value is out of range");
+            return (int)bi;
+          }
+          case CBORObjectType_BigFloat:{
+            BigInteger bi = ((BigFloat)this.ThisItem).ToBigInteger();
+            if (bi.CompareTo((BigInteger)maxValue) > 0 ||
+                bi.CompareTo((BigInteger)minValue) < 0)
+              throw new OverflowException("This object's value is out of range");
+            return (int)bi;
+          }
+        default:
+          throw new InvalidOperationException("Not a number type");
+      }
+    }
+    
     /// <summary>
     /// Converts this object to a 32-bit signed
     /// integer.  Floating point values are truncated
@@ -1741,41 +1826,8 @@ namespace PeterO {
     /// <exception cref="System.OverflowException">
     /// This object's value exceeds the range of a 32-bit
     /// signed integer.</exception>
-    public int AsInt32() {
-      Object thisItem = this.ThisItem;
-      if (this.ItemType == CBORObjectType_Integer) {
-        if ((long)thisItem > Int32.MaxValue || (long)thisItem < Int32.MinValue)
-          throw new OverflowException("This object's value is out of range");
-        return (int)(long)thisItem;
-      } else if (this.ItemType == CBORObjectType_BigInteger) {
-        if (((BigInteger)thisItem).CompareTo((BigInteger)Int32.MaxValue) > 0 ||
-            ((BigInteger)thisItem).CompareTo((BigInteger)Int32.MinValue) < 0)
-          throw new OverflowException("This object's value is out of range");
-        return (int)(BigInteger)thisItem;
-      } else if (this.ItemType == CBORObjectType_Single) {
-        if (Single.IsNaN((float)thisItem) ||
-            (float)thisItem > Int32.MaxValue || (float)thisItem < Int32.MinValue)
-          throw new OverflowException("This object's value is out of range");
-        return (int)(float)thisItem;
-      } else if (this.ItemType == CBORObjectType_Double) {
-        if (Double.IsNaN((double)thisItem) ||
-            (double)thisItem > Int32.MaxValue || (double)thisItem < Int32.MinValue)
-          throw new OverflowException("This object's value is out of range");
-        return (int)(double)thisItem;
-      } else if (this.ItemType == CBORObjectType_DecimalFraction) {
-        BigInteger bi = ((DecimalFraction)this.ThisItem).ToBigInteger();
-        if (bi.CompareTo((BigInteger)Int32.MaxValue) > 0 ||
-            bi.CompareTo((BigInteger)Int32.MinValue) < 0)
-          throw new OverflowException("This object's value is out of range");
-        return (int)bi;
-      } else if (this.ItemType == CBORObjectType_BigFloat) {
-        BigInteger bi = ((BigFloat)this.ThisItem).ToBigInteger();
-        if (bi.CompareTo((BigInteger)Int32.MaxValue) > 0 ||
-            bi.CompareTo((BigInteger)Int32.MinValue) < 0)
-          throw new OverflowException("This object's value is out of range");
-        return (int)bi;
-      } else
-        throw new InvalidOperationException("Not a number type");
+    public int AsInt32(){
+      return AsInt32(Int32.MinValue,Int32.MaxValue);
     }
     /// <summary>
     /// Gets the value of this object as a string object.
@@ -1783,11 +1835,14 @@ namespace PeterO {
     /// <returns>Gets this object's string.</returns>
     /// <exception cref="InvalidOperationException">
     /// This object's type is not a string.</exception>
-    public string AsString() {
-      if (this.ItemType == CBORObjectType_TextString) {
-        return (string)this.ThisItem;
-      } else {
-        throw new InvalidOperationException("Not a string type");
+    public string AsString(){
+      int type=this.ItemType;
+      switch(type){
+          case CBORObjectType_TextString:{
+            return (string)this.ThisItem;
+          }
+        default:
+          throw new InvalidOperationException("Not a string type");
       }
     }
     /// <summary>
@@ -2603,7 +2658,6 @@ namespace PeterO {
           foreach (KeyValuePair<string, CBORObject> entry in sMap) {
             string key = entry.Key;
             CBORObject value = entry.Value;
-            sMap[key] = value;
             if (!first) builder.Append(",");
             builder.Append(StringToJSONString(key));
             builder.Append(':');

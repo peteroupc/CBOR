@@ -45,8 +45,8 @@ import org.junit.Test;
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
 
-    private CBORObject RandomNumber(java.util.Random rand) {
-      switch (rand.nextInt(6)) {
+    private CBORObject RandomNumber(FastRandom rand) {
+      switch (rand.NextValue(6)) {
         case 0:
           return CBORObject.FromObject(RandomDouble(rand, Integer.MAX_VALUE));
         case 1:
@@ -64,27 +64,27 @@ import org.junit.Test;
       }
     }
 
-    private long RandomInt64(java.util.Random rand) {
-      long r = rand.nextInt(0x10000);
-      r |= ((long)rand.nextInt(0x10000)) << 16;
-      if (rand.nextInt(2) == 0) {
-        r |= ((long)rand.nextInt(0x10000)) << 32;
-        if (rand.nextInt(2) == 0) {
-          r |= ((long)rand.nextInt(0x10000)) << 48;
+    private long RandomInt64(FastRandom rand) {
+      long r = rand.NextValue(0x10000);
+      r |= ((long)rand.NextValue(0x10000)) << 16;
+      if (rand.NextValue(2) == 0) {
+        r |= ((long)rand.NextValue(0x10000)) << 32;
+        if (rand.NextValue(2) == 0) {
+          r |= ((long)rand.NextValue(0x10000)) << 48;
         }
       }
       return r;
     }
 
-    private double RandomDouble(java.util.Random rand, int exponent) {
+    private double RandomDouble(FastRandom rand, int exponent) {
       if (exponent == Integer.MAX_VALUE)
-        exponent = rand.nextInt(2047);
-      long r = rand.nextInt(0x10000);
-      r |= ((long)rand.nextInt(0x10000)) << 16;
-      if (rand.nextInt(2) == 0) {
-        r |= ((long)rand.nextInt(0x10000)) << 32;
-        if (rand.nextInt(2) == 0) {
-          r |= ((long)rand.nextInt(0x10000)) << 48;
+        exponent = rand.NextValue(2047);
+      long r = rand.NextValue(0x10000);
+      r |= ((long)rand.NextValue(0x10000)) << 16;
+      if (rand.NextValue(2) == 0) {
+        r |= ((long)rand.NextValue(0x10000)) << 32;
+        if (rand.NextValue(2) == 0) {
+          r |= ((long)rand.NextValue(0x10000)) << 48;
         }
       }
       r &= ~0x7FF0000000000000L; // clear exponent
@@ -92,65 +92,65 @@ import org.junit.Test;
       return Double.longBitsToDouble(r);
     }
 
-    private float RandomSingle(java.util.Random rand, int exponent) {
+    private float RandomSingle(FastRandom rand, int exponent) {
       if (exponent == Integer.MAX_VALUE)
-        exponent = rand.nextInt(255);
-      int r = rand.nextInt(0x10000);
-      if (rand.nextInt(2) == 0) {
-        r |= ((int)rand.nextInt(0x10000)) << 16;
+        exponent = rand.NextValue(255);
+      int r = rand.NextValue(0x10000);
+      if (rand.NextValue(2) == 0) {
+        r |= ((int)rand.NextValue(0x10000)) << 16;
       }
       r &= ~0x7F800000; // clear exponent
       r |= ((int)exponent) << 23; // set exponent
       return Float.intBitsToFloat(r);
     }
 
-    public static DecimalFraction RandomDecimalFraction(java.util.Random r) {
+    public static DecimalFraction RandomDecimalFraction(FastRandom r) {
       return DecimalFraction.FromString(RandomDecimalString(r));
     }
 
-    public static BigInteger RandomBigInteger(java.util.Random r) {
+    public static BigInteger RandomBigInteger(FastRandom r) {
       return new BigInteger(RandomBigIntString(r));
     }
 
-    public static BigFloat RandomBigFloat(java.util.Random r) {
-      return new BigFloat(RandomBigInteger(r),r.nextInt(400)-200);
+    public static BigFloat RandomBigFloat(FastRandom r) {
+      return new BigFloat(RandomBigInteger(r),r.NextValue(400)-200);
     }
 
-    public static String RandomBigIntString(java.util.Random r) {
-      int count = r.nextInt(50) + 1;
+    public static String RandomBigIntString(FastRandom r) {
+      int count = r.NextValue(50) + 1;
       StringBuilder sb = new StringBuilder();
-      if (r.nextInt(2) == 0) sb.append('-');
+      if (r.NextValue(2) == 0) sb.append('-');
       for (int i = 0; i < count; i++) {
         if (i == 0)
-          sb.append((char)('1' + r.nextInt(9)));
+          sb.append((char)('1' + r.NextValue(9)));
         else
-          sb.append((char)('0' + r.nextInt(10)));
+          sb.append((char)('0' + r.NextValue(10)));
       }
       return sb.toString();
     }
 
-    public static String RandomDecimalString(java.util.Random r) {
-      int count = r.nextInt(20) + 1;
+    public static String RandomDecimalString(FastRandom r) {
+      int count = r.NextValue(20) + 1;
       StringBuilder sb = new StringBuilder();
-      if (r.nextInt(2) == 0) sb.append('-');
+      if (r.NextValue(2) == 0) sb.append('-');
       for (int i = 0; i < count; i++) {
         if (i == 0)
-          sb.append((char)('1' + r.nextInt(9)));
+          sb.append((char)('1' + r.NextValue(9)));
         else
-          sb.append((char)('0' + r.nextInt(10)));
+          sb.append((char)('0' + r.NextValue(10)));
       }
-      if (r.nextInt(2) == 0) {
+      if (r.NextValue(2) == 0) {
         sb.append('.');
-        count = r.nextInt(20) + 1;
+        count = r.NextValue(20) + 1;
         for (int i = 0; i < count; i++) {
-          sb.append((char)('0' + r.nextInt(10)));
+          sb.append((char)('0' + r.NextValue(10)));
         }
       }
-      if (r.nextInt(2) == 0) {
+      if (r.NextValue(2) == 0) {
         sb.append('E');
-        count = r.nextInt(20);
+        count = r.NextValue(20);
         if (count != 0) {
-          sb.append(r.nextInt(2) == 0 ? '+' : '-');
+          sb.append(r.NextValue(2) == 0 ? '+' : '-');
         }
         sb.append(Integer.toString((int)count));
       }
@@ -166,7 +166,7 @@ import org.junit.Test;
     }
     @Test
     public void TestAdd() {
-      java.util.Random r = new java.util.Random();
+      FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; i++) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -182,7 +182,7 @@ import org.junit.Test;
     }
     @Test
     public void TestSubtract() {
-      java.util.Random r = new java.util.Random();
+      FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; i++) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -200,7 +200,7 @@ import org.junit.Test;
     
     @Test
     public void TestCompare() {
-      java.util.Random r = new java.util.Random();
+      FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; i++) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -217,7 +217,7 @@ import org.junit.Test;
 
     @Test
     public void TestParseDecimalStrings() {
-      java.util.Random rand = new java.util.Random();
+      FastRandom rand = new FastRandom();
       for (int i = 0; i < 2000; i++) {
         String r = RandomDecimalString(rand);
         TestDecimalString(r);
@@ -226,18 +226,18 @@ import org.junit.Test;
 
     @Test
     public void TestRandomData() {
-      java.util.Random rand = new java.util.Random();
+      FastRandom rand = new FastRandom();
       for (int i = 0; i < 200; i++) {
-        byte[] array = new byte[rand.nextInt(1000000) + 1];
+        byte[] array = new byte[rand.NextValue(1000000) + 1];
         for (int j = 0; j < array.length; j++) {
           if (j + 3 <= array.length) {
-            int r = rand.nextInt(0x1000000);
+            int r = rand.NextValue(0x1000000);
             array[j] = (byte)((r) & 0xFF);
             array[j + 1] = (byte)((r >> 8) & 0xFF);
             array[j + 2] = (byte)((r >> 16) & 0xFF);
             j += 2;
           } else {
-            array[j] = (byte)rand.nextInt(256);
+            array[j] = (byte)rand.NextValue(256);
           }
         }
         java.io.ByteArrayInputStream ms=null;
@@ -261,7 +261,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     }
     @Test
     public void TestBigFloatSingle() {
-      java.util.Random rand = new java.util.Random();
+      FastRandom rand = new FastRandom();
       for (int i = 0; i < 255; i++) { // Try a random float with a given exponent
         TestBigFloatSingleCore(RandomSingle(rand, i), null);
         TestBigFloatSingleCore(RandomSingle(rand, i), null);
@@ -276,7 +276,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestBigFloatDoubleCore(7, "7");
       TestBigFloatDoubleCore(1.75, "1.75");
       TestBigFloatDoubleCore(3.5, "3.5");
-      java.util.Random rand = new java.util.Random();
+      FastRandom rand = new FastRandom();
       for (int i = 0; i < 2047; i++) { // Try a random double with a given exponent
         TestBigFloatDoubleCore(RandomDouble(rand, i), null);
         TestBigFloatDoubleCore(RandomDouble(rand, i), null);
@@ -1299,8 +1299,445 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
       Assert.assertEquals("14.674005", DecimalFraction.FromString("139.5E3").Multiply(DecimalFraction.FromString("105.19E-6")).toString());
       Assert.assertEquals("3469019.40", DecimalFraction.FromString("160.38E2").Multiply(DecimalFraction.FromString("216.30E0")).toString());
     }
-
-
+    
+    // Tests whether AsInt32/64/16/AsByte properly truncate floats
+    // and doubles before bounds checking
+    @Test
+    public void FloatingPointCloseToEdge(){
+      try { CBORObject.FromObject(2.147483647E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483647E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483647E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483647E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836470000002E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836469999998E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483648E9d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483648E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483648E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483648E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836480000005E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836479999998E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483646E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483646E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483646E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.147483646E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836460000002E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474836459999998E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483648E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483648E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483648E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483648E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836479999998E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836480000005E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483647E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483647E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483647E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483647E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836469999998E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836470000002E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483649E9d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483649E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483649E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.147483649E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836489999995E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474836490000005E9d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372036854776E18d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372036854776E18d).AsInt64(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372036854776E18d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372036854776E18d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372036854778E18d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372036854778E18d).AsInt64(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372036854778E18d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372036854778E18d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.2233720368547748E18d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372036854776E18d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.2233720368547748E18d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt64(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372036854778E18d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.0d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.000000000004d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.000000000004d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.000000000004d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.000000000004d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.999999999996d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.999999999996d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.999999999996d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.999999999996d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.0d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.0d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.00000000001d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.00000000001d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.00000000001d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.00000000001d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.999999999996d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.999999999996d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.999999999996d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.999999999996d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.0d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.000000000004d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.000000000004d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.000000000004d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.000000000004d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32765.999999999996d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32765.999999999996d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32765.999999999996d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32765.999999999996d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.0d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.999999999996d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.999999999996d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.999999999996d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.999999999996d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.00000000001d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.00000000001d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.00000000001d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.00000000001d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.0d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32766.999999999996d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32766.999999999996d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32766.999999999996d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32766.999999999996d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.000000000004d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.000000000004d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.000000000004d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.000000000004d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.0d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.0d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.99999999999d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.99999999999d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.99999999999d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.99999999999d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.00000000001d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.00000000001d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.00000000001d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.00000000001d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.0d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(4.9E-324d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(4.9E-324d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(4.9E-324d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(4.9E-324d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-4.9E-324d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-4.9E-324d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-4.9E-324d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-4.9E-324d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0000000000000002d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0000000000000002d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0000000000000002d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0000000000000002d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.9999999999999999d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.9999999999999999d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.9999999999999999d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.9999999999999999d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-0.9999999999999999d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-0.9999999999999999d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-0.9999999999999999d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-0.9999999999999999d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0000000000000002d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0000000000000002d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0000000000000002d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0000000000000002d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.0d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.00000000000003d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.00000000000003d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.00000000000003d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.00000000000003d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.99999999999997d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.99999999999997d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.99999999999997d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.99999999999997d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.0d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.00000000000006d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.00000000000006d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.00000000000006d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.00000000000006d).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.99999999999997d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.99999999999997d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.99999999999997d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.99999999999997d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.0d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.0d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.0d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.0d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.00000000000003d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.00000000000003d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.00000000000003d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.00000000000003d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(253.99999999999997d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(253.99999999999997d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(253.99999999999997d).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(253.99999999999997d).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.14748365E9f).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.14748365E9f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.14748365E9f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.14748365E9f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474839E9f).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474839E9f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474839E9f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.1474839E9f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.14748352E9f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.14748352E9f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.14748352E9f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(2.14748352E9f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.14748365E9f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.14748365E9f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.14748365E9f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.14748365E9f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.14748352E9f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.14748352E9f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.14748352E9f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.14748352E9f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474839E9f).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474839E9f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474839E9f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-2.1474839E9f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372E18f).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372E18f).AsInt64(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372E18f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223372E18f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223373E18f).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223373E18f).AsInt64(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223373E18f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.223373E18f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.2233715E18f).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.2233715E18f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.2233715E18f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(9.2233715E18f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372E18f).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372E18f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372E18f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223372E18f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.2233715E18f).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.2233715E18f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.2233715E18f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.2233715E18f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223373E18f).AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223373E18f).AsInt64(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223373E18f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-9.223373E18f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.0f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.002f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.002f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.002f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.002f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.998f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.998f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.998f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.998f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.0f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.0f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.004f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.004f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.004f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32768.004f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.998f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.998f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.998f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32767.998f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.0f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.002f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.002f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.002f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32766.002f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32765.998f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32765.998f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32765.998f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(32765.998f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.0f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.998f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.998f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.998f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.998f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.004f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.004f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.004f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.004f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.0f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32766.998f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32766.998f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32766.998f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32766.998f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.002f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.002f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.002f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32767.002f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.0f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.0f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.996f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.996f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.996f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32768.996f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.004f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.004f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.004f).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-32769.004f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.0f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.4E-45f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.4E-45f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.4E-45f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.4E-45f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.4E-45f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.4E-45f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.4E-45f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.4E-45f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0000001f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0000001f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0000001f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(1.0000001f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.99999994f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.99999994f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.99999994f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(0.99999994f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-0.99999994f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-0.99999994f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-0.99999994f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-0.99999994f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0000001f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0000001f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0000001f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(-1.0000001f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.0f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.00002f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.00002f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.00002f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.00002f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.99998f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.99998f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.99998f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.99998f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.0f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.00003f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.00003f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.00003f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(256.00003f).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.99998f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.99998f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.99998f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(255.99998f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.0f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.0f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.0f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.0f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.00002f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.00002f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.00002f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(254.00002f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(253.99998f).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(253.99998f).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(253.99998f).AsInt16(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(253.99998f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
+    }
+    
     @Test
     public void FromDoubleTest() {
       Assert.assertEquals("0.213299999999999989608312489508534781634807586669921875", DecimalFraction.FromDouble(0.2133).toString());
@@ -1785,7 +2222,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
       Assert.assertEquals("20", DecimalFraction.FromBigFloat(bf).toString());
       bf = new BigFloat(BigInteger.valueOf(3), -1);
       Assert.assertEquals("1.5", DecimalFraction.FromBigFloat(bf).toString());
-      bf = new BigFloat(BigInteger.valueOf((-3)), -1);
+      bf = new BigFloat(BigInteger.valueOf(-3), -1);
       Assert.assertEquals("-1.5", DecimalFraction.FromBigFloat(bf).toString());
       DecimalFraction df;
       df = new DecimalFraction(20);
@@ -1794,7 +2231,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
       Assert.assertEquals("-20", BigFloat.FromDecimalFraction(df).toString());
       df = new DecimalFraction(BigInteger.valueOf(15), -1);
       Assert.assertEquals("1.5", BigFloat.FromDecimalFraction(df).toString());
-      df = new DecimalFraction(BigInteger.valueOf((-15)), -1);
+      df = new DecimalFraction(BigInteger.valueOf(-15), -1);
       Assert.assertEquals("-1.5", BigFloat.FromDecimalFraction(df).toString());
     }
 
@@ -1870,7 +2307,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
     @Test
     public void TestBigInteger() {
       BigInteger bi = BigInteger.valueOf(3);
-      BigInteger negseven = BigInteger.valueOf((-7));
+      BigInteger negseven = BigInteger.valueOf(-7);
       for (int i = 0; i < 500; i++) {
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),
@@ -1984,8 +2421,10 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
         TestCommon.AssertSer(o,
                              String.format(java.util.Locale.US,"%s", i));
         if (oldobj != null) {
-          Assert.assertEquals(1, o.compareTo(oldobj));
-          Assert.assertEquals(-1, oldobj.compareTo(o));
+          if(1!=o.compareTo(oldobj))
+            Assert.assertEquals(1, o.compareTo(oldobj));
+          if(-1!=oldobj.compareTo(o))
+            Assert.assertEquals(-1, oldobj.compareTo(o));
         }
         oldobj = o;
       }

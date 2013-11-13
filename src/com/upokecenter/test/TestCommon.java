@@ -71,15 +71,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     
     public static void TestNumber(CBORObject o) {
       if(o.getType()!= CBORType.Number){
-        try { o.AsByte(); } catch(IllegalStateException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsInt16(); } catch(IllegalStateException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsInt32(); } catch(IllegalStateException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsInt64(); } catch(IllegalStateException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsSingle(); } catch(IllegalStateException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsDouble(); } catch(IllegalStateException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsBigFloat(); } catch(IllegalStateException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsBigInteger(); } catch(IllegalStateException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsDecimalFraction(); } catch(IllegalStateException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
         return;
       }
       if(o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
@@ -100,30 +91,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { o.AsBigFloat(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
       try { o.AsSingle(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
       try { o.AsDouble(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      if(df.signum()>=0 &&
-         df.compareTo(BigInteger.valueOf(255))<=0){
-        try { o.AsByte(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      } else {
-        try { o.AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      }
-      if(df.compareTo(BigInteger.valueOf(Short.MIN_VALUE))>=0 &&
-         df.compareTo(BigInteger.valueOf(Short.MAX_VALUE))<=0){
-        try { o.AsInt16(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      } else {
-        try { o.AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      }
-      if(df.compareTo(BigInteger.valueOf(Integer.MIN_VALUE))>=0 &&
-         df.compareTo(BigInteger.valueOf(Integer.MAX_VALUE))<=0){
-        try { o.AsInt32(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      } else {
-        try { o.AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      }
-      if(df.compareTo(BigInteger.valueOf(Long.MIN_VALUE))>=0 &&
-         df.compareTo(BigInteger.valueOf(Long.MAX_VALUE))<=0){
-        try { o.AsInt64(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      } else {
-        try { o.AsInt64(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      }
     }
     
     public static void AssertRoundTrip(CBORObject o) {

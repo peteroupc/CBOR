@@ -35,7 +35,7 @@ private CBORObjectMath(){}
             return CBORObject.FromObject(valueA + valueB);
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigInteger: {
-            BigInteger bvalueA = BigInteger.valueOf((((Long)a.getThisItem()).longValue()));
+            BigInteger bvalueA = BigInteger.valueOf(((Long)a.getThisItem()).longValue());
             BigInteger bvalueB = (BigInteger)b.getThisItem();
             return CBORObject.FromObject(bvalueA.add(bvalueB));
           }
@@ -71,7 +71,7 @@ private CBORObjectMath(){}
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_Integer: {
             BigInteger bvalueA = (BigInteger)a.getThisItem();
-            BigInteger bvalueB = BigInteger.valueOf((((Long)b.getThisItem()).longValue()));
+            BigInteger bvalueB = BigInteger.valueOf(((Long)b.getThisItem()).longValue());
             return CBORObject.FromObject(bvalueA.add(bvalueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigInteger: {
@@ -358,7 +358,7 @@ private CBORObjectMath(){}
             return CBORObject.FromObject(valueA - valueB);
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigInteger: {
-            BigInteger bvalueA = BigInteger.valueOf((((Long)a.getThisItem()).longValue()));
+            BigInteger bvalueA = BigInteger.valueOf(((Long)a.getThisItem()).longValue());
             BigInteger bvalueB = (BigInteger)b.getThisItem();
             return CBORObject.FromObject(bvalueA.subtract(bvalueB));
           }
@@ -394,7 +394,7 @@ private CBORObjectMath(){}
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_Integer: {
             BigInteger bvalueA = (BigInteger)a.getThisItem();
-            BigInteger bvalueB = BigInteger.valueOf((((Long)b.getThisItem()).longValue()));
+            BigInteger bvalueB = BigInteger.valueOf(((Long)b.getThisItem()).longValue());
             return CBORObject.FromObject(bvalueA.subtract(bvalueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigInteger: {
@@ -687,7 +687,7 @@ private CBORObjectMath(){}
             return CBORObject.FromObject(valueA * valueB);
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigInteger: {
-            BigInteger bvalueA = BigInteger.valueOf((((Long)a.getThisItem()).longValue()));
+            BigInteger bvalueA = BigInteger.valueOf(((Long)a.getThisItem()).longValue());
             BigInteger bvalueB = (BigInteger)b.getThisItem();
             return CBORObject.FromObject(bvalueA.multiply(bvalueB));
           }
@@ -725,7 +725,7 @@ private CBORObjectMath(){}
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_Integer: {
             BigInteger bvalueA = (BigInteger)a.getThisItem();
-            BigInteger bvalueB = BigInteger.valueOf((((Long)b.getThisItem()).longValue()));
+            BigInteger bvalueB = BigInteger.valueOf(((Long)b.getThisItem()).longValue());
             return CBORObject.FromObject(bvalueA.multiply(bvalueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigInteger: {

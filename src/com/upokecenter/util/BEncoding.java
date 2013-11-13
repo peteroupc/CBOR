@@ -10,6 +10,7 @@ at: http://upokecenter.com/d/
 
 
 
+import java.util.*;
 import java.io.*;
 
 
@@ -149,20 +150,51 @@ private BEncoding(){}
         stream.write(((byte)((byte)':')));
         writeUtf8(s, stream);
       } else if (obj.getType() == CBORType.Map) {
-        stream.write(((byte)((byte)'d')));
+        boolean hasNonStringKeys = false;
         for(CBORObject key : obj.getKeys()) {
-          String str = (key.getType() == CBORType.TextString) ?
-            key.AsString() :
-            key.ToJSONString();
-          long length = CBORDataUtilities.GetUtf8Length(str, false);
-          if (length < 0)
-            throw new CBORException("invalid String");
-          writeUtf8(Long.toString((long)length), stream);
-          stream.write(((byte)((byte)':')));
-          writeUtf8(str, stream);
-          Write(obj.get(key), stream);
+          if (key.getType() != CBORType.TextString) {
+            hasNonStringKeys = true;
+            break;
+          }
         }
-        stream.write(((byte)((byte)'e')));
+        if (hasNonStringKeys) {
+          HashMap<String, CBORObject> sMap=new HashMap<String, CBORObject>();
+          // Copy to a map with String keys, since
+          // some keys could be duplicates
+          // when serialized to strings
+          for(CBORObject key : obj.getKeys()) {
+            CBORObject value = obj.get(key);
+            String str = (key.getType() == CBORType.TextString) ?
+              key.AsString() : key.ToJSONString();
+            sMap.put(str,value);
+          }
+          stream.write(((byte)((byte)'d')));
+          for(Map.Entry<String, CBORObject> entry : sMap.entrySet()) {
+            String key = entry.getKey();
+            CBORObject value = entry.getValue();
+            long length = CBORDataUtilities.GetUtf8Length(key, false);
+            if (length < 0)
+              throw new CBORException("invalid String");
+            writeUtf8(Long.toString((long)length), stream);
+            stream.write(((byte)((byte)':')));
+            writeUtf8(key, stream);
+            Write(value, stream);
+          }
+          stream.write(((byte)((byte)'e')));
+        } else {
+          stream.write(((byte)((byte)'d')));
+          for(CBORObject key : obj.getKeys()) {
+            String str = key.AsString();
+            long length = CBORDataUtilities.GetUtf8Length(str, false);
+            if (length < 0)
+              throw new CBORException("invalid String");
+            writeUtf8(Long.toString((long)length), stream);
+            stream.write(((byte)((byte)':')));
+            writeUtf8(str, stream);
+            Write(obj.get(key), stream);
+          }
+          stream.write(((byte)((byte)'e')));
+        }
       } else if (obj.getType() == CBORType.Array) {
         stream.write(((byte)((byte)'l')));
         for (int i = 0; i < obj.size(); i++) {

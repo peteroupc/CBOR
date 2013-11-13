@@ -288,66 +288,20 @@ namespace PeterO {
       int s = this.Sign;
       int ds = other.Sign;
       if (s != ds) return (s < ds) ? -1 : 1;
-      return this.Subtract(other).Sign;
-    }
-
-
-    private static BigInteger[] DivideWithPrecision(
-      BigInteger dividend, // NOTE: Assumes dividend is nonnegative
-      int divisor,
-      int maxIterations
-    ) {
-      BigInteger bigdivisor = (BigInteger)divisor;
-      BigInteger scale = BigInteger.Zero;
-      if(dividend.CompareTo(bigdivisor) < 0){
-        while (dividend.CompareTo(bigdivisor) < 0) {
-          scale += BigInteger.One;
-          dividend *= (BigInteger)10;
-        }
+      int expcmp = exponent.CompareTo((BigInteger)other.exponent);
+      if (expcmp == 0) {
+        return mantissa.CompareTo((BigInteger)other.mantissa);
+      } else if (expcmp > 0) {
+        BigInteger newmant = RescaleByExponentDiff(
+          mantissa, exponent, other.exponent);
+        return newmant.CompareTo((BigInteger)other.mantissa);
       } else {
-        BigInteger divisormul;
-        divisormul=bigdivisor*(BigInteger)100000;
-        while (dividend.CompareTo(divisormul) >= 0) {
-          scale -= (BigInteger)5;
-          bigdivisor=divisormul;
-          divisormul=bigdivisor*(BigInteger)100000;
-        }
-        divisormul=bigdivisor*(BigInteger)10;
-        while (dividend.CompareTo(divisormul) >= 0) {
-          scale -= BigInteger.One;
-          bigdivisor=divisormul;
-          divisormul=bigdivisor*(BigInteger)10;
-        }
+        BigInteger newmant = RescaleByExponentDiff(
+          other.mantissa, exponent, other.exponent);
+        return this.mantissa.CompareTo((BigInteger)newmant);
       }
-      BigInteger bigquotient = BigInteger.Zero;
-      BigInteger bigrem = BigInteger.Zero;
-      for (int i = 0; i < maxIterations; i++) {
-        BigInteger newquotient = BigInteger.DivRem(
-          (BigInteger)dividend,
-          (BigInteger)bigdivisor,
-          out bigrem);
-        bigquotient += (BigInteger)newquotient;
-        if (scale.Sign >= 0 && bigrem.IsZero) {
-          break;
-        }
-        scale += BigInteger.One;
-        bigquotient *= (BigInteger)10;
-        dividend *= (BigInteger)10;
-      }
-      if (!bigrem.IsZero) {
-        // Round half-up
-        BigInteger halfdivisor = bigdivisor;
-        halfdivisor >>= 1;
-        if (bigrem.CompareTo(halfdivisor) >= 0) {
-          bigrem += BigInteger.One;
-        }
-      }
-      BigInteger negscale = -(BigInteger)scale;
-      return new BigInteger[]{
-        bigquotient,bigrem,negscale
-      };
     }
-
+    
     /// <summary>
     /// Creates a bigfloat from an arbitrary-precision decimal fraction.
     /// Note that if the decimal fraction contains a negative exponent,
@@ -363,35 +317,25 @@ namespace PeterO {
         return new BigFloat(bigintMant);
       } else if (bigintExp.Sign > 0) {
         // Scaled integer
-        BigInteger curexp = bigintExp;
         BigInteger bigmantissa = bigintMant;
-        while (curexp.Sign > 0) {
-          bigmantissa *= (BigInteger)10;
-          curexp -= BigInteger.One;
-        }
+        bigmantissa*=(BigInteger)(DecimalFraction.FindPowerOfTen(bigintExp));
         return new BigFloat(bigmantissa);
       } else {
-        // Fractional number
-        BigInteger curexp = bigintExp;
-        BigInteger scale = curexp;
+        // Fractional number, keep dividing by
+        // 5 while the exponent is less than 0
+        BigInteger scale = bigintExp;
         BigInteger bigmantissa = bigintMant;
         bool neg = (bigmantissa.Sign < 0);
+        // Make positive because DivideWithPrecision assumes the
+        // dividend is positive
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        while (curexp < 0) {
-          if (curexp <= -10) {
-            BigInteger[] results = DivideWithPrecision(bigmantissa, 9765625, 20);
-            bigmantissa = results[0]; // quotient
-            BigInteger newscale = results[2];
-            scale = scale + (BigInteger)newscale;
-            curexp += (BigInteger)10;
-          } else {
-            BigInteger[] results = DivideWithPrecision(bigmantissa, 5, 20);
-            bigmantissa = results[0]; // quotient
-            BigInteger newscale = results[2];
-            scale = scale + (BigInteger)newscale;
-            curexp += BigInteger.One;
-          }
-        }
+        BigInteger negbigintExp = -(BigInteger)bigintExp;
+        BigInteger[] results = DecimalFraction.DivideWithPrecision(
+          bigmantissa,
+          DecimalFraction.FindPowerOfFive(negbigintExp), 21);
+        bigmantissa = results[0]; // quotient
+        BigInteger newscale = results[2];
+        scale = scale + (BigInteger)newscale;
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
         return new BigFloat(bigmantissa, scale);
       }
@@ -495,6 +439,7 @@ namespace PeterO {
         return bigmantissa;
       }
     }
+    
     /// <summary>
     /// Converts this value to a 32-bit floating-point number.
     /// The half-up rounding mode is used.
@@ -551,6 +496,21 @@ namespace PeterO {
       } else if (bigexponent < -149) {
         // subnormal
         subnormal = true;
+        // Shift 80 bits at a time while number
+        // remains subnormal
+        while (bigexponent < -228) {
+          if(bigmant.IsZero){
+            lastRoundedBit=0;
+            bigexponent=(BigInteger)(-149);
+            break;
+          } else {
+            bigmant >>= 79;
+            BigInteger bigsticky = bigmant & BigInteger.One;
+            lastRoundedBit = (int)bigsticky;
+            bigmant >>= 1;
+          }
+          bigexponent += (BigInteger)80;
+        }
         // Shift 20 bits at a time while number
         // remains subnormal
         while (bigexponent < -168) {
@@ -559,9 +519,10 @@ namespace PeterO {
             bigexponent=(BigInteger)(-149);
             break;
           } else {
+            bigmant >>= 19;
             BigInteger bigsticky = bigmant & BigInteger.One;
             lastRoundedBit = (int)bigsticky;
-            bigmant >>= 20;
+            bigmant >>= 1;
           }
           bigexponent += (BigInteger)20;
         }
@@ -588,7 +549,7 @@ namespace PeterO {
         }
       }
       if (bigexponent < -149) {
-        // exponent too small
+        // exponent too small, so return zero
         return (this.mantissa.Sign < 0) ?
           ConverterInternal.Int32BitsToSingle(1 << 31) :
           ConverterInternal.Int32BitsToSingle(0);
@@ -634,9 +595,10 @@ namespace PeterO {
         BigInteger OneShift72=BigInteger.One<<72;
         // Shift right 20 bits at a time
         while (bigmant.CompareTo(OneShift72) >= 0) {
-          BigInteger bigsticky = bigmant & (BigInteger)0xFFFFF;
-          lastRoundedBit = ((int)bigsticky)>>19;
-          bigmant >>= 20;
+          bigmant >>= 19;
+          BigInteger bigsticky = bigmant & BigInteger.One;
+          lastRoundedBit = (int)bigsticky;
+          bigmant >>= 1;
           bigexponent += (BigInteger)20;
         }
         // Shift right 1 bit at a time
@@ -700,7 +662,7 @@ namespace PeterO {
         }
       }
       if (bigexponent < -1074) {
-        // exponent too small
+        // exponent too small, so return zero
         return (this.mantissa.Sign < 0) ?
           ConverterInternal.Int64BitsToDouble(1L << 63) :
           ConverterInternal.Int64BitsToDouble(0);

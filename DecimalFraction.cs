@@ -120,7 +120,7 @@ namespace PeterO {
     /// <param name="mantissaLong">The desired value of the bigfloat</param>
     public DecimalFraction(long mantissaLong) {
       this.exponent = BigInteger.Zero;
-      this.mantissa = (BigInteger)mantissaLong;
+      this.mantissa = new BigInteger(mantissaLong);
     }
 
 
@@ -152,20 +152,20 @@ namespace PeterO {
         negative = (s[0] == '-');
         offset++;
       }
-      BigInteger bigint = BigInteger.Zero;
+      FastInteger mant = new FastInteger();
       bool haveDecimalPoint = false;
       bool haveDigits = false;
       bool haveExponent = false;
-      BigInteger newScale = BigInteger.Zero;
+      FastInteger newScale = new FastInteger();
       int i = offset;
       for (; i < s.Length; i++) {
         if (s[i] >= '0' && s[i] <= '9') {
-          bigint *= (BigInteger)10;
           int thisdigit = (int)(s[i] - '0');
-          bigint += (BigInteger)((long)thisdigit);
+          mant.Multiply(10);
+          mant.Add(thisdigit);
           haveDigits = true;
           if (haveDecimalPoint) {
-            newScale -= BigInteger.One;
+            newScale.Add(-1);
           }
         } else if (s[i] == '.') {
           if (haveDecimalPoint)
@@ -182,7 +182,7 @@ namespace PeterO {
       if (!haveDigits)
         throw new FormatException();
       if (haveExponent) {
-        BigInteger exponent = BigInteger.Zero;
+        FastInteger exp=new FastInteger();
         offset = 1;
         haveDigits = false;
         if (i == s.Length) throw new FormatException();
@@ -193,22 +193,23 @@ namespace PeterO {
         for (; i < s.Length; i++) {
           if (s[i] >= '0' && s[i] <= '9') {
             haveDigits = true;
-            exponent *= (BigInteger)10;
             int thisdigit = (int)(s[i] - '0') * offset;
-            exponent += (BigInteger)((long)thisdigit);
+            exp.Multiply(10);
+            exp.Add(thisdigit);
           } else {
             throw new FormatException();
           }
         }
         if (!haveDigits)
           throw new FormatException();
-        newScale += (BigInteger)exponent;
+        newScale.Add(exp);
       } else if (i != s.Length) {
         throw new FormatException();
       }
+      BigInteger bigint=mant.Value;
       if (negative)
         bigint = -(BigInteger)bigint;
-      return new DecimalFraction(bigint, newScale);
+      return new DecimalFraction(bigint, newScale.Value);
     }
 
     private BigInteger
@@ -216,17 +217,11 @@ namespace PeterO {
                             BigInteger e1,
                             BigInteger e2) {
       bool negative = (mantissa.Sign < 0);
+      if(mantissa.Sign==0)return BigInteger.Zero;
       if (negative) mantissa = -mantissa;
       BigInteger diff=e1-(BigInteger)e2;
       diff=BigInteger.Abs(diff);
-      while(diff.CompareTo(BigInt5)>0){
-        mantissa*=(BigInteger)100000;
-        diff-=(BigInteger)BigInt5;
-      }
-      while(diff.Sign>0){
-        mantissa*=(BigInteger)10;
-        diff-=BigInteger.One;
-      }
+      mantissa*=(BigInteger)(FindPowerOfTen(diff));
       if (negative) mantissa = -mantissa;
       return mantissa;
     }
@@ -260,6 +255,395 @@ namespace PeterO {
       return a.CompareTo(b) > 0 ? a : b;
     }
 
+    internal enum RoundingMode {
+      Down, Up,
+      HalfDown, HalfUp, HalfEven,
+      Ceiling, Floor
+    }
+
+    internal static BigInteger FindPowerOfFive(BigInteger diff){
+      if(diff.Sign<=0)return BigInteger.One;
+      BigInteger bigpow=BigInteger.Zero;
+      FastInteger intcurexp=new FastInteger(diff);
+      if(intcurexp.CompareTo(27)<=0){
+        return FindPowerOfFive(intcurexp.AsInt32());
+      }
+      BigInteger mantissa=BigInteger.One;
+      while (intcurexp.Sign>0) {
+        if(intcurexp.CompareTo(27)<=0){
+          bigpow=FindPowerOfFive(intcurexp.AsInt32());
+          mantissa *= (BigInteger)bigpow;
+          break;
+        } else if(intcurexp.CompareTo(9999999)<=0){
+          bigpow=BigInteger.Pow(FindPowerOfFive(1),intcurexp.AsInt32());
+          mantissa *= (BigInteger)bigpow;
+          break;
+        } else {
+          if(bigpow.IsZero)
+            bigpow=BigInteger.Pow(FindPowerOfFive(1),9999999);
+          mantissa *= bigpow;
+          intcurexp.Add(-9999999);
+        }
+      }
+      return mantissa;
+    }
+    
+    internal static BigInteger FindPowerOfTen(BigInteger diff){
+      if(diff.Sign<=0)return BigInteger.One;
+      BigInteger bigpow=BigInteger.Zero;
+      FastInteger intcurexp=new FastInteger(diff);
+      if(intcurexp.CompareTo(18)<=0){
+        return FindPowerOfTen(intcurexp.AsInt32());
+      }
+      BigInteger mantissa=BigInteger.One;
+      while (intcurexp.Sign>0) {
+        if(intcurexp.CompareTo(18)<=0){
+          bigpow=FindPowerOfTen(intcurexp.AsInt32());
+          mantissa*=(BigInteger)bigpow;
+          break;
+        } else if(intcurexp.CompareTo(9999999)<=0){
+          bigpow=BigInteger.Pow(FindPowerOfTen(1),intcurexp.AsInt32());
+          mantissa *= (BigInteger)bigpow;
+          break;
+        } else {
+          if(bigpow.IsZero)
+            bigpow=BigInteger.Pow(FindPowerOfTen(1),9999999);
+          mantissa *= bigpow;
+          intcurexp.Add(-9999999);
+        }
+      }
+      return mantissa;
+    }
+
+    internal static BigInteger FindPowerOfFive(long precision){
+      if(precision<=0)return BigInteger.One;
+      if(precision<BigIntPowersOfFive.Length)
+        return BigIntPowersOfFive[(int)precision];
+      BigInteger ret=BigInteger.One;
+      BigInteger bigpow=BigInteger.Zero;
+      while(precision>0){
+        if(precision<=27){
+          bigpow=BigIntPowersOfFive[(int)precision];
+          ret *= (BigInteger)bigpow;
+          break;
+        } else if(precision<=9999999){
+          bigpow=BigInteger.Pow(BigIntPowersOfFive[1],(int)precision);
+          ret *= (BigInteger)bigpow;
+          break;
+        } else {
+          if(bigpow.IsZero)
+            bigpow=BigInteger.Pow(BigIntPowersOfFive[1],9999999);
+          ret *= (BigInteger)bigpow;
+          precision-=9999999;
+        }
+      }
+      return ret;
+    }
+    
+    internal static BigInteger FindPowerOfTen(long precision){
+      if(precision<=0)return BigInteger.One;
+      if(precision<BigIntPowersOfTen.Length)
+        return BigIntPowersOfTen[(int)precision];
+      BigInteger ret=BigInteger.One;
+      BigInteger bigpow=BigInteger.Zero;
+      while(precision>0){
+        if(precision<=18){
+          bigpow=BigIntPowersOfTen[(int)precision];
+          ret *= (BigInteger)bigpow;
+          break;
+        } else if(precision<=9999999){
+          bigpow=BigInteger.Pow(BigIntPowersOfTen[1],(int)precision);
+          ret *= (BigInteger)bigpow;
+          break;
+        } else {
+          if(bigpow.IsZero)
+            bigpow=BigInteger.Pow(BigIntPowersOfTen[1],9999999);
+          ret *= (BigInteger)bigpow;
+          precision-=9999999;
+        }
+      }
+      return ret;
+    }
+    
+    /// <summary>
+    /// A mutable integer class initially backed by a 64-bit integer,
+    /// that only uses a big integer when arithmetic operations would
+    /// overflow the 64-bit integer.
+    /// </summary>
+    private sealed class FastInteger {
+      long smallValue;
+      BigInteger largeValue;
+      bool usingLarge;
+      
+      public FastInteger(){
+        smallValue=0;
+        usingLarge=false;
+        largeValue=BigInteger.Zero;
+      }
+
+      public FastInteger(long value){
+        smallValue=value;
+        usingLarge=false;
+        largeValue=BigInteger.Zero;
+      }
+      
+      public FastInteger(FastInteger value){
+        smallValue=value.smallValue;
+        usingLarge=value.usingLarge;
+        largeValue=value.largeValue;
+      }
+
+      // This constructor converts a big integer to a 64-bit one
+      // if it's small enough
+      public FastInteger(BigInteger bigintVal){
+        if(bigintVal.CompareTo((BigInteger)Int64.MinValue)>=0 &&
+           bigintVal.CompareTo((BigInteger)Int64.MaxValue)<=0){
+          smallValue=(long)bigintVal;
+          usingLarge=false;
+          largeValue=BigInteger.Zero;
+        } else {
+          smallValue=0;
+          usingLarge=true;
+          largeValue=bigintVal;
+        }
+      }
+      
+      public int AsInt32(){
+        if(usingLarge){
+          return (int)largeValue;
+        } else {
+          return unchecked((int)smallValue);
+        }
+      }
+      public int CompareTo(FastInteger val){
+        if(usingLarge || val.usingLarge){
+          BigInteger valValue=val.Value;
+          return largeValue.CompareTo(valValue);
+        } else {
+          return (val.smallValue==smallValue) ? 0 : 
+            (smallValue<val.smallValue ? -1 : 1);
+        }
+      }
+      
+      public int CompareTo(long val){
+        if(usingLarge){
+          return largeValue.CompareTo((BigInteger)val);
+        } else {
+          return (val==smallValue) ? 0 : (smallValue<val ? -1 : 1);
+        }
+      }
+      
+      public void Multiply(int val){
+        if(val==0){
+          smallValue=0;
+          usingLarge=false;
+        } else if(usingLarge){
+          largeValue*=(BigInteger)val;
+        } else {
+          bool apos = (smallValue > 0L);
+          bool bpos = (val > 0L);
+          if (
+            (apos && ((!bpos && (Int64.MinValue / smallValue) > val) ||
+                      (bpos && smallValue > (Int64.MaxValue / val)))) ||
+            (!apos && ((!bpos && smallValue != 0L &&
+                        (Int64.MaxValue / smallValue) > val) ||
+                       (bpos && smallValue < (Int64.MinValue / val))))) {
+            // would overflow, convert to large
+            largeValue=(BigInteger)smallValue;
+            usingLarge=true;
+            largeValue*=(BigInteger)val;
+          } else {
+            smallValue*=val;
+          }
+        }
+      }
+      
+      public void Add(FastInteger val){
+        if(usingLarge || val.usingLarge){
+          BigInteger valValue=val.Value;
+          largeValue+=(BigInteger)valValue;
+        } else if((smallValue < 0 && (long)val.smallValue < Int64.MinValue - smallValue) ||
+                  (smallValue > 0 && (long)val.smallValue > Int64.MaxValue - smallValue)){
+          // would overflow, convert to large
+          largeValue=(BigInteger)smallValue;
+          usingLarge=true;
+          largeValue+=(BigInteger)val.smallValue;
+        } else{
+          smallValue+=val.smallValue;
+        }
+      }
+      
+      public void Add(int val){
+        if(val!=0){
+          if(usingLarge){
+            largeValue+=(BigInteger)val;
+          } else if((smallValue < 0 && (long)val < Int64.MinValue - smallValue) ||
+                    (smallValue > 0 && (long)val > Int64.MaxValue - smallValue)){
+            // would overflow, convert to large
+            largeValue=(BigInteger)smallValue;
+            usingLarge=true;
+            largeValue+=(BigInteger)val;
+          } else{
+            smallValue+=val;
+          }
+        }
+      }
+      
+      public int Sign {
+        get {
+          return usingLarge ? largeValue.Sign : (
+            (smallValue==0) ? 0 : (smallValue<0 ? -1 : 1));
+        }
+      }
+      
+      public BigInteger Value {
+        get {
+          return usingLarge ? largeValue : (BigInteger)smallValue;
+        }
+      }
+    }
+    
+    internal static BigInteger[] DivideWithPrecision(
+      BigInteger dividend, // NOTE: Assumes dividend is nonnegative
+      BigInteger bigdivisor,
+      long minimumPrecision // in decimal digits
+    ) {
+      if(bigdivisor.IsZero)
+        throw new DivideByZeroException("division by zero");
+      BigInteger bigquotient = BigInteger.Zero;
+      BigInteger bigrem = BigInteger.Zero;
+      FastInteger scale = new FastInteger();
+      BigInteger minInclusive=FindPowerOfTen(minimumPrecision-1);
+      BigInteger bigintTen = FindPowerOfTen(1);
+      if(dividend.CompareTo(bigdivisor) < 0){
+        while (dividend.CompareTo(bigdivisor) < 0) {
+          scale.Add(1);
+          dividend *= bigintTen;
+        }
+      } else {
+        BigInteger divisormul;
+        divisormul=bigdivisor*(BigInteger)(FindPowerOfTen(5));
+        while (dividend.CompareTo(divisormul) >= 0) {
+          scale.Add(5);
+          bigdivisor=divisormul;
+          divisormul=bigdivisor*(BigInteger)(FindPowerOfTen(5));
+        }
+        divisormul=bigdivisor*(BigInteger)(FindPowerOfTen(1));
+        while (dividend.CompareTo(divisormul) >= 0) {
+          scale.Add(1);
+          bigdivisor=divisormul;
+          divisormul=bigdivisor*(BigInteger)(FindPowerOfTen(1));
+        }
+      }
+      while(true) {
+        BigInteger newquotient = BigInteger.DivRem(
+          (BigInteger)dividend,
+          (BigInteger)bigdivisor,
+          out bigrem);
+        if(bigquotient.IsZero)
+          bigquotient=newquotient;
+        else
+          bigquotient += (BigInteger)newquotient;
+        if (scale.Sign >= 0 && bigrem.IsZero) {
+          break;
+        }
+        if(bigquotient.CompareTo(minInclusive)>=0){
+          break;
+        }
+        scale.Add(1);
+        dividend = bigrem;
+        bigquotient *= bigintTen;
+        dividend *= bigintTen;
+      }
+      if (!bigrem.IsZero) {
+        // Round half-up
+        // TODO: Use half-even rounding instead
+        BigInteger halfdivisor = bigdivisor;
+        halfdivisor >>= 1;
+        if (bigrem.CompareTo(halfdivisor) >= 0) {
+          bigrem += BigInteger.One;
+        }
+      }
+      BigInteger scaleValue=scale.Value;
+      BigInteger negscale = -(BigInteger)scaleValue;
+      return new BigInteger[]{
+        bigquotient,bigrem,negscale
+      };
+    }
+    
+    internal static BigInteger[] Round(
+      BigInteger coeff,
+      BigInteger exponent,
+      long precision,
+      RoundingMode mode
+    ){
+      int sign=coeff.Sign;
+      if(sign!=0){
+        BigInteger powerForPrecision=FindPowerOfTen(precision);
+        if(sign<0)coeff=-coeff;
+        int digitsFollowingLeftmost=0; // OR of all digits following the leftmost digit
+        int digitLeftmost=0;
+        int exponentChange=0;
+        while(coeff.CompareTo(powerForPrecision)<0){
+          BigInteger digit;
+          BigInteger quotient=BigInteger.DivRem(coeff,FindPowerOfTen(1),out digit);
+          coeff=quotient;
+          int intDigit=(int)digit;
+          digitsFollowingLeftmost|=digitLeftmost;
+          digitLeftmost=intDigit;
+          exponentChange+=1;
+          if(exponentChange>=1000){
+            exponent+=(BigInteger)exponentChange;
+            exponentChange=0;
+          }
+        }
+        if(exponentChange>0){
+          exponent+=(BigInteger)exponentChange;
+        }
+        bool incremented=false;
+        if(mode==RoundingMode.HalfUp){
+          if(digitLeftmost>=5){
+            coeff+=BigInteger.One;
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.Up){
+          if((digitLeftmost|digitsFollowingLeftmost)!=0){
+            coeff+=BigInteger.One;
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.HalfEven){
+          if(digitLeftmost>5 || (digitLeftmost==5 && digitsFollowingLeftmost!=0)){
+            coeff+=BigInteger.One;
+            incremented=true;
+          } else if(digitLeftmost==5 && !coeff.IsEven){
+            coeff+=BigInteger.One;
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.HalfDown){
+          if(digitLeftmost>5 || (digitLeftmost==5 && digitsFollowingLeftmost!=0)){
+            coeff+=BigInteger.One;
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.Ceiling){
+          if((digitLeftmost|digitsFollowingLeftmost)!=0 && sign>0){
+            coeff+=BigInteger.One;
+            incremented=true;
+          }
+        } else if(mode==RoundingMode.Floor){
+          if((digitLeftmost|digitsFollowingLeftmost)!=0 && sign<0){
+            coeff+=BigInteger.One;
+            incremented=true;
+          }
+        }
+        if(incremented && coeff.CompareTo(powerForPrecision)>=0){
+          coeff/=(BigInteger)(FindPowerOfTen(1));
+          exponent+=BigInteger.One;
+        }
+      }
+      if(sign<0)coeff=-coeff;
+      return new BigInteger[]{ coeff, exponent };
+    }
+    
     /// <summary>
     /// Gets the lesser value between two DecimalFraction values.
     /// </summary>
@@ -359,7 +743,18 @@ namespace PeterO {
       int s = this.Sign;
       int ds = decfrac.Sign;
       if (s != ds) return (s < ds) ? -1 : 1;
-      return this.Subtract(decfrac).Sign;
+      int expcmp = exponent.CompareTo((BigInteger)decfrac.exponent);
+      if (expcmp == 0) {
+        return mantissa.CompareTo((BigInteger)decfrac.mantissa);
+      } else if (expcmp > 0) {
+        BigInteger newmant = RescaleByExponentDiff(
+          mantissa, exponent, decfrac.exponent);
+        return newmant.CompareTo((BigInteger)decfrac.mantissa);
+      } else {
+        BigInteger newmant = RescaleByExponentDiff(
+          decfrac.mantissa, exponent, decfrac.exponent);
+        return this.mantissa.CompareTo((BigInteger)newmant);
+      }
     }
 
     private bool InsertString(StringBuilder builder, BigInteger index, char c) {
@@ -441,16 +836,16 @@ namespace PeterO {
               decimalPointAdjust += BigInteger.One;
               newExponent += BigInteger.One;
             } else {
-              decimalPointAdjust += (BigInteger)2;
-              newExponent += (BigInteger)2;
+              decimalPointAdjust += (BigInteger)BigInt2;
+              newExponent += (BigInteger)BigInt2;
             }
           } else if (intphase == 2) {
             if (!adjExponentNegative) {
               decimalPointAdjust += BigInteger.One;
               newExponent += BigInteger.One;
             } else {
-              decimalPointAdjust += (BigInteger)2;
-              newExponent += (BigInteger)2;
+              decimalPointAdjust += (BigInteger)BigInt2;
+              newExponent += (BigInteger)BigInt2;
             }
           }
           threshold += BigInteger.One;
@@ -460,16 +855,16 @@ namespace PeterO {
               decimalPointAdjust += BigInteger.One;
               newExponent -= BigInteger.One;
             } else {
-              decimalPointAdjust += (BigInteger)2;
-              newExponent -= (BigInteger)2;
+              decimalPointAdjust += (BigInteger)BigInt2;
+              newExponent -= (BigInteger)BigInt2;
             }
           } else if (intphase == 2) {
             if (adjExponentNegative) {
               decimalPointAdjust += BigInteger.One;
               newExponent -= BigInteger.One;
             } else {
-              decimalPointAdjust += (BigInteger)2;
-              newExponent -= (BigInteger)2;
+              decimalPointAdjust += (BigInteger)BigInt2;
+              newExponent -= (BigInteger)BigInt2;
             }
           }
         }
@@ -530,40 +925,44 @@ namespace PeterO {
       }
     }
 
+    private static BigInteger BigInt2 = (BigInteger)2;
+    
+    private static BigInteger[] BigIntPowersOfTen=new BigInteger[]{
+      (BigInteger)1, (BigInteger)10, (BigInteger)100, (BigInteger)1000, (BigInteger)10000, (BigInteger)100000, (BigInteger)1000000, (BigInteger)10000000, (BigInteger)100000000, (BigInteger)1000000000,
+      (BigInteger)10000000000L, (BigInteger)100000000000L, (BigInteger)1000000000000L, (BigInteger)10000000000000L,
+      (BigInteger)100000000000000L, (BigInteger)1000000000000000L, (BigInteger)10000000000000000L,
+      (BigInteger)100000000000000000L, (BigInteger)1000000000000000000L
+    };
+    
+    private static BigInteger[] BigIntPowersOfFive=new BigInteger[]{
+      (BigInteger)1, (BigInteger)5, (BigInteger)25, (BigInteger)125, (BigInteger)625, (BigInteger)3125, (BigInteger)15625, (BigInteger)78125, (BigInteger)390625,
+      (BigInteger)1953125, (BigInteger)9765625, (BigInteger)48828125, (BigInteger)244140625, (BigInteger)1220703125,
+      (BigInteger)6103515625L, (BigInteger)30517578125L, (BigInteger)152587890625L, (BigInteger)762939453125L,
+      (BigInteger)3814697265625L, (BigInteger)19073486328125L, (BigInteger)95367431640625L,
+      (BigInteger)476837158203125L, (BigInteger)2384185791015625L, (BigInteger)11920928955078125L,
+      (BigInteger)59604644775390625L, (BigInteger)298023223876953125L, (BigInteger)1490116119384765625L,
+      (BigInteger)7450580596923828125L
+    };
+
+    
     /// <summary>
     /// Converts this value to an arbitrary-precision integer.
     /// Any fractional part in this value will be discarded when
     /// converting to a big integer.
     /// </summary>
     public BigInteger ToBigInteger() {
-      if (this.Exponent == 0) {
+      int sign=this.Exponent.Sign;
+      if (sign==0) {
         return this.Mantissa;
-      } else if (this.Exponent > 0) {
-        BigInteger curexp = this.Exponent;
+      } else if (sign>0) {
         BigInteger bigmantissa = this.Mantissa;
-        bool neg = (bigmantissa.Sign < 0);
-        if (neg) bigmantissa = -bigmantissa;
-        while (curexp > 0 && !bigmantissa.IsZero) {
-          bigmantissa *= (BigInteger)10;
-          curexp -= BigInteger.One;
-        }
-        if (neg) bigmantissa = -bigmantissa;
+        bigmantissa*=(BigInteger)(FindPowerOfTen(this.Exponent));
         return bigmantissa;
       } else {
-        BigInteger curexp = this.Exponent;
         BigInteger bigmantissa = this.Mantissa;
-        bool neg = (bigmantissa.Sign < 0);
-        if (neg) bigmantissa = -bigmantissa;
-        while (curexp<0 && !bigmantissa.IsZero) {
-          if (curexp.CompareTo(BigIntNeg5)<=0) {
-            bigmantissa /= (BigInteger)100000;
-            curexp += (BigInteger)BigInt5;
-          } else {
-            bigmantissa /= (BigInteger)10;
-            curexp += BigInteger.One;
-          }
-        }
-        if (neg) bigmantissa = -bigmantissa;
+        BigInteger bigexponent=this.Exponent;
+        bigexponent=-bigexponent;
+        bigmantissa/=(BigInteger)(FindPowerOfTen(bigexponent));
         return bigmantissa;
       }
     }
@@ -628,24 +1027,9 @@ namespace PeterO {
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = (BigInteger)fpMantissa;
-        long scale = fpExponent;
-        while (fpExponent < 0) {
-          if (fpExponent <= -20) {
-            bigmantissa *= (BigInteger)BigInt5Pow20;
-            fpExponent += 20;
-          } else if (fpExponent <= -10) {
-            bigmantissa *= (BigInteger)BigInt5Pow10;
-            fpExponent += 10;
-          } else if (fpExponent <= -5) {
-            bigmantissa *= (BigInteger)BigInt5Pow5;
-            fpExponent += 5;
-          } else {
-            bigmantissa *= (BigInteger)BigInt5;
-            fpExponent += 1;
-          }
-        }
+        bigmantissa*=(BigInteger)(FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new DecimalFraction(bigmantissa, scale);
+        return new DecimalFraction(bigmantissa, fpExponent);
       }
     }
 
@@ -685,37 +1069,12 @@ namespace PeterO {
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = (BigInteger)fpMantissa;
-        long scale = fpExponent;
-        while (fpExponent < 0) {
-          if (fpExponent <= -20) {
-            bigmantissa *= (BigInteger)BigInt5Pow20;
-            fpExponent += 20;
-          } else if (fpExponent <= -10) {
-            bigmantissa *= (BigInteger)BigInt5Pow10;
-            fpExponent += 10;
-          } else if (fpExponent <= -5) {
-            bigmantissa *= (BigInteger)BigInt5Pow5;
-            fpExponent += 5;
-          } else {
-            bigmantissa *= (BigInteger)BigInt5;
-            fpExponent += 1;
-          }
-        }
+        bigmantissa*=(BigInteger)(FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new DecimalFraction(bigmantissa, scale);
+        return new DecimalFraction(bigmantissa, fpExponent);
       }
     }
-
-    private static BigInteger BigInt5 = (BigInteger)5;
-    private static BigInteger BigInt10 = (BigInteger)10;
-    private static BigInteger BigInt20 = (BigInteger)20;
-    private static BigInteger BigIntNeg5 = (BigInteger)(-5);
-    private static BigInteger BigIntNeg10 = (BigInteger)(-10);
-    private static BigInteger BigIntNeg20 = (BigInteger)(-20);
-    private static BigInteger BigInt5Pow5 = (BigInteger)3125;
-    private static BigInteger BigInt5Pow10 = (BigInteger)9765625;
-    private static BigInteger BigInt5Pow20 = (BigInteger)(95367431640625L);
-
+    
     /// <summary>
     /// Creates a decimal fraction from an arbitrary-precision
     /// binary floating-point number.
@@ -729,59 +1088,36 @@ namespace PeterO {
         return new DecimalFraction(bigintMant);
       } else if (bigintExp > 0) {
         // Scaled integer
-        BigInteger curexp = bigintExp;
+        FastInteger intcurexp=new FastInteger(bigintExp);
         BigInteger bigmantissa = bigintMant;
         bool neg = (bigmantissa.Sign < 0);
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        while (curexp > 0) {
-          int shift = 64;
-          if (curexp.CompareTo((BigInteger)64) < 0) {
-            shift = (int)curexp;
+        while (intcurexp.Sign > 0) {
+          int shift = 512;
+          if (intcurexp.CompareTo(512) < 0) {
+            shift = intcurexp.AsInt32();
           }
           bigmantissa <<= shift;
-          curexp -= (BigInteger)shift;
+          intcurexp.Add(-shift);
         }
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
         return new DecimalFraction(bigmantissa);
       } else {
         // Fractional number
         BigInteger bigmantissa = bigintMant;
-        BigInteger curexp = bigintExp;
-        while (curexp.Sign < 0) {
-          if (curexp.CompareTo(BigIntNeg20) <= 0) {
-            bigmantissa *= (BigInteger)BigInt5Pow20;
-            curexp += (BigInteger)BigInt20;
-          } else if (curexp.CompareTo(BigIntNeg10) <= 0) {
-            bigmantissa *= (BigInteger)BigInt5Pow10;
-            curexp += (BigInteger)BigInt10;
-          } else if (curexp.CompareTo(BigIntNeg5) <= 0) {
-            bigmantissa *= (BigInteger)BigInt5Pow5;
-            curexp += (BigInteger)BigInt5;
-          } else if (curexp.CompareTo((BigInteger)(-4)) <= 0) {
-            bigmantissa *= (BigInteger)625;
-            curexp += (BigInteger)4;
-          } else if (curexp.CompareTo((BigInteger)(-3)) <= 0) {
-            bigmantissa *= (BigInteger)125;
-            curexp += (BigInteger)3;
-          } else if (curexp.CompareTo((BigInteger)(-2)) <= 0) {
-            bigmantissa *= (BigInteger)25;
-            curexp += (BigInteger)2;
-          } else {
-            bigmantissa *= (BigInteger)BigInt5;
-            curexp += BigInteger.One;
-          }
-        }
+        BigInteger negbigintExp=-(BigInteger)bigintExp;
+        bigmantissa*=(BigInteger)(FindPowerOfFive(negbigintExp));
         return new DecimalFraction(bigmantissa, bigintExp);
       }
     }
 
     /*
-    internal DecimalFraction MovePointLeft(BigInteger steps){
+    public DecimalFraction MovePointLeft(BigInteger steps){
       if(steps.IsZero)return this;
       return new DecimalFraction(this.Mantissa,this.Exponent-(BigInteger)steps);
     }
     
-    internal DecimalFraction MovePointRight(BigInteger steps){
+    public DecimalFraction MovePointRight(BigInteger steps){
       if(steps.IsZero)return this;
       return new DecimalFraction(this.Mantissa,this.Exponent+(BigInteger)steps);
     }
