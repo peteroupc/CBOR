@@ -307,23 +307,49 @@ import java.math.*;
         bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfTen(bigintExp));
         return new BigFloat(bigmantissa);
       } else {
-        // Fractional number, keep dividing by
-        // 5 while the exponent is less than 0
-        BigInteger scale = bigintExp;
+        // Fractional number
+        FastInteger scale = new FastInteger(bigintExp);
         BigInteger bigmantissa = bigintMant;
         boolean neg = (bigmantissa.signum() < 0);
-        // Make positive because DivideWithPrecision assumes the
-        // dividend is positive
+        BigInteger remainder;
         if (neg) bigmantissa=(bigmantissa).negate();
-        BigInteger negbigintExp=(bigintExp).negate();
-        BigInteger[] results = DecimalFraction.DivideWithPrecision(
-          bigmantissa,
-          DecimalFraction.FindPowerOfFive(negbigintExp), 21);
-        bigmantissa = results[0]; // quotient
-        BigInteger newscale = results[2];
-        scale = scale.add(newscale);
+        FastInteger negscale=new FastInteger(scale).Negate();
+        BigInteger divisor=DecimalFraction.FindPowerOfFive(negscale.AsBigInteger());
+        while(true){
+          BigInteger quotient;
+BigInteger[] divrem=(bigmantissa).divideAndRemainder(divisor);
+quotient=divrem[0];
+remainder=divrem[1];
+          // Ensure that the quotient has enough precision
+          // to be converted accurately to a single or double
+          if(remainder.signum()!=0 &&
+             quotient.compareTo(OneShift62)<0){
+            long smallquot=quotient.longValue();
+            int shift=0;
+            while(smallquot!=0 && smallquot<(1L<<62)){
+              smallquot<<=1;
+              shift++;
+            }
+            if(shift==0)shift=1;
+            bigmantissa=bigmantissa.shiftLeft(shift);
+            scale.Add(-shift);
+          } else {
+            bigmantissa=quotient;
+            break;
+          }
+        }
+        // Round half-even
+        BigInteger halfDivisor=divisor;
+        halfDivisor=halfDivisor.shiftRight(1);
+        int cmp=remainder.compareTo(halfDivisor);
+        // No need to check for exactly half since all powers
+        // of five are odd
+        if (cmp > 0) {
+          // Greater than half
+          bigmantissa=bigmantissa.add(BigInteger.ONE);
+        }
         if (neg) bigmantissa=(bigmantissa).negate();
-        return new BigFloat(bigmantissa, scale);
+        return new BigFloat(bigmantissa, scale.AsBigInteger());
       }
     }
 
@@ -394,7 +420,7 @@ import java.math.*;
         boolean neg = (bigmantissa.signum() < 0);
         if (neg) bigmantissa=bigmantissa.negate();
         while(curexp.signum()>0 && bigmantissa.signum()!=0){
-          int shift=1024;
+          int shift=4096;
           if(curexp.compareTo(BigInteger.valueOf(shift))<0){
             shift=curexp.intValue();
           }
@@ -413,8 +439,8 @@ import java.math.*;
         boolean neg = (bigmantissa.signum() < 0);
         if (neg) bigmantissa=bigmantissa.negate();
         while(curexp.signum()<0 && bigmantissa.signum()!=0){
-          int shift=1024;
-          if(curexp.compareTo(BigInteger.valueOf(-1024))>0){
+          int shift=4096;
+          if(curexp.compareTo(BigInteger.valueOf(-4096))>0){
             shift=-(curexp.intValue());
           }
           bigmantissa=bigmantissa.shiftRight(shift);
@@ -425,8 +451,14 @@ import java.math.*;
       }
     }
     
+    private static BigInteger OneShift23 = BigInteger.valueOf(1L << 23);
+    private static BigInteger OneShift24 = BigInteger.valueOf(1L << 24);
+    private static BigInteger OneShift52 = BigInteger.valueOf(1L << 52);
+    private static BigInteger OneShift53 = BigInteger.valueOf(1L << 53);
+    private static BigInteger OneShift62 = BigInteger.valueOf(1L << 62);
+    
     /**
-     * Converts this value to a 32-bit floating-point number. The half-up
+     * Converts this value to a 32-bit floating-point number. The half-even
      * rounding mode is used.
      * @return The closest 32-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
@@ -434,114 +466,74 @@ import java.math.*;
      */
     public float ToSingle() {
       BigInteger bigmant = (this.mantissa).abs();
-      BigInteger bigexponent = this.exponent;
-      int lastRoundedBit = 0;
+      FastInteger bigexponent = new FastInteger(this.exponent);
+      int bitLeftmost = 0;
+      int bitsAfterLeftmost=0;
       if (this.mantissa.signum()==0) {
         return 0.0f;
       }
-      if(bigmant.compareTo(BigInteger.valueOf(1L << 23)) < 0){
+      if(bigmant.compareTo(OneShift23) < 0){
         long smallmant=bigmant.longValue();
         int exponentchange=0;
         while(smallmant<(1L<<23)){
           smallmant<<=1;
           exponentchange++;
         }
-        bigexponent=bigexponent.subtract(BigInteger.valueOf(exponentchange));
+        bigexponent.Subtract(exponentchange);
         bigmant=BigInteger.valueOf(smallmant);
       } else {
-        // Shift right 20 bits at a time
-        while (bigmant.compareTo(BigInteger.valueOf(1L << 43)) >= 0) {
-          BigInteger bigsticky = bigmant.and(BigInteger.valueOf(0xFFFFF));
-          lastRoundedBit = (bigsticky.intValue())>>19;
-          bigmant=bigmant.shiftRight(20);
-          bigexponent=bigexponent.add(BigInteger.valueOf(20));
-        }
-        // Shift right 1 bit at a time
-        while (bigmant.compareTo(BigInteger.valueOf(1L << 24)) >= 0) {
-          BigInteger bigsticky = bigmant.and(BigInteger.ONE);
-          lastRoundedBit = bigsticky.intValue();
-          bigmant=bigmant.shiftRight(1);
-          bigexponent=bigexponent.add(BigInteger.ONE);
-        }
+        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        accum.ShiftToBits(24);
+        bitsAfterLeftmost=accum.getBitsAfterLeftmost();
+        bitLeftmost=accum.getBitLeftmost();
+        bigexponent.Add(accum.getDiscardedBitCount());
+        bigmant=accum.getShiftedInt();
       }
-      if (lastRoundedBit == 1) { // Round half-up
+      // TODO: At this point, bigmant will fit in an int,
+      // this is a good chance to optimize further
+      // Round half-even
+      if (bitLeftmost>0 && (bitsAfterLeftmost>0 || bigmant.testBit(0))){
         bigmant=bigmant.add(BigInteger.ONE);
-        if (bigmant.compareTo(BigInteger.valueOf(1L << 24)) == 0) {
+        if (bigmant.compareTo(OneShift24) == 0) {
           bigmant=bigmant.shiftRight(1);
-          bigexponent=bigexponent.add(BigInteger.ONE);
+          bigexponent.Add(1);
         }
       }
       boolean subnormal = false;
-      if (bigexponent.compareTo(BigInteger.valueOf(104))>0) {
+      if (bigexponent.compareTo(104)>0) {
         // exponent too big
         return (this.mantissa.signum() < 0) ?
           Float.NEGATIVE_INFINITY :
           Float.POSITIVE_INFINITY;
-      } else if (bigexponent.compareTo(BigInteger.valueOf(-149))<0) {
+      } else if (bigexponent.compareTo(-149)<0) {
         // subnormal
         subnormal = true;
-        // Shift 80 bits at a time while number
-        // remains subnormal
-        while (bigexponent.compareTo(BigInteger.valueOf(-228))<0) {
-          if(bigmant.signum()==0){
-            lastRoundedBit=0;
-            bigexponent=BigInteger.valueOf(-149);
-            break;
-          } else {
-            bigmant=bigmant.shiftRight(79);
-            BigInteger bigsticky = bigmant.and(BigInteger.ONE);
-            lastRoundedBit = bigsticky.intValue();
-            bigmant=bigmant.shiftRight(1);
-          }
-          bigexponent=bigexponent.add(BigInteger.valueOf(80));
-        }
-        // Shift 20 bits at a time while number
-        // remains subnormal
-        while (bigexponent.compareTo(BigInteger.valueOf(-168))<0) {
-          if(bigmant.signum()==0){
-            lastRoundedBit=0;
-            bigexponent=BigInteger.valueOf(-149);
-            break;
-          } else {
-            bigmant=bigmant.shiftRight(19);
-            BigInteger bigsticky = bigmant.and(BigInteger.ONE);
-            lastRoundedBit = bigsticky.intValue();
-            bigmant=bigmant.shiftRight(1);
-          }
-          bigexponent=bigexponent.add(BigInteger.valueOf(20));
-        }
-        // Shift 1 bit at a time while number
-        // remains subnormal
-        while (bigexponent.compareTo(BigInteger.valueOf(-149))<0) {
-          if(bigmant.signum()==0){
-            lastRoundedBit=0;
-            bigexponent=BigInteger.valueOf(-149);
-            break;
-          } else {
-            BigInteger bigsticky = bigmant.and(BigInteger.ONE);
-            lastRoundedBit = bigsticky.intValue();
-            bigmant=bigmant.shiftRight(1);
-          }
-          bigexponent=bigexponent.add(BigInteger.ONE);
-        }
-        if (lastRoundedBit == 1) { // Round half-up
+        // Shift while number remains subnormal
+        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        FastInteger fi=new FastInteger(bigexponent).Subtract(-149).Abs();
+        accum.ShiftRight(fi);
+        bitsAfterLeftmost=accum.getBitsAfterLeftmost();
+        bitLeftmost=accum.getBitLeftmost();
+        bigexponent.Add(accum.getDiscardedBitCount());
+        bigmant=accum.getShiftedInt();
+        // Round half-even
+        if (bitLeftmost>0 && (bitsAfterLeftmost>0 || bigmant.testBit(0))){
           bigmant=bigmant.add(BigInteger.ONE);
-          if (bigmant.compareTo(BigInteger.valueOf(1L << 24)) == 0) {
+          if (bigmant.compareTo(OneShift24) == 0) {
             bigmant=bigmant.shiftRight(1);
-            bigexponent=bigexponent.add(BigInteger.ONE);
+            bigexponent.Add(1);
           }
         }
       }
-      if (bigexponent.compareTo(BigInteger.valueOf(-149))<0) {
+      if (bigexponent.compareTo(-149) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.signum() < 0) ?
           Float.intBitsToFloat(1 << 31) :
           Float.intBitsToFloat(0);
       } else {
-        int smallexponent = bigexponent.intValue();
+        int smallexponent = bigexponent.AsInt32();
         smallexponent = smallexponent + 150;
-        bigmant = bigmant.and(BigInteger.valueOf(0x7FFFFFL));
-        int smallmantissa = bigmant.intValue();
+        int smallmantissa = (bigmant.intValue()) & 0x7FFFFF;
         if (!subnormal) {
           smallmantissa |= (smallexponent << 23);
         }
@@ -551,8 +543,184 @@ import java.math.*;
     }
 
 
+    private static final class BigShiftAccumulator {
+      int bitLeftmost=0;
+      
+      /**
+       * Gets whether the last discarded bit was set.
+       */
+      public int getBitLeftmost() { return bitLeftmost; }
+      int bitsAfterLeftmost=0;
+      
+      /**
+       * Gets whether any of the discarded bits was set.
+       */
+      public int getBitsAfterLeftmost() { return bitsAfterLeftmost; }
+      BigInteger shiftedInt;
+      
+      public BigInteger getShiftedInt() { return shiftedInt; }
+      FastInteger discardedBitCount;
+      
+      public FastInteger getDiscardedBitCount() { return discardedBitCount; }
+      public BigShiftAccumulator(BigInteger bigint){
+        shiftedInt=bigint;
+        discardedBitCount=new FastInteger();
+      }
+
+      public void ShiftRight(FastInteger fastint) {
+        if(fastint.signum()<=0)return;
+        if(fastint.CanFitInInt64()){
+          ShiftRight(fastint.AsInt64());
+        } else {
+          BigInteger bi=fastint.AsBigInteger();
+          while(bi.signum()>0){
+            long count=1000000;
+            if(bi.compareTo(BigInteger.valueOf(1000000))<0){
+              count=bi.longValue();
+            }
+            ShiftRight(count);
+            bi=bi.subtract(BigInteger.valueOf(count));
+          }
+        }
+      }
+      
+      private static byte[] ReverseBytes(byte[] bytes) {
+        if ((bytes) == null) throw new NullPointerException("bytes");
+        int half = bytes.length >> 1;
+        int right = bytes.length - 1;
+        for (int i = 0; i < half; i++, right--) {
+          byte value = bytes[i];
+          bytes[i] = bytes[right];
+          bytes[right] = value;
+        }
+        return bytes;
+      }
+
+      /**
+       * Shifts a number to the right, gathering information on whether the
+       * last bit discarded is set and whether the discarded bits to the right
+       * of that bit are set. Assumes that the big integer being shifted is positive.
+       */
+      public void ShiftRight(long bits) {
+        if(bits<=0)return;
+        if(shiftedInt.signum()==0){
+          bitsAfterLeftmost|=bitLeftmost;
+          bitLeftmost=0;
+        }
+        byte[] bytes=ReverseBytes(shiftedInt.toByteArray());
+        long bitLength=((long)bytes.length)<<3;
+        // Find the last bit set
+        for(int i=bytes.length-1;i>=0;i--){
+          int b=(int)bytes[i];
+          if(b!=0){
+            if((b&0x80)!=0){ bitLength-=0; break; }
+            if((b&0x40)!=0){ bitLength-=1; break; }
+            if((b&0x20)!=0){ bitLength-=2; break; }
+            if((b&0x10)!=0){ bitLength-=3; break; }
+            if((b&0x08)!=0){ bitLength-=4; break; }
+            if((b&0x04)!=0){ bitLength-=5; break; }
+            if((b&0x02)!=0){ bitLength-=6; break; }
+            if((b&0x01)!=0){ bitLength-=7; break; }
+          }
+          bitLength-=8;
+        }
+        long bitDiff=0;
+        if(bits>bitLength){
+          bitDiff=bits-bitLength;
+        }
+        long bitShift=Math.min(bitLength,bits);
+        if(bits>=bitLength){
+          shiftedInt=BigInteger.ZERO;
+        } else {
+          long tmpBitShift=bitShift;
+          while(tmpBitShift>0 && shiftedInt.signum()!=0){
+            int bs=(int)Math.min(1000000,tmpBitShift);
+            shiftedInt=shiftedInt.shiftRight(bs);
+            tmpBitShift-=bs;
+          }
+        }
+        discardedBitCount.Add(bits);
+        bitsAfterLeftmost|=bitLeftmost;
+        for(int i=0;i<bytes.length;i++){
+          if(bitShift>8){
+            // Discard all the bits, they come
+            // after the leftmost bit
+            bitsAfterLeftmost|=bytes[i];
+            bitShift-=8;
+          } else {
+            // 8 or fewer bits left.
+            // Get the bottommost bitShift minus 1 bits
+            bitsAfterLeftmost|=((bytes[i]<<(9-(int)bitShift))&0xFF);
+            // Get the bit just above those bits
+            bitLeftmost=(bytes[i]>>(((int)bitShift)-1))&0x01;
+            break;
+          }
+        }
+        bitsAfterLeftmost=(bitsAfterLeftmost!=0) ? 1 : 0;
+        if(bitDiff>0){
+          // Shifted more bits than the bit length
+          bitsAfterLeftmost|=bitLeftmost;
+          bitLeftmost=0;
+        }
+      }
+
+      /**
+       * Shifts a number until it reaches the given number of bits, gathering
+       * information on whether the last bit discarded is set and whether the
+       * discarded bits to the right of that bit are set. Assumes that the big
+       * integer being shifted is positive.
+       */
+      public void ShiftToBits(long bits) {
+        byte[] bytes=ReverseBytes(shiftedInt.toByteArray());
+        long bitLength=((long)bytes.length)<<3;
+        // Find the last bit set
+        for(int i=bytes.length-1;i>=0;i--){
+          int b=(int)bytes[i];
+          if(b!=0){
+            if((b&0x80)!=0){ bitLength-=0; break; }
+            if((b&0x40)!=0){ bitLength-=1; break; }
+            if((b&0x20)!=0){ bitLength-=2; break; }
+            if((b&0x10)!=0){ bitLength-=3; break; }
+            if((b&0x08)!=0){ bitLength-=4; break; }
+            if((b&0x04)!=0){ bitLength-=5; break; }
+            if((b&0x02)!=0){ bitLength-=6; break; }
+            if((b&0x01)!=0){ bitLength-=7; break; }
+          }
+          bitLength-=8;
+        }
+        // Shift by the difference in bit length
+        if(bitLength>bits){
+          long bitShift=bitLength-bits;
+          long tmpBitShift=bitShift;
+          while(tmpBitShift>0 && shiftedInt.signum()!=0){
+            int bs=(int)Math.min(1000000,tmpBitShift);
+            shiftedInt=shiftedInt.shiftRight(bs);
+            tmpBitShift-=bs;
+          }
+          bitsAfterLeftmost|=bitLeftmost;
+          discardedBitCount.Add(bitShift);
+          for(int i=0;i<bytes.length;i++){
+            if(bitShift>8){
+              // Discard all the bits, they come
+              // after the leftmost bit
+              bitsAfterLeftmost|=bytes[i];
+              bitShift-=8;
+            } else {
+              // 8 or fewer bits left.
+              // Get the bottommost bitShift minus 1 bits
+              bitsAfterLeftmost|=((bytes[i]<<(9-(int)bitShift))&0xFF);
+              // Get the bit just above those bits
+              bitLeftmost=(bytes[i]>>(((int)bitShift)-1))&0x01;
+              break;
+            }
+          }
+          bitsAfterLeftmost=(bitsAfterLeftmost!=0) ? 1 : 0;
+        }
+      }
+    }
+    
     /**
-     * Converts this value to a 64-bit floating-point number. The half-up
+     * Converts this value to a 64-bit floating-point number. The half-even
      * rounding mode is used.
      * @return The closest 64-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
@@ -560,100 +728,74 @@ import java.math.*;
      */
     public double ToDouble() {
       BigInteger bigmant = (this.mantissa).abs();
-      BigInteger bigexponent = this.exponent;
-      int lastRoundedBit = 0;
+      FastInteger bigexponent = new FastInteger(this.exponent);
+      int bitLeftmost = 0;
+      int bitsAfterLeftmost=0;
       if (this.mantissa.signum()==0) {
-        return 0.0;
+        return 0.0d;
       }
-      if(bigmant.compareTo(BigInteger.valueOf(1L << 52)) < 0){
+      if(bigmant.compareTo(OneShift52) < 0){
         long smallmant=bigmant.longValue();
         int exponentchange=0;
         while(smallmant<(1L<<52)){
           smallmant<<=1;
           exponentchange++;
         }
-        bigexponent=bigexponent.subtract(BigInteger.valueOf(exponentchange));
+        bigexponent.Subtract(exponentchange);
         bigmant=BigInteger.valueOf(smallmant);
       } else {
-        BigInteger OneShift72=BigInteger.ONE.shiftLeft(72);
-        // Shift right 20 bits at a time
-        while (bigmant.compareTo(OneShift72) >= 0) {
-          bigmant=bigmant.shiftRight(19);
-          BigInteger bigsticky = bigmant.and(BigInteger.ONE);
-          lastRoundedBit = bigsticky.intValue();
-          bigmant=bigmant.shiftRight(1);
-          bigexponent=bigexponent.add(BigInteger.valueOf(20));
-        }
-        // Shift right 1 bit at a time
-        while (bigmant.compareTo(BigInteger.valueOf(1L << 53)) >= 0) {
-          BigInteger bigsticky = bigmant.and(BigInteger.ONE);
-          lastRoundedBit = bigsticky.intValue();
-          bigmant=bigmant.shiftRight(1);
-          bigexponent=bigexponent.add(BigInteger.ONE);
-        }
+        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        accum.ShiftToBits(53);
+        bitsAfterLeftmost=accum.getBitsAfterLeftmost();
+        bitLeftmost=accum.getBitLeftmost();
+        bigexponent.Add(accum.getDiscardedBitCount());
+        bigmant=accum.getShiftedInt();
       }
-      if (lastRoundedBit == 1) { // Round half-up
+      // TODO: At this point, bigmant will fit in a long,
+      // this is a good chance to optimize further
+      // Round half-even
+      if (bitLeftmost>0 && (bitsAfterLeftmost>0 || bigmant.testBit(0))){
         bigmant=bigmant.add(BigInteger.ONE);
-        if (bigmant.compareTo(BigInteger.valueOf(1L << 53)) == 0) {
+        if (bigmant.compareTo(OneShift53) == 0) {
           bigmant=bigmant.shiftRight(1);
-          bigexponent=bigexponent.add(BigInteger.ONE);
+          bigexponent.Add(1);
         }
       }
       boolean subnormal = false;
-      if (bigexponent.compareTo(BigInteger.valueOf(971))>0) {
+      if (bigexponent.compareTo(971)>0) {
         // exponent too big
         return (this.mantissa.signum() < 0) ?
           Double.NEGATIVE_INFINITY :
           Double.POSITIVE_INFINITY;
-      } else if (bigexponent.compareTo(BigInteger.valueOf(-1074))<0) {
+      } else if (bigexponent.compareTo(-1074)<0) {
         // subnormal
         subnormal = true;
-        // Shift 20 bits at a time while number
-        // remains subnormal
-        while (bigexponent.compareTo(BigInteger.valueOf(-1093))<0) {
-          if(bigmant.signum()==0){
-            lastRoundedBit=0;
-            bigexponent=BigInteger.valueOf(-1074);
-            break;
-          } else {
-            BigInteger bigsticky = bigmant.and(BigInteger.ONE);
-            lastRoundedBit = bigsticky.intValue();
-            bigmant=bigmant.shiftRight(20);
-          }
-          bigexponent=bigexponent.add(BigInteger.valueOf(20));
-        }
-        // Shift 1 bit at a time while number
-        // remains subnormal
-        while (bigexponent.compareTo(BigInteger.valueOf(-1074))<0) {
-          if(bigmant.signum()==0){
-            lastRoundedBit=0;
-            bigexponent=BigInteger.valueOf(-1074);
-            break;
-          } else {
-            BigInteger bigsticky = bigmant.and(BigInteger.ONE);
-            lastRoundedBit = bigsticky.intValue();
-            bigmant=bigmant.shiftRight(1);
-          }
-          bigexponent=bigexponent.add(BigInteger.ONE);
-        }
-        if (lastRoundedBit == 1) { // Round half-up
+        // Shift while number remains subnormal
+        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        FastInteger fi=new FastInteger(bigexponent).Subtract(-1074).Abs();
+        accum.ShiftRight(fi);
+        bitsAfterLeftmost=accum.getBitsAfterLeftmost();
+        bitLeftmost=accum.getBitLeftmost();
+        bigexponent.Add(accum.getDiscardedBitCount());
+        bigmant=accum.getShiftedInt();
+        // Round half-even
+        if (bitLeftmost>0 && (bitsAfterLeftmost>0 || bigmant.testBit(0))){
           bigmant=bigmant.add(BigInteger.ONE);
-          if (bigmant.compareTo(BigInteger.valueOf(1L << 53)) == 0) {
+          if (bigmant.compareTo(OneShift53) == 0) {
             bigmant=bigmant.shiftRight(1);
-            bigexponent=bigexponent.add(BigInteger.ONE);
+            bigexponent.Add(1);
           }
         }
       }
-      if (bigexponent.compareTo(BigInteger.valueOf(-1074))<0) {
+      if (bigexponent.compareTo(-1074) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.signum() < 0) ?
           Double.longBitsToDouble(1L << 63) :
           Double.longBitsToDouble(0);
       } else {
-        long smallexponent = bigexponent.longValue();
+        long smallexponent = bigexponent.AsInt64();
         smallexponent = smallexponent + 1075;
-        bigmant = bigmant.and(BigInteger.valueOf(0xFFFFFFFFFFFFFL));
-        long smallmantissa = bigmant.longValue();
+        long smallmantissa = (bigmant.longValue()) & 0xFFFFFFFFFFFFFL;
         if (!subnormal) {
           smallmantissa |= (smallexponent << 52);
         }

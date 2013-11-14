@@ -200,31 +200,51 @@ import java.math.*;
           throw new IllegalStateException("This Object is not a number.");
       }
     }
+    private static int GetSignInternal(int type, Object obj, boolean returnOnNaN) {
+      switch (type) {
+          case CBORObject.CBORObjectType_Integer: {
+            long value = ((((Long)obj).longValue()));
+            return (value == 0) ? 0 : ((value < 0) ? -1 : 1);
+          }
+        case CBORObject.CBORObjectType_BigInteger:
+          return ((BigInteger)obj).signum();
+          case CBORObject.CBORObjectType_Single:{
+            float value=((Float)obj).floatValue();
+            if(Float.isNaN(value))
+              if(returnOnNaN)
+                return 2;
+              else
+                throw new IllegalStateException("This Object is not a number.");
+            return (int)(int)Math.signum(value);
+          }
+          case CBORObject.CBORObjectType_Double:{
+            double value=((Double)obj).doubleValue();
+            if(Double.isNaN(value))
+              if(returnOnNaN)
+                return 2;
+              else
+                throw new IllegalStateException("This Object is not a number.");
+            return (int)(int)Math.signum(value);
+          }
+        case CBORObject.CBORObjectType_DecimalFraction:
+          return ((DecimalFraction)obj).signum();
+        case CBORObject.CBORObjectType_BigFloat:
+          return ((BigFloat)obj).signum();
+        default:
+          if(returnOnNaN)
+            return 2; // not a number type
+          else
+            throw new IllegalStateException("This Object is not a number.");
+      }
+    }
 
     /**
      * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
      * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * not a number type, including the special not-a-number value (NaN).
      */
     public int signum() {
-        switch (this.getItemType()) {
-            case CBORObject.CBORObjectType_Integer: {
-              long value = ((((Long)this.getThisItem()).longValue()));
-              return (value == 0) ? 0 : ((value < 0) ? -1 : 1);
-            }
-          case CBORObject.CBORObjectType_BigInteger:
-            return ((BigInteger)this.getThisItem()).signum();
-          case CBORObject.CBORObjectType_Single:
-            return (int)Math.signum(((Float)this.getThisItem()).floatValue());
-          case CBORObject.CBORObjectType_Double:
-            return (int)Math.signum(((Double)this.getThisItem()).doubleValue());
-          case CBORObject.CBORObjectType_DecimalFraction:
-            return ((DecimalFraction)this.getThisItem()).signum();
-          case CBORObject.CBORObjectType_BigFloat:
-            return ((BigFloat)this.getThisItem()).signum();
-          default:
-            throw new IllegalStateException("This Object is not a number.");
-        }
+        return GetSignInternal(this.getItemType(),this.getThisItem(),false);
       }
 
 
@@ -276,7 +296,8 @@ import java.math.*;
      * <li>If either value is true, it is treated as the number 1.</li> <li>If
      * either value is false, CBORObject.Null, or the undefined value,
      * it is treated as the number 0.</li> <li>If both objects are numbers,
-     * their mathematical values are compared.</li> <li>If both objects
+     * their mathematical values are compared. Here, NaN (not-a-number)
+     * is considered greater than any number.</li> <li>If both objects
      * are arrays, each element is compared. If one array is shorter than
      * the other and the other array begins with that array (for the purposes
      * of comparison), the shorter array is considered less than the longer
@@ -393,6 +414,13 @@ public int compareTo(CBORObject other) {
         }
       } else {
         int combo = (typeA << 4) | typeB;
+        int s1=GetSignInternal(typeA,objA,true);
+        int s2=GetSignInternal(typeB,objB,true);
+        if(s1!=s2 && s1!=2 && s2!=2){
+          // if both types are numbers
+          // and their signs are different
+          return (s1<s2) ? -1 : 1;
+        }
         switch (combo) {
             case (CBORObjectType_Integer << 4) | CBORObjectType_BigInteger: {
               BigInteger xa = BigInteger.valueOf((((Long)objA).longValue()));
@@ -404,8 +432,8 @@ public int compareTo(CBORObject other) {
               if (sf == Float.NEGATIVE_INFINITY) return -1;
               if (sf == Float.POSITIVE_INFINITY) return 1;
               if (Float.isNaN(sf)) return 1;
-              DecimalFraction xa = new DecimalFraction((((Long)objA).longValue()));
-              DecimalFraction xb = DecimalFraction.FromSingle(sf);
+              BigFloat xa = new BigFloat((((Long)objA).longValue()));
+              BigFloat xb = BigFloat.FromSingle(sf);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_Double: {
@@ -413,8 +441,8 @@ public int compareTo(CBORObject other) {
               if (sf == Double.NEGATIVE_INFINITY) return -1;
               if (sf == Double.POSITIVE_INFINITY) return 1;
               if (Double.isNaN(sf)) return 1;
-              DecimalFraction xa = new DecimalFraction((((Long)objA).longValue()));
-              DecimalFraction xb = DecimalFraction.FromDouble(sf);
+              BigFloat xa = new BigFloat((((Long)objA).longValue()));
+              BigFloat xb = BigFloat.FromDouble(sf);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_DecimalFraction: {
@@ -437,8 +465,8 @@ public int compareTo(CBORObject other) {
               if (sf == Float.NEGATIVE_INFINITY) return -1;
               if (sf == Float.POSITIVE_INFINITY) return 1;
               if (Float.isNaN(sf)) return 1;
-              DecimalFraction xa = new DecimalFraction((BigInteger)objA);
-              DecimalFraction xb = DecimalFraction.FromSingle(sf);
+              BigFloat xa = new BigFloat((BigInteger)objA);
+              BigFloat xb = BigFloat.FromSingle(sf);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_Double: {
@@ -446,8 +474,8 @@ public int compareTo(CBORObject other) {
               if (sf == Double.NEGATIVE_INFINITY) return -1;
               if (sf == Double.POSITIVE_INFINITY) return 1;
               if (Double.isNaN(sf)) return 1;
-              DecimalFraction xa = new DecimalFraction((BigInteger)objA);
-              DecimalFraction xb = DecimalFraction.FromDouble(sf);
+              BigFloat xa = new BigFloat((BigInteger)objA);
+              BigFloat xb = BigFloat.FromDouble(sf);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_DecimalFraction: {
@@ -465,8 +493,8 @@ public int compareTo(CBORObject other) {
               if (sf == Float.NEGATIVE_INFINITY) return -1;
               if (sf == Float.POSITIVE_INFINITY) return 1;
               if (Float.isNaN(sf)) return 1;
-              DecimalFraction xa = DecimalFraction.FromSingle(sf);
-              DecimalFraction xb = new DecimalFraction((((Long)objB).longValue()));
+              BigFloat xa = BigFloat.FromSingle(sf);
+              BigFloat xb = new BigFloat((((Long)objB).longValue()));
               return xa.compareTo(xb);
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_BigInteger: {
@@ -474,8 +502,8 @@ public int compareTo(CBORObject other) {
               if (sf == Float.NEGATIVE_INFINITY) return -1;
               if (sf == Float.POSITIVE_INFINITY) return 1;
               if (Float.isNaN(sf)) return 1;
-              DecimalFraction xa = DecimalFraction.FromSingle(sf);
-              DecimalFraction xb = new DecimalFraction((BigInteger)objB);
+              BigFloat xa = BigFloat.FromSingle(sf);
+              BigFloat xb = new BigFloat((BigInteger)objB);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_Double: {
@@ -514,8 +542,8 @@ public int compareTo(CBORObject other) {
               if (sf == Double.NEGATIVE_INFINITY) return -1;
               if (sf == Double.POSITIVE_INFINITY) return 1;
               if (Double.isNaN(sf)) return 1;
-              DecimalFraction xa = DecimalFraction.FromDouble(sf);
-              DecimalFraction xb = new DecimalFraction((((Long)objB).longValue()));
+              BigFloat xa = BigFloat.FromDouble(sf);
+              BigFloat xb = new BigFloat((((Long)objB).longValue()));
               return xa.compareTo(xb);
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_BigInteger: {
@@ -523,8 +551,8 @@ public int compareTo(CBORObject other) {
               if (sf == Double.NEGATIVE_INFINITY) return -1;
               if (sf == Double.POSITIVE_INFINITY) return 1;
               if (Double.isNaN(sf)) return 1;
-              DecimalFraction xa = DecimalFraction.FromDouble(sf);
-              DecimalFraction xb = new DecimalFraction((BigInteger)objB);
+              BigFloat xa = BigFloat.FromDouble(sf);
+              BigFloat xb = new BigFloat((BigInteger)objB);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_Single: {
@@ -765,7 +793,7 @@ public int compareTo(CBORObject other) {
     private boolean CBORArrayEquals(
       List<CBORObject> listA,
       List<CBORObject> listB
-    ) {
+     ) {
       if (listA == null) return (listB == null);
       if (listB == null) return false;
       if (listA.size() != listB.size()) return false;
@@ -791,7 +819,7 @@ public int compareTo(CBORObject other) {
     private boolean CBORMapEquals(
       Map<CBORObject, CBORObject> mapA,
       Map<CBORObject, CBORObject> mapB
-    ) {
+     ) {
       if (mapA == null) return (mapB == null);
       if (mapB == null) return false;
       if (mapA.size() != mapB.size()) return false;
@@ -892,7 +920,7 @@ public boolean equals(CBORObject obj) {
 
     private static String GetOptimizedStringIfShortAscii(
       byte[] data, int offset
-    ) {
+     ) {
       int length = data.length;
       if (length > offset) {
         int nextbyte = ((int)(data[offset] & (int)0xFF));
@@ -2313,17 +2341,17 @@ public void set(String key, CBORObject value) {
           }
         } else if (this.getItemType() == CBORObjectType_Integer) {
           long value = (((Long)this.getThisItem()).longValue());
-          byte[] ret = null;
+          byte[] intBytes = null;
           if (value >= 0) {
-            ret = GetPositiveInt64Bytes(0, value);
+            intBytes = GetPositiveInt64Bytes(0, value);
           } else {
             value += 1;
             value = -value; // Will never overflow
-            ret = GetPositiveInt64Bytes(1, value);
+            intBytes = GetPositiveInt64Bytes(1, value);
           }
-          if (!tagged) return ret;
-          byte[] ret2 = new byte[ret.length + 1];
-          System.arraycopy(ret, 0, ret2, 1, ret.length);
+          if (!tagged) return intBytes;
+          byte[] ret2 = new byte[intBytes.length + 1];
+          System.arraycopy(intBytes, 0, ret2, 1, intBytes.length);
           ret2[0] = tagbyte;
           return ret2;
         } else if (this.getItemType() == CBORObjectType_Single) {
@@ -3417,7 +3445,7 @@ public static CBORObject FromObject(Object obj) {
       int allowOnlyType,
       int[] validTypeFlags,
       int validTypeIndex
-    ) throws IOException {
+     ) throws IOException {
       if (depth > 1000)
         throw new CBORException("Too deeply nested");
       int firstbyte = s.read();

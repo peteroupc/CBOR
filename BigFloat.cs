@@ -321,23 +321,46 @@ namespace PeterO {
         bigmantissa*=(BigInteger)(DecimalFraction.FindPowerOfTen(bigintExp));
         return new BigFloat(bigmantissa);
       } else {
-        // Fractional number, keep dividing by
-        // 5 while the exponent is less than 0
-        BigInteger scale = bigintExp;
+        // Fractional number
+        FastInteger scale = new FastInteger(bigintExp);
         BigInteger bigmantissa = bigintMant;
         bool neg = (bigmantissa.Sign < 0);
-        // Make positive because DivideWithPrecision assumes the
-        // dividend is positive
+        BigInteger remainder;
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        BigInteger negbigintExp = -(BigInteger)bigintExp;
-        BigInteger[] results = DecimalFraction.DivideWithPrecision(
-          bigmantissa,
-          DecimalFraction.FindPowerOfFive(negbigintExp), 21);
-        bigmantissa = results[0]; // quotient
-        BigInteger newscale = results[2];
-        scale = scale + (BigInteger)newscale;
+        FastInteger negscale=new FastInteger(scale).Negate();
+        BigInteger divisor=DecimalFraction.FindPowerOfFive(negscale.AsBigInteger());
+        while(true){
+          BigInteger quotient=BigInteger.DivRem(bigmantissa,divisor,out remainder);
+          // Ensure that the quotient has enough precision
+          // to be converted accurately to a single or double
+          if(!remainder.IsZero &&
+             quotient.CompareTo(OneShift62)<0){
+            long smallquot=(long)quotient;
+            int shift=0;
+            while(smallquot!=0 && smallquot<(1L<<62)){
+              smallquot<<=1;
+              shift++;
+            }
+            if(shift==0)shift=1;
+            bigmantissa<<=shift;
+            scale.Add(-shift);
+          } else {
+            bigmantissa=quotient;
+            break;
+          }
+        }
+        // Round half-even
+        BigInteger halfDivisor=divisor;
+        halfDivisor>>=1;
+        int cmp=remainder.CompareTo(halfDivisor);
+        // No need to check for exactly half since all powers
+        // of five are odd
+        if (cmp > 0) {
+          // Greater than half
+          bigmantissa+=BigInteger.One;
+        }
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new BigFloat(bigmantissa, scale);
+        return new BigFloat(bigmantissa, scale.AsBigInteger());
       }
     }
 
@@ -409,7 +432,7 @@ namespace PeterO {
         bool neg = (bigmantissa.Sign < 0);
         if (neg) bigmantissa = -bigmantissa;
         while(curexp>0 && !bigmantissa.IsZero){
-          int shift=1024;
+          int shift=4096;
           if(curexp.CompareTo((BigInteger)shift)<0){
             shift=(int)curexp;
           }
@@ -428,8 +451,8 @@ namespace PeterO {
         bool neg = (bigmantissa.Sign < 0);
         if (neg) bigmantissa = -bigmantissa;
         while(curexp<0 && !bigmantissa.IsZero){
-          int shift=1024;
-          if(curexp.CompareTo((BigInteger)(-1024))>0){
+          int shift=4096;
+          if(curexp.CompareTo((BigInteger)(-4096))>0){
             shift=-((int)curexp);
           }
           bigmantissa>>=shift;
@@ -440,9 +463,15 @@ namespace PeterO {
       }
     }
     
+    private static BigInteger OneShift23 = (BigInteger)(1L << 23);
+    private static BigInteger OneShift24 = (BigInteger)(1L << 24);
+    private static BigInteger OneShift52 = (BigInteger)(1L << 52);
+    private static BigInteger OneShift53 = (BigInteger)(1L << 53);
+    private static BigInteger OneShift62 = (BigInteger)(1L << 62);
+    
     /// <summary>
     /// Converts this value to a 32-bit floating-point number.
-    /// The half-up rounding mode is used.
+    /// The half-even rounding mode is used.
     /// </summary>
     /// <returns>The closest 32-bit floating-point number
     /// to this value. The return value can be positive
@@ -450,114 +479,74 @@ namespace PeterO {
     /// range of a 32-bit floating point number.</returns>
     public float ToSingle() {
       BigInteger bigmant = BigInteger.Abs(this.mantissa);
-      BigInteger bigexponent = this.exponent;
-      int lastRoundedBit = 0;
+      FastInteger bigexponent = new FastInteger(this.exponent);
+      int bitLeftmost = 0;
+      int bitsAfterLeftmost=0;
       if (this.mantissa.IsZero) {
         return 0.0f;
       }
-      if(bigmant.CompareTo((BigInteger)(1L << 23)) < 0){
+      if(bigmant.CompareTo(OneShift23) < 0){
         long smallmant=(long)bigmant;
         int exponentchange=0;
         while(smallmant<(1L<<23)){
           smallmant<<=1;
           exponentchange++;
         }
-        bigexponent-=(BigInteger)exponentchange;
+        bigexponent.Subtract(exponentchange);
         bigmant=(BigInteger)smallmant;
       } else {
-        // Shift right 20 bits at a time
-        while (bigmant.CompareTo((BigInteger)(1L << 43)) >= 0) {
-          BigInteger bigsticky = bigmant & (BigInteger)0xFFFFF;
-          lastRoundedBit = ((int)bigsticky)>>19;
-          bigmant >>= 20;
-          bigexponent += (BigInteger)20;
-        }
-        // Shift right 1 bit at a time
-        while (bigmant.CompareTo((BigInteger)(1L << 24)) >= 0) {
-          BigInteger bigsticky = bigmant & BigInteger.One;
-          lastRoundedBit = (int)bigsticky;
-          bigmant >>= 1;
-          bigexponent += BigInteger.One;
-        }
+        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        accum.ShiftToBits(24);
+        bitsAfterLeftmost=accum.BitsAfterLeftmost;
+        bitLeftmost=accum.BitLeftmost;
+        bigexponent.Add(accum.DiscardedBitCount);
+        bigmant=accum.ShiftedInt;
       }
-      if (lastRoundedBit == 1) { // Round half-up
+      // TODO: At this point, bigmant will fit in an int,
+      // this is a good chance to optimize further
+      // Round half-even
+      if (bitLeftmost>0 && (bitsAfterLeftmost>0 || !bigmant.IsEven)){
         bigmant += BigInteger.One;
-        if (bigmant.CompareTo((BigInteger)(1L << 24)) == 0) {
+        if (bigmant.CompareTo(OneShift24) == 0) {
           bigmant >>= 1;
-          bigexponent += BigInteger.One;
+          bigexponent.Add(1);
         }
       }
       bool subnormal = false;
-      if (bigexponent > 104) {
+      if (bigexponent.CompareTo(104)>0) {
         // exponent too big
         return (this.mantissa.Sign < 0) ?
           Single.NegativeInfinity :
           Single.PositiveInfinity;
-      } else if (bigexponent < -149) {
+      } else if (bigexponent.CompareTo(-149)<0) {
         // subnormal
         subnormal = true;
-        // Shift 80 bits at a time while number
-        // remains subnormal
-        while (bigexponent < -228) {
-          if(bigmant.IsZero){
-            lastRoundedBit=0;
-            bigexponent=(BigInteger)(-149);
-            break;
-          } else {
-            bigmant >>= 79;
-            BigInteger bigsticky = bigmant & BigInteger.One;
-            lastRoundedBit = (int)bigsticky;
-            bigmant >>= 1;
-          }
-          bigexponent += (BigInteger)80;
-        }
-        // Shift 20 bits at a time while number
-        // remains subnormal
-        while (bigexponent < -168) {
-          if(bigmant.IsZero){
-            lastRoundedBit=0;
-            bigexponent=(BigInteger)(-149);
-            break;
-          } else {
-            bigmant >>= 19;
-            BigInteger bigsticky = bigmant & BigInteger.One;
-            lastRoundedBit = (int)bigsticky;
-            bigmant >>= 1;
-          }
-          bigexponent += (BigInteger)20;
-        }
-        // Shift 1 bit at a time while number
-        // remains subnormal
-        while (bigexponent < -149) {
-          if(bigmant.IsZero){
-            lastRoundedBit=0;
-            bigexponent=(BigInteger)(-149);
-            break;
-          } else {
-            BigInteger bigsticky = bigmant & BigInteger.One;
-            lastRoundedBit = (int)bigsticky;
-            bigmant >>= 1;
-          }
-          bigexponent += BigInteger.One;
-        }
-        if (lastRoundedBit == 1) { // Round half-up
+        // Shift while number remains subnormal
+        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        FastInteger fi=new FastInteger(bigexponent).Subtract(-149).Abs();
+        accum.ShiftRight(fi);
+        bitsAfterLeftmost=accum.BitsAfterLeftmost;
+        bitLeftmost=accum.BitLeftmost;
+        bigexponent.Add(accum.DiscardedBitCount);
+        bigmant=accum.ShiftedInt;
+        // Round half-even
+        if (bitLeftmost>0 && (bitsAfterLeftmost>0 || !bigmant.IsEven)){
           bigmant += BigInteger.One;
-          if (bigmant.CompareTo((BigInteger)(1L << 24)) == 0) {
+          if (bigmant.CompareTo(OneShift24) == 0) {
             bigmant >>= 1;
-            bigexponent += BigInteger.One;
+            bigexponent.Add(1);
           }
         }
       }
-      if (bigexponent < -149) {
+      if (bigexponent.CompareTo(-149) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.Sign < 0) ?
           ConverterInternal.Int32BitsToSingle(1 << 31) :
           ConverterInternal.Int32BitsToSingle(0);
       } else {
-        int smallexponent = (int)bigexponent;
+        int smallexponent = bigexponent.AsInt32();
         smallexponent = smallexponent + 150;
-        bigmant = bigmant & (BigInteger)0x7FFFFFL;
-        int smallmantissa = (int)bigmant;
+        int smallmantissa = ((int)bigmant) & 0x7FFFFF;
         if (!subnormal) {
           smallmantissa |= (smallexponent << 23);
         }
@@ -567,9 +556,201 @@ namespace PeterO {
     }
 
 
+    private sealed class BigShiftAccumulator {
+      int bitLeftmost=0;
+      
+      /// <summary>
+      /// Gets whether the last discarded bit was set.
+      /// </summary>
+      public int BitLeftmost {
+        get { return bitLeftmost; }
+      }
+      int bitsAfterLeftmost=0;
+      
+      /// <summary>
+      /// Gets whether any of the discarded bits
+      /// was set.
+      /// </summary>
+      public int BitsAfterLeftmost {
+        get { return bitsAfterLeftmost; }
+      }
+      BigInteger shiftedInt;
+      
+      public BigInteger ShiftedInt {
+        get { return shiftedInt; }
+      }
+      FastInteger discardedBitCount;
+      
+      public FastInteger DiscardedBitCount {
+        get { return discardedBitCount; }
+      }
+      public BigShiftAccumulator(BigInteger bigint){
+        shiftedInt=bigint;
+        discardedBitCount=new FastInteger();
+      }
+
+      public void ShiftRight(FastInteger fastint){
+        if(fastint.Sign<=0)return;
+        if(fastint.CanFitInInt64()){
+          ShiftRight(fastint.AsInt64());
+        } else {
+          BigInteger bi=fastint.AsBigInteger();
+          while(bi.Sign>0){
+            long count=1000000;
+            if(bi.CompareTo((BigInteger)1000000)<0){
+              count=(long)bi;
+            }
+            ShiftRight(count);
+            bi-=(BigInteger)count;
+          }
+        }
+      }
+      
+      private static byte[] ReverseBytes(byte[] bytes) {
+        if ((bytes) == null) throw new ArgumentNullException("bytes");
+        int half = bytes.Length >> 1;
+        int right = bytes.Length - 1;
+        for (int i = 0; i < half; i++, right--) {
+          byte value = bytes[i];
+          bytes[i] = bytes[right];
+          bytes[right] = value;
+        }
+        return bytes;
+      }
+
+      /// <summary>
+      /// Shifts a number to the right,
+      /// gathering information
+      /// on whether the last bit discarded is set
+      /// and whether the discarded bits to the right
+      /// of that bit are set.
+      /// Assumes that the big integer being shifted
+      /// is positive.
+      /// </summary>
+      public void ShiftRight(long bits){
+        if(bits<=0)return;
+        if(shiftedInt.IsZero){
+          bitsAfterLeftmost|=bitLeftmost;
+          bitLeftmost=0;
+        }
+        byte[] bytes=shiftedInt.ToByteArray();
+        long bitLength=((long)bytes.Length)<<3;
+        // Find the last bit set
+        for(int i=bytes.Length-1;i>=0;i--){
+          int b=(int)bytes[i];
+          if(b!=0){
+            if((b&0x80)!=0){ bitLength-=0; break; }
+            if((b&0x40)!=0){ bitLength-=1; break; }
+            if((b&0x20)!=0){ bitLength-=2; break; }
+            if((b&0x10)!=0){ bitLength-=3; break; }
+            if((b&0x08)!=0){ bitLength-=4; break; }
+            if((b&0x04)!=0){ bitLength-=5; break; }
+            if((b&0x02)!=0){ bitLength-=6; break; }
+            if((b&0x01)!=0){ bitLength-=7; break; }
+          }
+          bitLength-=8;
+        }
+        long bitDiff=0;
+        if(bits>bitLength){
+          bitDiff=bits-bitLength;
+        }
+        long bitShift=Math.Min(bitLength,bits);
+        if(bits>=bitLength){
+          shiftedInt=BigInteger.Zero;
+        } else {
+          long tmpBitShift=bitShift;
+          while(tmpBitShift>0 && !shiftedInt.IsZero){
+            int bs=(int)Math.Min(1000000,tmpBitShift);
+            shiftedInt>>=bs;
+            tmpBitShift-=bs;
+          }
+        }
+        discardedBitCount.Add(bits);
+        bitsAfterLeftmost|=bitLeftmost;
+        for(int i=0;i<bytes.Length;i++){
+          if(bitShift>8){
+            // Discard all the bits, they come
+            // after the leftmost bit
+            bitsAfterLeftmost|=bytes[i];
+            bitShift-=8;
+          } else {
+            // 8 or fewer bits left.
+            // Get the bottommost bitShift minus 1 bits
+            bitsAfterLeftmost|=((bytes[i]<<(9-(int)bitShift))&0xFF);
+            // Get the bit just above those bits
+            bitLeftmost=(bytes[i]>>(((int)bitShift)-1))&0x01;
+            break;
+          }
+        }
+        bitsAfterLeftmost=(bitsAfterLeftmost!=0) ? 1 : 0;
+        if(bitDiff>0){
+          // Shifted more bits than the bit length
+          bitsAfterLeftmost|=bitLeftmost;
+          bitLeftmost=0;
+        }
+      }
+
+      /// <summary>
+      /// Shifts a number until it reaches the
+      /// given number of bits, gathering information
+      /// on whether the last bit discarded is set
+      /// and whether the discarded bits to the right
+      /// of that bit are set.
+      /// Assumes that the big integer being shifted
+      /// is positive.
+      /// </summary>
+      public void ShiftToBits(long bits){
+        byte[] bytes=shiftedInt.ToByteArray();
+        long bitLength=((long)bytes.Length)<<3;
+        // Find the last bit set
+        for(int i=bytes.Length-1;i>=0;i--){
+          int b=(int)bytes[i];
+          if(b!=0){
+            if((b&0x80)!=0){ bitLength-=0; break; }
+            if((b&0x40)!=0){ bitLength-=1; break; }
+            if((b&0x20)!=0){ bitLength-=2; break; }
+            if((b&0x10)!=0){ bitLength-=3; break; }
+            if((b&0x08)!=0){ bitLength-=4; break; }
+            if((b&0x04)!=0){ bitLength-=5; break; }
+            if((b&0x02)!=0){ bitLength-=6; break; }
+            if((b&0x01)!=0){ bitLength-=7; break; }
+          }
+          bitLength-=8;
+        }
+        // Shift by the difference in bit length
+        if(bitLength>bits){
+          long bitShift=bitLength-bits;
+          long tmpBitShift=bitShift;
+          while(tmpBitShift>0 && !shiftedInt.IsZero){
+            int bs=(int)Math.Min(1000000,tmpBitShift);
+            shiftedInt>>=bs;
+            tmpBitShift-=bs;
+          }
+          bitsAfterLeftmost|=bitLeftmost;
+          discardedBitCount.Add(bitShift);
+          for(int i=0;i<bytes.Length;i++){
+            if(bitShift>8){
+              // Discard all the bits, they come
+              // after the leftmost bit
+              bitsAfterLeftmost|=bytes[i];
+              bitShift-=8;
+            } else {
+              // 8 or fewer bits left.
+              // Get the bottommost bitShift minus 1 bits
+              bitsAfterLeftmost|=((bytes[i]<<(9-(int)bitShift))&0xFF);
+              // Get the bit just above those bits
+              bitLeftmost=(bytes[i]>>(((int)bitShift)-1))&0x01;
+              break;
+            }
+          }
+          bitsAfterLeftmost=(bitsAfterLeftmost!=0) ? 1 : 0;
+        }
+      }
+    }
+    
     /// <summary>
     /// Converts this value to a 64-bit floating-point number.
-    /// The half-up rounding mode is used.
+    /// The half-even rounding mode is used.
     /// </summary>
     /// <returns>The closest 64-bit floating-point number
     /// to this value. The return value can be positive
@@ -577,100 +758,74 @@ namespace PeterO {
     /// range of a 64-bit floating point number.</returns>
     public double ToDouble() {
       BigInteger bigmant = BigInteger.Abs(this.mantissa);
-      BigInteger bigexponent = this.exponent;
-      int lastRoundedBit = 0;
+      FastInteger bigexponent = new FastInteger(this.exponent);
+      int bitLeftmost = 0;
+      int bitsAfterLeftmost=0;
       if (this.mantissa.IsZero) {
-        return 0.0;
+        return 0.0d;
       }
-      if(bigmant.CompareTo((BigInteger)(1L << 52)) < 0){
+      if(bigmant.CompareTo(OneShift52) < 0){
         long smallmant=(long)bigmant;
         int exponentchange=0;
         while(smallmant<(1L<<52)){
           smallmant<<=1;
           exponentchange++;
         }
-        bigexponent-=(BigInteger)exponentchange;
+        bigexponent.Subtract(exponentchange);
         bigmant=(BigInteger)smallmant;
       } else {
-        BigInteger OneShift72=BigInteger.One<<72;
-        // Shift right 20 bits at a time
-        while (bigmant.CompareTo(OneShift72) >= 0) {
-          bigmant >>= 19;
-          BigInteger bigsticky = bigmant & BigInteger.One;
-          lastRoundedBit = (int)bigsticky;
-          bigmant >>= 1;
-          bigexponent += (BigInteger)20;
-        }
-        // Shift right 1 bit at a time
-        while (bigmant.CompareTo((BigInteger)(1L << 53)) >= 0) {
-          BigInteger bigsticky = bigmant & BigInteger.One;
-          lastRoundedBit = (int)bigsticky;
-          bigmant >>= 1;
-          bigexponent += BigInteger.One;
-        }
+        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        accum.ShiftToBits(53);
+        bitsAfterLeftmost=accum.BitsAfterLeftmost;
+        bitLeftmost=accum.BitLeftmost;
+        bigexponent.Add(accum.DiscardedBitCount);
+        bigmant=accum.ShiftedInt;
       }
-      if (lastRoundedBit == 1) { // Round half-up
+      // TODO: At this point, bigmant will fit in a long,
+      // this is a good chance to optimize further
+      // Round half-even
+      if (bitLeftmost>0 && (bitsAfterLeftmost>0 || !bigmant.IsEven)){
         bigmant += BigInteger.One;
-        if (bigmant.CompareTo((BigInteger)(1L << 53)) == 0) {
+        if (bigmant.CompareTo(OneShift53) == 0) {
           bigmant >>= 1;
-          bigexponent += BigInteger.One;
+          bigexponent.Add(1);
         }
       }
       bool subnormal = false;
-      if (bigexponent > 971) {
+      if (bigexponent.CompareTo(971)>0) {
         // exponent too big
         return (this.mantissa.Sign < 0) ?
           Double.NegativeInfinity :
           Double.PositiveInfinity;
-      } else if (bigexponent < -1074) {
+      } else if (bigexponent.CompareTo(-1074)<0) {
         // subnormal
         subnormal = true;
-        // Shift 20 bits at a time while number
-        // remains subnormal
-        while (bigexponent < -1093) {
-          if(bigmant.IsZero){
-            lastRoundedBit=0;
-            bigexponent=(BigInteger)(-1074);
-            break;
-          } else {
-            BigInteger bigsticky = bigmant & (BigInteger)1;
-            lastRoundedBit = (int)bigsticky;
-            bigmant >>= 20;
-          }
-          bigexponent += (BigInteger)20;
-        }
-        // Shift 1 bit at a time while number
-        // remains subnormal
-        while (bigexponent < -1074) {
-          if(bigmant.IsZero){
-            lastRoundedBit=0;
-            bigexponent=(BigInteger)(-1074);
-            break;
-          } else {
-            BigInteger bigsticky = bigmant & (BigInteger)1;
-            lastRoundedBit = (int)bigsticky;
-            bigmant >>= 1;
-          }
-          bigexponent += BigInteger.One;
-        }
-        if (lastRoundedBit == 1) { // Round half-up
+        // Shift while number remains subnormal
+        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        FastInteger fi=new FastInteger(bigexponent).Subtract(-1074).Abs();
+        accum.ShiftRight(fi);
+        bitsAfterLeftmost=accum.BitsAfterLeftmost;
+        bitLeftmost=accum.BitLeftmost;
+        bigexponent.Add(accum.DiscardedBitCount);
+        bigmant=accum.ShiftedInt;
+        // Round half-even
+        if (bitLeftmost>0 && (bitsAfterLeftmost>0 || !bigmant.IsEven)){
           bigmant += BigInteger.One;
-          if (bigmant.CompareTo((BigInteger)(1L << 53)) == 0) {
+          if (bigmant.CompareTo(OneShift53) == 0) {
             bigmant >>= 1;
-            bigexponent += BigInteger.One;
+            bigexponent.Add(1);
           }
         }
       }
-      if (bigexponent < -1074) {
+      if (bigexponent.CompareTo(-1074) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.Sign < 0) ?
           ConverterInternal.Int64BitsToDouble(1L << 63) :
           ConverterInternal.Int64BitsToDouble(0);
       } else {
-        long smallexponent = (long)bigexponent;
+        long smallexponent = bigexponent.AsInt64();
         smallexponent = smallexponent + 1075;
-        bigmant = bigmant & (BigInteger)0xFFFFFFFFFFFFFL;
-        long smallmantissa = (long)bigmant;
+        long smallmantissa = ((long)bigmant) & 0xFFFFFFFFFFFFFL;
         if (!subnormal) {
           smallmantissa |= (smallexponent << 52);
         }
