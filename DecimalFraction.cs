@@ -274,7 +274,7 @@ namespace PeterO {
       if(diff.Sign<=0)return BigInteger.One;
       BigInteger bigpow=BigInteger.Zero;
       FastInteger intcurexp=new FastInteger(diff);
-      if(intcurexp.CompareTo(27)<=0){
+      if(intcurexp.CompareTo(54)<=0){
         return FindPowerOfFive(intcurexp.AsInt32());
       }
       BigInteger mantissa=BigInteger.One;
@@ -301,7 +301,7 @@ namespace PeterO {
       if(diff.Sign<=0)return BigInteger.One;
       BigInteger bigpow=BigInteger.Zero;
       FastInteger intcurexp=new FastInteger(diff);
-      if(intcurexp.CompareTo(18)<=0){
+      if(intcurexp.CompareTo(36)<=0){
         return FindPowerOfTen(intcurexp.AsInt32());
       }
       BigInteger mantissa=BigInteger.One;
@@ -326,10 +326,18 @@ namespace PeterO {
 
     internal static BigInteger FindPowerOfFive(long precision){
       if(precision<=0)return BigInteger.One;
-      if(precision<BigIntPowersOfFive.Length)
+      BigInteger bigpow;
+      BigInteger ret;
+      if(precision<=27)
         return BigIntPowersOfFive[(int)precision];
-      BigInteger ret=BigInteger.One;
-      BigInteger bigpow=BigInteger.Zero;
+      if(precision<=54){
+        ret=BigIntPowersOfFive[27];
+        bigpow=BigIntPowersOfFive[((int)precision)-27];
+        ret*=(BigInteger)bigpow;
+        return ret;
+      }
+      ret=BigInteger.One;
+      bigpow=BigInteger.Zero;
       while(precision>0){
         if(precision<=27){
           bigpow=BigIntPowersOfFive[(int)precision];
@@ -351,10 +359,18 @@ namespace PeterO {
     
     internal static BigInteger FindPowerOfTen(long precision){
       if(precision<=0)return BigInteger.One;
-      if(precision<BigIntPowersOfTen.Length)
+      BigInteger ret;
+      BigInteger bigpow;
+      if(precision<=18)
         return BigIntPowersOfTen[(int)precision];
-      BigInteger ret=BigInteger.One;
-      BigInteger bigpow=BigInteger.Zero;
+      if(precision<=36){
+        ret=BigIntPowersOfTen[18];
+        bigpow=BigIntPowersOfTen[((int)precision)-18];
+        ret*=(BigInteger)bigpow;
+        return ret;
+      }
+      ret=BigInteger.One;
+      bigpow=BigInteger.Zero;
       while(precision>0){
         if(precision<=18){
           bigpow=BigIntPowersOfTen[(int)precision];
@@ -374,89 +390,12 @@ namespace PeterO {
       return ret;
     }
     
-    
-    internal static BigInteger[] DivideWithPrecision(
-      BigInteger dividend, // NOTE: Assumes dividend is nonnegative
-      BigInteger bigdivisor,
-      long minimumPrecision // in decimal digits
-    ) {
-      if(bigdivisor.IsZero)
-        throw new DivideByZeroException("division by zero");
-      BigInteger bigquotient = BigInteger.Zero;
-      BigInteger bigrem = BigInteger.Zero;
-      FastInteger scale = new FastInteger();
-      BigInteger minInclusive=FindPowerOfTen(minimumPrecision-1);
-      BigInteger bigintTen = FindPowerOfTen(1);
-      if(dividend.CompareTo(bigdivisor) < 0){
-        while (dividend.CompareTo(bigdivisor) < 0) {
-          scale.Add(1);
-          dividend *= bigintTen;
-        }
-      } else {
-        BigInteger divisormul;
-        divisormul=bigdivisor*(BigInteger)(FindPowerOfTen(5));
-        while (dividend.CompareTo(divisormul) >= 0) {
-          scale.Add(5);
-          bigdivisor=divisormul;
-          divisormul=bigdivisor*(BigInteger)(FindPowerOfTen(5));
-        }
-        divisormul=bigdivisor*(BigInteger)(FindPowerOfTen(1));
-        while (dividend.CompareTo(divisormul) >= 0) {
-          scale.Add(1);
-          bigdivisor=divisormul;
-          divisormul=bigdivisor*(BigInteger)(FindPowerOfTen(1));
-        }
-      }
-      while(true) {
-        BigInteger newquotient = BigInteger.DivRem(
-          (BigInteger)dividend,
-          (BigInteger)bigdivisor,
-          out bigrem);
-        if(bigquotient.IsZero)
-          bigquotient=newquotient;
-        else
-          bigquotient += (BigInteger)newquotient;
-        dividend = bigrem;
-        if (scale.Sign >= 0 && bigrem.IsZero) {
-          break;
-        }
-        if(bigquotient.CompareTo(minInclusive)>=0){
-          break;
-        }
-        scale.Add(1);
-        bigquotient *= bigintTen;
-        dividend *= bigintTen;
-      }
-      if (!dividend.IsZero) {
-        // Use half-even rounding
-        BigInteger halfbigdivisor = bigdivisor;
-        halfbigdivisor >>= 1;
-        int cmp=dividend.CompareTo(halfbigdivisor);
-        if (cmp > 0) {
-          // Greater than half
-          bigquotient += BigInteger.One;
-        } else if(cmp==0 && bigdivisor.IsEven){
-          // Exactly half
-          if(!bigquotient.IsEven){
-            // Result is odd
-            bigquotient+=BigInteger.One;
-          }
-        }
-        
-      }
-      BigInteger scaleValue=scale.AsBigInteger();
-      BigInteger negscale = -(BigInteger)scaleValue;
-      return new BigInteger[]{
-        bigquotient,dividend,negscale
-      };
-    }
-    
     internal static BigInteger[] Round(
       BigInteger coeff,
       BigInteger exponent,
       long precision,
       RoundingMode mode
-    ){
+     ){
       int sign=coeff.Sign;
       if(sign!=0){
         BigInteger powerForPrecision=FindPowerOfTen(precision);
@@ -637,30 +576,6 @@ namespace PeterO {
       }
     }
 
-    private bool InsertString(StringBuilder builder, FastInteger index, char c) {
-      if (index.CompareTo(Int32.MaxValue) > 0 || index.Sign<0) {
-        throw new NotSupportedException();
-      }
-      int iindex = index.AsInt32();
-      builder.Insert(iindex, c);
-      return true;
-    }
-
-    private bool InsertString(StringBuilder builder, FastInteger index, char c, FastInteger count) {
-      if (count.CompareTo(Int32.MaxValue) > 0 || count.Sign<0) {
-        throw new NotSupportedException();
-      }
-      if (index.CompareTo(Int32.MaxValue) > 0 || index.Sign<0) {
-        throw new NotSupportedException();
-      }
-      int icount = count.AsInt32();
-      int iindex = index.AsInt32();
-      for (int i = icount - 1; i >= 0; i--) {
-        builder.Insert(iindex, c);
-      }
-      return true;
-    }
-
     private bool AppendString(StringBuilder builder, char c, FastInteger count) {
       if (count.CompareTo(Int32.MaxValue) > 0 || count.Sign<0) {
         throw new NotSupportedException();
@@ -672,33 +587,24 @@ namespace PeterO {
       return true;
     }
 
-    private bool InsertString(StringBuilder builder, FastInteger index, string c) {
-      if (index.CompareTo(Int32.MaxValue) > 0 || index.Sign<0) {
-        throw new NotSupportedException();
-      }
-      int iindex = index.AsInt32();
-      builder.Insert(iindex, c);
-      return true;
-    }
 
     private string ToStringInternal(int mode) {
       // Using Java's rules for converting DecimalFraction
       // values to a string
-      System.Text.StringBuilder builder = new System.Text.StringBuilder();
-      builder.Append(this.mantissa.ToString(
-        System.Globalization.CultureInfo.InvariantCulture));
-      FastInteger adjustedExponent=new FastInteger(this.exponent);
+      String mantissaString=this.mantissa.ToString(
+        System.Globalization.CultureInfo.InvariantCulture);
       FastInteger scale=new FastInteger(this.exponent).Negate();
-      FastInteger sbLength=new FastInteger(builder.Length);
-      FastInteger negaPos=new FastInteger(0);
-      if (builder[0] == '-') {
-        sbLength.Add(-1);
-        negaPos.Add(1);
-      }
       bool iszero = (this.mantissa.IsZero);
       if (mode == 2 && iszero && scale.Sign < 0) {
         // special case for zero in plain
-        return builder.ToString();
+        return mantissaString;
+      }
+      FastInteger adjustedExponent=new FastInteger(this.exponent);
+      FastInteger sbLength=new FastInteger(mantissaString.Length);
+      int negaPos=0;
+      if (mantissaString[0] == '-') {
+        sbLength.Add(-1);
+        negaPos=1;
       }
       adjustedExponent.Add(sbLength).Add(-1);
       FastInteger decimalPointAdjust = new FastInteger(1);
@@ -750,50 +656,98 @@ namespace PeterO {
       }
       if (mode == 2 || ((adjustedExponent.CompareTo(threshold) >= 0 &&
                          scale.Sign >= 0))) {
-        FastInteger decimalPoint = new FastInteger(scale).Negate().Add(negaPos).Add(sbLength);
         if (scale.Sign > 0) {
+          FastInteger decimalPoint = new FastInteger(scale).Negate().Add(negaPos).Add(sbLength);
           int cmp = decimalPoint.CompareTo(negaPos);
+          System.Text.StringBuilder builder = new System.Text.StringBuilder();
           if (cmp < 0) {
-            InsertString(builder, negaPos, '0', new FastInteger(negaPos).Subtract(decimalPoint));
-            InsertString(builder, negaPos, "0.");
+            builder.Append(mantissaString,0,negaPos);
+            builder.Append("0.");
+            AppendString(builder, '0', new FastInteger(negaPos).Subtract(decimalPoint));
+            builder.Append(mantissaString,negaPos,mantissaString.Length-negaPos);
           } else if (cmp == 0) {
-            InsertString(builder, decimalPoint, "0.");
-          } else if (decimalPoint.CompareTo(new FastInteger(negaPos).Add(builder.Length)) > 0) {
-            InsertString(builder, new FastInteger(negaPos).Add(sbLength), '.');
-            InsertString(builder, new FastInteger(negaPos).Add(sbLength), '0',
+            if(!decimalPoint.CanFitInInt32())
+              throw new NotSupportedException();
+            int tmpInt=decimalPoint.AsInt32();
+            if(tmpInt<0)tmpInt=0;
+            builder.Append(mantissaString,0,tmpInt);
+            builder.Append("0.");
+            builder.Append(mantissaString,tmpInt,mantissaString.Length-tmpInt);
+          } else if (decimalPoint.CompareTo(new FastInteger(negaPos).Add(mantissaString.Length)) > 0) {
+            FastInteger insertionPoint=new FastInteger(negaPos).Add(sbLength);
+            if(!insertionPoint.CanFitInInt32())
+              throw new NotSupportedException();
+            int tmpInt=insertionPoint.AsInt32();
+            if(tmpInt<0)tmpInt=0;
+            builder.Append(mantissaString,0,tmpInt);
+            AppendString(builder, '0',
                          new FastInteger(decimalPoint).Subtract(builder.Length));
+            builder.Append('.');
+            builder.Append(mantissaString,tmpInt,mantissaString.Length-tmpInt);
           } else {
-            InsertString(builder, decimalPoint, '.');
+            if(!decimalPoint.CanFitInInt32())
+              throw new NotSupportedException();
+            int tmpInt=decimalPoint.AsInt32();
+            if(tmpInt<0)tmpInt=0;
+            builder.Append(mantissaString,0,tmpInt);
+            builder.Append('.');
+            builder.Append(mantissaString,tmpInt,mantissaString.Length-tmpInt);
           }
-        }
-        if (mode == 2 && scale.Sign < 0) {
+          return builder.ToString();
+        } else if (mode == 2 && scale.Sign < 0) {
           FastInteger negscale = new FastInteger(scale).Negate();
+          System.Text.StringBuilder builder = new System.Text.StringBuilder();
+          builder.Append(mantissaString);
           AppendString(builder, '0', negscale);
+          return builder.ToString();
+        } else {
+          return mantissaString;
         }
-        return builder.ToString();
       } else {
+        System.Text.StringBuilder builder=null;
         if (mode == 1 && iszero && decimalPointAdjust.CompareTo(1) > 0) {
+          builder=new System.Text.StringBuilder();
+          builder.Append(mantissaString);
           builder.Append('.');
           AppendString(builder, '0', new FastInteger(decimalPointAdjust).Add(-1));
         } else {
           FastInteger tmp = new FastInteger(negaPos).Add(decimalPointAdjust);
-          int cmp = tmp.CompareTo(builder.Length);
+          int cmp = tmp.CompareTo(mantissaString.Length);
           if (cmp > 0) {
-            tmp.Subtract(builder.Length);
+            tmp.Subtract(mantissaString.Length);
+            builder=new System.Text.StringBuilder();
+            builder.Append(mantissaString);
             AppendString(builder, '0', tmp);
           } else if (cmp < 0) {
-            InsertString(builder, tmp, '.');
+            // Insert a decimal point at the right place
+            if(!tmp.CanFitInInt32())
+              throw new NotSupportedException();
+            int tmpInt=tmp.AsInt32();
+            if(tmp.Sign<0)tmpInt=0;
+            builder=new System.Text.StringBuilder();
+            builder.Append(mantissaString,0,tmpInt);
+            builder.Append('.');
+            builder.Append(mantissaString,tmpInt,mantissaString.Length-tmpInt);
+          } else if (adjustedExponent.Sign==0) {
+            return mantissaString;
+          } else {
+            builder=new System.Text.StringBuilder();
+            builder.Append(mantissaString);
           }
         }
         if (adjustedExponent.Sign!=0) {
-          builder.Append('E');
-          builder.Append(adjustedExponent.Sign < 0 ? '-' : '+');
-          FastInteger sbPos = new FastInteger(builder.Length);
+          builder.Append(adjustedExponent.Sign < 0 ? "E-" : "E+");
           adjustedExponent.Abs();
+          StringBuilder builderReversed=new StringBuilder();
           while (adjustedExponent.Sign!=0) {
             int digit = new FastInteger(adjustedExponent).Mod(10).AsInt32();
-            InsertString(builder, sbPos, (char)('0' + digit));
+            // Each digit is retrieved from right to left
+            builderReversed.Append((char)('0'+digit));
             adjustedExponent.Divide(10);
+          }
+          int count=builderReversed.Length;
+          for(int i=0;i<count;i++){
+            builder.Append(builderReversed[count-1-i]);
           }
         }
         return builder.ToString();

@@ -264,7 +264,7 @@ import java.math.*;
       if(diff.signum()<=0)return BigInteger.ONE;
       BigInteger bigpow=BigInteger.ZERO;
       FastInteger intcurexp=new FastInteger(diff);
-      if(intcurexp.compareTo(27)<=0){
+      if(intcurexp.compareTo(54)<=0){
         return FindPowerOfFive(intcurexp.AsInt32());
       }
       BigInteger mantissa=BigInteger.ONE;
@@ -291,7 +291,7 @@ import java.math.*;
       if(diff.signum()<=0)return BigInteger.ONE;
       BigInteger bigpow=BigInteger.ZERO;
       FastInteger intcurexp=new FastInteger(diff);
-      if(intcurexp.compareTo(18)<=0){
+      if(intcurexp.compareTo(36)<=0){
         return FindPowerOfTen(intcurexp.AsInt32());
       }
       BigInteger mantissa=BigInteger.ONE;
@@ -316,10 +316,18 @@ import java.math.*;
 
     static BigInteger FindPowerOfFive(long precision){
       if(precision<=0)return BigInteger.ONE;
-      if(precision<BigIntPowersOfFive.length)
+      BigInteger bigpow;
+      BigInteger ret;
+      if(precision<=27)
         return BigIntPowersOfFive[(int)precision];
-      BigInteger ret=BigInteger.ONE;
-      BigInteger bigpow=BigInteger.ZERO;
+      if(precision<=54){
+        ret=BigIntPowersOfFive[27];
+        bigpow=BigIntPowersOfFive[((int)precision)-27];
+        ret=ret.multiply(bigpow);
+        return ret;
+      }
+      ret=BigInteger.ONE;
+      bigpow=BigInteger.ZERO;
       while(precision>0){
         if(precision<=27){
           bigpow=BigIntPowersOfFive[(int)precision];
@@ -341,10 +349,18 @@ import java.math.*;
     
     static BigInteger FindPowerOfTen(long precision){
       if(precision<=0)return BigInteger.ONE;
-      if(precision<BigIntPowersOfTen.length)
+      BigInteger ret;
+      BigInteger bigpow;
+      if(precision<=18)
         return BigIntPowersOfTen[(int)precision];
-      BigInteger ret=BigInteger.ONE;
-      BigInteger bigpow=BigInteger.ZERO;
+      if(precision<=36){
+        ret=BigIntPowersOfTen[18];
+        bigpow=BigIntPowersOfTen[((int)precision)-18];
+        ret=ret.multiply(bigpow);
+        return ret;
+      }
+      ret=BigInteger.ONE;
+      bigpow=BigInteger.ZERO;
       while(precision>0){
         if(precision<=18){
           bigpow=BigIntPowersOfTen[(int)precision];
@@ -364,89 +380,12 @@ import java.math.*;
       return ret;
     }
     
-    
-    static BigInteger[] DivideWithPrecision(
-      BigInteger dividend, // NOTE: Assumes dividend is nonnegative
-      BigInteger bigdivisor,
-      long minimumPrecision // in decimal digits
-    ) {
-      if(bigdivisor.signum()==0)
-        throw new ArithmeticException("division by zero");
-      BigInteger bigquotient = BigInteger.ZERO;
-      BigInteger bigrem = BigInteger.ZERO;
-      FastInteger scale = new FastInteger();
-      BigInteger minInclusive=FindPowerOfTen(minimumPrecision-1);
-      BigInteger bigintTen = FindPowerOfTen(1);
-      if(dividend.compareTo(bigdivisor) < 0){
-        while (dividend.compareTo(bigdivisor) < 0) {
-          scale.Add(1);
-          dividend=dividend.multiply(bigintTen);
-        }
-      } else {
-        BigInteger divisormul;
-        divisormul=bigdivisor.multiply(FindPowerOfTen(5));
-        while (dividend.compareTo(divisormul) >= 0) {
-          scale.Add(5);
-          bigdivisor=divisormul;
-          divisormul=bigdivisor.multiply(FindPowerOfTen(5));
-        }
-        divisormul=bigdivisor.multiply(FindPowerOfTen(1));
-        while (dividend.compareTo(divisormul) >= 0) {
-          scale.Add(1);
-          bigdivisor=divisormul;
-          divisormul=bigdivisor.multiply(FindPowerOfTen(1));
-        }
-      }
-      while(true) {
-        BigInteger newquotient;
-BigInteger[] divrem=(dividend).divideAndRemainder(bigdivisor);
-newquotient=divrem[0];
-bigrem=divrem[1];
-        if(bigquotient.signum()==0)
-          bigquotient=newquotient;
-        else
-          bigquotient=bigquotient.add(newquotient);
-        dividend = bigrem;
-        if (scale.signum() >= 0 && bigrem.signum()==0) {
-          break;
-        }
-        if(bigquotient.compareTo(minInclusive)>=0){
-          break;
-        }
-        scale.Add(1);
-        bigquotient=bigquotient.multiply(bigintTen);
-        dividend=dividend.multiply(bigintTen);
-      }
-      if (dividend.signum()!=0) {
-        // Use half-even rounding
-        BigInteger halfbigdivisor = bigdivisor;
-        halfbigdivisor=halfbigdivisor.shiftRight(1);
-        int cmp=dividend.compareTo(halfbigdivisor);
-        if (cmp > 0) {
-          // Greater than half
-          bigquotient=bigquotient.add(BigInteger.ONE);
-        } else if(cmp==0 && bigdivisor.testBit(0)==false){
-          // Exactly half
-          if(bigquotient.testBit(0)){
-            // Result is odd
-            bigquotient=bigquotient.add(BigInteger.ONE);
-          }
-        }
-        
-      }
-      BigInteger scaleValue=scale.AsBigInteger();
-      BigInteger negscale=(scaleValue).negate();
-      return new BigInteger[]{
-        bigquotient,dividend,negscale
-      };
-    }
-    
     static BigInteger[] Round(
       BigInteger coeff,
       BigInteger exponent,
       long precision,
       RoundingMode mode
-    ){
+     ){
       int sign=coeff.signum();
       if(sign!=0){
         BigInteger powerForPrecision=FindPowerOfTen(precision);
@@ -625,30 +564,6 @@ digit=divrem[1];
       }
     }
 
-    private boolean InsertString(StringBuilder builder, FastInteger index, char c) {
-      if (index.compareTo(Integer.MAX_VALUE) > 0 || index.signum()<0) {
-        throw new UnsupportedOperationException();
-      }
-      int iindex = index.AsInt32();
-      builder.insert(iindex, c);
-      return true;
-    }
-
-    private boolean InsertString(StringBuilder builder, FastInteger index, char c, FastInteger count) {
-      if (count.compareTo(Integer.MAX_VALUE) > 0 || count.signum()<0) {
-        throw new UnsupportedOperationException();
-      }
-      if (index.compareTo(Integer.MAX_VALUE) > 0 || index.signum()<0) {
-        throw new UnsupportedOperationException();
-      }
-      int icount = count.AsInt32();
-      int iindex = index.AsInt32();
-      for (int i = icount - 1; i >= 0; i--) {
-        builder.insert(iindex, c);
-      }
-      return true;
-    }
-
     private boolean AppendString(StringBuilder builder, char c, FastInteger count) {
       if (count.compareTo(Integer.MAX_VALUE) > 0 || count.signum()<0) {
         throw new UnsupportedOperationException();
@@ -660,32 +575,23 @@ digit=divrem[1];
       return true;
     }
 
-    private boolean InsertString(StringBuilder builder, FastInteger index, String c) {
-      if (index.compareTo(Integer.MAX_VALUE) > 0 || index.signum()<0) {
-        throw new UnsupportedOperationException();
-      }
-      int iindex = index.AsInt32();
-      builder.insert(iindex, c);
-      return true;
-    }
 
     private String ToStringInternal(int mode) {
       // Using Java's rules for converting DecimalFraction
       // values to a String
-      StringBuilder builder = new StringBuilder();
-      builder.append(this.mantissa.toString());
-      FastInteger adjustedExponent=new FastInteger(this.exponent);
+      String mantissaString=this.mantissa.toString();
       FastInteger scale=new FastInteger(this.exponent).Negate();
-      FastInteger sbLength=new FastInteger(builder.length());
-      FastInteger negaPos=new FastInteger(0);
-      if (builder.charAt(0) == '-') {
-        sbLength.Add(-1);
-        negaPos.Add(1);
-      }
       boolean iszero = (this.mantissa.signum()==0);
       if (mode == 2 && iszero && scale.signum() < 0) {
         // special case for zero in plain
-        return builder.toString();
+        return mantissaString;
+      }
+      FastInteger adjustedExponent=new FastInteger(this.exponent);
+      FastInteger sbLength=new FastInteger(mantissaString.length());
+      int negaPos=0;
+      if (mantissaString.charAt(0) == '-') {
+        sbLength.Add(-1);
+        negaPos=1;
       }
       adjustedExponent.Add(sbLength).Add(-1);
       FastInteger decimalPointAdjust = new FastInteger(1);
@@ -737,50 +643,98 @@ digit=divrem[1];
       }
       if (mode == 2 || ((adjustedExponent.compareTo(threshold) >= 0 &&
                          scale.signum() >= 0))) {
-        FastInteger decimalPoint = new FastInteger(scale).Negate().Add(negaPos).Add(sbLength);
         if (scale.signum() > 0) {
+          FastInteger decimalPoint = new FastInteger(scale).Negate().Add(negaPos).Add(sbLength);
           int cmp = decimalPoint.compareTo(negaPos);
+          StringBuilder builder = new StringBuilder();
           if (cmp < 0) {
-            InsertString(builder, negaPos, '0', new FastInteger(negaPos).Subtract(decimalPoint));
-            InsertString(builder, negaPos, "0.");
+            builder.append(mantissaString,0,(0)+(negaPos));
+            builder.append("0.");
+            AppendString(builder, '0', new FastInteger(negaPos).Subtract(decimalPoint));
+            builder.append(mantissaString,negaPos,(negaPos)+(mantissaString.length()-negaPos));
           } else if (cmp == 0) {
-            InsertString(builder, decimalPoint, "0.");
-          } else if (decimalPoint.compareTo(new FastInteger(negaPos).Add(builder.length())) > 0) {
-            InsertString(builder, new FastInteger(negaPos).Add(sbLength), '.');
-            InsertString(builder, new FastInteger(negaPos).Add(sbLength), '0',
+            if(!decimalPoint.CanFitInInt32())
+              throw new UnsupportedOperationException();
+            int tmpInt=decimalPoint.AsInt32();
+            if(tmpInt<0)tmpInt=0;
+            builder.append(mantissaString,0,(0)+(tmpInt));
+            builder.append("0.");
+            builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length()-tmpInt));
+          } else if (decimalPoint.compareTo(new FastInteger(negaPos).Add(mantissaString.length())) > 0) {
+            FastInteger insertionPoint=new FastInteger(negaPos).Add(sbLength);
+            if(!insertionPoint.CanFitInInt32())
+              throw new UnsupportedOperationException();
+            int tmpInt=insertionPoint.AsInt32();
+            if(tmpInt<0)tmpInt=0;
+            builder.append(mantissaString,0,(0)+(tmpInt));
+            AppendString(builder, '0',
                          new FastInteger(decimalPoint).Subtract(builder.length()));
+            builder.append('.');
+            builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length()-tmpInt));
           } else {
-            InsertString(builder, decimalPoint, '.');
+            if(!decimalPoint.CanFitInInt32())
+              throw new UnsupportedOperationException();
+            int tmpInt=decimalPoint.AsInt32();
+            if(tmpInt<0)tmpInt=0;
+            builder.append(mantissaString,0,(0)+(tmpInt));
+            builder.append('.');
+            builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length()-tmpInt));
           }
-        }
-        if (mode == 2 && scale.signum() < 0) {
+          return builder.toString();
+        } else if (mode == 2 && scale.signum() < 0) {
           FastInteger negscale = new FastInteger(scale).Negate();
+          StringBuilder builder = new StringBuilder();
+          builder.append(mantissaString);
           AppendString(builder, '0', negscale);
+          return builder.toString();
+        } else {
+          return mantissaString;
         }
-        return builder.toString();
       } else {
+        StringBuilder builder=null;
         if (mode == 1 && iszero && decimalPointAdjust.compareTo(1) > 0) {
+          builder=new StringBuilder();
+          builder.append(mantissaString);
           builder.append('.');
           AppendString(builder, '0', new FastInteger(decimalPointAdjust).Add(-1));
         } else {
           FastInteger tmp = new FastInteger(negaPos).Add(decimalPointAdjust);
-          int cmp = tmp.compareTo(builder.length());
+          int cmp = tmp.compareTo(mantissaString.length());
           if (cmp > 0) {
-            tmp.Subtract(builder.length());
+            tmp.Subtract(mantissaString.length());
+            builder=new StringBuilder();
+            builder.append(mantissaString);
             AppendString(builder, '0', tmp);
           } else if (cmp < 0) {
-            InsertString(builder, tmp, '.');
+            // Insert a decimal point at the right place
+            if(!tmp.CanFitInInt32())
+              throw new UnsupportedOperationException();
+            int tmpInt=tmp.AsInt32();
+            if(tmp.signum()<0)tmpInt=0;
+            builder=new StringBuilder();
+            builder.append(mantissaString,0,(0)+(tmpInt));
+            builder.append('.');
+            builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length()-tmpInt));
+          } else if (adjustedExponent.signum()==0) {
+            return mantissaString;
+          } else {
+            builder=new StringBuilder();
+            builder.append(mantissaString);
           }
         }
         if (adjustedExponent.signum()!=0) {
-          builder.append('E');
-          builder.append(adjustedExponent.signum() < 0 ? '-' : '+');
-          FastInteger sbPos = new FastInteger(builder.length());
+          builder.append(adjustedExponent.signum() < 0 ? "E-" : "E+");
           adjustedExponent.Abs();
+          StringBuilder builderReversed=new StringBuilder();
           while (adjustedExponent.signum()!=0) {
             int digit = new FastInteger(adjustedExponent).Mod(10).AsInt32();
-            InsertString(builder, sbPos, (char)('0' + digit));
+            // Each digit is retrieved from right to left
+            builderReversed.append((char)('0'+digit));
             adjustedExponent.Divide(10);
+          }
+          int count=builderReversed.length();
+          for(int i=0;i<count;i++){
+            builder.append(builderReversed.charAt(count-1-i));
           }
         }
         return builder.toString();

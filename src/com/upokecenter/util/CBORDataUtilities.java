@@ -107,7 +107,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @throws java.lang.NullPointerException "s" is null.
      */
     public static long GetUtf8Length(String s, boolean replace) {
-      if (s == null) throw new NullPointerException();
+      if (s == null) throw new NullPointerException("s");
       long size = 0;
       for (int i = 0; i < s.length(); i++) {
         int c = s.charAt(i);
@@ -718,16 +718,14 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         if (negative) bigintValue=(bigintValue).negate();
         return CBORObject.FromObject(bigintValue);
       } else {
-        BigInteger fracpart = (fracStart < 0) ? BigInteger.ZERO : new BigInteger(
-          str.substring(fracStart,(fracStart)+(fracEnd - fracStart)));
         // Intval consists of the whole and fractional part
         String intvalString = str.substring(numberStart,(numberStart)+(numberEnd - numberStart)) +
-          (fracpart.signum()==0 ? "" : str.substring(fracStart,(fracStart)+(fracEnd - fracStart)));
+          ((fracStart < 0) ? "" : str.substring(fracStart,(fracStart)+(fracEnd - fracStart)));
         BigInteger intval = new BigInteger(
           intvalString);
         if (negative) intval=intval.negate();
-        if (fracpart.signum()==0 && expStart < 0) {
-          // Zero fractional part and no exponent;
+        if ((fracStart < 0) && expStart < 0) {
+          // No fractional part and no exponent;
           // this is easy, just return the integer
           return CBORObject.FromObject(intval);
         }
@@ -735,29 +733,50 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           // Mantissa is 0, return 0 regardless of exponent
           return CBORObject.FromObject(0);
         }
-        BigInteger exp = (expStart < 0) ? BigInteger.ZERO : new BigInteger(
-          str.substring(expStart,(expStart)+(expEnd - expStart)));
-        if (negExp) exp=exp.negate();
-        if (fracpart.signum()!=0) {
-          // If there is a nonzero fractional part,
-          // decrease the exponent by that part's length
-          exp=exp.subtract(BigInteger.valueOf(fracEnd - fracStart));
+        FastInteger exp=null;
+        if(expStart<0){
+          // Exponent zero
+          exp=new FastInteger();
+          if (fracStart >= 0) {
+            // If there is a fractional part,
+            // decrease the exponent by that part's length
+            exp.Subtract(fracEnd-fracStart);
+          }
+        } else if(smallExponent.CanFitInInt64()){
+          // Use already parsed exponent
+          exp=smallExponent;
+        } else {
+          exp=new FastInteger(new BigInteger(
+            str.substring(expStart,(expStart)+(expEnd - expStart))));
+          if (negExp) exp.Negate();
+          if (fracStart >= 0) {
+            // If there is a fractional part,
+            // decrease the exponent by that part's length
+            exp.Subtract(fracEnd-fracStart);
+          }
         }
         if (exp.signum()==0) {
           // If exponent is 0, this is also easy,
           // just return the integer
           return CBORObject.FromObject(intval);
-        } else if (exp.compareTo(UInt64MaxValue) > 0 ||
-                   exp.compareTo(LowestMajorType1) < 0) {
+        } else if (!exp.CanFitInInt64() && (
+          exp.AsBigInteger().compareTo(UInt64MaxValue) > 0 ||
+          exp.AsBigInteger().compareTo(LowestMajorType1) < 0)) {
           // Exponent is lower than the lowest representable
           // integer of major type 1, or higher than the
           // highest representable integer of major type 0
           return null;
         }
         // Represent the CBOR Object as a decimal fraction
-        return CBORObject.FromObjectAndTag(new CBORObject[]{
-                                             CBORObject.FromObject(exp),
-                                             CBORObject.FromObject(intval)}, 4);
+        if(exp.CanFitInInt64()){
+          return CBORObject.FromObjectAndTag(new CBORObject[]{
+                                               CBORObject.FromObject(exp.AsInt64()),
+                                               CBORObject.FromObject(intval)}, 4);
+        } else {
+          return CBORObject.FromObjectAndTag(new CBORObject[]{
+                                               CBORObject.FromObject(exp.AsBigInteger()),
+                                               CBORObject.FromObject(intval)}, 4);
+        }
       }
     }
   }
