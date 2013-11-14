@@ -452,9 +452,7 @@ remainder=divrem[1];
     }
     
     private static BigInteger OneShift23 = BigInteger.valueOf(1L << 23);
-    private static BigInteger OneShift24 = BigInteger.valueOf(1L << 24);
     private static BigInteger OneShift52 = BigInteger.valueOf(1L << 52);
-    private static BigInteger OneShift53 = BigInteger.valueOf(1L << 53);
     private static BigInteger OneShift62 = BigInteger.valueOf(1L << 62);
     
     /**
@@ -472,15 +470,15 @@ remainder=divrem[1];
       if (this.mantissa.signum()==0) {
         return 0.0f;
       }
+      long smallmant=0;
       if(bigmant.compareTo(OneShift23) < 0){
-        long smallmant=bigmant.longValue();
+        smallmant=bigmant.longValue();
         int exponentchange=0;
         while(smallmant<(1L<<23)){
           smallmant<<=1;
           exponentchange++;
         }
         bigexponent.Subtract(exponentchange);
-        bigmant=BigInteger.valueOf(smallmant);
       } else {
         BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
         accum.ShiftToBits(24);
@@ -488,14 +486,13 @@ remainder=divrem[1];
         bitLeftmost=accum.getBitLeftmost();
         bigexponent.Add(accum.getDiscardedBitCount());
         bigmant=accum.getShiftedInt();
+        smallmant=bigmant.longValue();
       }
-      // TODO: At this point, bigmant will fit in an int,
-      // this is a good chance to optimize further
       // Round half-even
-      if (bitLeftmost>0 && (bitsAfterLeftmost>0 || bigmant.testBit(0))){
-        bigmant=bigmant.add(BigInteger.ONE);
-        if (bigmant.compareTo(OneShift24) == 0) {
-          bigmant=bigmant.shiftRight(1);
+      if (bitLeftmost>0 && (bitsAfterLeftmost>0 || (smallmant&1)!=0)){
+        smallmant++;
+        if (smallmant==(1<<24)) {
+          smallmant >>= 1;
           bigexponent.Add(1);
         }
       }
@@ -509,18 +506,18 @@ remainder=divrem[1];
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        SmallShiftAccumulator accum=new SmallShiftAccumulator(smallmant);
         FastInteger fi=new FastInteger(bigexponent).Subtract(-149).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost=accum.getBitsAfterLeftmost();
         bitLeftmost=accum.getBitLeftmost();
         bigexponent.Add(accum.getDiscardedBitCount());
-        bigmant=accum.getShiftedInt();
+        smallmant=accum.getShiftedInt();
         // Round half-even
-        if (bitLeftmost>0 && (bitsAfterLeftmost>0 || bigmant.testBit(0))){
-          bigmant=bigmant.add(BigInteger.ONE);
-          if (bigmant.compareTo(OneShift24) == 0) {
-            bigmant=bigmant.shiftRight(1);
+        if (bitLeftmost>0 && (bitsAfterLeftmost>0 || (smallmant&1)!=0)){
+          smallmant++;
+          if (smallmant==(1<<24)) {
+            smallmant >>= 1;
             bigexponent.Add(1);
           }
         }
@@ -533,7 +530,7 @@ remainder=divrem[1];
       } else {
         int smallexponent = bigexponent.AsInt32();
         smallexponent = smallexponent + 150;
-        int smallmantissa = (bigmant.intValue()) & 0x7FFFFF;
+        int smallmantissa = ((int)smallmant) & 0x7FFFFF;
         if (!subnormal) {
           smallmantissa |= (smallexponent << 23);
         }
@@ -543,7 +540,8 @@ remainder=divrem[1];
     }
 
 
-    private static final class BigShiftAccumulator {
+
+    private static final class SmallShiftAccumulator {
       int bitLeftmost=0;
       
       /**
@@ -553,17 +551,20 @@ remainder=divrem[1];
       int bitsAfterLeftmost=0;
       
       /**
-       * Gets whether any of the discarded bits was set.
+       * Gets whether any of the discarded bits to the right of the last one was
+       * set.
        */
       public int getBitsAfterLeftmost() { return bitsAfterLeftmost; }
-      BigInteger shiftedInt;
+      long shiftedLong;
       
-      public BigInteger getShiftedInt() { return shiftedInt; }
+      public long getShiftedInt() { return shiftedLong; }
       FastInteger discardedBitCount;
       
       public FastInteger getDiscardedBitCount() { return discardedBitCount; }
-      public BigShiftAccumulator(BigInteger bigint){
-        shiftedInt=bigint;
+      public SmallShiftAccumulator(long longInt){
+        if(longInt<0)
+          throw new IllegalArgumentException("longInt is negative");
+        shiftedLong=longInt;
         discardedBitCount=new FastInteger();
       }
 
@@ -583,7 +584,115 @@ remainder=divrem[1];
           }
         }
       }
+
+      /**
+       * Shifts a number to the right, gathering information on whether the
+       * last bit discarded is set and whether the discarded bits to the right
+       * of that bit are set. Assumes that the big integer being shifted is positive.
+       */
+      public void ShiftRight(long bits) {
+        if(bits<=0)return;
+        if(shiftedLong==0){
+          bitsAfterLeftmost|=bitLeftmost;
+          bitLeftmost=0;
+          return;
+        }
+        long bitLength=64;
+        for(int i=63;i>=0;i++){
+          if((shiftedLong&(1L<<i))!=0){
+            break;
+          } else {
+            bitLength--;
+          }
+        }
+        int shift=(int)Math.min(bitLength,bits);
+        discardedBitCount.Add(bits);
+        bitsAfterLeftmost|=bitLeftmost;
+        // Get the bottommost shift minus 1 bits
+        bitsAfterLeftmost|=(((shiftedLong<<(65-shift))!=0) ? 1 : 0);
+        // Get the bit just above that bit
+        bitLeftmost=(int)((shiftedLong>>(((int)shift)-1))&0x01);
+        shiftedLong>>=shift;
+        if(bits>bitLength){
+          // Shifted more bits than the bit length
+          bitsAfterLeftmost|=bitLeftmost;
+          bitLeftmost=0;
+        }
+      }
+
+      /**
+       * Shifts a number until it reaches the given number of bits, gathering
+       * information on whether the last bit discarded is set and whether the
+       * discarded bits to the right of that bit are set. Assumes that the big
+       * integer being shifted is positive.
+       */
+      public void ShiftToBits(long bits) {
+        long bitLength=64;
+        for(int i=63;i>=0;i++){
+          if((shiftedLong&(1L<<i))!=0){
+            break;
+          } else {
+            bitLength--;
+          }
+        }
+        // Shift by the difference in bit length
+        if(bitLength>bits){
+          long bitShift=bitLength-bits;
+          int shift=(int)bitShift;
+          discardedBitCount.Add(bitShift);
+          bitsAfterLeftmost|=bitLeftmost;
+          // Get the bottommost shift minus 1 bits
+          bitsAfterLeftmost|=(((shiftedLong<<(65-shift))!=0) ? 1 : 0);
+          // Get the bit just above that bit
+          bitLeftmost=(int)((shiftedLong>>(((int)shift)-1))&0x01);
+          shiftedLong>>=shift;
+        }
+      }
+    }
+    
+    
+    private static final class BigShiftAccumulator {
+      int bitLeftmost=0;
       
+      /**
+       * Gets whether the last discarded bit was set.
+       */
+      public int getBitLeftmost() { return bitLeftmost; }
+      int bitsAfterLeftmost=0;
+      
+      /**
+       * Gets whether any of the discarded bits to the right of the last one was
+       * set.
+       */
+      public int getBitsAfterLeftmost() { return bitsAfterLeftmost; }
+      BigInteger shiftedInt;
+      
+      public BigInteger getShiftedInt() { return shiftedInt; }
+      FastInteger discardedBitCount;
+      
+      public FastInteger getDiscardedBitCount() { return discardedBitCount; }
+      public BigShiftAccumulator(BigInteger bigint){
+        shiftedInt=bigint;
+        discardedBitCount=new FastInteger();
+      }
+/*
+      public void ShiftRight(FastInteger fastint) {
+        if(fastint.signum()<=0)return;
+        if(fastint.CanFitInInt64()){
+          ShiftRight(fastint.AsInt64());
+        } else {
+          BigInteger bi=fastint.AsBigInteger();
+          while(bi.signum()>0){
+            long count=1000000;
+            if(bi.compareTo(BigInteger.valueOf(1000000))<0){
+              count=bi.longValue();
+            }
+            ShiftRight(count);
+            bi=bi.subtract(BigInteger.valueOf(count));
+          }
+        }
+      }
+      */
       private static byte[] ReverseBytes(byte[] bytes) {
         if ((bytes) == null) throw new NullPointerException("bytes");
         int half = bytes.length >> 1;
@@ -606,6 +715,7 @@ remainder=divrem[1];
         if(shiftedInt.signum()==0){
           bitsAfterLeftmost|=bitLeftmost;
           bitLeftmost=0;
+          return;
         }
         byte[] bytes=ReverseBytes(shiftedInt.toByteArray());
         long bitLength=((long)bytes.length)<<3;
@@ -734,15 +844,15 @@ remainder=divrem[1];
       if (this.mantissa.signum()==0) {
         return 0.0d;
       }
+      long smallmant=0;
       if(bigmant.compareTo(OneShift52) < 0){
-        long smallmant=bigmant.longValue();
+        smallmant=bigmant.longValue();
         int exponentchange=0;
         while(smallmant<(1L<<52)){
           smallmant<<=1;
           exponentchange++;
         }
         bigexponent.Subtract(exponentchange);
-        bigmant=BigInteger.valueOf(smallmant);
       } else {
         BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
         accum.ShiftToBits(53);
@@ -750,14 +860,13 @@ remainder=divrem[1];
         bitLeftmost=accum.getBitLeftmost();
         bigexponent.Add(accum.getDiscardedBitCount());
         bigmant=accum.getShiftedInt();
+        smallmant=bigmant.longValue();
       }
-      // TODO: At this point, bigmant will fit in a long,
-      // this is a good chance to optimize further
       // Round half-even
-      if (bitLeftmost>0 && (bitsAfterLeftmost>0 || bigmant.testBit(0))){
-        bigmant=bigmant.add(BigInteger.ONE);
-        if (bigmant.compareTo(OneShift53) == 0) {
-          bigmant=bigmant.shiftRight(1);
+      if (bitLeftmost>0 && (bitsAfterLeftmost>0 || (smallmant&1)!=0)){
+        smallmant++;
+        if (smallmant==(1<<53)) {
+          smallmant >>= 1;
           bigexponent.Add(1);
         }
       }
@@ -771,18 +880,18 @@ remainder=divrem[1];
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        BigShiftAccumulator accum=new BigShiftAccumulator(bigmant);
+        SmallShiftAccumulator accum=new SmallShiftAccumulator(smallmant);
         FastInteger fi=new FastInteger(bigexponent).Subtract(-1074).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost=accum.getBitsAfterLeftmost();
         bitLeftmost=accum.getBitLeftmost();
         bigexponent.Add(accum.getDiscardedBitCount());
-        bigmant=accum.getShiftedInt();
+        smallmant=accum.getShiftedInt();
         // Round half-even
-        if (bitLeftmost>0 && (bitsAfterLeftmost>0 || bigmant.testBit(0))){
-          bigmant=bigmant.add(BigInteger.ONE);
-          if (bigmant.compareTo(OneShift53) == 0) {
-            bigmant=bigmant.shiftRight(1);
+        if (bitLeftmost>0 && (bitsAfterLeftmost>0 || (smallmant&1)!=0)){
+          smallmant++;
+          if (smallmant==(1<<53)) {
+            smallmant >>= 1;
             bigexponent.Add(1);
           }
         }
@@ -795,7 +904,7 @@ remainder=divrem[1];
       } else {
         long smallexponent = bigexponent.AsInt64();
         smallexponent = smallexponent + 1075;
-        long smallmantissa = (bigmant.longValue()) & 0xFFFFFFFFFFFFFL;
+        long smallmantissa = smallmant & 0xFFFFFFFFFFFFFL;
         if (!subnormal) {
           smallmantissa |= (smallexponent << 52);
         }
