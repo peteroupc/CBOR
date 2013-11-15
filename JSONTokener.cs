@@ -8,12 +8,14 @@
 namespace PeterO {
   using System;
   using System.Globalization;
+  using System.IO;
   using System.Text;
+  using System.Collections.Generic;
 
 
 
   /**
-   * A JSONTokener takes a source _string and extracts characters and tokens from
+   * A JSONTokener takes a source string and extracts characters and tokens from
    * it. It is used by the JSONObject and JSONArray constructors to parse
    * JSON source strings.
    * <p>
@@ -45,13 +47,6 @@ namespace PeterO {
      */
     public static readonly int OPTION_SHELL_COMMENTS = 2;
     /**
-     * Will add a "@comment" property to all objects with
-     * comments associated with them. Only applies to JSON
-     * objects, not JSON arrays.
-     */
-    public static readonly int OPTION_ADD_COMMENTS = 4;
-
-    /**
      * Single quotes are allowed to delimit strings.
      */
     public static readonly int OPTION_SINGLE_QUOTES = 32;
@@ -67,7 +62,7 @@ namespace PeterO {
      * between 'a' and 'f'.
      * @return  An int between 0 and 15, or -1 if c was not a hex digit.
      */
-    public static int dehexchar(char c) {
+    private static int dehexchar(int c) {
       if (c >= '0' && c <= '9')
         return c - '0';
       if (c >= 'A' && c <= 'F')
@@ -75,29 +70,6 @@ namespace PeterO {
       if (c >= 'a' && c <= 'f')
         return c + 10 - 'a';
       return -1;
-    }
-
-    public static string trimSpaces(string str) {
-      if (str == null || str.Length == 0) return str;
-      int index = 0;
-      int sLength = str.Length;
-      while (index < sLength) {
-        char c = str[index];
-        if (c != 0x09 && c != 0x0a && c != 0x0c && c != 0x0d && c != 0x20) {
-          break;
-        }
-        index++;
-      }
-      if (index == sLength) return "";
-      int startIndex = index;
-      index = sLength - 1;
-      while (index >= 0) {
-        char c = str[index];
-        if (c != 0x09 && c != 0x0a && c != 0x0c && c != 0x0d && c != 0x20)
-          return str.Substring(startIndex, (index + 1) - (startIndex));
-        index--;
-      }
-      return "";
     }
 
     /**
@@ -110,8 +82,7 @@ namespace PeterO {
      * The source _string being tokenized.
      */
     private string mySource;
-
-
+    private Stream stream;
     private int options;
 
     /**
@@ -119,163 +90,118 @@ namespace PeterO {
      *
      * @param s     A source _string.
      */
-    public JSONTokener(string s, int options) {
+    public JSONTokener(string str, int options) {
+      if((str)==null)throw new ArgumentNullException("str");
       myIndex = 0;
-      mySource = s;
+      mySource = str;
+      this.stream = null;
       this.options = options;
     }
 
-
-    /**
-     * Back up one character. This provides a sort of lookahead capability,
-     * so that you can test for a digit or letter before attempting to parse
-     * the next number or identifier.
-     */
-    public void back() {
-      if (myIndex > 0) {
-        myIndex -= 1;
-      }
+    public JSONTokener(Stream stream, int options) {
+      if((stream)==null)throw new ArgumentNullException("stream");
+      myIndex = 0;
+      mySource = null;
+      this.stream = stream;
+      this.options = options;
     }
-
-
-    /**
-     * Determine if the source _string still contains characters that next()
-     * can consume.
-     * @return true if not yet at the end of the source.
-     */
-    public bool more() {
-      return myIndex < mySource.Length;
-    }
-
 
     /**
      * Get the next character in the source _string.
      *
-     * @return The next character, or 0 if past the end of the source _string.
+     * @return The next character, or -1 if past the end of the source string.
      */
     public int next() {
-      int c = more() ? mySource[myIndex] : -1;
-      myIndex += 1;
-      return c;
-    }
-
-
-    /**
-     * Consume the next character, and check that it matches a specified
-     * character.
-     * @param c The character to match.
-     * @return The character.
-     * @ if the character does not match.
-     */
-    public int next(char c) {
-      int n = next();
-      if (n != c)
-        throw syntaxError("Expected '" + c + "' and instead saw '" +
-                          n + "'.");
-      return n;
-    }
-
-
-    /**
-     * Get the next n characters.
-     * @param n     The number of characters to take.
-     * @return      A _string of n characters.
-     * @exception FormatException
-     *   Substring bounds error if there are not
-     *   n characters remaining in the source _string.
-     */
-    public string next(int n) {
-      int i = myIndex;
-      int j = i + n;
-      if (j >= mySource.Length)
-        throw syntaxError("Substring bounds error");
-      myIndex += n;
-      return mySource.Substring(i, (j) - (i));
+      if(this.stream!=null){
+        int cp = 0;
+        int bytesSeen = 0;
+        int bytesNeeded = 0;
+        int lower = 0x80;
+        int upper = 0xBF;
+        try {
+          while (true) {
+            int b = stream.ReadByte();
+            if (b < 0) {
+              if (bytesNeeded != 0) {
+                bytesNeeded = 0;
+                throw syntaxError("Invalid UTF-8");
+              } else {
+                return -1;
+              }
+            }
+            if (bytesNeeded == 0) {
+              if (b < 0x80) {
+                myIndex+=1;
+                return b;
+              } else if (b >= 0xc2 && b <= 0xdf) {
+                bytesNeeded = 1;
+                cp = (b - 0xc0) << 6;
+              } else if (b >= 0xe0 && b <= 0xef) {
+                lower = (b == 0xe0) ? 0xa0 : 0x80;
+                upper = (b == 0xed) ? 0x9f : 0xbf;
+                bytesNeeded = 2;
+                cp = (b - 0xe0) << 12;
+              } else if (b >= 0xf0 && b <= 0xf4) {
+                lower = (b == 0xf0) ? 0x90 : 0x80;
+                upper = (b == 0xf4) ? 0x8f : 0xbf;
+                bytesNeeded = 3;
+                cp = (b - 0xf0) << 18;
+              } else {
+                throw syntaxError("Invalid UTF-8");
+              }
+              continue;
+            }
+            if (b < lower || b > upper) {
+              cp = bytesNeeded = bytesSeen = 0;
+              lower = 0x80;
+              upper = 0xbf;
+              throw syntaxError("Invalid UTF-8");
+            }
+            lower = 0x80;
+            upper = 0xbf;
+            bytesSeen++;
+            cp += (b - 0x80) << (6 * (bytesNeeded - bytesSeen));
+            if (bytesSeen != bytesNeeded) {
+              continue;
+            }
+            int ret = cp;
+            cp = 0;
+            bytesSeen = 0;
+            bytesNeeded = 0;
+            myIndex+=1;
+            return ret;
+          }
+        } catch(IOException ex){
+          throw syntaxError("I/O error occurred", ex);
+        }
+      } else {
+        int c = (myIndex < mySource.Length) ? mySource[myIndex] : -1;
+        myIndex += 1;
+        return c;
+      }
     }
 
     public int getOptions() {
       return options;
     }
 
-    /**
-     * Get the next comment or comments in the _string, if any.
-     * (Added by Peter O., 5/6/2013)
-     */
-    public string nextComment() {
-      StringBuilder builder = new StringBuilder();
-      while (true) {
-        int c = next();
-        if (c == '#' && (options & JSONTokener.OPTION_SHELL_COMMENTS) != 0) {
-          // Shell-style single-line comment
-          bool haveChar = false;
-          while (true) {
-            c = next();
-            if (c != '\n' && c != -1) {
-              if (haveChar || c > ' ') {
-                if (!haveChar && builder.Length > 0)
-                  builder.Append(' '); // append space if comment is continuing
-                builder.Append((char)c);
-                haveChar = true;
-              }
-            } else
-              break; // end of line
-          }
-        } else if (c == '/') {
-          switch (next()) {
-            case '/': { // single-line comment
-                bool haveChar = false;
-                while (true) {
-                  c = next();
-                  if (c != '\n' && c != -1) {
-                    if (haveChar || c > ' ') {
-                      if (!haveChar && builder.Length > 0)
-                        builder.Append(' '); // append space if comment is continuing
-                      builder.Append((char)c);
-                      haveChar = true;
-                    }
-                  } else
-                    break; // end of line
-                }
-                break;
-              }
-            case '*': { // multi-line comment
-                bool haveChar = false;
-                while (true) {
-                  c = next();
-                  if (c == -1)
-                    throw syntaxError("Unclosed comment.");
-                  if (c == '*') {
-                    if (next() == '/') {
-                      break;
-                    }
-                    back();
-                  }
-                  if (haveChar || c > ' ') {
-                    if (!haveChar && builder.Length > 0)
-                      builder.Append(' '); // append space if comment is continuing
-                    builder.Append((char)c);
-                    haveChar = true;
-                  }
-                }
-                break;
-              }
-            default:
-              back();
-              return builder.ToString();
-          }
-        } else if (c == -1) {
-          return builder.ToString(); // reached end of _string
-        } else if (c > ' ') {
-          // reached an ordinary character
-          back();
-          return builder.ToString();
-        }
+    private int nextParseComment(int firstChar) {
+      if ((options & JSONTokener.OPTION_ALLOW_COMMENTS) == 0){
+        if(firstChar==-1)
+          return next();
+        if(firstChar=='/' || firstChar=='#')
+          throw syntaxError("Comments not allowed");
+        return firstChar;
       }
-    }
-
-    public void nextCommentReturnVoid() {
+      bool first=true;
       while (true) {
-        int c = next();
+        int c;
+        if(first && firstChar>=0){
+          c=firstChar;
+        } else {
+          c=next();
+        }
+        first=false;
         if (c == '#' && (options & JSONTokener.OPTION_SHELL_COMMENTS) != 0) {
           // Shell-style single-line comment
           while (true) {
@@ -285,8 +211,9 @@ namespace PeterO {
               break; // end of line
           }
         } else if (c == '/') {
-          switch (next()) {
-            case '/': { // single-line comment
+          c=next();
+          switch (c) {
+              case '/': { // single-line comment
                 while (true) {
                   c = next();
                   if (c != '\n' && c != -1) {
@@ -295,50 +222,53 @@ namespace PeterO {
                 }
                 break;
               }
-            case '*': { // multi-line comment
+              case '*': { // multi-line comment
                 while (true) {
                   c = next();
                   if (c == -1)
                     throw syntaxError("Unclosed comment.");
-                  if (c == '*') {
-                    if (next() == '/') {
+                  // use a while loop to deal with
+                  // the case of multiple "*" followed by "/"
+                  bool endOfComment=false;
+                  while (c == '*') {
+                    c=next();
+                    if (c == '/') {
+                      endOfComment=true;
                       break;
                     }
-                    back();
                   }
+                  if(endOfComment)
+                    break;
                 }
                 break;
               }
             default:
-              back();
-              return;
+              return c;
           }
         } else if (c == -1) {
-          return; // reached end of _string
+          return c; // reached end of string
         } else if (c > ' ') {
-          // reached an ordinary character
-          back();
-          return;
+          return c; // reached an ordinary character
         }
       }
     }
 
-    /**
-     * Get the next char in the _string, skipping whitespace
-     * and comments (slashslash and slashstar).
-     * @
-     * @return  A character, or 0 if there are no more characters.
-     */
     public int nextClean() {
-      if ((options & JSONTokener.OPTION_ALLOW_COMMENTS) != 0)
-        nextCommentReturnVoid();
       while (true) {
-        int c = next();
+        int c = nextParseComment(-1);
         if (c == -1 || c > ' ')
           return c;
       }
     }
 
+    public int nextClean(int lastChar) {
+      while (true) {
+        int c = nextParseComment(lastChar);
+        if (c == -1 || c > ' ')
+          return c;
+        lastChar=-1;
+      }
+    }
 
     /**
      * Return the characters up to the next close quote character.
@@ -350,10 +280,11 @@ namespace PeterO {
      * @return      A string.
      * @exception FormatException Unterminated _string.
      */
-    public string nextString(int quote) {
+    private string nextString(int quote) {
       int c;
       StringBuilder sb = new StringBuilder();
       bool surrogate = false;
+      bool surrogateEscaped = false;
       bool escaped = false;
       while (true) {
         c = next();
@@ -395,12 +326,11 @@ namespace PeterO {
               case 'r':
                 c = ('\r');
                 break;
-              case 'u': { // Unicode escape
-                  string next4 = next(4);
-                  int c1 = dehexchar(next4[0]);
-                  int c2 = dehexchar(next4[1]);
-                  int c3 = dehexchar(next4[2]);
-                  int c4 = dehexchar(next4[3]);
+                case 'u': { // Unicode escape
+                  int c1 = dehexchar(next());
+                  int c2 = dehexchar(next());
+                  int c3 = dehexchar(next());
+                  int c4 = dehexchar(next());
                   if (c1 < 0 || c2 < 0 || c3 < 0 || c4 < 0)
                     throw this.syntaxError("Invalid Unicode escaped character");
                   c = (c4 | (c3 << 4) | (c2 << 8) | (c1 << 12));
@@ -415,32 +345,38 @@ namespace PeterO {
             break;
         }
         if (surrogate) {
-          if ((c & 0xFC00) != 0xDC00) {
+          if ((c & 0x1FFC00) != 0xDC00) {
             // Note: this includes the ending quote
+            // and supplementary characters
             throw this.syntaxError("Unpaired surrogate code point");
           }
+          if(escaped!=surrogateEscaped){
+            throw this.syntaxError("Pairing escaped surrogate with unescaped surrogate");
+          }
           surrogate = false;
-        } else if ((c & 0xFC00) == 0xD800) {
+        } else if ((c & 0x1FFC00) == 0xD800) {
           surrogate = true;
-        } else if ((c & 0xFC00) == 0xDC00) {
+          surrogateEscaped = escaped;
+        } else if ((c & 0x1FFC00) == 0xDC00) {
           throw this.syntaxError("Unpaired surrogate code point");
         }
         if (c == quote && !escaped) // End quote reached
           return sb.ToString();
-        sb.Append((char)c);
+        if(c<=0xFFFF){ sb.Append((char)(c)); }
+        else if(c<=0x10FFFF){
+          sb.Append((char)((((c-0x10000)>>10)&0x3FF)+0xD800));
+          sb.Append((char)((((c-0x10000))&0x3FF)+0xDC00));
+        }
       }
     }
 
-    /**
-     * Make a FormatException to signal a syntax error.
-     *
-     * @param message The error message.
-     * @return  A FormatException object, suitable for throwing
-     */
-    public CBORException syntaxError(string message) {
+    internal CBORException syntaxError(string message) {
       return new CBORException(message + ToString());
     }
 
+    internal CBORException syntaxError(string message, Exception innerException) {
+      return new CBORException(message + ToString(), innerException);
+    }
 
     /**
      * Make a printable string of this JSONTokener.
@@ -448,7 +384,192 @@ namespace PeterO {
      * @return " at character [myIndex] of [mySource]"
      */
     public override string ToString() {
-      return " at character " + myIndex + " of " + mySource;
+      if(mySource==null){
+        return " at character " + myIndex;
+      } else {
+        return " at character " + myIndex + " of " + mySource;
+      }
     }
+
+    private CBORObject NextJSONString(int firstChar) {
+      int c = firstChar;
+      if(c<0)
+        throw this.syntaxError("Unexpected end of data");
+      // Parse a string
+      if (c == '"' || (c == '\'' && ((this.getOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
+        // The tokenizer already checked the string for invalid
+        // surrogate pairs, so just call the CBORObject
+        // constructor directly
+        return CBORObject.FromRaw(this.nextString(c));
+      }
+      throw this.syntaxError("Expected a string as a key");
+    }
+    
+    // Based on the json.org implementation for JSONTokener
+    private CBORObject NextJSONValue(int firstChar, int[] nextChar) {
+      string str;
+      int c = firstChar;
+      CBORObject obj=null;
+      if(c<0)
+        throw this.syntaxError("Unexpected end of data");
+      if (c == '"' || (c == '\'' && ((this.getOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
+        // Parse a string
+        // The tokenizer already checked the string for invalid
+        // surrogate pairs, so just call the CBORObject
+        // constructor directly
+        obj=CBORObject.FromRaw(this.nextString(c));
+        nextChar[0]=this.nextClean();
+        return obj;
+      } else if (c == '{') {
+        // Parse an object
+        obj=ParseJSONObject();
+        nextChar[0]=this.nextClean();
+        return obj;
+      } else if (c == '[') {
+        // Parse an array
+        obj=ParseJSONArray();
+        nextChar[0]=this.nextClean();
+        return obj;
+      } else if(c=='t'){
+        // Parse true
+        if(this.next()!='r' ||
+           this.next()!='u' ||
+           this.next()!='e'){
+          throw this.syntaxError("Value can't be parsed.");
+        }
+        nextChar[0]=this.nextClean();
+        return CBORObject.True;
+      } else if(c=='f'){
+        // Parse false
+        if(this.next()!='a' ||
+           this.next()!='l' ||
+           this.next()!='s' ||
+           this.next()!='e'){
+          throw this.syntaxError("Value can't be parsed.");
+        }
+        nextChar[0]=this.nextClean();
+        return CBORObject.False;
+      } else if(c=='n'){
+        // Parse null
+        if(this.next()!='u' ||
+           this.next()!='l' ||
+           this.next()!='l'){
+          throw this.syntaxError("Value can't be parsed.");
+        }
+        nextChar[0]=this.nextClean();
+        return CBORObject.False;
+      } else if(c=='-' || (c>='0' && c<='9')){
+        // Parse a number
+        StringBuilder sb = new StringBuilder();
+        while (c=='-' || c == '+' || c == '.' || c=='e' || c=='E' || (c>='0' && c<='9')) {
+          sb.Append((char)c);
+          c = this.next();
+        }
+        str = sb.ToString();
+        obj = CBORDataUtilities.ParseJSONNumber(str, false, false);
+        if (obj == null)
+          throw this.syntaxError("JSON number can't be parsed.");
+        nextChar[0]=this.nextClean(c);
+        return obj;
+      } else {
+        throw this.syntaxError("Value can't be parsed.");
+      }
+    }
+
+    public CBORObject ParseJSONObjectOrArray() {
+      int c;
+      c = this.nextClean();
+      if(c=='[') {
+        return ParseJSONArray();
+      }
+      if(c=='{'){
+        return ParseJSONObject();
+      }
+      throw this.syntaxError("A JSON object must begin with '{' or '['");
+    }
+
+    // Based on the json.org implementation for JSONObject
+    private CBORObject ParseJSONObject() {
+      // Assumes that the last character read was '{'
+      int c;
+      CBORObject key;
+      CBORObject obj;
+      int[] nextchar=new int[1];
+      bool seenComma=false;
+      var myHashMap = new Dictionary<CBORObject, CBORObject>();
+      while (true) {
+        c = this.nextClean();
+        switch (c) {
+          case -1:
+            throw this.syntaxError("A JSONObject must end with '}'");
+          case '}':
+            if (seenComma &&
+                (this.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
+              // 2013-05-24 -- Peter O. Disallow trailing comma.
+              throw this.syntaxError("Trailing comma");
+            }
+            return CBORObject.FromRaw(myHashMap);
+          default:
+            obj = NextJSONString(c);
+            key = obj;
+            if ((this.getOptions() & JSONTokener.OPTION_NO_DUPLICATES) != 0 &&
+                myHashMap.ContainsKey(obj)) {
+              throw this.syntaxError("Key already exists: " + key);
+            }
+            break;
+        }
+
+        if (this.nextClean() != ':')
+          throw this.syntaxError("Expected a ':' after a key");
+        // NOTE: Will overwrite existing value. --Peter O.
+        myHashMap[key] = NextJSONValue(this.nextClean(),nextchar);
+        switch (nextchar[0]) {
+          case ',':
+            seenComma=true;
+            break;
+          case '}':
+            return CBORObject.FromRaw(myHashMap);
+          default:
+            throw this.syntaxError("Expected a ',' or '}'");
+        }
+      }
+    }
+
+    // Based on the json.org implementation for JSONArray
+    private CBORObject ParseJSONArray() {
+      var myArrayList = new List<CBORObject>();
+      bool seenComma=false;
+      int[] nextchar=new int[1];
+      // This method assumes that the last character read was '['
+      while (true) {
+        int c=this.nextClean();
+        if (c == ',') {
+          if ((this.getOptions() & JSONTokener.OPTION_EMPTY_ARRAY_ELEMENTS) == 0) {
+            throw this.syntaxError("Two commas one after the other");
+          }
+          myArrayList.Add(CBORObject.Null);
+          c=','; // Reuse the comma in the code that follows
+        } else if(c==']'){
+          if (seenComma && (this.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
+            // 2013-05-24 -- Peter O. Disallow trailing comma.
+            throw this.syntaxError("Trailing comma");
+          }
+          return CBORObject.FromRaw(myArrayList);
+        } else {
+          myArrayList.Add(NextJSONValue(c,nextchar));
+          c=nextchar[0];
+        }
+        switch (c) {
+          case ',':
+            seenComma=true;
+            break;
+          case ']':
+            return CBORObject.FromRaw(myArrayList);
+          default:
+            throw this.syntaxError("Expected a ',' or ']'");
+        }
+      }
+    }
+
   }
 }

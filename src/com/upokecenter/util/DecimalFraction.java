@@ -211,7 +211,7 @@ import java.math.*;
       return new DecimalFraction(mant.AsBigInteger(), newScale.AsBigInteger());
     }
 
-    private BigInteger
+    private static BigInteger
       RescaleByExponentDiff(BigInteger mantissa,
                             BigInteger e1,
                             BigInteger e2) {
@@ -226,8 +226,7 @@ import java.math.*;
     }
 
     /**
-     * Gets an object with the same ((value instanceof this one) ? (this one)value
-     * : null), but with the sign reversed.
+     * Gets an object with the same value as this one, but with the sign reversed.
      */
     public DecimalFraction Negate() {
       BigInteger neg=(this.mantissa).negate();
@@ -248,7 +247,7 @@ import java.math.*;
     /**
      * Gets the greater value between two DecimalFraction values.
      */
-    public DecimalFraction Max(DecimalFraction a, DecimalFraction b) {
+    public static DecimalFraction Max(DecimalFraction a, DecimalFraction b) {
       if (a == null) throw new NullPointerException("a");
       if (b == null) throw new NullPointerException("b");
       return a.compareTo(b) > 0 ? a : b;
@@ -459,7 +458,7 @@ digit=divrem[1];
     /**
      * Gets the lesser value between two DecimalFraction values.
      */
-    public DecimalFraction Min(DecimalFraction a, DecimalFraction b) {
+    public static DecimalFraction Min(DecimalFraction a, DecimalFraction b) {
       if (a == null) throw new NullPointerException("a");
       if (b == null) throw new NullPointerException("b");
       return a.compareTo(b) > 0 ? b : a;
@@ -564,7 +563,7 @@ digit=divrem[1];
       }
     }
 
-    private boolean AppendString(StringBuilder builder, char c, FastInteger count) {
+    private static boolean AppendString(StringBuilder builder, char c, FastInteger count) {
       if (count.compareTo(Integer.MAX_VALUE) > 0 || count.signum()<0) {
         throw new UnsupportedOperationException();
       }
@@ -580,19 +579,22 @@ digit=divrem[1];
       // Using Java's rules for converting DecimalFraction
       // values to a String
       String mantissaString=this.mantissa.toString();
-      FastInteger scale=new FastInteger(this.exponent).Negate();
+      int scaleSign = -this.exponent.signum();
+      if(scaleSign==0)
+        return mantissaString;
       boolean iszero = (this.mantissa.signum()==0);
-      if (mode == 2 && iszero && scale.signum() < 0) {
+      if (mode == 2 && iszero && scaleSign < 0) {
         // special case for zero in plain
         return mantissaString;
       }
-      FastInteger adjustedExponent=new FastInteger(this.exponent);
       FastInteger sbLength=new FastInteger(mantissaString.length());
       int negaPos=0;
       if (mantissaString.charAt(0) == '-') {
         sbLength.Add(-1);
         negaPos=1;
       }
+      FastInteger adjustedExponent=new FastInteger(this.exponent);
+      FastInteger thisExponent=new FastInteger(adjustedExponent);
       adjustedExponent.Add(sbLength).Add(-1);
       FastInteger decimalPointAdjust = new FastInteger(1);
       FastInteger threshold = new FastInteger(-6);
@@ -601,7 +603,7 @@ digit=divrem[1];
         boolean adjExponentNegative = (adjustedExponent.signum() < 0);
         int intphase = new FastInteger(adjustedExponent).Abs().Mod(3).AsInt32();
         if (iszero && (adjustedExponent.compareTo(threshold) < 0 ||
-                       scale.signum() < 0)) {
+                       scaleSign < 0)) {
           if (intphase == 1) {
             if (adjExponentNegative) {
               decimalPointAdjust.Add(1);
@@ -642,12 +644,13 @@ digit=divrem[1];
         adjustedExponent = newExponent;
       }
       if (mode == 2 || ((adjustedExponent.compareTo(threshold) >= 0 &&
-                         scale.signum() >= 0))) {
-        if (scale.signum() > 0) {
-          FastInteger decimalPoint = new FastInteger(scale).Negate().Add(negaPos).Add(sbLength);
+                         scaleSign >= 0))) {
+        if (scaleSign > 0) {
+          FastInteger decimalPoint = new FastInteger(thisExponent).Add(negaPos).Add(sbLength);
           int cmp = decimalPoint.compareTo(negaPos);
-          StringBuilder builder = new StringBuilder();
+          StringBuilder builder=null;
           if (cmp < 0) {
+            builder= new StringBuilder((int)Math.min(Integer.MAX_VALUE,(long)mantissaString.length()+6));
             builder.append(mantissaString,0,(0)+(negaPos));
             builder.append("0.");
             AppendString(builder, '0', new FastInteger(negaPos).Subtract(decimalPoint));
@@ -657,6 +660,7 @@ digit=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt=decimalPoint.AsInt32();
             if(tmpInt<0)tmpInt=0;
+            builder= new StringBuilder((int)Math.min(Integer.MAX_VALUE,(long)mantissaString.length()+6));
             builder.append(mantissaString,0,(0)+(tmpInt));
             builder.append("0.");
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length()-tmpInt));
@@ -666,6 +670,7 @@ digit=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt=insertionPoint.AsInt32();
             if(tmpInt<0)tmpInt=0;
+            builder= new StringBuilder((int)Math.min(Integer.MAX_VALUE,(long)mantissaString.length()+6));
             builder.append(mantissaString,0,(0)+(tmpInt));
             AppendString(builder, '0',
                          new FastInteger(decimalPoint).Subtract(builder.length()));
@@ -676,13 +681,14 @@ digit=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt=decimalPoint.AsInt32();
             if(tmpInt<0)tmpInt=0;
+            builder= new StringBuilder((int)Math.min(Integer.MAX_VALUE,(long)mantissaString.length()+6));
             builder.append(mantissaString,0,(0)+(tmpInt));
             builder.append('.');
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length()-tmpInt));
           }
           return builder.toString();
-        } else if (mode == 2 && scale.signum() < 0) {
-          FastInteger negscale = new FastInteger(scale).Negate();
+        } else if (mode == 2 && scaleSign < 0) {
+          FastInteger negscale = new FastInteger(thisExponent);
           StringBuilder builder = new StringBuilder();
           builder.append(mantissaString);
           AppendString(builder, '0', negscale);
@@ -711,7 +717,8 @@ digit=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt=tmp.AsInt32();
             if(tmp.signum()<0)tmpInt=0;
-            builder=new StringBuilder();
+            builder=new StringBuilder(
+              (int)Math.min(Integer.MAX_VALUE,(long)mantissaString.length()+6));
             builder.append(mantissaString,0,(0)+(tmpInt));
             builder.append('.');
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length()-tmpInt));
@@ -781,7 +788,7 @@ digit=divrem[1];
     }
 
     /**
-     * Converts this value to a 32-bit floating-point number. The half-up
+     * Converts this value to a 32-bit floating-point number. The half-even
      * rounding mode is used.
      * @return The closest 32-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
@@ -792,7 +799,7 @@ digit=divrem[1];
     }
 
     /**
-     * Converts this value to a 64-bit floating-point number. The half-up
+     * Converts this value to a 64-bit floating-point number. The half-even
      * rounding mode is used.
      * @return The closest 64-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
@@ -933,16 +940,16 @@ digit=divrem[1];
       return new DecimalFraction(this.getMantissa(),this.getExponent().add(steps));
     }
 
-    internal DecimalFraction Rescale(BigInteger scale)
+    DecimalFraction Rescale(BigInteger scale)
     {
       throw new UnsupportedOperationException();
     }
  
-    internal DecimalFraction RoundToIntegralValue(BigInteger scale)
+    DecimalFraction RoundToIntegralValue(BigInteger scale)
     {
       return Rescale(BigInteger.ZERO);
     }
-    internal DecimalFraction Normalize()
+    DecimalFraction Normalize()
     {
       if(this.getMantissa().signum()==0)
         return new DecimalFraction(0);

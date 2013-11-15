@@ -81,19 +81,5 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="ProfilingSessions\Session20131112_134508.sdps" />
-    <Content Include="ProfilingSessions\Session20131112_203450.sdps" />
-    <Content Include="ProfilingSessions\Session20131113_143153.sdps" />
-    <Content Include="ProfilingSessions\Session20131113_191312.sdps" />
-    <Content Include="ProfilingSessions\Session20131113_224408.sdps" />
-    <Content Include="ProfilingSessions\Session20131113_230937.sdps" />
-    <Content Include="ProfilingSessions\Session20131113_231043.sdps" />
-    <Content Include="ProfilingSessions\Session20131114_001932.sdps" />
-    <Content Include="ProfilingSessions\Session20131114_013232.sdps" />
-    <Content Include="ProfilingSessions\Session20131114_013328.sdps" />
-    <Content Include="ProfilingSessions\Session20131114_020237.sdps" />
-    <Content Include="ProfilingSessions\Session20131114_023551.sdps" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

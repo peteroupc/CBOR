@@ -253,10 +253,14 @@ import java.math.*;
      */
     public boolean IsPositiveInfinity() {
       switch (this.getItemType()) {
-        case CBORObject.CBORObjectType_Single:
-          return (((Float)this.getThisItem()).floatValue()) == Float.POSITIVE_INFINITY;
-        case CBORObject.CBORObjectType_Double:
-          return (((Double)this.getThisItem()).doubleValue()) == Double.POSITIVE_INFINITY;
+          case CBORObject.CBORObjectType_Single:{
+            float value=((Float)this.getThisItem()).floatValue();
+            return ((Float)(value)).isInfinite() && value>0;
+          }
+          case CBORObject.CBORObjectType_Double:{
+            double value=((Double)this.getThisItem()).doubleValue();
+            return ((Double)(value)).isInfinite() && value>0;
+          }
         default:
           return false;
       }
@@ -267,10 +271,14 @@ import java.math.*;
      */
     public boolean IsNegativeInfinity() {
       switch (this.getItemType()) {
-        case CBORObject.CBORObjectType_Single:
-          return (((Float)this.getThisItem()).floatValue()) == Float.NEGATIVE_INFINITY;
-        case CBORObject.CBORObjectType_Double:
-          return (((Double)this.getThisItem()).doubleValue()) == Double.NEGATIVE_INFINITY;
+          case CBORObject.CBORObjectType_Single:{
+            float value=((Float)this.getThisItem()).floatValue();
+            return ((Float)(value)).isInfinite() && value<0;
+          }
+          case CBORObject.CBORObjectType_Double:{
+            double value=((Double)this.getThisItem()).doubleValue();
+            return ((Double)(value)).isInfinite() && value<0;
+          }
         default:
           return false;
       }
@@ -390,7 +398,7 @@ public int compareTo(CBORObject other) {
                 ((BigFloat)objB));
             }
             case CBORObjectType_ByteString: {
-              return ByteArrayCompare((byte[])objA, (byte[])objB);
+              return CBORUtilities.ByteArrayCompare((byte[])objA, (byte[])objB);
             }
             case CBORObjectType_TextString: {
               return CBORDataUtilities.CodePointCompare(
@@ -429,18 +437,16 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_Single: {
               float sf = ((Float)objB).floatValue();
-              if (sf == Float.NEGATIVE_INFINITY) return -1;
-              if (sf == Float.POSITIVE_INFINITY) return 1;
-              if (Float.isNaN(sf)) return 1;
+              if(((Float)(sf)).isInfinite())return (sf<0 ? 1 : -1);
+              if (Float.isNaN(sf)) return -1;
               BigFloat xa = new BigFloat((((Long)objA).longValue()));
               BigFloat xb = BigFloat.FromSingle(sf);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_Double: {
               double sf = ((Double)objB).doubleValue();
-              if (sf == Double.NEGATIVE_INFINITY) return -1;
-              if (sf == Double.POSITIVE_INFINITY) return 1;
-              if (Double.isNaN(sf)) return 1;
+              if(((Double)(sf)).isInfinite())return (sf<0 ? 1 : -1);
+              if (Double.isNaN(sf)) return -1;
               BigFloat xa = new BigFloat((((Long)objA).longValue()));
               BigFloat xb = BigFloat.FromDouble(sf);
               return xa.compareTo(xb);
@@ -462,18 +468,16 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_Single: {
               float sf = ((Float)objB).floatValue();
-              if (sf == Float.NEGATIVE_INFINITY) return -1;
-              if (sf == Float.POSITIVE_INFINITY) return 1;
-              if (Float.isNaN(sf)) return 1;
+              if(((Float)(sf)).isInfinite())return (sf<0 ? 1 : -1);
+              if (Float.isNaN(sf)) return -1;
               BigFloat xa = new BigFloat((BigInteger)objA);
               BigFloat xb = BigFloat.FromSingle(sf);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_Double: {
               double sf = ((Double)objB).doubleValue();
-              if (sf == Double.NEGATIVE_INFINITY) return -1;
-              if (sf == Double.POSITIVE_INFINITY) return 1;
-              if (Double.isNaN(sf)) return 1;
+              if(((Double)(sf)).isInfinite())return (sf<0 ? 1 : -1);
+              if (Double.isNaN(sf)) return -1;
               BigFloat xa = new BigFloat((BigInteger)objA);
               BigFloat xb = BigFloat.FromDouble(sf);
               return xa.compareTo(xb);
@@ -490,8 +494,8 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_Integer: {
               float sf = ((Float)objA).floatValue();
-              if (sf == Float.NEGATIVE_INFINITY) return -1;
-              if (sf == Float.POSITIVE_INFINITY) return 1;
+              if(((Float)(sf)).isInfinite())return (sf<0 ? -1 : 1);
+              
               if (Float.isNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromSingle(sf);
               BigFloat xb = new BigFloat((((Long)objB).longValue()));
@@ -499,8 +503,7 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_BigInteger: {
               float sf = ((Float)objA).floatValue();
-              if (sf == Float.NEGATIVE_INFINITY) return -1;
-              if (sf == Float.POSITIVE_INFINITY) return 1;
+              if(((Float)(sf)).isInfinite())return (sf<0 ? -1 : 1);
               if (Float.isNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromSingle(sf);
               BigFloat xb = new BigFloat((BigInteger)objB);
@@ -521,8 +524,7 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_DecimalFraction: {
               float sf = ((Float)objA).floatValue();
-              if (sf == Float.NEGATIVE_INFINITY) return -1;
-              if (sf == Float.POSITIVE_INFINITY) return 1;
+              if(((Float)(sf)).isInfinite())return (sf<0 ? -1 : 1);
               if (Float.isNaN(sf)) return 1;
               DecimalFraction xa = DecimalFraction.FromSingle(sf);
               DecimalFraction xb = (DecimalFraction)objB;
@@ -530,8 +532,7 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_BigFloat: {
               float sf = ((Float)objA).floatValue();
-              if (sf == Float.NEGATIVE_INFINITY) return -1;
-              if (sf == Float.POSITIVE_INFINITY) return 1;
+              if(((Float)(sf)).isInfinite())return (sf<0 ? -1 : 1);
               if (Float.isNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromSingle(sf);
               BigFloat xb = (BigFloat)objB;
@@ -539,8 +540,7 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_Integer: {
               double sf = ((Double)objA).doubleValue();
-              if (sf == Double.NEGATIVE_INFINITY) return -1;
-              if (sf == Double.POSITIVE_INFINITY) return 1;
+              if(((Double)(sf)).isInfinite())return (sf<0 ? -1 : 1);
               if (Double.isNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromDouble(sf);
               BigFloat xb = new BigFloat((((Long)objB).longValue()));
@@ -548,8 +548,7 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_BigInteger: {
               double sf = ((Double)objA).doubleValue();
-              if (sf == Double.NEGATIVE_INFINITY) return -1;
-              if (sf == Double.POSITIVE_INFINITY) return 1;
+              if(((Double)(sf)).isInfinite())return (sf<0 ? -1 : 1);
               if (Double.isNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromDouble(sf);
               BigFloat xb = new BigFloat((BigInteger)objB);
@@ -570,8 +569,7 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_DecimalFraction: {
               double sf = ((Double)objA).doubleValue();
-              if (sf == Double.NEGATIVE_INFINITY) return -1;
-              if (sf == Double.POSITIVE_INFINITY) return 1;
+              if(((Double)(sf)).isInfinite())return (sf<0 ? -1 : 1);
               if (Double.isNaN(sf)) return 1;
               DecimalFraction xa = DecimalFraction.FromDouble(sf);
               DecimalFraction xb = (DecimalFraction)objB;
@@ -579,8 +577,7 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_BigFloat: {
               double sf = ((Double)objA).doubleValue();
-              if (sf == Double.NEGATIVE_INFINITY) return -1;
-              if (sf == Double.POSITIVE_INFINITY) return 1;
+              if(((Double)(sf)).isInfinite())return (sf<0 ? -1 : 1);
               if (Double.isNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromDouble(sf);
               BigFloat xb = (BigFloat)objB;
@@ -598,18 +595,16 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Single: {
               float sf = ((Float)objB).floatValue();
-              if (sf == Float.NEGATIVE_INFINITY) return -1;
-              if (sf == Float.POSITIVE_INFINITY) return 1;
-              if (Float.isNaN(sf)) return 1;
+              if(((Float)(sf)).isInfinite())return (sf<0 ? 1 : -1);
+              if (Float.isNaN(sf)) return -1;
               DecimalFraction xa = (DecimalFraction)objA;
               DecimalFraction xb = DecimalFraction.FromSingle(sf);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Double: {
               double sf = ((Double)objB).doubleValue();
-              if (sf == Double.NEGATIVE_INFINITY) return -1;
-              if (sf == Double.POSITIVE_INFINITY) return 1;
-              if (Double.isNaN(sf)) return 1;
+              if(((Double)(sf)).isInfinite())return (sf<0 ? 1 : -1);
+              if (Double.isNaN(sf)) return -1;
               DecimalFraction xa = (DecimalFraction)objA;
               DecimalFraction xb = DecimalFraction.FromDouble(sf);
               return xa.compareTo(xb);
@@ -631,18 +626,16 @@ public int compareTo(CBORObject other) {
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_Single: {
               float sf = ((Float)objB).floatValue();
-              if (sf == Float.NEGATIVE_INFINITY) return -1;
-              if (sf == Float.POSITIVE_INFINITY) return 1;
-              if (Float.isNaN(sf)) return 1;
+              if(((Float)(sf)).isInfinite())return (sf<0 ? 1 : -1);
+              if (Float.isNaN(sf)) return -1;
               BigFloat xa = (BigFloat)objA;
               BigFloat xb = BigFloat.FromSingle(sf);
               return xa.compareTo(xb);
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_Double: {
               double sf = ((Double)objB).doubleValue();
-              if (sf == Double.NEGATIVE_INFINITY) return -1;
-              if (sf == Double.POSITIVE_INFINITY) return 1;
-              if (Double.isNaN(sf)) return 1;
+              if(((Double)(sf)).isInfinite())return (sf<0 ? 1 : -1);
+              if (Double.isNaN(sf)) return -1;
               BigFloat xa = (BigFloat)objA;
               BigFloat xb = BigFloat.FromDouble(sf);
               return xa.compareTo(xb);
@@ -743,30 +736,8 @@ public int compareTo(CBORObject other) {
     }
 
     
-    private boolean ByteArrayEquals(byte[] a, byte[] b) {
-      if (a == null) return (b == null);
-      if (b == null) return false;
-      if (a.length != b.length) return false;
-      for (int i = 0; i < a.length; i++) {
-        if (a[i] != b[i]) return false;
-      }
-      return true;
-    }
 
-    private int ByteArrayCompare(byte[] a, byte[] b) {
-      if (a == null) return (b == null) ? 0 : -1;
-      if (b == null) return 1;
-      int c = Math.min(a.length, b.length);
-      for (int i = 0; i < c; i++) {
-        if (a[i] != b[i])
-          return (a[i] < b[i]) ? -1 : 1;
-      }
-      if (a.length != b.length)
-        return (a.length < b.length) ? -1 : 1;
-      return 0;
-    }
-
-    private int ListCompare(ArrayList<CBORObject> listA, ArrayList<CBORObject> listB) {
+    private static int ListCompare(ArrayList<CBORObject> listA, ArrayList<CBORObject> listB) {
       if (listA == null) return (listB == null) ? 0 : -1;
       if (listB == null) return 1;
       int c = Math.min(listA.size(), listB.size());
@@ -778,19 +749,7 @@ public int compareTo(CBORObject other) {
         return (listA.size() < listB.size()) ? -1 : 1;
       return 0;
     }
-    private int ByteArrayHashCode(byte[] a) {
-      if (a == null) return 0;
-      int ret = 19;
-      {
-        ret = ret * 31 + a.length;
-        for (int i = 0; i < a.length; i++) {
-          ret = ret * 31 + a[i];
-        }
-      }
-      return ret;
-    }
-
-    private boolean CBORArrayEquals(
+    private static boolean CBORArrayEquals(
       List<CBORObject> listA,
       List<CBORObject> listB
      ) {
@@ -803,7 +762,7 @@ public int compareTo(CBORObject other) {
       return true;
     }
 
-    private int CBORArrayHashCode(List<CBORObject> list) {
+    private static int CBORArrayHashCode(List<CBORObject> list) {
       if (list == null) return 0;
       int ret = 19;
       int count = list.size();
@@ -816,7 +775,7 @@ public int compareTo(CBORObject other) {
       return ret;
     }
 
-    private boolean CBORMapEquals(
+    private static boolean CBORMapEquals(
       Map<CBORObject, CBORObject> mapA,
       Map<CBORObject, CBORObject> mapB
      ) {
@@ -834,7 +793,7 @@ public int compareTo(CBORObject other) {
       return true;
     }
 
-    private int CBORMapHashCode(Map<CBORObject, CBORObject> a) {
+    private static int CBORMapHashCode(Map<CBORObject, CBORObject> a) {
       // To simplify matters, we use just the count of
       // the map as the basis for the hash code.  More complicated
       // hash code calculation would generally involve defining
@@ -860,7 +819,7 @@ public boolean equals(CBORObject obj) {
       if (other == null)
         return false;
       if(item_ instanceof byte[]) {
-        if (!ByteArrayEquals((byte[])this.getThisItem(), ((other.item_ instanceof byte[]) ? (byte[])other.item_ : null)))
+        if (!CBORUtilities.ByteArrayEquals((byte[])this.getThisItem(), ((other.item_ instanceof byte[]) ? (byte[])other.item_ : null)))
           return false;
       } else if(item_ instanceof List<?>) {
         if (!CBORArrayEquals(AsList(), ((other.item_ instanceof List<?>) ? (List<CBORObject>)other.item_ : null)))
@@ -887,7 +846,7 @@ public boolean equals(CBORObject obj) {
         if (item_ != null) {
           int itemHashCode = 0;
           if(item_ instanceof byte[])
-            itemHashCode = ByteArrayHashCode((byte[])this.getThisItem());
+            itemHashCode = CBORUtilities.ByteArrayHashCode((byte[])this.getThisItem());
           else if(item_ instanceof List<?>)
             itemHashCode = CBORArrayHashCode(AsList());
           else if(item_ instanceof Map<?,?>)
@@ -1180,8 +1139,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       return ((CBORObject)item_).HasTag(tagValue);
     }
 
-    private BigInteger LowHighToBigInteger(int tagLow, int tagHigh) {
-
+    private static BigInteger LowHighToBigInteger(int tagLow, int tagHigh) {
       BigInteger bi;
       if (tagHigh != 0) {
         bi = BigInteger.valueOf((tagHigh >> 16) & 0xFFFF);
@@ -1796,7 +1754,7 @@ public void set(String key, CBORObject value) {
         throw new CBORException("I/O error occurred.", ex);
       }
     }
-
+    
     private static void WriteObjectArray(
       List<CBORObject> list, OutputStream s) throws IOException {
       WritePositiveInt(4, list.size(), s);
@@ -1987,7 +1945,7 @@ public void set(String key, CBORObject value) {
     /**
      * Writes a bigfloat in CBOR format to a data stream.
      * @param bi Bigfloat to write.
-     * @param s Stream to write to.
+     * @param s InputStream to write to.
      * @throws java.lang.NullPointerException s is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2010,7 +1968,7 @@ public void set(String key, CBORObject value) {
     /**
      * Writes a bigfloat in CBOR format to a data stream.
      * @param bi Decimal fraction to write.
-     * @param s Stream to write to.
+     * @param s InputStream to write to.
      * @throws java.lang.NullPointerException s is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2033,7 +1991,7 @@ public void set(String key, CBORObject value) {
     /**
      * Writes a big integer in CBOR format to a data stream.
      * @param bi Big integer to write.
-     * @param s Stream to write to.
+     * @param s InputStream to write to.
      * @throws java.lang.NullPointerException s is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2449,45 +2407,89 @@ public static void Write(Object o, OutputStream s) throws IOException {
      * Generates a CBOR object from a string in JavaScript Object Notation
      * (JSON) format. This function only accepts maps and arrays.
      * @param str A string in JSON format.
+     * @throws java.lang.NullPointerException "str" is null.
+     * @throws CBORException The string is not in JSON format.
      */
     public static CBORObject FromJSONString(String str) {
       JSONTokener tokener = new JSONTokener(str, 0);
-      CBORObject obj = ParseJSONObject(tokener);
+      CBORObject obj = tokener.ParseJSONObjectOrArray();
       if (tokener.nextClean() != -1)
         throw tokener.syntaxError("End of String not reached");
       return obj;
     }
 
 
-    private static String StringToJSONString(String str) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("\"");
+    /**
+     * Generates a CBOR object from a data stream in JavaScript Object Notation
+     * (JSON) format and UTF-8 encoding. This function only accepts maps
+     * and arrays.
+     * @param str A readable data stream.
+     * @throws java.lang.NullPointerException "stream" is null.
+     * @throws java.io.IOException An I/O error occurred.
+     * @throws CBORException The data stream contains invalid UTF-8 or
+     * is not in JSON format.
+     */
+    public static CBORObject ReadJSON(InputStream stream) throws IOException {
+      JSONTokener tokener = new JSONTokener(stream, 0);
+      try {
+        CBORObject obj = tokener.ParseJSONObjectOrArray();
+        if (tokener.nextClean() != -1)
+          throw tokener.syntaxError("End of data stream not reached");
+        return obj;
+      } catch(CBORException ex){
+        if(ex.getCause()!=null && ex.getCause() instanceof IOException)
+          throw (IOException)ex.getCause();
+        throw ex;
+      }
+    }
+
+    private static void StringToJSONStringUnquoted(String str, StringBuilder sb) {
       // Surrogates were already verified when this
       // String was added to the CBOR Object; that check
       // is not repeated here
+      boolean first=true;
       for (int i = 0; i < str.length(); i++) {
         char c = str.charAt(i);
         if (c == '\\' || c == '"') {
+          if(first){
+            first=false;
+            sb.append(str,0,(0)+(i));
+          }
           sb.append('\\');
           sb.append(c);
-        } else if (c == 0x0d) {
-          sb.append("\\r");
-        } else if (c == 0x0a) {
-          sb.append("\\n");
-        } else if (c == 0x0c) {
-          sb.append("\\b");
-        } else if (c == 0x0c) {
-          sb.append("\\f");
-        } else if (c == 0x09) {
-          sb.append("\\t");
         } else if (c < 0x20) {
-          sb.append("\\u00");
-          sb.append((char)('0' + (int)(c >> 4)));
-          sb.append((char)('0' + (int)(c & 15)));
-        } else {
+          if(first){
+            first=false;
+            sb.append(str,0,(0)+(i));
+          }
+          if (c == 0x0d) {
+            sb.append("\\r");
+          } else if (c == 0x0a) {
+            sb.append("\\n");
+          } else if (c == 0x08) {
+            sb.append("\\b");
+          } else if (c == 0x0c) {
+            sb.append("\\f");
+          } else if (c == 0x09) {
+            sb.append("\\t");
+          } else {
+            sb.append("\\u00");
+            sb.append((char)('0' + (int)(c >> 4)));
+            sb.append((char)('0' + (int)(c & 15)));
+          }
+        } else if(!first){
           sb.append(c);
         }
       }
+      if(first){
+        sb.append(str);
+      }
+    }
+
+    private static String StringToJSONString(String str) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("\"");
+      StringToJSONStringUnquoted(str,sb);
       sb.append("\"");
       return sb.toString();
     }
@@ -2564,8 +2566,9 @@ public static void Write(Object o, OutputStream s) throws IOException {
             break;
           }
           if (!first) builder.append(",");
-          builder.append(StringToJSONString(key.AsString()));
-          builder.append(':');
+          builder.append("\"");
+          StringToJSONStringUnquoted(key.AsString(),builder);
+          builder.append("\":");
           builder.append(value.ToJSONString());
           first = false;
         }
@@ -2587,8 +2590,9 @@ public static void Write(Object o, OutputStream s) throws IOException {
             String key = entry.getKey();
             CBORObject value = entry.getValue();
             if (!first) builder.append(",");
-            builder.append(StringToJSONString(key));
-            builder.append(':');
+            builder.append("\"");
+            StringToJSONStringUnquoted(key,builder);
+            builder.append("\":");
             builder.append(value.ToJSONString());
             first = false;
           }
@@ -2600,147 +2604,16 @@ public static void Write(Object o, OutputStream s) throws IOException {
       }
     }
 
-
-    // Based on the json.org implementation for JSONTokener
-    private static CBORObject NextJSONValue(JSONTokener tokener) {
-      int c = tokener.nextClean();
-      String str;
-      if (c == '"' || (c == '\'' && ((tokener.getOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
-        // The tokenizer already checked the String for invalid
-        // surrogate pairs, so just call the CBORObject
-        // constructor directly
-        return new CBORObject(CBORObjectType_TextString,
-                              tokener.nextString(c));
-      }
-      if (c == '{') {
-        tokener.back();
-        return ParseJSONObject(tokener);
-      }
-      if (c == '[') {
-        tokener.back();
-        return ParseJSONArray(tokener);
-      }
-      StringBuilder sb = new StringBuilder();
-      int b = c;
-      while (c >= ' ' && c != ':' && c != ',' && c != ']' && c != '}' &&
-             c != '/') {
-        sb.append((char)c);
-        c = tokener.next();
-      }
-      tokener.back();
-      str = JSONTokener.trimSpaces(sb.toString());
-      if (str.equals("true"))
-        return CBORObject.True;
-      if (str.equals("false"))
-        return CBORObject.False;
-      if (str.equals("null"))
-        return CBORObject.Null;
-      if ((b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+') {
-        CBORObject obj = CBORDataUtilities.ParseJSONNumber(str, false, false);
-        if (obj == null)
-          throw tokener.syntaxError("JSON number can't be parsed.");
-        return obj;
-      }
-      if (str.length() == 0)
-        throw tokener.syntaxError("Missing value.");
-      // Value is unparseable
-      throw tokener.syntaxError("Value can't be parsed.");
+    static CBORObject FromRaw(String str){
+      return new CBORObject(CBORObjectType_TextString, str);
+    }
+    
+    static CBORObject FromRaw(List<CBORObject> list){
+      return new CBORObject(CBORObjectType_Array, list);
     }
 
-    // Based on the json.org implementation for JSONObject
-    private static CBORObject ParseJSONObject(JSONTokener x) {
-      int c;
-      CBORObject key;
-      CBORObject obj;
-      c = x.nextClean();
-      if (c == '[') {
-        x.back();
-        return ParseJSONArray(x);
-      }
-      HashMap<CBORObject, CBORObject> myHashMap=new HashMap<CBORObject, CBORObject>();
-      if (c != '{')
-        throw x.syntaxError("A JSONObject must begin with '{' or '['");
-      while (true) {
-        c = x.nextClean();
-        switch (c) {
-          case -1:
-            throw x.syntaxError("A JSONObject must end with '}'");
-          case '}':
-            return new CBORObject(CBORObjectType_Map, myHashMap);
-          default:
-            x.back();
-            obj = NextJSONValue(x);
-            if (obj.getItemType() != CBORObjectType_TextString)
-              throw x.syntaxError("Expected a String as a key");
-            key = obj;
-            if ((x.getOptions() & JSONTokener.OPTION_NO_DUPLICATES) != 0 &&
-                myHashMap.containsKey(obj)) {
-              throw x.syntaxError("Key already exists: " + key);
-            }
-            break;
-        }
-
-        if (x.nextClean() != ':')
-          throw x.syntaxError("Expected a ':' after a key");
-        // NOTE: Will overwrite existing value. --Peter O.
-        myHashMap.put(key,NextJSONValue(x));
-        switch (x.nextClean()) {
-          case ',':
-            if (x.nextClean() == '}') {
-              if ((x.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
-                // 2013-05-24 -- Peter O. Disallow trailing comma.
-                throw x.syntaxError("Trailing comma");
-              } else {
-                return new CBORObject(CBORObjectType_Map, myHashMap);
-              }
-            }
-            x.back();
-            break;
-          case '}':
-            return new CBORObject(CBORObjectType_Map, myHashMap);
-          default:
-            throw x.syntaxError("Expected a ',' or '}'");
-        }
-      }
-    }
-
-    // Based on the json.org implementation for JSONArray
-    private static CBORObject ParseJSONArray(JSONTokener x) {
-      ArrayList<CBORObject> myArrayList=new ArrayList<CBORObject>();
-      if (x.nextClean() != '[')
-        throw x.syntaxError("A JSONArray must start with '['");
-      if (x.nextClean() == ']')
-        return new CBORObject(CBORObjectType_Array, myArrayList);
-      x.back();
-      while (true) {
-        if (x.nextClean() == ',') {
-          if ((x.getOptions() & JSONTokener.OPTION_EMPTY_ARRAY_ELEMENTS) == 0) {
-            throw x.syntaxError("Two commas one after the other");
-          }
-          x.back();
-          myArrayList.add(CBORObject.Null);
-        } else {
-          x.back();
-          myArrayList.add(NextJSONValue(x));
-        }
-        switch (x.nextClean()) {
-          case ',':
-            if (x.nextClean() == ']') {
-              if ((x.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
-                // 2013-05-24 -- Peter O. Disallow trailing comma.
-                throw x.syntaxError("Trailing comma");
-              } else {
-                return FromObject(myArrayList);
-              }
-            }
-            x.back();
-            break;
-          case ']':
-            return FromObject(myArrayList);
-          default:
-            throw x.syntaxError("Expected a ',' or ']'");
-        }
-      }
+    static CBORObject FromRaw(Map<CBORObject, CBORObject> map){
+      return new CBORObject(CBORObjectType_Map, map);
     }
 
     /**

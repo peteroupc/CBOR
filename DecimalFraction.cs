@@ -221,7 +221,7 @@ namespace PeterO {
       return new DecimalFraction(mant.AsBigInteger(), newScale.AsBigInteger());
     }
 
-    private BigInteger
+    private static BigInteger
       RescaleByExponentDiff(BigInteger mantissa,
                             BigInteger e1,
                             BigInteger e2) {
@@ -258,7 +258,7 @@ namespace PeterO {
     /// <summary>
     /// Gets the greater value between two DecimalFraction values.
     /// </summary>
-    public DecimalFraction Max(DecimalFraction a, DecimalFraction b) {
+    public static DecimalFraction Max(DecimalFraction a, DecimalFraction b) {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");
       return a.CompareTo(b) > 0 ? a : b;
@@ -466,7 +466,7 @@ namespace PeterO {
     /// <summary>
     /// Gets the lesser value between two DecimalFraction values.
     /// </summary>
-    public DecimalFraction Min(DecimalFraction a, DecimalFraction b) {
+    public static DecimalFraction Min(DecimalFraction a, DecimalFraction b) {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");
       return a.CompareTo(b) > 0 ? b : a;
@@ -576,7 +576,7 @@ namespace PeterO {
       }
     }
 
-    private bool AppendString(StringBuilder builder, char c, FastInteger count) {
+    private static bool AppendString(StringBuilder builder, char c, FastInteger count) {
       if (count.CompareTo(Int32.MaxValue) > 0 || count.Sign<0) {
         throw new NotSupportedException();
       }
@@ -593,19 +593,22 @@ namespace PeterO {
       // values to a string
       String mantissaString=this.mantissa.ToString(
         System.Globalization.CultureInfo.InvariantCulture);
-      FastInteger scale=new FastInteger(this.exponent).Negate();
+      int scaleSign = -this.exponent.Sign;
+      if(scaleSign==0)
+        return mantissaString;
       bool iszero = (this.mantissa.IsZero);
-      if (mode == 2 && iszero && scale.Sign < 0) {
+      if (mode == 2 && iszero && scaleSign < 0) {
         // special case for zero in plain
         return mantissaString;
       }
-      FastInteger adjustedExponent=new FastInteger(this.exponent);
       FastInteger sbLength=new FastInteger(mantissaString.Length);
       int negaPos=0;
       if (mantissaString[0] == '-') {
         sbLength.Add(-1);
         negaPos=1;
       }
+      FastInteger adjustedExponent=new FastInteger(this.exponent);
+      FastInteger thisExponent=new FastInteger(adjustedExponent);
       adjustedExponent.Add(sbLength).Add(-1);
       FastInteger decimalPointAdjust = new FastInteger(1);
       FastInteger threshold = new FastInteger(-6);
@@ -614,7 +617,7 @@ namespace PeterO {
         bool adjExponentNegative = (adjustedExponent.Sign < 0);
         int intphase = new FastInteger(adjustedExponent).Abs().Mod(3).AsInt32();
         if (iszero && (adjustedExponent.CompareTo(threshold) < 0 ||
-                       scale.Sign < 0)) {
+                       scaleSign < 0)) {
           if (intphase == 1) {
             if (adjExponentNegative) {
               decimalPointAdjust.Add(1);
@@ -655,12 +658,13 @@ namespace PeterO {
         adjustedExponent = newExponent;
       }
       if (mode == 2 || ((adjustedExponent.CompareTo(threshold) >= 0 &&
-                         scale.Sign >= 0))) {
-        if (scale.Sign > 0) {
-          FastInteger decimalPoint = new FastInteger(scale).Negate().Add(negaPos).Add(sbLength);
+                         scaleSign >= 0))) {
+        if (scaleSign > 0) {
+          FastInteger decimalPoint = new FastInteger(thisExponent).Add(negaPos).Add(sbLength);
           int cmp = decimalPoint.CompareTo(negaPos);
-          System.Text.StringBuilder builder = new System.Text.StringBuilder();
+          System.Text.StringBuilder builder=null;
           if (cmp < 0) {
+            builder= new System.Text.StringBuilder((int)Math.Min(Int32.MaxValue,(long)mantissaString.Length+6));
             builder.Append(mantissaString,0,negaPos);
             builder.Append("0.");
             AppendString(builder, '0', new FastInteger(negaPos).Subtract(decimalPoint));
@@ -670,6 +674,7 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt=decimalPoint.AsInt32();
             if(tmpInt<0)tmpInt=0;
+            builder= new System.Text.StringBuilder((int)Math.Min(Int32.MaxValue,(long)mantissaString.Length+6));
             builder.Append(mantissaString,0,tmpInt);
             builder.Append("0.");
             builder.Append(mantissaString,tmpInt,mantissaString.Length-tmpInt);
@@ -679,6 +684,7 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt=insertionPoint.AsInt32();
             if(tmpInt<0)tmpInt=0;
+            builder= new System.Text.StringBuilder((int)Math.Min(Int32.MaxValue,(long)mantissaString.Length+6));
             builder.Append(mantissaString,0,tmpInt);
             AppendString(builder, '0',
                          new FastInteger(decimalPoint).Subtract(builder.Length));
@@ -689,13 +695,14 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt=decimalPoint.AsInt32();
             if(tmpInt<0)tmpInt=0;
+            builder= new System.Text.StringBuilder((int)Math.Min(Int32.MaxValue,(long)mantissaString.Length+6));
             builder.Append(mantissaString,0,tmpInt);
             builder.Append('.');
             builder.Append(mantissaString,tmpInt,mantissaString.Length-tmpInt);
           }
           return builder.ToString();
-        } else if (mode == 2 && scale.Sign < 0) {
-          FastInteger negscale = new FastInteger(scale).Negate();
+        } else if (mode == 2 && scaleSign < 0) {
+          FastInteger negscale = new FastInteger(thisExponent);
           System.Text.StringBuilder builder = new System.Text.StringBuilder();
           builder.Append(mantissaString);
           AppendString(builder, '0', negscale);
@@ -724,7 +731,8 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt=tmp.AsInt32();
             if(tmp.Sign<0)tmpInt=0;
-            builder=new System.Text.StringBuilder();
+            builder=new System.Text.StringBuilder(
+              (int)Math.Min(Int32.MaxValue,(long)mantissaString.Length+6));
             builder.Append(mantissaString,0,tmpInt);
             builder.Append('.');
             builder.Append(mantissaString,tmpInt,mantissaString.Length-tmpInt);
@@ -796,7 +804,7 @@ namespace PeterO {
 
     /// <summary>
     /// Converts this value to a 32-bit floating-point number.
-    /// The half-up rounding mode is used.
+    /// The half-even rounding mode is used.
     /// </summary>
     /// <returns>The closest 32-bit floating-point number
     /// to this value. The return value can be positive
@@ -808,7 +816,7 @@ namespace PeterO {
 
     /// <summary>
     /// Converts this value to a 64-bit floating-point number.
-    /// The half-up rounding mode is used.
+    /// The half-even rounding mode is used.
     /// </summary>
     /// <returns>The closest 64-bit floating-point number
     /// to this value. The return value can be positive

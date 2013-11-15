@@ -19,7 +19,7 @@ namespace Test {
 
   [TestFixture]
   public class CBORTest {
-    private void TestBigFloatDoubleCore(double d, string s) {
+    private static void TestBigFloatDoubleCore(double d, string s) {
       double oldd = d;
       BigFloat bf = BigFloat.FromDouble(d);
       if (s != null) {
@@ -31,7 +31,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
 
-    private void TestBigFloatSingleCore(float d, string s) {
+    private static void TestBigFloatSingleCore(float d, string s) {
       float oldd = d;
       BigFloat bf = BigFloat.FromSingle(d);
       if (s != null) {
@@ -43,7 +43,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
 
-    private CBORObject RandomNumber(FastRandom rand) {
+    private static CBORObject RandomNumber(FastRandom rand) {
       switch (rand.NextValue(6)) {
         case 0:
           return CBORObject.FromObject(RandomDouble(rand, Int32.MaxValue));
@@ -62,7 +62,7 @@ namespace Test {
       }
     }
 
-    private long RandomInt64(FastRandom rand) {
+    private static long RandomInt64(FastRandom rand) {
       long r = rand.NextValue(0x10000);
       r |= ((long)rand.NextValue(0x10000)) << 16;
       if (rand.NextValue(2) == 0) {
@@ -74,7 +74,7 @@ namespace Test {
       return r;
     }
 
-    private double RandomDouble(FastRandom rand, int exponent) {
+    private static double RandomDouble(FastRandom rand, int exponent) {
       if (exponent == Int32.MaxValue)
         exponent = rand.NextValue(2047);
       long r = rand.NextValue(0x10000);
@@ -90,7 +90,7 @@ namespace Test {
       return ConverterInternal.Int64BitsToDouble(r);
     }
 
-    private float RandomSingle(FastRandom rand, int exponent) {
+    private static float RandomSingle(FastRandom rand, int exponent) {
       if (exponent == Int32.MaxValue)
         exponent = rand.NextValue(255);
       int r = rand.NextValue(0x10000);
@@ -156,7 +156,7 @@ namespace Test {
       return sb.ToString();
     }
 
-    private void TestDecimalString(String r) {
+    private static void TestDecimalString(String r) {
       CBORObject o = CBORObject.FromObject(DecimalFraction.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
       if (o.CompareTo(o2) != 0) {
@@ -285,6 +285,17 @@ namespace Test {
     [ExpectedException(typeof(CBORException))]
     public void TestTagThenBreak() {
       TestCommon.FromBytesTestAB(new byte[] { 0xD1, 0xFF });
+    }
+    
+    [Test]
+    public void TestJSONSurrogates(){
+      try { CBORObject.FromJSONString("[\"\ud800\udc00\"]"); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+      try { CBORObject.FromJSONString("[\"\\ud800\\udc00\"]"); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+      try { CBORObject.FromJSONString("[\"\ud800\\udc00\"]"); } catch(CBORException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+      try { CBORObject.FromJSONString("[\"\\ud800\udc00\"]"); } catch(CBORException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+      try { CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]"); } catch(CBORException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+      try { CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]"); } catch(CBORException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+      try { CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]"); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
     }
 
     [Test]
@@ -541,7 +552,7 @@ namespace Test {
                      0, " \ufffd\ufffd", -1, null);
     }
 
-    private bool ByteArrayEquals(byte[] arrayA, byte[] arrayB) {
+    private static bool ByteArrayEquals(byte[] arrayA, byte[] arrayB) {
       if (arrayA == null) return (arrayB == null);
       if (arrayB == null) return false;
       if (arrayA.Length != arrayB.Length) return false;
@@ -3575,6 +3586,8 @@ namespace Test {
 
     [Test]
     public void TestDouble() {
+      if(!CBORObject.FromObject(Double.PositiveInfinity).IsPositiveInfinity())
+        Assert.Fail("Not positive infinity");
       TestCommon.AssertSer(CBORObject.FromObject(Double.PositiveInfinity),
                            "Infinity");
       TestCommon.AssertSer(CBORObject.FromObject(Double.NegativeInfinity),

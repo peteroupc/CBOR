@@ -19,6 +19,10 @@ namespace PeterO
   /// <para>This class is ideal for cases where operations should
   /// be arbitrary precision, but the need to use a precision greater
   /// than 64 bits is very rare.</para>
+  /// <para>Many methods in this class return a reference to the
+  /// same object as used in the call.  This allows chaining operations
+  /// in a single line of code.  For example:</para>
+  /// <code>fastInt.Add(5).Multiply(10);</code>
   /// </summary>
   sealed class FastInteger : IComparable<FastInteger> {
     long smallValue;
@@ -86,6 +90,12 @@ namespace PeterO
     public FastInteger Abs(){
       return (this.Sign<0) ? Negate() : this;
     }
+    /// <summary>
+    /// Sets this object's value to the remainder
+    /// of the current value divided by the given integer.
+    /// </summary>
+    /// <param name="divisor">The divisor.</param>
+    /// <returns>This object.</returns>
     public FastInteger Mod(int divisor){
       if(usingLarge){
         // Mod operator will always result in a
@@ -275,6 +285,10 @@ namespace PeterO
       return this;
     }
     
+    /// <summary>
+    /// Gets whether this object's value is within the
+    /// range of a 64-bit signed integer.
+    /// </summary>
     public bool CanFitInInt64() {
       if(usingLarge){
         return (largeValue.CompareTo(Int64MinValue)>=0 &&
@@ -284,6 +298,10 @@ namespace PeterO
       }
     }
     
+    /// <summary>
+    /// Gets whether this object's value is within the
+    /// range of a 32-bit signed integer.
+    /// </summary>
     public bool CanFitInInt32() {
       if(usingLarge){
         return (largeValue.CompareTo(Int32MinValue)>=0 &&

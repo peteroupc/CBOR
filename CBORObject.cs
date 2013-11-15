@@ -285,10 +285,14 @@ namespace PeterO {
     /// </summary>
     public bool IsPositiveInfinity() {
       switch (this.ItemType) {
-        case CBORObject.CBORObjectType_Single:
-          return ((float)this.ThisItem) == Single.PositiveInfinity;
-        case CBORObject.CBORObjectType_Double:
-          return ((double)this.ThisItem) == Double.PositiveInfinity;
+          case CBORObject.CBORObjectType_Single:{
+            float value=(float)this.ThisItem;
+            return Single.IsInfinity(value) && value>0;
+          }
+          case CBORObject.CBORObjectType_Double:{
+            double value=(double)this.ThisItem;
+            return Double.IsInfinity(value) && value>0;
+          }
         default:
           return false;
       }
@@ -299,10 +303,14 @@ namespace PeterO {
     /// </summary>
     public bool IsNegativeInfinity() {
       switch (this.ItemType) {
-        case CBORObject.CBORObjectType_Single:
-          return ((float)this.ThisItem) == Single.NegativeInfinity;
-        case CBORObject.CBORObjectType_Double:
-          return ((double)this.ThisItem) == Double.NegativeInfinity;
+          case CBORObject.CBORObjectType_Single:{
+            float value=(float)this.ThisItem;
+            return Single.IsInfinity(value) && value<0;
+          }
+          case CBORObject.CBORObjectType_Double:{
+            double value=(double)this.ThisItem;
+            return Double.IsInfinity(value) && value<0;
+          }
         default:
           return false;
       }
@@ -430,7 +438,7 @@ namespace PeterO {
                 ((BigFloat)objB));
             }
             case CBORObjectType_ByteString: {
-              return ByteArrayCompare((byte[])objA, (byte[])objB);
+              return CBORUtilities.ByteArrayCompare((byte[])objA, (byte[])objB);
             }
             case CBORObjectType_TextString: {
               return CBORDataUtilities.CodePointCompare(
@@ -469,18 +477,16 @@ namespace PeterO {
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_Single: {
               float sf = (float)objB;
-              if (sf == Single.NegativeInfinity) return -1;
-              if (sf == Single.PositiveInfinity) return 1;
-              if (Single.IsNaN(sf)) return 1;
+              if(Single.IsInfinity(sf))return (sf<0 ? 1 : -1);
+              if (Single.IsNaN(sf)) return -1;
               BigFloat xa = new BigFloat((long)objA);
               BigFloat xb = BigFloat.FromSingle(sf);
               return xa.CompareTo(xb);
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_Double: {
               double sf = (double)objB;
-              if (sf == Double.NegativeInfinity) return -1;
-              if (sf == Double.PositiveInfinity) return 1;
-              if (Double.IsNaN(sf)) return 1;
+              if(Double.IsInfinity(sf))return (sf<0 ? 1 : -1);
+              if (Double.IsNaN(sf)) return -1;
               BigFloat xa = new BigFloat((long)objA);
               BigFloat xb = BigFloat.FromDouble(sf);
               return xa.CompareTo(xb);
@@ -502,18 +508,16 @@ namespace PeterO {
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_Single: {
               float sf = (float)objB;
-              if (sf == Single.NegativeInfinity) return -1;
-              if (sf == Single.PositiveInfinity) return 1;
-              if (Single.IsNaN(sf)) return 1;
+              if(Single.IsInfinity(sf))return (sf<0 ? 1 : -1);
+              if (Single.IsNaN(sf)) return -1;
               BigFloat xa = new BigFloat((BigInteger)objA);
               BigFloat xb = BigFloat.FromSingle(sf);
               return xa.CompareTo(xb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_Double: {
               double sf = (double)objB;
-              if (sf == Double.NegativeInfinity) return -1;
-              if (sf == Double.PositiveInfinity) return 1;
-              if (Double.IsNaN(sf)) return 1;
+              if(Double.IsInfinity(sf))return (sf<0 ? 1 : -1);
+              if (Double.IsNaN(sf)) return -1;
               BigFloat xa = new BigFloat((BigInteger)objA);
               BigFloat xb = BigFloat.FromDouble(sf);
               return xa.CompareTo(xb);
@@ -530,8 +534,8 @@ namespace PeterO {
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_Integer: {
               float sf = (float)objA;
-              if (sf == Single.NegativeInfinity) return -1;
-              if (sf == Single.PositiveInfinity) return 1;
+              if(Single.IsInfinity(sf))return (sf<0 ? -1 : 1);
+              
               if (Single.IsNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromSingle(sf);
               BigFloat xb = new BigFloat((long)objB);
@@ -539,8 +543,7 @@ namespace PeterO {
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_BigInteger: {
               float sf = (float)objA;
-              if (sf == Single.NegativeInfinity) return -1;
-              if (sf == Single.PositiveInfinity) return 1;
+              if(Single.IsInfinity(sf))return (sf<0 ? -1 : 1);
               if (Single.IsNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromSingle(sf);
               BigFloat xb = new BigFloat((BigInteger)objB);
@@ -561,8 +564,7 @@ namespace PeterO {
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_DecimalFraction: {
               float sf = (float)objA;
-              if (sf == Single.NegativeInfinity) return -1;
-              if (sf == Single.PositiveInfinity) return 1;
+              if(Single.IsInfinity(sf))return (sf<0 ? -1 : 1);
               if (Single.IsNaN(sf)) return 1;
               DecimalFraction xa = DecimalFraction.FromSingle(sf);
               DecimalFraction xb = (DecimalFraction)objB;
@@ -570,8 +572,7 @@ namespace PeterO {
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_BigFloat: {
               float sf = (float)objA;
-              if (sf == Single.NegativeInfinity) return -1;
-              if (sf == Single.PositiveInfinity) return 1;
+              if(Single.IsInfinity(sf))return (sf<0 ? -1 : 1);
               if (Single.IsNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromSingle(sf);
               BigFloat xb = (BigFloat)objB;
@@ -579,8 +580,7 @@ namespace PeterO {
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_Integer: {
               double sf = (double)objA;
-              if (sf == Double.NegativeInfinity) return -1;
-              if (sf == Double.PositiveInfinity) return 1;
+              if(Double.IsInfinity(sf))return (sf<0 ? -1 : 1);
               if (Double.IsNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromDouble(sf);
               BigFloat xb = new BigFloat((long)objB);
@@ -588,8 +588,7 @@ namespace PeterO {
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_BigInteger: {
               double sf = (double)objA;
-              if (sf == Double.NegativeInfinity) return -1;
-              if (sf == Double.PositiveInfinity) return 1;
+              if(Double.IsInfinity(sf))return (sf<0 ? -1 : 1);
               if (Double.IsNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromDouble(sf);
               BigFloat xb = new BigFloat((BigInteger)objB);
@@ -610,8 +609,7 @@ namespace PeterO {
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_DecimalFraction: {
               double sf = (double)objA;
-              if (sf == Double.NegativeInfinity) return -1;
-              if (sf == Double.PositiveInfinity) return 1;
+              if(Double.IsInfinity(sf))return (sf<0 ? -1 : 1);
               if (Double.IsNaN(sf)) return 1;
               DecimalFraction xa = DecimalFraction.FromDouble(sf);
               DecimalFraction xb = (DecimalFraction)objB;
@@ -619,8 +617,7 @@ namespace PeterO {
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_BigFloat: {
               double sf = (double)objA;
-              if (sf == Double.NegativeInfinity) return -1;
-              if (sf == Double.PositiveInfinity) return 1;
+              if(Double.IsInfinity(sf))return (sf<0 ? -1 : 1);
               if (Double.IsNaN(sf)) return 1;
               BigFloat xa = BigFloat.FromDouble(sf);
               BigFloat xb = (BigFloat)objB;
@@ -638,18 +635,16 @@ namespace PeterO {
             }
             case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Single: {
               float sf = (float)objB;
-              if (sf == Single.NegativeInfinity) return -1;
-              if (sf == Single.PositiveInfinity) return 1;
-              if (Single.IsNaN(sf)) return 1;
+              if(Single.IsInfinity(sf))return (sf<0 ? 1 : -1);
+              if (Single.IsNaN(sf)) return -1;
               DecimalFraction xa = (DecimalFraction)objA;
               DecimalFraction xb = DecimalFraction.FromSingle(sf);
               return xa.CompareTo(xb);
             }
             case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Double: {
               double sf = (double)objB;
-              if (sf == Double.NegativeInfinity) return -1;
-              if (sf == Double.PositiveInfinity) return 1;
-              if (Double.IsNaN(sf)) return 1;
+              if(Double.IsInfinity(sf))return (sf<0 ? 1 : -1);
+              if (Double.IsNaN(sf)) return -1;
               DecimalFraction xa = (DecimalFraction)objA;
               DecimalFraction xb = DecimalFraction.FromDouble(sf);
               return xa.CompareTo(xb);
@@ -671,18 +666,16 @@ namespace PeterO {
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_Single: {
               float sf = (float)objB;
-              if (sf == Single.NegativeInfinity) return -1;
-              if (sf == Single.PositiveInfinity) return 1;
-              if (Single.IsNaN(sf)) return 1;
+              if(Single.IsInfinity(sf))return (sf<0 ? 1 : -1);
+              if (Single.IsNaN(sf)) return -1;
               BigFloat xa = (BigFloat)objA;
               BigFloat xb = BigFloat.FromSingle(sf);
               return xa.CompareTo(xb);
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_Double: {
               double sf = (double)objB;
-              if (sf == Double.NegativeInfinity) return -1;
-              if (sf == Double.PositiveInfinity) return 1;
-              if (Double.IsNaN(sf)) return 1;
+              if(Double.IsInfinity(sf))return (sf<0 ? 1 : -1);
+              if (Double.IsNaN(sf)) return -1;
               BigFloat xa = (BigFloat)objA;
               BigFloat xb = BigFloat.FromDouble(sf);
               return xa.CompareTo(xb);
@@ -783,30 +776,8 @@ namespace PeterO {
     }
 
     #region Equals and GetHashCode implementation
-    private bool ByteArrayEquals(byte[] a, byte[] b) {
-      if (a == null) return (b == null);
-      if (b == null) return false;
-      if (a.Length != b.Length) return false;
-      for (int i = 0; i < a.Length; i++) {
-        if (a[i] != b[i]) return false;
-      }
-      return true;
-    }
 
-    private int ByteArrayCompare(byte[] a, byte[] b) {
-      if (a == null) return (b == null) ? 0 : -1;
-      if (b == null) return 1;
-      int c = Math.Min(a.Length, b.Length);
-      for (int i = 0; i < c; i++) {
-        if (a[i] != b[i])
-          return (a[i] < b[i]) ? -1 : 1;
-      }
-      if (a.Length != b.Length)
-        return (a.Length < b.Length) ? -1 : 1;
-      return 0;
-    }
-
-    private int ListCompare(List<CBORObject> listA, List<CBORObject> listB) {
+    private static int ListCompare(List<CBORObject> listA, List<CBORObject> listB) {
       if (listA == null) return (listB == null) ? 0 : -1;
       if (listB == null) return 1;
       int c = Math.Min(listA.Count, listB.Count);
@@ -818,19 +789,7 @@ namespace PeterO {
         return (listA.Count < listB.Count) ? -1 : 1;
       return 0;
     }
-    private int ByteArrayHashCode(byte[] a) {
-      if (a == null) return 0;
-      int ret = 19;
-      unchecked {
-        ret = ret * 31 + a.Length;
-        for (int i = 0; i < a.Length; i++) {
-          ret = ret * 31 + a[i];
-        }
-      }
-      return ret;
-    }
-
-    private bool CBORArrayEquals(
+    private static bool CBORArrayEquals(
       IList<CBORObject> listA,
       IList<CBORObject> listB
      ) {
@@ -843,7 +802,7 @@ namespace PeterO {
       return true;
     }
 
-    private int CBORArrayHashCode(IList<CBORObject> list) {
+    private static int CBORArrayHashCode(IList<CBORObject> list) {
       if (list == null) return 0;
       int ret = 19;
       int count = list.Count;
@@ -856,7 +815,7 @@ namespace PeterO {
       return ret;
     }
 
-    private bool CBORMapEquals(
+    private static bool CBORMapEquals(
       IDictionary<CBORObject, CBORObject> mapA,
       IDictionary<CBORObject, CBORObject> mapB
      ) {
@@ -874,7 +833,7 @@ namespace PeterO {
       return true;
     }
 
-    private int CBORMapHashCode(IDictionary<CBORObject, CBORObject> a) {
+    private static int CBORMapHashCode(IDictionary<CBORObject, CBORObject> a) {
       // To simplify matters, we use just the count of
       // the map as the basis for the hash code.  More complicated
       // hash code calculation would generally involve defining
@@ -899,7 +858,7 @@ namespace PeterO {
       if (other == null)
         return false;
       if (item_ is byte[]) {
-        if (!ByteArrayEquals((byte[])this.ThisItem, other.item_ as byte[]))
+        if (!CBORUtilities.ByteArrayEquals((byte[])this.ThisItem, other.item_ as byte[]))
           return false;
       } else if (item_ is IList<CBORObject>) {
         if (!CBORArrayEquals(AsList(), other.item_ as IList<CBORObject>))
@@ -926,7 +885,7 @@ namespace PeterO {
         if (item_ != null) {
           int itemHashCode = 0;
           if (item_ is byte[])
-            itemHashCode = ByteArrayHashCode((byte[])this.ThisItem);
+            itemHashCode = CBORUtilities.ByteArrayHashCode((byte[])this.ThisItem);
           else if (item_ is IList<CBORObject>)
             itemHashCode = CBORArrayHashCode(AsList());
           else if (item_ is IDictionary<CBORObject, CBORObject>)
@@ -1220,8 +1179,7 @@ namespace PeterO {
       return ((CBORObject)item_).HasTag(tagValue);
     }
 
-    private BigInteger LowHighToBigInteger(int tagLow, int tagHigh) {
-
+    private static BigInteger LowHighToBigInteger(int tagLow, int tagHigh) {
       BigInteger bi;
       if (tagHigh != 0) {
         bi = (BigInteger)((tagHigh >> 16) & 0xFFFF);
@@ -1891,7 +1849,7 @@ namespace PeterO {
         throw new CBORException("I/O error occurred.", ex);
       }
     }
-
+    
     private static void WriteObjectArray(
       IList<CBORObject> list, Stream s) {
       WritePositiveInt(4, list.Count, s);
@@ -2548,44 +2506,89 @@ namespace PeterO {
     /// maps and arrays.
     /// </summary>
     /// <param name="str">A string in JSON format.</param>
+    /// <exception cref="System.ArgumentNullException">"str" is null.</exception>
+    /// <exception cref="CBORException">The string is not
+    /// in JSON format.</exception>
     public static CBORObject FromJSONString(string str) {
       JSONTokener tokener = new JSONTokener(str, 0);
-      CBORObject obj = ParseJSONObject(tokener);
+      CBORObject obj = tokener.ParseJSONObjectOrArray();
       if (tokener.nextClean() != -1)
         throw tokener.syntaxError("End of string not reached");
       return obj;
     }
 
 
-    private static string StringToJSONString(string str) {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("\"");
+    /// <summary>
+    /// Generates a CBOR object from a data stream in JavaScript
+    /// Object Notation (JSON) format and UTF-8 encoding.
+    /// This function only accepts maps and arrays.
+    /// </summary>
+    /// <param name="str">A readable data stream.</param>
+    /// <exception cref="System.ArgumentNullException">"stream" is null.</exception>
+    /// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
+    /// <exception cref="CBORException">The data stream contains invalid
+    /// UTF-8 or is not in JSON format.</exception>
+    public static CBORObject ReadJSON(Stream stream) {
+      JSONTokener tokener = new JSONTokener(stream, 0);
+      try {
+        CBORObject obj = tokener.ParseJSONObjectOrArray();
+        if (tokener.nextClean() != -1)
+          throw tokener.syntaxError("End of data stream not reached");
+        return obj;
+      } catch(CBORException ex){
+        if(ex.InnerException!=null && ex.InnerException is IOException)
+          throw (IOException)ex.InnerException;
+        throw ex;
+      }
+    }
+
+    private static void StringToJSONStringUnquoted(string str, StringBuilder sb) {
       // Surrogates were already verified when this
       // string was added to the CBOR object; that check
       // is not repeated here
+      bool first=true;
       for (int i = 0; i < str.Length; i++) {
         char c = str[i];
         if (c == '\\' || c == '"') {
+          if(first){
+            first=false;
+            sb.Append(str,0,i);
+          }
           sb.Append('\\');
           sb.Append(c);
-        } else if (c == 0x0d) {
-          sb.Append("\\r");
-        } else if (c == 0x0a) {
-          sb.Append("\\n");
-        } else if (c == 0x0c) {
-          sb.Append("\\b");
-        } else if (c == 0x0c) {
-          sb.Append("\\f");
-        } else if (c == 0x09) {
-          sb.Append("\\t");
         } else if (c < 0x20) {
-          sb.Append("\\u00");
-          sb.Append((char)('0' + (int)(c >> 4)));
-          sb.Append((char)('0' + (int)(c & 15)));
-        } else {
+          if(first){
+            first=false;
+            sb.Append(str,0,i);
+          }
+          if (c == 0x0d) {
+            sb.Append("\\r");
+          } else if (c == 0x0a) {
+            sb.Append("\\n");
+          } else if (c == 0x08) {
+            sb.Append("\\b");
+          } else if (c == 0x0c) {
+            sb.Append("\\f");
+          } else if (c == 0x09) {
+            sb.Append("\\t");
+          } else {
+            sb.Append("\\u00");
+            sb.Append((char)('0' + (int)(c >> 4)));
+            sb.Append((char)('0' + (int)(c & 15)));
+          }
+        } else if(!first){
           sb.Append(c);
         }
       }
+      if(first){
+        sb.Append(str);
+      }
+    }
+
+    private static string StringToJSONString(string str) {
+      StringBuilder sb = new StringBuilder();
+      sb.Append("\"");
+      StringToJSONStringUnquoted(str,sb);
       sb.Append("\"");
       return sb.ToString();
     }
@@ -2665,8 +2668,9 @@ namespace PeterO {
             break;
           }
           if (!first) builder.Append(",");
-          builder.Append(StringToJSONString(key.AsString()));
-          builder.Append(':');
+          builder.Append("\"");
+          StringToJSONStringUnquoted(key.AsString(),builder);
+          builder.Append("\":");
           builder.Append(value.ToJSONString());
           first = false;
         }
@@ -2688,8 +2692,9 @@ namespace PeterO {
             string key = entry.Key;
             CBORObject value = entry.Value;
             if (!first) builder.Append(",");
-            builder.Append(StringToJSONString(key));
-            builder.Append(':');
+            builder.Append("\"");
+            StringToJSONStringUnquoted(key,builder);
+            builder.Append("\":");
             builder.Append(value.ToJSONString());
             first = false;
           }
@@ -2701,147 +2706,16 @@ namespace PeterO {
       }
     }
 
-
-    // Based on the json.org implementation for JSONTokener
-    private static CBORObject NextJSONValue(JSONTokener tokener) {
-      int c = tokener.nextClean();
-      string str;
-      if (c == '"' || (c == '\'' && ((tokener.getOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
-        // The tokenizer already checked the string for invalid
-        // surrogate pairs, so just call the CBORObject
-        // constructor directly
-        return new CBORObject(CBORObjectType_TextString,
-                              tokener.nextString(c));
-      }
-      if (c == '{') {
-        tokener.back();
-        return ParseJSONObject(tokener);
-      }
-      if (c == '[') {
-        tokener.back();
-        return ParseJSONArray(tokener);
-      }
-      StringBuilder sb = new StringBuilder();
-      int b = c;
-      while (c >= ' ' && c != ':' && c != ',' && c != ']' && c != '}' &&
-             c != '/') {
-        sb.Append((char)c);
-        c = tokener.next();
-      }
-      tokener.back();
-      str = JSONTokener.trimSpaces(sb.ToString());
-      if (str.Equals("true"))
-        return CBORObject.True;
-      if (str.Equals("false"))
-        return CBORObject.False;
-      if (str.Equals("null"))
-        return CBORObject.Null;
-      if ((b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+') {
-        CBORObject obj = CBORDataUtilities.ParseJSONNumber(str, false, false);
-        if (obj == null)
-          throw tokener.syntaxError("JSON number can't be parsed.");
-        return obj;
-      }
-      if (str.Length == 0)
-        throw tokener.syntaxError("Missing value.");
-      // Value is unparseable
-      throw tokener.syntaxError("Value can't be parsed.");
+    internal static CBORObject FromRaw(String str){
+      return new CBORObject(CBORObjectType_TextString, str);
+    }
+    
+    internal static CBORObject FromRaw(IList<CBORObject> list){
+      return new CBORObject(CBORObjectType_Array, list);
     }
 
-    // Based on the json.org implementation for JSONObject
-    private static CBORObject ParseJSONObject(JSONTokener x) {
-      int c;
-      CBORObject key;
-      CBORObject obj;
-      c = x.nextClean();
-      if (c == '[') {
-        x.back();
-        return ParseJSONArray(x);
-      }
-      var myHashMap = new Dictionary<CBORObject, CBORObject>();
-      if (c != '{')
-        throw x.syntaxError("A JSONObject must begin with '{' or '['");
-      while (true) {
-        c = x.nextClean();
-        switch (c) {
-          case -1:
-            throw x.syntaxError("A JSONObject must end with '}'");
-          case '}':
-            return new CBORObject(CBORObjectType_Map, myHashMap);
-          default:
-            x.back();
-            obj = NextJSONValue(x);
-            if (obj.ItemType != CBORObjectType_TextString)
-              throw x.syntaxError("Expected a string as a key");
-            key = obj;
-            if ((x.getOptions() & JSONTokener.OPTION_NO_DUPLICATES) != 0 &&
-                myHashMap.ContainsKey(obj)) {
-              throw x.syntaxError("Key already exists: " + key);
-            }
-            break;
-        }
-
-        if (x.nextClean() != ':')
-          throw x.syntaxError("Expected a ':' after a key");
-        // NOTE: Will overwrite existing value. --Peter O.
-        myHashMap[key] = NextJSONValue(x);
-        switch (x.nextClean()) {
-          case ',':
-            if (x.nextClean() == '}') {
-              if ((x.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
-                // 2013-05-24 -- Peter O. Disallow trailing comma.
-                throw x.syntaxError("Trailing comma");
-              } else {
-                return new CBORObject(CBORObjectType_Map, myHashMap);
-              }
-            }
-            x.back();
-            break;
-          case '}':
-            return new CBORObject(CBORObjectType_Map, myHashMap);
-          default:
-            throw x.syntaxError("Expected a ',' or '}'");
-        }
-      }
-    }
-
-    // Based on the json.org implementation for JSONArray
-    private static CBORObject ParseJSONArray(JSONTokener x) {
-      var myArrayList = new List<CBORObject>();
-      if (x.nextClean() != '[')
-        throw x.syntaxError("A JSONArray must start with '['");
-      if (x.nextClean() == ']')
-        return new CBORObject(CBORObjectType_Array, myArrayList);
-      x.back();
-      while (true) {
-        if (x.nextClean() == ',') {
-          if ((x.getOptions() & JSONTokener.OPTION_EMPTY_ARRAY_ELEMENTS) == 0) {
-            throw x.syntaxError("Two commas one after the other");
-          }
-          x.back();
-          myArrayList.Add(CBORObject.Null);
-        } else {
-          x.back();
-          myArrayList.Add(NextJSONValue(x));
-        }
-        switch (x.nextClean()) {
-          case ',':
-            if (x.nextClean() == ']') {
-              if ((x.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
-                // 2013-05-24 -- Peter O. Disallow trailing comma.
-                throw x.syntaxError("Trailing comma");
-              } else {
-                return FromObject(myArrayList);
-              }
-            }
-            x.back();
-            break;
-          case ']':
-            return FromObject(myArrayList);
-          default:
-            throw x.syntaxError("Expected a ',' or ']'");
-        }
-      }
+    internal static CBORObject FromRaw(IDictionary<CBORObject, CBORObject> map){
+      return new CBORObject(CBORObjectType_Map, map);
     }
 
     /// <summary>
