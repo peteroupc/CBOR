@@ -17,7 +17,9 @@ import java.math.*;
    * only uses a big integer when arithmetic operations would overflow
    * the 64-bit integer. <p>This class is ideal for cases where operations
    * should be arbitrary precision, but the need to use a precision greater
-   * than 64 bits is very rare.</p>
+   * than 64 bits is very rare.</p> <p>Many methods in this class return
+   * a reference to the same object as used in the call. This allows chaining
+   * operations in a single line of code. For example:</p> <code>fastInt.Add(5).Multiply(10);</code>
    */
   final class FastInteger implements Comparable<FastInteger> {
     long smallValue;
@@ -85,6 +87,12 @@ import java.math.*;
     public FastInteger Abs() {
       return (this.signum()<0) ? Negate() : this;
     }
+    /**
+     * Sets this object's value to the remainder of the current value divided
+     * by the given integer.
+     * @param divisor The divisor.
+     * @return This object.
+     */
     public FastInteger Mod(int divisor) {
       if(usingLarge){
         // Mod operator will always result in a
@@ -276,6 +284,10 @@ import java.math.*;
       return this;
     }
     
+    /**
+     * Gets whether this object's value is within the range of a 64-bit signed
+     * integer.
+     */
     public boolean CanFitInInt64() {
       if(usingLarge){
         return (largeValue.compareTo(Int64MinValue)>=0 &&
@@ -285,6 +297,10 @@ import java.math.*;
       }
     }
     
+    /**
+     * Gets whether this object's value is within the range of a 32-bit signed
+     * integer.
+     */
     public boolean CanFitInInt32() {
       if(usingLarge){
         return (largeValue.compareTo(Int32MinValue)>=0 &&

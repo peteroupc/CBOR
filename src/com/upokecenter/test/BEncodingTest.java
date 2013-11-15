@@ -12,7 +12,7 @@ import com.upokecenter.util.*;
   
   public class BEncodingTest {
 
-    private CBORObject EncodingFromBytes(byte[] b) {
+    private static CBORObject EncodingFromBytes(byte[] b) {
       try {
         java.io.ByteArrayInputStream s=null;
 try {
@@ -27,7 +27,7 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
         throw new CBORException("", ex);
       }
     }
-    private byte[] EncodingToBytes(CBORObject b) {
+    private static byte[] EncodingToBytes(CBORObject b) {
       try {
         java.io.ByteArrayOutputStream s=null;
 try {

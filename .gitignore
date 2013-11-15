@@ -1,5 +1,6 @@
 bin/
 obj/
+.settings/
 CBORTest/bin/
 CBORTest/obj/
 CBORTest/OpenCover/

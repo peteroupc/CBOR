@@ -37,6 +37,7 @@ namespace PeterO {
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) continue;
+        if(!type.FullName.Contains("JSONTest"))continue;
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");

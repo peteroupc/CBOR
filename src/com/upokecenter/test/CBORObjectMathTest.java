@@ -18,7 +18,7 @@ import java.math.*;
   
   public class CBORObjectMathTest {
     @Test
-    public void CBORMultiplyTest() {
+    public static void CBORMultiplyTest() {
       {
         CBORObject a = CBORObject.FromObject(2.5268476f);
         CBORObject b = CBORObject.FromObject(new BigInteger("-503285733164839762215"));

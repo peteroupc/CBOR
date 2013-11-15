@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigFloat.cs" />
+    <Compile Include="BigShiftAccumulator.cs" />
     <Compile Include="CBORException.cs" />
     <Compile Include="CBORObject.cs" />
     <Compile Include="CBORObjectExtra.cs" />
@@ -62,19 +63,7 @@
     <Compile Include="FastInteger.cs" />
     <Compile Include="JSONTokener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ProfilingSessions\Session20131111_125414.sdps" />
-    <Content Include="ProfilingSessions\Session20131112_075521.sdps" />
-    <Content Include="ProfilingSessions\Session20131112_083027.sdps" />
-    <Content Include="ProfilingSessions\Session20131112_144732.sdps" />
-    <Content Include="ProfilingSessions\Session20131112_151548.sdps" />
-    <Content Include="ProfilingSessions\Session20131112_181635.sdps" />
-    <Content Include="ProfilingSessions\Session20131112_184155.sdps" />
-    <Content Include="ProfilingSessions\Session20131112_195324.sdps" />
-    <Content Include="ProfilingSessions\Session20131113_083348.sdps" />
-    <Content Include="ProfilingSessions\Session20131113_140143.sdps" />
-    <Content Include="ProfilingSessions\Session20131113_183648.sdps" />
+    <Compile Include="SmallShiftAccumulator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

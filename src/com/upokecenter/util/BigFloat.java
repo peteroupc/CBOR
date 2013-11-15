@@ -12,6 +12,16 @@ at: http://upokecenter.com/d/
 import java.math.*;
 
 
+
+
+
+
+
+    
+    
+
+
+
   /**
    * Represents an arbitrary-precision binary floating-point number.
    * Consists of a integer mantissa and an integer exponent, both arbitrary-precision.
@@ -114,10 +124,10 @@ import java.math.*;
       this.mantissa = BigInteger.valueOf(mantissaLong);
     }
 
-    private BigInteger FastMaxExponent = BigInteger.valueOf(2000);
-    private BigInteger FastMinExponent = BigInteger.valueOf(-2000);
+    private static BigInteger FastMaxExponent = BigInteger.valueOf(2000);
+    private static BigInteger FastMinExponent = BigInteger.valueOf(-2000);
 
-    private BigInteger
+    private static BigInteger
       RescaleByExponentDiff(BigInteger mantissa,
                             BigInteger e1,
                             BigInteger e2) {
@@ -151,8 +161,7 @@ import java.math.*;
     }
 
     /**
-     * Gets an object with the same ((value instanceof this one) ? (this one)value
-     * : null), but with the sign reversed.
+     * Gets an object with the same value as this one, but with the sign reversed.
      */
     public BigFloat Negate() {
       BigInteger neg=(this.mantissa).negate();
@@ -173,7 +182,7 @@ import java.math.*;
     /**
      * Gets the greater value between two BigFloat values.
      */
-    public BigFloat Max(BigFloat a, BigFloat b) {
+    public static BigFloat Max(BigFloat a, BigFloat b) {
       if (a == null) throw new NullPointerException("a");
       if (b == null) throw new NullPointerException("b");
       return a.compareTo(b) > 0 ? a : b;
@@ -182,7 +191,7 @@ import java.math.*;
     /**
      * Gets the lesser value between two BigFloat values.
      */
-    public BigFloat Min(BigFloat a, BigFloat b) {
+    public static BigFloat Min(BigFloat a, BigFloat b) {
       if (a == null) throw new NullPointerException("a");
       if (b == null) throw new NullPointerException("b");
       return a.compareTo(b) > 0 ? b : a;
@@ -536,296 +545,6 @@ remainder=divrem[1];
         }
         if (this.mantissa.signum() < 0) smallmantissa |= (1 << 31);
         return Float.intBitsToFloat(smallmantissa);
-      }
-    }
-
-
-
-    private static final class SmallShiftAccumulator {
-      int bitLeftmost=0;
-      
-      /**
-       * Gets whether the last discarded bit was set.
-       */
-      public int getBitLeftmost() { return bitLeftmost; }
-      int bitsAfterLeftmost=0;
-      
-      /**
-       * Gets whether any of the discarded bits to the right of the last one was
-       * set.
-       */
-      public int getBitsAfterLeftmost() { return bitsAfterLeftmost; }
-      long shiftedLong;
-      
-      public long getShiftedInt() { return shiftedLong; }
-      FastInteger discardedBitCount;
-      
-      public FastInteger getDiscardedBitCount() { return discardedBitCount; }
-      public SmallShiftAccumulator(long longInt){
-        if(longInt<0)
-          throw new IllegalArgumentException("longInt is negative");
-        shiftedLong=longInt;
-        discardedBitCount=new FastInteger();
-      }
-
-      public void ShiftRight(FastInteger fastint) {
-        if(fastint.signum()<=0)return;
-        if(fastint.CanFitInInt64()){
-          ShiftRight(fastint.AsInt64());
-        } else {
-          BigInteger bi=fastint.AsBigInteger();
-          while(bi.signum()>0){
-            long count=1000000;
-            if(bi.compareTo(BigInteger.valueOf(1000000))<0){
-              count=bi.longValue();
-            }
-            ShiftRight(count);
-            bi=bi.subtract(BigInteger.valueOf(count));
-          }
-        }
-      }
-
-      /**
-       * Shifts a number to the right, gathering information on whether the
-       * last bit discarded is set and whether the discarded bits to the right
-       * of that bit are set. Assumes that the big integer being shifted is positive.
-       */
-      public void ShiftRight(long bits) {
-        if(bits<=0)return;
-        if(shiftedLong==0){
-          bitsAfterLeftmost|=bitLeftmost;
-          bitLeftmost=0;
-          return;
-        }
-        long bitLength=64;
-        for(int i=63;i>=0;i++){
-          if((shiftedLong&(1L<<i))!=0){
-            break;
-          } else {
-            bitLength--;
-          }
-        }
-        int shift=(int)Math.min(bitLength,bits);
-        discardedBitCount.Add(bits);
-        bitsAfterLeftmost|=bitLeftmost;
-        // Get the bottommost shift minus 1 bits
-        bitsAfterLeftmost|=(((shiftedLong<<(65-shift))!=0) ? 1 : 0);
-        // Get the bit just above that bit
-        bitLeftmost=(int)((shiftedLong>>(((int)shift)-1))&0x01);
-        shiftedLong>>=shift;
-        if(bits>bitLength){
-          // Shifted more bits than the bit length
-          bitsAfterLeftmost|=bitLeftmost;
-          bitLeftmost=0;
-        }
-      }
-
-      /**
-       * Shifts a number until it reaches the given number of bits, gathering
-       * information on whether the last bit discarded is set and whether the
-       * discarded bits to the right of that bit are set. Assumes that the big
-       * integer being shifted is positive.
-       */
-      public void ShiftToBits(long bits) {
-        long bitLength=64;
-        for(int i=63;i>=0;i++){
-          if((shiftedLong&(1L<<i))!=0){
-            break;
-          } else {
-            bitLength--;
-          }
-        }
-        // Shift by the difference in bit length
-        if(bitLength>bits){
-          long bitShift=bitLength-bits;
-          int shift=(int)bitShift;
-          discardedBitCount.Add(bitShift);
-          bitsAfterLeftmost|=bitLeftmost;
-          // Get the bottommost shift minus 1 bits
-          bitsAfterLeftmost|=(((shiftedLong<<(65-shift))!=0) ? 1 : 0);
-          // Get the bit just above that bit
-          bitLeftmost=(int)((shiftedLong>>(((int)shift)-1))&0x01);
-          shiftedLong>>=shift;
-        }
-      }
-    }
-    
-    
-    private static final class BigShiftAccumulator {
-      int bitLeftmost=0;
-      
-      /**
-       * Gets whether the last discarded bit was set.
-       */
-      public int getBitLeftmost() { return bitLeftmost; }
-      int bitsAfterLeftmost=0;
-      
-      /**
-       * Gets whether any of the discarded bits to the right of the last one was
-       * set.
-       */
-      public int getBitsAfterLeftmost() { return bitsAfterLeftmost; }
-      BigInteger shiftedInt;
-      
-      public BigInteger getShiftedInt() { return shiftedInt; }
-      FastInteger discardedBitCount;
-      
-      public FastInteger getDiscardedBitCount() { return discardedBitCount; }
-      public BigShiftAccumulator(BigInteger bigint){
-        shiftedInt=bigint;
-        discardedBitCount=new FastInteger();
-      }
-/*
-      public void ShiftRight(FastInteger fastint) {
-        if(fastint.signum()<=0)return;
-        if(fastint.CanFitInInt64()){
-          ShiftRight(fastint.AsInt64());
-        } else {
-          BigInteger bi=fastint.AsBigInteger();
-          while(bi.signum()>0){
-            long count=1000000;
-            if(bi.compareTo(BigInteger.valueOf(1000000))<0){
-              count=bi.longValue();
-            }
-            ShiftRight(count);
-            bi=bi.subtract(BigInteger.valueOf(count));
-          }
-        }
-      }
-      */
-      private static byte[] ReverseBytes(byte[] bytes) {
-        if ((bytes) == null) throw new NullPointerException("bytes");
-        int half = bytes.length >> 1;
-        int right = bytes.length - 1;
-        for (int i = 0; i < half; i++, right--) {
-          byte value = bytes[i];
-          bytes[i] = bytes[right];
-          bytes[right] = value;
-        }
-        return bytes;
-      }
-
-      /**
-       * Shifts a number to the right, gathering information on whether the
-       * last bit discarded is set and whether the discarded bits to the right
-       * of that bit are set. Assumes that the big integer being shifted is positive.
-       */
-      public void ShiftRight(long bits) {
-        if(bits<=0)return;
-        if(shiftedInt.signum()==0){
-          bitsAfterLeftmost|=bitLeftmost;
-          bitLeftmost=0;
-          return;
-        }
-        byte[] bytes=ReverseBytes(shiftedInt.toByteArray());
-        long bitLength=((long)bytes.length)<<3;
-        // Find the last bit set
-        for(int i=bytes.length-1;i>=0;i--){
-          int b=(int)bytes[i];
-          if(b!=0){
-            if((b&0x80)!=0){ bitLength-=0; break; }
-            if((b&0x40)!=0){ bitLength-=1; break; }
-            if((b&0x20)!=0){ bitLength-=2; break; }
-            if((b&0x10)!=0){ bitLength-=3; break; }
-            if((b&0x08)!=0){ bitLength-=4; break; }
-            if((b&0x04)!=0){ bitLength-=5; break; }
-            if((b&0x02)!=0){ bitLength-=6; break; }
-            if((b&0x01)!=0){ bitLength-=7; break; }
-          }
-          bitLength-=8;
-        }
-        long bitDiff=0;
-        if(bits>bitLength){
-          bitDiff=bits-bitLength;
-        }
-        long bitShift=Math.min(bitLength,bits);
-        if(bits>=bitLength){
-          shiftedInt=BigInteger.ZERO;
-        } else {
-          long tmpBitShift=bitShift;
-          while(tmpBitShift>0 && shiftedInt.signum()!=0){
-            int bs=(int)Math.min(1000000,tmpBitShift);
-            shiftedInt=shiftedInt.shiftRight(bs);
-            tmpBitShift-=bs;
-          }
-        }
-        discardedBitCount.Add(bits);
-        bitsAfterLeftmost|=bitLeftmost;
-        for(int i=0;i<bytes.length;i++){
-          if(bitShift>8){
-            // Discard all the bits, they come
-            // after the leftmost bit
-            bitsAfterLeftmost|=bytes[i];
-            bitShift-=8;
-          } else {
-            // 8 or fewer bits left.
-            // Get the bottommost bitShift minus 1 bits
-            bitsAfterLeftmost|=((bytes[i]<<(9-(int)bitShift))&0xFF);
-            // Get the bit just above those bits
-            bitLeftmost=(bytes[i]>>(((int)bitShift)-1))&0x01;
-            break;
-          }
-        }
-        bitsAfterLeftmost=(bitsAfterLeftmost!=0) ? 1 : 0;
-        if(bitDiff>0){
-          // Shifted more bits than the bit length
-          bitsAfterLeftmost|=bitLeftmost;
-          bitLeftmost=0;
-        }
-      }
-
-      /**
-       * Shifts a number until it reaches the given number of bits, gathering
-       * information on whether the last bit discarded is set and whether the
-       * discarded bits to the right of that bit are set. Assumes that the big
-       * integer being shifted is positive.
-       */
-      public void ShiftToBits(long bits) {
-        byte[] bytes=ReverseBytes(shiftedInt.toByteArray());
-        long bitLength=((long)bytes.length)<<3;
-        // Find the last bit set
-        for(int i=bytes.length-1;i>=0;i--){
-          int b=(int)bytes[i];
-          if(b!=0){
-            if((b&0x80)!=0){ bitLength-=0; break; }
-            if((b&0x40)!=0){ bitLength-=1; break; }
-            if((b&0x20)!=0){ bitLength-=2; break; }
-            if((b&0x10)!=0){ bitLength-=3; break; }
-            if((b&0x08)!=0){ bitLength-=4; break; }
-            if((b&0x04)!=0){ bitLength-=5; break; }
-            if((b&0x02)!=0){ bitLength-=6; break; }
-            if((b&0x01)!=0){ bitLength-=7; break; }
-          }
-          bitLength-=8;
-        }
-        // Shift by the difference in bit length
-        if(bitLength>bits){
-          long bitShift=bitLength-bits;
-          long tmpBitShift=bitShift;
-          while(tmpBitShift>0 && shiftedInt.signum()!=0){
-            int bs=(int)Math.min(1000000,tmpBitShift);
-            shiftedInt=shiftedInt.shiftRight(bs);
-            tmpBitShift-=bs;
-          }
-          bitsAfterLeftmost|=bitLeftmost;
-          discardedBitCount.Add(bitShift);
-          for(int i=0;i<bytes.length;i++){
-            if(bitShift>8){
-              // Discard all the bits, they come
-              // after the leftmost bit
-              bitsAfterLeftmost|=bytes[i];
-              bitShift-=8;
-            } else {
-              // 8 or fewer bits left.
-              // Get the bottommost bitShift minus 1 bits
-              bitsAfterLeftmost|=((bytes[i]<<(9-(int)bitShift))&0xFF);
-              // Get the bit just above those bits
-              bitLeftmost=(bytes[i]>>(((int)bitShift)-1))&0x01;
-              break;
-            }
-          }
-          bitsAfterLeftmost=(bitsAfterLeftmost!=0) ? 1 : 0;
-        }
       }
     }
     

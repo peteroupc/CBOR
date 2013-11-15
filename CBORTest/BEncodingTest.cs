@@ -10,7 +10,7 @@ namespace Test {
   [TestFixture]
   public class BEncodingTest {
 
-    private CBORObject EncodingFromBytes(byte[] b) {
+    private static CBORObject EncodingFromBytes(byte[] b) {
       try {
         using (var s = new MemoryStream(b)) {
           return BEncoding.Read(s);
@@ -19,7 +19,7 @@ namespace Test {
         throw new CBORException("", ex);
       }
     }
-    private byte[] EncodingToBytes(CBORObject b) {
+    private static byte[] EncodingToBytes(CBORObject b) {
       try {
         using (var s = new MemoryStream()) {
           BEncoding.Write(b, s);

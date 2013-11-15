@@ -54,40 +54,41 @@ namespace PeterO {
     }
 
     private decimal DecimalFractionToDecimal(DecimalFraction decfrac) {
-      BigInteger bigexp = decfrac.Exponent;
+      FastInteger bigexp = new FastInteger(decfrac.Exponent);
       BigInteger bigmant = decfrac.Mantissa;
       BigInteger decmax = (BigInteger)Decimal.MaxValue; // equals (2^96-1)
       BigInteger decmin = (BigInteger)Decimal.MinValue; // equals -(2^96-1)
       bool neg = (bigmant < 0);
       if (neg) bigmant = -bigmant;
-      if (bigexp == 0) {
+      if (bigexp.Sign == 0) {
         if (bigmant > decmax)
           throw new OverflowException("This object's value is out of range");
         return (decimal)bigmant;
-      } else if (bigexp > 0) {
-        while (bigexp > 0) {
+      } else if (bigexp.Sign > 0) {
+        while (bigexp.Sign > 0) {
           bigmant *= 10;
           if (bigmant > decmax)
             throw new OverflowException("This object's value is out of range");
-          bigexp -= BigInteger.One;
+          bigexp.Add(-1);
         }
         return (decimal)bigmant;
       } else {
         int lastDigit = 0;
-        while (bigexp < 0) {
-          if (bigexp >= -28 && bigmant <= decmax) {
+        while (bigexp.Sign < 0) {
+          if (bigexp.CompareTo(-28) >= 0 && bigmant <= decmax) {
             if (lastDigit >= 5) {
               bigmant++; // round half-up
             }
             if (bigmant <= decmax) {
-              return EncodeDecimal(bigmant, -((int)bigexp), neg);
+              bigexp.Negate();
+              return EncodeDecimal(bigmant, bigexp.AsInt32(), neg);
             } else if (lastDigit >= 5) {
               bigmant--; // undo rounding
             }
           }
           lastDigit = (int)(bigmant % 10);
           bigmant /= 10;
-          bigexp -= BigInteger.One;
+          bigexp.Add(-1);
         }
         if (lastDigit >= 5) {
           bigmant++;

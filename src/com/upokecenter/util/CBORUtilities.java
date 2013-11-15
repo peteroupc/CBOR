@@ -58,6 +58,40 @@ private CBORUtilities(){}
       }
     }
 
+    public static boolean ByteArrayEquals(byte[] a, byte[] b) {
+      if (a == null) return (b == null);
+      if (b == null) return false;
+      if (a.length != b.length) return false;
+      for (int i = 0; i < a.length; i++) {
+        if (a[i] != b[i]) return false;
+      }
+      return true;
+    }
+
+    public static int ByteArrayHashCode(byte[] a) {
+      if (a == null) return 0;
+      int ret = 19;
+      {
+        ret = ret * 31 + a.length;
+        for (int i = 0; i < a.length; i++) {
+          ret = ret * 31 + a[i];
+        }
+      }
+      return ret;
+    }
+
+    public static int ByteArrayCompare(byte[] a, byte[] b) {
+      if (a == null) return (b == null) ? 0 : -1;
+      if (b == null) return 1;
+      int c = Math.min(a.length, b.length);
+      for (int i = 0; i < c; i++) {
+        if (a[i] != b[i])
+          return (a[i] < b[i]) ? -1 : 1;
+      }
+      if (a.length != b.length)
+        return (a.length < b.length) ? -1 : 1;
+      return 0;
+    }
 
     public static BigInteger BigIntegerFromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
