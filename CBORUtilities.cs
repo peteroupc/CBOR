@@ -92,7 +92,7 @@ namespace PeterO {
     }
 
     public static BigInteger BigIntegerFromSingle(float flt) {
-      int value = ConverterInternal.SingleToInt32Bits(flt);
+      int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt),0);
       int fpexponent = (int)((value >> 23) & 0xFF);
       if (fpexponent == 255)
         throw new OverflowException("Value is infinity or NaN");
@@ -126,7 +126,7 @@ namespace PeterO {
     }
 
     public static BigInteger BigIntegerFromDouble(double dbl) {
-      long value = ConverterInternal.DoubleToInt64Bits(dbl);
+      long value = BitConverter.ToInt64(BitConverter.GetBytes((double)dbl),0);
       int fpexponent = (int)((value >> 52) & 0x7ffL);
       if (fpexponent == 2047)
         throw new OverflowException("Value is infinity or NaN");
@@ -163,14 +163,11 @@ namespace PeterO {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
       value &= 0x7FFF;
       if (value >= 0x7C00) {
-        return ConverterInternal.Int32BitsToSingle(
-          (0x3FC00 | (value & 0x3FF)) << 13 | negvalue);
+        return BitConverter.ToSingle(BitConverter.GetBytes((int)(0x3FC00 | (value & 0x3FF)) << 13 | negvalue),0);
       } else if (value > 0x400) {
-        return ConverterInternal.Int32BitsToSingle(
-          ((value + 0x1c000) << 13) | negvalue);
+        return BitConverter.ToSingle(BitConverter.GetBytes((int)((value + 0x1c000) << 13) | negvalue),0);
       } else if ((value & 0x400) == value) {
-        return ConverterInternal.Int32BitsToSingle(
-          ((value == 0) ? 0 : 0x38800000) | negvalue);
+        return BitConverter.ToSingle(BitConverter.GetBytes((int)((value == 0) ? 0 : 0x38800000) | negvalue),0);
       } else {
         // denormalized
         int m = (value & 0x3FF);
@@ -179,8 +176,8 @@ namespace PeterO {
           value -= 0x400;
           m <<= 1;
         }
-        return ConverterInternal.Int32BitsToSingle(
-          ((value | (m & 0x3FF)) << 13) | negvalue);
+        value = ((value | (m & 0x3FF)) << 13) | negvalue;
+        return BitConverter.ToSingle(BitConverter.GetBytes((int)value),0);
       }
     }
   }

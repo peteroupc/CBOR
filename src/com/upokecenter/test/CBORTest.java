@@ -160,10 +160,9 @@ import org.junit.Test;
     private static void TestDecimalString(String r) {
       CBORObject o = CBORObject.FromObject(DecimalFraction.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
-      if (o.compareTo(o2) != 0) {
-        Assert.fail("Expected: " + o + "\n was: " + o2);
-      }
+      CompareTestEqual(o,o2);
     }
+    
     @Test
     public void TestAdd() {
       FastRandom r = new FastRandom();
@@ -197,6 +196,34 @@ import org.junit.Test;
       }
     }
 
+    private static String ObjectMessages(CBORObject o1, CBORObject o2, String s){
+        if(o1.getType()== CBORType.Number && o2.getType()== CBORType.Number){
+          return s+":\n" + o1.toString() + " and\n" + o2.toString()+"\nOR\n"+
+                          o1.AsDecimalFraction().toString() + " and\n" + o2.AsDecimalFraction().toString();                  
+        } else {
+          return s+":\n" + o1.toString() + " and\n" + o2.toString();          
+        }      
+    }
+    
+    private static void CompareTestEqual(CBORObject o1, CBORObject o2){
+      if(CompareTestReciprocal(o1,o2)!=0)
+        Assert.fail(ObjectMessages(o1,o2,"Not equal: "+CompareTestReciprocal(o1,o2)));
+    }
+    private static void CompareTestLess(CBORObject o1, CBORObject o2){
+      if(CompareTestReciprocal(o1,o2)>=0)
+        Assert.fail(ObjectMessages(o1,o2,"Not less: "+CompareTestReciprocal(o1,o2)));
+    }
+    
+    private static int CompareTestReciprocal(CBORObject o1, CBORObject o2){
+      if((o1)==null)throw new NullPointerException("o1");
+      if((o2)==null)throw new NullPointerException("o2");
+      int cmp=o1.compareTo(o2);
+      int cmp2=o2.compareTo(o1);
+      if(-cmp2!=cmp){
+        Assert.assertEquals(ObjectMessages(o1,o2,"Not reciprocal"),cmp,-cmp2);
+      }
+      return cmp;
+    }
     
     @Test
     public void TestCompare() {
@@ -205,14 +232,51 @@ import org.junit.Test;
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
         int cmpDecFrac = o1.AsDecimalFraction().compareTo(o2.AsDecimalFraction());
-        int cmpCobj = o1.compareTo(o2);
+        int cmpCobj = CompareTestReciprocal(o1,o2);
         if (cmpDecFrac != cmpCobj) {
-          Assert.assertEquals("Results don't match:\n" + o1.toString() + " and\n" + o2.toString()+"\nOR\n"+
-                          o1.AsDecimalFraction().toString() + " and\n" + o2.AsDecimalFraction().toString(),cmpDecFrac,cmpCobj);
+          Assert.assertEquals(ObjectMessages(o1,o2,"Results don't match"),cmpDecFrac,cmpCobj);
         }
         TestCommon.AssertRoundTrip(o1);
         TestCommon.AssertRoundTrip(o2);
       }
+      for (int i = 0; i < 50; i++) {
+        CBORObject o1 = CBORObject.FromObject(Float.NEGATIVE_INFINITY);
+        CBORObject o2 = RandomNumber(r);
+        CompareTestLess(o1,o2);
+        o1=CBORObject.FromObject(Double.NEGATIVE_INFINITY);
+        CompareTestLess(o1,o2);
+        o1=CBORObject.FromObject(Float.POSITIVE_INFINITY);
+        CompareTestLess(o2,o1);
+        o1=CBORObject.FromObject(Double.POSITIVE_INFINITY);
+        CompareTestLess(o2,o1);
+        o1=CBORObject.FromObject(Float.NaN);
+        CompareTestLess(o2,o1);
+        o1=CBORObject.FromObject(Double.NaN);
+        CompareTestLess(o2,o1);
+      }
+      CBORObject sp=CBORObject.FromObject(Float.POSITIVE_INFINITY);
+      CBORObject sn=CBORObject.FromObject(Float.NEGATIVE_INFINITY);
+      CBORObject snan=CBORObject.FromObject(Float.NaN);
+      CBORObject dp=CBORObject.FromObject(Double.POSITIVE_INFINITY);
+      CBORObject dn=CBORObject.FromObject(Double.NEGATIVE_INFINITY);
+      CBORObject dnan=CBORObject.FromObject(Double.NaN);
+      CompareTestEqual(sp,sp);
+      CompareTestEqual(sp,dp);
+      CompareTestEqual(dp,dp);
+      CompareTestEqual(sn,sn);
+      CompareTestEqual(sn,dn);
+      CompareTestEqual(dn,dn);
+      CompareTestEqual(snan,snan);
+      CompareTestEqual(snan,dnan);
+      CompareTestEqual(dnan,dnan);
+      CompareTestLess(sn,sp);
+      CompareTestLess(sn,dp);
+      CompareTestLess(sn,snan);
+      CompareTestLess(sn,dnan);
+      CompareTestLess(sp,snan);
+      CompareTestLess(sp,dnan);
+      CompareTestLess(dn,dp);
+      CompareTestLess(dp,dnan);
     }
 
     @Test
@@ -691,8 +755,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
     public static void AssertDecimalsEquivalent(String a, String b) {
       CBORObject ca = CBORDataUtilities.ParseJSONNumber(a);
       CBORObject cb = CBORDataUtilities.ParseJSONNumber(b);
-      if (ca.compareTo(cb) != 0)
-        Assert.fail(a + " not equal to " + b);
+      CompareTestEqual(ca,cb);
       TestCommon.AssertRoundTrip(ca);
       TestCommon.AssertRoundTrip(cb);
     }
@@ -3646,10 +3709,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
         TestCommon.AssertSer(o,
                              String.format(java.util.Locale.US,"%s", i));
         if (oldobj != null) {
-          if(1!=o.compareTo(oldobj))
-            Assert.assertEquals(1, o.compareTo(oldobj));
-          if(-1!=oldobj.compareTo(o))
-            Assert.assertEquals(-1, oldobj.compareTo(o));
+          CompareTestLess(oldobj,o);
         }
         oldobj = o;
       }

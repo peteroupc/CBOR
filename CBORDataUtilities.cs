@@ -542,11 +542,13 @@ namespace PeterO {
     /// </summary>
     /// <param name="str">A string to parse.</param>
     /// <returns>A CBOR object that represents the parsed
-    /// number, or null if the exponent is less than -(2^64)
-    /// or greater than 2^64-1 or if the entire string does
-    /// not represent a valid number.</returns>
+    /// number. This function will return
+    /// a CBOR object representing positive or negative infinity
+    /// if the exponent is greater than 2^64-1 (unless the value is 0),
+    /// and will return zero if the exponent is less
+    /// than -(2^64).</returns>
     public static CBORObject ParseJSONNumber(string str) {
-      return ParseJSONNumber(str, false, false);
+      return ParseJSONNumber(str, false, false, false);
     }
 
     /// <summary>
@@ -562,13 +564,21 @@ namespace PeterO {
     /// or exponents are allowed in the string.</param>
     /// <param name="positiveOnly">If true, only positive numbers
     /// are allowed (the leading minus is disallowed).</param>
+    /// <param name="failOnExponentOverflow">If true, this function
+    /// will return null if the exponent is less than -(2^64) or
+    /// greater than 2^64-1 (unless the value is 0).
+    /// If false, this function will return
+    /// a CBOR object representing positive or negative infinity
+    /// if the exponent is greater than 2^64-1 (unless the value is 0),
+    /// and will return zero if the exponent is less
+    /// than -(2^64).</param>
     /// <returns>A CBOR object that represents the parsed
-    /// number, or null if the exponent is less than -(2^64)
-    /// or greater than 2^64-1 or if the entire string does
-    /// not represent a valid number.</returns>
+    /// number.</returns>
     public static CBORObject ParseJSONNumber(string str,
                                              bool integersOnly,
-                                             bool positiveOnly) {
+                                             bool positiveOnly,
+                                             bool failOnExponentOverflow
+                                            ) {
       if (String.IsNullOrEmpty(str))
         return null;
       char c = str[0];
@@ -765,13 +775,25 @@ namespace PeterO {
           // If exponent is 0, this is also easy,
           // just return the integer
           return CBORObject.FromObject(intval);
-        } else if (!exp.CanFitInInt64() && (
-          exp.AsBigInteger().CompareTo(UInt64MaxValue) > 0 ||
-          exp.AsBigInteger().CompareTo(LowestMajorType1) < 0)) {
-          // Exponent is lower than the lowest representable
-          // integer of major type 1, or higher than the
-          // highest representable integer of major type 0
-          return null;
+        } else if (!exp.CanFitInInt64()){
+          if(exp.AsBigInteger().CompareTo(UInt64MaxValue) > 0){
+            // Exponent is higher than the highest representable
+            // integer of major type 0
+            if(failOnExponentOverflow)
+              return null;
+            else
+              return (exp.Sign<0) ?
+                CBORObject.FromObject(Double.NegativeInfinity) :
+                CBORObject.FromObject(Double.PositiveInfinity);
+          }
+          if(exp.AsBigInteger().CompareTo(LowestMajorType1) < 0) {
+            // Exponent is lower than the lowest representable
+            // integer of major type 1
+            if(failOnExponentOverflow)
+              return null;
+            else
+              return CBORObject.FromObject(0);
+          }
         }
         // Represent the CBOR object as a decimal fraction
         if(exp.CanFitInInt64()){

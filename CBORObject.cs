@@ -1066,12 +1066,11 @@ namespace PeterO {
             else if (firstbyte == 0xfa)
               return new CBORObject(
                 CBORObjectType_Single,
-                ConverterInternal.Int32BitsToSingle(
-                  unchecked((int)uadditional)));
+                BitConverter.ToSingle(BitConverter.GetBytes((int)unchecked((int)uadditional)),0));
             else if (firstbyte == 0xfb)
               return new CBORObject(
                 CBORObjectType_Double,
-                ConverterInternal.Int64BitsToDouble(uadditional));
+                BitConverter.ToDouble(BitConverter.GetBytes((long)uadditional),0));
             else if (firstbyte == 0xf8)
               return new CBORObject(
                 CBORObjectType_SimpleValue, (int)uadditional);
@@ -2043,6 +2042,8 @@ namespace PeterO {
     /// <param name="bi">Bigfloat to write.</param>
     /// <param name="s">Stream to write to.</param>
     /// <exception cref="System.ArgumentNullException">s is null.</exception>
+    /// <exception cref="System.ArgumentException">The value's exponent is less
+    /// than -(2^64) or greater than (2^64-1).</exception>
     /// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
     public static void Write(BigFloat bignum, Stream s) {
       if ((s) == null) throw new ArgumentNullException("s");
@@ -2054,6 +2055,8 @@ namespace PeterO {
       if (exponent.IsZero) {
         Write(bignum.Mantissa, s);
       } else {
+        if(!BigIntFits(exponent))
+          throw new ArgumentException("Exponent is too low or too high");
         s.WriteByte(0xC5); // tag 5
         s.WriteByte(0x82); // array, length 2
         Write(bignum.Exponent, s);
@@ -2067,6 +2070,8 @@ namespace PeterO {
     /// <param name="s">Stream to write to.</param>
     /// <exception cref="System.ArgumentNullException">s is null.</exception>
     /// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
+    /// <exception cref="System.ArgumentException">The value's exponent is less
+    /// than -(2^64) or greater than (2^64-1).</exception>
     public static void Write(DecimalFraction bignum, Stream s) {
       if ((s) == null) throw new ArgumentNullException("s");
       if (bignum == null) {
@@ -2077,6 +2082,8 @@ namespace PeterO {
       if (exponent.IsZero) {
         Write(bignum.Mantissa, s);
       } else {
+        if(!BigIntFits(exponent))
+          throw new ArgumentException("Exponent is too low or too high");
         s.WriteByte(0xC4); // tag 4
         s.WriteByte(0x82); // array, length 2
         Write(bignum.Exponent, s);
@@ -2288,8 +2295,7 @@ namespace PeterO {
     /// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
     public static void Write(float value, Stream s) {
       if ((s) == null) throw new ArgumentNullException("s");
-      int bits = ConverterInternal.SingleToInt32Bits(
-        value);
+      int bits = BitConverter.ToInt32(BitConverter.GetBytes((float)value),0);
       byte[] data = new byte[]{(byte)0xFA,
         (byte)((bits>>24)&0xFF),
         (byte)((bits>>16)&0xFF),
@@ -2306,8 +2312,7 @@ namespace PeterO {
     /// <exception cref="System.ArgumentNullException">s is null.</exception>
     /// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
     public static void Write(double value, Stream s) {
-      long bits = ConverterInternal.DoubleToInt64Bits(
-        (double)value);
+      long bits = BitConverter.ToInt64(BitConverter.GetBytes((double)(double)value),0);
       byte[] data = new byte[]{(byte)0xFB,
         (byte)((bits>>56)&0xFF),
         (byte)((bits>>48)&0xFF),
@@ -2417,8 +2422,8 @@ namespace PeterO {
           ret2[0] = tagbyte;
           return ret2;
         } else if (this.ItemType == CBORObjectType_Single) {
-          int bits = ConverterInternal.SingleToInt32Bits(
-            (float)this.ThisItem);
+          float value = (float)this.ThisItem;
+          int bits = BitConverter.ToInt32(BitConverter.GetBytes(value),0);
           return tagged ?
             new byte[]{tagbyte,(byte)0xFA,
             (byte)((bits>>24)&0xFF),
@@ -2431,8 +2436,8 @@ namespace PeterO {
             (byte)((bits>>8)&0xFF),
             (byte)(bits&0xFF)};
         } else if (this.ItemType == CBORObjectType_Double) {
-          long bits = ConverterInternal.DoubleToInt64Bits(
-            (double)this.ThisItem);
+          double value = (double)this.ThisItem;
+          long bits = BitConverter.ToInt64(BitConverter.GetBytes(value),0);
           return tagged ?
             new byte[]{tagbyte,(byte)0xFB,
             (byte)((bits>>56)&0xFF),
@@ -2803,6 +2808,8 @@ namespace PeterO {
     /// <param name="bigintValue">An arbitrary-precision binary floating-point
     /// number.</param>
     /// <returns>A CBOR number object.</returns>
+    /// <exception cref="System.ArgumentException">The value's exponent is less
+    /// than -(2^64) or greater than (2^64-1).</exception>
     public static CBORObject FromObject(BigFloat decfrac) {
       if ((object)decfrac == (object)null)
         return CBORObject.Null;
@@ -2810,6 +2817,8 @@ namespace PeterO {
       if (bigintExponent.IsZero) {
         return FromObject(decfrac.Mantissa);
       } else {
+        if(!BigIntFits(bigintExponent))
+          throw new ArgumentException("Exponent is too low or too high");
         return new CBORObject(CBORObjectType_BigFloat, decfrac);
       }
     }
@@ -2819,6 +2828,8 @@ namespace PeterO {
     /// </summary>
     /// <param name="bigintValue">An arbitrary-precision decimal number.</param>
     /// <returns>A CBOR number object.</returns>
+    /// <exception cref="System.ArgumentException">The value's exponent is less
+    /// than -(2^64) or greater than (2^64-1).</exception>
     public static CBORObject FromObject(DecimalFraction decfrac) {
       if ((object)decfrac == (object)null)
         return CBORObject.Null;
@@ -2826,6 +2837,8 @@ namespace PeterO {
       if (bigintExponent.IsZero) {
         return FromObject(decfrac.Mantissa);
       } else {
+        if(!BigIntFits(bigintExponent))
+          throw new ArgumentException("Exponent is too low or too high");
         return new CBORObject(CBORObjectType_DecimalFraction, decfrac);
       }
     }
@@ -3341,6 +3354,16 @@ namespace PeterO {
       return RewrapObject(o, FromObject(bi));
     }
 
+    private static bool BigIntFits(BigInteger bigint){
+      int sign=bigint.Sign;
+      if(sign<0)
+        return bigint.CompareTo(LowestMajorType1) >= 0;
+      else if(sign>0)
+        return bigint.CompareTo(UInt64MaxValue) <= 0;
+      else
+        return true;
+    }
+    
     private bool CanFitInTypeZeroOrOne() {
       switch (this.ItemType) {
         case CBORObjectType_Integer:

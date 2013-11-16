@@ -58,7 +58,6 @@
     <Compile Include="CBORObjectMath.cs" />
     <Compile Include="CBORType.cs" />
     <Compile Include="CBORUtilities.cs" />
-    <Compile Include="Converter.cs" />
     <Compile Include="DecimalFraction.cs" />
     <Compile Include="FastInteger.cs" />
     <Compile Include="JSONTokener.cs" />

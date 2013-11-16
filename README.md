@@ -13,7 +13,7 @@ Documentation
 
 This library defines one class, called CBORObject, that allows you to read and
 write CBOR objects to and from data streams and byte arrays, and to convert JSON
-text to CBOR objects.  It defines the following methods.
+text to CBOR objects.
 
 See the [Wiki](https://github.com/peteroupc/CBOR/wiki) for API documentation.
 

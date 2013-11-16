@@ -59,9 +59,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Converter.cs">
-      <Link>Converter.cs</Link>
-    </Compile>
     <Compile Include="BEncoding.cs" />
     <Compile Include="BEncodingTest.cs" />
     <Compile Include="CBORExtraTest.cs" />
