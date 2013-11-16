@@ -1027,8 +1027,7 @@ public boolean equals(CBORObject obj) {
             else if (firstbyte == 0xfa)
               return new CBORObject(
                 CBORObjectType_Single,
-                Float.intBitsToFloat(
-                  ((int)uadditional)));
+                Float.intBitsToFloat(((int)uadditional)));
             else if (firstbyte == 0xfb)
               return new CBORObject(
                 CBORObjectType_Double,
@@ -1947,6 +1946,8 @@ public void set(String key, CBORObject value) {
      * @param bi Bigfloat to write.
      * @param s InputStream to write to.
      * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.IllegalArgumentException The value's exponent is less
+     * than -(2^64) or greater than (2^64-1).
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(BigFloat bignum, OutputStream s) throws IOException {
@@ -1959,6 +1960,8 @@ public void set(String key, CBORObject value) {
       if (exponent.signum()==0) {
         Write(bignum.getMantissa(), s);
       } else {
+        if(!BigIntFits(exponent))
+          throw new IllegalArgumentException("Exponent is too low or too high");
         s.write(0xC5); // tag 5
         s.write(0x82); // array, length 2
         Write(bignum.getExponent(), s);
@@ -1971,6 +1974,8 @@ public void set(String key, CBORObject value) {
      * @param s InputStream to write to.
      * @throws java.lang.NullPointerException s is null.
      * @throws java.io.IOException An I/O error occurred.
+     * @throws java.lang.IllegalArgumentException The value's exponent is less
+     * than -(2^64) or greater than (2^64-1).
      */
     public static void Write(DecimalFraction bignum, OutputStream s) throws IOException {
       if ((s) == null) throw new NullPointerException("s");
@@ -1982,6 +1987,8 @@ public void set(String key, CBORObject value) {
       if (exponent.signum()==0) {
         Write(bignum.getMantissa(), s);
       } else {
+        if(!BigIntFits(exponent))
+          throw new IllegalArgumentException("Exponent is too low or too high");
         s.write(0xC4); // tag 4
         s.write(0x82); // array, length 2
         Write(bignum.getExponent(), s);
@@ -2186,8 +2193,7 @@ public void set(String key, CBORObject value) {
      */
     public static void Write(float value, OutputStream s) throws IOException {
       if ((s) == null) throw new NullPointerException("s");
-      int bits = Float.floatToRawIntBits(
-        value);
+      int bits = Float.floatToRawIntBits(value);
       byte[] data = new byte[]{(byte)0xFA,
         (byte)((bits>>24)&0xFF),
         (byte)((bits>>16)&0xFF),
@@ -2203,8 +2209,7 @@ public void set(String key, CBORObject value) {
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(double value, OutputStream s) throws IOException {
-      long bits = Double.doubleToRawLongBits(
-        (double)value);
+      long bits = Double.doubleToRawLongBits((double)value);
       byte[] data = new byte[]{(byte)0xFB,
         (byte)((bits>>56)&0xFF),
         (byte)((bits>>48)&0xFF),
@@ -2313,8 +2318,8 @@ public void set(String key, CBORObject value) {
           ret2[0] = tagbyte;
           return ret2;
         } else if (this.getItemType() == CBORObjectType_Single) {
-          int bits = Float.floatToRawIntBits(
-            ((Float)this.getThisItem()).floatValue());
+          float value = ((Float)this.getThisItem()).floatValue();
+          int bits = Float.floatToRawIntBits(value);
           return tagged ?
             new byte[]{tagbyte,(byte)0xFA,
             (byte)((bits>>24)&0xFF),
@@ -2327,8 +2332,8 @@ public void set(String key, CBORObject value) {
             (byte)((bits>>8)&0xFF),
             (byte)(bits&0xFF)};
         } else if (this.getItemType() == CBORObjectType_Double) {
-          long bits = Double.doubleToRawLongBits(
-            ((Double)this.getThisItem()).doubleValue());
+          double value = ((Double)this.getThisItem()).doubleValue();
+          long bits = Double.doubleToRawLongBits(value);
           return tagged ?
             new byte[]{tagbyte,(byte)0xFB,
             (byte)((bits>>56)&0xFF),
@@ -2699,6 +2704,8 @@ public static void Write(Object o, OutputStream s) throws IOException {
      * @param bigintValue An arbitrary-precision binary floating-point
      * number.
      * @return A CBOR number object.
+     * @throws java.lang.IllegalArgumentException The value's exponent is less
+     * than -(2^64) or greater than (2^64-1).
      */
     public static CBORObject FromObject(BigFloat decfrac) {
       if ((Object)decfrac == (Object)null)
@@ -2707,6 +2714,8 @@ public static void Write(Object o, OutputStream s) throws IOException {
       if (bigintExponent.signum()==0) {
         return FromObject(decfrac.getMantissa());
       } else {
+        if(!BigIntFits(bigintExponent))
+          throw new IllegalArgumentException("Exponent is too low or too high");
         return new CBORObject(CBORObjectType_BigFloat, decfrac);
       }
     }
@@ -2715,6 +2724,8 @@ public static void Write(Object o, OutputStream s) throws IOException {
      * Generates a CBOR object from a decimal fraction.
      * @param bigintValue An arbitrary-precision decimal number.
      * @return A CBOR number object.
+     * @throws java.lang.IllegalArgumentException The value's exponent is less
+     * than -(2^64) or greater than (2^64-1).
      */
     public static CBORObject FromObject(DecimalFraction decfrac) {
       if ((Object)decfrac == (Object)null)
@@ -2723,6 +2734,8 @@ public static void Write(Object o, OutputStream s) throws IOException {
       if (bigintExponent.signum()==0) {
         return FromObject(decfrac.getMantissa());
       } else {
+        if(!BigIntFits(bigintExponent))
+          throw new IllegalArgumentException("Exponent is too low or too high");
         return new CBORObject(CBORObjectType_DecimalFraction, decfrac);
       }
     }
@@ -3229,6 +3242,16 @@ public static CBORObject FromObject(Object obj) {
       return RewrapObject(o, FromObject(bi));
     }
 
+    private static boolean BigIntFits(BigInteger bigint) {
+      int sign=bigint.signum();
+      if(sign<0)
+        return bigint.compareTo(LowestMajorType1) >= 0;
+      else if(sign>0)
+        return bigint.compareTo(UInt64MaxValue) <= 0;
+      else
+        return true;
+    }
+    
     private boolean CanFitInTypeZeroOrOne() {
       switch (this.getItemType()) {
         case CBORObjectType_Integer:

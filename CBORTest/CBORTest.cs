@@ -87,7 +87,7 @@ namespace Test {
       }
       r &= ~0x7FF0000000000000L; // clear exponent
       r |= ((long)exponent) << 52; // set exponent
-      return ConverterInternal.Int64BitsToDouble(r);
+      return BitConverter.ToDouble(BitConverter.GetBytes((long)r),0);
     }
 
     private static float RandomSingle(FastRandom rand, int exponent) {
@@ -99,7 +99,7 @@ namespace Test {
       }
       r &= ~0x7F800000; // clear exponent
       r |= ((int)exponent) << 23; // set exponent
-      return ConverterInternal.Int32BitsToSingle(r);
+      return BitConverter.ToSingle(BitConverter.GetBytes((int)r),0);
     }
 
     public static DecimalFraction RandomDecimalFraction(FastRandom r) {
@@ -159,10 +159,9 @@ namespace Test {
     private static void TestDecimalString(String r) {
       CBORObject o = CBORObject.FromObject(DecimalFraction.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
-      if (o.CompareTo(o2) != 0) {
-        Assert.Fail("Expected: " + o + "\n was: " + o2);
-      }
+      CompareTestEqual(o,o2);
     }
+    
     [Test]
     public void TestAdd() {
       FastRandom r = new FastRandom();
@@ -198,6 +197,34 @@ namespace Test {
       }
     }
 
+    private static string ObjectMessages(CBORObject o1, CBORObject o2, String s){
+        if(o1.Type== CBORType.Number && o2.Type== CBORType.Number){
+          return s+":\n" + o1.ToString() + " and\n" + o2.ToString()+"\nOR\n"+
+                          o1.AsDecimalFraction().ToString() + " and\n" + o2.AsDecimalFraction().ToString();                  
+        } else {
+          return s+":\n" + o1.ToString() + " and\n" + o2.ToString();          
+        }      
+    }
+    
+    private static void CompareTestEqual(CBORObject o1, CBORObject o2){
+      if(CompareTestReciprocal(o1,o2)!=0)
+        Assert.Fail(ObjectMessages(o1,o2,"Not equal: "+CompareTestReciprocal(o1,o2)));
+    }
+    private static void CompareTestLess(CBORObject o1, CBORObject o2){
+      if(CompareTestReciprocal(o1,o2)>=0)
+        Assert.Fail(ObjectMessages(o1,o2,"Not less: "+CompareTestReciprocal(o1,o2)));
+    }
+    
+    private static int CompareTestReciprocal(CBORObject o1, CBORObject o2){
+      if((o1)==null)throw new ArgumentNullException("o1");
+      if((o2)==null)throw new ArgumentNullException("o2");
+      int cmp=o1.CompareTo(o2);
+      int cmp2=o2.CompareTo(o1);
+      if(-cmp2!=cmp){
+        Assert.AreEqual(cmp,-cmp2,ObjectMessages(o1,o2,"Not reciprocal"));
+      }
+      return cmp;
+    }
     
     [Test]
     public void TestCompare() {
@@ -206,15 +233,51 @@ namespace Test {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
         int cmpDecFrac = o1.AsDecimalFraction().CompareTo(o2.AsDecimalFraction());
-        int cmpCobj = o1.CompareTo(o2);
+        int cmpCobj = CompareTestReciprocal(o1,o2);
         if (cmpDecFrac != cmpCobj) {
-          Assert.AreEqual(cmpDecFrac, cmpCobj,
-                          "Results don't match:\n" + o1.ToString() + " and\n" + o2.ToString()+"\nOR\n"+
-                          o1.AsDecimalFraction().ToString() + " and\n" + o2.AsDecimalFraction().ToString());
+          Assert.AreEqual(cmpDecFrac, cmpCobj,ObjectMessages(o1,o2,"Results don't match"));
         }
         TestCommon.AssertRoundTrip(o1);
         TestCommon.AssertRoundTrip(o2);
       }
+      for (int i = 0; i < 50; i++) {
+        CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
+        CBORObject o2 = RandomNumber(r);
+        CompareTestLess(o1,o2);
+        o1=CBORObject.FromObject(Double.NegativeInfinity);
+        CompareTestLess(o1,o2);
+        o1=CBORObject.FromObject(Single.PositiveInfinity);
+        CompareTestLess(o2,o1);
+        o1=CBORObject.FromObject(Double.PositiveInfinity);
+        CompareTestLess(o2,o1);
+        o1=CBORObject.FromObject(Single.NaN);
+        CompareTestLess(o2,o1);
+        o1=CBORObject.FromObject(Double.NaN);
+        CompareTestLess(o2,o1);
+      }
+      CBORObject sp=CBORObject.FromObject(Single.PositiveInfinity);
+      CBORObject sn=CBORObject.FromObject(Single.NegativeInfinity);
+      CBORObject snan=CBORObject.FromObject(Single.NaN);
+      CBORObject dp=CBORObject.FromObject(Double.PositiveInfinity);
+      CBORObject dn=CBORObject.FromObject(Double.NegativeInfinity);
+      CBORObject dnan=CBORObject.FromObject(Double.NaN);
+      CompareTestEqual(sp,sp);
+      CompareTestEqual(sp,dp);
+      CompareTestEqual(dp,dp);
+      CompareTestEqual(sn,sn);
+      CompareTestEqual(sn,dn);
+      CompareTestEqual(dn,dn);
+      CompareTestEqual(snan,snan);
+      CompareTestEqual(snan,dnan);
+      CompareTestEqual(dnan,dnan);
+      CompareTestLess(sn,sp);
+      CompareTestLess(sn,dp);
+      CompareTestLess(sn,snan);
+      CompareTestLess(sn,dnan);
+      CompareTestLess(sp,snan);
+      CompareTestLess(sp,dnan);
+      CompareTestLess(dn,dp);
+      CompareTestLess(dp,dnan);
     }
 
     [Test]
@@ -660,8 +723,7 @@ namespace Test {
     public static void AssertDecimalsEquivalent(string a, string b) {
       CBORObject ca = CBORDataUtilities.ParseJSONNumber(a);
       CBORObject cb = CBORDataUtilities.ParseJSONNumber(b);
-      if (ca.CompareTo(cb) != 0)
-        Assert.Fail(a + " not equal to " + b);
+      CompareTestEqual(ca,cb);
       TestCommon.AssertRoundTrip(ca);
       TestCommon.AssertRoundTrip(cb);
     }
@@ -3600,10 +3662,7 @@ namespace Test {
         TestCommon.AssertSer(o,
                              String.Format(CultureInfo.InvariantCulture, "{0}", i));
         if (oldobj != null) {
-          if(1!=o.CompareTo(oldobj))
-            Assert.AreEqual(1, o.CompareTo(oldobj));
-          if(-1!=oldobj.CompareTo(o))
-            Assert.AreEqual(-1, oldobj.CompareTo(o));
+          CompareTestLess(oldobj,o);
         }
         oldobj = o;
       }

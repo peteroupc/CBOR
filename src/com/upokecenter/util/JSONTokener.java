@@ -1,9 +1,12 @@
 package com.upokecenter.util;
-// Modified by Peter O. from the 2002 public domain
+// Modified by Peter O; originally based on the 
+// 2002 public domain
 // code from json.org, to use generics and
 // to use int and -1 as the terminating
 // value rather than char and 0, among
-// other things; also moved from org.json.
+// other things.
+// Now much of this file has been rewritten and
+// altered by Peter O. to support the CBOR project.
 // Still in the public domain;
 // public domain dedication: http://creativecommons.org/publicdomain/zero/1.0/
 
@@ -14,16 +17,6 @@ package com.upokecenter.util;
   import java.util.*;
 
 
-
-  /**
-   * A JSONTokener takes a source String and extracts characters and tokens from
-   * it. It is used by the JSONObject and JSONArray constructors to parse
-   * JSON source strings.
-   * <p>
-   * Public Domain 2002 JSON.org
-   * @author JSON.org
-   * @version 0.1
-   */
   class JSONTokener {
 
 
@@ -80,14 +73,14 @@ package com.upokecenter.util;
 
 
     /**
-     * The source _string being tokenized.
+     * The source String being tokenized.
      */
     private String mySource;
     private InputStream stream;
     private int options;
 
     /**
-     * Construct a JSONTokener from a _string.
+     * Construct a JSONTokener from a String.
      *
      * @param s     A source _string.
      */
@@ -406,7 +399,8 @@ package com.upokecenter.util;
       throw this.syntaxError("Expected a String as a key");
     }
     
-    // Based on the json.org implementation for JSONTokener
+    // Based on the json.org implementation for JSONTokener,
+    // now mostly rewritten
     private CBORObject NextJSONValue(int firstChar, int[] nextChar) {
       String str;
       int c = firstChar;
@@ -467,7 +461,7 @@ package com.upokecenter.util;
           c = this.next();
         }
         str = sb.toString();
-        obj = CBORDataUtilities.ParseJSONNumber(str, false, false);
+        obj = CBORDataUtilities.ParseJSONNumber(str);
         if (obj == null)
           throw this.syntaxError("JSON number can't be parsed.");
         nextChar[0]=this.nextClean(c);

@@ -381,7 +381,7 @@ namespace PeterO {
     /// <returns>A bigfloat with the same value as "flt".</returns>
     /// <exception cref="OverflowException">"flt" is infinity or not-a-number.</exception>
     public static BigFloat FromSingle(float flt) {
-      int value = ConverterInternal.SingleToInt32Bits(flt);
+      int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt),0);
       int fpExponent = (int)((value >> 23) & 0xFF);
       if (fpExponent == 255)
         throw new OverflowException("Value is infinity or NaN");
@@ -406,7 +406,7 @@ namespace PeterO {
     /// <returns>A bigfloat with the same value as "dbl"</returns>
     /// <exception cref="OverflowException">"dbl" is infinity or not-a-number.</exception>
     public static BigFloat FromDouble(double dbl) {
-      long value = ConverterInternal.DoubleToInt64Bits(dbl);
+      long value = BitConverter.ToInt64(BitConverter.GetBytes((double)dbl),0);
       int fpExponent = (int)((value >> 52) & 0x7ffL);
       if (fpExponent == 2047)
         throw new OverflowException("Value is infinity or NaN");
@@ -548,8 +548,8 @@ namespace PeterO {
       if (bigexponent.CompareTo(-149) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.Sign < 0) ?
-          ConverterInternal.Int32BitsToSingle(1 << 31) :
-          ConverterInternal.Int32BitsToSingle(0);
+          BitConverter.ToSingle(BitConverter.GetBytes((int)1 << 31),0) :
+          BitConverter.ToSingle(BitConverter.GetBytes((int)0),0);
       } else {
         int smallexponent = bigexponent.AsInt32();
         smallexponent = smallexponent + 150;
@@ -558,7 +558,7 @@ namespace PeterO {
           smallmantissa |= (smallexponent << 23);
         }
         if (this.mantissa.Sign < 0) smallmantissa |= (1 << 31);
-        return ConverterInternal.Int32BitsToSingle(smallmantissa);
+        return BitConverter.ToSingle(BitConverter.GetBytes((int)smallmantissa),0);
       }
     }
     
@@ -633,8 +633,8 @@ namespace PeterO {
       if (bigexponent.CompareTo(-1074) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.Sign < 0) ?
-          ConverterInternal.Int64BitsToDouble(1L << 63) :
-          ConverterInternal.Int64BitsToDouble(0);
+          BitConverter.ToDouble(BitConverter.GetBytes((long)1L << 63),0) :
+          BitConverter.ToDouble(BitConverter.GetBytes((long)0),0);
       } else {
         long smallexponent = bigexponent.AsInt64();
         smallexponent = smallexponent + 1075;
@@ -643,7 +643,7 @@ namespace PeterO {
           smallmantissa |= (smallexponent << 52);
         }
         if (this.mantissa.Sign < 0) smallmantissa |= (1L << 63);
-        return ConverterInternal.Int64BitsToDouble(smallmantissa);
+        return BitConverter.ToDouble(BitConverter.GetBytes((long)smallmantissa),0);
       }
     }
 

@@ -165,14 +165,11 @@ private CBORUtilities(){}
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
       value &= 0x7FFF;
       if (value >= 0x7C00) {
-        return Float.intBitsToFloat(
-          (0x3FC00 | (value & 0x3FF)) << 13 | negvalue);
+        return Float.intBitsToFloat((0x3FC00 | (value & 0x3FF)) << 13 | negvalue);
       } else if (value > 0x400) {
-        return Float.intBitsToFloat(
-          ((value + 0x1c000) << 13) | negvalue);
+        return Float.intBitsToFloat(((value + 0x1c000) << 13) | negvalue);
       } else if ((value & 0x400) == value) {
-        return Float.intBitsToFloat(
-          ((value == 0) ? 0 : 0x38800000) | negvalue);
+        return Float.intBitsToFloat(((value == 0) ? 0 : 0x38800000) | negvalue);
       } else {
         // denormalized
         int m = (value & 0x3FF);
@@ -181,8 +178,8 @@ private CBORUtilities(){}
           value -= 0x400;
           m <<= 1;
         }
-        return Float.intBitsToFloat(
-          ((value | (m & 0x3FF)) << 13) | negvalue);
+        value = ((value | (m & 0x3FF)) << 13) | negvalue;
+        return Float.intBitsToFloat(value);
       }
     }
   }

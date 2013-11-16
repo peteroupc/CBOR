@@ -836,7 +836,7 @@ namespace PeterO {
     /// <returns>A decimal fraction with the same value as "flt".</returns>
     /// <exception cref="OverflowException">"flt" is infinity or not-a-number.</exception>
     public static DecimalFraction FromSingle(float flt) {
-      int value = ConverterInternal.SingleToInt32Bits(flt);
+      int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt),0);
       int fpExponent = (int)((value >> 23) & 0xFF);
       if (fpExponent == 255)
         throw new OverflowException("Value is infinity or NaN");
@@ -878,7 +878,7 @@ namespace PeterO {
     /// <returns>A decimal fraction with the same value as "dbl"</returns>
     /// <exception cref="OverflowException">"dbl" is infinity or not-a-number.</exception>
     public static DecimalFraction FromDouble(double dbl) {
-      long value = ConverterInternal.DoubleToInt64Bits(dbl);
+      long value = BitConverter.ToInt64(BitConverter.GetBytes((double)dbl),0);
       int fpExponent = (int)((value >> 52) & 0x7ffL);
       if (fpExponent == 2047)
         throw new OverflowException("Value is infinity or NaN");

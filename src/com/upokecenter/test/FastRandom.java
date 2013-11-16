@@ -52,7 +52,6 @@ package com.upokecenter.test;
         if(rand!=null){
           int seed=rand.nextInt(0x10000);
           seed|=(rand.nextInt(0x10000))<<16;
-          seed*=0; // don't use the seed for now, for determinism purposes
           m_z^=seed;
           return rand.nextInt(v);
         }

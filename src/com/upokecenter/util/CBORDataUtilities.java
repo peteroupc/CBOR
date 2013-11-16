@@ -543,12 +543,13 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * Parses a number whose format follows the JSON specification. See
      * #ParseJSONNumber(str, integersOnly, parseOnly) for more information.
      * @param str A string to parse.
-     * @return A CBOR object that represents the parsed number, or null if
-     * the exponent is less than -(2^64) or greater than 2^64-1 or if the entire
-     * string does not represent a valid number.
+     * @return A CBOR object that represents the parsed number. This function
+     * will return a CBOR object representing positive or negative infinity
+     * if the exponent is greater than 2^64-1 (unless the value is 0), and
+     * will return zero if the exponent is less than -(2^64).
      */
     public static CBORObject ParseJSONNumber(String str) {
-      return ParseJSONNumber(str, false, false);
+      return ParseJSONNumber(str, false, false, false);
     }
 
     /**
@@ -562,13 +563,19 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * in the string.
      * @param positiveOnly If true, only positive numbers are allowed (the
      * leading minus is disallowed).
-     * @return A CBOR object that represents the parsed number, or null if
-     * the exponent is less than -(2^64) or greater than 2^64-1 or if the entire
-     * string does not represent a valid number.
+     * @param failOnExponentOverflow If true, this function will return
+     * null if the exponent is less than -(2^64) or greater than 2^64-1 (unless
+     * the value is 0). If false, this function will return a CBOR object representing
+     * positive or negative infinity if the exponent is greater than 2^64-1
+     * (unless the value is 0), and will return zero if the exponent is less
+     * than -(2^64).
+     * @return A CBOR object that represents the parsed number.
      */
     public static CBORObject ParseJSONNumber(String str,
                                              boolean integersOnly,
-                                             boolean positiveOnly) {
+                                             boolean positiveOnly,
+                                             boolean failOnExponentOverflow
+                                            ) {
       if (((str)==null || (str).length()==0))
         return null;
       char c = str.charAt(0);
@@ -759,13 +766,25 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           // If exponent is 0, this is also easy,
           // just return the integer
           return CBORObject.FromObject(intval);
-        } else if (!exp.CanFitInInt64() && (
-          exp.AsBigInteger().compareTo(UInt64MaxValue) > 0 ||
-          exp.AsBigInteger().compareTo(LowestMajorType1) < 0)) {
-          // Exponent is lower than the lowest representable
-          // integer of major type 1, or higher than the
-          // highest representable integer of major type 0
-          return null;
+        } else if (!exp.CanFitInInt64()){
+          if(exp.AsBigInteger().compareTo(UInt64MaxValue) > 0){
+            // Exponent is higher than the highest representable
+            // integer of major type 0
+            if(failOnExponentOverflow)
+              return null;
+            else
+              return (exp.signum()<0) ?
+                CBORObject.FromObject(Double.NEGATIVE_INFINITY) :
+                CBORObject.FromObject(Double.POSITIVE_INFINITY);
+          }
+          if(exp.AsBigInteger().compareTo(LowestMajorType1) < 0) {
+            // Exponent is lower than the lowest representable
+            // integer of major type 1
+            if(failOnExponentOverflow)
+              return null;
+            else
+              return CBORObject.FromObject(0);
+          }
         }
         // Represent the CBOR Object as a decimal fraction
         if(exp.CanFitInInt64()){
