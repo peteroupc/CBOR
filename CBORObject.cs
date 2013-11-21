@@ -441,7 +441,7 @@ namespace PeterO {
               return CBORUtilities.ByteArrayCompare((byte[])objA, (byte[])objB);
             }
             case CBORObjectType_TextString: {
-              return CBORDataUtilities.CodePointCompare(
+              return DataUtilities.CodePointCompare(
                 (string)objA, (string)objB);
             }
             case CBORObjectType_Array: {
@@ -780,13 +780,15 @@ namespace PeterO {
     private static int ListCompare(List<CBORObject> listA, List<CBORObject> listB) {
       if (listA == null) return (listB == null) ? 0 : -1;
       if (listB == null) return 1;
-      int c = Math.Min(listA.Count, listB.Count);
+      int listACount=listA.Count;
+      int listBCount=listB.Count;
+      int c = Math.Min(listACount, listBCount);
       for (int i = 0; i < c; i++) {
         int cmp = listA[i].CompareTo(listB[i]);
         if (cmp != 0) return cmp;
       }
-      if (listA.Count != listB.Count)
-        return (listA.Count < listB.Count) ? -1 : 1;
+      if (listACount != listBCount)
+        return (listACount < listBCount) ? -1 : 1;
       return 0;
     }
     private static bool CBORArrayEquals(
@@ -795,9 +797,14 @@ namespace PeterO {
      ) {
       if (listA == null) return (listB == null);
       if (listB == null) return false;
-      if (listA.Count != listB.Count) return false;
-      for (int i = 0; i < listA.Count; i++) {
-        if (!Object.Equals(listA[i], listB[i])) return false;
+      int listACount=listA.Count;
+      int listBCount=listB.Count;
+      if (listACount != listBCount) return false;
+      for (int i = 0; i < listACount; i++) {
+        CBORObject itemA=listA[i];
+        CBORObject itemB=listB[i];
+        if (!(itemA==null ? itemB==null : itemA.Equals(itemB)))
+          return false;
       }
       return true;
     }
@@ -822,9 +829,12 @@ namespace PeterO {
       if (mapA == null) return (mapB == null);
       if (mapB == null) return false;
       if (mapA.Count != mapB.Count) return false;
-      foreach (CBORObject k in mapA.Keys) {
-        if (mapB.ContainsKey(k)) {
-          if (!Object.Equals(mapA[k], mapB[k]))
+      foreach (KeyValuePair<CBORObject,CBORObject> kvp in mapA) {
+        CBORObject valueB=null;
+        bool hasKey=mapB.TryGetValue(kvp.Key,out valueB);
+        if (hasKey) {
+          CBORObject valueA=kvp.Value;
+          if (!(valueA==null ? valueB==null : valueA.Equals(valueB)))
             return false;
         } else {
           return false;
@@ -857,21 +867,26 @@ namespace PeterO {
       CBORObject other = obj as CBORObject;
       if (other == null)
         return false;
-      if (item_ is byte[]) {
-        if (!CBORUtilities.ByteArrayEquals((byte[])this.ThisItem, other.item_ as byte[]))
-          return false;
-      } else if (item_ is IList<CBORObject>) {
-        if (!CBORArrayEquals(AsList(), other.item_ as IList<CBORObject>))
-          return false;
-      } else if (item_ is IDictionary<CBORObject, CBORObject>) {
-        if (!CBORMapEquals(AsMap(),
-                           other.item_ as IDictionary<CBORObject, CBORObject>))
-          return false;
-      } else {
-        if (!object.Equals(this.item_, other.item_))
-          return false;
+      switch(this.itemtype_){
+        case CBORObjectType_ByteString:
+          if (!CBORUtilities.ByteArrayEquals((byte[])this.ThisItem, other.item_ as byte[]))
+            return false;
+          break;
+        case CBORObjectType_Map:
+          if (!CBORMapEquals(AsMap(),
+                             other.item_ as IDictionary<CBORObject, CBORObject>))
+            return false;
+          break;
+        case CBORObjectType_Array:
+          if (!CBORArrayEquals(AsList(), other.item_ as IList<CBORObject>))
+            return false;
+          break;
+        default:
+          if (!object.Equals(this.item_, other.item_))
+            return false;
+          break;
       }
-      return this.ItemType == other.ItemType &&
+      return this.itemtype_ == other.itemtype_ &&
         this.tagLow == other.tagLow &&
         this.tagHigh == other.tagHigh;
     }
@@ -880,23 +895,27 @@ namespace PeterO {
     /// Calculates the hash code of this object.
     /// </summary>
     public override int GetHashCode() {
-      int hashCode = 0;
+      int hashCode = 13;
       unchecked {
         if (item_ != null) {
           int itemHashCode = 0;
-          if (item_ is byte[])
-            itemHashCode = CBORUtilities.ByteArrayHashCode((byte[])this.ThisItem);
-          else if (item_ is IList<CBORObject>)
-            itemHashCode = CBORArrayHashCode(AsList());
-          else if (item_ is IDictionary<CBORObject, CBORObject>)
-            itemHashCode = CBORMapHashCode(AsMap());
-          else
-            itemHashCode = item_.GetHashCode();
-          hashCode += 1000000007 * itemHashCode;
+          switch(this.itemtype_){
+            case CBORObjectType_ByteString:
+              itemHashCode = CBORUtilities.ByteArrayHashCode((byte[])this.ThisItem);
+              break;
+            case CBORObjectType_Map:
+              itemHashCode = CBORMapHashCode(AsMap());
+              break;
+            case CBORObjectType_Array:
+              itemHashCode = CBORArrayHashCode(AsList());
+              break;
+            default:
+              itemHashCode = item_.GetHashCode();
+              break;
+          }
+          hashCode += 17 * itemHashCode;
         }
-        hashCode += 1000000009 * this.ItemType.GetHashCode();
-        hashCode += 1000000009 * this.tagLow;
-        hashCode += 1000000009 * this.tagHigh;
+        hashCode += 19 * (this.itemtype_.GetHashCode()+this.tagLow+this.tagHigh);
       }
       return hashCode;
     }
@@ -1085,7 +1104,7 @@ namespace PeterO {
         return new CBORObject(CBORObjectType_ByteString, ret);
       } else if (majortype == 3) { // short text string
         StringBuilder ret = new StringBuilder(firstbyte - 0x60);
-        CBORDataUtilities.ReadUtf8FromBytes(data, 1, firstbyte - 0x60, ret, false);
+        DataUtilities.ReadUtf8FromBytes(data, 1, firstbyte - 0x60, ret, false);
         return new CBORObject(CBORObjectType_TextString, ret.ToString());
       } else if (firstbyte == 0x80) // empty array
         return FromObject(new List<CBORObject>());
@@ -1389,9 +1408,10 @@ namespace PeterO {
     }
 
     /// <summary>
-    /// Adds a new object to the end of this array.
+    /// Adds a new object to this map.
     /// </summary>
-    /// <param name="obj">A CBOR object.</param>
+    /// <param name="key">A CBOR object representing the key.</param>
+    /// <param name="value">A CBOR object representing the value.</param>
     /// <exception cref="System.ArgumentNullException">key or value is null
     /// (as opposed to CBORObject.Null).</exception>
     /// <exception cref="System.ArgumentException">key already exists in this map.</exception>
@@ -1407,6 +1427,21 @@ namespace PeterO {
       } else {
         throw new InvalidOperationException("Not a map");
       }
+    }
+
+    /// <summary>
+    /// Adds a new object to this map.
+    /// </summary>
+    /// <param name="key">Astring representing the key.</param>
+    /// <param name="value">A CBOR object representing the value.</param>
+    /// <exception cref="System.ArgumentNullException">key or value is null
+    /// (as opposed to CBORObject.Null).</exception>
+    /// <exception cref="System.ArgumentException">key already exists in this map.</exception>
+    /// <exception cref="InvalidOperationException">This object is not a map.</exception>
+    public void Add(string key, CBORObject value) {
+      if ((key) == null) throw new ArgumentNullException("key");
+      if ((value) == null) throw new ArgumentNullException("value");
+      Add(CBORObject.FromObject(key),value);
     }
 
     /// <summary>
@@ -1853,7 +1888,10 @@ namespace PeterO {
       IList<CBORObject> list, Stream s) {
       WritePositiveInt(4, list.Count, s);
       foreach (CBORObject i in list) {
-        Write(i, s);
+        if(i==null)
+          s.WriteByte(0xf6);
+        else
+          i.WriteTo(s);
       }
     }
 
@@ -1863,8 +1901,14 @@ namespace PeterO {
       foreach (KeyValuePair<CBORObject, CBORObject> entry in map) {
         CBORObject key = entry.Key;
         CBORObject value = entry.Value;
-        Write(key, s);
-        Write(value, s);
+        if(key==null)
+          s.WriteByte(0xf6);
+        else
+          key.WriteTo(s);
+        if(value==null)
+          s.WriteByte(0xf6);
+        else
+          value.WriteTo(s);
       }
     }
 
@@ -1944,7 +1988,7 @@ namespace PeterO {
       for (int index = 0; index < str.Length; index++) {
         int c = str[index];
         if (c <= 0x7F) {
-          if (byteIndex + 1 > StreamedStringBufferLength) {
+          if (byteIndex >= StreamedStringBufferLength) {
             // Write bytes retrieved so far
             if (!streaming)
               stream.WriteByte((byte)0x7F);
@@ -2136,21 +2180,30 @@ namespace PeterO {
           bytes[i] = bytes[right];
           bytes[right] = value;
         }
-        if (byteCount == 1)
-          s.WriteByte((byte)((datatype << 5) | 24));
-        else if (byteCount == 2)
-          s.WriteByte((byte)((datatype << 5) | 25));
-        else if (byteCount == 3)
-          s.WriteByte((byte)((datatype << 5) | 26));
-        else if (byteCount == 4)
-          s.WriteByte((byte)((datatype << 5) | 27));
-        else {
-          s.WriteByte((datatype == 0) ?
-                      (byte)0xC2 :
-                      (byte)0xC3);
-          WritePositiveInt(2, byteCount, s);
+        switch(byteCount){
+          case 1:
+            WritePositiveInt(datatype,((int)bytes[0])&0xFF,s);
+            break;
+          case 2:
+            s.WriteByte((byte)((datatype << 5) | 24));
+            s.Write(bytes, 0, byteCount);
+            break;
+          case 3:
+            s.WriteByte((byte)((datatype << 5) | 24));
+            s.Write(bytes, 0, byteCount);
+            break;
+          case 4:
+            s.WriteByte((byte)((datatype << 5) | 24));
+            s.Write(bytes, 0, byteCount);
+            break;
+          default:
+            s.WriteByte((datatype == 0) ?
+                        (byte)0xC2 :
+                        (byte)0xC3);
+            WritePositiveInt(2, byteCount, s);
+            s.Write(bytes, 0, byteCount);
+            break;
         }
-        s.Write(bytes, 0, byteCount);
       }
     }
 
@@ -2163,28 +2216,29 @@ namespace PeterO {
     public void WriteTo(Stream s) {
       if ((s) == null) throw new ArgumentNullException("s");
       WriteTags(s);
-      if (this.ItemType == CBORObjectType_Integer) {
+      int type=this.ItemType;
+      if (type == CBORObjectType_Integer) {
         Write((long)this.ThisItem, s);
-      } else if (this.ItemType == CBORObjectType_BigInteger) {
+      } else if (type == CBORObjectType_BigInteger) {
         Write((BigInteger)this.ThisItem, s);
-      } else if (this.ItemType == CBORObjectType_ByteString) {
+      } else if (type== CBORObjectType_ByteString) {
         byte[] arr = (byte[])this.ThisItem;
         WritePositiveInt((this.ItemType == CBORObjectType_ByteString) ? 2 : 3,
                          arr.Length, s);
         s.Write(arr, 0, arr.Length);
-      } else if (this.ItemType == CBORObjectType_TextString) {
-        Write(this.AsString(), s);
-      } else if (this.ItemType == CBORObjectType_Array) {
+      } else if (type == CBORObjectType_TextString) {
+        Write((string)this.ThisItem, s);
+      } else if (type == CBORObjectType_Array) {
         WriteObjectArray(AsList(), s);
-      } else if (this.ItemType == CBORObjectType_DecimalFraction) {
+      } else if (type == CBORObjectType_DecimalFraction) {
         DecimalFraction dec = (DecimalFraction)this.ThisItem;
         Write(dec, s);
-      } else if (this.ItemType == CBORObjectType_BigFloat) {
+      } else if (type == CBORObjectType_BigFloat) {
         BigFloat dec = (BigFloat)this.ThisItem;
         Write(dec, s);
-      } else if (this.ItemType == CBORObjectType_Map) {
+      } else if (type == CBORObjectType_Map) {
         WriteObjectMap(AsMap(), s);
-      } else if (this.ItemType == CBORObjectType_SimpleValue) {
+      } else if (type == CBORObjectType_SimpleValue) {
         int value = (int)this.ThisItem;
         if (value < 24) {
           s.WriteByte((byte)(0xE0 + value));
@@ -2192,9 +2246,9 @@ namespace PeterO {
           s.WriteByte(0xF8);
           s.WriteByte((byte)value);
         }
-      } else if (this.ItemType == CBORObjectType_Single) {
+      } else if (type == CBORObjectType_Single) {
         Write((float)this.ThisItem, s);
-      } else if (this.ItemType == CBORObjectType_Double) {
+      } else if (type == CBORObjectType_Double) {
         Write((double)this.ThisItem, s);
       } else {
         throw new ArgumentException("Unexpected data type");
@@ -2590,14 +2644,6 @@ namespace PeterO {
       }
     }
 
-    private static string StringToJSONString(string str) {
-      StringBuilder sb = new StringBuilder();
-      sb.Append("\"");
-      StringToJSONStringUnquoted(str,sb);
-      sb.Append("\"");
-      return sb.ToString();
-    }
-
     /// <summary>
     /// Converts this object to a JSON string.  This function
     /// works not only with arrays and maps (the only proper
@@ -2605,109 +2651,145 @@ namespace PeterO {
     /// strings, byte arrays, and other JSON data types.
     /// </summary>
     public string ToJSONString() {
-      if (this.ItemType == CBORObjectType_SimpleValue) {
-        if (this.IsTrue) return "true";
-        else if (this.IsFalse) return "false";
-        else if (this.IsNull) return "null";
-        else return "null";
-      } else if (this.ItemType == CBORObjectType_Single) {
-        float f = (float)this.ThisItem;
-        if (Single.IsNegativeInfinity(f) ||
-            Single.IsPositiveInfinity(f) ||
-            Single.IsNaN(f)) return "null";
-        else
-          return TrimDotZero(Convert.ToString((float)f,
-                                              CultureInfo.InvariantCulture));
-      } else if (this.ItemType == CBORObjectType_Double) {
-        double f = (double)this.ThisItem;
-        if (Double.IsNegativeInfinity(f) ||
-            Double.IsPositiveInfinity(f) ||
-            Double.IsNaN(f)) return "null";
-        else
-          return TrimDotZero(Convert.ToString((double)f,
-                                              CultureInfo.InvariantCulture));
-      } else if (this.ItemType == CBORObjectType_Integer) {
-        return Convert.ToString((long)this.ThisItem, CultureInfo.InvariantCulture);
-      } else if (this.ItemType == CBORObjectType_BigInteger) {
-        return ((BigInteger)this.ThisItem).ToString(CultureInfo.InvariantCulture);
-      } else if (this.ItemType == CBORObjectType_ByteString) {
-        StringBuilder sb = new StringBuilder();
-        sb.Append('\"');
-        if (this.HasTag(22)) {
-          CBORUtilities.ToBase64(sb, (byte[])this.ThisItem, false);
-        } else if (this.HasTag(23)) {
-          CBORUtilities.ToBase16(sb, (byte[])this.ThisItem);
-        } else {
-          CBORUtilities.ToBase64URL(sb, (byte[])this.ThisItem, false);
-        }
-        sb.Append('\"');
-        return sb.ToString();
-      } else if (this.ItemType == CBORObjectType_TextString) {
-        return StringToJSONString(this.AsString());
-      } else if (this.ItemType == CBORObjectType_DecimalFraction) {
-        return ((DecimalFraction)this.ThisItem).ToString();
-      } else if (this.ItemType == CBORObjectType_BigFloat) {
-        return ((BigFloat)this.ThisItem).ToString();
-      } else if (this.ItemType == CBORObjectType_Array) {
-        StringBuilder sb = new StringBuilder();
-        bool first = true;
-        sb.Append("[");
-        foreach (CBORObject i in AsList()) {
-          if (!first) sb.Append(",");
-          sb.Append(i.ToJSONString());
-          first = false;
-        }
-        sb.Append("]");
-        return sb.ToString();
-      } else if (this.ItemType == CBORObjectType_Map) {
-        StringBuilder builder = new StringBuilder();
-        bool first = true;
-        bool hasNonStringKeys = false;
-        IDictionary<CBORObject, CBORObject> objMap = AsMap();
-        builder.Append('{');
-        foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
-          CBORObject key = entry.Key;
-          CBORObject value = entry.Value;
-          if (key.ItemType != CBORObjectType_TextString) {
-            hasNonStringKeys = true;
+      int type=this.ItemType;
+      switch(type){
+          case (CBORObjectType_SimpleValue): {
+            if (this.IsTrue) return "true";
+            else if (this.IsFalse) return "false";
+            else if (this.IsNull) return "null";
+            else return "null";
+          }
+          case (CBORObjectType_Single): {
+            float f = (float)this.ThisItem;
+            if (Single.IsNegativeInfinity(f) ||
+                Single.IsPositiveInfinity(f) ||
+                Single.IsNaN(f)) return "null";
+            else
+              return TrimDotZero(Convert.ToString((float)f,
+                                                  CultureInfo.InvariantCulture));
+          }
+          case (CBORObjectType_Double): {
+            double f = (double)this.ThisItem;
+            if (Double.IsNegativeInfinity(f) ||
+                Double.IsPositiveInfinity(f) ||
+                Double.IsNaN(f)) return "null";
+            else
+              return TrimDotZero(Convert.ToString((double)f,
+                                                  CultureInfo.InvariantCulture));
+          }
+          case (CBORObjectType_Integer): {
+            return Convert.ToString((long)this.ThisItem, CultureInfo.InvariantCulture);
+          }
+          case (CBORObjectType_BigInteger): {
+            return ((BigInteger)this.ThisItem).ToString(CultureInfo.InvariantCulture);
+          }
+          case (CBORObjectType_DecimalFraction): {
+            return ((DecimalFraction)this.ThisItem).ToString();
+          }
+          case (CBORObjectType_BigFloat): {
+            return ((BigFloat)this.ThisItem).ToString();
+          }
+          default: {
+            StringBuilder sb=new StringBuilder();
+            ToJSONString(sb);
+            return sb.ToString();
+          }
+      }
+    }
+    
+    private void ToJSONString(StringBuilder sb) {
+      int type=this.ItemType;
+      switch(type){
+        case CBORObjectType_SimpleValue:
+        case CBORObjectType_Single:
+        case CBORObjectType_Double:
+        case CBORObjectType_Integer:
+        case CBORObjectType_BigInteger:
+        case CBORObjectType_DecimalFraction:
+        case CBORObjectType_BigFloat:
+          sb.Append(ToJSONString());
+          break;
+          case CBORObjectType_ByteString: {
+            sb.Append('\"');
+            if (this.HasTag(22)) {
+              CBORUtilities.ToBase64(sb, (byte[])this.ThisItem, false);
+            } else if (this.HasTag(23)) {
+              CBORUtilities.ToBase16(sb, (byte[])this.ThisItem);
+            } else {
+              CBORUtilities.ToBase64URL(sb, (byte[])this.ThisItem, false);
+            }
+            sb.Append('\"');
             break;
           }
-          if (!first) builder.Append(",");
-          builder.Append("\"");
-          StringToJSONStringUnquoted(key.AsString(),builder);
-          builder.Append("\":");
-          builder.Append(value.ToJSONString());
-          first = false;
-        }
-        if (hasNonStringKeys) {
-          builder.Clear();
-          var sMap = new Dictionary<String, CBORObject>();
-          // Copy to a map with String keys, since
-          // some keys could be duplicates
-          // when serialized to strings
-          foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
-            CBORObject key = entry.Key;
-            CBORObject value = entry.Value;
-            string str = (key.ItemType == CBORObjectType_TextString) ?
-              key.AsString() : key.ToJSONString();
-            sMap[str] = value;
+          case CBORObjectType_TextString: {
+            sb.Append('\"');
+            StringToJSONStringUnquoted((string)this.ThisItem,sb);
+            sb.Append('\"');
+            break;
           }
-          first = true;
-          foreach (KeyValuePair<string, CBORObject> entry in sMap) {
-            string key = entry.Key;
-            CBORObject value = entry.Value;
-            if (!first) builder.Append(",");
-            builder.Append("\"");
-            StringToJSONStringUnquoted(key,builder);
-            builder.Append("\":");
-            builder.Append(value.ToJSONString());
-            first = false;
+          case CBORObjectType_Array: {
+            bool first = true;
+            sb.Append('[');
+            foreach (CBORObject i in AsList()) {
+              if (!first) sb.Append(',');
+              i.ToJSONString(sb);
+              first = false;
+            }
+            sb.Append(']');
+            break;
           }
-        }
-        builder.Append('}');
-        return builder.ToString();
-      } else {
-        throw new InvalidOperationException("Unexpected data type");
+          case CBORObjectType_Map: {
+            bool first = true;
+            bool hasNonStringKeys = false;
+            IDictionary<CBORObject, CBORObject> objMap = AsMap();
+            sb.Append('{');
+            int oldLength=sb.Length;
+            foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
+              CBORObject key = entry.Key;
+              CBORObject value = entry.Value;
+              if (key.ItemType != CBORObjectType_TextString) {
+                hasNonStringKeys = true;
+                break;
+              }
+              if (!first) sb.Append(',');
+              sb.Append('\"');
+              StringToJSONStringUnquoted((string)key.ThisItem,sb);
+              sb.Append('\"');
+              sb.Append(':');
+              value.ToJSONString(sb);
+              first = false;
+            }
+            if (hasNonStringKeys) {
+              sb.Remove(oldLength,sb.Length-oldLength);
+              var sMap = new Dictionary<String, CBORObject>();
+              // Copy to a map with String keys, since
+              // some keys could be duplicates
+              // when serialized to strings
+              foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
+                CBORObject key = entry.Key;
+                CBORObject value = entry.Value;
+                string str = (key.ItemType == CBORObjectType_TextString) ?
+                  ((string)key.ThisItem) : key.ToJSONString();
+                sMap[str] = value;
+              }
+              first = true;
+              foreach (KeyValuePair<string, CBORObject> entry in sMap) {
+                string key = entry.Key;
+                CBORObject value = entry.Value;
+                if (!first) sb.Append(',');
+                sb.Append('\"');
+                StringToJSONStringUnquoted(key,sb);
+                sb.Append('\"');
+                sb.Append(':');
+                value.ToJSONString(sb);
+                first = false;
+              }
+            }
+            sb.Append('}');
+            break;
+          }
+        default:
+          throw new InvalidOperationException("Unexpected data type");
       }
     }
 
@@ -2852,7 +2934,7 @@ namespace PeterO {
     /// surrogate code point.</exception>
     public static CBORObject FromObject(string stringValue) {
       if (stringValue == null) return CBORObject.Null;
-      if (CBORDataUtilities.GetUtf8Length(stringValue, false) < 0)
+      if (DataUtilities.GetUtf8Length(stringValue, false) < 0)
         throw new ArgumentException("String contains an unpaired surrogate code point.");
       return new CBORObject(CBORObjectType_TextString, stringValue);
     }
@@ -3316,13 +3398,10 @@ namespace PeterO {
       byte[] data = (byte[])o.ThisItem;
       if (data.Length <= 7) {
         long x = 0;
-        if (data.Length > 0) x |= (((long)data[0]) & 0xFF) << 48;
-        if (data.Length > 1) x |= (((long)data[1]) & 0xFF) << 40;
-        if (data.Length > 2) x |= (((long)data[2]) & 0xFF) << 32;
-        if (data.Length > 3) x |= (((long)data[3]) & 0xFF) << 24;
-        if (data.Length > 4) x |= (((long)data[4]) & 0xFF) << 16;
-        if (data.Length > 5) x |= (((long)data[5]) & 0xFF) << 8;
-        if (data.Length > 6) x |= (((long)data[6]) & 0xFF);
+        for(int i=0;i<data.Length;i++){
+          x<<=8;
+          x|=(((long)data[i]) & 0xFF);
+        }
         if (negative) x = -x;
         return FromObject(x);
       }
@@ -3557,6 +3636,9 @@ namespace PeterO {
         default:
           break;
       }
+      // The following doesn't check for major types 0 and 1,
+      // since all of them are fixed-length types and are
+      // handled in the call to GetFixedLengthObject.
       if (type == 2) { // Byte string
         if (additional == 31) {
           // Streaming byte string
@@ -3635,7 +3717,7 @@ namespace PeterO {
                                     " is bigger than supported");
           }
           StringBuilder builder = new StringBuilder();
-          switch (CBORDataUtilities.ReadUtf8(s, (int)uadditional, builder, false)) {
+          switch (DataUtilities.ReadUtf8(s, (int)uadditional, builder, false)) {
             case -1:
               throw new CBORException("Invalid UTF-8");
             case -2:

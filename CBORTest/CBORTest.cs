@@ -427,14 +427,14 @@ namespace Test {
         StringBuilder builder = new StringBuilder();
         int ret = 0;
         using (MemoryStream ms = new MemoryStream(bytes)) {
-          ret = CBORDataUtilities.ReadUtf8(ms, length, builder, true);
+          ret = DataUtilities.ReadUtf8(ms, length, builder, true);
           Assert.AreEqual(expectedRet, ret);
           if (expectedRet == 0) {
             Assert.AreEqual(expectedString, builder.ToString());
           }
           ms.Position = 0;
           builder.Clear();
-          ret = CBORDataUtilities.ReadUtf8(ms, length, builder, false);
+          ret = DataUtilities.ReadUtf8(ms, length, builder, false);
           Assert.AreEqual(noReplaceRet, ret);
           if (noReplaceRet == 0) {
             Assert.AreEqual(noReplaceString, builder.ToString());
@@ -442,13 +442,13 @@ namespace Test {
         }
         if (bytes.Length >= length) {
           builder.Clear();
-          ret = CBORDataUtilities.ReadUtf8FromBytes(bytes, 0, length, builder, true);
+          ret = DataUtilities.ReadUtf8FromBytes(bytes, 0, length, builder, true);
           Assert.AreEqual(expectedRet, ret);
           if (expectedRet == 0) {
             Assert.AreEqual(expectedString, builder.ToString());
           }
           builder.Clear();
-          ret = CBORDataUtilities.ReadUtf8FromBytes(bytes, 0, length, builder, false);
+          ret = DataUtilities.ReadUtf8FromBytes(bytes, 0, length, builder, false);
           Assert.AreEqual(noReplaceRet, ret);
           if (noReplaceRet == 0) {
             Assert.AreEqual(noReplaceString, builder.ToString());
@@ -665,7 +665,7 @@ namespace Test {
       }
       return sb.ToString();
     }
-
+    
     [Test]
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
@@ -3525,8 +3525,9 @@ namespace Test {
     }
     [Test]
     public void TestDecimalFracMantissaMayBeBignum() {
-      TestCommon.FromBytesTestAB(
+      CBORObject o=TestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0x3, 0xc2, 0x41, 1 });
+      Assert.AreEqual(new DecimalFraction(1,3),o.AsDecimalFraction());
     }
 
     [Test]
@@ -3543,6 +3544,83 @@ namespace Test {
       TestCommon.AssertSer(
         CBORObject.FromObject(new byte[] { 0x20, 0x78 }), "h'2078'");
     }
+    
+    [Test]
+    public void TestBigNumBytes(){
+      CBORObject o=null;
+      o=TestCommon.FromBytesTestAB(new byte[]{0xc2,0x41,0x88});
+      Assert.AreEqual((BigInteger)0x88L,o.AsBigInteger());
+      o=TestCommon.FromBytesTestAB(new byte[]{0xc2,0x42,0x88,0x77});
+      Assert.AreEqual((BigInteger)0x8877L,o.AsBigInteger());
+      o=TestCommon.FromBytesTestAB(new byte[]{0xc2,0x44,0x88,0x77,0x66,0x55});
+      Assert.AreEqual((BigInteger)0x88776655L,o.AsBigInteger());
+      o=TestCommon.FromBytesTestAB(new byte[]{0xc2,0x47,0x88,0x77,0x66,0x55,0x44,0x33,0x22});
+      Assert.AreEqual((BigInteger)0x88776655443322L,o.AsBigInteger());
+    }
+    
+    [Test]
+    public void TestTaggedUntagged(){
+      for(int i=200;i<1000;i++){
+        CBORObject o,o2;
+        o=CBORObject.FromObject(0);
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObject(BigInteger.One<<100);
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObject(new byte[]{1,2,3});
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.NewArray();
+        o.Add(CBORObject.FromObject(0));
+        o.Add(CBORObject.FromObject(1));
+        o.Add(CBORObject.FromObject(2));
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.NewMap();
+        o.Add("a",CBORObject.FromObject(0));
+        o.Add("b",CBORObject.FromObject(1));
+        o.Add("c",CBORObject.FromObject(2));
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObject("a");
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.False;
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.True;
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.Null;
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.Undefined;
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+      }
+    }
+    
     [Test]
     public void TestBigInteger() {
       BigInteger bi = (BigInteger)3;
@@ -3618,11 +3696,11 @@ namespace Test {
 
     [Test]
     public void TestCodePointCompare() {
-      Assert.AreEqual(0, Math.Sign(CBORDataUtilities.CodePointCompare("abc", "abc")));
-      Assert.AreEqual(0, Math.Sign(CBORDataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
-      Assert.AreEqual(-1, Math.Sign(CBORDataUtilities.CodePointCompare("abc", "\ud800\udc00")));
-      Assert.AreEqual(-1, Math.Sign(CBORDataUtilities.CodePointCompare("\uf000", "\ud800\udc00")));
-      Assert.AreEqual(1, Math.Sign(CBORDataUtilities.CodePointCompare("\uf000", "\ud800")));
+      Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
+      Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
+      Assert.AreEqual(-1, Math.Sign(DataUtilities.CodePointCompare("abc", "\ud800\udc00")));
+      Assert.AreEqual(-1, Math.Sign(DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")));
+      Assert.AreEqual(1, Math.Sign(DataUtilities.CodePointCompare("\uf000", "\ud800")));
     }
 
     [Test]
@@ -3637,13 +3715,13 @@ namespace Test {
 
     [Test]
     public void TestGetUtf8Length() {
-      try { CBORDataUtilities.GetUtf8Length(null, true); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORDataUtilities.GetUtf8Length(null, false); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      Assert.AreEqual(3, CBORDataUtilities.GetUtf8Length("abc", true));
-      Assert.AreEqual(4, CBORDataUtilities.GetUtf8Length("\u0300\u0300", true));
-      Assert.AreEqual(6, CBORDataUtilities.GetUtf8Length("\u3000\u3000", true));
-      Assert.AreEqual(6, CBORDataUtilities.GetUtf8Length("\ud800\ud800", true));
-      Assert.AreEqual(-1, CBORDataUtilities.GetUtf8Length("\ud800\ud800", false));
+      try { DataUtilities.GetUtf8Length(null, true); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      try { DataUtilities.GetUtf8Length(null, false); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      Assert.AreEqual(3, DataUtilities.GetUtf8Length("abc", true));
+      Assert.AreEqual(4, DataUtilities.GetUtf8Length("\u0300\u0300", true));
+      Assert.AreEqual(6, DataUtilities.GetUtf8Length("\u3000\u3000", true));
+      Assert.AreEqual(6, DataUtilities.GetUtf8Length("\ud800\ud800", true));
+      Assert.AreEqual(-1, DataUtilities.GetUtf8Length("\ud800\ud800", false));
     }
 
     [Test]

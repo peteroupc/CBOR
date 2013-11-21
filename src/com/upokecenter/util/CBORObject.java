@@ -401,7 +401,7 @@ public int compareTo(CBORObject other) {
               return CBORUtilities.ByteArrayCompare((byte[])objA, (byte[])objB);
             }
             case CBORObjectType_TextString: {
-              return CBORDataUtilities.CodePointCompare(
+              return DataUtilities.CodePointCompare(
                 (String)objA, (String)objB);
             }
             case CBORObjectType_Array: {
@@ -740,13 +740,15 @@ public int compareTo(CBORObject other) {
     private static int ListCompare(ArrayList<CBORObject> listA, ArrayList<CBORObject> listB) {
       if (listA == null) return (listB == null) ? 0 : -1;
       if (listB == null) return 1;
-      int c = Math.min(listA.size(), listB.size());
+      int listACount=listA.size();
+      int listBCount=listB.size();
+      int c = Math.min(listACount, listBCount);
       for (int i = 0; i < c; i++) {
         int cmp = listA.get(i).compareTo(listB.get(i));
         if (cmp != 0) return cmp;
       }
-      if (listA.size() != listB.size())
-        return (listA.size() < listB.size()) ? -1 : 1;
+      if (listACount != listBCount)
+        return (listACount < listBCount) ? -1 : 1;
       return 0;
     }
     private static boolean CBORArrayEquals(
@@ -755,9 +757,14 @@ public int compareTo(CBORObject other) {
      ) {
       if (listA == null) return (listB == null);
       if (listB == null) return false;
-      if (listA.size() != listB.size()) return false;
-      for (int i = 0; i < listA.size(); i++) {
-        if (!(((listA.get(i))==null) ? ((listB.get(i))==null) : (listA.get(i)).equals(listB.get(i)))) return false;
+      int listACount=listA.size();
+      int listBCount=listB.size();
+      if (listACount != listBCount) return false;
+      for (int i = 0; i < listACount; i++) {
+        CBORObject itemA=listA.get(i);
+        CBORObject itemB=listB.get(i);
+        if (!(itemA==null ? itemB==null : itemA.equals(itemB)))
+          return false;
       }
       return true;
     }
@@ -782,9 +789,14 @@ public int compareTo(CBORObject other) {
       if (mapA == null) return (mapB == null);
       if (mapB == null) return false;
       if (mapA.size() != mapB.size()) return false;
-      for(CBORObject k : mapA.keySet()) {
-        if (mapB.containsKey(k)) {
-          if (!(((mapA.get(k))==null) ? ((mapB.get(k))==null) : (mapA.get(k)).equals(mapB.get(k))))
+      for(Map.Entry<CBORObject,CBORObject> kvp : mapA.entrySet()) {
+        CBORObject valueB=null;
+        boolean hasKey;
+valueB=mapB.get(kvp.getKey());
+hasKey=(valueB==null) ? mapB.containsKey(kvp.getKey()) : true;
+        if (hasKey) {
+          CBORObject valueA=kvp.getValue();
+          if (!(valueA==null ? valueB==null : valueA.equals(valueB)))
             return false;
         } else {
           return false;
@@ -818,21 +830,26 @@ public boolean equals(CBORObject obj) {
       CBORObject other = ((obj instanceof CBORObject) ? (CBORObject)obj : null);
       if (other == null)
         return false;
-      if(item_ instanceof byte[]) {
-        if (!CBORUtilities.ByteArrayEquals((byte[])this.getThisItem(), ((other.item_ instanceof byte[]) ? (byte[])other.item_ : null)))
-          return false;
-      } else if(item_ instanceof List<?>) {
-        if (!CBORArrayEquals(AsList(), ((other.item_ instanceof List<?>) ? (List<CBORObject>)other.item_ : null)))
-          return false;
-      } else if(item_ instanceof Map<?,?>) {
-        if (!CBORMapEquals(AsMap(),
-                           ((other.item_ instanceof Map<?,?>) ? (Map<CBORObject, CBORObject>)other.item_ : null)))
-          return false;
-      } else {
-        if (!(((this.item_)==null) ? ((other.item_)==null) : (this.item_).equals(other.item_)))
-          return false;
+      switch(this.itemtype_){
+        case CBORObjectType_ByteString:
+          if (!CBORUtilities.ByteArrayEquals((byte[])this.getThisItem(), ((other.item_ instanceof byte[]) ? (byte[])other.item_ : null)))
+            return false;
+          break;
+        case CBORObjectType_Map:
+          if (!CBORMapEquals(AsMap(),
+                             ((other.item_ instanceof Map<?,?>) ? (Map<CBORObject, CBORObject>)other.item_ : null)))
+            return false;
+          break;
+        case CBORObjectType_Array:
+          if (!CBORArrayEquals(AsList(), ((other.item_ instanceof List<?>) ? (List<CBORObject>)other.item_ : null)))
+            return false;
+          break;
+        default:
+          if (!(((this.item_)==null) ? ((other.item_)==null) : (this.item_).equals(other.item_)))
+            return false;
+          break;
       }
-      return this.getItemType() == other.getItemType() &&
+      return this.itemtype_ == other.itemtype_ &&
         this.tagLow == other.tagLow &&
         this.tagHigh == other.tagHigh;
     }
@@ -841,23 +858,27 @@ public boolean equals(CBORObject obj) {
      * Calculates the hash code of this object.
      */
     @Override public int hashCode() {
-      int hashCode_ = 0;
+      int hashCode_ = 13;
       {
         if (item_ != null) {
           int itemHashCode = 0;
-          if(item_ instanceof byte[])
-            itemHashCode = CBORUtilities.ByteArrayHashCode((byte[])this.getThisItem());
-          else if(item_ instanceof List<?>)
-            itemHashCode = CBORArrayHashCode(AsList());
-          else if(item_ instanceof Map<?,?>)
-            itemHashCode = CBORMapHashCode(AsMap());
-          else
-            itemHashCode = item_.hashCode();
-          hashCode_ += 1000000007 * itemHashCode;
+          switch(this.itemtype_){
+            case CBORObjectType_ByteString:
+              itemHashCode = CBORUtilities.ByteArrayHashCode((byte[])this.getThisItem());
+              break;
+            case CBORObjectType_Map:
+              itemHashCode = CBORMapHashCode(AsMap());
+              break;
+            case CBORObjectType_Array:
+              itemHashCode = CBORArrayHashCode(AsList());
+              break;
+            default:
+              itemHashCode = item_.hashCode();
+              break;
+          }
+          hashCode_ += 17 * itemHashCode;
         }
-        hashCode_ += 1000000009 * this.getItemType();
-        hashCode_ += 1000000009 * this.tagLow;
-        hashCode_ += 1000000009 * this.tagHigh;
+        hashCode_ += 19 * (this.itemtype_+this.tagLow+this.tagHigh);
       }
       return hashCode_;
     }
@@ -1046,7 +1067,7 @@ public boolean equals(CBORObject obj) {
         return new CBORObject(CBORObjectType_ByteString, ret);
       } else if (majortype == 3) { // short text String
         StringBuilder ret = new StringBuilder(firstbyte - 0x60);
-        CBORDataUtilities.ReadUtf8FromBytes(data, 1, firstbyte - 0x60, ret, false);
+        DataUtilities.ReadUtf8FromBytes(data, 1, firstbyte - 0x60, ret, false);
         return new CBORObject(CBORObjectType_TextString, ret.toString());
       } else if (firstbyte == 0x80) // empty array
         return FromObject(new ArrayList<CBORObject>());
@@ -1327,8 +1348,9 @@ public void set(String key, CBORObject value) {
       }
 
     /**
-     * Adds a new object to the end of this array.
-     * @param obj A CBOR object.
+     * Adds a new object to this map.
+     * @param key A CBOR object representing the key.
+     * @param value A CBOR object representing the value.
      * @throws java.lang.NullPointerException key or value is null (as opposed
      * to CBORObject.Null).
      * @throws java.lang.IllegalArgumentException key already exists in this map.
@@ -1345,6 +1367,21 @@ public void set(String key, CBORObject value) {
       } else {
         throw new IllegalStateException("Not a map");
       }
+    }
+
+    /**
+     * Adds a new object to this map.
+     * @param key Astring representing the key.
+     * @param value A CBOR object representing the value.
+     * @throws java.lang.NullPointerException key or value is null (as opposed
+     * to CBORObject.Null).
+     * @throws java.lang.IllegalArgumentException key already exists in this map.
+     * @throws IllegalStateException This object is not a map.
+     */
+    public void Add(String key, CBORObject value) {
+      if ((key) == null) throw new NullPointerException("key");
+      if ((value) == null) throw new NullPointerException("value");
+      Add(CBORObject.FromObject(key),value);
     }
 
     /**
@@ -1758,7 +1795,10 @@ public void set(String key, CBORObject value) {
       List<CBORObject> list, OutputStream s) throws IOException {
       WritePositiveInt(4, list.size(), s);
       for(CBORObject i : list) {
-        Write(i, s);
+        if(i==null)
+          s.write(0xf6);
+        else
+          i.WriteTo(s);
       }
     }
 
@@ -1768,8 +1808,14 @@ public void set(String key, CBORObject value) {
       for(Map.Entry<CBORObject, CBORObject> entry : map.entrySet()) {
         CBORObject key = entry.getKey();
         CBORObject value = entry.getValue();
-        Write(key, s);
-        Write(value, s);
+        if(key==null)
+          s.write(0xf6);
+        else
+          key.WriteTo(s);
+        if(value==null)
+          s.write(0xf6);
+        else
+          value.WriteTo(s);
       }
     }
 
@@ -1849,7 +1895,7 @@ public void set(String key, CBORObject value) {
       for (int index = 0; index < str.length(); index++) {
         int c = str.charAt(index);
         if (c <= 0x7F) {
-          if (byteIndex + 1 > StreamedStringBufferLength) {
+          if (byteIndex >= StreamedStringBufferLength) {
             // Write bytes retrieved so far
             if (!streaming)
               stream.write((byte)0x7F);
@@ -2041,21 +2087,30 @@ public void set(String key, CBORObject value) {
           bytes[i] = bytes[right];
           bytes[right] = value;
         }
-        if (byteCount == 1)
-          s.write((byte)((datatype << 5) | 24));
-        else if (byteCount == 2)
-          s.write((byte)((datatype << 5) | 25));
-        else if (byteCount == 3)
-          s.write((byte)((datatype << 5) | 26));
-        else if (byteCount == 4)
-          s.write((byte)((datatype << 5) | 27));
-        else {
-          s.write((datatype == 0) ?
-                      (byte)0xC2 :
-                      (byte)0xC3);
-          WritePositiveInt(2, byteCount, s);
+        switch(byteCount){
+          case 1:
+            WritePositiveInt(datatype,((int)bytes[0])&0xFF,s);
+            break;
+          case 2:
+            s.write((byte)((datatype << 5) | 24));
+            s.write(bytes,0,byteCount);
+            break;
+          case 3:
+            s.write((byte)((datatype << 5) | 24));
+            s.write(bytes,0,byteCount);
+            break;
+          case 4:
+            s.write((byte)((datatype << 5) | 24));
+            s.write(bytes,0,byteCount);
+            break;
+          default:
+            s.write((datatype == 0) ?
+                        (byte)0xC2 :
+                        (byte)0xC3);
+            WritePositiveInt(2, byteCount, s);
+            s.write(bytes,0,byteCount);
+            break;
         }
-        s.write(bytes,0,byteCount);
       }
     }
 
@@ -2068,28 +2123,29 @@ public void set(String key, CBORObject value) {
     public void WriteTo(OutputStream s) throws IOException {
       if ((s) == null) throw new NullPointerException("s");
       WriteTags(s);
-      if (this.getItemType() == CBORObjectType_Integer) {
+      int type=this.getItemType();
+      if (type == CBORObjectType_Integer) {
         Write((((Long)this.getThisItem()).longValue()), s);
-      } else if (this.getItemType() == CBORObjectType_BigInteger) {
+      } else if (type == CBORObjectType_BigInteger) {
         Write((BigInteger)this.getThisItem(), s);
-      } else if (this.getItemType() == CBORObjectType_ByteString) {
+      } else if (type== CBORObjectType_ByteString) {
         byte[] arr = (byte[])this.getThisItem();
         WritePositiveInt((this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
                          arr.length, s);
         s.write(arr,0,arr.length);
-      } else if (this.getItemType() == CBORObjectType_TextString) {
-        Write(this.AsString(), s);
-      } else if (this.getItemType() == CBORObjectType_Array) {
+      } else if (type == CBORObjectType_TextString) {
+        Write((String)this.getThisItem(), s);
+      } else if (type == CBORObjectType_Array) {
         WriteObjectArray(AsList(), s);
-      } else if (this.getItemType() == CBORObjectType_DecimalFraction) {
+      } else if (type == CBORObjectType_DecimalFraction) {
         DecimalFraction dec = (DecimalFraction)this.getThisItem();
         Write(dec, s);
-      } else if (this.getItemType() == CBORObjectType_BigFloat) {
+      } else if (type == CBORObjectType_BigFloat) {
         BigFloat dec = (BigFloat)this.getThisItem();
         Write(dec, s);
-      } else if (this.getItemType() == CBORObjectType_Map) {
+      } else if (type == CBORObjectType_Map) {
         WriteObjectMap(AsMap(), s);
-      } else if (this.getItemType() == CBORObjectType_SimpleValue) {
+      } else if (type == CBORObjectType_SimpleValue) {
         int value = ((Integer)this.getThisItem()).intValue();
         if (value < 24) {
           s.write((byte)(0xE0 + value));
@@ -2097,9 +2153,9 @@ public void set(String key, CBORObject value) {
           s.write(0xF8);
           s.write((byte)value);
         }
-      } else if (this.getItemType() == CBORObjectType_Single) {
+      } else if (type == CBORObjectType_Single) {
         Write(((Float)this.getThisItem()).floatValue(), s);
-      } else if (this.getItemType() == CBORObjectType_Double) {
+      } else if (type == CBORObjectType_Double) {
         Write(((Double)this.getThisItem()).doubleValue(), s);
       } else {
         throw new IllegalArgumentException("Unexpected data type");
@@ -2491,121 +2547,149 @@ public static void Write(Object o, OutputStream s) throws IOException {
       }
     }
 
-    private static String StringToJSONString(String str) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("\"");
-      StringToJSONStringUnquoted(str,sb);
-      sb.append("\"");
-      return sb.toString();
-    }
-
     /**
      * Converts this object to a JSON string. This function works not only
      * with arrays and maps (the only proper JSON objects under RFC 4627),
      * but also integers, strings, byte arrays, and other JSON data types.
      */
     public String ToJSONString() {
-      if (this.getItemType() == CBORObjectType_SimpleValue) {
-        if (this.isTrue()) return "true";
-        else if (this.isFalse()) return "false";
-        else if (this.isNull()) return "null";
-        else return "null";
-      } else if (this.getItemType() == CBORObjectType_Single) {
-        float f = ((Float)this.getThisItem()).floatValue();
-        if (((f)==Float.NEGATIVE_INFINITY) ||
-            ((f)==Float.POSITIVE_INFINITY) ||
-            Float.isNaN(f)) return "null";
-        else
-          return TrimDotZero(Float.toString((float)f));
-      } else if (this.getItemType() == CBORObjectType_Double) {
-        double f = ((Double)this.getThisItem()).doubleValue();
-        if (((f)==Double.NEGATIVE_INFINITY) ||
-            ((f)==Double.POSITIVE_INFINITY) ||
-            Double.isNaN(f)) return "null";
-        else
-          return TrimDotZero(Double.toString((double)f));
-      } else if (this.getItemType() == CBORObjectType_Integer) {
-        return Long.toString((((Long)this.getThisItem()).longValue()));
-      } else if (this.getItemType() == CBORObjectType_BigInteger) {
-        return ((BigInteger)this.getThisItem()).toString();
-      } else if (this.getItemType() == CBORObjectType_ByteString) {
-        StringBuilder sb = new StringBuilder();
-        sb.append('\"');
-        if (this.HasTag(22)) {
-          CBORUtilities.ToBase64(sb, (byte[])this.getThisItem(), false);
-        } else if (this.HasTag(23)) {
-          CBORUtilities.ToBase16(sb, (byte[])this.getThisItem());
-        } else {
-          CBORUtilities.ToBase64URL(sb, (byte[])this.getThisItem(), false);
-        }
-        sb.append('\"');
-        return sb.toString();
-      } else if (this.getItemType() == CBORObjectType_TextString) {
-        return StringToJSONString(this.AsString());
-      } else if (this.getItemType() == CBORObjectType_DecimalFraction) {
-        return ((DecimalFraction)this.getThisItem()).toString();
-      } else if (this.getItemType() == CBORObjectType_BigFloat) {
-        return ((BigFloat)this.getThisItem()).toString();
-      } else if (this.getItemType() == CBORObjectType_Array) {
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        sb.append("[");
-        for(CBORObject i : AsList()) {
-          if (!first) sb.append(",");
-          sb.append(i.ToJSONString());
-          first = false;
-        }
-        sb.append("]");
-        return sb.toString();
-      } else if (this.getItemType() == CBORObjectType_Map) {
-        StringBuilder builder = new StringBuilder();
-        boolean first = true;
-        boolean hasNonStringKeys = false;
-        Map<CBORObject, CBORObject> objMap = AsMap();
-        builder.append('{');
-        for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
-          CBORObject key = entry.getKey();
-          CBORObject value = entry.getValue();
-          if (key.getItemType() != CBORObjectType_TextString) {
-            hasNonStringKeys = true;
+      int type=this.getItemType();
+      switch(type){
+          case (CBORObjectType_SimpleValue): {
+            if (this.isTrue()) return "true";
+            else if (this.isFalse()) return "false";
+            else if (this.isNull()) return "null";
+            else return "null";
+          }
+          case (CBORObjectType_Single): {
+            float f = ((Float)this.getThisItem()).floatValue();
+            if (((f)==Float.NEGATIVE_INFINITY) ||
+                ((f)==Float.POSITIVE_INFINITY) ||
+                Float.isNaN(f)) return "null";
+            else
+              return TrimDotZero(Float.toString((float)f));
+          }
+          case (CBORObjectType_Double): {
+            double f = ((Double)this.getThisItem()).doubleValue();
+            if (((f)==Double.NEGATIVE_INFINITY) ||
+                ((f)==Double.POSITIVE_INFINITY) ||
+                Double.isNaN(f)) return "null";
+            else
+              return TrimDotZero(Double.toString((double)f));
+          }
+          case (CBORObjectType_Integer): {
+            return Long.toString((((Long)this.getThisItem()).longValue()));
+          }
+          case (CBORObjectType_BigInteger): {
+            return ((BigInteger)this.getThisItem()).toString();
+          }
+          case (CBORObjectType_DecimalFraction): {
+            return ((DecimalFraction)this.getThisItem()).toString();
+          }
+          case (CBORObjectType_BigFloat): {
+            return ((BigFloat)this.getThisItem()).toString();
+          }
+          default: {
+            StringBuilder sb=new StringBuilder();
+            ToJSONString(sb);
+            return sb.toString();
+          }
+      }
+    }
+    
+    private void ToJSONString(StringBuilder sb) {
+      int type=this.getItemType();
+      switch(type){
+        case CBORObjectType_SimpleValue:
+        case CBORObjectType_Single:
+        case CBORObjectType_Double:
+        case CBORObjectType_Integer:
+        case CBORObjectType_BigInteger:
+        case CBORObjectType_DecimalFraction:
+        case CBORObjectType_BigFloat:
+          sb.append(ToJSONString());
+          break;
+          case CBORObjectType_ByteString: {
+            sb.append('\"');
+            if (this.HasTag(22)) {
+              CBORUtilities.ToBase64(sb, (byte[])this.getThisItem(), false);
+            } else if (this.HasTag(23)) {
+              CBORUtilities.ToBase16(sb, (byte[])this.getThisItem());
+            } else {
+              CBORUtilities.ToBase64URL(sb, (byte[])this.getThisItem(), false);
+            }
+            sb.append('\"');
             break;
           }
-          if (!first) builder.append(",");
-          builder.append("\"");
-          StringToJSONStringUnquoted(key.AsString(),builder);
-          builder.append("\":");
-          builder.append(value.ToJSONString());
-          first = false;
-        }
-        if (hasNonStringKeys) {
-          builder.setLength(0);
-          HashMap<String, CBORObject> sMap=new HashMap<String, CBORObject>();
-          // Copy to a map with String keys, since
-          // some keys could be duplicates
-          // when serialized to strings
-          for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
-            CBORObject key = entry.getKey();
-            CBORObject value = entry.getValue();
-            String str = (key.getItemType() == CBORObjectType_TextString) ?
-              key.AsString() : key.ToJSONString();
-            sMap.put(str,value);
+          case CBORObjectType_TextString: {
+            sb.append('\"');
+            StringToJSONStringUnquoted((String)this.getThisItem(),sb);
+            sb.append('\"');
+            break;
           }
-          first = true;
-          for(Map.Entry<String, CBORObject> entry : sMap.entrySet()) {
-            String key = entry.getKey();
-            CBORObject value = entry.getValue();
-            if (!first) builder.append(",");
-            builder.append("\"");
-            StringToJSONStringUnquoted(key,builder);
-            builder.append("\":");
-            builder.append(value.ToJSONString());
-            first = false;
+          case CBORObjectType_Array: {
+            boolean first = true;
+            sb.append('[');
+            for(CBORObject i : AsList()) {
+              if (!first) sb.append(',');
+              i.ToJSONString(sb);
+              first = false;
+            }
+            sb.append(']');
+            break;
           }
-        }
-        builder.append('}');
-        return builder.toString();
-      } else {
-        throw new IllegalStateException("Unexpected data type");
+          case CBORObjectType_Map: {
+            boolean first = true;
+            boolean hasNonStringKeys = false;
+            Map<CBORObject, CBORObject> objMap = AsMap();
+            sb.append('{');
+            int oldLength=sb.length();
+            for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
+              CBORObject key = entry.getKey();
+              CBORObject value = entry.getValue();
+              if (key.getItemType() != CBORObjectType_TextString) {
+                hasNonStringKeys = true;
+                break;
+              }
+              if (!first) sb.append(',');
+              sb.append('\"');
+              StringToJSONStringUnquoted((String)key.getThisItem(),sb);
+              sb.append('\"');
+              sb.append(':');
+              value.ToJSONString(sb);
+              first = false;
+            }
+            if (hasNonStringKeys) {
+              sb.delete(oldLength,(oldLength)+(sb.length()-oldLength));
+              HashMap<String, CBORObject> sMap=new HashMap<String, CBORObject>();
+              // Copy to a map with String keys, since
+              // some keys could be duplicates
+              // when serialized to strings
+              for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
+                CBORObject key = entry.getKey();
+                CBORObject value = entry.getValue();
+                String str = (key.getItemType() == CBORObjectType_TextString) ?
+                  ((String)key.getThisItem()) : key.ToJSONString();
+                sMap.put(str,value);
+              }
+              first = true;
+              for(Map.Entry<String, CBORObject> entry : sMap.entrySet()) {
+                String key = entry.getKey();
+                CBORObject value = entry.getValue();
+                if (!first) sb.append(',');
+                sb.append('\"');
+                StringToJSONStringUnquoted(key,sb);
+                sb.append('\"');
+                sb.append(':');
+                value.ToJSONString(sb);
+                first = false;
+              }
+            }
+            sb.append('}');
+            break;
+          }
+        default:
+          throw new IllegalStateException("Unexpected data type");
       }
     }
 
@@ -2749,7 +2833,7 @@ public static void Write(Object o, OutputStream s) throws IOException {
      */
     public static CBORObject FromObject(String stringValue) {
       if (stringValue == null) return CBORObject.Null;
-      if (CBORDataUtilities.GetUtf8Length(stringValue, false) < 0)
+      if (DataUtilities.GetUtf8Length(stringValue, false) < 0)
         throw new IllegalArgumentException("String contains an unpaired surrogate code point.");
       return new CBORObject(CBORObjectType_TextString, stringValue);
     }
@@ -3204,13 +3288,10 @@ public static CBORObject FromObject(Object obj) {
       byte[] data = (byte[])o.getThisItem();
       if (data.length <= 7) {
         long x = 0;
-        if (data.length > 0) x |= (((long)data[0]) & 0xFF) << 48;
-        if (data.length > 1) x |= (((long)data[1]) & 0xFF) << 40;
-        if (data.length > 2) x |= (((long)data[2]) & 0xFF) << 32;
-        if (data.length > 3) x |= (((long)data[3]) & 0xFF) << 24;
-        if (data.length > 4) x |= (((long)data[4]) & 0xFF) << 16;
-        if (data.length > 5) x |= (((long)data[5]) & 0xFF) << 8;
-        if (data.length > 6) x |= (((long)data[6]) & 0xFF);
+        for(int i=0;i<data.length;i++){
+          x<<=8;
+          x|=(((long)data[i]) & 0xFF);
+        }
         if (negative) x = -x;
         return FromObject(x);
       }
@@ -3445,6 +3526,9 @@ public static CBORObject FromObject(Object obj) {
         default:
           break;
       }
+      // The following doesn't check for major types 0 and 1,
+      // since all of them are fixed-length types and are
+      // handled in the call to GetFixedLengthObject.
       if (type == 2) { // Byte String
         if (additional == 31) {
           // Streaming byte String
@@ -3535,7 +3619,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
                                     " is bigger than supported");
           }
           StringBuilder builder = new StringBuilder();
-          switch (CBORDataUtilities.ReadUtf8(s, (int)uadditional, builder, false)) {
+          switch (DataUtilities.ReadUtf8(s, (int)uadditional, builder, false)) {
             case -1:
               throw new CBORException("Invalid UTF-8");
             case -2:

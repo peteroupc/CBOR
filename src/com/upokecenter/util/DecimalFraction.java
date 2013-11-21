@@ -15,7 +15,7 @@ import java.math.*;
   
   /**
    * Represents an arbitrary-precision decimal floating-point number.
-   * Consists of a integer mantissa and an integer exponent, both arbitrary-precision.
+   * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
    * The value of the number is equal to mantissa * 10^exponent. <p> Note:
    * This class doesn't yet implement certain operations, notably division,
    * that require results to be rounded. That's because I haven't decided
@@ -220,7 +220,7 @@ import java.math.*;
       if (negative) mantissa=mantissa.negate();
       BigInteger diff=e1.subtract(e2);
       diff=(diff).abs();
-      mantissa=mantissa.multiply(FindPowerOfTen(diff));
+      mantissa=mantissa.multiply(FindPowerOfTenFromBig(diff));
       if (negative) mantissa=mantissa.negate();
       return mantissa;
     }
@@ -264,21 +264,21 @@ import java.math.*;
       BigInteger bigpow=BigInteger.ZERO;
       FastInteger intcurexp=new FastInteger(diff);
       if(intcurexp.compareTo(54)<=0){
-        return FindPowerOfFive(intcurexp.AsInt32());
+        return FindPowerOfFiveFromBig(intcurexp.AsInt32());
       }
       BigInteger mantissa=BigInteger.ONE;
       while (intcurexp.signum()>0) {
         if(intcurexp.compareTo(27)<=0){
-          bigpow=FindPowerOfFive(intcurexp.AsInt32());
+          bigpow=FindPowerOfFiveFromBig(intcurexp.AsInt32());
           mantissa=mantissa.multiply(bigpow);
           break;
         } else if(intcurexp.compareTo(9999999)<=0){
-          bigpow=(FindPowerOfFive(1)).pow(intcurexp.AsInt32());
+          bigpow=(FindPowerOfFiveFromBig(1)).pow(intcurexp.AsInt32());
           mantissa=mantissa.multiply(bigpow);
           break;
         } else {
           if(bigpow.signum()==0)
-            bigpow=(FindPowerOfFive(1)).pow(9999999);
+            bigpow=(FindPowerOfFiveFromBig(1)).pow(9999999);
           mantissa=mantissa.multiply(bigpow);
           intcurexp.Add(-9999999);
         }
@@ -286,7 +286,7 @@ import java.math.*;
       return mantissa;
     }
     
-    static BigInteger FindPowerOfTen(BigInteger diff){
+    static BigInteger FindPowerOfTenFromBig(BigInteger diff){
       if(diff.signum()<=0)return BigInteger.ONE;
       BigInteger bigpow=BigInteger.ZERO;
       FastInteger intcurexp=new FastInteger(diff);
@@ -313,7 +313,7 @@ import java.math.*;
       return mantissa;
     }
 
-    static BigInteger FindPowerOfFive(long precision){
+    static BigInteger FindPowerOfFiveFromBig(long precision){
       if(precision<=0)return BigInteger.ONE;
       BigInteger bigpow;
       BigInteger ret;
@@ -776,13 +776,13 @@ digit=divrem[1];
         return this.getMantissa();
       } else if (sign>0) {
         BigInteger bigmantissa = this.getMantissa();
-        bigmantissa=bigmantissa.multiply(FindPowerOfTen(this.getExponent()));
+        bigmantissa=bigmantissa.multiply(FindPowerOfTenFromBig(this.getExponent()));
         return bigmantissa;
       } else {
         BigInteger bigmantissa = this.getMantissa();
         BigInteger bigexponent=this.getExponent();
         bigexponent=bigexponent.negate();
-        bigmantissa=bigmantissa.divide(FindPowerOfTen(bigexponent));
+        bigmantissa=bigmantissa.divide(FindPowerOfTenFromBig(bigexponent));
         return bigmantissa;
       }
     }
@@ -845,7 +845,7 @@ digit=divrem[1];
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = BigInteger.valueOf(fpMantissa);
-        bigmantissa=bigmantissa.multiply(FindPowerOfFive(-fpExponent));
+        bigmantissa=bigmantissa.multiply(FindPowerOfFiveFromBig(-fpExponent));
         if (neg) bigmantissa=(bigmantissa).negate();
         return new DecimalFraction(bigmantissa, fpExponent);
       }
@@ -887,7 +887,7 @@ digit=divrem[1];
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = BigInteger.valueOf(fpMantissa);
-        bigmantissa=bigmantissa.multiply(FindPowerOfFive(-fpExponent));
+        bigmantissa=bigmantissa.multiply(FindPowerOfFiveFromBig(-fpExponent));
         if (neg) bigmantissa=(bigmantissa).negate();
         return new DecimalFraction(bigmantissa, fpExponent);
       }

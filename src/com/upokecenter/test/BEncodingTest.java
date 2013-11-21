@@ -52,7 +52,7 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
       Assert.assertEquals(b, newb);
     }
     public void doTestString(String value) {
-      String b = CBORDataUtilities.GetUtf8Length(value, false) + ":" + value;
+      String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(CBORDataUtilities.GetUtf8Bytes(b,true));
       Assert.assertEquals(value, beo.AsString());
       String newb = CBORDataUtilities.GetUtf8String(EncodingToBytes(beo),true);

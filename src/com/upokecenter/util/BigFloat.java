@@ -12,19 +12,9 @@ at: http://upokecenter.com/d/
 import java.math.*;
 
 
-
-
-
-
-
-    
-    
-
-
-
   /**
    * Represents an arbitrary-precision binary floating-point number.
-   * Consists of a integer mantissa and an integer exponent, both arbitrary-precision.
+   * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
    * The value of the number is equal to mantissa * 2^exponent. <p> Note:
    * This class doesn't yet implement certain operations, notably division,
    * that require results to be rounded. That's because I haven't decided
@@ -313,7 +303,7 @@ import java.math.*;
       } else if (bigintExp.signum() > 0) {
         // Scaled integer
         BigInteger bigmantissa = bigintMant;
-        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfTen(bigintExp));
+        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfTenFromBig(bigintExp));
         return new BigFloat(bigmantissa);
       } else {
         // Fractional number

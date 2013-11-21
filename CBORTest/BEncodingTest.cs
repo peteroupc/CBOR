@@ -38,7 +38,7 @@ namespace Test {
       Assert.AreEqual(b, newb);
     }
     public void doTestString(String value) {
-      String b = CBORDataUtilities.GetUtf8Length(value, false) + ":" + value;
+      String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
       Assert.AreEqual(value, beo.AsString());
       String newb = Encoding.UTF8.GetString(EncodingToBytes(beo));
