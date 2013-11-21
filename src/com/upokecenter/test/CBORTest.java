@@ -196,7 +196,7 @@ import org.junit.Test;
       }
     }
 
-    private static String ObjectMessages(CBORObject o1, CBORObject o2, String s){
+    private static String ObjectMessages(CBORObject o1, CBORObject o2, String s) {
         if(o1.getType()== CBORType.Number && o2.getType()== CBORType.Number){
           return s+":\n" + o1.toString() + " and\n" + o2.toString()+"\nOR\n"+
                           o1.AsDecimalFraction().toString() + " and\n" + o2.AsDecimalFraction().toString();                  
@@ -205,16 +205,16 @@ import org.junit.Test;
         }      
     }
     
-    private static void CompareTestEqual(CBORObject o1, CBORObject o2){
+    private static void CompareTestEqual(CBORObject o1, CBORObject o2) {
       if(CompareTestReciprocal(o1,o2)!=0)
         Assert.fail(ObjectMessages(o1,o2,"Not equal: "+CompareTestReciprocal(o1,o2)));
     }
-    private static void CompareTestLess(CBORObject o1, CBORObject o2){
+    private static void CompareTestLess(CBORObject o1, CBORObject o2) {
       if(CompareTestReciprocal(o1,o2)>=0)
         Assert.fail(ObjectMessages(o1,o2,"Not less: "+CompareTestReciprocal(o1,o2)));
     }
     
-    private static int CompareTestReciprocal(CBORObject o1, CBORObject o2){
+    private static int CompareTestReciprocal(CBORObject o1, CBORObject o2) {
       if((o1)==null)throw new NullPointerException("o1");
       if((o2)==null)throw new NullPointerException("o2");
       int cmp=o1.compareTo(o2);
@@ -350,19 +350,13 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     }
 
 
-    @Test
+    @Test(expected=CBORException.class)
     public void TestTagThenBreak() {
-try {
-
       TestCommon.FromBytesTestAB(new byte[]{ (byte)0xD1, (byte)0xFF });
-    
-} catch(Exception ex){
-if(!(ex instanceof CBORException))Assert.fail(ex.toString());
-}
-}
+    }
     
     @Test
-    public void TestJSONSurrogates(){
+    public void TestJSONSurrogates() {
       try { CBORObject.FromJSONString("[\"\ud800\udc00\"]"); } catch(Exception ex){ Assert.fail(ex.toString()); }
       try { CBORObject.FromJSONString("[\"\\ud800\\udc00\"]"); } catch(Exception ex){ Assert.fail(ex.toString()); }
       try { CBORObject.FromJSONString("[\"\ud800\\udc00\"]"); } catch(CBORException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
@@ -441,14 +435,14 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 try {
 ms=new ByteArrayInputStream(bytes);
 
-          ret = CBORDataUtilities.ReadUtf8(ms, length, builder, true);
+          ret = DataUtilities.ReadUtf8(ms, length, builder, true);
           Assert.assertEquals(expectedRet, ret);
           if (expectedRet == 0) {
             Assert.assertEquals(expectedString, builder.toString());
           }
           ms.reset();
           builder.setLength(0);
-          ret = CBORDataUtilities.ReadUtf8(ms, length, builder, false);
+          ret = DataUtilities.ReadUtf8(ms, length, builder, false);
           Assert.assertEquals(noReplaceRet, ret);
           if (noReplaceRet == 0) {
             Assert.assertEquals(noReplaceString, builder.toString());
@@ -459,13 +453,13 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
         if (bytes.length >= length) {
           builder.setLength(0);
-          ret = CBORDataUtilities.ReadUtf8FromBytes(bytes, 0, length, builder, true);
+          ret = DataUtilities.ReadUtf8FromBytes(bytes, 0, length, builder, true);
           Assert.assertEquals(expectedRet, ret);
           if (expectedRet == 0) {
             Assert.assertEquals(expectedString, builder.toString());
           }
           builder.setLength(0);
-          ret = CBORDataUtilities.ReadUtf8FromBytes(bytes, 0, length, builder, false);
+          ret = DataUtilities.ReadUtf8FromBytes(bytes, 0, length, builder, false);
           Assert.assertEquals(noReplaceRet, ret);
           if (noReplaceRet == 0) {
             Assert.assertEquals(noReplaceString, builder.toString());
@@ -682,7 +676,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       }
       return sb.toString();
     }
-
+    
     @Test
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
@@ -712,45 +706,27 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(longString, cbor2.AsString());
     }
 
-    @Test
+    @Test(expected=CBORException.class)
     public void TestTextStringStreamNoTagsBeforeDefinite() {
-try {
-
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x7F, 0x61, 0x20, (byte)0xC0, 0x61, 0x20, (byte)0xFF });
-    
-} catch(Exception ex){
-if(!(ex instanceof CBORException))Assert.fail(ex.toString());
-}
-}
+    }
 
-    @Test
+    @Test(expected=CBORException.class)
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
-try {
-
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x7F, 0x61, 0x20, 0x7F, 0x61, 0x20, (byte)0xFF, (byte)0xFF });
-    
-} catch(Exception ex){
-if(!(ex instanceof CBORException))Assert.fail(ex.toString());
-}
-}
+    }
     @Test
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x5F, 0x41, 0x20, 0x41, 0x20, (byte)0xFF });
     }
-    @Test
+    @Test(expected=CBORException.class)
     public void TestByteStringStreamNoTagsBeforeDefinite() {
-try {
-
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x5F, 0x41, 0x20, (byte)0xC2, 0x41, 0x20, (byte)0xFF });
-    
-} catch(Exception ex){
-if(!(ex instanceof CBORException))Assert.fail(ex.toString());
-}
-}
+    }
 
     public static void AssertDecimalsEquivalent(String a, String b) {
       CBORObject ca = CBORDataUtilities.ParseJSONNumber(a);
@@ -1377,7 +1353,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
     // Tests whether AsInt32/64/16/AsByte properly truncate floats
     // and doubles before bounds checking
     @Test
-    public void FloatingPointCloseToEdge(){
+    public void FloatingPointCloseToEdge() {
       try { CBORObject.FromObject(2.147483647E9d).AsInt32(); } catch(Exception ex){ Assert.fail(ex.toString()); }
       try { CBORObject.FromObject(2.147483647E9d).AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
       try { CBORObject.FromObject(2.147483647E9d).AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
@@ -2230,7 +2206,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
     }
     
     @Test
-    public void TestSubtractNonFinite(){
+    public void TestSubtractNonFinite() {
       try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(99.74439f)).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(0.04503661680757691d)).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(DecimalFraction.FromString("961.056025725133"))).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
@@ -2264,7 +2240,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
     }
 
     @Test
-    public void TestAsByte(){
+    public void TestAsByte() {
       for(int i=0;i<255;i++){
         Assert.assertEquals((byte)i,CBORObject.FromObject(i).AsByte());
       }
@@ -2276,17 +2252,11 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
       }
     }
 
-    @Test
+    @Test(expected=CBORException.class)
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
-try {
-
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x5F, 0x41, 0x20, 0x5F, 0x41, 0x20, (byte)0xFF, (byte)0xFF });
-    
-} catch(Exception ex){
-if(!(ex instanceof CBORException))Assert.fail(ex.toString());
-}
-}
+    }
 
 
     @Test
@@ -2310,7 +2280,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
     }
 
     @Test
-    public void TestDecFracToSingleDoubleHighExponents(){
+    public void TestDecFracToSingleDoubleHighExponents() {
       if(914323.0f!=DecimalFraction.FromString("914323").ToSingle())
         Assert.fail("decfrac single 914323\nExpected: 914323.0f\nWas: "+DecimalFraction.FromString("914323").ToSingle());
       if(914323.0d!=DecimalFraction.FromString("914323").ToDouble())
@@ -2714,7 +2684,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
     }
     
     @Test
-    public void TestDecFracIntegersToSingleDouble(){
+    public void TestDecFracIntegersToSingleDouble() {
       if(-5.7703064E7f!=DecimalFraction.FromString("-57703066").ToSingle())
         Assert.fail("decfrac single -57703066\nExpected: -5.7703064E7f\nWas: "+DecimalFraction.FromString("-57703066").ToSingle());
       if(-5.7703066E7d!=DecimalFraction.FromString("-57703066").ToDouble())
@@ -3118,7 +3088,7 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
     }
     
     @Test
-    public void TestDecFracToSingleDouble(){
+    public void TestDecFracToSingleDouble() {
       if(-4348.0f!=DecimalFraction.FromString("-4348").ToSingle())
         Assert.fail("decfrac single -4348\nExpected: -4348.0f\nWas: "+DecimalFraction.FromString("-4348").ToSingle());
       if(-4348.0d!=DecimalFraction.FromString("-4348").ToDouble())
@@ -3526,17 +3496,11 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
       TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, 0x3, 0x1a, 1, 2, 3, 4 });
     }
-    @Test
+    @Test(expected=CBORException.class)
     public void TestDecimalFracExponentMustNotBeBignum() {
-try {
-
       TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, (byte)0xc2, 0x41, 1, 0x1a, 1, 2, 3, 4 });
-    
-} catch(Exception ex){
-if(!(ex instanceof CBORException))Assert.fail(ex.toString());
-}
-}
+    }
 
     @Test
     public void TestDoubleToOther() {
@@ -3559,21 +3523,16 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
       CBORObject.FromObjectAndTag(CBORObject.Null, new BigInteger("18446744073709551615"));
     }
 
-    @Test
+    @Test(expected=CBORException.class)
     public void TestDecimalFracExactlyTwoElements() {
-try {
-
       TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, (byte)0xc2, 0x41, 1 });
-    
-} catch(Exception ex){
-if(!(ex instanceof CBORException))Assert.fail(ex.toString());
-}
-}
+    }
     @Test
     public void TestDecimalFracMantissaMayBeBignum() {
-      TestCommon.FromBytesTestAB(
+      CBORObject o=TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, 0x3, (byte)0xc2, 0x41, 1 });
+      Assert.assertEquals(new DecimalFraction(1,3),o.AsDecimalFraction());
     }
 
     @Test
@@ -3590,6 +3549,83 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
       TestCommon.AssertSer(
         CBORObject.FromObject(new byte[]{ 0x20, 0x78 }), "h'2078'");
     }
+    
+    @Test
+    public void TestBigNumBytes() {
+      CBORObject o=null;
+      o=TestCommon.FromBytesTestAB(new byte[]{(byte)0xc2,0x41,(byte)0x88});
+      Assert.assertEquals(BigInteger.valueOf(0x88L),o.AsBigInteger());
+      o=TestCommon.FromBytesTestAB(new byte[]{(byte)0xc2,0x42,(byte)0x88,0x77});
+      Assert.assertEquals(BigInteger.valueOf(0x8877L),o.AsBigInteger());
+      o=TestCommon.FromBytesTestAB(new byte[]{(byte)0xc2,0x44,(byte)0x88,0x77,0x66,0x55});
+      Assert.assertEquals(BigInteger.valueOf(0x88776655L),o.AsBigInteger());
+      o=TestCommon.FromBytesTestAB(new byte[]{(byte)0xc2,0x47,(byte)0x88,0x77,0x66,0x55,0x44,0x33,0x22});
+      Assert.assertEquals(BigInteger.valueOf(0x88776655443322L),o.AsBigInteger());
+    }
+    
+    @Test
+    public void TestTaggedUntagged() {
+      for(int i=200;i<1000;i++){
+        CBORObject o,o2;
+        o=CBORObject.FromObject(0);
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObject(BigInteger.ONE.shiftLeft(100));
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObject(new byte[]{1,2,3});
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.NewArray();
+        o.Add(CBORObject.FromObject(0));
+        o.Add(CBORObject.FromObject(1));
+        o.Add(CBORObject.FromObject(2));
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.NewMap();
+        o.Add("a",CBORObject.FromObject(0));
+        o.Add("b",CBORObject.FromObject(1));
+        o.Add("c",CBORObject.FromObject(2));
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObject("a");
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.False;
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.True;
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.Null;
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.Undefined;
+        o2=CBORObject.FromObjectAndTag(o,i);
+        TestCommon.AssertEqualsHashCode(o,o2);
+        o=CBORObject.FromObjectAndTag(o,i+1);
+        TestCommon.AssertEqualsHashCode(o,o2);
+      }
+    }
+    
     @Test
     public void TestBigInteger() {
       BigInteger bi = BigInteger.valueOf(3);
@@ -3665,11 +3701,11 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 
     @Test
     public void TestCodePointCompare() {
-      Assert.assertEquals(0, (int)Math.signum(CBORDataUtilities.CodePointCompare("abc", "abc")));
-      Assert.assertEquals(0, (int)Math.signum(CBORDataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
-      Assert.assertEquals(-1, (int)Math.signum(CBORDataUtilities.CodePointCompare("abc", "\ud800\udc00")));
-      Assert.assertEquals(-1, (int)Math.signum(CBORDataUtilities.CodePointCompare("\uf000", "\ud800\udc00")));
-      Assert.assertEquals(1, (int)Math.signum(CBORDataUtilities.CodePointCompare("\uf000", "\ud800")));
+      Assert.assertEquals(0, (int)Math.signum(DataUtilities.CodePointCompare("abc", "abc")));
+      Assert.assertEquals(0, (int)Math.signum(DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
+      Assert.assertEquals(-1, (int)Math.signum(DataUtilities.CodePointCompare("abc", "\ud800\udc00")));
+      Assert.assertEquals(-1, (int)Math.signum(DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")));
+      Assert.assertEquals(1, (int)Math.signum(DataUtilities.CodePointCompare("\uf000", "\ud800")));
     }
 
     @Test
@@ -3684,13 +3720,13 @@ if(!(ex instanceof CBORException))Assert.fail(ex.toString());
 
     @Test
     public void TestGetUtf8Length() {
-      try { CBORDataUtilities.GetUtf8Length(null, true); } catch(NullPointerException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORDataUtilities.GetUtf8Length(null, false); } catch(NullPointerException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      Assert.assertEquals(3, CBORDataUtilities.GetUtf8Length("abc", true));
-      Assert.assertEquals(4, CBORDataUtilities.GetUtf8Length("\u0300\u0300", true));
-      Assert.assertEquals(6, CBORDataUtilities.GetUtf8Length("\u3000\u3000", true));
-      Assert.assertEquals(6, CBORDataUtilities.GetUtf8Length("\ud800\ud800", true));
-      Assert.assertEquals(-1, CBORDataUtilities.GetUtf8Length("\ud800\ud800", false));
+      try { DataUtilities.GetUtf8Length(null, true); } catch(NullPointerException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { DataUtilities.GetUtf8Length(null, false); } catch(NullPointerException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      Assert.assertEquals(3, DataUtilities.GetUtf8Length("abc", true));
+      Assert.assertEquals(4, DataUtilities.GetUtf8Length("\u0300\u0300", true));
+      Assert.assertEquals(6, DataUtilities.GetUtf8Length("\u3000\u3000", true));
+      Assert.assertEquals(6, DataUtilities.GetUtf8Length("\ud800\ud800", true));
+      Assert.assertEquals(-1, DataUtilities.GetUtf8Length("\ud800\ud800", false));
     }
 
     @Test

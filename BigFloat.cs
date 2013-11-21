@@ -11,19 +11,9 @@ using System.Text;
 using System.Numerics;
 
 namespace PeterO {
-
-
-
-
-
-    
-    
-
-
-
   /// <summary>
   /// Represents an arbitrary-precision binary floating-point number.
-  /// Consists of a integer mantissa and an integer exponent,
+  /// Consists of an integer mantissa and an integer exponent,
   /// both arbitrary-precision.  The value of the number is equal
   /// to mantissa * 2^exponent.
   /// <para>
@@ -328,7 +318,7 @@ namespace PeterO {
       } else if (bigintExp.Sign > 0) {
         // Scaled integer
         BigInteger bigmantissa = bigintMant;
-        bigmantissa*=(BigInteger)(DecimalFraction.FindPowerOfTen(bigintExp));
+        bigmantissa*=(BigInteger)(DecimalFraction.FindPowerOfTenFromBig(bigintExp));
         return new BigFloat(bigmantissa);
       } else {
         // Fractional number

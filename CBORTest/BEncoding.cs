@@ -32,7 +32,7 @@ namespace PeterO {
 
 
     private static void writeUtf8(string s, Stream stream) {
-      if (CBORDataUtilities.WriteUtf8(s, stream, false) != 0)
+      if (DataUtilities.WriteUtf8(s, stream, false) != 0)
         throw new CBORException("invalid surrogate");
     }
 
@@ -131,7 +131,7 @@ namespace PeterO {
         throw new CBORException("Length too long", ex);
       }
       builder = new StringBuilder();
-      switch (CBORDataUtilities.ReadUtf8(stream, length, builder, false)) {
+      switch (DataUtilities.ReadUtf8(stream, length, builder, false)) {
         case -2:
           throw new CBORException("Premature end of data");
         case -1:
@@ -148,7 +148,7 @@ namespace PeterO {
         stream.WriteByte(unchecked((byte)((byte)'e')));
       } else if (obj.Type == CBORType.TextString) {
         string s = obj.AsString();
-        long length = CBORDataUtilities.GetUtf8Length(s, false);
+        long length = DataUtilities.GetUtf8Length(s, false);
         if (length < 0)
           throw new CBORException("invalid string");
         writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
@@ -177,7 +177,7 @@ namespace PeterO {
           foreach (KeyValuePair<string, CBORObject> entry in sMap) {
             string key = entry.Key;
             CBORObject value = entry.Value;
-            long length = CBORDataUtilities.GetUtf8Length(key, false);
+            long length = DataUtilities.GetUtf8Length(key, false);
             if (length < 0)
               throw new CBORException("invalid string");
             writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
@@ -190,7 +190,7 @@ namespace PeterO {
           stream.WriteByte(unchecked((byte)((byte)'d')));
           foreach (CBORObject key in obj.Keys) {
             string str = key.AsString();
-            long length = CBORDataUtilities.GetUtf8Length(str, false);
+            long length = DataUtilities.GetUtf8Length(str, false);
             if (length < 0)
               throw new CBORException("invalid string");
             writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
@@ -208,7 +208,7 @@ namespace PeterO {
         stream.WriteByte(unchecked((byte)((byte)'e')));
       } else {
         string str = obj.ToJSONString();
-        long length = CBORDataUtilities.GetUtf8Length(str, false);
+        long length = DataUtilities.GetUtf8Length(str, false);
         if (length < 0)
           throw new CBORException("invalid string");
         writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);

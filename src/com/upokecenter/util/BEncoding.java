@@ -29,7 +29,7 @@ private BEncoding(){}
 
 
     private static void writeUtf8(String s, OutputStream stream) throws IOException {
-      if (CBORDataUtilities.WriteUtf8(s, stream, false) != 0)
+      if (DataUtilities.WriteUtf8(s, stream, false) != 0)
         throw new CBORException("invalid surrogate");
     }
 
@@ -128,7 +128,7 @@ private BEncoding(){}
         throw new CBORException("Length too long", ex);
       }
       builder = new StringBuilder();
-      switch (CBORDataUtilities.ReadUtf8(stream, length, builder, false)) {
+      switch (DataUtilities.ReadUtf8(stream, length, builder, false)) {
         case -2:
           throw new CBORException("Premature end of data");
         case -1:
@@ -145,7 +145,7 @@ private BEncoding(){}
         stream.write(((byte)((byte)'e')));
       } else if (obj.getType() == CBORType.TextString) {
         String s = obj.AsString();
-        long length = CBORDataUtilities.GetUtf8Length(s, false);
+        long length = DataUtilities.GetUtf8Length(s, false);
         if (length < 0)
           throw new CBORException("invalid String");
         writeUtf8(Long.toString((long)length), stream);
@@ -174,7 +174,7 @@ private BEncoding(){}
           for(Map.Entry<String, CBORObject> entry : sMap.entrySet()) {
             String key = entry.getKey();
             CBORObject value = entry.getValue();
-            long length = CBORDataUtilities.GetUtf8Length(key, false);
+            long length = DataUtilities.GetUtf8Length(key, false);
             if (length < 0)
               throw new CBORException("invalid String");
             writeUtf8(Long.toString((long)length), stream);
@@ -187,7 +187,7 @@ private BEncoding(){}
           stream.write(((byte)((byte)'d')));
           for(CBORObject key : obj.getKeys()) {
             String str = key.AsString();
-            long length = CBORDataUtilities.GetUtf8Length(str, false);
+            long length = DataUtilities.GetUtf8Length(str, false);
             if (length < 0)
               throw new CBORException("invalid String");
             writeUtf8(Long.toString((long)length), stream);
@@ -205,7 +205,7 @@ private BEncoding(){}
         stream.write(((byte)((byte)'e')));
       } else {
         String str = obj.ToJSONString();
-        long length = CBORDataUtilities.GetUtf8Length(str, false);
+        long length = DataUtilities.GetUtf8Length(str, false);
         if (length < 0)
           throw new CBORException("invalid String");
         writeUtf8(Long.toString((long)length), stream);

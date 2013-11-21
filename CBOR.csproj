@@ -58,11 +58,15 @@
     <Compile Include="CBORObjectMath.cs" />
     <Compile Include="CBORType.cs" />
     <Compile Include="CBORUtilities.cs" />
+    <Compile Include="DataUtilities.cs" />
     <Compile Include="DecimalFraction.cs" />
     <Compile Include="FastInteger.cs" />
     <Compile Include="JSONTokener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmallShiftAccumulator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ProfilingSessions\Session20131118_021259.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,5 +1,5 @@
 package com.upokecenter.util;
-// Modified by Peter O; originally based on the 
+// Modified by Peter O; originally based on the
 // 2002 public domain
 // code from json.org, to use generics and
 // to use int and -1 as the terminating
@@ -100,18 +100,13 @@ package com.upokecenter.util;
       this.options = options;
     }
 
-    /**
-     * Get the next character in the source _string.
-     *
-     * @return The next character, or -1 if past the end of the source String.
-     */
-    public int next() {
+    private int next() {
       if(this.stream!=null){
         int cp = 0;
         int bytesSeen = 0;
         int bytesNeeded = 0;
-        int lower = 0x80;
-        int upper = 0xBF;
+        int lower=0;
+        int upper=0;
         try {
           while (true) {
             int b = stream.read();
@@ -124,11 +119,13 @@ package com.upokecenter.util;
               }
             }
             if (bytesNeeded == 0) {
-              if (b < 0x80) {
+              if ((b&0x7F)==b) {
                 myIndex+=1;
                 return b;
               } else if (b >= 0xc2 && b <= 0xdf) {
                 bytesNeeded = 1;
+                lower=0x80;
+                upper=0xbf;
                 cp = (b - 0xc0) << 6;
               } else if (b >= 0xe0 && b <= 0xef) {
                 lower = (b == 0xe0) ? 0xa0 : 0x80;

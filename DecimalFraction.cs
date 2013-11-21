@@ -14,7 +14,7 @@ namespace PeterO {
   
   /// <summary>
   /// Represents an arbitrary-precision decimal floating-point number.
-  /// Consists of a integer mantissa and an integer exponent,
+  /// Consists of an integer mantissa and an integer exponent,
   /// both arbitrary-precision.  The value of the number is equal
   /// to mantissa * 10^exponent.
   /// <para>
@@ -230,7 +230,7 @@ namespace PeterO {
       if (negative) mantissa = -mantissa;
       BigInteger diff=e1-(BigInteger)e2;
       diff=BigInteger.Abs(diff);
-      mantissa*=(BigInteger)(FindPowerOfTen(diff));
+      mantissa*=(BigInteger)(FindPowerOfTenFromBig(diff));
       if (negative) mantissa = -mantissa;
       return mantissa;
     }
@@ -275,21 +275,21 @@ namespace PeterO {
       BigInteger bigpow=BigInteger.Zero;
       FastInteger intcurexp=new FastInteger(diff);
       if(intcurexp.CompareTo(54)<=0){
-        return FindPowerOfFive(intcurexp.AsInt32());
+        return FindPowerOfFiveFromBig(intcurexp.AsInt32());
       }
       BigInteger mantissa=BigInteger.One;
       while (intcurexp.Sign>0) {
         if(intcurexp.CompareTo(27)<=0){
-          bigpow=FindPowerOfFive(intcurexp.AsInt32());
+          bigpow=FindPowerOfFiveFromBig(intcurexp.AsInt32());
           mantissa *= (BigInteger)bigpow;
           break;
         } else if(intcurexp.CompareTo(9999999)<=0){
-          bigpow=BigInteger.Pow(FindPowerOfFive(1),intcurexp.AsInt32());
+          bigpow=BigInteger.Pow(FindPowerOfFiveFromBig(1),intcurexp.AsInt32());
           mantissa *= (BigInteger)bigpow;
           break;
         } else {
           if(bigpow.IsZero)
-            bigpow=BigInteger.Pow(FindPowerOfFive(1),9999999);
+            bigpow=BigInteger.Pow(FindPowerOfFiveFromBig(1),9999999);
           mantissa *= bigpow;
           intcurexp.Add(-9999999);
         }
@@ -297,7 +297,7 @@ namespace PeterO {
       return mantissa;
     }
     
-    internal static BigInteger FindPowerOfTen(BigInteger diff){
+    internal static BigInteger FindPowerOfTenFromBig(BigInteger diff){
       if(diff.Sign<=0)return BigInteger.One;
       BigInteger bigpow=BigInteger.Zero;
       FastInteger intcurexp=new FastInteger(diff);
@@ -324,7 +324,7 @@ namespace PeterO {
       return mantissa;
     }
 
-    internal static BigInteger FindPowerOfFive(long precision){
+    internal static BigInteger FindPowerOfFiveFromBig(long precision){
       if(precision<=0)return BigInteger.One;
       BigInteger bigpow;
       BigInteger ret;
@@ -791,13 +791,13 @@ namespace PeterO {
         return this.Mantissa;
       } else if (sign>0) {
         BigInteger bigmantissa = this.Mantissa;
-        bigmantissa*=(BigInteger)(FindPowerOfTen(this.Exponent));
+        bigmantissa*=(BigInteger)(FindPowerOfTenFromBig(this.Exponent));
         return bigmantissa;
       } else {
         BigInteger bigmantissa = this.Mantissa;
         BigInteger bigexponent=this.Exponent;
         bigexponent=-bigexponent;
-        bigmantissa/=(BigInteger)(FindPowerOfTen(bigexponent));
+        bigmantissa/=(BigInteger)(FindPowerOfTenFromBig(bigexponent));
         return bigmantissa;
       }
     }
@@ -862,7 +862,7 @@ namespace PeterO {
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = (BigInteger)fpMantissa;
-        bigmantissa*=(BigInteger)(FindPowerOfFive(-fpExponent));
+        bigmantissa*=(BigInteger)(FindPowerOfFiveFromBig(-fpExponent));
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
         return new DecimalFraction(bigmantissa, fpExponent);
       }
@@ -904,7 +904,7 @@ namespace PeterO {
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = (BigInteger)fpMantissa;
-        bigmantissa*=(BigInteger)(FindPowerOfFive(-fpExponent));
+        bigmantissa*=(BigInteger)(FindPowerOfFiveFromBig(-fpExponent));
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
         return new DecimalFraction(bigmantissa, fpExponent);
       }
