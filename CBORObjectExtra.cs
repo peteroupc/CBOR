@@ -2,7 +2,6 @@
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
@@ -12,12 +11,14 @@ using System.Globalization;
 using System.IO;
 using System.Numerics;
 using System.Text;
-
 namespace PeterO {
   // Contains extra methods placed separately
   // because they are not CLS-compliant or they
   // are specific to the .NET framework.
   public sealed partial class CBORObject {
+    /// <summary> </summary>
+    /// <returns></returns>
+    /// <remarks/>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
       int v = AsInt32();
@@ -25,7 +26,9 @@ namespace PeterO {
         throw new OverflowException("This object's value is out of range");
       return (ushort)v;
     }
-
+    /// <summary> </summary>
+    /// <returns></returns>
+    /// <remarks/>
     [CLSCompliant(false)]
     public uint AsUInt32() {
       ulong v = AsUInt64();
@@ -33,7 +36,9 @@ namespace PeterO {
         throw new OverflowException("This object's value is out of range");
       return (uint)v;
     }
-
+    /// <summary> </summary>
+    /// <returns></returns>
+    /// <remarks/>
     [CLSCompliant(false)]
     public sbyte AsSByte() {
       int v = AsInt32();
@@ -52,7 +57,6 @@ namespace PeterO {
       if (neg) d |= (1 << 31);
       return new Decimal(new int[] { a, b, c, d });
     }
-
     private decimal DecimalFractionToDecimal(DecimalFraction decfrac) {
       FastInteger bigexp = new FastInteger(decfrac.Exponent);
       BigInteger bigmant = decfrac.Mantissa;
@@ -98,18 +102,12 @@ namespace PeterO {
         return EncodeDecimal(bigmant, 0, neg);
       }
     }
-
-    /// <summary>
-    /// Converts this object to a .NET decimal.
-    /// </summary>
-    /// <returns>The closest big integer
-    /// to this object.</returns>
-    /// <exception cref="System.InvalidOperationException">
-    /// This object's type is not a number type.
-    /// </exception>
-    /// <exception cref="System.OverflowException">
-    /// This object's value exceeds the range of a
-    /// .NET decimal.</exception>
+    /// <summary> Converts this object to a .NET decimal. </summary>
+    /// <returns> The closest big integer to this object.</returns>
+    /// <exception cref='System.InvalidOperationException'> This object's
+    /// type is not a number type. </exception>
+    /// <exception cref='System.OverflowException'> This object's value
+    /// exceeds the range of a .NET decimal.</exception>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
       if (this.ItemType == CBORObjectType_Integer) {
@@ -139,20 +137,13 @@ namespace PeterO {
       } else
         throw new InvalidOperationException("Not a number type");
     }
-
-    /// <summary>
-    /// Converts this object to a 64-bit unsigned
-    /// integer.  Floating point values are truncated
-    /// to an integer.
-    /// </summary>
-    /// <returns>The closest big integer
-    /// to this object.</returns>
-    /// <exception cref="System.InvalidOperationException">
-    /// This object's type is not a number type.
-    /// </exception>
-    /// <exception cref="System.OverflowException">
-    /// This object's value exceeds the range of a 64-bit
-    /// unsigned integer.</exception>
+    /// <summary> Converts this object to a 64-bit unsigned integer. Floating
+    /// point values are truncated to an integer. </summary>
+    /// <returns> The closest big integer to this object.</returns>
+    /// <exception cref='System.InvalidOperationException'> This object's
+    /// type is not a number type. </exception>
+    /// <exception cref='System.OverflowException'> This object's value
+    /// exceeds the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       if (this.ItemType == CBORObjectType_Integer) {
@@ -192,8 +183,6 @@ namespace PeterO {
       } else
         throw new InvalidOperationException("Not a number type");
     }
-
-
     [CLSCompliant(false)]
     public static void Write(sbyte value, Stream s) {
       Write((long)value, s);
@@ -214,7 +203,6 @@ namespace PeterO {
         s.WriteByte((byte)(value & 0xFF));
       }
     }
-
     public static CBORObject FromObject(decimal value) {
       if (Math.Round(value) == value) {
         // This is an integer
@@ -252,7 +240,6 @@ namespace PeterO {
     public static void Write(ushort value, Stream s) {
       Write((ulong)value, s);
     }
-
     [CLSCompliant(false)]
     public static CBORObject FromObject(sbyte value) {
       return FromObject((long)value);
@@ -269,15 +256,11 @@ namespace PeterO {
     public static CBORObject FromObject(ushort value) {
       return FromObject((long)value);
     }
-
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, (BigInteger)tag);
     }
-
-
     // .NET-specific
-
     private static string DateTimeToString(DateTime bi) {
       DateTime dt = bi.ToUniversalTime();
       int year = dt.Year;
@@ -318,21 +301,21 @@ namespace PeterO {
       }
       return new String(charbuf);
     }
-
+    /// <summary> </summary>
+    /// <param name='value'> A DateTime object.</param>
+    /// <returns></returns>
     public static CBORObject FromObject(DateTime value) {
       return new CBORObject(
         FromObject(DateTimeToString(value)), 0, 0);
     }
-    /// <summary>
-    /// Writes a date and time in CBOR format to a data stream.
-    /// </summary>
-    /// <param name="bi"></param>
-    /// <param name="s"></param>
+    /// <summary> Writes a date and time in CBOR format to a data stream. </summary>
+    /// <param name='bi'> A DateTime object.</param>
+    /// <returns></returns>
+    /// <param name='stream'> A Stream object.</param>
     public static void Write(DateTime bi, Stream stream) {
       if ((stream) == null) throw new ArgumentNullException("s");
       stream.WriteByte(0xC0);
       Write(DateTimeToString(bi), stream);
     }
-
   }
 }

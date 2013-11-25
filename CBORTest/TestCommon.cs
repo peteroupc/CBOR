@@ -2,23 +2,20 @@
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 using System.Numerics;
 using PeterO;
 using System.IO;
-
 namespace Test {
   static class TestCommon {
     private static CBORObject FromBytesA(byte[] b) {
       return CBORObject.DecodeFromBytes(b);
     }
-
     private static CBORObject FromBytesB(byte[] b) {
       using (MemoryStream ms = new MemoryStream(b)) {
         CBORObject o = CBORObject.Read(ms);
@@ -27,7 +24,6 @@ namespace Test {
         return o;
       }
     }
-
     //
     //  Tests the equivalence of the FromBytes and Read methods.
     //
@@ -38,7 +34,6 @@ namespace Test {
         Assert.AreEqual(oa, ob);
       return oa;
     }
-
     public static void AssertEqualsHashCode(CBORObject o, CBORObject o2) {
       if (o.Equals(o2)) {
         if (!o2.Equals(o))
@@ -97,8 +92,6 @@ namespace Test {
       TestNumber(o);
       AssertEqualsHashCode(o, o2);
     }
-
-
     public static void AssertSer(CBORObject o, String s) {
       if (!s.Equals(o.ToString()))
         Assert.AreEqual(s, o.ToString(), "o is not equal to s");
@@ -109,6 +102,5 @@ namespace Test {
       TestNumber(o);
       AssertEqualsHashCode(o, o2);
     }
-
   }
 }

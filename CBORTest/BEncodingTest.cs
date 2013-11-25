@@ -1,15 +1,14 @@
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using System;
 using System.IO;
 using PeterO;
-
 namespace Test {
-
-
-  [TestFixture]
-  public class BEncodingTest {
-
+    /// <summary>
+    /// </summary>
+    /// <remarks/>
+[TestClass]
+  public class BEncodingTest{
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {
         using (var s = new MemoryStream(b)) {
@@ -29,23 +28,40 @@ namespace Test {
         throw new CBORException("", ex);
       }
     }
-
-    public void doTestLong(long value) {
+    /// <summary>
+    /// </summary>
+    /// <param name='value'>
+    /// A 64-bit signed integer.</param>
+    /// <returns>
+    /// </returns>
+    /// <remarks/>
+public void doTestLong(long value) {
       String b = "i" + value + "e";
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
       Assert.AreEqual(value, beo.AsInt64());
       String newb = Encoding.UTF8.GetString(EncodingToBytes(beo));
       Assert.AreEqual(b, newb);
     }
-    public void doTestString(String value) {
+    /// <summary>
+    /// </summary>
+    /// <param name='value'>
+    /// A String object.</param>
+    /// <returns>
+    /// </returns>
+    /// <remarks/>
+public void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
       Assert.AreEqual(value, beo.AsString());
       String newb = Encoding.UTF8.GetString(EncodingToBytes(beo));
       Assert.AreEqual(b, newb);
     }
-
-    [Test]
+    /// <summary>
+    /// </summary>
+    /// <returns>
+    /// </returns>
+    /// <remarks/>
+[TestMethod]
     public void testLong() {
       doTestLong(0);
       doTestLong(-1);
@@ -54,8 +70,12 @@ namespace Test {
       doTestLong(Int64.MinValue);
       doTestLong(Int64.MaxValue);
     }
-
-    [Test]
+    /// <summary>
+    /// </summary>
+    /// <returns>
+    /// </returns>
+    /// <remarks/>
+[TestMethod]
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
       beo.Add(CBORObject.FromObject(1));
@@ -75,8 +95,12 @@ namespace Test {
       Assert.AreEqual(3, beo[2].AsInt64());
       Assert.AreEqual("four", beo[3].AsString());
     }
-
-    [Test]
+    /// <summary>
+    /// </summary>
+    /// <returns>
+    /// </returns>
+    /// <remarks/>
+[TestMethod]
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
       beo["zero"] = CBORObject.FromObject(1);
@@ -96,8 +120,12 @@ namespace Test {
       Assert.AreEqual(3, beo["two"].AsInt64());
       Assert.AreEqual("four", beo["three"].AsString());
     }
-
-    [Test]
+    /// <summary>
+    /// </summary>
+    /// <returns>
+    /// </returns>
+    /// <remarks/>
+[TestMethod]
     public void testString() {
       doTestString("");
       doTestString(" ");
@@ -117,5 +145,4 @@ namespace Test {
       doTestString("te\udbff\udfffst");
     }
   }
-
 }

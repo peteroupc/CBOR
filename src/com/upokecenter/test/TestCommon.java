@@ -3,7 +3,6 @@ package com.upokecenter.test;
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
@@ -15,13 +14,11 @@ import java.math.*;
 import com.upokecenter.util.*;
 import java.io.*;
 
-
   final class TestCommon {
 private TestCommon(){}
     private static CBORObject FromBytesA(byte[] b) {
       return CBORObject.DecodeFromBytes(b);
     }
-
     private static CBORObject FromBytesB(byte[] b) {
       java.io.ByteArrayInputStream ms=null;
 try {
@@ -37,7 +34,6 @@ finally {
 try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
     }
-
     //
     //  Tests the equivalence of the FromBytes and Read methods.
     //
@@ -48,7 +44,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         Assert.assertEquals(oa, ob);
       return oa;
     }
-
     public static void AssertEqualsHashCode(CBORObject o, CBORObject o2) {
       if (o.equals(o2)) {
         if (!o2.equals(o))
@@ -104,8 +99,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestNumber(o);
       AssertEqualsHashCode(o, o2);
     }
-
-
     public static void AssertSer(CBORObject o, String s) {
       if (!s.equals(o.toString()))
         Assert.assertEquals("o is not equal to s",s,o.toString());
@@ -116,5 +109,4 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestNumber(o);
       AssertEqualsHashCode(o, o2);
     }
-
   }

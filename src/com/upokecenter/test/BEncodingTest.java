@@ -6,12 +6,11 @@ import org.junit.Test;
 import java.io.*;
 import com.upokecenter.util.*;
 
+    /**
+     * 
+     */
 
-
-
-  
-  public class BEncodingTest {
-
+  public class BEncodingTest{
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {
         java.io.ByteArrayInputStream s=null;
@@ -43,23 +42,32 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
         throw new CBORException("", ex);
       }
     }
-
-    public void doTestLong(long value) {
+    /**
+     * 
+     * @param value A 64-bit signed integer.
+     */
+public void doTestLong(long value) {
       String b = "i" + value + "e";
-      CBORObject beo = EncodingFromBytes(CBORDataUtilities.GetUtf8Bytes(b,true));
+      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,true));
       Assert.assertEquals(value, beo.AsInt64());
-      String newb = CBORDataUtilities.GetUtf8String(EncodingToBytes(beo),true);
+      String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo),true);
       Assert.assertEquals(b, newb);
     }
-    public void doTestString(String value) {
+    /**
+     * 
+     * @param value A string object.
+     */
+public void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
-      CBORObject beo = EncodingFromBytes(CBORDataUtilities.GetUtf8Bytes(b,true));
+      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,true));
       Assert.assertEquals(value, beo.AsString());
-      String newb = CBORDataUtilities.GetUtf8String(EncodingToBytes(beo),true);
+      String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo),true);
       Assert.assertEquals(b, newb);
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void testLong() {
       doTestLong(0);
       doTestLong(-1);
@@ -68,8 +76,10 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
       doTestLong(Long.MIN_VALUE);
       doTestLong(Long.MAX_VALUE);
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
       beo.Add(CBORObject.FromObject(1));
@@ -89,8 +99,10 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
       Assert.assertEquals(3, beo.get(2).AsInt64());
       Assert.assertEquals("four", beo.get(3).AsString());
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
       beo.set("zero",CBORObject.FromObject(1));
@@ -110,8 +122,10 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
       Assert.assertEquals(3, beo.get("two").AsInt64());
       Assert.assertEquals("four", beo.get("three").AsString());
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void testString() {
       doTestString("");
       doTestString(" ");
@@ -131,4 +145,3 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
       doTestString("te\udbff\udfffst");
     }
   }
-

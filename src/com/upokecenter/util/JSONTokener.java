@@ -15,11 +15,7 @@ package com.upokecenter.util;
   import java.io.*;
   
   import java.util.*;
-
-
   class JSONTokener {
-
-
     /**
      * Trailing commas are allowed in the JSON _string.
      */
@@ -48,8 +44,6 @@ package com.upokecenter.util;
      * Allows comments in JSON texts.
      */
     public static final int OPTION_ALLOW_COMMENTS = 128;
-
-
     /**
      * Get the hex value of a character (base16).
      * @param c A character between '0' and '9' or between 'A' and 'F' or
@@ -65,20 +59,16 @@ package com.upokecenter.util;
         return c + 10 - 'a';
       return -1;
     }
-
     /**
      * The index of the next character.
      */
     private int myIndex;
-
-
     /**
      * The source String being tokenized.
      */
     private String mySource;
     private InputStream stream;
     private int options;
-
     /**
      * Construct a JSONTokener from a String.
      *
@@ -91,7 +81,6 @@ package com.upokecenter.util;
       this.stream = null;
       this.options = options;
     }
-
     public JSONTokener(InputStream stream, int options) {
       if((stream)==null)throw new NullPointerException("stream");
       myIndex = 0;
@@ -99,7 +88,6 @@ package com.upokecenter.util;
       this.stream = stream;
       this.options = options;
     }
-
     private int next() {
       if(this.stream!=null){
         int cp = 0;
@@ -171,11 +159,12 @@ package com.upokecenter.util;
         return c;
       }
     }
-
-    public int getOptions() {
+    /**
+     * 
+     */
+public int getOptions() {
       return options;
     }
-
     private int nextParseComment(int firstChar) {
       if ((options & JSONTokener.OPTION_ALLOW_COMMENTS) == 0){
         if(firstChar==-1)
@@ -243,16 +232,21 @@ package com.upokecenter.util;
         }
       }
     }
-
-    public int nextClean() {
+    /**
+     * 
+     */
+public int nextClean() {
       while (true) {
         int c = nextParseComment(-1);
         if (c == -1 || c > ' ')
           return c;
       }
     }
-
-    public int nextClean(int lastChar) {
+    /**
+     * 
+     * @param lastChar A 32-bit signed integer.
+     */
+public int nextClean(int lastChar) {
       while (true) {
         int c = nextParseComment(lastChar);
         if (c == -1 || c > ' ')
@@ -260,14 +254,13 @@ package com.upokecenter.util;
         lastChar=-1;
       }
     }
-
     /**
      * Return the characters up to the next close quote character.
      * Backslash processing is done. The formal JSON format does not
      * allow strings in single quotes, but an implementation is allowed to
      * accept them.
-     * @param quote The quoting character, either <code>"</code>&nbsp;
-     * <small>(double quote)</small> or <code>'</code>&nbsp;<small>(single quote)</small>.
+     * @param quote The quoting character, either <code>"</code>&#xa0;
+     * <small>(double quote)</small> or <code>'</code>&#xa0;<small>(single quote)</small>.
      * @return      A String.
      * @exception NumberFormatException Unterminated _string.
      */
@@ -360,15 +353,12 @@ package com.upokecenter.util;
         }
       }
     }
-
     CBORException syntaxError(String message) {
       return new CBORException(message + toString());
     }
-
     CBORException syntaxError(String message, Throwable innerException) {
       return new CBORException(message + toString(), innerException);
     }
-
     /**
      * Make a printable String of this JSONTokener.
      *
@@ -381,7 +371,6 @@ package com.upokecenter.util;
         return " at character " + myIndex + " of " + mySource;
       }
     }
-
     private CBORObject NextJSONString(int firstChar) {
       int c = firstChar;
       if(c<0)
@@ -467,8 +456,10 @@ package com.upokecenter.util;
         throw this.syntaxError("Value can't be parsed.");
       }
     }
-
-    public CBORObject ParseJSONObjectOrArray() {
+    /**
+     * 
+     */
+public CBORObject ParseJSONObjectOrArray() {
       int c;
       c = this.nextClean();
       if(c=='[') {
@@ -479,7 +470,6 @@ package com.upokecenter.util;
       }
       throw this.syntaxError("A JSON Object must begin with '{' or '['");
     }
-
     // Based on the json.org implementation for JSONObject
     private CBORObject ParseJSONObject() {
       // Assumes that the last character read was '{'
@@ -510,7 +500,6 @@ package com.upokecenter.util;
             }
             break;
         }
-
         if (this.nextClean() != ':')
           throw this.syntaxError("Expected a ':' after a key");
         // NOTE: Will overwrite existing value. --Peter O.
@@ -526,7 +515,6 @@ package com.upokecenter.util;
         }
       }
     }
-
     // Based on the json.org implementation for JSONArray
     private CBORObject ParseJSONArray() {
       ArrayList<CBORObject> myArrayList=new ArrayList<CBORObject>();
@@ -562,5 +550,4 @@ package com.upokecenter.util;
         }
       }
     }
-
   }

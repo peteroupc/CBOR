@@ -14,11 +14,7 @@ namespace PeterO {
   using System.IO;
   using System.Text;
   using System.Collections.Generic;
-
-
   class JSONTokener {
-
-
     /**
      * Trailing commas are allowed in the JSON _string.
      */
@@ -47,8 +43,6 @@ namespace PeterO {
      * Allows comments in JSON texts.
      */
     public static readonly int OPTION_ALLOW_COMMENTS = 128;
-
-
     /**
      * Get the hex value of a character (base16).
      * @param c A character between '0' and '9' or between 'A' and 'F' or
@@ -64,20 +58,16 @@ namespace PeterO {
         return c + 10 - 'a';
       return -1;
     }
-
     /**
      * The index of the next character.
      */
     private int myIndex;
-
-
     /**
      * The source string being tokenized.
      */
     private string mySource;
     private Stream stream;
     private int options;
-
     /**
      * Construct a JSONTokener from a string.
      *
@@ -90,7 +80,6 @@ namespace PeterO {
       this.stream = null;
       this.options = options;
     }
-
     public JSONTokener(Stream stream, int options) {
       if((stream)==null)throw new ArgumentNullException("stream");
       myIndex = 0;
@@ -98,7 +87,6 @@ namespace PeterO {
       this.stream = stream;
       this.options = options;
     }
-
     private int next() {
       if(this.stream!=null){
         int cp = 0;
@@ -170,11 +158,12 @@ namespace PeterO {
         return c;
       }
     }
-
-    public int getOptions() {
+    /// <summary> </summary>
+    /// <returns></returns>
+    /// <remarks/>
+public int getOptions() {
       return options;
     }
-
     private int nextParseComment(int firstChar) {
       if ((options & JSONTokener.OPTION_ALLOW_COMMENTS) == 0){
         if(firstChar==-1)
@@ -242,16 +231,21 @@ namespace PeterO {
         }
       }
     }
-
-    public int nextClean() {
+    /// <summary> </summary>
+    /// <returns></returns>
+    /// <remarks/>
+public int nextClean() {
       while (true) {
         int c = nextParseComment(-1);
         if (c == -1 || c > ' ')
           return c;
       }
     }
-
-    public int nextClean(int lastChar) {
+    /// <summary> </summary>
+    /// <param name='lastChar'> A 32-bit signed integer.</param>
+    /// <returns></returns>
+    /// <remarks/>
+public int nextClean(int lastChar) {
       while (true) {
         int c = nextParseComment(lastChar);
         if (c == -1 || c > ' ')
@@ -259,14 +253,13 @@ namespace PeterO {
         lastChar=-1;
       }
     }
-
     /**
      * Return the characters up to the next close quote character.
      * Backslash processing is done. The formal JSON format does not
      * allow strings in single quotes, but an implementation is allowed to
      * accept them.
-     * @param quote The quoting character, either <code>"</code>&nbsp;
-     * <small>(double quote)</small> or <code>'</code>&nbsp;<small>(single quote)</small>.
+     * @param quote The quoting character, either <code>"</code>&#xa0;
+     * <small>(double quote)</small> or <code>'</code>&#xa0;<small>(single quote)</small>.
      * @return      A string.
      * @exception FormatException Unterminated _string.
      */
@@ -359,15 +352,12 @@ namespace PeterO {
         }
       }
     }
-
     internal CBORException syntaxError(string message) {
       return new CBORException(message + ToString());
     }
-
     internal CBORException syntaxError(string message, Exception innerException) {
       return new CBORException(message + ToString(), innerException);
     }
-
     /**
      * Make a printable string of this JSONTokener.
      *
@@ -380,7 +370,6 @@ namespace PeterO {
         return " at character " + myIndex + " of " + mySource;
       }
     }
-
     private CBORObject NextJSONString(int firstChar) {
       int c = firstChar;
       if(c<0)
@@ -466,8 +455,10 @@ namespace PeterO {
         throw this.syntaxError("Value can't be parsed.");
       }
     }
-
-    public CBORObject ParseJSONObjectOrArray() {
+    /// <summary> </summary>
+    /// <returns></returns>
+    /// <remarks/>
+public CBORObject ParseJSONObjectOrArray() {
       int c;
       c = this.nextClean();
       if(c=='[') {
@@ -478,7 +469,6 @@ namespace PeterO {
       }
       throw this.syntaxError("A JSON object must begin with '{' or '['");
     }
-
     // Based on the json.org implementation for JSONObject
     private CBORObject ParseJSONObject() {
       // Assumes that the last character read was '{'
@@ -509,7 +499,6 @@ namespace PeterO {
             }
             break;
         }
-
         if (this.nextClean() != ':')
           throw this.syntaxError("Expected a ':' after a key");
         // NOTE: Will overwrite existing value. --Peter O.
@@ -525,7 +514,6 @@ namespace PeterO {
         }
       }
     }
-
     // Based on the json.org implementation for JSONArray
     private CBORObject ParseJSONArray() {
       var myArrayList = new List<CBORObject>();
@@ -561,6 +549,5 @@ namespace PeterO {
         }
       }
     }
-
   }
 }

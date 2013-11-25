@@ -2,7 +2,6 @@
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
@@ -12,10 +11,10 @@ using System.Globalization;
 using System.IO;
 using System.Numerics;
 using System.Text;
-
 namespace PeterO
 {
-  public sealed partial class CBORObject
+    /// <summary> </summary>
+public sealed partial class CBORObject
   {
     private static void WritePortable(BigInteger bigint, Stream s){
       if((s)==null)throw new ArgumentNullException("s");
