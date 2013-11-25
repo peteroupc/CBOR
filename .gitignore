@@ -1,6 +1,8 @@
 bin/
 obj/
 .settings/
+Help/Working/
+TestResults/
 CBORTest/bin/
 CBORTest/obj/
 CBORTest/OpenCover/
@@ -8,6 +10,8 @@ ProfilingSessions/
 CBORTest/ProfilingSessions/
 .project
 .classpath
+*.shf*
 *.class
 *.suo
+*.log
 .pmd

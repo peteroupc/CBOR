@@ -3,7 +3,6 @@ package com.upokecenter.test;
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
@@ -13,14 +12,15 @@ import java.math.*;
 import java.io.*;
 import com.upokecenter.util.*;
 
-
 import org.junit.Assert;
 import org.junit.Test;
 
+    /**
+     * 
+     * @param r A FastRandom object.
+     */
 
-
-  
-  public class CBORTest {
+  public class CBORTest{
     private static void TestBigFloatDoubleCore(double d, String s) {
       double oldd = d;
       BigFloat bf = BigFloat.FromDouble(d);
@@ -32,7 +32,6 @@ import org.junit.Test;
       TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
-
     private static void TestBigFloatSingleCore(float d, String s) {
       float oldd = d;
       BigFloat bf = BigFloat.FromSingle(d);
@@ -44,7 +43,6 @@ import org.junit.Test;
       TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
-
     private static CBORObject RandomNumber(FastRandom rand) {
       switch (rand.NextValue(6)) {
         case 0:
@@ -63,7 +61,6 @@ import org.junit.Test;
           throw new IllegalArgumentException();
       }
     }
-
     private static long RandomInt64(FastRandom rand) {
       long r = rand.NextValue(0x10000);
       r |= ((long)rand.NextValue(0x10000)) << 16;
@@ -75,7 +72,6 @@ import org.junit.Test;
       }
       return r;
     }
-
     private static double RandomDouble(FastRandom rand, int exponent) {
       if (exponent == Integer.MAX_VALUE)
         exponent = rand.NextValue(2047);
@@ -91,7 +87,6 @@ import org.junit.Test;
       r |= ((long)exponent) << 52; // set exponent
       return Double.longBitsToDouble(r);
     }
-
     private static float RandomSingle(FastRandom rand, int exponent) {
       if (exponent == Integer.MAX_VALUE)
         exponent = rand.NextValue(255);
@@ -103,19 +98,15 @@ import org.junit.Test;
       r |= ((int)exponent) << 23; // set exponent
       return Float.intBitsToFloat(r);
     }
-
     public static DecimalFraction RandomDecimalFraction(FastRandom r) {
       return DecimalFraction.FromString(RandomDecimalString(r));
     }
-
     public static BigInteger RandomBigInteger(FastRandom r) {
       return new BigInteger(RandomBigIntString(r));
     }
-
     public static BigFloat RandomBigFloat(FastRandom r) {
       return new BigFloat(RandomBigInteger(r),r.NextValue(400)-200);
     }
-
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
       StringBuilder sb = new StringBuilder();
@@ -128,7 +119,6 @@ import org.junit.Test;
       }
       return sb.toString();
     }
-
     public static String RandomDecimalString(FastRandom r) {
       int count = r.NextValue(20) + 1;
       StringBuilder sb = new StringBuilder();
@@ -156,14 +146,16 @@ import org.junit.Test;
       }
       return sb.toString();
     }
-
     private static void TestDecimalString(String r) {
       CBORObject o = CBORObject.FromObject(DecimalFraction.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
       CompareTestEqual(o,o2);
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestAdd() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; i++) {
@@ -179,7 +171,10 @@ import org.junit.Test;
         TestCommon.AssertRoundTrip(o2);
       }
     }
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestSubtract() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; i++) {
@@ -195,14 +190,13 @@ import org.junit.Test;
         TestCommon.AssertRoundTrip(o2);
       }
     }
-
     private static String ObjectMessages(CBORObject o1, CBORObject o2, String s) {
-        if(o1.getType()== CBORType.Number && o2.getType()== CBORType.Number){
-          return s+":\n" + o1.toString() + " and\n" + o2.toString()+"\nOR\n"+
-                          o1.AsDecimalFraction().toString() + " and\n" + o2.AsDecimalFraction().toString();                  
-        } else {
-          return s+":\n" + o1.toString() + " and\n" + o2.toString();          
-        }      
+      if(o1.getType()== CBORType.Number && o2.getType()== CBORType.Number){
+        return s+":\n" + o1.toString() + " and\n" + o2.toString()+"\nOR\n"+
+          o1.AsDecimalFraction().toString() + " and\n" + o2.AsDecimalFraction().toString();
+      } else {
+        return s+":\n" + o1.toString() + " and\n" + o2.toString();
+      }
     }
     
     private static void CompareTestEqual(CBORObject o1, CBORObject o2) {
@@ -225,7 +219,10 @@ import org.junit.Test;
       return cmp;
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestCompare() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; i++) {
@@ -278,8 +275,10 @@ import org.junit.Test;
       CompareTestLess(dn,dp);
       CompareTestLess(dp,dnan);
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestParseDecimalStrings() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 3000; i++) {
@@ -287,8 +286,10 @@ import org.junit.Test;
         TestDecimalString(r);
       }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 200; i++) {
@@ -323,7 +324,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
       }
     }
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestBigFloatSingle() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 255; i++) { // Try a random float with a given exponent
@@ -333,8 +337,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         TestBigFloatSingleCore(RandomSingle(rand, i), null);
       }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestBigFloatDouble() {
       TestBigFloatDoubleCore(3.5, "3.5");
       TestBigFloatDoubleCore(7, "7");
@@ -348,14 +354,15 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         TestBigFloatDoubleCore(RandomDouble(rand, i), null);
       }
     }
-
-
     @Test(expected=CBORException.class)
     public void TestTagThenBreak() {
       TestCommon.FromBytesTestAB(new byte[]{ (byte)0xD1, (byte)0xFF });
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestJSONSurrogates() {
       try { CBORObject.FromJSONString("[\"\ud800\udc00\"]"); } catch(Exception ex){ Assert.fail(ex.toString()); }
       try { CBORObject.FromJSONString("[\"\\ud800\\udc00\"]"); } catch(Exception ex){ Assert.fail(ex.toString()); }
@@ -365,8 +372,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]"); } catch(CBORException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
       try { CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]"); } catch(Exception ex){ Assert.fail(ex.toString()); }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestJSONEscapedChars() {
       CBORObject o = CBORObject.FromJSONString(
         "[\"\\r\\n\\u0006\\\\\\\"\"]");
@@ -376,8 +385,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
                       o.ToJSONString());
       TestCommon.AssertRoundTrip(o);
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestCBORFromArray() {
       CBORObject o = CBORObject.FromObject(new int[] { 1, 2, 3 });
       Assert.assertEquals(3, o.size());
@@ -386,8 +397,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(3, o.get(2).AsInt32());
       TestCommon.AssertRoundTrip(o);
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestJSON() {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,3]");
@@ -406,8 +419,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("false", CBORObject.False.ToJSONString());
       Assert.assertEquals("null", CBORObject.Null.ToJSONString());
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestByte() {
       for (int i = 0; i <= 255; i++) {
         TestCommon.AssertSer(
@@ -415,16 +430,31 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           String.format(java.util.Locale.US,"%s", i));
       }
     }
-
-    public void DoTestReadUtf8(byte[] bytes,
+    /**
+     * 
+     * @param bytes A byte[] object.
+     * @param expectedRet A 32-bit signed integer.
+     * @param expectedString A string object.
+     * @param noReplaceRet A 32-bit signed integer.
+     * @param noReplaceString A string object.
+     */
+public void DoTestReadUtf8(byte[] bytes,
                                int expectedRet, String expectedString,
                                int noReplaceRet, String noReplaceString
                               ) {
       DoTestReadUtf8(bytes, bytes.length, expectedRet, expectedString,
                      noReplaceRet, noReplaceString);
     }
-
-    public void DoTestReadUtf8(byte[] bytes, int length,
+    /**
+     * 
+     * @param bytes A byte[] object.
+     * @param length A 32-bit signed integer.
+     * @param expectedRet A 32-bit signed integer.
+     * @param expectedString A string object.
+     * @param noReplaceRet A 32-bit signed integer.
+     * @param noReplaceString A string object.
+     */
+public void DoTestReadUtf8(byte[] bytes, int length,
                                int expectedRet, String expectedString,
                                int noReplaceRet, String noReplaceString
                               ) {
@@ -469,8 +499,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         throw new CBORException("", ex);
       }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestDecFracOverflow() {
       try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
@@ -485,8 +517,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsBigFloat(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.FromObject(Double.NaN).AsBigFloat(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestFPToBigInteger() {
       Assert.assertEquals("0", CBORObject.FromObject((float)0.75).AsBigInteger().toString());
       Assert.assertEquals("0", CBORObject.FromObject((float)0.99).AsBigInteger().toString());
@@ -509,8 +543,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsBigInteger(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.FromObject(Double.NaN).AsBigInteger(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestDecFracFP() {
       Assert.assertEquals("0.75", DecimalFraction.FromDouble(0.75).toString());
       Assert.assertEquals("0.5", DecimalFraction.FromDouble(0.5).toString());
@@ -523,9 +559,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("0.875", DecimalFraction.FromSingle(0.875f).toString());
       Assert.assertEquals("0.125", DecimalFraction.FromSingle(0.125f).toString());
     }
-
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void ScaleTest() {
       Assert.assertEquals(BigInteger.valueOf(-7), DecimalFraction.FromString("1.265e-4").getExponent());
       Assert.assertEquals(BigInteger.valueOf(-4), DecimalFraction.FromString("0.000E-1").getExponent());
@@ -578,9 +615,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(BigInteger.valueOf(-11), DecimalFraction.FromString("0.574848e-5").getExponent());
       Assert.assertEquals(BigInteger.valueOf(-3), DecimalFraction.FromString("0.565055e+3").getExponent());
     }
-
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestReadUtf8() {
       DoTestReadUtf8(new byte[]{ 0x20, 0x20, 0x20 },
                      0, "   ", 0, "   ");
@@ -625,7 +663,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       DoTestReadUtf8(new byte[]{ 0x20, (byte)0xe0, (byte)0xff },
                      0, " \ufffd\ufffd", -1, null);
     }
-
     private static boolean ByteArrayEquals(byte[] arrayA, byte[] arrayB) {
       if (arrayA == null) return (arrayB == null);
       if (arrayB == null) return false;
@@ -635,9 +672,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       }
       return true;
     }
-
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestArray() {
       CBORObject cbor = CBORObject.FromJSONString("[]");
       cbor.Add(CBORObject.FromObject(3));
@@ -646,7 +684,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       boolean isequal = ByteArrayEquals(new byte[]{ (byte)(0x80 | 2), 3, 4 }, bytes);
       if(!(isequal))Assert.fail("array not equal");
     }
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestMap() {
       CBORObject cbor = CBORObject.FromJSONString("{\"a\":2,\"b\":4}");
       Assert.assertEquals(2, cbor.size());
@@ -659,8 +700,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(2, cbor.get(CBORObject.FromObject("a")).AsInt32());
       Assert.assertEquals(4, cbor.get(CBORObject.FromObject("b")).AsInt32());
     }
-
-
     private static String Repeat(char c, int num) {
       StringBuilder sb = new StringBuilder();
       for (int i = 0; i < num; i++) {
@@ -668,7 +707,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       }
       return sb.toString();
     }
-
     private static String Repeat(String c, int num) {
       StringBuilder sb = new StringBuilder();
       for (int i = 0; i < num; i++) {
@@ -677,7 +715,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       return sb.toString();
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
         new byte[]{ 0x7F, 0x61, 0x20, 0x61, 0x20, (byte)0xFF });
@@ -705,19 +746,20 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.AssertEqualsHashCode(cbor, cbor2);
       Assert.assertEquals(longString, cbor2.AsString());
     }
-
     @Test(expected=CBORException.class)
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x7F, 0x61, 0x20, (byte)0xC0, 0x61, 0x20, (byte)0xFF });
     }
-
     @Test(expected=CBORException.class)
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x7F, 0x61, 0x20, 0x7F, 0x61, 0x20, (byte)0xFF, (byte)0xFF });
     }
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x5F, 0x41, 0x20, 0x41, 0x20, (byte)0xFF });
@@ -727,7 +769,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x5F, 0x41, 0x20, (byte)0xC2, 0x41, 0x20, (byte)0xFF });
     }
-
     public static void AssertDecimalsEquivalent(String a, String b) {
       CBORObject ca = CBORDataUtilities.ParseJSONNumber(a);
       CBORObject cb = CBORDataUtilities.ParseJSONNumber(b);
@@ -735,9 +776,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.AssertRoundTrip(ca);
       TestCommon.AssertRoundTrip(cb);
     }
-
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void ZeroStringTests2() {
       Assert.assertEquals("0.0001265", DecimalFraction.FromString("1.265e-4").toString());
       Assert.assertEquals("0.0001265", DecimalFraction.FromString("1.265e-4").ToEngineeringString());
@@ -1040,9 +1082,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("0.0E-12", DecimalFraction.FromString("0.000e-10").ToEngineeringString());
       Assert.assertEquals("0.0000000000000", DecimalFraction.FromString("0.000e-10").ToPlainString());
     }
-
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void AddTest() {
       Assert.assertEquals("0.0000249885", DecimalFraction.FromString("228.16E-7").Add(DecimalFraction.FromString("217.25E-8")).toString());
       Assert.assertEquals("0.0000206435", DecimalFraction.FromString("228.16E-7").Subtract(DecimalFraction.FromString("217.25E-8")).toString());
@@ -1245,8 +1288,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("32539.12334", DecimalFraction.FromString("123.34E-3").Add(DecimalFraction.FromString("325.39E2")).toString());
       Assert.assertEquals("-32538.87666", DecimalFraction.FromString("123.34E-3").Subtract(DecimalFraction.FromString("325.39E2")).toString());
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void MultiplyTest() {
       Assert.assertEquals("1.23885300E+9", DecimalFraction.FromString("51.15E8").Multiply(DecimalFraction.FromString("242.20E-3")).toString());
       Assert.assertEquals("0.001106186758", DecimalFraction.FromString("373.22E-1").Multiply(DecimalFraction.FromString("296.39E-7")).toString());
@@ -1788,7 +1833,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { CBORObject.FromObject(253.99998f).AsByte(); } catch(Exception ex){ Assert.fail(ex.toString()); }
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void FromDoubleTest() {
       Assert.assertEquals("0.213299999999999989608312489508534781634807586669921875", DecimalFraction.FromDouble(0.2133).toString());
       Assert.assertEquals("2.29360000000000010330982488752915582352898127282969653606414794921875E-7", DecimalFraction.FromDouble(2.2936E-7).toString());
@@ -1891,9 +1939,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("0.000761999999999999982035203682784185730270110070705413818359375", DecimalFraction.FromDouble(7.62E-4).toString());
       Assert.assertEquals("313300000000", DecimalFraction.FromDouble(3.133E11).toString());
     }
-
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void ToPlainStringTest() {
       Assert.assertEquals("277220000000", DecimalFraction.FromString("277.22E9").ToPlainString());
       Assert.assertEquals("3911900", DecimalFraction.FromString("391.19E4").ToPlainString());
@@ -1996,8 +2045,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("2242600000000", DecimalFraction.FromString("224.26E10").ToPlainString());
       Assert.assertEquals("0.00000026818", DecimalFraction.FromString("268.18E-9").ToPlainString());
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void ToEngineeringStringTest() {
       Assert.assertEquals("8.912", DecimalFraction.FromString("89.12E-1").ToEngineeringString());
       Assert.assertEquals("0.024231", DecimalFraction.FromString("242.31E-4").ToEngineeringString());
@@ -2100,8 +2151,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("1.8533", DecimalFraction.FromString("185.33E-2").ToEngineeringString());
       Assert.assertEquals("70.7E+6", DecimalFraction.FromString("70.7E6").ToEngineeringString());
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestDecimalsEquivalent() {
       AssertDecimalsEquivalent("1.310E-7", "131.0E-9");
       AssertDecimalsEquivalent("0.001231", "123.1E-5");
@@ -2205,7 +2258,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       AssertDecimalsEquivalent("5.912E+7", "59.12E6");
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestSubtractNonFinite() {
       try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(99.74439f)).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(0.04503661680757691d)).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
@@ -2238,8 +2294,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { CBORObject.Subtract(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(new BigInteger("300921783316"))).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(new BigInteger("-5806763724610384900094490266237212718"))).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestAsByte() {
       for(int i=0;i<255;i++){
         Assert.assertEquals((byte)i,CBORObject.FromObject(i).AsByte());
@@ -2251,15 +2309,15 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         try { CBORObject.FromObject(i).AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail(ex.toString()); }
       }
     }
-
     @Test(expected=CBORException.class)
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x5F, 0x41, 0x20, 0x5F, 0x41, 0x20, (byte)0xFF, (byte)0xFF });
     }
-
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestBigFloatDecFrac() {
       BigFloat bf;
       bf = new BigFloat(20);
@@ -2278,7 +2336,29 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       df = new DecimalFraction(BigInteger.valueOf(-15), -1);
       Assert.assertEquals("-1.5", BigFloat.FromDecimalFraction(df).toString());
     }
-
+    /*
+    @Test
+    public void TestMutableBigInt() {
+      FastRandom r=new FastRandom();
+      for(int i=0;i<1000;i++){
+        MutableBigInteger mbi=new MutableBigInteger();
+        BigInteger control=BigInteger.ZERO;
+        for(int j=0;j<100;j++){
+          if(j==0 || r.NextValue(2)==0){
+            int x=r.NextValue(25);
+            control+=x;
+            mbi.Add(x);
+            Assert.assertEquals(control,mbi.ToBigInteger());
+          } else {
+            int x=r.NextValue(25)+1;
+            control=control.multiply(x);
+            mbi.Multiply(x);
+            Assert.assertEquals(control,mbi.ToBigInteger());
+          }
+        }
+      }
+    }
+    */
     @Test
     public void TestDecFracToSingleDoubleHighExponents() {
       if(914323.0f!=DecimalFraction.FromString("914323").ToSingle())
@@ -2683,7 +2763,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         Assert.fail("decfrac double -795058316.9186492185346968\nExpected: -7.950583169186492E8d\nWas: "+DecimalFraction.FromString("-795058316.9186492185346968").ToDouble());
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestDecFracIntegersToSingleDouble() {
       if(-5.7703064E7f!=DecimalFraction.FromString("-57703066").ToSingle())
         Assert.fail("decfrac single -57703066\nExpected: -5.7703064E7f\nWas: "+DecimalFraction.FromString("-57703066").ToSingle());
@@ -3087,7 +3170,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         Assert.fail("decfrac double 3071203450148698328\nExpected: 3.0712034501486981E18d\nWas: "+DecimalFraction.FromString("3071203450148698328").ToDouble());
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestDecFracToSingleDouble() {
       if(-4348.0f!=DecimalFraction.FromString("-4348").ToSingle())
         Assert.fail("decfrac single -4348\nExpected: -4348.0f\nWas: "+DecimalFraction.FromString("-4348").ToSingle());
@@ -3490,8 +3576,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       if(-1.0d!=DecimalFraction.FromString("-1").ToDouble())
         Assert.fail("decfrac double -1\nExpected: -1.0d\nWas: "+DecimalFraction.FromString("-1").ToDouble());
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestDecimalFrac() {
       TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, 0x3, 0x1a, 1, 2, 3, 4 });
@@ -3501,8 +3589,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, (byte)0xc2, 0x41, 1, 0x1a, 1, 2, 3, 4 });
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Integer.MIN_VALUE);
       CBORObject dbl2 = CBORObject.FromObject((double)Integer.MAX_VALUE);
@@ -3517,25 +3607,31 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { dbl2.AsInt64(); } catch(Exception ex){ Assert.fail(ex.toString()); }
       try { dbl2.AsBigInteger(); } catch(Exception ex){ Assert.fail(ex.toString()); }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestBigTag() {
       CBORObject.FromObjectAndTag(CBORObject.Null, new BigInteger("18446744073709551615"));
     }
-
     @Test(expected=CBORException.class)
     public void TestDecimalFracExactlyTwoElements() {
       TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, (byte)0xc2, 0x41, 1 });
     }
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o=TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, 0x3, (byte)0xc2, 0x41, 1 });
       Assert.assertEquals(new DecimalFraction(1,3),o.AsDecimalFraction());
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestShort() {
       for (int i = Short.MIN_VALUE; i <= Short.MAX_VALUE; i++) {
         TestCommon.AssertSer(
@@ -3543,14 +3639,19 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           String.format(java.util.Locale.US,"%s", i));
       }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestByteArray() {
       TestCommon.AssertSer(
         CBORObject.FromObject(new byte[]{ 0x20, 0x78 }), "h'2078'");
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestBigNumBytes() {
       CBORObject o=null;
       o=TestCommon.FromBytesTestAB(new byte[]{(byte)0xc2,0x41,(byte)0x88});
@@ -3563,7 +3664,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(BigInteger.valueOf(0x88776655443322L),o.AsBigInteger());
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestTaggedUntagged() {
       for(int i=200;i<1000;i++){
         CBORObject o,o2;
@@ -3626,7 +3730,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       }
     }
     
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestBigInteger() {
       BigInteger bi = BigInteger.valueOf(3);
       BigInteger negseven = BigInteger.valueOf(-7);
@@ -3657,7 +3764,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         }
       }
     }
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestLong() {
       long[] ranges = new long[]{
         -65539,65539,
@@ -3683,8 +3793,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         }
       }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestFloat() {
       TestCommon.AssertSer(CBORObject.FromObject(Float.POSITIVE_INFINITY),
                            "Infinity");
@@ -3698,8 +3810,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           String.format(java.util.Locale.US,"%s", i));
       }
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestCodePointCompare() {
       Assert.assertEquals(0, (int)Math.signum(DataUtilities.CodePointCompare("abc", "abc")));
       Assert.assertEquals(0, (int)Math.signum(DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
@@ -3707,8 +3821,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(-1, (int)Math.signum(DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")));
       Assert.assertEquals(1, (int)Math.signum(DataUtilities.CodePointCompare("\uf000", "\ud800")));
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestSimpleValues() {
       TestCommon.AssertSer(CBORObject.FromObject(true),
                            "true");
@@ -3717,8 +3833,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.AssertSer(CBORObject.FromObject((Object)null),
                            "null");
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestGetUtf8Length() {
       try { DataUtilities.GetUtf8Length(null, true); } catch(NullPointerException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { DataUtilities.GetUtf8Length(null, false); } catch(NullPointerException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
@@ -3728,8 +3846,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(6, DataUtilities.GetUtf8Length("\ud800\ud800", true));
       Assert.assertEquals(-1, DataUtilities.GetUtf8Length("\ud800\ud800", false));
     }
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestDouble() {
       if(!CBORObject.FromObject(Double.POSITIVE_INFINITY).IsPositiveInfinity())
         Assert.fail("Not positive infinity");
@@ -3750,9 +3870,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         oldobj = o;
       }
     }
-
-
-    @Test
+    /**
+     * 
+     */
+@Test
     public void TestTags() {
       BigInteger maxuint = new BigInteger("18446744073709551615");
       BigInteger[] ranges = new BigInteger[]{
@@ -3800,5 +3921,4 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         }
       }
     }
-
   }

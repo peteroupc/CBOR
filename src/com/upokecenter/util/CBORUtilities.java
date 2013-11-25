@@ -3,7 +3,6 @@ package com.upokecenter.util;
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
@@ -11,15 +10,20 @@ at: http://upokecenter.com/d/
 
 import java.math.*;
 
-
-  /**
-   * Contains utility methods that may have use outside of the CBORObject
-   * class.
-   */
+    /**
+     * Contains utility methods that may have use outside of the CBORObject
+     * class.
+     */
   final class CBORUtilities {
 private CBORUtilities(){}
     private static final String Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private static final String Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    /**
+     * 
+     * @param str A StringBuilder object.
+     * @param data A byte[] object.
+     * @param padding A Boolean object.
+     */
     public static void ToBase64(StringBuilder str, byte[] data, boolean padding) {
       ToBase64(str, data, Base64, padding);
     }
@@ -57,7 +61,6 @@ private CBORUtilities(){}
         str.append(HexAlphabet.charAt(data[i] & 15));
       }
     }
-
     public static boolean ByteArrayEquals(byte[] a, byte[] b) {
       if (a == null) return (b == null);
       if (b == null) return false;
@@ -67,7 +70,6 @@ private CBORUtilities(){}
       }
       return true;
     }
-
     public static int ByteArrayHashCode(byte[] a) {
       if (a == null) return 0;
       int ret = 19;
@@ -79,7 +81,6 @@ private CBORUtilities(){}
       }
       return ret;
     }
-
     public static int ByteArrayCompare(byte[] a, byte[] b) {
       if (a == null) return (b == null) ? 0 : -1;
       if (b == null) return 1;
@@ -92,7 +93,6 @@ private CBORUtilities(){}
         return (a.length < b.length) ? -1 : 1;
       return 0;
     }
-
     public static BigInteger BigIntegerFromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
       int fpexponent = (int)((value >> 23) & 0xFF);
@@ -126,7 +126,6 @@ private CBORUtilities(){}
         return BigInteger.valueOf(mantissa);
       }
     }
-
     public static BigInteger BigIntegerFromDouble(double dbl) {
       long value = Double.doubleToRawLongBits(dbl);
       int fpexponent = (int)((value >> 52) & 0x7ffL);
@@ -160,7 +159,6 @@ private CBORUtilities(){}
         return BigInteger.valueOf(mantissa);
       }
     }
-
     public static float HalfPrecisionToSingle(int value) {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
       value &= 0x7FFF;

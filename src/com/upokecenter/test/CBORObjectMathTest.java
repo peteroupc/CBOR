@@ -14,9 +14,11 @@ import com.upokecenter.util.*;
 
 import java.math.*;
 
+    /**
+     * 
+     */
 
-  
-  public class CBORObjectMathTest {
+  public class CBORObjectMathTest{
     @Test
     public static void CBORMultiplyTest() {
       {
@@ -751,5 +753,3 @@ import java.math.*;
       try { CBORObject.Multiply(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(DecimalFraction.FromString("-79289615410806439.169851689646729"))).AsDecimalFraction(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
     }
   }
-
-

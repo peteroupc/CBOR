@@ -7,15 +7,17 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 using System.Globalization;
 using System.Numerics;
-
 namespace Test {
-  [TestFixture]
-  public class CBORObjectMathTest {
-    [Test]
+    /// <summary>
+    /// </summary>
+    /// <remarks/>
+[TestClass]
+  public class CBORObjectMathTest{
+    [TestMethod]
     public static void CBORMultiplyTest() {
       {
         CBORObject a = CBORObject.FromObject(2.5268476f);
@@ -749,6 +751,4 @@ namespace Test {
       try { CBORObject.Multiply(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(DecimalFraction.FromString("-79289615410806439.169851689646729"))).AsDecimalFraction(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
     }
   }
-
-
 }

@@ -2,7 +2,6 @@
 Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
@@ -11,32 +10,20 @@ using System.Text;
 using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
-
 namespace PeterO {
-
-
-  /// <summary>
-  /// Contains methods for reading and writing objects
-  /// represented in BEncode, a serialization
-  /// format used in the BitTorrent protocol.
-  /// For more information, see:
-  /// https://wiki.theory.org/BitTorrentSpecification#bencoding
-  /// 
-  /// This class accepts BEncoded strings in UTF-8, and outputs
-  /// BEncoded strings in UTF-8.
-  /// 
-  /// This class also demonstrates how CBORObject supports
-  /// predefined serialization formats.
-  /// </summary>
+    /// <summary> Contains methods for reading and writing objects represented
+    /// in BEncode, a serialization format used in the BitTorrent protocol.
+    /// For more information, see: https://wiki.theory.org/BitTorrentSpecification#bencoding
+    /// This class accepts BEncoded strings in UTF-8, and outputs BEncoded
+    /// strings in UTF-8. This class also demonstrates how CBORObject supports
+    /// predefined serialization formats. </summary>
+    /// <returns></returns>
+    /// <param name='stream'> A Stream object.</param>
   public static class BEncoding {
-
-
     private static void writeUtf8(string s, Stream stream) {
       if (DataUtilities.WriteUtf8(s, stream, false) != 0)
         throw new CBORException("invalid surrogate");
     }
-
-
     private static CBORObject readDictionary(Stream stream) {
       CBORObject obj = CBORObject.NewMap();
       while (true) {
@@ -81,11 +68,9 @@ namespace PeterO {
       }
       return obj;
     }
-
     public static CBORObject Read(Stream stream) {
       return readObject(stream, false);
     }
-
     private static CBORObject readObject(Stream stream, bool allowEnd) {
       int c = stream.ReadByte();
       if (c == 'd')
@@ -102,7 +87,6 @@ namespace PeterO {
         throw new CBORException("Object expected");
       }
     }
-
     private static CBORObject readString(Stream stream, char firstChar) {
       StringBuilder builder = new StringBuilder();
       if (firstChar < (int)'0' && firstChar > (int)'9') {
@@ -217,6 +201,4 @@ namespace PeterO {
       }
     }
   }
-
-
 }

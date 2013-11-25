@@ -3,27 +3,23 @@ package com.upokecenter.util;
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
-
 
 
 import java.io.*;
 import java.math.*;
 
 
-
-  /**
-   * Contains methods useful for reading and writing data, with a focus
-   * on CBOR.
-   */
+    /**
+     * Contains methods useful for reading and writing data, with a focus
+     * on CBOR.
+     */
   public final class CBORDataUtilities {
 private CBORDataUtilities(){}
     private static BigInteger LowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
     private static BigInteger UInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
-
     /**
      * Generates a text string from a UTF-8 byte array.
      * @param bytes A byte array containing text encoded in UTF-8.
@@ -38,9 +34,8 @@ private CBORDataUtilities(){}
  */
 @Deprecated
     public static String GetUtf8String(byte[] bytes, boolean replace) {
-      return DataUtilities.GetUtf8String(bytes,replace);
+      return DataUtilities.GetUtf8String(bytes, replace);
     }
-
     /**
      * Generates a text string from a portion of a UTF-8 byte array.
      * @param bytes A byte array containing text encoded in UTF-8.
@@ -57,9 +52,8 @@ private CBORDataUtilities(){}
  */
 @Deprecated
     public static String GetUtf8String(byte[] bytes, int offset, int byteLength, boolean replace) {
-      return DataUtilities.GetUtf8String(bytes,offset,byteLength,replace);
+      return DataUtilities.GetUtf8String(bytes, offset, byteLength, replace);
     }
-
     /**
      * Encodes a string in UTF-8 as a byte array.
      * @param str A text string.
@@ -75,9 +69,8 @@ private CBORDataUtilities(){}
  */
 @Deprecated
     public static byte[] GetUtf8Bytes(String str, boolean replace) {
-      return DataUtilities.GetUtf8Bytes(str,replace);
+      return DataUtilities.GetUtf8Bytes(str, replace);
     }
-
     /**
      * Calculates the number of bytes needed to encode a string in UTF-8.
      * @param s A Unicode string.
@@ -93,15 +86,13 @@ private CBORDataUtilities(){}
  */
 @Deprecated
     public static long GetUtf8Length(String s, boolean replace) {
-      return DataUtilities.GetUtf8Length(s,replace);
+      return DataUtilities.GetUtf8Length(s, replace);
     }
-
-
     /**
      * Compares two strings in Unicode code point order. Unpaired surrogates
      * are treated as individual code points.
-     * @param a The first string.
-     * @param b The second string.
+     * @param strA The first string.
+     * @param strB The second string.
      * @return A value indicating which string is "less" or "greater". 0:
      * Both strings are equal or null. Less than 0: a is null and b isn't; or
      * the first code point that's different is less in A than in B; or b starts
@@ -112,9 +103,8 @@ private CBORDataUtilities(){}
  */
 @Deprecated
     public static int CodePointCompare(String strA, String strB) {
-      return DataUtilities.CodePointCompare(strA,strB);
+      return DataUtilities.CodePointCompare(strA, strB);
     }
-
     /**
      * Writes a portion of a string in UTF-8 encoding to a data stream.
      * @param str A string to write.
@@ -138,10 +128,8 @@ private CBORDataUtilities(){}
  */
 @Deprecated
     public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
-      return DataUtilities.WriteUtf8(str,offset,length,stream,replace);
+      return DataUtilities.WriteUtf8(str, offset, length, stream, replace);
     }
-
-
     /**
      * Writes a string in UTF-8 encoding to a data stream.
      * @param str A string to write.
@@ -158,10 +146,9 @@ private CBORDataUtilities(){}
  */
 @Deprecated
     public static int WriteUtf8(String str, OutputStream stream, boolean replace) throws IOException {
-      if((str)==null)throw new NullPointerException("str");
-      return DataUtilities.WriteUtf8(str,0,str.length(),stream,replace);
+      if ((str) == null) throw new NullPointerException("str");
+      return DataUtilities.WriteUtf8(str, 0, str.length(), stream, replace);
     }
-
     /**
      * Reads a string in UTF-8 encoding from a byte array.
      * @param data A byte array containing a UTF-8 string
@@ -185,10 +172,8 @@ private CBORDataUtilities(){}
     public static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength,
                                         StringBuilder builder,
                                         boolean replace) {
-      return DataUtilities.ReadUtf8FromBytes(data,offset,byteLength,builder,replace);
+      return DataUtilities.ReadUtf8FromBytes(data, offset, byteLength, builder, replace);
     }
-
-
     /**
      * Reads a string in UTF-8 encoding from a data stream.
      * @param stream A readable data stream.
@@ -211,9 +196,8 @@ private CBORDataUtilities(){}
 @Deprecated
     public static int ReadUtf8(InputStream stream, int byteLength, StringBuilder builder,
                                boolean replace) throws IOException {
-      return DataUtilities.ReadUtf8(stream,byteLength,builder,replace);
+      return DataUtilities.ReadUtf8(stream, byteLength, builder, replace);
     }
-
     /**
      * Parses a number whose format follows the JSON specification. See
      * #ParseJSONNumber(str, integersOnly, parseOnly) for more information.
@@ -226,7 +210,6 @@ private CBORDataUtilities(){}
     public static CBORObject ParseJSONNumber(String str) {
       return ParseJSONNumber(str, false, false, false);
     }
-
     /**
      * Parses a number whose format follows the JSON specification (RFC
      * 4627). Roughly speaking, a valid number consists of an optional minus
@@ -274,9 +257,9 @@ private CBORDataUtilities(){}
       boolean negExp = false;
       int expStart = -1;
       int expEnd = -1;
-      FastInteger smallNumber=new FastInteger();
-      FastInteger exponentAdjust=new FastInteger();
-      FastInteger smallExponent=new FastInteger();
+      FastInteger smallNumber = new FastInteger();
+      FastInteger exponentAdjust = new FastInteger();
+      FastInteger smallExponent = new FastInteger();
       if (c >= '1' && c <= '9') {
         smallNumber.Add((int)(c - '0'));
         while (index < str.length()) {
@@ -374,24 +357,24 @@ private CBORDataUtilities(){}
           }
         }
       }
-      if(negExp && smallExponent.CanFitInInt64())
+      if (negExp && smallExponent.CanFitInInt64())
         smallExponent.Negate();
-      if(negative && smallNumber.CanFitInInt64())
+      if (negative && smallNumber.CanFitInInt64())
         smallNumber.Negate();
-      if(smallExponent.CanFitInInt64())
+      if (smallExponent.CanFitInInt64())
         smallExponent.Add(exponentAdjust);
       if (index != str.length()) {
         // End of the String wasn't reached, so isn't a number
         return null;
       }
-      if (smallNumber.CanFitInInt64() && smallExponent.CanFitInInt64()){
+      if (smallNumber.CanFitInInt64() && smallExponent.CanFitInInt64()) {
         // Small whole/fractional part and small exponent
         long value = smallNumber.AsInt64();
         long exponent = smallExponent.AsInt64();
-        if(exponent==0){
+        if (exponent == 0) {
           return CBORObject.FromObject(value);
         }
-        return CBORObject.FromObject(new DecimalFraction(value,exponent));
+        return CBORObject.FromObject(new DecimalFraction(value, exponent));
       } else if (fracStart < 0 && expStart < 0) {
         // Bigger integer
         String strsub = (numberStart == 0 && numberEnd == str.length()) ? str :
@@ -403,8 +386,7 @@ private CBORDataUtilities(){}
         // Intval consists of the whole and fractional part
         String intvalString = str.substring(numberStart,(numberStart)+(numberEnd - numberStart)) +
           ((fracStart < 0) ? "" : str.substring(fracStart,(fracStart)+(fracEnd - fracStart)));
-        BigInteger intval = new BigInteger(
-          intvalString);
+        BigInteger intval = new BigInteger(intvalString);
         if (negative) intval=intval.negate();
         if ((fracStart < 0) && expStart < 0) {
           // No fractional part and no exponent;
@@ -415,54 +397,53 @@ private CBORDataUtilities(){}
           // Mantissa is 0, return 0 regardless of exponent
           return CBORObject.FromObject(0);
         }
-        FastInteger exp=null;
-        if(expStart<0){
+        FastInteger exp = null;
+        if (expStart < 0) {
           // Exponent zero
-          exp=new FastInteger();
+          exp = new FastInteger();
           if (fracStart >= 0) {
             // If there is a fractional part,
             // decrease the exponent by that part's length
-            exp.Subtract(fracEnd-fracStart);
+            exp.Subtract(fracEnd - fracStart);
           }
-        } else if(smallExponent.CanFitInInt64()){
+        } else if (smallExponent.CanFitInInt64()) {
           // Use already parsed exponent
-          exp=smallExponent;
+          exp = smallExponent;
         } else {
-          exp=new FastInteger(new BigInteger(
-            str.substring(expStart,(expStart)+(expEnd - expStart))));
+          exp = new FastInteger(new BigInteger(str.substring(expStart,(expStart)+(expEnd - expStart))));
           if (negExp) exp.Negate();
           if (fracStart >= 0) {
             // If there is a fractional part,
             // decrease the exponent by that part's length
-            exp.Subtract(fracEnd-fracStart);
+            exp.Subtract(fracEnd - fracStart);
           }
         }
-        if (exp.signum()==0) {
+        if (exp.signum() == 0) {
           // If exponent is 0, this is also easy,
           // just return the integer
           return CBORObject.FromObject(intval);
-        } else if (!exp.CanFitInInt64()){
-          if(exp.AsBigInteger().compareTo(UInt64MaxValue) > 0){
+        } else if (!exp.CanFitInInt64()) {
+          if (exp.AsBigInteger().compareTo(UInt64MaxValue) > 0) {
             // Exponent is higher than the highest representable
             // integer of major type 0
-            if(failOnExponentOverflow)
+            if (failOnExponentOverflow)
               return null;
             else
-              return (exp.signum()<0) ?
+              return (exp.signum() < 0) ?
                 CBORObject.FromObject(Double.NEGATIVE_INFINITY) :
                 CBORObject.FromObject(Double.POSITIVE_INFINITY);
           }
-          if(exp.AsBigInteger().compareTo(LowestMajorType1) < 0) {
+          if (exp.AsBigInteger().compareTo(LowestMajorType1) < 0) {
             // Exponent is lower than the lowest representable
             // integer of major type 1
-            if(failOnExponentOverflow)
+            if (failOnExponentOverflow)
               return null;
             else
               return CBORObject.FromObject(0);
           }
         }
         // Represent the CBOR Object as a decimal fraction
-        if(exp.CanFitInInt64()){
+        if (exp.CanFitInInt64()) {
           return CBORObject.FromObjectAndTag(new CBORObject[]{
                                                CBORObject.FromObject(exp.AsInt64()),
                                                CBORObject.FromObject(intval)}, 4);

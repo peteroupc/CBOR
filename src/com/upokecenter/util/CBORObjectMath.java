@@ -3,22 +3,23 @@ package com.upokecenter.util;
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
 import java.math.*;
 
-
-  /**
-   * Implements arithmetic operations with CBOR objects.
-   */
+    /**
+     * Implements arithmetic operations with CBOR objects.
+     */
   final class CBORObjectMath {
 private CBORObjectMath(){}
     private static CBORObject NaN = CBORObject.FromObject(Double.NaN);
-
-
+    /**
+     * 
+     * @param a A CBORObject object.
+     * @param b A CBORObject object.
+     */
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) throw new NullPointerException("a");
       if (b == null) throw new NullPointerException("b");
@@ -341,7 +342,6 @@ private CBORObjectMath(){}
           throw new IllegalArgumentException("a, b, or both are not numbers.");
       }
     }
-
     public static CBORObject Subtract(CBORObject a, CBORObject b) {
       if (a == null) throw new NullPointerException("a");
       if (b == null) throw new NullPointerException("b");
@@ -664,7 +664,6 @@ private CBORObjectMath(){}
           throw new IllegalArgumentException("a, b, or both are not numbers.");
       }
     }
-
     public static CBORObject Multiply(CBORObject a, CBORObject b) {
       if (a == null) throw new NullPointerException("a");
       if (b == null) throw new NullPointerException("b");

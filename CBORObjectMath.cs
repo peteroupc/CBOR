@@ -2,21 +2,20 @@
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
 using System.Numerics;
-
 namespace PeterO {
-  /// <summary>
-  /// Implements arithmetic operations with CBOR objects.
-  /// </summary>
+    /// <summary> Implements arithmetic operations with CBOR objects.
+    /// </summary>
   static class CBORObjectMath {
     private static CBORObject NaN = CBORObject.FromObject(Double.NaN);
-
-
+    /// <summary> </summary>
+    /// <param name='a'> A CBORObject object.</param>
+    /// <param name='b'> A CBORObject object.</param>
+    /// <returns></returns>
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");
@@ -339,7 +338,6 @@ namespace PeterO {
           throw new ArgumentException("a, b, or both are not numbers.");
       }
     }
-
     public static CBORObject Subtract(CBORObject a, CBORObject b) {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");
@@ -662,7 +660,6 @@ namespace PeterO {
           throw new ArgumentException("a, b, or both are not numbers.");
       }
     }
-
     public static CBORObject Multiply(CBORObject a, CBORObject b) {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");

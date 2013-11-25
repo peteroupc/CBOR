@@ -2,22 +2,18 @@
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
-
 using System;
 using System.Reflection;
-using NUnit.Framework;
-
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace PeterO {
-  /// <summary>
-  /// Description of Runner.
-  /// </summary>
+    /// <summary> Description of Runner. </summary>
+    /// <returns></returns>
   public class Runner {
     private static bool HasAttribute(Type mi, Type t) {
-      foreach (object a in mi.GetCustomAttributes(false)) {
+      foreach (object a in mi.GetCustomAttributes(t,false)) {
         if (t.IsAssignableFrom(a.GetType())) {
           return true;
         }
@@ -25,19 +21,17 @@ namespace PeterO {
       return false;
     }
     private static bool HasAttribute(MethodInfo mi, Type t) {
-      foreach (object a in mi.GetCustomAttributes(false)) {
+      foreach (object a in mi.GetCustomAttributes(t,false)) {
         if (t.IsAssignableFrom(a.GetType())) {
           return true;
         }
       }
       return false;
     }
-
     public static void Main() {
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
-        if (!HasAttribute(type, typeof(TestFixtureAttribute))) continue;
-        if(!type.FullName.Contains("JSONTest"))continue;
+        if (!HasAttribute(type, typeof(TestClassAttribute))) continue;
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
@@ -47,12 +41,12 @@ namespace PeterO {
           setup.Invoke(test, new object[] { });
         }
         foreach (var method in test.GetType().GetMethods()) {
-          if (!HasAttribute(method, typeof(TestAttribute))) continue;
+          if (!HasAttribute(method, typeof(TestMethodAttribute))) continue;
           Console.WriteLine(method.Name);
           Type exctype = null;
           foreach (var a in method.GetCustomAttributes(false)) {
             if (a is ExpectedExceptionAttribute) {
-              exctype = ((ExpectedExceptionAttribute)a).ExpectedException;
+              exctype = ((ExpectedExceptionAttribute)a).ExceptionType;
               break;
             }
           }
@@ -70,6 +64,5 @@ namespace PeterO {
         }
       }
     }
-
   }
 }

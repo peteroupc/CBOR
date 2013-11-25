@@ -3,16 +3,14 @@ package com.upokecenter.util;
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
 
-
-  /**
-   * Represents a type that a CBOR object can have.
-   */
+    /**
+     * Represents a type that a CBOR object can have.
+     */
   public enum CBORType {
     /**
      * A number of any kind, including integers, big integers, floating

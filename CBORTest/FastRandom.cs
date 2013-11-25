@@ -7,14 +7,11 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-
 namespace Test
 {
-  /// <summary>
-  /// The system's random number generator will be called
-  /// many times during testing.  Unfortunately it can be very
-  /// slow.  So we use this wrapper class.
-  /// </summary>
+    /// <summary> The system's random number generator will be called many
+    /// times during testing. Unfortunately it can be very slow. So we use
+    /// this wrapper class. </summary>
   public class FastRandom
   {
     private const int ReseedCount = 10000;
@@ -40,7 +37,11 @@ namespace Test
       return ((z << 16) | (w & 65535))&0x7FFFFFFF;
     }
     
-    public int NextValue(int v){
+    /// <summary> </summary>
+    /// <param name='v'> A 32-bit signed integer.</param>
+    /// <returns></returns>
+    /// <remarks/>
+public int NextValue(int v){
       if((v)<0)throw new ArgumentOutOfRangeException(
         "v"+" not greater or equal to "+"0"+" ("+
         Convert.ToString((int)v,System.Globalization.CultureInfo.InvariantCulture)+")");

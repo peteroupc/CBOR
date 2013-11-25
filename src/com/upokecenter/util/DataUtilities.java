@@ -3,25 +3,20 @@ package com.upokecenter.util;
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-
 import java.io.*;
 
 
-
-  /**
-   * Contains methods useful for reading and writing strings. It is designed
-   * to have no dependencies other than the basic runtime class library.
-   */
+    /**
+     * Contains methods useful for reading and writing strings. It is designed
+     * to have no dependencies other than the basic runtime class library.
+     */
   public final class DataUtilities {
 private DataUtilities(){}
-
     private static int StreamedStringBufferLength = 4096;
-
     /**
      * Generates a text string from a UTF-8 byte array.
      * @param bytes A byte array containing text encoded in UTF-8.
@@ -39,7 +34,6 @@ private DataUtilities(){}
         throw new IllegalArgumentException("Invalid UTF-8");
       return b.toString();
     }
-
     /**
      * Generates a text string from a portion of a UTF-8 byte array.
      * @param bytes A byte array containing text encoded in UTF-8.
@@ -59,7 +53,6 @@ private DataUtilities(){}
         throw new IllegalArgumentException("Invalid UTF-8");
       return b.toString();
     }
-
     /**
      * Encodes a string in UTF-8 as a byte array.
      * @param str A text string.
@@ -89,7 +82,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         throw new IllegalArgumentException("I/O error occurred", ex);
       }
     }
-
     /**
      * Calculates the number of bytes needed to encode a string in UTF-8.
      * @param s A Unicode string.
@@ -130,13 +122,13 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       }
       return size;
     }
-
-
     /**
-     * Compares two strings in Unicode code point order. Unpaired surrogates
+     * Compares two strings in Unicode code point order. Unpairedsurrogates
      * are treated as individual code points.
      * @param a The first string.
      * @param b The second string.
+     * @param strA A string object.
+     * @param strB A string object.
      * @return A value indicating which string is "less" or "greater". 0:
      * Both strings are equal or null. Less than 0: a is null and b isn't; or
      * the first code point that's different is less in A than in B; or b starts
@@ -187,7 +179,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       if (strA.length() == strB.length()) return 0;
       return (strA.length() < strB.length()) ? -1 : 1;
     }
-
     /**
      * Writes a portion of a string in UTF-8 encoding to a data stream.
      * @param str A string to write.
@@ -210,17 +201,17 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
       if ((stream) == null) throw new NullPointerException("stream");
-      if((str)==null)throw new NullPointerException("str");
-      if((offset)<0)throw new IllegalArgumentException("offset"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(offset))+")");
-      if((offset)>str.length())throw new IllegalArgumentException("offset"+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(offset))+")");
-      if((length)<0)throw new IllegalArgumentException("length"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(length))+")");
-      if((length)>str.length())throw new IllegalArgumentException("length"+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(length))+")");
-      if(((str.length()-offset))<length)throw new IllegalArgumentException("str's length minus "+offset+" not greater or equal to "+Long.toString((long)(length))+" ("+Long.toString((long)((str.length()-offset)))+")");
+      if ((str) == null) throw new NullPointerException("str");
+      if ((offset) < 0) throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " (" + Long.toString((long)(offset)) + ")");
+      if ((offset) > str.length()) throw new IllegalArgumentException("offset" + " not less or equal to " + Long.toString((long)(str.length())) + " (" + Long.toString((long)(offset)) + ")");
+      if ((length) < 0) throw new IllegalArgumentException("length" + " not greater or equal to " + "0" + " (" + Long.toString((long)(length)) + ")");
+      if ((length) > str.length()) throw new IllegalArgumentException("length" + " not less or equal to " + Long.toString((long)(str.length())) + " (" + Long.toString((long)(length)) + ")");
+      if (((str.length() - offset)) < length) throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to " + Long.toString((long)(length)) + " (" + Long.toString((long)((str.length() - offset))) + ")");
       byte[] bytes;
       int retval = 0;
       bytes = new byte[StreamedStringBufferLength];
       int byteIndex = 0;
-      int endIndex=offset+length;
+      int endIndex = offset + length;
       for (int index = offset; index < endIndex; index++) {
         int c = str.charAt(index);
         if (c <= 0x7F) {
@@ -277,8 +268,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       stream.write(bytes,0,byteIndex);
       return retval;
     }
-
-
     /**
      * Writes a string in UTF-8 encoding to a data stream.
      * @param str A string to write.
@@ -293,10 +282,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(String str, OutputStream stream, boolean replace) throws IOException {
-      if((str)==null)throw new NullPointerException("str");
-      return WriteUtf8(str,0,str.length(),stream,replace);
+      if ((str) == null) throw new NullPointerException("str");
+      return WriteUtf8(str, 0, str.length(), stream, replace);
     }
-
     /**
      * Reads a string in UTF-8 encoding from a byte array.
      * @param data A byte array containing a UTF-8 string
@@ -318,12 +306,12 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength,
                                         StringBuilder builder,
                                         boolean replace) {
-      if((data)==null)throw new NullPointerException("data");
-      if((offset)<0)throw new IllegalArgumentException("offset"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(offset))+")");
-      if((offset)>data.length)throw new IllegalArgumentException("offset"+" not less or equal to "+Long.toString((long)(data.length))+" ("+Long.toString((long)(offset))+")");
-      if((byteLength)<0)throw new IllegalArgumentException("byteLength"+" not greater or equal to "+Long.toString((long)(0))+" ("+Long.toString((long)(byteLength))+")");
-      if((byteLength)>data.length)throw new IllegalArgumentException("byteLength"+" not less or equal to "+Long.toString((long)(data.length))+" ("+Long.toString((long)(byteLength))+")");
-      if(((data.length-offset))<byteLength)throw new IllegalArgumentException("data's length minus "+offset+" not greater or equal to "+Long.toString((long)(byteLength))+" ("+Long.toString((long)((data.length-offset)))+")");
+      if ((data) == null) throw new NullPointerException("data");
+      if ((offset) < 0) throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " (" + Long.toString((long)(offset)) + ")");
+      if ((offset) > data.length) throw new IllegalArgumentException("offset" + " not less or equal to " + Long.toString((long)(data.length)) + " (" + Long.toString((long)(offset)) + ")");
+      if ((byteLength) < 0) throw new IllegalArgumentException("byteLength" + " not greater or equal to " + "0" + " (" + Long.toString((long)(byteLength)) + ")");
+      if ((byteLength) > data.length) throw new IllegalArgumentException("byteLength" + " not less or equal to " + Long.toString((long)(data.length)) + " (" + Long.toString((long)(byteLength)) + ")");
+      if (((data.length - offset)) < byteLength) throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to " + Long.toString((long)(byteLength)) + " (" + Long.toString((long)((data.length - offset))) + ")");
       if ((builder) == null) throw new NullPointerException("builder");
       int cp = 0;
       int bytesSeen = 0;
@@ -336,7 +324,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         int b = (data[pointer] & (int)0xFF);
         pointer++;
         if (bytesNeeded == 0) {
-          if ((b&0x7F)==b) {
+          if ((b & 0x7F) == b) {
             builder.append((char)b);
           } else if (b >= 0xc2 && b <= 0xdf) {
             bytesNeeded = 1;
@@ -400,8 +388,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       }
       return 0;
     }
-
-
     /**
      * Reads a string in UTF-8 encoding from a data stream.
      * @param stream A readable data stream.
@@ -452,7 +438,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           pointer++;
         }
         if (bytesNeeded == 0) {
-          if ((b&0x7F)==b) {
+          if ((b & 0x7F) == b) {
             builder.append((char)b);
           } else if (b >= 0xc2 && b <= 0xdf) {
             bytesNeeded = 1;
