@@ -1865,11 +1865,10 @@ namespace PeterO {
     }
     /// <summary> Writes a string in CBOR format to a data stream. </summary>
     /// <param name='str'> The string to write. Can be null.</param>
-    /// <param name='s'> A writable data stream.</param>
+    /// <param name='stream'> A writable data stream.</param>
     /// <exception cref='System.ArgumentNullException'> stream is null.</exception>
     /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
     /// <returns></returns>
-    /// <param name='stream'> A Stream object.</param>
     public static void Write(string str, Stream stream) {
       if ((stream) == null) throw new ArgumentNullException("stream");
       if (str == null) {
@@ -1909,14 +1908,13 @@ namespace PeterO {
       }
     }
     /// <summary> Writes a bigfloat in CBOR format to a data stream. </summary>
-    /// <param name='bi'> Decimal fraction to write.</param>
+    /// <param name='bignum'> Decimal fraction to write.</param>
     /// <param name='s'> Stream to write to.</param>
     /// <exception cref='System.ArgumentNullException'> s is null.</exception>
     /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentException'> The value's exponent
     /// is less than -(2^64) or greater than (2^64-1).</exception>
     /// <returns></returns>
-    /// <param name='bignum'> A DecimalFraction object.</param>
     public static void Write(DecimalFraction bignum, Stream s) {
       if ((s) == null) throw new ArgumentNullException("s");
       if (bignum == null) {
@@ -1936,12 +1934,11 @@ namespace PeterO {
       }
     }
     /// <summary> Writes a big integer in CBOR format to a data stream. </summary>
-    /// <param name='bi'> Big integer to write.</param>
+    /// <param name='bigint'> Big integer to write.</param>
     /// <param name='s'> Stream to write to.</param>
     /// <exception cref='System.ArgumentNullException'> s is null.</exception>
     /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
     /// <returns></returns>
-    /// <param name='bigint'> A BigInteger object.</param>
     public static void Write(BigInteger bigint, Stream s) {
       if ((s) == null) throw new ArgumentNullException("s");
       if ((object)bigint == (object)null) {
@@ -2353,14 +2350,13 @@ namespace PeterO {
     /// <summary> Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format and UTF-8 encoding. This function
     /// only accepts maps and arrays. </summary>
-    /// <param name='str'> A readable data stream.</param>
+    /// <param name='stream'> A readable data stream.</param>
     /// <exception cref='System.ArgumentNullException'> "stream" is
     /// null.</exception>
     /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
     /// <exception cref='CBORException'> The data stream contains invalid
     /// UTF-8 or is not in JSON format.</exception>
     /// <returns></returns>
-    /// <param name='stream'> A Stream object.</param>
     public static CBORObject ReadJSON(Stream stream) {
       JSONTokener tokener = new JSONTokener(stream, 0);
       try {
@@ -2619,9 +2615,8 @@ namespace PeterO {
       return new CBORObject(CBORObjectType_Integer, value);
     }
     /// <summary> Generates a CBOR object from a CBOR object. </summary>
-    /// <param name=''> A CBOR object.</param>
+    /// <param name='value'> A CBOR object.</param>
     /// <returns> Same as "value", or CBORObject.Null if "value" is null.</returns>
-    /// <param name='value'> A CBORObject object.</param>
     public static CBORObject FromObject(CBORObject value) {
       if (value == null) return CBORObject.Null;
       return value;
@@ -2647,7 +2642,6 @@ namespace PeterO {
     /// <returns> A CBOR number object.</returns>
     /// <exception cref='System.ArgumentException'> The value's exponent
     /// is less than -(2^64) or greater than (2^64-1).</exception>
-    /// <param name='decfrac'> A BigFloat object.</param>
     public static CBORObject FromObject(BigFloat bigValue) {
       if ((object)bigValue == (object)null)
         return CBORObject.Null;
@@ -2661,11 +2655,10 @@ namespace PeterO {
       }
     }
     /// <summary> Generates a CBOR object from a decimal fraction. </summary>
-    /// <param name='bigintValue'> An arbitrary-precision decimal number.</param>
+    /// <param name='decfrac'> An arbitrary-precision decimal number.</param>
     /// <returns> A CBOR number object.</returns>
     /// <exception cref='System.ArgumentException'> The value's exponent
     /// is less than -(2^64) or greater than (2^64-1).</exception>
-    /// <param name='decfrac'> A DecimalFraction object.</param>
     public static CBORObject FromObject(DecimalFraction decfrac) {
       if ((object)decfrac == (object)null)
         return CBORObject.Null;
@@ -2804,7 +2797,7 @@ namespace PeterO {
     /// <returns> A CBOR object where each key and value of the given map is
     /// converted to a CBOR object and copied to a new map, or CBORObject.Null
     /// if "dic" is null.</returns>
-    /// <param name='IDictionary&lt;TKey'> A IDictionary&lt;TKey object.</param>
+    /// <param name='IDictionary&lt;TKey'>A IDictionary&lt;TKey object.</param>
     public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey, TValue> dic) {
       if (dic == null) return CBORObject.Null;
       var map = new Dictionary<CBORObject, CBORObject>();
@@ -2895,12 +2888,11 @@ namespace PeterO {
     /// <summary> Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag. </summary>
     /// <param name='o'> An arbitrary object.</param>
-    /// <param name='bigintTag'> A 32-bit integer that specifies a tag number.</param>
+    /// <param name='intTag'> A 32-bit integer that specifies a tag number.</param>
     /// <returns> a CBOR object where the object "o" is converted to a CBOR
     /// object and given the tag "bigintTag".</returns>
     /// <exception cref='System.ArgumentException'> "intTag" is less
     /// than 0 or "o"'s type is unsupported.</exception>
-    /// <param name='intTag'> A 32-bit signed integer.</param>
     public static CBORObject FromObjectAndTag(Object o, int intTag) {
       if (intTag < 0) throw new ArgumentOutOfRangeException(
         "tag not greater or equal to 0 (" +

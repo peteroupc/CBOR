@@ -125,10 +125,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     /**
      * Compares two strings in Unicode code point order. Unpairedsurrogates
      * are treated as individual code points.
-     * @param a The first string.
-     * @param b The second string.
-     * @param strA A string object.
-     * @param strB A string object.
+     * @param strA The first string.
+     * @param strB The second string.
      * @return A value indicating which string is "less" or "greater". 0:
      * Both strings are equal or null. Less than 0: a is null and b isn't; or
      * the first code point that's different is less in A than in B; or b starts

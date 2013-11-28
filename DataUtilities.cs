@@ -111,16 +111,14 @@ namespace PeterO {
     }
     /// <summary> Compares two strings in Unicode code point order. Unpairedsurrogates
     /// are treated as individual code points.</summary>
-    /// <param name='a'> The first string.</param>
-    /// <param name='b'> The second string.</param>
     /// <returns> A value indicating which string is "less" or "greater".
     /// 0: Both strings are equal or null. Less than 0: a is null and b isn't;
     /// or the first code point that's different is less in A than in B; or b starts
     /// with a and is longer than a. Greater than 0: b is null and a isn't; or the
     /// first code point that's different is greater in A than in B; or a starts
     /// with b and is longer than b.</returns>
-    /// <param name='strA'> A String object.</param>
-    /// <param name='strB'> A String object.</param>
+    /// <param name='strA'>The first string.</param>
+    /// <param name='strB'>The second string.</param>
     public static int CodePointCompare(String strA, String strB) {
       if (strA == null) return (strB == null) ? 0 : -1;
       if (strB == null) return 1;

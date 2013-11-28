@@ -20,19 +20,28 @@ import java.math.*;
      * in scientific notation with one digit before the decimal point. For
      * example, with a precision of 3 and an EMax of 100, the maximum value
      * possible is 9.99E+100. (This is not the same as the highest possible
-     * Exponent property.)
+     * Exponent property.) If HasExponentRange is false, this value will
+     * be 0.
      */
-    public BigInteger getEMax() { return eMax; }
+    public BigInteger getEMax() { return hasExponentRange ? eMax : BigInteger.ZERO; }
     BigInteger eMin;
+
+    boolean hasExponentRange;
+    /**
+     * Gets whether this context defines a minimum and maximum exponent.
+     * If false, converted exponents can have any exponent.
+     */
+    public boolean getHasExponentRange() { return hasExponentRange; }
 
     /**
      * Gets the lowest exponent possible when a converted number is expressed
      * in scientific notation with one digit before the decimal point. For
      * example, with a precision of 3 and an EMin of -100, the next value that
      * comes after 0 is 0.001E-100. (This is not the same as the lowest possible
-     * Exponent property.)
+     * Exponent property.) If HasExponentRange is false, this value will
+     * be 0.
      */
-    public BigInteger getEMin() { return eMin; }
+    public BigInteger getEMin() { return hasExponentRange ? eMin : BigInteger.ZERO; }
     long precision;
 
     /**
@@ -51,9 +60,10 @@ import java.math.*;
      * than EMax + 1 - Precision. If a number's exponent is higher than that
      * value, but not high enough to cause overflow, the exponent is clamped
      * to that value and enough zeros are added to the number's mantissa to
-     * account for the adjustment.
+     * account for the adjustment. If HasExponentRange is false, this value
+     * is always false.
      */
-    public boolean getClampNormalExponents() { return clampNormalExponents; }
+    public boolean getClampNormalExponents() { return hasExponentRange ? clampNormalExponents : false; }
 
     /**
      * Gets the desired rounding mode when converting numbers that can't
@@ -73,32 +83,32 @@ import java.math.*;
      * Signals that the result was rounded to a different mathematical value,
      * but as close as possible to the original.
      */
-    public static final int SignalInexact = 1;
+    public static final int FlagInexact = 1;
     /**
      * Signals that the result was rounded to fit the precision; either the
      * value or the exponent may have changed from the original.
      */
-    public static final int SignalRounded = 2;
+    public static final int FlagRounded = 2;
     /**
      * Signals that the result is non-zero and the exponent is lower than
      * the lowest exponent allowed.
      */
-    public static final int SignalSubnormal = 4;
+    public static final int FlagSubnormal = 4;
     /**
      * Signals that the result is non-zero, the exponent is lower than the
      * lowest exponent allowed, and the result was rounded to a different
      * mathematical value, but as close as possible to the original.
      */
-    public static final int SignalUnderflow = 8;
+    public static final int FlagUnderflow = 8;
     /**
      * Signals that the result is non-zero and the exponent is higher than
      * the highest exponent allowed.
      */
-    public static final int SignalOverflow = 16;
+    public static final int FlagOverflow = 16;
     /**
      * Signals that the exponent was adjusted to fit the exponent range.
      */
-    public static final int SignalClamped = 32;
+    public static final int FlagClamped = 32;
     /**
      * Gets the flags that are set from converting numbers according to this
      * precision context. If HasFlags is false, this value will be 0.
@@ -114,6 +124,16 @@ import java.math.*;
           throw new IllegalStateException("Can't set flags");
         flags = value;
       }
+    /**
+     * Copies this PrecisionContext with HasFlags set to true and a Flags
+     * value of 0.
+     * @param rounding A Rounding object.
+     */
+    public PrecisionContext WithRounding(Rounding rounding) {
+      PrecisionContext pc = new PrecisionContext(this);
+      pc.rounding = rounding;
+      return pc;
+    }
 
     /**
      * Copies this PrecisionContext with HasFlags set to true and a Flags
@@ -136,6 +156,23 @@ import java.math.*;
       return pc;
     }
     /**
+     * Copies this PrecisionContext with an unlimited exponent range.
+     */
+    public PrecisionContext WithUnlimitedExponents() {
+      PrecisionContext pc = new PrecisionContext(this);
+      pc.hasExponentRange = false;
+      return pc;
+    }
+    /**
+     * Copies this PrecisionContext with an unlimited exponent range.
+     * @param precision A 64-bit signed integer.
+     */
+    public PrecisionContext WithPrecision(long precision) {
+      PrecisionContext pc = new PrecisionContext(this);
+      pc.precision = precision;
+      return pc;
+    }
+    /**
      * Initializes a new PrecisionContext that is a copy of another PrecisionContext.
      */
     public PrecisionContext(PrecisionContext pc) {
@@ -144,22 +181,45 @@ import java.math.*;
       this.flags = pc.flags;
       this.eMax = pc.eMax;
       this.eMin = pc.eMin;
+      this.hasExponentRange = true;
       this.precision = pc.precision;
       this.rounding = pc.rounding;
       this.clampNormalExponents = pc.clampNormalExponents;
     }
+
+    /**
+     * Initializes a new PrecisionContext from a desired maximum precision.
+     * @param precision A 64-bit signed integer.
+     */
+    public PrecisionContext(long precision){
+ this(precision, Rounding.HalfEven);
+    }
+
+    /**
+     * Initializes a new PrecisionContext from a desired rounding mode.
+     * @param rounding A Rounding object.
+     */
+    public PrecisionContext(Rounding rounding){
+ this(0,rounding);
+    }
+
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
-    public PrecisionContext(long precision, Rounding rounding, long eMinLong, long eMaxLong) {
-      if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + Long.toString((long)(precision)) + ")");
-      if ((eMinLong) > eMaxLong) throw new IllegalArgumentException("eMinLong" + " not less or equal to " + Long.toString((long)(eMaxLong)) + " (" + Long.toString((long)(eMinLong)) + ")");
+    public PrecisionContext(long precision, Rounding rounding){
       this.precision = precision;
       this.rounding = rounding;
       this.hasFlags = false;
       this.clampNormalExponents = false;
-      eMax = BigInteger.valueOf(eMaxLong);
-      eMin = BigInteger.valueOf(eMinLong);
+      eMax = BigInteger.ZERO;
+      eMin = BigInteger.ZERO;
+      this.hasExponentRange = false;
+    }
+    /**
+     * Initializes a new PrecisionContext. HasFlags will be set to false.
+     */
+    public PrecisionContext(long precision, Rounding rounding, long eMinLong, long eMaxLong){
+ this(precision,rounding,eMinLong,eMaxLong,false);
     }
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
@@ -178,15 +238,8 @@ import java.math.*;
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
-    public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax) {
-      if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + Long.toString((long)(precision)) + ")");
-      if (eMin.compareTo(eMax) > 0) throw new IllegalArgumentException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
-      this.precision = precision;
-      this.rounding = rounding;
-      this.hasFlags = false;
-      this.clampNormalExponents = false;
-      this.eMax = eMax;
-      this.eMin = eMin;
+    public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax){
+ this(precision,rounding,eMin,eMax,false);
     }
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
@@ -203,6 +256,11 @@ import java.math.*;
       this.eMin = eMin;
     }
 
+    /**
+     * Unlimited precision context.
+     */
+    public static final PrecisionContext Unlimited =
+      new PrecisionContext((long)0);
     /**
      * Precision context for the IEEE-754-2008 decimal32 format.
      */

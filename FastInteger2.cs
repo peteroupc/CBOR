@@ -42,6 +42,28 @@ namespace PeterO {
       return this;
     }
 
+    /// <summary>Multiplies this instance by the value of a Int32 object.</summary>
+    /// <returns>The product of the two objects.</returns>
+    /// <remarks/><param name='val'>A 32-bit signed integer.</param>
+    public FastInteger2 Multiply(int val) {
+      if (usingLarge) {
+        largeValue.Multiply(val);
+      } else {
+        bool apos = (smallValue > 0L);
+        if (
+          (apos && ((smallValue > Int64.MaxValue/val))) ||
+          (!apos && ((smallValue < Int64.MinValue/val)))) {
+          // would overflow, convert to large
+          largeValue = new MutableBigInteger(smallValue);
+          usingLarge = true;
+          largeValue.Multiply(val);
+        } else {
+          smallValue *= val;
+        }
+      }
+      return this;
+    }
+
     /// <summary> </summary>
     /// <param name='val'> A 32-bit signed integer.</param>
     /// <returns></returns>
@@ -83,6 +105,18 @@ namespace PeterO {
         a.Subtract(new FastInteger(largeValue.ToBigInteger()));
       } else {
         a.Subtract(smallValue);
+      }
+    }
+    
+    /// <summary> </summary>
+    /// <remarks/>
+public int Sign{
+      get {
+        if(usingLarge){
+          return largeValue.Sign;
+        } else {
+          return (smallValue==0) ? 0 : (smallValue<0 ? -1 : 1);
+        }
       }
     }
 

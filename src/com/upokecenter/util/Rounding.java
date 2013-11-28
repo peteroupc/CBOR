@@ -55,5 +55,10 @@ at: http://upokecenter.com/d/
      * away from zero; otherwise the fractional part is discarded. In overflow,
      * the fractional part is always discarded.
      */
-    ZeroFiveUp
+    ZeroFiveUp,
+    /**
+     * Indicates that rounding will not be used. If rounding is required,
+     * the rounding operation will report an error.
+     */
+    Unnecessary
   }

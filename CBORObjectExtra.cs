@@ -183,10 +183,18 @@ namespace PeterO {
       } else
         throw new InvalidOperationException("Not a number type");
     }
+    /// <summary> </summary>
+    /// <param name='value'>A SByte object.</param>
+    /// <param name='s'>A Stream object.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static void Write(sbyte value, Stream s) {
       Write((long)value, s);
     }
+    /// <summary> </summary>
+    /// <param name='value'>A 64-bit unsigned integer.</param>
+    /// <param name='s'>A Stream object.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream s) {
       if (value <= Int64.MaxValue) {
@@ -203,6 +211,9 @@ namespace PeterO {
         s.WriteByte((byte)(value & 0xFF));
       }
     }
+    /// <summary> </summary>
+    /// <param name='value'>A Decimal object.</param>
+    /// <returns></returns>
     public static CBORObject FromObject(decimal value) {
       if (Math.Round(value) == value) {
         // This is an integer
@@ -232,30 +243,54 @@ namespace PeterO {
           }, 4);
       }
     }
+    /// <summary> </summary>
+    /// <param name='value'>A 32-bit unsigned integer.</param>
+    /// <param name='s'>A Stream object.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static void Write(uint value, Stream s) {
       Write((ulong)value, s);
     }
+    /// <summary> </summary>
+    /// <param name='value'>A UInt16 object.</param>
+    /// <param name='s'>A Stream object.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static void Write(ushort value, Stream s) {
       Write((ulong)value, s);
     }
+    /// <summary> </summary>
+    /// <param name='value'>A SByte object.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(sbyte value) {
       return FromObject((long)value);
     }
+    /// <summary> </summary>
+    /// <param name='value'>A 64-bit unsigned integer.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ulong value) {
       return FromObject((BigInteger)value);
     }
+    /// <summary> </summary>
+    /// <param name='value'>A 32-bit unsigned integer.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(uint value) {
       return FromObject((long)value);
     }
+    /// <summary> </summary>
+    /// <param name='value'>A UInt16 object.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ushort value) {
       return FromObject((long)value);
     }
+    /// <summary> </summary>
+    /// <param name='o'>An arbitrary object.</param>
+    /// <param name='tag'>A 64-bit unsigned integer.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, (BigInteger)tag);

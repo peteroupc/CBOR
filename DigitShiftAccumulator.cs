@@ -9,25 +9,25 @@ using System;
 using System.Text;
 using System.Numerics;
 namespace PeterO {
-  internal sealed class DigitShiftAccumulator {
+  internal sealed class DigitShiftAccumulator : IShiftAccumulator {
     int bitLeftmost = 0;
 
     /// <summary> Gets whether the last discarded digit was set. </summary>
-    public int BitLeftmost {
+    public int LastDiscardedDigit {
       get { return bitLeftmost; }
     }
     int bitsAfterLeftmost = 0;
 
     /// <summary> Gets whether any of the discarded digits to the right of
     /// the last one was set. </summary>
-    public int BitsAfterLeftmost {
+    public int OlderDiscardedDigits {
       get { return bitsAfterLeftmost; }
     }
     BigInteger shiftedBigInt;
     long knownBitLength;
 
     /// <summary> Gets the length of the shifted value in digits. </summary>
-    public long KnownBitLength {
+    public long DigitLength {
       get {
         if (knownBitLength < 0) {
           knownBitLength = CalcKnownBitLength();
@@ -62,10 +62,19 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <remarks/>
-    public FastInteger DiscardedBitCount {
+    public FastInteger DiscardedDigitCount {
       get { return discardedBitCount; }
     }
     private static BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
+
+    public DigitShiftAccumulator(BigInteger bigint,
+      int lastDiscarded,
+      int olderDiscarded
+      ) : this(bigint) {
+        bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
+        bitLeftmost = lastDiscarded;
+    }
+
     public DigitShiftAccumulator(BigInteger bigint) {
       if (bigint.Sign < 0)
         throw new ArgumentException("bigint is negative");
@@ -80,7 +89,8 @@ namespace PeterO {
         knownBitLength = -1;
       }
     }
-    public DigitShiftAccumulator(long longInt) {
+    
+public DigitShiftAccumulator(long longInt) {
       if (longInt < 0)
         throw new ArgumentException("longInt is negative");
       shiftedLong = longInt;
@@ -283,7 +293,7 @@ namespace PeterO {
     /// Assumes that the big integer being shifted is positive. </summary>
     /// <returns></returns>
     /// <param name='digits'> A 64-bit signed integer.</param>
-    public void ShiftToBits(long digits) {
+    public void ShiftToDigits(long digits) {
       if (isSmall)
         ShiftToBitsSmall(digits);
       else

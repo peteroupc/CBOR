@@ -10,20 +10,20 @@ at: http://upokecenter.com/d/
 
 import java.math.*;
 
-  final class ShiftAccumulator {
+  final class BitShiftAccumulator implements IShiftAccumulator {
     int bitLeftmost = 0;
 
     /**
      * Gets whether the last discarded bit was set.
      */
-    public int getBitLeftmost() { return bitLeftmost; }
+    public int getLastDiscardedDigit() { return bitLeftmost; }
     int bitsAfterLeftmost = 0;
 
     /**
      * Gets whether any of the discarded bits to the right of the last one was
      * set.
      */
-    public int getBitsAfterLeftmost() { return bitsAfterLeftmost; }
+    public int getOlderDiscardedDigits() { return bitsAfterLeftmost; }
     BigInteger shiftedBigInt;
     long knownBitLength;
 
@@ -31,7 +31,7 @@ import java.math.*;
     /**
      * Gets the length of the shifted value in bits.
      */
-    public long getKnownBitLength() {
+    public long getDigitLength() {
         if (knownBitLength < 0) {
           knownBitLength = CalcKnownBitLength();
         }
@@ -63,8 +63,17 @@ import java.math.*;
     /**
      * 
      */
-    public FastInteger getDiscardedBitCount() { return discardedBitCount; }
-    public ShiftAccumulator(BigInteger bigint) {
+    public FastInteger getDiscardedDigitCount() { return discardedBitCount; }
+
+        public BitShiftAccumulator(BigInteger bigint,
+      int lastDiscarded,
+      int olderDiscarded
+      ){
+ this(bigint);
+        bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
+        bitLeftmost = (lastDiscarded != 0) ? 1 : 0;
+    }
+    public BitShiftAccumulator(BigInteger bigint) {
       if (bigint.signum() < 0)
         throw new IllegalArgumentException("bigint is negative");
       shiftedBigInt = bigint;
@@ -72,7 +81,7 @@ import java.math.*;
       isSmall = false;
       knownBitLength = -1;
     }
-    public ShiftAccumulator(long longInt) {
+    public BitShiftAccumulator(long longInt) {
       if (longInt < 0)
         throw new IllegalArgumentException("longInt is negative");
       shiftedLong = longInt;
@@ -336,7 +345,7 @@ import java.math.*;
      * integer being shifted is positive.
      * @param bits A 64-bit signed integer.
      */
-    public void ShiftToBits(long bits) {
+    public void ShiftToDigits(long bits) {
       if (isSmall)
         ShiftToBitsSmall(bits);
       else

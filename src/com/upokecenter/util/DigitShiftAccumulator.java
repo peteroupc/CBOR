@@ -10,27 +10,27 @@ at: http://upokecenter.com/d/
 
 import java.math.*;
 
-  final class DigitShiftAccumulator {
+  final class DigitShiftAccumulator implements IShiftAccumulator {
     int bitLeftmost = 0;
 
     /**
      * Gets whether the last discarded digit was set.
      */
-    public int getBitLeftmost() { return bitLeftmost; }
+    public int getLastDiscardedDigit() { return bitLeftmost; }
     int bitsAfterLeftmost = 0;
 
     /**
      * Gets whether any of the discarded digits to the right of the last one
      * was set.
      */
-    public int getBitsAfterLeftmost() { return bitsAfterLeftmost; }
+    public int getOlderDiscardedDigits() { return bitsAfterLeftmost; }
     BigInteger shiftedBigInt;
     long knownBitLength;
 
     /**
      * Gets the length of the shifted value in digits.
      */
-    public long getKnownBitLength() {
+    public long getDigitLength() {
         if (knownBitLength < 0) {
           knownBitLength = CalcKnownBitLength();
         }
@@ -62,8 +62,18 @@ import java.math.*;
     /**
      * 
      */
-    public FastInteger getDiscardedBitCount() { return discardedBitCount; }
+    public FastInteger getDiscardedDigitCount() { return discardedBitCount; }
     private static BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
+
+    public DigitShiftAccumulator(BigInteger bigint,
+      int lastDiscarded,
+      int olderDiscarded
+      ){
+ this(bigint);
+        bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
+        bitLeftmost = lastDiscarded;
+    }
+
     public DigitShiftAccumulator(BigInteger bigint) {
       if (bigint.signum() < 0)
         throw new IllegalArgumentException("bigint is negative");
@@ -78,7 +88,8 @@ import java.math.*;
         knownBitLength = -1;
       }
     }
-    public DigitShiftAccumulator(long longInt) {
+    
+public DigitShiftAccumulator(long longInt) {
       if (longInt < 0)
         throw new IllegalArgumentException("longInt is negative");
       shiftedLong = longInt;
@@ -283,7 +294,7 @@ import java.math.*;
      * the big integer being shifted is positive.
      * @param digits A 64-bit signed integer.
      */
-    public void ShiftToBits(long digits) {
+    public void ShiftToDigits(long digits) {
       if (isSmall)
         ShiftToBitsSmall(digits);
       else

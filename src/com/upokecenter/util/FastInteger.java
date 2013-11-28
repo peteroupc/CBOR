@@ -89,7 +89,7 @@ import java.math.*;
      */
     public int compareTo(FastInteger val) {
       if (usingLarge || val.usingLarge) {
-        BigInteger valValue = val.largeValue;
+        BigInteger valValue = val.AsBigInteger();
         return largeValue.compareTo(valValue);
       } else {
         return (val.smallValue == smallValue) ? 0 :
@@ -206,7 +206,7 @@ import java.math.*;
      */
     public FastInteger Subtract(FastInteger val) {
       if (usingLarge || val.usingLarge) {
-        BigInteger valValue = val.largeValue;
+        BigInteger valValue = val.AsBigInteger();
         largeValue=largeValue.subtract(valValue);
       } else if (((long)val.smallValue < 0 && Long.MAX_VALUE + (long)val.smallValue < smallValue) ||
                 ((long)val.smallValue > 0 && Long.MIN_VALUE + (long)val.smallValue > smallValue)) {
@@ -299,7 +299,7 @@ import java.math.*;
      */
     public FastInteger Add(FastInteger val) {
       if (usingLarge || val.usingLarge) {
-        BigInteger valValue = val.largeValue;
+        BigInteger valValue = val.AsBigInteger();
         largeValue=largeValue.add(valValue);
       } else if ((smallValue < 0 && (long)val.smallValue < Long.MIN_VALUE - smallValue) ||
                 (smallValue > 0 && (long)val.smallValue > Long.MAX_VALUE - smallValue)) {

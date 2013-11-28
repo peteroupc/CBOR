@@ -1895,8 +1895,7 @@ public void set(String key, CBORObject value) {
     /**
      * Writes a string in CBOR format to a data stream.
      * @param str The string to write. Can be null.
-     * @param s A writable data stream.
-     * @param stream A InputStream object.
+     * @param stream A writable data stream.
      * @throws java.lang.NullPointerException stream is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -1941,9 +1940,8 @@ public void set(String key, CBORObject value) {
     }
     /**
      * Writes a bigfloat in CBOR format to a data stream.
-     * @param bi Decimal fraction to write.
+     * @param bignum Decimal fraction to write.
      * @param s InputStream to write to.
-     * @param bignum A DecimalFraction object.
      * @throws java.lang.NullPointerException s is null.
      * @throws java.io.IOException An I/O error occurred.
      * @throws java.lang.IllegalArgumentException The value's exponent is less
@@ -1969,9 +1967,8 @@ public void set(String key, CBORObject value) {
     }
     /**
      * Writes a big integer in CBOR format to a data stream.
-     * @param bi Big integer to write.
+     * @param bigint Big integer to write.
      * @param s InputStream to write to.
-     * @param bigint A BigInteger object.
      * @throws java.lang.NullPointerException s is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2400,8 +2397,7 @@ public static void Write(Object objValue, OutputStream s) throws IOException {
      * Generates a CBOR object from a data stream in JavaScript Object Notation
      * (JSON) format and UTF-8 encoding. This function only accepts maps
      * and arrays.
-     * @param str A readable data stream.
-     * @param stream A InputStream object.
+     * @param stream A readable data stream.
      * @throws java.lang.NullPointerException "stream" is null.
      * @throws java.io.IOException An I/O error occurred.
      * @throws CBORException The data stream contains invalid UTF-8 or
@@ -2673,8 +2669,7 @@ public static void Write(Object objValue, OutputStream s) throws IOException {
     }
     /**
      * Generates a CBOR object from a CBOR object.
-     * @param A CBOR object.
-     * @param value A CBORObject object.
+     * @param value A CBOR object.
      * @return Same as "value", or CBORObject.Null if "value" is null.
      */
     public static CBORObject FromObject(CBORObject value) {
@@ -2701,7 +2696,6 @@ public static void Write(Object objValue, OutputStream s) throws IOException {
      * number.
      * @param bigValue An arbitrary-precision binary floating-point
      * number.
-     * @param decfrac A BigFloat object.
      * @return A CBOR number object.
      * @throws java.lang.IllegalArgumentException The value's exponent is less
      * than -(2^64) or greater than (2^64-1).
@@ -2720,8 +2714,7 @@ public static void Write(Object objValue, OutputStream s) throws IOException {
     }
     /**
      * Generates a CBOR object from a decimal fraction.
-     * @param bigintValue An arbitrary-precision decimal number.
-     * @param decfrac A DecimalFraction object.
+     * @param decfrac An arbitrary-precision decimal number.
      * @return A CBOR number object.
      * @throws java.lang.IllegalArgumentException The value's exponent is less
      * than -(2^64) or greater than (2^64-1).
@@ -2975,8 +2968,7 @@ public static CBORObject FromObject(Object obj) {
      * Generates a CBOR object from an arbitrary object and gives the resulting
      * object a tag.
      * @param o An arbitrary object.
-     * @param bigintTag A 32-bit integer that specifies a tag number.
-     * @param intTag A 32-bit signed integer.
+     * @param intTag A 32-bit integer that specifies a tag number.
      * @return a CBOR object where the object "o" is converted to a CBOR object
      * and given the tag "bigintTag".
      * @throws java.lang.IllegalArgumentException "intTag" is less than 0 or "o"'s

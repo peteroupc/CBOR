@@ -40,6 +40,9 @@ namespace PeterO {
     /// rounding is 0 or 5, the number is rounded to the closest representable
     /// number away from zero; otherwise the fractional part is discarded.
     /// In overflow, the fractional part is always discarded. </summary>
-    ZeroFiveUp
+    ZeroFiveUp,
+    /// <summary> Indicates that rounding will not be used. If rounding is
+    /// required, the rounding operation will report an error.</summary>
+    Unnecessary
   }
 }
