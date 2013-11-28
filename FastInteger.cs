@@ -88,7 +88,7 @@ namespace PeterO {
     /// <remarks/>
     public int CompareTo(FastInteger val) {
       if (usingLarge || val.usingLarge) {
-        BigInteger valValue = val.largeValue;
+        BigInteger valValue = val.AsBigInteger();
         return largeValue.CompareTo(valValue);
       } else {
         return (val.smallValue == smallValue) ? 0 :
@@ -195,7 +195,7 @@ namespace PeterO {
     /// <returns> This object.</returns>
     public FastInteger Subtract(FastInteger val) {
       if (usingLarge || val.usingLarge) {
-        BigInteger valValue = val.largeValue;
+        BigInteger valValue = val.AsBigInteger();
         largeValue -= (BigInteger)valValue;
       } else if (((long)val.smallValue < 0 && Int64.MaxValue + (long)val.smallValue < smallValue) ||
                 ((long)val.smallValue > 0 && Int64.MinValue + (long)val.smallValue > smallValue)) {
@@ -284,7 +284,7 @@ namespace PeterO {
     /// <remarks/>
     public FastInteger Add(FastInteger val) {
       if (usingLarge || val.usingLarge) {
-        BigInteger valValue = val.largeValue;
+        BigInteger valValue = val.AsBigInteger();
         largeValue += (BigInteger)valValue;
       } else if ((smallValue < 0 && (long)val.smallValue < Int64.MinValue - smallValue) ||
                 (smallValue > 0 && (long)val.smallValue > Int64.MaxValue - smallValue)) {

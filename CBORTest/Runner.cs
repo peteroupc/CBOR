@@ -54,8 +54,8 @@ namespace PeterO {
             method.Invoke(test, new object[] { });
           } catch (System.Reflection.TargetInvocationException e) {
             if (exctype == null || !e.InnerException.GetType().Equals(exctype)) {
-              Console.WriteLine(e.GetType().FullName);
-              string message = e.Message;
+              Console.WriteLine(e.InnerException.GetType().FullName);
+              string message = e.InnerException.Message;
               if (message.Length > 140)
                 message = message.Substring(0, 140);
               Console.WriteLine(message);

@@ -91,6 +91,18 @@ import java.math.*;
       }
       return this;
     }
+    
+    /**
+     * 
+     */
+public int signum() {
+        int ret=0;
+        for (int i = 0; i < length && ret==0; i++) {
+          ret|=data[i];
+        }
+        return (ret==0 ? 0 : 1);
+      }
+    
     /**
      * 
      * @param augend A 32-bit signed integer.

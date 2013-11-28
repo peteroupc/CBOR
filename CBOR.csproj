@@ -17,6 +17,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\CBOR.xml</DocumentationFile>
+    <NoWarn>1587</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -43,6 +44,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -54,10 +58,13 @@
     <Compile Include="BigFloat.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
     <Compile Include="FastInteger2.cs" />
+    <Compile Include="IRadixMathHelper.cs" />
+    <Compile Include="IShiftAccumulator.cs" />
     <Compile Include="MutableBigInteger.cs" />
+    <Compile Include="RadixMath.cs" />
     <Compile Include="Rounding.cs" />
     <Compile Include="PrecisionContext.cs" />
-    <Compile Include="ShiftAccumulator.cs" />
+    <Compile Include="BitShiftAccumulator.cs" />
     <Compile Include="CBORException.cs" />
     <Compile Include="CBORObject.cs" />
     <Compile Include="CBORObjectExtra.cs" />
@@ -91,6 +98,8 @@
     <Content Include="ProfilingSessions\Session20131124_140658.sdps" />
     <Content Include="ProfilingSessions\Session20131124_151743.sdps" />
     <Content Include="ProfilingSessions\Session20131124_152613.sdps" />
+    <Content Include="ProfilingSessions\Session20131127_134010.sdps" />
+    <Content Include="ProfilingSessions\Session20131127_154330.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -96,8 +96,6 @@ import java.math.*;
       this.exponent = BigInteger.ZERO;
       this.mantissa = BigInteger.valueOf(mantissaLong);
     }
-    private static BigInteger FastMaxExponent = BigInteger.valueOf(2000);
-    private static BigInteger FastMinExponent = BigInteger.valueOf(-2000);
     private static BigInteger BigShiftIteration = BigInteger.valueOf(1000000);
     private static int ShiftIteration = 1000000;
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
@@ -117,479 +115,6 @@ import java.math.*;
       int lastshift = (int)shift;
       val=val.shiftLeft(lastshift);
       return val;
-    }
-
-    private static BigInteger
-      RescaleByExponentDiff(BigInteger mantissa,
-                            BigInteger e1,
-                            BigInteger e2) {
-      boolean negative = (mantissa.signum() < 0);
-      if (negative) mantissa=mantissa.negate();
-      if (e1.compareTo(FastMinExponent) >= 0 &&
-          e1.compareTo(FastMaxExponent) <= 0 &&
-          e2.compareTo(FastMinExponent) >= 0 &&
-          e2.compareTo(FastMaxExponent) <= 0) {
-        int e1long = e1.intValue();
-        int e2long = e2.intValue();
-        e1long = Math.abs(e1long - e2long);
-        if (e1long != 0) {
-          mantissa=mantissa.shiftLeft(e1long);
-        }
-      } else {
-        BigInteger diff = (e1.subtract(e2)).abs();
-        mantissa = ShiftLeft(mantissa, diff);
-      }
-      if (negative) mantissa=mantissa.negate();
-      return mantissa;
-    }
-    /**
-     * Gets an object with the same value as this one, but with the sign reversed.
-     */
-    public BigFloat Negate() {
-      BigInteger neg=(this.mantissa).negate();
-      return new BigFloat(neg, this.exponent);
-    }
-    /**
-     * Gets the absolute value of this object.
-     */
-    public BigFloat Abs() {
-      if (this.signum() < 0) {
-        return Negate();
-      } else {
-        return this;
-      }
-    }
-
-    private static boolean Round(ShiftAccumulator accum, Rounding rounding,
-                              boolean neg, int lastDigit) {
-      boolean incremented = false;
-      if (rounding == Rounding.HalfUp) {
-        if (accum.getBitLeftmost() != 0) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.HalfEven) {
-        if (accum.getBitLeftmost() != 0) {
-          if (accum.getBitsAfterLeftmost() != 0 || lastDigit != 0) {
-            incremented = true;
-          }
-        }
-      } else if (rounding == Rounding.Ceiling) {
-        if (!neg && (accum.getBitLeftmost() | accum.getBitsAfterLeftmost()) != 0) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.Floor) {
-        if (neg && (accum.getBitLeftmost() | accum.getBitsAfterLeftmost()) != 0) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.HalfDown) {
-        if (accum.getBitLeftmost() != 0 && accum.getBitsAfterLeftmost() != 0) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.Up ||
-                rounding == Rounding.ZeroFiveUp) {
-        // NOTE: For binary floating point, ZeroFiveUp
-        // is the same as Up except in overflow situations
-        if ((accum.getBitLeftmost() | accum.getBitsAfterLeftmost()) != 0) {
-          incremented = true;
-        }
-      }
-      return incremented;
-    }
-
-    /**
-     * Rounds this object's value to a given precision, using the given rounding
-     * mode and range of exponent.
-     * @param context A context for controlling the precision, rounding
-     * mode, and exponent range.
-     * @return The closest value to this object's value, rounded to the specified
-     * precision. Returns null if the result of the rounding would cause
-     * an overflow. The caller can handle a null return value by treating
-     * it as positive or negative infinity depending on the sign of this object's
-     * value.
-     * @throws java.lang.IllegalArgumentException "precision" is null.
-     */
-    public BigFloat RoundToPrecision(
-      PrecisionContext context
-     ) {
-      if ((context) == null) throw new NullPointerException("context");
-      if (context.getPrecision() > 0 && context.getPrecision() <= 18) {
-        // Check if rounding is necessary at all
-        // for small precisions
-        BigInteger mantabs = (this.mantissa).abs();
-        if (mantabs.compareTo(ShiftLeft(BigInteger.ONE, context.getPrecision())) < 0) {
-          FastInteger fastExp = new FastInteger(this.exponent)
-            .Add(context.getPrecision()).Subtract(1);
-          FastInteger fastNormalMin = new FastInteger(context.getEMin())
-            .Add(context.getPrecision()).Subtract(1);
-          if (fastExp.compareTo(new FastInteger(context.getEMax())) <= 0 &&
-             fastExp.compareTo(fastNormalMin) >= 0) {
-            return this;
-          }
-        }
-      }
-      int[] signals = new int[1];
-      BigFloat dfrac = RoundToPrecision(
-        context.getPrecision(),
-        context.getRounding(),
-        context.getEMin(),
-        context.getEMax(), signals);
-      if (context.getClampNormalExponents() && dfrac != null) {
-        dfrac = dfrac.ClampExponent(context.getPrecision(), context.getEMax(), signals);
-      }
-      if (context.getHasFlags()) {
-        context.setFlags(context.getFlags()|signals[0]);
-      }
-      return dfrac;
-    }
-
-    private BigFloat ClampExponent(long precision, BigInteger eMax, int[] signals) {
-      if (signals != null && signals.length == 0)
-        throw new IllegalArgumentException("signals has zero length");
-      FastInteger exp = new FastInteger(this.exponent);
-      FastInteger clamp = new FastInteger(eMax).Add(1).Subtract(precision);
-      if (exp.compareTo(clamp) > 0) {
-        BigInteger bigmantissa = this.mantissa;
-        int sign = bigmantissa.signum();
-        if (sign != 0) {
-          if (sign < 0) bigmantissa=bigmantissa.negate();
-          FastInteger expdiff = new FastInteger(exp).Subtract(clamp);
-          if (expdiff.CanFitInInt64()) {
-            bigmantissa = (ShiftLeft(bigmantissa, expdiff.AsInt64()));
-          } else {
-            bigmantissa = (ShiftLeft(bigmantissa, expdiff.AsBigInteger()));
-          }
-          if (sign < 0) bigmantissa=bigmantissa.negate();
-        }
-        if (signals != null)
-          signals[0] |= PrecisionContext.SignalClamped;
-        return new BigFloat(bigmantissa, clamp.AsBigInteger());
-      }
-      return this;
-    }
-
-    private BigFloat RoundToPrecision(
-      long precision,
-      Rounding rounding,
-      BigInteger eMin,
-      BigInteger eMax,
-      int[] signals
-     ) {
-      if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to 1 (" + Long.toString((long)(precision)) + ")");
-      if (eMin.compareTo(eMax) > 0) throw new IllegalArgumentException("eMin greater than eMax");
-      if (signals != null && signals.length == 0)
-        throw new IllegalArgumentException("signals has zero length");
-      boolean neg = this.mantissa.signum() < 0;
-      int lastDigit = 0;
-      BigInteger bigmantissa = this.mantissa;
-      if (neg) bigmantissa=bigmantissa.negate();
-      // save mantissa in case result is subnormal
-      // and must be rounded again
-      BigInteger oldmantissa = bigmantissa;
-      ShiftAccumulator accum = new ShiftAccumulator(bigmantissa);
-      FastInteger exp = new FastInteger(this.exponent);
-      FastInteger fastEMin = new FastInteger(eMin);
-      FastInteger fastEMax = new FastInteger(eMax);
-      int flags = 0;
-      boolean unlimitedPrec = (precision == 0);
-      if (precision == 0) {
-        precision = accum.getKnownBitLength();
-      } else {
-        accum.ShiftToBits(precision);
-      }
-      FastInteger discardedBits = new FastInteger(accum.getDiscardedBitCount());
-      exp.Add(discardedBits);
-      FastInteger adjExponent = new FastInteger(exp);
-      adjExponent.Add(accum.getKnownBitLength()).Subtract(1);
-      FastInteger clamp = null;
-      if (adjExponent.compareTo(fastEMax) > 0) {
-        if (oldmantissa.signum()==0) {
-          flags |= PrecisionContext.SignalClamped;
-          if (signals != null) signals[0] = flags;
-          return new BigFloat(oldmantissa, fastEMax.AsBigInteger());
-        }
-        // Overflow
-        flags |= PrecisionContext.SignalOverflow | PrecisionContext.SignalInexact | PrecisionContext.SignalRounded;
-        if (!unlimitedPrec &&
-           (rounding == Rounding.Down ||
-           rounding == Rounding.ZeroFiveUp ||
-           (rounding == Rounding.Ceiling && neg) ||
-           (rounding == Rounding.Floor && !neg))) {
-          // Set to the highest possible value for
-          // the given precision
-          BigInteger overflowMant = BigInteger.ONE;
-          overflowMant = ShiftLeft(overflowMant, precision);
-          overflowMant=overflowMant.subtract(BigInteger.ONE);
-          if (neg) overflowMant=overflowMant.negate();
-          if (signals != null) signals[0] = flags;
-          clamp = new FastInteger(fastEMax).Add(1).Subtract(precision);
-          return new BigFloat(overflowMant, clamp.AsBigInteger());
-        }
-        if (signals != null) signals[0] = flags;
-        return null;
-      } else if (adjExponent.compareTo(fastEMin) < 0) {
-        // Subnormal
-        FastInteger fastETiny = new FastInteger(fastEMin)
-          .Subtract(precision)
-          .Add(1);
-        if (oldmantissa.signum()!=0)
-          flags |= PrecisionContext.SignalSubnormal;
-        if (exp.compareTo(fastETiny) < 0) {
-          FastInteger expdiff = new FastInteger(fastETiny).Subtract(exp);
-          expdiff.Add(discardedBits);
-          accum = new ShiftAccumulator(oldmantissa);
-          accum.ShiftRight(expdiff);
-          BigInteger newmantissa = accum.getShiftedInt();
-          if ((accum.getDiscardedBitCount()).signum() != 0) {
-            if (oldmantissa.signum()!=0)
-              flags |= PrecisionContext.SignalRounded;
-            lastDigit = 0;
-            if (rounding == Rounding.HalfEven ||
-               rounding == Rounding.ZeroFiveUp) {
-              lastDigit = (int)(newmantissa.testBit(0)==false ? 0 : 1);
-            }
-            if ((accum.getBitLeftmost() | accum.getBitsAfterLeftmost()) != 0) {
-              flags |= PrecisionContext.SignalInexact;
-            }
-            if (Round(accum, rounding, neg, lastDigit)) {
-              newmantissa=newmantissa.add(BigInteger.ONE);
-            }
-          }
-          if (newmantissa.signum()==0)
-            flags |= PrecisionContext.SignalClamped;
-          if ((flags & (PrecisionContext.SignalSubnormal | PrecisionContext.SignalInexact)) == (PrecisionContext.SignalSubnormal | PrecisionContext.SignalInexact))
-            flags |= PrecisionContext.SignalUnderflow | PrecisionContext.SignalRounded;
-          if (signals != null) signals[0] = flags;
-          if (neg) newmantissa=newmantissa.negate();
-          return new BigFloat(newmantissa, fastETiny.AsBigInteger());
-        }
-      }
-      boolean expChanged = false;
-      lastDigit = 0;
-      if ((accum.getDiscardedBitCount()).signum() != 0) {
-        if (bigmantissa.signum()!=0)
-          flags |= PrecisionContext.SignalRounded;
-        bigmantissa = accum.getShiftedInt();
-        if ((accum.getBitLeftmost() | accum.getBitsAfterLeftmost()) != 0) {
-          flags |= PrecisionContext.SignalInexact;
-        }
-      }
-      if (rounding == Rounding.HalfEven ||
-         rounding == Rounding.ZeroFiveUp) {
-        lastDigit = (int)(bigmantissa.testBit(0)==false ? 0 : 1);
-      }
-      if (Round(accum, rounding, neg, lastDigit)) {
-        bigmantissa=bigmantissa.add(BigInteger.ONE);
-        accum = new ShiftAccumulator(bigmantissa);
-        accum.ShiftToBits(precision);
-        if ((accum.getDiscardedBitCount()).signum() != 0) {
-          exp.Add(accum.getDiscardedBitCount());
-          discardedBits.Add(accum.getDiscardedBitCount());
-          bigmantissa = accum.getShiftedInt();
-          expChanged = true;
-        }
-      }
-      if (expChanged) {
-        // If exponent changed, check for overflow again
-        adjExponent = new FastInteger(exp);
-        adjExponent.Add(accum.getKnownBitLength()).Subtract(1);
-        if (adjExponent.compareTo(fastEMax) > 0) {
-          flags |= PrecisionContext.SignalOverflow | PrecisionContext.SignalInexact | PrecisionContext.SignalRounded;
-          if (!unlimitedPrec &&
-             (rounding == Rounding.Down ||
-             rounding == Rounding.ZeroFiveUp ||
-             (rounding == Rounding.Ceiling && neg) ||
-             (rounding == Rounding.Floor && !neg))) {
-            // Set to the highest possible value for
-            // the given precision
-            BigInteger overflowMant = BigInteger.ONE;
-            while (precision > 0) {
-              int tmp = (int)Math.min(9999999, precision);
-              overflowMant=overflowMant.shiftLeft(tmp);
-              precision -= tmp;
-            }
-            overflowMant=overflowMant.subtract(BigInteger.ONE);
-            if (neg) overflowMant=overflowMant.negate();
-            if (signals != null) signals[0] = flags;
-            clamp = new FastInteger(fastEMax).Add(1).Subtract(precision);
-            return new BigFloat(overflowMant, clamp.AsBigInteger());
-          }
-          if (signals != null) signals[0] = flags;
-          return null;
-        }
-      }
-      if (signals != null) signals[0] = flags;
-      if (neg) bigmantissa=bigmantissa.negate();
-      return new BigFloat(bigmantissa, exp.AsBigInteger());
-    }
-    /**
-     * Gets the greater value between two BigFloat values. If both values
-     * are equal, returns "a".
-     * @param a A BigFloat object.
-     * @param b A BigFloat object.
-     * @return The larger value of the two objects.
-     */
-    public static BigFloat Max(BigFloat a, BigFloat b) {
-      if (a == null) throw new NullPointerException("a");
-      if (b == null) throw new NullPointerException("b");
-      int cmp = a.compareTo(b);
-      if (cmp != 0)
-        return cmp > 0 ? a : b;
-      // Here the signs of both a and b can only be
-      // equal (negative zeros are not supported)
-      if (a.signum() >= 0) {
-        return (a.getExponent()).compareTo(b.getExponent()) > 0 ? a : b;
-      } else {
-        return (a.getExponent()).compareTo(b.getExponent()) > 0 ? b : a;
-      }
-    }
-    /**
-     * Gets the lesser value between two BigFloat values. If both values
-     * are equal, returns "a".
-     * @param a A BigFloat object.
-     * @param b A BigFloat object.
-     * @return The smaller value of the two objects.
-     */
-    public static BigFloat Min(BigFloat a, BigFloat b) {
-      if (a == null) throw new NullPointerException("a");
-      if (b == null) throw new NullPointerException("b");
-      int cmp = a.compareTo(b);
-      if (cmp != 0)
-        return cmp > 0 ? b : a;
-      // Here the signs of both a and b can only be
-      // equal (negative zeros are not supported)
-      if (a.signum() >= 0) {
-        return (a.getExponent()).compareTo(b.getExponent()) > 0 ? b : a;
-      } else {
-        return (a.getExponent()).compareTo(b.getExponent()) > 0 ? a : b;
-      }
-    }
-
-    /**
-     * Gets the lesser value between two values, ignoring their signs. If
-     * the absolute values are equal, has the same effect as Min.
-     * @param a A BigFloat object.
-     * @param b A BigFloat object.
-     */
-    public static BigFloat MinMagnitude(BigFloat a, BigFloat b) {
-      if (a == null) throw new NullPointerException("a");
-      if (b == null) throw new NullPointerException("b");
-      int cmp = a.Abs().compareTo(b.Abs());
-      if (cmp == 0) return Min(a, b);
-      return (cmp < 0) ? a : b;
-    }
-    /**
-     * Gets the greater value between two values, ignoring their signs.
-     * If the absolute values are equal, has the same effect as Max.
-     * @param a A BigFloat object.
-     * @param b A BigFloat object.
-     */
-    public static BigFloat MaxMagnitude(BigFloat a, BigFloat b) {
-      if (a == null) throw new NullPointerException("a");
-      if (b == null) throw new NullPointerException("b");
-      int cmp = a.Abs().compareTo(b.Abs());
-      if (cmp == 0) return Max(a, b);
-      return (cmp > 0) ? a : b;
-    }
-    /**
-     * Finds the sum of this object and another bigfloat. The result's exponent
-     * is set to the lower of the exponents of the two operands.
-     * @param decfrac A BigFloat object.
-     */
-    public BigFloat Add(BigFloat decfrac) {
-      int expcmp = exponent.compareTo(decfrac.exponent);
-      if (expcmp == 0) {
-        return new BigFloat(
-          mantissa.add(decfrac.mantissa), exponent);
-      } else if (expcmp > 0) {
-        BigInteger newmant = RescaleByExponentDiff(
-          mantissa, exponent, decfrac.exponent);
-        return new BigFloat(
-          newmant.add(decfrac.mantissa), decfrac.exponent);
-      } else {
-        BigInteger newmant = RescaleByExponentDiff(
-          decfrac.mantissa, exponent, decfrac.exponent);
-        return new BigFloat(
-          newmant.add(this.mantissa), exponent);
-      }
-    }
-    /**
-     * Finds the difference between this object and another bigfloat. The
-     * result's exponent is set to the lower of the exponents of the two operands.
-     * @param decfrac A BigFloat object.
-     * @return The difference of the two objects.
-     */
-    public BigFloat Subtract(BigFloat decfrac) {
-      int expcmp = exponent.compareTo(decfrac.exponent);
-      if (expcmp == 0) {
-        return new BigFloat(
-          this.mantissa.subtract(decfrac.mantissa), exponent);
-      } else if (expcmp > 0) {
-        BigInteger newmant = RescaleByExponentDiff(
-          mantissa, exponent, decfrac.exponent);
-        return new BigFloat(
-          newmant.subtract(decfrac.mantissa), decfrac.exponent);
-      } else {
-        BigInteger newmant = RescaleByExponentDiff(
-          decfrac.mantissa, exponent, decfrac.exponent);
-        return new BigFloat(
-          this.mantissa.subtract(newmant), exponent);
-      }
-    }
-    /**
-     * Multiplies two bigfloats. The resulting scale will be the sum of the
-     * scales of the two bigfloats.
-     * @param decfrac Another bigfloat.
-     * @return The product of the two bigfloats.
-     */
-    public BigFloat Multiply(BigFloat decfrac) {
-      BigInteger newexp = (this.exponent.add(decfrac.exponent));
-      return new BigFloat(
-        mantissa.multiply(decfrac.mantissa), newexp);
-    }
-    /**
-     * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
-     */
-    public int signum() {
-        return mantissa.signum();
-      }
-    /**
-     * Gets whether this object's value equals 0.
-     */
-    public boolean isZero() {
-        return mantissa.signum()==0;
-      }
-    /**
-     * Compares the mathematical values of two bigfloats. <p> This method
-     * is not consistent with the Equals method because two different bigfloats
-     * with the same mathematical value, but different exponents, will
-     * compare as equal.</p>
-     * @param other Another bigfloat.
-     * @return Less than 0 if this value is less than the other value, or greater
-     * than 0 if this value is greater than the other value or if "other" is
-     * null, or 0 if both values are equal.
-     */
-    public int compareTo(BigFloat other) {
-      if (other == null) return 1;
-      int s = this.signum();
-      int ds = other.signum();
-      if (s != ds) return (s < ds) ? -1 : 1;
-      int expcmp = exponent.compareTo((BigInteger)other.exponent);
-      int mantcmp = mantissa.compareTo((BigInteger)other.mantissa);
-      if (mantcmp == 0) {
-        // Special case: Mantissas are equal
-        return s == 0 ? 0 : expcmp * s;
-      }
-      if (expcmp == 0) {
-        return mantcmp;
-      } else if (expcmp > 0) {
-        BigInteger newmant = RescaleByExponentDiff(
-          mantissa, exponent, other.exponent);
-        return newmant.compareTo((BigInteger)other.mantissa);
-      } else {
-        BigInteger newmant = RescaleByExponentDiff(
-          other.mantissa, exponent, other.exponent);
-        return this.mantissa.compareTo(newmant);
-      }
     }
 
     /**
@@ -783,11 +308,11 @@ remainder=divrem[1];
         }
         bigexponent.Subtract(exponentchange);
       } else {
-        ShiftAccumulator accum = new ShiftAccumulator(bigmant);
-        accum.ShiftToBits(24);
-        bitsAfterLeftmost = accum.getBitsAfterLeftmost();
-        bitLeftmost = accum.getBitLeftmost();
-        bigexponent.Add(accum.getDiscardedBitCount());
+        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant);
+        accum.ShiftToDigits(24);
+        bitsAfterLeftmost = accum.getOlderDiscardedDigits();
+        bitLeftmost = accum.getLastDiscardedDigit();
+        bigexponent.Add(accum.getDiscardedDigitCount());
         smallmant = accum.getShiftedIntSmall();
       }
       // Round half-even
@@ -808,12 +333,12 @@ remainder=divrem[1];
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        ShiftAccumulator accum = new ShiftAccumulator(smallmant);
+        BitShiftAccumulator accum = new BitShiftAccumulator(smallmant);
         FastInteger fi = new FastInteger(bigexponent).Subtract(-149).Abs();
         accum.ShiftRight(fi);
-        bitsAfterLeftmost = accum.getBitsAfterLeftmost();
-        bitLeftmost = accum.getBitLeftmost();
-        bigexponent.Add(accum.getDiscardedBitCount());
+        bitsAfterLeftmost = accum.getOlderDiscardedDigits();
+        bitLeftmost = accum.getLastDiscardedDigit();
+        bigexponent.Add(accum.getDiscardedDigitCount());
         smallmant = accum.getShiftedIntSmall();
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
@@ -866,11 +391,11 @@ remainder=divrem[1];
         }
         bigexponent.Subtract(exponentchange);
       } else {
-        ShiftAccumulator accum = new ShiftAccumulator(bigmant);
-        accum.ShiftToBits(53);
-        bitsAfterLeftmost = accum.getBitsAfterLeftmost();
-        bitLeftmost = accum.getBitLeftmost();
-        bigexponent.Add(accum.getDiscardedBitCount());
+        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant);
+        accum.ShiftToDigits(53);
+        bitsAfterLeftmost = accum.getOlderDiscardedDigits();
+        bitLeftmost = accum.getLastDiscardedDigit();
+        bigexponent.Add(accum.getDiscardedDigitCount());
         smallmant = accum.getShiftedIntSmall();
       }
       // Round half-even
@@ -891,12 +416,12 @@ remainder=divrem[1];
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        ShiftAccumulator accum = new ShiftAccumulator(smallmant);
+        BitShiftAccumulator accum = new BitShiftAccumulator(smallmant);
         FastInteger fi = new FastInteger(bigexponent).Subtract(-1074).Abs();
         accum.ShiftRight(fi);
-        bitsAfterLeftmost = accum.getBitsAfterLeftmost();
-        bitLeftmost = accum.getBitLeftmost();
-        bigexponent.Add(accum.getDiscardedBitCount());
+        bitsAfterLeftmost = accum.getOlderDiscardedDigits();
+        bitLeftmost = accum.getLastDiscardedDigit();
+        bigexponent.Add(accum.getDiscardedDigitCount());
         smallmant = accum.getShiftedIntSmall();
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
@@ -947,4 +472,633 @@ remainder=divrem[1];
     public String ToPlainString() {
       return DecimalFraction.FromBigFloat(this).ToPlainString();
     }
+
+
+    private static final class BinaryMathHelper implements IRadixMathHelper<BigFloat> {
+
+    /**
+     * 
+     */
+public int GetRadix() {
+        return 2;
+      }
+
+    /**
+     * 
+     * @param value A BigFloat object.
+     */
+public BigFloat Abs(BigFloat value) {
+        return value.Abs();
+      }
+      
+    /**
+     * 
+     * @param value A BigFloat object.
+     */
+public int GetSign(BigFloat value) {
+        return value.signum();
+      }
+
+    /**
+     * 
+     * @param value A BigFloat object.
+     */
+public BigInteger GetMantissa(BigFloat value) {
+        return value.mantissa;
+      }
+
+    /**
+     * 
+     * @param value A BigFloat object.
+     */
+public BigInteger GetExponent(BigFloat value) {
+        return value.exponent;
+      }
+
+    /**
+     * 
+     * @param mantissa A BigInteger object.
+     * @param e1 A BigInteger object.
+     * @param e2 A BigInteger object.
+     */
+public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
+        boolean negative = (mantissa.signum() < 0);
+        if (negative) mantissa=mantissa.negate();
+        BigInteger diff = (e1.subtract(e2)).abs();
+        mantissa = ShiftLeft(mantissa, diff);
+        if (negative) mantissa=mantissa.negate();
+        return mantissa;
+      }
+
+    /**
+     * 
+     * @param mantissa A BigInteger object.
+     * @param exponent A BigInteger object.
+     */
+public BigFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
+        return new BigFloat(mantissa, exponent);
+      }
+
+    /**
+     * 
+     * @param value A BigInteger object.
+     * @param lastDigit A 32-bit signed integer.
+     * @param olderDigits A 32-bit signed integer.
+     * @param bigint A BigInteger object.
+     */
+public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint, int lastDigit, int olderDigits) {
+        return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
+      }
+
+    /**
+     * 
+     * @param value A BigInteger object.
+     * @param bigint A BigInteger object.
+     */
+public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
+        return new BitShiftAccumulator(bigint);
+      }
+
+    /**
+     * 
+     * @param value A 64-bit signed integer.
+     */
+public IShiftAccumulator CreateShiftAccumulator(long value) {
+        return new BitShiftAccumulator(value);
+      }
+
+    /**
+     * 
+     * @param num A BigInteger object.
+     * @param den A BigInteger object.
+     */
+public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
+        BigInteger gcd = num.gcd(den);
+        if (gcd.signum()==0) return false;
+        den=den.divide(gcd);
+        while (den.testBit(0)==false) {
+          den=den.shiftRight(1);
+        }
+        return den.equals(BigInteger.ONE);
+      }
+
+    /**
+     * 
+     * @param bigint A BigInteger object.
+     * @param power A 64-bit signed integer.
+     */
+public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
+        if (power <= 0) return bigint;
+        return ShiftLeft(bigint, power);
+      }
+
+    /**
+     * 
+     * @param bigint A BigInteger object.
+     * @param power A FastInteger object.
+     */
+public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
+        if (power.signum() <= 0) return bigint;
+        if (power.CanFitInInt64()) {
+          return ShiftLeft(bigint, power.AsInt64());
+        } else {
+          return ShiftLeft(bigint, power.AsBigInteger());
+        }
+      }
+    }
+
+    /**
+     * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+     */
+    public int signum() {
+        return mantissa.signum();
+      }
+    /**
+     * Gets whether this object's value equals 0.
+     */
+    public boolean isZero() {
+        return mantissa.signum()==0;
+      }
+    /**
+     * Gets the absolute value of this object.
+     */
+    public BigFloat Abs() {
+      if (this.signum() < 0) {
+        return Negate();
+      } else {
+        return this;
+      }
+    }
+
+    /**
+     * Gets an object with the same value as this one, but with the sign reversed.
+     */
+    public BigFloat Negate() {
+      BigInteger neg=(this.mantissa).negate();
+      return new BigFloat(neg, this.exponent);
+    }
+
+    /**
+     * Divides this object by another bigfloat and returns the result.
+     * @param divisor The divisor.
+     * @return The quotient of the two numbers.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The result would have a nonterminating
+     * decimal expansion.
+     */
+    public BigFloat Divide(BigFloat divisor) {
+      return Divide(divisor, PrecisionContext.Unlimited);
+    }
+
+    /**
+     * Divides this object by another bigfloat and returns a result with
+     * the same exponent as this object (the dividend).
+     * @param divisor The divisor.
+     * @param rounding The rounding mode to use if the result must be scaled
+     * down to have the same exponent as this value.
+     * @return The quotient of the two numbers.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * and the result is not exact.
+     */
+    public BigFloat Divide(BigFloat divisor, Rounding rounding) {
+      return Divide(divisor, this.exponent, rounding);
+    }
+
+    /**
+     * Divides two BigFloat objects, and returns the integer part of the
+     * result, with the preferred exponent set to this value's exponent
+     * minus the divisor's exponent.
+     * @param divisor The divisor.
+     * @return The integer part of the quotient of the two objects.
+     * @throws ArithmeticException Attempted to divide by zero.
+     */
+    public BigFloat DivideToIntegerNaturalScale(
+      BigFloat divisor
+      ) {
+      return DivideToIntegerNaturalScale(divisor, PrecisionContext.Unlimited);
+    }
+
+
+    /**
+     * 
+     * @param divisor A BigFloat object.
+     */
+    public BigFloat RemainderNaturalScale(
+          BigFloat divisor
+          ) {
+      return Subtract(this.DivideToIntegerNaturalScale(divisor).Multiply(divisor));
+    }
+
+
+    /**
+     * Divides two BigFloat objects, and gives a particular exponent to
+     * the result.
+     * @param divisor A BigFloat object.
+     * @param desiredExponentLong The desired exponent. A negative number
+     * places the cutoff point to the right of the usual decimal point. A positive
+     * number places the cutoff point to the left of the usual decimal point.
+     * @param ctx A precision context object to control the rounding mode.
+     * The precision and exponent range settings of this context are ignored.
+     * If HasFlags of the context is true, will also store the flags resulting
+     * from the operation (the flags are in addition to the pre-existing
+     * flags). Can be null, in which case the default rounding mode is HalfEven.
+     * @return The quotient of the two objects.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * and the result is not exact.
+     */
+    public BigFloat Divide(
+          BigFloat divisor,
+          long desiredExponentLong,
+          PrecisionContext ctx
+        ) {
+      return Divide(divisor, BigInteger.valueOf(desiredExponentLong), ctx);
+    }
+
+
+
+
+
+
+
+
+
+    /**
+     * Divides two BigFloat objects.
+     * @param divisor A BigFloat object.
+     * @param desiredExponentLong A 64-bit signed integer.
+     * @param rounding A Rounding object.
+     * @return The quotient of the two objects.
+     */
+    public BigFloat Divide(
+              BigFloat divisor,
+              long desiredExponentLong,
+              Rounding rounding
+            ) {
+      return Divide(divisor, BigInteger.valueOf(desiredExponentLong), new PrecisionContext(rounding));
+    }
+
+
+
+
+
+
+
+
+
+    /**
+     * Divides two BigFloat objects.
+     * @param divisor A BigFloat object.
+     * @param desiredExponentLong A BigInteger object.
+     * @param rounding A Rounding object.
+     * @param desiredExponent A BigInteger object.
+     * @return The quotient of the two objects.
+     */
+    public BigFloat Divide(
+              BigFloat divisor,
+              BigInteger desiredExponent,
+              Rounding rounding
+            ) {
+      return Divide(divisor, desiredExponent, new PrecisionContext(rounding));
+    }
+
+
+    /**
+     * 
+     * @param context A PrecisionContext object.
+     */
+    public BigFloat Abs(PrecisionContext context) {
+      return Abs().RoundToPrecision(context);
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 
+     * @param context A PrecisionContext object.
+     */
+    public BigFloat Negate(PrecisionContext context) {
+      return Negate().RoundToPrecision(context);
+    }
+
+
+
+
+
+
+
+    /**
+     * 
+     * @param decfrac A BigFloat object.
+     */
+    public BigFloat Add(BigFloat decfrac) {
+      return Add(decfrac, PrecisionContext.Unlimited);
+    }
+
+
+
+
+
+
+    /**
+     * Subtracts a BigFloat object from this instance.
+     * @param decfrac A BigFloat object.
+     * @return The difference of the two objects.
+     */
+    public BigFloat Subtract(BigFloat decfrac) {
+      return Add(decfrac.Negate());
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Subtracts a BigFloat object from another BigFloat object.
+     * @param decfrac A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     * @return The difference of the two objects.
+     */
+    public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
+      return Add(decfrac.Negate(), ctx);
+    }
+    /**
+     * Multiplies two bigfloats. The resulting scale will be the sum of the
+     * scales of the two bigfloats.
+     * @param decfrac Another bigfloat.
+     * @return The product of the two bigfloats. If a precision context is
+     * given, returns null if the result of rounding would cause an overflow.
+     */
+    public BigFloat Multiply(BigFloat decfrac) {
+      return Multiply(decfrac, PrecisionContext.Unlimited);
+    }
+
+    /**
+     * Multiplies by one bigfloat, and then adds another bigfloat.
+     * @param multiplicand The value to multiply.
+     * @param augend The value to add.
+     * @return The result this * multiplicand + augend.
+     */
+    public BigFloat MultiplyAndAdd(BigFloat multiplicand,
+                                          BigFloat augend) {
+      return this.Multiply(multiplicand).Add(augend);
+    }
+    //----------------------------------------------------------------
+
+    private static RadixMath<BigFloat> math = new RadixMath<BigFloat>(
+  new BinaryMathHelper());
+
+    /**
+     * Divides this object by another object, and returns the integer part
+     * of the result, with the preferred exponent set to thisValue value's
+     * exponent minus the divisor's exponent.
+     * @param divisor The divisor.
+     * @param ctx A precision context object to control the precision, rounding,
+     * and exponent range of the integer part of the result. Flags will be
+     * set on the given context only if the context's HasFlags is true and
+     * the integer part of the result doesn't fit the precision and exponent
+     * range without rounding.
+     * @return The integer part of the quotient of the two objects. Returns
+     * null if the return value would overflow the exponent range. A caller
+     * can handle a null return value by treating it as positive infinity
+     * if both operands have the same sign or as negative infinity if both
+     * operands have different signs.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * and the integer part of the result is not exact.
+     */
+    public BigFloat DivideToIntegerNaturalScale(
+  BigFloat divisor, PrecisionContext ctx) {
+      return math.DivideToIntegerNaturalScale(this, divisor, ctx);
+    }
+
+    /**
+     * Divides this object by another object, and returns the integer part
+     * of the result, with the exponent set to 0.
+     * @param divisor The divisor.
+     * @param ctx A precision context object to control the precision. The
+     * rounding and exponent range settings of thisValue context are ignored.
+     * No flags will be set from thisValue operation even if HasFlags of the
+     * context is true. Can be null.
+     * @return The integer part of the quotient of the two objects. The exponent
+     * will be set to 0.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The result doesn't fit the given precision.
+     */
+    public BigFloat DivideToIntegerZeroScale(
+      BigFloat divisor, PrecisionContext ctx) {
+      return math.DivideToIntegerZeroScale(this, divisor, ctx);
+    }
+
+    /**
+     * Divides this BigFloat object by another BigFloat object. The preferred
+     * exponent for the result is this object's exponent minus the divisor's
+     * exponent.
+     * @param divisor The divisor.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
+     * @return The quotient of the two objects. Returns null if the return
+     * value would overflow the exponent range. A caller can handle a null
+     * return value by treating it as positive infinity if both operands
+     * have the same sign or as negative infinity if both operands have different
+     * signs.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException Either ctx is null or ctx's precision
+     * is 0, and the result would have a nonterminating decimal expansion;
+     * or, the rounding mode is Rounding.Unnecessary and the result is not
+     * exact.
+     */
+    public BigFloat Divide(
+          BigFloat divisor,
+          PrecisionContext ctx
+        ) {
+      return math.Divide(this, divisor, ctx);
+    }
+
+    /**
+     * Divides this object by another object, and gives a particular exponent
+     * to the result.
+     * @param divisor The divisor.
+     * @param ctx A precision context object to control the rounding mode.
+     * The precision and exponent range settings of thisValue context are
+     * ignored. If HasFlags of the context is true, will also store the flags
+     * resulting from the operation (the flags are in addition to the pre-existing
+     * flags). Can be null, in which case the default rounding mode is HalfEven.
+     * @param desiredExponent A BigInteger object.
+     * @param thisValue A T object.
+     * @param exponent A BigInteger object.
+     * @return The quotient of the two objects.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * and the result is not exact.
+     */
+   public BigFloat Divide(
+      BigFloat divisor, BigInteger exponent, PrecisionContext ctx) {
+      return math.Divide(this, divisor, exponent, ctx);
+    }
+
+    /**
+     * Gets the greater value between two bigfloats.
+     * @param a A BigFloat object.
+     * @param b A BigFloat object.
+     * @return The larger value of the two objects.
+     */
+    public static BigFloat Max(
+       BigFloat a, BigFloat b) {
+      return math.Max(a, b);
+    }
+
+    /**
+     * Gets the lesser value between two decimal fractions.
+     * @param a A BigFloat object.
+     * @param b A BigFloat object.
+     * @return The smaller value of the two objects.
+     */
+    public static BigFloat Min(
+       BigFloat a, BigFloat b) {
+      return math.Min(a, b);
+    }
+    /**
+     * Gets the greater value between two values, ignoring their signs.
+     * If the absolute values are equal, has the same effect as Max.
+     * @param a A BigFloat object.
+     * @param b A BigFloat object.
+     */
+    public static BigFloat MaxMagnitude(
+       BigFloat a, BigFloat b) {
+      return math.MaxMagnitude(a, b);
+    }
+    /**
+     * Gets the lesser value between two values, ignoring their signs. If
+     * the absolute values are equal, has the same effect as Min.
+     * @param a A BigFloat object.
+     * @param b A BigFloat object.
+     */
+    public static BigFloat MinMagnitude(
+       BigFloat a, BigFloat b) {
+      return math.MinMagnitude(a, b);
+    }
+    /**
+     * Compares the mathematical values of this object and another object.
+     * <p> This method is not consistent with the Equals method because two
+     * different decimal fractions with the same mathematical value, but
+     * different exponents, will compare as equal.</p>
+     * @param op A BigFloat object.
+     * @return Less than 0 if this object's value is less than the other value,
+     * or greater than 0 if this object's value is greater than the other value
+     * or if "other" is null, or 0 if both values are equal.
+     */
+public int compareTo(
+       BigFloat op) {
+      return math.compareTo(this, op);
+    }
+    /**
+     * Finds the sum of this object and another object. The result's exponent
+     * is set to the lower of the exponents of the two operands.
+     * @param decfrac The number to add to.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
+     * @param op A BigFloat object.
+     * @return The sum of thisValue and the other object. Returns null if
+     * the result would overflow the exponent range.
+     */
+public BigFloat Add(
+       BigFloat op, PrecisionContext ctx) {
+      return math.Add(this, op, ctx);
+    }
+    /**
+     * Returns a decimal fraction with the same value but a new exponent.
+     * @param otherValue A decimal fraction containing the desired exponent
+     * of the result. The mantissa is ignored.
+     * @param ctx A PrecisionContext object.
+     * @param op A BigFloat object.
+     * @return A decimal fraction with the same value as this object but with
+     * the exponent changed.
+     */
+public BigFloat Quantize(
+       BigFloat op, PrecisionContext ctx) {
+      return math.Quantize(this, op, ctx);
+    }
+    /**
+     * 
+     * @param ctx A PrecisionContext object.
+     */
+public BigFloat RoundToIntegralExact(
+      PrecisionContext ctx) {
+  return math.RoundToIntegralExact(this, ctx);
+}
+    /**
+     * 
+     * @param ctx A PrecisionContext object.
+     */
+public BigFloat RoundToIntegralValue(
+      PrecisionContext ctx) {
+        return math.RoundToIntegralValue(this, ctx);
+}
+    /**
+     * Multiplies two BigFloat objects.
+     * @param op A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     * @return The product of the two objects.
+     */
+public BigFloat Multiply(
+       BigFloat op, PrecisionContext ctx) {
+      return math.Multiply(this, op, ctx);
+    }
+
+    /**
+     * Multiplies by one value, and then adds another value.
+     * @param multiplicand The value to multiply.
+     * @param augend The value to add.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
+     * @param op A BigFloat object.
+     * @return The result thisValue * multiplicand + augend. If a precision
+     * context is given, returns null if the result of rounding would cause
+     * an overflow. The caller can handle a null return value by treating
+     * it as positive or negative infinity depending on the sign of this object's
+     * value.
+     */
+    public BigFloat MultiplyAndAdd(
+       BigFloat op, BigFloat augend, PrecisionContext ctx) {
+      return math.MultiplyAndAdd(this, op, augend, ctx);
+    }
+    /**
+     * Rounds this object's value to a given precision, using the given rounding
+     * mode and range of exponent.
+     * @param context A context for controlling the precision, rounding
+     * mode, and exponent range. Can be null.
+     * @param ctx A PrecisionContext object.
+     * @return The closest value to this object's value, rounded to the specified
+     * precision. Returns the same value as this object if "context" is null
+     * or the precision and exponent range are unlimited. Returns null if
+     * the result of the rounding would cause an overflow. The caller can
+     * handle a null return value by treating it as positive or negative infinity
+     * depending on the sign of this object's value.
+     */
+    public BigFloat RoundToPrecision(
+       PrecisionContext ctx) {
+      return math.RoundToPrecision(this, ctx);
+    }
+
   }
+

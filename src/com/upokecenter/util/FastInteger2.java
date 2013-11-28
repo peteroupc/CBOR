@@ -46,6 +46,30 @@ import java.math.*;
     }
 
     /**
+     * Multiplies this instance by the value of a Int32 object.
+     * @param val A 32-bit signed integer.
+     * @return The product of the two objects.
+     */
+    public FastInteger2 Multiply(int val) {
+      if (usingLarge) {
+        largeValue.Multiply(val);
+      } else {
+        boolean apos = (smallValue > 0L);
+        if (
+          (apos && ((smallValue > Long.MAX_VALUE/val))) ||
+          (!apos && ((smallValue < Long.MIN_VALUE/val)))) {
+          // would overflow, convert to large
+          largeValue = new MutableBigInteger(smallValue);
+          usingLarge = true;
+          largeValue.Multiply(val);
+        } else {
+          smallValue *= val;
+        }
+      }
+      return this;
+    }
+
+    /**
      * 
      * @param val A 32-bit signed integer.
      */
@@ -88,6 +112,17 @@ import java.math.*;
         a.Subtract(smallValue);
       }
     }
+    
+    /**
+     * 
+     */
+public int signum() {
+        if(usingLarge){
+          return largeValue.signum();
+        } else {
+          return (smallValue==0) ? 0 : (smallValue<0 ? -1 : 1);
+        }
+      }
 
     /**
      * Converts this object to a text string.

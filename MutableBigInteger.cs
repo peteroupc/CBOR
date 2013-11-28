@@ -88,6 +88,19 @@ namespace PeterO {
       }
       return this;
     }
+    
+    /// <summary> </summary>
+    /// <remarks/>
+public int Sign{
+      get {
+        int ret=0;
+        for (int i = 0; i < length && ret==0; i++) {
+          ret|=data[i];
+        }
+        return (ret==0 ? 0 : 1);
+      }
+    }
+    
     /// <summary> </summary>
     /// <param name='augend'> A 32-bit signed integer.</param>
     /// <returns></returns>
