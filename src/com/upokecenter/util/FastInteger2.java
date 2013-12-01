@@ -19,8 +19,6 @@ import java.math.*;
     boolean usingLarge;
 
     public FastInteger2() {
-      smallValue = 0;
-      usingLarge = false;
     }
 
     /**

@@ -16,6 +16,25 @@ import java.io.*;
 
   final class TestCommon {
 private TestCommon(){}
+    public static void AssertDecFrac(DecimalFraction d3, String output) {
+     if(output==null && d3!=null)Assert.fail("d3 must be null");
+     if(output!=null && !d3.toString().equals(output)){
+        DecimalFraction d4=DecimalFraction.FromString(output);
+        Assert.assertEquals(output,d3.toString(),(
+          "expected: ["+(d4.getMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
+          "but was: ["+(d3.getMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
+     ));   }   
+   }
+    public static void AssertFlags(int expected, int actual) {
+    if(expected==actual)return;
+    Assert.assertEquals("Inexact",(expected&PrecisionContext.FlagInexact)!=0,(expected&PrecisionContext.FlagInexact)!=0);
+    Assert.assertEquals("Rounded",(expected&PrecisionContext.FlagRounded)!=0,(expected&PrecisionContext.FlagRounded)!=0);
+    Assert.assertEquals("Subnormal",(expected&PrecisionContext.FlagSubnormal)!=0,(expected&PrecisionContext.FlagSubnormal)!=0);
+    Assert.assertEquals("Overflow",(expected&PrecisionContext.FlagOverflow)!=0,(expected&PrecisionContext.FlagOverflow)!=0);
+    Assert.assertEquals("Underflow",(expected&PrecisionContext.FlagUnderflow)!=0,(expected&PrecisionContext.FlagUnderflow)!=0);
+    Assert.assertEquals("Clamped",(expected&PrecisionContext.FlagClamped)!=0,(expected&PrecisionContext.FlagClamped)!=0);    
+   }
+    
     private static CBORObject FromBytesA(byte[] b) {
       return CBORObject.DecodeFromBytes(b);
     }

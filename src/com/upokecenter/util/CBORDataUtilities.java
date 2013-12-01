@@ -40,7 +40,7 @@ private CBORDataUtilities(){}
      * Generates a text string from a portion of a UTF-8 byte array.
      * @param bytes A byte array containing text encoded in UTF-8.
      * @param offset Offset into the byte array to start reading
-     * @param byteLength Length, in bytes, of the UTF-8 string
+     * @param bytesCount Length, in bytes, of the UTF-8 string
      * @param replace If true, replaces invalid encoding with the replacement
      * character (U+FFFD). If false, stops processing when invalid UTF-8
      * is seen.
@@ -51,8 +51,8 @@ private CBORDataUtilities(){}
      * @deprecated Use DataUtilities.GetUtf8String instead. 
  */
 @Deprecated
-    public static String GetUtf8String(byte[] bytes, int offset, int byteLength, boolean replace) {
-      return DataUtilities.GetUtf8String(bytes, offset, byteLength, replace);
+    public static String GetUtf8String(byte[] bytes, int offset, int bytesCount, boolean replace) {
+      return DataUtilities.GetUtf8String(bytes, offset, bytesCount, replace);
     }
     /**
      * Encodes a string in UTF-8 as a byte array.
@@ -153,7 +153,7 @@ private CBORDataUtilities(){}
      * Reads a string in UTF-8 encoding from a byte array.
      * @param data A byte array containing a UTF-8 string
      * @param offset Offset into the byte array to start reading
-     * @param byteLength Length, in bytes, of the UTF-8 string
+     * @param bytesCount Length, in bytes, of the UTF-8 string
      * @param builder A string builder object where the resulting string
      * will be stored.
      * @param replace If true, replaces invalid encoding with the replacement
@@ -163,21 +163,21 @@ private CBORDataUtilities(){}
      * string is not valid UTF-8 and "replace" is false.
      * @throws java.lang.NullPointerException "data" is null or "builder"
      * is null.
-     * @throws java.lang.IllegalArgumentException "offset" is less than 0, "byteLength"
-     * is less than 0, or offset plus byteLength is greater than the length
+     * @throws java.lang.IllegalArgumentException "offset" is less than 0, "bytesCount"
+     * is less than 0, or offset plus bytesCount is greater than the length
      * of "data".
      * @deprecated Use DataUtilities.ReadUtf8FromBytes instead. 
  */
 @Deprecated
-    public static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength,
+    public static int ReadUtf8FromBytes(byte[] data, int offset, int bytesCount,
                                         StringBuilder builder,
                                         boolean replace) {
-      return DataUtilities.ReadUtf8FromBytes(data, offset, byteLength, builder, replace);
+      return DataUtilities.ReadUtf8FromBytes(data, offset, bytesCount, builder, replace);
     }
     /**
      * Reads a string in UTF-8 encoding from a data stream.
      * @param stream A readable data stream.
-     * @param byteLength The length, in bytes, of the string. If this is less
+     * @param bytesCount The length, in bytes, of the string. If this is less
      * than 0, this function will read until the end of the stream.
      * @param builder A string builder object where the resulting string
      * will be stored.
@@ -194,9 +194,9 @@ private CBORDataUtilities(){}
      * @deprecated Use DataUtilities.ReadUtf8 instead. 
  */
 @Deprecated
-    public static int ReadUtf8(InputStream stream, int byteLength, StringBuilder builder,
+    public static int ReadUtf8(InputStream stream, int bytesCount, StringBuilder builder,
                                boolean replace) throws IOException {
-      return DataUtilities.ReadUtf8(stream, byteLength, builder, replace);
+      return DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
     }
     /**
      * Parses a number whose format follows the JSON specification. See
@@ -210,6 +210,18 @@ private CBORDataUtilities(){}
     public static CBORObject ParseJSONNumber(String str) {
       return ParseJSONNumber(str, false, false, false);
     }
+
+    private static BigInteger FastParseBigInt(String str, int offset, int length) {
+      // Assumes the String contains
+      // only the digits '0' through '9'
+      MutableBigInteger mbi = new MutableBigInteger();
+      for (int i = 0; i < length; i++) {
+        int digit = (int)(str.charAt(offset + i) - '0');
+        mbi.Multiply(10).Add(digit);
+      }
+      return mbi.ToBigInteger();
+    }
+
     /**
      * Parses a number whose format follows the JSON specification (RFC
      * 4627). Roughly speaking, a valid number consists of an optional minus
@@ -377,16 +389,21 @@ private CBORDataUtilities(){}
         return CBORObject.FromObject(new DecimalFraction(value, exponent));
       } else if (fracStart < 0 && expStart < 0) {
         // Bigger integer
-        String strsub = (numberStart == 0 && numberEnd == str.length()) ? str :
-          str.substring(numberStart,(numberStart)+(numberEnd - numberStart));
-        BigInteger bigintValue = new BigInteger(strsub);
+        BigInteger bigintValue = FastParseBigInt(
+          str,numberStart,numberEnd-numberStart);
         if (negative) bigintValue=(bigintValue).negate();
         return CBORObject.FromObject(bigintValue);
       } else {
         // Intval consists of the whole and fractional part
-        String intvalString = str.substring(numberStart,(numberStart)+(numberEnd - numberStart)) +
-          ((fracStart < 0) ? "" : str.substring(fracStart,(fracStart)+(fracEnd - fracStart)));
-        BigInteger intval = new BigInteger(intvalString);
+        BigInteger intval;
+        if(fracStart<0){
+          intval=FastParseBigInt(
+            str,numberStart,numberEnd-numberStart);
+        } else {
+          String intvalString = str.substring(numberStart,(numberStart)+(numberEnd - numberStart)) +
+            str.substring(fracStart,(fracStart)+(fracEnd - fracStart));
+          intval=FastParseBigInt(intvalString,0,intvalString.length());
+        }
         if (negative) intval=intval.negate();
         if ((fracStart < 0) && expStart < 0) {
           // No fractional part and no exponent;
@@ -410,7 +427,7 @@ private CBORDataUtilities(){}
           // Use already parsed exponent
           exp = smallExponent;
         } else {
-          exp = new FastInteger(new BigInteger(str.substring(expStart,(expStart)+(expEnd - expStart))));
+          exp = new FastInteger(FastParseBigInt(str, expStart, expEnd - expStart));
           if (negExp) exp.Negate();
           if (fracStart >= 0) {
             // If there is a fractional part,

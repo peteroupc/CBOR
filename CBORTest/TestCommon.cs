@@ -6,13 +6,38 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.Globalization;
 using System.Numerics;
 using PeterO;
 using System.IO;
 namespace Test {
   static class TestCommon {
+    public static void AssertDecFrac(DecimalFraction d3, string output){
+     if(output==null && d3!=null)Assert.Fail("d3 must be null");
+     if(output!=null && !d3.ToString().Equals(output)){
+        DecimalFraction d4=DecimalFraction.FromString(output);
+        Assert.AreEqual(output,d3.ToString(),(
+          "expected: ["+(d4.Mantissa).ToString()+","+(d4.Exponent).ToString()+"]\\n"+
+          "but was: ["+(d3.Mantissa).ToString()+","+(d3.Exponent).ToString()+"]"
+     ));   }   
+   }
+    public static void AssertFlags(int expected, int actual){
+    if(expected==actual)return;
+    Assert.AreEqual((expected&PrecisionContext.FlagInexact)!=0,
+    (expected&PrecisionContext.FlagInexact)!=0,"Inexact");
+    Assert.AreEqual((expected&PrecisionContext.FlagRounded)!=0,
+    (expected&PrecisionContext.FlagRounded)!=0,"Rounded");
+    Assert.AreEqual((expected&PrecisionContext.FlagSubnormal)!=0,
+    (expected&PrecisionContext.FlagSubnormal)!=0,"Subnormal");
+    Assert.AreEqual((expected&PrecisionContext.FlagOverflow)!=0,
+    (expected&PrecisionContext.FlagOverflow)!=0,"Overflow");
+    Assert.AreEqual((expected&PrecisionContext.FlagUnderflow)!=0,
+    (expected&PrecisionContext.FlagUnderflow)!=0,"Underflow");
+    Assert.AreEqual((expected&PrecisionContext.FlagClamped)!=0,
+    (expected&PrecisionContext.FlagClamped)!=0,"Clamped");    
+   }
+    
     private static CBORObject FromBytesA(byte[] b) {
       return CBORObject.DecodeFromBytes(b);
     }

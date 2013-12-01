@@ -29,13 +29,13 @@ namespace PeterO {
     /// <summary> Determines whether this object's mantissa and exponent
     /// are equal to those of another object. </summary>
     /// <returns></returns>
-    /// <param name='obj'> A BigFloat object.</param>
-    public bool Equals(BigFloat obj) {
-      BigFloat other = obj as BigFloat;
-      if (other == null)
+    /// <param name='other'> A BigFloat object.</param>
+    public bool Equals(BigFloat other) {
+      BigFloat otherValue = other as BigFloat;
+      if (otherValue == null)
         return false;
-      return this.exponent.Equals(other.exponent) &&
-        this.mantissa.Equals(other.mantissa);
+      return this.exponent.Equals(otherValue.exponent) &&
+        this.mantissa.Equals(otherValue.mantissa);
     }
     /// <summary> Determines whether this object's mantissa and exponent
     /// are equal to those of another object and that object is a Bigfloat.
@@ -64,12 +64,19 @@ namespace PeterO {
       this.exponent = exponent;
       this.mantissa = mantissa;
     }
-    /// <summary> Creates a bigfloat with the value exponentLong*2^mantissa.
+    /// <summary> Represents the number 1. </summary>
+    public static readonly BigFloat One = new BigFloat(1);
+
+    /// <summary> Represents the number 0. </summary>
+    public static readonly BigFloat Zero = new BigFloat(0);
+    /// <summary> Represents the number 10. </summary>
+    public static readonly BigFloat Ten = new BigFloat(10);
+    /// <summary> Creates a bigfloat with the value exponentSmall*2^mantissa.
     /// </summary>
     /// <param name='mantissa'> The unscaled value.</param>
-    /// <param name='exponentLong'> The binary exponent.</param>
-    public BigFloat(BigInteger mantissa, long exponentLong) {
-      this.exponent = (BigInteger)exponentLong;
+    /// <param name='exponentSmall'> The binary exponent.</param>
+    public BigFloat(BigInteger mantissa, long exponentSmall) {
+      this.exponent = (BigInteger)exponentSmall;
       this.mantissa = mantissa;
     }
     /// <summary> Creates a bigfloat with the given mantissa and an exponent
@@ -81,10 +88,10 @@ namespace PeterO {
     }
     /// <summary> Creates a bigfloat with the given mantissa and an exponent
     /// of 0. </summary>
-    /// <param name='mantissaLong'> The desired value of the bigfloat</param>
-    public BigFloat(long mantissaLong) {
+    /// <param name='mantissaSmall'> The desired value of the bigfloat</param>
+    public BigFloat(long mantissaSmall) {
       this.exponent = BigInteger.Zero;
-      this.mantissa = (BigInteger)mantissaLong;
+      this.mantissa = (BigInteger)mantissaSmall;
     }
     private static BigInteger BigShiftIteration = (BigInteger)1000000;
     private static int ShiftIteration = 1000000;
@@ -113,6 +120,7 @@ namespace PeterO {
     /// <returns></returns>
     /// <param name='decfrac'> A DecimalFraction object.</param>
     public static BigFloat FromDecimalFraction(DecimalFraction decfrac) {
+      if((decfrac)==null)throw new ArgumentNullException("decfrac");
       BigInteger bigintExp = decfrac.Exponent;
       BigInteger bigintMant = decfrac.Mantissa;
       if (bigintMant.IsZero)
@@ -140,7 +148,7 @@ namespace PeterO {
           // Ensure that the quotient has enough precision
           // to be converted accurately to a single or double
           if (!remainder.IsZero &&
-             quotient.CompareTo(OneShift62) < 0) {
+              quotient.CompareTo(OneShift62) < 0) {
             long smallquot = (long)quotient;
             int shift = 0;
             while (smallquot != 0 && smallquot < (1L << 62)) {
@@ -457,7 +465,7 @@ namespace PeterO {
     /// <summary> </summary>
     /// <returns></returns>
     /// <remarks/>
-public int GetRadix() {
+      public int GetRadix() {
         return 2;
       }
 
@@ -465,7 +473,7 @@ public int GetRadix() {
     /// <param name='value'>A BigFloat object.</param>
     /// <returns></returns>
     /// <remarks/>
-public BigFloat Abs(BigFloat value) {
+      public BigFloat Abs(BigFloat value) {
         return value.Abs();
       }
       
@@ -473,7 +481,7 @@ public BigFloat Abs(BigFloat value) {
     /// <param name='value'>A BigFloat object.</param>
     /// <returns></returns>
     /// <remarks/>
-public int GetSign(BigFloat value) {
+      public int GetSign(BigFloat value) {
         return value.Sign;
       }
 
@@ -481,7 +489,7 @@ public int GetSign(BigFloat value) {
     /// <param name='value'>A BigFloat object.</param>
     /// <returns></returns>
     /// <remarks/>
-public BigInteger GetMantissa(BigFloat value) {
+      public BigInteger GetMantissa(BigFloat value) {
         return value.mantissa;
       }
 
@@ -489,7 +497,7 @@ public BigInteger GetMantissa(BigFloat value) {
     /// <param name='value'>A BigFloat object.</param>
     /// <returns></returns>
     /// <remarks/>
-public BigInteger GetExponent(BigFloat value) {
+      public BigInteger GetExponent(BigFloat value) {
         return value.exponent;
       }
 
@@ -499,7 +507,7 @@ public BigInteger GetExponent(BigFloat value) {
     /// <param name='e2'>A BigInteger object.</param>
     /// <returns></returns>
     /// <remarks/>
-public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
+      public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
         bool negative = (mantissa.Sign < 0);
         if (negative) mantissa = -mantissa;
         BigInteger diff = BigInteger.Abs(e1 - (BigInteger)e2);
@@ -513,25 +521,23 @@ public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigI
     /// <param name='exponent'>A BigInteger object.</param>
     /// <returns></returns>
     /// <remarks/>
-public BigFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
+      public BigFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
         return new BigFloat(mantissa, exponent);
       }
 
     /// <summary> </summary>
-    /// <param name='value'>A BigInteger object.</param>
     /// <param name='lastDigit'>A 32-bit signed integer.</param>
     /// <param name='olderDigits'>A 32-bit signed integer.</param>
     /// <returns></returns>
     /// <remarks/><param name='bigint'>A BigInteger object.</param>
-public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint, int lastDigit, int olderDigits) {
+      public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint, int lastDigit, int olderDigits) {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
     /// <summary> </summary>
-    /// <param name='value'>A BigInteger object.</param>
     /// <returns></returns>
     /// <remarks/><param name='bigint'>A BigInteger object.</param>
-public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
+      public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new BitShiftAccumulator(bigint);
       }
 
@@ -539,7 +545,7 @@ public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
     /// <param name='value'>A 64-bit signed integer.</param>
     /// <returns></returns>
     /// <remarks/>
-public IShiftAccumulator CreateShiftAccumulator(long value) {
+      public IShiftAccumulator CreateShiftAccumulator(long value) {
         return new BitShiftAccumulator(value);
       }
 
@@ -548,7 +554,7 @@ public IShiftAccumulator CreateShiftAccumulator(long value) {
     /// <param name='den'>A BigInteger object.</param>
     /// <returns></returns>
     /// <remarks/>
-public bool HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
+      public bool HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
         BigInteger gcd = BigInteger.GreatestCommonDivisor(num, den);
         if (gcd.IsZero) return false;
         den /= gcd;
@@ -563,7 +569,7 @@ public bool HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
     /// <param name='power'>A 64-bit signed integer.</param>
     /// <returns></returns>
     /// <remarks/>
-public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
+      public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
         if (power <= 0) return bigint;
         return ShiftLeft(bigint, power);
       }
@@ -573,7 +579,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
     /// <param name='power'>A FastInteger object.</param>
     /// <returns></returns>
     /// <remarks/>
-public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
+      public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.Sign <= 0) return bigint;
         if (power.CanFitInInt64()) {
           return ShiftLeft(bigint, power.AsInt64());
@@ -615,7 +621,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     }
 
     /// <summary> Divides this object by another bigfloat and returns the
-    /// result. </summary>
+    /// exact result. </summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>The quotient of the two numbers.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
@@ -623,7 +629,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <exception cref='ArithmeticException'>The result would have
     /// a nonterminating decimal expansion.</exception>
     public BigFloat Divide(BigFloat divisor) {
-      return Divide(divisor, PrecisionContext.Unlimited);
+      return Divide(divisor, new PrecisionContext(Rounding.Unnecessary));
     }
 
     /// <summary> Divides this object by another bigfloat and returns a result
@@ -641,16 +647,16 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     }
 
     /// <summary>Divides two BigFloat objects, and returns the integer
-    /// part of the result, with the preferred exponent set to this value's
-    /// exponent minus the divisor's exponent.</summary>
+    /// part of the result, rounded down, with the preferred exponent set
+    /// to this value's exponent minus the divisor's exponent.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>The integer part of the quotient of the two objects.</returns>
     /// <remarks/><exception cref='DivideByZeroException'>Attempted
     /// to divide by zero.</exception>
     public BigFloat DivideToIntegerNaturalScale(
       BigFloat divisor
-      ) {
-      return DivideToIntegerNaturalScale(divisor, PrecisionContext.Unlimited);
+     ) {
+      return DivideToIntegerNaturalScale(divisor, new PrecisionContext(Rounding.Down));
     }
 
 
@@ -659,8 +665,8 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <returns></returns>
     /// <remarks/>
     public BigFloat RemainderNaturalScale(
-          BigFloat divisor
-          ) {
+      BigFloat divisor
+     ) {
       return Subtract(this.DivideToIntegerNaturalScale(divisor).Multiply(divisor));
     }
 
@@ -668,7 +674,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <summary>Divides two BigFloat objects, and gives a particular exponent
     /// to the result.</summary>
     /// <param name='divisor'>A BigFloat object.</param>
-    /// <param name='desiredExponentLong'>The desired exponent. A negative
+    /// <param name='desiredExponentSmall'>The desired exponent. A negative
     /// number places the cutoff point to the right of the usual decimal point.
     /// A positive number places the cutoff point to the left of the usual decimal
     /// point.</param>
@@ -683,11 +689,11 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
     public BigFloat Divide(
-          BigFloat divisor,
-          long desiredExponentLong,
-          PrecisionContext ctx
-        ) {
-      return Divide(divisor, new BigInteger(desiredExponentLong), ctx);
+      BigFloat divisor,
+      long desiredExponentSmall,
+      PrecisionContext ctx
+     ) {
+      return Divide(divisor, new BigInteger(desiredExponentSmall), ctx);
     }
 
 
@@ -698,18 +704,26 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
 
 
 
-    /// <summary>Divides two BigFloat objects.</summary>
+    /// <summary>Divides two BigFloat objects, and gives a particular exponent
+    /// to the result.</summary>
     /// <param name='divisor'>A BigFloat object.</param>
-    /// <param name='desiredExponentLong'>A 64-bit signed integer.</param>
-    /// <param name='rounding'>A Rounding object.</param>
+    /// <param name='desiredExponentSmall'>The desired exponent. A negative
+    /// number places the cutoff point to the right of the usual decimal point.
+    /// A positive number places the cutoff point to the left of the usual decimal
+    /// point.</param>
+    /// <param name='rounding'>The rounding mode to use if the result must
+    /// be scaled down to fit the desired exponent.</param>
     /// <returns>The quotient of the two objects.</returns>
-    /// <remarks/>
+    /// <remarks/><exception cref='DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
+    /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
+    /// and the result is not exact.</exception>
     public BigFloat Divide(
-              BigFloat divisor,
-              long desiredExponentLong,
-              Rounding rounding
-            ) {
-      return Divide(divisor, new BigInteger(desiredExponentLong), new PrecisionContext(rounding));
+      BigFloat divisor,
+      long desiredExponentSmall,
+      Rounding rounding
+     ) {
+      return Divide(divisor, new BigInteger(desiredExponentSmall), new PrecisionContext(rounding));
     }
 
 
@@ -720,17 +734,25 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
 
 
 
-    /// <summary>Divides two BigFloat objects.</summary>
+    /// <summary>Divides two BigFloat objects, and gives a particular exponent
+    /// to the result.</summary>
     /// <param name='divisor'>A BigFloat object.</param>
-    /// <param name='desiredExponentLong'>A BigInteger object.</param>
-    /// <param name='rounding'>A Rounding object.</param>
+    /// <param name='desiredExponent'>The desired exponent. A negative
+    /// number places the cutoff point to the right of the usual decimal point.
+    /// A positive number places the cutoff point to the left of the usual decimal
+    /// point.</param>
+    /// <param name='rounding'>The rounding mode to use if the result must
+    /// be scaled down to fit the desired exponent.</param>
     /// <returns>The quotient of the two objects.</returns>
-    /// <remarks/><param name='desiredExponent'>A BigInteger object.</param>
+    /// <remarks/><exception cref='DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
+    /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
+    /// and the result is not exact.</exception>
     public BigFloat Divide(
-              BigFloat divisor,
-              BigInteger desiredExponent,
-              Rounding rounding
-            ) {
+      BigFloat divisor,
+      BigInteger desiredExponent,
+      Rounding rounding
+     ) {
       return Divide(divisor, desiredExponent, new PrecisionContext(rounding));
     }
 
@@ -784,6 +806,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <returns>The difference of the two objects.</returns>
     /// <remarks/>
     public BigFloat Subtract(BigFloat decfrac) {
+      if((decfrac)==null)throw new ArgumentNullException("decfrac");
       return Add(decfrac.Negate());
     }
 
@@ -802,6 +825,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <returns>The difference of the two objects.</returns>
     /// <remarks/>
     public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
+      if((decfrac)==null)throw new ArgumentNullException("decfrac");
       return Add(decfrac.Negate(), ctx);
     }
     /// <summary> Multiplies two bigfloats. The resulting scale will be
@@ -819,13 +843,13 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <param name='augend'> The value to add.</param>
     /// <returns> The result this * multiplicand + augend.</returns>
     public BigFloat MultiplyAndAdd(BigFloat multiplicand,
-                                          BigFloat augend) {
+                                   BigFloat augend) {
       return this.Multiply(multiplicand).Add(augend);
     }
     //----------------------------------------------------------------
 
     private static RadixMath<BigFloat> math = new RadixMath<BigFloat>(
-  new BinaryMathHelper());
+      new BinaryMathHelper());
 
     /// <summary>Divides this object by another object, and returns the
     /// integer part of the result, with the preferred exponent set to thisValue
@@ -846,7 +870,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the integer part of the result is not exact.</exception>
     public BigFloat DivideToIntegerNaturalScale(
-  BigFloat divisor, PrecisionContext ctx) {
+      BigFloat divisor, PrecisionContext ctx) {
       return math.DivideToIntegerNaturalScale(this, divisor, ctx);
     }
 
@@ -866,6 +890,27 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     public BigFloat DivideToIntegerZeroScale(
       BigFloat divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
+    }
+
+    /// <summary>Finds the remainder that results when dividing two BigFloat
+    /// objects.</summary>
+    /// <param name='divisor'>A BigFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>The remainder of the two objects.</returns>
+    /// <remarks/>
+    public BigFloat Remainder(
+      BigFloat divisor, PrecisionContext ctx) {
+      return math.Remainder(this, divisor, ctx);
+    }
+
+    /// <summary> </summary>
+    /// <param name='divisor'>A BigFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns></returns>
+    /// <remarks/>
+    public BigFloat RemainderNear(
+      BigFloat divisor, PrecisionContext ctx) {
+      return math.RemainderNear(this, divisor, ctx);
     }
 
     /// <summary>Divides this BigFloat object by another BigFloat object.
@@ -888,9 +933,9 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// expansion; or, the rounding mode is Rounding.Unnecessary and the
     /// result is not exact.</exception>
     public BigFloat Divide(
-          BigFloat divisor,
-          PrecisionContext ctx
-        ) {
+      BigFloat divisor,
+      PrecisionContext ctx
+     ) {
       return math.Divide(this, divisor, ctx);
     }
 
@@ -903,15 +948,17 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// flags resulting from the operation (the flags are in addition to the
     /// pre-existing flags). Can be null, in which case the default rounding
     /// mode is HalfEven.</param>
-    /// <returns>The quotient of the two objects.</returns>
+    /// <returns>The quotient of the two objects. Returns null if the return
+    /// value would overflow the exponent range. A caller can handle a null
+    /// return value by treating it as positive infinity if both operands
+    /// have the same sign or as negative infinity if both operands have different
+    /// signs.</returns>
     /// <remarks/><exception cref='DivideByZeroException'>Attempted
     /// to divide by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
-    /// <param name='desiredExponent'>A BigInteger object.</param>
-    /// <param name='thisValue'>A T object.</param>
     /// <param name='exponent'>A BigInteger object.</param>
-   public BigFloat Divide(
+    public BigFloat Divide(
       BigFloat divisor, BigInteger exponent, PrecisionContext ctx) {
       return math.Divide(this, divisor, exponent, ctx);
     }
@@ -921,7 +968,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <param name='a'>A BigFloat object.</param>
     /// <param name='b'>A BigFloat object.</param>
     public static BigFloat Max(
-       BigFloat a, BigFloat b) {
+      BigFloat a, BigFloat b) {
       return math.Max(a, b);
     }
 
@@ -930,7 +977,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <param name='a'>A BigFloat object.</param>
     /// <param name='b'>A BigFloat object.</param>
     public static BigFloat Min(
-       BigFloat a, BigFloat b) {
+      BigFloat a, BigFloat b) {
       return math.Min(a, b);
     }
     /// <summary> Gets the greater value between two values, ignoring their
@@ -940,7 +987,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <param name='a'>A BigFloat object.</param>
     /// <param name='b'>A BigFloat object.</param>
     public static BigFloat MaxMagnitude(
-       BigFloat a, BigFloat b) {
+      BigFloat a, BigFloat b) {
       return math.MaxMagnitude(a, b);
     }
     /// <summary> Gets the lesser value between two values, ignoring their
@@ -950,7 +997,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <param name='a'>A BigFloat object.</param>
     /// <param name='b'>A BigFloat object.</param>
     public static BigFloat MinMagnitude(
-       BigFloat a, BigFloat b) {
+      BigFloat a, BigFloat b) {
       return math.MinMagnitude(a, b);
     }
     /// <summary> Compares the mathematical values of this object and another
@@ -961,10 +1008,10 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     /// <returns> Less than 0 if this object's value is less than the other
     /// value, or greater than 0 if this object's value is greater than the
     /// other value or if "other" is null, or 0 if both values are equal.</returns>
-    /// <param name='op'>A BigFloat object.</param>
-public int CompareTo(
-       BigFloat op) {
-      return math.CompareTo(this, op);
+    /// <param name='other'>A BigFloat object to compare with.</param>
+    public int CompareTo(
+      BigFloat other) {
+      return math.CompareTo(this, other);
     }
     /// <summary> Finds the sum of this object and another object. The result's
     /// exponent is set to the lower of the exponents of the two operands. </summary>
@@ -975,46 +1022,116 @@ public int CompareTo(
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns> The sum of thisValue and the other object. Returns null
     /// if the result would overflow the exponent range.</returns>
-    /// <param name='op'>A BigFloat object.</param>
-public BigFloat Add(
-       BigFloat op, PrecisionContext ctx) {
-      return math.Add(this, op, ctx);
+    public BigFloat Add(
+      BigFloat decfrac, PrecisionContext ctx) {
+      return math.Add(this, decfrac, ctx);
     }
     /// <summary> Returns a decimal fraction with the same value but a new
     /// exponent. </summary>
     /// <param name='otherValue'>A decimal fraction containing the desired
     /// exponent of the result. The mantissa is ignored.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags), except that this method
+    /// will never set FlagOverflow. Can be null.</param>
     /// <returns>A decimal fraction with the same value as this object but
     /// with the exponent changed.</returns>
-    /// <remarks/><param name='op'>A BigFloat object.</param>
-public BigFloat Quantize(
-       BigFloat op, PrecisionContext ctx) {
-      return math.Quantize(this, op, ctx);
+    /// <exception cref='ArithmeticException'>The result would require
+    /// a greater precision (digit length) than specified in the precision
+    /// context.</exception>
+    public BigFloat Quantize(
+      BigFloat otherValue, PrecisionContext ctx) {
+      return math.Quantize(this, otherValue, ctx);
     }
     /// <summary> </summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
     /// <remarks/>
-public BigFloat RoundToIntegralExact(
+    public BigFloat RoundToIntegralExact(
       PrecisionContext ctx) {
-  return math.RoundToIntegralExact(this, ctx);
-}
+      return math.RoundToIntegralExact(this, ctx);
+    }
     /// <summary> </summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
     /// <remarks/>
-public BigFloat RoundToIntegralValue(
+    public BigFloat RoundToIntegralValue(
       PrecisionContext ctx) {
-        return math.RoundToIntegralValue(this, ctx);
-}
+      return math.RoundToIntegralValue(this, ctx);
+    }
+    /// <summary> Removes trailing zeros from this object's mantissa. For
+    /// example, 1.000 becomes 1.</summary>
+    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). Can be null.</param>
+    /// <returns>This value with trailing zeros removed. Note that if the
+    /// value has a very high exponent and the context says to clamp high exponents,
+    /// there may still be some trailing zeros in the mantissa. If a precision
+    /// context is given, returns null if the result of rounding would cause
+    /// an overflow. The caller can handle a null return value by treating
+    /// it as positive or negative infinity depending on the sign of this object's
+    /// value.</returns>
+    public BigFloat Reduce(
+      PrecisionContext ctx) {
+      return math.Reduce(this, ctx);
+    }
+    
+    
+    /// <summary> Gets the largest value that's smaller than the given value.</summary>
+    /// <param name='ctx'>A precision context object to control the precision
+    /// and exponent range of the result. The rounding mode from this context
+    /// is ignored. No flags will be set from thisValue operation even if HasFlags
+    /// of the context is true.</param>
+    /// <returns>Returns the largest value that's smaller than the given
+    /// value. Returns null if the result is negative infinity.</returns>
+    /// <remarks/><exception cref='System.ArgumentException'>"ctx"
+    /// is null, the precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    public BigFloat NextMinus(
+      PrecisionContext ctx
+     ){
+      return math.NextMinus(this,ctx);
+    }
+
+    /// <summary> Gets the smallest value that's greater than the given value.</summary>
+    /// <param name='ctx'>A precision context object to control the precision
+    /// and exponent range of the result. The rounding mode from this context
+    /// is ignored. No flags will be set from thisValue operation even if HasFlags
+    /// of the context is true.</param>
+    /// <returns>Returns the smallest value that's greater than the given
+    /// value. Returns null if the result is positive infinity.</returns>
+    /// <remarks/><exception cref='System.ArgumentException'>"ctx"
+    /// is null, the precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    public BigFloat NextPlus(
+      PrecisionContext ctx
+     ){
+      return math.NextPlus(this,ctx);
+    }
+
+    /// <summary> </summary>
+    /// <param name='otherValue'>A BigFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns></returns>
+    /// <remarks/>
+public BigFloat NextToward(
+      BigFloat otherValue,
+      PrecisionContext ctx
+     ){
+      return math.NextToward(this,otherValue,ctx);
+    }
+
     /// <summary>Multiplies two BigFloat objects.</summary>
     /// <param name='op'>A BigFloat object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>The product of the two objects.</returns>
+    /// <returns>The product of the two objects. Returns null if the return
+    /// value would overflow the exponent range. A caller can handle a null
+    /// return value by treating it as positive infinity if both operands
+    /// have the same sign or as negative infinity if both operands have different
+    /// signs.</returns>
     /// <remarks/>
-public BigFloat Multiply(
-       BigFloat op, PrecisionContext ctx) {
+    public BigFloat Multiply(
+      BigFloat op, PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);
     }
 
@@ -1027,30 +1144,28 @@ public BigFloat Multiply(
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns> The result thisValue * multiplicand + augend. If a precision
     /// context is given, returns null if the result of rounding would cause
-    /// an overflow. The caller can handle a null return value by treating
-    /// it as positive or negative infinity depending on the sign of this object's
-    /// value.</returns>
-    /// <param name='op'>A BigFloat object.</param>
+    /// an overflow.</returns>
     public BigFloat MultiplyAndAdd(
-       BigFloat op, BigFloat augend, PrecisionContext ctx) {
-      return math.MultiplyAndAdd(this, op, augend, ctx);
+      BigFloat multiplicand, BigFloat augend, PrecisionContext ctx) {
+      return math.MultiplyAndAdd(this, multiplicand, augend, ctx);
     }
     /// <summary> Rounds this object's value to a given precision, using
     /// the given rounding mode and range of exponent. </summary>
-    /// <param name='context'> A context for controlling the precision,
-    /// rounding mode, and exponent range. Can be null.</param>
+    /// <param name='ctx'> A context for controlling the precision, rounding
+    /// mode, and exponent range. Can be null.</param>
     /// <returns> The closest value to this object's value, rounded to the
     /// specified precision. Returns the same value as this object if "context"
     /// is null or the precision and exponent range are unlimited. Returns
     /// null if the result of the rounding would cause an overflow. The caller
     /// can handle a null return value by treating it as positive or negative
     /// infinity depending on the sign of this object's value.</returns>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     public BigFloat RoundToPrecision(
-       PrecisionContext ctx) {
+      PrecisionContext ctx) {
       return math.RoundToPrecision(this, ctx);
     }
 
+    
+    
   }
 
 }

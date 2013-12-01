@@ -18,6 +18,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\CBOR.xml</DocumentationFile>
     <NoWarn>1587</NoWarn>
+    <CodeAnalysisRules>-Microsoft.Globalization#CA1303;-Microsoft.Naming#CA1704;-Microsoft.Naming#CA1705;-Microsoft.Naming#CA1718</CodeAnalysisRules>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -44,8 +45,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <CodeAnalysisRules>-Microsoft.Globalization#CA1303%3b-Microsoft.Naming#CA1704%3b-Microsoft.Naming#CA1705%3b-Microsoft.Naming#CA1718%3b-Microsoft.Performance#CA1800</CodeAnalysisRules>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -16,7 +16,7 @@ import java.math.*;
     /**
      * 
      */
-public final class CBORObjectPortable
+ final class CBORObjectPortable
   {
     private static void WritePortable(BigInteger bigint, OutputStream s) throws IOException {
       if((s)==null)throw new NullPointerException("s");

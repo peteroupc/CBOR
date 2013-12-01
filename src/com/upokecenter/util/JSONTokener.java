@@ -76,15 +76,11 @@ package com.upokecenter.util;
      */
     public JSONTokener(String str, int options) {
       if((str)==null)throw new NullPointerException("str");
-      myIndex = 0;
       mySource = str;
-      this.stream = null;
       this.options = options;
     }
     public JSONTokener(InputStream stream, int options) {
       if((stream)==null)throw new NullPointerException("stream");
-      myIndex = 0;
-      mySource = null;
       this.stream = stream;
       this.options = options;
     }

@@ -148,11 +148,13 @@ namespace PeterO {
       pc.hasExponentRange = false;
       return pc;
     }
-    /// <summary> Copies this PrecisionContext with an unlimited exponent
-    /// range. </summary>
+    /// <summary> Copies this PrecisionContext with a particular precision.
+    /// </summary>
     /// <returns></returns>
-    /// <param name='precision'>A 64-bit signed integer.</param>
+    /// <param name='precision'>Desired precision. 0 means unlimited
+    /// precision.</param>
     public PrecisionContext WithPrecision(long precision) {
+      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
       PrecisionContext pc = new PrecisionContext(this);
       pc.precision = precision;
       return pc;
@@ -165,7 +167,7 @@ namespace PeterO {
       this.flags = pc.flags;
       this.eMax = pc.eMax;
       this.eMin = pc.eMin;
-      this.hasExponentRange = true;
+      this.hasExponentRange = pc.hasExponentRange;
       this.precision = pc.precision;
       this.rounding = pc.rounding;
       this.clampNormalExponents = pc.clampNormalExponents;
@@ -189,29 +191,26 @@ namespace PeterO {
     public PrecisionContext(long precision, Rounding rounding){
       this.precision = precision;
       this.rounding = rounding;
-      this.hasFlags = false;
-      this.clampNormalExponents = false;
       eMax = BigInteger.Zero;
       eMin = BigInteger.Zero;
-      this.hasExponentRange = false;
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
-    public PrecisionContext(long precision, Rounding rounding, long eMinLong, long eMaxLong) : 
-    this(precision,rounding,eMinLong,eMaxLong,false){
+    public PrecisionContext(long precision, Rounding rounding, long eMinSmall, long eMaxSmall) : 
+    this(precision,rounding,eMinSmall,eMaxSmall,false){
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
-    public PrecisionContext(long precision, Rounding rounding, long eMinLong, long eMaxLong,
+    public PrecisionContext(long precision, Rounding rounding, long eMinSmall, long eMaxSmall,
                             bool clampNormalExponents) {
-      if ((precision) < 0) throw new ArgumentOutOfRangeException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(precision)) + ")");
-      if ((eMinLong) > eMaxLong) throw new ArgumentOutOfRangeException("eMinLong" + " not less or equal to " + Convert.ToString((long)(eMaxLong)) + " (" + Convert.ToString((long)(eMinLong)) + ")");
+      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((eMinSmall) > eMaxSmall) throw new ArgumentException("eMinSmall" + " not less or equal to " + Convert.ToString((long)(long)(eMaxSmall),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)(eMinSmall),System.Globalization.CultureInfo.InvariantCulture) + ")");
       this.precision = precision;
       this.rounding = rounding;
-      this.hasFlags = false;
       this.clampNormalExponents = clampNormalExponents;
-      eMax = (BigInteger)eMaxLong;
-      eMin = (BigInteger)eMinLong;
+      this.hasExponentRange=true;
+      eMax = (BigInteger)eMaxSmall;
+      eMin = (BigInteger)eMinSmall;
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
@@ -222,19 +221,18 @@ namespace PeterO {
     /// set to false. </summary>
     public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax,
                             bool clampNormalExponents) {
-      if ((precision) < 0) throw new ArgumentOutOfRangeException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(precision)) + ")");
-      if (eMin.CompareTo(eMax) > 0) throw new ArgumentOutOfRangeException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
+      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if (eMin.CompareTo(eMax) > 0) throw new ArgumentException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
       this.precision = precision;
       this.rounding = rounding;
-      this.hasFlags = false;
       this.clampNormalExponents = clampNormalExponents;
       this.eMax = eMax;
       this.eMin = eMin;
     }
 
-    /// <summary> Unlimited precision context.</summary>
+    /// <summary> Unlimited precision context. Rounding mode HalfUp.</summary>
     public static readonly PrecisionContext Unlimited =
-      new PrecisionContext((long)0);
+      new PrecisionContext((long)0,Rounding.HalfUp);
     /// <summary> Precision context for the IEEE-754-2008 decimal32 format.
     /// </summary>
     public static readonly PrecisionContext Decimal32 =

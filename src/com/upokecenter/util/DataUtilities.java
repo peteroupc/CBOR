@@ -29,6 +29,7 @@ private DataUtilities(){}
      * and "replace" is false
      */
     public static String GetUtf8String(byte[] bytes, boolean replace) {
+      if((bytes)==null)throw new NullPointerException("bytes");
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, 0, bytes.length, b, replace) != 0)
         throw new IllegalArgumentException("Invalid UTF-8");
@@ -38,7 +39,7 @@ private DataUtilities(){}
      * Generates a text string from a portion of a UTF-8 byte array.
      * @param bytes A byte array containing text encoded in UTF-8.
      * @param offset Offset into the byte array to start reading
-     * @param byteLength Length, in bytes, of the UTF-8 string
+     * @param bytesCount Length, in bytes, of the UTF-8 string
      * @param replace If true, replaces invalid encoding with the replacement
      * character (U+FFFD). If false, stops processing when invalid UTF-8
      * is seen.
@@ -47,9 +48,9 @@ private DataUtilities(){}
      * @throws java.lang.IllegalArgumentException The portion of the byte array
      * is not valid UTF-8 and "replace" is false
      */
-    public static String GetUtf8String(byte[] bytes, int offset, int byteLength, boolean replace) {
+    public static String GetUtf8String(byte[] bytes, int offset, int bytesCount, boolean replace) {
       StringBuilder b = new StringBuilder();
-      if (ReadUtf8FromBytes(bytes, offset, byteLength, b, replace) != 0)
+      if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0)
         throw new IllegalArgumentException("Invalid UTF-8");
       return b.toString();
     }
@@ -84,21 +85,21 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     }
     /**
      * Calculates the number of bytes needed to encode a string in UTF-8.
-     * @param s A Unicode string.
      * @param replace If true, treats unpaired surrogate code points as
      * replacement characters (U+FFFD) instead, meaning each one takes
      * 3 UTF-8 bytes. If false, stops processing when an unpaired surrogate
      * code point is reached.
+     * @param str A string object.
      * @return The number of bytes needed to encode the given string in UTF-8,
      * or -1 if the string contains an unpaired surrogate code point and "replace"
      * is false.
      * @throws java.lang.NullPointerException "s" is null.
      */
-    public static long GetUtf8Length(String s, boolean replace) {
-      if (s == null) throw new NullPointerException("s");
+    public static long GetUtf8Length(String str, boolean replace) {
+      if (str == null) throw new NullPointerException("str");
       long size = 0;
-      for (int i = 0; i < s.length(); i++) {
-        int c = s.charAt(i);
+      for (int i = 0; i < str.length(); i++) {
+        int c = str.charAt(i);
         if (c <= 0x7F) {
           size++;
         } else if (c <= 0x7FF) {
@@ -107,7 +108,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           size += 3;
         } else if (c <= 0xDBFF) { // UTF-16 leading surrogate
           i++;
-          if (i >= s.length() || s.charAt(i) < 0xDC00 || s.charAt(i) > 0xDFFF) {
+          if (i >= str.length() || str.charAt(i) < 0xDC00 || str.charAt(i) > 0xDFFF) {
             if (replace) {
               size += 3;
               i--;
@@ -200,11 +201,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
       if ((stream) == null) throw new NullPointerException("stream");
       if ((str) == null) throw new NullPointerException("str");
-      if ((offset) < 0) throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " (" + Long.toString((long)(offset)) + ")");
-      if ((offset) > str.length()) throw new IllegalArgumentException("offset" + " not less or equal to " + Long.toString((long)(str.length())) + " (" + Long.toString((long)(offset)) + ")");
-      if ((length) < 0) throw new IllegalArgumentException("length" + " not greater or equal to " + "0" + " (" + Long.toString((long)(length)) + ")");
-      if ((length) > str.length()) throw new IllegalArgumentException("length" + " not less or equal to " + Long.toString((long)(str.length())) + " (" + Long.toString((long)(length)) + ")");
-      if (((str.length() - offset)) < length) throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to " + Long.toString((long)(length)) + " (" + Long.toString((long)((str.length() - offset))) + ")");
+      if ((offset) < 0) throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " (" + Long.toString((long)(long)(offset)) + ")");
+      if ((offset) > str.length()) throw new IllegalArgumentException("offset" + " not less or equal to " + Long.toString((long)(long)(str.length())) + " (" + Long.toString((long)(long)(offset)) + ")");
+      if ((length) < 0) throw new IllegalArgumentException("length" + " not greater or equal to " + "0" + " (" + Long.toString((long)(long)(length)) + ")");
+      if ((length) > str.length()) throw new IllegalArgumentException("length" + " not less or equal to " + Long.toString((long)(long)(str.length())) + " (" + Long.toString((long)(long)(length)) + ")");
+      if (((str.length() - offset)) < length) throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to " + Long.toString((long)(long)(length)) + " (" + Long.toString((long)(long)((str.length() - offset))) + ")");
       byte[] bytes;
       int retval = 0;
       bytes = new byte[StreamedStringBufferLength];
@@ -287,7 +288,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * Reads a string in UTF-8 encoding from a byte array.
      * @param data A byte array containing a UTF-8 string
      * @param offset Offset into the byte array to start reading
-     * @param byteLength Length, in bytes, of the UTF-8 string
+     * @param bytesCount Length, in bytes, of the UTF-8 string
      * @param builder A string builder object where the resulting string
      * will be stored.
      * @param replace If true, replaces invalid encoding with the replacement
@@ -297,19 +298,19 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * string is not valid UTF-8 and "replace" is false.
      * @throws java.lang.NullPointerException "data" is null or "builder"
      * is null.
-     * @throws java.lang.IllegalArgumentException "offset" is less than 0, "byteLength"
-     * is less than 0, or offset plus byteLength is greater than the length
+     * @throws java.lang.IllegalArgumentException "offset" is less than 0, "bytesCount"
+     * is less than 0, or offset plus bytesCount is greater than the length
      * of "data".
      */
-    public static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength,
+    public static int ReadUtf8FromBytes(byte[] data, int offset, int bytesCount,
                                         StringBuilder builder,
                                         boolean replace) {
       if ((data) == null) throw new NullPointerException("data");
-      if ((offset) < 0) throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " (" + Long.toString((long)(offset)) + ")");
-      if ((offset) > data.length) throw new IllegalArgumentException("offset" + " not less or equal to " + Long.toString((long)(data.length)) + " (" + Long.toString((long)(offset)) + ")");
-      if ((byteLength) < 0) throw new IllegalArgumentException("byteLength" + " not greater or equal to " + "0" + " (" + Long.toString((long)(byteLength)) + ")");
-      if ((byteLength) > data.length) throw new IllegalArgumentException("byteLength" + " not less or equal to " + Long.toString((long)(data.length)) + " (" + Long.toString((long)(byteLength)) + ")");
-      if (((data.length - offset)) < byteLength) throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to " + Long.toString((long)(byteLength)) + " (" + Long.toString((long)((data.length - offset))) + ")");
+      if ((offset) < 0) throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " (" + Long.toString((long)(long)(offset)) + ")");
+      if ((offset) > data.length) throw new IllegalArgumentException("offset" + " not less or equal to " + Long.toString((long)(long)(data.length)) + " (" + Long.toString((long)(long)(offset)) + ")");
+      if ((bytesCount) < 0) throw new IllegalArgumentException("bytesCount" + " not greater or equal to " + "0" + " (" + Long.toString((long)(long)(bytesCount)) + ")");
+      if ((bytesCount) > data.length) throw new IllegalArgumentException("bytesCount" + " not less or equal to " + Long.toString((long)(long)(data.length)) + " (" + Long.toString((long)(long)(bytesCount)) + ")");
+      if (((data.length - offset)) < bytesCount) throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to " + Long.toString((long)(long)(bytesCount)) + " (" + Long.toString((long)(long)((data.length - offset))) + ")");
       if ((builder) == null) throw new NullPointerException("builder");
       int cp = 0;
       int bytesSeen = 0;
@@ -317,7 +318,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       int lower = 0x80;
       int upper = 0xBF;
       int pointer = offset;
-      int endpointer = offset + byteLength;
+      int endpointer = offset + bytesCount;
       while (pointer < endpointer) {
         int b = (data[pointer] & (int)0xFF);
         pointer++;
@@ -389,7 +390,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     /**
      * Reads a string in UTF-8 encoding from a data stream.
      * @param stream A readable data stream.
-     * @param byteLength The length, in bytes, of the string. If this is less
+     * @param bytesCount The length, in bytes, of the string. If this is less
      * than 0, this function will read until the end of the stream.
      * @param builder A string builder object where the resulting string
      * will be stored.
@@ -404,7 +405,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @throws java.lang.NullPointerException "stream" is null or "builder"
      * is null.
      */
-    public static int ReadUtf8(InputStream stream, int byteLength, StringBuilder builder,
+    public static int ReadUtf8(InputStream stream, int bytesCount, StringBuilder builder,
                                boolean replace) throws IOException {
       if ((stream) == null) throw new NullPointerException("stream");
       if ((builder) == null) throw new NullPointerException("builder");
@@ -414,25 +415,25 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       int lower = 0x80;
       int upper = 0xBF;
       int pointer = 0;
-      while (pointer < byteLength || byteLength < 0) {
+      while (pointer < bytesCount || bytesCount < 0) {
         int b = stream.read();
         if (b < 0) {
           if (bytesNeeded != 0) {
             bytesNeeded = 0;
             if (replace) {
               builder.append((char)0xFFFD);
-              if (byteLength >= 0)
+              if (bytesCount >= 0)
                 return -2;
               break; // end of stream
             }
             return -1;
           } else {
-            if (byteLength >= 0)
+            if (bytesCount >= 0)
               return -2;
             break; // end of stream
           }
         }
-        if (byteLength > 0) {
+        if (bytesCount > 0) {
           pointer++;
         }
         if (bytesNeeded == 0) {

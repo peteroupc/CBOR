@@ -10,13 +10,13 @@ using System.Text;
 using System.Numerics;
 namespace PeterO {
   internal sealed class BitShiftAccumulator : IShiftAccumulator {
-    int bitLeftmost = 0;
+    int bitLeftmost;
 
     /// <summary> Gets whether the last discarded bit was set. </summary>
     public int LastDiscardedDigit {
       get { return bitLeftmost; }
     }
-    int bitsAfterLeftmost = 0;
+    int bitsAfterLeftmost;
 
     /// <summary> Gets whether any of the discarded bits to the right of the
     /// last one was set. </summary>
@@ -79,7 +79,6 @@ namespace PeterO {
         throw new ArgumentException("bigint is negative");
       shiftedBigInt = bigint;
       discardedBitCount = new FastInteger();
-      isSmall = false;
       knownBitLength = -1;
     }
     public BitShiftAccumulator(long longInt) {

@@ -31,14 +31,14 @@ import java.math.*;
     /**
      * Determines whether this object's mantissa and exponent are equal
      * to those of another object.
-     * @param obj A BigFloat object.
+     * @param other A BigFloat object.
      */
-    public boolean equals(BigFloat obj) {
-      BigFloat other = ((obj instanceof BigFloat) ? (BigFloat)obj : null);
-      if (other == null)
+    public boolean equals(BigFloat other) {
+      BigFloat otherValue = ((other instanceof BigFloat) ? (BigFloat)other : null);
+      if (otherValue == null)
         return false;
-      return this.exponent.equals(other.exponent) &&
-        this.mantissa.equals(other.mantissa);
+      return this.exponent.equals(otherValue.exponent) &&
+        this.mantissa.equals(otherValue.mantissa);
     }
     /**
      * Determines whether this object's mantissa and exponent are equal
@@ -72,12 +72,25 @@ import java.math.*;
       this.mantissa = mantissa;
     }
     /**
-     * Creates a bigfloat with the value exponentLong*2^mantissa.
-     * @param mantissa The unscaled value.
-     * @param exponentLong The binary exponent.
+     * Represents the number 1.
      */
-    public BigFloat(BigInteger mantissa, long exponentLong) {
-      this.exponent = BigInteger.valueOf(exponentLong);
+    public static final BigFloat One = new BigFloat(1);
+
+    /**
+     * Represents the number 0.
+     */
+    public static final BigFloat Zero = new BigFloat(0);
+    /**
+     * Represents the number 10.
+     */
+    public static final BigFloat Ten = new BigFloat(10);
+    /**
+     * Creates a bigfloat with the value exponentSmall*2^mantissa.
+     * @param mantissa The unscaled value.
+     * @param exponentSmall The binary exponent.
+     */
+    public BigFloat(BigInteger mantissa, long exponentSmall) {
+      this.exponent = BigInteger.valueOf(exponentSmall);
       this.mantissa = mantissa;
     }
     /**
@@ -90,11 +103,11 @@ import java.math.*;
     }
     /**
      * Creates a bigfloat with the given mantissa and an exponent of 0.
-     * @param mantissaLong The desired value of the bigfloat
+     * @param mantissaSmall The desired value of the bigfloat
      */
-    public BigFloat(long mantissaLong) {
+    public BigFloat(long mantissaSmall) {
       this.exponent = BigInteger.ZERO;
-      this.mantissa = BigInteger.valueOf(mantissaLong);
+      this.mantissa = BigInteger.valueOf(mantissaSmall);
     }
     private static BigInteger BigShiftIteration = BigInteger.valueOf(1000000);
     private static int ShiftIteration = 1000000;
@@ -124,6 +137,7 @@ import java.math.*;
      * @param decfrac A DecimalFraction object.
      */
     public static BigFloat FromDecimalFraction(DecimalFraction decfrac) {
+      if((decfrac)==null)throw new NullPointerException("decfrac");
       BigInteger bigintExp = decfrac.getExponent();
       BigInteger bigintMant = decfrac.getMantissa();
       if (bigintMant.signum()==0)
@@ -154,7 +168,7 @@ remainder=divrem[1];
           // Ensure that the quotient has enough precision
           // to be converted accurately to a single or double
           if (remainder.signum()!=0 &&
-             quotient.compareTo(OneShift62) < 0) {
+              quotient.compareTo(OneShift62) < 0) {
             long smallquot = quotient.longValue();
             int shift = 0;
             while (smallquot != 0 && smallquot < (1L << 62)) {
@@ -479,7 +493,7 @@ remainder=divrem[1];
     /**
      * 
      */
-public int GetRadix() {
+      public int GetRadix() {
         return 2;
       }
 
@@ -487,7 +501,7 @@ public int GetRadix() {
      * 
      * @param value A BigFloat object.
      */
-public BigFloat Abs(BigFloat value) {
+      public BigFloat Abs(BigFloat value) {
         return value.Abs();
       }
       
@@ -495,7 +509,7 @@ public BigFloat Abs(BigFloat value) {
      * 
      * @param value A BigFloat object.
      */
-public int GetSign(BigFloat value) {
+      public int GetSign(BigFloat value) {
         return value.signum();
       }
 
@@ -503,7 +517,7 @@ public int GetSign(BigFloat value) {
      * 
      * @param value A BigFloat object.
      */
-public BigInteger GetMantissa(BigFloat value) {
+      public BigInteger GetMantissa(BigFloat value) {
         return value.mantissa;
       }
 
@@ -511,7 +525,7 @@ public BigInteger GetMantissa(BigFloat value) {
      * 
      * @param value A BigFloat object.
      */
-public BigInteger GetExponent(BigFloat value) {
+      public BigInteger GetExponent(BigFloat value) {
         return value.exponent;
       }
 
@@ -521,7 +535,7 @@ public BigInteger GetExponent(BigFloat value) {
      * @param e1 A BigInteger object.
      * @param e2 A BigInteger object.
      */
-public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
+      public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
         boolean negative = (mantissa.signum() < 0);
         if (negative) mantissa=mantissa.negate();
         BigInteger diff = (e1.subtract(e2)).abs();
@@ -535,27 +549,25 @@ public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigI
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
      */
-public BigFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
+      public BigFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
         return new BigFloat(mantissa, exponent);
       }
 
     /**
      * 
-     * @param value A BigInteger object.
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.
      */
-public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint, int lastDigit, int olderDigits) {
+      public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint, int lastDigit, int olderDigits) {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
     /**
      * 
-     * @param value A BigInteger object.
      * @param bigint A BigInteger object.
      */
-public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
+      public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new BitShiftAccumulator(bigint);
       }
 
@@ -563,7 +575,7 @@ public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
      * 
      * @param value A 64-bit signed integer.
      */
-public IShiftAccumulator CreateShiftAccumulator(long value) {
+      public IShiftAccumulator CreateShiftAccumulator(long value) {
         return new BitShiftAccumulator(value);
       }
 
@@ -572,7 +584,7 @@ public IShiftAccumulator CreateShiftAccumulator(long value) {
      * @param num A BigInteger object.
      * @param den A BigInteger object.
      */
-public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
+      public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
         BigInteger gcd = num.gcd(den);
         if (gcd.signum()==0) return false;
         den=den.divide(gcd);
@@ -587,7 +599,7 @@ public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
      * @param bigint A BigInteger object.
      * @param power A 64-bit signed integer.
      */
-public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
+      public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
         if (power <= 0) return bigint;
         return ShiftLeft(bigint, power);
       }
@@ -597,7 +609,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
      * @param bigint A BigInteger object.
      * @param power A FastInteger object.
      */
-public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
+      public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.signum() <= 0) return bigint;
         if (power.CanFitInInt64()) {
           return ShiftLeft(bigint, power.AsInt64());
@@ -639,7 +651,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     }
 
     /**
-     * Divides this object by another bigfloat and returns the result.
+     * Divides this object by another bigfloat and returns the exact result.
      * @param divisor The divisor.
      * @return The quotient of the two numbers.
      * @throws ArithmeticException Attempted to divide by zero.
@@ -647,7 +659,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * decimal expansion.
      */
     public BigFloat Divide(BigFloat divisor) {
-      return Divide(divisor, PrecisionContext.Unlimited);
+      return Divide(divisor, new PrecisionContext(Rounding.Unnecessary));
     }
 
     /**
@@ -667,16 +679,16 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
 
     /**
      * Divides two BigFloat objects, and returns the integer part of the
-     * result, with the preferred exponent set to this value's exponent
-     * minus the divisor's exponent.
+     * result, rounded down, with the preferred exponent set to this value's
+     * exponent minus the divisor's exponent.
      * @param divisor The divisor.
      * @return The integer part of the quotient of the two objects.
      * @throws ArithmeticException Attempted to divide by zero.
      */
     public BigFloat DivideToIntegerNaturalScale(
       BigFloat divisor
-      ) {
-      return DivideToIntegerNaturalScale(divisor, PrecisionContext.Unlimited);
+     ) {
+      return DivideToIntegerNaturalScale(divisor, new PrecisionContext(Rounding.Down));
     }
 
 
@@ -685,8 +697,8 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * @param divisor A BigFloat object.
      */
     public BigFloat RemainderNaturalScale(
-          BigFloat divisor
-          ) {
+      BigFloat divisor
+     ) {
       return Subtract(this.DivideToIntegerNaturalScale(divisor).Multiply(divisor));
     }
 
@@ -695,7 +707,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * Divides two BigFloat objects, and gives a particular exponent to
      * the result.
      * @param divisor A BigFloat object.
-     * @param desiredExponentLong The desired exponent. A negative number
+     * @param desiredExponentSmall The desired exponent. A negative number
      * places the cutoff point to the right of the usual decimal point. A positive
      * number places the cutoff point to the left of the usual decimal point.
      * @param ctx A precision context object to control the rounding mode.
@@ -709,11 +721,11 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * and the result is not exact.
      */
     public BigFloat Divide(
-          BigFloat divisor,
-          long desiredExponentLong,
-          PrecisionContext ctx
-        ) {
-      return Divide(divisor, BigInteger.valueOf(desiredExponentLong), ctx);
+      BigFloat divisor,
+      long desiredExponentSmall,
+      PrecisionContext ctx
+     ) {
+      return Divide(divisor, BigInteger.valueOf(desiredExponentSmall), ctx);
     }
 
 
@@ -725,18 +737,25 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
 
 
     /**
-     * Divides two BigFloat objects.
+     * Divides two BigFloat objects, and gives a particular exponent to
+     * the result.
      * @param divisor A BigFloat object.
-     * @param desiredExponentLong A 64-bit signed integer.
-     * @param rounding A Rounding object.
+     * @param desiredExponentSmall The desired exponent. A negative number
+     * places the cutoff point to the right of the usual decimal point. A positive
+     * number places the cutoff point to the left of the usual decimal point.
+     * @param rounding The rounding mode to use if the result must be scaled
+     * down to fit the desired exponent.
      * @return The quotient of the two objects.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * and the result is not exact.
      */
     public BigFloat Divide(
-              BigFloat divisor,
-              long desiredExponentLong,
-              Rounding rounding
-            ) {
-      return Divide(divisor, BigInteger.valueOf(desiredExponentLong), new PrecisionContext(rounding));
+      BigFloat divisor,
+      long desiredExponentSmall,
+      Rounding rounding
+     ) {
+      return Divide(divisor, BigInteger.valueOf(desiredExponentSmall), new PrecisionContext(rounding));
     }
 
 
@@ -748,18 +767,24 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
 
 
     /**
-     * Divides two BigFloat objects.
+     * Divides two BigFloat objects, and gives a particular exponent to
+     * the result.
      * @param divisor A BigFloat object.
-     * @param desiredExponentLong A BigInteger object.
-     * @param rounding A Rounding object.
-     * @param desiredExponent A BigInteger object.
+     * @param desiredExponent The desired exponent. A negative number
+     * places the cutoff point to the right of the usual decimal point. A positive
+     * number places the cutoff point to the left of the usual decimal point.
+     * @param rounding The rounding mode to use if the result must be scaled
+     * down to fit the desired exponent.
      * @return The quotient of the two objects.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * and the result is not exact.
      */
     public BigFloat Divide(
-              BigFloat divisor,
-              BigInteger desiredExponent,
-              Rounding rounding
-            ) {
+      BigFloat divisor,
+      BigInteger desiredExponent,
+      Rounding rounding
+     ) {
       return Divide(divisor, desiredExponent, new PrecisionContext(rounding));
     }
 
@@ -814,6 +839,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * @return The difference of the two objects.
      */
     public BigFloat Subtract(BigFloat decfrac) {
+      if((decfrac)==null)throw new NullPointerException("decfrac");
       return Add(decfrac.Negate());
     }
 
@@ -833,6 +859,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * @return The difference of the two objects.
      */
     public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
+      if((decfrac)==null)throw new NullPointerException("decfrac");
       return Add(decfrac.Negate(), ctx);
     }
     /**
@@ -853,13 +880,13 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * @return The result this * multiplicand + augend.
      */
     public BigFloat MultiplyAndAdd(BigFloat multiplicand,
-                                          BigFloat augend) {
+                                   BigFloat augend) {
       return this.Multiply(multiplicand).Add(augend);
     }
     //----------------------------------------------------------------
 
     private static RadixMath<BigFloat> math = new RadixMath<BigFloat>(
-  new BinaryMathHelper());
+      new BinaryMathHelper());
 
     /**
      * Divides this object by another object, and returns the integer part
@@ -881,7 +908,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * and the integer part of the result is not exact.
      */
     public BigFloat DivideToIntegerNaturalScale(
-  BigFloat divisor, PrecisionContext ctx) {
+      BigFloat divisor, PrecisionContext ctx) {
       return math.DivideToIntegerNaturalScale(this, divisor, ctx);
     }
 
@@ -901,6 +928,27 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
     public BigFloat DivideToIntegerZeroScale(
       BigFloat divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
+    }
+
+    /**
+     * Finds the remainder that results when dividing two BigFloat objects.
+     * @param divisor A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     * @return The remainder of the two objects.
+     */
+    public BigFloat Remainder(
+      BigFloat divisor, PrecisionContext ctx) {
+      return math.Remainder(this, divisor, ctx);
+    }
+
+    /**
+     * 
+     * @param divisor A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     */
+    public BigFloat RemainderNear(
+      BigFloat divisor, PrecisionContext ctx) {
+      return math.RemainderNear(this, divisor, ctx);
     }
 
     /**
@@ -924,9 +972,9 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * exact.
      */
     public BigFloat Divide(
-          BigFloat divisor,
-          PrecisionContext ctx
-        ) {
+      BigFloat divisor,
+      PrecisionContext ctx
+     ) {
       return math.Divide(this, divisor, ctx);
     }
 
@@ -939,15 +987,17 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * ignored. If HasFlags of the context is true, will also store the flags
      * resulting from the operation (the flags are in addition to the pre-existing
      * flags). Can be null, in which case the default rounding mode is HalfEven.
-     * @param desiredExponent A BigInteger object.
-     * @param thisValue A T object.
      * @param exponent A BigInteger object.
-     * @return The quotient of the two objects.
+     * @return The quotient of the two objects. Returns null if the return
+     * value would overflow the exponent range. A caller can handle a null
+     * return value by treating it as positive infinity if both operands
+     * have the same sign or as negative infinity if both operands have different
+     * signs.
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-   public BigFloat Divide(
+    public BigFloat Divide(
       BigFloat divisor, BigInteger exponent, PrecisionContext ctx) {
       return math.Divide(this, divisor, exponent, ctx);
     }
@@ -959,7 +1009,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * @return The larger value of the two objects.
      */
     public static BigFloat Max(
-       BigFloat a, BigFloat b) {
+      BigFloat a, BigFloat b) {
       return math.Max(a, b);
     }
 
@@ -970,7 +1020,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * @return The smaller value of the two objects.
      */
     public static BigFloat Min(
-       BigFloat a, BigFloat b) {
+      BigFloat a, BigFloat b) {
       return math.Min(a, b);
     }
     /**
@@ -980,7 +1030,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * @param b A BigFloat object.
      */
     public static BigFloat MaxMagnitude(
-       BigFloat a, BigFloat b) {
+      BigFloat a, BigFloat b) {
       return math.MaxMagnitude(a, b);
     }
     /**
@@ -990,7 +1040,7 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * @param b A BigFloat object.
      */
     public static BigFloat MinMagnitude(
-       BigFloat a, BigFloat b) {
+      BigFloat a, BigFloat b) {
       return math.MinMagnitude(a, b);
     }
     /**
@@ -998,14 +1048,14 @@ public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
      * <p> This method is not consistent with the Equals method because two
      * different decimal fractions with the same mathematical value, but
      * different exponents, will compare as equal.</p>
-     * @param op A BigFloat object.
+     * @param other A BigFloat object to compare with.
      * @return Less than 0 if this object's value is less than the other value,
      * or greater than 0 if this object's value is greater than the other value
      * or if "other" is null, or 0 if both values are equal.
      */
-public int compareTo(
-       BigFloat op) {
-      return math.compareTo(this, op);
+    public int compareTo(
+      BigFloat other) {
+      return math.compareTo(this, other);
     }
     /**
      * Finds the sum of this object and another object. The result's exponent
@@ -1015,51 +1065,126 @@ public int compareTo(
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
-     * @param op A BigFloat object.
      * @return The sum of thisValue and the other object. Returns null if
      * the result would overflow the exponent range.
      */
-public BigFloat Add(
-       BigFloat op, PrecisionContext ctx) {
-      return math.Add(this, op, ctx);
+    public BigFloat Add(
+      BigFloat decfrac, PrecisionContext ctx) {
+      return math.Add(this, decfrac, ctx);
     }
     /**
      * Returns a decimal fraction with the same value but a new exponent.
      * @param otherValue A decimal fraction containing the desired exponent
      * of the result. The mantissa is ignored.
-     * @param ctx A PrecisionContext object.
-     * @param op A BigFloat object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags), except that this method will
+     * never set FlagOverflow. Can be null.
      * @return A decimal fraction with the same value as this object but with
      * the exponent changed.
+     * @throws ArithmeticException The result would require a greater
+     * precision (digit length) than specified in the precision context.
      */
-public BigFloat Quantize(
-       BigFloat op, PrecisionContext ctx) {
-      return math.Quantize(this, op, ctx);
+    public BigFloat Quantize(
+      BigFloat otherValue, PrecisionContext ctx) {
+      return math.Quantize(this, otherValue, ctx);
     }
     /**
      * 
      * @param ctx A PrecisionContext object.
      */
-public BigFloat RoundToIntegralExact(
+    public BigFloat RoundToIntegralExact(
       PrecisionContext ctx) {
-  return math.RoundToIntegralExact(this, ctx);
-}
+      return math.RoundToIntegralExact(this, ctx);
+    }
     /**
      * 
      * @param ctx A PrecisionContext object.
      */
-public BigFloat RoundToIntegralValue(
+    public BigFloat RoundToIntegralValue(
       PrecisionContext ctx) {
-        return math.RoundToIntegralValue(this, ctx);
-}
+      return math.RoundToIntegralValue(this, ctx);
+    }
+    /**
+     * Removes trailing zeros from this object's mantissa. For example,
+     * 1.000 becomes 1.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
+     * @return This value with trailing zeros removed. Note that if the value
+     * has a very high exponent and the context says to clamp high exponents,
+     * there may still be some trailing zeros in the mantissa. If a precision
+     * context is given, returns null if the result of rounding would cause
+     * an overflow. The caller can handle a null return value by treating
+     * it as positive or negative infinity depending on the sign of this object's
+     * value.
+     */
+    public BigFloat Reduce(
+      PrecisionContext ctx) {
+      return math.Reduce(this, ctx);
+    }
+    
+    
+    /**
+     * Gets the largest value that's smaller than the given value.
+     * @param ctx A precision context object to control the precision and
+     * exponent range of the result. The rounding mode from this context
+     * is ignored. No flags will be set from thisValue operation even if HasFlags
+     * of the context is true.
+     * @return Returns the largest value that's smaller than the given value.
+     * Returns null if the result is negative infinity.
+     * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
+     * is 0, or "ctx" has an unlimited exponent range.
+     */
+    public BigFloat NextMinus(
+      PrecisionContext ctx
+     ) {
+      return math.NextMinus(this,ctx);
+    }
+
+    /**
+     * Gets the smallest value that's greater than the given value.
+     * @param ctx A precision context object to control the precision and
+     * exponent range of the result. The rounding mode from this context
+     * is ignored. No flags will be set from thisValue operation even if HasFlags
+     * of the context is true.
+     * @return Returns the smallest value that's greater than the given
+     * value. Returns null if the result is positive infinity.
+     * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
+     * is 0, or "ctx" has an unlimited exponent range.
+     */
+    public BigFloat NextPlus(
+      PrecisionContext ctx
+     ) {
+      return math.NextPlus(this,ctx);
+    }
+
+    /**
+     * 
+     * @param otherValue A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     */
+public BigFloat NextToward(
+      BigFloat otherValue,
+      PrecisionContext ctx
+     ) {
+      return math.NextToward(this,otherValue,ctx);
+    }
+
     /**
      * Multiplies two BigFloat objects.
      * @param op A BigFloat object.
      * @param ctx A PrecisionContext object.
-     * @return The product of the two objects.
+     * @return The product of the two objects. Returns null if the return
+     * value would overflow the exponent range. A caller can handle a null
+     * return value by treating it as positive infinity if both operands
+     * have the same sign or as negative infinity if both operands have different
+     * signs.
      */
-public BigFloat Multiply(
-       BigFloat op, PrecisionContext ctx) {
+    public BigFloat Multiply(
+      BigFloat op, PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);
     }
 
@@ -1071,23 +1196,19 @@ public BigFloat Multiply(
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
-     * @param op A BigFloat object.
      * @return The result thisValue * multiplicand + augend. If a precision
      * context is given, returns null if the result of rounding would cause
-     * an overflow. The caller can handle a null return value by treating
-     * it as positive or negative infinity depending on the sign of this object's
-     * value.
+     * an overflow.
      */
     public BigFloat MultiplyAndAdd(
-       BigFloat op, BigFloat augend, PrecisionContext ctx) {
-      return math.MultiplyAndAdd(this, op, augend, ctx);
+      BigFloat multiplicand, BigFloat augend, PrecisionContext ctx) {
+      return math.MultiplyAndAdd(this, multiplicand, augend, ctx);
     }
     /**
      * Rounds this object's value to a given precision, using the given rounding
      * mode and range of exponent.
-     * @param context A context for controlling the precision, rounding
-     * mode, and exponent range. Can be null.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A context for controlling the precision, rounding mode,
+     * and exponent range. Can be null.
      * @return The closest value to this object's value, rounded to the specified
      * precision. Returns the same value as this object if "context" is null
      * or the precision and exponent range are unlimited. Returns null if
@@ -1096,9 +1217,11 @@ public BigFloat Multiply(
      * depending on the sign of this object's value.
      */
     public BigFloat RoundToPrecision(
-       PrecisionContext ctx) {
+      PrecisionContext ctx) {
       return math.RoundToPrecision(this, ctx);
     }
 
+    
+    
   }
 

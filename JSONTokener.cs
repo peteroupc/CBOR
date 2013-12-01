@@ -18,31 +18,31 @@ namespace PeterO {
     /**
      * Trailing commas are allowed in the JSON _string.
      */
-    public static readonly int OPTION_TRAILING_COMMAS = 8;
+    public const int OPTION_TRAILING_COMMAS = 8;
     /**
      * Empty array elements are allowed in array notation
      */
-    public static readonly int OPTION_EMPTY_ARRAY_ELEMENTS = 16;
+    public const int OPTION_EMPTY_ARRAY_ELEMENTS = 16;
     /**
      * Allow forward slashes to be escaped in strings.
      */
-    public static readonly int OPTION_ESCAPED_SLASHES = 64;
+    public const int OPTION_ESCAPED_SLASHES = 64;
     /**
      * No duplicates are allowed in the JSON _string.
      */
-    public static readonly int OPTION_NO_DUPLICATES = 1;
+    public const int OPTION_NO_DUPLICATES = 1;
     /**
      * Will parse Shell-style comments (beginning with "#").
      */
-    public static readonly int OPTION_SHELL_COMMENTS = 2;
+    public const int OPTION_SHELL_COMMENTS = 2;
     /**
      * Single quotes are allowed to delimit strings.
      */
-    public static readonly int OPTION_SINGLE_QUOTES = 32;
+    public const int OPTION_SINGLE_QUOTES = 32;
     /**
      * Allows comments in JSON texts.
      */
-    public static readonly int OPTION_ALLOW_COMMENTS = 128;
+    public const int OPTION_ALLOW_COMMENTS = 128;
     /**
      * Get the hex value of a character (base16).
      * @param c A character between '0' and '9' or between 'A' and 'F' or
@@ -75,15 +75,11 @@ namespace PeterO {
      */
     public JSONTokener(string str, int options) {
       if((str)==null)throw new ArgumentNullException("str");
-      myIndex = 0;
       mySource = str;
-      this.stream = null;
       this.options = options;
     }
     public JSONTokener(Stream stream, int options) {
       if((stream)==null)throw new ArgumentNullException("stream");
-      myIndex = 0;
-      mySource = null;
       this.stream = stream;
       this.options = options;
     }

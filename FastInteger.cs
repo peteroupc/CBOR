@@ -30,13 +30,10 @@ namespace PeterO {
     private static BigInteger Int32MaxValue = (BigInteger)Int32.MaxValue;
 
     public FastInteger() {
-      smallValue = 0;
-      usingLarge = false;
     }
 
     public FastInteger(long value) {
       smallValue = value;
-      usingLarge = false;
     }
 
     public FastInteger(FastInteger value) {
@@ -55,7 +52,6 @@ namespace PeterO {
         smallValue = (long)bigintVal;
         usingLarge = false;
       } else {
-        smallValue = 0;
         usingLarge = true;
         largeValue = bigintVal;
       }
@@ -158,15 +154,6 @@ namespace PeterO {
           smallValue *= val;
         }
       }
-      return this;
-    }
-
-    /// <summary> Sets this object's value to the given integer. </summary>
-    /// <param name='val'> The value to set.</param>
-    /// <returns> This object.</returns>
-    public FastInteger Set(int val) {
-      usingLarge = false;
-      smallValue = val;
       return this;
     }
 
