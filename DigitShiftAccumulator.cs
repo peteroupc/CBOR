@@ -10,13 +10,13 @@ using System.Text;
 using System.Numerics;
 namespace PeterO {
   internal sealed class DigitShiftAccumulator : IShiftAccumulator {
-    int bitLeftmost = 0;
+    int bitLeftmost;
 
     /// <summary> Gets whether the last discarded digit was set. </summary>
     public int LastDiscardedDigit {
       get { return bitLeftmost; }
     }
-    int bitsAfterLeftmost = 0;
+    int bitsAfterLeftmost;
 
     /// <summary> Gets whether any of the discarded digits to the right of
     /// the last one was set. </summary>
@@ -99,6 +99,8 @@ public DigitShiftAccumulator(long longInt) {
       knownBitLength = -1;
     }
     private static BigInteger FastParseBigInt(string str, int offset, int length) {
+      // Assumes the string contains
+      // only the digits '0' through '9'
       MutableBigInteger mbi = new MutableBigInteger();
       for (int i = 0; i < length; i++) {
         int digit = (int)(str[offset + i] - '0');
@@ -110,8 +112,7 @@ public DigitShiftAccumulator(long longInt) {
     private static long FastParseLong(string str, int offset, int length) {
       // Assumes the string is length 18 or less and contains
       // only the digits '0' through '9'
-      if (length > 18)
-        throw new ArgumentException();
+      if((length)>18)throw new ArgumentException("length"+" not less or equal to "+"18"+" ("+Convert.ToString((long)(long)(length),System.Globalization.CultureInfo.InvariantCulture)+")");
       long ret = 0;
       for (int i = 0; i < length; i++) {
         int digit = (int)(str[offset + i] - '0');

@@ -7,7 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 namespace PeterO {
     /// <summary> Description of Runner. </summary>
     /// <returns></returns>
@@ -31,7 +31,7 @@ namespace PeterO {
     public static void Main() {
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
-        if (!HasAttribute(type, typeof(TestClassAttribute))) continue;
+        if (!HasAttribute(type, typeof(TestFixtureAttribute))) continue;
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
@@ -41,12 +41,12 @@ namespace PeterO {
           setup.Invoke(test, new object[] { });
         }
         foreach (var method in test.GetType().GetMethods()) {
-          if (!HasAttribute(method, typeof(TestMethodAttribute))) continue;
+          if (!HasAttribute(method, typeof(TestAttribute))) continue;
           Console.WriteLine(method.Name);
           Type exctype = null;
           foreach (var a in method.GetCustomAttributes(false)) {
             if (a is ExpectedExceptionAttribute) {
-              exctype = ((ExpectedExceptionAttribute)a).ExceptionType;
+              exctype = ((ExpectedExceptionAttribute)a).ExpectedException;
               break;
             }
           }

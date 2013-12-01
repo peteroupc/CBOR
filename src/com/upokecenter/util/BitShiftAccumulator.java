@@ -11,13 +11,13 @@ at: http://upokecenter.com/d/
 import java.math.*;
 
   final class BitShiftAccumulator implements IShiftAccumulator {
-    int bitLeftmost = 0;
+    int bitLeftmost;
 
     /**
      * Gets whether the last discarded bit was set.
      */
     public int getLastDiscardedDigit() { return bitLeftmost; }
-    int bitsAfterLeftmost = 0;
+    int bitsAfterLeftmost;
 
     /**
      * Gets whether any of the discarded bits to the right of the last one was
@@ -78,7 +78,6 @@ import java.math.*;
         throw new IllegalArgumentException("bigint is negative");
       shiftedBigInt = bigint;
       discardedBitCount = new FastInteger();
-      isSmall = false;
       knownBitLength = -1;
     }
     public BitShiftAccumulator(long longInt) {

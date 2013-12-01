@@ -9,7 +9,8 @@ using System;
 using System.Runtime.Serialization;
 namespace PeterO {
     /// <summary> Exception thrown for errors involving CBOR data. </summary>
-  public class CBORException : Exception, ISerializable {
+    [Serializable]
+    public class CBORException : Exception, ISerializable {
     /// <summary> </summary>
     public CBORException() {
     }

@@ -12,8 +12,8 @@ namespace PeterO {
     /// <summary> Contains utility methods that may have use outside of the
     /// CBORObject class. </summary>
   internal static class CBORUtilities {
-    private static readonly string Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    private static readonly string Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    private const string Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    private const string Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     /// <summary> </summary>
     /// <param name='str'> A StringBuilder object.</param>
     /// <param name='data'> A byte[] object.</param>
@@ -48,7 +48,7 @@ namespace PeterO {
         }
       }
     }
-    private static readonly string HexAlphabet = "0123456789ABCDEF";
+    private const string HexAlphabet = "0123456789ABCDEF";
     public static void ToBase16(StringBuilder str, byte[] data) {
       int length = data.Length;
       for (int i = 0; i < length; i++) {

@@ -7,7 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 using System.Globalization;
 using System.Numerics;
@@ -15,10 +15,10 @@ namespace Test {
     /// <summary>
     /// </summary>
     /// <remarks/>
-[TestClass]
+[TestFixture]
   public class CBORObjectMathTest{
-    [TestMethod]
-    public static void CBORMultiplyTest() {
+    [Test]
+    public void CBORMultiplyTest() {
       {
         CBORObject a = CBORObject.FromObject(2.5268476f);
         CBORObject b = CBORObject.FromObject(BigInteger.Parse("-503285733164839762215", NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture));

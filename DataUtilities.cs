@@ -25,6 +25,7 @@ namespace PeterO {
     /// <exception cref='System.ArgumentException'> The string is not
     /// valid UTF-8 and "replace" is false</exception>
     public static string GetUtf8String(byte[] bytes, bool replace) {
+      if((bytes)==null)throw new ArgumentNullException("bytes");
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, 0, bytes.Length, b, replace) != 0)
         throw new ArgumentException("Invalid UTF-8");
@@ -34,7 +35,7 @@ namespace PeterO {
     /// </summary>
     /// <param name='bytes'> A byte array containing text encoded in UTF-8.</param>
     /// <param name='offset'> Offset into the byte array to start reading</param>
-    /// <param name='byteLength'> Length, in bytes, of the UTF-8 string</param>
+    /// <param name='bytesCount'> Length, in bytes, of the UTF-8 string</param>
     /// <param name='replace'> If true, replaces invalid encoding with
     /// the replacement character (U+FFFD). If false, stops processing
     /// when invalid UTF-8 is seen.</param>
@@ -43,9 +44,9 @@ namespace PeterO {
     /// null.</exception>
     /// <exception cref='System.ArgumentException'> The portion of the
     /// byte array is not valid UTF-8 and "replace" is false</exception>
-    public static string GetUtf8String(byte[] bytes, int offset, int byteLength, bool replace) {
+    public static string GetUtf8String(byte[] bytes, int offset, int bytesCount, bool replace) {
       StringBuilder b = new StringBuilder();
-      if (ReadUtf8FromBytes(bytes, offset, byteLength, b, replace) != 0)
+      if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0)
         throw new ArgumentException("Invalid UTF-8");
       return b.ToString();
     }
@@ -72,7 +73,6 @@ namespace PeterO {
     }
     /// <summary> Calculates the number of bytes needed to encode a string
     /// in UTF-8. </summary>
-    /// <param name='s'> A Unicode string.</param>
     /// <param name='replace'> If true, treats unpaired surrogate code
     /// points as replacement characters (U+FFFD) instead, meaning each
     /// one takes 3 UTF-8 bytes. If false, stops processing when an unpaired
@@ -81,11 +81,12 @@ namespace PeterO {
     /// UTF-8, or -1 if the string contains an unpaired surrogate code point
     /// and "replace" is false.</returns>
     /// <exception cref='System.ArgumentNullException'> "s" is null.</exception>
-    public static long GetUtf8Length(String s, bool replace) {
-      if (s == null) throw new ArgumentNullException("s");
+    /// <param name='str'>A String object.</param>
+    public static long GetUtf8Length(String str, bool replace) {
+      if (str == null) throw new ArgumentNullException("str");
       long size = 0;
-      for (int i = 0; i < s.Length; i++) {
-        int c = s[i];
+      for (int i = 0; i < str.Length; i++) {
+        int c = str[i];
         if (c <= 0x7F) {
           size++;
         } else if (c <= 0x7FF) {
@@ -94,7 +95,7 @@ namespace PeterO {
           size += 3;
         } else if (c <= 0xDBFF) { // UTF-16 leading surrogate
           i++;
-          if (i >= s.Length || s[i] < 0xDC00 || s[i] > 0xDFFF) {
+          if (i >= str.Length || str[i] < 0xDC00 || str[i] > 0xDFFF) {
             if (replace) {
               size += 3;
               i--;
@@ -184,11 +185,11 @@ namespace PeterO {
     public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
       if ((stream) == null) throw new ArgumentNullException("stream");
       if ((str) == null) throw new ArgumentNullException("str");
-      if ((offset) < 0) throw new ArgumentOutOfRangeException("offset" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(offset)) + ")");
-      if ((offset) > str.Length) throw new ArgumentOutOfRangeException("offset" + " not less or equal to " + Convert.ToString((long)(str.Length)) + " (" + Convert.ToString((long)(offset)) + ")");
-      if ((length) < 0) throw new ArgumentOutOfRangeException("length" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(length)) + ")");
-      if ((length) > str.Length) throw new ArgumentOutOfRangeException("length" + " not less or equal to " + Convert.ToString((long)(str.Length)) + " (" + Convert.ToString((long)(length)) + ")");
-      if (((str.Length - offset)) < length) throw new ArgumentOutOfRangeException("str's length minus " + offset + " not greater or equal to " + Convert.ToString((long)(length)) + " (" + Convert.ToString((long)((str.Length - offset))) + ")");
+      if ((offset) < 0) throw new ArgumentException("offset" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(offset),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((offset) > str.Length) throw new ArgumentException("offset" + " not less or equal to " + Convert.ToString((long)(long)(str.Length),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)(offset),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((length) < 0) throw new ArgumentException("length" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(length),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((length) > str.Length) throw new ArgumentException("length" + " not less or equal to " + Convert.ToString((long)(long)(str.Length),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)(length),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if (((str.Length - offset)) < length) throw new ArgumentException("str's length minus " + offset + " not greater or equal to " + Convert.ToString((long)(long)(length),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)((str.Length - offset)),System.Globalization.CultureInfo.InvariantCulture) + ")");
       byte[] bytes;
       int retval = 0;
       bytes = new byte[StreamedStringBufferLength];
@@ -268,7 +269,7 @@ namespace PeterO {
     /// <summary> Reads a string in UTF-8 encoding from a byte array. </summary>
     /// <param name='data'> A byte array containing a UTF-8 string</param>
     /// <param name='offset'> Offset into the byte array to start reading</param>
-    /// <param name='byteLength'> Length, in bytes, of the UTF-8 string</param>
+    /// <param name='bytesCount'> Length, in bytes, of the UTF-8 string</param>
     /// <param name='builder'> A string builder object where the resulting
     /// string will be stored.</param>
     /// <param name='replace'> If true, replaces invalid encoding with
@@ -279,17 +280,17 @@ namespace PeterO {
     /// <exception cref='System.ArgumentNullException'> "data" is null
     /// or "builder" is null.</exception>
     /// <exception cref='System.ArgumentException'> "offset" is less
-    /// than 0, "byteLength" is less than 0, or offset plus byteLength is greater
+    /// than 0, "bytesCount" is less than 0, or offset plus bytesCount is greater
     /// than the length of "data".</exception>
-    public static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength,
+    public static int ReadUtf8FromBytes(byte[] data, int offset, int bytesCount,
                                         StringBuilder builder,
                                         bool replace) {
       if ((data) == null) throw new ArgumentNullException("data");
-      if ((offset) < 0) throw new ArgumentOutOfRangeException("offset" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(offset)) + ")");
-      if ((offset) > data.Length) throw new ArgumentOutOfRangeException("offset" + " not less or equal to " + Convert.ToString((long)(data.Length)) + " (" + Convert.ToString((long)(offset)) + ")");
-      if ((byteLength) < 0) throw new ArgumentOutOfRangeException("byteLength" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(byteLength)) + ")");
-      if ((byteLength) > data.Length) throw new ArgumentOutOfRangeException("byteLength" + " not less or equal to " + Convert.ToString((long)(data.Length)) + " (" + Convert.ToString((long)(byteLength)) + ")");
-      if (((data.Length - offset)) < byteLength) throw new ArgumentOutOfRangeException("data's length minus " + offset + " not greater or equal to " + Convert.ToString((long)(byteLength)) + " (" + Convert.ToString((long)((data.Length - offset))) + ")");
+      if ((offset) < 0) throw new ArgumentException("offset" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(offset),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((offset) > data.Length) throw new ArgumentException("offset" + " not less or equal to " + Convert.ToString((long)(long)(data.Length),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)(offset),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((bytesCount) < 0) throw new ArgumentException("bytesCount" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(bytesCount),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((bytesCount) > data.Length) throw new ArgumentException("bytesCount" + " not less or equal to " + Convert.ToString((long)(long)(data.Length),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)(bytesCount),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if (((data.Length - offset)) < bytesCount) throw new ArgumentException("data's length minus " + offset + " not greater or equal to " + Convert.ToString((long)(long)(bytesCount),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)((data.Length - offset)),System.Globalization.CultureInfo.InvariantCulture) + ")");
       if ((builder) == null) throw new ArgumentNullException("builder");
       int cp = 0;
       int bytesSeen = 0;
@@ -297,7 +298,7 @@ namespace PeterO {
       int lower = 0x80;
       int upper = 0xBF;
       int pointer = offset;
-      int endpointer = offset + byteLength;
+      int endpointer = offset + bytesCount;
       while (pointer < endpointer) {
         int b = (data[pointer] & (int)0xFF);
         pointer++;
@@ -368,7 +369,7 @@ namespace PeterO {
     }
     /// <summary> Reads a string in UTF-8 encoding from a data stream. </summary>
     /// <param name='stream'> A readable data stream.</param>
-    /// <param name='byteLength'> The length, in bytes, of the string. If
+    /// <param name='bytesCount'> The length, in bytes, of the string. If
     /// this is less than 0, this function will read until the end of the stream.</param>
     /// <param name='builder'> A string builder object where the resulting
     /// string will be stored.</param>
@@ -382,7 +383,7 @@ namespace PeterO {
     /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentNullException'> "stream" is
     /// null or "builder" is null.</exception>
-    public static int ReadUtf8(Stream stream, int byteLength, StringBuilder builder,
+    public static int ReadUtf8(Stream stream, int bytesCount, StringBuilder builder,
                                bool replace) {
       if ((stream) == null) throw new ArgumentNullException("stream");
       if ((builder) == null) throw new ArgumentNullException("builder");
@@ -392,25 +393,25 @@ namespace PeterO {
       int lower = 0x80;
       int upper = 0xBF;
       int pointer = 0;
-      while (pointer < byteLength || byteLength < 0) {
+      while (pointer < bytesCount || bytesCount < 0) {
         int b = stream.ReadByte();
         if (b < 0) {
           if (bytesNeeded != 0) {
             bytesNeeded = 0;
             if (replace) {
               builder.Append((char)0xFFFD);
-              if (byteLength >= 0)
+              if (bytesCount >= 0)
                 return -2;
               break; // end of stream
             }
             return -1;
           } else {
-            if (byteLength >= 0)
+            if (bytesCount >= 0)
               return -2;
             break; // end of stream
           }
         }
-        if (byteLength > 0) {
+        if (bytesCount > 0) {
           pointer++;
         }
         if (bytesNeeded == 0) {

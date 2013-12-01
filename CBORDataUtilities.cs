@@ -34,7 +34,7 @@ namespace PeterO {
     /// </summary>
     /// <param name='bytes'> A byte array containing text encoded in UTF-8.</param>
     /// <param name='offset'> Offset into the byte array to start reading</param>
-    /// <param name='byteLength'> Length, in bytes, of the UTF-8 string</param>
+    /// <param name='bytesCount'> Length, in bytes, of the UTF-8 string</param>
     /// <param name='replace'> If true, replaces invalid encoding with
     /// the replacement character (U+FFFD). If false, stops processing
     /// when invalid UTF-8 is seen.</param>
@@ -44,8 +44,8 @@ namespace PeterO {
     /// <exception cref='System.ArgumentException'> The portion of the
     /// byte array is not valid UTF-8 and "replace" is false</exception>
     [Obsolete("Use DataUtilities.GetUtf8String instead.")]
-    public static string GetUtf8String(byte[] bytes, int offset, int byteLength, bool replace) {
-      return DataUtilities.GetUtf8String(bytes, offset, byteLength, replace);
+    public static string GetUtf8String(byte[] bytes, int offset, int bytesCount, bool replace) {
+      return DataUtilities.GetUtf8String(bytes, offset, bytesCount, replace);
     }
     /// <summary> Encodes a string in UTF-8 as a byte array. </summary>
     /// <param name='str'> A text string.</param>
@@ -132,7 +132,7 @@ namespace PeterO {
     /// <summary> Reads a string in UTF-8 encoding from a byte array. </summary>
     /// <param name='data'> A byte array containing a UTF-8 string</param>
     /// <param name='offset'> Offset into the byte array to start reading</param>
-    /// <param name='byteLength'> Length, in bytes, of the UTF-8 string</param>
+    /// <param name='bytesCount'> Length, in bytes, of the UTF-8 string</param>
     /// <param name='builder'> A string builder object where the resulting
     /// string will be stored.</param>
     /// <param name='replace'> If true, replaces invalid encoding with
@@ -143,17 +143,17 @@ namespace PeterO {
     /// <exception cref='System.ArgumentNullException'> "data" is null
     /// or "builder" is null.</exception>
     /// <exception cref='System.ArgumentException'> "offset" is less
-    /// than 0, "byteLength" is less than 0, or offset plus byteLength is greater
+    /// than 0, "bytesCount" is less than 0, or offset plus bytesCount is greater
     /// than the length of "data".</exception>
     [Obsolete("Use DataUtilities.ReadUtf8FromBytes instead.")]
-    public static int ReadUtf8FromBytes(byte[] data, int offset, int byteLength,
+    public static int ReadUtf8FromBytes(byte[] data, int offset, int bytesCount,
                                         StringBuilder builder,
                                         bool replace) {
-      return DataUtilities.ReadUtf8FromBytes(data, offset, byteLength, builder, replace);
+      return DataUtilities.ReadUtf8FromBytes(data, offset, bytesCount, builder, replace);
     }
     /// <summary> Reads a string in UTF-8 encoding from a data stream. </summary>
     /// <param name='stream'> A readable data stream.</param>
-    /// <param name='byteLength'> The length, in bytes, of the string. If
+    /// <param name='bytesCount'> The length, in bytes, of the string. If
     /// this is less than 0, this function will read until the end of the stream.</param>
     /// <param name='builder'> A string builder object where the resulting
     /// string will be stored.</param>
@@ -168,9 +168,9 @@ namespace PeterO {
     /// <exception cref='System.ArgumentNullException'> "stream" is
     /// null or "builder" is null.</exception>
     [Obsolete("Use DataUtilities.ReadUtf8 instead.")]
-    public static int ReadUtf8(Stream stream, int byteLength, StringBuilder builder,
+    public static int ReadUtf8(Stream stream, int bytesCount, StringBuilder builder,
                                bool replace) {
-      return DataUtilities.ReadUtf8(stream, byteLength, builder, replace);
+      return DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
     }
     /// <summary> Parses a number whose format follows the JSON specification.
     /// See #ParseJSONNumber(str, integersOnly, parseOnly) for more information.
@@ -183,6 +183,18 @@ namespace PeterO {
     public static CBORObject ParseJSONNumber(string str) {
       return ParseJSONNumber(str, false, false, false);
     }
+
+    private static BigInteger FastParseBigInt(string str, int offset, int length) {
+      // Assumes the string contains
+      // only the digits '0' through '9'
+      MutableBigInteger mbi = new MutableBigInteger();
+      for (int i = 0; i < length; i++) {
+        int digit = (int)(str[offset + i] - '0');
+        mbi.Multiply(10).Add(digit);
+      }
+      return mbi.ToBigInteger();
+    }
+
     /// <summary> Parses a number whose format follows the JSON specification
     /// (RFC 4627). Roughly speaking, a valid number consists of an optional
     /// minus sign, one or more digits (starting with 1 to 9 unless the only
@@ -348,21 +360,21 @@ namespace PeterO {
         return CBORObject.FromObject(new DecimalFraction(value, exponent));
       } else if (fracStart < 0 && expStart < 0) {
         // Bigger integer
-        string strsub = (numberStart == 0 && numberEnd == str.Length) ? str :
-          str.Substring(numberStart, numberEnd - numberStart);
-        BigInteger bigintValue = BigInteger.Parse(strsub,
-                                                  NumberStyles.None,
-                                                  CultureInfo.InvariantCulture);
+        BigInteger bigintValue = FastParseBigInt(
+          str,numberStart,numberEnd-numberStart);
         if (negative) bigintValue = -(BigInteger)bigintValue;
         return CBORObject.FromObject(bigintValue);
       } else {
         // Intval consists of the whole and fractional part
-        string intvalString = str.Substring(numberStart, numberEnd - numberStart) +
-          ((fracStart < 0) ? String.Empty : str.Substring(fracStart, fracEnd - fracStart));
-        BigInteger intval = BigInteger.Parse(
-          intvalString,
-          NumberStyles.None,
-          CultureInfo.InvariantCulture);
+        BigInteger intval;
+        if(fracStart<0){
+          intval=FastParseBigInt(
+            str,numberStart,numberEnd-numberStart);
+        } else {
+          string intvalString = str.Substring(numberStart, numberEnd - numberStart) +
+            str.Substring(fracStart, fracEnd - fracStart);
+          intval=FastParseBigInt(intvalString,0,intvalString.Length);
+        }
         if (negative) intval = -intval;
         if ((fracStart < 0) && expStart < 0) {
           // No fractional part and no exponent;
@@ -386,10 +398,7 @@ namespace PeterO {
           // Use already parsed exponent
           exp = smallExponent;
         } else {
-          exp = new FastInteger(BigInteger.Parse(
-            str.Substring(expStart, expEnd - expStart),
-            NumberStyles.None,
-            CultureInfo.InvariantCulture));
+          exp = new FastInteger(FastParseBigInt(str, expStart, expEnd - expStart));
           if (negExp) exp.Negate();
           if (fracStart >= 0) {
             // If there is a fractional part,

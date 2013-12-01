@@ -46,7 +46,7 @@ namespace PeterO {
         throw new OverflowException("This object's value is out of range");
       return (sbyte)v;
     }
-    private decimal EncodeDecimal(BigInteger bigmant,
+    private static decimal EncodeDecimal(BigInteger bigmant,
                                   int scale, bool neg) {
       if (scale < 0 || scale > 28)
         throw new ArgumentOutOfRangeException("scale");
@@ -57,11 +57,10 @@ namespace PeterO {
       if (neg) d |= (1 << 31);
       return new Decimal(new int[] { a, b, c, d });
     }
-    private decimal DecimalFractionToDecimal(DecimalFraction decfrac) {
+    private static decimal DecimalFractionToDecimal(DecimalFraction decfrac) {
       FastInteger bigexp = new FastInteger(decfrac.Exponent);
       BigInteger bigmant = decfrac.Mantissa;
       BigInteger decmax = (BigInteger)Decimal.MaxValue; // equals (2^96-1)
-      BigInteger decmin = (BigInteger)Decimal.MinValue; // equals -(2^96-1)
       bool neg = (bigmant < 0);
       if (neg) bigmant = -bigmant;
       if (bigexp.Sign == 0) {
@@ -185,30 +184,31 @@ namespace PeterO {
     }
     /// <summary> </summary>
     /// <param name='value'>A SByte object.</param>
-    /// <param name='s'>A Stream object.</param>
     /// <returns></returns>
+    /// <param name='stream'>A Stream object.</param>
     [CLSCompliant(false)]
-    public static void Write(sbyte value, Stream s) {
-      Write((long)value, s);
+    public static void Write(sbyte value, Stream stream) {
+      Write((long)value, stream);
     }
     /// <summary> </summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
-    /// <param name='s'>A Stream object.</param>
     /// <returns></returns>
+    /// <param name='stream'>A Stream object.</param>
     [CLSCompliant(false)]
-    public static void Write(ulong value, Stream s) {
+    public static void Write(ulong value, Stream stream) {
+      if((stream)==null)throw new ArgumentNullException("stream");
       if (value <= Int64.MaxValue) {
-        Write((long)value, s);
+        Write((long)value, stream);
       } else {
-        s.WriteByte((byte)(27));
-        s.WriteByte((byte)((value >> 56) & 0xFF));
-        s.WriteByte((byte)((value >> 48) & 0xFF));
-        s.WriteByte((byte)((value >> 40) & 0xFF));
-        s.WriteByte((byte)((value >> 32) & 0xFF));
-        s.WriteByte((byte)((value >> 24) & 0xFF));
-        s.WriteByte((byte)((value >> 16) & 0xFF));
-        s.WriteByte((byte)((value >> 8) & 0xFF));
-        s.WriteByte((byte)(value & 0xFF));
+        stream.WriteByte((byte)(27));
+        stream.WriteByte((byte)((value >> 56) & 0xFF));
+        stream.WriteByte((byte)((value >> 48) & 0xFF));
+        stream.WriteByte((byte)((value >> 40) & 0xFF));
+        stream.WriteByte((byte)((value >> 32) & 0xFF));
+        stream.WriteByte((byte)((value >> 24) & 0xFF));
+        stream.WriteByte((byte)((value >> 16) & 0xFF));
+        stream.WriteByte((byte)((value >> 8) & 0xFF));
+        stream.WriteByte((byte)(value & 0xFF));
       }
     }
     /// <summary> </summary>
@@ -245,19 +245,19 @@ namespace PeterO {
     }
     /// <summary> </summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
-    /// <param name='s'>A Stream object.</param>
     /// <returns></returns>
+    /// <param name='stream'>A Stream object.</param>
     [CLSCompliant(false)]
-    public static void Write(uint value, Stream s) {
-      Write((ulong)value, s);
+    public static void Write(uint value, Stream stream) {
+      Write((ulong)value, stream);
     }
     /// <summary> </summary>
     /// <param name='value'>A UInt16 object.</param>
-    /// <param name='s'>A Stream object.</param>
     /// <returns></returns>
+    /// <param name='stream'>A Stream object.</param>
     [CLSCompliant(false)]
-    public static void Write(ushort value, Stream s) {
-      Write((ulong)value, s);
+    public static void Write(ushort value, Stream stream) {
+      Write((ulong)value, stream);
     }
     /// <summary> </summary>
     /// <param name='value'>A SByte object.</param>
@@ -348,7 +348,7 @@ namespace PeterO {
     /// <returns></returns>
     /// <param name='stream'> A Stream object.</param>
     public static void Write(DateTime bi, Stream stream) {
-      if ((stream) == null) throw new ArgumentNullException("s");
+      if ((stream) == null) throw new ArgumentNullException("stream");
       stream.WriteByte(0xC0);
       Write(DateTimeToString(bi), stream);
     }

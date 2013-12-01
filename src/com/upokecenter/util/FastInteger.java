@@ -30,13 +30,10 @@ import java.math.*;
     private static BigInteger Int32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
 
     public FastInteger() {
-      smallValue = 0;
-      usingLarge = false;
     }
 
     public FastInteger(long value) {
       smallValue = value;
-      usingLarge = false;
     }
 
     public FastInteger(FastInteger value) {
@@ -55,7 +52,6 @@ import java.math.*;
         smallValue = bigintVal.longValue();
         usingLarge = false;
       } else {
-        smallValue = 0;
         usingLarge = true;
         largeValue = bigintVal;
       }
@@ -163,17 +159,6 @@ import java.math.*;
           smallValue *= val;
         }
       }
-      return this;
-    }
-
-    /**
-     * Sets this object's value to the given integer.
-     * @param val The value to set.
-     * @return This object.
-     */
-    public FastInteger Set(int val) {
-      usingLarge = false;
-      smallValue = val;
       return this;
     }
 

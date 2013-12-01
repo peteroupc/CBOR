@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.Text;
 using System;
 using System.IO;
@@ -7,7 +7,7 @@ namespace Test {
     /// <summary>
     /// </summary>
     /// <remarks/>
-[TestClass]
+[TestFixture]
   public class BEncodingTest{
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {
@@ -61,7 +61,7 @@ public void doTestString(String value) {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[TestMethod]
+[Test]
     public void testLong() {
       doTestLong(0);
       doTestLong(-1);
@@ -75,7 +75,7 @@ public void doTestString(String value) {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[TestMethod]
+[Test]
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
       beo.Add(CBORObject.FromObject(1));
@@ -100,7 +100,7 @@ public void doTestString(String value) {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[TestMethod]
+[Test]
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
       beo["zero"] = CBORObject.FromObject(1);
@@ -125,7 +125,7 @@ public void doTestString(String value) {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[TestMethod]
+[Test]
     public void testString() {
       doTestString("");
       doTestString(" ");

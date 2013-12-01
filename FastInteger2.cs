@@ -16,8 +16,6 @@ namespace PeterO {
     bool usingLarge;
 
     public FastInteger2() {
-      smallValue = 0;
-      usingLarge = false;
     }
 
     /// <summary> </summary>

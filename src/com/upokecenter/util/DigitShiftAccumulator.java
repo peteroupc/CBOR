@@ -11,13 +11,13 @@ at: http://upokecenter.com/d/
 import java.math.*;
 
   final class DigitShiftAccumulator implements IShiftAccumulator {
-    int bitLeftmost = 0;
+    int bitLeftmost;
 
     /**
      * Gets whether the last discarded digit was set.
      */
     public int getLastDiscardedDigit() { return bitLeftmost; }
-    int bitsAfterLeftmost = 0;
+    int bitsAfterLeftmost;
 
     /**
      * Gets whether any of the discarded digits to the right of the last one
@@ -98,6 +98,8 @@ public DigitShiftAccumulator(long longInt) {
       knownBitLength = -1;
     }
     private static BigInteger FastParseBigInt(String str, int offset, int length) {
+      // Assumes the String contains
+      // only the digits '0' through '9'
       MutableBigInteger mbi = new MutableBigInteger();
       for (int i = 0; i < length; i++) {
         int digit = (int)(str.charAt(offset + i) - '0');
@@ -109,8 +111,7 @@ public DigitShiftAccumulator(long longInt) {
     private static long FastParseLong(String str, int offset, int length) {
       // Assumes the String is length 18 or less and contains
       // only the digits '0' through '9'
-      if (length > 18)
-        throw new IllegalArgumentException();
+      if((length)>18)throw new IllegalArgumentException("length"+" not less or equal to "+"18"+" ("+Long.toString((long)(long)(length))+")");
       long ret = 0;
       for (int i = 0; i < length; i++) {
         int digit = (int)(str.charAt(offset + i) - '0');
