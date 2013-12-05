@@ -5,8 +5,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
-using System;
-using System.Runtime.Serialization;
 namespace PeterO {
     /// <summary> Specifies the mode to use when "shortening" numbers that
     /// otherwise can't fit a given number of digits, so that the shortened
