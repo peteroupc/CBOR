@@ -1166,7 +1166,21 @@ public BigFloat NextToward(
       return math.RoundToPrecision(this, ctx);
     }
 
-    
+    /// <summary> Rounds this object's value to a given maximum bit length,
+    /// using the given rounding mode and range of exponent. </summary>
+    /// <param name='ctx'> A context for controlling the precision, rounding
+    /// mode, and exponent range. The precision is interpreted as the maximum
+    /// bit length of the mantissa. Can be null.</param>
+    /// <returns> The closest value to this object's value, rounded to the
+    /// specified precision. Returns the same value as this object if "context"
+    /// is null or the precision and exponent range are unlimited. Returns
+    /// null if the result of the rounding would cause an overflow. The caller
+    /// can handle a null return value by treating it as positive or negative
+    /// infinity depending on the sign of this object's value.</returns>
+    public BigFloat RoundToBinaryPrecision(
+      PrecisionContext ctx) {
+      return math.RoundToBinaryPrecision(this, ctx);
+    }
     
   }
 

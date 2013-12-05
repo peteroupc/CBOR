@@ -17,6 +17,44 @@ namespace Test {
     /// <remarks/>
 [TestFixture]
   public class CBORExtraTest{
+  
+  
+    [Test]
+    public void GenerateDecimalTests(){
+      FastRandom r = new FastRandom();
+      for(int i=0;i<5000;i++){
+        CBORObject o1=CBORTest.RandomNumber(r);
+        var df=o1.AsDecimalFraction();
+        try {
+          decimal s=Decimal.Parse(df.ToPlainString());
+          try {
+            var df2=df.RoundToBinaryPrecision(
+              new PrecisionContext(96,Rounding.HalfEven,0,28,true));
+            if(df2.Exponent<-28 || df2.Exponent>0){
+              Console.WriteLine(df2);
+            }
+            Assert.AreEqual(s.ToString(),df2.ToPlainString());
+          } catch(AssertionException){
+            Console.WriteLine(
+              "Assert.AreEqual(\""+s.ToString()+"\",DecimalFraction.FromString(\""+df.ToString()+"\")"+
+              ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)).ToPlainString());"
+             );
+            throw;
+          }
+        } catch(OverflowException){
+          try {
+            Assert.AreEqual(null,df.RoundToBinaryPrecision(
+              new PrecisionContext(96,Rounding.HalfEven,0,28,false)));
+          } catch(AssertionException){
+            Console.WriteLine(
+              "Assert.AreEqual(null,DecimalFraction.FromString(\""+df.ToString()+"\")"+
+              ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)));"
+             );
+            throw;
+          }
+        }
+      }
+    }
     private decimal RandomDecimal(FastRandom rand, int exponent) {
       int[] x = new int[4];
       int r = rand.NextValue(0x10000);
