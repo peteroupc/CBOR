@@ -44,7 +44,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
-    private static CBORObject RandomNumber(FastRandom rand) {
+    public static CBORObject RandomNumber(FastRandom rand) {
       switch (rand.NextValue(6)) {
         case 0:
           return CBORObject.FromObject(RandomDouble(rand, Int32.MaxValue));
@@ -298,6 +298,24 @@ namespace Test {
       AddSubCompare(CBORObject.DecodeFromBytes(new byte[]{(byte)0xFB,0x3C,0x00,(byte)0xCF,(byte)0xB6,(byte)0xBD,(byte)0xFF,0x37,0x38}),
                     CBORObject.DecodeFromBytes(new byte[]{(byte)0xFA,0x30,(byte)0x80,0x75,0x63}));
     }
+    
+    [Test]
+    public void ExtraDecimalTests(){
+      Assert.AreEqual(null,DecimalFraction.FromString("-79228162514264337593543950336").
+                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+      Assert.AreEqual(null,DecimalFraction.FromString("8.782580686213340724E+28").
+                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+      Assert.AreEqual(null,DecimalFraction.FromString("-9.3168444507547E+28").
+                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+      Assert.AreEqual("-9344285899206687626894794544",DecimalFraction.FromString(
+        "-9344285899206687626894794544.04982268810272216796875").RoundToBinaryPrecision(
+                        new PrecisionContext(96,Rounding.HalfEven,0,28,false)).ToPlainString());
+      Assert.AreEqual(null,DecimalFraction.FromString("96148154858060747311034406200").
+                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+      Assert.AreEqual(null,DecimalFraction.FromString("90246605365627217170000000000").
+                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+    }
+    
     
     /// <summary>
     /// </summary>

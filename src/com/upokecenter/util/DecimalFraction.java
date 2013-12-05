@@ -528,7 +528,7 @@ bigrem=divrem[1];
     private String ToStringInternal(int mode) {
       // Using Java's rules for converting DecimalFraction
       // values to a String
-      String mantissaString = this.mantissa.toString(); // TODO
+      String mantissaString = this.mantissa.toString();
       int scaleSign = -this.exponent.signum();
       if (scaleSign == 0)
         return mantissaString;
@@ -1492,9 +1492,15 @@ bigrem=divrem[1];
      * Returns a decimal fraction with the same value but a new exponent.
      * @param otherValue A decimal fraction containing the desired exponent
      * of the result. The mantissa is ignored.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context to control precision and rounding
+     * of the result. The exponent range of this context is ignored. If HasFlags
+     * of the context is true, will also store the flags resulting from the
+     * operation (the flags are in addition to the pre-existing flags).
+     * Can be null, in which case the default rounding mode is HalfEven.
      * @return A decimal fraction with the same value as this object but with
      * the exponent changed.
+     * @throws ArithmeticException An overflow error occurred, or the
+     * result can't fit the given precision without rounding.
      */
     public DecimalFraction Quantize(
       DecimalFraction otherValue, PrecisionContext ctx) {
@@ -1573,4 +1579,23 @@ bigrem=divrem[1];
       PrecisionContext ctx) {
       return math.RoundToPrecision(this, ctx);
     }
+
+    /**
+     * Rounds this object's value to a given maximum bit length, using the
+     * given rounding mode and range of exponent.
+     * @param ctx A context for controlling the precision, rounding mode,
+     * and exponent range. The precision is interpreted as the maximum bit
+     * length of the mantissa. Can be null.
+     * @return The closest value to this object's value, rounded to the specified
+     * precision. Returns the same value as this object if "context" is null
+     * or the precision and exponent range are unlimited. Returns null if
+     * the result of the rounding would cause an overflow. The caller can
+     * handle a null return value by treating it as positive or negative infinity
+     * depending on the sign of this object's value.
+     */
+    public DecimalFraction RoundToBinaryPrecision(
+      PrecisionContext ctx) {
+      return math.RoundToBinaryPrecision(this, ctx);
+    }
+
   }

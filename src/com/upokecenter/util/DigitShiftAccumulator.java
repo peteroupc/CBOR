@@ -311,7 +311,7 @@ public DigitShiftAccumulator(long longInt) {
         }
         return kb == 0 ? 1 : kb;
       } else {
-        String str = shiftedBigInt.toString(); // TODO
+        String str = shiftedBigInt.toString();
         return str.length();
       }
     }
