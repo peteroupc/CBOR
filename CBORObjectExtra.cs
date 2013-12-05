@@ -48,8 +48,8 @@ namespace PeterO {
     }
     private static decimal EncodeDecimal(BigInteger bigmant,
                                          int scale, bool neg) {
-      if (scale < 0 || scale > 28)
-        throw new ArgumentOutOfRangeException("scale");
+      if((scale)<0)throw new ArgumentException("scale"+" not greater or equal to "+"0"+" ("+Convert.ToString((long)(long)(scale),System.Globalization.CultureInfo.InvariantCulture)+")");
+if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+" ("+Convert.ToString((long)(long)(scale),System.Globalization.CultureInfo.InvariantCulture)+")");
       byte[] data=bigmant.ToByteArray();
       int a=0;
       int b=0;
@@ -111,48 +111,12 @@ namespace PeterO {
     }
     
     private static decimal DecimalFractionToDecimal(DecimalFraction decfrac) {
-      FastInteger bigexp = new FastInteger(decfrac.Exponent);
-      BigInteger bigmant = decfrac.Mantissa;
-      BigInteger decmax = DecimalMaxValue;// set to Decimal.MaxValue, equal to (2^96-1)
-      bool neg = (bigmant.Sign < 0);
-      if (neg) bigmant = -bigmant;
-      if (bigexp.Sign == 0) {
-        if (bigmant > decmax)
-          throw new OverflowException("This object's value is out of range");
-        return BigIntegerToDecimal(bigmant);
-      } else if (bigexp.Sign > 0) {
-        while (bigexp.Sign > 0) {
-          bigmant *= 10;
-          if (bigmant > decmax)
-            throw new OverflowException("This object's value is out of range");
-          bigexp.Add(-1);
-        }
-        return BigIntegerToDecimal(bigmant);
-      } else {
-        int lastDigit = 0;
-        while (bigexp.Sign < 0) {
-          if (bigexp.CompareTo(-28) >= 0 && bigmant <= decmax) {
-            if (lastDigit >= 5) {
-              bigmant+=BigInteger.One; // round half-up
-            }
-            if (bigmant <= decmax) {
-              bigexp.Negate();
-              return EncodeDecimal(bigmant, bigexp.AsInt32(), neg);
-            } else if (lastDigit >= 5) {
-              bigmant-=BigInteger.One; // undo rounding
-            }
-          }
-          lastDigit = (int)(bigmant % 10);
-          bigmant /= 10;
-          bigexp.Add(-1);
-        }
-        if (lastDigit >= 5) {
-          bigmant+=BigInteger.One;
-        }
-        if (bigmant > decmax)
-          throw new OverflowException("This object's value is out of range");
-        return EncodeDecimal(bigmant, 0, neg);
-      }
+      DecimalFraction newDecimal=decfrac.RoundToBinaryPrecision(PrecisionContext.CliDecimal);
+      if(newDecimal==null)
+        throw new OverflowException("This object's value is out of range");
+      return EncodeDecimal(BigInteger.Abs(newDecimal.Mantissa),
+                           -((int)(newDecimal.Exponent)),
+                           newDecimal.Mantissa.Sign<0);
     }
     /// <summary> Converts this object to a .NET decimal. </summary>
     /// <returns> The closest big integer to this object.</returns>

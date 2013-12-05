@@ -583,7 +583,7 @@ namespace PeterO {
                   expshift.CompareTo(new FastInteger(ctx.Precision).Add(8)) > 0) {
                 // Result would require a too-high precision since
                 // exponent shift is much higher
-                throw new ArithmeticException();
+                throw new ArithmeticException("Result can't fit the precision");
               }
               mantissaDividend = helper.MultiplyByRadixPower(result.AsBigInteger(), expshift);
               if (negA ^ negB) {
@@ -744,8 +744,75 @@ namespace PeterO {
       return Add(addend, augend, ctx);
     }
 
-
-
+    /// <summary> </summary>
+    /// <param name='thisValue'>A T object.</param>
+    /// <param name='context'>A PrecisionContext object.</param>
+    /// <returns></returns>
+    /// <remarks/>
+    public T RoundToBinaryPrecision(
+      T thisValue,
+      PrecisionContext context
+     ) {
+      return RoundToBinaryPrecision(thisValue, context, 0, 0);
+    }
+    private T RoundToBinaryPrecision(
+      T thisValue,
+      PrecisionContext context,
+      int lastDiscarded,
+      int olderDiscarded
+     ) {
+      if ((context) == null) return thisValue;
+      if (context.Precision == 0 && !context.HasExponentRange &&
+          (lastDiscarded | olderDiscarded) == 0)
+        return thisValue;
+      if(context.Precision==0 || helper.GetRadix()==2)
+        return RoundToPrecision(thisValue,context,lastDiscarded,olderDiscarded);
+      FastInteger fastEMin = (context.HasExponentRange) ? new FastInteger().Add(context.EMin) : null;
+      FastInteger fastEMax = (context.HasExponentRange) ? new FastInteger().Add(context.EMax) : null;
+      int[] signals = new int[1];
+      T dfrac = RoundToBinaryPrecisionInternal(
+        thisValue,
+        context.Precision,
+        context.Rounding, fastEMin, fastEMax,
+        lastDiscarded,
+        olderDiscarded,
+        signals);
+      // Clamp exponents to eMax + 1 - precision
+      // if directed
+      if (context.ClampNormalExponents && dfrac != null) {
+        BigInteger maxMantissa = BigInteger.One;
+        long prec=context.Precision;
+        while(prec>0){
+          int shift=(int)Math.Min(1000000,prec);
+          maxMantissa<<=shift;
+          prec-=shift;
+        }
+        maxMantissa-=BigInteger.One;
+        // Get the digit length of the maximum possible mantissa
+        // for the given binary precision
+        long digitCount=helper.CreateShiftAccumulator(maxMantissa).DigitLength;
+        FastInteger clamp = new FastInteger(fastEMax).Add(1).Subtract(digitCount);
+        FastInteger fastExp = new FastInteger(helper.GetExponent(dfrac));
+        if (fastExp.CompareTo(clamp) > 0) {
+          BigInteger bigmantissa = helper.GetMantissa(dfrac);
+          int sign = bigmantissa.Sign;
+          if (sign != 0) {
+            if (sign < 0) bigmantissa = -bigmantissa;
+            FastInteger expdiff = new FastInteger(fastExp).Subtract(clamp);
+            bigmantissa = helper.MultiplyByRadixPower(bigmantissa, expdiff);
+            if (sign < 0) bigmantissa = -bigmantissa;
+          }
+          if (signals != null)
+            signals[0] |= PrecisionContext.FlagClamped;
+          dfrac = helper.CreateNew(bigmantissa, clamp.AsBigInteger());
+        }
+      }
+      if (context.HasFlags) {
+        context.Flags |= signals[0];
+      }
+      return dfrac;
+    }
+    
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='context'>A PrecisionContext object.</param>
@@ -870,10 +937,10 @@ namespace PeterO {
         ret = RoundToPrecision(ret, tmpctx, accum.LastDiscardedDigit,
                                accum.OlderDiscardedDigits);
       }
-      if (ret == null || !helper.GetExponent(ret).Equals(expOther)) {
-        throw new ArithmeticException();
-      }
       if ((tmpctx.Flags & PrecisionContext.FlagOverflow) != 0) {
+        throw new OverflowException();
+      }
+      if (ret == null || !helper.GetExponent(ret).Equals(expOther)) {
         throw new ArithmeticException();
       }
       if (signThis < 0 && helper.GetSign(ret) > 0) {
@@ -1137,7 +1204,7 @@ namespace PeterO {
       int lastDiscarded,
       int olderDiscarded,
       int[] signals
-     ) { // TODO: Incomplete
+     ) {
       if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
       if(helper.GetRadix()==2 || precision==0){
         return RoundToPrecisionInternal(thisValue,precision,rounding,
@@ -1151,12 +1218,13 @@ namespace PeterO {
       // and must be rounded again
       BigInteger oldmantissa = bigmantissa;
       BigInteger maxMantissa = BigInteger.One;
-      long prec=0;
+      long prec=precision;
       while(prec>0){
         int shift=(int)Math.Min(1000000,prec);
         maxMantissa<<=shift;
         prec-=shift;
       }
+      maxMantissa-=BigInteger.One;
       FastInteger exp = new FastInteger(helper.GetExponent(thisValue));
       int flags = 0;
       IShiftAccumulator accumMaxMant = helper.CreateShiftAccumulator(
@@ -1175,6 +1243,16 @@ namespace PeterO {
       FastInteger adjExponent = new FastInteger(exp)
         .Add(accum.DigitLength).Subtract(1);
       FastInteger clamp = null;
+      if(fastEMax!=null && adjExponent.CompareTo(fastEMax)==0){
+        // May or may not be an overflow depending on the mantissa
+        FastInteger expdiff=new FastInteger(digitCount).Subtract(accum.DigitLength);
+        BigInteger currMantissa=accum.ShiftedInt;
+        currMantissa=helper.MultiplyByRadixPower(currMantissa,expdiff);
+        if((currMantissa).CompareTo(maxMantissa)>0){
+          // Mantissa too high, treat as overflow
+          adjExponent.Add(1);
+        }
+      }
       if (fastEMax != null && adjExponent.CompareTo(fastEMax) > 0) {
         if (oldmantissa.IsZero) {
           flags |= PrecisionContext.FlagClamped;
@@ -1194,7 +1272,7 @@ namespace PeterO {
           BigInteger overflowMant = maxMantissa;
           if (neg) overflowMant = -overflowMant;
           if (signals != null) signals[0] = flags;
-          clamp = new FastInteger(fastEMax).Add(1).Subtract(precision);
+          clamp = new FastInteger(fastEMax).Add(1).Subtract(digitCount);
           return helper.CreateNew(overflowMant, clamp.AsBigInteger());
         }
         if (signals != null) signals[0] = flags;
@@ -1202,7 +1280,7 @@ namespace PeterO {
       } else if (fastEMin != null && adjExponent.CompareTo(fastEMin) < 0) {
         // Subnormal
         FastInteger fastETiny = new FastInteger(fastEMin)
-          .Subtract(precision)
+          .Subtract(digitCount)
           .Add(1);
         if (!oldmantissa.IsZero)
           flags |= PrecisionContext.FlagSubnormal;
@@ -1234,7 +1312,7 @@ namespace PeterO {
           return helper.CreateNew(newmantissa, fastETiny.AsBigInteger());
         }
       }
-      bool expChanged = false;
+      bool mantChanged=false;
       if ((accum.DiscardedDigitCount).Sign != 0 ||
           (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
         if (!bigmantissa.IsZero)
@@ -1247,22 +1325,35 @@ namespace PeterO {
         }
         if (Round(accum, rounding, neg, bigmantissa)) {
           bigmantissa += BigInteger.One;
+          mantChanged = true;
           if (bigmantissa.IsEven) {
             accum = helper.CreateShiftAccumulator(bigmantissa);
-            accum.ShiftToDigits(precision);
+            accum.ShiftToDigits(digitCount);
+            while((accum.ShiftedInt).CompareTo(maxMantissa)>0){
+              accum.ShiftRight(1);
+            }
             if ((accum.DiscardedDigitCount).Sign != 0) {
               exp.Add(accum.DiscardedDigitCount);
               discardedBits.Add(accum.DiscardedDigitCount);
               bigmantissa = accum.ShiftedInt;
-              expChanged = true;
             }
           }
         }
       }
-      if (expChanged && fastEMax != null) {
-        // If exponent changed, check for overflow again
+      if (mantChanged && fastEMax != null) {
+        // If mantissa changed, check for overflow again
         adjExponent = new FastInteger(exp);
         adjExponent.Add(accum.DigitLength).Subtract(1);
+        if(fastEMax!=null && adjExponent.CompareTo(fastEMax)==0 && mantChanged){
+          // May or may not be an overflow depending on the mantissa
+          FastInteger expdiff=new FastInteger(digitCount).Subtract(accum.DigitLength);
+          BigInteger currMantissa=accum.ShiftedInt;
+          currMantissa=helper.MultiplyByRadixPower(currMantissa,expdiff);
+          if((currMantissa).CompareTo(maxMantissa)>0){
+            // Mantissa too high, treat as overflow
+            adjExponent.Add(1);
+          }
+        }
         if (adjExponent.CompareTo(fastEMax) > 0) {
           flags |= PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
           if ((rounding == Rounding.Down ||
@@ -1274,7 +1365,7 @@ namespace PeterO {
             BigInteger overflowMant = maxMantissa;
             if (neg) overflowMant = -overflowMant;
             if (signals != null) signals[0] = flags;
-            clamp = new FastInteger(fastEMax).Add(1).Subtract(precision);
+            clamp = new FastInteger(fastEMax).Add(1).Subtract(digitCount);
             return helper.CreateNew(overflowMant, clamp.AsBigInteger());
           }
           if (signals != null) signals[0] = flags;

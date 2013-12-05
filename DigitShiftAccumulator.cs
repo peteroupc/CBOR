@@ -308,7 +308,7 @@ public DigitShiftAccumulator(long longInt) {
         }
         return kb == 0 ? 1 : kb;
       } else {
-        String str = shiftedBigInt.ToString(); // TODO
+        String str = shiftedBigInt.ToString();
         return str.Length;
       }
     }
