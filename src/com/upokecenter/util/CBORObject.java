@@ -10,7 +10,7 @@ at: http://upokecenter.com/d/
 import java.util.*;
 
 import java.io.*;
-import java.math.*;
+//import java.math.*;
 
 
     /**
@@ -1002,7 +1002,8 @@ public boolean equals(CBORObject other) {
               int low=((int)((uadditional)&0xFFFFFFFFL));
               int high=((int)((uadditional>>32)&0xFFFFFFFFL));
               BigInteger bigintAdditional=LowHighToBigInteger(low,high);
-              bigintAdditional = (BigInteger.valueOf(-1)).subtract(bigintAdditional);
+              bigintAdditional =(BigInteger.ONE).negate();
+              bigintAdditional=bigintAdditional.subtract(bigintAdditional);
               return FromObject(bigintAdditional);
             }
           case 7:
@@ -2373,10 +2374,13 @@ public static void Write(Object objValue, OutputStream s) throws IOException {
       if ((s) == null) throw new NullPointerException("s");
       if (objValue == null) {
         s.write(0xf6);
-      } else if(objValue instanceof byte[]) {
-        byte[] data = (byte[])objValue;
+        return;
+      } 
+      byte[] data=(((objValue instanceof byte[]) ? (byte[])objValue : null));
+      if(data!=null) {
         WritePositiveInt(3, data.length, s);
         s.write(data,0,data.length);
+        return;
       } else if(objValue instanceof List<?>) {
         WriteObjectArray((List<CBORObject>)objValue, s);
       } else if(objValue instanceof Map<?,?>) {
@@ -2498,7 +2502,7 @@ public static void Write(Object objValue, OutputStream s) throws IOException {
             return Long.toString((((Long)this.getThisItem()).longValue()));
           }
           case (CBORObjectType_BigInteger): {
-            return ((BigInteger)this.getThisItem()).toString();
+            return CBORUtilities.BigIntToString((BigInteger)this.getThisItem());
           }
           case (CBORObjectType_DecimalFraction): {
             return ((DecimalFraction)this.getThisItem()).toString();
@@ -2901,8 +2905,10 @@ public static CBORObject FromObject(Object obj) {
       if(obj instanceof Long) return FromObject((((Long)obj).longValue()));
       if(obj instanceof CBORObject) return FromObject((CBORObject)obj);
       if(obj instanceof BigInteger) return FromObject((BigInteger)obj);
-      if(obj instanceof DecimalFraction) return FromObject((DecimalFraction)obj);
-      if(obj instanceof BigFloat) return FromObject((BigFloat)obj);
+      DecimalFraction df=(((obj instanceof DecimalFraction) ? (DecimalFraction)obj : null));
+      if (df!=null) return FromObject(df);
+      BigFloat bf=(((obj instanceof BigFloat) ? (BigFloat)obj : null));
+      if (bf!=null) return FromObject(bf);
       if(obj instanceof String) return FromObject((String)obj);
       if(obj instanceof Integer) return FromObject(((Integer)obj).intValue());
       if(obj instanceof Short) return FromObject(((Short)obj).shortValue());
@@ -2918,6 +2924,8 @@ public static CBORObject FromObject(Object obj) {
       
       if(obj instanceof Double) return FromObject(((Double)obj).doubleValue());
       if(obj instanceof List<?>) return FromObject((List<CBORObject>)obj);
+      byte[] bytearr=(((obj instanceof byte[]) ? (byte[])obj : null));
+      if (bytearr!=null) return FromObject(bytearr);
       if(obj instanceof byte[]) return FromObject((byte[])obj);
       if(obj instanceof int[]) return FromObject((int[])obj);
       if(obj instanceof long[]) return FromObject((long[])obj);
@@ -2940,6 +2948,7 @@ public static CBORObject FromObject(Object obj) {
      * greater than 2^64-1, or "o"'s type is unsupported.
      */
     public static CBORObject FromObjectAndTag(Object o, BigInteger bigintTag) {
+      if((bigintTag)==null)throw new NullPointerException("bigintTag");
       if ((bigintTag).signum() < 0) throw new IllegalArgumentException(
         "tag not greater or equal to 0 (" + bigintTag.toString() + ")");
       if ((bigintTag).compareTo(UInt64MaxValue) > 0) throw new IllegalArgumentException(
@@ -3043,7 +3052,7 @@ public static CBORObject FromObject(Object obj) {
           sb.append(Integer.toString((int)low));
         } else {
           BigInteger bi = LowHighToBigInteger(low, high);
-          sb.append(bi.toString());
+          sb.append(CBORUtilities.BigIntToString(bi));
         }
         sb.append('(');
         curobject = ((CBORObject)(curobject.item_));
@@ -3130,7 +3139,7 @@ public static CBORObject FromObject(Object obj) {
         if (sb == null) return simvalue;
         sb.append(simvalue);
       } else if (type == CBORObjectType_BigInteger) {
-        simvalue = (((BigInteger)this.getThisItem()).toString());
+        simvalue = CBORUtilities.BigIntToString((BigInteger)this.getThisItem());
         if (sb == null) return simvalue;
         sb.append(simvalue);
       } else if (type == CBORObjectType_ByteString) {
@@ -3469,7 +3478,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    bigintAdditional.toString() +
+                                    CBORUtilities.BigIntToString(bigintAdditional) +
                                     " is bigger than supported");
           } else if (uadditional > Integer.MAX_VALUE) {
             throw new CBORException("Length of " +
@@ -3523,7 +3532,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    bigintAdditional.toString() +
+                                    CBORUtilities.BigIntToString(bigintAdditional) +
                                     " is bigger than supported");
           } else if (uadditional > Integer.MAX_VALUE) {
             throw new CBORException("Length of " +
@@ -3555,7 +3564,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    bigintAdditional.toString() +
+                                    CBORUtilities.BigIntToString(bigintAdditional) +
                                     " is bigger than supported");
           } else if (uadditional > Integer.MAX_VALUE) {
             throw new CBORException("Length of " +
@@ -3581,7 +3590,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    bigintAdditional.toString() +
+                                    CBORUtilities.BigIntToString(bigintAdditional) +
                                     " is bigger than supported");
           } else if (uadditional > Integer.MAX_VALUE) {
             throw new CBORException("Length of " +

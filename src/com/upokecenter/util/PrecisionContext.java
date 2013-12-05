@@ -7,7 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-import java.math.*;
+//import java.math.*;
 
     /**
      * Contains parameters for controlling the precision, rounding, and
@@ -244,6 +244,7 @@ import java.math.*;
      */
     public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax,
                             boolean clampNormalExponents) {
+      if((eMin)==null)throw new NullPointerException("eMin");
       if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + Long.toString((long)(long)(precision)) + ")");
       if (eMin.compareTo(eMax) > 0) throw new IllegalArgumentException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
       this.precision = precision;

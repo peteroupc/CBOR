@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
 
-import java.math.*;
+//import java.math.*;
 
 
     /**
@@ -528,7 +528,7 @@ bigrem=divrem[1];
     private String ToStringInternal(int mode) {
       // Using Java's rules for converting DecimalFraction
       // values to a String
-      String mantissaString = this.mantissa.toString();
+      String mantissaString = this.mantissa.toString(); // TODO
       int scaleSign = -this.exponent.signum();
       if (scaleSign == 0)
         return mantissaString;
@@ -850,7 +850,7 @@ bigrem=divrem[1];
       if (bigintExp.signum()==0) {
         // Integer
         return new DecimalFraction(bigintMant);
-      } else if (bigintExp.signum()>0) {
+      } else if (bigintExp.signum() > 0) {
         // Scaled integer
         FastInteger intcurexp = new FastInteger(bigintExp);
         BigInteger bigmantissa = bigintMant;
@@ -874,6 +874,7 @@ bigrem=divrem[1];
         return new DecimalFraction(bigmantissa, bigintExp);
       }
     }
+    
     /**
      * Converts this value to a string.The format of the return value is exactly
      * the same as that of the java.math.BigDecimal.toString() method.
@@ -948,6 +949,7 @@ bigrem=divrem[1];
 
     /**
      * Divides this object by another decimal fraction and returns the result.
+     * When possible, the result will be exact.
      * @param divisor The divisor.
      * @return The quotient of the two numbers.
      * @throws ArithmeticException Attempted to divide by zero.
@@ -1025,11 +1027,13 @@ bigrem=divrem[1];
      * @param desiredExponentSmall The desired exponent. A negative number
      * places the cutoff point to the right of the usual decimal point. A positive
      * number places the cutoff point to the left of the usual decimal point.
-     * @param ctx A precision context object to control the rounding mode.
-     * The precision and exponent range settings of this context are ignored.
-     * If HasFlags of the context is true, will also store the flags resulting
-     * from the operation (the flags are in addition to the pre-existing
-     * flags). Can be null, in which case the default rounding mode is HalfEven.
+     * @param ctx A precision context object to control the rounding mode
+     * to use if the result must be scaled down to have the same exponent as
+     * this value. The precision and exponent range settings of this context
+     * are ignored. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags). Can be null, in which case the default rounding
+     * mode is HalfEven.
      * @return The quotient of the two objects.
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
@@ -1040,7 +1044,8 @@ bigrem=divrem[1];
       long desiredExponentSmall,
       PrecisionContext ctx
      ) {
-      return Divide(divisor, BigInteger.valueOf(desiredExponentSmall), ctx);
+      BigInteger desexp=BigInteger.valueOf(desiredExponentSmall);
+      return Divide(divisor, desexp, ctx);
     }
 
 
@@ -1058,8 +1063,13 @@ bigrem=divrem[1];
      * @param desiredExponentSmall The desired exponent. A negative number
      * places the cutoff point to the right of the usual decimal point. A positive
      * number places the cutoff point to the left of the usual decimal point.
-     * @param rounding The rounding mode to use when dividing.
-     * @return The quotient of the two objects.
+     * @param rounding The rounding mode to use if the result must be scaled
+     * down to have the same exponent as this value.
+     * @return The quotient of the two objects. Returns null if the return
+     * value would overflow the exponent range. A caller can handle a null
+     * return value by treating it as positive infinity if both operands
+     * have the same sign or as negative infinity if both operands have different
+     * signs.
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
@@ -1069,7 +1079,8 @@ bigrem=divrem[1];
       long desiredExponentSmall,
       Rounding rounding
      ) {
-      return Divide(divisor, BigInteger.valueOf(desiredExponentSmall), new PrecisionContext(rounding));
+      BigInteger desexp=BigInteger.valueOf(desiredExponentSmall);
+      return Divide(divisor, desexp, new PrecisionContext(rounding));
     }
 
 
@@ -1077,15 +1088,51 @@ bigrem=divrem[1];
 
 
 
+    /**
+     * Divides two DecimalFraction objects and gives the result a particular
+     * exponent.
+     * @param divisor A DecimalFraction object.
+     * @param exponent The desired exponent. A negative number places the
+     * cutoff point to the right of the usual decimal point. A positive number
+     * places the cutoff point to the left of the usual decimal point.
+     * @param ctx A precision context to control precision and rounding
+     * of the result. The exponent range of this context is ignored. If HasFlags
+     * of the context is true, will also store the flags resulting from the
+     * operation (the flags are in addition to the pre-existing flags).
+     * Can be null.
+     * @return The quotient of the two objects. Returns null if the return
+     * value would overflow the exponent range. A caller can handle a null
+     * return value by treating it as positive infinity if both operands
+     * have the same sign or as negative infinity if both operands have different
+     * signs.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * and the result is not exact.
+     */
+    public DecimalFraction Divide(
+      DecimalFraction divisor, BigInteger exponent, PrecisionContext ctx) {
+      return math.Divide(this, divisor, exponent, ctx);
+    }
 
 
 
     /**
-     * Divides two DecimalFraction objects.
+     * Divides two DecimalFraction objects, and gives a particular exponent
+     * to the result.
      * @param divisor A DecimalFraction object.
-     * @param desiredExponent A BigInteger object.
-     * @param rounding A Rounding object.
-     * @return The quotient of the two objects.
+     * @param desiredExponent The desired exponent. A negative number
+     * places the cutoff point to the right of the usual decimal point. A positive
+     * number places the cutoff point to the left of the usual decimal point.
+     * @param rounding The rounding mode to use when converting the value
+     * to use the specified exponent.
+     * @return The quotient of the two objects. Returns null if the return
+     * value would overflow the exponent range. A caller can handle a null
+     * return value by treating it as positive infinity if both operands
+     * have the same sign or as negative infinity if both operands have different
+     * signs.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * and the result is not exact.
      */
     public DecimalFraction Divide(
       DecimalFraction divisor,
@@ -1098,7 +1145,11 @@ bigrem=divrem[1];
 
     /**
      * 
-     * @param context A PrecisionContext object.
+     * @param context A precision context to control precision, rounding,
+     * and exponent range of the result. If HasFlags of the context is true,
+     * will also store the flags resulting from the operation (the flags
+     * are in addition to the pre-existing flags). Can be null.
+     * @return The absolute value of this object.
      */
     public DecimalFraction Abs(PrecisionContext context) {
       return Abs().RoundToPrecision(context);
@@ -1114,8 +1165,12 @@ bigrem=divrem[1];
 
 
     /**
-     * 
-     * @param context A PrecisionContext object.
+     * Returns a decimal fraction with the same value as this object but with
+     * the sign reversed.
+     * @param context A precision context to control precision, rounding,
+     * and exponent range of the result. If HasFlags of the context is true,
+     * will also store the flags resulting from the operation (the flags
+     * are in addition to the pre-existing flags). Can be null.
      */
     public DecimalFraction Negate(PrecisionContext context) {
       return Negate().RoundToPrecision(context);
@@ -1152,19 +1207,13 @@ bigrem=divrem[1];
     }
 
 
-
-
-
-
-
-
-
-
     /**
-     * Subtracts a DecimalFraction object from another DecimalFraction
-     * object.
+     * Subtracts a DecimalFraction object from this instance.
      * @param decfrac A DecimalFraction object.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
      * @return The difference of the two objects.
      */
     public DecimalFraction Subtract(DecimalFraction decfrac, PrecisionContext ctx) {
@@ -1228,9 +1277,9 @@ bigrem=divrem[1];
      * of the result, with the exponent set to 0.
      * @param divisor The divisor.
      * @param ctx A precision context object to control the precision. The
-     * rounding and exponent range settings of thisValue context are ignored.
-     * No flags will be set from thisValue operation even if HasFlags of the
-     * context is true. Can be null.
+     * rounding and exponent range settings of this context are ignored.
+     * No flags will be set from this operation even if HasFlags of the context
+     * is true. Can be null.
      * @return The integer part of the quotient of the two objects. The exponent
      * will be set to 0.
      * @throws ArithmeticException Attempted to divide by zero.
@@ -1243,19 +1292,46 @@ bigrem=divrem[1];
     
     /**
      * Finds the remainder that results when dividing two DecimalFraction
-     * objects.
-     * @param divisor A DecimalFraction object.
-     * @param ctx A PrecisionContext object.
+     * objects. The remainder is the value that remains when the absolute
+     * value of this object is divided by the absolute value of the other object;
+     * the remainder has the same sign (positive or negative) as this object.
+     * @param divisor The divisor.
+     * @param ctx A precision context object to control the precision. The
+     * rounding and exponent range settings of this context are ignored.
+     * No flags will be set from this operation even if HasFlags of the context
+     * is true. Can be null.
      * @return The remainder of the two objects.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The result of integer division (the
+     * quotient, not the remainder) wouldn't fit the given precision.
      */
     public DecimalFraction Remainder(
       DecimalFraction divisor, PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
     }
     /**
-     * 
-     * @param divisor A DecimalFraction object.
-     * @param ctx A PrecisionContext object.
+     * Finds the distance to the closest multiple of the given divisor. <ul>
+     * <li>If this and the other object divide evenly, the result is 0.</li>
+     * <li>If the remainder's absolute value is less than half of the divisor's
+     * absolute value, the result has the same sign as this object and will
+     * be the distance to the closest multiple.</li> <li>If the remainder's
+     * absolute value is more than half of the divisor's absolute value,
+     * the result has the opposite sign of this object and will be the distance
+     * to the closest multiple.</li> <li>If the remainder's absolute value
+     * is exactly half of the divisor's absolute value, the result has the
+     * opposite sign of this object if the quotient, rounded down, is odd,
+     * and has the same sign as this object if the quotient, rounded down,
+     * is even, and the result's absolute value is half of the divisor's absolute
+     * value.</li> </ul>
+     * @param divisor The divisor.
+     * @param ctx A precision context object to control the precision. The
+     * rounding and exponent range settings of this context are ignored.
+     * No flags will be set from this operation even if HasFlags of the context
+     * is true. Can be null.
+     * @return The distance of the closest multiple.
+     * @throws ArithmeticException Attempted to divide by zero.
+     * @throws ArithmeticException The result of integer division (the
+     * quotient, not the remainder) wouldn't fit the given precision.
      */
     public DecimalFraction RemainderNear(
       DecimalFraction divisor, PrecisionContext ctx) {
@@ -1263,11 +1339,13 @@ bigrem=divrem[1];
     }
 
     /**
-     * Gets the largest value that's smaller than the given value.
+     * Finds the largest value that's smaller than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
-     * is ignored. No flags will be set from thisValue operation even if HasFlags
+     * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
+     * @return Returns the largest value that's less than the given value.
+     * Returns null if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
@@ -1279,10 +1357,10 @@ bigrem=divrem[1];
 
 
     /**
-     * Gets the smallest value that's greater than the given value.
+     * Finds the smallest value that's greater than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
-     * is ignored. No flags will be set from thisValue operation even if HasFlags
+     * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
      * @return Returns the smallest value that's greater than the given
      * value. Returns null if the result is positive infinity.
@@ -1298,9 +1376,12 @@ bigrem=divrem[1];
     /**
      * 
      * @param otherValue A DecimalFraction object.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context object to control the precision and
+     * exponent range of the result. The rounding mode from this context
+     * is ignored. No flags will be set from this operation even if HasFlags
+     * of the context is true.
      */
-public DecimalFraction NextToward(
+    public DecimalFraction NextToward(
       DecimalFraction otherValue,
       PrecisionContext ctx
      ) {
@@ -1335,17 +1416,6 @@ public DecimalFraction NextToward(
       return math.Divide(this, divisor, ctx);
     }
 
-    /**
-     * Divides two DecimalFraction objects.
-     * @param divisor A DecimalFraction object.
-     * @param exponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return The quotient of the two objects.
-     */
-    public DecimalFraction Divide(
-      DecimalFraction divisor, BigInteger exponent, PrecisionContext ctx) {
-      return math.Divide(this, divisor, exponent, ctx);
-    }
 
     /**
      * Gets the greater value between two decimal fractions.

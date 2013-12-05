@@ -8,7 +8,7 @@
  */
 using System;
 using NUnit.Framework;
-using System.Numerics;
+//using System.Numerics;
 using System.Globalization;
 using PeterO;
 namespace Test {
@@ -38,10 +38,6 @@ namespace Test {
       }
       return new Decimal(x);
     }
-  
-  [Test]
-  public void TestSqrt(){
-  }
   
   
     /// <summary>
@@ -862,9 +858,6 @@ namespace Test {
           TestCommon.AssertSer(
             CBORObject.FromObject(j),
             String.Format(CultureInfo.InvariantCulture, "{0}", j));
-          Assert.AreEqual(
-            CBORObject.FromObject(j),
-            CBORObject.FromObject((BigInteger)j));
           if (j == ranges[i + 1]) break;
           j++;
         }

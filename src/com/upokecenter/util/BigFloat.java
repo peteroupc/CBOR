@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
 
-import java.math.*;
+//import java.math.*;
 
     /**
      * Represents an arbitrary-precision binary floating-point number.
@@ -250,10 +250,11 @@ remainder=divrem[1];
      * part in this value will be discarded when converting to a big integer.
      */
     public BigInteger ToBigInteger() {
-      if (this.getExponent().signum()==0) {
+      int expsign=this.getExponent().signum();
+      if (expsign==0) {
         // Integer
         return this.getMantissa();
-      } else if (this.getExponent().signum()>0) {
+      } else if (expsign > 0) {
         // Integer with trailing zeros
         BigInteger curexp = this.getExponent();
         BigInteger bigmantissa = this.getMantissa();
@@ -261,7 +262,7 @@ remainder=divrem[1];
           return bigmantissa;
         boolean neg = (bigmantissa.signum() < 0);
         if (neg) bigmantissa=bigmantissa.negate();
-        while (curexp.signum()>0 && bigmantissa.signum()!=0) {
+        while (curexp.signum() > 0 && bigmantissa.signum()!=0) {
           int shift = 4096;
           if (curexp.compareTo(BigInteger.valueOf(shift)) < 0) {
             shift = curexp.intValue();
@@ -280,7 +281,7 @@ remainder=divrem[1];
           return bigmantissa;
         boolean neg = (bigmantissa.signum() < 0);
         if (neg) bigmantissa=bigmantissa.negate();
-        while (curexp.signum()<0 && bigmantissa.signum()!=0) {
+        while (curexp.signum() < 0 && bigmantissa.signum()!=0) {
           int shift = 4096;
           if (curexp.compareTo(BigInteger.valueOf(-4096)) > 0) {
             shift = -(curexp.intValue());
@@ -725,7 +726,8 @@ remainder=divrem[1];
       long desiredExponentSmall,
       PrecisionContext ctx
      ) {
-      return Divide(divisor, BigInteger.valueOf(desiredExponentSmall), ctx);
+      BigInteger desexp=BigInteger.valueOf(desiredExponentSmall);
+      return Divide(divisor, desexp, ctx);
     }
 
 
@@ -755,7 +757,8 @@ remainder=divrem[1];
       long desiredExponentSmall,
       Rounding rounding
      ) {
-      return Divide(divisor, BigInteger.valueOf(desiredExponentSmall), new PrecisionContext(rounding));
+      BigInteger desexp=BigInteger.valueOf(desiredExponentSmall);
+      return Divide(divisor, desexp, new PrecisionContext(rounding));
     }
 
 
@@ -917,9 +920,9 @@ remainder=divrem[1];
      * of the result, with the exponent set to 0.
      * @param divisor The divisor.
      * @param ctx A precision context object to control the precision. The
-     * rounding and exponent range settings of thisValue context are ignored.
-     * No flags will be set from thisValue operation even if HasFlags of the
-     * context is true. Can be null.
+     * rounding and exponent range settings of this context are ignored.
+     * No flags will be set from this operation even if HasFlags of the context
+     * is true. Can be null.
      * @return The integer part of the quotient of the two objects. The exponent
      * will be set to 0.
      * @throws ArithmeticException Attempted to divide by zero.
@@ -983,9 +986,9 @@ remainder=divrem[1];
      * to the result.
      * @param divisor The divisor.
      * @param ctx A precision context object to control the rounding mode.
-     * The precision and exponent range settings of thisValue context are
-     * ignored. If HasFlags of the context is true, will also store the flags
-     * resulting from the operation (the flags are in addition to the pre-existing
+     * The precision and exponent range settings of this context are ignored.
+     * If HasFlags of the context is true, will also store the flags resulting
+     * from the operation (the flags are in addition to the pre-existing
      * flags). Can be null, in which case the default rounding mode is HalfEven.
      * @param exponent A BigInteger object.
      * @return The quotient of the two objects. Returns null if the return
@@ -1131,7 +1134,7 @@ remainder=divrem[1];
      * Gets the largest value that's smaller than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
-     * is ignored. No flags will be set from thisValue operation even if HasFlags
+     * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
      * @return Returns the largest value that's smaller than the given value.
      * Returns null if the result is negative infinity.
@@ -1148,7 +1151,7 @@ remainder=divrem[1];
      * Gets the smallest value that's greater than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
-     * is ignored. No flags will be set from thisValue operation even if HasFlags
+     * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
      * @return Returns the smallest value that's greater than the given
      * value. Returns null if the result is positive infinity.

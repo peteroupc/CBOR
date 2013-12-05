@@ -7,7 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-import java.math.*;
+//import java.math.*;
 
   final class MutableBigInteger {
     int[] data;

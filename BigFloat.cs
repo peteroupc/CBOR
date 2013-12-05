@@ -7,7 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-using System.Numerics;
+//using System.Numerics;
 namespace PeterO {
     /// <summary> Represents an arbitrary-precision binary floating-point
     /// number. Consists of an integer mantissa and an integer exponent,
@@ -228,10 +228,11 @@ namespace PeterO {
     /// to a big integer. </summary>
     /// <returns></returns>
     public BigInteger ToBigInteger() {
-      if (this.Exponent == 0) {
+      int expsign=this.Exponent.Sign;
+      if (expsign==0) {
         // Integer
         return this.Mantissa;
-      } else if (this.Exponent > 0) {
+      } else if (expsign > 0) {
         // Integer with trailing zeros
         BigInteger curexp = this.Exponent;
         BigInteger bigmantissa = this.Mantissa;
@@ -239,7 +240,7 @@ namespace PeterO {
           return bigmantissa;
         bool neg = (bigmantissa.Sign < 0);
         if (neg) bigmantissa = -bigmantissa;
-        while (curexp > 0 && !bigmantissa.IsZero) {
+        while (curexp.Sign > 0 && !bigmantissa.IsZero) {
           int shift = 4096;
           if (curexp.CompareTo((BigInteger)shift) < 0) {
             shift = (int)curexp;
@@ -258,7 +259,7 @@ namespace PeterO {
           return bigmantissa;
         bool neg = (bigmantissa.Sign < 0);
         if (neg) bigmantissa = -bigmantissa;
-        while (curexp < 0 && !bigmantissa.IsZero) {
+        while (curexp.Sign < 0 && !bigmantissa.IsZero) {
           int shift = 4096;
           if (curexp.CompareTo((BigInteger)(-4096)) > 0) {
             shift = -((int)curexp);
@@ -693,7 +694,8 @@ namespace PeterO {
       long desiredExponentSmall,
       PrecisionContext ctx
      ) {
-      return Divide(divisor, new BigInteger(desiredExponentSmall), ctx);
+      BigInteger desexp=(BigInteger)desiredExponentSmall;
+      return Divide(divisor, desexp, ctx);
     }
 
 
@@ -723,7 +725,8 @@ namespace PeterO {
       long desiredExponentSmall,
       Rounding rounding
      ) {
-      return Divide(divisor, new BigInteger(desiredExponentSmall), new PrecisionContext(rounding));
+      BigInteger desexp=(BigInteger)desiredExponentSmall;
+      return Divide(divisor, desexp, new PrecisionContext(rounding));
     }
 
 
@@ -878,9 +881,9 @@ namespace PeterO {
     /// integer part of the result, with the exponent set to 0.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision.
-    /// The rounding and exponent range settings of thisValue context are
-    /// ignored. No flags will be set from thisValue operation even if HasFlags
-    /// of the context is true. Can be null.</param>
+    /// The rounding and exponent range settings of this context are ignored.
+    /// No flags will be set from this operation even if HasFlags of the context
+    /// is true. Can be null.</param>
     /// <returns>The integer part of the quotient of the two objects. The
     /// exponent will be set to 0.</returns>
     /// <remarks/><exception cref='DivideByZeroException'>Attempted
@@ -943,11 +946,10 @@ namespace PeterO {
     /// exponent to the result.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the rounding
-    /// mode. The precision and exponent range settings of thisValue context
-    /// are ignored. If HasFlags of the context is true, will also store the
-    /// flags resulting from the operation (the flags are in addition to the
-    /// pre-existing flags). Can be null, in which case the default rounding
-    /// mode is HalfEven.</param>
+    /// mode. The precision and exponent range settings of this context are
+    /// ignored. If HasFlags of the context is true, will also store the flags
+    /// resulting from the operation (the flags are in addition to the pre-existing
+    /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
     /// <returns>The quotient of the two objects. Returns null if the return
     /// value would overflow the exponent range. A caller can handle a null
     /// return value by treating it as positive infinity if both operands
@@ -1082,7 +1084,7 @@ namespace PeterO {
     /// <summary> Gets the largest value that's smaller than the given value.</summary>
     /// <param name='ctx'>A precision context object to control the precision
     /// and exponent range of the result. The rounding mode from this context
-    /// is ignored. No flags will be set from thisValue operation even if HasFlags
+    /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
     /// <returns>Returns the largest value that's smaller than the given
     /// value. Returns null if the result is negative infinity.</returns>
@@ -1097,7 +1099,7 @@ namespace PeterO {
     /// <summary> Gets the smallest value that's greater than the given value.</summary>
     /// <param name='ctx'>A precision context object to control the precision
     /// and exponent range of the result. The rounding mode from this context
-    /// is ignored. No flags will be set from thisValue operation even if HasFlags
+    /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
     /// <returns>Returns the smallest value that's greater than the given
     /// value. Returns null if the result is positive infinity.</returns>

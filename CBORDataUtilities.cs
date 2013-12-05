@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 using System.Text;
 using System.IO;
-using System.Numerics;
+//using System.Numerics;
 using System.Globalization;
 namespace PeterO {
     /// <summary> Contains methods useful for reading and writing data,

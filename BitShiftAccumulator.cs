@@ -7,7 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-using System.Numerics;
+//using System.Numerics;
 namespace PeterO {
   internal sealed class BitShiftAccumulator : IShiftAccumulator {
     int bitLeftmost;

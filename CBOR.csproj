@@ -19,6 +19,7 @@
     <DocumentationFile>bin\Release\CBOR.xml</DocumentationFile>
     <NoWarn>1587</NoWarn>
     <CodeAnalysisRules>-Microsoft.Globalization#CA1303;-Microsoft.Naming#CA1704;-Microsoft.Naming#CA1705;-Microsoft.Naming#CA1718</CodeAnalysisRules>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -54,10 +55,11 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigFloat.cs" />
+    <Compile Include="BigIntegerExtra.cs" />
+    <Compile Include="BigInteger.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
     <Compile Include="FastInteger2.cs" />
     <Compile Include="IRadixMathHelper.cs" />
@@ -102,6 +104,40 @@
     <Content Include="ProfilingSessions\Session20131124_152613.sdps" />
     <Content Include="ProfilingSessions\Session20131127_134010.sdps" />
     <Content Include="ProfilingSessions\Session20131127_154330.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_014910.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_020611.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_044617.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_044702.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_053907.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_055629.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_061812.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_063234.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_070040.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_120927.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_124149.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_124506.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_134246.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_140550.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_145143.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_145226.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_182203.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_184233.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_184921.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_202652.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_204157.sdps" />
+    <Content Include="ProfilingSessions\Session20131201_205426.sdps" />
+    <Content Include="ProfilingSessions\Session20131202_014946.sdps" />
+    <Content Include="ProfilingSessions\Session20131202_021227.sdps" />
+    <Content Include="ProfilingSessions\Session20131202_022655.sdps" />
+    <Content Include="ProfilingSessions\Session20131202_023401.sdps" />
+    <Content Include="ProfilingSessions\Session20131202_023602.sdps" />
+    <Content Include="ProfilingSessions\Session20131202_045254.sdps" />
+    <Content Include="ProfilingSessions\Session20131202_063428.sdps" />
+    <Content Include="ProfilingSessions\Session20131202_071016.sdps" />
+    <Content Include="ProfilingSessions\Session20131205_055508.sdps" />
+    <Content Include="ProfilingSessions\Session20131205_060207.sdps" />
+    <Content Include="ProfilingSessions\Session20131205_061512.sdps" />
+    <Content Include="ProfilingSessions\Session20131205_062337.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

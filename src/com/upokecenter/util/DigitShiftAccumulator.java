@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
 
-import java.math.*;
+//import java.math.*;
 
   final class DigitShiftAccumulator implements IShiftAccumulator {
     int bitLeftmost;
@@ -151,7 +151,7 @@ public DigitShiftAccumulator(long longInt) {
         knownBitLength = 1;
         return;
       }
-      String str = shiftedBigInt.toString();
+      String str = shiftedBigInt.toString(); // TODO
       // NOTE: Will be 1 if the value is 0
       long digitLength = str.length();
       long bitDiff = 0;
@@ -205,7 +205,7 @@ public DigitShiftAccumulator(long longInt) {
      * the big integer being shifted is positive.
      */
     private void ShiftToBitsBig(long digits) {
-      String str = shiftedBigInt.toString();
+      String str = shiftedBigInt.toString(); // TODO
       // NOTE: Will be 1 if the value is 0
       long digitLength = str.length();
       knownBitLength = digitLength;
@@ -311,7 +311,7 @@ public DigitShiftAccumulator(long longInt) {
         }
         return kb == 0 ? 1 : kb;
       } else {
-        String str = shiftedBigInt.toString();
+        String str = shiftedBigInt.toString(); // TODO
         return str.length();
       }
     }

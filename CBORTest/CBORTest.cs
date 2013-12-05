@@ -7,20 +7,20 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Globalization;
-using System.Numerics;
+//using System.Numerics;
 using System.IO;
 using PeterO;
 using System.Text;
 using NUnit.Framework;
 namespace Test {
-    /// <summary>
-    /// </summary>
-    /// <remarks/>
-    /// <returns>
-    /// </returns>
-    /// <param name='r'>
-    /// A FastRandom object.</param>
-[TestFixture]
+  /// <summary>
+  /// </summary>
+  /// <remarks/>
+  /// <returns>
+  /// </returns>
+  /// <param name='r'>
+  /// A FastRandom object.</param>
+  [TestFixture]
   public class CBORTest{
     private static void TestBigFloatDoubleCore(double d, string s) {
       double oldd = d;
@@ -103,7 +103,7 @@ namespace Test {
       return DecimalFraction.FromString(RandomDecimalString(r));
     }
     public static BigInteger RandomBigInteger(FastRandom r) {
-      return BigInteger.Parse(RandomBigIntString(r),CultureInfo.InvariantCulture);
+      return TestCommon.BigIntParse(RandomBigIntString(r));
     }
     public static BigFloat RandomBigFloat(FastRandom r) {
       return new BigFloat(RandomBigInteger(r),r.NextValue(400)-200);
@@ -159,7 +159,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestAdd() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; i++) {
@@ -169,8 +169,7 @@ namespace Test {
         DecimalFraction cmpCobj = CBORObject.Addition(o1,o2).AsDecimalFraction();
         if (cmpDecFrac.CompareTo(cmpCobj)!=0) {
           Assert.AreEqual(0,cmpDecFrac.CompareTo(cmpCobj),
-                          "Results don't match:\n" + o1.ToString() + " and\n" + o2.ToString() + "\nOR\n" +
-                          o1.AsDecimalFraction().ToString() + " and\n" + o2.AsDecimalFraction().ToString());
+                          ObjectMessages(o1,o2,"Results don't match"));
         }
         TestCommon.AssertRoundTrip(o1);
         TestCommon.AssertRoundTrip(o2);
@@ -181,7 +180,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestSubtract() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; i++) {
@@ -191,8 +190,7 @@ namespace Test {
         DecimalFraction cmpCobj = CBORObject.Subtract(o1,o2).AsDecimalFraction();
         if (cmpDecFrac.CompareTo(cmpCobj)!=0) {
           Assert.AreEqual(0,cmpDecFrac.CompareTo(cmpCobj),
-                          "Results don't match:\n" + o1.ToString() + " and\n" + o2.ToString() + "\nOR\n" +
-                          o1.AsDecimalFraction().ToString() + " and\n" + o2.AsDecimalFraction().ToString());
+                          ObjectMessages(o1,o2,"Results don't match"));
         }
         TestCommon.AssertRoundTrip(o1);
         TestCommon.AssertRoundTrip(o2);
@@ -201,9 +199,11 @@ namespace Test {
     private static string ObjectMessages(CBORObject o1, CBORObject o2, String s){
       if(o1.Type== CBORType.Number && o2.Type== CBORType.Number){
         return s+":\n" + o1.ToString() + " and\n" + o2.ToString()+"\nOR\n"+
-          o1.AsDecimalFraction().ToString() + " and\n" + o2.AsDecimalFraction().ToString();
+          o1.AsDecimalFraction().ToString() + " and\n" + o2.AsDecimalFraction().ToString()+"\nOR\n"+
+          "AddSubCompare("+ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2)+");";
       } else {
-        return s+":\n" + o1.ToString() + " and\n" + o2.ToString();
+        return s+":\n" + o1.ToString() + " and\n" + o2.ToString()+"\nOR\n"+
+          ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
       }
     }
     
@@ -227,24 +227,90 @@ namespace Test {
       return cmp;
     }
     
+    public static string ToByteArrayString(CBORObject obj){
+      byte[] bytes=obj.EncodeToBytes();
+      StringBuilder sb=new StringBuilder();
+      string hex="0123456789ABCDEF";
+      sb.Append("CBORObject.DecodeFromBytes(new byte[]{");
+      for(int i=0;i<bytes.Length;i++){
+        if(i>0)
+          sb.Append(",");
+        if((bytes[i]&0x80)!=0)
+          sb.Append("(byte)0x");
+        else
+          sb.Append("0x");
+        sb.Append(hex[(bytes[i]>>4)&0xF]);
+        sb.Append(hex[(bytes[i])&0xF]);
+      }
+      sb.Append("})");
+      return sb.ToString();
+    }
+    
+    [Test]
+    public void TestDecFracCompareIntegerVsBigFraction(){
+      DecimalFraction a=DecimalFraction.FromString("7.004689238424764477580371752455515117709288087566222056632084784688080253355047487262563521426272927783429622650146484375");
+      DecimalFraction b=DecimalFraction.FromString("5");
+      Assert.AreEqual(1,a.CompareTo(b));
+      Assert.AreEqual(-1,b.CompareTo(a));
+      CBORObject o1=null;
+      CBORObject o2=null;
+      o1=CBORObject.DecodeFromBytes(new byte[]{(byte)0xFB,(byte)0x8B,0x44,(byte)0xF2,(byte)0xA9,0x0C,0x27,0x42,0x28});
+      o2=CBORObject.DecodeFromBytes(new byte[]{(byte)0xC5,(byte)0x82,0x38,(byte)0xA4,(byte)0xC3,0x50,0x02,(byte)0x98,
+                                      (byte)0xC5,(byte)0xA8,0x02,(byte)0xC1,(byte)0xF6,(byte)0xC0,0x1A,(byte)0xBE,0x08,
+                                      0x04,(byte)0x86,(byte)0x99,0x3E,(byte)0xF1});
+      AddSubCompare(o1,o2);
+    }
+    
+    private static void CompareDecimals(CBORObject o1, CBORObject o2){
+      int cmpDecFrac = o1.AsDecimalFraction().CompareTo(o2.AsDecimalFraction());
+      int cmpCobj = CompareTestReciprocal(o1,o2);
+      if (cmpDecFrac != cmpCobj) {
+        Assert.AreEqual(cmpDecFrac, cmpCobj,ObjectMessages(o1,o2,"Compare: Results don't match"));
+      }
+      TestCommon.AssertRoundTrip(o1);
+      TestCommon.AssertRoundTrip(o2);
+    }
+    
+    private void AddSubCompare(CBORObject o1, CBORObject o2){
+      DecimalFraction cmpDecFrac = o1.AsDecimalFraction().Add(o2.AsDecimalFraction());
+      DecimalFraction cmpCobj = CBORObject.Addition(o1,o2).AsDecimalFraction();
+      if (cmpDecFrac.CompareTo(cmpCobj)!=0) {
+        Assert.AreEqual(0,cmpDecFrac.CompareTo(cmpCobj),
+                        ObjectMessages(o1,o2,"Add: Results don't match:\n"+cmpDecFrac+" vs\n"+cmpCobj));
+      }
+      cmpDecFrac = o1.AsDecimalFraction().Subtract(o2.AsDecimalFraction());
+      cmpCobj = CBORObject.Subtract(o1,o2).AsDecimalFraction();
+      if (cmpDecFrac.CompareTo(cmpCobj)!=0) {
+        Assert.AreEqual(0,cmpDecFrac.CompareTo(cmpCobj),
+                        ObjectMessages(o1,o2,"Subtract: Results don't match:\n"+cmpDecFrac+" vs\n"+cmpCobj));
+      }
+      CompareDecimals(o1,o2);
+    }
+    
+    [Test]
+    public void TestCompareB(){
+      AddSubCompare(CBORObject.DecodeFromBytes(new byte[]{(byte)0xC5,(byte)0x82,0x38,(byte)0xC7,0x3B,0x00,0x00,0x08,(byte)0xBF,(byte)0xDA,(byte)0xAF,0x73,0x46}),
+                    CBORObject.DecodeFromBytes(new byte[]{0x3B,0x5A,(byte)0x9B,(byte)0x9A,(byte)0x9C,(byte)0xB4,(byte)0x95,(byte)0xBF,0x71}));
+      AddSubCompare(CBORObject.DecodeFromBytes(new byte[]{0x1A,(byte)0xBB,0x0C,(byte)0xF7,0x52}),
+                    CBORObject.DecodeFromBytes(new byte[]{0x1A,(byte)0x82,0x00,(byte)0xBF,(byte)0xF9}));
+      AddSubCompare(CBORObject.DecodeFromBytes(new byte[]{(byte)0xFA,0x1F,(byte)0x80,(byte)0xDB,(byte)0x9B}),
+                    CBORObject.DecodeFromBytes(new byte[]{(byte)0xFB,0x31,(byte)0x90,(byte)0xEA,0x16,(byte)0xBE,(byte)0x80,0x0B,0x37}));
+      AddSubCompare(CBORObject.DecodeFromBytes(new byte[]{(byte)0xFB,0x3C,0x00,(byte)0xCF,(byte)0xB6,(byte)0xBD,(byte)0xFF,0x37,0x38}),
+                    CBORObject.DecodeFromBytes(new byte[]{(byte)0xFA,0x30,(byte)0x80,0x75,0x63}));
+    }
+    
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestCompare() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 3000; i++) {
+      for (int i = 0; i < 5000; i++) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
-        int cmpDecFrac = o1.AsDecimalFraction().CompareTo(o2.AsDecimalFraction());
-        int cmpCobj = CompareTestReciprocal(o1,o2);
-        if (cmpDecFrac != cmpCobj) {
-          Assert.AreEqual(cmpDecFrac, cmpCobj,ObjectMessages(o1,o2,"Results don't match"));
-        }
-        TestCommon.AssertRoundTrip(o1);
-        TestCommon.AssertRoundTrip(o2);
+        CompareDecimals(o1,o2);
       }
       for (int i = 0; i < 50; i++) {
         CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
@@ -290,7 +356,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestParseDecimalStrings() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 3000; i++) {
@@ -303,7 +369,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 200; i++) {
@@ -336,7 +402,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestBigFloatSingle() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 255; i++) { // Try a random float with a given exponent
@@ -351,7 +417,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestBigFloatDouble() {
       TestBigFloatDoubleCore(3.5, "3.5");
       TestBigFloatDoubleCore(7, "7");
@@ -376,7 +442,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestJSONSurrogates(){
       try { CBORObject.FromJSONString("[\"\ud800\udc00\"]"); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
       try { CBORObject.FromJSONString("[\"\\ud800\\udc00\"]"); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
@@ -391,7 +457,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestJSONEscapedChars() {
       CBORObject o = CBORObject.FromJSONString(
         "[\"\\r\\n\\u0006\\\\\\\"\"]");
@@ -406,7 +472,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestCBORFromArray() {
       CBORObject o = CBORObject.FromObject(new int[] { 1, 2, 3 });
       Assert.AreEqual(3, o.Count);
@@ -420,7 +486,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestJSON() {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,3]");
@@ -444,7 +510,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestByte() {
       for (int i = 0; i <= 255; i++) {
         TestCommon.AssertSer(
@@ -467,7 +533,7 @@ namespace Test {
     /// <returns>
     /// </returns>
     /// <remarks/>
-public void DoTestReadUtf8(byte[] bytes,
+    public void DoTestReadUtf8(byte[] bytes,
                                int expectedRet, string expectedString,
                                int noReplaceRet, string noReplaceString
                               ) {
@@ -491,7 +557,7 @@ public void DoTestReadUtf8(byte[] bytes,
     /// <returns>
     /// </returns>
     /// <remarks/>
-public void DoTestReadUtf8(byte[] bytes, int length,
+    public void DoTestReadUtf8(byte[] bytes, int length,
                                int expectedRet, string expectedString,
                                int noReplaceRet, string noReplaceString
                               ) {
@@ -535,7 +601,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestDecFracOverflow() {
       try { CBORObject.FromObject(Single.PositiveInfinity).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.FromObject(Single.NegativeInfinity).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
@@ -555,7 +621,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestFPToBigInteger() {
       Assert.AreEqual("0", CBORObject.FromObject((float)0.75).AsBigInteger().ToString());
       Assert.AreEqual("0", CBORObject.FromObject((float)0.99).AsBigInteger().ToString());
@@ -583,7 +649,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestDecFracFP() {
       Assert.AreEqual("0.75", DecimalFraction.FromDouble(0.75).ToString());
       Assert.AreEqual("0.5", DecimalFraction.FromDouble(0.5).ToString());
@@ -601,7 +667,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void ScaleTest() {
       Assert.AreEqual(-(BigInteger)7, DecimalFraction.FromString("1.265e-4").Exponent);
       Assert.AreEqual(-(BigInteger)4, DecimalFraction.FromString("0.000E-1").Exponent);
@@ -659,7 +725,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestReadUtf8() {
       DoTestReadUtf8(new byte[] { 0x20, 0x20, 0x20 },
                      0, "   ", 0, "   ");
@@ -718,7 +784,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestArray() {
       CBORObject cbor = CBORObject.FromJSONString("[]");
       cbor.Add(CBORObject.FromObject(3));
@@ -732,7 +798,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestMap() {
       CBORObject cbor = CBORObject.FromJSONString("{\"a\":2,\"b\":4}");
       Assert.AreEqual(2, cbor.Count);
@@ -765,7 +831,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
         new byte[] { 0x7F, 0x61, 0x20, 0x61, 0x20, 0xFF });
@@ -810,7 +876,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F, 0x41, 0x20, 0x41, 0x20, 0xFF });
@@ -833,7 +899,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void ZeroStringTests2() {
       Assert.AreEqual("0.0001265", DecimalFraction.FromString("1.265e-4").ToString());
       Assert.AreEqual("0.0001265", DecimalFraction.FromString("1.265e-4").ToEngineeringString());
@@ -1579,7 +1645,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void FromDoubleTest() {
       Assert.AreEqual("0.213299999999999989608312489508534781634807586669921875", DecimalFraction.FromDouble(0.2133).ToString());
       Assert.AreEqual("2.29360000000000010330982488752915582352898127282969653606414794921875E-7", DecimalFraction.FromDouble(2.2936E-7).ToString());
@@ -1687,7 +1753,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void ToPlainStringTest() {
       Assert.AreEqual("277220000000", DecimalFraction.FromString("277.22E9").ToPlainString());
       Assert.AreEqual("3911900", DecimalFraction.FromString("391.19E4").ToPlainString());
@@ -1795,7 +1861,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void ToEngineeringStringTest() {
       Assert.AreEqual("8.912", DecimalFraction.FromString("89.12E-1").ToEngineeringString());
       Assert.AreEqual("0.024231", DecimalFraction.FromString("242.31E-4").ToEngineeringString());
@@ -1903,7 +1969,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestDecimalsEquivalent() {
       AssertDecimalsEquivalent("1.310E-7", "131.0E-9");
       AssertDecimalsEquivalent("0.001231", "123.1E-5");
@@ -2012,7 +2078,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestSubtractNonFinite(){
       try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(99.74439f)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(0.04503661680757691d)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
@@ -2032,25 +2098,25 @@ public void DoTestReadUtf8(byte[] bytes, int length,
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(-4742894673080640195L)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(-8.057984695058738E-10d)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(-6832707275063219586L)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(BigInteger.Parse("3037587108614072", NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(TestCommon.BigIntParse("3037587108614072"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(DecimalFraction.FromString("-21687"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(21.02954f)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(-280.74258f)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(3.295564645540288E-15d)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(-1.8643148756498468E-14d)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(DecimalFraction.FromString("56E-9"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(BigInteger.Parse("06842884252556766213171069781", NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(TestCommon.BigIntParse("06842884252556766213171069781"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(-6381263349646471084L)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(9127378784365184230L)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(BigInteger.Parse("300921783316", NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(BigInteger.Parse("-5806763724610384900094490266237212718", NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(TestCommon.BigIntParse("300921783316"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(TestCommon.BigIntParse("-5806763724610384900094490266237212718"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
     }
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestAsByte(){
       for(int i=0;i<255;i++){
         Assert.AreEqual((byte)i,CBORObject.FromObject(i).AsByte());
@@ -2073,7 +2139,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestBigFloatDecFrac() {
       BigFloat bf;
       bf = new BigFloat(20);
@@ -2094,14 +2160,14 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     }
     [Test]
     public void TestDecFracToSingleDoubleHighExponents(){
+      if(-5.731800748367376E125d!=DecimalFraction.FromString("-57318007483673759194E+106").ToDouble())
+        Assert.Fail("decfrac double -57318007483673759194E+106\nExpected: -5.731800748367376E125d\nWas: "+DecimalFraction.FromString("-57318007483673759194E+106").ToDouble());
       if(914323.0f!=DecimalFraction.FromString("914323").ToSingle())
         Assert.Fail("decfrac single 914323\nExpected: 914323.0f\nWas: "+DecimalFraction.FromString("914323").ToSingle());
       if(914323.0d!=DecimalFraction.FromString("914323").ToDouble())
         Assert.Fail("decfrac double 914323\nExpected: 914323.0d\nWas: "+DecimalFraction.FromString("914323").ToDouble());
       if(Single.NegativeInfinity!=DecimalFraction.FromString("-57318007483673759194E+106").ToSingle())
         Assert.Fail("decfrac single -57318007483673759194E+106\nExpected: Single.NegativeInfinity\nWas: "+DecimalFraction.FromString("-57318007483673759194E+106").ToSingle());
-      if(-5.731800748367376E125d!=DecimalFraction.FromString("-57318007483673759194E+106").ToDouble())
-        Assert.Fail("decfrac double -57318007483673759194E+106\nExpected: -5.731800748367376E125d\nWas: "+DecimalFraction.FromString("-57318007483673759194E+106").ToDouble());
       if(0.0f!=DecimalFraction.FromString("420685230629E-264").ToSingle())
         Assert.Fail("decfrac single 420685230629E-264\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("420685230629E-264").ToSingle());
       if(4.20685230629E-253d!=DecimalFraction.FromString("420685230629E-264").ToDouble())
@@ -2501,7 +2567,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestDecFracIntegersToSingleDouble(){
       if(-5.7703064E7f!=DecimalFraction.FromString("-57703066").ToSingle())
         Assert.Fail("decfrac single -57703066\nExpected: -5.7703064E7f\nWas: "+DecimalFraction.FromString("-57703066").ToSingle());
@@ -2910,7 +2976,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestDecFracToSingleDouble(){
       if(-4348.0f!=DecimalFraction.FromString("-4348").ToSingle())
         Assert.Fail("decfrac single -4348\nExpected: -4348.0f\nWas: "+DecimalFraction.FromString("-4348").ToSingle());
@@ -3318,7 +3384,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestDecimalFrac() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0x3, 0x1a, 1, 2, 3, 4 });
@@ -3334,7 +3400,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
       CBORObject dbl2 = CBORObject.FromObject((double)Int32.MaxValue);
@@ -3354,9 +3420,9 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestBigTag() {
-      CBORObject.FromObjectAndTag(CBORObject.Null, (BigInteger)UInt64.MaxValue);
+      CBORObject.FromObjectAndTag(CBORObject.Null, (BigInteger.One<<64)-BigInteger.One);
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
@@ -3369,7 +3435,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o=TestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0x3, 0xc2, 0x41, 1 });
@@ -3380,7 +3446,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestShort() {
       for (int i = Int16.MinValue; i <= Int16.MaxValue; i++) {
         TestCommon.AssertSer(
@@ -3393,7 +3459,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestByteArray() {
       TestCommon.AssertSer(
         CBORObject.FromObject(new byte[] { 0x20, 0x78 }), "h'2078'");
@@ -3404,7 +3470,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestBigNumBytes(){
       CBORObject o=null;
       o=TestCommon.FromBytesTestAB(new byte[]{0xc2,0x41,0x88});
@@ -3422,7 +3488,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestTaggedUntagged(){
       for(int i=200;i<1000;i++){
         CBORObject o,o2;
@@ -3485,15 +3551,51 @@ public void DoTestReadUtf8(byte[] bytes, int length,
       }
     }
     
+    public void AssertBigIntString(string s, BigInteger bi){
+      Assert.AreEqual(s,bi.ToString());
+    }
+    public void AssertAdd(BigInteger bi, BigInteger bi2, string s){
+      AssertBigIntString(s,bi+(BigInteger)bi2);
+      AssertBigIntString(s,bi2+(BigInteger)bi);
+      BigInteger negbi=-bi;
+      BigInteger negbi2=-bi2;
+      AssertBigIntString(s,bi-(BigInteger)negbi2);
+      AssertBigIntString(s,bi2-(BigInteger)negbi);
+    }
+    
+    [Test]
+    public void TestBigIntAddSub(){
+      BigInteger posSmall=(BigInteger)5;
+      BigInteger negSmall=-(BigInteger)5;
+      BigInteger posLarge=(BigInteger)5555555;
+      BigInteger negLarge=-(BigInteger)5555555;
+      AssertAdd(posSmall,posSmall,"10");
+      AssertAdd(posSmall,negSmall,"0");
+      AssertAdd(posSmall,posLarge,"5555560");
+      AssertAdd(posSmall,negLarge,"-5555550");
+      AssertAdd(negSmall,negSmall,"-10");
+      AssertAdd(negSmall,posLarge,"5555550");
+      AssertAdd(negSmall,negLarge,"-5555560");
+      AssertAdd(posLarge,posLarge,"11111110");
+      AssertAdd(posLarge,negLarge,"0");
+      AssertAdd(negLarge,negLarge,"-11111110");
+    }
+    
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestBigInteger() {
       BigInteger bi = (BigInteger)3;
+      AssertBigIntString("3",bi);
       BigInteger negseven = (BigInteger)(-7);
+      AssertBigIntString("-7",negseven);
+      BigInteger other = (BigInteger)(-898989);
+      AssertBigIntString("-898989",other);
+      other=(BigInteger)898989;
+      AssertBigIntString("898989",other);
       for (int i = 0; i < 500; i++) {
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),
@@ -3503,12 +3605,12 @@ public void DoTestReadUtf8(byte[] bytes, int length,
       BigInteger[] ranges = new BigInteger[]{
         (BigInteger)Int64.MinValue-(BigInteger)512,
         (BigInteger)Int64.MinValue+(BigInteger)512,
-        (BigInteger)UInt64.MinValue-(BigInteger)512,
-        (BigInteger)UInt64.MinValue+(BigInteger)512,
+        BigInteger.Zero-(BigInteger)512,
+        BigInteger.Zero+(BigInteger)512,
         (BigInteger)Int64.MaxValue-(BigInteger)512,
         (BigInteger)Int64.MaxValue+(BigInteger)512,
-        (BigInteger)UInt64.MaxValue-(BigInteger)512,
-        (BigInteger)UInt64.MaxValue+(BigInteger)512,
+        ((BigInteger.One<<64)-BigInteger.One)-(BigInteger)512,
+        ((BigInteger.One<<64)-BigInteger.One)+(BigInteger)512,
       };
       for (int i = 0; i < ranges.Length; i += 2) {
         BigInteger bigintTemp = ranges[i];
@@ -3526,7 +3628,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestLong() {
       long[] ranges = new long[]{
         -65539,65539,
@@ -3557,7 +3659,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestFloat() {
       TestCommon.AssertSer(CBORObject.FromObject(Single.PositiveInfinity),
                            "Infinity");
@@ -3576,7 +3678,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestCodePointCompare() {
       Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
       Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
@@ -3589,7 +3691,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestSimpleValues() {
       TestCommon.AssertSer(CBORObject.FromObject(true),
                            "true");
@@ -3603,7 +3705,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestGetUtf8Length() {
       try { DataUtilities.GetUtf8Length(null, true); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { DataUtilities.GetUtf8Length(null, false); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
@@ -3618,7 +3720,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestDouble() {
       if(!CBORObject.FromObject(Double.PositiveInfinity).IsPositiveInfinity())
         Assert.Fail("Not positive infinity");
@@ -3644,9 +3746,9 @@ public void DoTestReadUtf8(byte[] bytes, int length,
     /// <returns>
     /// </returns>
     /// <remarks/>
-[Test]
+    [Test]
     public void TestTags() {
-      BigInteger maxuint = (BigInteger)UInt64.MaxValue;
+      BigInteger maxuint = ((BigInteger.One<<64)-BigInteger.One);
       BigInteger[] ranges = new BigInteger[]{
         (BigInteger)6,
         (BigInteger)65539,
@@ -3654,7 +3756,7 @@ public void DoTestReadUtf8(byte[] bytes, int length,
         (BigInteger)Int32.MaxValue+(BigInteger)500,
         (BigInteger)Int64.MaxValue-(BigInteger)500,
         (BigInteger)Int64.MaxValue+(BigInteger)500,
-        (BigInteger)UInt64.MaxValue-(BigInteger)500,
+        ((BigInteger.One<<64)-BigInteger.One)-(BigInteger)500,
         maxuint,
       };
       for (int i = 0; i < ranges.Length; i += 2) {
@@ -3684,12 +3786,12 @@ public void DoTestReadUtf8(byte[] bytes, int length,
               Assert.AreEqual(bigintTemp + BigInteger.One, bi[0],
                               String.Format(CultureInfo.InvariantCulture,
                                             "Outer tag doesn't match: {0}", obj2));
-            if (!(bi[1] == (BigInteger)bigintTemp))
+            if (!(bi[1].Equals((BigInteger)bigintTemp)))
               Assert.AreEqual(bigintTemp, bi[1],
                               String.Format(CultureInfo.InvariantCulture,
                                             "Inner tag doesn't match: {0}", obj2));
-            if (!(obj2.InnermostTag == (BigInteger)bigintTemp))
-              Assert.AreEqual(bigintTemp, bi[0],
+            if (!(obj2.InnermostTag.Equals((BigInteger)bigintTemp)))
+              Assert.AreEqual(bigintTemp, obj2.InnermostTag,
                               String.Format(CultureInfo.InvariantCulture,
                                             "Innermost tag doesn't match: {0}", obj2));
             TestCommon.AssertSer(

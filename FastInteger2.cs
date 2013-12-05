@@ -7,7 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.Numerics;
+//using System.Numerics;
 namespace PeterO {
     /// <summary> Description of FastInteger2. </summary>
   class FastInteger2 {

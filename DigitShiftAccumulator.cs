@@ -7,7 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-using System.Numerics;
+//using System.Numerics;
 namespace PeterO {
   internal sealed class DigitShiftAccumulator : IShiftAccumulator {
     int bitLeftmost;
@@ -152,8 +152,7 @@ public DigitShiftAccumulator(long longInt) {
         knownBitLength = 1;
         return;
       }
-      String str = shiftedBigInt.ToString(
-        System.Globalization.CultureInfo.InvariantCulture);
+      String str = shiftedBigInt.ToString(); // TODO
       // NOTE: Will be 1 if the value is 0
       long digitLength = str.Length;
       long bitDiff = 0;
@@ -205,8 +204,7 @@ public DigitShiftAccumulator(long longInt) {
     /// and whether the discarded digits to the right of that digit are set.
     /// Assumes that the big integer being shifted is positive. </summary>
     private void ShiftToBitsBig(long digits) {
-      String str = shiftedBigInt.ToString(
-        System.Globalization.CultureInfo.InvariantCulture);
+      String str = shiftedBigInt.ToString(); // TODO
       // NOTE: Will be 1 if the value is 0
       long digitLength = str.Length;
       knownBitLength = digitLength;
@@ -310,8 +308,7 @@ public DigitShiftAccumulator(long longInt) {
         }
         return kb == 0 ? 1 : kb;
       } else {
-        String str = shiftedBigInt.ToString(
-          System.Globalization.CultureInfo.InvariantCulture);
+        String str = shiftedBigInt.ToString(); // TODO
         return str.Length;
       }
     }
