@@ -60,6 +60,7 @@
     <Compile Include="BigFloat.cs" />
     <Compile Include="BigIntegerExtra.cs" />
     <Compile Include="BigInteger.cs" />
+    <Compile Include="CBORException.NOPCL.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
     <Compile Include="FastInteger2.cs" />
     <Compile Include="IRadixMathHelper.cs" />
