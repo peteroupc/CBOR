@@ -249,6 +249,7 @@ at: http://upokecenter.com/d/
       if (eMin.compareTo(eMax) > 0) throw new IllegalArgumentException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
       this.precision = precision;
       this.rounding = rounding;
+      this.hasExponentRange=true;
       this.clampNormalExponents = clampNormalExponents;
       this.eMax = eMax;
       this.eMin = eMin;
@@ -274,4 +275,12 @@ at: http://upokecenter.com/d/
      */
     public static final PrecisionContext Decimal128 =
       new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
+    /**
+     * Precision context for the Common Language Infrastructure (.NET
+     * Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
+     * to round a decimal fraction to this format.
+     */
+    public static final PrecisionContext CliDecimal =
+      new PrecisionContext(96,Rounding.HalfEven,0,28,true);
+    
   }

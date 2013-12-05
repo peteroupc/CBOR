@@ -8,7 +8,9 @@ at: http://upokecenter.com/d/
 using System;
 using System.Runtime.Serialization;
 namespace PeterO {
-    /// <summary> </summary>
+    /// <summary> Specifies the mode to use when "shortening" numbers that
+    /// otherwise can't fit a given number of digits, so that the shortened
+    /// number has about the same value. This "shortening" is known as rounding.</summary>
     /// <remarks/>
   public enum Rounding {
     /// <summary> The fractional part is discarded (the number is truncated).
@@ -39,7 +41,9 @@ namespace PeterO {
     /// <summary> If there is a fractional part and if the last digit before
     /// rounding is 0 or 5, the number is rounded to the closest representable
     /// number away from zero; otherwise the fractional part is discarded.
-    /// In overflow, the fractional part is always discarded. </summary>
+    /// In overflow, the fractional part is always discarded. This rounding
+    /// mode is useful for rounding intermediate results at a slightly higher
+    /// precision than the final precision.</summary>
     ZeroFiveUp,
     /// <summary> Indicates that rounding will not be used. If rounding is
     /// required, the rounding operation will report an error.</summary>

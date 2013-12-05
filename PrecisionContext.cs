@@ -196,8 +196,8 @@ namespace PeterO {
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
-    public PrecisionContext(long precision, Rounding rounding, long eMinSmall, long eMaxSmall) : 
-    this(precision,rounding,eMinSmall,eMaxSmall,false){
+    public PrecisionContext(long precision, Rounding rounding, long eMinSmall, long eMaxSmall) :
+      this(precision,rounding,eMinSmall,eMaxSmall,false){
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
@@ -215,7 +215,7 @@ namespace PeterO {
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
     public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax) :
-    this(precision,rounding,eMin,eMax,false){
+      this(precision,rounding,eMin,eMax,false){
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
@@ -226,6 +226,7 @@ namespace PeterO {
       if (eMin.CompareTo(eMax) > 0) throw new ArgumentException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
       this.precision = precision;
       this.rounding = rounding;
+      this.hasExponentRange=true;
       this.clampNormalExponents = clampNormalExponents;
       this.eMax = eMax;
       this.eMin = eMin;
@@ -246,5 +247,11 @@ namespace PeterO {
     /// </summary>
     public static readonly PrecisionContext Decimal128 =
       new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
+    /// <summary> Precision context for the Common Language Infrastructure
+    /// (.NET Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
+    /// to round a decimal fraction to this format. </summary>
+    public static readonly PrecisionContext CliDecimal =
+      new PrecisionContext(96,Rounding.HalfEven,0,28,true);
+    
   }
 }
