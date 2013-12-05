@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Numerics;
+//using System.Numerics;
 using System.Text;
 namespace PeterO {
     /// <summary> Represents an object in Concise Binary Object Representation
@@ -1001,7 +1001,8 @@ namespace PeterO {
               int low=unchecked((int)((uadditional)&0xFFFFFFFFL));
               int high=unchecked((int)((uadditional>>32)&0xFFFFFFFFL));
               BigInteger bigintAdditional=LowHighToBigInteger(low,high);
-              bigintAdditional = (BigInteger.MinusOne) - (BigInteger)bigintAdditional;
+              bigintAdditional =-BigInteger.One;
+              bigintAdditional-=(BigInteger)bigintAdditional;
               return FromObject(bigintAdditional);
             }
           case 7:
@@ -2327,10 +2328,13 @@ namespace PeterO {
       if ((s) == null) throw new ArgumentNullException("s");
       if (objValue == null) {
         s.WriteByte(0xf6);
-      } else if (objValue is byte[]) {
-        byte[] data = (byte[])objValue;
+        return;
+      } 
+      byte[] data=(objValue as byte[]);
+      if(data!=null) {
         WritePositiveInt(3, data.Length, s);
         s.Write(data, 0, data.Length);
+        return;
       } else if (objValue is IList<CBORObject>) {
         WriteObjectArray((IList<CBORObject>)objValue, s);
       } else if (objValue is IDictionary<CBORObject, CBORObject>) {
@@ -2454,7 +2458,7 @@ namespace PeterO {
             return Convert.ToString((long)this.ThisItem, CultureInfo.InvariantCulture);
           }
           case (CBORObjectType_BigInteger): {
-            return ((BigInteger)this.ThisItem).ToString(CultureInfo.InvariantCulture);
+            return CBORUtilities.BigIntToString((BigInteger)this.ThisItem);
           }
           case (CBORObjectType_DecimalFraction): {
             return ((DecimalFraction)this.ThisItem).ToString();
@@ -2824,8 +2828,10 @@ namespace PeterO {
       if (obj is long) return FromObject((long)obj);
       if (obj is CBORObject) return FromObject((CBORObject)obj);
       if (obj is BigInteger) return FromObject((BigInteger)obj);
-      if (obj is DecimalFraction) return FromObject((DecimalFraction)obj);
-      if (obj is BigFloat) return FromObject((BigFloat)obj);
+      DecimalFraction df=(obj as DecimalFraction);
+      if (df!=null) return FromObject(df);
+      BigFloat bf=(obj as BigFloat);
+      if (bf!=null) return FromObject(bf);
       if (obj is string) return FromObject((string)obj);
       if (obj is int) return FromObject((int)obj);
       if (obj is short) return FromObject((short)obj);
@@ -2841,6 +2847,8 @@ namespace PeterO {
       if (obj is DateTime) return FromObject((DateTime)obj);
       if (obj is double) return FromObject((double)obj);
       if (obj is IList<CBORObject>) return FromObject((IList<CBORObject>)obj);
+      byte[] bytearr=(obj as byte[]);
+      if (bytearr!=null) return FromObject(bytearr);
       if (obj is byte[]) return FromObject((byte[])obj);
       if (obj is int[]) return FromObject((int[])obj);
       if (obj is long[]) return FromObject((long[])obj);
@@ -2861,6 +2869,7 @@ namespace PeterO {
     /// <exception cref='System.ArgumentException'> "bigintTag" is
     /// less than 0 or greater than 2^64-1, or "o"'s type is unsupported.</exception>
     public static CBORObject FromObjectAndTag(Object o, BigInteger bigintTag) {
+      if((bigintTag)==null)throw new ArgumentNullException("bigintTag");
       if ((bigintTag).Sign < 0) throw new ArgumentException(
         "tag not greater or equal to 0 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
       if ((bigintTag).CompareTo(UInt64MaxValue) > 0) throw new ArgumentException(
@@ -2962,7 +2971,7 @@ namespace PeterO {
           sb.Append(Convert.ToString((int)low, CultureInfo.InvariantCulture));
         } else {
           BigInteger bi = LowHighToBigInteger(low, high);
-          sb.Append(bi.ToString(CultureInfo.InvariantCulture));
+          sb.Append(CBORUtilities.BigIntToString(bi));
         }
         sb.Append('(');
         curobject = ((CBORObject)(curobject.item_));
@@ -3047,7 +3056,7 @@ namespace PeterO {
         if (sb == null) return simvalue;
         sb.Append(simvalue);
       } else if (type == CBORObjectType_BigInteger) {
-        simvalue = (((BigInteger)this.ThisItem).ToString(CultureInfo.InvariantCulture));
+        simvalue = CBORUtilities.BigIntToString((BigInteger)this.ThisItem);
         if (sb == null) return simvalue;
         sb.Append(simvalue);
       } else if (type == CBORObjectType_ByteString) {
@@ -3380,7 +3389,7 @@ namespace PeterO {
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    bigintAdditional.ToString(CultureInfo.InvariantCulture) +
+                                    CBORUtilities.BigIntToString(bigintAdditional) +
                                     " is bigger than supported");
           } else if (uadditional > Int32.MaxValue) {
             throw new CBORException("Length of " +
@@ -3428,7 +3437,7 @@ namespace PeterO {
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    bigintAdditional.ToString(CultureInfo.InvariantCulture) +
+                                    CBORUtilities.BigIntToString(bigintAdditional) +
                                     " is bigger than supported");
           } else if (uadditional > Int32.MaxValue) {
             throw new CBORException("Length of " +
@@ -3460,7 +3469,7 @@ namespace PeterO {
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    bigintAdditional.ToString(CultureInfo.InvariantCulture) +
+                                    CBORUtilities.BigIntToString(bigintAdditional) +
                                     " is bigger than supported");
           } else if (uadditional > Int32.MaxValue) {
             throw new CBORException("Length of " +
@@ -3486,7 +3495,7 @@ namespace PeterO {
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    bigintAdditional.ToString(CultureInfo.InvariantCulture) +
+                                    CBORUtilities.BigIntToString(bigintAdditional) +
                                     " is bigger than supported");
           } else if (uadditional > Int32.MaxValue) {
             throw new CBORException("Length of " +

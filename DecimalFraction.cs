@@ -7,7 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-using System.Numerics;
+//using System.Numerics;
 namespace PeterO {
 
     /// <summary> Represents an arbitrary-precision decimal floating-point
@@ -512,8 +512,7 @@ namespace PeterO {
     private string ToStringInternal(int mode) {
       // Using Java's rules for converting DecimalFraction
       // values to a string
-      String mantissaString = this.mantissa.ToString(
-        System.Globalization.CultureInfo.InvariantCulture);
+      String mantissaString = this.mantissa.ToString(); // TODO
       int scaleSign = -this.exponent.Sign;
       if (scaleSign == 0)
         return mantissaString;
@@ -826,7 +825,7 @@ namespace PeterO {
       if (bigintExp.IsZero) {
         // Integer
         return new DecimalFraction(bigintMant);
-      } else if (bigintExp > 0) {
+      } else if (bigintExp.Sign > 0) {
         // Scaled integer
         FastInteger intcurexp = new FastInteger(bigintExp);
         BigInteger bigmantissa = bigintMant;
@@ -850,6 +849,7 @@ namespace PeterO {
         return new DecimalFraction(bigmantissa, bigintExp);
       }
     }
+    
     /// <summary> Converts this value to a string.The format of the return
     /// value is exactly the same as that of the java.math.BigDecimal.toString()
     /// method. </summary>
@@ -915,7 +915,7 @@ namespace PeterO {
     }
 
     /// <summary> Divides this object by another decimal fraction and returns
-    /// the result. </summary>
+    /// the result. When possible, the result will be exact.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>The quotient of the two numbers.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
@@ -990,10 +990,12 @@ namespace PeterO {
     /// A positive number places the cutoff point to the left of the usual decimal
     /// point.</param>
     /// <param name='ctx'>A precision context object to control the rounding
-    /// mode. The precision and exponent range settings of this context are
-    /// ignored. If HasFlags of the context is true, will also store the flags
-    /// resulting from the operation (the flags are in addition to the pre-existing
-    /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
+    /// mode to use if the result must be scaled down to have the same exponent
+    /// as this value. The precision and exponent range settings of this context
+    /// are ignored. If HasFlags of the context is true, will also store the
+    /// flags resulting from the operation (the flags are in addition to the
+    /// pre-existing flags). Can be null, in which case the default rounding
+    /// mode is HalfEven.</param>
     /// <returns>The quotient of the two objects.</returns>
     /// <remarks/><exception cref='DivideByZeroException'>Attempted
     /// to divide by zero.</exception>
@@ -1004,7 +1006,8 @@ namespace PeterO {
       long desiredExponentSmall,
       PrecisionContext ctx
      ) {
-      return Divide(divisor, new BigInteger(desiredExponentSmall), ctx);
+      BigInteger desexp=(BigInteger)desiredExponentSmall;
+      return Divide(divisor, desexp, ctx);
     }
 
 
@@ -1022,18 +1025,24 @@ namespace PeterO {
     /// number places the cutoff point to the right of the usual decimal point.
     /// A positive number places the cutoff point to the left of the usual decimal
     /// point.</param>
-    /// <param name='rounding'>The rounding mode to use when dividing.</param>
+    /// <param name='rounding'>The rounding mode to use if the result must
+    /// be scaled down to have the same exponent as this value.</param>
     /// <remarks/><exception cref='DivideByZeroException'>Attempted
     /// to divide by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
-    /// <returns>The quotient of the two objects.</returns>
+    /// <returns>The quotient of the two objects. Returns null if the return
+    /// value would overflow the exponent range. A caller can handle a null
+    /// return value by treating it as positive infinity if both operands
+    /// have the same sign or as negative infinity if both operands have different
+    /// signs.</returns>
     public DecimalFraction Divide(
       DecimalFraction divisor,
       long desiredExponentSmall,
       Rounding rounding
      ) {
-      return Divide(divisor, new BigInteger(desiredExponentSmall), new PrecisionContext(rounding));
+      BigInteger desexp=(BigInteger)desiredExponentSmall;
+      return Divide(divisor, desexp, new PrecisionContext(rounding));
     }
 
 
@@ -1041,15 +1050,51 @@ namespace PeterO {
 
 
 
-
-
-
-    /// <summary>Divides two DecimalFraction objects.</summary>
+    /// <summary>Divides two DecimalFraction objects and gives the result
+    /// a particular exponent.</summary>
     /// <param name='divisor'>A DecimalFraction object.</param>
-    /// <param name='desiredExponent'>A BigInteger object.</param>
-    /// <param name='rounding'>A Rounding object.</param>
-    /// <returns>The quotient of the two objects.</returns>
-    /// <remarks/>
+    /// <param name='exponent'>The desired exponent. A negative number
+    /// places the cutoff point to the right of the usual decimal point. A positive
+    /// number places the cutoff point to the left of the usual decimal point.</param>
+    /// <param name='ctx'> A precision context to control precision and
+    /// rounding of the result. The exponent range of this context is ignored.
+    /// If HasFlags of the context is true, will also store the flags resulting
+    /// from the operation (the flags are in addition to the pre-existing
+    /// flags). Can be null.</param>
+    /// <returns>The quotient of the two objects. Returns null if the return
+    /// value would overflow the exponent range. A caller can handle a null
+    /// return value by treating it as positive infinity if both operands
+    /// have the same sign or as negative infinity if both operands have different
+    /// signs.</returns>
+    /// <remarks/><exception cref='DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
+    /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
+    /// and the result is not exact.</exception>
+    public DecimalFraction Divide(
+      DecimalFraction divisor, BigInteger exponent, PrecisionContext ctx) {
+      return math.Divide(this, divisor, exponent, ctx);
+    }
+
+
+
+    /// <summary>Divides two DecimalFraction objects, and gives a particular
+    /// exponent to the result.</summary>
+    /// <param name='divisor'>A DecimalFraction object.</param>
+    /// <param name='desiredExponent'>The desired exponent. A negative
+    /// number places the cutoff point to the right of the usual decimal point.
+    /// A positive number places the cutoff point to the left of the usual decimal
+    /// point.</param>
+    /// <param name='rounding'>The rounding mode to use when converting
+    /// the value to use the specified exponent.</param>
+    /// <returns>The quotient of the two objects. Returns null if the return
+    /// value would overflow the exponent range. A caller can handle a null
+    /// return value by treating it as positive infinity if both operands
+    /// have the same sign or as negative infinity if both operands have different
+    /// signs.</returns>
+    /// <remarks/><exception cref='DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
+    /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
+    /// and the result is not exact.</exception>
     public DecimalFraction Divide(
       DecimalFraction divisor,
       BigInteger desiredExponent,
@@ -1060,8 +1105,11 @@ namespace PeterO {
 
 
     /// <summary> </summary>
-    /// <param name='context'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <param name='context'> A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the context
+    /// is true, will also store the flags resulting from the operation (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// <returns>The absolute value of this object.</returns>
     /// <remarks/>
     public DecimalFraction Abs(PrecisionContext context) {
       return Abs().RoundToPrecision(context);
@@ -1076,8 +1124,12 @@ namespace PeterO {
 
 
 
-    /// <summary> </summary>
-    /// <param name='context'>A PrecisionContext object.</param>
+    /// <summary> Returns a decimal fraction with the same value as this object
+    /// but with the sign reversed.</summary>
+    /// <param name='context'> A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the context
+    /// is true, will also store the flags resulting from the operation (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
     /// <returns></returns>
     /// <remarks/>
     public DecimalFraction Negate(PrecisionContext context) {
@@ -1114,18 +1166,12 @@ namespace PeterO {
     }
 
 
-
-
-
-
-
-
-
-
-    /// <summary>Subtracts a DecimalFraction object from another DecimalFraction
-    /// object.</summary>
+    /// <summary>Subtracts a DecimalFraction object from this instance.</summary>
     /// <param name='decfrac'>A DecimalFraction object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The difference of the two objects.</returns>
     /// <remarks/>
     public DecimalFraction Subtract(DecimalFraction decfrac, PrecisionContext ctx) {
@@ -1184,9 +1230,9 @@ namespace PeterO {
     /// integer part of the result, with the exponent set to 0.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision.
-    /// The rounding and exponent range settings of thisValue context are
-    /// ignored. No flags will be set from thisValue operation even if HasFlags
-    /// of the context is true. Can be null.</param>
+    /// The rounding and exponent range settings of this context are ignored.
+    /// No flags will be set from this operation even if HasFlags of the context
+    /// is true. Can be null.</param>
     /// <returns>The integer part of the quotient of the two objects. The
     /// exponent will be set to 0.</returns>
     /// <remarks/><exception cref='DivideByZeroException'>Attempted
@@ -1199,31 +1245,63 @@ namespace PeterO {
     }
     
     /// <summary>Finds the remainder that results when dividing two DecimalFraction
-    /// objects.</summary>
-    /// <param name='divisor'>A DecimalFraction object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// objects. The remainder is the value that remains when the absolute
+    /// value of this object is divided by the absolute value of the other object;
+    /// the remainder has the same sign (positive or negative) as this object.</summary>
+    /// <param name='divisor'>The divisor.</param>
+    /// <param name='ctx'>A precision context object to control the precision.
+    /// The rounding and exponent range settings of this context are ignored.
+    /// No flags will be set from this operation even if HasFlags of the context
+    /// is true. Can be null.</param>
     /// <returns>The remainder of the two objects.</returns>
-    /// <remarks/>
+    /// <remarks/><remarks/><exception cref='DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
+    /// <exception cref='ArithmeticException'>The result of integer
+    /// division (the quotient, not the remainder) wouldn't fit the given
+    /// precision.</exception>
     public DecimalFraction Remainder(
       DecimalFraction divisor, PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
     }
-    /// <summary> </summary>
-    /// <param name='divisor'>A DecimalFraction object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
-    /// <remarks/>
+    /// <summary>Finds the distance to the closest multiple of the given
+    /// divisor. <list type=''> <item>If this and the other object divide
+    /// evenly, the result is 0.</item>
+    /// <item>If the remainder's absolute value is less than half of the divisor's
+    /// absolute value, the result has the same sign as this object and will
+    /// be the distance to the closest multiple.</item>
+    /// <item>If the remainder's absolute value is more than half of the divisor's
+    /// absolute value, the result has the opposite sign of this object and
+    /// will be the distance to the closest multiple.</item>
+    /// <item>If the remainder's absolute value is exactly half of the divisor's
+    /// absolute value, the result has the opposite sign of this object if
+    /// the quotient, rounded down, is odd, and has the same sign as this object
+    /// if the quotient, rounded down, is even, and the result's absolute
+    /// value is half of the divisor's absolute value.</item>
+    /// </list>
+    /// </summary>
+    /// <param name='divisor'>The divisor.</param>
+    /// <param name='ctx'>A precision context object to control the precision.
+    /// The rounding and exponent range settings of this context are ignored.
+    /// No flags will be set from this operation even if HasFlags of the context
+    /// is true. Can be null.</param>
+    /// <returns>The distance of the closest multiple.</returns>
+    /// <remarks/><exception cref='DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
+    /// <exception cref='ArithmeticException'>The result of integer
+    /// division (the quotient, not the remainder) wouldn't fit the given
+    /// precision.</exception>
     public DecimalFraction RemainderNear(
       DecimalFraction divisor, PrecisionContext ctx) {
       return math.RemainderNear(this, divisor, ctx);
     }
 
-    /// <summary> Gets the largest value that's smaller than the given value.</summary>
+    /// <summary> Finds the largest value that's smaller than the given value.</summary>
     /// <param name='ctx'>A precision context object to control the precision
     /// and exponent range of the result. The rounding mode from this context
-    /// is ignored. No flags will be set from thisValue operation even if HasFlags
+    /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns></returns>
+    /// <returns>Returns the largest value that's less than the given value.
+    /// Returns null if the result is negative infinity.</returns>
     /// <remarks/><exception cref='System.ArgumentException'>"ctx"
     /// is null, the precision is 0, or "ctx" has an unlimited exponent range.</exception>
     public DecimalFraction NextMinus(
@@ -1233,10 +1311,11 @@ namespace PeterO {
     }
 
 
-    /// <summary> Gets the smallest value that's greater than the given value.</summary>
+    /// <summary> Finds the smallest value that's greater than the given
+    /// value.</summary>
     /// <param name='ctx'>A precision context object to control the precision
     /// and exponent range of the result. The rounding mode from this context
-    /// is ignored. No flags will be set from thisValue operation even if HasFlags
+    /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
     /// <returns>Returns the smallest value that's greater than the given
     /// value. Returns null if the result is positive infinity.</returns>
@@ -1250,10 +1329,13 @@ namespace PeterO {
     
     /// <summary> </summary>
     /// <param name='otherValue'>A DecimalFraction object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context object to control the precision
+    /// and exponent range of the result. The rounding mode from this context
+    /// is ignored. No flags will be set from this operation even if HasFlags
+    /// of the context is true.</param>
     /// <returns></returns>
     /// <remarks/>
-public DecimalFraction NextToward(
+    public DecimalFraction NextToward(
       DecimalFraction otherValue,
       PrecisionContext ctx
      ){
@@ -1287,16 +1369,6 @@ public DecimalFraction NextToward(
       return math.Divide(this, divisor, ctx);
     }
 
-    /// <summary>Divides two DecimalFraction objects.</summary>
-    /// <param name='divisor'>A DecimalFraction object.</param>
-    /// <param name='exponent'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>The quotient of the two objects.</returns>
-    /// <remarks/>
-    public DecimalFraction Divide(
-      DecimalFraction divisor, BigInteger exponent, PrecisionContext ctx) {
-      return math.Divide(this, divisor, exponent, ctx);
-    }
 
     /// <summary> Gets the greater value between two decimal fractions.
     /// </summary>

@@ -7,7 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-using System.Numerics;
+//using System.Numerics;
 namespace PeterO {
     /// <summary> A mutable integer class initially backed by a 64-bit integer,
     /// that only uses a big integer when arithmetic operations would overflow
@@ -47,8 +47,8 @@ namespace PeterO {
     public FastInteger(BigInteger bigintVal) {
       int sign = bigintVal.Sign;
       if (sign == 0 ||
-         (sign < 0 && bigintVal.CompareTo(Int64MinValue) >= 0) ||
-         (sign > 0 && bigintVal.CompareTo(Int64MaxValue) <= 0)) {
+          (sign < 0 && bigintVal.CompareTo(Int64MinValue) >= 0) ||
+          (sign > 0 && bigintVal.CompareTo(Int64MaxValue) <= 0)) {
         smallValue = (long)bigintVal;
         usingLarge = false;
       } else {
@@ -185,7 +185,7 @@ namespace PeterO {
         BigInteger valValue = val.AsBigInteger();
         largeValue -= (BigInteger)valValue;
       } else if (((long)val.smallValue < 0 && Int64.MaxValue + (long)val.smallValue < smallValue) ||
-                ((long)val.smallValue > 0 && Int64.MinValue + (long)val.smallValue > smallValue)) {
+                 ((long)val.smallValue > 0 && Int64.MinValue + (long)val.smallValue > smallValue)) {
         // would overflow, convert to large
         largeValue = (BigInteger)smallValue;
         usingLarge = true;
@@ -204,7 +204,7 @@ namespace PeterO {
         BigInteger valValue = (BigInteger)val;
         largeValue -= (BigInteger)valValue;
       } else if (((long)val < 0 && Int64.MaxValue + (long)val < smallValue) ||
-                ((long)val > 0 && Int64.MinValue + (long)val > smallValue)) {
+                 ((long)val > 0 && Int64.MinValue + (long)val > smallValue)) {
         // would overflow, convert to large
         largeValue = (BigInteger)smallValue;
         usingLarge = true;
@@ -223,13 +223,45 @@ namespace PeterO {
       if (usingLarge) {
         largeValue -= (BigInteger)val;
       } else if (((long)val < 0 && Int64.MaxValue + (long)val < smallValue) ||
-                ((long)val > 0 && Int64.MinValue + (long)val > smallValue)) {
+                 ((long)val > 0 && Int64.MinValue + (long)val > smallValue)) {
         // would overflow, convert to large
         largeValue = (BigInteger)smallValue;
         usingLarge = true;
         largeValue -= (BigInteger)val;
       } else {
         smallValue -= val;
+      }
+      return this;
+    }
+
+    /// <summary> Sets this object's value to the current value plus the given
+    /// integer. </summary>
+    /// <param name='bigintVal'> The number to add.</param>
+    /// <returns> This object.</returns>
+    public FastInteger Add(BigInteger bigintVal) {
+      if (usingLarge) {
+        largeValue += (BigInteger)bigintVal;
+      } else {
+        int sign = bigintVal.Sign;
+        if (sign == 0 ||
+            (sign < 0 && bigintVal.CompareTo(Int64MinValue) >= 0) ||
+            (sign > 0 && bigintVal.CompareTo(Int64MaxValue) <= 0)) {
+          long val = (long)bigintVal;
+          if ((smallValue < 0 && val < Int64.MinValue - smallValue) ||
+              (smallValue > 0 && val > Int64.MaxValue - smallValue)) {
+            // would overflow, convert to large
+            largeValue = (BigInteger)smallValue;
+            usingLarge = true;
+            largeValue += (BigInteger)bigintVal;
+          } else {
+            smallValue += val;
+          }
+        } else {
+          // convert to large
+          largeValue = (BigInteger)smallValue;
+          usingLarge = true;
+          largeValue += (BigInteger)bigintVal;
+        }
       }
       return this;
     }
@@ -244,15 +276,15 @@ namespace PeterO {
       } else {
         int sign = bigintVal.Sign;
         if (sign == 0 ||
-           (sign < 0 && bigintVal.CompareTo(Int64MinValue) >= 0) ||
-           (sign > 0 && bigintVal.CompareTo(Int64MaxValue) <= 0)) {
+            (sign < 0 && bigintVal.CompareTo(Int64MinValue) >= 0) ||
+            (sign > 0 && bigintVal.CompareTo(Int64MaxValue) <= 0)) {
           long val = (long)bigintVal;
           if ((val < 0 && Int64.MaxValue + val < smallValue) ||
-             (val > 0 && Int64.MinValue + val > smallValue)) {
+              (val > 0 && Int64.MinValue + val > smallValue)) {
             // would overflow, convert to large
             largeValue = (BigInteger)smallValue;
             usingLarge = true;
-            largeValue -= (BigInteger)val;
+            largeValue -= (BigInteger)bigintVal;
           } else {
             smallValue -= val;
           }
@@ -274,7 +306,7 @@ namespace PeterO {
         BigInteger valValue = val.AsBigInteger();
         largeValue += (BigInteger)valValue;
       } else if ((smallValue < 0 && (long)val.smallValue < Int64.MinValue - smallValue) ||
-                (smallValue > 0 && (long)val.smallValue > Int64.MaxValue - smallValue)) {
+                 (smallValue > 0 && (long)val.smallValue > Int64.MaxValue - smallValue)) {
         // would overflow, convert to large
         largeValue = (BigInteger)smallValue;
         usingLarge = true;
@@ -314,7 +346,7 @@ namespace PeterO {
         if (usingLarge) {
           largeValue += (BigInteger)val;
         } else if ((smallValue < 0 && (long)val < Int64.MinValue - smallValue) ||
-                  (smallValue > 0 && (long)val > Int64.MaxValue - smallValue)) {
+                   (smallValue > 0 && (long)val > Int64.MaxValue - smallValue)) {
           // would overflow, convert to large
           largeValue = (BigInteger)smallValue;
           usingLarge = true;
@@ -334,7 +366,7 @@ namespace PeterO {
         if (usingLarge) {
           largeValue += (BigInteger)val;
         } else if ((smallValue < 0 && val < Int64.MinValue - smallValue) ||
-                  (smallValue > 0 && val > Int64.MaxValue - smallValue)) {
+                   (smallValue > 0 && val > Int64.MaxValue - smallValue)) {
           // would overflow, convert to large
           largeValue = (BigInteger)smallValue;
           usingLarge = true;

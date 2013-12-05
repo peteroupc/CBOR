@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
 
-import java.math.*;
+//import java.math.*;
 
   final class BitShiftAccumulator implements IShiftAccumulator {
     int bitLeftmost;

@@ -7,7 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-using System.Numerics;
+//using System.Numerics;
 namespace PeterO {
     /// <summary> Contains utility methods that may have use outside of the
     /// CBORObject class. </summary>
@@ -121,6 +121,11 @@ namespace PeterO {
         return (BigInteger)mantissa;
       }
     }
+    
+    public static string BigIntToString(BigInteger bigint){
+      return bigint.ToString();
+    }
+    
     public static BigInteger BigIntegerFromDouble(double dbl) {
       long value = BitConverter.ToInt64(BitConverter.GetBytes((double)dbl),0);
       int fpexponent = (int)((value >> 52) & 0x7ffL);

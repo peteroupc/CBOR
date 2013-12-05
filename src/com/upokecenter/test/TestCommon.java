@@ -10,30 +10,159 @@ at: http://upokecenter.com/d/
 import org.junit.Assert;
 
 
-import java.math.*;
+//import java.math.*;
 import com.upokecenter.util.*;
 import java.io.*;
 
   final class TestCommon {
 private TestCommon(){}
+    
+    private static final class MutableBigInteger {
+      int[] data;
+      int length;
+      public MutableBigInteger() {
+        data = new int[2];
+        length = 1;
+        data[0] = 0;
+      }
+      private static byte[] ReverseBytes(byte[] bytes) {
+        if ((bytes) == null) throw new NullPointerException("bytes");
+        int half = bytes.length >> 1;
+        int right = bytes.length - 1;
+        for (int i = 0; i < half; i++, right--) {
+          byte value = bytes[i];
+          bytes[i] = bytes[right];
+          bytes[right] = value;
+        }
+        return bytes;
+      }
+    /**
+     * 
+     */
+      public BigInteger ToBigInteger() {
+        byte[] bytes = new byte[length * 4 + 1];
+        for (int i = 0; i < length; i++) {
+          bytes[i * 4 + 0] = (byte)((data[i]) & 0xFF);
+          bytes[i * 4 + 1] = (byte)((data[i] >> 8) & 0xFF);
+          bytes[i * 4 + 2] = (byte)((data[i] >> 16) & 0xFF);
+          bytes[i * 4 + 3] = (byte)((data[i] >> 24) & 0xFF);
+        }
+        bytes[bytes.length - 1] = 0;
+        return new BigInteger(ReverseBytes((byte[])bytes));
+      }
+
+    /**
+     * Converts this object to a text string.
+     * @return A string representation of this object.
+     */
+      @Override public String toString() {
+        return ToBigInteger().toString();
+      }
+
+    /**
+     * Multiplies this instance by the value of a Int32 object.
+     * @param multiplicand A 32-bit signed integer.
+     * @return The product of the two objects.
+     */
+      public MutableBigInteger Multiply(int multiplicand) {
+        if (multiplicand < 0)
+          throw new IllegalArgumentException("Only positive multiplicands are supported");
+        else if (multiplicand != 0) {
+          int carry = 0;
+          for (int i = 0; i < length; i++) {
+            long subproduct = ((long)data[i]) & 0xFFFFFFFFL;
+            subproduct *= multiplicand;
+            subproduct += carry;
+            carry = ((int)((subproduct >> 32) & 0xFFFFFFFFL));
+            data[i] = ((int)((subproduct) & 0xFFFFFFFFL));
+          }
+          if (carry != 0) {
+            if (length >= data.length) {
+              int[] newdata = new int[length + 20];
+              System.arraycopy(data, 0, newdata, 0, data.length);
+              data = newdata;
+            }
+            data[length] = carry;
+            length++;
+          }
+        } else {
+          data[0] = 0;
+          length = 1;
+        }
+        return this;
+      }
+      
+    /**
+     * 
+     * @param augend A 32-bit signed integer.
+     */
+      public MutableBigInteger Add(int augend) {
+        if (augend < 0)
+          throw new IllegalArgumentException("Only positive augends are supported");
+        else if (augend != 0) {
+          int carry = 0;
+          for (int i = 0; i < length; i++) {
+            long subproduct = ((long)data[i]) & 0xFFFFFFFFL;
+            subproduct += augend;
+            subproduct += carry;
+            carry = ((int)((subproduct >> 32) & 0xFFFFFFFFL));
+            data[i] = ((int)((subproduct) & 0xFFFFFFFFL));
+            if (carry == 0) return this;
+            augend = 0;
+          }
+          if (carry != 0) {
+            if (length >= data.length) {
+              int[] newdata = new int[length + 20];
+              System.arraycopy(data, 0, newdata, 0, data.length);
+              data = newdata;
+            }
+            data[length] = carry;
+            length++;
+          }
+        }
+        return this;
+      }
+    }
+
     public static void AssertDecFrac(DecimalFraction d3, String output) {
-     if(output==null && d3!=null)Assert.fail("d3 must be null");
-     if(output!=null && !d3.toString().equals(output)){
+      if(output==null && d3!=null)Assert.fail("d3 must be null");
+      if(output!=null && !d3.toString().equals(output)){
         DecimalFraction d4=DecimalFraction.FromString(output);
         Assert.assertEquals(output,d3.toString(),(
           "expected: ["+(d4.getMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
           "but was: ["+(d3.getMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
-     ));   }   
-   }
+         ));   }
+    }
+    
+    public static BigInteger BigIntParse(String str) {
+      if(str==null || str.length()==0)throw new NullPointerException("str");
+      int offset=0;
+      boolean negative=false;
+      if(str.charAt(0)=='-'){
+        offset++;
+        negative=true;
+      }
+      // Assumes the String contains
+      // only the digits '0' through '9'
+      MutableBigInteger mbi = new MutableBigInteger();
+      for (int i = offset; i < str.length(); i++) {
+        int digit = (int)(str.charAt(i) - '0');
+        mbi.Multiply(10).Add(digit);
+      }
+      BigInteger bi=mbi.ToBigInteger();
+      if(negative)bi=bi.negate();
+      return bi;
+    }
+    
     public static void AssertFlags(int expected, int actual) {
-    if(expected==actual)return;
-    Assert.assertEquals("Inexact",(expected&PrecisionContext.FlagInexact)!=0,(expected&PrecisionContext.FlagInexact)!=0);
-    Assert.assertEquals("Rounded",(expected&PrecisionContext.FlagRounded)!=0,(expected&PrecisionContext.FlagRounded)!=0);
-    Assert.assertEquals("Subnormal",(expected&PrecisionContext.FlagSubnormal)!=0,(expected&PrecisionContext.FlagSubnormal)!=0);
-    Assert.assertEquals("Overflow",(expected&PrecisionContext.FlagOverflow)!=0,(expected&PrecisionContext.FlagOverflow)!=0);
-    Assert.assertEquals("Underflow",(expected&PrecisionContext.FlagUnderflow)!=0,(expected&PrecisionContext.FlagUnderflow)!=0);
-    Assert.assertEquals("Clamped",(expected&PrecisionContext.FlagClamped)!=0,(expected&PrecisionContext.FlagClamped)!=0);    
-   }
+      if(expected==actual)return;
+      Assert.assertEquals("Inexact",(expected&PrecisionContext.FlagInexact)!=0,(expected&PrecisionContext.FlagInexact)!=0);
+      Assert.assertEquals("Rounded",(expected&PrecisionContext.FlagRounded)!=0,(expected&PrecisionContext.FlagRounded)!=0);
+      Assert.assertEquals("Subnormal",(expected&PrecisionContext.FlagSubnormal)!=0,(expected&PrecisionContext.FlagSubnormal)!=0);
+      Assert.assertEquals("Overflow",(expected&PrecisionContext.FlagOverflow)!=0,(expected&PrecisionContext.FlagOverflow)!=0);
+      Assert.assertEquals("Underflow",(expected&PrecisionContext.FlagUnderflow)!=0,(expected&PrecisionContext.FlagUnderflow)!=0);
+      Assert.assertEquals("Clamped",(expected&PrecisionContext.FlagClamped)!=0,(expected&PrecisionContext.FlagClamped)!=0);
+    }
     
     private static CBORObject FromBytesA(byte[] b) {
       return CBORObject.DecodeFromBytes(b);

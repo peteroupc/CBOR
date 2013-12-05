@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
 
-import java.math.*;
+//import java.math.*;
 
     /**
      * Contains utility methods that may have use outside of the CBORObject
@@ -126,6 +126,11 @@ private CBORUtilities(){}
         return BigInteger.valueOf(mantissa);
       }
     }
+    
+    public static String BigIntToString(BigInteger bigint) {
+      return bigint.toString();
+    }
+    
     public static BigInteger BigIntegerFromDouble(double dbl) {
       long value = Double.doubleToRawLongBits(dbl);
       int fpexponent = (int)((value >> 52) & 0x7ffL);

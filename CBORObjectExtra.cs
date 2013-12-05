@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Numerics;
+//using System.Numerics;
 using System.Text;
 namespace PeterO {
   // Contains extra methods placed separately
@@ -47,26 +47,79 @@ namespace PeterO {
       return (sbyte)v;
     }
     private static decimal EncodeDecimal(BigInteger bigmant,
-                                  int scale, bool neg) {
+                                         int scale, bool neg) {
       if (scale < 0 || scale > 28)
         throw new ArgumentOutOfRangeException("scale");
-      int a = unchecked((int)(long)(bigmant & 0xFFFFFFFFL));
-      int b = unchecked((int)(long)((bigmant >> 32) & 0xFFFFFFFFL));
-      int c = unchecked((int)(long)((bigmant >> 64) & 0xFFFFFFFFL));
+      byte[] data=bigmant.ToByteArray();
+      int a=0;
+      int b=0;
+      int c=0;
+      for(int i=0;i<Math.Min(4,data.Length);i++){
+        a|=(((int)data[i])&0xFF)<<((i)*8);
+      }
+      for(int i=4;i<Math.Min(8,data.Length);i++){
+        b|=(((int)data[i])&0xFF)<<((i-4)*8);
+      }
+      for(int i=8;i<Math.Min(12,data.Length);i++){
+        c|=(((int)data[i])&0xFF)<<((i-8)*8);
+      }
       int d = (scale << 16);
       if (neg) d |= (1 << 31);
       return new Decimal(new int[] { a, b, c, d });
     }
+    
+    private static BigInteger DecimalMaxValue = (BigInteger.One<<96)-BigInteger.One;
+    private static BigInteger DecimalMinValue = -((BigInteger.One<<96)-BigInteger.One);
+
+    private static decimal BigIntegerToDecimal(BigInteger bi){
+      if(bi.Sign<0){
+        if(bi.CompareTo(DecimalMinValue)<0)
+          throw new OverflowException();
+        bi=-bi;
+        return EncodeDecimal(bi,0,true);
+      }
+      if(bi.CompareTo(DecimalMaxValue)>0)
+        throw new OverflowException();
+      return EncodeDecimal(bi,0,false);
+    }
+    
+    private static BigInteger DecimalToBigInteger(decimal dec){
+      int[] bits=Decimal.GetBits(dec);
+      byte[] data=new byte[13];
+      data[0]=(byte)((bits[0])&0xFF);
+      data[1]=(byte)((bits[0]>>8)&0xFF);
+      data[2]=(byte)((bits[0]>>16)&0xFF);
+      data[3]=(byte)((bits[0]>>24)&0xFF);
+      data[4]=(byte)((bits[1])&0xFF);
+      data[5]=(byte)((bits[1]>>8)&0xFF);
+      data[6]=(byte)((bits[1]>>16)&0xFF);
+      data[7]=(byte)((bits[1]>>24)&0xFF);
+      data[8]=(byte)((bits[2])&0xFF);
+      data[9]=(byte)((bits[2]>>8)&0xFF);
+      data[10]=(byte)((bits[2]>>16)&0xFF);
+      data[11]=(byte)((bits[2]>>24)&0xFF);
+      data[12]=0;
+      int scale=(bits[3]>>16)&0xFF;
+      BigInteger bigint=new BigInteger((byte[])data);
+      for(int i=0;i<scale;i++){
+        bigint/=(BigInteger)10;
+      }
+      if((bits[3]>>31)!=0){
+        bigint=-bigint;
+      }
+      return bigint;
+    }
+    
     private static decimal DecimalFractionToDecimal(DecimalFraction decfrac) {
       FastInteger bigexp = new FastInteger(decfrac.Exponent);
       BigInteger bigmant = decfrac.Mantissa;
-      BigInteger decmax = (BigInteger)Decimal.MaxValue; // equals (2^96-1)
-      bool neg = (bigmant < 0);
+      BigInteger decmax = DecimalMaxValue;// set to Decimal.MaxValue, equal to (2^96-1)
+      bool neg = (bigmant.Sign < 0);
       if (neg) bigmant = -bigmant;
       if (bigexp.Sign == 0) {
         if (bigmant > decmax)
           throw new OverflowException("This object's value is out of range");
-        return (decimal)bigmant;
+        return BigIntegerToDecimal(bigmant);
       } else if (bigexp.Sign > 0) {
         while (bigexp.Sign > 0) {
           bigmant *= 10;
@@ -74,19 +127,19 @@ namespace PeterO {
             throw new OverflowException("This object's value is out of range");
           bigexp.Add(-1);
         }
-        return (decimal)bigmant;
+        return BigIntegerToDecimal(bigmant);
       } else {
         int lastDigit = 0;
         while (bigexp.Sign < 0) {
           if (bigexp.CompareTo(-28) >= 0 && bigmant <= decmax) {
             if (lastDigit >= 5) {
-              bigmant++; // round half-up
+              bigmant+=BigInteger.One; // round half-up
             }
             if (bigmant <= decmax) {
               bigexp.Negate();
               return EncodeDecimal(bigmant, bigexp.AsInt32(), neg);
             } else if (lastDigit >= 5) {
-              bigmant--; // undo rounding
+              bigmant-=BigInteger.One; // undo rounding
             }
           }
           lastDigit = (int)(bigmant % 10);
@@ -94,7 +147,7 @@ namespace PeterO {
           bigexp.Add(-1);
         }
         if (lastDigit >= 5) {
-          bigmant++;
+          bigmant+=BigInteger.One;
         }
         if (bigmant > decmax)
           throw new OverflowException("This object's value is out of range");
@@ -112,20 +165,20 @@ namespace PeterO {
       if (this.ItemType == CBORObjectType_Integer) {
         return (decimal)(long)this.ThisItem;
       } else if (this.ItemType == CBORObjectType_BigInteger) {
-        if ((BigInteger)this.ThisItem > (BigInteger)Decimal.MaxValue ||
-           (BigInteger)this.ThisItem < (BigInteger)Decimal.MinValue)
+        if ((BigInteger)this.ThisItem > DecimalMaxValue ||
+            (BigInteger)this.ThisItem < DecimalMinValue)
           throw new OverflowException("This object's value is out of range");
-        return (decimal)(BigInteger)this.ThisItem;
+        return BigIntegerToDecimal((BigInteger)this.ThisItem);
       } else if (this.ItemType == CBORObjectType_Single) {
         if (Single.IsNaN((float)this.ThisItem) ||
-           (float)this.ThisItem > (float)Decimal.MaxValue ||
-           (float)this.ThisItem < (float)Decimal.MinValue)
+            (float)this.ThisItem > (float)Decimal.MaxValue ||
+            (float)this.ThisItem < (float)Decimal.MinValue)
           throw new OverflowException("This object's value is out of range");
         return (decimal)(float)this.ThisItem;
       } else if (this.ItemType == CBORObjectType_Double) {
         if (Double.IsNaN((double)this.ThisItem) ||
-           (double)this.ThisItem > (double)Decimal.MaxValue ||
-           (double)this.ThisItem < (double)Decimal.MinValue)
+            (double)this.ThisItem > (double)Decimal.MaxValue ||
+            (double)this.ThisItem < (double)Decimal.MinValue)
           throw new OverflowException("This object's value is out of range");
         return (decimal)(double)this.ThisItem;
       } else if (this.ItemType == CBORObjectType_DecimalFraction) {
@@ -150,9 +203,10 @@ namespace PeterO {
           throw new OverflowException("This object's value is out of range");
         return (ulong)(long)this.ThisItem;
       } else if (this.ItemType == CBORObjectType_BigInteger) {
-        if ((BigInteger)this.ThisItem > UInt64.MaxValue || (BigInteger)this.ThisItem < 0)
+        if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
+            ((BigInteger)this.ThisItem).Sign < 0)
           throw new OverflowException("This object's value is out of range");
-        return (ulong)(BigInteger)this.ThisItem;
+        return (ulong)BigIntegerToDecimal((BigInteger)this.ThisItem);
       } else if (this.ItemType == CBORObjectType_Single) {
         float fltItem = (float)this.ThisItem;
         if (Single.IsNaN(fltItem))
@@ -171,14 +225,16 @@ namespace PeterO {
         throw new OverflowException("This object's value is out of range");
       } else if (this.ItemType == CBORObjectType_DecimalFraction) {
         BigInteger bi = ((DecimalFraction)this.ThisItem).ToBigInteger();
-        if (bi > UInt64.MaxValue || bi < 0)
+        if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
+            bi.Sign < 0)
           throw new OverflowException("This object's value is out of range");
-        return (ulong)bi;
+        return (ulong)BigIntegerToDecimal(bi);
       } else if (this.ItemType == CBORObjectType_BigFloat) {
         BigInteger bi = ((BigFloat)this.ThisItem).ToBigInteger();
-        if (bi > UInt64.MaxValue || bi < 0)
+        if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
+            bi.Sign < 0)
           throw new OverflowException("This object's value is out of range");
-        return (ulong)bi;
+        return (ulong)BigIntegerToDecimal(bi);
       } else
         throw new InvalidOperationException("Not a number type");
     }
@@ -222,19 +278,27 @@ namespace PeterO {
         } else if (value >= Int64.MinValue && value <= Int64.MaxValue) {
           return FromObject((long)value);
         } else {
-          return FromObject((BigInteger)value);
+          return FromObject(DecimalToBigInteger(value));
         }
       } else {
-        int[] v = Decimal.GetBits(value);
-        uint low = unchecked((uint)v[0]);
-        ulong mid = (ulong)unchecked((uint)v[1]);
-        ulong high = (ulong)unchecked((uint)v[2]);
-        bool negative = (v[3] >> 31) != 0;
-        int scale = (v[3] >> 16) & 0xFF;
-        high <<= 32;
-        BigInteger mantissa = high | mid;
-        mantissa <<= 32;
-        mantissa |= low;
+        int[] bits = Decimal.GetBits(value);
+        byte[] data=new byte[13];
+        data[0]=(byte)((bits[0])&0xFF);
+        data[1]=(byte)((bits[0]>>8)&0xFF);
+        data[2]=(byte)((bits[0]>>16)&0xFF);
+        data[3]=(byte)((bits[0]>>24)&0xFF);
+        data[4]=(byte)((bits[1])&0xFF);
+        data[5]=(byte)((bits[1]>>8)&0xFF);
+        data[6]=(byte)((bits[1]>>16)&0xFF);
+        data[7]=(byte)((bits[1]>>24)&0xFF);
+        data[8]=(byte)((bits[2])&0xFF);
+        data[9]=(byte)((bits[2]>>8)&0xFF);
+        data[10]=(byte)((bits[2]>>16)&0xFF);
+        data[11]=(byte)((bits[2]>>24)&0xFF);
+        data[12]=0;
+        BigInteger mantissa=new BigInteger((byte[])data);
+        bool negative = (bits[3] >> 31) != 0;
+        int scale = (bits[3] >> 16) & 0xFF;
         if (negative) mantissa = -mantissa;
         return FromObjectAndTag(
           new CBORObject[]{
@@ -271,7 +335,7 @@ namespace PeterO {
     /// <returns></returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ulong value) {
-      return FromObject((BigInteger)value);
+      return FromObject(DecimalToBigInteger((decimal)value));
     }
     /// <summary> </summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
@@ -293,7 +357,7 @@ namespace PeterO {
     /// <returns></returns>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
-      return FromObjectAndTag(o, (BigInteger)tag);
+      return FromObjectAndTag(o, DecimalToBigInteger((decimal)tag));
     }
     // .NET-specific
     private static string DateTimeToString(DateTime bi) {

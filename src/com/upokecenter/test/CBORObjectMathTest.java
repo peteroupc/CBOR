@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import com.upokecenter.util.*;
 
-import java.math.*;
 
     /**
      * 
@@ -22,8 +21,15 @@ import java.math.*;
     @Test
     public void CBORMultiplyTest() {
       {
+        CBORObject a = CBORObject.FromObject(9.12506362461426E-6d);
+        CBORObject b = CBORObject.FromObject(5.641029925579569E-11d);
+        Assert.assertEquals("5.1474756979266608403696403459529410796038238050457548796657151114380471943990657843652277518542957623903788544339477084577083587646484375E-16", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
+        TestCommon.AssertRoundTrip(a);
+        TestCommon.AssertRoundTrip(b);
+      }
+      {
         CBORObject a = CBORObject.FromObject(2.5268476f);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-503285733164839762215"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-503285733164839762215"));
         Assert.assertEquals("-1271726347433338951145.9595930576324462890625", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -50,21 +56,14 @@ import java.math.*;
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(9.12506362461426E-6d);
-        CBORObject b = CBORObject.FromObject(5.641029925579569E-11d);
-        Assert.assertEquals("5.1474756979266608403696403459529410796038238050457548796657151114380471943990657843652277518542957623903788544339477084577083587646484375E-16", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
-        TestCommon.AssertRoundTrip(a);
-        TestCommon.AssertRoundTrip(b);
-      }
-      {
         CBORObject a = CBORObject.FromObject(2.9863508f);
-        CBORObject b = CBORObject.FromObject(new BigInteger("41913315893308968"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("41913315893308968"));
         Assert.assertEquals("125167863390954038.6309108734130859375000", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("51373759105328576374643305691411448"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("51373759105328576374643305691411448"));
         CBORObject b = CBORObject.FromObject(-4.5222281096959924E-14d);
         Assert.assertEquals("-2323238575268673257254.501371566891879118691399132531527312220315285794225955429137542296302854083478450775146484375000", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
@@ -100,7 +99,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(DecimalFraction.FromString("9574254"));
-        CBORObject b = CBORObject.FromObject(new BigInteger("41249908590533189242686"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("41249908590533189242686"));
         Assert.assertEquals("394937102322546749239543406244", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -114,35 +113,35 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(DecimalFraction.FromString("-84626937430208985E-5"));
-        CBORObject b = CBORObject.FromObject(new BigInteger("-47837170150939961006483074488002"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-47837170150939961006483074488002"));
         Assert.assertEquals("40483132052018569867862771568011144050367350.97970", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
         CBORObject a = CBORObject.FromObject(83.96423266687334d);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-07749556847133167"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-07749556847133167"));
         Assert.assertEquals("-650685594177850651.7836587888087223063848796300590038299560546875", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
         CBORObject a = CBORObject.FromObject(-1078924234326945061L);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-70255986437016738376158956"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-70255986437016738376158956"));
         Assert.assertEquals("75800886373442521468941315650954034815116316", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
         CBORObject a = CBORObject.FromObject(9.796470955886588E-7d);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-0495371"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-0495371"));
         Assert.assertEquals("-0.48528876138884952104734314530000427456712941420846618711948394775390625", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
         CBORObject a = CBORObject.FromObject(DecimalFraction.FromString("-476244027101E+14"));
-        CBORObject b = CBORObject.FromObject(new BigInteger("-656"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-656"));
         Assert.assertEquals("3.12416081778256E+28", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -176,15 +175,15 @@ import java.math.*;
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("38590484691689397685891"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("38590484691689397685891"));
         CBORObject b = CBORObject.FromObject(1.1009459375566415E-10d);
         Assert.assertEquals("4248603734965.72066567535336329941927488838145139684907372092104171912296806112863123416900634765625", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("676774623"));
-        CBORObject b = CBORObject.FromObject(new BigInteger("-47634494821244064152830613"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("676774623"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-47634494821244064152830613"));
         Assert.assertEquals("-32237817274442903908019752495933899", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -205,7 +204,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(1.0216558189301154E-15d);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-5724273202"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-5724273202"));
         Assert.assertEquals("-0.000005848237025969023709984342844564627101483494383367053859323902997857658192515373229980468750", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -232,7 +231,7 @@ import java.math.*;
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("-02"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("-02"));
         CBORObject b = CBORObject.FromObject(-5702680986781981196L);
         Assert.assertEquals("11405361973563962392", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
@@ -240,7 +239,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(9.818825f);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-8990374781030894584337219503247649429"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-8990374781030894584337219503247649429"));
         Assert.assertEquals("-88274914574185741393190188566231820133.88379669189453125", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -253,7 +252,7 @@ import java.math.*;
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("-9274297774670234"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("-9274297774670234"));
         CBORObject b = CBORObject.FromObject(-3.7425284200877295E-11d);
         Assert.assertEquals("347093.22998059736154967580553904219931632546813091502735382221089821541681885719299316406250", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
@@ -324,7 +323,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(8335870817615450098L);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-563870621864145974050"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-563870621864145974050"));
         Assert.assertEquals("-4700352661708010793197043881265377956900", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -337,7 +336,7 @@ import java.math.*;
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("-463514687832433253675988214902"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("-463514687832433253675988214902"));
         CBORObject b = CBORObject.FromObject(-4484615119892422017L);
         Assert.assertEquals("2078684977345546220618244518078728370549072297334", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
@@ -345,14 +344,14 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(DecimalFraction.FromString("29638173439801182344"));
-        CBORObject b = CBORObject.FromObject(new BigInteger("-89020"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-89020"));
         Assert.assertEquals("-2638390199611101252262880", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
         CBORObject a = CBORObject.FromObject(-12.33862f);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-4926900679850357315"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-4926900679850357315"));
         Assert.assertEquals("60791156182089811119.72905635833740234375", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -401,7 +400,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(0.020507919f);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-5992214163"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-5992214163"));
         Assert.assertEquals("-122887840.71266113780438899993896484375", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -422,7 +421,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(-1.1449391699652754E-9d);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-8580867092245"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-8580867092245"));
         Assert.assertEquals("9824.5708461773363347106053394302652805576236798301703601055123726837337017059326171875", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -436,7 +435,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(-0.031387743f);
-        CBORObject b = CBORObject.FromObject(new BigInteger("3045954"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("3045954"));
         Assert.assertEquals("-95605.6201502010226249694824218750", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -456,7 +455,7 @@ import java.math.*;
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("583988109357508438741511"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("583988109357508438741511"));
         CBORObject b = CBORObject.FromObject(-1.6970299566622061E-15d);
         Assert.assertEquals("-991045315.914216249444323438492234978558828936731849875803211105145169336483323974107406684197485446929931640625", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
@@ -513,7 +512,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(DecimalFraction.FromString("0247111039693066700.39680963861467394E-17"));
-        CBORObject b = CBORObject.FromObject(new BigInteger("062292"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("062292"));
         Assert.assertEquals("153930.4088456051090111806600858526907048", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -533,7 +532,7 @@ import java.math.*;
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("947048618983259414095031115"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("947048618983259414095031115"));
         CBORObject b = CBORObject.FromObject(DecimalFraction.FromString("-9E-4"));
         Assert.assertEquals("-852343757084933472685528.0035", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
@@ -561,8 +560,8 @@ import java.math.*;
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("-40065583103663138597508921275"));
-        CBORObject b = CBORObject.FromObject(new BigInteger("473"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("-40065583103663138597508921275"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("473"));
         Assert.assertEquals("-18951020808032664556621719763075", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -583,7 +582,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(47.861744f);
-        CBORObject b = CBORObject.FromObject(new BigInteger("5256943339128067199183052"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("5256943339128067199183052"));
         Assert.assertEquals("251606475936106139213206572.928573608398437500", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -638,22 +637,22 @@ import java.math.*;
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("-4264980344"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("-4264980344"));
         CBORObject b = CBORObject.FromObject(-353911288916818824L);
         Assert.assertEquals("1509424690749937335369195456", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("-26252698366425756223523673798"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("-26252698366425756223523673798"));
         CBORObject b = CBORObject.FromObject(-4.044065397264691E-12d);
         Assert.assertEquals("106167629048489689.528899553185499035078122372783849572121359674777354986652255774970399215817451477050781250", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
-        CBORObject a = CBORObject.FromObject(new BigInteger("060678661656686749713123"));
-        CBORObject b = CBORObject.FromObject(new BigInteger("-174887388"));
+        CBORObject a = CBORObject.FromObject(TestCommon.BigIntParse("060678661656686749713123"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-174887388"));
         Assert.assertEquals("-10611932644473698391537830792724", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -688,14 +687,14 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(9110863928365686743L);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-8380668660385914816256238003566314789196"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-8380668660385914816256238003566314789196"));
         Assert.assertEquals("-76355131793494813285288405143907259897735748561661816828628", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
       }
       {
         CBORObject a = CBORObject.FromObject(DecimalFraction.FromString("-2172.821088252086"));
-        CBORObject b = CBORObject.FromObject(new BigInteger("-8423191408427840522"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-8423191408427840522"));
         Assert.assertEquals("18302087922615801441887.468541828892", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -709,7 +708,7 @@ import java.math.*;
       }
       {
         CBORObject a = CBORObject.FromObject(-7183434807273822406L);
-        CBORObject b = CBORObject.FromObject(new BigInteger("-991545325414884273004"));
+        CBORObject b = CBORObject.FromObject(TestCommon.BigIntParse("-991545325414884273004"));
         Assert.assertEquals("7122701203574928729236980610073516127624", CBORObject.Multiply(a, b).AsDecimalFraction().toString());
         TestCommon.AssertRoundTrip(a);
         TestCommon.AssertRoundTrip(b);
@@ -724,12 +723,12 @@ import java.math.*;
       try { CBORObject.Multiply(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(1.2205979f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(-0.14995685f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(DecimalFraction.FromString("4310268018194"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Multiply(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(new BigInteger("-11455275312320262539482205058"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.Multiply(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(TestCommon.BigIntParse("-11455275312320262539482205058"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(0.12440690306802586d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(1.7928118469091356d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(4.643360738610487E-4d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(-829735834988622602L)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Multiply(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(new BigInteger("0694747557297"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.Multiply(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(TestCommon.BigIntParse("0694747557297"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(-2.7874117743461464E-8d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Double.NEGATIVE_INFINITY), CBORObject.FromObject(-46.968563f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Double.NEGATIVE_INFINITY), CBORObject.FromObject(444965269622467066L)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
@@ -745,10 +744,10 @@ import java.math.*;
       try { CBORObject.Multiply(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(-8.220424f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(8170883058720593388L)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(-2.6966395632014205E-15d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Multiply(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(new BigInteger("-57698063111489"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.Multiply(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(TestCommon.BigIntParse("-57698063111489"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(-6.147896963914895E-16d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Multiply(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(new BigInteger("6741304989218497671449227825882685277187"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Multiply(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(new BigInteger("16890648775547279842225596545"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.Multiply(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(TestCommon.BigIntParse("6741304989218497671449227825882685277187"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.Multiply(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(TestCommon.BigIntParse("16890648775547279842225596545"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(-10.620593f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.Multiply(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(DecimalFraction.FromString("-79289615410806439.169851689646729"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
     }

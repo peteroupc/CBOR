@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using System.Numerics;
+//using System.Numerics;
 namespace PeterO {
     /// <summary> Contains parameters for controlling the precision, rounding,
     /// and exponent range of arbitrary-precision numbers. </summary>
@@ -221,6 +221,7 @@ namespace PeterO {
     /// set to false. </summary>
     public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax,
                             bool clampNormalExponents) {
+      if((eMin)==null)throw new ArgumentNullException("eMin");
       if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
       if (eMin.CompareTo(eMax) > 0) throw new ArgumentException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
       this.precision = precision;

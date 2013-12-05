@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using System.Numerics;
+//using System.Numerics;
 namespace PeterO {
   internal sealed class MutableBigInteger {
     int[] data;

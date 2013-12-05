@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
 
-import java.math.*;
+//import java.math.*;
 
     /**
      * A mutable integer class initially backed by a 64-bit integer, that
@@ -47,8 +47,8 @@ import java.math.*;
     public FastInteger(BigInteger bigintVal) {
       int sign = bigintVal.signum();
       if (sign == 0 ||
-         (sign < 0 && bigintVal.compareTo(Int64MinValue) >= 0) ||
-         (sign > 0 && bigintVal.compareTo(Int64MaxValue) <= 0)) {
+          (sign < 0 && bigintVal.compareTo(Int64MinValue) >= 0) ||
+          (sign > 0 && bigintVal.compareTo(Int64MaxValue) <= 0)) {
         smallValue = bigintVal.longValue();
         usingLarge = false;
       } else {
@@ -194,7 +194,7 @@ import java.math.*;
         BigInteger valValue = val.AsBigInteger();
         largeValue=largeValue.subtract(valValue);
       } else if (((long)val.smallValue < 0 && Long.MAX_VALUE + (long)val.smallValue < smallValue) ||
-                ((long)val.smallValue > 0 && Long.MIN_VALUE + (long)val.smallValue > smallValue)) {
+                 ((long)val.smallValue > 0 && Long.MIN_VALUE + (long)val.smallValue > smallValue)) {
         // would overflow, convert to large
         largeValue = BigInteger.valueOf(smallValue);
         usingLarge = true;
@@ -215,7 +215,7 @@ import java.math.*;
         BigInteger valValue = BigInteger.valueOf(val);
         largeValue=largeValue.subtract(valValue);
       } else if (((long)val < 0 && Long.MAX_VALUE + (long)val < smallValue) ||
-                ((long)val > 0 && Long.MIN_VALUE + (long)val > smallValue)) {
+                 ((long)val > 0 && Long.MIN_VALUE + (long)val > smallValue)) {
         // would overflow, convert to large
         largeValue = BigInteger.valueOf(smallValue);
         usingLarge = true;
@@ -235,13 +235,46 @@ import java.math.*;
       if (usingLarge) {
         largeValue=largeValue.subtract(BigInteger.valueOf(val));
       } else if (((long)val < 0 && Long.MAX_VALUE + (long)val < smallValue) ||
-                ((long)val > 0 && Long.MIN_VALUE + (long)val > smallValue)) {
+                 ((long)val > 0 && Long.MIN_VALUE + (long)val > smallValue)) {
         // would overflow, convert to large
         largeValue = BigInteger.valueOf(smallValue);
         usingLarge = true;
         largeValue=largeValue.subtract(BigInteger.valueOf(val));
       } else {
         smallValue -= val;
+      }
+      return this;
+    }
+
+    /**
+     * Sets this object's value to the current value plus the given integer.
+     * @param bigintVal The number to add.
+     * @return This object.
+     */
+    public FastInteger Add(BigInteger bigintVal) {
+      if (usingLarge) {
+        largeValue=largeValue.add(bigintVal);
+      } else {
+        int sign = bigintVal.signum();
+        if (sign == 0 ||
+            (sign < 0 && bigintVal.compareTo(Int64MinValue) >= 0) ||
+            (sign > 0 && bigintVal.compareTo(Int64MaxValue) <= 0)) {
+          long val = bigintVal.longValue();
+          if ((smallValue < 0 && val < Long.MIN_VALUE - smallValue) ||
+              (smallValue > 0 && val > Long.MAX_VALUE - smallValue)) {
+            // would overflow, convert to large
+            largeValue = BigInteger.valueOf(smallValue);
+            usingLarge = true;
+            largeValue=largeValue.add(bigintVal);
+          } else {
+            smallValue += val;
+          }
+        } else {
+          // convert to large
+          largeValue = BigInteger.valueOf(smallValue);
+          usingLarge = true;
+          largeValue=largeValue.add(bigintVal);
+        }
       }
       return this;
     }
@@ -257,15 +290,15 @@ import java.math.*;
       } else {
         int sign = bigintVal.signum();
         if (sign == 0 ||
-           (sign < 0 && bigintVal.compareTo(Int64MinValue) >= 0) ||
-           (sign > 0 && bigintVal.compareTo(Int64MaxValue) <= 0)) {
+            (sign < 0 && bigintVal.compareTo(Int64MinValue) >= 0) ||
+            (sign > 0 && bigintVal.compareTo(Int64MaxValue) <= 0)) {
           long val = bigintVal.longValue();
           if ((val < 0 && Long.MAX_VALUE + val < smallValue) ||
-             (val > 0 && Long.MIN_VALUE + val > smallValue)) {
+              (val > 0 && Long.MIN_VALUE + val > smallValue)) {
             // would overflow, convert to large
             largeValue = BigInteger.valueOf(smallValue);
             usingLarge = true;
-            largeValue=largeValue.subtract(BigInteger.valueOf(val));
+            largeValue=largeValue.subtract(bigintVal);
           } else {
             smallValue -= val;
           }
@@ -287,7 +320,7 @@ import java.math.*;
         BigInteger valValue = val.AsBigInteger();
         largeValue=largeValue.add(valValue);
       } else if ((smallValue < 0 && (long)val.smallValue < Long.MIN_VALUE - smallValue) ||
-                (smallValue > 0 && (long)val.smallValue > Long.MAX_VALUE - smallValue)) {
+                 (smallValue > 0 && (long)val.smallValue > Long.MAX_VALUE - smallValue)) {
         // would overflow, convert to large
         largeValue = BigInteger.valueOf(smallValue);
         usingLarge = true;
@@ -328,7 +361,7 @@ import java.math.*;
         if (usingLarge) {
           largeValue=largeValue.add(BigInteger.valueOf(val));
         } else if ((smallValue < 0 && (long)val < Long.MIN_VALUE - smallValue) ||
-                  (smallValue > 0 && (long)val > Long.MAX_VALUE - smallValue)) {
+                   (smallValue > 0 && (long)val > Long.MAX_VALUE - smallValue)) {
           // would overflow, convert to large
           largeValue = BigInteger.valueOf(smallValue);
           usingLarge = true;
@@ -348,7 +381,7 @@ import java.math.*;
         if (usingLarge) {
           largeValue=largeValue.add(BigInteger.valueOf(val));
         } else if ((smallValue < 0 && val < Long.MIN_VALUE - smallValue) ||
-                  (smallValue > 0 && val > Long.MAX_VALUE - smallValue)) {
+                   (smallValue > 0 && val > Long.MAX_VALUE - smallValue)) {
           // would overflow, convert to large
           largeValue = BigInteger.valueOf(smallValue);
           usingLarge = true;
