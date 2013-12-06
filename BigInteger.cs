@@ -11,7 +11,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 namespace PeterO {
-  /// <summary> An arbitrary-precision integer. </summary>
+    /// <summary> An arbitrary-precision integer. </summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger> {
 
     private static bool LittleEndianSerialize = false;
@@ -30,9 +30,9 @@ namespace PeterO {
 
 
     private static short ShiftWordsLeftByBits(short[] r, int rstart, int n, int shiftBits) {
-#if DEBUG
+      #if DEBUG
       if (!(shiftBits < 16)) throw new ArgumentException("doesn't satisfy shiftBits<16");
-#endif
+      #endif
 
       unchecked {
         short u, carry = 0;
@@ -53,10 +53,10 @@ namespace PeterO {
       unchecked {
         if (shiftBits != 0)
           for (int i = n; i > 0; i--) {
-            u = r[rstart + i - 1];
-            r[rstart + i - 1] = (short)((((((int)u) & 0xFFFF) >> (int)shiftBits) & 0xFFFF) | (((int)carry) & 0xFFFF));
-            carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
-          }
+          u = r[rstart + i - 1];
+          r[rstart + i - 1] = (short)((((((int)u) & 0xFFFF) >> (int)shiftBits) & 0xFFFF) | (((int)carry) & 0xFFFF));
+          carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
+        }
         return carry;
       }
     }
@@ -67,10 +67,10 @@ namespace PeterO {
         short u, carry = (short)((int)0xFFFF << (int)(16 - shiftBits));
         if (shiftBits != 0)
           for (int i = n; i > 0; i--) {
-            u = r[rstart + i - 1];
-            r[rstart + i - 1] = (short)(((((int)u) & 0xFFFF) >> (int)shiftBits) | (((int)carry) & 0xFFFF));
-            carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
-          }
+          u = r[rstart + i - 1];
+          r[rstart + i - 1] = (short)(((((int)u) & 0xFFFF) >> (int)shiftBits) | (((int)carry) & 0xFFFF));
+          carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
+        }
         return carry;
       }
     }
@@ -210,7 +210,7 @@ namespace PeterO {
     }
 
 
-    private static short LinearMultiply(short[] C, int cstart,
+    private static short LinearMultiply(short[] productArr, int cstart,
                                         short[] A, int astart, short B, int N) {
       unchecked {
         short carry = 0;
@@ -219,7 +219,7 @@ namespace PeterO {
           int p;
           p = (((int)A[astart + i]) & 0xFFFF) * Bint;
           p = p + (((int)carry) & 0xFFFF);
-          C[cstart + i] = (short)(p);
+          productArr[cstart + i] = (short)(p);
           carry = (short)(p >> 16);
         }
         return carry;
@@ -1386,9 +1386,9 @@ namespace PeterO {
       short[] Tarr,
       int Tstart, short[] Aarr, int Astart, int NA, short[] Barr, int Bstart, int NB) {
       if (NA == NB) {
-        if (Astart == Bstart && Aarr == Barr)
+        if (Astart == Bstart && Aarr == Barr){
           Square(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, NA);
-        else if (NA == 2)
+        } else if (NA == 2)
           Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
         else
           Multiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, NA);
@@ -1565,9 +1565,9 @@ namespace PeterO {
           A[Astart + 1] = GetLowHalf(u);
           A[Astart + 2] += GetHighHalf(u);
           Q++;
-#if DEBUG
+          #if DEBUG
           if (!(Q != 0)) throw new ArgumentException("doesn't satisfy Q!=0");
-#endif
+          #endif
 
         }
       }
@@ -1607,9 +1607,9 @@ namespace PeterO {
       short[] Tarr, int Tstart,
       short[] Qarr, int Qstart,
       short[] Barr, int Bstart, int N) {
-#if DEBUG
+      #if DEBUG
       if (!(N != 0 && N % 2 == 0)) throw new ArgumentException("doesn't satisfy N!=0 && N%2==0");
-#endif
+      #endif
 
       unchecked {
         if (N == 2)
@@ -1636,14 +1636,14 @@ namespace PeterO {
       // set up temporary work space
       int NA = (int)NAint;
       int NB = (int)NBint;
-#if DEBUG
+      #if DEBUG
       if ((NAint) <= 0) throw new ArgumentException("NAint" + " not less than " + "0" + " (" + Convert.ToString((long)(long)(NAint), System.Globalization.CultureInfo.InvariantCulture) + ")");
       if ((NBint) <= 0) throw new ArgumentException("NBint" + " not less than " + "0" + " (" + Convert.ToString((long)(long)(NBint), System.Globalization.CultureInfo.InvariantCulture) + ")");
       if (!(NA % 2 == 0 && NB % 2 == 0)) throw new ArgumentException("doesn't satisfy NA%2==0 && NB%2==0");
       if (!(Barr[Bstart + NB - 1] != 0 ||
-           Barr[Bstart + NB - 2] != 0)) throw new ArgumentException("doesn't satisfy B[NB-1]!=0 || B[NB-2]!=0");
+            Barr[Bstart + NB - 2] != 0)) throw new ArgumentException("doesn't satisfy B[NB-1]!=0 || B[NB-2]!=0");
       if (!(NB <= NA)) throw new ArgumentException("doesn't satisfy NB<=NA");
-#endif
+      #endif
       short[] TBarr = TA;
       short[] TParr = TA;
       int TBstart = (int)(Tstart + (NA + 2));
@@ -1666,7 +1666,7 @@ namespace PeterO {
         if (TA[Tstart + NA + 1] == 0 && (((int)TA[Tstart + NA]) & 0xFFFF) <= 1) {
           Qarr[Qstart + NA - NB + 1] = Qarr[Qstart + NA - NB] = 0;
           while (TA[NA] != 0 || Compare(TA, (int)(Tstart + NA - NB),
-                                      TBarr, TBstart, NB) >= 0) {
+                                        TBarr, TBstart, NB) >= 0) {
             TA[NA] -= (short)Subtract(TA, (int)(Tstart + NA - NB),
                                       TA, (int)(Tstart + NA - NB),
                                       TBarr, TBstart, NB);
@@ -1924,21 +1924,24 @@ namespace PeterO {
     /// <returns></returns>
     /// <remarks/>
     public BigInteger shiftLeft(int n) {
-      if ((n) <= Int32.MinValue) throw new ArgumentException("n" + " not less than " + Convert.ToString((long)(long)(Int32.MinValue), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)(n), System.Globalization.CultureInfo.InvariantCulture) + ")");
       if (n == 0) return this;
-      if (n < 0) return this.shiftRight(-n);
+      if (n < 0){
+        if(n==Int32.MinValue)
+          return this.shiftRight(1).shiftRight(Int32.MaxValue);
+        return this.shiftRight(-n);
+      }
       BigInteger ret = new BigInteger();
       int numWords = (int)(this.wordCount);
       int shiftWords = (int)(n >> 4);
       int shiftBits = (int)(n & 15);
-      int sign = this.Sign;
+      bool neg=numWords>0 && this.negative;
       ret.negative=this.negative;
       ret.reg = new short[RoundupSize(numWords + BitsToWords((int)n))];
       Array.Copy(this.reg,ret.reg,numWords);
-      if (sign < 0) { TwosComplement(ret.reg, (int)(ret.reg.Length)); }
+      if (neg) { TwosComplement(ret.reg, (int)(ret.reg.Length)); }
       ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
       ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
-      if (sign < 0) { TwosComplement(ret.reg, (int)(ret.reg.Length)); }
+      if (neg) { TwosComplement(ret.reg, (int)(ret.reg.Length)); }
       ret.wordCount = ret.CalcWordCount();
       return ret;
     }
@@ -1947,9 +1950,12 @@ namespace PeterO {
     /// <returns></returns>
     /// <remarks/>
     public BigInteger shiftRight(int n) {
-      if ((n) <= Int32.MinValue) throw new ArgumentException("n" + " not less than " + Convert.ToString((long)(long)(Int32.MinValue), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)(n), System.Globalization.CultureInfo.InvariantCulture) + ")");
       if (n == 0) return this;
-      if (n < 0) return this.shiftLeft(-n);
+      if (n < 0){
+        if(n==Int32.MinValue)
+          return this.shiftLeft(1).shiftLeft(Int32.MaxValue);
+        return this.shiftLeft(-n);
+      }
       BigInteger ret = new BigInteger();
       int numWords = (int)(this.wordCount);
       int shiftWords = (int)(n >> 4);
@@ -2047,9 +2053,9 @@ namespace PeterO {
       if (count > 4) throw new OverflowException();
       if (count == 4 && (this.reg[3] & 0x8000) != 0) {
         if (this.negative && this.reg[3] == unchecked((short)0x8000) &&
-           this.reg[2] == 0 &&
-           this.reg[1] == 0 &&
-           this.reg[0] == 0) {
+            this.reg[2] == 0 &&
+            this.reg[1] == 0 &&
+            this.reg[0] == 0) {
           return Int64.MinValue;
         } else {
           throw new OverflowException();
@@ -2281,7 +2287,7 @@ namespace PeterO {
       BigInteger thisValue = this.abs();
       bigintSecond = bigintSecond.abs();
       if (bigintSecond.Equals(BigInteger.One) ||
-         thisValue.Equals(bigintSecond))
+          thisValue.Equals(bigintSecond))
         return bigintSecond;
       if (thisValue.Equals(BigInteger.One))
         return thisValue;
@@ -2486,20 +2492,35 @@ namespace PeterO {
       return diff;
     }
 
-    static void PositiveMultiply(BigInteger product, BigInteger bigintA, BigInteger bigintB) {
-      int aSize = RoundupSize((int)(bigintA.wordCount));
-      int bSize = RoundupSize((int)(bigintB.wordCount));
-
-      product.reg = new short[RoundupSize(aSize + bSize)];
-      product.negative = false;
-
-      short[] workspace = new short[aSize + bSize];
-      if (bigintA.Equals(bigintB)) {
-        AsymmetricMultiply(product.reg, 0,
-                           workspace, 0,
-                           bigintA.reg, 0, aSize,
-                           bigintA.reg, 0, aSize);
+    private static void PositiveMultiply(BigInteger product, BigInteger bigintA, BigInteger bigintB) {
+      if(bigintA.wordCount==1){
+        int wc=bigintB.wordCount;
+        product.reg = new short[RoundupSize(wc+1)];
+        product.reg[wc]=LinearMultiply(product.reg,0,bigintB.reg,0,bigintA.reg[0],wc);
+        product.negative = false;
+        product.wordCount = product.CalcWordCount();
+        return;
+      } else if(bigintB.wordCount==1){
+        int wc=bigintA.wordCount;
+        product.reg = new short[RoundupSize(wc+1)];
+        product.reg[wc]=LinearMultiply(product.reg,0,bigintA.reg,0,bigintB.reg[0],wc);
+        product.negative = false;
+        product.wordCount = product.CalcWordCount();
+        return;
+      } else if (bigintA.Equals(bigintB)) {
+        int aSize = RoundupSize(bigintA.wordCount);
+        product.reg = new short[RoundupSize(aSize + aSize)];
+        product.negative = false;
+        short[] workspace = new short[aSize + aSize];
+        Square(product.reg, 0,
+               workspace, 0,
+               bigintA.reg, 0, aSize);
       } else {
+        int aSize = RoundupSize(bigintA.wordCount);
+        int bSize = RoundupSize(bigintB.wordCount);
+        product.reg = new short[RoundupSize(aSize + bSize)];
+        product.negative = false;
+        short[] workspace = new short[aSize + bSize];
         AsymmetricMultiply(product.reg, 0,
                            workspace, 0,
                            bigintA.reg, 0, aSize,
@@ -2508,20 +2529,17 @@ namespace PeterO {
       product.wordCount = product.CalcWordCount();
     }
 
-    static void Multiply(BigInteger product, BigInteger mul1, BigInteger mul2) {
-      PositiveMultiply(product, mul1, mul2);
-
-      if ((mul1.Sign >= 0) != (mul2.Sign >= 0))
-        product.NegateInternal();
-    }
-
     /// <summary>Multiplies this instance by the value of a BigInteger object.</summary>
     /// <param name='bigintMult'>A BigInteger object.</param>
     /// <returns>The product of the two objects.</returns>
     /// <remarks/>
     public BigInteger multiply(BigInteger bigintMult) {
       BigInteger product = new BigInteger();
-      Multiply(product, this, bigintMult);
+      if(this.wordCount==0 || bigintMult.wordCount==0)
+        return BigInteger.Zero;
+      PositiveMultiply(product, this, bigintMult);
+      if ((this.Sign >= 0) != (bigintMult.Sign >= 0))
+        product.NegateInternal();
       return product;
     }
 

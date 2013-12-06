@@ -38,6 +38,12 @@ namespace PeterO {
     }
     long shiftedLong;
     bool isSmall;
+    
+    /// <summary> </summary>
+    /// <remarks/>
+public bool IsSmall{
+    get { return isSmall; }
+  }
 
     /// <summary> </summary>
     /// <remarks/>

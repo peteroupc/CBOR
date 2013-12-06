@@ -38,6 +38,11 @@ at: http://upokecenter.com/d/
       }
     long shiftedLong;
     boolean isSmall;
+    
+    /**
+     * 
+     */
+public boolean isSmall() { return isSmall; }
 
     /**
      * 
@@ -66,12 +71,12 @@ at: http://upokecenter.com/d/
     private static BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
 
     public DigitShiftAccumulator(BigInteger bigint,
-      int lastDiscarded,
-      int olderDiscarded
-      ){
+                                 int lastDiscarded,
+                                 int olderDiscarded
+                                ){
  this(bigint);
-        bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
-        bitLeftmost = lastDiscarded;
+      bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
+      bitLeftmost = lastDiscarded;
     }
 
     public DigitShiftAccumulator(BigInteger bigint) {
@@ -89,7 +94,7 @@ at: http://upokecenter.com/d/
       }
     }
     
-public DigitShiftAccumulator(long longInt) {
+    public DigitShiftAccumulator(long longInt) {
       if (longInt < 0)
         throw new IllegalArgumentException("longInt is negative");
       shiftedLong = longInt;
@@ -205,7 +210,7 @@ public DigitShiftAccumulator(long longInt) {
      * the big integer being shifted is positive.
      */
     private void ShiftToBitsBig(long digits) {
-      String str = shiftedBigInt.toString(); // TODO
+      String str = shiftedBigInt.toString();
       // NOTE: Will be 1 if the value is 0
       long digitLength = str.length();
       knownBitLength = digitLength;
