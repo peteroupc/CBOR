@@ -34,7 +34,7 @@ namespace Test {
               Console.WriteLine(df2);
             }
             Assert.AreEqual(s.ToString(),df2.ToPlainString());
-          } catch(AssertionException){
+          } catch(Exception){
             Console.WriteLine(
               "Assert.AreEqual(\""+s.ToString()+"\",DecimalFraction.FromString(\""+df.ToString()+"\")"+
               ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)).ToPlainString());"
@@ -45,7 +45,7 @@ namespace Test {
           try {
             Assert.AreEqual(null,df.RoundToBinaryPrecision(
               new PrecisionContext(96,Rounding.HalfEven,0,28,false)));
-          } catch(AssertionException){
+          } catch(Exception){
             Console.WriteLine(
               "Assert.AreEqual(null,DecimalFraction.FromString(\""+df.ToString()+"\")"+
               ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)));"

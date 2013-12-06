@@ -300,6 +300,18 @@ namespace Test {
     }
     
     [Test]
+    public void FMATests(){
+      Assert.AreEqual(DecimalFraction.FromString("9000000000000000000000000000000001E5998"),
+                      DecimalFraction.FromString("9199906250000000000000000000000000E5075").MultiplyAndAdd(
+                        DecimalFraction.FromString("9600000000000000000000000000000000E855"),
+                        DecimalFraction.FromString("90E6030"), PrecisionContext.Decimal128.WithRounding(Rounding.HalfEven)));
+      Assert.AreEqual(DecimalFraction.FromString("5999999999999999E-329"),
+                      DecimalFraction.FromString("-5303202010047041E-70").MultiplyAndAdd(
+                        DecimalFraction.FromString("20280844420162E-345"),
+                        DecimalFraction.FromString("6E-314"), PrecisionContext.Decimal64.WithRounding(Rounding.Down)));
+    }
+    
+    [Test]
     public void ExtraDecimalTests(){
       Assert.AreEqual(null,DecimalFraction.FromString("-79228162514264337593543950336").
                       RoundToBinaryPrecision(PrecisionContext.CliDecimal));
