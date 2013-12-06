@@ -290,6 +290,14 @@ import org.junit.Test;
     }
     
     @Test
+    public void FMATests() {
+      Assert.assertEquals(DecimalFraction.FromString("5999999999999999E-329"),
+                      DecimalFraction.FromString("-5303202010047041E-70").MultiplyAndAdd(
+                        DecimalFraction.FromString("20280844420162E-345"),
+                        DecimalFraction.FromString("6E-314"),PrecisionContext.Decimal64.WithRounding(Rounding.Down)));
+    }
+    
+    @Test
     public void ExtraDecimalTests() {
       Assert.assertEquals(null,DecimalFraction.FromString("-79228162514264337593543950336").
                       RoundToBinaryPrecision(PrecisionContext.CliDecimal));

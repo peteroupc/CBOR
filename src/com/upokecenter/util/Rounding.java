@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-
-
     /**
      * Specifies the mode to use when "shortening" numbers that otherwise
      * can't fit a given number of digits, so that the shortened number has

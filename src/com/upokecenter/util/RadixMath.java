@@ -1574,9 +1574,14 @@ bigrem=divrem[1];
                   // and second operand isn't zero
                   // the 8 digits at the end are guard digits
                   FastInteger tmp=new FastInteger(op2Exponent).Subtract(ctx.getPrecision()).Subtract(8);
-                  if((helper.GetMantissa(op1)).abs().compareTo(bigMant2)>0){
-                    // first mantissa's absolute value is greater, subtract precision again
-                    tmp.Subtract(ctx.getPrecision());
+                  BigInteger bigMant1=(helper.GetMantissa(op1)).abs();
+                  if(bigMant1.compareTo(bigMant2)>0){
+                    // first mantissa's absolute value is greater,
+                    // subtract first mantissa's digit length or precision,
+                    // whichever is greater
+                    long digitLength=helper.CreateShiftAccumulator(bigMant1)
+                      .DigitLength;
+                    tmp.Subtract(Math.max(ctx.getPrecision(),digitLength));
                   }
                   op1Exponent = (tmp.AsBigInteger());
                 }
@@ -1587,9 +1592,14 @@ bigrem=divrem[1];
                   // and first operand isn't zero
                   // the 8 digits at the end are guard digits
                   FastInteger tmp=new FastInteger(op1Exponent).Subtract(ctx.getPrecision()).Subtract(8);
-                  if((helper.GetMantissa(op2)).abs().compareTo(bigMant1)>0){
-                    // second mantissa's absolute value is greater, subtract precision again
-                    tmp.Subtract(ctx.getPrecision());
+                  BigInteger bigMant2=(helper.GetMantissa(op2)).abs();
+                  if(bigMant2.compareTo(bigMant1)>0){
+                    // second mantissa's absolute value is greater,
+                    // subtract second mantissa's digit length or precision,
+                    // whichever is greater
+                    long digitLength=helper.CreateShiftAccumulator(bigMant2)
+                      .DigitLength;
+                    tmp.Subtract(Math.max(ctx.getPrecision(),digitLength));
                   }
                   op2Exponent = (tmp.AsBigInteger());
                 }

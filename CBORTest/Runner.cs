@@ -35,6 +35,7 @@ namespace PeterO {
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
+        if(!type.FullName.Contains("ExtensiveTest"))continue;
         object test = Activator.CreateInstance(type);
         var setup = type.GetMethod("SetUp");
         if (setup != null) {

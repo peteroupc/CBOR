@@ -50,149 +50,168 @@ namespace CBOR
     private bool Contains(string str, string sub){
       return str.IndexOf(sub,StringComparison.Ordinal)>=0;
     }
+    private bool StartsWith(string str, string sub){
+      return str.IndexOf(sub,StringComparison.Ordinal)>=0;
+    }
     
     
-    private void ParseLine(string ln){
-      Match match=LineRegex.Match(ln);
-      if(match.Success){
-        string type=(match.Groups[1].ToString());
-        PrecisionContext ctx=(type.Equals("d64")) ?
-          PrecisionContext.Decimal64 :
-          PrecisionContext.Decimal128;
-        string op=(match.Groups[2].ToString());
-        string round=(match.Groups[3].ToString());
-        if(round.Equals(">"))ctx=ctx.WithRounding(Rounding.Ceiling);
-        if(round.Equals("<"))ctx=ctx.WithRounding(Rounding.Floor);
-        if(round.Equals("0"))ctx=ctx.WithRounding(Rounding.Down);
-        if(round.Equals("=0"))ctx=ctx.WithRounding(Rounding.HalfEven);
-        if(round.Equals("h>"))ctx=ctx.WithRounding(Rounding.HalfUp);
-        string op1str=match.Groups[4].ToString();
-        string op2str=match.Groups[5].ToString();
-        DecimalFraction op1=DecimalFraction.FromString(match.Groups[4].ToString());
-        DecimalFraction op2=DecimalFraction.FromString(match.Groups[5].ToString());
-        DecimalFraction result;
-        if(Contains(match.Groups[6].ToString(),"inf")){
-          result=null;
+    private int ParseLine(string ln){
+      string[] chunks=ln.Split(' ');
+      if(chunks.Length<4)
+        return 0;
+      string type=chunks[0];
+      PrecisionContext ctx=(type.StartsWith("d64")) ?
+        PrecisionContext.Decimal64 :
+        PrecisionContext.Decimal128;
+      if(Contains(type,"!"))
+        return 0;
+      bool squroot=Contains(type,"V");
+      bool div=Contains(type,"/");
+      bool fma=Contains(type,"*+");
+      bool fms=Contains(type,"*-");
+      bool addop=!fma && Contains(type,"+");
+      bool subop=!fms && Contains(type,"-");
+      bool mul=!fma && !fms && Contains(type,"*");
+      if(!fma && !fms && !addop && !subop)
+        return 0;
+      string round=chunks[1];
+      if(round.Equals(">"))ctx=ctx.WithRounding(Rounding.Ceiling);
+      if(round.Equals("<"))ctx=ctx.WithRounding(Rounding.Floor);
+      if(round.Equals("0"))ctx=ctx.WithRounding(Rounding.Down);
+      if(round.Equals("=0"))ctx=ctx.WithRounding(Rounding.HalfEven);
+      if(round.Equals("h>"))ctx=ctx.WithRounding(Rounding.HalfUp);
+      string op1str=chunks[2];
+      if(op1str.Equals("+inf") || op1str.Equals("-inf") || 
+         op1str.Equals("+Inf") || op1str.Equals("-Inf") || op1str.Equals("S") || op1str.Equals("Q"))
+        return 0;
+      string op2str=chunks[3];
+      if(op2str.Equals("+inf") || op2str.Equals("-inf") || 
+         op2str.Equals("+Inf") || op2str.Equals("-Inf") || op2str.Equals("S") || op2str.Equals("Q"))
+        return 0;
+      string op3str=String.Empty;
+      if(chunks.Length<=4)
+        return 0;
+      string sresult=String.Empty;
+      string flags=String.Empty;
+      op3str=chunks[4];
+      if(op3str.Equals("->")){
+        if(chunks.Length<=6)
+          return 0;
+        op3str=String.Empty;
+        sresult=chunks[5];
+        flags=chunks[6];
+      } else {
+        if(chunks.Length<=7)
+          return 0;
+        if(op3str.Equals("+inf") || op3str.Equals("-inf") || 
+           op3str.Equals("+Inf") || op3str.Equals("-Inf") || op3str.Equals("S") || op3str.Equals("Q"))
+          return 0;
+        sresult=chunks[6];
+        flags=chunks[7];
+      }
+      if(sresult.Equals("S") || sresult.Equals("Q"))
+        return 0;
+      DecimalFraction op1=DecimalFraction.FromString(op1str);
+      DecimalFraction op2=DecimalFraction.FromString(op2str);
+      DecimalFraction op3=(String.IsNullOrEmpty(op3str)) ? null : DecimalFraction.FromString(op3str);
+      DecimalFraction result;
+      if(Contains(sresult,"inf") || Contains(sresult,"Inf")){
+        result=null;
+      } else {
+        result=DecimalFraction.FromString(sresult.ToString());
+      }
+      int expectedFlags=0;
+      if(Contains(flags,"x"))expectedFlags|=PrecisionContext.FlagInexact;
+      if(Contains(flags,"u"))expectedFlags|=PrecisionContext.FlagUnderflow;
+      if(Contains(flags,"o"))expectedFlags|=PrecisionContext.FlagOverflow;
+      bool invalid=(Contains(flags,"i"));
+      bool divzero=(Contains(flags,"z"));
+      ctx=ctx.WithBlankFlags();
+      if(addop){
+        if(invalid){
+          try { op1.Add(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
         } else {
-          result=DecimalFraction.FromString(match.Groups[6].ToString());
-        }
-        string flags=match.Groups[7].ToString();
-        int expectedFlags=0;
-        if(Contains(flags,"x"))expectedFlags|=PrecisionContext.FlagInexact;
-        if(Contains(flags,"u"))expectedFlags|=PrecisionContext.FlagUnderflow;
-        if(Contains(flags,"o"))expectedFlags|=PrecisionContext.FlagOverflow;
-        bool invalid=(Contains(flags,"i"));
-        bool divzero=(Contains(flags,"z"));
-        ctx=ctx.WithBlankFlags();
-        if(op.Equals("+")){
-          if(invalid){
-            try { op1.Add(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
-          } else {
-            DecimalFraction d3=op1.Add(op2,ctx);
-            if(!Object.Equals(d3,result))
-              Assert.AreEqual(result,d3,ln);
-            AssertFlags(expectedFlags,ctx.Flags,ln);
-          }
-        }
-        else if(op.Equals("-")){
-          if(invalid){
-            try { op1.Subtract(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
-          } else {
-            DecimalFraction d3=op1.Subtract(op2,ctx);
-            if(!Object.Equals(d3,result))
-              Assert.AreEqual(result,d3,ln);
-            AssertFlags(expectedFlags,ctx.Flags,ln);
-          }
-        }
-        else if(op.Equals("*")){
-          if(invalid){
-            try { op1.Multiply(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
-          } else {
-            DecimalFraction d3=op1.Multiply(op2,ctx);
-            if(!Object.Equals(d3,result))
-              Assert.AreEqual(result,d3,ln);
-            AssertFlags(expectedFlags,ctx.Flags,ln);
-          }
-        }
-        else if(op.Equals("/")){
-          if(invalid){
-            try { op1.Divide(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
-          } else if(divzero){
-            try { op1.Divide(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(DivideByZeroException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
-          } else {
-            DecimalFraction d3=op1.Divide(op2,ctx);
-            if(!Object.Equals(d3,result))
-              Assert.AreEqual(result,d3,ln);
-            AssertFlags(expectedFlags,ctx.Flags,ln);
-          }
-        }
-        return;
-      } 
-      match=ThreeOpLineRegex.Match(ln);
-      if(match.Success){
-        string type=(match.Groups[1].ToString());
-        PrecisionContext ctx=(type.Equals("d64")) ?
-          PrecisionContext.Decimal64 :
-          PrecisionContext.Decimal128;
-        string op=(match.Groups[2].ToString());
-        string round=(match.Groups[3].ToString());
-        if(round.Equals(">"))ctx=ctx.WithRounding(Rounding.Ceiling);
-        if(round.Equals("<"))ctx=ctx.WithRounding(Rounding.Floor);
-        if(round.Equals("0"))ctx=ctx.WithRounding(Rounding.Down);
-        if(round.Equals("=0"))ctx=ctx.WithRounding(Rounding.HalfEven);
-        if(round.Equals("h>"))ctx=ctx.WithRounding(Rounding.HalfUp);
-        string op1str=match.Groups[4].ToString();
-        string op2str=match.Groups[5].ToString();
-        string op3str=match.Groups[6].ToString();
-        DecimalFraction op1=DecimalFraction.FromString(match.Groups[4].ToString());
-        DecimalFraction op2=DecimalFraction.FromString(match.Groups[5].ToString());
-        DecimalFraction op3=DecimalFraction.FromString(match.Groups[6].ToString());
-        DecimalFraction result;
-        if(Contains(match.Groups[7].ToString(),"inf")){
-          result=null;
-        } else {
-          result=DecimalFraction.FromString(match.Groups[7].ToString());
-        }
-        string flags=match.Groups[8].ToString();
-        int expectedFlags=0;
-        if(Contains(flags,"x"))expectedFlags|=PrecisionContext.FlagInexact;
-        if(Contains(flags,"u"))expectedFlags|=PrecisionContext.FlagUnderflow;
-        if(Contains(flags,"o"))expectedFlags|=PrecisionContext.FlagOverflow;
-        bool invalid=(Contains(flags,"i"));
-        bool divzero=(Contains(flags,"z"));
-        ctx=ctx.WithBlankFlags();
-        if(op.Equals("*+") && false){
-          if(invalid){
-            try { op1.MultiplyAndAdd(op2,op3,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
-          } else {
-            DecimalFraction d3=op1.MultiplyAndAdd(op2,op3,ctx);
-            if(!Object.Equals(d3,result))
-              Assert.AreEqual(result,d3,ln);
-            AssertFlags(expectedFlags,ctx.Flags,ln);
-          }
-        }
-        else if(op.Equals("*-") && false){
-          if(invalid){
-            try { op1.MultiplyAndAdd(op2,op3.Negate(),ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
-          } else {
-            DecimalFraction d3=op1.MultiplyAndAdd(op2,op3.Negate(),ctx);
-            if(!Object.Equals(d3,result))
-              Assert.AreEqual(result,d3,ln);
-            AssertFlags(expectedFlags,ctx.Flags,ln);
-          }
+          DecimalFraction d3=op1.Add(op2,ctx);
+          if(!Object.Equals(d3,result))
+            Assert.AreEqual(result,d3,ln);
+          AssertFlags(expectedFlags,ctx.Flags,ln);
         }
       }
+      else if(subop){
+        if(invalid){
+          try { op1.Subtract(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+        } else {
+          DecimalFraction d3=op1.Subtract(op2,ctx);
+          if(!Object.Equals(d3,result))
+            Assert.AreEqual(result,d3,ln);
+          AssertFlags(expectedFlags,ctx.Flags,ln);
+        }
+      }
+      else if(mul){
+        if(invalid){
+          try { op1.Multiply(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+        } else {
+          DecimalFraction d3=op1.Multiply(op2,ctx);
+          if(!Object.Equals(d3,result))
+            Assert.AreEqual(result,d3,ln);
+          AssertFlags(expectedFlags,ctx.Flags,ln);
+        }
+      }
+      else if(div){
+        if(invalid){
+          try { op1.Divide(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+        } else if(divzero){
+          try { op1.Divide(op2,ctx); Assert.Fail("Should have failed\n"+ln); } catch(DivideByZeroException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+        } else {
+          DecimalFraction d3=op1.Divide(op2,ctx);
+          if(!Object.Equals(d3,result))
+            Assert.AreEqual(result,d3,ln);
+          AssertFlags(expectedFlags,ctx.Flags,ln);
+        }
+      }
+      else if(fma){
+        if(invalid){
+          try { op1.MultiplyAndAdd(op2,op3,ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+        } else {
+          DecimalFraction d3=op1.MultiplyAndAdd(op2,op3,ctx);
+          if(!Object.Equals(d3,result))
+            Assert.AreEqual(result,d3,ln);
+          AssertFlags(expectedFlags,ctx.Flags,ln);
+        }
+      }
+      else if(fms){
+        if(invalid){
+          try { op1.MultiplyAndAdd(op2,op3.Negate(),ctx); Assert.Fail("Should have failed\n"+ln); } catch(ArithmeticException){ } catch(Exception ex){ Assert.Fail(ex.ToString()); }
+        } else {
+          DecimalFraction d3=op1.MultiplyAndAdd(op2,op3.Negate(),ctx);
+          if(!Object.Equals(d3,result))
+            Assert.AreEqual(result,d3,ln);
+          AssertFlags(expectedFlags,ctx.Flags,ln);
+        }
+      }
+      return 0;
     }
     
     [Test]
     public void TestParser(){
+      long failures=0;
       foreach(var p in Directory.GetDirectories(Path)){
         foreach(var f in Directory.GetFiles(p)){
+          Console.WriteLine(f);
           string[] lines=File.ReadAllLines(f);
           foreach(var ln in lines){
-            ParseLine(ln);
+            try {
+              ParseLine(ln);
+            } catch(Exception ex){
+              Console.WriteLine(ln);
+              Console.WriteLine(ex.Message);
+              failures++;
+            }
           }
         }
+      }
+      if(failures>0){
+        Assert.Fail(failures+" failure(s)");
       }
     }
   }

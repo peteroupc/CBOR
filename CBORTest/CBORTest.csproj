@@ -58,6 +58,7 @@
     <Compile Include="CBORExtraTest.cs" />
     <Compile Include="CBORObjectMathTest.cs" />
     <Compile Include="CBORTest.cs" />
+    <Compile Include="ExtensiveTest.cs" />
     <Compile Include="FastRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner.cs" />
@@ -93,6 +94,10 @@
     <Content Include="ProfilingSessions\Session20131203_150841.sdps" />
     <Content Include="ProfilingSessions\Session20131203_160449.sdps" />
     <Content Include="ProfilingSessions\Session20131203_161532.sdps" />
+    <Content Include="ProfilingSessions\Session20131205_204759.sdps" />
+    <Content Include="ProfilingSessions\Session20131205_204917.sdps" />
+    <Content Include="ProfilingSessions\Session20131205_205025.sdps" />
+    <Content Include="ProfilingSessions\Session20131205_205245.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

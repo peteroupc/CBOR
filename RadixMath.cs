@@ -3,9 +3,9 @@ using System.Text;
 //using System.Numerics;
 
 namespace PeterO {
-    /// <summary> Encapsulates radix-independent arithmetic. </summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+  /// <summary> Encapsulates radix-independent arithmetic. </summary>
+  /// <typeparam name='T'>Data type for a numeric value in a particular
+  /// radix.</typeparam>
   class RadixMath<T> {
 
     IRadixMathHelper<T> helper;
@@ -1544,40 +1544,84 @@ namespace PeterO {
         T op2 = decfrac;
         BigInteger op1Exponent = helper.GetExponent(op1);
         BigInteger op2Exponent = helper.GetExponent(op2);
-        BigInteger expdiff = BigInteger.Abs(op1Exponent - (BigInteger)op2Exponent);
+        FastInteger fastOp1Exp=new FastInteger(op1Exponent);
+        FastInteger fastOp2Exp=new FastInteger(op2Exponent);
+        FastInteger expdiff = new FastInteger(fastOp1Exp).Subtract(fastOp2Exp).Abs();
+        bool inCompare=false;
         if (ctx != null && ctx.Precision > 0) {
           // Check if exponent difference is too big for
           // radix-power calculation to work quickly
-          if (expdiff.CompareTo((BigInteger)100) >= 0) {
-            FastInteger fastint = new FastInteger(expdiff);
+          if (!inCompare || expdiff.CompareTo(100) >= 0) {
             // If exponent difference is greater than the precision
-            if (fastint.CompareTo(ctx.Precision) > 0) {
-              int expcmp2 = op1Exponent.CompareTo(op2Exponent);
+            if (new FastInteger(expdiff).CompareTo(ctx.Precision) > 0) {
+              BigInteger op1MantAbs=BigInteger.Abs(helper.GetMantissa(op1));
+              BigInteger op2MantAbs=BigInteger.Abs(helper.GetMantissa(op2));
+              int expcmp2 = fastOp1Exp.CompareTo(fastOp2Exp);
               if (expcmp2 < 0) {
-                BigInteger bigMant2=BigInteger.Abs(helper.GetMantissa(op2));
-                if(!(bigMant2.IsZero)){
+                if(!(op2MantAbs.IsZero)){
                   // first operand's exponent is less
                   // and second operand isn't zero
-                  // the 8 digits at the end are guard digits
-                  FastInteger tmp=new FastInteger(op2Exponent).Subtract(ctx.Precision).Subtract(8);
-                  if(BigInteger.Abs(helper.GetMantissa(op1)).CompareTo(bigMant2)>0){
-                    // first mantissa's absolute value is greater, subtract precision again
-                    tmp.Subtract(ctx.Precision);
+                  // second mantissa will be shifted by the exponent
+                  // difference
+                  //                    111111111111|
+                  //        222222222222222|
+                  long digitLength1=helper.CreateShiftAccumulator(op1MantAbs)
+                    .DigitLength;
+                  if (
+                    new FastInteger(fastOp1Exp)
+                    .Add(digitLength1)
+                    .Add(2)
+                    .CompareTo(fastOp2Exp) < 0) {
+                    // first operand's mantissa can't reach the
+                    // second operand's mantissa, so the exponent can be
+                    // raised without affecting the result
+                    FastInteger tmp=new FastInteger(fastOp2Exp).Subtract(8)
+                      .Subtract(digitLength1)
+                      .Subtract(ctx.Precision);
+                    FastInteger newDiff=new FastInteger(tmp).Subtract(fastOp2Exp).Abs();
+                    if(newDiff.CompareTo(expdiff)<0){
+                      /*
+                      Console.WriteLine("op1: {0} | {1}",tmp,op1MantAbs);
+                      Console.WriteLine("op1 was: {0} | {1}",op1Exponent,op1MantAbs);
+                      Console.WriteLine("op2: {0} | {1}",op2Exponent,op2MantAbs);
+                      changed=true;
+                       */
+                      op1Exponent = (tmp.AsBigInteger());
+                    }
                   }
-                  op1Exponent = (tmp.AsBigInteger());
                 }
               } else if (expcmp2 > 0) {
-                BigInteger bigMant1=BigInteger.Abs(helper.GetMantissa(op1));
-                if(!(bigMant1.IsZero)){
+                if(!(op1MantAbs.IsZero)){
                   // first operand's exponent is greater
-                  // and first operand isn't zero
-                  // the 8 digits at the end are guard digits
-                  FastInteger tmp=new FastInteger(op1Exponent).Subtract(ctx.Precision).Subtract(8);
-                  if(BigInteger.Abs(helper.GetMantissa(op2)).CompareTo(bigMant1)>0){
-                    // second mantissa's absolute value is greater, subtract precision again
-                    tmp.Subtract(ctx.Precision);
+                  // and second operand isn't zero
+                  // first mantissa will be shifted by the exponent
+                  // difference
+                  //       111111111111|
+                  //                222222222222222|
+                  long digitLength2=helper.CreateShiftAccumulator(op2MantAbs)
+                    .DigitLength;
+                  if (
+                    new FastInteger(fastOp2Exp)
+                    .Add(digitLength2)
+                    .Add(2)
+                    .CompareTo(fastOp1Exp) < 0) {
+                    // second operand's mantissa can't reach the
+                    // first operand's mantissa, so the exponent can be
+                    // raised without affecting the result
+                    FastInteger tmp=new FastInteger(fastOp1Exp).Subtract(8)
+                      .Subtract(digitLength2)
+                      .Subtract(ctx.Precision);
+                    FastInteger newDiff=new FastInteger(tmp).Subtract(fastOp1Exp).Abs();
+                    if(newDiff.CompareTo(expdiff)<0){
+                      /*
+                      Console.WriteLine("op1: {0} | {1}",op1Exponent,op1MantAbs);
+                      Console.WriteLine("op2: {0} | {1}",tmp,op2MantAbs);
+                      Console.WriteLine("op2 was: {0} | {1}",op2Exponent,op2MantAbs);
+                      changed=true;
+                       */
+                      op2Exponent = (tmp.AsBigInteger());
+                    }
                   }
-                  op2Exponent = (tmp.AsBigInteger());
                 }
               }
               expcmp = op1Exponent.CompareTo((BigInteger)op2Exponent);
@@ -1628,66 +1672,106 @@ namespace PeterO {
         // Special case: First operand is zero
         return -ds;
       }
-      if (expcmp == 0) {
+      if(expcmp==0){
         return mantcmp;
-      } else {
-        BigInteger op1Exponent = helper.GetExponent(thisValue);
-        BigInteger op2Exponent = helper.GetExponent(decfrac);
-        BigInteger expdiff = BigInteger.Abs(op1Exponent - (BigInteger)op2Exponent);
-        // Check if exponent difference is too big for
-        // radix-power calculation to work quickly
-        if (expdiff.CompareTo((BigInteger)100) >= 0) {
-          FastInteger fastint = new FastInteger(expdiff);
-          BigInteger op1Mantissa = helper.GetMantissa(thisValue);
-          BigInteger op2Mantissa = helper.GetMantissa(decfrac);
-          long precision1 = helper.CreateShiftAccumulator(
-            BigInteger.Abs(op1Mantissa)).DigitLength;
-          long precision2 = helper.CreateShiftAccumulator(
-            BigInteger.Abs(op2Mantissa)).DigitLength;
-          long maxPrecision = Math.Max(precision1, precision2);
-          // If exponent difference is greater than the
-          // maximum precision of the two operands
-          if (fastint.CompareTo(maxPrecision) > 0) {
-            int expcmp2 = op1Exponent.CompareTo(op2Exponent);
-            if (expcmp2 < 0) {
-              BigInteger bigMant2=BigInteger.Abs(op2Mantissa);
-              if(!(bigMant2.IsZero)){
-                // first operand's exponent is less
-                // and second operand isn't zero
-                // the 8 digits at the end are guard digits
-                FastInteger tmp=new FastInteger(op2Exponent).Subtract(maxPrecision).Subtract(8);
-                if(BigInteger.Abs(op1Mantissa).CompareTo(bigMant2)>0){
-                  // first mantissa's absolute value is greater, subtract precision again
-                  tmp.Subtract(maxPrecision);
+      }
+      BigInteger op1Exponent = helper.GetExponent(thisValue);
+      BigInteger op2Exponent = helper.GetExponent(decfrac);
+      FastInteger fastOp1Exp=new FastInteger(op1Exponent);
+      FastInteger fastOp2Exp=new FastInteger(op2Exponent);
+      FastInteger expdiff = new FastInteger(fastOp1Exp).Subtract(fastOp2Exp).Abs();
+      // Check if exponent difference is too big for
+      // radix-power calculation to work quickly
+      if (expdiff.CompareTo(100) >= 0) {
+        BigInteger op1MantAbs=BigInteger.Abs(helper.GetMantissa(thisValue));
+        BigInteger op2MantAbs=BigInteger.Abs(helper.GetMantissa(decfrac));
+        long precision1 = helper.CreateShiftAccumulator(
+          op1MantAbs).DigitLength;
+        long precision2 = helper.CreateShiftAccumulator(
+          op2MantAbs).DigitLength;
+        long maxPrecision = Math.Max(precision1, precision2);
+        // If exponent difference is greater than the
+        // maximum precision of the two operands
+        if (new FastInteger(expdiff).CompareTo(maxPrecision) > 0) {
+          int expcmp2 = fastOp1Exp.CompareTo(fastOp2Exp);
+          if (expcmp2 < 0) {
+            if(!(op2MantAbs.IsZero)){
+              // first operand's exponent is less
+              // and second operand isn't zero
+              // second mantissa will be shifted by the exponent
+              // difference
+              //                    111111111111|
+              //        222222222222222|
+              long digitLength1=helper.CreateShiftAccumulator(op1MantAbs)
+                .DigitLength;
+              if (
+                new FastInteger(fastOp1Exp)
+                .Add(digitLength1)
+                .Add(2)
+                .CompareTo(fastOp2Exp) < 0) {
+                // first operand's mantissa can't reach the
+                // second operand's mantissa, so the exponent can be
+                // raised without affecting the result
+                FastInteger tmp=new FastInteger(fastOp2Exp).Subtract(8)
+                  .Subtract(digitLength1)
+                  .Subtract(maxPrecision);
+                FastInteger newDiff=new FastInteger(tmp).Subtract(fastOp2Exp).Abs();
+                if(newDiff.CompareTo(expdiff)<0){
+                  /*
+                      Console.WriteLine("op1: {0} | {1}",tmp,op1MantAbs);
+                      Console.WriteLine("op1 was: {0} | {1}",op1Exponent,op1MantAbs);
+                      Console.WriteLine("op2: {0} | {1}",op2Exponent,op2MantAbs);
+                      changed=true;
+                   */
+                  op1Exponent = (tmp.AsBigInteger());
                 }
-                op1Exponent = (tmp.AsBigInteger());
-              }
-            } else if (expcmp2 > 0) {
-              BigInteger bigMant1=BigInteger.Abs(op1Mantissa);
-              if(!(bigMant1.IsZero)){
-                // first operand's exponent is greater
-                // and first operand isn't zero
-                // the 8 digits at the end are guard digits
-                FastInteger tmp=new FastInteger(op1Exponent).Subtract(maxPrecision).Subtract(8);
-                if(BigInteger.Abs(op2Mantissa).CompareTo(bigMant1)>0){
-                  // second mantissa's absolute value is greater, subtract precision again
-                  tmp.Subtract(maxPrecision);
-                }
-                op2Exponent = (tmp.AsBigInteger());
               }
             }
-            expcmp = op1Exponent.CompareTo((BigInteger)op2Exponent);
+          } else if (expcmp2 > 0) {
+            if(!(op1MantAbs.IsZero)){
+              // first operand's exponent is greater
+              // and second operand isn't zero
+              // first mantissa will be shifted by the exponent
+              // difference
+              //       111111111111|
+              //                222222222222222|
+              long digitLength2=helper.CreateShiftAccumulator(op2MantAbs)
+                .DigitLength;
+              if (
+                new FastInteger(fastOp2Exp)
+                .Add(digitLength2)
+                .Add(2)
+                .CompareTo(fastOp1Exp) < 0) {
+                // second operand's mantissa can't reach the
+                // first operand's mantissa, so the exponent can be
+                // raised without affecting the result
+                FastInteger tmp=new FastInteger(fastOp1Exp).Subtract(8)
+                  .Subtract(digitLength2)
+                  .Subtract(maxPrecision);
+                FastInteger newDiff=new FastInteger(tmp).Subtract(fastOp1Exp).Abs();
+                if(newDiff.CompareTo(expdiff)<0){
+                  /*
+                      Console.WriteLine("op1: {0} | {1}",op1Exponent,op1MantAbs);
+                      Console.WriteLine("op2: {0} | {1}",tmp,op2MantAbs);
+                      Console.WriteLine("op2 was: {0} | {1}",op2Exponent,op2MantAbs);
+                      changed=true;
+                   */
+                  op2Exponent = (tmp.AsBigInteger());
+                }
+              }
+            }
           }
+          expcmp = op1Exponent.CompareTo((BigInteger)op2Exponent);
         }
-        if (expcmp > 0) {
-          BigInteger newmant = helper.RescaleByExponentDiff(
-            helper.GetMantissa(thisValue), op1Exponent, op2Exponent);
-          return newmant.CompareTo((BigInteger)helper.GetMantissa(decfrac));
-        } else {
-          BigInteger newmant = helper.RescaleByExponentDiff(
-            helper.GetMantissa(decfrac), op1Exponent, op2Exponent);
-          return helper.GetMantissa(thisValue).CompareTo((BigInteger)newmant);
-        }
+      }
+      if (expcmp > 0) {
+        BigInteger newmant = helper.RescaleByExponentDiff(
+          helper.GetMantissa(thisValue), op1Exponent, op2Exponent);
+        return newmant.CompareTo((BigInteger)helper.GetMantissa(decfrac));
+      } else {
+        BigInteger newmant = helper.RescaleByExponentDiff(
+          helper.GetMantissa(decfrac), op1Exponent, op2Exponent);
+        return helper.GetMantissa(thisValue).CompareTo((BigInteger)newmant);
       }
     }
   }

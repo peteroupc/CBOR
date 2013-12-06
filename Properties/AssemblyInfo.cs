@@ -15,7 +15,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
-
 // The assembly version has following format :
 //
 // Major.Minor.Build.Revision

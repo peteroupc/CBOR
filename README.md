@@ -31,4 +31,5 @@ at: http://upokecenter.com/d/
 Acknowledgments
 -----------
 
-Carsten Bormann reviewed this library and gave helpful suggestions.
+* Carsten Bormann reviewed this library and gave helpful suggestions.
+* Anders Gustafssson converted this library to a Portable Class Library.
