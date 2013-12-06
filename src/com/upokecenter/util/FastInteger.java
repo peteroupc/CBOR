@@ -355,7 +355,7 @@ at: http://upokecenter.com/d/
     /**
      * 
      */
-public boolean isEven() {
+public boolean isEvenNumber() {
         return (usingLarge) ? largeValue.testBit(0)==false : (smallValue&1)==0;
       }
 

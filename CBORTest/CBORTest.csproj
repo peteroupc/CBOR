@@ -58,7 +58,6 @@
     <Compile Include="CBORExtraTest.cs" />
     <Compile Include="CBORObjectMathTest.cs" />
     <Compile Include="CBORTest.cs" />
-    <Compile Include="ExtensiveTest.cs" />
     <Compile Include="FastRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner.cs" />

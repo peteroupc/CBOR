@@ -339,7 +339,7 @@ namespace PeterO {
     
     /// <summary> </summary>
     /// <remarks/>
-public bool IsEven{
+public bool IsEvenNumber{
       get {
         return (usingLarge) ? largeValue.IsEven : (smallValue&1)==0;
       }

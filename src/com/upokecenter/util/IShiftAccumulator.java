@@ -6,7 +6,7 @@ package com.upokecenter.util;
   interface IShiftAccumulator {
     BigInteger getShiftedInt();
     long getDigitLength();
-    boolean getIsSmall();
+    boolean isSmall();
     int getOlderDiscardedDigits();
     int getLastDiscardedDigit();
     long getShiftedIntSmall();

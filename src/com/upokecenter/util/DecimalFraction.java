@@ -255,7 +255,7 @@ at: http://upokecenter.com/d/
       return mantissa;
     }
     
-    private static BigInteger FivePower40=(BigInteger.valueOf(95367431640625))*(BigInteger.valueOf(95367431640625));
+    private static BigInteger FivePower40=(BigInteger.valueOf(95367431640625L)).multiply(BigInteger.valueOf(95367431640625L));
 
     static BigInteger FindPowerOfFive(long precision) {
       if (precision <= 0) return BigInteger.ONE;
@@ -267,7 +267,7 @@ at: http://upokecenter.com/d/
         return FivePower40;
       if (precision <= 54) {
         if((precision&1)==0){
-          ret = BigIntPowersOfFive[precision>>1];
+          ret = BigIntPowersOfFive[(int)(precision>>1)];
           ret=ret.multiply(ret);
           return ret;
         } else {
@@ -325,7 +325,7 @@ at: http://upokecenter.com/d/
       }
       if (precision <= 36) {
         if((precision&1)==0){
-          ret = BigIntPowersOfTen[precision>>1];
+          ret = BigIntPowersOfTen[(int)(precision>>1)];
           ret=ret.multiply(ret);
           return ret;
         } else {

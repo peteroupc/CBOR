@@ -45,7 +45,7 @@ namespace PeterO {
         if (accum.LastDiscardedDigit >= (radix / 2)) {
           if ((accum.LastDiscardedDigit > (radix / 2) || accum.OlderDiscardedDigits != 0)) {
             incremented = true;
-          } else if (!fastint.IsEven) {
+          } else if (!fastint.IsEvenNumber) {
             incremented = true;
           }
         }
@@ -1615,8 +1615,7 @@ namespace PeterO {
                   // difference
                   //                    111111111111|
                   //        222222222222222|
-                  long digitLength1=helper.CreateShiftAccumulator(op1MantAbs)
-                    .DigitLength;
+                  long digitLength1=helper.CreateShiftAccumulator(op1MantAbs).DigitLength;
                   if (
                     new FastInteger(fastOp1Exp)
                     .Add(digitLength1)
@@ -1648,8 +1647,7 @@ namespace PeterO {
                   // difference
                   //       111111111111|
                   //                222222222222222|
-                  long digitLength2=helper.CreateShiftAccumulator(op2MantAbs)
-                    .DigitLength;
+                  long digitLength2=helper.CreateShiftAccumulator(op2MantAbs).DigitLength;
                   if (
                     new FastInteger(fastOp2Exp)
                     .Add(digitLength2)
@@ -1752,8 +1750,8 @@ namespace PeterO {
               // difference
               //                    111111111111|
               //        222222222222222|
-              long digitLength1=helper.CreateShiftAccumulator(op1MantAbs)
-                .DigitLength;
+              long digitLength1=helper.CreateShiftAccumulator(
+                op1MantAbs).DigitLength;
               if (
                 new FastInteger(fastOp1Exp)
                 .Add(digitLength1)
@@ -1785,8 +1783,8 @@ namespace PeterO {
               // difference
               //       111111111111|
               //                222222222222222|
-              long digitLength2=helper.CreateShiftAccumulator(op2MantAbs)
-                .DigitLength;
+              long digitLength2=helper.CreateShiftAccumulator(
+                op2MantAbs).DigitLength;
               if (
                 new FastInteger(fastOp2Exp)
                 .Add(digitLength2)

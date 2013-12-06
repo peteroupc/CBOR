@@ -271,7 +271,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(o2);
     }
     
-    private void AddSubCompare(CBORObject o1, CBORObject o2){
+    private static void AddSubCompare(CBORObject o1, CBORObject o2){
       DecimalFraction cmpDecFrac = o1.AsDecimalFraction().Add(o2.AsDecimalFraction());
       DecimalFraction cmpCobj = CBORObject.Addition(o1,o2).AsDecimalFraction();
       if (cmpDecFrac.CompareTo(cmpCobj)!=0) {
