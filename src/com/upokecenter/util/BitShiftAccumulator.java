@@ -39,6 +39,11 @@ at: http://upokecenter.com/d/
       }
     long shiftedLong;
     boolean isSmall;
+    
+    /**
+     * 
+     */
+public boolean isSmall() { return isSmall; }
 
     /**
      * 

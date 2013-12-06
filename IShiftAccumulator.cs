@@ -5,6 +5,7 @@ namespace PeterO {
   interface IShiftAccumulator {
     BigInteger ShiftedInt { get; }
     long DigitLength { get; }
+    bool IsSmall { get; }
     int OlderDiscardedDigits { get; }
     int LastDiscardedDigit { get; }
     long ShiftedIntSmall { get; }

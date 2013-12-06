@@ -351,6 +351,13 @@ at: http://upokecenter.com/d/
       }
       return this;
     }
+    
+    /**
+     * 
+     */
+public boolean isEven() {
+        return (usingLarge) ? largeValue.testBit(0)==false : (smallValue&1)==0;
+      }
 
     /**
      * 

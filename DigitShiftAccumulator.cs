@@ -37,6 +37,12 @@ namespace PeterO {
     }
     long shiftedLong;
     bool isSmall;
+    
+    /// <summary> </summary>
+    /// <remarks/>
+public bool IsSmall{
+      get { return isSmall; }
+    }
 
     /// <summary> </summary>
     /// <remarks/>
@@ -68,11 +74,11 @@ namespace PeterO {
     private static BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
 
     public DigitShiftAccumulator(BigInteger bigint,
-      int lastDiscarded,
-      int olderDiscarded
-      ) : this(bigint) {
-        bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
-        bitLeftmost = lastDiscarded;
+                                 int lastDiscarded,
+                                 int olderDiscarded
+                                ) : this(bigint) {
+      bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
+      bitLeftmost = lastDiscarded;
     }
 
     public DigitShiftAccumulator(BigInteger bigint) {
@@ -90,7 +96,7 @@ namespace PeterO {
       }
     }
     
-public DigitShiftAccumulator(long longInt) {
+    public DigitShiftAccumulator(long longInt) {
       if (longInt < 0)
         throw new ArgumentException("longInt is negative");
       shiftedLong = longInt;
@@ -204,7 +210,7 @@ public DigitShiftAccumulator(long longInt) {
     /// and whether the discarded digits to the right of that digit are set.
     /// Assumes that the big integer being shifted is positive. </summary>
     private void ShiftToBitsBig(long digits) {
-      String str = shiftedBigInt.ToString(); // TODO
+      String str = shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
       long digitLength = str.Length;
       knownBitLength = digitLength;

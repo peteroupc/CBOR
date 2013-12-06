@@ -243,6 +243,8 @@ namespace PeterO {
       }
       return mantissa;
     }
+    
+    private static BigInteger FivePower40=((BigInteger)95367431640625)*((BigInteger)95367431640625);
 
     internal static BigInteger FindPowerOfFive(long precision) {
       if (precision <= 0) return BigInteger.One;
@@ -250,11 +252,19 @@ namespace PeterO {
       BigInteger ret;
       if (precision <= 27)
         return BigIntPowersOfFive[(int)precision];
+      if(precision==40)
+        return FivePower40;
       if (precision <= 54) {
-        ret = BigIntPowersOfFive[27];
-        bigpow = BigIntPowersOfFive[((int)precision) - 27];
-        ret *= (BigInteger)bigpow;
-        return ret;
+        if((precision&1)==0){
+          ret = BigIntPowersOfFive[precision>>1];
+          ret *= (BigInteger)ret;
+          return ret;
+        } else {
+          ret = BigIntPowersOfFive[27];
+          bigpow = BigIntPowersOfFive[((int)precision) - 27];
+          ret *= (BigInteger)bigpow;
+          return ret;
+        }
       }
       ret = BigInteger.One;
       bool first = true;
@@ -303,10 +313,16 @@ namespace PeterO {
         return ret;
       }
       if (precision <= 36) {
-        ret = BigIntPowersOfTen[18];
-        bigpow = BigIntPowersOfTen[((int)precision) - 18];
-        ret *= (BigInteger)bigpow;
-        return ret;
+        if((precision&1)==0){
+          ret = BigIntPowersOfTen[precision>>1];
+          ret *= (BigInteger)ret;
+          return ret;
+        } else {
+          ret = BigIntPowersOfTen[18];
+          bigpow = BigIntPowersOfTen[((int)precision) - 18];
+          ret *= (BigInteger)bigpow;
+          return ret;
+        }
       }
       ret = BigInteger.One;
       bool first = true;

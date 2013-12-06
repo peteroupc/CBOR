@@ -336,6 +336,14 @@ namespace PeterO {
       }
       return this;
     }
+    
+    /// <summary> </summary>
+    /// <remarks/>
+public bool IsEven{
+      get {
+        return (usingLarge) ? largeValue.IsEven : (smallValue&1)==0;
+      }
+    }
 
     /// <summary> </summary>
     /// <param name='val'> A 32-bit signed integer.</param>

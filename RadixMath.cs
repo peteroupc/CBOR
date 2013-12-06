@@ -3,9 +3,9 @@ using System.Text;
 //using System.Numerics;
 
 namespace PeterO {
-  /// <summary> Encapsulates radix-independent arithmetic. </summary>
-  /// <typeparam name='T'>Data type for a numeric value in a particular
-  /// radix.</typeparam>
+    /// <summary> Encapsulates radix-independent arithmetic. </summary>
+    /// <typeparam name='T'>Data type for a numeric value in a particular
+    /// radix.</typeparam>
   class RadixMath<T> {
 
     IRadixMathHelper<T> helper;
@@ -32,6 +32,54 @@ namespace PeterO {
       }
     }
 
+
+    private bool Round(IShiftAccumulator accum, Rounding rounding,
+                       bool neg, FastInteger fastint) {
+      bool incremented = false;
+      int radix = helper.GetRadix();
+      if (rounding == Rounding.HalfUp) {
+        if (accum.LastDiscardedDigit >= (radix / 2)) {
+          incremented = true;
+        }
+      } else if (rounding == Rounding.HalfEven) {
+        if (accum.LastDiscardedDigit >= (radix / 2)) {
+          if ((accum.LastDiscardedDigit > (radix / 2) || accum.OlderDiscardedDigits != 0)) {
+            incremented = true;
+          } else if (!fastint.IsEven) {
+            incremented = true;
+          }
+        }
+      } else if (rounding == Rounding.Ceiling) {
+        if (!neg && (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+          incremented = true;
+        }
+      } else if (rounding == Rounding.Floor) {
+        if (neg && (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+          incremented = true;
+        }
+      } else if (rounding == Rounding.HalfDown) {
+        if (accum.LastDiscardedDigit > (radix / 2) ||
+            (accum.LastDiscardedDigit == (radix / 2) && accum.OlderDiscardedDigits != 0)) {
+          incremented = true;
+        }
+      } else if (rounding == Rounding.Up) {
+        if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+          incremented = true;
+        }
+      } else if (rounding == Rounding.ZeroFiveUp) {
+        if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+          if (radix == 2) {
+            incremented = true;
+          } else {
+            int lastDigit = new FastInteger(fastint).Mod(radix).AsInt32();
+            if (lastDigit == 0 || lastDigit == (radix / 2)) {
+              incremented = true;
+            }
+          }
+        }
+      }
+      return incremented;
+    }
 
     private bool Round(IShiftAccumulator accum, Rounding rounding,
                        bool neg, BigInteger bigval) {
@@ -844,7 +892,7 @@ namespace PeterO {
         if (mantabs.CompareTo(helper.MultiplyByRadixPower(BigInteger.One, context.Precision)) < 0) {
           if (!context.HasExponentRange)
             return thisValue;
-          FastInteger fastExp = new FastInteger().Add(helper.GetExponent(thisValue));
+          FastInteger fastExp = new FastInteger(helper.GetExponent(thisValue));
           FastInteger fastAdjustedExp = new FastInteger(fastExp)
             .Add(context.Precision).Subtract(1);
           FastInteger fastNormalMin = new FastInteger(fastEMin)
@@ -1448,7 +1496,9 @@ namespace PeterO {
           expdiff.Add(discardedBits);
           accum = helper.CreateShiftAccumulator(oldmantissa, lastDiscarded, olderDiscarded);
           accum.ShiftRight(expdiff);
-          BigInteger newmantissa = accum.ShiftedInt;
+          FastInteger newmantissa = accum.IsSmall ? 
+            new FastInteger(accum.ShiftedIntSmall) :
+            new FastInteger(accum.ShiftedInt);
           if ((accum.DiscardedDigitCount).Sign != 0 ||
               (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
             if (!oldmantissa.IsZero)
@@ -1459,16 +1509,16 @@ namespace PeterO {
                 throw new ArithmeticException("Rounding was required");
             }
             if (Round(accum, rounding, neg, newmantissa)) {
-              newmantissa += BigInteger.One;
+              newmantissa.Add(1);
             }
           }
-          if (newmantissa.IsZero)
+          if (newmantissa.Sign==0)
             flags |= PrecisionContext.FlagClamped;
           if ((flags & (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact)) == (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact))
             flags |= PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
           if (signals != null) signals[0] = flags;
-          if (neg) newmantissa = -newmantissa;
-          return helper.CreateNew(newmantissa, fastETiny.AsBigInteger());
+          if (neg) newmantissa.Negate();
+          return helper.CreateNew(newmantissa.AsBigInteger(), fastETiny.AsBigInteger());
         }
       }
       bool expChanged = false;
@@ -1593,7 +1643,7 @@ namespace PeterO {
               } else if (expcmp2 > 0) {
                 if(!(op1MantAbs.IsZero)){
                   // first operand's exponent is greater
-                  // and second operand isn't zero
+                  // and first operand isn't zero
                   // first mantissa will be shifted by the exponent
                   // difference
                   //       111111111111|
