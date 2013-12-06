@@ -263,7 +263,7 @@ import org.junit.Test;
       TestCommon.AssertRoundTrip(o2);
     }
     
-    private void AddSubCompare(CBORObject o1, CBORObject o2) {
+    private static void AddSubCompare(CBORObject o1, CBORObject o2) {
       DecimalFraction cmpDecFrac = o1.AsDecimalFraction().Add(o2.AsDecimalFraction());
       DecimalFraction cmpCobj = CBORObject.Addition(o1,o2).AsDecimalFraction();
       if (cmpDecFrac.compareTo(cmpCobj)!=0) {
@@ -287,14 +287,6 @@ import org.junit.Test;
                     CBORObject.DecodeFromBytes(new byte[]{(byte)0xFB,0x31,(byte)0x90,(byte)0xEA,0x16,(byte)0xBE,(byte)0x80,0x0B,0x37}));
       AddSubCompare(CBORObject.DecodeFromBytes(new byte[]{(byte)0xFB,0x3C,0x00,(byte)0xCF,(byte)0xB6,(byte)0xBD,(byte)0xFF,0x37,0x38}),
                     CBORObject.DecodeFromBytes(new byte[]{(byte)0xFA,0x30,(byte)0x80,0x75,0x63}));
-    }
-    
-    @Test
-    public void FMATests() {
-      Assert.assertEquals(DecimalFraction.FromString("5999999999999999E-329"),
-                      DecimalFraction.FromString("-5303202010047041E-70").MultiplyAndAdd(
-                        DecimalFraction.FromString("20280844420162E-345"),
-                        DecimalFraction.FromString("6E-314"),PrecisionContext.Decimal64.WithRounding(Rounding.Down)));
     }
     
     @Test

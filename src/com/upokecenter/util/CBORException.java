@@ -10,7 +10,8 @@ at: http://upokecenter.com/d/
     /**
      * Exception thrown for errors involving CBOR data.
      */
-    public class CBORException : Exception {
+    public class CBORException extends RuntimeException {
+private static final long serialVersionUID=1L;
     /**
      * 
      */

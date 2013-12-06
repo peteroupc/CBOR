@@ -149,9 +149,6 @@ namespace PeterO {
         A[Astart + i] = unchecked((short)(~A[Astart + i]));
     }
 
-    private static int Decrement(short[] A, int N) {
-      return Decrement(A, N, (short)1);
-    }
     private static int Decrement(short[] A, int N, short B) {
       //DebugAssert.IsTrue(N!=0,"{0} line {1}: N","integer.cpp",76);
       unchecked {
@@ -166,7 +163,7 @@ namespace PeterO {
       }
     }
     private static void TwosComplement(short[] A, int N) {
-      Decrement(A, N);
+      Decrement(A, N, (short)1);
       for (int i = 0; i < N; i++)
         A[i] = unchecked((short)(~A[i]));
     }
@@ -2082,23 +2079,23 @@ namespace PeterO {
     public BigInteger pow(BigInteger power) {
       if ((power) == null) throw new ArgumentNullException("power");
       if (power.Sign < 0) throw new ArgumentException("power is negative");
-      BigInteger thisValue = this;
+      BigInteger thisVar = this;
       if (power.Equals(BigInteger.Zero))
         return BigInteger.One; // however 0 to the power of 0 is undefined
       else if (power.Equals(BigInteger.One))
         return this;
       else if (power.Equals((BigInteger)2))
-        return thisValue * thisValue;
+        return thisVar * (BigInteger)thisVar;
       else if (power.Equals((BigInteger)3))
-        return (thisValue * thisValue) * thisValue;
+        return (thisVar * (BigInteger)thisVar) * (BigInteger)thisVar;
       BigInteger r = BigInteger.One;
       while (!power.IsZero) {
         if (!power.IsEven) {
-          r = (r * thisValue);
+          r = (r * (BigInteger)thisVar);
         }
         power >>= 1;
         if (!power.IsZero) {
-          thisValue = (thisValue * thisValue);
+          thisVar = (thisVar * (BigInteger)thisVar);
         }
       }
       return r;
@@ -2110,23 +2107,23 @@ namespace PeterO {
     /// <remarks/>
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) throw new ArgumentException("power is negative");
-      BigInteger thisValue = this;
+      BigInteger thisVar = this;
       if (powerSmall == 0)
         return BigInteger.One; // however 0 to the power of 0 is undefined
       else if (powerSmall == 1)
         return this;
       else if (powerSmall == 2)
-        return thisValue * thisValue;
+        return thisVar * (BigInteger)thisVar;
       else if (powerSmall == 3)
-        return (thisValue * thisValue) * thisValue;
+        return (thisVar * (BigInteger)thisVar) * (BigInteger)thisVar;
       BigInteger r = BigInteger.One;
       while (powerSmall != 0) {
         if ((powerSmall & 1) != 0) {
-          r = (r * thisValue);
+          r = (r * (BigInteger)thisVar);
         }
         powerSmall >>= 1;
         if (powerSmall != 0) {
-          thisValue = (thisValue * thisValue);
+          thisVar = (thisVar * (BigInteger)thisVar);
         }
       }
       return r;
@@ -2298,7 +2295,7 @@ namespace PeterO {
           thisValue = bigintSecond;
           bigintSecond = temp;
         }
-        thisValue = thisValue % bigintSecond;
+        thisValue = thisValue % (BigInteger)bigintSecond;
       }
       return bigintSecond;
     }
@@ -2863,7 +2860,7 @@ namespace PeterO {
       BigInteger bigintY = Power2((BitLength() + 1) / 2);
       do {
         bigintX = bigintY;
-        bigintY = bi / bigintX;
+        bigintY = bi / (BigInteger)bigintX;
         bigintY += bigintX;
         bigintY >>= 1;
       } while (bigintY.CompareTo(bigintX) < 0);

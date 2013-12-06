@@ -139,6 +139,12 @@
     <Content Include="ProfilingSessions\Session20131205_060207.sdps" />
     <Content Include="ProfilingSessions\Session20131205_061512.sdps" />
     <Content Include="ProfilingSessions\Session20131205_062337.sdps" />
+    <Content Include="ProfilingSessions\Session20131206_020448.sdps" />
+    <Content Include="ProfilingSessions\Session20131206_031227.sdps" />
+    <Content Include="ProfilingSessions\Session20131206_032001.sdps" />
+    <Content Include="ProfilingSessions\Session20131206_043319.sdps" />
+    <Content Include="ProfilingSessions\Session20131206_043805.sdps" />
+    <Content Include="ProfilingSessions\Session20131206_044259.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

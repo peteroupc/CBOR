@@ -48,7 +48,7 @@ package com.upokecenter.util;
         if (accum.getLastDiscardedDigit() >= (radix / 2)) {
           if ((accum.getLastDiscardedDigit() > (radix / 2) || accum.getOlderDiscardedDigits() != 0)) {
             incremented = true;
-          } else if (fastint.testBit(0)) {
+          } else if (!fastint.isEvenNumber()) {
             incremented = true;
           }
         }
@@ -1510,7 +1510,7 @@ bigrem=divrem[1];
           expdiff.Add(discardedBits);
           accum = helper.CreateShiftAccumulator(oldmantissa, lastDiscarded, olderDiscarded);
           accum.ShiftRight(expdiff);
-          FastInteger newmantissa = accum.getIsSmall() ? 
+          FastInteger newmantissa = accum.isSmall() ? 
             new FastInteger(accum.getShiftedIntSmall()) :
             new FastInteger(accum.getShiftedInt());
           if ((accum.getDiscardedDigitCount()).signum() != 0 ||
@@ -1629,8 +1629,7 @@ bigrem=divrem[1];
                   // difference
                   //                    111111111111|
                   //        222222222222222|
-                  long digitLength1=helper.CreateShiftAccumulator(op1MantAbs)
-                    .DigitLength;
+                  long digitLength1=helper.CreateShiftAccumulator(op1MantAbs).getDigitLength();
                   if (
                     new FastInteger(fastOp1Exp)
                     .Add(digitLength1)
@@ -1662,8 +1661,7 @@ bigrem=divrem[1];
                   // difference
                   //       111111111111|
                   //                222222222222222|
-                  long digitLength2=helper.CreateShiftAccumulator(op2MantAbs)
-                    .DigitLength;
+                  long digitLength2=helper.CreateShiftAccumulator(op2MantAbs).getDigitLength();
                   if (
                     new FastInteger(fastOp2Exp)
                     .Add(digitLength2)
@@ -1767,8 +1765,8 @@ bigrem=divrem[1];
               // difference
               //                    111111111111|
               //        222222222222222|
-              long digitLength1=helper.CreateShiftAccumulator(op1MantAbs)
-                .DigitLength;
+              long digitLength1=helper.CreateShiftAccumulator(
+                op1MantAbs).getDigitLength();
               if (
                 new FastInteger(fastOp1Exp)
                 .Add(digitLength1)
@@ -1800,8 +1798,8 @@ bigrem=divrem[1];
               // difference
               //       111111111111|
               //                222222222222222|
-              long digitLength2=helper.CreateShiftAccumulator(op2MantAbs)
-                .DigitLength;
+              long digitLength2=helper.CreateShiftAccumulator(
+                op2MantAbs).getDigitLength();
               if (
                 new FastInteger(fastOp2Exp)
                 .Add(digitLength2)

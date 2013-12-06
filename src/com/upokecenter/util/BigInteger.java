@@ -150,9 +150,6 @@ at: http://upokecenter.com/d/
         A[Astart + i] = ((short)(~A[Astart + i]));
     }
 
-    private static int Decrement(short[] A, int N) {
-      return Decrement(A, N, (short)1);
-    }
     private static int Decrement(short[] A, int N, short B) {
       //Debugif(!(N!=0))Assert.fail("{0} line {1}: N","integer.cpp",76);
       {
@@ -167,7 +164,7 @@ at: http://upokecenter.com/d/
       }
     }
     private static void TwosComplement(short[] A, int N) {
-      Decrement(A, N);
+      Decrement(A, N, (short)1);
       for (int i = 0; i < N; i++)
         A[i] = ((short)(~A[i]));
     }
@@ -2078,23 +2075,23 @@ at: http://upokecenter.com/d/
     public BigInteger pow(BigInteger power) {
       if ((power) == null) throw new NullPointerException("power");
       if (power.signum() < 0) throw new IllegalArgumentException("power is negative");
-      BigInteger thisValue = this;
+      BigInteger thisVar = this;
       if (power.equals(BigInteger.ZERO))
         return BigInteger.ONE; // however 0 to the power of 0 is undefined
       else if (power.equals(BigInteger.ONE))
         return this;
       else if (power.equals(BigInteger.valueOf(2)))
-        return thisValue * thisValue;
+        return thisVar.multiply(thisVar);
       else if (power.equals(BigInteger.valueOf(3)))
-        return (thisValue * thisValue) * thisValue;
+        return (thisVar.multiply(thisVar)).multiply(thisVar);
       BigInteger r = BigInteger.ONE;
       while (power.signum()!=0) {
         if (power.testBit(0)) {
-          r = (r * thisValue);
+          r = (r.multiply(thisVar));
         }
         power=power.shiftRight(1);
         if (power.signum()!=0) {
-          thisValue = (thisValue * thisValue);
+          thisVar = (thisVar.multiply(thisVar));
         }
       }
       return r;
@@ -2106,23 +2103,23 @@ at: http://upokecenter.com/d/
      */
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) throw new IllegalArgumentException("power is negative");
-      BigInteger thisValue = this;
+      BigInteger thisVar = this;
       if (powerSmall == 0)
         return BigInteger.ONE; // however 0 to the power of 0 is undefined
       else if (powerSmall == 1)
         return this;
       else if (powerSmall == 2)
-        return thisValue * thisValue;
+        return thisVar.multiply(thisVar);
       else if (powerSmall == 3)
-        return (thisValue * thisValue) * thisValue;
+        return (thisVar.multiply(thisVar)).multiply(thisVar);
       BigInteger r = BigInteger.ONE;
       while (powerSmall != 0) {
         if ((powerSmall & 1) != 0) {
-          r = (r * thisValue);
+          r = (r.multiply(thisVar));
         }
         powerSmall >>= 1;
         if (powerSmall != 0) {
-          thisValue = (thisValue * thisValue);
+          thisVar = (thisVar.multiply(thisVar));
         }
       }
       return r;
@@ -2297,7 +2294,7 @@ at: http://upokecenter.com/d/
           thisValue = bigintSecond;
           bigintSecond = temp;
         }
-        thisValue = thisValue % bigintSecond;
+        thisValue = thisValue.remainder(bigintSecond);
       }
       return bigintSecond;
     }
@@ -2873,7 +2870,7 @@ at: http://upokecenter.com/d/
       BigInteger bigintY = Power2((BitLength() + 1) / 2);
       do {
         bigintX = bigintY;
-        bigintY = bi / bigintX;
+        bigintY = bi.divide(bigintX);
         bigintY=bigintY.add(bigintX);
         bigintY=bigintY.shiftRight(1);
       } while (bigintY.compareTo(bigintX) < 0);
