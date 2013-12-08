@@ -75,23 +75,18 @@ namespace PeterO {
     /// </summary>
     /// <param name='mantissa'> The unscaled value.</param>
     /// <param name='exponentSmall'> The binary exponent.</param>
-    public BigFloat(BigInteger mantissa, long exponentSmall) {
-      this.exponent = (BigInteger)exponentSmall;
-      this.mantissa = mantissa;
+    public BigFloat(BigInteger mantissa, long exponentSmall) : 
+      this(mantissa,(BigInteger)exponentSmall) {
     }
     /// <summary> Creates a bigfloat with the given mantissa and an exponent
     /// of 0. </summary>
     /// <param name='mantissa'> The desired value of the bigfloat</param>
-    public BigFloat(BigInteger mantissa) {
-      this.exponent = BigInteger.Zero;
-      this.mantissa = mantissa;
+    public BigFloat(BigInteger mantissa) : this(mantissa, BigInteger.Zero) {
     }
     /// <summary> Creates a bigfloat with the given mantissa and an exponent
     /// of 0. </summary>
     /// <param name='mantissaSmall'> The desired value of the bigfloat</param>
-    public BigFloat(long mantissaSmall) {
-      this.exponent = BigInteger.Zero;
-      this.mantissa = (BigInteger)mantissaSmall;
+    public BigFloat(long mantissaSmall) : this((BigInteger)mantissaSmall, BigInteger.Zero) {
     }
     private static BigInteger BigShiftIteration = (BigInteger)1000000;
     private static int ShiftIteration = 1000000;
@@ -289,11 +284,11 @@ namespace PeterO {
       if (this.mantissa.IsZero) {
         return 0.0f;
       }
-      long smallmant = 0;
+      int smallmant = 0;
       if (bigmant.CompareTo(OneShift23) < 0) {
-        smallmant = (long)bigmant;
+        smallmant = (int)bigmant;
         int exponentchange = 0;
-        while (smallmant < (1L << 23)) {
+        while (smallmant < (1 << 23)) {
           smallmant <<= 1;
           exponentchange++;
         }
@@ -304,7 +299,7 @@ namespace PeterO {
         bitsAfterLeftmost = accum.OlderDiscardedDigits;
         bitLeftmost = accum.LastDiscardedDigit;
         bigexponent.Add(accum.DiscardedDigitCount);
-        smallmant = accum.ShiftedIntSmall;
+        smallmant = (int)accum.ShiftedIntSmall;
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
@@ -330,7 +325,7 @@ namespace PeterO {
         bitsAfterLeftmost = accum.OlderDiscardedDigits;
         bitLeftmost = accum.LastDiscardedDigit;
         bigexponent.Add(accum.DiscardedDigitCount);
-        smallmant = accum.ShiftedIntSmall;
+        smallmant = (int)accum.ShiftedIntSmall;
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
           smallmant++;

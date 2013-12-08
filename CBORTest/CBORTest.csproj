@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='UTF-8'?>
+<Project DefaultTargets='Build' ToolsVersion='4.0' xmlns='http://schemas.microsoft.com/developer/msbuild/2003'>
   <PropertyGroup>
     <ProjectGuid>{8FE63143-541E-448D-8337-A98D1FA51541}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Configuration Condition=' &apos;$(Configuration)&apos; == &apos;&apos; '>Debug</Configuration>
+    <Platform Condition=' &apos;$(Platform)&apos; == &apos;&apos; '>AnyCPU</Platform>
     <OutputType>Exe</OutputType>
     <RootNamespace>CBORTest</RootNamespace>
     <AssemblyName>CBORTest</AssemblyName>
@@ -19,14 +19,14 @@
     <WarningLevel>4</WarningLevel>
     <SourceAnalysisOverrideSettingsFile>C:\Users\Peter\AppData\Roaming\ICSharpCode/SharpDevelop4\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+  <PropertyGroup Condition=' &apos;$(Platform)&apos; == &apos;AnyCPU&apos; '>
     <PlatformTarget>x86</PlatformTarget>
     <BaseAddress>4194304</BaseAddress>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <PropertyGroup Condition=' &apos;$(Configuration)&apos; == &apos;Debug&apos; '>
     <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>True</DebugSymbols>
     <DebugType>Full</DebugType>
@@ -35,7 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition=' &apos;$(Configuration)&apos; == &apos;Release&apos; '>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>False</DebugSymbols>
     <DebugType>None</DebugType>
@@ -45,58 +45,58 @@
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core">
+    <Reference Include='nunit.framework'/>
+    <Reference Include='System'/>
+    <Reference Include='System.Core'>
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BEncoding.cs" />
-    <Compile Include="BEncodingTest.cs" />
-    <Compile Include="BigIntTests.cs" />
-    <Compile Include="CBORExtraTest.cs" />
-    <Compile Include="CBORObjectMathTest.cs" />
-    <Compile Include="CBORTest.cs" />
-    <Compile Include="FastRandom.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner.cs" />
-    <Compile Include="TestCommon.cs" />
-  </ItemGroup>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  <Compile Include='BEncoding.cs'/><Compile Include='BEncodingTest.cs'/><Compile Include='BigIntTests.cs'/><Compile Include='CBORExtraTest.cs'/><Compile Include='CBORObjectMathTest.cs'/><Compile Include='CBORTest.cs'/><Compile Include='ExtensiveTest.cs'/><Compile Include='FastRandom.cs'/><Compile Include='Properties\AssemblyInfo.cs'/><Compile Include='Runner.cs'/><Compile Include='TestCommon.cs'/></ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CBOR.csproj">
+    <ProjectReference Include='..\CBOR.csproj'>
       <Project>{3A85B4B0-5FF0-47F3-8D3E-8DC5F398041F}</Project>
       <Name>CBOR</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include='app.config'/>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ProfilingSessions\Session20131117_073438.sdps" />
-    <Content Include="ProfilingSessions\Session20131117_075920.sdps" />
-    <Content Include="ProfilingSessions\Session20131117_080050.sdps" />
-    <Content Include="ProfilingSessions\Session20131117_191704.sdps" />
-    <Content Include="ProfilingSessions\Session20131117_215523.sdps" />
-    <Content Include="ProfilingSessions\Session20131121_204124.sdps" />
-    <Content Include="ProfilingSessions\Session20131124_160442.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_012223.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_042235.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_044329.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_052858.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_125031.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_142716.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_144654.sdps" />
-    <Content Include="ProfilingSessions\Session20131202_013819.sdps" />
-    <Content Include="ProfilingSessions\Session20131202_015101.sdps" />
-    <Content Include="ProfilingSessions\Session20131203_150657.sdps" />
-    <Content Include="ProfilingSessions\Session20131203_150841.sdps" />
-    <Content Include="ProfilingSessions\Session20131203_160449.sdps" />
-    <Content Include="ProfilingSessions\Session20131203_161532.sdps" />
-    <Content Include="ProfilingSessions\Session20131205_204759.sdps" />
-    <Content Include="ProfilingSessions\Session20131205_204917.sdps" />
-    <Content Include="ProfilingSessions\Session20131205_205025.sdps" />
-    <Content Include="ProfilingSessions\Session20131205_205245.sdps" />
+    <Content Include='ProfilingSessions\Session20131117_073438.sdps'/>
+    <Content Include='ProfilingSessions\Session20131117_075920.sdps'/>
+    <Content Include='ProfilingSessions\Session20131117_080050.sdps'/>
+    <Content Include='ProfilingSessions\Session20131117_191704.sdps'/>
+    <Content Include='ProfilingSessions\Session20131117_215523.sdps'/>
+    <Content Include='ProfilingSessions\Session20131121_204124.sdps'/>
+    <Content Include='ProfilingSessions\Session20131124_160442.sdps'/>
+    <Content Include='ProfilingSessions\Session20131201_012223.sdps'/>
+    <Content Include='ProfilingSessions\Session20131201_042235.sdps'/>
+    <Content Include='ProfilingSessions\Session20131201_044329.sdps'/>
+    <Content Include='ProfilingSessions\Session20131201_052858.sdps'/>
+    <Content Include='ProfilingSessions\Session20131201_125031.sdps'/>
+    <Content Include='ProfilingSessions\Session20131201_142716.sdps'/>
+    <Content Include='ProfilingSessions\Session20131201_144654.sdps'/>
+    <Content Include='ProfilingSessions\Session20131202_013819.sdps'/>
+    <Content Include='ProfilingSessions\Session20131202_015101.sdps'/>
+    <Content Include='ProfilingSessions\Session20131203_150657.sdps'/>
+    <Content Include='ProfilingSessions\Session20131203_150841.sdps'/>
+    <Content Include='ProfilingSessions\Session20131203_160449.sdps'/>
+    <Content Include='ProfilingSessions\Session20131203_161532.sdps'/>
+    <Content Include='ProfilingSessions\Session20131205_204759.sdps'/>
+    <Content Include='ProfilingSessions\Session20131205_204917.sdps'/>
+    <Content Include='ProfilingSessions\Session20131205_205025.sdps'/>
+    <Content Include='ProfilingSessions\Session20131205_205245.sdps'/>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>
 </Project>

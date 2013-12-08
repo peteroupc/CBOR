@@ -901,6 +901,97 @@ namespace Test {
         }
       }
     }
+    
+    
+            private static short Divide32By16(int dividendLow, short divisor, bool returnRemainder){
+      int t;
+      int dividendHigh=0;
+      int intDivisor=(((int)divisor)&0xFFFF);
+      for(int i=0;i<32;i++){
+        t=dividendHigh>>31;
+        dividendHigh<<=1;
+        dividendHigh=unchecked((int)(dividendHigh|((int)((dividendLow>>31)&1))));
+        dividendLow<<=1;
+        t|=dividendHigh;
+        // unsigned greater-than-or-equal check
+        if(((t>>31)!=0) || (t>=intDivisor)){
+          unchecked {
+            dividendHigh-=intDivisor;
+            dividendLow+=1;
+          }
+        }
+      }
+      return (returnRemainder ? 
+              unchecked((short)(((int)dividendHigh)&0xFFFF)) :
+              unchecked((short)(((int)dividendLow)&0xFFFF))
+             );
+    }
+
+
+    private static short DivideUnsigned(int x, short y) {
+      unchecked {
+        int iy = (((int)y) & 0xFFFF);
+        if ((x >> 31) == 0) {
+          // x is already nonnegative
+          return (short)(((int)x / iy) & 0xFFFF);
+        } else {
+          return Divide32By16(x,y,false);
+        }
+      }
+    }
+    private static short RemainderUnsigned(int x, short y) {
+      unchecked {
+        int iy = (((int)y) & 0xFFFF);
+        if ((x >> 31) == 0) {
+          // x is already nonnegative
+          return (short)(((int)x % iy) & 0xFFFF);
+        } else {
+          return Divide32By16(x,y,true);
+        }
+      }
+    }
+
+    [Test]
+    public void TestDivideUnsigned(){
+      FastRandom fr=new FastRandom();
+      unchecked {
+        for(int i=0;i<1000;i++){
+          uint x=(uint)fr.NextValue(0x10000);
+          x|=((uint)fr.NextValue(0x10000))<<16;
+          ushort y=(ushort)fr.NextValue(0x10000);
+          int dx=(int)x;
+          short dy=(short)y;
+          if(dy==0)continue;
+          short expected=(short)(x/y);
+          short actual=DivideUnsigned(dx,dy);
+          if(expected!=actual){
+            Assert.AreEqual(expected,actual,"Dividing "+x+" by "+y);
+          }
+        }
+        for(int i=0;i<20;i++){
+          ulong x=(ulong)fr.NextValue(0x10000);
+          x|=((ulong)fr.NextValue(0x10000))<<16;
+          x|=((ulong)fr.NextValue(0x10000))<<32;
+          x|=((ulong)fr.NextValue(0x10000))<<48;
+          long dx=(long)x;
+          uint y=(uint)fr.NextValue(0x10000);
+          y|=((uint)fr.NextValue(0x10000))<<16;
+          y&=~(1U<<31);
+          int dy=(int)y;
+          if(dy==0)continue;
+          long dxrem=dx/dy;
+          ulong udxrem=(ulong)dxrem;
+          Console.WriteLine(
+            "result=new ILong("+((uint)x)+","+((uint)(x>>32))+").divideUnsigned("+y+");\n"+
+            "if(result.lo!="+((uint)dxrem)+" || result.hi!="+((uint)(dxrem>>32))+")\n"+
+            "console.log(\""+dx+"/"+dy+", expected: "+
+            ((uint)dxrem)+", "+(dxrem>>32)+", was \"+[result.lo,result.hi]+\","+
+            " remainder="+((ulong)(dx%dy))+"\");");
+        }        
+      }
+    }
+
+    
     /// <summary>
     /// </summary>
     /// <returns>

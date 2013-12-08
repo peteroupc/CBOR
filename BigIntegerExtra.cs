@@ -13,10 +13,6 @@ namespace PeterO
   public sealed partial class BigInteger
   {
     
-    static BigInteger(){
-      LittleEndianSerialize=true;
-    }
-    
     /// <summary>Converts the value of a Int64 object to BigInteger.</summary>
     /// <returns>A BigInteger object with the same value as the Int64 object.</returns>
     /// <param name='bigValue'>A 64-bit signed integer.</param>
@@ -86,6 +82,18 @@ namespace PeterO
       return bthis.shiftLeft(n);
     }
 
+    
+    /// <summary> Calculates the remainder when a BigInteger raised to a
+    /// certain power is divided by another BigInteger. </summary>
+    /// <param name='bigintValue'>A BigInteger object.</param>
+    /// <param name='pow'>A BigInteger object.</param>
+    /// <param name='mod'>A BigInteger object.</param>
+    /// <returns>(bigintValue^pow)%mod</returns>
+    /// <remarks/>
+    public static BigInteger ModPow(BigInteger bigintValue, BigInteger pow, BigInteger mod) {
+      if ((bigintValue) == null) throw new ArgumentNullException("value");
+      return bigintValue.ModPow(pow, mod);
+    }
 
     /// <summary> Shifts the bits of a BigInteger instance to the right. </summary>
     /// <param name='bthis'>A BigInteger object.</param>
@@ -244,7 +252,7 @@ namespace PeterO
     /// <returns></returns>
     [CLSCompliant(false)]
     public byte[] ToByteArray(){
-      return toByteArray();
+      return toByteArray(true);
     }
     
     /// <summary> </summary>
@@ -253,6 +261,26 @@ namespace PeterO
     /// <returns></returns>
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, BigInteger power){
+      if(power.Sign<0)
+        throw new ArgumentException("power");
+      BigInteger val=BigInteger.One;
+      while(power.Sign>0){
+        BigInteger p=(power>(BigInteger)5000000) ? 
+          (BigInteger)5000000 : power;
+        val*=bigValue.pow((int)p);
+        power-=p;
+      }
+      return val;
+    }
+    
+    /// <summary> </summary>
+    /// <param name='bigValue'>A BigInteger object.</param>
+    /// <param name='power'>A 32-bit signed integer.</param>
+    /// <returns></returns>
+    [CLSCompliant(false)]
+    public static BigInteger Pow(BigInteger bigValue, int power){
+      if(power<0)
+        throw new ArgumentException("power");
       return bigValue.pow(power);
     }
     
@@ -280,17 +308,34 @@ namespace PeterO
         r[i] = unchecked((short)(a[i] & b[i]));
     }
 
+    /// <summary> </summary>
+    /// <param name='bytes'>A byte[] object.</param>
+    public BigInteger(byte[] bytes){
+      fromByteArrayInternal(bytes,true);
+    }
+
+    /// <summary> </summary>
+    /// <param name='other'>A BigInteger object.</param>
+    /// <returns></returns>
+    /// <remarks/>
+    public bool Equals(BigInteger other) {
+      if (other == null) return false;
+      return this.CompareTo(other) == 0;
+    }
 
     /// <summary> Returns a BigInteger with every bit flipped. </summary>
     /// <param name='a'>A BigInteger object.</param>
     /// <returns></returns>
     public static BigInteger Not(BigInteger a){
       if((a)==null)throw new ArgumentNullException("a");
-      BigInteger xa=new BigInteger(a);
-      if(xa.Sign<0){ TwosComplement(xa.reg,(int)xa.reg.Length); }
+      BigInteger xa=new BigInteger().Allocate(a.wordCount);
+      Array.Copy(a.reg,xa.reg,xa.reg.Length);
+      xa.negative=a.negative;
+      xa.wordCount=a.wordCount;
+      if(xa.Sign<0){ TwosComplement(xa.reg,0,(int)xa.reg.Length); }
       xa.negative=!(xa.Sign<0);
       NotWords((xa.reg),(int)xa.reg.Length);
-      if(xa.Sign<0){ TwosComplement(xa.reg,(int)xa.reg.Length); }
+      if(xa.Sign<0){ TwosComplement(xa.reg,0,(int)xa.reg.Length); }
       xa.wordCount=xa.CalcWordCount();
       if(xa.wordCount==0)xa.negative=false;
       return xa;
@@ -305,15 +350,21 @@ namespace PeterO
       if((a)==null)throw new ArgumentNullException("a");
       if((b)==null)throw new ArgumentNullException("b");
       if(b.IsZero || a.IsZero)return Zero;
-      BigInteger xa=new BigInteger(a);
-      BigInteger xb=new BigInteger(b);
+      BigInteger xa=new BigInteger().Allocate(a.wordCount);
+      Array.Copy(a.reg,xa.reg,xa.reg.Length);
+      BigInteger xb=new BigInteger().Allocate(b.wordCount);
+      Array.Copy(b.reg,xb.reg,xb.reg.Length);
+      xa.negative=a.negative;
+      xa.wordCount=a.wordCount;
+      xb.negative=b.negative;
+      xb.wordCount=b.wordCount;
       xa.reg=CleanGrow(xa.reg,Math.Max(xa.reg.Length,xb.reg.Length));
       xb.reg=CleanGrow(xb.reg,Math.Max(xa.reg.Length,xb.reg.Length));
-      if(xa.Sign<0){ TwosComplement(xa.reg,(int)xa.reg.Length); }
-      if(xb.Sign<0){ TwosComplement(xb.reg,(int)xb.reg.Length); }
+      if(xa.Sign<0){ TwosComplement(xa.reg,0,(int)xa.reg.Length); }
+      if(xb.Sign<0){ TwosComplement(xb.reg,0,(int)xb.reg.Length); }
       xa.negative&=(xb.Sign<0);
       AndWords((xa.reg),(xa.reg),(xb.reg),(int)xa.reg.Length);
-      if(xa.Sign<0){ TwosComplement(xa.reg,(int)xa.reg.Length); }
+      if(xa.Sign<0){ TwosComplement(xa.reg,0,(int)xa.reg.Length); }
       xa.wordCount=xa.CalcWordCount();
       if(xa.wordCount==0)xa.negative=false;
       return xa;
@@ -327,15 +378,21 @@ namespace PeterO
     /// representation for the purposes of this operator.</remarks>
     /// <returns></returns>
     public static BigInteger Or(BigInteger a, BigInteger b){
-      BigInteger xa=new BigInteger(a);
-      BigInteger xb=new BigInteger(b);
+      BigInteger xa=new BigInteger().Allocate(a.wordCount);
+      Array.Copy(a.reg,xa.reg,xa.reg.Length);
+      BigInteger xb=new BigInteger().Allocate(b.wordCount);
+      Array.Copy(b.reg,xb.reg,xb.reg.Length);
+      xa.negative=a.negative;
+      xa.wordCount=a.wordCount;
+      xb.negative=b.negative;
+      xb.wordCount=b.wordCount;
       xa.reg=CleanGrow(xa.reg,Math.Max(xa.reg.Length,xb.reg.Length));
       xb.reg=CleanGrow(xb.reg,Math.Max(xa.reg.Length,xb.reg.Length));
-      if(xa.Sign<0){ TwosComplement(xa.reg,(int)xa.reg.Length); }
-      if(xb.Sign<0){ TwosComplement(xb.reg,(int)xb.reg.Length); }
+      if(xa.Sign<0){ TwosComplement(xa.reg,0,(int)xa.reg.Length); }
+      if(xb.Sign<0){ TwosComplement(xb.reg,0,(int)xb.reg.Length); }
       xa.negative|=(xb.Sign<0);
       OrWords((xa.reg),(xa.reg),(xb.reg),(int)xa.reg.Length);
-      if(xa.Sign<0){ TwosComplement(xa.reg,(int)xa.reg.Length); }
+      if(xa.Sign<0){ TwosComplement(xa.reg,0,(int)xa.reg.Length); }
       xa.wordCount=xa.CalcWordCount();
       if(xa.wordCount==0)xa.negative=false;
       return xa;
@@ -348,15 +405,21 @@ namespace PeterO
     /// representation for the purposes of this operator.</remarks>
     /// <returns></returns>
     public static BigInteger Xor(BigInteger a, BigInteger b){
-      BigInteger xa=new BigInteger(a);
-      BigInteger xb=new BigInteger(b);
+      BigInteger xa=new BigInteger().Allocate(a.wordCount);
+      Array.Copy(a.reg,xa.reg,xa.reg.Length);
+      BigInteger xb=new BigInteger().Allocate(b.wordCount);
+      Array.Copy(b.reg,xb.reg,xb.reg.Length);
+      xa.negative=a.negative;
+      xa.wordCount=a.wordCount;
+      xb.negative=b.negative;
+      xb.wordCount=b.wordCount;
       xa.reg=CleanGrow(xa.reg,Math.Max(xa.reg.Length,xb.reg.Length));
       xb.reg=CleanGrow(xb.reg,Math.Max(xa.reg.Length,xb.reg.Length));
-      if(xa.Sign<0){ TwosComplement(xa.reg,(int)xa.reg.Length); }
-      if(xb.Sign<0){ TwosComplement(xb.reg,(int)xb.reg.Length); }
+      if(xa.Sign<0){ TwosComplement(xa.reg,0,(int)xa.reg.Length); }
+      if(xb.Sign<0){ TwosComplement(xb.reg,0,(int)xb.reg.Length); }
       xa.negative^=(xb.Sign<0);
       XorWords((xa.reg),(xa.reg),(xb.reg),(int)xa.reg.Length);
-      if(xa.Sign<0){ TwosComplement(xa.reg,(int)xa.reg.Length); }
+      if(xa.Sign<0){ TwosComplement(xa.reg,0,(int)xa.reg.Length); }
       xa.wordCount=xa.CalcWordCount();
       if(xa.wordCount==0)xa.negative=false;
       return xa;

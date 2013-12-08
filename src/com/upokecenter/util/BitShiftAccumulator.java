@@ -134,7 +134,7 @@ public boolean isSmall() { return isSmall; }
         knownBitLength = 1;
         return;
       }
-      byte[] bytes = ReverseBytes(shiftedBigInt.toByteArray());
+      byte[] bytes = shiftedBigInt.toByteArray(true);
       knownBitLength = ((long)bytes.length) << 3;
       // Find the last bit set
       for (int i = bytes.length - 1; i >= 0; i--) {
@@ -208,7 +208,7 @@ public boolean isSmall() { return isSmall; }
         if (kb == 0) knownBitLength++;
         return kb;
       } else {
-        byte[] bytes = ReverseBytes(shiftedBigInt.toByteArray());
+        byte[] bytes = shiftedBigInt.toByteArray(true);
         long kb = ((long)bytes.length) << 3;
         // Find the last bit set
         for (int i = bytes.length - 1; i >= 0; i--) {
@@ -238,7 +238,7 @@ public boolean isSmall() { return isSmall; }
      * integer being shifted is positive.
      */
     private void ShiftToBitsBig(long bits) {
-      byte[] bytes = ReverseBytes(shiftedBigInt.toByteArray());
+      byte[] bytes = shiftedBigInt.toByteArray(true);
       knownBitLength = ((long)bytes.length) << 3;
       // Find the last bit set
       for (int i = bytes.length - 1; i >= 0; i--) {
