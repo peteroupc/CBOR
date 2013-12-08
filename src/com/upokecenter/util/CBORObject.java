@@ -1130,7 +1130,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         uabytes[1]=(byte)((tagLow>>8)&0xFF);
         uabytes[0]=(byte)((tagLow)&0xFF);
         uabytes[8]=0;
-        return new BigInteger(ReverseBytes((byte[])uabytes));
+        return BigInteger.fromByteArray((byte[])uabytes,true);
       } else if(tagLow!=0){
         uabytes=new byte[5];
         uabytes[3]=(byte)((tagLow>>24)&0xFF);
@@ -1138,7 +1138,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         uabytes[1]=(byte)((tagLow>>8)&0xFF);
         uabytes[0]=(byte)((tagLow)&0xFF);
         uabytes[4]=0;
-        return new BigInteger(ReverseBytes((byte[])uabytes));
+        return BigInteger.fromByteArray((byte[])uabytes,true);
       } else {
         return BigInteger.ZERO;
       }
@@ -2000,7 +2000,7 @@ public void set(String key, CBORObject value) {
         // Get a byte array of the big integer's value,
         // since shifting and doing AND operations is
         // slow with large BigIntegers
-        byte[] bytes = ReverseBytes(bigint.toByteArray());
+        byte[] bytes = bigint.toByteArray(true);
         int byteCount = bytes.length;
         while (byteCount > 0 && bytes[byteCount - 1] == 0) {
           // Ignore trailing zero bytes
@@ -2968,7 +2968,7 @@ public static CBORObject FromObject(Object obj) {
       } else {
         long tagLow = 0;
         long tagHigh = 0;
-        byte[] bytes=ReverseBytes(bigintTag.toByteArray());
+        byte[] bytes=bigintTag.toByteArray(true);
         for(int i=0;i<Math.min(4,bytes.length);i++){
           int b=((int)bytes[i])&0xFF;
           tagLow|=((long)b)<<(i*8);
@@ -3239,7 +3239,7 @@ public static CBORObject FromObject(Object obj) {
           bytes[bytes.length - 1] = 0;
         }
       }
-      BigInteger bi = new BigInteger(ReverseBytes((byte[])bytes));
+      BigInteger bi = BigInteger.fromByteArray((byte[])bytes,true);
       return RewrapObject(o, FromObject(bi));
     }
     private static boolean BigIntFits(BigInteger bigint) {
@@ -3431,7 +3431,7 @@ public static CBORObject FromObject(Object obj) {
               uabytes[7]=data[0];
               uabytes[8]=0;
               hasBigAdditional=true;
-              bigintAdditional=new BigInteger(ReverseBytes((byte[])uabytes));
+              bigintAdditional=BigInteger.fromByteArray((byte[])uabytes,true);
             } else {
               uadditional = (((long)(data[0] & (long)0xFF)) << 56);
               uadditional |= (((long)(data[1] & (long)0xFF)) << 48);

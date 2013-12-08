@@ -12,9 +12,8 @@ at: http://upokecenter.com/d/
 using System;
 namespace PeterO {
     /// <summary> An arbitrary-precision integer. </summary>
-  public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger> {
-
-    private static bool LittleEndianSerialize = false;
+  public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger> 
+  {
 
     private static int CountWords(short[] X, int N) {
       while (N != 0 && X[N - 1] == 0)
@@ -122,9 +121,11 @@ namespace PeterO {
         A[Astart] = (short)(tmp + B);
         if ((((int)A[Astart]) & 0xFFFF) >= (((int)tmp) & 0xFFFF))
           return 0;
-        for (int i = 1; i < N; i++)
-          if (++A[Astart + i] != 0)
+        for (int i = 1; i < N; i++){
+          A[Astart+i]++;
+          if (A[Astart + i] != 0)
             return 0;
+        }
         return 1;
       }
     }
@@ -135,9 +136,12 @@ namespace PeterO {
         A[Astart] = (short)(tmp - B);
         if ((((int)A[Astart]) & 0xFFFF) <= (((int)tmp) & 0xFFFF))
           return 0;
-        for (int i = 1; i < N; i++)
-          if (A[Astart + i]-- != 0)
+        for (int i = 1; i < N; i++){
+          tmp=A[Astart+i];
+          A[Astart+i]--;
+          if (tmp != 0)
             return 0;
+        }
         return 1;
       }
     }
@@ -147,25 +151,6 @@ namespace PeterO {
       Decrement(A, Astart, N, (short)1);
       for (int i = 0; i < N; i++)
         A[Astart + i] = unchecked((short)(~A[Astart + i]));
-    }
-
-    private static int Decrement(short[] A, int N, short B) {
-      //DebugAssert.IsTrue(N!=0,"{0} line {1}: N","integer.cpp",76);
-      unchecked {
-        short tmp = A[0];
-        A[0] = (short)(tmp - B);
-        if ((((int)A[0]) & 0xFFFF) <= (((int)tmp) & 0xFFFF))
-          return 0;
-        for (int i = 1; i < N; i++)
-          if (A[i]-- != 0)
-            return 0;
-        return 1;
-      }
-    }
-    private static void TwosComplement(short[] A, int N) {
-      Decrement(A, N, (short)1);
-      for (int i = 0; i < N; i++)
-        A[i] = unchecked((short)(~A[i]));
     }
 
     private static int Add(
@@ -1406,11 +1391,12 @@ namespace PeterO {
             return;
           case 1:
             Array.Copy(Barr, Bstart, Rarr, Rstart, (int)NB);
-            Rarr[Rstart + NB] = Rarr[Rstart + NB + 1] = 0;
+            Rarr[Rstart + NB] = (short)0;
+            Rarr[Rstart + NB + 1] = (short)0;
             return;
           default:
             Rarr[Rstart + NB] = LinearMultiply(Rarr, Rstart, Barr, Bstart, Aarr[Astart], NB);
-            Rarr[Rstart + NB + 1] = 0;
+            Rarr[Rstart + NB + 1] = (short)0;
             return;
         }
       }
@@ -1498,6 +1484,31 @@ namespace PeterO {
 
       return h;
     }
+    
+    private static short Divide32By16(int dividendLow, short divisorShort, bool returnRemainder){
+      int tmpInt;
+      int dividendHigh=0;
+      int intDivisor=(((int)divisorShort)&0xFFFF);
+      for(int i=0;i<32;i++){
+        tmpInt=dividendHigh>>31;
+        dividendHigh<<=1;
+        dividendHigh=unchecked((int)(dividendHigh|((int)((dividendLow>>31)&1))));
+        dividendLow<<=1;
+        tmpInt|=dividendHigh;
+        // unsigned greater-than-or-equal check
+        if(((tmpInt>>31)!=0) || (tmpInt>=intDivisor)){
+          unchecked {
+            dividendHigh-=intDivisor;
+            dividendLow+=1;
+          }
+        }
+      }
+      return (returnRemainder ? 
+              unchecked((short)(((int)dividendHigh)&0xFFFF)) :
+              unchecked((short)(((int)dividendLow)&0xFFFF))
+             );
+    }
+
 
     private static short DivideUnsigned(int x, short y) {
       unchecked {
@@ -1506,11 +1517,7 @@ namespace PeterO {
           // x is already nonnegative
           return (short)(((int)x / iy) & 0xFFFF);
         } else {
-          // convert to long to prevent dividing
-          // a negative number
-          long lx = ((long)x) & 0xFFFFFFFFL;
-          lx = (lx / iy) & 0xFFFFL;
-          return (short)(((int)lx) & 0xFFFF);
+          return Divide32By16(x,y,false);
         }
       }
     }
@@ -1521,11 +1528,7 @@ namespace PeterO {
           // x is already nonnegative
           return (short)(((int)x % iy) & 0xFFFF);
         } else {
-          // convert to long to prevent dividing
-          // a negative number
-          long lx = ((long)x) & 0xFFFFFFFFL;
-          lx = (lx % iy) & 0xFFFFL;
-          return (short)(((int)lx) & 0xFFFF);
+          return Divide32By16(x,y,true);
         }
       }
     }
@@ -1634,8 +1637,8 @@ namespace PeterO {
       int NA = (int)NAint;
       int NB = (int)NBint;
       #if DEBUG
-      if ((NAint) <= 0) throw new ArgumentException("NAint" + " not less than " + "0" + " (" + Convert.ToString((long)(long)(NAint), System.Globalization.CultureInfo.InvariantCulture) + ")");
-      if ((NBint) <= 0) throw new ArgumentException("NBint" + " not less than " + "0" + " (" + Convert.ToString((long)(long)(NBint), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((NAint) <= 0) throw new ArgumentException("NAint" + " not less than " + "0" + " (" + Convert.ToString((int)(NAint), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((NBint) <= 0) throw new ArgumentException("NBint" + " not less than " + "0" + " (" + Convert.ToString((int)(NBint), System.Globalization.CultureInfo.InvariantCulture) + ")");
       if (!(NA % 2 == 0 && NB % 2 == 0)) throw new ArgumentException("doesn't satisfy NA%2==0 && NB%2==0");
       if (!(Barr[Bstart + NB - 1] != 0 ||
             Barr[Bstart + NB - 2] != 0)) throw new ArgumentException("doesn't satisfy B[NB-1]!=0 || B[NB-2]!=0");
@@ -1648,26 +1651,30 @@ namespace PeterO {
       unchecked {
         // copy B into TB and normalize it so that TB has highest bit set to 1
         int shiftWords = (short)(Barr[Bstart + NB - 1] == 0 ? 1 : 0);
-        TBarr[TBstart] = TBarr[TBstart + NB - 1] = 0;
+        TBarr[TBstart] = (short)0;
+        TBarr[TBstart + NB - 1] = (short)0;
         Array.Copy(Barr, Bstart, TBarr, (int)(TBstart + shiftWords), NB - shiftWords);
         short shiftBits = (short)((short)16 - BitPrecision(TBarr[TBstart + NB - 1]));
         ShiftWordsLeftByBits(
           TBarr, TBstart,
           NB, shiftBits);
         // copy A into TA and normalize it
-        TA[0] = TA[NA] = TA[NA + 1] = 0;
+        TA[0] = (short)0;
+        TA[NA] = (short)0;
+        TA[NA + 1] = (short)0;
         Array.Copy(Aarr, Astart, TA, (int)(Tstart + shiftWords), NAint);
         ShiftWordsLeftByBits(
           TA, Tstart, NA + 2, shiftBits);
 
         if (TA[Tstart + NA + 1] == 0 && (((int)TA[Tstart + NA]) & 0xFFFF) <= 1) {
-          Qarr[Qstart + NA - NB + 1] = Qarr[Qstart + NA - NB] = 0;
+          Qarr[Qstart + NA - NB + 1] = (short)0;
+          Qarr[Qstart + NA - NB] = (short)0;
           while (TA[NA] != 0 || Compare(TA, (int)(Tstart + NA - NB),
                                         TBarr, TBstart, NB) >= 0) {
             TA[NA] -= (short)Subtract(TA, (int)(Tstart + NA - NB),
                                       TA, (int)(Tstart + NA - NB),
                                       TBarr, TBstart, NB);
-            Qarr[Qstart + NA - NB]++;
+            Qarr[Qstart + NA - NB]+=(short)1;
           }
         } else {
           NA += 2;
@@ -1706,14 +1713,6 @@ namespace PeterO {
         return 64;
       else return (int)(1) << (int)BitPrecisionInt(n - 1);
     }
-
-    /// <summary> BigInteger object for the number zero.</summary>
-    public static readonly BigInteger ZERO = new BigInteger(0);
-    /// <summary> BigInteger object for the number one. </summary>
-    public static readonly BigInteger ONE = new BigInteger(1);
-    /// <summary> BigInteger object for the number ten. </summary>
-    public static readonly BigInteger TEN = new BigInteger(10);
-
     bool negative;
     int wordCount = -1;
     short[] reg;
@@ -1722,20 +1721,27 @@ namespace PeterO {
     /// <summary> Initializes a BigInteger object from an array of bytes.
     /// </summary>
     /// <param name='bytes'>A byte[] object.</param>
-    public BigInteger(byte[] bytes) {
+    /// <returns></returns>
+    /// <param name='littleEndian'>A Boolean object.</param>
+    public static BigInteger fromByteArray(byte[] bytes, bool littleEndian){
+      BigInteger bigint=new BigInteger();
+      bigint.fromByteArrayInternal(bytes, littleEndian);
+      return bigint;
+    }
+    private void fromByteArrayInternal(byte[] bytes, bool littleEndian) {
       if (bytes == null)
         throw new ArgumentNullException("bytes");
       if (bytes.Length == 0) {
-        this.reg = new short[] { 0, 0 };
+        this.reg = new short[] { (short)0, (short)0 };
         this.wordCount = 0;
       } else {
         this.reg = new short[RoundupSize(((int)bytes.Length + 1) / 2)];
-        int jIndex = (LittleEndianSerialize) ? bytes.Length - 1 : 0;
+        int jIndex = (littleEndian) ? bytes.Length - 1 : 0;
         bool negative = ((bytes[jIndex]) & 0x80) != 0;
         int j = 0;
         for (int i = 0; i < bytes.Length; i += 2, j++) {
-          int index = (LittleEndianSerialize) ? i : bytes.Length - 1 - i;
-          int index2 = (LittleEndianSerialize) ? i + 1 : bytes.Length - 2 - i;
+          int index = (littleEndian) ? i : bytes.Length - 1 - i;
+          int index2 = (littleEndian) ? i + 1 : bytes.Length - 2 - i;
           this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
           if (index2 >= 0 && index2 < bytes.Length) {
             this.reg[j] |= unchecked((short)(((short)bytes[index2]) << 8));
@@ -1754,6 +1760,7 @@ namespace PeterO {
         this.wordCount = CalcWordCount();
       }
     }
+
     private BigInteger Allocate(int length) {
       this.reg = new short[RoundupSize(length)];
       SetWords(this.reg, 1, (short)0, (int)(this.reg.Length - 1));
@@ -1763,14 +1770,13 @@ namespace PeterO {
       return this;
     }
 
-    private BigInteger(BigInteger t) {
-      this.reg = new short[RoundupSize((int)(t.wordCount))];
-      Array.Copy(t.reg, reg, Math.Min(reg.Length, t.reg.Length));
-      // IsZero relies on the current state of reg
-      this.negative = (t.Sign < 0);
-      this.wordCount = CalcWordCount();
+    private static short[] GrowForCarry(short[] a, short carry){
+      int oldLength=a.Length;
+      short[] ret=CleanGrow(a,RoundupSize(oldLength+1));
+      ret[oldLength]=carry;
+      return ret;
     }
-
+    
     private static short[] CleanGrow(short[] a, int size) {
       if (size > a.Length) {
         short[] newa = new short[size];
@@ -1821,45 +1827,39 @@ namespace PeterO {
     /// <param name='n'>A 32-bit unsigned integer.</param>
     /// <returns/><remarks/>
     private bool GetUnsignedBit(int n) {
-      if ((n) < 0) throw new ArgumentException("n" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(n), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((n) < 0) throw new ArgumentException("n" + " not greater or equal to " + "0" + " (" + Convert.ToString((int)(n), System.Globalization.CultureInfo.InvariantCulture) + ")");
       if (n / 16 >= reg.Length)
         return false;
       else
         return (bool)(((reg[n / 16] >> (int)(n & 15)) & 1) != 0);
     }
 
-    private BigInteger(int numberValue) {
-      int ut;
+    private BigInteger InitializeInt(int numberValue) {
+      int iut;
       unchecked {
-        negative = (numberValue < 0);
+        this.negative = (numberValue < 0);
         if (numberValue == Int32.MinValue) {
-          reg = new short[2];
-          reg[0] = 0;
-          reg[1] = (short)0x8000;
-          wordCount = 2;
+          this.reg = new short[2];
+          this.reg[0] = 0;
+          this.reg[1] = (short)0x8000;
+          this.wordCount = 2;
         } else {
-          ut = unchecked((numberValue < 0) ? (int)-numberValue : (int)numberValue);
-          reg = new short[2];
-          reg[0] = (short)ut;
-          reg[1] = (short)(ut >> 16);
-          wordCount = (reg[1] != 0 ? 2 : (reg[0] == 0 ? 0 : 1));
+          iut = unchecked((numberValue < 0) ? (int)-numberValue : (int)numberValue);
+          this.reg = new short[2];
+          this.reg[0] = (short)iut;
+          this.reg[1] = (short)(iut >> 16);
+          this.wordCount = (this.reg[1] != 0 ? 2 : (this.reg[0] == 0 ? 0 : 1));
         }
       }
+      return this;
     }
     /// <summary>Returns a byte array of this object's value. </summary>
     /// <returns>A byte array that represents the value of this object.</returns>
-    /// <remarks>The returned array contains this object's value in little-endian
-    /// byte order, that is, the lowest bits of the value go first in the array.
-    /// The value is stored in two's complement format, sign extended as necessary,
-    /// with an extra bit to indicate whether the value is negative. If the
-    /// highest bit of the last byte in the array is set, the value is negative.
-    /// To make the array compatible with Java, simply reverse the order of
-    /// each element in the array, since Java's BigInteger byte arrays are
-    /// stored in big-endian byte order but are otherwise identical.</remarks>
-    public byte[] toByteArray() {
+    /// <param name='littleEndian'>A Boolean object.</param>
+    public byte[] toByteArray(bool littleEndian) {
       int sign = this.Sign;
       if (sign == 0) {
-        return new byte[] { 0 };
+        return new byte[] { (byte)0 };
       } else if (sign > 0) {
         int byteCount = ByteCount();
         int bc = BitLength();
@@ -1870,8 +1870,8 @@ namespace PeterO {
         byte[] bytes = new byte[byteArrayLength];
         int j = 0;
         for (int i = 0; i < byteCount; i += 2, j++) {
-          int index = (LittleEndianSerialize) ? i : bytes.Length - 1 - i;
-          int index2 = (LittleEndianSerialize) ? i + 1 : bytes.Length - 2 - i;
+          int index = (littleEndian) ? i : bytes.Length - 1 - i;
+          int index2 = (littleEndian) ? i + 1 : bytes.Length - 2 - i;
           bytes[index] = (byte)((reg[j]) & 0xff);
           if (index2 >= 0 && index2 < byteArrayLength) {
             bytes[index2] = (byte)((reg[j] >> 8) & 0xff);
@@ -1901,12 +1901,12 @@ namespace PeterO {
         }
         if (byteCount == 0) byteCount = 1;
         byte[] bytes = new byte[byteCount];
-        bytes[(LittleEndianSerialize) ? bytes.Length - 1 : 0] = (byte)0xFF;
+        bytes[(littleEndian) ? bytes.Length - 1 : 0] = (byte)0xFF;
         byteCount = Math.Min(byteCount, regdata.Length * 2);
         int j = 0;
         for (int i = 0; i < byteCount; i += 2, j++) {
-          int index = (LittleEndianSerialize) ? i : bytes.Length - 1 - i;
-          int index2 = (LittleEndianSerialize) ? i + 1 : bytes.Length - 2 - i;
+          int index = (littleEndian) ? i : bytes.Length - 1 - i;
+          int index2 = (littleEndian) ? i + 1 : bytes.Length - 2 - i;
           bytes[index] = (byte)((regdata[j]) & 0xff);
           if (index2 >= 0 && index2 < byteCount) {
             bytes[index2] = (byte)((regdata[j] >> 8) & 0xff);
@@ -1935,10 +1935,10 @@ namespace PeterO {
       ret.negative=this.negative;
       ret.reg = new short[RoundupSize(numWords + BitsToWords((int)n))];
       Array.Copy(this.reg,ret.reg,numWords);
-      if (neg) { TwosComplement(ret.reg, (int)(ret.reg.Length)); }
+      if (neg) { TwosComplement(ret.reg, 0, (int)(ret.reg.Length)); }
       ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
       ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
-      if (neg) { TwosComplement(ret.reg, (int)(ret.reg.Length)); }
+      if (neg) { TwosComplement(ret.reg, 0, (int)(ret.reg.Length)); }
       ret.wordCount = ret.CalcWordCount();
       return ret;
     }
@@ -1961,11 +1961,11 @@ namespace PeterO {
       ret.reg = new short[RoundupSize(numWords)];
       Array.Copy(this.reg,ret.reg,numWords);
       if (this.Sign < 0) {
-        TwosComplement(ret.reg, (int)(ret.reg.Length));
+        TwosComplement(ret.reg, 0, (int)(ret.reg.Length));
         ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
         if (numWords > shiftWords)
           ShiftWordsRightByBitsSignExtend(ret.reg, 0, numWords - shiftWords, shiftBits);
-        TwosComplement(ret.reg, (int)(ret.reg.Length));
+        TwosComplement(ret.reg, 0, (int)(ret.reg.Length));
       } else {
         ShiftWordsRightByWords(ret.reg, 0, numWords, shiftWords);
         if (numWords > shiftWords)
@@ -1977,32 +1977,37 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <returns></returns>
-    /// <param name='numberValue'>A 64-bit signed integer.</param>
-    public static BigInteger valueOf(long numberValue) {
-      if (numberValue == 0) return BigInteger.Zero;
-      if (numberValue == 1) return BigInteger.One;
+    /// <param name='longerValue'>A 64-bit signed integer.</param>
+    public static BigInteger valueOf(long longerValue) {
+      if (longerValue == 0) return BigInteger.Zero;
+      if (longerValue == 1) return BigInteger.One;
       BigInteger ret = new BigInteger();
       unchecked {
-        ret.negative = (numberValue < 0);
+        ret.negative = (longerValue < 0);
         ret.reg = new short[4];
-        if (numberValue == Int64.MinValue) {
+        if (longerValue == Int64.MinValue) {
           ret.reg[0] = 0;
           ret.reg[1] = 0;
           ret.reg[2] = 0;
           ret.reg[3] = (short)0x8000;
           ret.wordCount = 4;
         } else {
-          long ut = unchecked((numberValue < 0) ? -numberValue : numberValue);
+          long ut = longerValue;
+          if(ut<0)ut=-ut;
+          long ut2=ut;
           ret.reg[0] = (short)(ut & 0xFFFF);
-          ret.reg[1] = (short)((ut >> 16) & 0xFFFF);
-          ret.reg[2] = (short)((ut >> 32) & 0xFFFF);
-          ret.reg[3] = (short)((ut >> 48) & 0xFFFF);
+          ut>>=16;
+          ret.reg[1] = (short)(ut & 0xFFFF);
+          ut>>=16;
+          ret.reg[2] = (short)(ut & 0xFFFF);
+          ut>>=16;
+          ret.reg[3] = (short)(ut & 0xFFFF);
           // at this point, the word count can't
           // be 0 (the check for 0 was already done above)
           ret.wordCount = 4;
-          if ((ut >> 48) == 0) ret.wordCount = 3;
-          if ((ut >> 32) == 0) ret.wordCount = 2;
-          if ((ut >> 16) == 0) ret.wordCount = 1;
+          while (ret.wordCount != 0 && 
+                 ret.reg[ret.wordCount - 1] == 0)
+            ret.wordCount--;
         }
       }
       return ret;
@@ -2022,11 +2027,21 @@ namespace PeterO {
           throw new OverflowException();
         }
       } else {
-        int vv = (((int)this.reg[0]) & 0xFFFF);
-        if (c > 1) vv |= (((int)this.reg[1]) & 0xFFFF) << 16;
-        if (this.negative) vv = -vv;
-        return vv;
+        int ivv = (((int)this.reg[0]) & 0xFFFF);
+        if (c > 1) ivv |= (((int)this.reg[1]) & 0xFFFF) << 16;
+        if (this.negative) ivv = -ivv;
+        return ivv;
       }
+    }
+
+    private bool HasTinyValue() {
+      int c = (int)this.wordCount;
+      if (c > 2) return false;
+      if (c == 2 && (this.reg[1] & 0x8000) != 0) {
+        return (this.negative && this.reg[1] == unchecked((short)0x8000) &&
+                this.reg[0] == 0);
+      }
+      return true;
     }
 
     private bool HasSmallValue() {
@@ -2045,8 +2060,8 @@ namespace PeterO {
     /// <returns></returns>
     /// <remarks/>
     public long longValue() {
-      int count = (int)this.wordCount;
-      if (count == 0) return 0;
+      int count = this.wordCount;
+      if (count == 0) return (long)0;
       if (count > 4) throw new OverflowException();
       if (count == 4 && (this.reg[3] & 0x8000) != 0) {
         if (this.negative && this.reg[3] == unchecked((short)0x8000) &&
@@ -2058,10 +2073,20 @@ namespace PeterO {
           throw new OverflowException();
         }
       } else {
-        long vv = (long)(((int)this.reg[0]) & 0xFFFF);
-        if (count > 1) vv |= (long)(((int)this.reg[1]) & 0xFFFF) << 16;
-        if (count > 2) vv |= (long)(((int)this.reg[2]) & 0xFFFF) << 32;
-        if (count > 3) vv |= (long)(((int)this.reg[3]) & 0xFFFF) << 48;
+        int tmp=((int)this.reg[0]) & 0xFFFF;
+        long vv = (long)tmp;
+        if (count > 1){
+          tmp=((int)this.reg[1]) & 0xFFFF;
+          vv |= (long)(tmp) << 16;
+        }
+        if (count > 2){
+          tmp=((int)this.reg[2]) & 0xFFFF;
+          vv |= (long)(tmp) << 32;
+        }
+        if (count > 3){
+          tmp=((int)this.reg[3]) & 0xFFFF;
+          vv |= (long)(tmp) << 48;
+        }
         if (this.negative) vv = -vv;
         return vv;
       }
@@ -2076,17 +2101,18 @@ namespace PeterO {
     /// <summary> </summary>
     /// <returns></returns>
     /// <remarks/><param name='power'>A BigInteger object.</param>
-    public BigInteger pow(BigInteger power) {
+    public BigInteger PowBigIntVar(BigInteger power) {
       if ((power) == null) throw new ArgumentNullException("power");
-      if (power.Sign < 0) throw new ArgumentException("power is negative");
+      int sign=power.Sign;
+      if (sign < 0) throw new ArgumentException("power is negative");
       BigInteger thisVar = this;
-      if (power.Equals(BigInteger.Zero))
+      if (sign==0)
         return BigInteger.One; // however 0 to the power of 0 is undefined
       else if (power.Equals(BigInteger.One))
         return this;
-      else if (power.Equals((BigInteger)2))
+      else if (power.wordCount==1 && power.reg[0]==2)
         return thisVar * (BigInteger)thisVar;
-      else if (power.Equals((BigInteger)3))
+      else if (power.wordCount==1 && power.reg[0]==3)
         return (thisVar * (BigInteger)thisVar) * (BigInteger)thisVar;
       BigInteger r = BigInteger.One;
       while (!power.IsZero) {
@@ -2214,7 +2240,7 @@ namespace PeterO {
       while (value != 0) {
         char digit = vec[(int)(value % 10)];
         chars[count++] = digit;
-        value /= 10;
+        value = value / 10;
       }
       if (neg)
         ReverseChars(chars, 1, count - 1);
@@ -2244,7 +2270,7 @@ namespace PeterO {
           int rest = tempReg[0];
           while (rest != 0) {
             s[i++] = vec[rest % 10];
-            rest /= 10;
+            rest = rest / 10;
           }
           break;
         } else {
@@ -2254,7 +2280,7 @@ namespace PeterO {
             wordCount--;
           for (int j = 0; j < 4; j++) {
             s[i++] = vec[(int)(remainderSmall % 10)];
-            remainderSmall /= 10;
+            remainderSmall = remainderSmall / 10;
           }
         }
       }
@@ -2270,6 +2296,40 @@ namespace PeterO {
 
     }
 
+    /// <summary> </summary>
+    /// <param name='str'>A string object.</param>
+    /// <returns></returns>
+    public static BigInteger fromString(string str){
+      if(str==null || str.Length==0)throw new ArgumentNullException("str");
+      int offset=0;
+      bool negative=false;
+      if(str[0]=='-'){
+        offset++;
+        negative=true;
+      }
+      BigInteger bigint=new BigInteger().Allocate(4);
+      bool haveDigits=false;
+      for (int i = offset; i < str.Length; i++) {
+        char c=str[i];
+        if(c<'0' || c>'9')throw new FormatException("Illegal character found");
+        haveDigits=true;
+        int digit = (int)(c - '0');
+        // Multiply by 10
+        short carry=LinearMultiply(bigint.reg,0,bigint.reg,0,(short)10,bigint.reg.Length);
+        if(carry!=0)
+          bigint.reg=GrowForCarry(bigint.reg,carry);
+        // Add the parersed digit
+        if(digit!=0 && Increment(bigint.reg,0,bigint.reg.Length,(short)digit)!=0)
+          bigint.reg=GrowForCarry(bigint.reg,(short)1);
+      }
+      if(!haveDigits)
+        throw new FormatException("No digits");
+      bigint.wordCount=bigint.CalcWordCount();
+      bigint.negative=(bigint.wordCount!=0 && negative);
+      return bigint;
+    }
+
+    
     /// <summary>Returns the greatest common divisor of two integers. </summary>
     /// <returns></returns>
     /// <remarks>The greatest common divisor (GCD) is also known as the greatest
@@ -2300,17 +2360,6 @@ namespace PeterO {
       return bigintSecond;
     }
 
-    /// <summary> Calculates the remainder when a BigInteger raised to a
-    /// certain power is divided by another BigInteger. </summary>
-    /// <param name='bigintValue'>A BigInteger object.</param>
-    /// <param name='pow'>A BigInteger object.</param>
-    /// <param name='mod'>A BigInteger object.</param>
-    /// <returns>(bigintValue^pow)%mod</returns>
-    /// <remarks/>
-    public static BigInteger ModPow(BigInteger bigintValue, BigInteger pow, BigInteger mod) {
-      if ((bigintValue) == null) throw new ArgumentNullException("value");
-      return bigintValue.ModPow(pow, mod);
-    }
     /// <summary> Calculates the remainder when a BigInteger raised to a
     /// certain power is divided by another BigInteger. </summary>
     /// <param name='pow'>A BigInteger object.</param>
@@ -2362,7 +2411,7 @@ namespace PeterO {
       if (carry != 0) {
         int len = RoundupSize((sum.reg.Length / 2) + 1);
         sum.reg = CleanGrow(sum.reg, len);
-        sum.reg[sum.reg.Length / 2] = 1;
+        sum.reg[sum.reg.Length / 2] = (short)1;
       }
       sum.negative = false;
       sum.wordCount = sum.CalcWordCount();
@@ -2677,18 +2726,22 @@ namespace PeterO {
         // dividend is less than divisor
         return BigInteger.Zero;
       }
-      if (aSize <= 4 && bSize <= 4 && this.HasSmallValue() && bigintDivisor.HasSmallValue()) {
-        long aSmall = this.longValue();
-        long bSmall = bigintDivisor.longValue();
-        if (aSmall != Int64.MinValue || bSmall != -1) {
-          long result = aSmall / bSmall;
-          return (BigInteger)result;
+      if (aSize <= 4 && bSize <= 4 && this.HasTinyValue() && bigintDivisor.HasTinyValue()) {
+        int aSmall = this.intValue();
+        int  bSmall = bigintDivisor.intValue();
+        if (aSmall != Int32.MinValue || bSmall != -1) {
+          int result = aSmall / bSmall;
+          return new BigInteger().InitializeInt(result);
         }
       }
       BigInteger quotient;
       if (bSize == 1) {
         // divisor is small, use a fast path
-        quotient = new BigInteger(this);
+        quotient = new BigInteger();
+        quotient.reg=new short[this.reg.Length];
+        quotient.wordCount=this.wordCount;
+        quotient.negative=this.negative;
+        Array.Copy(this.reg,quotient.reg,quotient.reg.Length);
         FastDivide(quotient.reg, aSize, bigintDivisor.reg[0]);
         quotient.wordCount = quotient.CalcWordCount();
         if (quotient.wordCount != 0) {
@@ -2730,7 +2783,11 @@ namespace PeterO {
       }
       if (bSize == 1) {
         // divisor is small, use a fast path
-        quotient = new BigInteger(this);
+        quotient = new BigInteger();
+        quotient.reg=new short[this.reg.Length];
+        quotient.wordCount=this.wordCount;
+        quotient.negative=this.negative;
+        Array.Copy(this.reg,quotient.reg,quotient.reg.Length);
         int smallRemainder = (((int)FastDivideAndRemainder(
           quotient.reg, aSize, divisor.reg[0])) & 0xFFFF);
         quotient.wordCount = quotient.CalcWordCount();
@@ -2740,7 +2797,7 @@ namespace PeterO {
           quotient.negative = false;
         }
         if (this.Sign < 0) smallRemainder = -smallRemainder;
-        return new BigInteger[] { quotient, BigInteger.valueOf(smallRemainder) };
+        return new BigInteger[] { quotient, new BigInteger().InitializeInt(smallRemainder) };
       }
       BigInteger remainder = new BigInteger();
       quotient = new BigInteger();
@@ -2786,7 +2843,7 @@ namespace PeterO {
         short shortRemainder = FastRemainder(this.reg, this.wordCount, divisor.reg[0]);
         int smallRemainder = (((int)shortRemainder) & 0xFFFF);
         if (this.Sign < 0) smallRemainder = -smallRemainder;
-        return (BigInteger)smallRemainder;
+        return new BigInteger().InitializeInt(smallRemainder);
       }
       aSize += aSize % 2;
       bSize += bSize % 2;
@@ -2869,13 +2926,11 @@ namespace PeterO {
     /// <summary> Gets whether this value is even. </summary>
     public bool IsEven { get { return !GetUnsignedBit(0); } }
 
-    /// <summary> </summary>
-    /// <param name='other'>A BigInteger object.</param>
-    /// <returns></returns>
-    /// <remarks/>
-    public bool Equals(BigInteger other) {
-      if (other == null) return false;
-      return this.CompareTo(other) == 0;
-    }
+    /// <summary> BigInteger object for the number zero.</summary>
+    public static readonly BigInteger ZERO = new BigInteger().InitializeInt(0);
+    /// <summary> BigInteger object for the number one. </summary>
+    public static readonly BigInteger ONE = new BigInteger().InitializeInt(1);
+    /// <summary> BigInteger object for the number ten. </summary>
+    public static readonly BigInteger TEN = new BigInteger().InitializeInt(10);
   }
 }

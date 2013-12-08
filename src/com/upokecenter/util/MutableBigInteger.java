@@ -48,7 +48,7 @@ at: http://upokecenter.com/d/
         bytes[i * 4 + 3] = (byte)((data[i] >> 24) & 0xFF);
       }
       bytes[bytes.length - 1] = 0;
-      return new BigInteger(ReverseBytes((byte[])bytes));
+      return BigInteger.fromByteArray((byte[])bytes,true);
     }
 
     /**

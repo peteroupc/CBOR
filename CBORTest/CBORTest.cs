@@ -103,7 +103,7 @@ namespace Test {
       return DecimalFraction.FromString(RandomDecimalString(r));
     }
     public static BigInteger RandomBigInteger(FastRandom r) {
-      return TestCommon.BigIntParse(RandomBigIntString(r));
+      return BigInteger.fromString(RandomBigIntString(r));
     }
     public static BigFloat RandomBigFloat(FastRandom r) {
       return new BigFloat(RandomBigInteger(r),r.NextValue(400)-200);
@@ -2116,18 +2116,18 @@ namespace Test {
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(-4742894673080640195L)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(-8.057984695058738E-10d)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(-6832707275063219586L)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(TestCommon.BigIntParse("3037587108614072"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(BigInteger.fromString("3037587108614072"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NaN), CBORObject.FromObject(DecimalFraction.FromString("-21687"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(21.02954f)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(-280.74258f)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(3.295564645540288E-15d)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(-1.8643148756498468E-14d)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.PositiveInfinity), CBORObject.FromObject(DecimalFraction.FromString("56E-9"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(TestCommon.BigIntParse("06842884252556766213171069781"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(BigInteger.fromString("06842884252556766213171069781"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(-6381263349646471084L)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(9127378784365184230L)).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(TestCommon.BigIntParse("300921783316"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(TestCommon.BigIntParse("-5806763724610384900094490266237212718"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(BigInteger.fromString("300921783316"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
+      try { CBORObject.Subtract(CBORObject.FromObject(Single.NegativeInfinity), CBORObject.FromObject(BigInteger.fromString("-5806763724610384900094490266237212718"))).AsDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
     }
     /// <summary>
     /// </summary>

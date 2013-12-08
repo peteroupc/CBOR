@@ -347,7 +347,6 @@ public bool IsSmall{
     /// whether the discarded bits to the right of that bit are set. Assumes
     /// that the big integer being shifted is positive. </summary>
     /// <returns></returns>
-    /// <param name='bits'> A 64-bit signed integer.</param>
     public void ShiftToDigits(long bits) {
       if (isSmall)
         ShiftToBitsSmall(bits);
