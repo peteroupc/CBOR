@@ -91,7 +91,7 @@ namespace PeterO
     /// <returns>(bigintValue^pow)%mod</returns>
     /// <remarks/>
     public static BigInteger ModPow(BigInteger bigintValue, BigInteger pow, BigInteger mod) {
-      if ((bigintValue) == null) throw new ArgumentNullException("value");
+      if ((bigintValue) == null) throw new ArgumentNullException("bigintValue");
       return bigintValue.ModPow(pow, mod);
     }
 
@@ -123,6 +123,7 @@ namespace PeterO
     /// <returns>A Int64 object with the same value as the BigInteger object.</returns>
     /// <param name='bigValue'>A BigInteger object.</param>
     public static explicit operator long(BigInteger bigValue){
+      if((bigValue)==null)throw new ArgumentNullException("bigValue");
       return bigValue.longValue();
     }
 
@@ -130,6 +131,7 @@ namespace PeterO
     /// <returns>A Int32 object with the same value as the BigInteger object.</returns>
     /// <param name='bigValue'>A BigInteger object.</param>
     public static explicit operator int(BigInteger bigValue){
+      if((bigValue)==null)throw new ArgumentNullException("bigValue");
       return bigValue.intValue();
     }
     
@@ -198,6 +200,7 @@ namespace PeterO
     /// <returns></returns>
     [CLSCompliant(false)]
     public static BigInteger Abs(BigInteger thisValue){
+      if((thisValue)==null)throw new ArgumentNullException("thisValue");
       return thisValue.abs();
     }
     
@@ -235,6 +238,7 @@ namespace PeterO
     /// <returns></returns>
     public static BigInteger DivRem(BigInteger dividend, BigInteger divisor, out BigInteger remainder)
     {
+      if((dividend)==null)throw new ArgumentNullException("dividend");
       BigInteger[] result=dividend.divideAndRemainder(divisor);
       remainder=result[1];
       return result[0];
@@ -245,6 +249,7 @@ namespace PeterO
     /// <param name='bigintSecond'>A BigInteger object.</param>
     /// <returns></returns>
     public static BigInteger GreatestCommonDivisor(BigInteger bigintFirst, BigInteger bigintSecond){
+      if((bigintFirst)==null)throw new ArgumentNullException("bigintFirst");
       return bigintFirst.gcd(bigintSecond);
     }
     
@@ -261,8 +266,9 @@ namespace PeterO
     /// <returns></returns>
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, BigInteger power){
-      if(power.Sign<0)
-        throw new ArgumentException("power");
+      if((bigValue)==null)throw new ArgumentNullException("bigValue");
+      if((power)==null)throw new ArgumentNullException("power");
+      if((power.Sign)<0)throw new ArgumentException("power.Sign"+" not greater or equal to "+"0"+" ("+Convert.ToString((long)(long)(power.Sign),System.Globalization.CultureInfo.InvariantCulture)+")");
       BigInteger val=BigInteger.One;
       while(power.Sign>0){
         BigInteger p=(power>(BigInteger)5000000) ? 
@@ -279,8 +285,8 @@ namespace PeterO
     /// <returns></returns>
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, int power){
-      if(power<0)
-        throw new ArgumentException("power");
+      if((bigValue)==null)throw new ArgumentNullException("bigValue");
+      if((power)<0)throw new ArgumentException("power"+" not greater or equal to "+"0"+" ("+Convert.ToString((long)(long)(power),System.Globalization.CultureInfo.InvariantCulture)+")");
       return bigValue.pow(power);
     }
     
@@ -378,6 +384,8 @@ namespace PeterO
     /// representation for the purposes of this operator.</remarks>
     /// <returns></returns>
     public static BigInteger Or(BigInteger a, BigInteger b){
+      if((a)==null)throw new ArgumentNullException("a");
+      if((b)==null)throw new ArgumentNullException("b");
       BigInteger xa=new BigInteger().Allocate(a.wordCount);
       Array.Copy(a.reg,xa.reg,xa.reg.Length);
       BigInteger xb=new BigInteger().Allocate(b.wordCount);
@@ -405,6 +413,8 @@ namespace PeterO
     /// representation for the purposes of this operator.</remarks>
     /// <returns></returns>
     public static BigInteger Xor(BigInteger a, BigInteger b){
+      if((a)==null)throw new ArgumentNullException("a");
+      if((b)==null)throw new ArgumentNullException("b");
       BigInteger xa=new BigInteger().Allocate(a.wordCount);
       Array.Copy(a.reg,xa.reg,xa.reg.Length);
       BigInteger xb=new BigInteger().Allocate(b.wordCount);

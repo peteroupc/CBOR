@@ -234,7 +234,7 @@ namespace PeterO {
 
     /// <summary> Unlimited precision context. Rounding mode HalfUp.</summary>
     public static readonly PrecisionContext Unlimited =
-      new PrecisionContext((long)0,Rounding.HalfUp);
+      new PrecisionContext(0,Rounding.HalfUp);
     /// <summary> Precision context for the IEEE-754-2008 decimal32 format.
     /// </summary>
     public static readonly PrecisionContext Decimal32 =

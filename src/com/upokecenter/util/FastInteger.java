@@ -123,7 +123,7 @@ at: http://upokecenter.com/d/
      * @return Zero if the values are equal; a negative number is this instance
      * is less, or a positive number if this instance is greater.
      */
-    public int compareTo(long val) {
+    public int compareTo(int val) {
       if (usingLarge) {
         return largeValue.compareTo(BigInteger.valueOf(val));
       } else {
@@ -355,7 +355,7 @@ at: http://upokecenter.com/d/
     /**
      * 
      */
-public boolean isEvenNumber() {
+    public boolean isEvenNumber() {
         return (usingLarge) ? largeValue.testBit(0)==false : (smallValue&1)==0;
       }
 

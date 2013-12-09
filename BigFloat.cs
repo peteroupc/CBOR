@@ -81,12 +81,15 @@ namespace PeterO {
     /// <summary> Creates a bigfloat with the given mantissa and an exponent
     /// of 0. </summary>
     /// <param name='mantissa'> The desired value of the bigfloat</param>
-    public BigFloat(BigInteger mantissa) : this(mantissa, BigInteger.Zero) {
+    public BigFloat(BigInteger mantissa) : 
+      this(mantissa, BigInteger.Zero) {
     }
     /// <summary> Creates a bigfloat with the given mantissa and an exponent
     /// of 0. </summary>
     /// <param name='mantissaSmall'> The desired value of the bigfloat</param>
-    public BigFloat(long mantissaSmall) : this((BigInteger)mantissaSmall, BigInteger.Zero) {
+    public BigFloat(long mantissaSmall) {
+      this.exponent = BigInteger.Zero;
+      this.mantissa = (BigInteger)mantissaSmall;
     }
     private static BigInteger BigShiftIteration = (BigInteger)1000000;
     private static int ShiftIteration = 1000000;
@@ -535,14 +538,6 @@ namespace PeterO {
     /// <remarks/><param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new BitShiftAccumulator(bigint);
-      }
-
-    /// <summary> </summary>
-    /// <param name='value'>A 64-bit signed integer.</param>
-    /// <returns></returns>
-    /// <remarks/>
-      public IShiftAccumulator CreateShiftAccumulator(long value) {
-        return new BitShiftAccumulator(value);
       }
 
     /// <summary> </summary>

@@ -69,16 +69,14 @@ namespace PeterO {
     /// </summary>
     /// <param name='mantissa'> The unscaled value.</param>
     /// <param name='exponentSmall'> The decimal exponent.</param>
-    public DecimalFraction(BigInteger mantissa, long exponentSmall) {
-      this.exponent = (BigInteger)exponentSmall;
-      this.mantissa = mantissa;
+    public DecimalFraction(BigInteger mantissa, long exponentSmall) :
+      this(mantissa,(BigInteger)exponentSmall) {
     }
     /// <summary> Creates a decimal fraction with the given mantissa and
     /// an exponent of 0. </summary>
     /// <param name='mantissa'> The desired value of the bigfloat</param>
-    public DecimalFraction(BigInteger mantissa) {
-      this.exponent = BigInteger.Zero;
-      this.mantissa = mantissa;
+    public DecimalFraction(BigInteger mantissa) :
+      this(mantissa,BigInteger.Zero){
     }
     /// <summary> Creates a decimal fraction with the given mantissa and
     /// an exponent of 0. </summary>
@@ -246,7 +244,7 @@ namespace PeterO {
     
     private static BigInteger FivePower40=((BigInteger)95367431640625L)*(BigInteger)(95367431640625L);
 
-    internal static BigInteger FindPowerOfFive(long precision) {
+    internal static BigInteger FindPowerOfFive(int precision) {
       if (precision <= 0) return BigInteger.One;
       BigInteger bigpow;
       BigInteger ret;
@@ -300,7 +298,7 @@ namespace PeterO {
       return ret;
     }
 
-    internal static BigInteger FindPowerOfTen(long precision) {
+    internal static BigInteger FindPowerOfTen(int precision) {
       if (precision <= 0) return BigInteger.One;
       BigInteger ret;
       BigInteger bigpow;
@@ -412,8 +410,8 @@ namespace PeterO {
         if (mantissa.Sign == 0) return BigInteger.Zero;
         if (negative) mantissa = -mantissa;
         FastInteger diff = new FastInteger(e1).Subtract(e2).Abs();
-        if (diff.CanFitInInt64()) {
-          mantissa *= (BigInteger)(FindPowerOfTen(diff.AsInt64()));
+        if (diff.CanFitInInt32()) {
+          mantissa *= (BigInteger)(FindPowerOfTen(diff.AsInt32()));
         } else {
           mantissa *= (BigInteger)(FindPowerOfTenFromBig(diff.AsBigInteger()));
         }
@@ -444,14 +442,6 @@ namespace PeterO {
     /// <remarks/><param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new DigitShiftAccumulator(bigint);
-      }
-
-    /// <summary> </summary>
-    /// <param name='value'>A 64-bit signed integer.</param>
-    /// <returns></returns>
-    /// <remarks/>
-      public IShiftAccumulator CreateShiftAccumulator(long value) {
-        return new DigitShiftAccumulator(value);
       }
 
     /// <summary> </summary>
@@ -487,14 +477,18 @@ namespace PeterO {
     /// <remarks/>
       public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
         if (power <= 0) return bigint;
-        if (bigint.Equals(BigInteger.One)) {
-          bigint = (BigInteger)(FindPowerOfTen(power));
-        } else if (bigint.IsZero) {
+        if(power<=Int32.MaxValue){
+          if (bigint.Equals(BigInteger.One)) {
+            bigint = (BigInteger)(FindPowerOfTen((int)power));
+          } else if (bigint.IsZero) {
+            return bigint;
+          } else {
+            bigint *= (BigInteger)(FindPowerOfTen((int)power));
+          }
           return bigint;
         } else {
-          bigint *= (BigInteger)(FindPowerOfTen(power));
+          return MultiplyByRadixPower(bigint,new FastInteger(power));
         }
-        return bigint;
       }
 
     /// <summary> </summary>
@@ -505,8 +499,8 @@ namespace PeterO {
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.Sign <= 0) return bigint;
         if (bigint.IsZero) return bigint;
-        if (power.CanFitInInt64()) {
-          bigint *= (BigInteger)(FindPowerOfTen(power.AsInt64()));
+        if (power.CanFitInInt32()) {
+          bigint *= (BigInteger)(FindPowerOfTen(power.AsInt32()));
         } else {
           bigint *= (BigInteger)(FindPowerOfTenFromBig(power.AsBigInteger()));
         }
@@ -600,7 +594,10 @@ namespace PeterO {
           int cmp = decimalPoint.CompareTo(negaPos);
           System.Text.StringBuilder builder = null;
           if (cmp < 0) {
-            builder = new System.Text.StringBuilder((int)Math.Min(Int32.MaxValue, (long)mantissaString.Length + 6));
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
+            builder = new System.Text.StringBuilder(
+              tmpFast.CompareTo(Int32.MaxValue)>0 ? 
+              Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, negaPos);
             builder.Append("0.");
             AppendString(builder, '0', new FastInteger(negaPos).Subtract(decimalPoint));
@@ -610,7 +607,10 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt = decimalPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            builder = new System.Text.StringBuilder((int)Math.Min(Int32.MaxValue, (long)mantissaString.Length + 6));
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
+            builder = new System.Text.StringBuilder(
+              tmpFast.CompareTo(Int32.MaxValue)>0 ? 
+              Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, tmpInt);
             builder.Append("0.");
             builder.Append(mantissaString, tmpInt, mantissaString.Length - tmpInt);
@@ -620,7 +620,10 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt = insertionPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            builder = new System.Text.StringBuilder((int)Math.Min(Int32.MaxValue, (long)mantissaString.Length + 6));
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
+            builder = new System.Text.StringBuilder(
+              tmpFast.CompareTo(Int32.MaxValue)>0 ? 
+              Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, tmpInt);
             AppendString(builder, '0',
                          new FastInteger(decimalPoint).Subtract(builder.Length));
@@ -631,7 +634,10 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt = decimalPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            builder = new System.Text.StringBuilder((int)Math.Min(Int32.MaxValue, (long)mantissaString.Length + 6));
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
+            builder = new System.Text.StringBuilder(
+              tmpFast.CompareTo(Int32.MaxValue)>0 ? 
+              Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, tmpInt);
             builder.Append('.');
             builder.Append(mantissaString, tmpInt, mantissaString.Length - tmpInt);
@@ -667,8 +673,10 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt = tmp.AsInt32();
             if (tmp.Sign < 0) tmpInt = 0;
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
             builder = new System.Text.StringBuilder(
-              (int)Math.Min(Int32.MaxValue, (long)mantissaString.Length + 6));
+              tmpFast.CompareTo(Int32.MaxValue)>0 ? 
+              Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, tmpInt);
             builder.Append('.');
             builder.Append(mantissaString, tmpInt, mantissaString.Length - tmpInt);

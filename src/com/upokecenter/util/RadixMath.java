@@ -566,9 +566,10 @@ bigrem=divrem[1];
         FastInteger expdiff = new FastInteger(helper.GetExponent(thisValue)).Subtract(
           helper.GetExponent(divisor));
         FastInteger fastDesiredExponent = new FastInteger(desiredExponent);
+        FastInteger fastPrecision=new FastInteger(ctx.getPrecision());
         if (integerMode == IntegerModeFixedScale) {
           if (ctx != null && ctx.getPrecision() != 0 &&
-              new FastInteger(expdiff).Subtract(8).compareTo(ctx.getPrecision()) > 0 &&
+              new FastInteger(expdiff).Subtract(8).compareTo(fastPrecision) > 0 &&
               desiredExponent.signum()==0) { // NOTE: 8 guard digits
             // Result would require a too-high precision since
             // exponent difference is much higher
@@ -591,7 +592,7 @@ currentRemainder=divrem[1];
             result.Add(quotient.intValue());
             mantissaDividend = currentRemainder;
             if (ctx != null && ctx.getPrecision() != 0 &&
-                resultPrecision.compareTo(ctx.getPrecision()) == 0) {
+                resultPrecision.compareTo(fastPrecision) == 0) {
               break;
             }
             if (currentRemainder.signum()==0 && adjust.signum() >= 0) {
@@ -1107,7 +1108,7 @@ currentRemainder=divrem[1];
         if(bigmant.signum()==0){
           exp=new FastInteger(0);
         } else {
-          long radix=helper.GetRadix();
+          int radix=helper.GetRadix();
           BigInteger bigradix=BigInteger.valueOf(radix);
           while(!(bigmant.signum()==0)){
             BigInteger bigrem;
@@ -1616,8 +1617,9 @@ bigrem=divrem[1];
           // Check if exponent difference is too big for
           // radix-power calculation to work quickly
           if (!inCompare || expdiff.compareTo(100) >= 0) {
+            FastInteger fastPrecision=new FastInteger(ctx.getPrecision());
             // If exponent difference is greater than the precision
-            if (new FastInteger(expdiff).compareTo(ctx.getPrecision()) > 0) {
+            if (new FastInteger(expdiff).compareTo(fastPrecision) > 0) {
               BigInteger op1MantAbs=(helper.GetMantissa(op1)).abs();
               BigInteger op2MantAbs=(helper.GetMantissa(op2)).abs();
               int expcmp2 = fastOp1Exp.compareTo(fastOp2Exp);
@@ -1752,7 +1754,7 @@ bigrem=divrem[1];
           op1MantAbs).getDigitLength();
         long precision2 = helper.CreateShiftAccumulator(
           op2MantAbs).getDigitLength();
-        long maxPrecision = Math.max(precision1, precision2);
+        FastInteger maxPrecision = new FastInteger(Math.max(precision1, precision2));
         // If exponent difference is greater than the
         // maximum precision of the two operands
         if (new FastInteger(expdiff).compareTo(maxPrecision) > 0) {

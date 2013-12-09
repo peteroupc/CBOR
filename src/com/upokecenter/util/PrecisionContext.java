@@ -259,7 +259,7 @@ at: http://upokecenter.com/d/
      * Unlimited precision context. Rounding mode HalfUp.
      */
     public static final PrecisionContext Unlimited =
-      new PrecisionContext((long)0,Rounding.HalfUp);
+      new PrecisionContext(0,Rounding.HalfUp);
     /**
      * Precision context for the IEEE-754-2008 decimal32 format.
      */

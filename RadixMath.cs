@@ -559,9 +559,10 @@ namespace PeterO {
         FastInteger expdiff = new FastInteger(helper.GetExponent(thisValue)).Subtract(
           helper.GetExponent(divisor));
         FastInteger fastDesiredExponent = new FastInteger(desiredExponent);
+        FastInteger fastPrecision=new FastInteger(ctx.Precision);
         if (integerMode == IntegerModeFixedScale) {
           if (ctx != null && ctx.Precision != 0 &&
-              new FastInteger(expdiff).Subtract(8).CompareTo(ctx.Precision) > 0 &&
+              new FastInteger(expdiff).Subtract(8).CompareTo(fastPrecision) > 0 &&
               desiredExponent.IsZero) { // NOTE: 8 guard digits
             // Result would require a too-high precision since
             // exponent difference is much higher
@@ -581,7 +582,7 @@ namespace PeterO {
             result.Add((int)quotient);
             mantissaDividend = currentRemainder;
             if (ctx != null && ctx.Precision != 0 &&
-                resultPrecision.CompareTo(ctx.Precision) == 0) {
+                resultPrecision.CompareTo(fastPrecision) == 0) {
               break;
             }
             if (currentRemainder.IsZero && adjust.Sign >= 0) {
@@ -1096,7 +1097,7 @@ namespace PeterO {
         if(bigmant.IsZero){
           exp=new FastInteger(0);
         } else {
-          long radix=helper.GetRadix();
+          int radix=helper.GetRadix();
           BigInteger bigradix=(BigInteger)radix;
           while(!(bigmant.IsZero)){
             BigInteger bigrem;
@@ -1602,8 +1603,9 @@ namespace PeterO {
           // Check if exponent difference is too big for
           // radix-power calculation to work quickly
           if (!inCompare || expdiff.CompareTo(100) >= 0) {
+            FastInteger fastPrecision=new FastInteger(ctx.Precision);
             // If exponent difference is greater than the precision
-            if (new FastInteger(expdiff).CompareTo(ctx.Precision) > 0) {
+            if (new FastInteger(expdiff).CompareTo(fastPrecision) > 0) {
               BigInteger op1MantAbs=BigInteger.Abs(helper.GetMantissa(op1));
               BigInteger op2MantAbs=BigInteger.Abs(helper.GetMantissa(op2));
               int expcmp2 = fastOp1Exp.CompareTo(fastOp2Exp);
@@ -1737,7 +1739,7 @@ namespace PeterO {
           op1MantAbs).DigitLength;
         long precision2 = helper.CreateShiftAccumulator(
           op2MantAbs).DigitLength;
-        long maxPrecision = Math.Max(precision1, precision2);
+        FastInteger maxPrecision = new FastInteger(Math.Max(precision1, precision2));
         // If exponent difference is greater than the
         // maximum precision of the two operands
         if (new FastInteger(expdiff).CompareTo(maxPrecision) > 0) {

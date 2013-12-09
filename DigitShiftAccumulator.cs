@@ -96,14 +96,6 @@ public bool IsSmall{
       }
     }
     
-    public DigitShiftAccumulator(long longInt) {
-      if (longInt < 0)
-        throw new ArgumentException("longInt is negative");
-      shiftedLong = longInt;
-      discardedBitCount = new FastInteger();
-      isSmall = true;
-      knownBitLength = -1;
-    }
     private static BigInteger FastParseBigInt(string str, int offset, int length) {
       // Assumes the string contains
       // only the digits '0' through '9'
@@ -128,20 +120,20 @@ public bool IsSmall{
       return ret;
     }
     /// <summary> </summary>
-    /// <param name='fastint'> A FastInteger object.</param>
+    /// <param name='fastint'>A FastInteger object.</param>
     /// <returns></returns>
     /// <remarks/>
-    public void ShiftRight(FastInteger fastint) {
+public void ShiftRight(FastInteger fastint) {
       if ((fastint) == null) throw new ArgumentNullException("fastint");
       if (fastint.Sign <= 0) return;
-      if (fastint.CanFitInInt64()) {
-        ShiftRight(fastint.AsInt64());
+      if (fastint.CanFitInInt32()) {
+        ShiftRight(fastint.AsInt32());
       } else {
         BigInteger bi = fastint.AsBigInteger();
         while (bi.Sign > 0) {
-          long count = 1000000;
+          int count = 1000000;
           if (bi.CompareTo((BigInteger)1000000) < 0) {
-            count = (long)bi;
+            count = (int)bi;
           }
           ShiftRight(count);
           bi -= (BigInteger)count;
@@ -149,7 +141,7 @@ public bool IsSmall{
       }
     }
 
-    private void ShiftRightBig(long digits) {
+    private void ShiftRightBig(int digits) {
       if (digits <= 0) return;
       if (shiftedBigInt.IsZero) {
         discardedBitCount.Add(digits);
@@ -158,7 +150,7 @@ public bool IsSmall{
         knownBitLength = 1;
         return;
       }
-      String str = shiftedBigInt.ToString(); // TODO
+      String str = shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
       long digitLength = str.Length;
       long bitDiff = 0;
@@ -249,14 +241,14 @@ public bool IsSmall{
     /// digits to the right of that digit are set. Assumes that the big integer
     /// being shifted is positive. </summary>
     /// <returns></returns>
-    /// <param name='digits'> A 64-bit signed integer.</param>
-    public void ShiftRight(long digits) {
+    /// <param name='digits'>A 32-bit signed integer.</param>
+    public void ShiftRight(int digits) {
       if (isSmall)
         ShiftRightSmall(digits);
       else
         ShiftRightBig(digits);
     }
-    private void ShiftRightSmall(long digits) {
+    private void ShiftRightSmall(int digits) {
       if (digits <= 0) return;
       if (shiftedLong == 0) {
         discardedBitCount.Add(digits);

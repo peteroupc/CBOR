@@ -89,17 +89,15 @@ at: http://upokecenter.com/d/
      * @param mantissa The unscaled value.
      * @param exponentSmall The binary exponent.
      */
-    public BigFloat(BigInteger mantissa, long exponentSmall) {
-      this.exponent = BigInteger.valueOf(exponentSmall);
-      this.mantissa = mantissa;
+    public BigFloat(BigInteger mantissa, long exponentSmall){
+ this(mantissa,BigInteger.valueOf(exponentSmall));
     }
     /**
      * Creates a bigfloat with the given mantissa and an exponent of 0.
      * @param mantissa The desired value of the bigfloat
      */
-    public BigFloat(BigInteger mantissa) {
-      this.exponent = BigInteger.ZERO;
-      this.mantissa = mantissa;
+    public BigFloat(BigInteger mantissa){
+ this(mantissa, BigInteger.ZERO);
     }
     /**
      * Creates a bigfloat with the given mantissa and an exponent of 0.
@@ -313,11 +311,11 @@ remainder=divrem[1];
       if (this.mantissa.signum()==0) {
         return 0.0f;
       }
-      long smallmant = 0;
+      int smallmant = 0;
       if (bigmant.compareTo(OneShift23) < 0) {
-        smallmant = bigmant.longValue();
+        smallmant = bigmant.intValue();
         int exponentchange = 0;
-        while (smallmant < (1L << 23)) {
+        while (smallmant < (1 << 23)) {
           smallmant <<= 1;
           exponentchange++;
         }
@@ -328,7 +326,7 @@ remainder=divrem[1];
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
         bigexponent.Add(accum.getDiscardedDigitCount());
-        smallmant = accum.getShiftedIntSmall();
+        smallmant = (int)accum.getShiftedIntSmall();
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
@@ -354,7 +352,7 @@ remainder=divrem[1];
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
         bigexponent.Add(accum.getDiscardedDigitCount());
-        smallmant = accum.getShiftedIntSmall();
+        smallmant = (int)accum.getShiftedIntSmall();
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
           smallmant++;
@@ -570,14 +568,6 @@ remainder=divrem[1];
      */
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new BitShiftAccumulator(bigint);
-      }
-
-    /**
-     * 
-     * @param value A 64-bit signed integer.
-     */
-      public IShiftAccumulator CreateShiftAccumulator(long value) {
-        return new BitShiftAccumulator(value);
       }
 
     /**
