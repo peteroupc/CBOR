@@ -47,7 +47,7 @@
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <CodeAnalysisRules>-Microsoft.Globalization#CA1303%3b-Microsoft.Naming#CA1704%3b-Microsoft.Naming#CA1705%3b-Microsoft.Naming#CA1718%3b-Microsoft.Performance#CA1800</CodeAnalysisRules>
+    <CodeAnalysisRules>-Microsoft.Globalization#CA1303;-Microsoft.Naming#CA1704;-Microsoft.Naming#CA1705;-Microsoft.Naming#CA1718;-Microsoft.Performance#CA1800</CodeAnalysisRules>
     <RunCodeAnalysis>True</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>

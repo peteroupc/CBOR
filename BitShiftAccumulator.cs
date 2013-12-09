@@ -73,7 +73,7 @@ public bool IsSmall{
       get { return discardedBitCount; }
     }
 
-        public BitShiftAccumulator(BigInteger bigint,
+    public BitShiftAccumulator(BigInteger bigint,
       int lastDiscarded,
       int olderDiscarded
       ) : this(bigint) {
@@ -101,33 +101,22 @@ public bool IsSmall{
     /// <remarks/>
     public void ShiftRight(FastInteger fastint) {
       if (fastint.Sign <= 0) return;
-      if (fastint.CanFitInInt64()) {
-        ShiftRight(fastint.AsInt64());
+      if (fastint.CanFitInInt32()) {
+        ShiftRight(fastint.AsInt32());
       } else {
         BigInteger bi = fastint.AsBigInteger();
         while (bi.Sign > 0) {
-          long count = 1000000;
+          int count = 1000000;
           if (bi.CompareTo((BigInteger)1000000) < 0) {
-            count = (long)bi;
+            count = (int)bi;
           }
           ShiftRight(count);
           bi -= (BigInteger)count;
         }
       }
     }
-    private static byte[] ReverseBytes(byte[] bytes) {
-      if ((bytes) == null) throw new ArgumentNullException("bytes");
-      int half = bytes.Length >> 1;
-      int right = bytes.Length - 1;
-      for (int i = 0; i < half; i++, right--) {
-        byte value = bytes[i];
-        bytes[i] = bytes[right];
-        bytes[right] = value;
-      }
-      return bytes;
-    }
 
-    private void ShiftRightBig(long bits) {
+    private void ShiftRightBig(int bits) {
       if (bits <= 0) return;
       if (shiftedBigInt.IsZero) {
         discardedBitCount.Add(bits);
@@ -301,13 +290,13 @@ public bool IsSmall{
     /// shifted is positive. </summary>
     /// <returns></returns>
     /// <param name='bits'> A 64-bit signed integer.</param>
-    public void ShiftRight(long bits) {
+    public void ShiftRight(int bits) {
       if (isSmall)
         ShiftRightSmall(bits);
       else
         ShiftRightBig(bits);
     }
-    private void ShiftRightSmall(long bits) {
+    private void ShiftRightSmall(int bits) {
       if (bits <= 0) return;
       if (shiftedLong == 0) {
         discardedBitCount.Add(bits);
@@ -347,6 +336,7 @@ public bool IsSmall{
     /// whether the discarded bits to the right of that bit are set. Assumes
     /// that the big integer being shifted is positive. </summary>
     /// <returns></returns>
+    /// <param name='bits'>A 64-bit signed integer.</param>
     public void ShiftToDigits(long bits) {
       if (isSmall)
         ShiftToBitsSmall(bits);

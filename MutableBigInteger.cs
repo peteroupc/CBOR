@@ -24,17 +24,6 @@ namespace PeterO {
       data[0] = unchecked((int)((val) & 0xFFFFFFFFL));
       data[1] = unchecked((int)((val >> 32) & 0xFFFFFFFFL));
     }
-    private static byte[] ReverseBytes(byte[] bytes) {
-      if ((bytes) == null) throw new ArgumentNullException("bytes");
-      int half = bytes.Length >> 1;
-      int right = bytes.Length - 1;
-      for (int i = 0; i < half; i++, right--) {
-        byte value = bytes[i];
-        bytes[i] = bytes[right];
-        bytes[right] = value;
-      }
-      return bytes;
-    }
     /// <summary> </summary>
     /// <returns></returns>
     /// <remarks/>

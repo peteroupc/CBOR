@@ -25,17 +25,6 @@ at: http://upokecenter.com/d/
       data[0] = ((int)((val) & 0xFFFFFFFFL));
       data[1] = ((int)((val >> 32) & 0xFFFFFFFFL));
     }
-    private static byte[] ReverseBytes(byte[] bytes) {
-      if ((bytes) == null) throw new NullPointerException("bytes");
-      int half = bytes.length >> 1;
-      int right = bytes.length - 1;
-      for (int i = 0; i < half; i++, right--) {
-        byte value = bytes[i];
-        bytes[i] = bytes[right];
-        bytes[right] = value;
-      }
-      return bytes;
-    }
     /**
      * 
      */

@@ -77,18 +77,16 @@ at: http://upokecenter.com/d/
      * @param mantissa The unscaled value.
      * @param exponentSmall The decimal exponent.
      */
-    public DecimalFraction(BigInteger mantissa, long exponentSmall) {
-      this.exponent = BigInteger.valueOf(exponentSmall);
-      this.mantissa = mantissa;
+    public DecimalFraction(BigInteger mantissa, long exponentSmall){
+ this(mantissa,BigInteger.valueOf(exponentSmall));
     }
     /**
      * Creates a decimal fraction with the given mantissa and an exponent
      * of 0.
      * @param mantissa The desired value of the bigfloat
      */
-    public DecimalFraction(BigInteger mantissa) {
-      this.exponent = BigInteger.ZERO;
-      this.mantissa = mantissa;
+    public DecimalFraction(BigInteger mantissa){
+ this(mantissa,BigInteger.ZERO);
     }
     /**
      * Creates a decimal fraction with the given mantissa and an exponent
@@ -257,7 +255,7 @@ at: http://upokecenter.com/d/
     
     private static BigInteger FivePower40=(BigInteger.valueOf(95367431640625L)).multiply(BigInteger.valueOf(95367431640625L));
 
-    static BigInteger FindPowerOfFive(long precision) {
+    static BigInteger FindPowerOfFive(int precision) {
       if (precision <= 0) return BigInteger.ONE;
       BigInteger bigpow;
       BigInteger ret;
@@ -311,7 +309,7 @@ at: http://upokecenter.com/d/
       return ret;
     }
 
-    static BigInteger FindPowerOfTen(long precision) {
+    static BigInteger FindPowerOfTen(int precision) {
       if (precision <= 0) return BigInteger.ONE;
       BigInteger ret;
       BigInteger bigpow;
@@ -423,8 +421,8 @@ at: http://upokecenter.com/d/
         if (mantissa.signum() == 0) return BigInteger.ZERO;
         if (negative) mantissa=mantissa.negate();
         FastInteger diff = new FastInteger(e1).Subtract(e2).Abs();
-        if (diff.CanFitInInt64()) {
-          mantissa=mantissa.multiply(FindPowerOfTen(diff.AsInt64()));
+        if (diff.CanFitInInt32()) {
+          mantissa=mantissa.multiply(FindPowerOfTen(diff.AsInt32()));
         } else {
           mantissa=mantissa.multiply(FindPowerOfTenFromBig(diff.AsBigInteger()));
         }
@@ -457,14 +455,6 @@ at: http://upokecenter.com/d/
      */
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new DigitShiftAccumulator(bigint);
-      }
-
-    /**
-     * 
-     * @param value A 64-bit signed integer.
-     */
-      public IShiftAccumulator CreateShiftAccumulator(long value) {
-        return new DigitShiftAccumulator(value);
       }
 
     /**
@@ -503,14 +493,18 @@ bigrem=divrem[1];
      */
       public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
         if (power <= 0) return bigint;
-        if (bigint.equals(BigInteger.ONE)) {
-          bigint = FindPowerOfTen(power);
-        } else if (bigint.signum()==0) {
+        if(power<=Integer.MAX_VALUE){
+          if (bigint.equals(BigInteger.ONE)) {
+            bigint = FindPowerOfTen((int)power);
+          } else if (bigint.signum()==0) {
+            return bigint;
+          } else {
+            bigint=bigint.multiply(FindPowerOfTen((int)power));
+          }
           return bigint;
         } else {
-          bigint=bigint.multiply(FindPowerOfTen(power));
+          return MultiplyByRadixPower(bigint,new FastInteger(power));
         }
-        return bigint;
       }
 
     /**
@@ -521,8 +515,8 @@ bigrem=divrem[1];
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.signum() <= 0) return bigint;
         if (bigint.signum()==0) return bigint;
-        if (power.CanFitInInt64()) {
-          bigint=bigint.multiply(FindPowerOfTen(power.AsInt64()));
+        if (power.CanFitInInt32()) {
+          bigint=bigint.multiply(FindPowerOfTen(power.AsInt32()));
         } else {
           bigint=bigint.multiply(FindPowerOfTenFromBig(power.AsBigInteger()));
         }
@@ -616,7 +610,10 @@ bigrem=divrem[1];
           int cmp = decimalPoint.compareTo(negaPos);
           StringBuilder builder = null;
           if (cmp < 0) {
-            builder = new StringBuilder((int)Math.min(Integer.MAX_VALUE, (long)mantissaString.length() + 6));
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).Add(6);
+            builder = new StringBuilder(
+              tmpFast.compareTo(Integer.MAX_VALUE)>0 ? 
+              Integer.MAX_VALUE : tmpFast.AsInt32());
             builder.append(mantissaString,0,(0)+(negaPos));
             builder.append("0.");
             AppendString(builder, '0', new FastInteger(negaPos).Subtract(decimalPoint));
@@ -626,7 +623,10 @@ bigrem=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt = decimalPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            builder = new StringBuilder((int)Math.min(Integer.MAX_VALUE, (long)mantissaString.length() + 6));
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).Add(6);
+            builder = new StringBuilder(
+              tmpFast.compareTo(Integer.MAX_VALUE)>0 ? 
+              Integer.MAX_VALUE : tmpFast.AsInt32());
             builder.append(mantissaString,0,(0)+(tmpInt));
             builder.append("0.");
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
@@ -636,7 +636,10 @@ bigrem=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt = insertionPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            builder = new StringBuilder((int)Math.min(Integer.MAX_VALUE, (long)mantissaString.length() + 6));
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).Add(6);
+            builder = new StringBuilder(
+              tmpFast.compareTo(Integer.MAX_VALUE)>0 ? 
+              Integer.MAX_VALUE : tmpFast.AsInt32());
             builder.append(mantissaString,0,(0)+(tmpInt));
             AppendString(builder, '0',
                          new FastInteger(decimalPoint).Subtract(builder.length()));
@@ -647,7 +650,10 @@ bigrem=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt = decimalPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            builder = new StringBuilder((int)Math.min(Integer.MAX_VALUE, (long)mantissaString.length() + 6));
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).Add(6);
+            builder = new StringBuilder(
+              tmpFast.compareTo(Integer.MAX_VALUE)>0 ? 
+              Integer.MAX_VALUE : tmpFast.AsInt32());
             builder.append(mantissaString,0,(0)+(tmpInt));
             builder.append('.');
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
@@ -683,8 +689,10 @@ bigrem=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt = tmp.AsInt32();
             if (tmp.signum() < 0) tmpInt = 0;
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).Add(6);
             builder = new StringBuilder(
-              (int)Math.min(Integer.MAX_VALUE, (long)mantissaString.length() + 6));
+              tmpFast.compareTo(Integer.MAX_VALUE)>0 ? 
+              Integer.MAX_VALUE : tmpFast.AsInt32());
             builder.append(mantissaString,0,(0)+(tmpInt));
             builder.append('.');
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));

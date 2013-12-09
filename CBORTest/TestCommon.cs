@@ -14,6 +14,77 @@ using System.IO;
 namespace Test {
   static class TestCommon {
 
+    public static void AssertBigIntegersEqual(string a, BigInteger b){
+      Assert.AreEqual(a,b.ToString());
+      BigInteger a2=BigInteger.fromString(a);
+      Assert.AreEqual(a2,b);
+      AssertEqualsHashCode(a2,b);
+    }
+    public static void DoTestDivide(string dividend, string divisor, string result){
+      BigInteger bigintA=BigInteger.fromString(dividend);
+      BigInteger bigintB=BigInteger.fromString(divisor);
+      if(bigintB.IsZero){
+        try { bigintA.divide(bigintB); Assert.Fail("Expected divide by 0 error");
+        } catch(Exception){ }
+      } else {
+        AssertBigIntegersEqual(result,bigintA.divide(bigintB));
+      }
+    }
+    public static void DoTestRemainder(string dividend, string divisor, string result){
+      BigInteger bigintA=BigInteger.fromString(dividend);
+      BigInteger bigintB=BigInteger.fromString(divisor);
+      if(bigintB.IsZero){
+        try { bigintA.remainder(bigintB); Assert.Fail("Expected divide by 0 error");
+        } catch(Exception){ }
+      } else {
+        AssertBigIntegersEqual(result,(bigintA.remainder(bigintB)));
+      }
+    }
+    public static void DoTestDivideAndRemainder(string dividend, string divisor, string result, string rem){
+      BigInteger bigintA=BigInteger.fromString(dividend);
+      BigInteger bigintB=BigInteger.fromString(divisor);
+      BigInteger rembi;
+      if(bigintB.IsZero){
+        try {
+          BigInteger quo=BigInteger.DivRem(bigintA,bigintB,out rembi);
+          Assert.Fail("Expected divide by 0 error");
+        } catch(Exception){ }
+      } else {
+        BigInteger quo=BigInteger.DivRem(bigintA,bigintB,out rembi);
+        AssertBigIntegersEqual(result,quo);
+        AssertBigIntegersEqual(rem,rembi);
+      }
+    }
+    public static void DoTestMultiply(string m1, string m2, string result){
+      BigInteger bigintA=BigInteger.fromString(m1);
+      BigInteger bigintB=BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result,(bigintA.multiply(bigintB)));
+    }
+    public static void DoTestAdd(string m1, string m2, string result){
+      BigInteger bigintA=BigInteger.fromString(m1);
+      BigInteger bigintB=BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result,(bigintA.add(bigintB)));
+    }
+    public static void DoTestSubtract(string m1, string m2, string result){
+      BigInteger bigintA=BigInteger.fromString(m1);
+      BigInteger bigintB=BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result,(bigintA.subtract(bigintB)));
+    }
+    public static void DoTestPow(string m1, int m2, string result){
+      BigInteger bigintA=BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result,(bigintA.pow(m2)));
+    }
+    public static void DoTestShiftLeft(string m1, int m2, string result){
+      BigInteger bigintA=BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result,(bigintA.shiftLeft(m2)));
+      AssertBigIntegersEqual(result,(bigintA.shiftRight(-m2)));
+    }
+    public static void DoTestShiftRight(string m1, int m2, string result){
+      BigInteger bigintA=BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result,(bigintA.shiftRight(m2)));
+      AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
+    }
+    
     public static void AssertDecFrac(DecimalFraction d3, string output){
       if(output==null && d3!=null)Assert.Fail("d3 must be null");
       if(output!=null && !d3.ToString().Equals(output)){
@@ -65,7 +136,7 @@ namespace Test {
         Assert.AreEqual(oa, ob);
       return oa;
     }
-    public static void AssertEqualsHashCode(CBORObject o, CBORObject o2) {
+    public static void AssertEqualsHashCode(Object o, Object o2) {
       if (o.Equals(o2)) {
         if (!o2.Equals(o))
           Assert.Fail(

@@ -119,7 +119,7 @@ namespace PeterO {
     /// <returns> Zero if the values are equal; a negative number is this instance
     /// is less, or a positive number if this instance is greater.</returns>
     /// <remarks/>
-    public int CompareTo(long val) {
+    public int CompareTo(int val) {
       if (usingLarge) {
         return largeValue.CompareTo((BigInteger)val);
       } else {
@@ -339,7 +339,7 @@ namespace PeterO {
     
     /// <summary> </summary>
     /// <remarks/>
-public bool IsEvenNumber{
+    public bool IsEvenNumber{
       get {
         return (usingLarge) ? largeValue.IsEven : (smallValue&1)==0;
       }

@@ -17,6 +17,83 @@ import java.io.*;
   final class TestCommon {
 private TestCommon(){}
 
+    public static void AssertBigIntegersEqual(String a, BigInteger b) {
+      Assert.assertEquals(a,b.toString());
+      BigInteger a2=BigInteger.fromString(a);
+      Assert.assertEquals(a2,b);
+      AssertEqualsHashCode(a2,b);
+    }
+    public static void DoTestDivide(String dividend, String divisor, String result) {
+      BigInteger bigintA=BigInteger.fromString(dividend);
+      BigInteger bigintB=BigInteger.fromString(divisor);
+      if(bigintB.signum()==0){
+        try { bigintA.divide(bigintB); Assert.fail("Expected divide by 0 error");
+        } catch(Exception ex){ }
+      } else {
+        AssertBigIntegersEqual(result,bigintA.divide(bigintB));
+      }
+    }
+    public static void DoTestRemainder(String dividend, String divisor, String result) {
+      BigInteger bigintA=BigInteger.fromString(dividend);
+      BigInteger bigintB=BigInteger.fromString(divisor);
+      if(bigintB.signum()==0){
+        try { bigintA.remainder(bigintB); Assert.fail("Expected divide by 0 error");
+        } catch(Exception ex){ }
+      } else {
+        AssertBigIntegersEqual(result,(bigintA.remainder(bigintB)));
+      }
+    }
+    public static void DoTestDivideAndRemainder(String dividend, String divisor, String result, String rem) {
+      BigInteger bigintA=BigInteger.fromString(dividend);
+      BigInteger bigintB=BigInteger.fromString(divisor);
+      BigInteger rembi;
+      if(bigintB.signum()==0){
+        try {
+          BigInteger quo;
+BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
+quo=divrem[0];
+rembi=divrem[1];
+          Assert.fail("Expected divide by 0 error");
+        } catch(Exception ex){ }
+      } else {
+        BigInteger quo;
+BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
+quo=divrem[0];
+rembi=divrem[1];
+        AssertBigIntegersEqual(result,quo);
+        AssertBigIntegersEqual(rem,rembi);
+      }
+    }
+    public static void DoTestMultiply(String m1, String m2, String result) {
+      BigInteger bigintA=BigInteger.fromString(m1);
+      BigInteger bigintB=BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result,(bigintA.multiply(bigintB)));
+    }
+    public static void DoTestAdd(String m1, String m2, String result) {
+      BigInteger bigintA=BigInteger.fromString(m1);
+      BigInteger bigintB=BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result,(bigintA.add(bigintB)));
+    }
+    public static void DoTestSubtract(String m1, String m2, String result) {
+      BigInteger bigintA=BigInteger.fromString(m1);
+      BigInteger bigintB=BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result,(bigintA.subtract(bigintB)));
+    }
+    public static void DoTestPow(String m1, int m2, String result) {
+      BigInteger bigintA=BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result,(bigintA.pow(m2)));
+    }
+    public static void DoTestShiftLeft(String m1, int m2, String result) {
+      BigInteger bigintA=BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result,(bigintA.shiftLeft(m2)));
+      AssertBigIntegersEqual(result,(bigintA.shiftRight(-m2)));
+    }
+    public static void DoTestShiftRight(String m1, int m2, String result) {
+      BigInteger bigintA=BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result,(bigintA.shiftRight(m2)));
+      AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
+    }
+    
     public static void AssertDecFrac(DecimalFraction d3, String output) {
       if(output==null && d3!=null)Assert.fail("d3 must be null");
       if(output!=null && !d3.toString().equals(output)){
@@ -69,7 +146,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         Assert.assertEquals(oa, ob);
       return oa;
     }
-    public static void AssertEqualsHashCode(CBORObject o, CBORObject o2) {
+    public static void AssertEqualsHashCode(Object o, Object o2) {
       if (o.equals(o2)) {
         if (!o2.equals(o))
           Assert.fail(

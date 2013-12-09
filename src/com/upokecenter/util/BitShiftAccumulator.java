@@ -70,7 +70,7 @@ public boolean isSmall() { return isSmall; }
      */
     public FastInteger getDiscardedDigitCount() { return discardedBitCount; }
 
-        public BitShiftAccumulator(BigInteger bigint,
+    public BitShiftAccumulator(BigInteger bigint,
       int lastDiscarded,
       int olderDiscarded
       ){
@@ -99,33 +99,22 @@ public boolean isSmall() { return isSmall; }
      */
     public void ShiftRight(FastInteger fastint) {
       if (fastint.signum() <= 0) return;
-      if (fastint.CanFitInInt64()) {
-        ShiftRight(fastint.AsInt64());
+      if (fastint.CanFitInInt32()) {
+        ShiftRight(fastint.AsInt32());
       } else {
         BigInteger bi = fastint.AsBigInteger();
         while (bi.signum() > 0) {
-          long count = 1000000;
+          int count = 1000000;
           if (bi.compareTo(BigInteger.valueOf(1000000)) < 0) {
-            count = bi.longValue();
+            count = bi.intValue();
           }
           ShiftRight(count);
           bi=bi.subtract(BigInteger.valueOf(count));
         }
       }
     }
-    private static byte[] ReverseBytes(byte[] bytes) {
-      if ((bytes) == null) throw new NullPointerException("bytes");
-      int half = bytes.length >> 1;
-      int right = bytes.length - 1;
-      for (int i = 0; i < half; i++, right--) {
-        byte value = bytes[i];
-        bytes[i] = bytes[right];
-        bytes[right] = value;
-      }
-      return bytes;
-    }
 
-    private void ShiftRightBig(long bits) {
+    private void ShiftRightBig(int bits) {
       if (bits <= 0) return;
       if (shiftedBigInt.signum()==0) {
         discardedBitCount.Add(bits);
@@ -301,13 +290,13 @@ public boolean isSmall() { return isSmall; }
      * of that bit are set. Assumes that the big integer being shifted is positive.
      * @param bits A 64-bit signed integer.
      */
-    public void ShiftRight(long bits) {
+    public void ShiftRight(int bits) {
       if (isSmall)
         ShiftRightSmall(bits);
       else
         ShiftRightBig(bits);
     }
-    private void ShiftRightSmall(long bits) {
+    private void ShiftRightSmall(int bits) {
       if (bits <= 0) return;
       if (shiftedLong == 0) {
         discardedBitCount.Add(bits);

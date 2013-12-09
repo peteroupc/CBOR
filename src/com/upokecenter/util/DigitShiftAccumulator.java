@@ -94,14 +94,6 @@ public boolean isSmall() { return isSmall; }
       }
     }
     
-    public DigitShiftAccumulator(long longInt) {
-      if (longInt < 0)
-        throw new IllegalArgumentException("longInt is negative");
-      shiftedLong = longInt;
-      discardedBitCount = new FastInteger();
-      isSmall = true;
-      knownBitLength = -1;
-    }
     private static BigInteger FastParseBigInt(String str, int offset, int length) {
       // Assumes the String contains
       // only the digits '0' through '9'
@@ -129,17 +121,17 @@ public boolean isSmall() { return isSmall; }
      * 
      * @param fastint A FastInteger object.
      */
-    public void ShiftRight(FastInteger fastint) {
+public void ShiftRight(FastInteger fastint) {
       if ((fastint) == null) throw new NullPointerException("fastint");
       if (fastint.signum() <= 0) return;
-      if (fastint.CanFitInInt64()) {
-        ShiftRight(fastint.AsInt64());
+      if (fastint.CanFitInInt32()) {
+        ShiftRight(fastint.AsInt32());
       } else {
         BigInteger bi = fastint.AsBigInteger();
         while (bi.signum() > 0) {
-          long count = 1000000;
+          int count = 1000000;
           if (bi.compareTo(BigInteger.valueOf(1000000)) < 0) {
-            count = bi.longValue();
+            count = bi.intValue();
           }
           ShiftRight(count);
           bi=bi.subtract(BigInteger.valueOf(count));
@@ -147,7 +139,7 @@ public boolean isSmall() { return isSmall; }
       }
     }
 
-    private void ShiftRightBig(long digits) {
+    private void ShiftRightBig(int digits) {
       if (digits <= 0) return;
       if (shiftedBigInt.signum()==0) {
         discardedBitCount.Add(digits);
@@ -156,7 +148,7 @@ public boolean isSmall() { return isSmall; }
         knownBitLength = 1;
         return;
       }
-      String str = shiftedBigInt.toString(); // TODO
+      String str = shiftedBigInt.toString();
       // NOTE: Will be 1 if the value is 0
       long digitLength = str.length();
       long bitDiff = 0;
@@ -249,15 +241,15 @@ public boolean isSmall() { return isSmall; }
      * last digit discarded is set and whether the discarded digits to the
      * right of that digit are set. Assumes that the big integer being shifted
      * is positive.
-     * @param digits A 64-bit signed integer.
+     * @param digits A 32-bit signed integer.
      */
-    public void ShiftRight(long digits) {
+    public void ShiftRight(int digits) {
       if (isSmall)
         ShiftRightSmall(digits);
       else
         ShiftRightBig(digits);
     }
-    private void ShiftRightSmall(long digits) {
+    private void ShiftRightSmall(int digits) {
       if (digits <= 0) return;
       if (shiftedLong == 0) {
         discardedBitCount.Add(digits);

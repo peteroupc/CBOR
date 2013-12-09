@@ -409,85 +409,91 @@ public int compareTo(CBORObject other) {
           // and their signs are different
           return (s1 < s2) ? -1 : 1;
         }
+        BigInteger bigintXa;
+        BigInteger bigintXb;
+        BigFloat bigfloatXa;
+        BigFloat bigfloatXb;
+        DecimalFraction decfracXa;
+        DecimalFraction decfracXb;
         switch (combo) {
             case (CBORObjectType_Integer << 4) | CBORObjectType_BigInteger: {
-              BigInteger xa = BigInteger.valueOf((((Long)objA).longValue()));
-              BigInteger xb = (BigInteger)objB;
-              return xa.compareTo(xb);
+              bigintXa = BigInteger.valueOf((((Long)objA).longValue()));
+              bigintXb = (BigInteger)objB;
+              return bigintXa.compareTo(bigintXb);
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_Single: {
               float sf = ((Float)objB).floatValue();
               if (((Float)(sf)).isInfinite()) return (sf < 0 ? 1 : -1);
               if (Float.isNaN(sf)) return -1;
-              BigFloat xa = new BigFloat((((Long)objA).longValue()));
-              BigFloat xb = BigFloat.FromSingle(sf);
-              return xa.compareTo(xb);
+              bigfloatXa = new BigFloat((((Long)objA).longValue()));
+              bigfloatXb = BigFloat.FromSingle(sf);
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_Double: {
               double sf = ((Double)objB).doubleValue();
               if (((Double)(sf)).isInfinite()) return (sf < 0 ? 1 : -1);
               if (Double.isNaN(sf)) return -1;
-              BigFloat xa = new BigFloat((((Long)objA).longValue()));
-              BigFloat xb = BigFloat.FromDouble(sf);
-              return xa.compareTo(xb);
+              bigfloatXa = new BigFloat((((Long)objA).longValue()));
+              bigfloatXb = BigFloat.FromDouble(sf);
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_DecimalFraction: {
-              DecimalFraction xa = new DecimalFraction((((Long)objA).longValue()));
-              DecimalFraction xb = (DecimalFraction)objB;
-              return xa.compareTo(xb);
+              decfracXa = new DecimalFraction((((Long)objA).longValue()));
+              decfracXb = (DecimalFraction)objB;
+              return decfracXa.compareTo(decfracXb);
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_BigFloat: {
-              BigFloat xa = new BigFloat((((Long)objA).longValue()));
-              BigFloat xb = (BigFloat)objB;
-              return xa.compareTo(xb);
+              bigfloatXa = new BigFloat((((Long)objA).longValue()));
+              bigfloatXb = (BigFloat)objB;
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_Integer: {
-              BigInteger xa = (BigInteger)objA;
-              BigInteger xb = BigInteger.valueOf((((Long)objB).longValue()));
-              return xa.compareTo(xb);
+              bigintXa = (BigInteger)objA;
+              bigintXb = BigInteger.valueOf((((Long)objB).longValue()));
+              return bigintXa.compareTo(bigintXb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_Single: {
               float sf = ((Float)objB).floatValue();
               if (((Float)(sf)).isInfinite()) return (sf < 0 ? 1 : -1);
               if (Float.isNaN(sf)) return -1;
-              BigFloat xa = new BigFloat((BigInteger)objA);
-              BigFloat xb = BigFloat.FromSingle(sf);
-              return xa.compareTo(xb);
+              bigfloatXa = new BigFloat((BigInteger)objA);
+              bigfloatXb = BigFloat.FromSingle(sf);
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_Double: {
               double sf = ((Double)objB).doubleValue();
               if (((Double)(sf)).isInfinite()) return (sf < 0 ? 1 : -1);
               if (Double.isNaN(sf)) return -1;
-              BigFloat xa = new BigFloat((BigInteger)objA);
-              BigFloat xb = BigFloat.FromDouble(sf);
-              return xa.compareTo(xb);
+              bigfloatXa = new BigFloat((BigInteger)objA);
+              bigfloatXb = BigFloat.FromDouble(sf);
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_DecimalFraction: {
-              DecimalFraction xa = new DecimalFraction((BigInteger)objA);
-              DecimalFraction xb = (DecimalFraction)objB;
-              return xa.compareTo(xb);
+              decfracXa = new DecimalFraction((BigInteger)objA);
+              decfracXb = (DecimalFraction)objB;
+              return decfracXa.compareTo(decfracXb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_BigFloat: {
-              BigFloat xa = new BigFloat((BigInteger)objA);
-              BigFloat xb = (BigFloat)objB;
-              return xa.compareTo(xb);
+              bigfloatXa = new BigFloat((BigInteger)objA);
+              bigfloatXb = (BigFloat)objB;
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_Integer: {
               float sf = ((Float)objA).floatValue();
               if (((Float)(sf)).isInfinite()) return (sf < 0 ? -1 : 1);
 
               if (Float.isNaN(sf)) return 1;
-              BigFloat xa = BigFloat.FromSingle(sf);
-              BigFloat xb = new BigFloat((((Long)objB).longValue()));
-              return xa.compareTo(xb);
+              bigfloatXa = BigFloat.FromSingle(sf);
+              bigfloatXb = new BigFloat((((Long)objB).longValue()));
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_BigInteger: {
               float sf = ((Float)objA).floatValue();
               if (((Float)(sf)).isInfinite()) return (sf < 0 ? -1 : 1);
               if (Float.isNaN(sf)) return 1;
-              BigFloat xa = BigFloat.FromSingle(sf);
-              BigFloat xb = new BigFloat((BigInteger)objB);
-              return xa.compareTo(xb);
+              bigfloatXa = BigFloat.FromSingle(sf);
+              bigfloatXb = new BigFloat((BigInteger)objB);
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_Double: {
               double a = ((Float)objA).doubleValue();
@@ -506,33 +512,33 @@ public int compareTo(CBORObject other) {
               float sf = ((Float)objA).floatValue();
               if (((Float)(sf)).isInfinite()) return (sf < 0 ? -1 : 1);
               if (Float.isNaN(sf)) return 1;
-              DecimalFraction xa = DecimalFraction.FromSingle(sf);
-              DecimalFraction xb = (DecimalFraction)objB;
-              return xa.compareTo(xb);
+              decfracXa = DecimalFraction.FromSingle(sf);
+              decfracXb = (DecimalFraction)objB;
+              return decfracXa.compareTo(decfracXb);
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_BigFloat: {
               float sf = ((Float)objA).floatValue();
               if (((Float)(sf)).isInfinite()) return (sf < 0 ? -1 : 1);
               if (Float.isNaN(sf)) return 1;
-              BigFloat xa = BigFloat.FromSingle(sf);
-              BigFloat xb = (BigFloat)objB;
-              return xa.compareTo(xb);
+              bigfloatXa = BigFloat.FromSingle(sf);
+              bigfloatXb = (BigFloat)objB;
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_Integer: {
               double sf = ((Double)objA).doubleValue();
               if (((Double)(sf)).isInfinite()) return (sf < 0 ? -1 : 1);
               if (Double.isNaN(sf)) return 1;
-              BigFloat xa = BigFloat.FromDouble(sf);
-              BigFloat xb = new BigFloat((((Long)objB).longValue()));
-              return xa.compareTo(xb);
+              bigfloatXa = BigFloat.FromDouble(sf);
+              bigfloatXb = new BigFloat((((Long)objB).longValue()));
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_BigInteger: {
               double sf = ((Double)objA).doubleValue();
               if (((Double)(sf)).isInfinite()) return (sf < 0 ? -1 : 1);
               if (Double.isNaN(sf)) return 1;
-              BigFloat xa = BigFloat.FromDouble(sf);
-              BigFloat xb = new BigFloat((BigInteger)objB);
-              return xa.compareTo(xb);
+              bigfloatXa = BigFloat.FromDouble(sf);
+              bigfloatXb = new BigFloat((BigInteger)objB);
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_Single: {
               double a = ((Double)objA).doubleValue();
@@ -551,79 +557,79 @@ public int compareTo(CBORObject other) {
               double sf = ((Double)objA).doubleValue();
               if (((Double)(sf)).isInfinite()) return (sf < 0 ? -1 : 1);
               if (Double.isNaN(sf)) return 1;
-              DecimalFraction xa = DecimalFraction.FromDouble(sf);
-              DecimalFraction xb = (DecimalFraction)objB;
-              return xa.compareTo(xb);
+              decfracXa = DecimalFraction.FromDouble(sf);
+              decfracXb = (DecimalFraction)objB;
+              return decfracXa.compareTo(decfracXb);
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_BigFloat: {
               double sf = ((Double)objA).doubleValue();
               if (((Double)(sf)).isInfinite()) return (sf < 0 ? -1 : 1);
               if (Double.isNaN(sf)) return 1;
-              BigFloat xa = BigFloat.FromDouble(sf);
-              BigFloat xb = (BigFloat)objB;
-              return xa.compareTo(xb);
+              bigfloatXa = BigFloat.FromDouble(sf);
+              bigfloatXb = (BigFloat)objB;
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Integer: {
-              DecimalFraction xa = (DecimalFraction)objA;
-              DecimalFraction xb = new DecimalFraction((((Long)objB).longValue()));
-              return xa.compareTo(xb);
+              decfracXa = (DecimalFraction)objA;
+              decfracXb = new DecimalFraction((((Long)objB).longValue()));
+              return decfracXa.compareTo(decfracXb);
             }
             case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_BigInteger: {
-              DecimalFraction xa = (DecimalFraction)objA;
-              DecimalFraction xb = new DecimalFraction((BigInteger)objB);
-              return xa.compareTo(xb);
+              decfracXa = (DecimalFraction)objA;
+              decfracXb = new DecimalFraction((BigInteger)objB);
+              return decfracXa.compareTo(decfracXb);
             }
             case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Single: {
               float sf = ((Float)objB).floatValue();
               if (((Float)(sf)).isInfinite()) return (sf < 0 ? 1 : -1);
               if (Float.isNaN(sf)) return -1;
-              DecimalFraction xa = (DecimalFraction)objA;
-              DecimalFraction xb = DecimalFraction.FromSingle(sf);
-              return xa.compareTo(xb);
+              decfracXa = (DecimalFraction)objA;
+              decfracXb = DecimalFraction.FromSingle(sf);
+              return decfracXa.compareTo(decfracXb);
             }
             case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Double: {
               double sf = ((Double)objB).doubleValue();
               if (((Double)(sf)).isInfinite()) return (sf < 0 ? 1 : -1);
               if (Double.isNaN(sf)) return -1;
-              DecimalFraction xa = (DecimalFraction)objA;
-              DecimalFraction xb = DecimalFraction.FromDouble(sf);
-              return xa.compareTo(xb);
+              decfracXa = (DecimalFraction)objA;
+              decfracXb = DecimalFraction.FromDouble(sf);
+              return decfracXa.compareTo(decfracXb);
             }
             case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_BigFloat: {
-              DecimalFraction xa = (DecimalFraction)objA;
-              DecimalFraction xb = DecimalFraction.FromBigFloat((BigFloat)objB);
-              return xa.compareTo(xb);
+              decfracXa = (DecimalFraction)objA;
+              decfracXb = DecimalFraction.FromBigFloat((BigFloat)objB);
+              return decfracXa.compareTo(decfracXb);
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_Integer: {
-              BigFloat xa = (BigFloat)objA;
-              BigFloat xb = new BigFloat((((Long)objB).longValue()));
-              return xa.compareTo(xb);
+              bigfloatXa = (BigFloat)objA;
+              bigfloatXb = new BigFloat((((Long)objB).longValue()));
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_BigInteger: {
-              BigFloat xa = (BigFloat)objA;
-              BigFloat xb = new BigFloat((BigInteger)objB);
-              return xa.compareTo(xb);
+              bigfloatXa = (BigFloat)objA;
+              bigfloatXb = new BigFloat((BigInteger)objB);
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_Single: {
               float sf = ((Float)objB).floatValue();
               if (((Float)(sf)).isInfinite()) return (sf < 0 ? 1 : -1);
               if (Float.isNaN(sf)) return -1;
-              BigFloat xa = (BigFloat)objA;
-              BigFloat xb = BigFloat.FromSingle(sf);
-              return xa.compareTo(xb);
+              bigfloatXa = (BigFloat)objA;
+              bigfloatXb = BigFloat.FromSingle(sf);
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_Double: {
               double sf = ((Double)objB).doubleValue();
               if (((Double)(sf)).isInfinite()) return (sf < 0 ? 1 : -1);
               if (Double.isNaN(sf)) return -1;
-              BigFloat xa = (BigFloat)objA;
-              BigFloat xb = BigFloat.FromDouble(sf);
-              return xa.compareTo(xb);
+              bigfloatXa = (BigFloat)objA;
+              bigfloatXb = BigFloat.FromDouble(sf);
+              return bigfloatXa.compareTo(bigfloatXb);
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_DecimalFraction: {
-              DecimalFraction xa = DecimalFraction.FromBigFloat((BigFloat)objA);
-              DecimalFraction xb = (DecimalFraction)objB;
-              return xa.compareTo(xb);
+              decfracXa = DecimalFraction.FromBigFloat((BigFloat)objA);
+              decfracXb = (DecimalFraction)objB;
+              return decfracXa.compareTo(decfracXb);
             }
           case (CBORObjectType_BigFloat << 4) | CBORObjectType_SimpleValue:
           case (CBORObjectType_BigFloat << 4) | CBORObjectType_ByteString:
@@ -2375,7 +2381,7 @@ public static void Write(Object objValue, OutputStream s) throws IOException {
       if (objValue == null) {
         s.write(0xf6);
         return;
-      } 
+      }
       byte[] data=(((objValue instanceof byte[]) ? (byte[])objValue : null));
       if(data!=null) {
         WritePositiveInt(3, data.length, s);
@@ -2926,8 +2932,8 @@ public static CBORObject FromObject(Object obj) {
       if(obj instanceof List<?>) return FromObject((List<CBORObject>)obj);
       byte[] bytearr=(((obj instanceof byte[]) ? (byte[])obj : null));
       if (bytearr!=null) return FromObject(bytearr);
-      if(obj instanceof byte[]) return FromObject((byte[])obj);
-      if(obj instanceof int[]) return FromObject((int[])obj);
+      int[] intarr=(((obj instanceof int[]) ? (int[])obj : null));
+      if (intarr!=null) return FromObject(intarr);
       if(obj instanceof long[]) return FromObject((long[])obj);
       if(obj instanceof CBORObject[]) return FromObject((CBORObject[])obj);
       if(obj instanceof Map<?,?>) return FromObject(
@@ -3190,17 +3196,6 @@ public static CBORObject FromObject(Object obj) {
         AppendClosingTags(sb);
       }
       return sb.toString();
-    }
-    private static byte[] ReverseBytes(byte[] bytes) {
-      if ((bytes) == null) throw new NullPointerException("bytes");
-      int half = bytes.length >> 1;
-      int right = bytes.length - 1;
-      for (int i = 0; i < half; i++, right--) {
-        byte value = bytes[i];
-        bytes[i] = bytes[right];
-        bytes[right] = value;
-      }
-      return bytes;
     }
     private static CBORObject ConvertToBigNum(CBORObject o, boolean negative) {
       if (o.getItemType() != CBORObjectType_ByteString)

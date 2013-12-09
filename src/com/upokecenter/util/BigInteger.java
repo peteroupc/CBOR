@@ -15,7 +15,7 @@ at: http://upokecenter.com/d/
     /**
      * An arbitrary-precision integer.
      */
-  public final class BigInteger implements Comparable<BigInteger> 
+  public final class BigInteger implements Comparable<BigInteger>
   {
 
     private static int CountWords(short[] X, int N) {
@@ -1504,7 +1504,7 @@ at: http://upokecenter.com/d/
           }
         }
       }
-      return (returnRemainder ? 
+      return (returnRemainder ?
               ((short)(((int)dividendHigh)&0xFFFF)) :
               ((short)(((int)dividendLow)&0xFFFF))
              );
@@ -1912,8 +1912,11 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * 
-     * @param n A 32-bit signed integer.
+     * Shifts this object's value by a number of bits. A value of 1 doubles
+     * this value, a value of 2 multiplies it by 4, a value of 3 by 8, a value of
+     * 4 by 16, and so on.
+     * @param n The number of bits to shift. Can be negative, in which case
+     * this is the same as shiftRight with the absolute value of n.
      */
     public BigInteger shiftLeft(int n) {
       if (n == 0) return this;
@@ -1990,7 +1993,6 @@ at: http://upokecenter.com/d/
         } else {
           long ut = longerValue;
           if(ut<0)ut=-ut;
-          long ut2=ut;
           ret.reg[0] = (short)(ut & 0xFFFF);
           ut>>=16;
           ret.reg[1] = (short)(ut & 0xFFFF);
@@ -2001,7 +2003,7 @@ at: http://upokecenter.com/d/
           // at this point, the word count can't
           // be 0 (the check for 0 was already done above)
           ret.wordCount = 4;
-          while (ret.wordCount != 0 && 
+          while (ret.wordCount != 0 &&
                  ret.reg[ret.wordCount - 1] == 0)
             ret.wordCount--;
         }
@@ -2589,6 +2591,7 @@ at: http://upokecenter.com/d/
      * @return The product of the two objects.
      */
     public BigInteger multiply(BigInteger bigintMult) {
+      if((bigintMult)==null)throw new NullPointerException("bigintMult");
       BigInteger product = new BigInteger();
       if(this.wordCount==0 || bigintMult.wordCount==0)
         return BigInteger.ZERO;
@@ -2728,6 +2731,7 @@ at: http://upokecenter.com/d/
      * @throws ArithmeticException The divisor is zero.
      */
     public BigInteger divide(BigInteger bigintDivisor) {
+      if((bigintDivisor)==null)throw new NullPointerException("bigintDivisor");
       int aSize = this.wordCount;
       int bSize = bigintDivisor.wordCount;
       if (bSize == 0)
@@ -2780,7 +2784,7 @@ at: http://upokecenter.com/d/
      * @param divisor A BigInteger object.
      */
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
-      if ((divisor) == null) throw new NullPointerException("dividend");
+      if ((divisor) == null) throw new NullPointerException("divisor");
       BigInteger quotient;
       int aSize = this.wordCount;
       int bSize = divisor.wordCount;
@@ -2832,7 +2836,8 @@ at: http://upokecenter.com/d/
     }
     /**
      * Finds the remainder that results when this instance is divided by
-     * the value of a BigInteger object.
+     * the value of a BigInteger object. The remainder will have the same
+     * sign as the dividend.
      * @param divisor A BigInteger object.
      * @return The remainder of the two objects.
      */

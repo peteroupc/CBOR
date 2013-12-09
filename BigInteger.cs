@@ -12,7 +12,7 @@ at: http://upokecenter.com/d/
 using System;
 namespace PeterO {
     /// <summary> An arbitrary-precision integer. </summary>
-  public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger> 
+  public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
 
     private static int CountWords(short[] X, int N) {
@@ -1503,7 +1503,7 @@ namespace PeterO {
           }
         }
       }
-      return (returnRemainder ? 
+      return (returnRemainder ?
               unchecked((short)(((int)dividendHigh)&0xFFFF)) :
               unchecked((short)(((int)dividendLow)&0xFFFF))
              );
@@ -1916,8 +1916,11 @@ namespace PeterO {
       }
     }
 
-    /// <summary> </summary>
-    /// <param name='n'>A 32-bit signed integer.</param>
+    /// <summary> Shifts this object's value by a number of bits. A value of
+    /// 1 doubles this value, a value of 2 multiplies it by 4, a value of 3 by 8,
+    /// a value of 4 by 16, and so on.</summary>
+    /// <param name='n'>The number of bits to shift. Can be negative, in which
+    /// case this is the same as shiftRight with the absolute value of n.</param>
     /// <returns></returns>
     /// <remarks/>
     public BigInteger shiftLeft(int n) {
@@ -1994,7 +1997,6 @@ namespace PeterO {
         } else {
           long ut = longerValue;
           if(ut<0)ut=-ut;
-          long ut2=ut;
           ret.reg[0] = (short)(ut & 0xFFFF);
           ut>>=16;
           ret.reg[1] = (short)(ut & 0xFFFF);
@@ -2005,7 +2007,7 @@ namespace PeterO {
           // at this point, the word count can't
           // be 0 (the check for 0 was already done above)
           ret.wordCount = 4;
-          while (ret.wordCount != 0 && 
+          while (ret.wordCount != 0 &&
                  ret.reg[ret.wordCount - 1] == 0)
             ret.wordCount--;
         }
@@ -2580,6 +2582,7 @@ namespace PeterO {
     /// <returns>The product of the two objects.</returns>
     /// <remarks/>
     public BigInteger multiply(BigInteger bigintMult) {
+      if((bigintMult)==null)throw new ArgumentNullException("bigintMult");
       BigInteger product = new BigInteger();
       if(this.wordCount==0 || bigintMult.wordCount==0)
         return BigInteger.Zero;
@@ -2718,6 +2721,7 @@ namespace PeterO {
     /// is zero.</exception>
     /// <param name='bigintDivisor'>A BigInteger object.</param>
     public BigInteger divide(BigInteger bigintDivisor) {
+      if((bigintDivisor)==null)throw new ArgumentNullException("bigintDivisor");
       int aSize = this.wordCount;
       int bSize = bigintDivisor.wordCount;
       if (bSize == 0)
@@ -2770,7 +2774,7 @@ namespace PeterO {
     /// <returns></returns>
     /// <remarks/>
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
-      if ((divisor) == null) throw new ArgumentNullException("dividend");
+      if ((divisor) == null) throw new ArgumentNullException("divisor");
       BigInteger quotient;
       int aSize = this.wordCount;
       int bSize = divisor.wordCount;
@@ -2821,7 +2825,8 @@ namespace PeterO {
       return new BigInteger[] { quotient, remainder };
     }
     /// <summary>Finds the remainder that results when this instance is
-    /// divided by the value of a BigInteger object.</summary>
+    /// divided by the value of a BigInteger object. The remainder will have
+    /// the same sign as the dividend.</summary>
     /// <param name='divisor'>A BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
     /// <remarks/>

@@ -11,7 +11,7 @@ namespace PeterO {
     long ShiftedIntSmall { get; }
     FastInteger DiscardedDigitCount { get; }
     void ShiftRight(FastInteger bits);
-    void ShiftRight(long bits);
+    void ShiftRight(int bits);
     void ShiftToDigits(long bits);
   }
 }

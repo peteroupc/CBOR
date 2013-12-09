@@ -12,6 +12,6 @@ package com.upokecenter.util;
     long getShiftedIntSmall();
     FastInteger getDiscardedDigitCount();
     void ShiftRight(FastInteger bits);
-    void ShiftRight(long bits);
+    void ShiftRight(int bits);
     void ShiftToDigits(long bits);
   }
