@@ -19,7 +19,9 @@
     <DocumentationFile>bin\Release\CBOR.xml</DocumentationFile>
     <NoWarn>1587</NoWarn>
     <CodeAnalysisRules>-Microsoft.Globalization#CA1303;-Microsoft.Naming#CA1704;-Microsoft.Naming#CA1705;-Microsoft.Naming#CA1718</CodeAnalysisRules>
-    <RunCodeAnalysis>True</RunCodeAnalysis>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -62,7 +64,7 @@
     <Compile Include="BigInteger.cs" />
     <Compile Include="CBORException.NOPCL.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
-    <Compile Include="FastInteger2.cs" />
+    <Compile Include="Extras.cs" />
     <Compile Include="IRadixMathHelper.cs" />
     <Compile Include="IShiftAccumulator.cs" />
     <Compile Include="MutableBigInteger.cs" />

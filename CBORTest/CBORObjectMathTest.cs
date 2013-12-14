@@ -13,7 +13,7 @@ using PeterO;
 namespace Test {
     /// <summary>
     /// </summary>
-    /// <remarks/>
+    /// 
 [TestFixture]
   public class CBORObjectMathTest{
     [Test]

@@ -149,7 +149,6 @@ namespace PeterO {
     /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T DivideToIntegerNaturalScale(
       T thisValue,
       T divisor,
@@ -161,6 +160,8 @@ namespace PeterO {
                              null);
       bool neg = (helper.GetSign(thisValue) < 0) ^ (helper.GetSign(divisor) < 0);
       if (helper.GetExponent(ret).Sign < 0) {
+        // If the result's exponent is negative,
+        // shift right until the exponent is 0
         BigInteger bigmantissa = BigInteger.Abs(helper.GetMantissa(ret));
         IShiftAccumulator accum = helper.CreateShiftAccumulator(bigmantissa);
         accum.ShiftRight(new FastInteger(helper.GetExponent(ret)).Negate());
@@ -168,11 +169,16 @@ namespace PeterO {
         if (helper.GetMantissa(ret).Sign < 0) bigmantissa = -bigmantissa;
         ret = helper.CreateNew(bigmantissa, BigInteger.Zero);
       }
+      // Now the sign can only be 0 or positive
       if (helper.GetSign(ret) == 0) {
+        // Value is 0, so just change the exponent
+        // the the preferred one
         BigInteger divisorExp=helper.GetExponent(divisor);
-        ret = helper.CreateNew(BigInteger.Zero, helper.GetExponent(thisValue) - (BigInteger)divisorExp);
+        ret = helper.CreateNew(BigInteger.Zero, helper.GetExponent(thisValue) -
+                               (BigInteger)divisorExp);
       } else {
-        FastInteger desiredScale = new FastInteger(helper.GetExponent(thisValue)).Subtract(
+        FastInteger desiredScale = new FastInteger(
+          helper.GetExponent(thisValue)).Subtract(
           helper.GetExponent(divisor));
         if (desiredScale.Sign < 0) {
           desiredScale.Negate();
@@ -186,6 +192,8 @@ namespace PeterO {
           FastInteger fastexponent = new FastInteger(helper.GetExponent(ret));
           BigInteger bigradix = (BigInteger)(helper.GetRadix());
           while(true){
+            if(desiredScale.CompareTo(fastexponent)==0)
+              break;
             BigInteger bigrem;
             BigInteger bigquo=BigInteger.DivRem(bigmantissa,bigradix,out bigrem);
             if(!bigrem.IsZero)
@@ -209,14 +217,14 @@ namespace PeterO {
     /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T DivideToIntegerZeroScale(
       T thisValue,
       T divisor,
       PrecisionContext ctx
      ) {
       T ret = DivideInternal(thisValue, divisor,
-                             new PrecisionContext(Rounding.Down).WithPrecision(ctx == null ? 0 : ctx.Precision),
+                             new PrecisionContext(Rounding.Down).WithPrecision(
+                               ctx == null ? BigInteger.Zero : ctx.Precision),
                              IntegerModeFixedScale, BigInteger.Zero,
                              null);
       if (ctx != null) {
@@ -240,7 +248,6 @@ namespace PeterO {
     /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The remainder of the two objects.</returns>
-    /// <remarks/>
     public T Remainder(
       T thisValue,
       T divisor,
@@ -260,7 +267,6 @@ namespace PeterO {
     /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T RemainderNear(
       T thisValue,
       T divisor,
@@ -268,7 +274,7 @@ namespace PeterO {
      ) {
       T ret = DivideInternal(thisValue, divisor,
                              new PrecisionContext(Rounding.HalfEven)
-                             .WithPrecision(ctx == null ? 0 : ctx.Precision),
+                             .WithPrecision(ctx == null ? BigInteger.Zero : ctx.Precision),
                              IntegerModeFixedScale, BigInteger.Zero,
                              null);
       if (ctx != null) {
@@ -291,13 +297,12 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T NextMinus(
       T thisValue,
       PrecisionContext ctx
      ){
       if((ctx)==null)throw new ArgumentNullException("ctx");
-      if((ctx.Precision)<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((long)(long)(ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((ctx.Precision).Sign<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
       if(!(ctx.HasExponentRange))throw new ArgumentException("doesn't satisfy ctx.HasExponentRange");
       BigInteger minusone=-(BigInteger)BigInteger.One;
       FastInteger minexp=new FastInteger(ctx.EMin).Subtract(ctx.Precision).Add(1);
@@ -319,14 +324,13 @@ namespace PeterO {
     /// <param name='otherValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T NextToward(
       T thisValue,
       T otherValue,
       PrecisionContext ctx
      ){
       if((ctx)==null)throw new ArgumentNullException("ctx");
-      if((ctx.Precision)<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((long)(long)(ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((ctx.Precision).Sign<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
       if(!(ctx.HasExponentRange))throw new ArgumentException("doesn't satisfy ctx.HasExponentRange");
       PrecisionContext ctx2;
       int cmp=CompareTo(thisValue,otherValue);
@@ -359,13 +363,12 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T NextPlus(
       T thisValue,
       PrecisionContext ctx
      ){
       if((ctx)==null)throw new ArgumentNullException("ctx");
-      if((ctx.Precision)<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((long)(long)(ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((ctx.Precision).Sign<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
       if(!(ctx.HasExponentRange))throw new ArgumentException("doesn't satisfy ctx.HasExponentRange");
       BigInteger minusone=BigInteger.One;
       FastInteger minexp=new FastInteger(ctx.EMin).Subtract(ctx.Precision).Add(1);
@@ -388,13 +391,14 @@ namespace PeterO {
     /// <param name='desiredExponent'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The quotient of the two objects.</returns>
-    /// <remarks/>
-    public T Divide(
+    public T DivideToExponent(
       T thisValue,
       T divisor,
       BigInteger desiredExponent,
       PrecisionContext ctx
      ) {
+      if(ctx!=null && !ctx.ExponentWithinRange(desiredExponent))
+        throw new ArithmeticException("Exponent not within exponent range: "+desiredExponent.ToString());
       PrecisionContext ctx2 = (ctx == null) ?
         new PrecisionContext(Rounding.HalfDown) :
         ctx.WithUnlimitedExponents().WithPrecision(0);
@@ -412,7 +416,6 @@ namespace PeterO {
     /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The quotient of the two objects.</returns>
-    /// <remarks/>
     public T Divide(
       T thisValue,
       T divisor,
@@ -482,6 +485,8 @@ namespace PeterO {
     private const int IntegerModeNaturalScale = 2;
     private const int IntegerModeRegular = 0;
 
+    private const int NonTerminatingCheckThreshold = 5;
+    
     private T DivideInternal(
       T thisValue,
       T divisor,
@@ -495,6 +500,7 @@ namespace PeterO {
       if (signB == 0) {
         throw new DivideByZeroException();
       }
+      int radix=helper.GetRadix();
       if (signA == 0) {
         T retval=default(T);
         if (integerMode == IntegerModeFixedScale) {
@@ -513,7 +519,7 @@ namespace PeterO {
         BigInteger mantissaDividend = helper.GetMantissa(thisValue);
         BigInteger mantissaDivisor = helper.GetMantissa(divisor);
         FastInteger adjust = new FastInteger();
-        FastInteger2 result = new FastInteger2();
+        FastInteger result = new FastInteger();
         bool negA = (signA < 0);
         bool negB = (signB < 0);
         if (negA) mantissaDividend = -mantissaDividend;
@@ -522,35 +528,47 @@ namespace PeterO {
         int mantcmp = mantissaDividend.CompareTo(mantissaDivisor);
         if (mantcmp < 0) {
           // dividend mantissa is less than divisor mantissa
-          long dividendPrecision = helper.CreateShiftAccumulator(mantissaDividend).DigitLength;
-          long divisorPrecision = helper.CreateShiftAccumulator(mantissaDivisor).DigitLength;
-          long powerOfRadix = Math.Max(1, divisorPrecision - dividendPrecision);
+          FastInteger dividendPrecision =
+            helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
+          FastInteger divisorPrecision =
+            helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
+          divisorPrecision.Subtract(dividendPrecision);
+          if(divisorPrecision.Sign==0)
+            divisorPrecision.Add(1);
           // multiply dividend mantissa so precisions are the same
           // (except if they're already the same, in which case multiply
           // by radix)
-          mantissaDividend = helper.MultiplyByRadixPower(mantissaDividend, powerOfRadix);
-          adjust.Add(powerOfRadix);
+          mantissaDividend = helper.MultiplyByRadixPower(
+            mantissaDividend, divisorPrecision);
+          adjust.Add(divisorPrecision);
           if (mantissaDividend.CompareTo(mantissaDivisor) < 0) {
             // dividend mantissa is still less, multiply once more
-            mantissaDividend = helper.MultiplyByRadixPower(mantissaDividend, 1);
+            if(radix==2){
+              mantissaDividend<<=1;
+            } else {
+              mantissaDividend*=(BigInteger)radix;
+            }
             adjust.Add(1);
           }
         } else if (mantcmp > 0) {
           // dividend mantissa is greater than divisor mantissa
-          long dividendPrecision = helper.CreateShiftAccumulator(mantissaDividend).DigitLength;
-          long divisorPrecision = helper.CreateShiftAccumulator(mantissaDivisor).DigitLength;
-          long powerOfRadix = (dividendPrecision - divisorPrecision);
+          FastInteger dividendPrecision =
+            helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
+          FastInteger divisorPrecision =
+            helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
+          dividendPrecision.Subtract(divisorPrecision);
           BigInteger oldMantissaB = mantissaDivisor;
-          mantissaDivisor = helper.MultiplyByRadixPower(mantissaDivisor, powerOfRadix);
-          adjust.Subtract(powerOfRadix);
+          mantissaDivisor = helper.MultiplyByRadixPower(
+            mantissaDivisor, dividendPrecision);
+          adjust.Subtract(dividendPrecision);
           if (mantissaDividend.CompareTo(mantissaDivisor) < 0) {
             // dividend mantissa is now less, divide by radix power
-            if (powerOfRadix == 1) {
-              // no need to divide here, since thisValue would just undo
+            if (dividendPrecision.CompareTo(1)==0) {
+              // no need to divide here, since that would just undo
               // the multiplication
               mantissaDivisor = oldMantissaB;
             } else {
-              BigInteger bigpow = (BigInteger)(helper.GetRadix());
+              BigInteger bigpow = (BigInteger)(radix);
               mantissaDivisor /= bigpow;
             }
             adjust.Add(1);
@@ -559,9 +577,10 @@ namespace PeterO {
         FastInteger expdiff = new FastInteger(helper.GetExponent(thisValue)).Subtract(
           helper.GetExponent(divisor));
         FastInteger fastDesiredExponent = new FastInteger(desiredExponent);
-        FastInteger fastPrecision=new FastInteger(ctx.Precision);
+        FastInteger fastPrecision=(ctx==null) ? new FastInteger(0) :
+          new FastInteger(ctx.Precision);
         if (integerMode == IntegerModeFixedScale) {
-          if (ctx != null && ctx.Precision != 0 &&
+          if (ctx != null && (ctx.Precision).Sign!=0 &&
               new FastInteger(expdiff).Subtract(8).CompareTo(fastPrecision) > 0 &&
               desiredExponent.IsZero) { // NOTE: 8 guard digits
             // Result would require a too-high precision since
@@ -569,27 +588,49 @@ namespace PeterO {
             throw new ArithmeticException("Result can't fit the precision");
           }
         }
-        BigInteger lastRemainder=BigInteger.Zero;
+        MutableNumber lastRemainder=new MutableNumber(0);
         if (mantcmp == 0) {
-          result = new FastInteger2().Add(1);
+          result = new FastInteger(1);
           mantissaDividend = BigInteger.Zero;
         } else {
           int check = 0;
+          MutableNumber divs=new MutableNumber(mantissaDivisor);
+          MutableNumber divd=new MutableNumber(mantissaDividend);
+          MutableNumber divsHalfRadix=null;
+          if(radix!=2){
+            divsHalfRadix=divs.Copy().Multiply(radix/2);
+          }
           while (true) {
-            BigInteger currentRemainder;
-            BigInteger olddividend = mantissaDividend;
-            BigInteger quotient = BigInteger.DivRem(mantissaDividend, mantissaDivisor, out currentRemainder);
-            result.Add((int)quotient);
-            mantissaDividend = currentRemainder;
-            if (ctx != null && ctx.Precision != 0 &&
+            BigInteger olddividend=null;
+            bool remainderZero=false;
+            if (check == NonTerminatingCheckThreshold &&
+                (ctx == null || (ctx.Precision).IsZero) &&
+                integerMode == IntegerModeRegular) {
+              olddividend=divd.ToBigInteger();
+            }
+            int count=0;
+            if(divsHalfRadix!=null && divd.CompareTo(divsHalfRadix)>=0){
+              divd.Subtract(divsHalfRadix);
+              count+=radix/2;
+            }
+            while(divd.CompareTo(divs)>=0){
+              divd.Subtract(divs);
+              count++;
+            }
+            result.Add(count);
+            remainderZero=(divd.Sign==0);
+            if (ctx != null && (ctx.Precision).Sign!=0 &&
                 resultPrecision.CompareTo(fastPrecision) == 0) {
+              mantissaDividend=divd.ToBigInteger();
               break;
             }
-            if (currentRemainder.IsZero && adjust.Sign >= 0) {
+            if (remainderZero && adjust.Sign >= 0) {
+              mantissaDividend=divd.ToBigInteger();
               break;
             }
             // NOTE: 5 is an arbitrary threshold
-            if (check == 5 && (ctx == null || ctx.Precision == 0) &&
+            if (check == NonTerminatingCheckThreshold &&
+                (ctx == null || (ctx.Precision).IsZero) &&
                 integerMode == IntegerModeRegular) {
               // Check for a non-terminating radix expansion
               // if using unlimited precision and not in integer
@@ -598,13 +639,14 @@ namespace PeterO {
                 throw new ArithmeticException("Result would have a nonterminating expansion");
               }
               check++;
-            } else if (check < 5) {
+            } else if (check < NonTerminatingCheckThreshold) {
               check++;
             }
             if (integerMode == IntegerModeFixedScale ||
                 integerMode == IntegerModeNaturalScale) {
               if (new FastInteger(expdiff).Subtract(fastDesiredExponent).CompareTo(adjust) <= 0) {
                 // Value is a full integer or has a fractional part
+                mantissaDividend=divd.ToBigInteger();
                 break;
               }
             }
@@ -612,9 +654,12 @@ namespace PeterO {
             if (result.Sign != 0) {
               resultPrecision.Add(1);
             }
-            lastRemainder=mantissaDividend;
-            result.Multiply(helper.GetRadix());
-            mantissaDividend = helper.MultiplyByRadixPower(mantissaDividend, 1);
+            result.Multiply(radix);
+            if (integerMode == IntegerModeFixedScale) {
+              // Only used in the IntegerModeFixedScale mode
+              lastRemainder=divd.Copy();
+            }
+            divd.Multiply(radix);
           }
         }
         // mantissaDividend now has the remainder
@@ -622,13 +667,13 @@ namespace PeterO {
         if (integerMode == IntegerModeFixedScale) {
           FastInteger expshift = new FastInteger(exp).Subtract(fastDesiredExponent);
           if(remainder!=null){
-            remainder[0]=helper.CreateNew(lastRemainder,
+            remainder[0]=helper.CreateNew(lastRemainder.ToBigInteger(),
                                           fastDesiredExponent.AsBigInteger());
           }
           if (result.Sign != 0) {
             if (expshift.Sign > 0) {
               // Exponent is greater than desired exponent
-              if (ctx != null && ctx.Precision != 0 &&
+              if (ctx != null && (ctx.Precision).Sign!=0 &&
                   expshift.CompareTo(new FastInteger(ctx.Precision).Add(8)) > 0) {
                 // Result would require a too-high precision since
                 // exponent shift is much higher
@@ -689,11 +734,11 @@ namespace PeterO {
           int cmpHalf = mantissaDividend.CompareTo(halfDivisor);
           if ((cmpHalf == 0) && mantissaDivisor.IsEven) {
             // remainder is exactly half
-            lastDiscarded = (helper.GetRadix() / 2);
+            lastDiscarded = (radix / 2);
             olderDiscarded = 0;
           } else if (cmpHalf > 0) {
             // remainder is greater than half
-            lastDiscarded = (helper.GetRadix() / 2);
+            lastDiscarded = (radix / 2);
             olderDiscarded = 1;
           } else {
             // remainder is less than half
@@ -763,7 +808,6 @@ namespace PeterO {
     /// <param name='decfrac'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The product of the two objects.</returns>
-    /// <remarks/>
     public T Multiply(T thisValue, T decfrac, PrecisionContext ctx) {
       BigInteger bigintOp2 = helper.GetExponent(decfrac);
       BigInteger newexp = (helper.GetExponent(thisValue) + (BigInteger)bigintOp2);
@@ -780,7 +824,6 @@ namespace PeterO {
     /// <param name='augend'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T MultiplyAndAdd(T thisValue, T multiplicand,
                             T augend,
                             PrecisionContext ctx) {
@@ -797,7 +840,6 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='context'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T RoundToBinaryPrecision(
       T thisValue,
       PrecisionContext context
@@ -811,17 +853,17 @@ namespace PeterO {
       int olderDiscarded
      ) {
       if ((context) == null) return thisValue;
-      if (context.Precision == 0 && !context.HasExponentRange &&
+      if ((context.Precision).IsZero && !context.HasExponentRange &&
           (lastDiscarded | olderDiscarded) == 0)
         return thisValue;
-      if(context.Precision==0 || helper.GetRadix()==2)
+      if((context.Precision).IsZero || helper.GetRadix()==2)
         return RoundToPrecision(thisValue,context,lastDiscarded,olderDiscarded);
-      FastInteger fastEMin = (context.HasExponentRange) ? new FastInteger().Add(context.EMin) : null;
-      FastInteger fastEMax = (context.HasExponentRange) ? new FastInteger().Add(context.EMax) : null;
+      FastInteger fastEMin = (context.HasExponentRange) ? new FastInteger(context.EMin) : null;
+      FastInteger fastEMax = (context.HasExponentRange) ? new FastInteger(context.EMax) : null;
+      FastInteger fastPrecision = new FastInteger(context.Precision);
       int[] signals = new int[1];
       T dfrac = RoundToBinaryPrecisionInternal(
-        thisValue,
-        context.Precision,
+        thisValue,fastPrecision,
         context.Rounding, fastEMin, fastEMax,
         lastDiscarded,
         olderDiscarded,
@@ -829,17 +871,25 @@ namespace PeterO {
       // Clamp exponents to eMax + 1 - precision
       // if directed
       if (context.ClampNormalExponents && dfrac != null) {
-        BigInteger maxMantissa = BigInteger.One;
-        long prec=context.Precision;
-        while(prec>0){
-          int shift=(int)Math.Min(1000000,prec);
-          maxMantissa<<=shift;
-          prec-=shift;
+        FastInteger digitCount=null;
+        if(helper.GetRadix()==2){
+          digitCount=new FastInteger(fastPrecision);
+        } else {
+          // TODO: Use a faster way to get the digit
+          // count for radix 10
+          BigInteger maxMantissa = BigInteger.One;
+          FastInteger prec=new FastInteger(fastPrecision);
+          while(prec.Sign>0){
+            int shift=prec.CompareTo(1000000)>=0 ? 1000000 : prec.AsInt32();
+            maxMantissa<<=shift;
+            prec.Subtract(shift);
+          }
+          maxMantissa-=BigInteger.One;
+          // Get the digit length of the maximum possible mantissa
+          // for the given binary precision
+          digitCount=helper.CreateShiftAccumulator(maxMantissa)
+            .GetDigitLength();
         }
-        maxMantissa-=BigInteger.One;
-        // Get the digit length of the maximum possible mantissa
-        // for the given binary precision
-        long digitCount=helper.CreateShiftAccumulator(maxMantissa).DigitLength;
         FastInteger clamp = new FastInteger(fastEMax).Add(1).Subtract(digitCount);
         FastInteger fastExp = new FastInteger(helper.GetExponent(dfrac));
         if (fastExp.CompareTo(clamp) > 0) {
@@ -866,7 +916,6 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='context'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T RoundToPrecision(
       T thisValue,
       PrecisionContext context
@@ -880,24 +929,25 @@ namespace PeterO {
       int olderDiscarded
      ) {
       if ((context) == null) return thisValue;
-      if (context.Precision == 0 && !context.HasExponentRange &&
+      if ((context.Precision).IsZero && !context.HasExponentRange &&
           (lastDiscarded | olderDiscarded) == 0)
         return thisValue;
-      FastInteger fastEMin = (context.HasExponentRange) ? new FastInteger().Add(context.EMin) : null;
-      FastInteger fastEMax = (context.HasExponentRange) ? new FastInteger().Add(context.EMax) : null;
-      if (context.Precision > 0 && context.Precision <= 18 &&
+      FastInteger fastEMin = (context.HasExponentRange) ? new FastInteger(context.EMin) : null;
+      FastInteger fastEMax = (context.HasExponentRange) ? new FastInteger(context.EMax) : null;
+      FastInteger fastPrecision=new FastInteger(context.Precision);
+      if (fastPrecision.Sign > 0 && fastPrecision.CompareTo(18) <= 0 &&
           (lastDiscarded | olderDiscarded) == 0) {
         // Check if rounding is necessary at all
         // for small precisions
         BigInteger mantabs = BigInteger.Abs(helper.GetMantissa(thisValue));
-        if (mantabs.CompareTo(helper.MultiplyByRadixPower(BigInteger.One, context.Precision)) < 0) {
+        if (mantabs.CompareTo(helper.MultiplyByRadixPower(BigInteger.One, fastPrecision)) < 0) {
           if (!context.HasExponentRange)
             return thisValue;
           FastInteger fastExp = new FastInteger(helper.GetExponent(thisValue));
           FastInteger fastAdjustedExp = new FastInteger(fastExp)
-            .Add(context.Precision).Subtract(1);
+            .Add(fastPrecision).Subtract(1);
           FastInteger fastNormalMin = new FastInteger(fastEMin)
-            .Add(context.Precision).Subtract(1);
+            .Add(fastPrecision).Subtract(1);
           if (fastAdjustedExp.CompareTo(fastEMax) <= 0 &&
               fastAdjustedExp.CompareTo(fastNormalMin) >= 0) {
             return thisValue;
@@ -906,8 +956,7 @@ namespace PeterO {
       }
       int[] signals = new int[1];
       T dfrac = RoundToPrecisionInternal(
-        thisValue,
-        context.Precision,
+        thisValue,fastPrecision,
         context.Rounding, fastEMin, fastEMax,
         lastDiscarded,
         olderDiscarded,
@@ -915,7 +964,7 @@ namespace PeterO {
       if (context.ClampNormalExponents && dfrac != null) {
         // Clamp exponents to eMax + 1 - precision
         // if directed
-        FastInteger clamp = new FastInteger(fastEMax).Add(1).Subtract(context.Precision);
+        FastInteger clamp = new FastInteger(fastEMax).Add(1).Subtract(fastPrecision);
         FastInteger fastExp = new FastInteger(helper.GetExponent(dfrac));
         if (fastExp.CompareTo(clamp) > 0) {
           BigInteger bigmantissa = helper.GetMantissa(dfrac);
@@ -942,18 +991,19 @@ namespace PeterO {
     /// <param name='otherValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T Quantize(
       T thisValue,
       T otherValue,
       PrecisionContext ctx
      ) {
+      BigInteger expOther = helper.GetExponent(otherValue);
+      if(ctx!=null && !ctx.ExponentWithinRange(expOther))
+        throw new ArithmeticException("Exponent not within exponent range: "+expOther.ToString());
       PrecisionContext tmpctx = (ctx == null ?
                                  new PrecisionContext(Rounding.HalfEven) :
                                  new PrecisionContext(ctx)).WithBlankFlags();
       BigInteger mantThis = BigInteger.Abs(helper.GetMantissa(thisValue));
       BigInteger expThis = helper.GetExponent(thisValue);
-      BigInteger expOther = helper.GetExponent(otherValue);
       int expcmp = expThis.CompareTo(expOther);
       int signThis = helper.GetSign(thisValue);
       T ret = default(T);
@@ -965,7 +1015,7 @@ namespace PeterO {
       } else if (expcmp > 0) {
         // Other exponent is less
         FastInteger radixPower = new FastInteger(expThis).Subtract(expOther);
-        if (tmpctx.Precision > 0 &&
+        if ((tmpctx.Precision).Sign>0 &&
             radixPower.CompareTo(new FastInteger(tmpctx.Precision).Add(10)) > 0) {
           // Radix power is much too high for the current precision
           throw new ArithmeticException();
@@ -1004,47 +1054,11 @@ namespace PeterO {
       }
       return ret;
     }
-
-    private T QuantizeClose(
-      T thisValue,
-      T otherValue,
-      PrecisionContext ctx
-     ){
-      BigInteger expThis = helper.GetExponent(thisValue);
-      BigInteger expOther = helper.GetExponent(otherValue);
-      int expcmp = expThis.CompareTo(expOther);
-      T ret;
-      PrecisionContext ctx2=PrecisionContext.Unlimited.WithBlankFlags();
-      if(expcmp<0){
-        // Other exponent is greater, so
-        // result must be rounded
-        int signThis = helper.GetSign(thisValue);
-        BigInteger mantThis = BigInteger.Abs(helper.GetMantissa(thisValue));
-        IShiftAccumulator accum = helper.CreateShiftAccumulator(mantThis);
-        accum.ShiftRight(new FastInteger(expOther).Subtract(expThis));
-        if((accum.LastDiscardedDigit|accum.OlderDiscardedDigits)!=0){
-          // would be inexact
-          ret=thisValue;
-          return RoundToPrecision(ret,ctx);
-        }
-        mantThis = accum.ShiftedInt;
-        if (signThis < 0)
-          mantThis = -mantThis;
-        ret = helper.CreateNew(mantThis, expOther);
-        return RoundToPrecision(ret, ctx, accum.LastDiscardedDigit,
-                                accum.OlderDiscardedDigits);
-      } else {
-        // No need to round during Quantize
-        ret = Quantize(thisValue,otherValue,ctx2);
-        return RoundToPrecision(ret,ctx);
-      }
-    }
     
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T RoundToIntegralExact(
       T thisValue,
       PrecisionContext ctx) {
@@ -1067,7 +1081,6 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T RoundToIntegralValue(
       T thisValue,
       PrecisionContext ctx
@@ -1085,7 +1098,6 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T Reduce(
       T thisValue,
       PrecisionContext ctx
@@ -1123,130 +1135,33 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
-    public T NaturalLog(T thisValue, PrecisionContext ctx){
+    public  T NaturalLog(T thisValue, PrecisionContext ctx){
       if((thisValue)==null)throw new ArgumentNullException("thisValue");
       if((ctx)==null)throw new ArgumentNullException("ctx");
-      if((ctx.Precision)<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((long)(long)(ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
-      PrecisionContext ctx2=HigherPrecision(ctx);
-      PrecisionContext ctxFinal=(ctx==null ? new PrecisionContext(Rounding.HalfEven) :
-                                 ctx.WithNoFlags().WithRounding(Rounding.HalfEven));
-      T one=helper.CreateNew(BigInteger.One,BigInteger.Zero);
-      T xp1=Add(thisValue,one,null);
-      T xm1=Add(thisValue,Negate(one),null);
-      T z=Divide(xm1,xp1,ctx2);
-      T zsq=Multiply(z,z,null); // z^2
-      T zaccum=Multiply(zsq,z,null); // z^3
-      T zseries=z;
-      T guess=helper.Abs(z);
-      T roundedGuess=RoundToPrecision(guess,ctxFinal);
-      int correct=0;
-      FastInteger count=new FastInteger(3);
-      while(true){
-        T newguess;
-        T element=Divide(zaccum,helper.CreateNew(
-          count.AsBigInteger(),BigInteger.Zero),ctx2);
-        zseries=Add(zseries,element,null);
-        newguess=Add(zseries,zseries,null);
-        newguess=helper.Abs(newguess);
-        T newRoundedGuess=RoundToPrecision(newguess,ctxFinal);
-        if(CompareTo(newRoundedGuess,roundedGuess)==0){
-          correct++;
-          if(correct>=4){
-            break;
-          }
-        } else {
-          correct=0;
-        }
-        zaccum=Multiply(zaccum,zsq,null);
-        count.Add(2);
-        guess=newguess;
-        roundedGuess=newRoundedGuess;
-      }
-      return roundedGuess;
-    }
-    
-    private static BigInteger FloorOfHalf(BigInteger bi){
-      if(bi.Sign>=0){
-        return (bi>>1);
-      } else {
-        return (bi-BigInteger.One)/(BigInteger)2;
-      }
-    }
-    
-    private static PrecisionContext HigherPrecision(PrecisionContext ctx){
-      FastInteger fi=new FastInteger(ctx.Precision).Add(6);
-      long prec=fi.CanFitInInt64() ? fi.AsInt64() : Int64.MaxValue;
-      prec=Math.Max(16,prec);
-      return ctx.WithPrecision(prec);
+      if((ctx.Precision).Sign<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
+      throw new NotImplementedException();
     }
     
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T SquareRoot(T thisValue, PrecisionContext ctx){
       if((thisValue)==null)throw new ArgumentNullException("thisValue");
       if((ctx)==null)throw new ArgumentNullException("ctx");
-      if((ctx.Precision)<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((long)(long)(ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((ctx.Precision).Sign<=0)throw new ArgumentException("ctx.Precision"+" not less than "+"0"+" ("+Convert.ToString((ctx.Precision),System.Globalization.CultureInfo.InvariantCulture)+")");
       
       int sign=helper.GetSign(thisValue);
       if(sign<0)
         throw new ArithmeticException();
-      PrecisionContext ctx2=(ctx.WithNoFlags().WithRounding(Rounding.HalfEven));
-      PrecisionContext ctx2flags=HigherPrecision(ctx2).WithUnlimitedExponents();
-      T idealExp=helper.CreateNew(
-        BigInteger.One,
-        FloorOfHalf(helper.GetExponent(thisValue)));
-      if(sign==0){
-        return QuantizeClose(thisValue,idealExp,ctx2);
-      }
-      T one=helper.CreateNew(BigInteger.One,BigInteger.Zero);
-      T a=one;
-      T b=one;
-      int correct=0;
-      T result=default(T);
-      T oldresult=default(T);
-      while(true){
-        T newB=default(T);
-        T newA=default(T);
-        for(int i=0;i<5;i++){
-          newB=Add(a,b,null);
-          T tmp=helper.Abs(Multiply(b,thisValue,null));
-          newA=Add(a,tmp,null);
-          a=newA;
-          b=newB;
-        }
-        result=Divide(a,b,ctx2flags);
-        if(!result.Equals(default(T)) &&
-           CompareTo(result,oldresult)==0){
-          correct++;
-          if(correct>=2){
-            if(ctx.HasFlags){
-              ctx.Flags|=ctx2flags.Flags;
-            }
-            break;
-          }
-        } else {
-          correct=0;
-        }
-        a=Reduce(newA,null);
-        b=Reduce(newB,null);
-        oldresult=result;
-      }
-      ctx2flags=ctx2.WithBlankFlags();
-      result=QuantizeClose(result,idealExp,ctx2flags);
-      if(ctx.HasFlags){
-        ctx.Flags|=ctx2flags.Flags;
-      }
-      return result;
+
+      throw new NotImplementedException();
     }
 
 
     private T RoundToBinaryPrecisionInternal(
       T thisValue,
-      long precision,
+      FastInteger precision,
       Rounding rounding,
       FastInteger fastEMin,
       FastInteger fastEMax,
@@ -1254,8 +1169,8 @@ namespace PeterO {
       int olderDiscarded,
       int[] signals
      ) {
-      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
-      if(helper.GetRadix()==2 || precision==0){
+      if (precision.Sign < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if(helper.GetRadix()==2 || precision.Sign==0){
         return RoundToPrecisionInternal(thisValue,precision,rounding,
                                         fastEMin,fastEMax,lastDiscarded,
                                         olderDiscarded,signals);
@@ -1267,11 +1182,11 @@ namespace PeterO {
       // and must be rounded again
       BigInteger oldmantissa = bigmantissa;
       BigInteger maxMantissa = BigInteger.One;
-      long prec=precision;
-      while(prec>0){
-        int shift=(int)Math.Min(1000000,prec);
+      FastInteger prec=new FastInteger(precision);
+      while(prec.Sign>0){
+        int shift=(prec.CompareTo(1000000)>=0) ? 1000000 : prec.AsInt32();
         maxMantissa<<=shift;
-        prec-=shift;
+        prec.Subtract(shift);
       }
       maxMantissa-=BigInteger.One;
       FastInteger exp = new FastInteger(helper.GetExponent(thisValue));
@@ -1280,7 +1195,7 @@ namespace PeterO {
         maxMantissa);
       // Get the digit length of the maximum possible mantissa
       // for the given binary precision
-      long digitCount=accumMaxMant.DigitLength;
+      FastInteger digitCount=accumMaxMant.GetDigitLength();
       IShiftAccumulator accum = helper.CreateShiftAccumulator(
         bigmantissa, lastDiscarded, olderDiscarded);
       accum.ShiftToDigits(digitCount);
@@ -1290,11 +1205,11 @@ namespace PeterO {
       FastInteger discardedBits = new FastInteger(accum.DiscardedDigitCount);
       exp.Add(discardedBits);
       FastInteger adjExponent = new FastInteger(exp)
-        .Add(accum.DigitLength).Subtract(1);
+        .Add(accum.GetDigitLength()).Subtract(1);
       FastInteger clamp = null;
       if(fastEMax!=null && adjExponent.CompareTo(fastEMax)==0){
         // May or may not be an overflow depending on the mantissa
-        FastInteger expdiff=new FastInteger(digitCount).Subtract(accum.DigitLength);
+        FastInteger expdiff=new FastInteger(digitCount).Subtract(accum.GetDigitLength());
         BigInteger currMantissa=accum.ShiftedInt;
         currMantissa=helper.MultiplyByRadixPower(currMantissa,expdiff);
         if((currMantissa).CompareTo(maxMantissa)>0){
@@ -1392,10 +1307,10 @@ namespace PeterO {
       if (mantChanged && fastEMax != null) {
         // If mantissa changed, check for overflow again
         adjExponent = new FastInteger(exp);
-        adjExponent.Add(accum.DigitLength).Subtract(1);
+        adjExponent.Add(accum.GetDigitLength()).Subtract(1);
         if(fastEMax!=null && adjExponent.CompareTo(fastEMax)==0 && mantChanged){
           // May or may not be an overflow depending on the mantissa
-          FastInteger expdiff=new FastInteger(digitCount).Subtract(accum.DigitLength);
+          FastInteger expdiff=new FastInteger(digitCount).Subtract(accum.GetDigitLength());
           BigInteger currMantissa=accum.ShiftedInt;
           currMantissa=helper.MultiplyByRadixPower(currMantissa,expdiff);
           if((currMantissa).CompareTo(maxMantissa)>0){
@@ -1425,11 +1340,10 @@ namespace PeterO {
       if (neg) bigmantissa = -bigmantissa;
       return helper.CreateNew(bigmantissa, exp.AsBigInteger());
     }
-
     
     private T RoundToPrecisionInternal(
       T thisValue,
-      long precision,
+      FastInteger precision,
       Rounding rounding,
       FastInteger fastEMin,
       FastInteger fastEMax,
@@ -1437,9 +1351,9 @@ namespace PeterO {
       int olderDiscarded,
       int[] signals
      ) {
-      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
-      bool neg = helper.GetMantissa(thisValue).Sign < 0;
+      if (precision.Sign < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + precision + ")");
       BigInteger bigmantissa = helper.GetMantissa(thisValue);
+      bool neg = bigmantissa.Sign < 0;
       if (neg) bigmantissa = -bigmantissa;
       // save mantissa in case result is subnormal
       // and must be rounded again
@@ -1448,16 +1362,18 @@ namespace PeterO {
       int flags = 0;
       IShiftAccumulator accum = helper.CreateShiftAccumulator(
         bigmantissa, lastDiscarded, olderDiscarded);
-      bool unlimitedPrec = (precision == 0);
-      if (precision > 0) {
+      bool unlimitedPrec = (precision.Sign==0);
+      if (precision.Sign > 0) {
         accum.ShiftToDigits(precision);
       } else {
-        precision = accum.DigitLength;
+        precision = accum.GetDigitLength();
       }
       FastInteger discardedBits = new FastInteger(accum.DiscardedDigitCount);
+      FastInteger fastPrecision=precision;
       exp.Add(discardedBits);
       FastInteger adjExponent = new FastInteger(exp)
-        .Add(accum.DigitLength).Subtract(1);
+        .Add(accum.GetDigitLength())
+        .Subtract(1);
       FastInteger clamp = null;
       if (fastEMax != null && adjExponent.CompareTo(fastEMax) > 0) {
         if (oldmantissa.IsZero) {
@@ -1476,11 +1392,11 @@ namespace PeterO {
              (rounding == Rounding.Floor && !neg))) {
           // Set to the highest possible value for
           // the given precision
-          BigInteger overflowMant = helper.MultiplyByRadixPower(BigInteger.One, precision);
+          BigInteger overflowMant = helper.MultiplyByRadixPower(BigInteger.One, fastPrecision);
           overflowMant -= BigInteger.One;
           if (neg) overflowMant = -overflowMant;
           if (signals != null) signals[0] = flags;
-          clamp = new FastInteger(fastEMax).Add(1).Subtract(precision);
+          clamp = new FastInteger(fastEMax).Add(1).Subtract(fastPrecision);
           return helper.CreateNew(overflowMant, clamp.AsBigInteger());
         }
         if (signals != null) signals[0] = flags;
@@ -1488,7 +1404,7 @@ namespace PeterO {
       } else if (fastEMin != null && adjExponent.CompareTo(fastEMin) < 0) {
         // Subnormal
         FastInteger fastETiny = new FastInteger(fastEMin)
-          .Subtract(precision)
+          .Subtract(fastPrecision)
           .Add(1);
         if (!oldmantissa.IsZero)
           flags |= PrecisionContext.FlagSubnormal;
@@ -1497,9 +1413,7 @@ namespace PeterO {
           expdiff.Add(discardedBits);
           accum = helper.CreateShiftAccumulator(oldmantissa, lastDiscarded, olderDiscarded);
           accum.ShiftRight(expdiff);
-          FastInteger newmantissa = accum.IsSmall ? 
-            new FastInteger(accum.ShiftedIntSmall) :
-            new FastInteger(accum.ShiftedInt);
+          FastInteger newmantissa = accum.ShiftedIntFast;
           if ((accum.DiscardedDigitCount).Sign != 0 ||
               (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
             if (!oldmantissa.IsZero)
@@ -1537,7 +1451,7 @@ namespace PeterO {
           bigmantissa += BigInteger.One;
           if (bigmantissa.IsEven) {
             accum = helper.CreateShiftAccumulator(bigmantissa);
-            accum.ShiftToDigits(precision);
+            accum.ShiftToDigits(fastPrecision);
             if ((accum.DiscardedDigitCount).Sign != 0) {
               exp.Add(accum.DiscardedDigitCount);
               discardedBits.Add(accum.DiscardedDigitCount);
@@ -1550,7 +1464,7 @@ namespace PeterO {
       if (expChanged && fastEMax != null) {
         // If exponent changed, check for overflow again
         adjExponent = new FastInteger(exp);
-        adjExponent.Add(accum.DigitLength).Subtract(1);
+        adjExponent.Add(accum.GetDigitLength()).Subtract(1);
         if (adjExponent.CompareTo(fastEMax) > 0) {
           flags |= PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
           if (!unlimitedPrec &&
@@ -1560,11 +1474,11 @@ namespace PeterO {
                (rounding == Rounding.Floor && !neg))) {
             // Set to the highest possible value for
             // the given precision
-            BigInteger overflowMant = helper.MultiplyByRadixPower(BigInteger.One, precision);
+            BigInteger overflowMant = helper.MultiplyByRadixPower(BigInteger.One, fastPrecision);
             overflowMant -= BigInteger.One;
             if (neg) overflowMant = -overflowMant;
             if (signals != null) signals[0] = flags;
-            clamp = new FastInteger(fastEMax).Add(1).Subtract(precision);
+            clamp = new FastInteger(fastEMax).Add(1).Subtract(fastPrecision);
             return helper.CreateNew(overflowMant, clamp.AsBigInteger());
           }
           if (signals != null) signals[0] = flags;
@@ -1581,7 +1495,6 @@ namespace PeterO {
     /// <param name='decfrac'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public T Add(T thisValue, T decfrac, PrecisionContext ctx) {
       int expcmp = helper.GetExponent(thisValue).CompareTo((BigInteger)helper.GetExponent(decfrac));
       T retval = default(T);
@@ -1599,7 +1512,7 @@ namespace PeterO {
         FastInteger fastOp2Exp=new FastInteger(op2Exponent);
         FastInteger expdiff = new FastInteger(fastOp1Exp).Subtract(fastOp2Exp).Abs();
         bool inCompare=false;
-        if (ctx != null && ctx.Precision > 0) {
+        if (ctx != null && (ctx.Precision).Sign > 0) {
           // Check if exponent difference is too big for
           // radix-power calculation to work quickly
           if (!inCompare || expdiff.CompareTo(100) >= 0) {
@@ -1617,7 +1530,8 @@ namespace PeterO {
                   // difference
                   //                    111111111111|
                   //        222222222222222|
-                  long digitLength1=helper.CreateShiftAccumulator(op1MantAbs).DigitLength;
+                  FastInteger digitLength1=helper.CreateShiftAccumulator(op1MantAbs)
+                    .GetDigitLength();
                   if (
                     new FastInteger(fastOp1Exp)
                     .Add(digitLength1)
@@ -1631,13 +1545,26 @@ namespace PeterO {
                       .Subtract(ctx.Precision);
                     FastInteger newDiff=new FastInteger(tmp).Subtract(fastOp2Exp).Abs();
                     if(newDiff.CompareTo(expdiff)<0){
-                      /*
-                      Console.WriteLine("op1: {0} | {1}",tmp,op1MantAbs);
-                      Console.WriteLine("op1 was: {0} | {1}",op1Exponent,op1MantAbs);
-                      Console.WriteLine("op2: {0} | {1}",op2Exponent,op2MantAbs);
-                      changed=true;
-                       */
-                      op1Exponent = (tmp.AsBigInteger());
+                      // Can be treated as almost zero
+                      if(helper.GetSign(thisValue)==helper.GetSign(decfrac)){
+                        FastInteger digitLength2=helper.CreateShiftAccumulator(
+                          op2MantAbs).GetDigitLength();
+                        if(digitLength2.CompareTo(fastPrecision)<0){
+                          // Second operand's precision too short
+                          FastInteger precisionDiff=new FastInteger(fastPrecision).Subtract(digitLength2);
+                          op2MantAbs=helper.MultiplyByRadixPower(
+                            op2MantAbs,precisionDiff);
+                          BigInteger bigintTemp=precisionDiff.AsBigInteger();
+                          op2Exponent-=(BigInteger)bigintTemp;
+                          if(helper.GetSign(decfrac)<0)op2MantAbs=-op2MantAbs;
+                          decfrac=helper.CreateNew(op2MantAbs,op2Exponent);
+                          return RoundToPrecision(decfrac,ctx,0,1);
+                        } else {
+                          return RoundToPrecision(decfrac,ctx,0,1);
+                        }
+                      } else {
+                        op1Exponent = (tmp.AsBigInteger());
+                      }
                     }
                   }
                 }
@@ -1649,7 +1576,7 @@ namespace PeterO {
                   // difference
                   //       111111111111|
                   //                222222222222222|
-                  long digitLength2=helper.CreateShiftAccumulator(op2MantAbs).DigitLength;
+                  FastInteger digitLength2=helper.CreateShiftAccumulator(op2MantAbs).GetDigitLength();
                   if (
                     new FastInteger(fastOp2Exp)
                     .Add(digitLength2)
@@ -1663,13 +1590,25 @@ namespace PeterO {
                       .Subtract(ctx.Precision);
                     FastInteger newDiff=new FastInteger(tmp).Subtract(fastOp1Exp).Abs();
                     if(newDiff.CompareTo(expdiff)<0){
-                      /*
-                      Console.WriteLine("op1: {0} | {1}",op1Exponent,op1MantAbs);
-                      Console.WriteLine("op2: {0} | {1}",tmp,op2MantAbs);
-                      Console.WriteLine("op2 was: {0} | {1}",op2Exponent,op2MantAbs);
-                      changed=true;
-                       */
-                      op2Exponent = (tmp.AsBigInteger());
+                      // Can be treated as almost zero
+                      if(helper.GetSign(thisValue)==helper.GetSign(decfrac)){
+                        FastInteger digitLength1=helper.CreateShiftAccumulator(op1MantAbs).GetDigitLength();
+                        if(digitLength1.CompareTo(fastPrecision)<0){
+                          // First operand's precision too short
+                          FastInteger precisionDiff=new FastInteger(fastPrecision).Subtract(digitLength1);
+                          op1MantAbs=helper.MultiplyByRadixPower(
+                            op1MantAbs,precisionDiff);
+                          BigInteger bigintTemp=precisionDiff.AsBigInteger();
+                          op1Exponent-=(BigInteger)bigintTemp;
+                          if(helper.GetSign(thisValue)<0)op1MantAbs=-op1MantAbs;
+                          thisValue=helper.CreateNew(op1MantAbs,op1Exponent);
+                          return RoundToPrecision(thisValue,ctx,0,1);
+                        } else {
+                          return RoundToPrecision(thisValue,ctx,0,1);
+                        }
+                      } else {
+                        op2Exponent = (tmp.AsBigInteger());
+                      }
                     }
                   }
                 }
@@ -1702,7 +1641,6 @@ namespace PeterO {
     /// <param name='decfrac'>A T object.</param>
     /// <returns>Zero if the values are equal; a negative number is this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    /// <remarks/>
     public int CompareTo(T thisValue, T decfrac) {
       if (decfrac == null) return 1;
       int s = helper.GetSign(thisValue);
@@ -1735,11 +1673,15 @@ namespace PeterO {
       if (expdiff.CompareTo(100) >= 0) {
         BigInteger op1MantAbs=BigInteger.Abs(helper.GetMantissa(thisValue));
         BigInteger op2MantAbs=BigInteger.Abs(helper.GetMantissa(decfrac));
-        long precision1 = helper.CreateShiftAccumulator(
-          op1MantAbs).DigitLength;
-        long precision2 = helper.CreateShiftAccumulator(
-          op2MantAbs).DigitLength;
-        FastInteger maxPrecision = new FastInteger(Math.Max(precision1, precision2));
+        FastInteger precision1 = helper.CreateShiftAccumulator(
+          op1MantAbs).GetDigitLength();
+        FastInteger precision2 = helper.CreateShiftAccumulator(
+          op2MantAbs).GetDigitLength();
+        FastInteger maxPrecision=null;
+        if(precision1.CompareTo(precision2)>0)
+          maxPrecision=precision1;
+        else
+          maxPrecision=precision2;
         // If exponent difference is greater than the
         // maximum precision of the two operands
         if (new FastInteger(expdiff).CompareTo(maxPrecision) > 0) {
@@ -1752,8 +1694,8 @@ namespace PeterO {
               // difference
               //                    111111111111|
               //        222222222222222|
-              long digitLength1=helper.CreateShiftAccumulator(
-                op1MantAbs).DigitLength;
+              FastInteger digitLength1=helper.CreateShiftAccumulator(
+                op1MantAbs).GetDigitLength();
               if (
                 new FastInteger(fastOp1Exp)
                 .Add(digitLength1)
@@ -1767,13 +1709,11 @@ namespace PeterO {
                   .Subtract(maxPrecision);
                 FastInteger newDiff=new FastInteger(tmp).Subtract(fastOp2Exp).Abs();
                 if(newDiff.CompareTo(expdiff)<0){
-                  /*
-                      Console.WriteLine("op1: {0} | {1}",tmp,op1MantAbs);
-                      Console.WriteLine("op1 was: {0} | {1}",op1Exponent,op1MantAbs);
-                      Console.WriteLine("op2: {0} | {1}",op2Exponent,op2MantAbs);
-                      changed=true;
-                   */
-                  op1Exponent = (tmp.AsBigInteger());
+                  if(s==ds){
+                    return (s<0) ? 1 : -1;
+                  } else {
+                    op1Exponent = (tmp.AsBigInteger());
+                  }
                 }
               }
             }
@@ -1785,8 +1725,8 @@ namespace PeterO {
               // difference
               //       111111111111|
               //                222222222222222|
-              long digitLength2=helper.CreateShiftAccumulator(
-                op2MantAbs).DigitLength;
+              FastInteger digitLength2=helper.CreateShiftAccumulator(
+                op2MantAbs).GetDigitLength();
               if (
                 new FastInteger(fastOp2Exp)
                 .Add(digitLength2)
@@ -1800,13 +1740,11 @@ namespace PeterO {
                   .Subtract(maxPrecision);
                 FastInteger newDiff=new FastInteger(tmp).Subtract(fastOp1Exp).Abs();
                 if(newDiff.CompareTo(expdiff)<0){
-                  /*
-                      Console.WriteLine("op1: {0} | {1}",op1Exponent,op1MantAbs);
-                      Console.WriteLine("op2: {0} | {1}",tmp,op2MantAbs);
-                      Console.WriteLine("op2 was: {0} | {1}",op2Exponent,op2MantAbs);
-                      changed=true;
-                   */
-                  op2Exponent = (tmp.AsBigInteger());
+                  if(s==ds){
+                    return (s<0) ? -1 : 1;
+                  } else {
+                    op2Exponent = (tmp.AsBigInteger());
+                  }
                 }
               }
             }

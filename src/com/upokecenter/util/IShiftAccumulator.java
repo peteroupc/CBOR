@@ -5,13 +5,12 @@ package com.upokecenter.util;
 
   interface IShiftAccumulator {
     BigInteger getShiftedInt();
-    long getDigitLength();
-    boolean isSmall();
+    FastInteger GetDigitLength();
     int getOlderDiscardedDigits();
     int getLastDiscardedDigit();
-    long getShiftedIntSmall();
+    FastInteger getShiftedIntFast();
     FastInteger getDiscardedDigitCount();
     void ShiftRight(FastInteger bits);
     void ShiftRight(int bits);
-    void ShiftToDigits(long bits);
+    void ShiftToDigits(FastInteger bits);
   }

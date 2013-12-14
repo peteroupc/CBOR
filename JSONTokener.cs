@@ -156,8 +156,7 @@ namespace PeterO {
     }
     /// <summary> </summary>
     /// <returns></returns>
-    /// <remarks/>
-public int getOptions() {
+    public int getOptions() {
       return options;
     }
     private int nextParseComment(int firstChar) {
@@ -229,8 +228,7 @@ public int getOptions() {
     }
     /// <summary> </summary>
     /// <returns></returns>
-    /// <remarks/>
-public int nextClean() {
+    public int nextClean() {
       while (true) {
         int c = nextParseComment(-1);
         if (c == -1 || c > ' ')
@@ -240,8 +238,7 @@ public int nextClean() {
     /// <summary> </summary>
     /// <param name='lastChar'> A 32-bit signed integer.</param>
     /// <returns></returns>
-    /// <remarks/>
-public int nextClean(int lastChar) {
+    public int nextClean(int lastChar) {
       while (true) {
         int c = nextParseComment(lastChar);
         if (c == -1 || c > ' ')
@@ -453,8 +450,7 @@ public int nextClean(int lastChar) {
     }
     /// <summary> </summary>
     /// <returns></returns>
-    /// <remarks/>
-public CBORObject ParseJSONObjectOrArray() {
+    public CBORObject ParseJSONObjectOrArray() {
       int c;
       c = this.nextClean();
       if(c=='[') {

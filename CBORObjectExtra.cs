@@ -18,7 +18,6 @@ namespace PeterO {
   public sealed partial class CBORObject {
     /// <summary> </summary>
     /// <returns></returns>
-    /// <remarks/>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
       int v = AsInt32();
@@ -28,7 +27,6 @@ namespace PeterO {
     }
     /// <summary> </summary>
     /// <returns></returns>
-    /// <remarks/>
     [CLSCompliant(false)]
     public uint AsUInt32() {
       ulong v = AsUInt64();
@@ -38,7 +36,6 @@ namespace PeterO {
     }
     /// <summary> </summary>
     /// <returns></returns>
-    /// <remarks/>
     [CLSCompliant(false)]
     public sbyte AsSByte() {
       int v = AsInt32();
@@ -48,8 +45,8 @@ namespace PeterO {
     }
     private static decimal EncodeDecimal(BigInteger bigmant,
                                          int scale, bool neg) {
-      if((scale)<0)throw new ArgumentException("scale"+" not greater or equal to "+"0"+" ("+Convert.ToString((long)(long)(scale),System.Globalization.CultureInfo.InvariantCulture)+")");
-if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+" ("+Convert.ToString((long)(long)(scale),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((scale)<0)throw new ArgumentException("scale"+" not greater or equal to "+"0"+" ("+Convert.ToString((scale),System.Globalization.CultureInfo.InvariantCulture)+")");
+if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+" ("+Convert.ToString((scale),System.Globalization.CultureInfo.InvariantCulture)+")");
       byte[] data=bigmant.ToByteArray();
       int a=0;
       int b=0;

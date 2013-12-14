@@ -18,6 +18,9 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
     <SourceAnalysisOverrideSettingsFile>C:\Users\Peter\AppData\Roaming\ICSharpCode/SharpDevelop4\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Platform)&apos; == &apos;AnyCPU&apos; '>
     <PlatformTarget>x86</PlatformTarget>
@@ -34,6 +37,8 @@
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <StartAction>Project</StartAction>
+    <StartArguments>Test.</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Configuration)&apos; == &apos;Release&apos; '>
     <OutputPath>bin\Release\</OutputPath>
@@ -62,13 +67,8 @@
     
     
     
+    
   <Compile Include='BEncoding.cs'/><Compile Include='BEncodingTest.cs'/><Compile Include='BigIntTests.cs'/><Compile Include='CBORExtraTest.cs'/><Compile Include='CBORObjectMathTest.cs'/><Compile Include='CBORTest.cs'/><Compile Include='ExtensiveTest.cs'/><Compile Include='FastRandom.cs'/><Compile Include='Properties\AssemblyInfo.cs'/><Compile Include='Runner.cs'/><Compile Include='TestCommon.cs'/></ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include='..\CBOR.csproj'>
-      <Project>{3A85B4B0-5FF0-47F3-8D3E-8DC5F398041F}</Project>
-      <Name>CBOR</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <None Include='app.config'/>
   </ItemGroup>
@@ -97,6 +97,32 @@
     <Content Include='ProfilingSessions\Session20131205_204917.sdps'/>
     <Content Include='ProfilingSessions\Session20131205_205025.sdps'/>
     <Content Include='ProfilingSessions\Session20131205_205245.sdps'/>
+    <Content Include='ProfilingSessions\Session20131210_011240.sdps'/>
+    <Content Include='ProfilingSessions\Session20131210_015154.sdps'/>
+    <Content Include='ProfilingSessions\Session20131210_135342.sdps'/>
+    <Content Include='ProfilingSessions\Session20131210_142012.sdps'/>
+    <Content Include='ProfilingSessions\Session20131210_194632.sdps'/>
+    <Content Include='ProfilingSessions\Session20131210_200426.sdps'/>
+    <Content Include='ProfilingSessions\Session20131210_200513.sdps'/>
+    <Content Include='ProfilingSessions\Session20131211_080304.sdps'/>
+    <Content Include='ProfilingSessions\Session20131211_083412.sdps'/>
+    <Content Include='ProfilingSessions\Session20131211_083804.sdps'/>
+    <Content Include='ProfilingSessions\Session20131211_083856.sdps'/>
+    <Content Include='ProfilingSessions\Session20131211_083920.sdps'/>
+    <Content Include='ProfilingSessions\Session20131211_090932.sdps'/>
+    <Content Include='ProfilingSessions\Session20131211_180750.sdps'/>
+    <Content Include='ProfilingSessions\Session20131211_183431.sdps'/>
+    <Content Include='ProfilingSessions\Session20131211_185907.sdps'/>
+    <Content Include='ProfilingSessions\Session20131213_063330.sdps'/>
+    <Content Include='ProfilingSessions\Session20131213_071337.sdps'/>
+    <Content Include='ProfilingSessions\Session20131213_071556.sdps'/>
+    <Content Include='ProfilingSessions\Session20131213_090412.sdps'/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include='..\Portable.CBOR.csproj'>
+      <Project>{23A1B70C-F064-47B6-8B7E-E2042CDAD8C7}</Project>
+      <Name>Portable.CBOR</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>
 </Project>

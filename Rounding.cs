@@ -9,7 +9,6 @@ namespace PeterO {
     /// <summary> Specifies the mode to use when "shortening" numbers that
     /// otherwise can't fit a given number of digits, so that the shortened
     /// number has about the same value. This "shortening" is known as rounding.</summary>
-    /// <remarks/>
   public enum Rounding {
     /// <summary> The fractional part is discarded (the number is truncated).
     /// </summary>

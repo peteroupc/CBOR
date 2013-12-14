@@ -6,7 +6,7 @@ using PeterO;
 namespace Test {
     /// <summary>
     /// </summary>
-    /// <remarks/>
+    /// 
 [TestFixture]
   public class BEncodingTest{
     private static CBORObject EncodingFromBytes(byte[] b) {
@@ -34,7 +34,7 @@ namespace Test {
     /// A 64-bit signed integer.</param>
     /// <returns>
     /// </returns>
-    /// <remarks/>
+    /// 
 public void doTestLong(long value) {
       String b = "i" + value + "e";
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
@@ -48,7 +48,7 @@ public void doTestLong(long value) {
     /// A String object.</param>
     /// <returns>
     /// </returns>
-    /// <remarks/>
+    /// 
 public void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
@@ -60,7 +60,7 @@ public void doTestString(String value) {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
+    /// 
 [Test]
     public void testLong() {
       doTestLong(0);
@@ -74,7 +74,7 @@ public void doTestString(String value) {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
+    /// 
 [Test]
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
@@ -99,7 +99,7 @@ public void doTestString(String value) {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
+    /// 
 [Test]
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
@@ -124,7 +124,7 @@ public void doTestString(String value) {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
+    /// 
 [Test]
     public void testString() {
       doTestString("");

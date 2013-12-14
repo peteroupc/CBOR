@@ -127,36 +127,33 @@ namespace PeterO {
     }
     
     public static BigInteger BigIntegerFromDouble(double dbl) {
-      long value = BitConverter.ToInt64(BitConverter.GetBytes((double)dbl),0);
-      int fpexponent = (int)((value >> 52) & 0x7ffL);
-      if (fpexponent == 2047)
+      int[] value = Extras.DoubleToIntegers(dbl);
+      int fpExponent = (int)((value[1] >> 20) & 0x7ff);
+      bool neg=(value[1]>>31)!=0;
+      if (fpExponent == 2047)
         throw new OverflowException("Value is infinity or NaN");
-      long mantissa = value & 0xFFFFFFFFFFFFFL;
-      if (fpexponent == 0) fpexponent++;
-      else mantissa |= (1L << 52);
-      if (mantissa == 0) return BigInteger.Zero;
-      fpexponent -= 1075;
-      while ((mantissa & 1) == 0) {
-        fpexponent++;
-        mantissa >>= 1;
+      value[1]&=0xFFFFF; // Mask out the exponent and sign
+      if (fpExponent == 0) fpExponent++;
+      else value[1]|=0x100000;
+      if ((value[1]|value[0]) != 0) {
+        fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
       }
-      bool neg = ((value >> 63) != 0);
-      if (fpexponent == 0) {
-        if (neg) mantissa = -mantissa;
-        return (BigInteger)mantissa;
-      } else if (fpexponent > 0) {
+      fpExponent -= 1075;
+      BigInteger bigmantissa=MutableNumber.WordsToBigInteger(value);
+      if (fpExponent == 0) {
+        if (neg) bigmantissa = -bigmantissa;
+        return bigmantissa;
+      } else if (fpExponent > 0) {
         // Value is an integer
-        BigInteger bigmantissa = (BigInteger)mantissa;
-        bigmantissa <<= fpexponent;
+        bigmantissa <<= fpExponent;
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
         return bigmantissa;
       } else {
         // Value has a fractional part
-        int exp = -fpexponent;
-        for (int i = 0; i < exp && mantissa != 0; i++) {
-          mantissa >>= 1;
-        }
-        return (BigInteger)mantissa;
+        int exp = -fpExponent;
+        bigmantissa>>=exp;
+        if (neg) bigmantissa = -(BigInteger)bigmantissa;
+        return bigmantissa;
       }
     }
     public static float HalfPrecisionToSingle(int value) {

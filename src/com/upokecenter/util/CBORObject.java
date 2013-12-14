@@ -2956,9 +2956,9 @@ public static CBORObject FromObject(Object obj) {
     public static CBORObject FromObjectAndTag(Object o, BigInteger bigintTag) {
       if((bigintTag)==null)throw new NullPointerException("bigintTag");
       if ((bigintTag).signum() < 0) throw new IllegalArgumentException(
-        "tag not greater or equal to 0 (" + bigintTag.toString() + ")");
+        "tag not greater or equal to 0 ("+bigintTag+")");
       if ((bigintTag).compareTo(UInt64MaxValue) > 0) throw new IllegalArgumentException(
-        "tag not less or equal to 18446744073709551615 (" + bigintTag.toString() + ")");
+        "tag not less or equal to 18446744073709551615 ("+bigintTag+")");
       CBORObject c = FromObject(o);
       if (bigintTag.compareTo(BigInt65536) < 0) {
         // Low-numbered, commonly used tags
@@ -3386,19 +3386,22 @@ public static CBORObject FromObject(Object obj) {
       BigInteger bigintAdditional = BigInteger.ZERO;
       boolean hasBigAdditional = false;
       data = new byte[8];
+      int lowAdditional=0;
       switch (firstbyte & 0x1F) {
           case 24: {
             int tmp = s.read();
             if (tmp < 0)
               throw new CBORException("Premature end of data");
-            uadditional = tmp;
+            lowAdditional = tmp;
+            uadditional=lowAdditional;
             break;
           }
           case 25: {
             if (s.read(data, 0, 2) != 2)
               throw new CBORException("Premature end of data");
-            uadditional = (((long)(data[0] & (long)0xFF)) << 8);
-            uadditional |= (((long)(data[1] & (long)0xFF)));
+            lowAdditional = (((int)(data[0] & (int)0xFF)) << 8);
+            lowAdditional |= (((int)(data[1] & (int)0xFF)));
+            uadditional=lowAdditional;
             break;
           }
           case 26: {

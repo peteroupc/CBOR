@@ -12,14 +12,14 @@ using NUnit.Framework;
 using System.Globalization;
 using PeterO;
 namespace Test {
-    /// <summary>
-    /// </summary>
-    /// <remarks/>
-[TestFixture]
+  /// <summary>
+  /// </summary>
+  /// 
+  [TestFixture]
   public class CBORExtraTest{
-  
-  
-    [Test]
+    
+    
+    //[Test]
     public void GenerateDecimalTests(){
       FastRandom r = new FastRandom();
       for(int i=0;i<5000;i++){
@@ -76,14 +76,14 @@ namespace Test {
       }
       return new Decimal(x);
     }
-  
-  
+    
+    
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
-[Test]
+    /// 
+    [Test]
     public void TestCBORObjectDecimal() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i <= 28; i++) { // Try a random decimal with a given exponent
@@ -95,12 +95,13 @@ namespace Test {
         }
       }
     }
+    
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
-[Test]
+    /// 
+    [Test]
     public void TestSByte() {
       for (int i = SByte.MinValue; i <= SByte.MaxValue; i++) {
         TestCommon.AssertSer(
@@ -152,8 +153,8 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
-[Test]
+    /// 
+    [Test]
     public void TestFloatCloseToEdge(){
       try { CBORObject.FromObject(2.147483647E9d).AsUInt32(); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
       try { CBORObject.FromObject(2.147483647E9d).AsUInt64(); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
@@ -881,8 +882,8 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
-[Test]
+    /// 
+    [Test]
     public void TestULong() {
       ulong[] ranges = new ulong[]{
         0,65539,
@@ -903,7 +904,7 @@ namespace Test {
     }
     
     
-            private static short Divide32By16(int dividendLow, short divisor, bool returnRemainder){
+    private static short Divide32By16(int dividendLow, short divisor, bool returnRemainder){
       int t;
       int dividendHigh=0;
       int intDivisor=(((int)divisor)&0xFFFF);
@@ -921,7 +922,7 @@ namespace Test {
           }
         }
       }
-      return (returnRemainder ? 
+      return (returnRemainder ?
               unchecked((short)(((int)dividendHigh)&0xFFFF)) :
               unchecked((short)(((int)dividendLow)&0xFFFF))
              );
@@ -968,6 +969,7 @@ namespace Test {
             Assert.AreEqual(expected,actual,"Dividing "+x+" by "+y);
           }
         }
+        /*
         for(int i=0;i<20;i++){
           ulong x=(ulong)fr.NextValue(0x10000);
           x|=((ulong)fr.NextValue(0x10000))<<16;
@@ -987,7 +989,8 @@ namespace Test {
             "console.log(\""+dx+"/"+dy+", expected: "+
             ((uint)dxrem)+", "+(dxrem>>32)+", was \"+[result.lo,result.hi]+\","+
             " remainder="+((ulong)(dx%dy))+"\");");
-        }        
+        }
+         */
       }
     }
 
@@ -996,8 +999,8 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
-[Test]
+    /// 
+    [Test]
     public void TestUInt() {
       uint[] ranges = new uint[]{
         0,65539,
@@ -1022,8 +1025,8 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
-[Test]
+    /// 
+    [Test]
     public void TestDecimal() {
       TestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MinValue),
@@ -1047,8 +1050,8 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
-[Test]
+    /// 
+    [Test]
     public void TestUShort() {
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; i++) {
         TestCommon.AssertSer(
@@ -1060,8 +1063,8 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
-[Test]
+    /// 
+    [Test]
     public void TestDoubleToOtherII() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
       CBORObject dbl2 = CBORObject.FromObject((double)Int32.MaxValue);
@@ -1078,8 +1081,8 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// <remarks/>
-[Test]
+    /// 
+    [Test]
     public void TestDateTime() {
       DateTime[] ranges = new DateTime[]{
         new DateTime(1,1,1,0,0,0,DateTimeKind.Utc),
