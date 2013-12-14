@@ -42,7 +42,7 @@ at: http://upokecenter.com/d/
      * be 0.
      */
     public BigInteger getEMin() { return hasExponentRange ? eMin : BigInteger.ZERO; }
-    long precision;
+    BigInteger bigintPrecision;
 
     /**
      * Gets the maximum length of a converted number in digits, ignoring
@@ -50,7 +50,7 @@ at: http://upokecenter.com/d/
      * number's mantissa can range from 0 to 999 (up to three digits long).
      * If 0, converted numbers can have any precision.
      */
-    public long getPrecision() { return precision; }
+    public BigInteger getPrecision() { return bigintPrecision; }
     Rounding rounding;
 
     boolean clampNormalExponents;
@@ -124,6 +124,31 @@ at: http://upokecenter.com/d/
           throw new IllegalStateException("Can't set flags");
         flags = value;
       }
+    
+    /**
+     * 
+     * @param exponent A BigInteger object.
+     */
+public boolean ExponentWithinRange(BigInteger exponent) {
+      if(!this.getHasExponentRange())
+        return true;
+      if(bigintPrecision.signum()==0){
+        // Only check EMax, since with an unlimited
+        // precision, any exponent less than EMin will exceed EMin if
+        // the mantissa is the right size
+        return exponent.compareTo(this.getEMax())<=0;
+      } else {
+        BigInteger bigint=exponent;
+        bigint=bigint.add(bigintPrecision);
+        bigint=bigint.subtract(BigInteger.ONE);
+        if(bigint.compareTo(this.getEMin())<0)
+          return false;
+        if(exponent.compareTo(this.getEMax())>0)
+          return false;
+        return true;
+      }
+    }
+    
     /**
      * Copies this PrecisionContext with HasFlags set to true and a Flags
      * value of 0.
@@ -167,12 +192,24 @@ at: http://upokecenter.com/d/
      * Copies this PrecisionContext with a particular precision.
      * @param precision Desired precision. 0 means unlimited precision.
      */
-    public PrecisionContext WithPrecision(long precision) {
-      if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + Long.toString((long)(long)(precision)) + ")");
+    public PrecisionContext WithPrecision(int precision) {
+      if (precision < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+(precision)+")");
       PrecisionContext pc = new PrecisionContext(this);
-      pc.precision = precision;
+      pc.bigintPrecision = BigInteger.valueOf(precision);
       return pc;
     }
+
+    /**
+     * 
+     * @param bigintPrecision A BigInteger object.
+     */
+public PrecisionContext WithPrecision(BigInteger bigintPrecision) {
+      if (bigintPrecision.signum() < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + bigintPrecision + ")");
+      PrecisionContext pc = new PrecisionContext(this);
+      pc.bigintPrecision = bigintPrecision;
+      return pc;
+    }
+
     /**
      * Initializes a new PrecisionContext that is a copy of another PrecisionContext.
      */
@@ -183,7 +220,7 @@ at: http://upokecenter.com/d/
       this.eMax = pc.eMax;
       this.eMin = pc.eMin;
       this.hasExponentRange = pc.hasExponentRange;
-      this.precision = pc.precision;
+      this.bigintPrecision = pc.bigintPrecision;
       this.rounding = pc.rounding;
       this.clampNormalExponents = pc.clampNormalExponents;
     }
@@ -192,7 +229,7 @@ at: http://upokecenter.com/d/
      * Initializes a new PrecisionContext from a desired maximum precision.
      * @param precision A 64-bit signed integer.
      */
-    public PrecisionContext(long precision){
+    public PrecisionContext(int precision){
  this(precision, Rounding.HalfEven);
     }
 
@@ -207,8 +244,8 @@ at: http://upokecenter.com/d/
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
-    public PrecisionContext(long precision, Rounding rounding){
-      this.precision = precision;
+    public PrecisionContext(int precision, Rounding rounding){
+      this.bigintPrecision = BigInteger.valueOf(precision);
       this.rounding = rounding;
       eMax = BigInteger.ZERO;
       eMin = BigInteger.ZERO;
@@ -216,17 +253,17 @@ at: http://upokecenter.com/d/
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
-    public PrecisionContext(long precision, Rounding rounding, long eMinSmall, long eMaxSmall){
+    public PrecisionContext(int precision, Rounding rounding, int eMinSmall, int eMaxSmall){
  this(precision,rounding,eMinSmall,eMaxSmall,false);
     }
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
-    public PrecisionContext(long precision, Rounding rounding, long eMinSmall, long eMaxSmall,
+    public PrecisionContext(int precision, Rounding rounding, int eMinSmall, int eMaxSmall,
                             boolean clampNormalExponents) {
-      if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + Long.toString((long)(long)(precision)) + ")");
-      if ((eMinSmall) > eMaxSmall) throw new IllegalArgumentException("eMinSmall" + " not less or equal to " + Long.toString((long)(long)(eMaxSmall)) + " (" + Long.toString((long)(long)(eMinSmall)) + ")");
-      this.precision = precision;
+      if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+(precision)+")");
+      if ((eMinSmall) > eMaxSmall) throw new IllegalArgumentException("eMinSmall" + " not less or equal to "+(eMaxSmall)+" ("+(eMinSmall)+")");
+      this.bigintPrecision = BigInteger.valueOf(precision);
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
       this.hasExponentRange=true;
@@ -236,18 +273,18 @@ at: http://upokecenter.com/d/
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
-    public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax){
+    public PrecisionContext(int precision, Rounding rounding, BigInteger eMin, BigInteger eMax){
  this(precision,rounding,eMin,eMax,false);
     }
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
-    public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax,
+    public PrecisionContext(int precision, Rounding rounding, BigInteger eMin, BigInteger eMax,
                             boolean clampNormalExponents) {
       if((eMin)==null)throw new NullPointerException("eMin");
-      if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + Long.toString((long)(long)(precision)) + ")");
+      if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+(precision)+")");
       if (eMin.compareTo(eMax) > 0) throw new IllegalArgumentException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
-      this.precision = precision;
+      this.bigintPrecision = BigInteger.valueOf(precision);
       this.rounding = rounding;
       this.hasExponentRange=true;
       this.clampNormalExponents = clampNormalExponents;

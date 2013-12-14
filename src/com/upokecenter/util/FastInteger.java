@@ -11,48 +11,50 @@ at: http://upokecenter.com/d/
 //import java.math.*;
 
     /**
-     * A mutable integer class initially backed by a 64-bit integer, that
+     * A mutable integer class initially backed by a small integer, that
      * only uses a big integer when arithmetic operations would overflow
-     * the 64-bit integer. <p> This class is ideal for cases where operations
-     * should be arbitrary precision, but the need to use a precision greater
-     * than 64 bits is very rare.</p> <p> Many methods in this class return
-     * a reference to the same object as used in the call. This allows chaining
-     * operations in a single line of code. For example:</p> <code> fastInt.Add(5).Multiply(10);</code>
+     * the small integer. <p> This class is ideal for cases where operations
+     * should be arbitrary precision, but the need to use a high precision
+     * is rare.</p> <p> Many methods in this class return a reference to the
+     * same object as used in the call. This allows chaining operations in
+     * a single line of code. For example:</p> <code> fastInt.Add(5).Multiply(10);</code>
      */
   final class FastInteger implements Comparable<FastInteger> {
-    long smallValue;
-    BigInteger largeValue;
-    boolean usingLarge;
+    int smallValue; // if integerMode is 0
+    MutableNumber mnum; // if integerMode is 1
+    BigInteger largeValue; // if integerMode is 2
+    int integerMode;
 
-    private static BigInteger Int64MinValue = BigInteger.valueOf(Long.MIN_VALUE);
-    private static BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
     private static BigInteger Int32MinValue = BigInteger.valueOf(Integer.MIN_VALUE);
     private static BigInteger Int32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
+    private static BigInteger NegativeInt32MinValue=(Int32MinValue).negate();
 
     public FastInteger() {
     }
 
-    public FastInteger(long value) {
+    public FastInteger(int value) {
       smallValue = value;
     }
 
     public FastInteger(FastInteger value) {
       smallValue = value.smallValue;
-      usingLarge = value.usingLarge;
+      integerMode = value.integerMode;
       largeValue = value.largeValue;
+      mnum=(value.mnum==null) ? null : value.mnum.Copy();
     }
 
-    // This constructor converts a big integer to a 64-bit one
-    // if it's small enough
     public FastInteger(BigInteger bigintVal) {
       int sign = bigintVal.signum();
       if (sign == 0 ||
-          (sign < 0 && bigintVal.compareTo(Int64MinValue) >= 0) ||
-          (sign > 0 && bigintVal.compareTo(Int64MaxValue) <= 0)) {
-        smallValue = bigintVal.longValue();
-        usingLarge = false;
+          (sign < 0 && bigintVal.compareTo(Int32MinValue) >= 0) ||
+          (sign > 0 && bigintVal.compareTo(Int32MaxValue) <= 0)) {
+        integerMode=0;
+        smallValue = bigintVal.intValue();
+      } else if(sign>0){
+        integerMode=1;
+        mnum=new MutableNumber(bigintVal);
       } else {
-        usingLarge = true;
+        integerMode=2;
         largeValue = bigintVal;
       }
     }
@@ -61,22 +63,20 @@ at: http://upokecenter.com/d/
      * 
      */
     public int AsInt32() {
-      if (usingLarge) {
-        return largeValue.intValue();
-      } else {
-        return ((int)smallValue);
+      switch(this.integerMode){
+        case 0:
+          return smallValue;
+          case 1:{
+            BigInteger bigint=mnum.ToBigInteger();
+            return bigint.intValue();
+          }
+        case 2:
+          return largeValue.intValue();
+        default:
+          throw new IllegalStateException();
       }
     }
-    /**
-     * 
-     */
-    public long AsInt64() {
-      if (usingLarge) {
-        return largeValue.longValue();
-      } else {
-        return ((long)smallValue);
-      }
-    }
+    
     /**
      * Compares a FastInteger object with this instance.
      * @param val A FastInteger object.
@@ -84,12 +84,20 @@ at: http://upokecenter.com/d/
      * is less, or a positive number if this instance is greater.
      */
     public int compareTo(FastInteger val) {
-      if (usingLarge || val.usingLarge) {
-        BigInteger valValue = val.AsBigInteger();
-        return largeValue.compareTo(valValue);
-      } else {
-        return (val.smallValue == smallValue) ? 0 :
-          (smallValue < val.smallValue ? -1 : 1);
+      switch(this.integerMode){
+        case 0:
+          if(val.integerMode==0){
+            return (val.smallValue == smallValue) ? 0 :
+              (smallValue < val.smallValue ? -1 : 1);
+          } else {
+            return AsBigInteger().compareTo(val.AsBigInteger());
+          }
+        case 1:
+          return AsBigInteger().compareTo(val.AsBigInteger());
+        case 2:
+          return AsBigInteger().compareTo(val.AsBigInteger());
+        default:
+          throw new IllegalStateException();
       }
     }
     /**
@@ -97,38 +105,6 @@ at: http://upokecenter.com/d/
      */
     public FastInteger Abs() {
       return (this.signum() < 0) ? Negate() : this;
-    }
-    /**
-     * Sets this object's value to the remainder of the current value divided
-     * by the given integer.
-     * @param divisor The divisor.
-     * @return This object.
-     */
-    public FastInteger Mod(int divisor) {
-      if (usingLarge) {
-        // Mod operator will always result in a
-        // number that fits an int for int divisors
-        largeValue = largeValue.remainder(BigInteger.valueOf(divisor));
-        smallValue = largeValue.intValue();
-        usingLarge = false;
-      } else {
-        smallValue %= divisor;
-      }
-      return this;
-    }
-
-    /**
-     * Compares a Int64 object with this instance.
-     * @param val A 64-bit signed integer.
-     * @return Zero if the values are equal; a negative number is this instance
-     * is less, or a positive number if this instance is greater.
-     */
-    public int compareTo(int val) {
-      if (usingLarge) {
-        return largeValue.compareTo(BigInteger.valueOf(val));
-      } else {
-        return (val == smallValue) ? 0 : (smallValue < val ? -1 : 1);
-      }
     }
 
     /**
@@ -139,24 +115,50 @@ at: http://upokecenter.com/d/
     public FastInteger Multiply(int val) {
       if (val == 0) {
         smallValue = 0;
-        usingLarge = false;
-      } else if (usingLarge) {
-        largeValue=largeValue.multiply(BigInteger.valueOf(val));
+        integerMode=0;
       } else {
-        boolean apos = (smallValue > 0L);
-        boolean bpos = (val > 0L);
-        if (
-          (apos && ((!bpos && (Long.MIN_VALUE / smallValue) > val) ||
-                    (bpos && smallValue > (Long.MAX_VALUE / val)))) ||
-          (!apos && ((!bpos && smallValue != 0L &&
-                      (Long.MAX_VALUE / smallValue) > val) ||
-                     (bpos && smallValue < (Long.MIN_VALUE / val))))) {
-          // would overflow, convert to large
-          largeValue = BigInteger.valueOf(smallValue);
-          usingLarge = true;
-          largeValue=largeValue.multiply(BigInteger.valueOf(val));
-        } else {
-          smallValue *= val;
+        switch (integerMode) {
+          case 0:
+            boolean apos = (smallValue > 0L);
+            boolean bpos = (val > 0L);
+            if (
+              (apos && ((!bpos && (Integer.MIN_VALUE / smallValue) > val) ||
+                        (bpos && smallValue > (Integer.MAX_VALUE / val)))) ||
+              (!apos && ((!bpos && smallValue != 0L &&
+                          (Integer.MAX_VALUE / smallValue) > val) ||
+                         (bpos && smallValue < (Integer.MIN_VALUE / val))))) {
+              // would overflow, convert to large
+              if(apos && bpos){
+                // if both operands are nonnegative
+                // convert to mutable big integer
+                integerMode=1;
+                mnum=new MutableNumber(smallValue);
+                mnum.Multiply(val);
+              } else {
+                // if either operand is negative
+                // convert to big integer
+                integerMode=2;
+                largeValue = BigInteger.valueOf(smallValue);
+                largeValue=largeValue.multiply(BigInteger.valueOf(val));
+              }
+            } else {
+              smallValue *= val;
+            }
+            break;
+          case 1:
+            if(val<0){
+              integerMode=2;
+              largeValue=mnum.ToBigInteger();
+              largeValue=largeValue.multiply(BigInteger.valueOf(val));
+            } else {
+              mnum.Multiply(val);
+            }
+            break;
+          case 2:
+            largeValue=largeValue.multiply(BigInteger.valueOf(val));
+            break;
+          default:
+            throw new IllegalStateException();
         }
       }
       return this;
@@ -168,17 +170,26 @@ at: http://upokecenter.com/d/
      * @return This object.
      */
     public FastInteger Negate() {
-      if (usingLarge) {
-        largeValue=(largeValue).negate();
-      } else {
-        if (smallValue == Long.MIN_VALUE) {
-          // would overflow, convert to large
-          largeValue = BigInteger.valueOf(smallValue);
-          usingLarge = true;
+      switch (integerMode) {
+        case 0:
+          if (smallValue == Integer.MIN_VALUE) {
+            // would overflow, convert to large
+            integerMode=1;
+            mnum = new MutableNumber(NegativeInt32MinValue);
+          } else {
+            smallValue = -smallValue;
+          }
+          break;
+        case 1:
+          integerMode=2;
+          largeValue=mnum.ToBigInteger();
           largeValue=(largeValue).negate();
-        } else {
-          smallValue = -smallValue;
-        }
+          break;
+        case 2:
+          largeValue=(largeValue).negate();
+          break;
+        default:
+          throw new IllegalStateException();
       }
       return this;
     }
@@ -190,61 +201,55 @@ at: http://upokecenter.com/d/
      * @return This object.
      */
     public FastInteger Subtract(FastInteger val) {
-      if (usingLarge || val.usingLarge) {
-        BigInteger valValue = val.AsBigInteger();
-        largeValue=largeValue.subtract(valValue);
-      } else if (((long)val.smallValue < 0 && Long.MAX_VALUE + (long)val.smallValue < smallValue) ||
-                 ((long)val.smallValue > 0 && Long.MIN_VALUE + (long)val.smallValue > smallValue)) {
-        // would overflow, convert to large
-        largeValue = BigInteger.valueOf(smallValue);
-        usingLarge = true;
-        largeValue=largeValue.subtract(BigInteger.valueOf(val.smallValue));
-      } else {
-        smallValue -= val.smallValue;
+      BigInteger valValue;
+      switch (integerMode) {
+        case 0:
+          if(val.integerMode==0){
+            if (((int)val.smallValue < 0 && Integer.MAX_VALUE + (int)val.smallValue < smallValue) ||
+                ((int)val.smallValue > 0 && Integer.MIN_VALUE + (int)val.smallValue > smallValue)) {
+              // would overflow, convert to large
+              integerMode=2;
+              largeValue = BigInteger.valueOf(smallValue);
+              largeValue=largeValue.subtract(BigInteger.valueOf(val.smallValue));
+            } else {
+              smallValue-=val.smallValue;
+            }
+          } else {
+            integerMode=2;
+            largeValue=BigInteger.valueOf(smallValue);
+            valValue = val.AsBigInteger();
+            largeValue=largeValue.subtract(valValue);
+          }
+          break;
+        case 1:
+          integerMode=2;
+          largeValue=mnum.ToBigInteger();
+          valValue = val.AsBigInteger();
+          largeValue=largeValue.subtract(valValue);
+          break;
+        case 2:
+          valValue = val.AsBigInteger();
+          largeValue=largeValue.subtract(valValue);
+          break;
+        default:
+          throw new IllegalStateException();
       }
       return this;
     }
-    /**
-     * Sets this object's value to the current value minus the given integer
-     * value.
-     * @param val The subtrahend.
-     * @return This object.
-     */
-    public FastInteger Subtract(long val) {
-      if (usingLarge) {
-        BigInteger valValue = BigInteger.valueOf(val);
-        largeValue=largeValue.subtract(valValue);
-      } else if (((long)val < 0 && Long.MAX_VALUE + (long)val < smallValue) ||
-                 ((long)val > 0 && Long.MIN_VALUE + (long)val > smallValue)) {
-        // would overflow, convert to large
-        largeValue = BigInteger.valueOf(smallValue);
-        usingLarge = true;
-        largeValue=largeValue.subtract(BigInteger.valueOf(val));
-      } else {
-        smallValue -= val;
-      }
-      return this;
-    }
-
     /**
      * Sets this object's value to the current value minus the given integer.
      * @param val The subtrahend.
      * @return This object.
      */
     public FastInteger Subtract(int val) {
-      if (usingLarge) {
-        largeValue=largeValue.subtract(BigInteger.valueOf(val));
-      } else if (((long)val < 0 && Long.MAX_VALUE + (long)val < smallValue) ||
-                 ((long)val > 0 && Long.MIN_VALUE + (long)val > smallValue)) {
-        // would overflow, convert to large
-        largeValue = BigInteger.valueOf(smallValue);
-        usingLarge = true;
-        largeValue=largeValue.subtract(BigInteger.valueOf(val));
+      if(val==Integer.MIN_VALUE){
+        return Add(NegativeInt32MinValue);
       } else {
-        smallValue -= val;
+        return Add(-val);
       }
-      return this;
     }
+    
+    
 
     /**
      * Sets this object's value to the current value plus the given integer.
@@ -252,32 +257,30 @@ at: http://upokecenter.com/d/
      * @return This object.
      */
     public FastInteger Add(BigInteger bigintVal) {
-      if (usingLarge) {
-        largeValue=largeValue.add(bigintVal);
-      } else {
-        int sign = bigintVal.signum();
-        if (sign == 0 ||
-            (sign < 0 && bigintVal.compareTo(Int64MinValue) >= 0) ||
-            (sign > 0 && bigintVal.compareTo(Int64MaxValue) <= 0)) {
-          long val = bigintVal.longValue();
-          if ((smallValue < 0 && val < Long.MIN_VALUE - smallValue) ||
-              (smallValue > 0 && val > Long.MAX_VALUE - smallValue)) {
-            // would overflow, convert to large
-            largeValue = BigInteger.valueOf(smallValue);
-            usingLarge = true;
-            largeValue=largeValue.add(bigintVal);
-          } else {
-            smallValue += val;
+      switch (integerMode) {
+          case 0:{
+            int sign = bigintVal.signum();
+            if (sign == 0 ||
+                (sign < 0 && bigintVal.compareTo(Int32MinValue) >= 0) ||
+                (sign > 0 && bigintVal.compareTo(Int32MaxValue) <= 0)) {
+              return Add(bigintVal.intValue());
+            }
+            return Add(new FastInteger(bigintVal));
           }
-        } else {
-          // convert to large
-          largeValue = BigInteger.valueOf(smallValue);
-          usingLarge = true;
+        case 1:
+          integerMode=2;
+          largeValue=mnum.ToBigInteger();
           largeValue=largeValue.add(bigintVal);
-        }
+          break;
+        case 2:
+          largeValue=largeValue.add(bigintVal);
+          break;
+        default:
+          throw new IllegalStateException();
       }
       return this;
     }
+    
 
     /**
      * Sets this object's value to the current value minus the given integer.
@@ -285,51 +288,108 @@ at: http://upokecenter.com/d/
      * @return This object.
      */
     public FastInteger Subtract(BigInteger bigintVal) {
-      if (usingLarge) {
+      if (integerMode==2) {
         largeValue=largeValue.subtract(bigintVal);
+        return this;
       } else {
         int sign = bigintVal.signum();
-        if (sign == 0 ||
-            (sign < 0 && bigintVal.compareTo(Int64MinValue) >= 0) ||
-            (sign > 0 && bigintVal.compareTo(Int64MaxValue) <= 0)) {
-          long val = bigintVal.longValue();
-          if ((val < 0 && Long.MAX_VALUE + val < smallValue) ||
-              (val > 0 && Long.MIN_VALUE + val > smallValue)) {
-            // would overflow, convert to large
-            largeValue = BigInteger.valueOf(smallValue);
-            usingLarge = true;
-            largeValue=largeValue.subtract(bigintVal);
-          } else {
-            smallValue -= val;
-          }
-        } else {
-          // convert to large
-          largeValue = BigInteger.valueOf(smallValue);
-          usingLarge = true;
-          largeValue=largeValue.subtract(bigintVal);
+        if (sign == 0)return this;
+        // Check if this value fits an int, except if
+        // it's MinValue
+        if(sign < 0 && bigintVal.compareTo(Int32MinValue) > 0){
+          return Add(-(bigintVal.intValue()));
         }
+        if(sign > 0 && bigintVal.compareTo(Int32MaxValue) <= 0){
+          return Subtract(bigintVal.intValue());
+        }
+        bigintVal=bigintVal.negate();
+        return Add(bigintVal);
       }
-      return this;
     }
     /**
      * 
      * @param val A FastInteger object.
      */
     public FastInteger Add(FastInteger val) {
-      if (usingLarge || val.usingLarge) {
-        BigInteger valValue = val.AsBigInteger();
-        largeValue=largeValue.add(valValue);
-      } else if ((smallValue < 0 && (long)val.smallValue < Long.MIN_VALUE - smallValue) ||
-                 (smallValue > 0 && (long)val.smallValue > Long.MAX_VALUE - smallValue)) {
-        // would overflow, convert to large
-        largeValue = BigInteger.valueOf(smallValue);
-        usingLarge = true;
-        largeValue=largeValue.add(BigInteger.valueOf(val.smallValue));
-      } else {
-        smallValue += val.smallValue;
+      BigInteger valValue;
+      switch (integerMode) {
+        case 0:
+          if(val.integerMode==0){
+            if ((smallValue < 0 && (int)val.smallValue < Integer.MIN_VALUE - smallValue) ||
+                (smallValue > 0 && (int)val.smallValue > Integer.MAX_VALUE - smallValue)) {
+              // would overflow
+              if(val.smallValue>=0){
+                integerMode=1;
+                mnum=new MutableNumber(this.smallValue);
+                mnum.Add(val.smallValue);
+              } else {
+                integerMode=2;
+                largeValue = BigInteger.valueOf(smallValue);
+                largeValue=largeValue.add(BigInteger.valueOf(val.smallValue));
+              }
+            } else {
+              smallValue+=val.smallValue;
+            }
+          } else {
+            integerMode=2;
+            largeValue=BigInteger.valueOf(smallValue);
+            valValue = val.AsBigInteger();
+            largeValue=largeValue.add(valValue);
+          }
+          break;
+        case 1:
+          if(val.integerMode==0 && val.smallValue>=0){
+            mnum.Add(val.smallValue);
+          } else {
+            integerMode=2;
+            largeValue=mnum.ToBigInteger();
+            valValue = val.AsBigInteger();
+            largeValue=largeValue.add(valValue);
+          }
+          break;
+        case 2:
+          valValue = val.AsBigInteger();
+          largeValue=largeValue.add(valValue);
+          break;
+        default:
+          throw new IllegalStateException();
       }
       return this;
     }
+    /**
+     * Sets this object's value to the remainder of the current value divided
+     * by the given integer.
+     * @param divisor The divisor.
+     * @return This object.
+     */
+    public FastInteger Mod(int divisor) {
+      // Mod operator will always result in a
+      // number that fits an int for int divisors
+      if (divisor != 0) {
+        switch (integerMode) {
+          case 0:
+            smallValue %= divisor;
+            break;
+          case 1:
+            largeValue=mnum.ToBigInteger();
+            largeValue = largeValue.remainder(BigInteger.valueOf(divisor));
+            smallValue = largeValue.intValue();
+            integerMode=0;
+            break;
+          case 2:
+            largeValue = largeValue.remainder(BigInteger.valueOf(divisor));
+            smallValue = largeValue.intValue();
+            integerMode=0;
+            break;
+          default:
+            throw new IllegalStateException();
+        }
+      } else {
+        throw new ArithmeticException();
+      }
+      return this;
+    }
+
 
     /**
      * Divides this instance by the value of a Int32 object.
@@ -338,16 +398,37 @@ at: http://upokecenter.com/d/
      */
     public FastInteger Divide(int divisor) {
       if (divisor != 0) {
-        if (usingLarge) {
-          largeValue=largeValue.divide(BigInteger.valueOf(divisor));
-        } else if (divisor == -1 && smallValue == Long.MIN_VALUE) {
-          // would overflow, convert to large
-          largeValue = BigInteger.valueOf(smallValue);
-          usingLarge = true;
-          largeValue=largeValue.divide(BigInteger.valueOf(divisor));
-        } else {
-          smallValue /= divisor;
+        switch (integerMode) {
+          case 0:
+            if (divisor == -1 && smallValue == Integer.MIN_VALUE) {
+              // would overflow, convert to large
+              integerMode=1;
+              mnum = new MutableNumber(NegativeInt32MinValue);
+            } else {
+              smallValue /= divisor;
+            }
+            break;
+          case 1:
+            integerMode=2;
+            largeValue=mnum.ToBigInteger();
+            largeValue=largeValue.divide(BigInteger.valueOf(divisor));
+            if(largeValue.signum()==0){
+              integerMode=0;
+              smallValue=0;
+            }
+            break;
+          case 2:
+            largeValue=largeValue.divide(BigInteger.valueOf(divisor));
+            if(largeValue.signum()==0){
+              integerMode=0;
+              smallValue=0;
+            }
+            break;
+          default:
+            throw new IllegalStateException();
         }
+      } else {
+        throw new ArithmeticException();
       }
       return this;
     }
@@ -356,78 +437,79 @@ at: http://upokecenter.com/d/
      * 
      */
     public boolean isEvenNumber() {
-        return (usingLarge) ? largeValue.testBit(0)==false : (smallValue&1)==0;
-      }
-
-    /**
-     * 
-     * @param val A 32-bit signed integer.
-     */
-    public FastInteger Add(int val) {
-      if (val != 0) {
-        if (usingLarge) {
-          largeValue=largeValue.add(BigInteger.valueOf(val));
-        } else if ((smallValue < 0 && (long)val < Long.MIN_VALUE - smallValue) ||
-                   (smallValue > 0 && (long)val > Long.MAX_VALUE - smallValue)) {
-          // would overflow, convert to large
-          largeValue = BigInteger.valueOf(smallValue);
-          usingLarge = true;
-          largeValue=largeValue.add(BigInteger.valueOf(val));
-        } else {
-          smallValue += val;
+        switch (integerMode) {
+          case 0:
+            return (smallValue&1)==0;
+          case 1:
+            return mnum.isEvenNumber();
+          case 2:
+            return largeValue.testBit(0)==false;
+          default:
+            throw new IllegalStateException();
         }
       }
-      return this;
-    }
     /**
      * 
      * @param val A 64-bit signed integer.
      */
-    public FastInteger Add(long val) {
-      if (val != 0) {
-        if (usingLarge) {
-          largeValue=largeValue.add(BigInteger.valueOf(val));
-        } else if ((smallValue < 0 && val < Long.MIN_VALUE - smallValue) ||
-                   (smallValue > 0 && val > Long.MAX_VALUE - smallValue)) {
-          // would overflow, convert to large
-          largeValue = BigInteger.valueOf(smallValue);
-          usingLarge = true;
-          largeValue=largeValue.add(BigInteger.valueOf(val));
-        } else {
-          smallValue += val;
-        }
+    public FastInteger Add(int val) {
+      BigInteger valValue;
+      switch (integerMode) {
+        case 0:
+          if ((smallValue < 0 && (int)val < Integer.MIN_VALUE - smallValue) ||
+              (smallValue > 0 && (int)val > Integer.MAX_VALUE - smallValue)) {
+            // would overflow
+            if(val>=0){
+              integerMode=1;
+              mnum=new MutableNumber(this.smallValue);
+              mnum.Add(val);
+            } else {
+              integerMode=2;
+              largeValue = BigInteger.valueOf(smallValue);
+              largeValue=largeValue.add(BigInteger.valueOf(val));
+            }
+          } else {
+            smallValue+=val;
+          }
+          break;
+        case 1:
+          if(val>=0){
+            mnum.Add(val);
+          } else {
+            integerMode=2;
+            largeValue=mnum.ToBigInteger();
+            valValue = BigInteger.valueOf(val);
+            largeValue=largeValue.add(valValue);
+          }
+          break;
+        case 2:
+          valValue = BigInteger.valueOf(val);
+          largeValue=largeValue.add(valValue);
+          break;
+        default:
+          throw new IllegalStateException();
       }
       return this;
     }
 
     /**
-     * Gets whether this object's value is within the range of a 64-bit signed
-     * integer.
-     */
-    public boolean CanFitInInt64() {
-      if (!usingLarge) {
-        return true;
-      } else {
-        int sign = largeValue.signum();
-        if (sign == 0) return true;
-        if (sign < 0) return largeValue.compareTo(Int64MinValue) >= 0;
-        return largeValue.compareTo(Int64MaxValue) <= 0;
-      }
-    }
-
-    /**
-     * Gets whether this object's value is within the range of a 32-bit signed
-     * integer.
+     * 
      */
     public boolean CanFitInInt32() {
-      if (usingLarge) {
-        int sign = largeValue.signum();
-        if (sign == 0) return true;
-        if (sign < 0) return largeValue.compareTo(Int32MinValue) >= 0;
-        return largeValue.compareTo(Int32MaxValue) <= 0;
-      } else {
-        return (smallValue >= Integer.MIN_VALUE &&
-                smallValue <= Integer.MAX_VALUE);
+      int sign;
+      switch(this.integerMode){
+        case 0:
+          return true;
+        case 1:
+          return mnum.CanFitInInt32();
+          case 2:{
+            sign = largeValue.signum();
+            if (sign == 0) return true;
+            if (sign < 0) return largeValue.compareTo(Int32MinValue) >= 0;
+            return largeValue.compareTo(Int32MaxValue) <= 0;
+          }
+        default:
+          throw new IllegalStateException();
       }
     }
 
@@ -436,20 +518,66 @@ at: http://upokecenter.com/d/
      * @return A string representation of this object.
      */
     @Override public String toString() {
-      return usingLarge ? largeValue.toString() : Long.toString((long)smallValue);
+      switch(this.integerMode){
+        case 0:
+          return Integer.toString((int)smallValue);
+        case 1:
+          return mnum.ToBigInteger().toString();
+        case 2:
+          return largeValue.toString();
+        default:
+          throw new IllegalStateException();
+      }
     }
     /**
      * 
      */
     public int signum() {
-        return usingLarge ? largeValue.signum() : (
-          (smallValue == 0) ? 0 : (smallValue < 0 ? -1 : 1));
+        switch(this.integerMode){
+          case 0:
+            if(this.smallValue==0)return 0;
+            return (this.smallValue<0) ? -1 : 1;
+          case 1:
+            return mnum.signum();
+          case 2:
+            return largeValue.signum();
+          default:
+            throw new IllegalStateException();
+        }
       }
+
+    /**
+     * Compares a Int32 object with this instance.
+     * @param val A 64-bit signed integer.
+     * @return Zero if the values are equal; a negative number is this instance
+     * is less, or a positive number if this instance is greater.
+     */
+    public int compareTo(int val) {
+      switch(this.integerMode){
+        case 0:
+          return (val == smallValue) ? 0 : (smallValue < val ? -1 : 1);
+        case 1:
+          return mnum.ToBigInteger().compareTo(BigInteger.valueOf(val));
+        case 2:
+          return largeValue.compareTo(BigInteger.valueOf(val));
+        default:
+          throw new IllegalStateException();
+      }
+    }
 
     /**
      * 
      */
     public BigInteger AsBigInteger() {
-      return usingLarge ? largeValue : BigInteger.valueOf(smallValue);
+      switch(this.integerMode){
+        case 0:
+          return BigInteger.valueOf(smallValue);
+        case 1:
+          return mnum.ToBigInteger();
+        case 2:
+          return largeValue;
+        default:
+          throw new IllegalStateException();
+      }
     }
   }

@@ -75,7 +75,6 @@ namespace PeterO
     /// <param name='bthis'>A BigInteger object.</param>
     /// <param name='n'>A 32-bit unsigned integer.</param>
     /// <returns></returns>
-    /// <remarks/>
     public static BigInteger operator<<(BigInteger bthis, int n)
     {
       if((bthis)==null)throw new ArgumentNullException("bthis");
@@ -89,7 +88,6 @@ namespace PeterO
     /// <param name='pow'>A BigInteger object.</param>
     /// <param name='mod'>A BigInteger object.</param>
     /// <returns>(bigintValue^pow)%mod</returns>
-    /// <remarks/>
     public static BigInteger ModPow(BigInteger bigintValue, BigInteger pow, BigInteger mod) {
       if ((bigintValue) == null) throw new ArgumentNullException("bigintValue");
       return bigintValue.ModPow(pow, mod);
@@ -123,7 +121,6 @@ namespace PeterO
     /// <returns>A Int64 object with the same value as the BigInteger object.</returns>
     /// <param name='bigValue'>A BigInteger object.</param>
     public static explicit operator long(BigInteger bigValue){
-      if((bigValue)==null)throw new ArgumentNullException("bigValue");
       return bigValue.longValue();
     }
 
@@ -131,7 +128,6 @@ namespace PeterO
     /// <returns>A Int32 object with the same value as the BigInteger object.</returns>
     /// <param name='bigValue'>A BigInteger object.</param>
     public static explicit operator int(BigInteger bigValue){
-      if((bigValue)==null)throw new ArgumentNullException("bigValue");
       return bigValue.intValue();
     }
     
@@ -141,7 +137,6 @@ namespace PeterO
     /// <param name='otherValue'>A BigInteger object.</param>
     /// <returns>True if &apos;thisValue&apos; is less than &apos;otherValue&apos;;
     /// otherwise, false.</returns>
-    /// <remarks/>
     public static bool operator<(BigInteger thisValue,BigInteger otherValue){
       if(thisValue==null)return (otherValue!=null);
       return (thisValue.CompareTo(otherValue)<0);
@@ -152,7 +147,6 @@ namespace PeterO
     /// <param name='otherValue'>A BigInteger object.</param>
     /// <returns>True if &apos;thisValue&apos; is less than or equal to
     /// &apos;otherValue&apos;; otherwise, false.</returns>
-    /// <remarks/>
     public static bool operator<=(BigInteger thisValue,BigInteger otherValue){
       if(thisValue==null)return true;
       return (thisValue.CompareTo(otherValue)<=0);
@@ -163,7 +157,6 @@ namespace PeterO
     /// <param name='otherValue'>A BigInteger object.</param>
     /// <returns>True if &apos;thisValue&apos; is greater than &apos;otherValue&apos;;
     /// otherwise, false.</returns>
-    /// <remarks/>
     public static bool operator>(BigInteger thisValue,BigInteger otherValue){
       if(thisValue==null)return false;
       return (thisValue.CompareTo(otherValue)>0);
@@ -182,7 +175,7 @@ namespace PeterO
 
 
     /// <summary> </summary>
-    /// <remarks/><returns/>
+    /// <returns/>
     public bool IsPowerOfTwo{
       get {
         int bits=BitLength();
@@ -268,7 +261,7 @@ namespace PeterO
     public static BigInteger Pow(BigInteger bigValue, BigInteger power){
       if((bigValue)==null)throw new ArgumentNullException("bigValue");
       if((power)==null)throw new ArgumentNullException("power");
-      if((power.Sign)<0)throw new ArgumentException("power.Sign"+" not greater or equal to "+"0"+" ("+Convert.ToString((long)(long)(power.Sign),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((power.Sign)<0)throw new ArgumentException("power.Sign"+" not greater or equal to "+"0"+" ("+Convert.ToString((power.Sign),System.Globalization.CultureInfo.InvariantCulture)+")");
       BigInteger val=BigInteger.One;
       while(power.Sign>0){
         BigInteger p=(power>(BigInteger)5000000) ? 
@@ -286,7 +279,7 @@ namespace PeterO
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, int power){
       if((bigValue)==null)throw new ArgumentNullException("bigValue");
-      if((power)<0)throw new ArgumentException("power"+" not greater or equal to "+"0"+" ("+Convert.ToString((long)(long)(power),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((power)<0)throw new ArgumentException("power"+" not greater or equal to "+"0"+" ("+Convert.ToString((power),System.Globalization.CultureInfo.InvariantCulture)+")");
       return bigValue.pow(power);
     }
     
@@ -323,7 +316,6 @@ namespace PeterO
     /// <summary> </summary>
     /// <param name='other'>A BigInteger object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public bool Equals(BigInteger other) {
       if (other == null) return false;
       return this.CompareTo(other) == 0;

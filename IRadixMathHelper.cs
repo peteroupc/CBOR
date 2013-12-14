@@ -14,7 +14,6 @@ namespace PeterO {
     IShiftAccumulator CreateShiftAccumulator(BigInteger value, int lastDigit, int olderDigits);
     IShiftAccumulator CreateShiftAccumulator(BigInteger value);
     bool HasTerminatingRadixExpansion(BigInteger num, BigInteger den);
-    BigInteger MultiplyByRadixPower(BigInteger value, long power);
     BigInteger MultiplyByRadixPower(BigInteger value, FastInteger power);
   }
 }

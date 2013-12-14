@@ -11,6 +11,7 @@ using NUnit.Framework;
 namespace PeterO {
     /// <summary> Description of Runner. </summary>
     /// <returns></returns>
+    /// <param name='args'>A string[] object.</param>
   public class Runner {
     private static bool HasAttribute(Type mi, Type t) {
       foreach (object a in mi.GetCustomAttributes(t,false)) {
@@ -28,13 +29,22 @@ namespace PeterO {
       }
       return false;
     }
-    public static void Main() {
+    public static void Main(string[] args) {
+        String param=null;
+      if(args.Length>0){
+          param=args[0];
+        Console.WriteLine(param);
+      }
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) continue;
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
+        if(param!=null && param.Length>0){
+          if(!type.FullName.Contains(param))
+            continue;
+        }
         object test = Activator.CreateInstance(type);
         var setup = type.GetMethod("SetUp");
         if (setup != null) {

@@ -75,21 +75,20 @@ namespace PeterO {
     /// </summary>
     /// <param name='mantissa'> The unscaled value.</param>
     /// <param name='exponentSmall'> The binary exponent.</param>
-    public BigFloat(BigInteger mantissa, long exponentSmall) : 
+    public BigFloat(BigInteger mantissa, long exponentSmall) :
       this(mantissa,(BigInteger)exponentSmall) {
     }
     /// <summary> Creates a bigfloat with the given mantissa and an exponent
     /// of 0. </summary>
     /// <param name='mantissa'> The desired value of the bigfloat</param>
-    public BigFloat(BigInteger mantissa) : 
+    public BigFloat(BigInteger mantissa) :
       this(mantissa, BigInteger.Zero) {
     }
     /// <summary> Creates a bigfloat with the given mantissa and an exponent
     /// of 0. </summary>
     /// <param name='mantissaSmall'> The desired value of the bigfloat</param>
-    public BigFloat(long mantissaSmall) {
-      this.exponent = BigInteger.Zero;
-      this.mantissa = (BigInteger)mantissaSmall;
+    public BigFloat(long mantissaSmall) :
+      this( (BigInteger)((long)mantissaSmall), BigInteger.Zero) {
     }
     private static BigInteger BigShiftIteration = (BigInteger)1000000;
     private static int ShiftIteration = 1000000;
@@ -102,7 +101,7 @@ namespace PeterO {
       val <<= lastshift;
       return val;
     }
-    private static BigInteger ShiftLeft(BigInteger val, long shift) {
+    private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
       while (shift > ShiftIteration) {
         val <<= 1000000;
         shift -= ShiftIteration;
@@ -111,9 +110,10 @@ namespace PeterO {
       val <<= lastshift;
       return val;
     }
-
+    
+    
     /// <summary> Creates a bigfloat from an arbitrary-precision decimal
-    /// fraction. Note that if the decimal fraction contains a negative exponent,
+    /// fraction. Note that if the bigfloat contains a negative exponent,
     /// the resulting value might not be exact. </summary>
     /// <returns></returns>
     /// <param name='decfrac'> A DecimalFraction object.</param>
@@ -147,15 +147,26 @@ namespace PeterO {
           // to be converted accurately to a single or double
           if (!remainder.IsZero &&
               quotient.CompareTo(OneShift62) < 0) {
-            long smallquot = (long)quotient;
-            int shift = 0;
-            while (smallquot != 0 && smallquot < (1L << 62)) {
-              smallquot <<= 1;
-              shift++;
+            // At this point, the quotient has 62 or fewer bits
+            int[] bits=MutableNumber.GetLastWords(quotient,2);
+            int shift=0;
+            if((bits[0]|bits[1])!=0){
+              // Quotient's integer part is nonzero.
+              // Get the number of bits of the quotient
+              int bitPrecision=DecimalFraction.BitPrecisionInt(bits[1]);
+              if(bitPrecision!=0)
+                bitPrecision+=32;
+              else
+                bitPrecision=DecimalFraction.BitPrecisionInt(bits[0]);
+              shift=63-bitPrecision;
+              scale.Subtract(shift);
+            } else {
+              // Integer part of quotient is 0
+              shift=1;
+              scale.Subtract(shift);
             }
-            if (shift == 0) shift = 1;
-            bigmantissa <<= shift;
-            scale.Add(-shift);
+            // shift by that many bits, but not less than 1
+            bigmantissa<<=shift;
           } else {
             bigmantissa = quotient;
             break;
@@ -204,22 +215,21 @@ namespace PeterO {
     /// <returns> A bigfloat with the same value as "dbl"</returns>
     /// <exception cref='OverflowException'> "dbl" is infinity or not-a-number.</exception>
     public static BigFloat FromDouble(double dbl) {
-      long value = BitConverter.ToInt64(BitConverter.GetBytes((double)dbl), 0);
-      int fpExponent = (int)((value >> 52) & 0x7ffL);
+      int[] value = Extras.DoubleToIntegers(dbl);
+      int fpExponent = (int)((value[1] >> 20) & 0x7ff);
+      bool neg=(value[1]>>31)!=0;
       if (fpExponent == 2047)
         throw new OverflowException("Value is infinity or NaN");
-      long fpMantissa = value & 0xFFFFFFFFFFFFFL;
+      value[1]&=0xFFFFF; // Mask out the exponent and sign
       if (fpExponent == 0) fpExponent++;
-      else fpMantissa |= (1L << 52);
-      if (fpMantissa != 0) {
-        while ((fpMantissa & 1) == 0) {
-          fpExponent++;
-          fpMantissa >>= 1;
-        }
-        if ((value >> 63) != 0)
-          fpMantissa = -fpMantissa;
+      else value[1]|=0x100000;
+      if ((value[1]|value[0]) != 0) {
+        fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
       }
-      return new BigFloat((BigInteger)((long)fpMantissa), fpExponent - 1075);
+      BigFloat ret=new BigFloat(MutableNumber.WordsToBigInteger(value),
+                                fpExponent - 1075);
+      if(neg)ret=ret.Negate();
+      return ret;
     }
     /// <summary> Converts this value to an arbitrary-precision integer.
     /// Any fractional part in this value will be discarded when converting
@@ -288,6 +298,7 @@ namespace PeterO {
         return 0.0f;
       }
       int smallmant = 0;
+      FastInteger fastSmallMant;
       if (bigmant.CompareTo(OneShift23) < 0) {
         smallmant = (int)bigmant;
         int exponentchange = 0;
@@ -296,19 +307,21 @@ namespace PeterO {
           exponentchange++;
         }
         bigexponent.Subtract(exponentchange);
+        fastSmallMant=new FastInteger(smallmant);
       } else {
         BitShiftAccumulator accum = new BitShiftAccumulator(bigmant);
         accum.ShiftToDigits(24);
         bitsAfterLeftmost = accum.OlderDiscardedDigits;
         bitLeftmost = accum.LastDiscardedDigit;
         bigexponent.Add(accum.DiscardedDigitCount);
-        smallmant = (int)accum.ShiftedIntSmall;
+        fastSmallMant = accum.ShiftedIntFast;
       }
       // Round half-even
-      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
-        smallmant++;
-        if (smallmant == (1 << 24)) {
-          smallmant >>= 1;
+      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
+                              !fastSmallMant.IsEvenNumber)) {
+        fastSmallMant.Add(1);
+        if (fastSmallMant.CompareTo(1 << 24)==0) {
+          fastSmallMant=new FastInteger(1<<23);
           bigexponent.Add(1);
         }
       }
@@ -322,18 +335,19 @@ namespace PeterO {
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        BitShiftAccumulator accum = new BitShiftAccumulator(smallmant);
+        BitShiftAccumulator accum = new BitShiftAccumulator(fastSmallMant.AsInt32());
         FastInteger fi = new FastInteger(bigexponent).Subtract(-149).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost = accum.OlderDiscardedDigits;
         bitLeftmost = accum.LastDiscardedDigit;
         bigexponent.Add(accum.DiscardedDigitCount);
-        smallmant = (int)accum.ShiftedIntSmall;
+        fastSmallMant = accum.ShiftedIntFast;
         // Round half-even
-        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
-          smallmant++;
-          if (smallmant == (1 << 24)) {
-            smallmant >>= 1;
+        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
+                                !fastSmallMant.IsEvenNumber)) {
+          fastSmallMant.Add(1);
+          if (fastSmallMant.CompareTo(1 << 24)==0) {
+            fastSmallMant=new FastInteger(1<<23);
             bigexponent.Add(1);
           }
         }
@@ -346,7 +360,7 @@ namespace PeterO {
       } else {
         int smallexponent = bigexponent.AsInt32();
         smallexponent = smallexponent + 150;
-        int smallmantissa = ((int)smallmant) & 0x7FFFFF;
+        int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7FFFFF;
         if (!subnormal) {
           smallmantissa |= (smallexponent << 23);
         }
@@ -354,6 +368,8 @@ namespace PeterO {
         return BitConverter.ToSingle(BitConverter.GetBytes((int)smallmantissa), 0);
       }
     }
+    
+    
 
     /// <summary> Converts this value to a 64-bit floating-point number.
     /// The half-even rounding mode is used. </summary>
@@ -368,28 +384,34 @@ namespace PeterO {
       if (this.mantissa.IsZero) {
         return 0.0d;
       }
-      long smallmant = 0;
+      int[] mantissaBits;
       if (bigmant.CompareTo(OneShift52) < 0) {
-        smallmant = (long)bigmant;
-        int exponentchange = 0;
-        while (smallmant < (1L << 52)) {
-          smallmant <<= 1;
-          exponentchange++;
+        mantissaBits=MutableNumber.GetLastWords(bigmant,2);
+        // This will be an infinite loop if both elements
+        // of the bits array are 0, but the check for
+        // 0 was already done above
+        while (!DecimalFraction.HasBitSet(mantissaBits,52)) {
+          DecimalFraction.ShiftLeftOne(mantissaBits);
+          bigexponent.Subtract(1);
         }
-        bigexponent.Subtract(exponentchange);
       } else {
         BitShiftAccumulator accum = new BitShiftAccumulator(bigmant);
         accum.ShiftToDigits(53);
         bitsAfterLeftmost = accum.OlderDiscardedDigits;
         bitLeftmost = accum.LastDiscardedDigit;
         bigexponent.Add(accum.DiscardedDigitCount);
-        smallmant = accum.ShiftedIntSmall;
+        mantissaBits=MutableNumber.GetLastWords(accum.ShiftedInt,2);
       }
       // Round half-even
-      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
-        smallmant++;
-        if (smallmant == (1 << 53)) {
-          smallmant >>= 1;
+      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
+                              !DecimalFraction.HasBitSet(mantissaBits,0))) {
+        // Add 1 to the bits
+        mantissaBits[0]=unchecked((int)(mantissaBits[0]+1));
+        if(mantissaBits[0]==0)
+          mantissaBits[1]=unchecked((int)(mantissaBits[1]+1));
+        if (mantissaBits[0]==0 &&
+            mantissaBits[1]==(1<<21)) { // if mantissa is now 2^53
+          mantissaBits[1]>>=1; // change it to 2^52
           bigexponent.Add(1);
         }
       }
@@ -403,18 +425,24 @@ namespace PeterO {
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        BitShiftAccumulator accum = new BitShiftAccumulator(smallmant);
+        BitShiftAccumulator accum = new BitShiftAccumulator(
+          MutableNumber.WordsToBigInteger(mantissaBits));
         FastInteger fi = new FastInteger(bigexponent).Subtract(-1074).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost = accum.OlderDiscardedDigits;
         bitLeftmost = accum.LastDiscardedDigit;
         bigexponent.Add(accum.DiscardedDigitCount);
-        smallmant = accum.ShiftedIntSmall;
+        mantissaBits=MutableNumber.GetLastWords(accum.ShiftedInt,2);
         // Round half-even
-        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
-          smallmant++;
-          if (smallmant == (1 << 53)) {
-            smallmant >>= 1;
+        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
+                                !DecimalFraction.HasBitSet(mantissaBits,0))) {
+          // Add 1 to the bits
+          mantissaBits[0]=unchecked((int)(mantissaBits[0]+1));
+          if(mantissaBits[0]==0)
+            mantissaBits[1]=unchecked((int)(mantissaBits[1]+1));
+          if (mantissaBits[0]==0 &&
+              mantissaBits[1]==(1<<21)) { // if mantissa is now 2^53
+            mantissaBits[1]>>=1; // change it to 2^52
             bigexponent.Add(1);
           }
         }
@@ -422,17 +450,20 @@ namespace PeterO {
       if (bigexponent.CompareTo(-1074) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.Sign < 0) ?
-          BitConverter.ToDouble(BitConverter.GetBytes((long)1L << 63), 0) :
-          BitConverter.ToDouble(BitConverter.GetBytes((long)0), 0);
+          Extras.IntegersToDouble(new int[]{0,unchecked((int)0x80000000)}) :
+          0.0d;
       } else {
-        long smallexponent = bigexponent.AsInt64();
-        smallexponent = smallexponent + 1075;
-        long smallmantissa = smallmant & 0xFFFFFFFFFFFFFL;
+        bigexponent.Add(1075);
+        // Clear the high bits where the exponent and sign are
+        mantissaBits[1]&=0xFFFFF;
         if (!subnormal) {
-          smallmantissa |= (smallexponent << 52);
+          int smallexponent=bigexponent.AsInt32()<<20;
+          mantissaBits[1]|=smallexponent;
         }
-        if (this.mantissa.Sign < 0) smallmantissa |= (1L << 63);
-        return BitConverter.ToDouble(BitConverter.GetBytes((long)smallmantissa), 0);
+        if (this.mantissa.Sign < 0){
+          mantissaBits[1]|= unchecked((int)(1 << 31));
+        }
+        return Extras.IntegersToDouble(mantissaBits);
       }
     }
     /// <summary> Converts this value to a string.The format of the return
@@ -463,7 +494,6 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <returns></returns>
-    /// <remarks/>
       public int GetRadix() {
         return 2;
       }
@@ -471,7 +501,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='value'>A BigFloat object.</param>
     /// <returns></returns>
-    /// <remarks/>
       public BigFloat Abs(BigFloat value) {
         return value.Abs();
       }
@@ -479,7 +508,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='value'>A BigFloat object.</param>
     /// <returns></returns>
-    /// <remarks/>
       public int GetSign(BigFloat value) {
         return value.Sign;
       }
@@ -487,7 +515,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='value'>A BigFloat object.</param>
     /// <returns></returns>
-    /// <remarks/>
       public BigInteger GetMantissa(BigFloat value) {
         return value.mantissa;
       }
@@ -495,7 +522,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='value'>A BigFloat object.</param>
     /// <returns></returns>
-    /// <remarks/>
       public BigInteger GetExponent(BigFloat value) {
         return value.exponent;
       }
@@ -505,7 +531,6 @@ namespace PeterO {
     /// <param name='e1'>A BigInteger object.</param>
     /// <param name='e2'>A BigInteger object.</param>
     /// <returns></returns>
-    /// <remarks/>
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
         bool negative = (mantissa.Sign < 0);
         if (negative) mantissa = -mantissa;
@@ -519,7 +544,6 @@ namespace PeterO {
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='exponent'>A BigInteger object.</param>
     /// <returns></returns>
-    /// <remarks/>
       public BigFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
         return new BigFloat(mantissa, exponent);
       }
@@ -528,14 +552,14 @@ namespace PeterO {
     /// <param name='lastDigit'>A 32-bit signed integer.</param>
     /// <param name='olderDigits'>A 32-bit signed integer.</param>
     /// <returns></returns>
-    /// <remarks/><param name='bigint'>A BigInteger object.</param>
+    /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint, int lastDigit, int olderDigits) {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
     /// <summary> </summary>
     /// <returns></returns>
-    /// <remarks/><param name='bigint'>A BigInteger object.</param>
+    /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new BitShiftAccumulator(bigint);
       }
@@ -544,7 +568,6 @@ namespace PeterO {
     /// <param name='num'>A BigInteger object.</param>
     /// <param name='den'>A BigInteger object.</param>
     /// <returns></returns>
-    /// <remarks/>
       public bool HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
         BigInteger gcd = BigInteger.GreatestCommonDivisor(num, den);
         if (gcd.IsZero) return false;
@@ -557,23 +580,12 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <param name='bigint'>A BigInteger object.</param>
-    /// <param name='power'>A 64-bit signed integer.</param>
-    /// <returns></returns>
-    /// <remarks/>
-      public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
-        if (power <= 0) return bigint;
-        return ShiftLeft(bigint, power);
-      }
-
-    /// <summary> </summary>
-    /// <param name='bigint'>A BigInteger object.</param>
     /// <param name='power'>A FastInteger object.</param>
     /// <returns></returns>
-    /// <remarks/>
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.Sign <= 0) return bigint;
-        if (power.CanFitInInt64()) {
-          return ShiftLeft(bigint, power.AsInt64());
+        if (power.CanFitInInt32()) {
+          return ShiftLeftInt(bigint, power.AsInt32());
         } else {
           return ShiftLeft(bigint, power.AsBigInteger());
         }
@@ -642,8 +654,8 @@ namespace PeterO {
     /// to this value's exponent minus the divisor's exponent.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>The integer part of the quotient of the two objects.</returns>
-    /// <remarks/><exception cref='DivideByZeroException'>Attempted
-    /// to divide by zero.</exception>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     public BigFloat DivideToIntegerNaturalScale(
       BigFloat divisor
      ) {
@@ -654,7 +666,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='divisor'>A BigFloat object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public BigFloat RemainderNaturalScale(
       BigFloat divisor
      ) {
@@ -675,8 +686,8 @@ namespace PeterO {
     /// resulting from the operation (the flags are in addition to the pre-existing
     /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
     /// <returns>The quotient of the two objects.</returns>
-    /// <remarks/><exception cref='DivideByZeroException'>Attempted
-    /// to divide by zero.</exception>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
     public BigFloat Divide(
@@ -706,8 +717,8 @@ namespace PeterO {
     /// <param name='rounding'>The rounding mode to use if the result must
     /// be scaled down to fit the desired exponent.</param>
     /// <returns>The quotient of the two objects.</returns>
-    /// <remarks/><exception cref='DivideByZeroException'>Attempted
-    /// to divide by zero.</exception>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
     public BigFloat Divide(
@@ -737,8 +748,8 @@ namespace PeterO {
     /// <param name='rounding'>The rounding mode to use if the result must
     /// be scaled down to fit the desired exponent.</param>
     /// <returns>The quotient of the two objects.</returns>
-    /// <remarks/><exception cref='DivideByZeroException'>Attempted
-    /// to divide by zero.</exception>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
     public BigFloat Divide(
@@ -753,7 +764,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='context'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public BigFloat Abs(PrecisionContext context) {
       return Abs().RoundToPrecision(context);
     }
@@ -770,7 +780,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='context'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public BigFloat Negate(PrecisionContext context) {
       return Negate().RoundToPrecision(context);
     }
@@ -784,7 +793,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='decfrac'>A BigFloat object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public BigFloat Add(BigFloat decfrac) {
       return Add(decfrac, PrecisionContext.Unlimited);
     }
@@ -797,7 +805,6 @@ namespace PeterO {
     /// <summary>Subtracts a BigFloat object from this instance.</summary>
     /// <param name='decfrac'>A BigFloat object.</param>
     /// <returns>The difference of the two objects.</returns>
-    /// <remarks/>
     public BigFloat Subtract(BigFloat decfrac) {
       if((decfrac)==null)throw new ArgumentNullException("decfrac");
       return Add(decfrac.Negate());
@@ -816,7 +823,6 @@ namespace PeterO {
     /// <param name='decfrac'>A BigFloat object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The difference of the two objects.</returns>
-    /// <remarks/>
     public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
       if((decfrac)==null)throw new ArgumentNullException("decfrac");
       return Add(decfrac.Negate(), ctx);
@@ -858,8 +864,8 @@ namespace PeterO {
     /// can handle a null return value by treating it as positive infinity
     /// if both operands have the same sign or as negative infinity if both
     /// operands have different signs.</returns>
-    /// <remarks/><exception cref='DivideByZeroException'>Attempted
-    /// to divide by zero.</exception>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the integer part of the result is not exact.</exception>
     public BigFloat DivideToIntegerNaturalScale(
@@ -876,8 +882,8 @@ namespace PeterO {
     /// is true. Can be null.</param>
     /// <returns>The integer part of the quotient of the two objects. The
     /// exponent will be set to 0.</returns>
-    /// <remarks/><exception cref='DivideByZeroException'>Attempted
-    /// to divide by zero.</exception>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The result doesn't fit
     /// the given precision.</exception>
     public BigFloat DivideToIntegerZeroScale(
@@ -890,7 +896,6 @@ namespace PeterO {
     /// <param name='divisor'>A BigFloat object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The remainder of the two objects.</returns>
-    /// <remarks/>
     public BigFloat Remainder(
       BigFloat divisor, PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
@@ -900,7 +905,6 @@ namespace PeterO {
     /// <param name='divisor'>A BigFloat object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public BigFloat RemainderNear(
       BigFloat divisor, PrecisionContext ctx) {
       return math.RemainderNear(this, divisor, ctx);
@@ -919,8 +923,8 @@ namespace PeterO {
     /// return value by treating it as positive infinity if both operands
     /// have the same sign or as negative infinity if both operands have different
     /// signs.</returns>
-    /// <remarks/><exception cref='DivideByZeroException'>Attempted
-    /// to divide by zero.</exception>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     /// <exception cref='ArithmeticException'>Either ctx is null or ctx's
     /// precision is 0, and the result would have a nonterminating decimal
     /// expansion; or, the rounding mode is Rounding.Unnecessary and the
@@ -945,14 +949,14 @@ namespace PeterO {
     /// return value by treating it as positive infinity if both operands
     /// have the same sign or as negative infinity if both operands have different
     /// signs.</returns>
-    /// <remarks/><exception cref='DivideByZeroException'>Attempted
-    /// to divide by zero.</exception>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
     /// <param name='exponent'>A BigInteger object.</param>
     public BigFloat Divide(
       BigFloat divisor, BigInteger exponent, PrecisionContext ctx) {
-      return math.Divide(this, divisor, exponent, ctx);
+      return math.DivideToExponent(this, divisor, exponent, ctx);
     }
 
     /// <summary> Gets the greater value between two bigfloats. </summary>
@@ -964,7 +968,7 @@ namespace PeterO {
       return math.Max(a, b);
     }
 
-    /// <summary> Gets the lesser value between two decimal fractions. </summary>
+    /// <summary> Gets the lesser value between two bigfloats. </summary>
     /// <returns> The smaller value of the two objects.</returns>
     /// <param name='a'>A BigFloat object.</param>
     /// <param name='b'>A BigFloat object.</param>
@@ -994,8 +998,8 @@ namespace PeterO {
     }
     /// <summary> Compares the mathematical values of this object and another
     /// object. <para> This method is not consistent with the Equals method
-    /// because two different decimal fractions with the same mathematical
-    /// value, but different exponents, will compare as equal.</para>
+    /// because two different bigfloats with the same mathematical value,
+    /// but different exponents, will compare as equal.</para>
     /// </summary>
     /// <returns> Less than 0 if this object's value is less than the other
     /// value, or greater than 0 if this object's value is greater than the
@@ -1018,28 +1022,67 @@ namespace PeterO {
       BigFloat decfrac, PrecisionContext ctx) {
       return math.Add(this, decfrac, ctx);
     }
-    /// <summary> Returns a decimal fraction with the same value but a new
-    /// exponent. </summary>
-    /// <param name='otherValue'>A decimal fraction containing the desired
-    /// exponent of the result. The mantissa is ignored.</param>
-    /// <param name='ctx'> A precision context to control precision, rounding,
-    /// and exponent range of the result. If HasFlags of the context is true,
-    /// will also store the flags resulting from the operation (the flags
-    /// are in addition to the pre-existing flags), except that this method
-    /// will never set FlagOverflow. Can be null.</param>
-    /// <returns>A decimal fraction with the same value as this object but
-    /// with the exponent changed.</returns>
-    /// <exception cref='ArithmeticException'>The result would require
-    /// a greater precision (digit length) than specified in the precision
-    /// context.</exception>
+
+    /// <summary> Returns a bigfloat with the same value but a new exponent.
+    /// </summary>
+    /// <param name='desiredExponent'>The desired exponent of the result.</param>
+    /// <param name='ctx'> A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
+    /// <returns>A bigfloat with the same value as this object but with the
+    /// exponent changed.</returns>
+    /// <exception cref='ArithmeticException'>An overflow error occurred,
+    /// or the result can't fit the given precision without rounding</exception>
+    /// <exception cref='System.ArgumentException'>The exponent is
+    /// outside of the valid range of the precision context, if it defines
+    /// an exponent range.</exception>
+    public BigFloat Quantize(
+      BigInteger desiredExponent, PrecisionContext ctx) {
+      return math.Quantize(this, new BigFloat(BigInteger.One,desiredExponent), ctx);
+    }
+
+    /// <summary> Returns a bigfloat with the same value but a new exponent.
+    /// </summary>
+    /// <param name='ctx'> A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
+    /// <returns>A bigfloat with the same value as this object but with the
+    /// exponent changed.</returns>
+    /// <exception cref='ArithmeticException'>An overflow error occurred,
+    /// or the result can't fit the given precision without rounding</exception>
+    /// <exception cref='System.ArgumentException'>The exponent is
+    /// outside of the valid range of the precision context, if it defines
+    /// an exponent range.</exception>
+    /// <param name='desiredExponentInteger'>A 32-bit signed integer.</param>
+    public BigFloat Quantize(
+      int desiredExponentInteger, PrecisionContext ctx) {
+      return math.Quantize(this, 
+        new BigFloat(BigInteger.One,(BigInteger)desiredExponentInteger), ctx);
+    }
+
+    /// <summary> Returns a bigfloat with the same value as this object but
+    /// with the same exponent as another bigfloat. </summary>
+    /// <param name='otherValue'>A bigfloat containing the desired exponent
+    /// of the result. The mantissa is ignored.</param>
+    /// <param name='ctx'> A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
+    /// <returns>A bigfloat with the same value as this object but with the
+    /// exponent changed.</returns>
+    /// <exception cref='ArithmeticException'>An overflow error occurred,
+    /// or the result can't fit the given precision without rounding.</exception>
     public BigFloat Quantize(
       BigFloat otherValue, PrecisionContext ctx) {
       return math.Quantize(this, otherValue, ctx);
-    }
-    /// <summary> </summary>
+    }    /// <summary> </summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public BigFloat RoundToIntegralExact(
       PrecisionContext ctx) {
       return math.RoundToIntegralExact(this, ctx);
@@ -1047,7 +1090,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
     public BigFloat RoundToIntegralValue(
       PrecisionContext ctx) {
       return math.RoundToIntegralValue(this, ctx);
@@ -1078,8 +1120,8 @@ namespace PeterO {
     /// of the context is true.</param>
     /// <returns>Returns the largest value that's smaller than the given
     /// value. Returns null if the result is negative infinity.</returns>
-    /// <remarks/><exception cref='System.ArgumentException'>"ctx"
-    /// is null, the precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    /// <exception cref='System.ArgumentException'>"ctx" is null, the
+    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
     public BigFloat NextMinus(
       PrecisionContext ctx
      ){
@@ -1093,8 +1135,8 @@ namespace PeterO {
     /// of the context is true.</param>
     /// <returns>Returns the smallest value that's greater than the given
     /// value. Returns null if the result is positive infinity.</returns>
-    /// <remarks/><exception cref='System.ArgumentException'>"ctx"
-    /// is null, the precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    /// <exception cref='System.ArgumentException'>"ctx" is null, the
+    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
     public BigFloat NextPlus(
       PrecisionContext ctx
      ){
@@ -1105,8 +1147,7 @@ namespace PeterO {
     /// <param name='otherValue'>A BigFloat object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns></returns>
-    /// <remarks/>
-public BigFloat NextToward(
+    public BigFloat NextToward(
       BigFloat otherValue,
       PrecisionContext ctx
      ){
@@ -1121,7 +1162,6 @@ public BigFloat NextToward(
     /// return value by treating it as positive infinity if both operands
     /// have the same sign or as negative infinity if both operands have different
     /// signs.</returns>
-    /// <remarks/>
     public BigFloat Multiply(
       BigFloat op, PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);

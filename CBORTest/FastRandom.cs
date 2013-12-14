@@ -40,7 +40,6 @@ namespace Test
     /// <summary> </summary>
     /// <param name='v'> A 32-bit signed integer.</param>
     /// <returns></returns>
-    /// <remarks/>
 public int NextValue(int v){
       if((v)<0)throw new ArgumentException(
         "v"+" not greater or equal to "+"0"+" ("+

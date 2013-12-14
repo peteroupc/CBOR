@@ -26,25 +26,47 @@ at: http://upokecenter.com/d/
     public int getOlderDiscardedDigits() { return bitsAfterLeftmost; }
     BigInteger shiftedBigInt;
     long knownBitLength;
-
-
-    /**
-     * Gets the length of the shifted value in bits.
-     */
-    public long getDigitLength() {
-        if (knownBitLength < 0) {
-          knownBitLength = CalcKnownBitLength();
-        }
-        return knownBitLength;
-      }
-    long shiftedLong;
-    boolean isSmall;
     
     /**
      * 
      */
-public boolean isSmall() { return isSmall; }
-
+    public FastInteger GetDigitLength() {
+      if (knownBitLength < 0) {
+        knownBitLength = CalcKnownBitLength();
+      }
+      FastInteger ret;
+      if(knownBitLength<=Integer.MAX_VALUE)
+        ret=new FastInteger((int)knownBitLength);
+      else
+        ret=new FastInteger(BigInteger.valueOf(knownBitLength));
+      return ret;
+    }
+    
+    /**
+     * 
+     * @param bits A FastInteger object.
+     */
+public void ShiftToDigits(FastInteger bits) {
+      if(bits.signum()<0)
+        throw new IllegalArgumentException("bits is negative");
+      if(bits.CanFitInInt32()){
+        ShiftToDigits(bits.AsInt32());
+      } else {
+        knownBitLength=CalcKnownBitLength();
+        BigInteger bigintDiff=BigInteger.valueOf(knownBitLength);
+        BigInteger bitsBig=bits.AsBigInteger();
+        bigintDiff=bigintDiff.subtract(bitsBig);
+        if(bigintDiff.signum()>0){
+          // current length is greater than the 
+          // desired bit length
+          ShiftRight(new FastInteger(bigintDiff));
+        }
+      }
+    }
+    
+    long shiftedLong;
+    boolean isSmall;
+    
     /**
      * 
      */
@@ -57,11 +79,16 @@ public boolean isSmall() { return isSmall; }
     /**
      * 
      */
-    public long getShiftedIntSmall() {
-        if (isSmall)
-          return shiftedLong;
-        else
-          return shiftedBigInt.longValue();
+    public FastInteger getShiftedIntFast() {
+        if (isSmall){
+          if(shiftedLong>=Integer.MIN_VALUE && shiftedLong<=Integer.MAX_VALUE){
+            return new FastInteger((int)shiftedLong);
+          } else {
+            return new FastInteger(BigInteger.valueOf(shiftedLong));
+          }
+        } else {
+          return new FastInteger(shiftedBigInt);
+        }
       }
     FastInteger discardedBitCount;
 
@@ -71,12 +98,12 @@ public boolean isSmall() { return isSmall; }
     public FastInteger getDiscardedDigitCount() { return discardedBitCount; }
 
     public BitShiftAccumulator(BigInteger bigint,
-      int lastDiscarded,
-      int olderDiscarded
-      ){
+                               int lastDiscarded,
+                               int olderDiscarded
+                              ){
  this(bigint);
-        bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
-        bitLeftmost = (lastDiscarded != 0) ? 1 : 0;
+      bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
+      bitLeftmost = (lastDiscarded != 0) ? 1 : 0;
     }
     public BitShiftAccumulator(BigInteger bigint) {
       if (bigint.signum() < 0)
@@ -263,7 +290,10 @@ public boolean isSmall() { return isSmall; }
           shiftedLong = shiftedBigInt.longValue();
         }
         bitsAfterLeftmost |= bitLeftmost;
-        discardedBitCount.Add(bitShift);
+        if(bitShift<=Integer.MAX_VALUE)
+          discardedBitCount.Add((int)bitShift);
+        else
+          discardedBitCount.Add(BigInteger.valueOf(bitShift));
         for (int i = 0; i < bytes.length; i++) {
           if (bitShift > 8) {
             // Discard all the bits, they come
@@ -339,6 +369,8 @@ public boolean isSmall() { return isSmall; }
      * @param bits A 64-bit signed integer.
      */
     public void ShiftToDigits(long bits) {
+      if(bits<0)
+        throw new IllegalArgumentException("bits is negative");
       if (isSmall)
         ShiftToBitsSmall(bits);
       else
@@ -346,21 +378,24 @@ public boolean isSmall() { return isSmall; }
     }
 
     private void ShiftToBitsSmall(long bits) {
-      knownBitLength = 64;
+      int kbl = 64;
       for (int i = 63; i >= 0; i++) {
         if ((shiftedLong & (1L << i)) != 0) {
           break;
         } else {
-          knownBitLength--;
+          kbl--;
         }
       }
-      if (knownBitLength == 0) knownBitLength++;
+      if (kbl == 0) kbl++;
       // Shift by the difference in bit length
-      if (knownBitLength > bits) {
-        long bitShift = knownBitLength - bits;
+      if (kbl > bits) {
+        int bitShift = kbl - (int)bits;
         int shift = (int)bitShift;
         knownBitLength = bits;
-        discardedBitCount.Add(bitShift);
+        if(bitShift<=Integer.MAX_VALUE)
+          discardedBitCount.Add((int)bitShift);
+        else
+          discardedBitCount.Add(BigInteger.valueOf(bitShift));
         bitsAfterLeftmost |= bitLeftmost;
         // Get the bottommost shift minus 1 bits
         bitsAfterLeftmost |= (((shiftedLong << (65 - shift)) != 0) ? 1 : 0);
@@ -368,6 +403,8 @@ public boolean isSmall() { return isSmall; }
         bitLeftmost = (int)((shiftedLong >> (((int)shift) - 1)) & 0x01);
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
         shiftedLong >>= shift;
+      } else {
+        knownBitLength=kbl;
       }
     }
   }

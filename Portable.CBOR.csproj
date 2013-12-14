@@ -11,33 +11,65 @@
     <RootNamespace>PeterO</RootNamespace>
     <AssemblyName>CBOR</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile1</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <NoWin32Manifest>False</NoWin32Manifest>
-    <RunCodeAnalysis>True</RunCodeAnalysis>
-    <CodeAnalysisRules>-Microsoft.Design#CA2210%3b-Microsoft.Naming#CA1706%3b-Microsoft.Naming#CA1708%3b-Microsoft.Naming#CA1709%3b-Microsoft.Usage#CA2225</CodeAnalysisRules>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <OutputPath>bin\Debug\</OutputPath>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>False</Optimize>
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DebugType>PdbOnly</DebugType>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
     <Content Include="ProfilingSessions\Session20131205_192710.sdps" />
+    <Content Include="ProfilingSessions\Session20131210_123621.sdps" />
+    <Content Include="ProfilingSessions\Session20131210_143746.sdps" />
+    <Content Include="ProfilingSessions\Session20131210_150048.sdps" />
+    <Content Include="ProfilingSessions\Session20131210_162441.sdps" />
+    <Content Include="ProfilingSessions\Session20131210_191730.sdps" />
+    <Content Include="ProfilingSessions\Session20131210_205905.sdps" />
+    <Content Include="ProfilingSessions\Session20131211_010228.sdps" />
+    <Content Include="ProfilingSessions\Session20131213_034249.sdps" />
+    <Content Include="ProfilingSessions\Session20131213_050523.sdps" />
+    <Content Include="ProfilingSessions\Session20131213_083704.sdps" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigFloat.cs" />
@@ -55,17 +87,22 @@
     <Compile Include="DecimalFraction.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
     <Compile Include="FastInteger.cs" />
-    <Compile Include="FastInteger2.cs" />
+    <Compile Include="Extras.cs" />
     <Compile Include="IRadixMathHelper.cs" />
     <Compile Include="IShiftAccumulator.cs" />
     <Compile Include="JSONTokener.cs" />
-    <Compile Include="MutableBigInteger.cs" />
+    <Compile Include="MutableNumber.cs" />
     <Compile Include="PrecisionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadixMath.cs" />
     <Compile Include="Rounding.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

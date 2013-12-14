@@ -28,21 +28,23 @@ at: http://upokecenter.com/d/
     long knownBitLength;
 
     /**
-     * Gets the length of the shifted value in digits.
-     */
-    public long getDigitLength() {
-        if (knownBitLength < 0) {
-          knownBitLength = CalcKnownBitLength();
-        }
-        return knownBitLength;
-      }
-    long shiftedLong;
-    boolean isSmall;
-    
-    /**
      * 
      */
-public boolean isSmall() { return isSmall; }
+    public FastInteger GetDigitLength() {
+      if (knownBitLength < 0) {
+        knownBitLength = CalcKnownBitLength();
+      }
+      FastInteger ret;
+      if(knownBitLength<=Integer.MAX_VALUE)
+        ret=new FastInteger((int)knownBitLength);
+      else
+        ret=new FastInteger(BigInteger.valueOf(knownBitLength));
+      return ret;
+    }
+    
+    
+    long shiftedLong;
+    boolean isSmall;
 
     /**
      * 
@@ -52,15 +54,6 @@ public boolean isSmall() { return isSmall; }
           return BigInteger.valueOf(shiftedLong);
         else
           return shiftedBigInt;
-      }
-    /**
-     * 
-     */
-    public long getShiftedIntSmall() {
-        if (isSmall)
-          return shiftedLong;
-        else
-          return shiftedBigInt.longValue();
       }
     FastInteger discardedBitCount;
 
@@ -97,18 +90,18 @@ public boolean isSmall() { return isSmall; }
     private static BigInteger FastParseBigInt(String str, int offset, int length) {
       // Assumes the String contains
       // only the digits '0' through '9'
-      MutableBigInteger mbi = new MutableBigInteger();
+      FastInteger mbi = new FastInteger();
       for (int i = 0; i < length; i++) {
         int digit = (int)(str.charAt(offset + i) - '0');
         mbi.Multiply(10).Add(digit);
       }
-      return mbi.ToBigInteger();
+      return mbi.AsBigInteger();
     }
 
     private static long FastParseLong(String str, int offset, int length) {
       // Assumes the String is length 18 or less and contains
       // only the digits '0' through '9'
-      if((length)>18)throw new IllegalArgumentException("length"+" not less or equal to "+"18"+" ("+Long.toString((long)(long)(length))+")");
+      if((length)>18)throw new IllegalArgumentException("length"+" not less or equal to "+"18"+" ("+(length)+")");
       long ret = 0;
       for (int i = 0; i < length; i++) {
         int digit = (int)(str.charAt(offset + i) - '0');
@@ -117,11 +110,27 @@ public boolean isSmall() { return isSmall; }
       }
       return ret;
     }
+    
+    
+    /**
+     * 
+     */
+    public FastInteger getShiftedIntFast() {
+        if (isSmall){
+          if(shiftedLong>=Integer.MIN_VALUE && shiftedLong<=Integer.MAX_VALUE){
+            return new FastInteger((int)shiftedLong);
+          } else {
+            return new FastInteger(BigInteger.valueOf(shiftedLong));
+          }
+        } else {
+          return new FastInteger(shiftedBigInt);
+        }
+      }
     /**
      * 
      * @param fastint A FastInteger object.
      */
-public void ShiftRight(FastInteger fastint) {
+    public void ShiftRight(FastInteger fastint) {
       if ((fastint) == null) throw new NullPointerException("fastint");
       if (fastint.signum() <= 0) return;
       if (fastint.CanFitInInt32()) {
@@ -150,14 +159,14 @@ public void ShiftRight(FastInteger fastint) {
       }
       String str = shiftedBigInt.toString();
       // NOTE: Will be 1 if the value is 0
-      long digitLength = str.length();
-      long bitDiff = 0;
+      int digitLength = str.length();
+      int bitDiff = 0;
       if (digits > digitLength) {
         bitDiff = digits - digitLength;
       }
       discardedBitCount.Add(digits);
       bitsAfterLeftmost |= bitLeftmost;
-      long digitShift = Math.min(digitLength, digits);
+      int digitShift = Math.min(digitLength, digits);
       if (digits >= digitLength) {
         isSmall = true;
         shiftedLong = 0;
@@ -211,7 +220,10 @@ public void ShiftRight(FastInteger fastint) {
         long digitShift = digitLength - digits;
         long bitShiftCount = digitShift;
         int newLength = (int)(digitLength - digitShift);
-        discardedBitCount.Add(digitShift);
+        if(digitShift<=Integer.MAX_VALUE)
+          discardedBitCount.Add((int)digitShift);
+        else
+          discardedBitCount.Add(BigInteger.valueOf(digitShift));
         for (int i = str.length() - 1; i >= 0; i--) {
           bitsAfterLeftmost |= bitLeftmost;
           bitLeftmost = (int)(str.charAt(i) - '0');
@@ -258,6 +270,7 @@ public void ShiftRight(FastInteger fastint) {
         knownBitLength = 1;
         return;
       }
+      
       knownBitLength = 0;
       long tmp = shiftedLong;
       while (tmp > 0) {
@@ -283,6 +296,28 @@ public void ShiftRight(FastInteger fastint) {
         }
       }
       bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+    }
+
+    /**
+     * 
+     * @param bits A FastInteger object.
+     */
+public void ShiftToDigits(FastInteger bits) {
+      if(bits.signum()<0)
+        throw new IllegalArgumentException("bits is negative");
+      if(bits.CanFitInInt32()){
+        ShiftToDigits(bits.AsInt32());
+      } else {
+        knownBitLength=CalcKnownBitLength();
+        BigInteger bigintDiff=BigInteger.valueOf(knownBitLength);
+        BigInteger bitsBig=bits.AsBigInteger();
+        bigintDiff=bigintDiff.subtract(bitsBig);
+        if(bigintDiff.signum()>0){
+          // current length is greater than the
+          // desired bit length
+          ShiftRight(new FastInteger(bigintDiff));
+        }
+      }
     }
 
     /**

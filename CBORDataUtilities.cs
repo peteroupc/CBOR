@@ -7,7 +7,6 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-using System.IO;
 //using System.Numerics;
 using System.Globalization;
 namespace PeterO {
@@ -16,162 +15,8 @@ namespace PeterO {
   public static class CBORDataUtilities {
     private static BigInteger LowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
     private static BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
-    /// <summary> Generates a text string from a UTF-8 byte array. </summary>
-    /// <param name='bytes'> A byte array containing text encoded in UTF-8.</param>
-    /// <param name='replace'> If true, replaces invalid encoding with
-    /// the replacement character (U+FFFD). If false, stops processing
-    /// when invalid UTF-8 is seen.</param>
-    /// <returns> A string represented by the UTF-8 byte array.</returns>
-    /// <exception cref='System.ArgumentNullException'> "bytes" is
-    /// null.</exception>
-    /// <exception cref='System.ArgumentException'> The string is not
-    /// valid UTF-8 and "replace" is false</exception>
-    [Obsolete("Use DataUtilities.GetUtf8String instead.")]
-    public static string GetUtf8String(byte[] bytes, bool replace) {
-      return DataUtilities.GetUtf8String(bytes, replace);
-    }
-    /// <summary> Generates a text string from a portion of a UTF-8 byte array.
-    /// </summary>
-    /// <param name='bytes'> A byte array containing text encoded in UTF-8.</param>
-    /// <param name='offset'> Offset into the byte array to start reading</param>
-    /// <param name='bytesCount'> Length, in bytes, of the UTF-8 string</param>
-    /// <param name='replace'> If true, replaces invalid encoding with
-    /// the replacement character (U+FFFD). If false, stops processing
-    /// when invalid UTF-8 is seen.</param>
-    /// <returns> A string represented by the UTF-8 byte array.</returns>
-    /// <exception cref='System.ArgumentNullException'> "bytes" is
-    /// null.</exception>
-    /// <exception cref='System.ArgumentException'> The portion of the
-    /// byte array is not valid UTF-8 and "replace" is false</exception>
-    [Obsolete("Use DataUtilities.GetUtf8String instead.")]
-    public static string GetUtf8String(byte[] bytes, int offset, int bytesCount, bool replace) {
-      return DataUtilities.GetUtf8String(bytes, offset, bytesCount, replace);
-    }
-    /// <summary> Encodes a string in UTF-8 as a byte array. </summary>
-    /// <param name='str'> A text string.</param>
-    /// <param name='replace'> If true, replaces unpaired surrogate code
-    /// points with the replacement character (U+FFFD). If false, stops
-    /// processing when an unpaired surrogate code point is seen.</param>
-    /// <returns> The string encoded in UTF-8.</returns>
-    /// <exception cref='System.ArgumentNullException'> "str" is null.</exception>
-    /// <exception cref='System.ArgumentException'> The string contains
-    /// an unpaired surrogate code point and "replace" is false, or an internal
-    /// error occurred.</exception>
-    [Obsolete("Use DataUtilities.GetUtf8Bytes instead.")]
-    public static byte[] GetUtf8Bytes(string str, bool replace) {
-      return DataUtilities.GetUtf8Bytes(str, replace);
-    }
-    /// <summary> Calculates the number of bytes needed to encode a string
-    /// in UTF-8. </summary>
-    /// <param name='s'> A Unicode string.</param>
-    /// <param name='replace'> If true, treats unpaired surrogate code
-    /// points as replacement characters (U+FFFD) instead, meaning each
-    /// one takes 3 UTF-8 bytes. If false, stops processing when an unpaired
-    /// surrogate code point is reached.</param>
-    /// <returns> The number of bytes needed to encode the given string in
-    /// UTF-8, or -1 if the string contains an unpaired surrogate code point
-    /// and "replace" is false.</returns>
-    /// <exception cref='System.ArgumentNullException'> "s" is null.</exception>
-    [Obsolete("Use DataUtilities.GetUtf8Length instead.")]
-    public static long GetUtf8Length(String s, bool replace) {
-      return DataUtilities.GetUtf8Length(s, replace);
-    }
-    /// <summary> Compares two strings in Unicode code point order. Unpaired
-    /// surrogates are treated as individual code points.</summary>
-    /// <returns> A value indicating which string is "less" or "greater".
-    /// 0: Both strings are equal or null. Less than 0: a is null and b isn't;
-    /// or the first code point that's different is less in A than in B; or b starts
-    /// with a and is longer than a. Greater than 0: b is null and a isn't; or the
-    /// first code point that's different is greater in A than in B; or a starts
-    /// with b and is longer than b.</returns>
-    /// <param name='strA'> The first string.</param>
-    /// <param name='strB'> The second string.</param>
-    [Obsolete("Use DataUtilities.CodePointCompare instead.")]
-    public static int CodePointCompare(String strA, String strB) {
-      return DataUtilities.CodePointCompare(strA, strB);
-    }
-    /// <summary> Writes a portion of a string in UTF-8 encoding to a data stream.
-    /// </summary>
-    /// <param name='str'> A string to write.</param>
-    /// <param name='offset'> The zero-based index where the string portion
-    /// to write begins.</param>
-    /// <param name='length'> The length of the string portion to write.</param>
-    /// <param name='stream'> A writable data stream.</param>
-    /// <param name='replace'> If true, replaces unpaired surrogate code
-    /// points with the replacement character (U+FFFD). If false, stops
-    /// processing when an unpaired surrogate code point is seen.</param>
-    /// <returns> 0 if the entire string portion was written; or -1 if the string
-    /// portion contains an unpaired surrogate code point and "replace"
-    /// is false.</returns>
-    /// <exception cref='System.ArgumentNullException'> "str" is null
-    /// or "stream" is null.</exception>
-    /// <exception cref='System.ArgumentException'> "offset" is less
-    /// than 0, "length" is less than 0, or "offset" plus "length" is greater
-    /// than the string's length.</exception>
-    /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
-    [Obsolete("Use DataUtilities.WriteUtf8 instead.")]
-    public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
-      return DataUtilities.WriteUtf8(str, offset, length, stream, replace);
-    }
-    /// <summary> Writes a string in UTF-8 encoding to a data stream. </summary>
-    /// <param name='str'> A string to write.</param>
-    /// <param name='stream'> A writable data stream.</param>
-    /// <param name='replace'> If true, replaces unpaired surrogate code
-    /// points with the replacement character (U+FFFD). If false, stops
-    /// processing when an unpaired surrogate code point is seen.</param>
-    /// <returns> 0 if the entire string was written; or -1 if the string contains
-    /// an unpaired surrogate code point and "replace" is false.</returns>
-    /// <exception cref='System.ArgumentNullException'> "str" is null
-    /// or "stream" is null.</exception>
-    /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
-    [Obsolete("Use DataUtilities.WriteUtf8 instead.")]
-    public static int WriteUtf8(String str, Stream stream, bool replace) {
-      if ((str) == null) throw new ArgumentNullException("str");
-      return DataUtilities.WriteUtf8(str, 0, str.Length, stream, replace);
-    }
-    /// <summary> Reads a string in UTF-8 encoding from a byte array. </summary>
-    /// <param name='data'> A byte array containing a UTF-8 string</param>
-    /// <param name='offset'> Offset into the byte array to start reading</param>
-    /// <param name='bytesCount'> Length, in bytes, of the UTF-8 string</param>
-    /// <param name='builder'> A string builder object where the resulting
-    /// string will be stored.</param>
-    /// <param name='replace'> If true, replaces invalid encoding with
-    /// the replacement character (U+FFFD). If false, stops processing
-    /// when invalid UTF-8 is seen.</param>
-    /// <returns> 0 if the entire string was read without errors, or -1 if the
-    /// string is not valid UTF-8 and "replace" is false.</returns>
-    /// <exception cref='System.ArgumentNullException'> "data" is null
-    /// or "builder" is null.</exception>
-    /// <exception cref='System.ArgumentException'> "offset" is less
-    /// than 0, "bytesCount" is less than 0, or offset plus bytesCount is greater
-    /// than the length of "data".</exception>
-    [Obsolete("Use DataUtilities.ReadUtf8FromBytes instead.")]
-    public static int ReadUtf8FromBytes(byte[] data, int offset, int bytesCount,
-                                        StringBuilder builder,
-                                        bool replace) {
-      return DataUtilities.ReadUtf8FromBytes(data, offset, bytesCount, builder, replace);
-    }
-    /// <summary> Reads a string in UTF-8 encoding from a data stream. </summary>
-    /// <param name='stream'> A readable data stream.</param>
-    /// <param name='bytesCount'> The length, in bytes, of the string. If
-    /// this is less than 0, this function will read until the end of the stream.</param>
-    /// <param name='builder'> A string builder object where the resulting
-    /// string will be stored.</param>
-    /// <param name='replace'> If true, replaces invalid encoding with
-    /// the replacement character (U+FFFD). If false, stops processing
-    /// when an unpaired surrogate code point is seen.</param>
-    /// <returns> 0 if the entire string was read without errors, -1 if the
-    /// string is not valid UTF-8 and "replace" is false (even if the end of
-    /// the stream is reached), or -2 if the end of the stream was reached before
-    /// the entire string was read. </returns>
-    /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
-    /// <exception cref='System.ArgumentNullException'> "stream" is
-    /// null or "builder" is null.</exception>
-    [Obsolete("Use DataUtilities.ReadUtf8 instead.")]
-    public static int ReadUtf8(Stream stream, int bytesCount, StringBuilder builder,
-                               bool replace) {
-      return DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
-    }
+    
+
     /// <summary> Parses a number whose format follows the JSON specification.
     /// See #ParseJSONNumber(str, integersOnly, parseOnly) for more information.
     /// </summary>
@@ -183,18 +28,6 @@ namespace PeterO {
     public static CBORObject ParseJSONNumber(string str) {
       return ParseJSONNumber(str, false, false, false);
     }
-
-    private static BigInteger FastParseBigInt(string str, int offset, int length) {
-      // Assumes the string contains
-      // only the digits '0' through '9'
-      MutableBigInteger mbi = new MutableBigInteger();
-      for (int i = 0; i < length; i++) {
-        int digit = (int)(str[offset + i] - '0');
-        mbi.Multiply(10).Add(digit);
-      }
-      return mbi.ToBigInteger();
-    }
-
     /// <summary> Parses a number whose format follows the JSON specification
     /// (RFC 4627). Roughly speaking, a valid number consists of an optional
     /// minus sign, one or more digits (starting with 1 to 9 unless the only
@@ -229,31 +62,22 @@ namespace PeterO {
         negative = true;
         index++;
       }
-      int numberStart = index;
       if (index >= str.Length)
         return null;
       c = str[index];
       index++;
-      int numberEnd = index;
-      int fracStart = -1;
-      int fracEnd = -1;
       bool negExp = false;
-      int expStart = -1;
-      int expEnd = -1;
-      FastInteger smallNumber = new FastInteger();
+      FastInteger fastNumber = new FastInteger();
       FastInteger exponentAdjust = new FastInteger();
-      FastInteger smallExponent = new FastInteger();
+      FastInteger fastExponent = new FastInteger();
       if (c >= '1' && c <= '9') {
-        smallNumber.Add((int)(c - '0'));
+        fastNumber.Add((int)(c - '0'));
         while (index < str.Length) {
           c = str[index];
           if (c >= '0' && c <= '9') {
             index++;
-            numberEnd = index;
-            if (smallNumber.CanFitInInt64()) {
-              smallNumber.Multiply(10);
-              smallNumber.Add((int)(c - '0'));
-            }
+            fastNumber.Multiply(10);
+            fastNumber.Add((int)(c - '0'));
           } else {
             break;
           }
@@ -265,32 +89,25 @@ namespace PeterO {
         if (index < str.Length && str[index] == '.') {
           // Fraction
           index++;
-          fracStart = index;
           if (index >= str.Length)
             return null;
           c = str[index];
           index++;
-          fracEnd = index;
           if (c >= '0' && c <= '9') {
             // Adjust the exponent for this
             // fractional digit
             exponentAdjust.Add(-1);
-            if (smallNumber.CanFitInInt64()) {
-              smallNumber.Multiply(10);
-              smallNumber.Add((int)(c - '0'));
-            }
+            fastNumber.Multiply(10);
+            fastNumber.Add((int)(c - '0'));
             while (index < str.Length) {
               c = str[index];
               if (c >= '0' && c <= '9') {
                 index++;
-                fracEnd = index;
                 // Adjust the exponent for this
                 // fractional digit
                 exponentAdjust.Add(-1);
-                if (smallNumber.CanFitInInt64()) {
-                  smallNumber.Multiply(10);
-                  smallNumber.Add((int)(c - '0'));
-                }
+                fastNumber.Multiply(10);
+                fastNumber.Add((int)(c - '0'));
               } else {
                 break;
               }
@@ -311,25 +128,18 @@ namespace PeterO {
             index++;
           }
           if (c == '+') index++;
-          expStart = index;
           if (index >= str.Length)
             return null;
           c = str[index];
           index++;
-          expEnd = index;
           if (c >= '0' && c <= '9') {
-            if (smallExponent.CanFitInInt64()) {
-              smallExponent.Add((int)(c - '0'));
-            }
+            fastExponent.Add((int)(c - '0'));
             while (index < str.Length) {
               c = str[index];
               if (c >= '0' && c <= '9') {
                 index++;
-                expEnd = index;
-                if (smallExponent.CanFitInInt64()) {
-                  smallExponent.Multiply(10);
-                  smallExponent.Add((int)(c - '0'));
-                }
+                fastExponent.Multiply(10);
+                fastExponent.Add((int)(c - '0'));
               } else {
                 break;
               }
@@ -340,105 +150,52 @@ namespace PeterO {
           }
         }
       }
-      if (negExp && smallExponent.CanFitInInt64())
-        smallExponent.Negate();
-      if (negative && smallNumber.CanFitInInt64())
-        smallNumber.Negate();
-      if (smallExponent.CanFitInInt64())
-        smallExponent.Add(exponentAdjust);
+      if (negExp)
+        fastExponent.Negate();
+      if (negative)
+        fastNumber.Negate();
+      fastExponent.Add(exponentAdjust);
       if (index != str.Length) {
         // End of the string wasn't reached, so isn't a number
         return null;
       }
-      if (smallNumber.CanFitInInt64() && smallExponent.CanFitInInt64()) {
-        // Small whole/fractional part and small exponent
-        long value = smallNumber.AsInt64();
-        long exponent = smallExponent.AsInt64();
-        if (exponent == 0) {
-          return CBORObject.FromObject(value);
-        }
-        return CBORObject.FromObject(new DecimalFraction(value, exponent));
-      } else if (fracStart < 0 && expStart < 0) {
-        // Bigger integer
-        BigInteger bigintValue = FastParseBigInt(
-          str,numberStart,numberEnd-numberStart);
-        if (negative) bigintValue = -(BigInteger)bigintValue;
-        return CBORObject.FromObject(bigintValue);
+      // No fractional part
+      if(fastExponent.Sign==0){
+        if(fastNumber.CanFitInInt32())
+          return CBORObject.FromObject(fastNumber.AsInt32());
+        else
+          return CBORObject.FromObject(fastNumber.AsBigInteger());
       } else {
-        // Intval consists of the whole and fractional part
-        BigInteger intval;
-        if(fracStart<0){
-          intval=FastParseBigInt(
-            str,numberStart,numberEnd-numberStart);
-        } else {
-          string intvalString = str.Substring(numberStart, numberEnd - numberStart) +
-            str.Substring(fracStart, fracEnd - fracStart);
-          intval=FastParseBigInt(intvalString,0,intvalString.Length);
-        }
-        if (negative) intval = -intval;
-        if ((fracStart < 0) && expStart < 0) {
-          // No fractional part and no exponent;
-          // this is easy, just return the integer
-          return CBORObject.FromObject(intval);
-        }
-        if (intval.IsZero) {
-          // Mantissa is 0, return 0 regardless of exponent
+        if(fastNumber.Sign==0){
           return CBORObject.FromObject(0);
         }
-        FastInteger exp = null;
-        if (expStart < 0) {
-          // Exponent zero
-          exp = new FastInteger();
-          if (fracStart >= 0) {
-            // If there is a fractional part,
-            // decrease the exponent by that part's length
-            exp.Subtract(fracEnd - fracStart);
-          }
-        } else if (smallExponent.CanFitInInt64()) {
-          // Use already parsed exponent
-          exp = smallExponent;
+        if(fastNumber.CanFitInInt32() && fastExponent.CanFitInInt32()){
+          return CBORObject.FromObject(new DecimalFraction(
+            fastNumber.AsInt32(),fastExponent.AsInt32()));
         } else {
-          exp = new FastInteger(FastParseBigInt(str, expStart, expEnd - expStart));
-          if (negExp) exp.Negate();
-          if (fracStart >= 0) {
-            // If there is a fractional part,
-            // decrease the exponent by that part's length
-            exp.Subtract(fracEnd - fracStart);
+          BigInteger bigintExponent=fastExponent.AsBigInteger();
+          if(!fastExponent.CanFitInInt32()){
+            if (bigintExponent.CompareTo(UInt64MaxValue) > 0) {
+              // Exponent is higher than the highest representable
+              // integer of major type 0
+              if (failOnExponentOverflow)
+                return null;
+              else
+                return (fastExponent.Sign < 0) ?
+                  CBORObject.FromObject(Double.NegativeInfinity) :
+                  CBORObject.FromObject(Double.PositiveInfinity);
+            }
+            if (bigintExponent.CompareTo(LowestMajorType1) < 0) {
+              // Exponent is lower than the lowest representable
+              // integer of major type 1
+              if (failOnExponentOverflow)
+                return null;
+              else
+                return CBORObject.FromObject(0);
+            }
           }
-        }
-        if (exp.Sign == 0) {
-          // If exponent is 0, this is also easy,
-          // just return the integer
-          return CBORObject.FromObject(intval);
-        } else if (!exp.CanFitInInt64()) {
-          if (exp.AsBigInteger().CompareTo(UInt64MaxValue) > 0) {
-            // Exponent is higher than the highest representable
-            // integer of major type 0
-            if (failOnExponentOverflow)
-              return null;
-            else
-              return (exp.Sign < 0) ?
-                CBORObject.FromObject(Double.NegativeInfinity) :
-                CBORObject.FromObject(Double.PositiveInfinity);
-          }
-          if (exp.AsBigInteger().CompareTo(LowestMajorType1) < 0) {
-            // Exponent is lower than the lowest representable
-            // integer of major type 1
-            if (failOnExponentOverflow)
-              return null;
-            else
-              return CBORObject.FromObject(0);
-          }
-        }
-        // Represent the CBOR object as a decimal fraction
-        if (exp.CanFitInInt64()) {
-          return CBORObject.FromObjectAndTag(new CBORObject[]{
-                                               CBORObject.FromObject(exp.AsInt64()),
-                                               CBORObject.FromObject(intval)}, 4);
-        } else {
-          return CBORObject.FromObjectAndTag(new CBORObject[]{
-                                               CBORObject.FromObject(exp.AsBigInteger()),
-                                               CBORObject.FromObject(intval)}, 4);
+          return CBORObject.FromObject(new DecimalFraction(
+            fastNumber.AsBigInteger(),bigintExponent));
         }
       }
     }

@@ -3125,7 +3125,7 @@ function() {
      * @param n A 32-bit unsigned integer.
      */
     prototype.GetUnsignedBit = function(n) {
-        if ((n) < 0) throw new RuntimeException("n" + " not greater or equal to " + "0" + " (" + Integer.toString(n|0) + ")");
+        if ((n) < 0) throw new RuntimeException("n" + " not greater or equal to " + "0" + " (" + ((n|0)+"") + ")");
         if (((n / 16)|0) >= this.reg.length) return false; else return (((this.reg[((n / 16)|0)] >> ((n & 15)|0)) & 1) != 0);
     };
     prototype.InitializeInt = function(numberValue) {
@@ -4029,8 +4029,10 @@ function() {
     };
     /**
      * Finds the remainder that results when this instance is divided by
-     * the value of a BigInteger object. The remainder will have the same
-     * sign as the dividend.
+     * the value of a BigInteger object. The remainder is the value that remains
+     * when the absolute value of this object is divided by the absolute value
+     * of the other object; the remainder has the same sign (positive or negative)
+     * as this object.
      * @param divisor A BigInteger object.
      * @return The remainder of the two objects.
      */
@@ -4130,6 +4132,5 @@ function() {
     constructor.ONE = new BigInteger().InitializeInt(1);
     constructor.TEN = new BigInteger().InitializeInt(10);
 })(BigInteger,BigInteger.prototype);
-
 
 if(typeof exports!=="undefined")exports.BigInteger=BigInteger;

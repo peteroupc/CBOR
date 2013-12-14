@@ -803,7 +803,6 @@ namespace PeterO {
     /// equal.</summary>
     /// <param name='obj'> A Object object.</param>
     /// <returns> True if the objects are equal; false otherwise.</returns>
-    /// <remarks/>
     public override bool Equals(object obj) {
       return Equals(obj as CBORObject);
     }
@@ -3303,19 +3302,22 @@ namespace PeterO {
       BigInteger bigintAdditional = BigInteger.Zero;
       bool hasBigAdditional = false;
       data = new byte[8];
+      int lowAdditional=0;
       switch (firstbyte & 0x1F) {
           case 24: {
             int tmp = s.ReadByte();
             if (tmp < 0)
               throw new CBORException("Premature end of data");
-            uadditional = tmp;
+            lowAdditional = tmp;
+            uadditional=lowAdditional;
             break;
           }
           case 25: {
             if (s.Read(data, 0, 2) != 2)
               throw new CBORException("Premature end of data");
-            uadditional = (((long)(data[0] & (long)0xFF)) << 8);
-            uadditional |= (((long)(data[1] & (long)0xFF)));
+            lowAdditional = (((int)(data[0] & (int)0xFF)) << 8);
+            lowAdditional |= (((int)(data[1] & (int)0xFF)));
+            uadditional=lowAdditional;
             break;
           }
           case 26: {

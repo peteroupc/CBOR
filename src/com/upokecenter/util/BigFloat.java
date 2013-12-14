@@ -103,9 +103,8 @@ at: http://upokecenter.com/d/
      * Creates a bigfloat with the given mantissa and an exponent of 0.
      * @param mantissaSmall The desired value of the bigfloat
      */
-    public BigFloat(long mantissaSmall) {
-      this.exponent = BigInteger.ZERO;
-      this.mantissa = BigInteger.valueOf(mantissaSmall);
+    public BigFloat(long mantissaSmall){
+ this( BigInteger.valueOf((long)mantissaSmall), BigInteger.ZERO);
     }
     private static BigInteger BigShiftIteration = BigInteger.valueOf(1000000);
     private static int ShiftIteration = 1000000;
@@ -118,7 +117,7 @@ at: http://upokecenter.com/d/
       val=val.shiftLeft(lastshift);
       return val;
     }
-    private static BigInteger ShiftLeft(BigInteger val, long shift) {
+    private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
       while (shift > ShiftIteration) {
         val=val.shiftLeft(1000000);
         shift -= ShiftIteration;
@@ -127,11 +126,12 @@ at: http://upokecenter.com/d/
       val=val.shiftLeft(lastshift);
       return val;
     }
-
+    
+    
     /**
      * Creates a bigfloat from an arbitrary-precision decimal fraction.
-     * Note that if the decimal fraction contains a negative exponent, the
-     * resulting value might not be exact.
+     * Note that if the bigfloat contains a negative exponent, the resulting
+     * value might not be exact.
      * @param decfrac A DecimalFraction object.
      */
     public static BigFloat FromDecimalFraction(DecimalFraction decfrac) {
@@ -167,15 +167,26 @@ remainder=divrem[1];
           // to be converted accurately to a single or double
           if (remainder.signum()!=0 &&
               quotient.compareTo(OneShift62) < 0) {
-            long smallquot = quotient.longValue();
-            int shift = 0;
-            while (smallquot != 0 && smallquot < (1L << 62)) {
-              smallquot <<= 1;
-              shift++;
+            // At this point, the quotient has 62 or fewer bits
+            int[] bits=MutableNumber.GetLastWords(quotient,2);
+            int shift=0;
+            if((bits[0]|bits[1])!=0){
+              // Quotient's integer part is nonzero.
+              // Get the number of bits of the quotient
+              int bitPrecision=DecimalFraction.BitPrecisionInt(bits[1]);
+              if(bitPrecision!=0)
+                bitPrecision+=32;
+              else
+                bitPrecision=DecimalFraction.BitPrecisionInt(bits[0]);
+              shift=63-bitPrecision;
+              scale.Subtract(shift);
+            } else {
+              // Integer part of quotient is 0
+              shift=1;
+              scale.Subtract(shift);
             }
-            if (shift == 0) shift = 1;
+            // shift by that many bits, but not less than 1
             bigmantissa=bigmantissa.shiftLeft(shift);
-            scale.Add(-shift);
           } else {
             bigmantissa = quotient;
             break;
@@ -226,22 +237,21 @@ remainder=divrem[1];
      * @throws ArithmeticException "dbl" is infinity or not-a-number.
      */
     public static BigFloat FromDouble(double dbl) {
-      long value = Double.doubleToRawLongBits(dbl);
-      int fpExponent = (int)((value >> 52) & 0x7ffL);
+      int[] value = Extras.DoubleToIntegers(dbl);
+      int fpExponent = (int)((value[1] >> 20) & 0x7ff);
+      boolean neg=(value[1]>>31)!=0;
       if (fpExponent == 2047)
         throw new ArithmeticException("Value is infinity or NaN");
-      long fpMantissa = value & 0xFFFFFFFFFFFFFL;
+      value[1]&=0xFFFFF; // Mask out the exponent and sign
       if (fpExponent == 0) fpExponent++;
-      else fpMantissa |= (1L << 52);
-      if (fpMantissa != 0) {
-        while ((fpMantissa & 1) == 0) {
-          fpExponent++;
-          fpMantissa >>= 1;
-        }
-        if ((value >> 63) != 0)
-          fpMantissa = -fpMantissa;
+      else value[1]|=0x100000;
+      if ((value[1]|value[0]) != 0) {
+        fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
       }
-      return new BigFloat(BigInteger.valueOf((long)fpMantissa), fpExponent - 1075);
+      BigFloat ret=new BigFloat(MutableNumber.WordsToBigInteger(value),
+                                fpExponent - 1075);
+      if(neg)ret=ret.Negate();
+      return ret;
     }
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
@@ -312,6 +322,7 @@ remainder=divrem[1];
         return 0.0f;
       }
       int smallmant = 0;
+      FastInteger fastSmallMant;
       if (bigmant.compareTo(OneShift23) < 0) {
         smallmant = bigmant.intValue();
         int exponentchange = 0;
@@ -320,19 +331,21 @@ remainder=divrem[1];
           exponentchange++;
         }
         bigexponent.Subtract(exponentchange);
+        fastSmallMant=new FastInteger(smallmant);
       } else {
         BitShiftAccumulator accum = new BitShiftAccumulator(bigmant);
         accum.ShiftToDigits(24);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
         bigexponent.Add(accum.getDiscardedDigitCount());
-        smallmant = (int)accum.getShiftedIntSmall();
+        fastSmallMant = accum.getShiftedIntFast();
       }
       // Round half-even
-      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
-        smallmant++;
-        if (smallmant == (1 << 24)) {
-          smallmant >>= 1;
+      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
+                              !fastSmallMant.isEvenNumber())) {
+        fastSmallMant.Add(1);
+        if (fastSmallMant.compareTo(1 << 24)==0) {
+          fastSmallMant=new FastInteger(1<<23);
           bigexponent.Add(1);
         }
       }
@@ -346,18 +359,19 @@ remainder=divrem[1];
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        BitShiftAccumulator accum = new BitShiftAccumulator(smallmant);
+        BitShiftAccumulator accum = new BitShiftAccumulator(fastSmallMant.AsInt32());
         FastInteger fi = new FastInteger(bigexponent).Subtract(-149).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
         bigexponent.Add(accum.getDiscardedDigitCount());
-        smallmant = (int)accum.getShiftedIntSmall();
+        fastSmallMant = accum.getShiftedIntFast();
         // Round half-even
-        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
-          smallmant++;
-          if (smallmant == (1 << 24)) {
-            smallmant >>= 1;
+        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
+                                !fastSmallMant.isEvenNumber())) {
+          fastSmallMant.Add(1);
+          if (fastSmallMant.compareTo(1 << 24)==0) {
+            fastSmallMant=new FastInteger(1<<23);
             bigexponent.Add(1);
           }
         }
@@ -370,7 +384,7 @@ remainder=divrem[1];
       } else {
         int smallexponent = bigexponent.AsInt32();
         smallexponent = smallexponent + 150;
-        int smallmantissa = ((int)smallmant) & 0x7FFFFF;
+        int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7FFFFF;
         if (!subnormal) {
           smallmantissa |= (smallexponent << 23);
         }
@@ -378,6 +392,8 @@ remainder=divrem[1];
         return Float.intBitsToFloat(smallmantissa);
       }
     }
+    
+    
 
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
@@ -394,28 +410,34 @@ remainder=divrem[1];
       if (this.mantissa.signum()==0) {
         return 0.0d;
       }
-      long smallmant = 0;
+      int[] mantissaBits;
       if (bigmant.compareTo(OneShift52) < 0) {
-        smallmant = bigmant.longValue();
-        int exponentchange = 0;
-        while (smallmant < (1L << 52)) {
-          smallmant <<= 1;
-          exponentchange++;
+        mantissaBits=MutableNumber.GetLastWords(bigmant,2);
+        // This will be an infinite loop if both elements
+        // of the bits array are 0, but the check for
+        // 0 was already done above
+        while (!DecimalFraction.HasBitSet(mantissaBits,52)) {
+          DecimalFraction.ShiftLeftOne(mantissaBits);
+          bigexponent.Subtract(1);
         }
-        bigexponent.Subtract(exponentchange);
       } else {
         BitShiftAccumulator accum = new BitShiftAccumulator(bigmant);
         accum.ShiftToDigits(53);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
         bigexponent.Add(accum.getDiscardedDigitCount());
-        smallmant = accum.getShiftedIntSmall();
+        mantissaBits=MutableNumber.GetLastWords(accum.getShiftedInt(),2);
       }
       // Round half-even
-      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
-        smallmant++;
-        if (smallmant == (1 << 53)) {
-          smallmant >>= 1;
+      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
+                              !DecimalFraction.HasBitSet(mantissaBits,0))) {
+        // Add 1 to the bits
+        mantissaBits[0]=((int)(mantissaBits[0]+1));
+        if(mantissaBits[0]==0)
+          mantissaBits[1]=((int)(mantissaBits[1]+1));
+        if (mantissaBits[0]==0 &&
+            mantissaBits[1]==(1<<21)) { // if mantissa is now 2^53
+          mantissaBits[1]>>=1; // change it to 2^52
           bigexponent.Add(1);
         }
       }
@@ -429,18 +451,24 @@ remainder=divrem[1];
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        BitShiftAccumulator accum = new BitShiftAccumulator(smallmant);
+        BitShiftAccumulator accum = new BitShiftAccumulator(
+          MutableNumber.WordsToBigInteger(mantissaBits));
         FastInteger fi = new FastInteger(bigexponent).Subtract(-1074).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
         bigexponent.Add(accum.getDiscardedDigitCount());
-        smallmant = accum.getShiftedIntSmall();
+        mantissaBits=MutableNumber.GetLastWords(accum.getShiftedInt(),2);
         // Round half-even
-        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || (smallmant & 1) != 0)) {
-          smallmant++;
-          if (smallmant == (1 << 53)) {
-            smallmant >>= 1;
+        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
+                                !DecimalFraction.HasBitSet(mantissaBits,0))) {
+          // Add 1 to the bits
+          mantissaBits[0]=((int)(mantissaBits[0]+1));
+          if(mantissaBits[0]==0)
+            mantissaBits[1]=((int)(mantissaBits[1]+1));
+          if (mantissaBits[0]==0 &&
+              mantissaBits[1]==(1<<21)) { // if mantissa is now 2^53
+            mantissaBits[1]>>=1; // change it to 2^52
             bigexponent.Add(1);
           }
         }
@@ -448,17 +476,20 @@ remainder=divrem[1];
       if (bigexponent.compareTo(-1074) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.signum() < 0) ?
-          Double.longBitsToDouble(1L << 63) :
-          Double.longBitsToDouble(0);
+          Extras.IntegersToDouble(new int[]{0,((int)0x80000000)}) :
+          0.0d;
       } else {
-        long smallexponent = bigexponent.AsInt64();
-        smallexponent = smallexponent + 1075;
-        long smallmantissa = smallmant & 0xFFFFFFFFFFFFFL;
+        bigexponent.Add(1075);
+        // Clear the high bits where the exponent and sign are
+        mantissaBits[1]&=0xFFFFF;
         if (!subnormal) {
-          smallmantissa |= (smallexponent << 52);
+          int smallexponent=bigexponent.AsInt32()<<20;
+          mantissaBits[1]|=smallexponent;
         }
-        if (this.mantissa.signum() < 0) smallmantissa |= (1L << 63);
-        return Double.longBitsToDouble(smallmantissa);
+        if (this.mantissa.signum() < 0){
+          mantissaBits[1]|= ((int)(1 << 31));
+        }
+        return Extras.IntegersToDouble(mantissaBits);
       }
     }
     /**
@@ -588,22 +619,12 @@ remainder=divrem[1];
     /**
      * 
      * @param bigint A BigInteger object.
-     * @param power A 64-bit signed integer.
-     */
-      public BigInteger MultiplyByRadixPower(BigInteger bigint, long power) {
-        if (power <= 0) return bigint;
-        return ShiftLeft(bigint, power);
-      }
-
-    /**
-     * 
-     * @param bigint A BigInteger object.
      * @param power A FastInteger object.
      */
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.signum() <= 0) return bigint;
-        if (power.CanFitInInt64()) {
-          return ShiftLeft(bigint, power.AsInt64());
+        if (power.CanFitInInt32()) {
+          return ShiftLeftInt(bigint, power.AsInt32());
         } else {
           return ShiftLeft(bigint, power.AsBigInteger());
         }
@@ -992,7 +1013,7 @@ remainder=divrem[1];
      */
     public BigFloat Divide(
       BigFloat divisor, BigInteger exponent, PrecisionContext ctx) {
-      return math.Divide(this, divisor, exponent, ctx);
+      return math.DivideToExponent(this, divisor, exponent, ctx);
     }
 
     /**
@@ -1007,7 +1028,7 @@ remainder=divrem[1];
     }
 
     /**
-     * Gets the lesser value between two decimal fractions.
+     * Gets the lesser value between two bigfloats.
      * @param a A BigFloat object.
      * @param b A BigFloat object.
      * @return The smaller value of the two objects.
@@ -1039,8 +1060,8 @@ remainder=divrem[1];
     /**
      * Compares the mathematical values of this object and another object.
      * <p> This method is not consistent with the Equals method because two
-     * different decimal fractions with the same mathematical value, but
-     * different exponents, will compare as equal.</p>
+     * different bigfloats with the same mathematical value, but different
+     * exponents, will compare as equal.</p>
      * @param other A BigFloat object to compare with.
      * @return Less than 0 if this object's value is less than the other value,
      * or greater than 0 if this object's value is greater than the other value
@@ -1065,25 +1086,67 @@ remainder=divrem[1];
       BigFloat decfrac, PrecisionContext ctx) {
       return math.Add(this, decfrac, ctx);
     }
+
     /**
-     * Returns a decimal fraction with the same value but a new exponent.
-     * @param otherValue A decimal fraction containing the desired exponent
-     * of the result. The mantissa is ignored.
-     * @param ctx A precision context to control precision, rounding, and
-     * exponent range of the result. If HasFlags of the context is true, will
-     * also store the flags resulting from the operation (the flags are in
-     * addition to the pre-existing flags), except that this method will
-     * never set FlagOverflow. Can be null.
-     * @return A decimal fraction with the same value as this object but with
-     * the exponent changed.
-     * @throws ArithmeticException The result would require a greater
-     * precision (digit length) than specified in the precision context.
+     * Returns a bigfloat with the same value but a new exponent.
+     * @param desiredExponent The desired exponent of the result.
+     * @param ctx A precision context to control precision and rounding
+     * of the result. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags). Can be null, in which case the default rounding
+     * mode is HalfEven.
+     * @return A bigfloat with the same value as this object but with the exponent
+     * changed.
+     * @throws ArithmeticException An overflow error occurred, or the
+     * result can't fit the given precision without rounding
+     * @throws java.lang.IllegalArgumentException The exponent is outside of the
+     * valid range of the precision context, if it defines an exponent range.
+     */
+    public BigFloat Quantize(
+      BigInteger desiredExponent, PrecisionContext ctx) {
+      return math.Quantize(this, new BigFloat(BigInteger.ONE,desiredExponent), ctx);
+    }
+
+    /**
+     * Returns a bigfloat with the same value but a new exponent.
+     * @param ctx A precision context to control precision and rounding
+     * of the result. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags). Can be null, in which case the default rounding
+     * mode is HalfEven.
+     * @param desiredExponentInteger A 32-bit signed integer.
+     * @return A bigfloat with the same value as this object but with the exponent
+     * changed.
+     * @throws ArithmeticException An overflow error occurred, or the
+     * result can't fit the given precision without rounding
+     * @throws java.lang.IllegalArgumentException The exponent is outside of the
+     * valid range of the precision context, if it defines an exponent range.
+     */
+    public BigFloat Quantize(
+      int desiredExponentInteger, PrecisionContext ctx) {
+      return math.Quantize(this, 
+        new BigFloat(BigInteger.ONE,BigInteger.valueOf(desiredExponentInteger)), ctx);
+    }
+
+    /**
+     * Returns a bigfloat with the same value as this object but with the same
+     * exponent as another bigfloat.
+     * @param otherValue A bigfloat containing the desired exponent of
+     * the result. The mantissa is ignored.
+     * @param ctx A precision context to control precision and rounding
+     * of the result. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags). Can be null, in which case the default rounding
+     * mode is HalfEven.
+     * @return A bigfloat with the same value as this object but with the exponent
+     * changed.
+     * @throws ArithmeticException An overflow error occurred, or the
+     * result can't fit the given precision without rounding.
      */
     public BigFloat Quantize(
       BigFloat otherValue, PrecisionContext ctx) {
       return math.Quantize(this, otherValue, ctx);
-    }
-    /**
+    }    /**
      * 
      * @param ctx A PrecisionContext object.
      */
@@ -1159,7 +1222,7 @@ remainder=divrem[1];
      * @param otherValue A BigFloat object.
      * @param ctx A PrecisionContext object.
      */
-public BigFloat NextToward(
+    public BigFloat NextToward(
       BigFloat otherValue,
       PrecisionContext ctx
      ) {

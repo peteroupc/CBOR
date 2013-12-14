@@ -158,7 +158,7 @@ package com.upokecenter.util;
     /**
      * 
      */
-public int getOptions() {
+    public int getOptions() {
       return options;
     }
     private int nextParseComment(int firstChar) {
@@ -231,7 +231,7 @@ public int getOptions() {
     /**
      * 
      */
-public int nextClean() {
+    public int nextClean() {
       while (true) {
         int c = nextParseComment(-1);
         if (c == -1 || c > ' ')
@@ -242,7 +242,7 @@ public int nextClean() {
      * 
      * @param lastChar A 32-bit signed integer.
      */
-public int nextClean(int lastChar) {
+    public int nextClean(int lastChar) {
       while (true) {
         int c = nextParseComment(lastChar);
         if (c == -1 || c > ' ')
@@ -455,7 +455,7 @@ public int nextClean(int lastChar) {
     /**
      * 
      */
-public CBORObject ParseJSONObjectOrArray() {
+    public CBORObject ParseJSONObjectOrArray() {
       int c;
       c = this.nextClean();
       if(c=='[') {

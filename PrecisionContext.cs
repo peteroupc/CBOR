@@ -39,14 +39,14 @@ namespace PeterO {
     public BigInteger EMin {
       get { return hasExponentRange ? eMin : BigInteger.Zero; }
     }
-    long precision;
+    BigInteger bigintPrecision;
 
     /// <summary> Gets the maximum length of a converted number in digits,
     /// ignoring the decimal point and exponent. For example, if precision
     /// is 3, a converted number's mantissa can range from 0 to 999 (up to three
     /// digits long). If 0, converted numbers can have any precision. </summary>
-    public long Precision {
-      get { return precision; }
+    public BigInteger Precision {
+      get { return bigintPrecision; }
     }
     Rounding rounding;
 
@@ -112,6 +112,30 @@ namespace PeterO {
         flags = value;
       }
     }
+    
+    /// <summary> </summary>
+    /// <param name='exponent'>A BigInteger object.</param>
+    /// <returns></returns>
+public bool ExponentWithinRange(BigInteger exponent){
+      if(!this.HasExponentRange)
+        return true;
+      if(bigintPrecision.IsZero){
+        // Only check EMax, since with an unlimited
+        // precision, any exponent less than EMin will exceed EMin if
+        // the mantissa is the right size
+        return exponent.CompareTo(this.EMax)<=0;
+      } else {
+        BigInteger bigint=exponent;
+        bigint+=(BigInteger)bigintPrecision;
+        bigint-=BigInteger.One;
+        if(bigint.CompareTo(this.EMin)<0)
+          return false;
+        if(exponent.CompareTo(this.EMax)>0)
+          return false;
+        return true;
+      }
+    }
+    
     /// <summary> Copies this PrecisionContext with HasFlags set to true
     /// and a Flags value of 0. </summary>
     /// <returns></returns>
@@ -153,12 +177,23 @@ namespace PeterO {
     /// <returns></returns>
     /// <param name='precision'>Desired precision. 0 means unlimited
     /// precision.</param>
-    public PrecisionContext WithPrecision(long precision) {
-      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
+    public PrecisionContext WithPrecision(int precision) {
+      if (precision < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
       PrecisionContext pc = new PrecisionContext(this);
-      pc.precision = precision;
+      pc.bigintPrecision = (BigInteger)precision;
       return pc;
     }
+
+    /// <summary> </summary>
+    /// <param name='bigintPrecision'>A BigInteger object.</param>
+    /// <returns></returns>
+public PrecisionContext WithPrecision(BigInteger bigintPrecision) {
+      if (bigintPrecision.Sign < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + bigintPrecision + ")");
+      PrecisionContext pc = new PrecisionContext(this);
+      pc.bigintPrecision = bigintPrecision;
+      return pc;
+    }
+
     /// <summary> Initializes a new PrecisionContext that is a copy of another
     /// PrecisionContext. </summary>
     public PrecisionContext(PrecisionContext pc) {
@@ -168,7 +203,7 @@ namespace PeterO {
       this.eMax = pc.eMax;
       this.eMin = pc.eMin;
       this.hasExponentRange = pc.hasExponentRange;
-      this.precision = pc.precision;
+      this.bigintPrecision = pc.bigintPrecision;
       this.rounding = pc.rounding;
       this.clampNormalExponents = pc.clampNormalExponents;
     }
@@ -176,7 +211,7 @@ namespace PeterO {
     /// <summary> Initializes a new PrecisionContext from a desired maximum
     /// precision. </summary>
     /// <param name='precision'>A 64-bit signed integer.</param>
-    public PrecisionContext(long precision)
+    public PrecisionContext(int precision)
       : this(precision, Rounding.HalfEven) {
     }
 
@@ -188,24 +223,24 @@ namespace PeterO {
 
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
-    public PrecisionContext(long precision, Rounding rounding){
-      this.precision = precision;
+    public PrecisionContext(int precision, Rounding rounding){
+      this.bigintPrecision = (BigInteger)precision;
       this.rounding = rounding;
       eMax = BigInteger.Zero;
       eMin = BigInteger.Zero;
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
-    public PrecisionContext(long precision, Rounding rounding, long eMinSmall, long eMaxSmall) :
+    public PrecisionContext(int precision, Rounding rounding, int eMinSmall, int eMaxSmall) :
       this(precision,rounding,eMinSmall,eMaxSmall,false){
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
-    public PrecisionContext(long precision, Rounding rounding, long eMinSmall, long eMaxSmall,
+    public PrecisionContext(int precision, Rounding rounding, int eMinSmall, int eMaxSmall,
                             bool clampNormalExponents) {
-      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
-      if ((eMinSmall) > eMaxSmall) throw new ArgumentException("eMinSmall" + " not less or equal to " + Convert.ToString((long)(long)(eMaxSmall),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(long)(eMinSmall),System.Globalization.CultureInfo.InvariantCulture) + ")");
-      this.precision = precision;
+      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((eMinSmall) > eMaxSmall) throw new ArgumentException("eMinSmall" + " not less or equal to " + Convert.ToString((eMaxSmall),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((eMinSmall),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      this.bigintPrecision = (BigInteger)precision;
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
       this.hasExponentRange=true;
@@ -214,17 +249,17 @@ namespace PeterO {
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
-    public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax) :
+    public PrecisionContext(int precision, Rounding rounding, BigInteger eMin, BigInteger eMax) :
       this(precision,rounding,eMin,eMax,false){
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
-    public PrecisionContext(long precision, Rounding rounding, BigInteger eMin, BigInteger eMax,
+    public PrecisionContext(int precision, Rounding rounding, BigInteger eMin, BigInteger eMax,
                             bool clampNormalExponents) {
       if((eMin)==null)throw new ArgumentNullException("eMin");
-      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)(long)(precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
       if (eMin.CompareTo(eMax) > 0) throw new ArgumentException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
-      this.precision = precision;
+      this.bigintPrecision = (BigInteger)precision;
       this.rounding = rounding;
       this.hasExponentRange=true;
       this.clampNormalExponents = clampNormalExponents;
