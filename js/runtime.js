@@ -6,7 +6,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
-function RuntimeException(m,inner){}
 if(typeof StringBuilder=="undefined"){
 var StringBuilder=function(){
 this.str="";
@@ -99,7 +98,9 @@ ILong.prototype.equals=function(other){
  return this.lo==other.lo && this.hi==other.hi
 }
 ILong.prototype.negate=function(){
-return new ILong(this.lo,this.hi^(1<<31));
+var ret=new ILong(this.lo,this.hi);
+if((this.lo|this.hi)!=0)ret._twosComplement();
+return ret;
 }
 ILong.prototype.or=function(other){
 return new ILong(this.lo|other.lo,this.hi|other.hi);
@@ -207,9 +208,9 @@ ILong.prototype.shiftRight=function(len){
     JSInteropFactory.LONG_MAX_VALUE :
     JSInteropFactory.LONG_MIN_VALUE;
  } else if(len>=32){
-  return new ILong(this.hi>>(len-32),((this.hi>>>31)!=0) ? (~0) : 0);
+  return new ILong((this.hi>>len-32),((this.hi>>>31)!=0) ? (~0) : 0);
  } else if(this.hi==0){
-  return new ILong(this.lo>>len,0);
+  return new ILong(this.lo>>>len,0);
  } else {
   var newhigh=this.hi>>len;
   var newlow=this.lo>>>len;
@@ -221,10 +222,14 @@ JSInteropFactory.createStringBuilder=function(param){
  return new StringBuilder();
 }
 JSInteropFactory.createLong=function(param){
+ if(param.constructor==ILong)return param;
  return new ILong(param,(param<0) ? (~0) : 0);
 }
-JSInteropFactory.LONG_MIN_VALUE_=new ILong(0,(1<<31))
-JSInteropFactory.LONG_MAX_VALUE_=new ILong(~0,~0)
+JSInteropFactory.createLongFromInts=function(a,b){
+ return new ILong(a>>>0,b>>>0);
+}
+JSInteropFactory.LONG_MIN_VALUE_=new ILong(0,(1<<31));
+JSInteropFactory.LONG_MAX_VALUE_=new ILong(~0,~0);
 JSInteropFactory.LONG_MIN_VALUE=function(){
  return JSInteropFactory.LONG_MIN_VALUE_;
 }
@@ -232,6 +237,8 @@ JSInteropFactory.LONG_MAX_VALUE=function(){
  return JSInteropFactory.LONG_MAX_VALUE_;
 }
 JSInteropFactory.LONG_ZERO=new ILong(0,0)
-
+var Extras={}
+Extras.IntegersToDouble=function(){}
+Extras.DoubleToIntegers=function(){}
 
 

@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 using System;
 //using System.Numerics;
@@ -48,7 +48,7 @@ namespace PeterO {
             if (Single.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            bigfloatValueA = new BigFloat((long)a.ThisItem);
+            bigfloatValueA = BigFloat.FromInt64((long)a.ThisItem);
             bigfloatValueB = BigFloat.FromSingle((float)sb);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
@@ -58,17 +58,17 @@ namespace PeterO {
             if (Double.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            bigfloatValueA = new BigFloat((long)a.ThisItem);
+            bigfloatValueA = BigFloat.FromInt64((long)a.ThisItem);
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = new DecimalFraction((long)a.ThisItem);
+            decfracValueA = DecimalFraction.FromInt64((long)a.ThisItem);
             decfracValueB = (DecimalFraction)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigFloat: {
-            bigfloatValueA = new BigFloat((long)a.ThisItem);
+            bigfloatValueA = BigFloat.FromInt64((long)a.ThisItem);
             bigfloatValueB = (BigFloat)b.ThisItem;
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
@@ -88,7 +88,7 @@ namespace PeterO {
             if (Single.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            bigfloatValueA = new BigFloat((BigInteger)a.ThisItem);
+            bigfloatValueA = BigFloat.FromBigInteger((BigInteger)a.ThisItem);
             bigfloatValueB = BigFloat.FromSingle((float)sb);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
@@ -98,17 +98,17 @@ namespace PeterO {
             if (Double.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            bigfloatValueA = new BigFloat((BigInteger)a.ThisItem);
+            bigfloatValueA = BigFloat.FromBigInteger((BigInteger)a.ThisItem);
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = new DecimalFraction((BigInteger)a.ThisItem);
+            decfracValueA = DecimalFraction.FromBigInteger((BigInteger)a.ThisItem);
             decfracValueB = (DecimalFraction)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigFloat: {
-            bigfloatValueA = new BigFloat((BigInteger)a.ThisItem);
+            bigfloatValueA = BigFloat.FromBigInteger((BigInteger)a.ThisItem);
             bigfloatValueB = (BigFloat)b.ThisItem;
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
@@ -119,7 +119,7 @@ namespace PeterO {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
             bigfloatValueA = BigFloat.FromSingle((float)sa);
-            bigfloatValueB = new BigFloat((long)b.ThisItem);
+            bigfloatValueB = BigFloat.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_BigInteger: {
@@ -129,7 +129,7 @@ namespace PeterO {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
             bigfloatValueA = BigFloat.FromSingle((float)sa);
-            bigfloatValueB = new BigFloat((BigInteger)b.ThisItem);
+            bigfloatValueB = BigFloat.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_Single: {
@@ -193,7 +193,7 @@ namespace PeterO {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
             bigfloatValueA = BigFloat.FromDouble((double)sa);
-            bigfloatValueB = new BigFloat((long)b.ThisItem);
+            bigfloatValueB = BigFloat.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_BigInteger: {
@@ -203,7 +203,7 @@ namespace PeterO {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
             bigfloatValueA = BigFloat.FromDouble((double)sa);
-            bigfloatValueB = new BigFloat((BigInteger)b.ThisItem);
+            bigfloatValueB = BigFloat.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_Single: {
@@ -262,12 +262,12 @@ namespace PeterO {
           }
         case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Integer: {
             decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = new DecimalFraction((long)b.ThisItem);
+            decfracValueB = DecimalFraction.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_BigInteger: {
             decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = new DecimalFraction((BigInteger)b.ThisItem);
+            decfracValueB = DecimalFraction.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Single: {
@@ -302,12 +302,12 @@ namespace PeterO {
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_Integer: {
             bigfloatValueA = (BigFloat)a.ThisItem;
-            bigfloatValueB = new BigFloat((long)b.ThisItem);
+            bigfloatValueB = BigFloat.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_BigInteger: {
             bigfloatValueA = (BigFloat)a.ThisItem;
-            bigfloatValueB = new BigFloat((BigInteger)b.ThisItem);
+            bigfloatValueB = BigFloat.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_Single: {
@@ -376,7 +376,7 @@ namespace PeterO {
             if (Single.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            bigfloatValueA = new BigFloat((long)a.ThisItem);
+            bigfloatValueA = BigFloat.FromInt64((long)a.ThisItem);
             bigfloatValueB = BigFloat.FromSingle((float)sb);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
@@ -386,17 +386,17 @@ namespace PeterO {
             if (Double.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            bigfloatValueA = new BigFloat((long)a.ThisItem);
+            bigfloatValueA = BigFloat.FromInt64((long)a.ThisItem);
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = new DecimalFraction((long)a.ThisItem);
+            decfracValueA = DecimalFraction.FromInt64((long)a.ThisItem);
             decfracValueB = (DecimalFraction)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigFloat: {
-            bigfloatValueA = new BigFloat((long)a.ThisItem);
+            bigfloatValueA = BigFloat.FromInt64((long)a.ThisItem);
             bigfloatValueB = (BigFloat)b.ThisItem;
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
@@ -416,7 +416,7 @@ namespace PeterO {
             if (Single.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            bigfloatValueA = new BigFloat((BigInteger)a.ThisItem);
+            bigfloatValueA = BigFloat.FromBigInteger((BigInteger)a.ThisItem);
             bigfloatValueB = BigFloat.FromSingle((float)sb);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
@@ -426,17 +426,17 @@ namespace PeterO {
             if (Double.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            bigfloatValueA = new BigFloat((BigInteger)a.ThisItem);
+            bigfloatValueA = BigFloat.FromBigInteger((BigInteger)a.ThisItem);
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = new DecimalFraction((BigInteger)a.ThisItem);
+            decfracValueA = DecimalFraction.FromBigInteger((BigInteger)a.ThisItem);
             decfracValueB = (DecimalFraction)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigFloat: {
-            bigfloatValueA = new BigFloat((BigInteger)a.ThisItem);
+            bigfloatValueA = BigFloat.FromBigInteger((BigInteger)a.ThisItem);
             bigfloatValueB = (BigFloat)b.ThisItem;
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
@@ -447,7 +447,7 @@ namespace PeterO {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
             bigfloatValueA = BigFloat.FromSingle((float)sa);
-            bigfloatValueB = new BigFloat((long)b.ThisItem);
+            bigfloatValueB = BigFloat.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_BigInteger: {
@@ -457,7 +457,7 @@ namespace PeterO {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
             bigfloatValueA = BigFloat.FromSingle((float)sa);
-            bigfloatValueB = new BigFloat((BigInteger)b.ThisItem);
+            bigfloatValueB = BigFloat.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_Single: {
@@ -521,7 +521,7 @@ namespace PeterO {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
             bigfloatValueA = BigFloat.FromDouble((double)sa);
-            bigfloatValueB = new BigFloat((long)b.ThisItem);
+            bigfloatValueB = BigFloat.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_BigInteger: {
@@ -531,7 +531,7 @@ namespace PeterO {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
             bigfloatValueA = BigFloat.FromDouble((double)sa);
-            bigfloatValueB = new BigFloat((BigInteger)b.ThisItem);
+            bigfloatValueB = BigFloat.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_Single: {
@@ -590,12 +590,12 @@ namespace PeterO {
           }
         case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Integer: {
             decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = new DecimalFraction((long)b.ThisItem);
+            decfracValueB = DecimalFraction.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_BigInteger: {
             decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = new DecimalFraction((BigInteger)b.ThisItem);
+            decfracValueB = DecimalFraction.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Single: {
@@ -630,12 +630,12 @@ namespace PeterO {
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_Integer: {
             bigfloatValueA = (BigFloat)a.ThisItem;
-            bigfloatValueB = new BigFloat((long)b.ThisItem);
+            bigfloatValueB = BigFloat.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_BigInteger: {
             bigfloatValueA = (BigFloat)a.ThisItem;
-            bigfloatValueB = new BigFloat((BigInteger)b.ThisItem);
+            bigfloatValueB = BigFloat.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_Single: {
@@ -711,7 +711,7 @@ namespace PeterO {
               int s = Math.Sign((long)a.ThisItem);
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sb : sb));
             }
-            bigfloatValueA = new BigFloat((long)a.ThisItem);
+            bigfloatValueA = BigFloat.FromInt64((long)a.ThisItem);
             bigfloatValueB = BigFloat.FromSingle((float)sb);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
@@ -722,17 +722,17 @@ namespace PeterO {
               int s = Math.Sign((long)a.ThisItem);
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sb : sb));
             }
-            bigfloatValueA = new BigFloat((long)a.ThisItem);
+            bigfloatValueA = BigFloat.FromInt64((long)a.ThisItem);
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = new DecimalFraction((long)a.ThisItem);
+            decfracValueA = DecimalFraction.FromInt64((long)a.ThisItem);
             decfracValueB = (DecimalFraction)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigFloat: {
-            bigfloatValueA = new BigFloat((long)a.ThisItem);
+            bigfloatValueA = BigFloat.FromInt64((long)a.ThisItem);
             bigfloatValueB = (BigFloat)b.ThisItem;
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
@@ -753,7 +753,7 @@ namespace PeterO {
               int s = ((BigInteger)a.ThisItem).Sign;
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sb : sb));
             }
-            bigfloatValueA = new BigFloat((BigInteger)a.ThisItem);
+            bigfloatValueA = BigFloat.FromBigInteger((BigInteger)a.ThisItem);
             bigfloatValueB = BigFloat.FromSingle((float)sb);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
@@ -764,17 +764,17 @@ namespace PeterO {
               int s = ((BigInteger)a.ThisItem).Sign;
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sb : sb));
             }
-            bigfloatValueA = new BigFloat((BigInteger)a.ThisItem);
+            bigfloatValueA = BigFloat.FromBigInteger((BigInteger)a.ThisItem);
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = new DecimalFraction((BigInteger)a.ThisItem);
+            decfracValueA = DecimalFraction.FromBigInteger((BigInteger)a.ThisItem);
             decfracValueB = (DecimalFraction)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigFloat: {
-            bigfloatValueA = new BigFloat((BigInteger)a.ThisItem);
+            bigfloatValueA = BigFloat.FromBigInteger((BigInteger)a.ThisItem);
             bigfloatValueB = (BigFloat)b.ThisItem;
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
@@ -786,7 +786,7 @@ namespace PeterO {
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sa : sa));
             }
             bigfloatValueA = BigFloat.FromSingle((float)sa);
-            bigfloatValueB = new BigFloat((long)b.ThisItem);
+            bigfloatValueB = BigFloat.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_BigInteger: {
@@ -797,7 +797,7 @@ namespace PeterO {
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sa : sa));
             }
             bigfloatValueA = BigFloat.FromSingle((float)sa);
-            bigfloatValueB = new BigFloat((BigInteger)b.ThisItem);
+            bigfloatValueB = BigFloat.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_Single: {
@@ -864,7 +864,7 @@ namespace PeterO {
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sa : sa));
             }
             bigfloatValueA = BigFloat.FromDouble((double)sa);
-            bigfloatValueB = new BigFloat((long)b.ThisItem);
+            bigfloatValueB = BigFloat.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_BigInteger: {
@@ -875,7 +875,7 @@ namespace PeterO {
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sa : sa));
             }
             bigfloatValueA = BigFloat.FromDouble((double)sa);
-            bigfloatValueB = new BigFloat((BigInteger)b.ThisItem);
+            bigfloatValueB = BigFloat.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_Single: {
@@ -936,12 +936,12 @@ namespace PeterO {
           }
         case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Integer: {
             decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = new DecimalFraction((long)b.ThisItem);
+            decfracValueB = DecimalFraction.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_BigInteger: {
             decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = new DecimalFraction((BigInteger)b.ThisItem);
+            decfracValueB = DecimalFraction.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Single: {
@@ -978,12 +978,12 @@ namespace PeterO {
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_Integer: {
             bigfloatValueA = (BigFloat)a.ThisItem;
-            bigfloatValueB = new BigFloat((long)b.ThisItem);
+            bigfloatValueB = BigFloat.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_BigInteger: {
             bigfloatValueA = (BigFloat)a.ThisItem;
-            bigfloatValueB = new BigFloat((BigInteger)b.ThisItem);
+            bigfloatValueB = BigFloat.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_Single: {

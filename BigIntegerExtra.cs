@@ -22,63 +22,63 @@ namespace PeterO
     
     /// <summary>Adds a BigInteger object and a BigInteger object.</summary>
     /// <param name='bthis'>A BigInteger object.</param>
-    /// <param name='t'>A BigInteger object.</param>
     /// <returns>The sum of the two objects.</returns>
-    public static BigInteger operator+(BigInteger bthis, BigInteger t)
+    /// <param name='augend'>A BigInteger object.</param>
+    public static BigInteger operator+(BigInteger bthis, BigInteger augend)
     {
       if((bthis)==null)throw new ArgumentNullException("bthis");
-      return bthis.add(t);
+      return bthis.add(augend);
     }
 
     
     /// <summary> Subtracts two BigInteger values. </summary>
     /// <param name='bthis'>A BigInteger value.</param>
-    /// <param name='t'>Another BigInteger value.</param>
     /// <returns>The difference of the two objects.</returns>
-    public static BigInteger operator-(BigInteger bthis, BigInteger t)
+    /// <param name='subtrahend'>A BigInteger object.</param>
+    public static BigInteger operator-(BigInteger bthis, BigInteger subtrahend)
     {
       if((bthis)==null)throw new ArgumentNullException("bthis");
-      return bthis.subtract(t);
+      return bthis.subtract(subtrahend);
     }
     
     /// <summary>Multiplies a BigInteger object by the value of a BigInteger
     /// object.</summary>
-    /// <param name='a'>A BigInteger object.</param>
-    /// <param name='b'>A BigInteger object.</param>
     /// <returns>The product of the two objects.</returns>
-    public static BigInteger operator*(BigInteger a, BigInteger b){
-      if((a)==null)throw new ArgumentNullException("a");
-      return a.multiply(b);
+    /// <param name='operand1'>A BigInteger object.</param>
+    /// <param name='operand2'>A BigInteger object.</param>
+    public static BigInteger operator*(BigInteger operand1, BigInteger operand2){
+      if((operand1)==null)throw new ArgumentNullException("operand1");
+      return operand1.multiply(operand2);
     }
     
     /// <summary>Divides a BigInteger object by the value of a BigInteger
     /// object.</summary>
-    /// <param name='a'>A BigInteger object.</param>
-    /// <param name='b'>A BigInteger object.</param>
     /// <returns>The quotient of the two objects.</returns>
-    public static BigInteger operator/(BigInteger a, BigInteger b){
-      if((a)==null)throw new ArgumentNullException("a");
-      return a.divide(b);
+    /// <param name='dividend'>A BigInteger object.</param>
+    /// <param name='divisor'>A BigInteger object.</param>
+    public static BigInteger operator/(BigInteger dividend, BigInteger divisor){
+      if((dividend)==null)throw new ArgumentNullException("dividend");
+      return dividend.divide(divisor);
     }
 
     /// <summary>Finds the remainder that results when a BigInteger object
     /// is divided by the value of a BigInteger object.</summary>
-    /// <param name='a'>A BigInteger object.</param>
-    /// <param name='b'>A BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
-    public static BigInteger operator%(BigInteger a, BigInteger b){
-      if((a)==null)throw new ArgumentNullException("a");
-      return a.remainder(b);
+    /// <param name='dividend'>A BigInteger object.</param>
+    /// <param name='divisor'>A BigInteger object.</param>
+    public static BigInteger operator%(BigInteger dividend, BigInteger divisor){
+      if((dividend)==null)throw new ArgumentNullException("dividend");
+      return dividend.remainder(divisor);
     }
     
     /// <summary> </summary>
     /// <param name='bthis'>A BigInteger object.</param>
-    /// <param name='n'>A 32-bit unsigned integer.</param>
     /// <returns></returns>
-    public static BigInteger operator<<(BigInteger bthis, int n)
+    /// <param name='numBits'>A 32-bit signed integer.</param>
+    public static BigInteger operator<<(BigInteger bthis, int numBits)
     {
       if((bthis)==null)throw new ArgumentNullException("bthis");
-      return bthis.shiftLeft(n);
+      return bthis.shiftLeft(numBits);
     }
 
     
@@ -173,7 +173,6 @@ namespace PeterO
       return (thisValue.CompareTo(otherValue)>=0);
     }
 
-
     /// <summary> </summary>
     /// <returns/>
     public bool IsPowerOfTwo{
@@ -212,14 +211,14 @@ namespace PeterO
     
     /// <summary> </summary>
     /// <param name='index'>A 32-bit signed integer.</param>
-    /// <param name='n'>A 32-bit signed integer.</param>
     /// <returns></returns>
-    public long GetBits(int index, int n)
+    /// <param name='numberBits'>A 32-bit signed integer.</param>
+    public long GetBits(int index, int numberBits)
     {
-      if(n<0 || n>64)throw new ArgumentOutOfRangeException("n");
+      if(numberBits<0 || numberBits>64)throw new ArgumentOutOfRangeException("n");
       long v = 0;
       //DebugAssert.IsTrue(n <= 8*8,"{0} line {1}: n <= sizeof(v)*8","integer.cpp",2939);
-      for (int j=0; j<n; j++)
+      for (int j=0; j<numberBits; j++)
         v |= (long)(testBit((int)(index+j)) ? 1 : 0) << j;
       return v;
     }
@@ -370,22 +369,22 @@ namespace PeterO
 
     /// <summary> Does an OR operation between two BigInteger instances.
     /// </summary>
-    /// <param name='a'>A BigInteger instance.</param>
-    /// <param name='b'>Another BigInteger instance.</param>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
     /// <returns></returns>
-    public static BigInteger Or(BigInteger a, BigInteger b){
-      if((a)==null)throw new ArgumentNullException("a");
-      if((b)==null)throw new ArgumentNullException("b");
-      BigInteger xa=new BigInteger().Allocate(a.wordCount);
-      Array.Copy(a.reg,xa.reg,xa.reg.Length);
-      BigInteger xb=new BigInteger().Allocate(b.wordCount);
-      Array.Copy(b.reg,xb.reg,xb.reg.Length);
-      xa.negative=a.negative;
-      xa.wordCount=a.wordCount;
-      xb.negative=b.negative;
-      xb.wordCount=b.wordCount;
+    /// <param name='first'>A BigInteger object.</param>
+    /// <param name='second'>A BigInteger object.</param>
+    public static BigInteger Or(BigInteger first, BigInteger second){
+      if((first)==null)throw new ArgumentNullException("first");
+      if((second)==null)throw new ArgumentNullException("second");
+      BigInteger xa=new BigInteger().Allocate(first.wordCount);
+      Array.Copy(first.reg,xa.reg,xa.reg.Length);
+      BigInteger xb=new BigInteger().Allocate(second.wordCount);
+      Array.Copy(second.reg,xb.reg,xb.reg.Length);
+      xa.negative=first.negative;
+      xa.wordCount=first.wordCount;
+      xb.negative=second.negative;
+      xb.wordCount=second.wordCount;
       xa.reg=CleanGrow(xa.reg,Math.Max(xa.reg.Length,xb.reg.Length));
       xb.reg=CleanGrow(xb.reg,Math.Max(xa.reg.Length,xb.reg.Length));
       if(xa.Sign<0){ TwosComplement(xa.reg,0,(int)xa.reg.Length); }

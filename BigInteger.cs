@@ -7,7 +7,7 @@ the public-domain library CryptoPP by Wei Dai.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 using System;
 namespace PeterO {
@@ -21,12 +21,10 @@ namespace PeterO {
       return (int)N;
     }
 
-
     private static void SetWords(short[] r, int rstart, short a, int n) {
       for (int i = 0; i < n; i++)
         r[rstart + i] = a;
     }
-
 
     private static short ShiftWordsLeftByBits(short[] r, int rstart, int n, int shiftBits) {
       #if DEBUG
@@ -73,8 +71,6 @@ namespace PeterO {
         return carry;
       }
     }
-
-
 
     private static void ShiftWordsLeftByWords(short[] r, int rstart, int n, int shiftWords) {
       shiftWords = Math.Min(shiftWords, n);
@@ -146,7 +142,6 @@ namespace PeterO {
       }
     }
 
-
     private static void TwosComplement(short[] A, int Astart, int N) {
       Decrement(A, Astart, N, (short)1);
       for (int i = 0; i < N; i++)
@@ -190,7 +185,6 @@ namespace PeterO {
         return (int)((u >> 31) & 1);
       }
     }
-
 
     private static short LinearMultiply(short[] productArr, int cstart,
                                         short[] A, int astart, short B, int N) {
@@ -1621,8 +1615,6 @@ namespace PeterO {
       Q[Qstart + 1] = GetHighHalf(q);
     }
 
-
-
     // for use by Divide(), corrects the underestimated quotient {Q1,Q0}
     private static void CorrectQuotientEstimate(
       short[] Rarr,
@@ -1709,9 +1701,7 @@ namespace PeterO {
 
         // start reducing TA mod TB, 2 words at a time
         for (int i = NA - 2; i >= NB; i -= 2) {
-          //"T",TA);
           AtomicDivide(Qarr, (int)(Qstart + i - NB), TA, (int)(Tstart + i - 2), BT, 0);
-          //"Ta",TA);
           CorrectQuotientEstimate(TA, (int)(Tstart + i - NB),
                                   TParr, TPstart, Qarr, (int)(Qstart + (i - NB)), TBarr, TBstart, NB);
         }
@@ -1942,31 +1932,32 @@ namespace PeterO {
     /// <summary> Shifts this object's value by a number of bits. A value of
     /// 1 doubles this value, a value of 2 multiplies it by 4, a value of 3 by 8,
     /// a value of 4 by 16, and so on.</summary>
-    /// <param name='n'>The number of bits to shift. Can be negative, in which
-    /// case this is the same as shiftRight with the absolute value of n.</param>
+    /// <param name='numberBits'>The number of bits to shift. Can be negative,
+    /// in which case this is the same as shiftRight with the absolute value
+    /// of numberBits.</param>
     /// <returns></returns>
-    public BigInteger shiftLeft(int n) {
-      if (n == 0) return this;
-      if (n < 0){
-        if(n==Int32.MinValue)
+    public BigInteger shiftLeft(int numberBits) {
+      if (numberBits == 0) return this;
+      if (numberBits < 0){
+        if(numberBits==Int32.MinValue)
           return this.shiftRight(1).shiftRight(Int32.MaxValue);
-        return this.shiftRight(-n);
+        return this.shiftRight(-numberBits);
       }
       BigInteger ret = new BigInteger();
       int numWords = (int)(this.wordCount);
-      int shiftWords = (int)(n >> 4);
-      int shiftBits = (int)(n & 15);
+      int shiftWords = (int)(numberBits >> 4);
+      int shiftBits = (int)(numberBits & 15);
       bool neg=numWords>0 && this.negative;
       if(!neg){
         ret.negative=false;
-        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)n))];
+        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
         Array.Copy(this.reg,ret.reg,numWords);
         ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
         ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
         ret.wordCount = ret.CalcWordCount();
       } else {
         ret.negative=true;
-        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)n))];
+        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
         Array.Copy(this.reg,ret.reg,numWords);
         TwosComplement(ret.reg, 0, (int)(ret.reg.Length));
         ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
@@ -1977,19 +1968,19 @@ namespace PeterO {
       return ret;
     }
     /// <summary> </summary>
-    /// <param name='n'>A 32-bit signed integer.</param>
     /// <returns></returns>
-    public BigInteger shiftRight(int n) {
-      if (n == 0) return this;
-      if (n < 0){
-        if(n==Int32.MinValue)
+    /// <param name='numberBits'>A 32-bit signed integer.</param>
+    public BigInteger shiftRight(int numberBits) {
+      if (numberBits == 0) return this;
+      if (numberBits < 0){
+        if(numberBits==Int32.MinValue)
           return this.shiftLeft(1).shiftLeft(Int32.MaxValue);
-        return this.shiftLeft(-n);
+        return this.shiftLeft(-numberBits);
       }
       BigInteger ret = new BigInteger();
       int numWords = (int)(this.wordCount);
-      int shiftWords = (int)(n >> 4);
-      int shiftBits = (int)(n & 15);
+      int shiftWords = (int)(numberBits >> 4);
+      int shiftBits = (int)(numberBits & 15);
       ret.negative=this.negative;
       ret.reg = new short[RoundupSize(numWords)];
       Array.Copy(this.reg,ret.reg,numWords);
@@ -2395,7 +2386,6 @@ namespace PeterO {
       return r;
     }
 
-
     private static void PositiveAdd(BigInteger sum,
                                     BigInteger bigintAddend,
                                     BigInteger bigintAugend) {
@@ -2496,7 +2486,6 @@ namespace PeterO {
     }
     #endregion
 
-
     /// <summary> Adds this object and another object.</summary>
     /// <returns>The sum of the two objects.</returns>
     /// <param name='bigintAugend'>A BigInteger object.</param>
@@ -2545,9 +2534,9 @@ namespace PeterO {
       if(this.reg.Length>32){
         int newLength=RoundupSize(this.wordCount);
         if(newLength<this.reg.Length &&
-           Math.Abs(this.reg.Length-newLength)>=16){
+           (this.reg.Length-newLength)>=16){
           // Reallocate the array if the rounded length
-          // is smaller than the current length
+          // is much smaller than the current length
           short[] newreg=new short[newLength];
           Array.Copy(this.reg,newreg,Math.Min(newLength,this.reg.Length));
           this.reg=newreg;
@@ -2638,7 +2627,7 @@ namespace PeterO {
       if (lengthA < lengthB) {
         // If lengthA is less than lengthB, then
         // A is less than B, so set quotient to 0
-        // and modulus to A
+        // and remainder to A
         if (modResult != null) {
           short[] tmpa = new short[a.Length];
           Array.Copy(a, tmpa, a.Length);
@@ -2856,6 +2845,7 @@ namespace PeterO {
     /// <param name='divisor'>A divisor greater than 0.</param>
     /// <returns></returns>
     public BigInteger mod(BigInteger divisor) {
+      if((divisor)==null)throw new ArgumentNullException("divisor");
       if(divisor.Sign<0){
         throw new ArithmeticException("Divisor is negative");
       }
@@ -2905,7 +2895,6 @@ namespace PeterO {
       }
       return remainder;
     }
-
 
     void NegateInternal() {
       if (this.wordCount != 0)
@@ -2972,10 +2961,25 @@ namespace PeterO {
     public bool IsEven { get { return !GetUnsignedBit(0); } }
 
     /// <summary> BigInteger object for the number zero.</summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="BigInteger is immutable")]
+    #endif
     public static readonly BigInteger ZERO = new BigInteger().InitializeInt(0);
     /// <summary> BigInteger object for the number one. </summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="BigInteger is immutable")]
+    #endif
     public static readonly BigInteger ONE = new BigInteger().InitializeInt(1);
     /// <summary> BigInteger object for the number ten. </summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="BigInteger is immutable")]
+    #endif
     public static readonly BigInteger TEN = new BigInteger().InitializeInt(10);
   }
 }

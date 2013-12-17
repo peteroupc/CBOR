@@ -26,10 +26,10 @@ Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
 
 Acknowledgments
 -----------
 
 * Carsten Bormann reviewed this library and gave helpful suggestions.
-* Anders Gustafssson converted this library to a Portable Class Library.
+* Anders Gustafsson converted this library to a Portable Class Library.

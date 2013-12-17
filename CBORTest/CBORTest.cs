@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 using System;
 using System.Globalization;
@@ -106,7 +106,7 @@ namespace Test {
       return BigInteger.fromString(RandomBigIntString(r));
     }
     public static BigFloat RandomBigFloat(FastRandom r) {
-      return new BigFloat(RandomBigInteger(r),r.NextValue(400)-200);
+      return new BigFloat(RandomBigInteger(r),(BigInteger)(r.NextValue(400)-200));
     }
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
@@ -432,6 +432,7 @@ namespace Test {
         TestBigFloatSingleCore(RandomSingle(rand, i), null);
       }
     }
+    
     /// <summary>
     /// </summary>
     /// <returns>
@@ -2162,16 +2163,16 @@ namespace Test {
     [Test]
     public void TestBigFloatDecFrac() {
       BigFloat bf;
-      bf = new BigFloat(20);
+      bf = BigFloat.FromInt64(20);
       Assert.AreEqual("20", DecimalFraction.FromBigFloat(bf).ToString());
-      bf = new BigFloat((BigInteger)3, -1);
+      bf = new BigFloat((BigInteger)3, (BigInteger)(-1));
       Assert.AreEqual("1.5", DecimalFraction.FromBigFloat(bf).ToString());
-      bf = new BigFloat((BigInteger)(-3), -1);
+      bf = new BigFloat((BigInteger)(-3), (BigInteger)(-1));
       Assert.AreEqual("-1.5", DecimalFraction.FromBigFloat(bf).ToString());
       DecimalFraction df;
-      df = new DecimalFraction(20);
+      df = DecimalFraction.FromInt64(20);
       Assert.AreEqual("20", BigFloat.FromDecimalFraction(df).ToString());
-      df = new DecimalFraction(-20);
+      df = DecimalFraction.FromInt64(-20);
       Assert.AreEqual("-20", BigFloat.FromDecimalFraction(df).ToString());
       df = new DecimalFraction((BigInteger)15, -1);
       Assert.AreEqual("1.5", BigFloat.FromDecimalFraction(df).ToString());

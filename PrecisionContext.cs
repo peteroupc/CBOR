@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 using System;
 //using System.Numerics;
@@ -11,7 +11,7 @@ namespace PeterO {
     /// <summary> Contains parameters for controlling the precision, rounding,
     /// and exponent range of arbitrary-precision numbers. </summary>
   public class PrecisionContext {
-    BigInteger eMax;
+    BigInteger exponentMax;
     /// <summary> Gets the highest exponent possible when a converted number
     /// is expressed in scientific notation with one digit before the decimal
     /// point. For example, with a precision of 3 and an EMax of 100, the maximum
@@ -19,9 +19,9 @@ namespace PeterO {
     /// Exponent property.) If HasExponentRange is false, this value will
     /// be 0.</summary>
     public BigInteger EMax {
-      get { return hasExponentRange ? eMax : BigInteger.Zero; }
+      get { return hasExponentRange ? exponentMax : BigInteger.Zero; }
     }
-    BigInteger eMin;
+    BigInteger exponentMin;
 
     bool hasExponentRange;
     /// <summary> Gets whether this context defines a minimum and maximum
@@ -37,7 +37,7 @@ namespace PeterO {
     /// lowest possible Exponent property.) If HasExponentRange is false,
     /// this value will be 0.</summary>
     public BigInteger EMin {
-      get { return hasExponentRange ? eMin : BigInteger.Zero; }
+      get { return hasExponentRange ? exponentMin : BigInteger.Zero; }
     }
     BigInteger bigintPrecision;
 
@@ -116,7 +116,8 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='exponent'>A BigInteger object.</param>
     /// <returns></returns>
-public bool ExponentWithinRange(BigInteger exponent){
+    public bool ExponentWithinRange(BigInteger exponent){
+      if((exponent)==null)throw new ArgumentNullException("exponent");
       if(!this.HasExponentRange)
         return true;
       if(bigintPrecision.IsZero){
@@ -141,7 +142,7 @@ public bool ExponentWithinRange(BigInteger exponent){
     /// <returns></returns>
     /// <param name='rounding'>A Rounding object.</param>
     public PrecisionContext WithRounding(Rounding rounding) {
-      PrecisionContext pc = new PrecisionContext(this);
+      PrecisionContext pc = this.Copy();
       pc.rounding = rounding;
       return pc;
     }
@@ -150,16 +151,41 @@ public bool ExponentWithinRange(BigInteger exponent){
     /// and a Flags value of 0. </summary>
     /// <returns></returns>
     public PrecisionContext WithBlankFlags() {
-      PrecisionContext pc = new PrecisionContext(this);
+      PrecisionContext pc = this.Copy();
       pc.hasFlags = true;
       pc.flags = 0;
       return pc;
     }
+
+    /// <summary> </summary>
+    /// <param name='clamp'>A Boolean object.</param>
+    /// <returns></returns>
+public PrecisionContext WithExponentClamp(bool clamp) {
+      PrecisionContext pc = this.Copy();
+      pc.clampNormalExponents=clamp;
+      return pc;
+    }
+
+    /// <summary> </summary>
+    /// <param name='exponentMin'>A BigInteger object.</param>
+    /// <param name='exponentMax'>A BigInteger object.</param>
+    /// <returns></returns>
+public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
+      if((exponentMin)==null)throw new ArgumentNullException("exponentMin");
+      if(exponentMin.CompareTo(exponentMax)>0)
+        throw new ArgumentException("exponentMin greater than exponentMax");
+      PrecisionContext pc = this.Copy();
+      pc.hasExponentRange=true;
+      pc.exponentMin=exponentMin;
+      pc.exponentMax=exponentMax;
+      return pc;
+    }
+
     /// <summary> Copies this PrecisionContext with HasFlags set to false
     /// and a Flags value of 0. </summary>
     /// <returns></returns>
     public PrecisionContext WithNoFlags() {
-      PrecisionContext pc = new PrecisionContext(this);
+      PrecisionContext pc = this.Copy();
       pc.hasFlags = false;
       pc.flags = 0;
       return pc;
@@ -168,7 +194,7 @@ public bool ExponentWithinRange(BigInteger exponent){
     /// range. </summary>
     /// <returns></returns>
     public PrecisionContext WithUnlimitedExponents() {
-      PrecisionContext pc = new PrecisionContext(this);
+      PrecisionContext pc = this.Copy();
       pc.hasExponentRange = false;
       return pc;
     }
@@ -179,7 +205,7 @@ public bool ExponentWithinRange(BigInteger exponent){
     /// precision.</param>
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
-      PrecisionContext pc = new PrecisionContext(this);
+      PrecisionContext pc = this.Copy();
       pc.bigintPrecision = (BigInteger)precision;
       return pc;
     }
@@ -187,104 +213,96 @@ public bool ExponentWithinRange(BigInteger exponent){
     /// <summary> </summary>
     /// <param name='bigintPrecision'>A BigInteger object.</param>
     /// <returns></returns>
-public PrecisionContext WithPrecision(BigInteger bigintPrecision) {
-      if (bigintPrecision.Sign < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + bigintPrecision + ")");
-      PrecisionContext pc = new PrecisionContext(this);
+public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
+      if((bigintPrecision)==null)throw new ArgumentNullException("bigintPrecision");
+      if (bigintPrecision.Sign < 0) throw new ArgumentException(
+        "precision" + " not greater or equal to " + "0" + " (" +
+        bigintPrecision + ")");
+      PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
       return pc;
     }
 
     /// <summary> Initializes a new PrecisionContext that is a copy of another
     /// PrecisionContext. </summary>
-    public PrecisionContext(PrecisionContext pc) {
-      if ((pc) == null) throw new ArgumentNullException("pc");
-      this.hasFlags = pc.hasFlags;
-      this.flags = pc.flags;
-      this.eMax = pc.eMax;
-      this.eMin = pc.eMin;
-      this.hasExponentRange = pc.hasExponentRange;
-      this.bigintPrecision = pc.bigintPrecision;
-      this.rounding = pc.rounding;
-      this.clampNormalExponents = pc.clampNormalExponents;
+    /// <returns></returns>
+    public PrecisionContext Copy() {
+      PrecisionContext pcnew=new PrecisionContext(0,this.rounding,0,0,this.clampNormalExponents);
+      pcnew.hasFlags = this.hasFlags;
+      pcnew.flags = this.flags;
+      pcnew.exponentMax = this.exponentMax;
+      pcnew.exponentMin = this.exponentMin;
+      pcnew.hasExponentRange = this.hasExponentRange;
+      pcnew.bigintPrecision = this.bigintPrecision;
+      pcnew.rounding = this.rounding;
+      pcnew.clampNormalExponents = this.clampNormalExponents;
+      return pcnew;
     }
 
-    /// <summary> Initializes a new PrecisionContext from a desired maximum
-    /// precision. </summary>
-    /// <param name='precision'>A 64-bit signed integer.</param>
-    public PrecisionContext(int precision)
-      : this(precision, Rounding.HalfEven) {
+    public static PrecisionContext ForPrecision(int precision){
+      return new PrecisionContext(precision,Rounding.HalfUp,0,0,false).WithUnlimitedExponents();
     }
-
-    /// <summary> Initializes a new PrecisionContext from a desired rounding
-    /// mode. </summary>
-    /// <param name='rounding'>A Rounding object.</param>
-    public PrecisionContext(Rounding rounding) : this(0,rounding){
+    public static PrecisionContext ForRounding(Rounding rounding){
+      return new PrecisionContext(0,rounding,0,0,false).WithUnlimitedExponents();
     }
-
-    /// <summary> Initializes a new PrecisionContext. HasFlags will be
-    /// set to false. </summary>
-    public PrecisionContext(int precision, Rounding rounding){
-      this.bigintPrecision = (BigInteger)precision;
-      this.rounding = rounding;
-      eMax = BigInteger.Zero;
-      eMin = BigInteger.Zero;
+    public static PrecisionContext ForPrecisionAndRounding(int precision, Rounding rounding){
+      return new PrecisionContext(precision,rounding,0,0,false).WithUnlimitedExponents();
     }
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
-    public PrecisionContext(int precision, Rounding rounding, int eMinSmall, int eMaxSmall) :
-      this(precision,rounding,eMinSmall,eMaxSmall,false){
-    }
-    /// <summary> Initializes a new PrecisionContext. HasFlags will be
-    /// set to false. </summary>
-    public PrecisionContext(int precision, Rounding rounding, int eMinSmall, int eMaxSmall,
+    public PrecisionContext(int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
                             bool clampNormalExponents) {
       if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
-      if ((eMinSmall) > eMaxSmall) throw new ArgumentException("eMinSmall" + " not less or equal to " + Convert.ToString((eMaxSmall),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((eMinSmall),System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((exponentMinSmall) > exponentMaxSmall) throw new ArgumentException("exponentMinSmall" + " not less or equal to " + Convert.ToString((exponentMaxSmall),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((exponentMinSmall),System.Globalization.CultureInfo.InvariantCulture) + ")");
       this.bigintPrecision = (BigInteger)precision;
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
       this.hasExponentRange=true;
-      eMax = (BigInteger)eMaxSmall;
-      eMin = (BigInteger)eMinSmall;
+      exponentMax = (BigInteger)exponentMaxSmall;
+      exponentMin = (BigInteger)exponentMinSmall;
     }
-    /// <summary> Initializes a new PrecisionContext. HasFlags will be
-    /// set to false. </summary>
-    public PrecisionContext(int precision, Rounding rounding, BigInteger eMin, BigInteger eMax) :
-      this(precision,rounding,eMin,eMax,false){
-    }
-    /// <summary> Initializes a new PrecisionContext. HasFlags will be
-    /// set to false. </summary>
-    public PrecisionContext(int precision, Rounding rounding, BigInteger eMin, BigInteger eMax,
-                            bool clampNormalExponents) {
-      if((eMin)==null)throw new ArgumentNullException("eMin");
-      if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
-      if (eMin.CompareTo(eMax) > 0) throw new ArgumentException("eMin" + " not less or equal to " + eMax + " (" + eMin + ")");
-      this.bigintPrecision = (BigInteger)precision;
-      this.rounding = rounding;
-      this.hasExponentRange=true;
-      this.clampNormalExponents = clampNormalExponents;
-      this.eMax = eMax;
-      this.eMin = eMin;
-    }
-
     /// <summary> Unlimited precision context. Rounding mode HalfUp.</summary>
-    public static readonly PrecisionContext Unlimited =
-      new PrecisionContext(0,Rounding.HalfUp);
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="This PrecisionContext is immutable")]
+    #endif
+    public static readonly PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
     /// <summary> Precision context for the IEEE-754-2008 decimal32 format.
     /// </summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="This PrecisionContext is immutable")]
+    #endif
     public static readonly PrecisionContext Decimal32 =
-      new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
+      new PrecisionContext(7, Rounding.HalfEven, -95, 96,true);
     /// <summary> Precision context for the IEEE-754-2008 decimal64 format.
     /// </summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="This PrecisionContext is immutable")]
+    #endif
     public static readonly PrecisionContext Decimal64 =
-      new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
+      new PrecisionContext(16, Rounding.HalfEven, -383, 384,true);
     /// <summary> Precision context for the IEEE-754-2008 decimal128 format.
     /// </summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="This PrecisionContext is immutable")]
+    #endif
     public static readonly PrecisionContext Decimal128 =
-      new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
+      new PrecisionContext(34, Rounding.HalfEven, -6143, 6144,true);
     /// <summary> Precision context for the Common Language Infrastructure
     /// (.NET Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
     /// to round a decimal fraction to this format. </summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="This PrecisionContext is immutable")]
+    #endif
     public static readonly PrecisionContext CliDecimal =
       new PrecisionContext(96,Rounding.HalfEven,0,28,true);
     

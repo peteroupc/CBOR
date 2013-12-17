@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 
 
@@ -20,42 +20,421 @@ at: http://upokecenter.com/d/
      * a single line of code. For example:</p> <code> fastInt.Add(5).Multiply(10);</code>
      */
   final class FastInteger implements Comparable<FastInteger> {
+    
+    private static final class MutableNumber {
+      int[] data;
+      int wordCount;
+      public static MutableNumber FromBigInteger(BigInteger bigintVal) {
+        MutableNumber mnum=new MutableNumber(0);
+        if ( bigintVal.signum() < 0)
+          throw new IllegalArgumentException("Only positive integers are supported");
+        byte[] bytes=bigintVal.toByteArray(true);
+        int len=bytes.length;
+        int newWordCount=Math.max(4,(len/4)+1);
+        if(newWordCount>mnum.data.length){
+          mnum.data=new int[mnum.wordCount];
+        }
+        mnum.wordCount=newWordCount;
+        {
+          for(int i=0;i<len;i+=4){
+            int x=((int)bytes[i])&0xFF;
+            if(i+1<len){
+              x|=(((int)bytes[i+1])&0xFF)<<8;
+            }
+            if(i+2<len){
+              x|=(((int)bytes[i+2])&0xFF)<<16;
+            }
+            if(i+3<len){
+              x|=(((int)bytes[i+3])&0xFF)<<24;
+            }
+            mnum.data[i>>2]=x;
+          }
+        }
+        // Calculate the correct data length
+        while(mnum.wordCount!=0 && mnum.data[mnum.wordCount-1]==0)
+          mnum.wordCount--;
+        return mnum;
+      }
+      public MutableNumber (int val) {
+        if (val < 0)
+          throw new IllegalArgumentException("Only positive integers are supported");
+        data = new int[4];
+        wordCount = (val==0) ? 0 : 1;
+        data[0] = ((int)((val) & 0xFFFFFFFFL));
+      }
+      
+    /**
+     * 
+     */
+      public BigInteger ToBigInteger() {
+        if(wordCount==1 && (data[0]>>31)==0){
+          return BigInteger.valueOf((int)data[0]);
+        }
+        byte[] bytes = new byte[wordCount * 4 + 1];
+        for (int i = 0; i < wordCount; i++) {
+          bytes[i * 4 + 0] = (byte)((data[i]) & 0xFF);
+          bytes[i * 4 + 1] = (byte)((data[i] >> 8) & 0xFF);
+          bytes[i * 4 + 2] = (byte)((data[i] >> 16) & 0xFF);
+          bytes[i * 4 + 3] = (byte)((data[i] >> 24) & 0xFF);
+        }
+        bytes[bytes.length - 1] = (byte)0;
+        return BigInteger.fromByteArray((byte[])bytes,true);
+      }
+      
+      int[] GetLastWordsInternal(int numWords32Bit){
+        int[] ret=new int[numWords32Bit];
+        System.arraycopy(data,0,ret,0,Math.min(numWords32Bit,this.wordCount));
+        return ret;
+      }
+      
+    /**
+     * 
+     */
+      public boolean CanFitInInt32() {
+        return wordCount==0 || (wordCount==1 && (data[0]>>31)==0);
+      }
+      
+    /**
+     * 
+     */
+      public int ToInt32() {
+        return wordCount==0 ? 0 : data[0];
+      }
+      
+    /**
+     * 
+     */
+      public MutableNumber Copy() {
+        MutableNumber mbi=new MutableNumber(0);
+        if(this.wordCount>mbi.data.length){
+          mbi.data=new int[this.wordCount];
+        }
+        System.arraycopy(this.data,0,mbi.data,0,this.wordCount);
+        mbi.wordCount=this.wordCount;
+        return mbi;
+      }
+      
+    /**
+     * Multiplies this instance by the value of a Int32 object.
+     * @param multiplicand A 32-bit signed integer.
+     * @return The product of the two objects.
+     */
+      public MutableNumber Multiply(int multiplicand) {
+        if (multiplicand < 0)
+          throw new IllegalArgumentException("Only positive multiplicands are supported");
+        else if (multiplicand != 0) {
+          int carry = 0;
+          if(this.wordCount==0){
+            if(this.data.length==0)this.data=new int[4];
+            this.data[0]=0;
+            this.wordCount=1;
+          }
+          int result0,result1,result2,result3;
+          if(multiplicand<65536){
+            for (int i = 0; i < this.wordCount; i++) {
+              int x0=this.data[i];
+              int x1=x0;
+              int y0=multiplicand;
+              x0&=(65535);
+              x1=((x1>>16)&65535);
+              int temp = (x0 * y0); // a * c
+              result1 = (temp >> 16)&65535;   result0 = temp & 65535;
+              result2 = 0;
+              temp = (x1 * y0); // b * c
+              result2 += (temp >> 16)&65535;  result1 += temp & 65535;
+              result2 += (result1 >>16)&65535;  result1 = result1 & 65535;
+              result3 = (result2 >>16)&65535;  result2 = result2 & 65535;
+              // Add carry
+              x0=((int)(result0|(result1<<16)));
+              x1=((int)(result2|(result3<<16)));
+              int x2=(x0+carry);
+              if(((x2>>31)==(x0>>31)) ? ((x2&Integer.MAX_VALUE)<(x0&Integer.MAX_VALUE)) :
+                 ((x2>>31)==0)){
+                // Carry in addition
+                x1=(x1+1);
+              }
+              data[i]=x2;
+              carry=x1;
+            }
+          } else {
+            for (int i = 0; i < this.wordCount; i++) {
+              int x0=this.data[i];
+              int x1=x0;
+              int y0=multiplicand;
+              int y1=y0;
+              x0&=(65535);
+              y0&=(65535);
+              x1=((x1>>16)&65535);
+              y1=((y1>>16)&65535);
+              int temp = (x0 * y0); // a * c
+              result1 = (temp >> 16)&65535;   result0 = temp & 65535;
+              temp = (x0 * y1); // a * d
+              result2 = (temp >> 16)&65535;   result1 += temp & 65535;
+              result2 += (result1 >>16)&65535;   result1 = result1 & 65535;
+              temp = (x1 * y0); // b * c
+              result2 += (temp >> 16)&65535;  result1 += temp & 65535;
+              result2 += (result1 >>16)&65535;  result1 = result1 & 65535;
+              result3 = (result2 >>16)&65535;  result2 = result2 & 65535;
+              temp = (x1 * y1); // b * d
+              result3 += (temp >> 16)&65535;   result2 += temp & 65535;
+              result3 += (result2 >>16)&65535;   result2 = result2 & 65535;
+              // Add carry
+              x0=((int)(result0|(result1<<16)));
+              x1=((int)(result2|(result3<<16)));
+              int x2=(x0+carry);
+              if(((x2>>31)==(x0>>31)) ? ((x2&Integer.MAX_VALUE)<(x0&Integer.MAX_VALUE)) :
+                 ((x2>>31)==0)){
+                // Carry in addition
+                x1=(x1+1);
+              }
+              data[i]=x2;
+              carry=x1;
+            }
+          }
+          if (carry != 0) {
+            if (wordCount >= data.length) {
+              int[] newdata = new int[wordCount + 20];
+              System.arraycopy(data, 0, newdata, 0, data.length);
+              data = newdata;
+            }
+            data[wordCount] = carry;
+            wordCount++;
+          }
+          // Calculate the correct data length
+          while(this.wordCount!=0 && this.data[this.wordCount-1]==0)
+            this.wordCount--;
+        } else {
+          if(data.length>0)data[0] = 0;
+          wordCount = 0;
+        }
+        return this;
+      }
+      
+    /**
+     * 
+     */
+      public int signum() {
+          return (wordCount==0 ? 0 : 1);
+        }
+
+    /**
+     * 
+     */
+      public boolean isEvenNumber() {
+          return (wordCount==0 || (data[0]&1)==0);
+        }
+      
+    /**
+     * 
+     * @param val A 32-bit signed integer.
+     */
+      public int CompareToInt(int val) {
+        if(val<0 || wordCount>1)return 1;
+        if(wordCount==0){
+          // this value is 0
+          return (val==0) ? 0 : -1;
+        } else if(data[0]==val){
+          return 0;
+        } else {
+          return (((data[0]>>31)==(val>>31)) ? ((data[0]&Integer.MAX_VALUE)<(val&Integer.MAX_VALUE))
+                  : ((data[0]>>31)==0)) ? -1 : 1;
+        }
+      }
+      
+    /**
+     * Subtracts a Int32 object from this instance.
+     * @param other A 32-bit signed integer.
+     * @return The difference of the two objects.
+     */
+      public MutableNumber SubtractInt(
+        int other
+       ) {
+        if (other < 0)
+          throw new IllegalArgumentException("Only positive values are supported");
+        else if (other != 0)
+        {
+          {
+            // Ensure a length of at least 1
+            if(this.wordCount==0){
+              if(this.data.length==0)this.data=new int[4];
+              this.data[0]=0;
+              this.wordCount=1;
+            }
+            int borrow;
+            int u;
+            int a=this.data[0];
+            u=(a-other);
+            borrow=((((a>>31)==(u>>31)) ?
+                     ((a&Integer.MAX_VALUE)<(u&Integer.MAX_VALUE)) :
+                     ((a>>31)==0)) || (a==u && other!=0)) ? 1 : 0;
+            this.data[0] = (int)(u);
+            if(borrow!=0){
+              for (int i = 1; i < this.wordCount; i++) {
+                u=(this.data[i])-borrow;
+                borrow=((((this.data[i]>>31)==(u>>31)) ?
+                         ((this.data[i]&Integer.MAX_VALUE)<(u&Integer.MAX_VALUE)) :
+                         ((this.data[i]>>31)==0))) ? 1 : 0;
+                this.data[i] = (int)(u);
+              }
+            }
+            // Calculate the correct data length
+            while(this.wordCount!=0 && this.data[this.wordCount-1]==0)
+              this.wordCount--;
+          }
+        }
+        return this;
+      }
+
+    /**
+     * Subtracts a MutableNumber object from this instance.
+     * @param other A MutableNumber object.
+     * @return The difference of the two objects.
+     */
+      public MutableNumber Subtract(
+        MutableNumber other
+       ) {
+        {
+          {
+            // System.out.println("{0} {1}",this.data.length,other.data.length);
+            int neededSize=(this.wordCount>other.wordCount) ? this.wordCount : other.wordCount;
+            if(data.length<neededSize){
+              int[] newdata = new int[neededSize + 20];
+              System.arraycopy(data, 0, newdata, 0, data.length);
+              data = newdata;
+            }
+            neededSize=(this.wordCount<other.wordCount) ? this.wordCount : other.wordCount;
+            int u=0;
+            int borrow=0;
+            for (int i = 0; i < neededSize; i++) {
+              int a=this.data[i];
+              u=(a-other.data[i])-borrow;
+              borrow=((((a>>31)==(u>>31)) ? ((a&Integer.MAX_VALUE)<(u&Integer.MAX_VALUE)) :
+                       ((a>>31)==0)) || (a==u && other.data[i]!=0)) ? 1 : 0;
+              this.data[i] = (int)(u);
+            }
+            if(borrow!=0){
+              for (int i = neededSize; i < this.wordCount; i++) {
+                int a=this.data[i];
+                u=(a-other.data[i])-borrow;
+                borrow=((((a>>31)==(u>>31)) ? ((a&Integer.MAX_VALUE)<(u&Integer.MAX_VALUE)) :
+                         ((a>>31)==0)) || (a==u && other.data[i]!=0)) ? 1 : 0;
+                this.data[i] = (int)(u);
+              }
+            }
+            // Calculate the correct data length
+            while(this.wordCount!=0 && this.data[this.wordCount-1]==0)
+              this.wordCount--;
+            return this;
+          }
+        }
+      }
+
+    /**
+     * Compares a MutableNumber object with this instance.
+     * @param other A MutableNumber object.
+     * @return Zero if the values are equal; a negative number if this instance
+     * is less, or a positive number if this instance is greater.
+     */
+      public int compareTo(MutableNumber other) {
+        if(this.wordCount!=other.wordCount){
+          return (this.wordCount<other.wordCount) ? -1 : 1;
+        }
+        int N=this.wordCount;
+        while ((N--) != 0) {
+          int an = this.data[N];
+          int bn = other.data[N];
+          // Unsigned less-than check
+          if (((an>>31)==(bn>>31)) ?
+              ((an&Integer.MAX_VALUE)<(bn&Integer.MAX_VALUE)) :
+              ((an>>31)==0)){
+            return -1;
+          } else if (an != bn){
+            return 1;
+          }
+        }
+        return 0;
+      }
+      
+    /**
+     * 
+     * @param augend A 32-bit signed integer.
+     */
+      public MutableNumber Add(int augend) {
+        if (augend < 0)
+          throw new IllegalArgumentException("Only positive augends are supported");
+        else if (augend != 0)
+        {
+          int carry = 0;
+          // Ensure a length of at least 1
+          if(this.wordCount==0){
+            if(this.data.length==0)this.data=new int[4];
+            this.data[0]=0;
+            this.wordCount=1;
+          }
+          for (int i = 0; i < wordCount; i++) {
+            int u;
+            int a=this.data[i];
+            u=(a+augend)+carry;
+            carry=((((u>>31)==(a>>31)) ? ((u&Integer.MAX_VALUE)<(a&Integer.MAX_VALUE)) :
+                    ((u>>31)==0)) || (u==a && augend!=0)) ? 1 : 0;
+            data[i] = u;
+            if (carry == 0) return this;
+            augend = 0;
+          }
+          if (carry != 0) {
+            if (wordCount >= data.length) {
+              int[] newdata = new int[wordCount + 20];
+              System.arraycopy(data, 0, newdata, 0, data.length);
+              data = newdata;
+            }
+            data[wordCount] = carry;
+            wordCount++;
+          }
+        }
+        // Calculate the correct data length
+        while(this.wordCount!=0 && this.data[this.wordCount-1]==0)
+          this.wordCount--;
+        return this;
+      }
+    }
+    
     int smallValue; // if integerMode is 0
     MutableNumber mnum; // if integerMode is 1
     BigInteger largeValue; // if integerMode is 2
-    int integerMode;
+    int integerMode = 0;
 
     private static BigInteger Int32MinValue = BigInteger.valueOf(Integer.MIN_VALUE);
     private static BigInteger Int32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
     private static BigInteger NegativeInt32MinValue=(Int32MinValue).negate();
 
-    public FastInteger() {
-    }
-
-    public FastInteger(int value) {
+    public FastInteger (int value) {
       smallValue = value;
     }
 
-    public FastInteger(FastInteger value) {
-      smallValue = value.smallValue;
-      integerMode = value.integerMode;
-      largeValue = value.largeValue;
-      mnum=(value.mnum==null) ? null : value.mnum.Copy();
+    public static FastInteger Copy(FastInteger value) {
+      FastInteger fi=new FastInteger(value.smallValue);
+      fi.integerMode = value.integerMode;
+      fi.largeValue = value.largeValue;
+      fi.mnum=(value.mnum==null || value.integerMode!=1) ? null : value.mnum.Copy();
+      return fi;
     }
 
-    public FastInteger(BigInteger bigintVal) {
+    public static FastInteger FromBig(BigInteger bigintVal) {
       int sign = bigintVal.signum();
       if (sign == 0 ||
           (sign < 0 && bigintVal.compareTo(Int32MinValue) >= 0) ||
           (sign > 0 && bigintVal.compareTo(Int32MaxValue) <= 0)) {
-        integerMode=0;
-        smallValue = bigintVal.intValue();
+        return new FastInteger(bigintVal.intValue());
       } else if(sign>0){
-        integerMode=1;
-        mnum=new MutableNumber(bigintVal);
+        FastInteger fi=new FastInteger(0);
+        fi.integerMode=1;
+        fi.mnum=MutableNumber.FromBigInteger(bigintVal);
+        return fi;
       } else {
-        integerMode=2;
-        largeValue = bigintVal;
+        FastInteger fi=new FastInteger(0);
+        fi.integerMode=2;
+        fi.largeValue = bigintVal;
+        return fi;
       }
     }
 
@@ -66,10 +445,8 @@ at: http://upokecenter.com/d/
       switch(this.integerMode){
         case 0:
           return smallValue;
-          case 1:{
-            BigInteger bigint=mnum.ToBigInteger();
-            return bigint.intValue();
-          }
+        case 1:
+          return mnum.ToInt32();
         case 2:
           return largeValue.intValue();
         default:
@@ -84,18 +461,26 @@ at: http://upokecenter.com/d/
      * is less, or a positive number if this instance is greater.
      */
     public int compareTo(FastInteger val) {
-      switch(this.integerMode){
-        case 0:
-          if(val.integerMode==0){
-            return (val.smallValue == smallValue) ? 0 :
-              (smallValue < val.smallValue ? -1 : 1);
-          } else {
-            return AsBigInteger().compareTo(val.AsBigInteger());
+      switch((this.integerMode<<2)|val.integerMode){
+          case ((0<<2)|0):{
+            int vsv=val.smallValue;
+            return (smallValue == vsv) ? 0 :
+              (smallValue < vsv ? -1 : 1);
           }
-        case 1:
-          return AsBigInteger().compareTo(val.AsBigInteger());
-        case 2:
-          return AsBigInteger().compareTo(val.AsBigInteger());
+        case ((0<<2)|1):
+          return -(val.mnum.CompareToInt(smallValue));
+        case ((0<<2)|2):
+          return AsBigInteger().compareTo(val.largeValue);
+        case ((1<<2)|0):
+          return mnum.CompareToInt(val.smallValue);
+        case ((1<<2)|1):
+          return mnum.compareTo(val.mnum);
+        case ((1<<2)|2):
+          return AsBigInteger().compareTo(val.largeValue);
+        case ((2<<2)|0):
+        case ((2<<2)|1):
+        case ((2<<2)|2):
+          return largeValue.compareTo(val.AsBigInteger());
         default:
           throw new IllegalStateException();
       }
@@ -106,7 +491,26 @@ at: http://upokecenter.com/d/
     public FastInteger Abs() {
       return (this.signum() < 0) ? Negate() : this;
     }
-
+    
+    public static BigInteger WordsToBigInteger(int[] words) {
+      int wordCount=words.length;
+      if(wordCount==1 && (words[0]>>31)==0){
+        return BigInteger.valueOf((int)words[0]);
+      }
+      byte[] bytes = new byte[wordCount * 4 + 1];
+      for (int i = 0; i < wordCount; i++) {
+        bytes[i * 4 + 0] = (byte)((words[i]) & 0xFF);
+        bytes[i * 4 + 1] = (byte)((words[i] >> 8) & 0xFF);
+        bytes[i * 4 + 2] = (byte)((words[i] >> 16) & 0xFF);
+        bytes[i * 4 + 3] = (byte)((words[i] >> 24) & 0xFF);
+      }
+      bytes[bytes.length - 1] = (byte)0;
+      return BigInteger.fromByteArray((byte[])bytes,true);
+    }
+    public static int[] GetLastWords(BigInteger bigint, int numWords32Bit) {
+      return MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
+    }
+    
     /**
      * Sets this object's value to the current value times another integer.
      * @param val The integer to multiply by.
@@ -175,7 +579,7 @@ at: http://upokecenter.com/d/
           if (smallValue == Integer.MIN_VALUE) {
             // would overflow, convert to large
             integerMode=1;
-            mnum = new MutableNumber(NegativeInt32MinValue);
+            mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
           } else {
             smallValue = -smallValue;
           }
@@ -205,14 +609,15 @@ at: http://upokecenter.com/d/
       switch (integerMode) {
         case 0:
           if(val.integerMode==0){
-            if (((int)val.smallValue < 0 && Integer.MAX_VALUE + (int)val.smallValue < smallValue) ||
-                ((int)val.smallValue > 0 && Integer.MIN_VALUE + (int)val.smallValue > smallValue)) {
+            int vsv=val.smallValue;
+            if ((vsv < 0 && Integer.MAX_VALUE + vsv < smallValue) ||
+                (vsv > 0 && Integer.MIN_VALUE + vsv > smallValue)) {
               // would overflow, convert to large
               integerMode=2;
               largeValue = BigInteger.valueOf(smallValue);
-              largeValue=largeValue.subtract(BigInteger.valueOf(val.smallValue));
+              largeValue=largeValue.subtract(BigInteger.valueOf(vsv));
             } else {
-              smallValue-=val.smallValue;
+              smallValue-=vsv;
             }
           } else {
             integerMode=2;
@@ -222,10 +627,18 @@ at: http://upokecenter.com/d/
           }
           break;
         case 1:
-          integerMode=2;
-          largeValue=mnum.ToBigInteger();
-          valValue = val.AsBigInteger();
-          largeValue=largeValue.subtract(valValue);
+          if(val.integerMode==1){
+            // NOTE: Mutable numbers are
+            // currently always zero or positive
+            mnum.Subtract(val.mnum);
+          } else if(val.integerMode==0 && val.smallValue>=0){
+            mnum.SubtractInt(val.smallValue);
+          } else {
+            integerMode=2;
+            largeValue=mnum.ToBigInteger();
+            valValue = val.AsBigInteger();
+            largeValue=largeValue.subtract(valValue);
+          }
           break;
         case 2:
           valValue = val.AsBigInteger();
@@ -241,11 +654,11 @@ at: http://upokecenter.com/d/
      * @param val The subtrahend.
      * @return This object.
      */
-    public FastInteger Subtract(int val) {
+    public FastInteger SubtractInt(int val) {
       if(val==Integer.MIN_VALUE){
-        return Add(NegativeInt32MinValue);
+        return AddBig(NegativeInt32MinValue);
       } else {
-        return Add(-val);
+        return AddInt(-val);
       }
     }
     
@@ -256,16 +669,16 @@ at: http://upokecenter.com/d/
      * @param bigintVal The number to add.
      * @return This object.
      */
-    public FastInteger Add(BigInteger bigintVal) {
+    public FastInteger AddBig(BigInteger bigintVal) {
       switch (integerMode) {
           case 0:{
             int sign = bigintVal.signum();
             if (sign == 0 ||
                 (sign < 0 && bigintVal.compareTo(Int32MinValue) >= 0) ||
                 (sign > 0 && bigintVal.compareTo(Int32MaxValue) <= 0)) {
-              return Add(bigintVal.intValue());
+              return AddInt(bigintVal.intValue());
             }
-            return Add(new FastInteger(bigintVal));
+            return Add(FastInteger.FromBig(bigintVal));
           }
         case 1:
           integerMode=2;
@@ -287,7 +700,7 @@ at: http://upokecenter.com/d/
      * @param bigintVal The subtrahend.
      * @return This object.
      */
-    public FastInteger Subtract(BigInteger bigintVal) {
+    public FastInteger SubtractBig(BigInteger bigintVal) {
       if (integerMode==2) {
         largeValue=largeValue.subtract(bigintVal);
         return this;
@@ -297,13 +710,13 @@ at: http://upokecenter.com/d/
         // Check if this value fits an int, except if
         // it's MinValue
         if(sign < 0 && bigintVal.compareTo(Int32MinValue) > 0){
-          return Add(-(bigintVal.intValue()));
+          return AddInt(-(bigintVal.intValue()));
         }
         if(sign > 0 && bigintVal.compareTo(Int32MaxValue) <= 0){
-          return Subtract(bigintVal.intValue());
+          return SubtractInt(bigintVal.intValue());
         }
         bigintVal=bigintVal.negate();
-        return Add(bigintVal);
+        return AddBig(bigintVal);
       }
     }
     /**
@@ -390,7 +803,6 @@ at: http://upokecenter.com/d/
       return this;
     }
 
-
     /**
      * Divides this instance by the value of a Int32 object.
      * @param divisor A 32-bit signed integer.
@@ -403,7 +815,7 @@ at: http://upokecenter.com/d/
             if (divisor == -1 && smallValue == Integer.MIN_VALUE) {
               // would overflow, convert to large
               integerMode=1;
-              mnum = new MutableNumber(NegativeInt32MinValue);
+              mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
             } else {
               smallValue /= divisor;
             }
@@ -448,11 +860,12 @@ at: http://upokecenter.com/d/
             throw new IllegalStateException();
         }
       }
+    
     /**
      * 
-     * @param val A 64-bit signed integer.
+     * @param val A 32-bit signed integer.
      */
-    public FastInteger Add(int val) {
+    public FastInteger AddInt(int val) {
       BigInteger valValue;
       switch (integerMode) {
         case 0:
@@ -526,7 +939,7 @@ at: http://upokecenter.com/d/
         case 2:
           return largeValue.toString();
         default:
-          throw new IllegalStateException();
+          return "";
       }
     }
     /**
@@ -535,24 +948,23 @@ at: http://upokecenter.com/d/
     public int signum() {
         switch(this.integerMode){
           case 0:
-            if(this.smallValue==0)return 0;
-            return (this.smallValue<0) ? -1 : 1;
+            return ((this.smallValue==0) ? 0 : ((this.smallValue<0) ? -1 : 1));
           case 1:
             return mnum.signum();
           case 2:
             return largeValue.signum();
           default:
-            throw new IllegalStateException();
+            return 0;
         }
       }
-
+    
     /**
      * Compares a Int32 object with this instance.
-     * @param val A 64-bit signed integer.
-     * @return Zero if the values are equal; a negative number is this instance
+     * @param val A 32-bit signed integer.
+     * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
-    public int compareTo(int val) {
+    public int CompareToInt(int val) {
       switch(this.integerMode){
         case 0:
           return (val == smallValue) ? 0 : (smallValue < val ? -1 : 1);
@@ -561,8 +973,16 @@ at: http://upokecenter.com/d/
         case 2:
           return largeValue.compareTo(BigInteger.valueOf(val));
         default:
-          throw new IllegalStateException();
+          return 0;
       }
+    }
+
+    /**
+     * 
+     * @param val A 32-bit signed integer.
+     */
+    public int MinInt32(int val) {
+      return this.CompareToInt(val)<0 ? this.AsInt32() : val;
     }
 
     /**

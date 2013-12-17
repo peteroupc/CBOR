@@ -1,15 +1,5 @@
-function conlog(x){
-}
-var Assert={
-AreEqual:function(x,y){
- if(x.equals ? !x.equals(y) : x!=y){
-  conlog("Expected "+x+", was "+y)
- }
-},
-Fail:function(x){
- conlog("Failed: "+x)
-}
-}
+
+
 function AssertBigIntegersEqual(a,b){
       Assert.AreEqual(a,b.toString());
       var a2=BigInteger.fromString(a);
