@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 
 
@@ -105,7 +105,7 @@ import org.junit.Test;
       return BigInteger.fromString(RandomBigIntString(r));
     }
     public static BigFloat RandomBigFloat(FastRandom r) {
-      return new BigFloat(RandomBigInteger(r),r.NextValue(400)-200);
+      return new BigFloat(RandomBigInteger(r),BigInteger.valueOf(r.NextValue(400)-200));
     }
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
@@ -421,6 +421,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         TestBigFloatSingleCore(RandomSingle(rand, i), null);
       }
     }
+    
     /**
      * 
      */
@@ -2091,16 +2092,16 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test
     public void TestBigFloatDecFrac() {
       BigFloat bf;
-      bf = new BigFloat(20);
+      bf = BigFloat.FromInt64(20);
       Assert.assertEquals("20", DecimalFraction.FromBigFloat(bf).toString());
-      bf = new BigFloat(BigInteger.valueOf(3), -1);
+      bf = new BigFloat(BigInteger.valueOf(3), BigInteger.valueOf(-1));
       Assert.assertEquals("1.5", DecimalFraction.FromBigFloat(bf).toString());
-      bf = new BigFloat(BigInteger.valueOf(-3), -1);
+      bf = new BigFloat(BigInteger.valueOf(-3), BigInteger.valueOf(-1));
       Assert.assertEquals("-1.5", DecimalFraction.FromBigFloat(bf).toString());
       DecimalFraction df;
-      df = new DecimalFraction(20);
+      df = DecimalFraction.FromInt64(20);
       Assert.assertEquals("20", BigFloat.FromDecimalFraction(df).toString());
-      df = new DecimalFraction(-20);
+      df = DecimalFraction.FromInt64(-20);
       Assert.assertEquals("-20", BigFloat.FromDecimalFraction(df).toString());
       df = new DecimalFraction(BigInteger.valueOf(15), -1);
       Assert.assertEquals("1.5", BigFloat.FromDecimalFraction(df).toString());
@@ -3599,11 +3600,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void TestCodePointCompare() {
-      Assert.assertEquals(0, (int)Math.signum(DataUtilities.CodePointCompare("abc", "abc")));
-      Assert.assertEquals(0, (int)Math.signum(DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
-      Assert.assertEquals(-1, (int)Math.signum(DataUtilities.CodePointCompare("abc", "\ud800\udc00")));
-      Assert.assertEquals(-1, (int)Math.signum(DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")));
-      Assert.assertEquals(1, (int)Math.signum(DataUtilities.CodePointCompare("\uf000", "\ud800")));
+      Assert.assertEquals(0, ((DataUtilities.CodePointCompare("abc", "abc")==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "abc")<0) ? -1 : 1)));
+      Assert.assertEquals(0, ((DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")<0) ? -1 : 1)));
+      Assert.assertEquals(-1, ((DataUtilities.CodePointCompare("abc", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "\ud800\udc00")<0) ? -1 : 1)));
+      Assert.assertEquals(-1, ((DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")<0) ? -1 : 1)));
+      Assert.assertEquals(1, ((DataUtilities.CodePointCompare("\uf000", "\ud800")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000", "\ud800")<0) ? -1 : 1)));
     }
     /**
      * 

@@ -928,7 +928,6 @@ namespace Test {
              );
     }
 
-
     private static short DivideUnsigned(int x, short y) {
       unchecked {
         int iy = (((int)y) & 0xFFFF);

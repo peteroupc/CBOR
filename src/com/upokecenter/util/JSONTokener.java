@@ -74,12 +74,12 @@ package com.upokecenter.util;
      *
      * @param s     A source _string.
      */
-    public JSONTokener(String str, int options) {
+    public JSONTokener (String str, int options) {
       if((str)==null)throw new NullPointerException("str");
       mySource = str;
       this.options = options;
     }
-    public JSONTokener(InputStream stream, int options) {
+    public JSONTokener (InputStream stream, int options) {
       if((stream)==null)throw new NullPointerException("stream");
       this.stream = stream;
       this.options = options;

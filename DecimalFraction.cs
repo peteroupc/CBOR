@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 using System;
 using System.Text;
@@ -31,12 +31,20 @@ namespace PeterO {
     /// are equal to those of another object. </summary>
     /// <returns></returns>
     /// <param name='other'> A DecimalFraction object.</param>
-    public bool Equals(DecimalFraction other) {
+    public bool EqualsInternal(DecimalFraction other) {
       DecimalFraction otherValue = other as DecimalFraction;
       if (otherValue == null)
         return false;
       return this.exponent.Equals(otherValue.exponent) &&
         this.mantissa.Equals(otherValue.mantissa);
+    }
+    
+    
+    /// <summary> </summary>
+    /// <param name='other'>A DecimalFraction object.</param>
+    /// <returns></returns>
+    public bool Equals(DecimalFraction other) {
+      return EqualsInternal(other);
     }
     /// <summary> Determines whether this object's mantissa and exponent
     /// are equal to those of another object and that other object is a decimal
@@ -44,7 +52,7 @@ namespace PeterO {
     /// <returns> True if the objects are equal; false otherwise.</returns>
     /// <param name='obj'> A Object object.</param>
     public override bool Equals(object obj) {
-      return Equals(obj as DecimalFraction);
+      return EqualsInternal(obj as DecimalFraction);
     }
     /// <summary> Calculates this object's hash code. </summary>
     /// <returns> This object's hash code.</returns>
@@ -65,35 +73,7 @@ namespace PeterO {
       this.exponent = exponent;
       this.mantissa = mantissa;
     }
-    /// <summary> Creates a decimal fraction with the value exponentSmall*10^mantissa.
-    /// </summary>
-    /// <param name='mantissa'> The unscaled value.</param>
-    /// <param name='exponentSmall'> The decimal exponent.</param>
-    public DecimalFraction(BigInteger mantissa, long exponentSmall) :
-      this(mantissa,(BigInteger)exponentSmall) {
-    }
-    /// <summary> Creates a decimal fraction with the given mantissa and
-    /// an exponent of 0. </summary>
-    /// <param name='mantissa'> The desired value of the bigfloat</param>
-    public DecimalFraction(BigInteger mantissa) :
-      this(mantissa,BigInteger.Zero){
-    }
-    /// <summary> Creates a decimal fraction with the given mantissa and
-    /// an exponent of 0. </summary>
-    /// <param name='mantissaSmall'> The desired value of the bigfloat</param>
-    public DecimalFraction(long mantissaSmall) {
-      this.exponent = BigInteger.Zero;
-      this.mantissa = (BigInteger)mantissaSmall;
-    }
-    /// <summary> Creates a decimal fraction with the given mantissa and
-    /// an exponent of 0. </summary>
-    /// <param name='mantissaSmall'> The unscaled value.</param>
-    /// <param name='exponentSmall'> The decimal exponent.</param>
-    public DecimalFraction(long mantissaSmall, long exponentSmall) {
-      this.exponent = (BigInteger)exponentSmall;
-      this.mantissa = (BigInteger)mantissaSmall;
-    }
-
+    
     /// <summary> Creates a decimal fraction from a string that represents
     /// a number. <para> The format of the string generally consists of:<list
     /// type=''> <item> An optional '-' or '+' character (if '-', the value
@@ -120,20 +100,20 @@ namespace PeterO {
         negative = (str[0] == '-');
         offset++;
       }
-      FastInteger mant = new FastInteger();
+      FastInteger mant = new FastInteger(0);
       bool haveDecimalPoint = false;
       bool haveDigits = false;
       bool haveExponent = false;
-      FastInteger newScale = new FastInteger();
+      FastInteger newScale = new FastInteger(0);
       int i = offset;
       for (; i < str.Length; i++) {
         if (str[i] >= '0' && str[i] <= '9') {
           int thisdigit = (int)(str[i] - '0');
           mant.Multiply(10);
-          mant.Add(thisdigit);
+          mant.AddInt(thisdigit);
           haveDigits = true;
           if (haveDecimalPoint) {
-            newScale.Add(-1);
+            newScale.AddInt(-1);
           }
         } else if (str[i] == '.') {
           if (haveDecimalPoint)
@@ -150,7 +130,7 @@ namespace PeterO {
       if (!haveDigits)
         throw new FormatException();
       if (haveExponent) {
-        FastInteger exp = new FastInteger();
+        FastInteger exp = new FastInteger(0);
         offset = 1;
         haveDigits = false;
         if (i == str.Length) throw new FormatException();
@@ -163,7 +143,7 @@ namespace PeterO {
             haveDigits = true;
             int thisdigit = (int)(str[i] - '0');
             exp.Multiply(10);
-            exp.Add(thisdigit);
+            exp.AddInt(thisdigit);
           } else {
             throw new FormatException();
           }
@@ -292,17 +272,17 @@ namespace PeterO {
     internal static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
       if (diff.Sign <= 0) return BigInteger.One;
       BigInteger bigpow = BigInteger.Zero;
-      FastInteger intcurexp = new FastInteger(diff);
-      if (intcurexp.CompareTo(54) <= 0) {
+      FastInteger intcurexp = FastInteger.FromBig(diff);
+      if (intcurexp.CompareToInt(54) <= 0) {
         return FindPowerOfFive(intcurexp.AsInt32());
       }
       BigInteger mantissa = BigInteger.One;
       while (intcurexp.Sign > 0) {
-        if (intcurexp.CompareTo(27) <= 0) {
+        if (intcurexp.CompareToInt(27) <= 0) {
           bigpow = FindPowerOfFive(intcurexp.AsInt32());
           mantissa *= (BigInteger)bigpow;
           break;
-        } else if (intcurexp.CompareTo(9999999) <= 0) {
+        } else if (intcurexp.CompareToInt(9999999) <= 0) {
           bigpow = BigInteger.Pow(FindPowerOfFive(1), intcurexp.AsInt32());
           mantissa *= (BigInteger)bigpow;
           break;
@@ -310,7 +290,7 @@ namespace PeterO {
           if (bigpow.IsZero)
             bigpow = BigInteger.Pow(FindPowerOfFive(1), 9999999);
           mantissa *= bigpow;
-          intcurexp.Add(-9999999);
+          intcurexp.AddInt(-9999999);
         }
       }
       return mantissa;
@@ -323,15 +303,15 @@ namespace PeterO {
       if (bigintExponent.CompareTo(BigInt36) <= 0) {
         return FindPowerOfTen((int)bigintExponent);
       }
-      FastInteger intcurexp = new FastInteger(bigintExponent);
+      FastInteger intcurexp = FastInteger.FromBig(bigintExponent);
       BigInteger mantissa = BigInteger.One;
       BigInteger bigpow = BigInteger.Zero;
       while (intcurexp.Sign > 0) {
-        if (intcurexp.CompareTo(18) <= 0) {
+        if (intcurexp.CompareToInt(18) <= 0) {
           bigpow = FindPowerOfTen(intcurexp.AsInt32());
           mantissa *= (BigInteger)bigpow;
           break;
-        } else if (intcurexp.CompareTo(9999999) <= 0) {
+        } else if (intcurexp.CompareToInt(9999999) <= 0) {
           int val = intcurexp.AsInt32();
           bigpow = FindPowerOfFive(val);
           bigpow <<= val;
@@ -343,7 +323,7 @@ namespace PeterO {
             bigpow <<= 9999999;
           }
           mantissa *= bigpow;
-          intcurexp.Add(-9999999);
+          intcurexp.AddInt(-9999999);
         }
       }
       return mantissa;
@@ -370,6 +350,12 @@ namespace PeterO {
           ret *= (BigInteger)bigpow;
           return ret;
         }
+      }
+      if(precision>40 && precision<=94){
+        ret = FivePower40;
+        bigpow = FindPowerOfFive(precision-40);
+        ret *= (BigInteger)bigpow;
+        return ret;
       }
       ret = BigInteger.One;
       bool first = true;
@@ -476,13 +462,6 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='value'>A DecimalFraction object.</param>
     /// <returns></returns>
-      public DecimalFraction Abs(DecimalFraction value) {
-        return value.Abs();
-      }
-
-    /// <summary> </summary>
-    /// <param name='value'>A DecimalFraction object.</param>
-    /// <returns></returns>
       public int GetSign(DecimalFraction value) {
         return value.Sign;
       }
@@ -510,7 +489,7 @@ namespace PeterO {
         bool negative = (mantissa.Sign < 0);
         if (mantissa.Sign == 0) return BigInteger.Zero;
         if (negative) mantissa = -mantissa;
-        FastInteger diff = new FastInteger(e1).Subtract(e2).Abs();
+        FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
         if (diff.CanFitInInt32()) {
           mantissa *= (BigInteger)(FindPowerOfTen(diff.AsInt32()));
         } else {
@@ -533,7 +512,7 @@ namespace PeterO {
     /// <param name='olderDigits'>A 32-bit signed integer.</param>
     /// <returns></returns>
     /// <param name='bigint'>A BigInteger object.</param>
-      public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint, int lastDigit, int olderDigits) {
+      public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
         return new DigitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
@@ -541,7 +520,7 @@ namespace PeterO {
     /// <returns></returns>
     /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
-        return new DigitShiftAccumulator(bigint);
+        return new DigitShiftAccumulator(bigint,0,0);
       }
 
     /// <summary> </summary>
@@ -587,15 +566,14 @@ namespace PeterO {
             bigint = (BigInteger)(FindPowerOfTen(power.AsInt32()));
           } else {
             bigint = (BigInteger)(FindPowerOfTenFromBig(power.AsBigInteger()));
-          }          
+          }
         }
         return bigint;
       }
     }
 
-
     private static bool AppendString(StringBuilder builder, char c, FastInteger count) {
-      if (count.CompareTo(Int32.MaxValue) > 0 || count.Sign < 0) {
+      if (count.CompareToInt(Int32.MaxValue) > 0 || count.Sign < 0) {
         throw new NotSupportedException();
       }
       int icount = count.AsInt32();
@@ -619,54 +597,54 @@ namespace PeterO {
       FastInteger sbLength = new FastInteger(mantissaString.Length);
       int negaPos = 0;
       if (mantissaString[0] == '-') {
-        sbLength.Add(-1);
+        sbLength.AddInt(-1);
         negaPos = 1;
       }
-      FastInteger adjustedExponent = new FastInteger(this.exponent);
-      FastInteger thisExponent = new FastInteger(adjustedExponent);
-      adjustedExponent.Add(sbLength).Add(-1);
+      FastInteger adjustedExponent = FastInteger.FromBig(this.exponent);
+      FastInteger thisExponent = FastInteger.Copy(adjustedExponent);
+      adjustedExponent.Add(sbLength).AddInt(-1);
       FastInteger decimalPointAdjust = new FastInteger(1);
       FastInteger threshold = new FastInteger(-6);
       if (mode == 1) { // engineering string adjustments
-        FastInteger newExponent = new FastInteger(adjustedExponent);
+        FastInteger newExponent = FastInteger.Copy(adjustedExponent);
         bool adjExponentNegative = (adjustedExponent.Sign < 0);
-        int intphase = new FastInteger(adjustedExponent).Abs().Mod(3).AsInt32();
+        int intphase = FastInteger.Copy(adjustedExponent).Abs().Mod(3).AsInt32();
         if (iszero && (adjustedExponent.CompareTo(threshold) < 0 ||
                        scaleSign < 0)) {
           if (intphase == 1) {
             if (adjExponentNegative) {
-              decimalPointAdjust.Add(1);
-              newExponent.Add(1);
+              decimalPointAdjust.AddInt(1);
+              newExponent.AddInt(1);
             } else {
-              decimalPointAdjust.Add(2);
-              newExponent.Add(2);
+              decimalPointAdjust.AddInt(2);
+              newExponent.AddInt(2);
             }
           } else if (intphase == 2) {
             if (!adjExponentNegative) {
-              decimalPointAdjust.Add(1);
-              newExponent.Add(1);
+              decimalPointAdjust.AddInt(1);
+              newExponent.AddInt(1);
             } else {
-              decimalPointAdjust.Add(2);
-              newExponent.Add(2);
+              decimalPointAdjust.AddInt(2);
+              newExponent.AddInt(2);
             }
           }
-          threshold.Add(1);
+          threshold.AddInt(1);
         } else {
           if (intphase == 1) {
             if (!adjExponentNegative) {
-              decimalPointAdjust.Add(1);
-              newExponent.Add(-1);
+              decimalPointAdjust.AddInt(1);
+              newExponent.AddInt(-1);
             } else {
-              decimalPointAdjust.Add(2);
-              newExponent.Add(-2);
+              decimalPointAdjust.AddInt(2);
+              newExponent.AddInt(-2);
             }
           } else if (intphase == 2) {
             if (adjExponentNegative) {
-              decimalPointAdjust.Add(1);
-              newExponent.Add(-1);
+              decimalPointAdjust.AddInt(1);
+              newExponent.AddInt(-1);
             } else {
-              decimalPointAdjust.Add(2);
-              newExponent.Add(-2);
+              decimalPointAdjust.AddInt(2);
+              newExponent.AddInt(-2);
             }
           }
         }
@@ -675,13 +653,13 @@ namespace PeterO {
       if (mode == 2 || ((adjustedExponent.CompareTo(threshold) >= 0 &&
                          scaleSign >= 0))) {
         if (scaleSign > 0) {
-          FastInteger decimalPoint = new FastInteger(thisExponent).Add(negaPos).Add(sbLength);
-          int cmp = decimalPoint.CompareTo(negaPos);
+          FastInteger decimalPoint = FastInteger.Copy(thisExponent).AddInt(negaPos).Add(sbLength);
+          int cmp = decimalPoint.CompareToInt(negaPos);
           System.Text.StringBuilder builder = null;
           if (cmp < 0) {
-            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).AddInt(6);
             builder = new System.Text.StringBuilder(
-              tmpFast.CompareTo(Int32.MaxValue)>0 ?
+              tmpFast.CompareToInt(Int32.MaxValue)>0 ?
               Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, negaPos);
             builder.Append("0.");
@@ -692,26 +670,26 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt = decimalPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).AddInt(6);
             builder = new System.Text.StringBuilder(
-              tmpFast.CompareTo(Int32.MaxValue)>0 ?
+              tmpFast.CompareToInt(Int32.MaxValue)>0 ?
               Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, tmpInt);
             builder.Append("0.");
             builder.Append(mantissaString, tmpInt, mantissaString.Length - tmpInt);
-          } else if (decimalPoint.CompareTo(new FastInteger(negaPos).Add(mantissaString.Length)) > 0) {
+          } else if (decimalPoint.CompareTo(new FastInteger(negaPos).AddInt(mantissaString.Length)) > 0) {
             FastInteger insertionPoint = new FastInteger(negaPos).Add(sbLength);
             if (!insertionPoint.CanFitInInt32())
               throw new NotSupportedException();
             int tmpInt = insertionPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).AddInt(6);
             builder = new System.Text.StringBuilder(
-              tmpFast.CompareTo(Int32.MaxValue)>0 ?
+              tmpFast.CompareToInt(Int32.MaxValue)>0 ?
               Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, tmpInt);
             AppendString(builder, '0',
-                         new FastInteger(decimalPoint).Subtract(builder.Length));
+                         FastInteger.Copy(decimalPoint).SubtractInt(builder.Length));
             builder.Append('.');
             builder.Append(mantissaString, tmpInt, mantissaString.Length - tmpInt);
           } else {
@@ -719,9 +697,9 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt = decimalPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).AddInt(6);
             builder = new System.Text.StringBuilder(
-              tmpFast.CompareTo(Int32.MaxValue)>0 ?
+              tmpFast.CompareToInt(Int32.MaxValue)>0 ?
               Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, tmpInt);
             builder.Append('.');
@@ -729,7 +707,7 @@ namespace PeterO {
           }
           return builder.ToString();
         } else if (mode == 2 && scaleSign < 0) {
-          FastInteger negscale = new FastInteger(thisExponent);
+          FastInteger negscale = FastInteger.Copy(thisExponent);
           System.Text.StringBuilder builder = new System.Text.StringBuilder();
           builder.Append(mantissaString);
           AppendString(builder, '0', negscale);
@@ -739,16 +717,16 @@ namespace PeterO {
         }
       } else {
         System.Text.StringBuilder builder = null;
-        if (mode == 1 && iszero && decimalPointAdjust.CompareTo(1) > 0) {
+        if (mode == 1 && iszero && decimalPointAdjust.CompareToInt(1) > 0) {
           builder = new System.Text.StringBuilder();
           builder.Append(mantissaString);
           builder.Append('.');
-          AppendString(builder, '0', new FastInteger(decimalPointAdjust).Add(-1));
+          AppendString(builder, '0', FastInteger.Copy(decimalPointAdjust).AddInt(-1));
         } else {
           FastInteger tmp = new FastInteger(negaPos).Add(decimalPointAdjust);
-          int cmp = tmp.CompareTo(mantissaString.Length);
+          int cmp = tmp.CompareToInt(mantissaString.Length);
           if (cmp > 0) {
-            tmp.Subtract(mantissaString.Length);
+            tmp.SubtractInt(mantissaString.Length);
             builder = new System.Text.StringBuilder();
             builder.Append(mantissaString);
             AppendString(builder, '0', tmp);
@@ -758,9 +736,9 @@ namespace PeterO {
               throw new NotSupportedException();
             int tmpInt = tmp.AsInt32();
             if (tmp.Sign < 0) tmpInt = 0;
-            FastInteger tmpFast=new FastInteger(mantissaString.Length).Add(6);
+            FastInteger tmpFast=new FastInteger(mantissaString.Length).AddInt(6);
             builder = new System.Text.StringBuilder(
-              tmpFast.CompareTo(Int32.MaxValue)>0 ?
+              tmpFast.CompareToInt(Int32.MaxValue)>0 ?
               Int32.MaxValue : tmpFast.AsInt32());
             builder.Append(mantissaString, 0, tmpInt);
             builder.Append('.');
@@ -777,7 +755,7 @@ namespace PeterO {
           adjustedExponent.Abs();
           StringBuilder builderReversed = new StringBuilder();
           while (adjustedExponent.Sign != 0) {
-            int digit = new FastInteger(adjustedExponent).Mod(10).AsInt32();
+            int digit = FastInteger.Copy(adjustedExponent).Mod(10).AsInt32();
             // Each digit is retrieved from right to left
             builderReversed.Append((char)('0' + digit));
             adjustedExponent.Divide(10);
@@ -859,7 +837,7 @@ namespace PeterO {
       int fpMantissa = value & 0x7FFFFF;
       if (fpExponent == 0) fpExponent++;
       else fpMantissa |= (1 << 23);
-      if (fpMantissa == 0) return new DecimalFraction(0);
+      if (fpMantissa == 0) return DecimalFraction.Zero;
       fpExponent -= 150;
       while ((fpMantissa & 1) == 0) {
         fpExponent++;
@@ -868,21 +846,31 @@ namespace PeterO {
       bool neg = ((value >> 31) != 0);
       if (fpExponent == 0) {
         if (neg) fpMantissa = -fpMantissa;
-        return new DecimalFraction(fpMantissa);
+        return DecimalFraction.FromInt64(fpMantissa);
       } else if (fpExponent > 0) {
         // Value is an integer
         BigInteger bigmantissa = (BigInteger)fpMantissa;
         bigmantissa <<= fpExponent;
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new DecimalFraction(bigmantissa);
+        return DecimalFraction.FromBigInteger(bigmantissa);
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = (BigInteger)fpMantissa;
         bigmantissa *= (BigInteger)(FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new DecimalFraction(bigmantissa, fpExponent);
+        return new DecimalFraction(bigmantissa, (BigInteger)fpExponent);
       }
     }
+    
+    public static DecimalFraction FromBigInteger(BigInteger bigint) {
+      return new DecimalFraction(bigint,BigInteger.Zero);
+    }
+    
+    public static DecimalFraction FromInt64(long valueSmall) {
+      BigInteger bigint=(BigInteger)valueSmall;
+      return new DecimalFraction(bigint,BigInteger.Zero);
+    }
+
     /// <summary> Creates a decimal fraction from a 64-bit floating-point
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
@@ -903,22 +891,22 @@ namespace PeterO {
         fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
       }
       fpExponent -= 1075;
-      BigInteger fpMantissaBig=MutableNumber.WordsToBigInteger(value);
+      BigInteger fpMantissaBig=FastInteger.WordsToBigInteger(value);
       if (fpExponent == 0) {
         if (neg) fpMantissaBig = -fpMantissaBig;
-        return new DecimalFraction(fpMantissaBig);
+        return DecimalFraction.FromBigInteger(fpMantissaBig);
       } else if (fpExponent > 0) {
         // Value is an integer
         BigInteger bigmantissa = (BigInteger)fpMantissaBig;
         bigmantissa <<= fpExponent;
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new DecimalFraction(bigmantissa);
+        return DecimalFraction.FromBigInteger(bigmantissa);
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = (BigInteger)fpMantissaBig;
         bigmantissa *= (BigInteger)(FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new DecimalFraction(bigmantissa, fpExponent);
+        return new DecimalFraction(bigmantissa, (BigInteger)fpExponent);
       }
     }
 
@@ -932,23 +920,23 @@ namespace PeterO {
       BigInteger bigintMant = bigfloat.Mantissa;
       if (bigintExp.IsZero) {
         // Integer
-        return new DecimalFraction(bigintMant);
+        return DecimalFraction.FromBigInteger(bigintMant);
       } else if (bigintExp.Sign > 0) {
         // Scaled integer
-        FastInteger intcurexp = new FastInteger(bigintExp);
+        FastInteger intcurexp = FastInteger.FromBig(bigintExp);
         BigInteger bigmantissa = bigintMant;
         bool neg = (bigmantissa.Sign < 0);
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
         while (intcurexp.Sign > 0) {
           int shift = 512;
-          if (intcurexp.CompareTo(512) < 0) {
+          if (intcurexp.CompareToInt(512) < 0) {
             shift = intcurexp.AsInt32();
           }
           bigmantissa <<= shift;
-          intcurexp.Add(-shift);
+          intcurexp.AddInt(-shift);
         }
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new DecimalFraction(bigmantissa);
+        return DecimalFraction.FromBigInteger(bigmantissa);
       } else {
         // Fractional number
         BigInteger bigmantissa = bigintMant;
@@ -982,12 +970,27 @@ namespace PeterO {
     }
 
     /// <summary> Represents the number 1. </summary>
-    public static readonly DecimalFraction One = new DecimalFraction(1);
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="DecimalFraction is immutable")]
+    #endif
+    public static readonly DecimalFraction One = new DecimalFraction(BigInteger.One,BigInteger.Zero);
 
     /// <summary> Represents the number 0. </summary>
-    public static readonly DecimalFraction Zero = new DecimalFraction(0);
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="DecimalFraction is immutable")]
+    #endif
+    public static readonly DecimalFraction Zero = new DecimalFraction(BigInteger.Zero,BigInteger.Zero);
     /// <summary> Represents the number 10. </summary>
-    public static readonly DecimalFraction Ten = new DecimalFraction(10);
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104", 
+      Justification="DecimalFraction is immutable")]
+    #endif
+    public static readonly DecimalFraction Ten = new DecimalFraction((BigInteger)10,BigInteger.Zero);
 
     //----------------------------------------------------------------
 
@@ -1031,7 +1034,7 @@ namespace PeterO {
     /// <exception cref='ArithmeticException'>The result would have
     /// a nonterminating decimal expansion.</exception>
     public DecimalFraction Divide(DecimalFraction divisor) {
-      return Divide(divisor, new PrecisionContext(Rounding.Unnecessary));
+      return Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
 
     /// <summary> Divides this object by another decimal fraction and returns
@@ -1044,8 +1047,8 @@ namespace PeterO {
     /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
-    public DecimalFraction Divide(DecimalFraction divisor, Rounding rounding) {
-      return Divide(divisor, this.exponent, rounding);
+    public DecimalFraction DivideToSameExponent(DecimalFraction divisor, Rounding rounding) {
+      return DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two DecimalFraction objects, and returns the
@@ -1058,9 +1061,8 @@ namespace PeterO {
     public DecimalFraction DivideToIntegerNaturalScale(
       DecimalFraction divisor
      ) {
-      return DivideToIntegerNaturalScale(divisor, new PrecisionContext(Rounding.Down));
+      return DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
-
 
     /// <summary> Removes trailing zeros from this object's mantissa. For
     /// example, 1.000 becomes 1.</summary>
@@ -1085,7 +1087,7 @@ namespace PeterO {
     public DecimalFraction RemainderNaturalScale(
       DecimalFraction divisor
      ) {
-      return Subtract(this.DivideToIntegerNaturalScale(divisor).Multiply(divisor));
+      return RemainderNaturalScale(divisor,null);
     }
 
     /// <summary> </summary>
@@ -1096,7 +1098,8 @@ namespace PeterO {
       DecimalFraction divisor,
       PrecisionContext ctx
      ) {
-      return Subtract(this.DivideToIntegerNaturalScale(divisor).Multiply(divisor),ctx);
+      return Subtract(this.DivideToIntegerNaturalScale(divisor,null)
+                      .Multiply(divisor,null),ctx);
     }
 
     /// <summary>Divides two DecimalFraction objects, and gives a particular
@@ -1120,13 +1123,12 @@ namespace PeterO {
     /// an exponent range.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
-    public DecimalFraction Divide(
+    public DecimalFraction DivideToExponent(
       DecimalFraction divisor,
       long desiredExponentSmall,
       PrecisionContext ctx
      ) {
-      BigInteger desexp=(BigInteger)desiredExponentSmall;
-      return Divide(divisor, desexp, ctx);
+      return DivideToExponent(divisor, ((BigInteger)desiredExponentSmall), ctx);
     }
 
     /// <summary>Divides two DecimalFraction objects, and gives a particular
@@ -1143,13 +1145,12 @@ namespace PeterO {
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
     /// <returns>The quotient of the two objects.</returns>
-    public DecimalFraction Divide(
+    public DecimalFraction DivideToExponent(
       DecimalFraction divisor,
       long desiredExponentSmall,
       Rounding rounding
      ) {
-      BigInteger desexp=(BigInteger)desiredExponentSmall;
-      return Divide(divisor, desexp, new PrecisionContext(rounding));
+      return DivideToExponent(divisor, ((BigInteger)desiredExponentSmall), PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two DecimalFraction objects, and gives a particular
@@ -1172,12 +1173,10 @@ namespace PeterO {
     /// an exponent range.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
-    public DecimalFraction Divide(
+    public DecimalFraction DivideToExponent(
       DecimalFraction divisor, BigInteger exponent, PrecisionContext ctx) {
       return math.DivideToExponent(this, divisor, exponent, ctx);
     }
-
-
 
     /// <summary>Divides two DecimalFraction objects, and gives a particular
     /// exponent to the result.</summary>
@@ -1193,14 +1192,13 @@ namespace PeterO {
     /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
-    public DecimalFraction Divide(
+    public DecimalFraction DivideToExponent(
       DecimalFraction divisor,
       BigInteger desiredExponent,
       Rounding rounding
      ) {
-      return Divide(divisor, desiredExponent, new PrecisionContext(rounding));
+      return DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
-
 
     /// <summary> Finds the absolute value of this object (if it's negative,
     /// it becomes positive).</summary>
@@ -1213,15 +1211,6 @@ namespace PeterO {
       return Abs().RoundToPrecision(context);
     }
 
-
-
-
-
-
-
-
-
-
     /// <summary> Returns a decimal fraction with the same value as this object
     /// but with the sign reversed.</summary>
     /// <param name='context'> A precision context to control precision,
@@ -1233,12 +1222,6 @@ namespace PeterO {
       return Negate().RoundToPrecision(context);
     }
 
-
-
-
-
-
-
     /// <summary> Adds this object and another decimal fraction and returns
     /// the result.</summary>
     /// <param name='decfrac'>A DecimalFraction object.</param>
@@ -1248,20 +1231,13 @@ namespace PeterO {
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
-
-
-
-
-
     /// <summary>Subtracts a DecimalFraction object from this instance
     /// and returns the result..</summary>
     /// <param name='decfrac'>A DecimalFraction object.</param>
     /// <returns>The difference of the two objects.</returns>
     public DecimalFraction Subtract(DecimalFraction decfrac) {
-      if((decfrac)==null)throw new ArgumentNullException("decfrac");
-      return Add(decfrac.Negate());
+      return Subtract(decfrac,null);
     }
-
 
     /// <summary>Subtracts a DecimalFraction object from this instance.</summary>
     /// <param name='decfrac'>A DecimalFraction object.</param>
@@ -1295,7 +1271,7 @@ namespace PeterO {
     /// <returns> The result this * multiplicand + augend.</returns>
     public DecimalFraction MultiplyAndAdd(DecimalFraction multiplicand,
                                           DecimalFraction augend) {
-      return this.Multiply(multiplicand).Add(augend);
+      return MultiplyAndAdd(multiplicand,augend,null);
     }
     //----------------------------------------------------------------
 
@@ -1378,12 +1354,13 @@ namespace PeterO {
     /// if the quotient, rounded down, is even, and the result's absolute
     /// value is half of the divisor's absolute value.</item>
     /// </list>
-    /// </summary>
+    /// This function is also known as the "IEEE Remainder" function. </summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision.
-    /// The rounding and exponent range settings of this context are ignored.
-    /// No flags will be set from this operation even if HasFlags of the context
-    /// is true. Can be null.</param>
+    /// The rounding and exponent range settings of this context are ignored
+    /// (the rounding mode is always treated as HalfEven). No flags will be
+    /// set from this operation even if HasFlags of the context is true. Can
+    /// be null.</param>
     /// <returns>The distance of the closest multiple.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
@@ -1408,7 +1385,6 @@ namespace PeterO {
      ){
       return math.NextMinus(this,ctx);
     }
-
 
     /// <summary> Finds the smallest value that's greater than the given
     /// value.</summary>
@@ -1471,45 +1447,44 @@ namespace PeterO {
       return math.Divide(this, divisor, ctx);
     }
 
-
     /// <summary> Gets the greater value between two decimal fractions.
     /// </summary>
     /// <returns> The larger value of the two objects.</returns>
-    /// <param name='a'>A DecimalFraction object.</param>
-    /// <param name='b'>A DecimalFraction object.</param>
+    /// <param name='first'>A DecimalFraction object.</param>
+    /// <param name='second'>A DecimalFraction object.</param>
     public static DecimalFraction Max(
-      DecimalFraction a, DecimalFraction b) {
-      return math.Max(a, b);
+      DecimalFraction first, DecimalFraction second) {
+      return math.Max(first, second);
     }
 
     /// <summary> Gets the lesser value between two decimal fractions. </summary>
     /// <returns> The smaller value of the two objects.</returns>
-    /// <param name='a'>A DecimalFraction object.</param>
-    /// <param name='b'>A DecimalFraction object.</param>
+    /// <param name='first'>A DecimalFraction object.</param>
+    /// <param name='second'>A DecimalFraction object.</param>
     public static DecimalFraction Min(
-      DecimalFraction a, DecimalFraction b) {
-      return math.Min(a, b);
+      DecimalFraction first, DecimalFraction second) {
+      return math.Min(first, second);
     }
     /// <summary> Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.
     /// </summary>
     /// <returns></returns>
-    /// <param name='a'>A DecimalFraction object.</param>
-    /// <param name='b'>A DecimalFraction object.</param>
+    /// <param name='first'>A DecimalFraction object.</param>
+    /// <param name='second'>A DecimalFraction object.</param>
     public static DecimalFraction MaxMagnitude(
-      DecimalFraction a, DecimalFraction b) {
-      return math.MaxMagnitude(a, b);
+      DecimalFraction first, DecimalFraction second) {
+      return math.MaxMagnitude(first, second);
     }
     
     /// <summary> Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
     /// <returns></returns>
-    /// <param name='a'>A DecimalFraction object.</param>
-    /// <param name='b'>A DecimalFraction object.</param>
+    /// <param name='first'>A DecimalFraction object.</param>
+    /// <param name='second'>A DecimalFraction object.</param>
     public static DecimalFraction MinMagnitude(
-      DecimalFraction a, DecimalFraction b) {
-      return math.MinMagnitude(a, b);
+      DecimalFraction first, DecimalFraction second) {
+      return math.MinMagnitude(first, second);
     }
     /// <summary> Compares the mathematical values of this object and another
     /// object. <para> This method is not consistent with the Equals method
@@ -1555,7 +1530,7 @@ namespace PeterO {
     /// an exponent range.</exception>
     public DecimalFraction Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return math.Quantize(this, new DecimalFraction(BigInteger.One,desiredExponent), ctx);
+      return Quantize(new DecimalFraction(BigInteger.One,desiredExponent), ctx);
     }
 
     /// <summary> Returns a decimal fraction with the same value but a new
@@ -1572,11 +1547,10 @@ namespace PeterO {
     /// <exception cref='System.ArgumentException'>The exponent is
     /// outside of the valid range of the precision context, if it defines
     /// an exponent range.</exception>
-    /// <param name='desiredExponentInteger'>A 32-bit signed integer.</param>
+    /// <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
     public DecimalFraction Quantize(
-      int desiredExponentInteger, PrecisionContext ctx) {
-      return math.Quantize(this,
-                           new DecimalFraction(BigInteger.One,(BigInteger)desiredExponentInteger), ctx);
+      int desiredExponentSmall, PrecisionContext ctx) {
+      return Quantize(new DecimalFraction(BigInteger.One,(BigInteger)desiredExponentSmall), ctx);
     }
 
     /// <summary> Returns a decimal fraction with the same value as this object
@@ -1592,25 +1566,102 @@ namespace PeterO {
     /// with the exponent changed.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
     /// or the result can't fit the given precision without rounding.</exception>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// is outside of the valid range of the precision context, if it defines
+    /// an exponent range.</exception>
     public DecimalFraction Quantize(
       DecimalFraction otherValue, PrecisionContext ctx) {
       return math.Quantize(this, otherValue, ctx);
     }
-    /// <summary> </summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <summary> Returns a decimal fraction with the same value as this object
+    /// but rounded to an integer. </summary>
+    /// <param name='ctx'> A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
+    /// <returns>A decimal fraction with the same value as this object but
+    /// rounded to an integer.</returns>
+    /// <exception cref='ArithmeticException'>An overflow error occurred,
+    /// or the result can't fit the given precision without rounding.</exception>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// must be changed to 0 when rounding and 0 is outside of the valid range
+    /// of the precision context, if it defines an exponent range.</exception>
     public DecimalFraction RoundToIntegralExact(
       PrecisionContext ctx) {
-      return math.RoundToIntegralExact(this, ctx);
+      return math.RoundToExponentExact(this, BigInteger.Zero, ctx);
     }
-    /// <summary> </summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
-    public DecimalFraction RoundToIntegralValue(
+    /// <summary> Returns a decimal fraction with the same value as this object
+    /// but rounded to an integer, without adding the FlagInexact or FlagRounded
+    /// flags. </summary>
+    /// <param name='ctx'> A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags), except that this function will never
+    /// add the FlagRounded and FlagInexact flags (the only difference between
+    /// this and RoundToExponentExact). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
+    /// <returns>A decimal fraction with the same value as this object but
+    /// rounded to an integer.</returns>
+    /// <exception cref='ArithmeticException'>An overflow error occurred,
+    /// or the result can't fit the given precision without rounding.</exception>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// must be changed to 0 when rounding and 0 is outside of the valid range
+    /// of the precision context, if it defines an exponent range.</exception>
+    public DecimalFraction RoundToIntegralNoRoundedFlag(
       PrecisionContext ctx) {
-      return math.RoundToIntegralValue(this, ctx);
+      return math.RoundToExponentNoRoundedFlag(this, BigInteger.Zero, ctx);
     }
-
+    /// <summary> Returns a decimal fraction with the same value as this object
+    /// but rounded to a given exponent. </summary>
+    /// <param name='exponent'>The minimum exponent the result can have.
+    /// This is the maximum number of fractional digits in the result, expressed
+    /// as a negative number. Can also be positive, which eliminates lower-order
+    /// places from the number. For example, -3 means round to the thousandth
+    /// (10^-3), and 3 means round to the thousand (10^3). A value of 0 rounds
+    /// the number to an integer.</param>
+    /// <param name='ctx'> A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
+    /// <returns>A decimal fraction rounded to the given exponent.</returns>
+    /// <exception cref='ArithmeticException'>An overflow error occurred,
+    /// or the result can't fit the given precision without rounding.</exception>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// must be changed when rounding and the new exponent is outside of the
+    /// valid range of the precision context, if it defines an exponent range.</exception>
+    public DecimalFraction RoundToExponentExact(
+      BigInteger exponent, PrecisionContext ctx) {
+      return math.RoundToExponentExact(this, exponent, ctx);
+    }
+    /// <summary> Returns a decimal fraction with the same value as this object
+    /// but rounded to a given exponent, without throwing an exception if
+    /// the result overflows or doesn't fit the precision range. </summary>
+    /// <param name='exponent'>The minimum exponent the result can have.
+    /// This is the maximum number of fractional digits in the result, expressed
+    /// as a negative number. Can also be positive, which eliminates lower-order
+    /// places from the number. For example, -3 means round to the thousandth
+    /// (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+    /// value of 0 rounds the number to an integer.</param>
+    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). Can be null, in which case
+    /// the default rounding mode is HalfEven.</param>
+    /// <returns>A decimal fraction rounded to the closest value representable
+    /// in the given precision, meaning if the result can't fit the precision,
+    /// additional digits are discarded to make it fit. Returns null if the
+    /// result of the rounding would cause an overflow. The caller can handle
+    /// a null return value by treating it as positive or negative infinity
+    /// depending on the sign of this object's value.</returns>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// must be changed when rounding and the new exponent is outside of the
+    /// valid range of the precision context, if it defines an exponent range.</exception>
+    public DecimalFraction RoundToExponent(
+      BigInteger exponent, PrecisionContext ctx) {
+      return math.RoundToExponentSimple(this, exponent, ctx);
+    }
 
     /// <summary> Multiplies two decimal fractions. The resulting scale
     /// will be the sum of the scales of the two decimal fractions. </summary>
@@ -1629,7 +1680,6 @@ namespace PeterO {
       DecimalFraction op, PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);
     }
-
     /// <summary> Multiplies by one value, and then adds another value. </summary>
     /// <param name='op'> The value to multiply.</param>
     /// <param name='augend'> The value to add.</param>

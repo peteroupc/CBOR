@@ -24,8 +24,7 @@ package com.upokecenter.test;
     int m_w = 521288629;
     int m_z = 362436069;
     
-    public FastRandom()
-    {
+    public FastRandom () {
       rand=new java.util.Random();
       count=ReseedCount;
     }

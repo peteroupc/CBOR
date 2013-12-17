@@ -1,40 +1,10 @@
-/**
-     * An arbitrary-precision integer.
-     */
+
 var BigInteger = 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//"T",TA);
-//"Ta",TA);
-
-/**
-     * Initializes a BigInteger object set to zero.
-     */
 function() {
 
 };
-(function(constructor, prototype){
+(function(constructor,prototype){
     constructor.CountWords = function(X, N) {
         while (N != 0 && X[N - 1] == 0) N--;
         return (N|0);
@@ -2733,7 +2703,7 @@ function() {
                     BigInteger.Baseline_Multiply16(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
                     break;
                 default:
-                    throw new RuntimeException();
+                    throw "exception";
             }
         } else {
             var N2 = ((N / 2)|0);
@@ -2770,7 +2740,7 @@ function() {
                     BigInteger.Baseline_Square16(Rarr, Rstart, Aarr, Astart);
                     break;
                 default:
-                    throw new RuntimeException();
+                    throw "exception";
             }
         } else {
             var N2 = ((N / 2)|0);
@@ -2861,22 +2831,47 @@ function() {
     };
     constructor.BitPrecision = function(numberValue) {
         if (numberValue == 0) return 0;
-        var ivalue = ((numberValue|0) & 65535);
-        var l = 0, h = 16;
-        while (h - l > 1) {
-            var middle = (((l + h) / 2)|0);
-            if ((ivalue >> (middle|0)) != 0) l = middle; else h = middle;
+        var i = 16;
+        {
+            if ((numberValue >> 8) == 0) {
+                numberValue <<= 8;
+                i -= 8;
+            }
+            if ((numberValue >> 12) == 0) {
+                numberValue <<= 4;
+                i -= 4;
+            }
+            if ((numberValue >> 14) == 0) {
+                numberValue <<= 2;
+                i -= 2;
+            }
+            if ((numberValue >> 15) == 0) --i;
         }
-        return h;
+        return i;
     };
     constructor.BitPrecisionInt = function(numberValue) {
         if (numberValue == 0) return 0;
-        var l = 0, h = 32;
-        while (h - l > 1) {
-            var middle = (((l + h) / 2)|0);
-            if ((numberValue >> (middle|0)) != 0) l = middle; else h = middle;
+        var i = 32;
+        {
+            if ((numberValue >> 16) == 0) {
+                numberValue <<= 16;
+                i -= 16;
+            }
+            if ((numberValue >> 24) == 0) {
+                numberValue <<= 8;
+                i -= 8;
+            }
+            if ((numberValue >> 28) == 0) {
+                numberValue <<= 4;
+                i -= 4;
+            }
+            if ((numberValue >> 30) == 0) {
+                numberValue <<= 2;
+                i -= 2;
+            }
+            if ((numberValue >> 31) == 0) --i;
         }
-        return h;
+        return i;
     };
     constructor.Divide32By16 = function(dividendLow, divisorShort, returnRemainder) {
         var tmpInt;
@@ -3019,18 +3014,14 @@ function() {
     prototype.negative = null;
     prototype.wordCount = -1;
     prototype.reg = null;
-    /**
-     * Initializes a BigInteger object from an array of bytes.
-     * @param bytes A Array<Byte> object.
-     * @param littleEndian A Boolean object.
-     */
+    
     constructor.fromByteArray = function(bytes, littleEndian) {
         var bigint = new BigInteger();
         bigint.fromByteArrayInternal(bytes, littleEndian);
         return bigint;
     };
     prototype.fromByteArrayInternal = function(bytes, littleEndian) {
-        if (bytes == null) throw new RuntimeException("bytes");
+        if (bytes == null) throw ("bytes");
         if (bytes.length == 0) {
             this.reg = [0, 0];
             this.wordCount = 0;
@@ -3065,7 +3056,6 @@ function() {
     prototype.Allocate = function(length) {
         this.reg = [];
         for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(length); arrfillI++) this.reg[arrfillI] = 0;
-        BigInteger.SetWords(this.reg, 1, 0, ((this.reg.length - 1)|0));
         
         this.negative = false;
         this.wordCount = 0;
@@ -3096,12 +3086,9 @@ function() {
             this.wordCount = this.CalcWordCount();
         }
     };
-    /**
-     * 
-     * @param index A 32-bit unsigned integer.
-     */
+    
     prototype.testBit = function(index) {
-        if (index < 0) throw new RuntimeException("index");
+        if (index < 0) throw ("index");
         if (this.signum() < 0) {
             var tcindex = 0;
             var wordpos = ((index / 16)|0);
@@ -3120,12 +3107,8 @@ function() {
             return this.GetUnsignedBit(index);
         }
     };
-    /**
-     * 
-     * @param n A 32-bit unsigned integer.
-     */
+    
     prototype.GetUnsignedBit = function(n) {
-        if ((n) < 0) throw new RuntimeException("n" + " not greater or equal to " + "0" + " (" + ((n|0)+"") + ")");
         if (((n / 16)|0) >= this.reg.length) return false; else return (((this.reg[((n / 16)|0)] >> ((n & 15)|0)) & 1) != 0);
     };
     prototype.InitializeInt = function(numberValue) {
@@ -3147,11 +3130,7 @@ function() {
         }
         return this;
     };
-    /**
-     * Returns a byte array of this object's value.
-     * @param littleEndian A Boolean object.
-     * @return A byte array that represents the value of this object.
-     */
+    
     prototype.toByteArray = function(littleEndian) {
         var sign = this.signum();
         if (sign == 0) {
@@ -3214,53 +3193,50 @@ function() {
             return bytes;
         }
     };
-    /**
-     * Shifts this object's value by a number of bits. A value of 1 doubles
-     * this value, a value of 2 multiplies it by 4, a value of 3 by 8, a value of
-     * 4 by 16, and so on.
-     * @param n The number of bits to shift. Can be negative, in which case
-     * this is the same as shiftRight with the absolute value of n.
-     */
-    prototype.shiftLeft = function(n) {
-        if (n == 0) return this;
-        if (n < 0) {
-            if (n == -2147483648) return this.shiftRight(1).shiftRight(2147483647);
-            return this.shiftRight(-n);
+    
+    prototype.shiftLeft = function(numberBits) {
+        if (numberBits == 0) return this;
+        if (numberBits < 0) {
+            if (numberBits == -2147483648) return this.shiftRight(1).shiftRight(2147483647);
+            return this.shiftRight(-numberBits);
         }
         var ret = new BigInteger();
         var numWords = ((this.wordCount)|0);
-        var shiftWords = ((n >> 4)|0);
-        var shiftBits = ((n & 15)|0);
+        var shiftWords = ((numberBits >> 4)|0);
+        var shiftBits = ((numberBits & 15)|0);
         var neg = numWords > 0 && this.negative;
-        ret.negative = this.negative;
-        ret.reg = [];
-        for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(numWords + BigInteger.BitsToWords(n|0)); arrfillI++) ret.reg[arrfillI] = 0;
-        for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[0 + arrfillI];
-        if (neg) {
+        if (!neg) {
+            ret.negative = false;
+            ret.reg = [];
+            for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(numWords + BigInteger.BitsToWords(numberBits|0)); arrfillI++) ret.reg[arrfillI] = 0;
+            for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[0 + arrfillI];
+            BigInteger.ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
+            BigInteger.ShiftWordsLeftByBits(ret.reg, (shiftWords|0), numWords + BigInteger.BitsToWords(shiftBits), shiftBits);
+            ret.wordCount = ret.CalcWordCount();
+        } else {
+            ret.negative = true;
+            ret.reg = [];
+            for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(numWords + BigInteger.BitsToWords(numberBits|0)); arrfillI++) ret.reg[arrfillI] = 0;
+            for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[0 + arrfillI];
             BigInteger.TwosComplement(ret.reg, 0, ((ret.reg.length)|0));
-        }
-        BigInteger.ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
-        BigInteger.ShiftWordsLeftByBits(ret.reg, (shiftWords|0), numWords + BigInteger.BitsToWords(shiftBits), shiftBits);
-        if (neg) {
+            BigInteger.ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
+            BigInteger.ShiftWordsLeftByBits(ret.reg, (shiftWords|0), numWords + BigInteger.BitsToWords(shiftBits), shiftBits);
             BigInteger.TwosComplement(ret.reg, 0, ((ret.reg.length)|0));
+            ret.wordCount = ret.CalcWordCount();
         }
-        ret.wordCount = ret.CalcWordCount();
         return ret;
     };
-    /**
-     * 
-     * @param n A 32-bit signed integer.
-     */
-    prototype.shiftRight = function(n) {
-        if (n == 0) return this;
-        if (n < 0) {
-            if (n == -2147483648) return this.shiftLeft(1).shiftLeft(2147483647);
-            return this.shiftLeft(-n);
+    
+    prototype.shiftRight = function(numberBits) {
+        if (numberBits == 0) return this;
+        if (numberBits < 0) {
+            if (numberBits == -2147483648) return this.shiftLeft(1).shiftLeft(2147483647);
+            return this.shiftLeft(-numberBits);
         }
         var ret = new BigInteger();
         var numWords = ((this.wordCount)|0);
-        var shiftWords = ((n >> 4)|0);
-        var shiftBits = ((n & 15)|0);
+        var shiftWords = ((numberBits >> 4)|0);
+        var shiftBits = ((numberBits & 15)|0);
         ret.negative = this.negative;
         ret.reg = [];
         for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(numWords); arrfillI++) ret.reg[arrfillI] = 0;
@@ -3277,11 +3253,9 @@ function() {
         ret.wordCount = ret.CalcWordCount();
         return ret;
     };
-    /**
-     * 
-     * @param longerValue A 64-bit signed integer.
-     */
-    constructor.valueOf = function(longerValue) {
+    
+    constructor.valueOf = function(longerValue_obj) {
+        var longerValue = JSInteropFactory.createLong(longerValue_obj);
         if (longerValue.signum() == 0) return BigInteger.ZERO;
         if (longerValue.equalsInt(1)) return BigInteger.ONE;
         var ret = new BigInteger();
@@ -3311,18 +3285,16 @@ function() {
         }
         return ret;
     };
-    /**
-     * 
-     */
+    
     prototype.intValue = function() {
         var c = ((this.wordCount)|0);
         if (c == 0) return 0;
-        if (c > 2) throw new RuntimeException();
+        if (c > 2) throw "exception";
         if (c == 2 && (this.reg[1] & 32768) != 0) {
             if ((((this.reg[1] & 32767)|0) | this.reg[0]) == 0 && this.negative) {
                 return -2147483648;
             } else {
-                throw new RuntimeException();
+                throw "exception";
             }
         } else {
             var ivv = (((this.reg[0])|0) & 65535);
@@ -3347,18 +3319,16 @@ function() {
         }
         return true;
     };
-    /**
-     * 
-     */
+    
     prototype.longValue = function() {
         var count = this.wordCount;
         if (count == 0) return JSInteropFactory.createLong(0);
-        if (count > 4) throw new RuntimeException();
+        if (count > 4) throw "exception";
         if (count == 4 && (this.reg[3] & 32768) != 0) {
             if (this.negative && this.reg[3] == (32768) && this.reg[2] == 0 && this.reg[1] == 0 && this.reg[0] == 0) {
                 return JSInteropFactory.LONG_MIN_VALUE();
             } else {
-                throw new RuntimeException();
+                throw "exception";
             }
         } else {
             var tmp = ((this.reg[0])|0) & 65535;
@@ -3385,14 +3355,11 @@ function() {
         
         return r;
     };
-    /**
-     * 
-     * @param power A BigInteger object.
-     */
+    
     prototype.PowBigIntVar = function(power) {
-        if ((power) == null) throw new RuntimeException("power");
+        if ((power) == null) throw ("power");
         var sign = power.signum();
-        if (sign < 0) throw new RuntimeException("power is negative");
+        if (sign < 0) throw ("power is negative");
         var thisVar = this;
         if (sign == 0) return BigInteger.ONE; else if (power.equals(BigInteger.ONE)) return this; else if (power.wordCount == 1 && power.reg[0] == 2) return thisVar.multiply(thisVar); else if (power.wordCount == 1 && power.reg[0] == 3) return (thisVar.multiply(thisVar)).multiply(thisVar);
         
@@ -3408,12 +3375,9 @@ function() {
         }
         return r;
     };
-    /**
-     * 
-     * @param powerSmall A 32-bit signed integer.
-     */
+    
     prototype.pow = function(powerSmall) {
-        if (powerSmall < 0) throw new RuntimeException("power is negative");
+        if (powerSmall < 0) throw ("power is negative");
         var thisVar = this;
         if (powerSmall == 0) return BigInteger.ONE; else if (powerSmall == 1) return this; else if (powerSmall == 2) return thisVar.multiply(thisVar); else if (powerSmall == 3) return (thisVar.multiply(thisVar)).multiply(thisVar);
         
@@ -3429,9 +3393,7 @@ function() {
         }
         return r;
     };
-    /**
-     * 
-     */
+    
     prototype.negate = function() {
         var bigintRet = new BigInteger();
         bigintRet.reg = this.reg;
@@ -3440,40 +3402,27 @@ function() {
         bigintRet.negative = (this.wordCount != 0) && (!this.negative);
         return bigintRet;
     };
-    /**
-     * 
-     */
+    
     prototype.abs = function() {
         return this.signum() >= 0 ? this : this.negate();
     };
-    constructor.BytePrecision = function(numberValue) {
-        if (numberValue == 0) return 0;
-        var l = 0, h = 8 * 2;
-        while (h - l > 8) {
-            var t = (((l + h) / 2)|0);
-            if ((numberValue >> t) != 0) l = t; else h = t;
-        }
-        return (((h / 8)|0)|0);
-    };
-    /**
-     * 
-     */
+    
     prototype.CalcWordCount = function() {
         return ((BigInteger.CountWords(this.reg, this.reg.length))|0);
     };
-    /**
-     * 
-     */
+    
     prototype.ByteCount = function() {
         var wc = this.wordCount;
-        if (wc > 0) return (((wc - 1) * 2 + BigInteger.BytePrecision(this.reg[wc - 1]))|0); else return 0;
+        if (wc == 0) return 0;
+        var s = this.reg[wc - 1];
+        wc = (wc - 1) << 1;
+        if (s == 0) return wc;
+        return ((s >> 8) == 0) ? wc + 1 : wc + 2;
     };
-    /**
-     * 
-     */
+    
     prototype.BitLength = function() {
         var wc = this.wordCount;
-        if (wc > 0) return (((wc - 1) * 16 + BigInteger.BitPrecision(this.reg[wc - 1]))|0); else return 0;
+        if (wc != 0) return (((wc - 1) * 16 + BigInteger.BitPrecision(this.reg[wc - 1]))|0); else return 0;
     };
     constructor.vec = "0123456789ABCDEF";
     constructor.ReverseChars = function(chars, offset, length) {
@@ -3506,10 +3455,7 @@ function() {
         for (var arrfillI = 0; arrfillI < count; arrfillI++) tmpbuilder.append(chars[arrfillI]);
         return tmpbuilder.toString();
     };
-    /**
-     * Converts this object to a text string.
-     * @return A string representation of this object.
-     */
+    
     prototype.toString = function() {
         if (this.signum() == 0) return "0";
         if (this.HasSmallValue()) {
@@ -3553,12 +3499,10 @@ function() {
             return tmpbuilder.toString();
         }
     };
-    /**
-     * 
-     * @param str A string object.
-     */
+    
     constructor.fromString = function(str) {
-        if (str == null || str.length == 0) throw new RuntimeException("str");
+        if (str == null) throw ("str");
+        if ((str.length) <= 0) throw ("str.length" + " not less than " + "0" + " (" + (JSInteropFactory.createLong(str.length)) + ")");
         var offset = 0;
         var negative = false;
         if (str.charAt(0) == '-') {
@@ -3569,7 +3513,7 @@ function() {
         var haveDigits = false;
         for (var i = offset; i < str.length; i++) {
             var c = str.charAt(i);
-            if (c < '0' || c > '9') throw new RuntimeException("Illegal character found");
+            if (c < '0' || c > '9') throw ("Illegal character found");
             haveDigits = true;
             var digit = ((c - '0')|0);
             
@@ -3578,17 +3522,14 @@ function() {
             
             if (digit != 0 && BigInteger.Increment(bigint.reg, 0, bigint.reg.length, (digit|0)) != 0) bigint.reg = BigInteger.GrowForCarry(bigint.reg, 1);
         }
-        if (!haveDigits) throw new RuntimeException("No digits");
+        if (!haveDigits) throw ("No digits");
         bigint.wordCount = bigint.CalcWordCount();
         bigint.negative = (bigint.wordCount != 0 && negative);
         return bigint;
     };
-    /**
-     * Returns the greatest common divisor of two integers.
-     * @param bigintSecond A BigInteger object.
-     */
+    
     prototype.gcd = function(bigintSecond) {
-        if ((bigintSecond) == null) throw new RuntimeException("bigintSecond");
+        if ((bigintSecond) == null) throw ("bigintSecond");
         if (this.signum() == 0) return (bigintSecond).abs();
         if (bigintSecond.signum() == 0) return (this).abs();
         var thisValue = this.abs();
@@ -3606,15 +3547,10 @@ function() {
         }
         return bigintSecond;
     };
-    /**
-     * Calculates the remainder when a BigInteger raised to a certain power
-     * is divided by another BigInteger.
-     * @param pow A BigInteger object.
-     * @param mod A BigInteger object.
-     */
+    
     prototype.ModPow = function(pow, mod) {
-        if ((pow) == null) throw new RuntimeException("pow");
-        if (pow.signum() < 0) throw new RuntimeException("pow is negative");
+        if ((pow) == null) throw ("pow");
+        if (pow.signum() < 0) throw ("pow is negative");
         var r = BigInteger.ONE;
         var v = this;
         while (pow.signum() != 0) {
@@ -3646,16 +3582,7 @@ function() {
         }
         sum.negative = false;
         sum.wordCount = sum.CalcWordCount();
-        if (sum.reg.length - sum.wordCount > 10) {
-            
-            var newLength = BigInteger.RoundupSize(sum.wordCount);
-            if (newLength < sum.reg.length) {
-                var newreg = [];
-                for (var arrfillI = 0; arrfillI < newLength; arrfillI++) newreg[arrfillI] = 0;
-                for (var arrfillI = 0; arrfillI < sum.wordCount; arrfillI++) newreg[0 + arrfillI] = sum.reg[0 + arrfillI];
-                sum.reg = newreg;
-            }
-        }
+        sum.ShortenArray();
     };
     constructor.PositiveSubtract = function(diff, minuend, subtrahend) {
         var aSize = minuend.wordCount;
@@ -3690,22 +3617,16 @@ function() {
             diff.negative = true;
         }
         diff.wordCount = diff.CalcWordCount();
+        diff.ShortenArray();
         if (diff.wordCount == 0) diff.negative = false;
     };
-    /**
-     * Determines whether this object and another object are equal.
-     * @param obj An arbitrary object.
-     * @return True if the objects are equal; false otherwise.
-     */
+    
     prototype.equals = function(obj) {
         var other = ((obj.constructor==BigInteger) ? obj : null);
         if (other == null) return false;
         return other.compareTo(this) == 0;
     };
-    /**
-     * Returns the hash code for this instance.
-     * @return A 32-bit hash code.
-     */
+    
     prototype.hashCode = function() {
         var hashCodeValue = 0;
         {
@@ -3718,13 +3639,9 @@ function() {
         }
         return hashCodeValue;
     };
-    /**
-     * Adds this object and another object.
-     * @param bigintAugend A BigInteger object.
-     * @return The sum of the two objects.
-     */
+    
     prototype.add = function(bigintAugend) {
-        if ((bigintAugend) == null) throw new RuntimeException("bigintAugend");
+        if ((bigintAugend) == null) throw ("bigintAugend");
         var sum = new BigInteger().Allocate((this.reg.length > bigintAugend.reg.length ? this.reg.length : bigintAugend.reg.length)|0);
         if (this.signum() >= 0) {
             if (bigintAugend.signum() >= 0) BigInteger.PositiveAdd(sum, this, bigintAugend); else BigInteger.PositiveSubtract(sum, this, bigintAugend);
@@ -3742,13 +3659,9 @@ function() {
         }
         return sum;
     };
-    /**
-     * Subtracts a BigInteger from this BigInteger.
-     * @param subtrahend A BigInteger object.
-     * @return The difference of the two objects.
-     */
+    
     prototype.subtract = function(subtrahend) {
-        if ((subtrahend) == null) throw new RuntimeException("subtrahend");
+        if ((subtrahend) == null) throw ("subtrahend");
         var diff = new BigInteger().Allocate((this.reg.length > subtrahend.reg.length ? this.reg.length : subtrahend.reg.length)|0);
         if (this.signum() >= 0) {
             if (subtrahend.signum() >= 0) BigInteger.PositiveSubtract(diff, this, subtrahend); else BigInteger.PositiveAdd(diff, this, subtrahend);
@@ -3761,6 +3674,18 @@ function() {
             }
         }
         return diff;
+    };
+    prototype.ShortenArray = function() {
+        if (this.reg.length > 32) {
+            var newLength = BigInteger.RoundupSize(this.wordCount);
+            if (newLength < this.reg.length && (this.reg.length - newLength) >= 16) {
+                
+                var newreg = [];
+                for (var arrfillI = 0; arrfillI < newLength; arrfillI++) newreg[arrfillI] = 0;
+                for (var arrfillI = 0; arrfillI < (newLength < this.reg.length ? newLength : this.reg.length); arrfillI++) newreg[0 + arrfillI] = this.reg[0 + arrfillI];
+                this.reg = newreg;
+            }
+        }
     };
     constructor.PositiveMultiply = function(product, bigintA, bigintB) {
         if (bigintA.wordCount == 1) {
@@ -3798,16 +3723,15 @@ function() {
             BigInteger.AsymmetricMultiply(product.reg, 0, workspace, 0, bigintA.reg, 0, aSize, bigintB.reg, 0, bSize);
         }
         product.wordCount = product.CalcWordCount();
+        product.ShortenArray();
     };
-    /**
-     * Multiplies this instance by the value of a BigInteger object.
-     * @param bigintMult A BigInteger object.
-     * @return The product of the two objects.
-     */
+    
     prototype.multiply = function(bigintMult) {
-        if ((bigintMult) == null) throw new RuntimeException("bigintMult");
+        if ((bigintMult) == null) throw ("bigintMult");
         var product = new BigInteger();
         if (this.wordCount == 0 || bigintMult.wordCount == 0) return BigInteger.ZERO;
+        if (this.wordCount == 1 && this.reg[0] == 1) return this.negative ? bigintMult.negate() : bigintMult;
+        if (bigintMult.wordCount == 1 && bigintMult.reg[0] == 1) return bigintMult.negative ? this.negate() : this;
         BigInteger.PositiveMultiply(product, this, bigintMult);
         if ((this.signum() >= 0) != (bigintMult.signum() >= 0)) product.NegateInternal();
         return product;
@@ -3821,7 +3745,7 @@ function() {
     constructor.DivideWithRemainderAnyLength = function(a, b, quotResult, modResult) {
         var lengthA = BigInteger.OperandLength(a);
         var lengthB = BigInteger.OperandLength(b);
-        if (lengthB == 0) throw new RuntimeException("The divisor is zero.");
+        if (lengthB == 0) throw ("The divisor is zero.");
         
         if (lengthA == 0) {
             
@@ -3861,9 +3785,9 @@ function() {
             return;
         }
         lengthA += lengthA % 2;
-        if (lengthA > a.length) throw new RuntimeException("no room");
+        if (lengthA > a.length) throw ("no room");
         lengthB += lengthB % 2;
-        if (lengthB > b.length) throw new RuntimeException("no room");
+        if (lengthB > b.length) throw ("no room");
         var tempbuf = [];
         for (var arrfillI = 0; arrfillI < lengthA + 3 * (lengthB + 2); arrfillI++) tempbuf[arrfillI] = 0;
         BigInteger.Divide(modResult, 0, quotResult, 0, tempbuf, 0, a, 0, lengthA, b, 0, lengthB);
@@ -3889,7 +3813,7 @@ function() {
         var remainder = 0;
         var idivisor = ((divisorSmall|0) & 65535);
         while ((i--) > 0) {
-            var currentDividend = BigInteger.MakeUint(quotientReg[i], remainder);
+            var currentDividend = (((((((quotientReg[i])|0) & 65535) | ((remainder|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
                 quotientReg[i] = (((((((currentDividend / idivisor)|0)|0) & 65535))|0));
                 if (i > 0) remainder = ((currentDividend % idivisor)|0);
@@ -3904,7 +3828,7 @@ function() {
         var remainder = 0;
         var idivisor = ((divisorSmall|0) & 65535);
         while ((i--) > 0) {
-            var currentDividend = BigInteger.MakeUint(quotientReg[i], remainder);
+            var currentDividend = (((((((quotientReg[i])|0) & 65535) | ((remainder|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
                 quotientReg[i] = (((((((currentDividend / idivisor)|0)|0) & 65535))|0));
                 remainder = ((currentDividend % idivisor)|0);
@@ -3915,21 +3839,12 @@ function() {
         }
         return remainder;
     };
-    /**
-     * Divides this instance by the value of a BigInteger object. The result
-     * is rounded down (the fractional part is discarded). Except if the
-     * result is 0, it will be negative if this object is positive and the other
-     * is negative, or vice versa, and will be positive if both are positive
-     * or both are negative.
-     * @param bigintDivisor A BigInteger object.
-     * @return The quotient of the two objects.
-     * @throws RuntimeException The divisor is zero.
-     */
+    
     prototype.divide = function(bigintDivisor) {
-        if ((bigintDivisor) == null) throw new RuntimeException("bigintDivisor");
+        if ((bigintDivisor) == null) throw ("bigintDivisor");
         var aSize = this.wordCount;
         var bSize = bigintDivisor.wordCount;
-        if (bSize == 0) throw new RuntimeException();
+        if (bSize == 0) throw "exception";
         if (aSize < bSize) {
             
             return BigInteger.ZERO;
@@ -3968,21 +3883,19 @@ function() {
         quotient.negative = false;
         BigInteger.DivideWithRemainderAnyLength(this.reg, bigintDivisor.reg, quotient.reg, null);
         quotient.wordCount = quotient.CalcWordCount();
+        quotient.ShortenArray();
         if ((this.signum() < 0) ^ (bigintDivisor.signum() < 0)) {
             quotient.NegateInternal();
         }
         return quotient;
     };
-    /**
-     * 
-     * @param divisor A BigInteger object.
-     */
+    
     prototype.divideAndRemainder = function(divisor) {
-        if ((divisor) == null) throw new RuntimeException("divisor");
+        if ((divisor) == null) throw ("divisor");
         var quotient;
         var aSize = this.wordCount;
         var bSize = divisor.wordCount;
-        if (bSize == 0) throw new RuntimeException();
+        if (bSize == 0) throw "exception";
         if (aSize < bSize) {
             
             return [BigInteger.ZERO, this];
@@ -3997,6 +3910,7 @@ function() {
             for (var arrfillI = 0; arrfillI < quotient.reg.length; arrfillI++) quotient.reg[0 + arrfillI] = this.reg[0 + arrfillI];
             var smallRemainder = (((BigInteger.FastDivideAndRemainder(quotient.reg, aSize, divisor.reg[0]))|0) & 65535);
             quotient.wordCount = quotient.CalcWordCount();
+            quotient.ShortenArray();
             if (quotient.wordCount != 0) {
                 quotient.negative = (this.signum() < 0) ^ (divisor.signum() < 0);
             } else {
@@ -4018,6 +3932,8 @@ function() {
         BigInteger.DivideWithRemainderAnyLength(this.reg, divisor.reg, quotient.reg, remainder.reg);
         remainder.wordCount = remainder.CalcWordCount();
         quotient.wordCount = quotient.CalcWordCount();
+        remainder.ShortenArray();
+        quotient.ShortenArray();
         if (this.signum() < 0) {
             quotient.NegateInternal();
             if (remainder.signum() != 0) {
@@ -4027,24 +3943,26 @@ function() {
         if (divisor.signum() < 0) quotient.NegateInternal();
         return [quotient, remainder];
     };
-    /**
-     * Finds the remainder that results when this instance is divided by
-     * the value of a BigInteger object. The remainder is the value that remains
-     * when the absolute value of this object is divided by the absolute value
-     * of the other object; the remainder has the same sign (positive or negative)
-     * as this object.
-     * @param divisor A BigInteger object.
-     * @return The remainder of the two objects.
-     */
+    
+    prototype.mod = function(divisor) {
+        if ((divisor) == null) throw ("divisor");
+        if (divisor.signum() < 0) {
+            throw ("Divisor is negative");
+        }
+        var rem = this.remainder(divisor);
+        if (rem.signum() < 0) rem = divisor.subtract(rem);
+        return rem;
+    };
+    
     prototype.remainder = function(divisor) {
         if (this.PositiveCompare(divisor) < 0) {
-            if (divisor.signum() == 0) throw new RuntimeException();
+            if (divisor.signum() == 0) throw "exception";
             return this;
         }
         var remainder = new BigInteger();
         var aSize = this.wordCount;
         var bSize = divisor.wordCount;
-        if (bSize == 0) throw new RuntimeException();
+        if (bSize == 0) throw "exception";
         if (aSize < bSize) {
             
             return this;
@@ -4064,6 +3982,7 @@ function() {
         for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize((aSize - bSize + 2)|0); arrfillI++) quotientReg[arrfillI] = 0;
         BigInteger.DivideWithRemainderAnyLength(this.reg, divisor.reg, quotientReg, remainder.reg);
         remainder.wordCount = remainder.CalcWordCount();
+        remainder.ShortenArray();
         if (this.signum() < 0 && remainder.signum() != 0) {
             remainder.NegateInternal();
         }
@@ -4076,12 +3995,7 @@ function() {
         var size = this.wordCount, tSize = t.wordCount;
         if (size == tSize) return BigInteger.Compare(this.reg, 0, t.reg, 0, (size|0)); else return size > tSize ? 1 : -1;
     };
-    /**
-     * Compares a BigInteger object with this instance.
-     * @param other A BigInteger object.
-     * @return Zero if the values are equal; a negative number is this instance
-     * is less, or a positive number if this instance is greater.
-     */
+    
     prototype.compareTo = function(other) {
         if (other == null) return 1;
         var size = this.wordCount, tSize = other.wordCount;
@@ -4093,23 +4007,16 @@ function() {
         if (size == tSize) cmp = BigInteger.Compare(this.reg, 0, other.reg, 0, (size|0)); else cmp = size > tSize ? 1 : -1;
         return (sa > 0) ? cmp : -cmp;
     };
-    /**
-     * 
-     */
+    
     prototype.signum = function() {
         if (this.wordCount == 0) return 0;
         return (this.negative) ? -1 : 1;
     };
-    /**
-     * 
-     */
+    
     prototype.isZero = function() {
         return (this.wordCount == 0);
     };
-    /**
-     * 
-     * @param bi A BigInteger object.
-     */
+    
     prototype.Sqrt = function(bi) {
         if (this.signum() < 0) return BigInteger.ZERO;
         var bigintX = null;
@@ -4122,9 +4029,7 @@ function() {
         } while (bigintY.compareTo(bigintX) < 0);
         return bigintX;
     };
-    /**
-     * Gets whether this value is even.
-     */
+    
     prototype.isEven = function() {
         return !this.GetUnsignedBit(0);
     };
@@ -4132,5 +4037,6 @@ function() {
     constructor.ONE = new BigInteger().InitializeInt(1);
     constructor.TEN = new BigInteger().InitializeInt(10);
 })(BigInteger,BigInteger.prototype);
+
 
 if(typeof exports!=="undefined")exports.BigInteger=BigInteger;

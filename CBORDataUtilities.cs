@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 using System;
 using System.Text;
@@ -67,17 +67,17 @@ namespace PeterO {
       c = str[index];
       index++;
       bool negExp = false;
-      FastInteger fastNumber = new FastInteger();
-      FastInteger exponentAdjust = new FastInteger();
-      FastInteger fastExponent = new FastInteger();
+      FastInteger fastNumber = new FastInteger(0);
+      FastInteger exponentAdjust = new FastInteger(0);
+      FastInteger fastExponent = new FastInteger(0);
       if (c >= '1' && c <= '9') {
-        fastNumber.Add((int)(c - '0'));
+        fastNumber.AddInt((int)(c - '0'));
         while (index < str.Length) {
           c = str[index];
           if (c >= '0' && c <= '9') {
             index++;
             fastNumber.Multiply(10);
-            fastNumber.Add((int)(c - '0'));
+            fastNumber.AddInt((int)(c - '0'));
           } else {
             break;
           }
@@ -96,18 +96,18 @@ namespace PeterO {
           if (c >= '0' && c <= '9') {
             // Adjust the exponent for this
             // fractional digit
-            exponentAdjust.Add(-1);
+            exponentAdjust.AddInt(-1);
             fastNumber.Multiply(10);
-            fastNumber.Add((int)(c - '0'));
+            fastNumber.AddInt((int)(c - '0'));
             while (index < str.Length) {
               c = str[index];
               if (c >= '0' && c <= '9') {
                 index++;
                 // Adjust the exponent for this
                 // fractional digit
-                exponentAdjust.Add(-1);
+                exponentAdjust.AddInt(-1);
                 fastNumber.Multiply(10);
-                fastNumber.Add((int)(c - '0'));
+                fastNumber.AddInt((int)(c - '0'));
               } else {
                 break;
               }
@@ -133,13 +133,13 @@ namespace PeterO {
           c = str[index];
           index++;
           if (c >= '0' && c <= '9') {
-            fastExponent.Add((int)(c - '0'));
+            fastExponent.AddInt((int)(c - '0'));
             while (index < str.Length) {
               c = str[index];
               if (c >= '0' && c <= '9') {
                 index++;
                 fastExponent.Multiply(10);
-                fastExponent.Add((int)(c - '0'));
+                fastExponent.AddInt((int)(c - '0'));
               } else {
                 break;
               }

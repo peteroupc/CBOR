@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 
 
@@ -144,7 +144,7 @@ private CBORUtilities(){}
         fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
       }
       fpExponent -= 1075;
-      BigInteger bigmantissa=MutableNumber.WordsToBigInteger(value);
+      BigInteger bigmantissa=FastInteger.WordsToBigInteger(value);
       if (fpExponent == 0) {
         if (neg) bigmantissa=bigmantissa.negate();
         return bigmantissa;

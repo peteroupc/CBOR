@@ -8,7 +8,7 @@ the public-domain library CryptoPP by Wei Dai.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 
 
@@ -24,12 +24,10 @@ at: http://upokecenter.com/d/
       return (int)N;
     }
 
-
     private static void SetWords(short[] r, int rstart, short a, int n) {
       for (int i = 0; i < n; i++)
         r[rstart + i] = a;
     }
-
 
     private static short ShiftWordsLeftByBits(short[] r, int rstart, int n, int shiftBits) {
       
@@ -74,8 +72,6 @@ at: http://upokecenter.com/d/
         return carry;
       }
     }
-
-
 
     private static void ShiftWordsLeftByWords(short[] r, int rstart, int n, int shiftWords) {
       shiftWords = Math.min(shiftWords, n);
@@ -147,7 +143,6 @@ at: http://upokecenter.com/d/
       }
     }
 
-
     private static void TwosComplement(short[] A, int Astart, int N) {
       Decrement(A, Astart, N, (short)1);
       for (int i = 0; i < N; i++)
@@ -191,7 +186,6 @@ at: http://upokecenter.com/d/
         return (int)((u >> 31) & 1);
       }
     }
-
 
     private static short LinearMultiply(short[] productArr, int cstart,
                                         short[] A, int astart, short B, int N) {
@@ -1620,8 +1614,6 @@ at: http://upokecenter.com/d/
       Q[Qstart + 1] = GetHighHalf(q);
     }
 
-
-
     // for use by Divide(), corrects the underestimated quotient {Q1,Q0}
     private static void CorrectQuotientEstimate(
       short[] Rarr,
@@ -1699,9 +1691,7 @@ at: http://upokecenter.com/d/
 
         // start reducing TA mod TB, 2 words at a time
         for (int i = NA - 2; i >= NB; i -= 2) {
-          //"T",TA);
           AtomicDivide(Qarr, (int)(Qstart + i - NB), TA, (int)(Tstart + i - 2), BT, 0);
-          //"Ta",TA);
           CorrectQuotientEstimate(TA, (int)(Tstart + i - NB),
                                   TParr, TPstart, Qarr, (int)(Qstart + (i - NB)), TBarr, TBstart, NB);
         }
@@ -1937,31 +1927,32 @@ at: http://upokecenter.com/d/
      * Shifts this object's value by a number of bits. A value of 1 doubles
      * this value, a value of 2 multiplies it by 4, a value of 3 by 8, a value of
      * 4 by 16, and so on.
-     * @param n The number of bits to shift. Can be negative, in which case
-     * this is the same as shiftRight with the absolute value of n.
+     * @param numberBits The number of bits to shift. Can be negative, in
+     * which case this is the same as shiftRight with the absolute value of
+     * numberBits.
      */
-    public BigInteger shiftLeft(int n) {
-      if (n == 0) return this;
-      if (n < 0){
-        if(n==Integer.MIN_VALUE)
+    public BigInteger shiftLeft(int numberBits) {
+      if (numberBits == 0) return this;
+      if (numberBits < 0){
+        if(numberBits==Integer.MIN_VALUE)
           return this.shiftRight(1).shiftRight(Integer.MAX_VALUE);
-        return this.shiftRight(-n);
+        return this.shiftRight(-numberBits);
       }
       BigInteger ret = new BigInteger();
       int numWords = (int)(this.wordCount);
-      int shiftWords = (int)(n >> 4);
-      int shiftBits = (int)(n & 15);
+      int shiftWords = (int)(numberBits >> 4);
+      int shiftBits = (int)(numberBits & 15);
       boolean neg=numWords>0 && this.negative;
       if(!neg){
         ret.negative=false;
-        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)n))];
+        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
         System.arraycopy(this.reg,0,ret.reg,0,numWords);
         ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
         ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
         ret.wordCount = ret.CalcWordCount();
       } else {
         ret.negative=true;
-        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)n))];
+        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
         System.arraycopy(this.reg,0,ret.reg,0,numWords);
         TwosComplement(ret.reg, 0, (int)(ret.reg.length));
         ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
@@ -1973,19 +1964,19 @@ at: http://upokecenter.com/d/
     }
     /**
      * 
-     * @param n A 32-bit signed integer.
+     * @param numberBits A 32-bit signed integer.
      */
-    public BigInteger shiftRight(int n) {
-      if (n == 0) return this;
-      if (n < 0){
-        if(n==Integer.MIN_VALUE)
+    public BigInteger shiftRight(int numberBits) {
+      if (numberBits == 0) return this;
+      if (numberBits < 0){
+        if(numberBits==Integer.MIN_VALUE)
           return this.shiftLeft(1).shiftLeft(Integer.MAX_VALUE);
-        return this.shiftLeft(-n);
+        return this.shiftLeft(-numberBits);
       }
       BigInteger ret = new BigInteger();
       int numWords = (int)(this.wordCount);
-      int shiftWords = (int)(n >> 4);
-      int shiftBits = (int)(n & 15);
+      int shiftWords = (int)(numberBits >> 4);
+      int shiftBits = (int)(numberBits & 15);
       ret.negative=this.negative;
       ret.reg = new short[RoundupSize(numWords)];
       System.arraycopy(this.reg,0,ret.reg,0,numWords);
@@ -2404,7 +2395,6 @@ at: http://upokecenter.com/d/
       return r;
     }
 
-
     private static void PositiveAdd(BigInteger sum,
                                     BigInteger bigintAddend,
                                     BigInteger bigintAugend) {
@@ -2508,7 +2498,6 @@ at: http://upokecenter.com/d/
     }
     
 
-
     /**
      * Adds this object and another object.
      * @param bigintAugend A BigInteger object.
@@ -2561,9 +2550,9 @@ at: http://upokecenter.com/d/
       if(this.reg.length>32){
         int newLength=RoundupSize(this.wordCount);
         if(newLength<this.reg.length &&
-           Math.abs(this.reg.length-newLength)>=16){
+           (this.reg.length-newLength)>=16){
           // Reallocate the array if the rounded length
-          // is smaller than the current length
+          // is much smaller than the current length
           short[] newreg=new short[newLength];
           System.arraycopy(this.reg,0,newreg,0,Math.min(newLength,this.reg.length));
           this.reg=newreg;
@@ -2656,7 +2645,7 @@ at: http://upokecenter.com/d/
       if (lengthA < lengthB) {
         // If lengthA is less than lengthB, then
         // A is less than B, so set quotient to 0
-        // and modulus to A
+        // and remainder to A
         if (modResult != null) {
           short[] tmpa = new short[a.length];
           System.arraycopy(a,0,tmpa,0,a.length);
@@ -2871,14 +2860,13 @@ at: http://upokecenter.com/d/
 
     /**
      * Finds the modulus remainder that results when this instance is divided
-     * by the value of a BigInteger object. The modulus remainder is the ((same
-     * instanceof the normal remainder if the normal remainder is positive)
-     * ? (the normal remainder if the normal remainder is positive)same
-     * : null), and equals divisor minus normal remainder if the normal remainder
-     * is negative.
+     * by the value of a BigInteger object. The modulus remainder is the same
+     * as the normal remainder if the normal remainder is positive, and equals
+     * divisor minus normal remainder if the normal remainder is negative.
      * @param divisor A divisor greater than 0.
      */
     public BigInteger mod(BigInteger divisor) {
+      if((divisor)==null)throw new NullPointerException("divisor");
       if(divisor.signum()<0){
         throw new ArithmeticException("Divisor is negative");
       }
@@ -2930,7 +2918,6 @@ at: http://upokecenter.com/d/
       }
       return remainder;
     }
-
 
     void NegateInternal() {
       if (this.wordCount != 0)
@@ -3004,13 +2991,16 @@ at: http://upokecenter.com/d/
     /**
      * BigInteger object for the number zero.
      */
+    
     public static final BigInteger ZERO = new BigInteger().InitializeInt(0);
     /**
      * BigInteger object for the number one.
      */
+    
     public static final BigInteger ONE = new BigInteger().InitializeInt(1);
     /**
      * BigInteger object for the number ten.
      */
+    
     public static final BigInteger TEN = new BigInteger().InitializeInt(10);
   }

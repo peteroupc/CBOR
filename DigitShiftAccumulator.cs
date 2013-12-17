@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 using System;
 using System.Text;
@@ -24,31 +24,27 @@ namespace PeterO {
       get { return bitsAfterLeftmost; }
     }
     BigInteger shiftedBigInt;
-    long knownBitLength;
+    FastInteger knownBitLength;
+    private const int SmallBitLength = 32;
 
     /// <summary> </summary>
     /// <returns></returns>
     public FastInteger GetDigitLength(){
-      if (knownBitLength < 0) {
+      if (knownBitLength==null) {
         knownBitLength = CalcKnownBitLength();
       }
-      FastInteger ret;
-      if(knownBitLength<=Int32.MaxValue)
-        ret=new FastInteger((int)knownBitLength);
-      else
-        ret=new FastInteger((BigInteger)knownBitLength);
-      return ret;
+      return FastInteger.Copy(knownBitLength);
     }
     
     
-    long shiftedLong;
+    int shiftedSmall;
     bool isSmall;
 
     /// <summary> </summary>
     public BigInteger ShiftedInt {
       get {
         if (isSmall)
-          return (BigInteger)shiftedLong;
+          return (BigInteger)shiftedSmall;
         else
           return shiftedBigInt;
       }
@@ -59,47 +55,44 @@ namespace PeterO {
     public FastInteger DiscardedDigitCount {
       get { return discardedBitCount; }
     }
-    private static BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
+    private static BigInteger Int32MaxValue = (BigInteger)Int32.MaxValue;
 
     public DigitShiftAccumulator(BigInteger bigint,
                                  int lastDiscarded,
                                  int olderDiscarded
-                                ) : this(bigint) {
+                                ){
+      if (bigint.Sign < 0)
+        throw new ArgumentException("bigint is negative");
+      discardedBitCount = new FastInteger(0);
+      if (bigint.CompareTo(Int32MaxValue) <= 0) {
+        shiftedSmall = (int)bigint;
+        isSmall = true;
+      } else {
+        shiftedBigInt = bigint;
+        isSmall = false;
+      }
       bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
       bitLeftmost = lastDiscarded;
     }
 
-    public DigitShiftAccumulator(BigInteger bigint) {
-      if (bigint.Sign < 0)
-        throw new ArgumentException("bigint is negative");
-      discardedBitCount = new FastInteger();
-      if (bigint.CompareTo(Int64MaxValue) <= 0) {
-        shiftedLong = (long)bigint;
-        isSmall = true;
-        knownBitLength = -1;
-      } else {
-        shiftedBigInt = bigint;
-        isSmall = false;
-        knownBitLength = -1;
-      }
-    }
-    
     private static BigInteger FastParseBigInt(string str, int offset, int length) {
       // Assumes the string contains
       // only the digits '0' through '9'
-      FastInteger mbi = new FastInteger();
+      FastInteger mbi = new FastInteger(0);
       for (int i = 0; i < length; i++) {
         int digit = (int)(str[offset + i] - '0');
-        mbi.Multiply(10).Add(digit);
+        mbi.Multiply(10).AddInt(digit);
       }
       return mbi.AsBigInteger();
     }
 
-    private static long FastParseLong(string str, int offset, int length) {
-      // Assumes the string is length 18 or less and contains
+    private static int FastParseLong(string str, int offset, int length) {
+      // Assumes the string is length 9 or less and contains
       // only the digits '0' through '9'
-      if((length)>18)throw new ArgumentException("length"+" not less or equal to "+"18"+" ("+Convert.ToString((length),System.Globalization.CultureInfo.InvariantCulture)+")");
-      long ret = 0;
+      if((length)>9)throw new ArgumentException(
+        "length"+" not less or equal to "+"9"+" ("+
+        Convert.ToString((length),System.Globalization.CultureInfo.InvariantCulture)+")");
+      int ret = 0;
       for (int i = 0; i < length; i++) {
         int digit = (int)(str[offset + i] - '0');
         ret *= 10;
@@ -113,13 +106,9 @@ namespace PeterO {
     public FastInteger ShiftedIntFast{
       get {
         if (isSmall){
-          if(shiftedLong>=Int32.MinValue && shiftedLong<=Int32.MaxValue){
-            return new FastInteger((int)shiftedLong);
-          } else {
-            return new FastInteger((BigInteger)shiftedLong);
-          }
+          return new FastInteger(shiftedSmall);
         } else {
-          return new FastInteger(shiftedBigInt);
+          return FastInteger.FromBig(shiftedBigInt);
         }
       }
     }
@@ -130,7 +119,7 @@ namespace PeterO {
       if ((fastint) == null) throw new ArgumentNullException("fastint");
       if (fastint.Sign <= 0) return;
       if (fastint.CanFitInInt32()) {
-        ShiftRight(fastint.AsInt32());
+        ShiftRightInt(fastint.AsInt32());
       } else {
         BigInteger bi = fastint.AsBigInteger();
         while (bi.Sign > 0) {
@@ -138,7 +127,7 @@ namespace PeterO {
           if (bi.CompareTo((BigInteger)1000000) < 0) {
             count = (int)bi;
           }
-          ShiftRight(count);
+          ShiftRightInt(count);
           bi -= (BigInteger)count;
         }
       }
@@ -147,10 +136,10 @@ namespace PeterO {
     private void ShiftRightBig(int digits) {
       if (digits <= 0) return;
       if (shiftedBigInt.IsZero) {
-        discardedBitCount.Add(digits);
+        discardedBitCount.AddInt(digits);
         bitsAfterLeftmost |= bitLeftmost;
         bitLeftmost = 0;
-        knownBitLength = 1;
+        knownBitLength = new FastInteger(1);
         return;
       }
       String str = shiftedBigInt.ToString();
@@ -160,20 +149,20 @@ namespace PeterO {
       if (digits > digitLength) {
         bitDiff = digits - digitLength;
       }
-      discardedBitCount.Add(digits);
+      discardedBitCount.AddInt(digits);
       bitsAfterLeftmost |= bitLeftmost;
       int digitShift = Math.Min(digitLength, digits);
       if (digits >= digitLength) {
         isSmall = true;
-        shiftedLong = 0;
-        knownBitLength = 1;
+        shiftedSmall = 0;
+        knownBitLength = new FastInteger(1);
       } else {
         int newLength = (int)(digitLength - digitShift);
-        knownBitLength = digitLength - digitShift;
-        if (newLength <= 18) {
-          // Fits in a long
+        knownBitLength = new FastInteger(newLength);
+        if (newLength <= 9) {
+          // Fits in a small number
           isSmall = true;
-          shiftedLong = FastParseLong(str, 0, newLength);
+          shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
           shiftedBigInt = FastParseBigInt(str, 0, newLength);
         }
@@ -193,31 +182,24 @@ namespace PeterO {
         bitLeftmost = 0;
       }
     }
-    private static BigInteger[] BigIntPowersOfTen = new BigInteger[]{
-      (BigInteger)1, (BigInteger)10, (BigInteger)100, (BigInteger)1000, (BigInteger)10000, (BigInteger)100000, (BigInteger)1000000, (BigInteger)10000000, (BigInteger)100000000, (BigInteger)1000000000,
-      (BigInteger)10000000000L, (BigInteger)100000000000L, (BigInteger)1000000000000L, (BigInteger)10000000000000L,
-      (BigInteger)100000000000000L, (BigInteger)1000000000000000L, (BigInteger)10000000000000000L,
-      (BigInteger)100000000000000000L, (BigInteger)1000000000000000000L
-    };
-
     /// <summary> Shifts a number until it reaches the given number of digits,
     /// gathering information on whether the last digit discarded is set
     /// and whether the discarded digits to the right of that digit are set.
     /// Assumes that the big integer being shifted is positive. </summary>
-    private void ShiftToBitsBig(long digits) {
+    private void ShiftToBitsBig(int digits) {
       String str = shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
-      long digitLength = str.Length;
-      knownBitLength = digitLength;
+      int digitLength = str.Length;
+      knownBitLength = new FastInteger(digitLength);
       // Shift by the difference in digit length
       if (digitLength > digits) {
-        long digitShift = digitLength - digits;
-        long bitShiftCount = digitShift;
+        int digitShift = digitLength - digits;
+        int bitShiftCount = digitShift;
         int newLength = (int)(digitLength - digitShift);
         if(digitShift<=Int32.MaxValue)
-          discardedBitCount.Add((int)digitShift);
+          discardedBitCount.AddInt((int)digitShift);
         else
-          discardedBitCount.Add((BigInteger)digitShift);
+          discardedBitCount.AddBig((BigInteger)digitShift);
         for (int i = str.Length - 1; i >= 0; i--) {
           bitsAfterLeftmost |= bitLeftmost;
           bitLeftmost = (int)(str[i] - '0');
@@ -226,14 +208,10 @@ namespace PeterO {
             break;
           }
         }
-        knownBitLength = digits;
-        if (newLength <= 18) {
-          // Fits in a long
+        knownBitLength = new FastInteger(digits);
+        if (newLength <= 9) {
           isSmall = true;
-          shiftedLong = FastParseLong(str, 0, newLength);
-        } else if (bitShiftCount <= 18) {
-          BigInteger bigpow = BigIntPowersOfTen[(int)bitShiftCount];
-          shiftedBigInt /= (BigInteger)bigpow;
+          shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
           shiftedBigInt = FastParseBigInt(str, 0, newLength);
         }
@@ -241,14 +219,13 @@ namespace PeterO {
       }
     }
 
-
     /// <summary> Shifts a number to the right, gathering information on
     /// whether the last digit discarded is set and whether the discarded
     /// digits to the right of that digit are set. Assumes that the big integer
     /// being shifted is positive. </summary>
     /// <returns></returns>
     /// <param name='digits'>A 32-bit signed integer.</param>
-    public void ShiftRight(int digits) {
+    public void ShiftRightInt(int digits) {
       if (isSmall)
         ShiftRightSmall(digits);
       else
@@ -256,36 +233,37 @@ namespace PeterO {
     }
     private void ShiftRightSmall(int digits) {
       if (digits <= 0) return;
-      if (shiftedLong == 0) {
-        discardedBitCount.Add(digits);
+      if (shiftedSmall == 0) {
+        discardedBitCount.AddInt(digits);
         bitsAfterLeftmost |= bitLeftmost;
         bitLeftmost = 0;
-        knownBitLength = 1;
+        knownBitLength = new FastInteger(1);
         return;
       }
       
-      knownBitLength = 0;
-      long tmp = shiftedLong;
+      int kb = 0;
+      int tmp = shiftedSmall;
       while (tmp > 0) {
-        knownBitLength++;
+        kb++;
         tmp /= 10;
       }
       // Make sure digit length is 1 if value is 0
-      if (knownBitLength == 0) knownBitLength++;
-      discardedBitCount.Add(digits);
+      if (kb == 0) kb++;
+      knownBitLength=new FastInteger(kb);
+      discardedBitCount.AddInt(digits);
       while (digits > 0) {
-        if (shiftedLong == 0) {
+        if (shiftedSmall == 0) {
           bitsAfterLeftmost |= bitLeftmost;
           bitLeftmost = 0;
-          knownBitLength = 1;
+          knownBitLength = new FastInteger(0);
           break;
         } else {
-          int digit = (int)(shiftedLong % 10);
+          int digit = (int)(shiftedSmall % 10);
           bitsAfterLeftmost |= bitLeftmost;
           bitLeftmost = digit;
           digits--;
-          shiftedLong /= 10;
-          knownBitLength--;
+          shiftedSmall /= 10;
+          knownBitLength.SubtractInt(1);
         }
       }
       bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
@@ -294,20 +272,20 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='bits'>A FastInteger object.</param>
     /// <returns></returns>
-public void ShiftToDigits(FastInteger bits){
+    public void ShiftToDigits(FastInteger bits){
       if(bits.Sign<0)
         throw new ArgumentException("bits is negative");
       if(bits.CanFitInInt32()){
-        ShiftToDigits(bits.AsInt32());
+        ShiftToDigitsInt(bits.AsInt32());
       } else {
         knownBitLength=CalcKnownBitLength();
-        BigInteger bigintDiff=(BigInteger)knownBitLength;
+        BigInteger bigintDiff=knownBitLength.AsBigInteger();
         BigInteger bitsBig=bits.AsBigInteger();
         bigintDiff-=(BigInteger)bitsBig;
         if(bigintDiff.Sign>0){
           // current length is greater than the
           // desired bit length
-          ShiftRight(new FastInteger(bigintDiff));
+          ShiftRight(FastInteger.FromBig(bigintDiff));
         }
       }
     }
@@ -318,43 +296,45 @@ public void ShiftToDigits(FastInteger bits){
     /// Assumes that the big integer being shifted is positive. </summary>
     /// <returns></returns>
     /// <param name='digits'> A 64-bit signed integer.</param>
-    public void ShiftToDigits(long digits) {
+    public void ShiftToDigitsInt(int digits) {
       if (isSmall)
         ShiftToBitsSmall(digits);
       else
         ShiftToBitsBig(digits);
     }
-    private long CalcKnownBitLength() {
+    private FastInteger CalcKnownBitLength() {
       if (isSmall) {
         int kb = 0;
-        long tmp = shiftedLong;
+        int tmp = shiftedSmall;
         while (tmp > 0) {
           kb++;
           tmp /= 10;
         }
-        return kb == 0 ? 1 : kb;
+        kb=(kb == 0 ? 1 : kb);
+        return new FastInteger(kb);
       } else {
         String str = shiftedBigInt.ToString();
-        return str.Length;
+        return new FastInteger(str.Length);
       }
     }
-    private void ShiftToBitsSmall(long digits) {
-      knownBitLength = 0;
-      long tmp = shiftedLong;
+    private void ShiftToBitsSmall(int digits) {
+      int kb=0;
+      int tmp = shiftedSmall;
       while (tmp > 0) {
-        knownBitLength++;
+        kb++;
         tmp /= 10;
       }
       // Make sure digit length is 1 if value is 0
-      if (knownBitLength == 0) knownBitLength++;
-      if (knownBitLength > digits) {
-        int digitShift = (int)(knownBitLength - digits);
-        int newLength = (int)(knownBitLength - digitShift);
-        knownBitLength = Math.Max(1, newLength);
-        discardedBitCount.Add(digitShift);
+      if (kb == 0) kb++;
+      knownBitLength=new FastInteger(kb);
+      if (kb > digits) {
+        int digitShift = (int)(kb - digits);
+        int newLength = (int)(kb - digitShift);
+        knownBitLength = new FastInteger(Math.Max(1, newLength));
+        discardedBitCount.AddInt(digitShift);
         for (int i = 0; i < digitShift; i++) {
-          int digit = (int)(shiftedLong % 10);
-          shiftedLong /= 10;
+          int digit = (int)(shiftedSmall % 10);
+          shiftedSmall /= 10;
           bitsAfterLeftmost |= bitLeftmost;
           bitLeftmost = digit;
         }

@@ -10,7 +10,7 @@ namespace PeterO {
     FastInteger ShiftedIntFast { get; }
     FastInteger DiscardedDigitCount { get; }
     void ShiftRight(FastInteger bits);
-    void ShiftRight(int bits);
+    void ShiftRightInt(int bits);
     void ShiftToDigits(FastInteger bits);
   }
 }

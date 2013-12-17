@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 
 
@@ -33,12 +33,19 @@ at: http://upokecenter.com/d/
      * to those of another object.
      * @param other A BigFloat object.
      */
-    public boolean equals(BigFloat other) {
+    private boolean EqualsInternal(BigFloat other) {
       BigFloat otherValue = ((other instanceof BigFloat) ? (BigFloat)other : null);
       if (otherValue == null)
         return false;
       return this.exponent.equals(otherValue.exponent) &&
         this.mantissa.equals(otherValue.mantissa);
+    }
+    /**
+     * 
+     * @param other A BigFloat object.
+     */
+public boolean equals(BigFloat other) {
+      return EqualsInternal(other);
     }
     /**
      * Determines whether this object's mantissa and exponent are equal
@@ -47,7 +54,7 @@ at: http://upokecenter.com/d/
      * @return True if the objects are equal; false otherwise.
      */
     @Override public boolean equals(Object obj) {
-      return equals(((obj instanceof BigFloat) ? (BigFloat)obj : null));
+      return EqualsInternal(((obj instanceof BigFloat) ? (BigFloat)obj : null));
     }
     /**
      * Calculates this object's hash code.
@@ -67,45 +74,11 @@ at: http://upokecenter.com/d/
      * @param mantissa The unscaled value.
      * @param exponent The binary exponent.
      */
-    public BigFloat(BigInteger mantissa, BigInteger exponent) {
+    public BigFloat (BigInteger mantissa, BigInteger exponent) {
       this.exponent = exponent;
       this.mantissa = mantissa;
     }
-    /**
-     * Represents the number 1.
-     */
-    public static final BigFloat One = new BigFloat(1);
-
-    /**
-     * Represents the number 0.
-     */
-    public static final BigFloat Zero = new BigFloat(0);
-    /**
-     * Represents the number 10.
-     */
-    public static final BigFloat Ten = new BigFloat(10);
-    /**
-     * Creates a bigfloat with the value exponentSmall*2^mantissa.
-     * @param mantissa The unscaled value.
-     * @param exponentSmall The binary exponent.
-     */
-    public BigFloat(BigInteger mantissa, long exponentSmall){
- this(mantissa,BigInteger.valueOf(exponentSmall));
-    }
-    /**
-     * Creates a bigfloat with the given mantissa and an exponent of 0.
-     * @param mantissa The desired value of the bigfloat
-     */
-    public BigFloat(BigInteger mantissa){
- this(mantissa, BigInteger.ZERO);
-    }
-    /**
-     * Creates a bigfloat with the given mantissa and an exponent of 0.
-     * @param mantissaSmall The desired value of the bigfloat
-     */
-    public BigFloat(long mantissaSmall){
- this( BigInteger.valueOf((long)mantissaSmall), BigInteger.ZERO);
-    }
+    
     private static BigInteger BigShiftIteration = BigInteger.valueOf(1000000);
     private static int ShiftIteration = 1000000;
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
@@ -127,6 +100,14 @@ at: http://upokecenter.com/d/
       return val;
     }
     
+    public static BigFloat FromBigInteger(BigInteger bigint) {
+      return new BigFloat(bigint,BigInteger.ZERO);
+    }
+    
+    public static BigFloat FromInt64(long numberValue) {
+      BigInteger bigint=BigInteger.valueOf(numberValue);
+      return new BigFloat(bigint,BigInteger.ZERO);
+    }
     
     /**
      * Creates a bigfloat from an arbitrary-precision decimal fraction.
@@ -139,23 +120,23 @@ at: http://upokecenter.com/d/
       BigInteger bigintExp = decfrac.getExponent();
       BigInteger bigintMant = decfrac.getMantissa();
       if (bigintMant.signum()==0)
-        return new BigFloat(0);
+        return BigFloat.Zero;
       if (bigintExp.signum()==0) {
         // Integer
-        return new BigFloat(bigintMant);
+        return FromBigInteger(bigintMant);
       } else if (bigintExp.signum() > 0) {
         // Scaled integer
         BigInteger bigmantissa = bigintMant;
         bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfTenFromBig(bigintExp));
-        return new BigFloat(bigmantissa);
+        return FromBigInteger(bigmantissa);
       } else {
         // Fractional number
-        FastInteger scale = new FastInteger(bigintExp);
+        FastInteger scale = FastInteger.FromBig(bigintExp);
         BigInteger bigmantissa = bigintMant;
         boolean neg = (bigmantissa.signum() < 0);
         BigInteger remainder;
         if (neg) bigmantissa=(bigmantissa).negate();
-        FastInteger negscale = new FastInteger(scale).Negate();
+        FastInteger negscale = FastInteger.Copy(scale).Negate();
         BigInteger divisor = DecimalFraction.FindPowerOfFiveFromBig(
           negscale.AsBigInteger());
         while (true) {
@@ -168,7 +149,7 @@ remainder=divrem[1];
           if (remainder.signum()!=0 &&
               quotient.compareTo(OneShift62) < 0) {
             // At this point, the quotient has 62 or fewer bits
-            int[] bits=MutableNumber.GetLastWords(quotient,2);
+            int[] bits=FastInteger.GetLastWords(quotient,2);
             int shift=0;
             if((bits[0]|bits[1])!=0){
               // Quotient's integer part is nonzero.
@@ -179,11 +160,11 @@ remainder=divrem[1];
               else
                 bitPrecision=DecimalFraction.BitPrecisionInt(bits[0]);
               shift=63-bitPrecision;
-              scale.Subtract(shift);
+              scale.SubtractInt(shift);
             } else {
               // Integer part of quotient is 0
               shift=1;
-              scale.Subtract(shift);
+              scale.SubtractInt(shift);
             }
             // shift by that many bits, but not less than 1
             bigmantissa=bigmantissa.shiftLeft(shift);
@@ -228,7 +209,8 @@ remainder=divrem[1];
         if ((value >> 31) != 0)
           fpMantissa = -fpMantissa;
       }
-      return new BigFloat(BigInteger.valueOf((long)fpMantissa), fpExponent - 150);
+      return new BigFloat(BigInteger.valueOf((long)fpMantissa), 
+                          BigInteger.valueOf(fpExponent - 150));
     }
     /**
      * Creates a bigfloat from a 64-bit floating-point number.
@@ -248,8 +230,8 @@ remainder=divrem[1];
       if ((value[1]|value[0]) != 0) {
         fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
       }
-      BigFloat ret=new BigFloat(MutableNumber.WordsToBigInteger(value),
-                                fpExponent - 1075);
+      BigFloat ret=new BigFloat(FastInteger.WordsToBigInteger(value),
+                                BigInteger.valueOf(fpExponent - 1075));
       if(neg)ret=ret.Negate();
       return ret;
     }
@@ -302,9 +284,9 @@ remainder=divrem[1];
       }
     }
 
-    private static BigInteger OneShift23 = BigInteger.valueOf(1L << 23);
-    private static BigInteger OneShift52 = BigInteger.valueOf(1L << 52);
-    private static BigInteger OneShift62 = BigInteger.valueOf(1L << 62);
+    private static BigInteger OneShift23 = BigInteger.ONE.shiftLeft(23);
+    private static BigInteger OneShift52 = BigInteger.ONE.shiftLeft(52);
+    private static BigInteger OneShift62 = BigInteger.ONE.shiftLeft(62);
 
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
@@ -315,7 +297,7 @@ remainder=divrem[1];
      */
     public float ToSingle() {
       BigInteger bigmant = (this.mantissa).abs();
-      FastInteger bigexponent = new FastInteger(this.exponent);
+      FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       int bitLeftmost = 0;
       int bitsAfterLeftmost = 0;
       if (this.mantissa.signum()==0) {
@@ -330,11 +312,11 @@ remainder=divrem[1];
           smallmant <<= 1;
           exponentchange++;
         }
-        bigexponent.Subtract(exponentchange);
+        bigexponent.SubtractInt(exponentchange);
         fastSmallMant=new FastInteger(smallmant);
       } else {
-        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant);
-        accum.ShiftToDigits(24);
+        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant,0,0);
+        accum.ShiftToDigitsInt(24);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
         bigexponent.Add(accum.getDiscardedDigitCount());
@@ -343,24 +325,24 @@ remainder=divrem[1];
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
                               !fastSmallMant.isEvenNumber())) {
-        fastSmallMant.Add(1);
-        if (fastSmallMant.compareTo(1 << 24)==0) {
+        fastSmallMant.AddInt(1);
+        if (fastSmallMant.CompareToInt(1 << 24)==0) {
           fastSmallMant=new FastInteger(1<<23);
-          bigexponent.Add(1);
+          bigexponent.AddInt(1);
         }
       }
       boolean subnormal = false;
-      if (bigexponent.compareTo(104) > 0) {
+      if (bigexponent.CompareToInt(104) > 0) {
         // exponent too big
         return (this.mantissa.signum() < 0) ?
           Float.NEGATIVE_INFINITY :
           Float.POSITIVE_INFINITY;
-      } else if (bigexponent.compareTo(-149) < 0) {
+      } else if (bigexponent.CompareToInt(-149) < 0) {
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        BitShiftAccumulator accum = new BitShiftAccumulator(fastSmallMant.AsInt32());
-        FastInteger fi = new FastInteger(bigexponent).Subtract(-149).Abs();
+        BitShiftAccumulator accum = BitShiftAccumulator.FromInt32(fastSmallMant.AsInt32());
+        FastInteger fi = FastInteger.Copy(bigexponent).SubtractInt(-149).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
@@ -369,14 +351,14 @@ remainder=divrem[1];
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
                                 !fastSmallMant.isEvenNumber())) {
-          fastSmallMant.Add(1);
-          if (fastSmallMant.compareTo(1 << 24)==0) {
+          fastSmallMant.AddInt(1);
+          if (fastSmallMant.CompareToInt(1 << 24)==0) {
             fastSmallMant=new FastInteger(1<<23);
-            bigexponent.Add(1);
+            bigexponent.AddInt(1);
           }
         }
       }
-      if (bigexponent.compareTo(-149) < 0) {
+      if (bigexponent.CompareToInt(-149) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.signum() < 0) ?
           Float.intBitsToFloat(1 << 31) :
@@ -404,7 +386,7 @@ remainder=divrem[1];
      */
     public double ToDouble() {
       BigInteger bigmant = (this.mantissa).abs();
-      FastInteger bigexponent = new FastInteger(this.exponent);
+      FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       int bitLeftmost = 0;
       int bitsAfterLeftmost = 0;
       if (this.mantissa.signum()==0) {
@@ -412,21 +394,21 @@ remainder=divrem[1];
       }
       int[] mantissaBits;
       if (bigmant.compareTo(OneShift52) < 0) {
-        mantissaBits=MutableNumber.GetLastWords(bigmant,2);
+        mantissaBits=FastInteger.GetLastWords(bigmant,2);
         // This will be an infinite loop if both elements
         // of the bits array are 0, but the check for
         // 0 was already done above
         while (!DecimalFraction.HasBitSet(mantissaBits,52)) {
           DecimalFraction.ShiftLeftOne(mantissaBits);
-          bigexponent.Subtract(1);
+          bigexponent.SubtractInt(1);
         }
       } else {
-        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant);
-        accum.ShiftToDigits(53);
+        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant,0,0);
+        accum.ShiftToDigitsInt(53);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
         bigexponent.Add(accum.getDiscardedDigitCount());
-        mantissaBits=MutableNumber.GetLastWords(accum.getShiftedInt(),2);
+        mantissaBits=FastInteger.GetLastWords(accum.getShiftedInt(),2);
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
@@ -438,27 +420,27 @@ remainder=divrem[1];
         if (mantissaBits[0]==0 &&
             mantissaBits[1]==(1<<21)) { // if mantissa is now 2^53
           mantissaBits[1]>>=1; // change it to 2^52
-          bigexponent.Add(1);
+          bigexponent.AddInt(1);
         }
       }
       boolean subnormal = false;
-      if (bigexponent.compareTo(971) > 0) {
+      if (bigexponent.CompareToInt(971) > 0) {
         // exponent too big
         return (this.mantissa.signum() < 0) ?
           Double.NEGATIVE_INFINITY :
           Double.POSITIVE_INFINITY;
-      } else if (bigexponent.compareTo(-1074) < 0) {
+      } else if (bigexponent.CompareToInt(-1074) < 0) {
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
         BitShiftAccumulator accum = new BitShiftAccumulator(
-          MutableNumber.WordsToBigInteger(mantissaBits));
-        FastInteger fi = new FastInteger(bigexponent).Subtract(-1074).Abs();
+          FastInteger.WordsToBigInteger(mantissaBits),0,0);
+        FastInteger fi = FastInteger.Copy(bigexponent).SubtractInt(-1074).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
         bitLeftmost = accum.getLastDiscardedDigit();
         bigexponent.Add(accum.getDiscardedDigitCount());
-        mantissaBits=MutableNumber.GetLastWords(accum.getShiftedInt(),2);
+        mantissaBits=FastInteger.GetLastWords(accum.getShiftedInt(),2);
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
                                 !DecimalFraction.HasBitSet(mantissaBits,0))) {
@@ -469,17 +451,17 @@ remainder=divrem[1];
           if (mantissaBits[0]==0 &&
               mantissaBits[1]==(1<<21)) { // if mantissa is now 2^53
             mantissaBits[1]>>=1; // change it to 2^52
-            bigexponent.Add(1);
+            bigexponent.AddInt(1);
           }
         }
       }
-      if (bigexponent.compareTo(-1074) < 0) {
+      if (bigexponent.CompareToInt(-1074) < 0) {
         // exponent too small, so return zero
         return (this.mantissa.signum() < 0) ?
           Extras.IntegersToDouble(new int[]{0,((int)0x80000000)}) :
           0.0d;
       } else {
-        bigexponent.Add(1075);
+        bigexponent.AddInt(1075);
         // Clear the high bits where the exponent and sign are
         mantissaBits[1]&=0xFFFFF;
         if (!subnormal) {
@@ -509,14 +491,13 @@ remainder=divrem[1];
       return DecimalFraction.FromBigFloat(this).ToEngineeringString();
     }
     /**
-     * Converts this value to a string, but without an exponent part.getThe()
+     * Converts this value to a string, but without an exponent part. The
      * format of the return value follows the format of the java.math.BigDecimal.toPlainString()
      * method.
      */
     public String ToPlainString() {
       return DecimalFraction.FromBigFloat(this).ToPlainString();
     }
-
 
     private static final class BinaryMathHelper implements IRadixMathHelper<BigFloat> {
 
@@ -527,14 +508,6 @@ remainder=divrem[1];
         return 2;
       }
 
-    /**
-     * 
-     * @param value A BigFloat object.
-     */
-      public BigFloat Abs(BigFloat value) {
-        return value.Abs();
-      }
-      
     /**
      * 
      * @param value A BigFloat object.
@@ -589,7 +562,7 @@ remainder=divrem[1];
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.
      */
-      public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint, int lastDigit, int olderDigits) {
+      public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
@@ -598,7 +571,7 @@ remainder=divrem[1];
      * @param bigint A BigInteger object.
      */
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
-        return new BitShiftAccumulator(bigint);
+        return new BitShiftAccumulator(bigint,0,0);
       }
 
     /**
@@ -671,7 +644,7 @@ remainder=divrem[1];
      * decimal expansion.
      */
     public BigFloat Divide(BigFloat divisor) {
-      return Divide(divisor, new PrecisionContext(Rounding.Unnecessary));
+      return Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
 
     /**
@@ -685,8 +658,8 @@ remainder=divrem[1];
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public BigFloat Divide(BigFloat divisor, Rounding rounding) {
-      return Divide(divisor, this.exponent, rounding);
+    public BigFloat DivideToSameExponent(BigFloat divisor, Rounding rounding) {
+      return DivideToExponent(divisor, this.exponent,  PrecisionContext.ForRounding(rounding));
     }
 
     /**
@@ -700,9 +673,8 @@ remainder=divrem[1];
     public BigFloat DivideToIntegerNaturalScale(
       BigFloat divisor
      ) {
-      return DivideToIntegerNaturalScale(divisor, new PrecisionContext(Rounding.Down));
+      return DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
-
 
     /**
      * 
@@ -711,10 +683,21 @@ remainder=divrem[1];
     public BigFloat RemainderNaturalScale(
       BigFloat divisor
      ) {
-      return Subtract(this.DivideToIntegerNaturalScale(divisor).Multiply(divisor));
+      return RemainderNaturalScale(divisor,null);
     }
 
-
+    /**
+     * 
+     * @param divisor A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     */
+    public BigFloat RemainderNaturalScale(
+      BigFloat divisor,
+      PrecisionContext ctx
+     ) {
+      return Subtract(this.DivideToIntegerNaturalScale(divisor,null)
+                      .Multiply(divisor,null),ctx);
+    }
     /**
      * Divides two BigFloat objects, and gives a particular exponent to
      * the result.
@@ -732,22 +715,13 @@ remainder=divrem[1];
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public BigFloat Divide(
+    public BigFloat DivideToExponent(
       BigFloat divisor,
       long desiredExponentSmall,
       PrecisionContext ctx
      ) {
-      BigInteger desexp=BigInteger.valueOf(desiredExponentSmall);
-      return Divide(divisor, desexp, ctx);
+      return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
-
-
-
-
-
-
-
-
 
     /**
      * Divides two BigFloat objects, and gives a particular exponent to
@@ -763,22 +737,14 @@ remainder=divrem[1];
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public BigFloat Divide(
+    public BigFloat DivideToExponent(
       BigFloat divisor,
       long desiredExponentSmall,
       Rounding rounding
      ) {
-      BigInteger desexp=BigInteger.valueOf(desiredExponentSmall);
-      return Divide(divisor, desexp, new PrecisionContext(rounding));
+      return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)),
+                    PrecisionContext.ForRounding(rounding));
     }
-
-
-
-
-
-
-
-
 
     /**
      * Divides two BigFloat objects, and gives a particular exponent to
@@ -794,14 +760,13 @@ remainder=divrem[1];
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public BigFloat Divide(
+    public BigFloat DivideToExponent(
       BigFloat divisor,
       BigInteger desiredExponent,
       Rounding rounding
      ) {
-      return Divide(divisor, desiredExponent, new PrecisionContext(rounding));
+      return DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
-
 
     /**
      * 
@@ -811,15 +776,6 @@ remainder=divrem[1];
       return Abs().RoundToPrecision(context);
     }
 
-
-
-
-
-
-
-
-
-
     /**
      * 
      * @param context A PrecisionContext object.
@@ -827,12 +783,6 @@ remainder=divrem[1];
     public BigFloat Negate(PrecisionContext context) {
       return Negate().RoundToPrecision(context);
     }
-
-
-
-
-
-
 
     /**
      * 
@@ -842,29 +792,14 @@ remainder=divrem[1];
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
-
-
-
-
-
     /**
      * Subtracts a BigFloat object from this instance.
      * @param decfrac A BigFloat object.
      * @return The difference of the two objects.
      */
     public BigFloat Subtract(BigFloat decfrac) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
-      return Add(decfrac.Negate());
+      return Subtract(decfrac,null);
     }
-
-
-
-
-
-
-
-
-
 
     /**
      * Subtracts a BigFloat object from another BigFloat object.
@@ -895,7 +830,7 @@ remainder=divrem[1];
      */
     public BigFloat MultiplyAndAdd(BigFloat multiplicand,
                                    BigFloat augend) {
-      return this.Multiply(multiplicand).Add(augend);
+      return MultiplyAndAdd(multiplicand,augend,null);
     }
     //----------------------------------------------------------------
 
@@ -904,8 +839,8 @@ remainder=divrem[1];
 
     /**
      * Divides this object by another object, and returns the integer part
-     * of the result, with the preferred exponent set to thisValue value's
-     * exponent minus the divisor's exponent.
+     * of the result, with the preferred exponent set to this value's exponent
+     * minus the divisor's exponent.
      * @param divisor The divisor.
      * @param ctx A precision context object to control the precision, rounding,
      * and exponent range of the integer part of the result. Flags will be
@@ -1011,51 +946,51 @@ remainder=divrem[1];
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public BigFloat Divide(
+    public BigFloat DivideToExponent(
       BigFloat divisor, BigInteger exponent, PrecisionContext ctx) {
       return math.DivideToExponent(this, divisor, exponent, ctx);
     }
 
     /**
      * Gets the greater value between two bigfloats.
-     * @param a A BigFloat object.
-     * @param b A BigFloat object.
+     * @param first A BigFloat object.
+     * @param second A BigFloat object.
      * @return The larger value of the two objects.
      */
     public static BigFloat Max(
-      BigFloat a, BigFloat b) {
-      return math.Max(a, b);
+      BigFloat first, BigFloat second) {
+      return math.Max(first, second);
     }
 
     /**
      * Gets the lesser value between two bigfloats.
-     * @param a A BigFloat object.
-     * @param b A BigFloat object.
+     * @param first A BigFloat object.
+     * @param second A BigFloat object.
      * @return The smaller value of the two objects.
      */
     public static BigFloat Min(
-      BigFloat a, BigFloat b) {
-      return math.Min(a, b);
+      BigFloat first, BigFloat second) {
+      return math.Min(first, second);
     }
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param a A BigFloat object.
-     * @param b A BigFloat object.
+     * @param first A BigFloat object.
+     * @param second A BigFloat object.
      */
     public static BigFloat MaxMagnitude(
-      BigFloat a, BigFloat b) {
-      return math.MaxMagnitude(a, b);
+      BigFloat first, BigFloat second) {
+      return math.MaxMagnitude(first, second);
     }
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param a A BigFloat object.
-     * @param b A BigFloat object.
+     * @param first A BigFloat object.
+     * @param second A BigFloat object.
      */
     public static BigFloat MinMagnitude(
-      BigFloat a, BigFloat b) {
-      return math.MinMagnitude(a, b);
+      BigFloat first, BigFloat second) {
+      return math.MinMagnitude(first, second);
     }
     /**
      * Compares the mathematical values of this object and another object.
@@ -1104,7 +1039,7 @@ remainder=divrem[1];
      */
     public BigFloat Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return math.Quantize(this, new BigFloat(BigInteger.ONE,desiredExponent), ctx);
+      return Quantize(new BigFloat(BigInteger.ONE,desiredExponent), ctx);
     }
 
     /**
@@ -1114,7 +1049,7 @@ remainder=divrem[1];
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
-     * @param desiredExponentInteger A 32-bit signed integer.
+     * @param desiredExponentSmall A 32-bit signed integer.
      * @return A bigfloat with the same value as this object but with the exponent
      * changed.
      * @throws ArithmeticException An overflow error occurred, or the
@@ -1123,9 +1058,9 @@ remainder=divrem[1];
      * valid range of the precision context, if it defines an exponent range.
      */
     public BigFloat Quantize(
-      int desiredExponentInteger, PrecisionContext ctx) {
-      return math.Quantize(this, 
-        new BigFloat(BigInteger.ONE,BigInteger.valueOf(desiredExponentInteger)), ctx);
+      int desiredExponentSmall, PrecisionContext ctx) {
+      return Quantize( 
+        new BigFloat(BigInteger.ONE,BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
     /**
@@ -1152,15 +1087,15 @@ remainder=divrem[1];
      */
     public BigFloat RoundToIntegralExact(
       PrecisionContext ctx) {
-      return math.RoundToIntegralExact(this, ctx);
+      return math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     }
     /**
      * 
      * @param ctx A PrecisionContext object.
      */
-    public BigFloat RoundToIntegralValue(
+    public BigFloat RoundToIntegralNoRoundedFlag(
       PrecisionContext ctx) {
-      return math.RoundToIntegralValue(this, ctx);
+      return math.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
     }
     /**
      * Removes trailing zeros from this object's mantissa. For example,
@@ -1294,6 +1229,24 @@ remainder=divrem[1];
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
     }
+ 
+    /**
+     * Represents the number 1.
+     */
+    
+    public static final BigFloat One = new BigFloat(BigInteger.ONE,BigInteger.ZERO);
+
+    /**
+     * Represents the number 0.
+     */
+    
+    public static final BigFloat Zero = new BigFloat(BigInteger.ZERO,BigInteger.ZERO);
+    /**
+     * Represents the number 10.
+     */
+    
+    public static final BigFloat Ten = FromInt64((long)10);
+
     
   }
 
