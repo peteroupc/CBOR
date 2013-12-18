@@ -188,7 +188,7 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
     
-    private FastInteger ByteArrayBitLength(byte[] bytes) {
+    private static FastInteger ByteArrayBitLength(byte[] bytes) {
       FastInteger fastKB = new FastInteger(bytes.length).Multiply(8);
       for (int i = bytes.length - 1; i >= 0; i--) {
         int b = (int)bytes[i];

@@ -171,7 +171,7 @@ namespace PeterO {
         }
         if(fastNumber.CanFitInInt32() && fastExponent.CanFitInInt32()){
           return CBORObject.FromObject(new DecimalFraction(
-            fastNumber.AsInt32(),fastExponent.AsInt32()));
+            fastNumber.AsBigInteger(),fastExponent.AsBigInteger()));
         } else {
           BigInteger bigintExponent=fastExponent.AsBigInteger();
           if(!fastExponent.CanFitInInt32()){

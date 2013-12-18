@@ -25,7 +25,6 @@ namespace PeterO {
     }
     BigInteger shiftedBigInt;
     FastInteger knownBitLength;
-    private const int SmallBitLength = 32;
 
     /// <summary> </summary>
     /// <returns></returns>
@@ -194,7 +193,6 @@ namespace PeterO {
       // Shift by the difference in digit length
       if (digitLength > digits) {
         int digitShift = digitLength - digits;
-        int bitShiftCount = digitShift;
         int newLength = (int)(digitLength - digitShift);
         if(digitShift<=Int32.MaxValue)
           discardedBitCount.AddInt((int)digitShift);

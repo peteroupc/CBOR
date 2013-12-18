@@ -184,7 +184,7 @@ namespace PeterO {
       }
     }
     
-    private FastInteger ByteArrayBitLength(byte[] bytes){
+    private static FastInteger ByteArrayBitLength(byte[] bytes){
       FastInteger fastKB = new FastInteger(bytes.Length).Multiply(8);
       for (int i = bytes.Length - 1; i >= 0; i--) {
         int b = (int)bytes[i];

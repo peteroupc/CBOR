@@ -238,7 +238,11 @@ JSInteropFactory.LONG_MAX_VALUE=function(){
 }
 JSInteropFactory.LONG_ZERO=new ILong(0,0)
 var Extras={}
-Extras.IntegersToDouble=function(){}
-Extras.DoubleToIntegers=function(){}
-
-
+Extras.IntegersToDouble=function(){throw "Not implemented"}
+Extras.DoubleToIntegers=function(){throw "Not implemented"}
+if(typeof exports!=="undefined"){
+exports.Extras=Extras;
+exports.JSInteropFactory=JSInteropFactory;
+exports.ILong=ILong;
+exports.StringBuilder=StringBuilder;
+}

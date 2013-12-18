@@ -40,16 +40,19 @@ end
 
 def utf8edit(file,createIfNotFound=false)
   data=""
+  found=false
   if !FileTest.exist?(file)
     return if !createIfNotFound
   else
+    found=true
     data=utf8read(file)
   end
   return if !data
   data2=yield(data.clone)
-  if data2!=data
-    utf8write(data2,file)
-  end
+  if (createIfNotFound && !found) || 
+      (data2!=data && data2!=nil) # nil check for sanity
+    utf8write(data2||"",file)
+  end   
 end
 
 ##################
