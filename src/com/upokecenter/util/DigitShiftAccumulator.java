@@ -26,7 +26,6 @@ at: http://peteroupc.github.io/CBOR/
     public int getOlderDiscardedDigits() { return bitsAfterLeftmost; }
     BigInteger shiftedBigInt;
     FastInteger knownBitLength;
-    private static final int SmallBitLength = 32;
 
     /**
      * 
@@ -198,7 +197,6 @@ at: http://peteroupc.github.io/CBOR/
       // Shift by the difference in digit length
       if (digitLength > digits) {
         int digitShift = digitLength - digits;
-        int bitShiftCount = digitShift;
         int newLength = (int)(digitLength - digitShift);
         if(digitShift<=Integer.MAX_VALUE)
           discardedBitCount.AddInt((int)digitShift);
