@@ -110,12 +110,12 @@ rembi=divrem[1];
     
     public static void AssertFlags(int expected, int actual) {
       if(expected==actual)return;
-      Assert.assertEquals("Inexact",(expected&PrecisionContext.FlagInexact)!=0,(expected&PrecisionContext.FlagInexact)!=0);
-      Assert.assertEquals("Rounded",(expected&PrecisionContext.FlagRounded)!=0,(expected&PrecisionContext.FlagRounded)!=0);
-      Assert.assertEquals("Subnormal",(expected&PrecisionContext.FlagSubnormal)!=0,(expected&PrecisionContext.FlagSubnormal)!=0);
-      Assert.assertEquals("Overflow",(expected&PrecisionContext.FlagOverflow)!=0,(expected&PrecisionContext.FlagOverflow)!=0);
-      Assert.assertEquals("Underflow",(expected&PrecisionContext.FlagUnderflow)!=0,(expected&PrecisionContext.FlagUnderflow)!=0);
-      Assert.assertEquals("Clamped",(expected&PrecisionContext.FlagClamped)!=0,(expected&PrecisionContext.FlagClamped)!=0);
+      Assert.assertEquals("Inexact",(expected&PrecisionContext.FlagInexact)!=0,(actual&PrecisionContext.FlagInexact)!=0);
+      Assert.assertEquals("Rounded",(expected&PrecisionContext.FlagRounded)!=0,(actual&PrecisionContext.FlagRounded)!=0);
+      Assert.assertEquals("Subnormal",(expected&PrecisionContext.FlagSubnormal)!=0,(actual&PrecisionContext.FlagSubnormal)!=0);
+      Assert.assertEquals("Overflow",(expected&PrecisionContext.FlagOverflow)!=0,(actual&PrecisionContext.FlagOverflow)!=0);
+      Assert.assertEquals("Underflow",(expected&PrecisionContext.FlagUnderflow)!=0,(actual&PrecisionContext.FlagUnderflow)!=0);
+      Assert.assertEquals("Clamped",(expected&PrecisionContext.FlagClamped)!=0,(actual&PrecisionContext.FlagClamped)!=0);
     }
     
     private static CBORObject FromBytesA(byte[] b) {

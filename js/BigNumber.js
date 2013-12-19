@@ -4315,7 +4315,7 @@ function(value) {
             var newWordCount = (4 > ((len / 4)|0) + 1 ? 4 : ((len / 4)|0) + 1);
             if (newWordCount > mnum.data.length) {
                 mnum.data = [];
-                for (var arrfillI = 0; arrfillI < mnum.wordCount; arrfillI++) mnum.data[arrfillI] = 0;
+                for (var arrfillI = 0; arrfillI < newWordCount; arrfillI++) mnum.data[arrfillI] = 0;
             }
             mnum.wordCount = newWordCount;
             {
@@ -6017,8 +6017,7 @@ var RadixMath = function(helper) {
         var ret = this.DivideToIntegerZeroScale(thisValue, divisor, ctx);
         ret = this.Add(thisValue, this.Negate(this.Multiply(ret, divisor, null)), null);
         if (ctx != null) {
-            var ctx2 = ctx.WithBlankFlags();
-            ret = this.RoundToPrecision(ret, ctx2);
+            ret = this.RoundToPrecision(ret, ctx);
         }
         return ret;
     };
@@ -6034,8 +6033,7 @@ var RadixMath = function(helper) {
         }
         ret = this.Add(thisValue, this.Negate(this.Multiply(ret, divisor, null)), null);
         if (ctx != null) {
-            var ctx2 = ctx.WithBlankFlags();
-            ret = this.RoundToPrecision(ret, ctx2);
+            ret = this.RoundToPrecision(ret, ctx);
         }
         return ret;
     };
@@ -6072,6 +6070,9 @@ var RadixMath = function(helper) {
             if (bigexp.compareTo(minexp) < 0) {
                 
                 minexp = FastInteger.Copy(bigexp).SubtractInt(2);
+            } else {
+                
+                minexp.SubtractInt(2);
             }
             var bigdir = BigInteger.ONE;
             if (cmp > 0) {
@@ -6081,6 +6082,10 @@ var RadixMath = function(helper) {
             var val = thisValue;
             ctx2 = ctx.WithRounding((cmp > 0) ? Rounding.Floor : Rounding.Ceiling).WithBlankFlags();
             val = this.Add(val, quantum, ctx2);
+            if ((ctx2.getFlags() & (PrecisionContext.FlagOverflow | PrecisionContext.FlagUnderflow)) == 0) {
+                
+                ctx2.setFlags(0);
+            }
             if (ctx.getHasFlags()) {
                 ctx.setFlags(ctx.getFlags() | ctx2.getFlags());
             }
@@ -6153,7 +6158,7 @@ var RadixMath = function(helper) {
         if ((accum.getDiscardedDigitCount()).signum() != 0 || (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
             if (mantissa.signum() != 0) flags |= PrecisionContext.FlagRounded;
             if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                flags |= PrecisionContext.FlagInexact;
+                flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
                 if (rounding == Rounding.Unnecessary) throw ("Rounding was required");
             }
             if (this.RoundGivenBigInt(accum, rounding, neg, newmantissa)) {
@@ -6198,6 +6203,7 @@ var RadixMath = function(helper) {
             var expdiff = FastInteger.Copy(expDividend).Subtract(expDivisor);
             var adjust = new FastInteger(0);
             var result = new FastInteger(0);
+            var naturalExponent = FastInteger.Copy(expdiff);
             var fastDesiredExponent = FastInteger.FromBig(desiredExponent);
             var negA = (signA < 0);
             var negB = (signB < 0);
@@ -6207,6 +6213,10 @@ var RadixMath = function(helper) {
             if (integerMode == RadixMath.IntegerModeFixedScale) {
                 var shift;
                 var rem;
+                if (ctx != null && ctx.getHasFlags() && FastInteger.FromBig(desiredExponent).compareTo(naturalExponent) > 0) {
+                    
+                    ctx.setFlags(ctx.getFlags() | PrecisionContext.FlagRounded);
+                }
                 if (expdiff.compareTo(fastDesiredExponent) <= 0) {
                     shift = FastInteger.Copy(fastDesiredExponent).Subtract(expdiff);
                     var quo;
@@ -6344,6 +6354,10 @@ var RadixMath = function(helper) {
             if (negA ^ negB) {
                 bigResult = bigResult.negate();
             }
+            if (ctx != null && ctx.getHasFlags() && exp.compareTo(naturalExponent) > 0) {
+                
+                ctx.setFlags(ctx.getFlags() | PrecisionContext.FlagRounded);
+            }
             return this.RoundToPrecisionWithDigits(this.helper.CreateNew(bigResult, exp.AsBigInteger()), ctx, lastDiscarded, olderDiscarded);
         }
     };
@@ -6451,12 +6465,15 @@ var RadixMath = function(helper) {
         return this.RoundToPrecisionWithDigits(thisValue, context, 0, 0);
     };
     prototype.RoundToPrecisionWithDigits = function(thisValue, context, lastDiscarded, olderDiscarded) {
+        return this.RoundToPrecisionWithShift(thisValue, context, lastDiscarded, olderDiscarded, new FastInteger(0));
+    };
+    prototype.RoundToPrecisionWithShift = function(thisValue, context, lastDiscarded, olderDiscarded, shift) {
         if ((context) == null) return thisValue;
-        if ((context.getPrecision()).signum() == 0 && !context.getHasExponentRange() && (lastDiscarded | olderDiscarded) == 0) return thisValue;
+        if ((context.getPrecision()).signum() == 0 && !context.getHasExponentRange() && (lastDiscarded | olderDiscarded) == 0 && shift.signum() == 0) return thisValue;
         var fastEMin = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMin()) : null;
         var fastEMax = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMax()) : null;
         var fastPrecision = FastInteger.FromBig(context.getPrecision());
-        if (fastPrecision.signum() > 0 && fastPrecision.CompareToInt(18) <= 0 && (lastDiscarded | olderDiscarded) == 0) {
+        if (fastPrecision.signum() > 0 && fastPrecision.CompareToInt(18) <= 0 && (lastDiscarded | olderDiscarded) == 0 && shift.signum() == 0) {
             
             var mantabs = (this.helper.GetMantissa(thisValue)).abs();
             if (mantabs.compareTo(this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision)) < 0) {
@@ -6470,7 +6487,7 @@ var RadixMath = function(helper) {
             }
         }
         var signals = [0];
-        var dfrac = this.RoundToPrecisionInternal(thisValue, fastPrecision, context.getRounding(), fastEMin, fastEMax, lastDiscarded, olderDiscarded, signals);
+        var dfrac = this.RoundToPrecisionInternal(thisValue, fastPrecision, context.getRounding(), fastEMin, fastEMax, lastDiscarded, olderDiscarded, shift, context.getHasFlags() ? signals : null);
         if (context.getClampNormalExponents() && dfrac != null) {
             
             var clamp = FastInteger.Copy(fastEMax).AddInt(1).Subtract(fastPrecision);
@@ -6521,12 +6538,10 @@ var RadixMath = function(helper) {
             ret = this.RoundToPrecision(ret, tmpctx);
         } else {
             
-            var accum = this.helper.CreateShiftAccumulator(mantThis);
-            accum.ShiftRight(FastInteger.FromBig(expOther).SubtractBig(expThis));
-            mantThis = accum.getShiftedInt();
+            var shift = FastInteger.FromBig(expOther).SubtractBig(expThis);
             if (signThis < 0) mantThis = mantThis.negate();
             ret = this.helper.CreateNew(mantThis, expOther);
-            ret = this.RoundToPrecisionWithDigits(ret, tmpctx, accum.getLastDiscardedDigit(), accum.getOlderDiscardedDigits());
+            ret = this.RoundToPrecisionWithShift(ret, tmpctx, 0, 0, shift);
         }
         if ((tmpctx.getFlags() & PrecisionContext.FlagOverflow) != 0) {
             throw "exception";
@@ -6610,7 +6625,11 @@ var RadixMath = function(helper) {
             var sign = (this.helper.GetSign(ret) < 0);
             ret = this.helper.CreateNew(bigmant, exp.AsBigInteger());
             if (ctx != null && ctx.getClampNormalExponents()) {
-                ret = this.RoundToPrecision(ret, ctx);
+                var ctxtmp = ctx.WithBlankFlags();
+                ret = this.RoundToPrecision(ret, ctxtmp);
+                if (ctx.getHasFlags()) {
+                    ctx.setFlags(ctx.getFlags() | (ctx.getFlags() & ~PrecisionContext.FlagClamped));
+                }
             }
             ret = this.EnsureSign(ret, sign);
         }
@@ -6626,15 +6645,17 @@ var RadixMath = function(helper) {
         throw "exception";
     };
     prototype.RoundToBinaryPrecisionInternal = function(thisValue, precision, rounding, fastEMin, fastEMax, lastDiscarded, olderDiscarded, signals) {
+        
         if (precision.signum() < 0) throw ("precision" + " not greater or equal to " + "0" + " (" + (precision) + ")");
         if (this.helper.GetRadix() == 2 || precision.signum() == 0) {
-            return this.RoundToPrecisionInternal(thisValue, precision, rounding, fastEMin, fastEMax, lastDiscarded, olderDiscarded, signals);
+            return this.RoundToPrecisionInternal(thisValue, precision, rounding, fastEMin, fastEMax, lastDiscarded, olderDiscarded, null, signals);
         }
         var neg = this.helper.GetMantissa(thisValue).signum() < 0;
         var bigmantissa = this.helper.GetMantissa(thisValue);
         if (neg) bigmantissa = bigmantissa.negate();
         
         var oldmantissa = bigmantissa;
+        var mantissaWasZero = (oldmantissa.signum() == 0 && (lastDiscarded | olderDiscarded) == 0);
         var maxMantissa = BigInteger.ONE;
         var prec = FastInteger.Copy(precision);
         while (prec.signum() > 0) {
@@ -6668,7 +6689,7 @@ var RadixMath = function(helper) {
             }
         }
         if (fastEMax != null && adjExponent.compareTo(fastEMax) > 0) {
-            if (oldmantissa.signum() == 0) {
+            if (mantissaWasZero) {
                 flags |= PrecisionContext.FlagClamped;
                 if (signals != null) signals[0] = flags;
                 return this.helper.CreateNew(oldmantissa, fastEMax.AsBigInteger());
@@ -6689,7 +6710,7 @@ var RadixMath = function(helper) {
         } else if (fastEMin != null && adjExponent.compareTo(fastEMin) < 0) {
             
             var fastETiny = FastInteger.Copy(fastEMin).Subtract(digitCount).AddInt(1);
-            if (oldmantissa.signum() != 0) flags |= PrecisionContext.FlagSubnormal;
+            if (!mantissaWasZero) flags |= PrecisionContext.FlagSubnormal;
             if (exp.compareTo(fastETiny) < 0) {
                 var expdiff = FastInteger.Copy(fastETiny).Subtract(exp);
                 expdiff.Add(discardedBits);
@@ -6697,9 +6718,9 @@ var RadixMath = function(helper) {
                 accum.ShiftRight(expdiff);
                 var newmantissa = accum.getShiftedInt();
                 if ((accum.getDiscardedDigitCount()).signum() != 0 || (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                    if (oldmantissa.signum() != 0) flags |= PrecisionContext.FlagRounded;
+                    if (!mantissaWasZero) flags |= PrecisionContext.FlagRounded;
                     if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                        flags |= PrecisionContext.FlagInexact;
+                        flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
                         if (rounding == Rounding.Unnecessary) throw ("Rounding was required");
                     }
                     if (this.RoundGivenBigInt(accum, rounding, neg, newmantissa)) {
@@ -6718,7 +6739,7 @@ var RadixMath = function(helper) {
             if (bigmantissa.signum() != 0) flags |= PrecisionContext.FlagRounded;
             bigmantissa = accum.getShiftedInt();
             if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                flags |= PrecisionContext.FlagInexact;
+                flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
                 if (rounding == Rounding.Unnecessary) throw ("Rounding was required");
             }
             if (this.RoundGivenBigInt(accum, rounding, neg, bigmantissa)) {
@@ -6770,17 +6791,22 @@ var RadixMath = function(helper) {
         if (neg) bigmantissa = bigmantissa.negate();
         return this.helper.CreateNew(bigmantissa, exp.AsBigInteger());
     };
-    prototype.RoundToPrecisionInternal = function(thisValue, precision, rounding, fastEMin, fastEMax, lastDiscarded, olderDiscarded, signals) {
+    prototype.RoundToPrecisionInternal = function(thisValue, precision, rounding, fastEMin, fastEMax, lastDiscarded, olderDiscarded, shift, signals) {
         if (precision.signum() < 0) throw ("precision" + " not greater or equal to " + "0" + " (" + precision + ")");
         var bigmantissa = this.helper.GetMantissa(thisValue);
         var neg = bigmantissa.signum() < 0;
         if (neg) bigmantissa = bigmantissa.negate();
         
         var oldmantissa = bigmantissa;
+        var mantissaWasZero = (oldmantissa.signum() == 0 && (lastDiscarded | olderDiscarded) == 0);
         var exp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
         var flags = 0;
         var accum = this.helper.CreateShiftAccumulatorWithDigits(bigmantissa, lastDiscarded, olderDiscarded);
         var unlimitedPrec = (precision.signum() == 0);
+        if (shift != null) {
+            accum.ShiftRight(shift);
+            exp.Subtract(accum.getDiscardedDigitCount());
+        }
         if (precision.signum() > 0) {
             accum.ShiftToDigits(precision);
         } else {
@@ -6790,11 +6816,29 @@ var RadixMath = function(helper) {
         var fastPrecision = precision;
         exp.Add(discardedBits);
         var adjExponent = FastInteger.Copy(exp).Add(accum.GetDigitLength()).SubtractInt(1);
+        var newAdjExponent = adjExponent;
         var clamp = null;
+        
+        var earlyRounded = null;
+        if (signals != null && fastEMin != null && adjExponent.compareTo(fastEMin) < 0) {
+            earlyRounded = accum.getShiftedInt();
+            if (this.RoundGivenBigInt(accum, rounding, neg, earlyRounded)) {
+                earlyRounded = earlyRounded.add(BigInteger.ONE);
+                if (earlyRounded.testBit(0) == false) {
+                    var accum2 = this.helper.CreateShiftAccumulator(earlyRounded);
+                    accum2.ShiftToDigits(fastPrecision);
+                    if ((accum2.getDiscardedDigitCount()).signum() != 0) {
+                        earlyRounded = accum2.getShiftedInt();
+                    }
+                    newAdjExponent = FastInteger.Copy(exp).Add(accum2.GetDigitLength()).SubtractInt(1);
+                }
+            }
+        }
         if (fastEMax != null && adjExponent.compareTo(fastEMax) > 0) {
-            if (oldmantissa.signum() == 0) {
-                flags |= PrecisionContext.FlagClamped;
-                if (signals != null) signals[0] = flags;
+            if (mantissaWasZero) {
+                if (signals != null) {
+                    signals[0] = flags | PrecisionContext.FlagClamped;
+                }
                 return this.helper.CreateNew(oldmantissa, fastEMax.AsBigInteger());
             }
             
@@ -6814,26 +6858,38 @@ var RadixMath = function(helper) {
         } else if (fastEMin != null && adjExponent.compareTo(fastEMin) < 0) {
             
             var fastETiny = FastInteger.Copy(fastEMin).Subtract(fastPrecision).AddInt(1);
-            if (oldmantissa.signum() != 0) flags |= PrecisionContext.FlagSubnormal;
+            if (signals != null) {
+                if (earlyRounded.signum() != 0) {
+                    if (newAdjExponent.compareTo(fastEMin) < 0) {
+                        flags |= PrecisionContext.FlagSubnormal;
+                    }
+                }
+            }
             if (exp.compareTo(fastETiny) < 0) {
                 var expdiff = FastInteger.Copy(fastETiny).Subtract(exp);
                 expdiff.Add(discardedBits);
                 accum = this.helper.CreateShiftAccumulatorWithDigits(oldmantissa, lastDiscarded, olderDiscarded);
                 accum.ShiftRight(expdiff);
                 var newmantissa = accum.getShiftedIntFast();
+                if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
+                    if (rounding == Rounding.Unnecessary) throw ("Rounding was required");
+                }
                 if ((accum.getDiscardedDigitCount()).signum() != 0 || (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                    if (oldmantissa.signum() != 0) flags |= PrecisionContext.FlagRounded;
-                    if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                        flags |= PrecisionContext.FlagInexact;
-                        if (rounding == Rounding.Unnecessary) throw ("Rounding was required");
+                    if (signals != null) {
+                        if (!mantissaWasZero) flags |= PrecisionContext.FlagRounded;
+                        if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
+                            flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
+                        }
                     }
                     if (this.Round(accum, rounding, neg, newmantissa)) {
                         newmantissa.AddInt(1);
                     }
                 }
-                if (newmantissa.signum() == 0) flags |= PrecisionContext.FlagClamped;
-                if ((flags & (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact)) == (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact)) flags |= PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
-                if (signals != null) signals[0] = flags;
+                if (signals != null) {
+                    if (newmantissa.signum() == 0) flags |= PrecisionContext.FlagClamped;
+                    if ((flags & (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact)) == (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact)) flags |= PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
+                    signals[0] = flags;
+                }
                 if (neg) newmantissa.Negate();
                 return this.helper.CreateNew(newmantissa.AsBigInteger(), fastETiny.AsBigInteger());
             }
@@ -6843,7 +6899,7 @@ var RadixMath = function(helper) {
             if (bigmantissa.signum() != 0) flags |= PrecisionContext.FlagRounded;
             bigmantissa = accum.getShiftedInt();
             if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                flags |= PrecisionContext.FlagInexact;
+                flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
                 if (rounding == Rounding.Unnecessary) throw ("Rounding was required");
             }
             if (this.RoundGivenBigInt(accum, rounding, neg, bigmantissa)) {

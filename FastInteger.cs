@@ -32,7 +32,7 @@ namespace PeterO {
         int len=bytes.Length;
         int newWordCount=Math.Max(4,(len/4)+1);
         if(newWordCount>mnum.data.Length){
-          mnum.data=new int[mnum.wordCount];
+          mnum.data=new int[newWordCount];
         }
         mnum.wordCount=newWordCount;
         unchecked {

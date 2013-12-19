@@ -102,17 +102,17 @@ namespace Test {
     public static void AssertFlags(int expected, int actual){
       if(expected==actual)return;
       Assert.AreEqual((expected&PrecisionContext.FlagInexact)!=0,
-                      (expected&PrecisionContext.FlagInexact)!=0,"Inexact");
+                      (actual&PrecisionContext.FlagInexact)!=0,"Inexact");
       Assert.AreEqual((expected&PrecisionContext.FlagRounded)!=0,
-                      (expected&PrecisionContext.FlagRounded)!=0,"Rounded");
+                      (actual&PrecisionContext.FlagRounded)!=0,"Rounded");
       Assert.AreEqual((expected&PrecisionContext.FlagSubnormal)!=0,
-                      (expected&PrecisionContext.FlagSubnormal)!=0,"Subnormal");
+                      (actual&PrecisionContext.FlagSubnormal)!=0,"Subnormal");
       Assert.AreEqual((expected&PrecisionContext.FlagOverflow)!=0,
-                      (expected&PrecisionContext.FlagOverflow)!=0,"Overflow");
+                      (actual&PrecisionContext.FlagOverflow)!=0,"Overflow");
       Assert.AreEqual((expected&PrecisionContext.FlagUnderflow)!=0,
-                      (expected&PrecisionContext.FlagUnderflow)!=0,"Underflow");
+                      (actual&PrecisionContext.FlagUnderflow)!=0,"Underflow");
       Assert.AreEqual((expected&PrecisionContext.FlagClamped)!=0,
-                      (expected&PrecisionContext.FlagClamped)!=0,"Clamped");
+                      (actual&PrecisionContext.FlagClamped)!=0,"Clamped");
     }
     
     private static CBORObject FromBytesA(byte[] b) {
