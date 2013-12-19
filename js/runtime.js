@@ -12,7 +12,7 @@ this.str="";
 }
 }
 StringBuilder.prototype.append=function(ch){
-if(typeof ch=="Number")
+if(typeof ch=="number")
  this.str+=String.fromCharCode(ch);
 else
  this.str+=ch
@@ -205,8 +205,8 @@ ILong.prototype.shiftRight=function(len){
  if(len<=0)return this;
  if(len>=64){
   return ((this.hi>>>31)!=0) ? 
-    JSInteropFactory.LONG_MAX_VALUE :
-    JSInteropFactory.LONG_MIN_VALUE;
+    JSInteropFactory.LONG_MAX_VALUE() :
+    JSInteropFactory.LONG_MIN_VALUE();
  } else if(len>=32){
   return new ILong((this.hi>>len-32),((this.hi>>>31)!=0) ? (~0) : 0);
  } else if(this.hi==0){

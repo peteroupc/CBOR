@@ -232,7 +232,7 @@ remainder=divrem[1];
       }
       BigFloat ret=new BigFloat(FastInteger.WordsToBigInteger(value),
                                 BigInteger.valueOf(fpExponent - 1075));
-      if(neg)ret=ret.Negate();
+      if(neg)ret=ret.Negate(null);
       return ret;
     }
     /**
@@ -620,19 +620,14 @@ remainder=divrem[1];
      * Gets the absolute value of this object.
      */
     public BigFloat Abs() {
-      if (this.signum() < 0) {
-        return Negate();
-      } else {
-        return this;
-      }
+      return Abs(null);
     }
 
     /**
      * Gets an object with the same value as this one, but with the sign reversed.
      */
     public BigFloat Negate() {
-      BigInteger neg=(this.mantissa).negate();
-      return new BigFloat(neg, this.exponent);
+      return Negate(null);
     }
 
     /**
@@ -773,7 +768,11 @@ remainder=divrem[1];
      * @param context A PrecisionContext object.
      */
     public BigFloat Abs(PrecisionContext context) {
-      return Abs().RoundToPrecision(context);
+      if (this.signum() < 0) {
+        return Negate(context);
+      } else {
+        return RoundToPrecision(context);
+      }
     }
 
     /**
@@ -781,7 +780,8 @@ remainder=divrem[1];
      * @param context A PrecisionContext object.
      */
     public BigFloat Negate(PrecisionContext context) {
-      return Negate().RoundToPrecision(context);
+      BigInteger neg=(this.mantissa).negate();
+      return new BigFloat(neg, this.exponent).RoundToPrecision(context);
     }
 
     /**
@@ -809,7 +809,7 @@ remainder=divrem[1];
      */
     public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
-      return Add(decfrac.Negate(), ctx);
+      return Add(decfrac.Negate(null), ctx);
     }
     /**
      * Multiplies two bigfloats. The resulting scale will be the sum of the

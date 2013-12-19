@@ -1033,19 +1033,14 @@ bigrem=divrem[1];
      * Gets the absolute value of this object.
      */
     public DecimalFraction Abs() {
-      if (this.signum() < 0) {
-        return Negate();
-      } else {
-        return this;
-      }
+      return Abs(null);
     }
 
     /**
      * Gets an object with the same value as this one, but with the sign reversed.
      */
     public DecimalFraction Negate() {
-      BigInteger neg=(this.mantissa).negate();
-      return new DecimalFraction(neg, this.exponent);
+      return Negate(null);
     }
 
     /**
@@ -1241,7 +1236,11 @@ bigrem=divrem[1];
      * @return The absolute value of this object.
      */
     public DecimalFraction Abs(PrecisionContext context) {
-      return Abs().RoundToPrecision(context);
+      if (this.signum() < 0) {
+        return Negate(context);
+      } else {
+        return RoundToPrecision(context);
+      }
     }
 
     /**
@@ -1253,7 +1252,8 @@ bigrem=divrem[1];
      * are in addition to the pre-existing flags). Can be null.
      */
     public DecimalFraction Negate(PrecisionContext context) {
-      return Negate().RoundToPrecision(context);
+      BigInteger neg=(this.mantissa).negate();
+      return new DecimalFraction(neg, this.exponent).RoundToPrecision(context);
     }
 
     /**
@@ -1288,7 +1288,7 @@ bigrem=divrem[1];
      */
     public DecimalFraction Subtract(DecimalFraction decfrac, PrecisionContext ctx) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
-      return Add(decfrac.Negate(), ctx);
+      return Add(decfrac.Negate(null), ctx);
     }
     /**
      * Multiplies two decimal fractions. The resulting scale will be the

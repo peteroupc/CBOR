@@ -31,8 +31,7 @@ CBOR/JSON conversion, and support for decimal fractions and bigfloats.
 The JavaScript version currently only contains the code for big integers,
 decimal fractions, and bigfloats.  It currently doesn't support converting
 singles and doubles to big numbers and its support for converting other
-objects, except strings, to big numbers is limited.  Its code also isn't tested
-as well as the C# and Java versions.
+objects, except strings, to big numbers is limited. 
 
 About
 -----------
