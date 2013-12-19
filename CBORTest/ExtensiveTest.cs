@@ -23,16 +23,6 @@ namespace CBOR
   {
     
     static string Path="..\\..\\..\\.settings\\test";
-    static Regex LineRegex=new Regex(
-      @"^(d64|d128)(\+|\-|\*|\/|\*\+|\*\-|V)[ \t]+(>|<|0|\=0|h>)[ \t]+"+
-      @"([+\-][0-9]+E[+\-]?[0-9]+)[ \t]+([+\-][0-9]+E[+\-]?[0-9]+)[ \t]+\->[ \t]+"+
-      @"([+\-][0-9]+E[+\-]?[0-9]+|[+\-]inf)[ \t]*(x?u?o?z?i?)[ \t]*",
-      RegexOptions.Compiled);
-    static Regex ThreeOpLineRegex=new Regex(
-      @"^(d64|d128)(\+|\-|\*|\/|\*\+|\*\-|V)[ \t]+(>|<|0|\=0|h>)[ \t]+"+
-      @"([+\-][0-9]+E[+\-]?[0-9]+)[ \t]+([+\-][0-9]+E[+\-]?[0-9]+)[ \t]+([+\-][0-9]+E[+\-]?[0-9]+)[ \t]+\->[ \t]+"+
-      @"([+\-][0-9]+E[+\-]?[0-9]+|[+\-]inf)[ \t]*(x?u?o?z?i?)[ \t]*",
-      RegexOptions.Compiled);
     
     public static void AssertFlags(int expected, int actual, string str){
       actual&=(PrecisionContext.FlagInexact|

@@ -7,8 +7,12 @@ console.log=sys.puts
 var Assert={
 AreEqual:function(x,y,ln){
  if(typeof ln!="undefined")ln="\n"+ln
- if(x.equals ? !x.equals(y) : x!=y){
-  console.log("Expected "+x+", was "+y+(ln||""))
+ if(x==null || y==null){
+  if((x==null)!=(y==null)){
+    console.log("Expected "+(x||"[]")+", was "+(y||"[]")+" "+(ln||""))
+  }
+ } else if(x.equals ? !x.equals(y) : x!=y){
+  console.log("Expected "+x+", was "+y+" "+(ln||""))
  }
 },
 Fail:function(x){

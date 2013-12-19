@@ -217,7 +217,7 @@ public bool Equals(BigFloat other) {
       }
       BigFloat ret=new BigFloat(FastInteger.WordsToBigInteger(value),
                                 (BigInteger)(fpExponent - 1075));
-      if(neg)ret=ret.Negate();
+      if(neg)ret=ret.Negate(null);
       return ret;
     }
     /// <summary> Converts this value to an arbitrary-precision integer.
@@ -589,19 +589,14 @@ public bool Equals(BigFloat other) {
     /// <summary> Gets the absolute value of this object. </summary>
     /// <returns></returns>
     public BigFloat Abs() {
-      if (this.Sign < 0) {
-        return Negate();
-      } else {
-        return this;
-      }
+      return Abs(null);
     }
 
     /// <summary> Gets an object with the same value as this one, but with the
     /// sign reversed. </summary>
     /// <returns></returns>
     public BigFloat Negate() {
-      BigInteger neg = -(BigInteger)this.mantissa;
-      return new BigFloat(neg, this.exponent);
+      return Negate(null);
     }
 
     /// <summary> Divides this object by another bigfloat and returns the
@@ -737,14 +732,19 @@ public bool Equals(BigFloat other) {
     /// <param name='context'>A PrecisionContext object.</param>
     /// <returns></returns>
     public BigFloat Abs(PrecisionContext context) {
-      return Abs().RoundToPrecision(context);
+      if (this.Sign < 0) {
+        return Negate(context);
+      } else {
+        return RoundToPrecision(context);
+      }
     }
 
     /// <summary> </summary>
     /// <param name='context'>A PrecisionContext object.</param>
     /// <returns></returns>
     public BigFloat Negate(PrecisionContext context) {
-      return Negate().RoundToPrecision(context);
+      BigInteger neg = -(BigInteger)this.mantissa;
+      return new BigFloat(neg, this.exponent).RoundToPrecision(context);
     }
 
     /// <summary> </summary>
@@ -767,7 +767,7 @@ public bool Equals(BigFloat other) {
     /// <returns>The difference of the two objects.</returns>
     public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
       if((decfrac)==null)throw new ArgumentNullException("decfrac");
-      return Add(decfrac.Negate(), ctx);
+      return Add(decfrac.Negate(null), ctx);
     }
     /// <summary> Multiplies two bigfloats. The resulting scale will be
     /// the sum of the scales of the two bigfloats. </summary>

@@ -1010,19 +1010,14 @@ namespace PeterO {
     /// <summary> Gets the absolute value of this object. </summary>
     /// <returns></returns>
     public DecimalFraction Abs() {
-      if (this.Sign < 0) {
-        return Negate();
-      } else {
-        return this;
-      }
+      return Abs(null);
     }
 
     /// <summary> Gets an object with the same value as this one, but with the
     /// sign reversed. </summary>
     /// <returns></returns>
     public DecimalFraction Negate() {
-      BigInteger neg = -(BigInteger)this.mantissa;
-      return new DecimalFraction(neg, this.exponent);
+      return Negate(null);
     }
 
     /// <summary> Divides this object by another decimal fraction and returns
@@ -1208,7 +1203,11 @@ namespace PeterO {
     /// flags are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The absolute value of this object.</returns>
     public DecimalFraction Abs(PrecisionContext context) {
-      return Abs().RoundToPrecision(context);
+      if (this.Sign < 0) {
+        return Negate(context);
+      } else {
+        return RoundToPrecision(context);
+      }
     }
 
     /// <summary> Returns a decimal fraction with the same value as this object
@@ -1219,7 +1218,8 @@ namespace PeterO {
     /// flags are in addition to the pre-existing flags). Can be null.</param>
     /// <returns></returns>
     public DecimalFraction Negate(PrecisionContext context) {
-      return Negate().RoundToPrecision(context);
+      BigInteger neg = -(BigInteger)this.mantissa;
+      return new DecimalFraction(neg, this.exponent).RoundToPrecision(context);
     }
 
     /// <summary> Adds this object and another decimal fraction and returns
@@ -1249,7 +1249,7 @@ namespace PeterO {
     /// is given, returns null if the result of rounding would cause an overflow.</returns>
     public DecimalFraction Subtract(DecimalFraction decfrac, PrecisionContext ctx) {
       if((decfrac)==null)throw new ArgumentNullException("decfrac");
-      return Add(decfrac.Negate(), ctx);
+      return Add(decfrac.Negate(null), ctx);
     }
     /// <summary> Multiplies two decimal fractions. The resulting scale
     /// will be the sum of the scales of the two decimal fractions. </summary>
