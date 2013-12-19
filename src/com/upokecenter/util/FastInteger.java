@@ -32,7 +32,7 @@ at: http://peteroupc.github.io/CBOR/
         int len=bytes.length;
         int newWordCount=Math.max(4,(len/4)+1);
         if(newWordCount>mnum.data.length){
-          mnum.data=new int[mnum.wordCount];
+          mnum.data=new int[newWordCount];
         }
         mnum.wordCount=newWordCount;
         {
