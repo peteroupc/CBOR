@@ -3386,9 +3386,8 @@ function() {
             return [0];
         } else if (sign > 0) {
             var byteCount = this.ByteCount();
-            var bc = this.BitLength();
             var byteArrayLength = byteCount;
-            if ((bc & 7) == 0 && this.GetUnsignedBit(bc - 1)) {
+            if (this.GetUnsignedBit((byteCount * 8) - 1)) {
                 byteArrayLength++;
             }
             var bytes = [];
@@ -4247,13 +4246,22 @@ function() {
     
     prototype.compareTo = function(other) {
         if (other == null) return 1;
+        if (this == other) return 0;
         var size = this.wordCount, tSize = other.wordCount;
         var sa = (size == 0 ? 0 : (this.negative ? -1 : 1));
         var sb = (tSize == 0 ? 0 : (other.negative ? -1 : 1));
         if (sa != sb) return (sa < sb) ? -1 : 1;
         if (sa == 0) return 0;
         var cmp = 0;
-        if (size == tSize) cmp = BigInteger.Compare(this.reg, 0, other.reg, 0, (size|0)); else cmp = size > tSize ? 1 : -1;
+        if (size == tSize) {
+            if (size == 1 && this.reg[0] == other.reg[0]) {
+                return 0;
+            } else {
+                cmp = BigInteger.Compare(this.reg, 0, other.reg, 0, (size|0));
+            }
+        } else {
+            cmp = size > tSize ? 1 : -1;
+        }
         return (sa > 0) ? cmp : -cmp;
     };
     
@@ -5445,12 +5453,32 @@ function(bigint, lastDiscarded, olderDiscarded) {
     constructor.Int32MaxValue = BigInteger.valueOf(2147483647);
     constructor.FastParseBigInt = function(str, offset, length) {
         
-        var mbi = new FastInteger(0);
-        for (var i = 0; i < length; i++) {
+        var smallint = 0;
+        var mlength = (9 < length ? 9 : length);
+        for (var i = 0; i < mlength; i++) {
             var digit = ((str.charAt(offset + i) - '0')|0);
-            mbi.Multiply(10).AddInt(digit);
+            smallint *= 10;
+            smallint += digit;
         }
-        return mbi.AsBigInteger();
+        if (mlength == length) {
+            return BigInteger.valueOf(smallint);
+        } else {
+            var mbi = new FastInteger(smallint);
+            for (var i = 9; i < length; ) {
+                mlength = (9 < length - i ? 9 : length - i);
+                var multer = 1;
+                var adder = 0;
+                for (var j = i; j < i + mlength; j++) {
+                    var digit = ((str.charAt(offset + j) - '0')|0);
+                    multer *= 10;
+                    adder *= 10;
+                    adder += digit;
+                }
+                mbi.Multiply(multer).AddInt(adder);
+                i += mlength;
+            }
+            return mbi.AsBigInteger();
+        }
     };
     constructor.FastParseLong = function(str, offset, length) {
         
@@ -5540,7 +5568,8 @@ function(bigint, lastDiscarded, olderDiscarded) {
     };
     
     prototype.ShiftToBitsBig = function(digits) {
-        var str = this.shiftedBigInt.toString();
+        var str;
+        str = this.shiftedBigInt.toString();
         
         var digitLength = str.length;
         this.knownBitLength = new FastInteger(digitLength);
@@ -7038,7 +7067,6 @@ var RadixMath = function(helper) {
     };
 })(RadixMath,RadixMath.prototype);
 
-
 if(typeof exports!=="undefined")exports.RadixMath=RadixMath;
 
 var DecimalFraction = 
@@ -7073,6 +7101,7 @@ function(mantissa, exponent) {
         }
         return hashCode_;
     };
+    constructor.MaxSafeInt = 214748363;
     
     constructor.FromString = function(str) {
         if (str == null) throw ("str");
@@ -7083,20 +7112,33 @@ function(mantissa, exponent) {
             negative = (str.charAt(0) == '-');
             offset++;
         }
-        var mant = new FastInteger(0);
+        var mantInt = 0;
+        var mant = null;
         var haveDecimalPoint = false;
         var haveDigits = false;
         var haveExponent = false;
-        var newScale = new FastInteger(0);
+        var newScaleInt = 0;
+        var newScale = null;
         var i = offset;
         for (; i < str.length; i++) {
             if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
                 var thisdigit = ((str.charCodeAt(i)-48)|0);
-                mant.Multiply(10);
-                mant.AddInt(thisdigit);
+                if (mantInt > DecimalFraction.MaxSafeInt) {
+                    if (mant == null) mant = new FastInteger(mantInt);
+                    mant.Multiply(10);
+                    mant.AddInt(thisdigit);
+                } else {
+                    mantInt *= 10;
+                    mantInt += thisdigit;
+                }
                 haveDigits = true;
                 if (haveDecimalPoint) {
-                    newScale.AddInt(-1);
+                    if (newScaleInt == -2147483648) {
+                        if (newScale == null) newScale = new FastInteger(newScaleInt);
+                        newScale.AddInt(-1);
+                    } else {
+                        newScaleInt--;
+                    }
                 }
             } else if (str.charAt(i) == '.') {
                 if (haveDecimalPoint) throw "exception";
@@ -7111,7 +7153,8 @@ function(mantissa, exponent) {
         }
         if (!haveDigits) throw "exception";
         if (haveExponent) {
-            var exp = new FastInteger(0);
+            var exp = null;
+            var expInt = 0;
             offset = 1;
             haveDigits = false;
             if (i == str.length) throw "exception";
@@ -7123,18 +7166,36 @@ function(mantissa, exponent) {
                 if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
                     haveDigits = true;
                     var thisdigit = ((str.charCodeAt(i)-48)|0);
-                    exp.Multiply(10);
-                    exp.AddInt(thisdigit);
+                    if (expInt > DecimalFraction.MaxSafeInt) {
+                        if (exp == null) exp = new FastInteger(expInt);
+                        exp.Multiply(10);
+                        exp.AddInt(thisdigit);
+                    } else {
+                        expInt *= 10;
+                        expInt += thisdigit;
+                    }
                 } else {
                     throw "exception";
                 }
             }
             if (!haveDigits) throw "exception";
-            if (offset < 0) newScale.Subtract(exp); else newScale.Add(exp);
+            if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
+                newScaleInt = expInt;
+            } else if (exp == null) {
+                if (newScale == null) newScale = new FastInteger(newScaleInt);
+                if (offset < 0) newScale.SubtractInt(expInt); else newScale.AddInt(expInt);
+            } else {
+                if (newScale == null) newScale = new FastInteger(newScaleInt);
+                if (offset < 0) newScale.Subtract(exp); else newScale.Add(exp);
+            }
         } else if (i != str.length) {
             throw "exception";
         }
-        return new DecimalFraction((negative) ? mant.Negate().AsBigInteger() : mant.AsBigInteger(), newScale.AsBigInteger());
+        if (negative) {
+            
+            if (mant == null) mantInt = -mantInt; else mant.Negate();
+        }
+        return new DecimalFraction((mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(), (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger());
     };
     constructor.ShiftLeftOne = function(arr) {
         {
@@ -7451,14 +7512,14 @@ function(mantissa, exponent) {
                 } else {
                     bigint = bigint.multiply(DecimalFraction.FindPowerOfTenFromBig(power.AsBigInteger()));
                 }
+                return bigint;
             } else {
                 if (power.CanFitInInt32()) {
-                    bigint = DecimalFraction.FindPowerOfTen(power.AsInt32());
+                    return (DecimalFraction.FindPowerOfTen(power.AsInt32()));
                 } else {
-                    bigint = DecimalFraction.FindPowerOfTenFromBig(power.AsBigInteger());
+                    return (DecimalFraction.FindPowerOfTenFromBig(power.AsBigInteger()));
                 }
             }
-            return bigint;
         };
     })(DecimalFraction.DecimalMathHelper,DecimalFraction.DecimalMathHelper.prototype);
 

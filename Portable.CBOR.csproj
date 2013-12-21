@@ -11,9 +11,10 @@
     <RootNamespace>PeterO</RootNamespace>
     <AssemblyName>CBOR</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile1</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC};{786C830F-07A1-408B-BD7F-6EE04809D6DB}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <NoWin32Manifest>False</NoWin32Manifest>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
@@ -73,6 +74,15 @@
     <Content Include="ProfilingSessions\Session20131215_065853.sdps" />
     <Content Include="ProfilingSessions\Session20131215_220130.sdps" />
     <Content Include="ProfilingSessions\Session20131216_023019.sdps" />
+    <Content Include="ProfilingSessions\Session20131220_084641.sdps" />
+    <Content Include="ProfilingSessions\Session20131220_085413.sdps" />
+    <Content Include="ProfilingSessions\Session20131220_092437.sdps" />
+    <Content Include="ProfilingSessions\Session20131220_100626.sdps" />
+    <Content Include="ProfilingSessions\Session20131220_182053.sdps" />
+    <Content Include="ProfilingSessions\Session20131220_213256.sdps" />
+    <Content Include="ProfilingSessions\Session20131220_220040.sdps" />
+    <Content Include="ProfilingSessions\Session20131221_011721.sdps" />
+    <Content Include="ProfilingSessions\Session20131221_015939.sdps" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigFloat.cs" />
@@ -99,7 +109,12 @@
     <Compile Include="RadixMath.cs" />
     <Compile Include="Rounding.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

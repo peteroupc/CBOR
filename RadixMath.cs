@@ -80,41 +80,41 @@ namespace PeterO {
       return incremented;
     }
 
-    private bool RoundGivenBigInt(IShiftAccumulator accum, Rounding rounding,
+    private bool RoundGivenDigits(int lastDiscarded, int olderDiscarded, Rounding rounding,
                                   bool neg, BigInteger bigval) {
       bool incremented = false;
       int radix = helper.GetRadix();
       if (rounding == Rounding.HalfUp) {
-        if (accum.LastDiscardedDigit >= (radix / 2)) {
+        if (lastDiscarded >= (radix / 2)) {
           incremented = true;
         }
       } else if (rounding == Rounding.HalfEven) {
-        if (accum.LastDiscardedDigit >= (radix / 2)) {
-          if ((accum.LastDiscardedDigit > (radix / 2) || accum.OlderDiscardedDigits != 0)) {
+        if (lastDiscarded >= (radix / 2)) {
+          if ((lastDiscarded > (radix / 2) || olderDiscarded != 0)) {
             incremented = true;
           } else if (!bigval.IsEven) {
             incremented = true;
           }
         }
       } else if (rounding == Rounding.Ceiling) {
-        if (!neg && (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+        if (!neg && (lastDiscarded | olderDiscarded) != 0) {
           incremented = true;
         }
       } else if (rounding == Rounding.Floor) {
-        if (neg && (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+        if (neg && (lastDiscarded | olderDiscarded) != 0) {
           incremented = true;
         }
       } else if (rounding == Rounding.HalfDown) {
-        if (accum.LastDiscardedDigit > (radix / 2) ||
-            (accum.LastDiscardedDigit == (radix / 2) && accum.OlderDiscardedDigits != 0)) {
+        if (lastDiscarded > (radix / 2) ||
+            (lastDiscarded == (radix / 2) && olderDiscarded != 0)) {
           incremented = true;
         }
       } else if (rounding == Rounding.Up) {
-        if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+        if ((lastDiscarded | olderDiscarded) != 0) {
           incremented = true;
         }
       } else if (rounding == Rounding.ZeroFiveUp) {
-        if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+        if ((lastDiscarded | olderDiscarded) != 0) {
           if (radix == 2) {
             incremented = true;
           } else {
@@ -127,6 +127,12 @@ namespace PeterO {
         }
       }
       return incremented;
+    }
+
+    private bool RoundGivenBigInt(IShiftAccumulator accum, Rounding rounding,
+                                  bool neg, BigInteger bigval) {
+      return RoundGivenDigits(accum.LastDiscardedDigit,accum.OlderDiscardedDigits,rounding,
+                              neg,bigval);
     }
 
     private T EnsureSign(T val, bool negative) {
@@ -439,42 +445,66 @@ namespace PeterO {
       PrecisionContext ctx
      ) {
       IShiftAccumulator accum;
+      Rounding rounding = (ctx == null) ? Rounding.HalfEven : ctx.Rounding;
       int lastDiscarded = 0;
       int olderDiscarded = 0;
       if (!(remainder.IsZero)) {
-        BigInteger halfDivisor = (divisor >> 1);
-        int cmpHalf = remainder.CompareTo(halfDivisor);
-        if ((cmpHalf == 0) && divisor.IsEven) {
-          // remainder is exactly half
-          lastDiscarded = (helper.GetRadix() / 2);
-          olderDiscarded = 0;
-        } else if (cmpHalf > 0) {
-          // remainder is greater than half
-          lastDiscarded = (helper.GetRadix() / 2);
-          olderDiscarded = 1;
+        if(rounding== Rounding.HalfDown ||
+           rounding== Rounding.HalfUp ||
+           rounding== Rounding.HalfEven){
+          BigInteger halfDivisor = (divisor >> 1);
+          int cmpHalf = remainder.CompareTo(halfDivisor);
+          if ((cmpHalf == 0) && divisor.IsEven) {
+            // remainder is exactly half
+            lastDiscarded = (helper.GetRadix() / 2);
+            olderDiscarded = 0;
+          } else if (cmpHalf > 0) {
+            // remainder is greater than half
+            lastDiscarded = (helper.GetRadix() / 2);
+            olderDiscarded = 1;
+          } else {
+            // remainder is less than half
+            lastDiscarded = 0;
+            olderDiscarded = 1;
+          }
         } else {
-          // remainder is less than half
-          lastDiscarded = 0;
+          // Rounding mode doesn't care about
+          // whether remainder is exactly half
+          if (rounding == Rounding.Unnecessary)
+            throw new ArithmeticException("Rounding was required");
+          lastDiscarded = 1;
           olderDiscarded = 1;
         }
       }
-      accum = helper.CreateShiftAccumulatorWithDigits(
-        mantissa, lastDiscarded, olderDiscarded);
-      accum.ShiftRight(shift);
       int flags = 0;
-      Rounding rounding = (ctx == null) ? Rounding.HalfEven : ctx.Rounding;
-      BigInteger newmantissa = accum.ShiftedInt;
-      if ((accum.DiscardedDigitCount).Sign != 0 ||
-          (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
-        if (!mantissa.IsZero)
-          flags |= PrecisionContext.FlagRounded;
-        if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+      BigInteger newmantissa=mantissa;
+      if(shift.Sign==0){
+        if ((lastDiscarded|olderDiscarded) != 0) {
           flags |= PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
           if (rounding == Rounding.Unnecessary)
             throw new ArithmeticException("Rounding was required");
+          if (RoundGivenDigits(lastDiscarded,olderDiscarded,
+                               rounding, neg, newmantissa)) {
+            newmantissa += BigInteger.One;
+          }
         }
-        if (RoundGivenBigInt(accum, rounding, neg, newmantissa)) {
-          newmantissa += BigInteger.One;
+      } else {
+        accum = helper.CreateShiftAccumulatorWithDigits(
+          mantissa, lastDiscarded, olderDiscarded);
+        accum.ShiftRight(shift);
+        newmantissa = accum.ShiftedInt;
+        if ((accum.DiscardedDigitCount).Sign != 0 ||
+            (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+          if (!mantissa.IsZero)
+            flags |= PrecisionContext.FlagRounded;
+          if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
+            flags |= PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
+            if (rounding == Rounding.Unnecessary)
+              throw new ArithmeticException("Rounding was required");
+          }
+          if (RoundGivenBigInt(accum, rounding, neg, newmantissa)) {
+            newmantissa += BigInteger.One;
+          }
         }
       }
       if (ctx.HasFlags) {
@@ -528,7 +558,6 @@ namespace PeterO {
         FastInteger adjust = new FastInteger(0);
         FastInteger result = new FastInteger(0);
         FastInteger naturalExponent = FastInteger.Copy(expdiff);
-        FastInteger fastDesiredExponent = FastInteger.FromBig(desiredExponent);
         bool negA = (signA < 0);
         bool negB = (signB < 0);
         if (negA) mantissaDividend = -mantissaDividend;
@@ -538,8 +567,8 @@ namespace PeterO {
         if(integerMode==IntegerModeFixedScale){
           FastInteger shift;
           BigInteger rem;
-          if(ctx!=null && ctx.HasFlags && FastInteger.FromBig(desiredExponent)
-             .CompareTo(naturalExponent)>0){
+          FastInteger fastDesiredExponent = FastInteger.FromBig(desiredExponent);
+          if(ctx!=null && ctx.HasFlags && fastDesiredExponent.CompareTo(naturalExponent)>0){
             // Treat as rounded if the desired exponent is greater
             // than the "ideal" exponent
             ctx.Flags|=PrecisionContext.FlagRounded;
@@ -613,6 +642,7 @@ namespace PeterO {
             adjust.AddInt(1);
           }
         }
+        bool atMaxPrecision=false;
         if (mantcmp == 0) {
           result = new FastInteger(1);
           mantissaDividend = BigInteger.Zero;
@@ -653,6 +683,7 @@ namespace PeterO {
             remainderZero=(divd.Sign==0);
             if (hasPrecision && resultPrecision.CompareTo(fastPrecision) == 0) {
               mantissaDividend=divd.AsBigInteger();
+              atMaxPrecision=true;
               break;
             }
             if (remainderZero && adjust.Sign >= 0) {
@@ -669,26 +700,38 @@ namespace PeterO {
         }
         // mantissaDividend now has the remainder
         FastInteger exp = FastInteger.Copy(expdiff).Subtract(adjust);
+        Rounding rounding=(ctx==null) ? Rounding.HalfEven : ctx.Rounding;
         int lastDiscarded = 0;
         int olderDiscarded = 0;
         if (!(mantissaDividend.IsZero)) {
-          BigInteger halfDivisor = (mantissaDivisor >> 1);
-          int cmpHalf = mantissaDividend.CompareTo(halfDivisor);
-          if ((cmpHalf == 0) && mantissaDivisor.IsEven) {
-            // remainder is exactly half
-            lastDiscarded = (radix / 2);
-            olderDiscarded = 0;
-          } else if (cmpHalf > 0) {
-            // remainder is greater than half
-            lastDiscarded = (radix / 2);
-            olderDiscarded = 1;
+          if(rounding==Rounding.HalfDown ||
+             rounding==Rounding.HalfEven ||
+             rounding==Rounding.HalfUp
+            ){
+            BigInteger halfDivisor = (mantissaDivisor >> 1);
+            int cmpHalf = mantissaDividend.CompareTo(halfDivisor);
+            if ((cmpHalf == 0) && mantissaDivisor.IsEven) {
+              // remainder is exactly half
+              lastDiscarded = (radix / 2);
+              olderDiscarded = 0;
+            } else if (cmpHalf > 0) {
+              // remainder is greater than half
+              lastDiscarded = (radix / 2);
+              olderDiscarded = 1;
+            } else {
+              // remainder is less than half
+              lastDiscarded = 0;
+              olderDiscarded = 1;
+            }
           } else {
-            // remainder is less than half
-            lastDiscarded = 0;
-            olderDiscarded = 1;
+            if(rounding==Rounding.Unnecessary)
+              throw new ArithmeticException("Rounding was required");
+            lastDiscarded=1;
+            olderDiscarded=1;
           }
         }
         BigInteger bigResult = result.AsBigInteger();
+        BigInteger posBigResult=bigResult;
         if (negA ^ negB) {
           bigResult = -bigResult;
         }
@@ -697,9 +740,49 @@ namespace PeterO {
           // than the "ideal" exponent
           ctx.Flags|=PrecisionContext.FlagRounded;
         }
+        BigInteger bigexp=exp.AsBigInteger();
+        T retval=helper.CreateNew(
+          bigResult, bigexp);
+        if(atMaxPrecision && !ctx.HasExponentRange){
+          // At this point, the check for rounding with Rounding.Unnecessary
+          // already occurred above
+          if(!RoundGivenDigits(lastDiscarded,olderDiscarded,rounding,negA^negB,posBigResult)){
+            if(ctx!=null && ctx.HasFlags && (lastDiscarded|olderDiscarded)!=0){
+              ctx.Flags|=PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
+            }
+            return retval;
+          } else if(posBigResult.IsEven && (helper.GetRadix()&1)==0){
+            posBigResult+=1;
+            if(negA^negB)posBigResult=-posBigResult;
+            if(ctx!=null && ctx.HasFlags && (lastDiscarded|olderDiscarded)!=0){
+              ctx.Flags|=PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
+            }
+            return helper.CreateNew(posBigResult,bigexp);
+          }
+        }
+        if(atMaxPrecision && ctx.HasExponentRange){
+          BigInteger fastAdjustedExp = FastInteger.Copy(exp)
+            .AddBig(ctx.Precision).SubtractInt(1).AsBigInteger();
+          if(fastAdjustedExp.CompareTo(ctx.EMin)>=0 && fastAdjustedExp.CompareTo(ctx.EMax)<=0){
+            // At this point, the check for rounding with Rounding.Unnecessary
+            // already occurred above
+            if(!RoundGivenDigits(lastDiscarded,olderDiscarded,rounding,negA^negB,posBigResult)){
+              if(ctx!=null && ctx.HasFlags && (lastDiscarded|olderDiscarded)!=0){
+                ctx.Flags|=PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
+              }
+              return retval;
+            } else if(posBigResult.IsEven && (helper.GetRadix()&1)==0){
+              posBigResult+=1;
+              if(negA^negB)posBigResult=-posBigResult;
+              if(ctx!=null && ctx.HasFlags && (lastDiscarded|olderDiscarded)!=0){
+                ctx.Flags|=PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
+              }
+              return helper.CreateNew(posBigResult,bigexp);
+            }
+          }
+        }
         return RoundToPrecisionWithShift(
-          helper.CreateNew(
-            bigResult, exp.AsBigInteger()),
+          retval,
           ctx,
           lastDiscarded, olderDiscarded, new FastInteger(0));
       }
@@ -885,22 +968,48 @@ namespace PeterO {
       FastInteger fastEMin = (context.HasExponentRange) ? FastInteger.FromBig(context.EMin) : null;
       FastInteger fastEMax = (context.HasExponentRange) ? FastInteger.FromBig(context.EMax) : null;
       FastInteger fastPrecision=FastInteger.FromBig(context.Precision);
-      if (fastPrecision.Sign > 0 && fastPrecision.CompareToInt(18) <= 0 &&
-          (lastDiscarded | olderDiscarded) == 0 && shift.Sign==0) {
+      if (fastPrecision.Sign > 0 && fastPrecision.CompareToInt(34) <= 0 && shift.Sign==0) {
         // Check if rounding is necessary at all
         // for small precisions
         BigInteger mantabs = BigInteger.Abs(helper.GetMantissa(thisValue));
-        if (mantabs.CompareTo(helper.MultiplyByRadixPower(BigInteger.One, fastPrecision)) < 0) {
-          if (!context.HasExponentRange)
-            return thisValue;
-          FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
-          FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
-            .Add(fastPrecision).SubtractInt(1);
-          FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
-            .Add(fastPrecision).SubtractInt(1);
-          if (fastAdjustedExp.CompareTo(fastEMax) <= 0 &&
-              fastAdjustedExp.CompareTo(fastNormalMin) >= 0) {
-            return thisValue;
+        BigInteger radixPower=helper.MultiplyByRadixPower(BigInteger.One, fastPrecision);
+        if (mantabs.CompareTo(radixPower) < 0) {
+          bool neg=helper.GetSign(thisValue)<0;
+          if(!RoundGivenDigits(lastDiscarded,olderDiscarded,context.Rounding,
+                               neg,mantabs)){
+            if(context.HasFlags && (lastDiscarded|olderDiscarded)!=0){
+              context.Flags|=PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
+            }
+            if (!context.HasExponentRange)
+              return thisValue;
+            FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
+            FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
+              .Add(fastPrecision).SubtractInt(1);
+            FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
+              .Add(fastPrecision).SubtractInt(1);
+            if (fastAdjustedExp.CompareTo(fastEMax) <= 0 &&
+                fastAdjustedExp.CompareTo(fastNormalMin) >= 0) {
+              return thisValue;
+            }
+          } else {
+            if(context.HasFlags && (lastDiscarded|olderDiscarded)!=0){
+              context.Flags|=PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
+            }
+            mantabs+=BigInteger.One;
+            if(mantabs.CompareTo(radixPower)<0){
+              if(neg)mantabs=-mantabs;
+              if (!context.HasExponentRange)
+                return helper.CreateNew(mantabs,helper.GetExponent(thisValue));
+              FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
+              FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
+                .Add(fastPrecision).SubtractInt(1);
+              FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
+                .Add(fastPrecision).SubtractInt(1);
+              if (fastAdjustedExp.CompareTo(fastEMax) <= 0 &&
+                  fastAdjustedExp.CompareTo(fastNormalMin) >= 0) {
+                return helper.CreateNew(mantabs,helper.GetExponent(thisValue));
+              }
+            }
           }
         }
       }
@@ -1137,7 +1246,6 @@ namespace PeterO {
 
       throw new NotImplementedException();
     }
-
     private T RoundToPrecisionInternal(
       T thisValue,
       FastInteger precision,
@@ -1220,7 +1328,7 @@ namespace PeterO {
         earlyRounded=accum.ShiftedInt;
         if(RoundGivenBigInt(accum, rounding, neg, earlyRounded)){
           earlyRounded += BigInteger.One;
-          if (earlyRounded.IsEven) {
+          if (earlyRounded.IsEven && (helper.GetRadix()&1)==0) {
             IShiftAccumulator accum2 = helper.CreateShiftAccumulator(earlyRounded);
             accum2.ShiftToDigits(fastPrecision);
             if ((accum2.DiscardedDigitCount).Sign != 0) {
@@ -1281,7 +1389,8 @@ namespace PeterO {
         if (exp.CompareTo(fastETiny) < 0) {
           FastInteger expdiff = FastInteger.Copy(fastETiny).Subtract(exp);
           expdiff.Add(discardedBits);
-          accum = helper.CreateShiftAccumulatorWithDigits(oldmantissa, lastDiscarded, olderDiscarded);
+          accum = helper.CreateShiftAccumulatorWithDigits(
+            oldmantissa, lastDiscarded, olderDiscarded);
           accum.ShiftRight(expdiff);
           FastInteger newmantissa = accum.ShiftedIntFast;
           if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
@@ -1326,7 +1435,7 @@ namespace PeterO {
         if (RoundGivenBigInt(accum, rounding, neg, bigmantissa)) {
           bigmantissa += BigInteger.One;
           if(binaryPrec)recheckOverflow=true;
-          if (bigmantissa.IsEven) {
+          if (bigmantissa.IsEven && (helper.GetRadix()&1)==0) {
             accum = helper.CreateShiftAccumulator(bigmantissa);
             accum.ShiftToDigits(fastPrecision);
             if(binaryPrec){

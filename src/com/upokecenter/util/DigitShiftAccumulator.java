@@ -79,12 +79,32 @@ at: http://peteroupc.github.io/CBOR/
     private static BigInteger FastParseBigInt(String str, int offset, int length) {
       // Assumes the String contains
       // only the digits '0' through '9'
-      FastInteger mbi = new FastInteger(0);
-      for (int i = 0; i < length; i++) {
+      int smallint=0;
+      int mlength=Math.min(9,length);
+      for (int i = 0; i < mlength; i++) {
         int digit = (int)(str.charAt(offset + i) - '0');
-        mbi.Multiply(10).AddInt(digit);
+        smallint*=10;
+        smallint+=digit;
       }
-      return mbi.AsBigInteger();
+      if(mlength==length){
+        return BigInteger.valueOf(smallint);
+      } else {
+        FastInteger mbi = new FastInteger(smallint);
+        for (int i = 9; i < length;) {
+          mlength=Math.min(9,length-i);
+          int multer=1;
+          int adder=0;
+          for(int j=i;j<i+mlength;j++){
+            int digit = (int)(str.charAt(offset + j) - '0');
+            multer*=10;
+            adder*=10;
+            adder+=digit;
+          }
+          mbi.Multiply(multer).AddInt(adder);
+          i+=mlength;
+        }
+        return mbi.AsBigInteger();
+      }
     }
 
     private static int FastParseLong(String str, int offset, int length) {
@@ -183,6 +203,7 @@ at: http://peteroupc.github.io/CBOR/
         bitLeftmost = 0;
       }
     }
+    
     /**
      * Shifts a number until it reaches the given number of digits, gathering
      * information on whether the last digit discarded is set and whether
@@ -190,7 +211,8 @@ at: http://peteroupc.github.io/CBOR/
      * the big integer being shifted is positive.
      */
     private void ShiftToBitsBig(int digits) {
-      String str = shiftedBigInt.toString();
+      String str;
+      str=shiftedBigInt.toString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.length();
       knownBitLength = new FastInteger(digitLength);

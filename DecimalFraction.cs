@@ -74,6 +74,8 @@ namespace PeterO {
       this.mantissa = mantissa;
     }
     
+    private const int MaxSafeInt = 214748363;
+    
     /// <summary> Creates a decimal fraction from a string that represents
     /// a number. <para> The format of the string generally consists of:<list
     /// type=''> <item> An optional '-' or '+' character (if '-', the value
@@ -100,20 +102,35 @@ namespace PeterO {
         negative = (str[0] == '-');
         offset++;
       }
-      FastInteger mant = new FastInteger(0);
+      int mantInt=0;
+      FastInteger mant = null;
       bool haveDecimalPoint = false;
       bool haveDigits = false;
       bool haveExponent = false;
-      FastInteger newScale = new FastInteger(0);
+      int newScaleInt=0;
+      FastInteger newScale = null;
       int i = offset;
       for (; i < str.Length; i++) {
         if (str[i] >= '0' && str[i] <= '9') {
           int thisdigit = (int)(str[i] - '0');
-          mant.Multiply(10);
-          mant.AddInt(thisdigit);
+          if(mantInt>MaxSafeInt){
+            if(mant==null)
+              mant=new FastInteger(mantInt);
+            mant.Multiply(10);
+            mant.AddInt(thisdigit);
+          } else {
+            mantInt*=10;
+            mantInt+=thisdigit;
+          }
           haveDigits = true;
           if (haveDecimalPoint) {
-            newScale.AddInt(-1);
+            if(newScaleInt==Int32.MinValue){
+              if(newScale==null)
+                newScale=new FastInteger(newScaleInt);
+              newScale.AddInt(-1);
+            } else {
+              newScaleInt--;
+            }
           }
         } else if (str[i] == '.') {
           if (haveDecimalPoint)
@@ -130,7 +147,8 @@ namespace PeterO {
       if (!haveDigits)
         throw new FormatException();
       if (haveExponent) {
-        FastInteger exp = new FastInteger(0);
+        FastInteger exp = null;
+        int expInt=0;
         offset = 1;
         haveDigits = false;
         if (i == str.Length) throw new FormatException();
@@ -142,25 +160,52 @@ namespace PeterO {
           if (str[i] >= '0' && str[i] <= '9') {
             haveDigits = true;
             int thisdigit = (int)(str[i] - '0');
-            exp.Multiply(10);
-            exp.AddInt(thisdigit);
+            if(expInt>MaxSafeInt){
+              if(exp==null)
+                exp=new FastInteger(expInt);
+              exp.Multiply(10);
+              exp.AddInt(thisdigit);
+            } else {
+              expInt*=10;
+              expInt+=thisdigit;
+            }
           } else {
             throw new FormatException();
           }
         }
         if (!haveDigits)
           throw new FormatException();
-        if (offset < 0)
-          newScale.Subtract(exp);
-        else
-          newScale.Add(exp);
+        if(offset>=0 && newScaleInt==0 && newScale==null && exp==null){
+          newScaleInt=expInt;
+        } else if(exp==null){
+          if(newScale==null)
+            newScale=new FastInteger(newScaleInt);
+          if (offset < 0)
+            newScale.SubtractInt(expInt);
+          else
+            newScale.AddInt(expInt);
+        } else {
+          if(newScale==null)
+            newScale=new FastInteger(newScaleInt);
+          if (offset < 0)
+            newScale.Subtract(exp);
+          else
+            newScale.Add(exp);
+        }
       } else if (i != str.Length) {
         throw new FormatException();
       }
+      if(negative){
+        // NOTE: mantInt can't be negative beforehand,
+        // so no chance of overflow
+        if(mant==null)
+          mantInt=-mantInt;
+        else
+          mant.Negate();
+      }
       return new DecimalFraction(
-        (negative) ? mant.Negate().AsBigInteger() :
-        mant.AsBigInteger(),
-        newScale.AsBigInteger());
+        (mant==null) ? ((BigInteger)mantInt) : mant.AsBigInteger(),
+        (newScale==null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger());
     }
     
     internal static int ShiftLeftOne(int[] arr){
@@ -561,14 +606,14 @@ namespace PeterO {
           } else {
             bigint *= (BigInteger)(FindPowerOfTenFromBig(power.AsBigInteger()));
           }
+          return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            bigint = (BigInteger)(FindPowerOfTen(power.AsInt32()));
+            return (FindPowerOfTen(power.AsInt32()));
           } else {
-            bigint = (BigInteger)(FindPowerOfTenFromBig(power.AsBigInteger()));
+            return (FindPowerOfTenFromBig(power.AsBigInteger()));
           }
         }
-        return bigint;
       }
     }
 
@@ -972,7 +1017,7 @@ namespace PeterO {
     /// <summary> Represents the number 1. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="DecimalFraction is immutable")]
     #endif
     public static readonly DecimalFraction One = new DecimalFraction(BigInteger.One,BigInteger.Zero);
@@ -980,14 +1025,14 @@ namespace PeterO {
     /// <summary> Represents the number 0. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="DecimalFraction is immutable")]
     #endif
     public static readonly DecimalFraction Zero = new DecimalFraction(BigInteger.Zero,BigInteger.Zero);
     /// <summary> Represents the number 10. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="DecimalFraction is immutable")]
     #endif
     public static readonly DecimalFraction Ten = new DecimalFraction((BigInteger)10,BigInteger.Zero);
@@ -1258,7 +1303,7 @@ namespace PeterO {
     /// context is given, returns null if the result of rounding would cause
     /// an overflow. A caller can handle a null return value by treating it
     /// as positive infinity if both operands have the same sign or as negative
-    /// infinity if both operands have different signs</returns>
+    /// infinity if both operands have different signs.</returns>
     public DecimalFraction Multiply(DecimalFraction decfrac) {
       if((decfrac)==null)throw new ArgumentNullException("decfrac");
       return Multiply(decfrac, PrecisionContext.Unlimited);
