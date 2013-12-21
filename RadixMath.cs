@@ -752,7 +752,7 @@ namespace PeterO {
             }
             return retval;
           } else if(posBigResult.IsEven && (helper.GetRadix()&1)==0){
-            posBigResult+=1;
+            posBigResult+=BigInteger.One;
             if(negA^negB)posBigResult=-posBigResult;
             if(ctx!=null && ctx.HasFlags && (lastDiscarded|olderDiscarded)!=0){
               ctx.Flags|=PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
@@ -772,7 +772,7 @@ namespace PeterO {
               }
               return retval;
             } else if(posBigResult.IsEven && (helper.GetRadix()&1)==0){
-              posBigResult+=1;
+              posBigResult+=BigInteger.One;
               if(negA^negB)posBigResult=-posBigResult;
               if(ctx!=null && ctx.HasFlags && (lastDiscarded|olderDiscarded)!=0){
                 ctx.Flags|=PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;

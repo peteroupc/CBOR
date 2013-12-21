@@ -2978,20 +2978,18 @@ public static CBORObject FromObject(Object obj) {
       } else if (bigintTag.compareTo(BigInteger.valueOf(5)) == 0) {
         return ConvertToDecimalFrac(c, false);
       } else {
-        long tagLow = 0;
-        long tagHigh = 0;
+        int tagLow = 0;
+        int tagHigh = 0;
         byte[] bytes=bigintTag.toByteArray(true);
         for(int i=0;i<Math.min(4,bytes.length);i++){
           int b=((int)bytes[i])&0xFF;
-          tagLow|=((long)b)<<(i*8);
+          tagLow=(tagLow|(((int)b)<<(i*8)));
         }
         for(int i=4;i<Math.min(8,bytes.length);i++){
           int b=((int)bytes[i])&0xFF;
-          tagHigh|=((long)b)<<((i-4)*8);
+          tagHigh=(tagHigh|(((int)b)<<(i*8)));
         }
-        int low = ((int)(tagLow & 0xFFFFFFFFL));
-        int high = ((int)(tagHigh & 0xFFFFFFFFL));
-        return new CBORObject(c, low, high);
+        return new CBORObject(c, tagLow,tagHigh);
       }
     }
     /**

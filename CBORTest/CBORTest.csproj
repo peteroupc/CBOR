@@ -21,6 +21,7 @@
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
     <RunCodeAnalysis>False</RunCodeAnalysis>
+    <DocumentationFile>bin\Release\CBORTest.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Platform)&apos; == &apos;AnyCPU&apos; '>
     <PlatformTarget>x86</PlatformTarget>
