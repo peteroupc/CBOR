@@ -773,7 +773,7 @@ rem=divrem[1];
             }
             return retval;
           } else if(posBigResult.testBit(0)==false && (helper.GetRadix()&1)==0){
-            posBigResult=posBigResult.add(1);
+            posBigResult=posBigResult.add(BigInteger.ONE);
             if(negA^negB)posBigResult=posBigResult.negate();
             if(ctx!=null && ctx.getHasFlags() && (lastDiscarded|olderDiscarded)!=0){
               ctx.setFlags(ctx.getFlags()|PrecisionContext.FlagInexact|PrecisionContext.FlagRounded);
@@ -793,7 +793,7 @@ rem=divrem[1];
               }
               return retval;
             } else if(posBigResult.testBit(0)==false && (helper.GetRadix()&1)==0){
-              posBigResult=posBigResult.add(1);
+              posBigResult=posBigResult.add(BigInteger.ONE);
               if(negA^negB)posBigResult=posBigResult.negate();
               if(ctx!=null && ctx.getHasFlags() && (lastDiscarded|olderDiscarded)!=0){
                 ctx.setFlags(ctx.getFlags()|PrecisionContext.FlagInexact|PrecisionContext.FlagRounded);

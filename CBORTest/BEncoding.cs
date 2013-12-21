@@ -17,8 +17,6 @@ namespace PeterO {
     /// This class accepts BEncoded strings in UTF-8, and outputs BEncoded
     /// strings in UTF-8. This class also demonstrates how CBORObject supports
     /// predefined serialization formats. </summary>
-    /// <returns></returns>
-    /// <param name='stream'> A Stream object.</param>
   public static class BEncoding {
     private static void writeUtf8(string s, Stream stream) {
       if (DataUtilities.WriteUtf8(s, stream, false) != 0)
