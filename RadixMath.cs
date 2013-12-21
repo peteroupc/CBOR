@@ -1650,12 +1650,6 @@ namespace PeterO {
       int s = helper.GetSign(thisValue);
       int ds = helper.GetSign(decfrac);
       if (s != ds) return (s < ds) ? -1 : 1;
-      int expcmp = helper.GetExponent(thisValue).CompareTo((BigInteger)helper.GetExponent(decfrac));
-      int mantcmp = helper.GetMantissa(thisValue).CompareTo((BigInteger)helper.GetMantissa(decfrac));
-      if (mantcmp == 0) {
-        // Special case: Mantissas are equal
-        return s == 0 ? 0 : expcmp * s;
-      }
       if (ds == 0) {
         // Special case: Second operand is zero
         return s;
@@ -1663,6 +1657,12 @@ namespace PeterO {
       if (s == 0) {
         // Special case: First operand is zero
         return -ds;
+      }
+      int expcmp = helper.GetExponent(thisValue).CompareTo((BigInteger)helper.GetExponent(decfrac));
+      int mantcmp = helper.GetMantissa(thisValue).CompareTo((BigInteger)helper.GetMantissa(decfrac));
+      if (mantcmp == 0) {
+        // Special case: Mantissas are equal
+        return s == 0 ? 0 : expcmp * s;
       }
       if(expcmp==0){
         return mantcmp;

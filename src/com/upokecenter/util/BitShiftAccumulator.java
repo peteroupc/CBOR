@@ -279,7 +279,7 @@ at: http://peteroupc.github.io/CBOR/
      * Shifts a number to the right, gathering information on whether the
      * last bit discarded is set and whether the discarded bits to the right
      * of that bit are set. Assumes that the big integer being shifted is positive.
-     * @param bits A 64-bit signed integer.
+     * @param bits A 32-bit signed integer.
      */
     public void ShiftRightInt(int bits) {
       if (isSmall)
@@ -340,8 +340,8 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private void ShiftSmallToBits(int bits) {
-      int kbl = 64;
-      for (int i = 63; i >= 0; i++) {
+      int kbl = SmallBitLength;
+      for (int i = SmallBitLength - 1; i >= 0; i++) {
         if ((shiftedSmall & (1L << i)) != 0) {
           break;
         } else {
@@ -357,7 +357,7 @@ at: http://peteroupc.github.io/CBOR/
         discardedBitCount.AddInt(bitShift);
         bitsAfterLeftmost |= bitLeftmost;
         // Get the bottommost shift minus 1 bits
-        bitsAfterLeftmost |= (((shiftedSmall << (65 - shift)) != 0) ? 1 : 0);
+        bitsAfterLeftmost |= (((shiftedSmall << (SmallBitLength + 1 - shift)) != 0) ? 1 : 0);
         // Get the bit just above that bit
         bitLeftmost = (int)((shiftedSmall >> (((int)shift) - 1)) & 0x01);
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
