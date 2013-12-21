@@ -19,7 +19,7 @@ import java.io.*;
      * This class accepts BEncoded strings in UTF-8, and outputs BEncoded
      * strings in UTF-8. This class also demonstrates how CBORObject supports
      * predefined serialization formats.
-     * @param stream A InputStream object.
+     * @param stream A readable data stream.
      */
   public final class BEncoding {
 private BEncoding(){}

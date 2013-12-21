@@ -24,7 +24,6 @@ DecTestUtil.TestOp_abs=function(name,precision,
     
     var d3=d1.Abs(ctx);
     
-   // sys.puts([input1]+"")
     TestCommon.AssertDecFrac(d3,output,"abs "+[input1,output]);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
