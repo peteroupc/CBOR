@@ -108,7 +108,8 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
     }
     
     private static decimal DecimalFractionToDecimal(DecimalFraction decfrac) {
-      DecimalFraction newDecimal=decfrac.RoundToBinaryPrecision(PrecisionContext.CliDecimal);
+      DecimalFraction newDecimal=decfrac.RoundToBinaryPrecision(
+        PrecisionContext.CliDecimal);
       if(newDecimal==null)
         throw new OverflowException("This object's value is out of range");
       return EncodeDecimal(BigInteger.Abs(newDecimal.Mantissa),

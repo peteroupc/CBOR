@@ -77,12 +77,32 @@ namespace PeterO {
     private static BigInteger FastParseBigInt(string str, int offset, int length) {
       // Assumes the string contains
       // only the digits '0' through '9'
-      FastInteger mbi = new FastInteger(0);
-      for (int i = 0; i < length; i++) {
+      int smallint=0;
+      int mlength=Math.Min(9,length);
+      for (int i = 0; i < mlength; i++) {
         int digit = (int)(str[offset + i] - '0');
-        mbi.Multiply(10).AddInt(digit);
+        smallint*=10;
+        smallint+=digit;
       }
-      return mbi.AsBigInteger();
+      if(mlength==length){
+        return (BigInteger)smallint;
+      } else {
+        FastInteger mbi = new FastInteger(smallint);
+        for (int i = 9; i < length;) {
+          mlength=Math.Min(9,length-i);
+          int multer=1;
+          int adder=0;
+          for(int j=i;j<i+mlength;j++){
+            int digit = (int)(str[offset + j] - '0');
+            multer*=10;
+            adder*=10;
+            adder+=digit;
+          }
+          mbi.Multiply(multer).AddInt(adder);
+          i+=mlength;
+        }
+        return mbi.AsBigInteger();
+      }
     }
 
     private static int FastParseLong(string str, int offset, int length) {
@@ -181,12 +201,14 @@ namespace PeterO {
         bitLeftmost = 0;
       }
     }
+    
     /// <summary> Shifts a number until it reaches the given number of digits,
     /// gathering information on whether the last digit discarded is set
     /// and whether the discarded digits to the right of that digit are set.
     /// Assumes that the big integer being shifted is positive. </summary>
     private void ShiftToBitsBig(int digits) {
-      String str = shiftedBigInt.ToString();
+      String str;
+      str=shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.Length;
       knownBitLength = new FastInteger(digitLength);

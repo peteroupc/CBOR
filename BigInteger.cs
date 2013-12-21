@@ -1875,9 +1875,8 @@ namespace PeterO {
         return new byte[] { (byte)0 };
       } else if (sign > 0) {
         int byteCount = ByteCount();
-        int bc = BitLength();
         int byteArrayLength = byteCount;
-        if ((bc & 7) == 0 && GetUnsignedBit(bc - 1)) {
+        if (GetUnsignedBit((byteCount*8) - 1)) {
           byteArrayLength++;
         }
         byte[] bytes = new byte[byteArrayLength];
@@ -2915,16 +2914,22 @@ namespace PeterO {
     /// <param name='other'>A BigInteger object.</param>
     public int CompareTo(BigInteger other) {
       if (other == null) return 1;
+      if(this==other)return 0;
       int size = this.wordCount, tSize = other.wordCount;
       int sa = (size == 0 ? 0 : (this.negative ? -1 : 1));
       int sb = (tSize == 0 ? 0 : (other.negative ? -1 : 1));
       if (sa != sb) return (sa < sb) ? -1 : 1;
       if (sa == 0) return 0;
       int cmp = 0;
-      if (size == tSize)
-        cmp = Compare(this.reg, 0, other.reg, 0, (int)size);
-      else
+      if (size == tSize){
+        if(size==1 && this.reg[0]==other.reg[0]){
+          return 0;
+        } else {
+          cmp = Compare(this.reg, 0, other.reg, 0, (int)size);
+        }
+      } else {
         cmp = size > tSize ? 1 : -1;
+      }
       return (sa > 0) ? cmp : -cmp;
     }
     /// <summary> </summary>
@@ -2963,21 +2968,21 @@ namespace PeterO {
     /// <summary> BigInteger object for the number zero.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="BigInteger is immutable")]
     #endif
     public static readonly BigInteger ZERO = new BigInteger().InitializeInt(0);
     /// <summary> BigInteger object for the number one. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="BigInteger is immutable")]
     #endif
     public static readonly BigInteger ONE = new BigInteger().InitializeInt(1);
     /// <summary> BigInteger object for the number ten. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="BigInteger is immutable")]
     #endif
     public static readonly BigInteger TEN = new BigInteger().InitializeInt(10);

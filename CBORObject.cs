@@ -2914,20 +2914,18 @@ namespace PeterO {
       } else if (bigintTag.CompareTo((BigInteger)5) == 0) {
         return ConvertToDecimalFrac(c, false);
       } else {
-        long tagLow = 0;
-        long tagHigh = 0;
+        int tagLow = 0;
+        int tagHigh = 0;
         byte[] bytes=bigintTag.ToByteArray();
         for(int i=0;i<Math.Min(4,bytes.Length);i++){
           int b=((int)bytes[i])&0xFF;
-          tagLow|=((long)b)<<(i*8);
+          tagLow=unchecked(tagLow|(((int)b)<<(i*8)));
         }
         for(int i=4;i<Math.Min(8,bytes.Length);i++){
           int b=((int)bytes[i])&0xFF;
-          tagHigh|=((long)b)<<((i-4)*8);
+          tagHigh=unchecked(tagHigh|(((int)b)<<(i*8)));
         }
-        int low = unchecked((int)(tagLow & 0xFFFFFFFFL));
-        int high = unchecked((int)(tagHigh & 0xFFFFFFFFL));
-        return new CBORObject(c, low, high);
+        return new CBORObject(c, tagLow,tagHigh);
       }
     }
     /// <summary> Generates a CBOR object from an arbitrary object and gives

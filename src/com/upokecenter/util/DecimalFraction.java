@@ -82,6 +82,8 @@ at: http://peteroupc.github.io/CBOR/
       this.mantissa = mantissa;
     }
     
+    private static final int MaxSafeInt = 214748363;
+    
     /**
      * Creates a decimal fraction from a string that represents a number.
      * <p> The format of the string generally consists of:<ul> <li> An optional
@@ -105,20 +107,35 @@ at: http://peteroupc.github.io/CBOR/
         negative = (str.charAt(0) == '-');
         offset++;
       }
-      FastInteger mant = new FastInteger(0);
+      int mantInt=0;
+      FastInteger mant = null;
       boolean haveDecimalPoint = false;
       boolean haveDigits = false;
       boolean haveExponent = false;
-      FastInteger newScale = new FastInteger(0);
+      int newScaleInt=0;
+      FastInteger newScale = null;
       int i = offset;
       for (; i < str.length(); i++) {
         if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
           int thisdigit = (int)(str.charAt(i) - '0');
-          mant.Multiply(10);
-          mant.AddInt(thisdigit);
+          if(mantInt>MaxSafeInt){
+            if(mant==null)
+              mant=new FastInteger(mantInt);
+            mant.Multiply(10);
+            mant.AddInt(thisdigit);
+          } else {
+            mantInt*=10;
+            mantInt+=thisdigit;
+          }
           haveDigits = true;
           if (haveDecimalPoint) {
-            newScale.AddInt(-1);
+            if(newScaleInt==Integer.MIN_VALUE){
+              if(newScale==null)
+                newScale=new FastInteger(newScaleInt);
+              newScale.AddInt(-1);
+            } else {
+              newScaleInt--;
+            }
           }
         } else if (str.charAt(i) == '.') {
           if (haveDecimalPoint)
@@ -135,7 +152,8 @@ at: http://peteroupc.github.io/CBOR/
       if (!haveDigits)
         throw new NumberFormatException();
       if (haveExponent) {
-        FastInteger exp = new FastInteger(0);
+        FastInteger exp = null;
+        int expInt=0;
         offset = 1;
         haveDigits = false;
         if (i == str.length()) throw new NumberFormatException();
@@ -147,25 +165,52 @@ at: http://peteroupc.github.io/CBOR/
           if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
             haveDigits = true;
             int thisdigit = (int)(str.charAt(i) - '0');
-            exp.Multiply(10);
-            exp.AddInt(thisdigit);
+            if(expInt>MaxSafeInt){
+              if(exp==null)
+                exp=new FastInteger(expInt);
+              exp.Multiply(10);
+              exp.AddInt(thisdigit);
+            } else {
+              expInt*=10;
+              expInt+=thisdigit;
+            }
           } else {
             throw new NumberFormatException();
           }
         }
         if (!haveDigits)
           throw new NumberFormatException();
-        if (offset < 0)
-          newScale.Subtract(exp);
-        else
-          newScale.Add(exp);
+        if(offset>=0 && newScaleInt==0 && newScale==null && exp==null){
+          newScaleInt=expInt;
+        } else if(exp==null){
+          if(newScale==null)
+            newScale=new FastInteger(newScaleInt);
+          if (offset < 0)
+            newScale.SubtractInt(expInt);
+          else
+            newScale.AddInt(expInt);
+        } else {
+          if(newScale==null)
+            newScale=new FastInteger(newScaleInt);
+          if (offset < 0)
+            newScale.Subtract(exp);
+          else
+            newScale.Add(exp);
+        }
       } else if (i != str.length()) {
         throw new NumberFormatException();
       }
+      if(negative){
+        // NOTE: mantInt can't be negative beforehand,
+        // so no chance of overflow
+        if(mant==null)
+          mantInt=-mantInt;
+        else
+          mant.Negate();
+      }
       return new DecimalFraction(
-        (negative) ? mant.Negate().AsBigInteger() :
-        mant.AsBigInteger(),
-        newScale.AsBigInteger());
+        (mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
+        (newScale==null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger());
     }
     
     static int ShiftLeftOne(int[] arr){
@@ -579,14 +624,14 @@ bigrem=divrem[1];
           } else {
             bigint=bigint.multiply(FindPowerOfTenFromBig(power.AsBigInteger()));
           }
+          return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            bigint = FindPowerOfTen(power.AsInt32());
+            return (FindPowerOfTen(power.AsInt32()));
           } else {
-            bigint = FindPowerOfTenFromBig(power.AsBigInteger());
+            return (FindPowerOfTenFromBig(power.AsBigInteger()));
           }
         }
-        return bigint;
       }
     }
 
@@ -1298,7 +1343,7 @@ bigrem=divrem[1];
      * is given, returns null if the result of rounding would cause an overflow.
      * A caller can handle a null return value by treating it as positive infinity
      * if both operands have the same sign or as negative infinity if both
-     * operands have different signs
+     * operands have different signs.
      */
     public DecimalFraction Multiply(DecimalFraction decfrac) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
