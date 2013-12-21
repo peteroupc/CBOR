@@ -1216,7 +1216,7 @@ namespace PeterO {
           PrecisionContext ctxtmp=ctx.WithBlankFlags();
           ret=RoundToPrecision(ret,ctxtmp);
           if(ctx.HasFlags){
-            ctx.Flags|=(ctx.Flags&~PrecisionContext.FlagClamped);
+            ctx.Flags|=(ctxtmp.Flags&~PrecisionContext.FlagClamped);
           }
         }
         ret=EnsureSign(ret,sign);
