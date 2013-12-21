@@ -3763,7 +3763,7 @@ function() {
             var c = str.charAt(i);
             if (c < '0' || c > '9') throw ("Illegal character found");
             haveDigits = true;
-            var digit = ((c - '0')|0);
+            var digit = ((c-48)|0);
             
             var carry = BigInteger.LinearMultiply(bigint.reg, 0, bigint.reg, 0, 10, bigint.reg.length);
             if (carry != 0) bigint.reg = BigInteger.GrowForCarry(bigint.reg, carry);
