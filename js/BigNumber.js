@@ -328,10 +328,10 @@ function() {
     constructor.Increment = function(A, Astart, N, B) {
         {
             var tmp = A[Astart];
-            A[Astart] = (((((tmp + B)|0) & 65535)|0));
+            A[Astart] = (((tmp + B) & 65535));
             if ((A[Astart] & 65535) >= (tmp & 65535)) return 0;
             for (var i = 1; i < N; i++) {
-                A[Astart + i] = (((A[Astart + i] + 1) & 65535)|0);
+                A[Astart + i] = ((A[Astart + i] + 1) & 65535);
                 if (A[Astart + i] != 0) return 0;
             }
             return 1;
@@ -340,11 +340,11 @@ function() {
     constructor.Decrement = function(A, Astart, N, B) {
         {
             var tmp = A[Astart];
-            A[Astart] = (((((tmp - B)|0) & 65535)|0));
+            A[Astart] = (((tmp - B) & 65535));
             if ((A[Astart] & 65535) <= (tmp & 65535)) return 0;
             for (var i = 1; i < N; i++) {
                 tmp = A[Astart + i];
-                A[Astart + i] = (((A[Astart + i] - 1) & 65535)|0);
+                A[Astart + i] = ((A[Astart + i] - 1) & 65535);
                 if (tmp != 0) return 0;
             }
             return 1;
@@ -352,7 +352,7 @@ function() {
     };
     constructor.TwosComplement = function(A, Astart, N) {
         BigInteger.Decrement(A, Astart, N, 1);
-        for (var i = 0; i < N; i++) A[Astart + i] = (((((~A[Astart + i])|0) & 65535)|0));
+        for (var i = 0; i < N; i++) A[Astart + i] = (((~A[Astart + i]) & 65535));
     };
     constructor.Add = function(C, cstart, A, astart, B, bstart, N) {
         {
@@ -372,12 +372,12 @@ function() {
             var u;
             u = 0;
             for (var i = 0; i < N; i += 2) {
-                u = (A[astart + i] & 65535) - (B[bstart + i] & 65535) - (((u >> 31) & 1)|0);
+                u = (A[astart + i] & 65535) - (B[bstart + i] & 65535) - ((u >> 31) & 1);
                 C[cstart + i] = (((((u & 65535) & 65535))|0));
-                u = (A[astart + i + 1] & 65535) - (B[bstart + i + 1] & 65535) - (((u >> 31) & 1)|0);
+                u = (A[astart + i + 1] & 65535) - (B[bstart + i + 1] & 65535) - ((u >> 31) & 1);
                 C[cstart + i + 1] = (((((u & 65535) & 65535))|0));
             }
-            return (((u >> 31) & 1)|0);
+            return ((u >> 31) & 1);
         }
     };
     constructor.LinearMultiply = function(productArr, cstart, A, astart, B, N) {
@@ -415,7 +415,7 @@ function() {
             p = (A[astart + 2 - 1] & 65535) * (A[astart + 2 - 1] & 65535);
             p += e;
             R[rstart + 2 * 2 - 2] = (((((p & 65535) & 65535))|0));
-            R[rstart + 2 * 2 - 1] = (((((p >> 16)|0) & 65535)|0));
+            R[rstart + 2 * 2 - 1] = (((p >> 16) & 65535));
         }
     };
     constructor.Baseline_Square4 = function(R, rstart, A, astart) {
@@ -487,7 +487,7 @@ function() {
             p = (A[astart + 4 - 1] & 65535) * (A[astart + 4 - 1] & 65535);
             p += e;
             R[rstart + 2 * 4 - 2] = (((((p & 65535) & 65535))|0));
-            R[rstart + 2 * 4 - 1] = (((((p >> 16)|0) & 65535)|0));
+            R[rstart + 2 * 4 - 1] = (((p >> 16) & 65535));
         }
     };
     constructor.Baseline_Square8 = function(R, rstart, A, astart) {
@@ -703,7 +703,7 @@ function() {
             p = (A[astart + 8 - 1] & 65535) * (A[astart + 8 - 1] & 65535);
             p += e;
             R[rstart + 2 * 8 - 2] = (((((p & 65535) & 65535))|0));
-            R[rstart + 2 * 8 - 1] = (((((p >> 16)|0) & 65535)|0));
+            R[rstart + 2 * 8 - 1] = (((p >> 16) & 65535));
         }
     };
     constructor.Baseline_Square16 = function(R, rstart, A, astart) {
@@ -1399,7 +1399,7 @@ function() {
             p = (A[astart + 16 - 1] & 65535) * (A[astart + 16 - 1] & 65535);
             p += e;
             R[rstart + 2 * 16 - 2] = (((((p & 65535) & 65535))|0));
-            R[rstart + 2 * 16 - 1] = (((((p >> 16)|0) & 65535)|0));
+            R[rstart + 2 * 16 - 1] = (((p >> 16) & 65535));
         }
     };
     constructor.Baseline_Multiply2 = function(R, rstart, A, astart, B, bstart) {
@@ -1425,7 +1425,7 @@ function() {
             p = (A[astart + 1] & 65535) * (B[bstart + 1] & 65535);
             p += d;
             R[rstart + 1 + 1] = (((((p & 65535) & 65535))|0));
-            R[rstart + 1 + 2] = (((((p >> 16)|0) & 65535)|0));
+            R[rstart + 1 + 2] = (((p >> 16) & 65535));
         }
     };
     constructor.Baseline_Multiply4 = function(R, rstart, A, astart, B, bstart) {
@@ -1511,7 +1511,7 @@ function() {
             p = (A[astart + 3] & 65535) * (B[bstart + 3] & 65535);
             p += d;
             R[rstart + 5 + 1] = (((((p & 65535) & 65535))|0));
-            R[rstart + 5 + 2] = (((((p >> 16)|0) & 65535)|0));
+            R[rstart + 5 + 2] = (((p >> 16) & 65535));
         }
     };
     constructor.Baseline_Multiply8 = function(R, rstart, A, astart, B, bstart) {
@@ -1813,7 +1813,7 @@ function() {
             p = (A[astart + 7] & 65535) * (B[bstart + 7] & 65535);
             p += d;
             R[rstart + 13 + 1] = (((((p & 65535) & 65535))|0));
-            R[rstart + 13 + 2] = (((((p >> 16)|0) & 65535)|0));
+            R[rstart + 13 + 2] = (((p >> 16) & 65535));
         }
     };
     constructor.Baseline_Multiply16 = function(R, rstart, A, astart, B, bstart) {
@@ -2931,7 +2931,7 @@ function() {
             p = (A[astart + 15] & 65535) * (B[bstart + 15] & 65535);
             p += d;
             R[rstart + 30] = (((((p & 65535) & 65535))|0));
-            R[rstart + 31] = (((((p >> 16)|0) & 65535)|0));
+            R[rstart + 31] = (((p >> 16) & 65535));
         }
     };
     constructor.s_recursionLimit = 16;
@@ -3036,7 +3036,7 @@ function() {
                     Rarr[Rstart + NB + 1] = 0;
                     return;
                 default:
-                    Rarr[Rstart + NB] = ((((BigInteger.LinearMultiply(Rarr, Rstart, Barr, Bstart, Aarr[Astart], NB)) & 65535)|0));
+                    Rarr[Rstart + NB] = (((BigInteger.LinearMultiply(Rarr, Rstart, Barr, Bstart, Aarr[Astart], NB)) & 65535));
                     Rarr[Rstart + NB + 1] = 0;
                     return;
             }
@@ -3129,7 +3129,7 @@ function() {
         for (var i = 0; i < 32; i++) {
             tmpInt = dividendHigh >> 31;
             dividendHigh <<= 1;
-            dividendHigh = ((((dividendHigh | (((dividendLow >> 31) & 1)|0)))|0));
+            dividendHigh = ((((dividendHigh | ((dividendLow >> 31) & 1)))|0));
             dividendLow <<= 1;
             tmpInt |= dividendHigh;
             if (((tmpInt >> 31) != 0) || (tmpInt >= intDivisor)) {
@@ -3145,7 +3145,7 @@ function() {
         {
             var iy = (y & 65535);
             if ((x >> 31) == 0) {
-                return ((((((x|0) / iy)|0) & 65535))|0);
+                return (((((x|0) / iy) & 65535))|0);
             } else {
                 return BigInteger.Divide32By16(x, y, false);
             }
@@ -3155,7 +3155,7 @@ function() {
         {
             var iy = (y & 65535);
             if ((x >> 31) == 0) {
-                return ((((x|0) % iy) & 65535)|0);
+                return (((x|0) % iy) & 65535);
             } else {
                 return BigInteger.Divide32By16(x, y, true);
             }
@@ -3164,22 +3164,22 @@ function() {
     constructor.DivideThreeWordsByTwo = function(A, Astart, B0, B1) {
         var Q;
         {
-            if (((B1 + 1)|0) == 0) Q = A[Astart + 2]; else if ((B1 & 65535) > 0) Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart + 1], A[Astart + 2]), ((((B1|0) + 1) & 65535)|0)); else Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart], A[Astart + 1]), B0);
+            if (((B1 + 1)|0) == 0) Q = A[Astart + 2]; else if ((B1 & 65535) > 0) Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart + 1], A[Astart + 2]), (((B1|0) + 1) & 65535)); else Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart], A[Astart + 1]), B0);
             var Qint = (Q & 65535);
             var B0int = (B0 & 65535);
             var B1int = (B1 & 65535);
             var p = B0int * Qint;
-            var u = (A[Astart] & 65535) - (((BigInteger.GetLowHalf(p))|0) & 65535);
-            A[Astart] = ((((BigInteger.GetLowHalf(u)) & 65535)|0));
-            u = (A[Astart + 1] & 65535) - (((BigInteger.GetHighHalf(p))|0) & 65535) - (((BigInteger.GetHighHalfAsBorrow(u))|0) & 65535) - (B1int * Qint);
-            A[Astart + 1] = ((((BigInteger.GetLowHalf(u)) & 65535)|0));
-            A[Astart + 2] = ((((A[Astart + 2] + BigInteger.GetHighHalf(u)) & 65535)|0));
+            var u = (A[Astart] & 65535) - ((BigInteger.GetLowHalf(p)) & 65535);
+            A[Astart] = (((BigInteger.GetLowHalf(u)) & 65535));
+            u = (A[Astart + 1] & 65535) - ((BigInteger.GetHighHalf(p)) & 65535) - ((BigInteger.GetHighHalfAsBorrow(u)) & 65535) - (B1int * Qint);
+            A[Astart + 1] = (((BigInteger.GetLowHalf(u)) & 65535));
+            A[Astart + 2] = (((A[Astart + 2] + BigInteger.GetHighHalf(u)) & 65535));
             while (A[Astart + 2] != 0 || (A[Astart + 1] & 65535) > (B1 & 65535) || (A[Astart + 1] == B1 && (A[Astart] & 65535) >= (B0 & 65535))) {
                 u = (A[Astart] & 65535) - B0int;
-                A[Astart] = ((((BigInteger.GetLowHalf(u)) & 65535)|0));
-                u = (A[Astart + 1] & 65535) - B1int - (((BigInteger.GetHighHalfAsBorrow(u))|0) & 65535);
-                A[Astart + 1] = ((((BigInteger.GetLowHalf(u)) & 65535)|0));
-                A[Astart + 2] = ((((A[Astart + 2] + BigInteger.GetHighHalf(u)) & 65535)|0));
+                A[Astart] = (((BigInteger.GetLowHalf(u)) & 65535));
+                u = (A[Astart + 1] & 65535) - B1int - ((BigInteger.GetHighHalfAsBorrow(u)) & 65535);
+                A[Astart + 1] = (((BigInteger.GetLowHalf(u)) & 65535));
+                A[Astart + 2] = (((A[Astart + 2] + BigInteger.GetHighHalf(u)) & 65535));
                 Q++;
             }
         }
@@ -3188,10 +3188,10 @@ function() {
     constructor.DivideFourWordsByTwo = function(T, Al, Ah, B) {
         if (B == 0) return BigInteger.MakeUint(BigInteger.GetLowHalf(Al), BigInteger.GetHighHalf(Ah)); else {
             var Q = [0, 0];
-            T[0] = ((((BigInteger.GetLowHalf(Al)) & 65535)|0));
-            T[1] = ((((BigInteger.GetHighHalf(Al)) & 65535)|0));
-            T[2] = ((((BigInteger.GetLowHalf(Ah)) & 65535)|0));
-            T[3] = ((((BigInteger.GetHighHalf(Ah)) & 65535)|0));
+            T[0] = (((BigInteger.GetLowHalf(Al)) & 65535));
+            T[1] = (((BigInteger.GetHighHalf(Al)) & 65535));
+            T[2] = (((BigInteger.GetLowHalf(Ah)) & 65535));
+            T[3] = (((BigInteger.GetHighHalf(Ah)) & 65535));
             Q[1] = (((((BigInteger.DivideThreeWordsByTwo(T, 1, BigInteger.GetLowHalf(B), BigInteger.GetHighHalf(B))) & 65535))|0));
             Q[0] = (((((BigInteger.DivideThreeWordsByTwo(T, 0, BigInteger.GetLowHalf(B), BigInteger.GetHighHalf(B))) & 65535))|0));
             return BigInteger.MakeUint(Q[0], Q[1]);
@@ -3200,8 +3200,8 @@ function() {
     constructor.AtomicDivide = function(Q, Qstart, A, Astart, B, Bstart) {
         var T = [0, 0, 0, 0];
         var q = BigInteger.DivideFourWordsByTwo(T, BigInteger.MakeUint(A[Astart], A[Astart + 1]), BigInteger.MakeUint(A[Astart + 2], A[Astart + 3]), BigInteger.MakeUint(B[Bstart], B[Bstart + 1]));
-        Q[Qstart] = ((((BigInteger.GetLowHalf(q)) & 65535)|0));
-        Q[Qstart + 1] = ((((BigInteger.GetHighHalf(q)) & 65535)|0));
+        Q[Qstart] = (((BigInteger.GetLowHalf(q)) & 65535));
+        Q[Qstart + 1] = (((BigInteger.GetHighHalf(q)) & 65535));
     };
     constructor.CorrectQuotientEstimate = function(Rarr, Rstart, Tarr, Tstart, Qarr, Qstart, Barr, Bstart, N) {
         {
@@ -3209,7 +3209,7 @@ function() {
             BigInteger.Subtract(Rarr, Rstart, Rarr, Rstart, Tarr, Tstart, N + 2);
             while (Rarr[Rstart + N] != 0 || BigInteger.Compare(Rarr, Rstart, Barr, Bstart, N) >= 0) {
                 Rarr[Rstart + N] = (((((Rarr[Rstart + N] - ((BigInteger.Subtract(Rarr, Rstart, Rarr, Rstart, Barr, Bstart, N))|0)) & 65535))|0));
-                Qarr[Qstart] = (((Qarr[Qstart] + 1) & 65535)|0);
+                Qarr[Qstart] = ((Qarr[Qstart] + 1) & 65535);
                 Qarr[Qstart + 1] = (((((Qarr[Qstart + 1] + (((Qarr[Qstart] == 0) ? 1 : 0)|0)) & 65535))|0));
             }
         }
@@ -3238,14 +3238,14 @@ function() {
                 Qarr[Qstart + NA - NB] = 0;
                 while (TA[NA] != 0 || BigInteger.Compare(TA, ((Tstart + NA - NB)|0), TBarr, TBstart, NB) >= 0) {
                     TA[NA] = (((((TA[NA] - ((BigInteger.Subtract(TA, ((Tstart + NA - NB)|0), TA, ((Tstart + NA - NB)|0), TBarr, TBstart, NB))|0)) & 65535))|0));
-                    Qarr[Qstart + NA - NB] = (((Qarr[Qstart + NA - NB] + 1) & 65535)|0);
+                    Qarr[Qstart + NA - NB] = ((Qarr[Qstart + NA - NB] + 1) & 65535);
                 }
             } else {
                 NA += 2;
             }
             var BT = [0, 0];
-            BT[0] = (((((TBarr[TBstart + NB - 2] + 1)|0) & 65535)|0));
-            BT[1] = ((((((TBarr[TBstart + NB - 1] + ((BT[0] == 0 ? 1 : 0)|0))|0) & 65535))|0));
+            BT[0] = (((TBarr[TBstart + NB - 2] + 1) & 65535));
+            BT[1] = (((((TBarr[TBstart + NB - 1] + ((BT[0] == 0 ? 1 : 0)|0)) & 65535))|0));
             for (var i = NA - 2; i >= NB; i -= 2) {
                 BigInteger.AtomicDivide(Qarr, ((Qstart + i - NB)|0), TA, ((Tstart + i - 2)|0), BT, 0);
                 BigInteger.CorrectQuotientEstimate(TA, ((Tstart + i - NB)|0), TParr, TPstart, Qarr, ((Qstart + (i - NB))|0), TBarr, TBstart, NB);
@@ -3288,7 +3288,7 @@ function() {
                     this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
                 } else if (negative) {
                     
-                    this.reg[j] = ((((this.reg[j] | (65280)) & 65535)|0));
+                    this.reg[j] = (((this.reg[j] | (65280)) & 65535));
                 }
             }
             this.negative = negative;
@@ -3373,7 +3373,7 @@ function() {
                 iut = ((numberValue < 0) ? ((-numberValue)|0) : (numberValue|0));
                 this.reg = [0, 0];
                 this.reg[0] = (iut & 65535);
-                this.reg[1] = (((((iut >> 16)|0) & 65535)|0));
+                this.reg[1] = (((iut >> 16) & 65535));
                 this.wordCount = (this.reg[1] != 0 ? 2 : (this.reg[0] == 0 ? 0 : 1));
             }
         }
@@ -3396,9 +3396,9 @@ function() {
             for (var i = 0; i < byteCount; i += 2, j++) {
                 var index = (littleEndian) ? i : bytes.length - 1 - i;
                 var index2 = (littleEndian) ? i + 1 : bytes.length - 2 - i;
-                bytes[index] = (((this.reg[j]) & 255)|0);
+                bytes[index] = ((this.reg[j]) & 255);
                 if (index2 >= 0 && index2 < byteArrayLength) {
-                    bytes[index2] = (((this.reg[j] >> 8) & 255)|0);
+                    bytes[index2] = ((this.reg[j] >> 8) & 255);
                 }
             }
             return bytes;
@@ -3435,7 +3435,7 @@ function() {
                 var index2 = (littleEndian) ? i + 1 : bytes.length - 2 - i;
                 bytes[index] = (regdata[j] & 255);
                 if (index2 >= 0 && index2 < byteCount) {
-                    bytes[index2] = (((regdata[j] >> 8) & 255)|0);
+                    bytes[index2] = ((regdata[j] >> 8) & 255);
                 }
             }
             return bytes;
@@ -3545,8 +3545,8 @@ function() {
                 throw "exception";
             }
         } else {
-            var ivv = (((this.reg[0])|0) & 65535);
-            if (c > 1) ivv |= (((this.reg[1])|0) & 65535) << 16;
+            var ivv = ((this.reg[0]) & 65535);
+            if (c > 1) ivv |= ((this.reg[1]) & 65535) << 16;
             if (this.negative) ivv = -ivv;
             return ivv;
         }
@@ -3940,7 +3940,7 @@ function() {
             var wc = bigintB.wordCount;
             product.reg = [];
             for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(wc + 1); arrfillI++) product.reg[arrfillI] = 0;
-            product.reg[wc] = ((((BigInteger.LinearMultiply(product.reg, 0, bigintB.reg, 0, bigintA.reg[0], wc)) & 65535)|0));
+            product.reg[wc] = (((BigInteger.LinearMultiply(product.reg, 0, bigintB.reg, 0, bigintA.reg[0], wc)) & 65535));
             product.negative = false;
             product.wordCount = product.CalcWordCount();
             return;
@@ -3948,7 +3948,7 @@ function() {
             var wc = bigintA.wordCount;
             product.reg = [];
             for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(wc + 1); arrfillI++) product.reg[arrfillI] = 0;
-            product.reg[wc] = ((((BigInteger.LinearMultiply(product.reg, 0, bigintA.reg, 0, bigintB.reg[0], wc)) & 65535)|0));
+            product.reg[wc] = (((BigInteger.LinearMultiply(product.reg, 0, bigintA.reg, 0, bigintB.reg[0], wc)) & 65535));
             product.negative = false;
             product.wordCount = product.CalcWordCount();
             return;
@@ -4063,10 +4063,10 @@ function() {
         while ((i--) > 0) {
             var currentDividend = (((((quotientReg[i] & 65535) | ((remainder|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
-                quotientReg[i] = (((((((currentDividend / idivisor)|0)|0) & 65535))|0));
+                quotientReg[i] = ((((((currentDividend / idivisor)|0) & 65535))|0));
                 if (i > 0) remainder = ((currentDividend % idivisor)|0);
             } else {
-                quotientReg[i] = ((((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535)|0));
+                quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
                 if (i > 0) remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
             }
         }
@@ -4078,10 +4078,10 @@ function() {
         while ((i--) > 0) {
             var currentDividend = (((((quotientReg[i] & 65535) | ((remainder|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
-                quotientReg[i] = (((((((currentDividend / idivisor)|0)|0) & 65535))|0));
+                quotientReg[i] = ((((((currentDividend / idivisor)|0) & 65535))|0));
                 remainder = ((currentDividend % idivisor)|0);
             } else {
-                quotientReg[i] = ((((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535)|0));
+                quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
                 remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
             }
         }
@@ -4156,7 +4156,7 @@ function() {
             quotient.wordCount = this.wordCount;
             quotient.negative = this.negative;
             for (var arrfillI = 0; arrfillI < quotient.reg.length; arrfillI++) quotient.reg[0 + arrfillI] = this.reg[0 + arrfillI];
-            var smallRemainder = (((BigInteger.FastDivideAndRemainder(quotient.reg, aSize, divisor.reg[0]))|0) & 65535);
+            var smallRemainder = ((BigInteger.FastDivideAndRemainder(quotient.reg, aSize, divisor.reg[0])) & 65535);
             quotient.wordCount = quotient.CalcWordCount();
             quotient.ShortenArray();
             if (quotient.wordCount != 0) {
@@ -4351,10 +4351,10 @@ function(value) {
             var bytes = [];
             for (var arrfillI = 0; arrfillI < this.wordCount * 4 + 1; arrfillI++) bytes[arrfillI] = 0;
             for (var i = 0; i < this.wordCount; i++) {
-                bytes[i * 4 + 0] = (((this.data[i]) & 255)|0);
-                bytes[i * 4 + 1] = (((this.data[i] >> 8) & 255)|0);
-                bytes[i * 4 + 2] = (((this.data[i] >> 16) & 255)|0);
-                bytes[i * 4 + 3] = (((this.data[i] >> 24) & 255)|0);
+                bytes[i * 4 + 0] = ((this.data[i]) & 255);
+                bytes[i * 4 + 1] = ((this.data[i] >> 8) & 255);
+                bytes[i * 4 + 2] = ((this.data[i] >> 16) & 255);
+                bytes[i * 4 + 3] = ((this.data[i] >> 24) & 255);
             }
             bytes[bytes.length - 1] = 0;
             return BigInteger.fromByteArray(bytes, true);
@@ -4679,9 +4679,9 @@ function(value) {
         for (var arrfillI = 0; arrfillI < wordCount * 4 + 1; arrfillI++) bytes[arrfillI] = 0;
         for (var i = 0; i < wordCount; i++) {
             bytes[i * 4 + 0] = (words[i] & 255);
-            bytes[i * 4 + 1] = (((words[i] >> 8) & 255)|0);
-            bytes[i * 4 + 2] = (((words[i] >> 16) & 255)|0);
-            bytes[i * 4 + 3] = (((words[i] >> 24) & 255)|0);
+            bytes[i * 4 + 1] = ((words[i] >> 8) & 255);
+            bytes[i * 4 + 2] = ((words[i] >> 16) & 255);
+            bytes[i * 4 + 3] = ((words[i] >> 24) & 255);
         }
         bytes[bytes.length - 1] = 0;
         return BigInteger.fromByteArray(bytes, true);
@@ -6119,7 +6119,7 @@ var RadixMath = function(helper) {
                 ctx2.setFlags(0);
             }
             if (ctx.getHasFlags()) {
-                ctx.setFlags(ctx.getFlags() | ctx2.getFlags());
+                ctx.setFlags(ctx.getFlags() | (ctx2.getFlags()));
             }
             return val;
         }
@@ -6148,7 +6148,7 @@ var RadixMath = function(helper) {
         var ctx2 = (ctx == null) ? PrecisionContext.ForRounding(Rounding.HalfDown) : ctx.WithUnlimitedExponents().WithPrecision(0);
         var ret = this.DivideInternal(thisValue, divisor, ctx2, RadixMath.IntegerModeFixedScale, desiredExponent, null);
         if (ctx != null && ctx.getHasFlags()) {
-            ctx.setFlags(ctx.getFlags() | ctx2.getFlags());
+            ctx.setFlags(ctx.getFlags() | (ctx2.getFlags()));
         }
         return ret;
     };
@@ -6216,7 +6216,7 @@ var RadixMath = function(helper) {
             }
         }
         if (ctx.getHasFlags()) {
-            ctx.setFlags(ctx.getFlags() | flags);
+            ctx.setFlags(ctx.getFlags() | (flags));
         }
         if (neg) {
             newmantissa = newmantissa.negate();
@@ -6265,7 +6265,7 @@ var RadixMath = function(helper) {
                 var fastDesiredExponent = FastInteger.FromBig(desiredExponent);
                 if (ctx != null && ctx.getHasFlags() && fastDesiredExponent.compareTo(naturalExponent) > 0) {
                     
-                    ctx.setFlags(ctx.getFlags() | PrecisionContext.FlagRounded);
+                    ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagRounded));
                 }
                 if (expdiff.compareTo(fastDesiredExponent) <= 0) {
                     shift = FastInteger.Copy(fastDesiredExponent).Subtract(expdiff);
@@ -6416,7 +6416,7 @@ var RadixMath = function(helper) {
             }
             if (ctx != null && ctx.getHasFlags() && exp.compareTo(naturalExponent) > 0) {
                 
-                ctx.setFlags(ctx.getFlags() | PrecisionContext.FlagRounded);
+                ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagRounded));
             }
             var bigexp = exp.AsBigInteger();
             var retval = this.helper.CreateNew(bigResult, bigexp);
@@ -6424,14 +6424,14 @@ var RadixMath = function(helper) {
                 
                 if (!this.RoundGivenDigits(lastDiscarded, olderDiscarded, rounding, negA ^ negB, posBigResult)) {
                     if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                        ctx.setFlags(ctx.getFlags() | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded);
+                        ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
                     }
                     return retval;
                 } else if (posBigResult.testBit(0) == false && (this.helper.GetRadix() & 1) == 0) {
                     posBigResult = posBigResult.add(BigInteger.ONE);
                     if (negA ^ negB) posBigResult = posBigResult.negate();
                     if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                        ctx.setFlags(ctx.getFlags() | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded);
+                        ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
                     }
                     return this.helper.CreateNew(posBigResult, bigexp);
                 }
@@ -6442,14 +6442,14 @@ var RadixMath = function(helper) {
                     
                     if (!this.RoundGivenDigits(lastDiscarded, olderDiscarded, rounding, negA ^ negB, posBigResult)) {
                         if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                            ctx.setFlags(ctx.getFlags() | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded);
+                            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
                         }
                         return retval;
                     } else if (posBigResult.testBit(0) == false && (this.helper.GetRadix() & 1) == 0) {
                         posBigResult = posBigResult.add(BigInteger.ONE);
                         if (negA ^ negB) posBigResult = posBigResult.negate();
                         if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                            ctx.setFlags(ctx.getFlags() | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded);
+                            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
                         }
                         return this.helper.CreateNew(posBigResult, bigexp);
                     }
@@ -6553,7 +6553,7 @@ var RadixMath = function(helper) {
             }
         }
         if (context.getHasFlags()) {
-            context.setFlags(context.getFlags() | signals[0]);
+            context.setFlags(context.getFlags() | (signals[0]));
         }
         return dfrac;
     };
@@ -6575,7 +6575,7 @@ var RadixMath = function(helper) {
                 var neg = this.helper.GetSign(thisValue) < 0;
                 if (!this.RoundGivenDigits(lastDiscarded, olderDiscarded, context.getRounding(), neg, mantabs)) {
                     if (context.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                        context.setFlags(context.getFlags() | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded);
+                        context.setFlags(context.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
                     }
                     if (!context.getHasExponentRange()) return thisValue;
                     var fastExp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
@@ -6586,7 +6586,7 @@ var RadixMath = function(helper) {
                     }
                 } else {
                     if (context.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                        context.setFlags(context.getFlags() | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded);
+                        context.setFlags(context.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
                     }
                     mantabs = mantabs.add(BigInteger.ONE);
                     if (mantabs.compareTo(radixPower) < 0) {
@@ -6622,7 +6622,7 @@ var RadixMath = function(helper) {
             }
         }
         if (context.getHasFlags()) {
-            context.setFlags(context.getFlags() | signals[0]);
+            context.setFlags(context.getFlags() | (signals[0]));
         }
         return dfrac;
     };
@@ -6673,7 +6673,7 @@ var RadixMath = function(helper) {
         if (ctx != null && ctx.getHasFlags()) {
             var flags = tmpctx.getFlags();
             flags &= ~PrecisionContext.FlagUnderflow;
-            ctx.setFlags(ctx.getFlags() | flags);
+            ctx.setFlags(ctx.getFlags() | (flags));
         }
         return ret;
     };
@@ -6685,7 +6685,7 @@ var RadixMath = function(helper) {
             var pctx = (ctx == null) ? null : ctx.WithPrecision(0).WithBlankFlags();
             var ret = this.Quantize(thisValue, this.helper.CreateNew(BigInteger.ONE, expOther), pctx);
             if (ctx != null && ctx.getHasFlags()) {
-                ctx.setFlags(ctx.getFlags() | pctx.getFlags());
+                ctx.setFlags(ctx.getFlags() | (pctx.getFlags()));
             }
             return ret;
         }
@@ -6744,7 +6744,7 @@ var RadixMath = function(helper) {
                 var ctxtmp = ctx.WithBlankFlags();
                 ret = this.RoundToPrecision(ret, ctxtmp);
                 if (ctx.getHasFlags()) {
-                    ctx.setFlags(ctx.getFlags() | (ctx.getFlags() & ~PrecisionContext.FlagClamped));
+                    ctx.setFlags(ctx.getFlags() | (ctxtmp.getFlags() & ~PrecisionContext.FlagClamped));
                 }
             }
             ret = this.EnsureSign(ret, sign);
@@ -7814,7 +7814,7 @@ function(mantissa, exponent) {
     
     constructor.FromSingle = function(flt) {
         var value = Float.floatToRawIntBits(flt);
-        var fpExponent = (((value >> 23) & 255)|0);
+        var fpExponent = ((value >> 23) & 255);
         if (fpExponent == 255) throw ("Value is infinity or NaN");
         var fpMantissa = value & 8388607;
         if (fpExponent == 0) fpExponent++; else fpMantissa |= (1 << 23);
@@ -7853,7 +7853,7 @@ function(mantissa, exponent) {
     
     constructor.FromDouble = function(dbl) {
         var value = Extras.DoubleToIntegers(dbl);
-        var fpExponent = (((value[1] >> 20) & 2047)|0);
+        var fpExponent = ((value[1] >> 20) & 2047);
         var neg = (value[1] >> 31) != 0;
         if (fpExponent == 2047) throw ("Value is infinity or NaN");
         value[1] = value[1] & 1048575;
@@ -8199,7 +8199,7 @@ function(mantissa, exponent) {
     
     constructor.FromSingle = function(flt) {
         var value = Float.floatToRawIntBits(flt);
-        var fpExponent = (((value >> 23) & 255)|0);
+        var fpExponent = ((value >> 23) & 255);
         if (fpExponent == 255) throw ("Value is infinity or NaN");
         var fpMantissa = value & 8388607;
         if (fpExponent == 0) fpExponent++; else fpMantissa |= (1 << 23);
@@ -8215,7 +8215,7 @@ function(mantissa, exponent) {
     
     constructor.FromDouble = function(dbl) {
         var value = Extras.DoubleToIntegers(dbl);
-        var fpExponent = (((value[1] >> 20) & 2047)|0);
+        var fpExponent = ((value[1] >> 20) & 2047);
         var neg = (value[1] >> 31) != 0;
         if (fpExponent == 2047) throw ("Value is infinity or NaN");
         value[1] = value[1] & 1048575;

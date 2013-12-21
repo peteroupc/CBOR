@@ -375,7 +375,7 @@ bigrem=divrem[1];
           ctx2.setFlags(0);
         }
         if(ctx.getHasFlags()){
-          ctx.setFlags(ctx.getFlags()|ctx2.getFlags());
+          ctx.setFlags(ctx.getFlags()|(ctx2.getFlags()));
         }
         return val;
       }
@@ -431,7 +431,7 @@ bigrem=divrem[1];
                              ctx2,
                              IntegerModeFixedScale, desiredExponent,null);
       if (ctx != null && ctx.getHasFlags()) {
-        ctx.setFlags(ctx.getFlags()|ctx2.getFlags());
+        ctx.setFlags(ctx.getFlags()|(ctx2.getFlags()));
       }
       return ret;
     }
@@ -524,7 +524,7 @@ bigrem=divrem[1];
         }
       }
       if (ctx.getHasFlags()) {
-        ctx.setFlags(ctx.getFlags()|flags);
+        ctx.setFlags(ctx.getFlags()|(flags));
       }
       if (neg) {
         newmantissa=newmantissa.negate();
@@ -586,7 +586,7 @@ bigrem=divrem[1];
           if(ctx!=null && ctx.getHasFlags() && fastDesiredExponent.compareTo(naturalExponent)>0){
             // Treat as rounded if the desired exponent is greater
             // than the "ideal" exponent
-            ctx.setFlags(ctx.getFlags()|PrecisionContext.FlagRounded);
+            ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
           }
           if(expdiff.compareTo(fastDesiredExponent)<=0){
             shift=FastInteger.Copy(fastDesiredExponent).Subtract(expdiff);
@@ -759,7 +759,7 @@ rem=divrem[1];
         if(ctx!=null && ctx.getHasFlags() && exp.compareTo(naturalExponent)>0){
           // Treat as rounded if the true exponent is greater
           // than the "ideal" exponent
-          ctx.setFlags(ctx.getFlags()|PrecisionContext.FlagRounded);
+          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
         }
         BigInteger bigexp=exp.AsBigInteger();
         T retval=helper.CreateNew(
@@ -769,14 +769,14 @@ rem=divrem[1];
           // already occurred above
           if(!RoundGivenDigits(lastDiscarded,olderDiscarded,rounding,negA^negB,posBigResult)){
             if(ctx!=null && ctx.getHasFlags() && (lastDiscarded|olderDiscarded)!=0){
-              ctx.setFlags(ctx.getFlags()|PrecisionContext.FlagInexact|PrecisionContext.FlagRounded);
+              ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact|PrecisionContext.FlagRounded));
             }
             return retval;
           } else if(posBigResult.testBit(0)==false && (helper.GetRadix()&1)==0){
             posBigResult=posBigResult.add(BigInteger.ONE);
             if(negA^negB)posBigResult=posBigResult.negate();
             if(ctx!=null && ctx.getHasFlags() && (lastDiscarded|olderDiscarded)!=0){
-              ctx.setFlags(ctx.getFlags()|PrecisionContext.FlagInexact|PrecisionContext.FlagRounded);
+              ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact|PrecisionContext.FlagRounded));
             }
             return helper.CreateNew(posBigResult,bigexp);
           }
@@ -789,14 +789,14 @@ rem=divrem[1];
             // already occurred above
             if(!RoundGivenDigits(lastDiscarded,olderDiscarded,rounding,negA^negB,posBigResult)){
               if(ctx!=null && ctx.getHasFlags() && (lastDiscarded|olderDiscarded)!=0){
-                ctx.setFlags(ctx.getFlags()|PrecisionContext.FlagInexact|PrecisionContext.FlagRounded);
+                ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact|PrecisionContext.FlagRounded));
               }
               return retval;
             } else if(posBigResult.testBit(0)==false && (helper.GetRadix()&1)==0){
               posBigResult=posBigResult.add(BigInteger.ONE);
               if(negA^negB)posBigResult=posBigResult.negate();
               if(ctx!=null && ctx.getHasFlags() && (lastDiscarded|olderDiscarded)!=0){
-                ctx.setFlags(ctx.getFlags()|PrecisionContext.FlagInexact|PrecisionContext.FlagRounded);
+                ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact|PrecisionContext.FlagRounded));
               }
               return helper.CreateNew(posBigResult,bigexp);
             }
@@ -964,7 +964,7 @@ rem=divrem[1];
         }
       }
       if (context.getHasFlags()) {
-        context.setFlags(context.getFlags()|signals[0]);
+        context.setFlags(context.getFlags()|(signals[0]));
       }
       return dfrac;
     }
@@ -1004,7 +1004,7 @@ rem=divrem[1];
           if(!RoundGivenDigits(lastDiscarded,olderDiscarded,context.getRounding(),
                                neg,mantabs)){
             if(context.getHasFlags() && (lastDiscarded|olderDiscarded)!=0){
-              context.setFlags(context.getFlags()|PrecisionContext.FlagInexact|PrecisionContext.FlagRounded);
+              context.setFlags(context.getFlags()|(PrecisionContext.FlagInexact|PrecisionContext.FlagRounded));
             }
             if (!context.getHasExponentRange())
               return thisValue;
@@ -1019,7 +1019,7 @@ rem=divrem[1];
             }
           } else {
             if(context.getHasFlags() && (lastDiscarded|olderDiscarded)!=0){
-              context.setFlags(context.getFlags()|PrecisionContext.FlagInexact|PrecisionContext.FlagRounded);
+              context.setFlags(context.getFlags()|(PrecisionContext.FlagInexact|PrecisionContext.FlagRounded));
             }
             mantabs=mantabs.add(BigInteger.ONE);
             if(mantabs.compareTo(radixPower)<0){
@@ -1067,7 +1067,7 @@ rem=divrem[1];
         }
       }
       if (context.getHasFlags()) {
-        context.setFlags(context.getFlags()|signals[0]);
+        context.setFlags(context.getFlags()|(signals[0]));
       }
       return dfrac;
     }
@@ -1134,7 +1134,7 @@ rem=divrem[1];
       if (ctx != null && ctx.getHasFlags()) {
         int flags = tmpctx.getFlags();
         flags &= ~PrecisionContext.FlagUnderflow;
-        ctx.setFlags(ctx.getFlags()|flags);
+        ctx.setFlags(ctx.getFlags()|(flags));
       }
       return ret;
     }
@@ -1158,7 +1158,7 @@ rem=divrem[1];
           BigInteger.ONE, expOther),
                          pctx);
         if (ctx != null && ctx.getHasFlags()) {
-          ctx.setFlags(ctx.getFlags()|pctx.getFlags());
+          ctx.setFlags(ctx.getFlags()|(pctx.getFlags()));
         }
         return ret;
       }
@@ -1209,7 +1209,7 @@ rem=divrem[1];
         ctx.WithBlankFlags();
       T ret = RoundToExponentExact(thisValue, exponent, pctx);
       if (ctx != null && ctx.getHasFlags()) {
-        ctx.setFlags(ctx.getFlags()|(pctx.getFlags()&~(PrecisionContext.FlagInexact|PrecisionContext.FlagRounded)));
+        ctx.setFlags(ctx.getFlags()|((pctx.getFlags()&~(PrecisionContext.FlagInexact|PrecisionContext.FlagRounded))));
       }
       return ret;
     }
@@ -1250,7 +1250,7 @@ bigrem=divrem[1];
           PrecisionContext ctxtmp=ctx.WithBlankFlags();
           ret=RoundToPrecision(ret,ctxtmp);
           if(ctx.getHasFlags()){
-            ctx.setFlags(ctx.getFlags()|(ctx.getFlags()&~PrecisionContext.FlagClamped));
+            ctx.setFlags(ctx.getFlags()|((ctxtmp.getFlags()&~PrecisionContext.FlagClamped)));
           }
         }
         ret=EnsureSign(ret,sign);
