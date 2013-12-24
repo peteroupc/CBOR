@@ -157,6 +157,7 @@ package com.upokecenter.util;
     }
     /**
      * 
+     * @return A 32-bit signed integer.
      */
     public int getOptions() {
       return options;
@@ -230,6 +231,7 @@ package com.upokecenter.util;
     }
     /**
      * 
+     * @return A 32-bit signed integer.
      */
     public int nextClean() {
       while (true) {
@@ -241,6 +243,7 @@ package com.upokecenter.util;
     /**
      * 
      * @param lastChar A 32-bit signed integer.
+     * @return A 32-bit signed integer.
      */
     public int nextClean(int lastChar) {
       while (true) {
@@ -454,6 +457,7 @@ package com.upokecenter.util;
     }
     /**
      * 
+     * @return A CBORObject object.
      */
     public CBORObject ParseJSONObjectOrArray() {
       int c;

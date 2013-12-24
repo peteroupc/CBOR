@@ -3,9 +3,9 @@ using System.Text;
 //using System.Numerics;
 
 namespace PeterO {
-    /// <summary> Encapsulates radix-independent arithmetic. </summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+  /// <summary> Encapsulates radix-independent arithmetic. </summary>
+  /// <typeparam name='T'>Data type for a numeric value in a particular
+  /// radix.</typeparam>
   class RadixMath<T> {
     
     IRadixMathHelper<T> helper;
@@ -111,7 +111,7 @@ namespace PeterO {
       return default(T);
     }
 
-    private T MinMaxHandleSpecial(T thisValue, T otherValue, PrecisionContext ctx, 
+    private T MinMaxHandleSpecial(T thisValue, T otherValue, PrecisionContext ctx,
                                   bool isMinOp, bool compareAbs){
       int thisFlags=helper.GetFlags(thisValue);
       int otherFlags=helper.GetFlags(otherValue);
@@ -144,11 +144,11 @@ namespace PeterO {
           }
           // This value is infinity
           if(isMinOp){
-            return ((thisFlags&BigNumberFlags.FlagNegative)!=0) ? 
+            return ((thisFlags&BigNumberFlags.FlagNegative)!=0) ?
               thisValue : // if negative, will be less than every other number
               RoundToPrecision(otherValue,ctx); // if positive, will be greater
           } else {
-            return ((thisFlags&BigNumberFlags.FlagNegative)==0) ? 
+            return ((thisFlags&BigNumberFlags.FlagNegative)==0) ?
               thisValue : // if positive, will be greater than every other number
               RoundToPrecision(otherValue,ctx);
           }
@@ -160,11 +160,11 @@ namespace PeterO {
             return (isMinOp) ? RoundToPrecision(thisValue,ctx) : otherValue;
           }
           if(isMinOp){
-            return ((otherFlags&BigNumberFlags.FlagNegative)==0) ? 
+            return ((otherFlags&BigNumberFlags.FlagNegative)==0) ?
               RoundToPrecision(thisValue,ctx) :
               otherValue;
           } else {
-            return ((otherFlags&BigNumberFlags.FlagNegative)!=0) ? 
+            return ((otherFlags&BigNumberFlags.FlagNegative)!=0) ?
               RoundToPrecision(thisValue,ctx) :
               otherValue;
           }
@@ -424,7 +424,7 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T DivideToIntegerNaturalScale(
       T thisValue,
       T divisor,
@@ -494,7 +494,7 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T DivideToIntegerZeroScale(
       T thisValue,
       T divisor,
@@ -527,8 +527,8 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='value'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
-public T Abs(T value, PrecisionContext ctx){
+    /// <returns>A T object.</returns>
+    public T Abs(T value, PrecisionContext ctx){
       int flags=helper.GetFlags(value);
       if((flags&BigNumberFlags.FlagSignalingNaN)!=0){
         return SignalingNaNInvalid(value,ctx);
@@ -549,8 +549,8 @@ public T Abs(T value, PrecisionContext ctx){
     /// <summary> </summary>
     /// <param name='value'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
-public T Negate(T value, PrecisionContext ctx){
+    /// <returns>A T object.</returns>
+    public T Negate(T value, PrecisionContext ctx){
       int flags=helper.GetFlags(value);
       if((flags&BigNumberFlags.FlagSignalingNaN)!=0){
         return SignalingNaNInvalid(value,ctx);
@@ -631,7 +631,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T RemainderNear(
       T thisValue,
       T divisor,
@@ -670,7 +670,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T NextMinus(
       T thisValue,
       PrecisionContext ctx
@@ -717,7 +717,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <param name='thisValue'>A T object.</param>
     /// <param name='otherValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T NextToward(
       T thisValue,
       T otherValue,
@@ -798,7 +798,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T NextPlus(
       T thisValue,
       PrecisionContext ctx
@@ -1246,9 +1246,9 @@ public T Negate(T value, PrecisionContext ctx){
     /// <summary> Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
-    /// <returns></returns>
-    /// <param name='a'> A T object.</param>
-    /// <param name='b'> A T object.</param>
+    /// <returns>A T object.</returns>
+    /// <param name='a'>A T object.</param>
+    /// <param name='b'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) throw new ArgumentNullException("a");
@@ -1258,15 +1258,15 @@ public T Negate(T value, PrecisionContext ctx){
       if((Object)result!=(Object)default(T))return result;
       int cmp = CompareTo(AbsRaw(a), AbsRaw(b));
       if (cmp == 0) return Min(a, b, ctx);
-      return (cmp < 0) ? RoundToPrecision(a,ctx) : 
+      return (cmp < 0) ? RoundToPrecision(a,ctx) :
         RoundToPrecision(b,ctx);
     }
     /// <summary> Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.
     /// </summary>
-    /// <returns></returns>
-    /// <param name='a'> A T object.</param>
-    /// <param name='b'> A T object.</param>
+    /// <returns>A T object.</returns>
+    /// <param name='a'>A T object.</param>
+    /// <param name='b'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) throw new ArgumentNullException("a");
@@ -1276,13 +1276,13 @@ public T Negate(T value, PrecisionContext ctx){
       if((Object)result!=(Object)default(T))return result;
       int cmp = CompareTo(AbsRaw(a), AbsRaw(b));
       if (cmp == 0) return Max(a, b, ctx);
-      return (cmp > 0) ? RoundToPrecision(a,ctx) : 
+      return (cmp > 0) ? RoundToPrecision(a,ctx) :
         RoundToPrecision(b,ctx);
     }
     /// <summary> Gets the greater value between two T values. </summary>
-    /// <returns> The larger value of the two objects.</returns>
-    /// <param name='a'> A T object.</param>
-    /// <param name='b'> A T object.</param>
+    /// <returns>The larger value of the two objects.</returns>
+    /// <param name='a'>A T object.</param>
+    /// <param name='b'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public T Max(T a, T b, PrecisionContext ctx) {
       if (a == null) throw new ArgumentNullException("a");
@@ -1292,26 +1292,26 @@ public T Negate(T value, PrecisionContext ctx){
       if((Object)result!=(Object)default(T))return result;
       int cmp = CompareTo(a, b);
       if (cmp != 0)
-        return cmp < 0 ? RoundToPrecision(b,ctx) : 
-        RoundToPrecision(a,ctx);
+        return cmp < 0 ? RoundToPrecision(b,ctx) :
+          RoundToPrecision(a,ctx);
       int flagNegA=(helper.GetFlags(a)&BigNumberFlags.FlagNegative);
       if(flagNegA!=(helper.GetFlags(b)&BigNumberFlags.FlagNegative)){
-        return (flagNegA!=0) ? RoundToPrecision(b,ctx) : 
-        RoundToPrecision(a,ctx);
+        return (flagNegA!=0) ? RoundToPrecision(b,ctx) :
+          RoundToPrecision(a,ctx);
       }
       if (flagNegA==0) {
-        return helper.GetExponent(a).CompareTo(helper.GetExponent(b)) > 0 ? RoundToPrecision(a,ctx) : 
-        RoundToPrecision(b,ctx);
+        return helper.GetExponent(a).CompareTo(helper.GetExponent(b)) > 0 ? RoundToPrecision(a,ctx) :
+          RoundToPrecision(b,ctx);
       } else {
-        return helper.GetExponent(a).CompareTo(helper.GetExponent(b)) > 0 ? RoundToPrecision(b,ctx) : 
-        RoundToPrecision(a,ctx);
+        return helper.GetExponent(a).CompareTo(helper.GetExponent(b)) > 0 ? RoundToPrecision(b,ctx) :
+          RoundToPrecision(a,ctx);
       }
     }
 
     /// <summary> Gets the lesser value between two T values.</summary>
-    /// <returns> The smaller value of the two objects.</returns>
-    /// <param name='a'> A T object.</param>
-    /// <param name='b'> A T object.</param>
+    /// <returns>The smaller value of the two objects.</returns>
+    /// <param name='a'>A T object.</param>
+    /// <param name='b'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public T Min(T a, T b, PrecisionContext ctx) {
       if (a == null) throw new ArgumentNullException("a");
@@ -1321,19 +1321,19 @@ public T Negate(T value, PrecisionContext ctx){
       if((Object)result!=(Object)default(T))return result;
       int cmp = CompareTo(a, b);
       if (cmp != 0)
-        return cmp > 0 ? RoundToPrecision(b,ctx) : 
-        RoundToPrecision(a,ctx);
+        return cmp > 0 ? RoundToPrecision(b,ctx) :
+          RoundToPrecision(a,ctx);
       int signANeg=helper.GetFlags(a)&BigNumberFlags.FlagNegative;
       if(signANeg!=(helper.GetFlags(b)&BigNumberFlags.FlagNegative)){
-        return (signANeg!=0) ? RoundToPrecision(a,ctx) : 
-        RoundToPrecision(b,ctx);
+        return (signANeg!=0) ? RoundToPrecision(a,ctx) :
+          RoundToPrecision(b,ctx);
       }
       if (signANeg==0) {
-        return (helper.GetExponent(a)).CompareTo(helper.GetExponent(b)) > 0 ? RoundToPrecision(b,ctx) : 
-        RoundToPrecision(a,ctx);
+        return (helper.GetExponent(a)).CompareTo(helper.GetExponent(b)) > 0 ? RoundToPrecision(b,ctx) :
+          RoundToPrecision(a,ctx);
       } else {
-        return (helper.GetExponent(a)).CompareTo(helper.GetExponent(b)) > 0 ? RoundToPrecision(a,ctx) : 
-        RoundToPrecision(b,ctx);
+        return (helper.GetExponent(a)).CompareTo(helper.GetExponent(b)) > 0 ? RoundToPrecision(a,ctx) :
+          RoundToPrecision(b,ctx);
       }
     }
 
@@ -1378,7 +1378,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <param name='multiplicand'>A T object.</param>
     /// <param name='augend'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T MultiplyAndAdd(T thisValue, T multiplicand,
                             T augend,
                             PrecisionContext ctx) {
@@ -1391,7 +1391,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='context'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T RoundToBinaryPrecision(
       T thisValue,
       PrecisionContext context
@@ -1469,7 +1469,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='context'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T Plus(
       T thisValue,
       PrecisionContext context
@@ -1479,7 +1479,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='context'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T RoundToPrecision(
       T thisValue,
       PrecisionContext context
@@ -1502,7 +1502,8 @@ public T Negate(T value, PrecisionContext ctx){
       FastInteger fastEMax = (context.HasExponentRange) ? FastInteger.FromBig(context.EMax) : null;
       FastInteger fastPrecision=FastInteger.FromBig(context.Precision);
       int thisFlags=helper.GetFlags(thisValue);
-      if (fastPrecision.Sign > 0 && fastPrecision.CompareToInt(34) <= 0 && shift.Sign==0 &&
+      if (fastPrecision.Sign > 0 && fastPrecision.CompareToInt(34) <= 0 &&
+          (shift==null || shift.Sign==0) &&
           (thisFlags&BigNumberFlags.FlagSpecial)==0) {
         // Check if rounding is necessary at all
         // for small precisions
@@ -1590,7 +1591,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <param name='thisValue'>A T object.</param>
     /// <param name='otherValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T Quantize(
       T thisValue,
       T otherValue,
@@ -1661,7 +1662,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <param name='thisValue'>A T object.</param>
     /// <param name='expOther'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T RoundToExponentExact(
       T thisValue,
       BigInteger expOther,
@@ -1685,7 +1686,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <param name='thisValue'>A T object.</param>
     /// <param name='expOther'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T RoundToExponentSimple(
       T thisValue,
       BigInteger expOther,
@@ -1718,7 +1719,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     /// <param name='exponent'>A BigInteger object.</param>
     public T RoundToExponentNoRoundedFlag(
       T thisValue,
@@ -1737,7 +1738,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     public T Reduce(
       T thisValue,
       PrecisionContext ctx
@@ -1860,10 +1861,10 @@ public T Negate(T value, PrecisionContext ctx){
       }
       FastInteger discardedBits = FastInteger.Copy(accum.DiscardedDigitCount);
       exp.Add(discardedBits);
-      //Console.WriteLine("{0}->{1} digits={2} exp={3} [curexp={4}]",bigmantissa,accum.ShiftedInt,
-      //                accum.DiscardedDigitCount,exp,helper.GetExponent(thisValue));
       FastInteger adjExponent = FastInteger.Copy(exp)
         .Add(accum.GetDigitLength()).SubtractInt(1);
+      //Console.WriteLine("{0}->{1} digits={2} exp={3} [curexp={4}] adj={5},max={6}",bigmantissa,accum.ShiftedInt,
+      //              accum.DiscardedDigitCount,exp,helper.GetExponent(thisValue),adjExponent,fastEMax);
       FastInteger newAdjExponent = adjExponent;
       FastInteger clamp = null;
       BigInteger earlyRounded=BigInteger.Zero;
@@ -2100,7 +2101,7 @@ public T Negate(T value, PrecisionContext ctx){
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A T object.</returns>
     /// <param name='other'>A T object.</param>
     public T Add(T thisValue, T other, PrecisionContext ctx) {
       int thisFlags=helper.GetFlags(thisValue);
@@ -2160,7 +2161,7 @@ public T Negate(T value, PrecisionContext ctx){
                   // first operand's mantissa can't reach the
                   // second operand's mantissa, so the exponent can be
                   // raised without affecting the result
-                  FastInteger tmp=FastInteger.Copy(fastOp2Exp).SubtractInt(8)
+                  FastInteger tmp=FastInteger.Copy(fastOp2Exp).SubtractInt(4)
                     .Subtract(digitLength1)
                     .SubtractBig(ctx.Precision);
                   FastInteger newDiff=FastInteger.Copy(tmp).Subtract(fastOp2Exp).Abs();
@@ -2177,13 +2178,14 @@ public T Negate(T value, PrecisionContext ctx){
                         BigInteger bigintTemp=precisionDiff.AsBigInteger();
                         op2Exponent-=(BigInteger)bigintTemp;
                         other=helper.CreateNewWithFlags(op2MantAbs,op2Exponent,helper.GetFlags(other));
-                        return RoundToPrecisionWithShift(other,ctx,0,1,
-                                                         new FastInteger(0),false);
+                        return RoundToPrecisionWithShift(other,ctx,0,1,null,false);
                       } else {
-                        return RoundToPrecisionWithShift(other,ctx,0,1,
-                                                         new FastInteger(0),false);
+                        FastInteger shift=FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                        return RoundToPrecisionWithShift(other,ctx,0,1,shift,false);
                       }
                     } else {
+                      if(!(op1MantAbs.IsZero))
+                        op1MantAbs = BigInteger.One;
                       op1Exponent = (tmp.AsBigInteger());
                     }
                   }
@@ -2206,7 +2208,7 @@ public T Negate(T value, PrecisionContext ctx){
                   // second operand's mantissa can't reach the
                   // first operand's mantissa, so the exponent can be
                   // raised without affecting the result
-                  FastInteger tmp=FastInteger.Copy(fastOp1Exp).SubtractInt(8)
+                  FastInteger tmp=FastInteger.Copy(fastOp1Exp).SubtractInt(4)
                     .Subtract(digitLength2)
                     .SubtractBig(ctx.Precision);
                   FastInteger newDiff=FastInteger.Copy(tmp).Subtract(fastOp1Exp).Abs();
@@ -2223,11 +2225,14 @@ public T Negate(T value, PrecisionContext ctx){
                         op1Exponent-=(BigInteger)bigintTemp;
                         thisValue=helper.CreateNewWithFlags(op1MantAbs,op1Exponent,
                                                             helper.GetFlags(thisValue));
-                        return RoundToPrecisionWithShift(thisValue,ctx,0,1, new FastInteger(0),false);
+                        return RoundToPrecisionWithShift(thisValue,ctx,0,1, null,false);
                       } else {
-                        return RoundToPrecisionWithShift(thisValue,ctx,0,1, new FastInteger(0),false);
+                        FastInteger shift=FastInteger.Copy(digitLength1).Subtract(fastPrecision);
+                        return RoundToPrecisionWithShift(thisValue,ctx,0,1, shift,false);
                       }
                     } else {
+                      if(!(op2MantAbs.IsZero))
+                        op2MantAbs = BigInteger.One;
                       op2Exponent = (tmp.AsBigInteger());
                     }
                   }
@@ -2241,12 +2246,14 @@ public T Negate(T value, PrecisionContext ctx){
         if (expcmp > 0) {
           op1MantAbs = helper.RescaleByExponentDiff(
             op1MantAbs, op1Exponent, op2Exponent);
+          //Console.WriteLine("{0} {1} -> {2}",op1MantAbs,op2MantAbs,op2MantAbs-op1MantAbs);
           retval = AddCore(
             op1MantAbs, op2MantAbs,resultExponent,
             thisFlags,otherFlags,ctx);
         } else {
           op2MantAbs = helper.RescaleByExponentDiff(
             op2MantAbs, op1Exponent, op2Exponent);
+          //Console.WriteLine("{0} {1} -> {2}",op1MantAbs,op2MantAbs,op2MantAbs-op1MantAbs);
           retval = AddCore(
             op1MantAbs, op2MantAbs,resultExponent,
             thisFlags,otherFlags,ctx);
@@ -2263,8 +2270,8 @@ public T Negate(T value, PrecisionContext ctx){
     /// <param name='decfrac'>A T object.</param>
     /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
-public T CompareToWithContext(T thisValue, T decfrac, bool treatQuietNansAsSignaling, PrecisionContext ctx){
+    /// <returns>A T object.</returns>
+    public T CompareToWithContext(T thisValue, T decfrac, bool treatQuietNansAsSignaling, PrecisionContext ctx){
       if(decfrac==null)return SignalInvalid(ctx);
       T result=CompareToHandleSpecial(thisValue,decfrac,treatQuietNansAsSignaling,ctx);
       if((Object)result!=(Object)default(T))return result;

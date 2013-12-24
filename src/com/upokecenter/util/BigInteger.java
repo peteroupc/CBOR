@@ -1727,6 +1727,7 @@ at: http://peteroupc.github.io/CBOR/
      * Initializes a BigInteger object from an array of bytes.
      * @param bytes A byte[] object.
      * @param littleEndian A Boolean object.
+     * @return A BigInteger object.
      */
     public static BigInteger fromByteArray(byte[] bytes, boolean littleEndian) {
       BigInteger bigint=new BigInteger();
@@ -1805,6 +1806,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param index A 32-bit unsigned integer.
+     * @return A Boolean object.
      */
     public boolean testBit(int index) {
       if (index < 0) throw new IllegalArgumentException("index");
@@ -1929,6 +1931,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param numberBits The number of bits to shift. Can be negative, in
      * which case this is the same as shiftRight with the absolute value of
      * numberBits.
+     * @return A BigInteger object.
      */
     public BigInteger shiftLeft(int numberBits) {
       if (numberBits == 0) return this;
@@ -1964,6 +1967,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param numberBits A 32-bit signed integer.
+     * @return A BigInteger object.
      */
     public BigInteger shiftRight(int numberBits) {
       if (numberBits == 0) return this;
@@ -1997,6 +2001,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param longerValue A 64-bit signed integer.
+     * @return A BigInteger object.
      */
     public static BigInteger valueOf(long longerValue) {
       if (longerValue == 0) return BigInteger.ZERO;
@@ -2034,6 +2039,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
+     * @return A 32-bit signed integer.
      */
     public int intValue() {
       int c = (int)this.wordCount;
@@ -2077,6 +2083,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
+     * @return A 64-bit signed integer.
      */
     public long longValue() {
       int count = this.wordCount;
@@ -2120,6 +2127,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param power A BigInteger object.
+     * @return A BigInteger object.
      */
     public BigInteger PowBigIntVar(BigInteger power) {
       if ((power) == null) throw new NullPointerException("power");
@@ -2150,6 +2158,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param powerSmall A 32-bit signed integer.
+     * @return A BigInteger object.
      */
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) throw new IllegalArgumentException("power is negative");
@@ -2177,6 +2186,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
+     * @return A BigInteger object.
      */
     public BigInteger negate() {
       BigInteger bigintRet = new BigInteger();
@@ -2187,6 +2197,7 @@ at: http://peteroupc.github.io/CBOR/
     }
     /**
      * 
+     * @return A BigInteger object.
      */
     public BigInteger abs() {
       return this.signum() >= 0 ? this : this.negate();
@@ -2308,6 +2319,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param str A string object.
+     * @return A BigInteger object.
      */
     public static BigInteger fromString(String str) {
       if(str==null)throw new NullPointerException("str");
@@ -2344,6 +2356,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Returns the greatest common divisor of two integers.
      * @param bigintSecond A BigInteger object.
+     * @return A BigInteger object.
      */
     public BigInteger gcd(BigInteger bigintSecond) {
       if ((bigintSecond) == null) throw new NullPointerException("bigintSecond");
@@ -2375,6 +2388,7 @@ at: http://peteroupc.github.io/CBOR/
      * is divided by another BigInteger.
      * @param pow A BigInteger object.
      * @param mod A BigInteger object.
+     * @return A BigInteger object.
      */
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
       if ((pow) == null) throw new NullPointerException("pow");
@@ -2803,6 +2817,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param divisor A BigInteger object.
+     * @return A BigInteger[] object.
      */
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
       if ((divisor) == null) throw new NullPointerException("divisor");
@@ -2865,6 +2880,7 @@ at: http://peteroupc.github.io/CBOR/
      * as the normal remainder if the normal remainder is positive, and equals
      * divisor minus normal remainder if the normal remainder is negative.
      * @param divisor A divisor greater than 0.
+     * @return A BigInteger object.
      */
     public BigInteger mod(BigInteger divisor) {
       if((divisor)==null)throw new NullPointerException("divisor");
@@ -2976,6 +2992,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param bi A BigInteger object.
+     * @return A BigInteger object.
      */
     public BigInteger Sqrt(BigInteger bi) {
       if (this.signum() < 0)

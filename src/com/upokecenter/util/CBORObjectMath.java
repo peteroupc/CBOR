@@ -19,6 +19,7 @@ private CBORObjectMath(){}
      * 
      * @param a A CBORObject object.
      * @param b A CBORObject object.
+     * @return A CBORObject object.
      */
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) throw new NullPointerException("a");

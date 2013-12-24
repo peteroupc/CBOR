@@ -15,11 +15,11 @@ namespace PeterO {
   public static class DataUtilities {
     private static int StreamedStringBufferLength = 4096;
     /// <summary> Generates a text string from a UTF-8 byte array. </summary>
-    /// <param name='bytes'> A byte array containing text encoded in UTF-8.</param>
-    /// <param name='replace'> If true, replaces invalid encoding with
+    /// <param name='bytes'>A byte array containing text encoded in UTF-8.</param>
+    /// <param name='replace'>If true, replaces invalid encoding with
     /// the replacement character (U+FFFD). If false, stops processing
     /// when invalid UTF-8 is seen.</param>
-    /// <returns> A string represented by the UTF-8 byte array.</returns>
+    /// <returns>A string represented by the UTF-8 byte array.</returns>
     /// <exception cref='System.ArgumentNullException'> "bytes" is
     /// null.</exception>
     /// <exception cref='System.ArgumentException'> The string is not
@@ -33,13 +33,13 @@ namespace PeterO {
     }
     /// <summary> Generates a text string from a portion of a UTF-8 byte array.
     /// </summary>
-    /// <param name='bytes'> A byte array containing text encoded in UTF-8.</param>
-    /// <param name='offset'> Offset into the byte array to start reading</param>
-    /// <param name='bytesCount'> Length, in bytes, of the UTF-8 string</param>
-    /// <param name='replace'> If true, replaces invalid encoding with
+    /// <param name='bytes'>A byte array containing text encoded in UTF-8.</param>
+    /// <param name='offset'>Offset into the byte array to start reading</param>
+    /// <param name='bytesCount'>Length, in bytes, of the UTF-8 string</param>
+    /// <param name='replace'>If true, replaces invalid encoding with
     /// the replacement character (U+FFFD). If false, stops processing
     /// when invalid UTF-8 is seen.</param>
-    /// <returns> A string represented by the UTF-8 byte array.</returns>
+    /// <returns>A string represented by the UTF-8 byte array.</returns>
     /// <exception cref='System.ArgumentNullException'> "bytes" is
     /// null.</exception>
     /// <exception cref='System.ArgumentException'> The portion of the
@@ -51,11 +51,11 @@ namespace PeterO {
       return b.ToString();
     }
     /// <summary> Encodes a string in UTF-8 as a byte array. </summary>
-    /// <param name='str'> A text string.</param>
-    /// <param name='replace'> If true, replaces unpaired surrogate code
+    /// <param name='str'>A text string.</param>
+    /// <param name='replace'>If true, replaces unpaired surrogate code
     /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
-    /// <returns> The string encoded in UTF-8.</returns>
+    /// <returns>The string encoded in UTF-8.</returns>
     /// <exception cref='System.ArgumentNullException'> "str" is null.</exception>
     /// <exception cref='System.ArgumentException'> The string contains
     /// an unpaired surrogate code point and "replace" is false, or an internal
@@ -73,13 +73,13 @@ namespace PeterO {
     }
     /// <summary> Calculates the number of bytes needed to encode a string
     /// in UTF-8. </summary>
-    /// <param name='replace'> If true, treats unpaired surrogate code
+    /// <param name='replace'>If true, treats unpaired surrogate code
     /// points as replacement characters (U+FFFD) instead, meaning each
     /// one takes 3 UTF-8 bytes. If false, stops processing when an unpaired
     /// surrogate code point is reached.</param>
-    /// <returns> The number of bytes needed to encode the given string in
+    /// <returns>The number of bytes needed to encode the given string in
     /// UTF-8, or -1 if the string contains an unpaired surrogate code point
-    /// and "replace" is false.</returns>
+    /// and &quot;replace&quot; is false.</returns>
     /// <exception cref='System.ArgumentNullException'> "s" is null.</exception>
     /// <param name='str'>A String object.</param>
     public static long GetUtf8Length(String str, bool replace) {
@@ -112,12 +112,13 @@ namespace PeterO {
     }
     /// <summary> Compares two strings in Unicode code point order. Unpairedsurrogates
     /// are treated as individual code points.</summary>
-    /// <returns> A value indicating which string is "less" or "greater".
-    /// 0: Both strings are equal or null. Less than 0: a is null and b isn't;
-    /// or the first code point that's different is less in A than in B; or b starts
-    /// with a and is longer than a. Greater than 0: b is null and a isn't; or the
-    /// first code point that's different is greater in A than in B; or a starts
-    /// with b and is longer than b.</returns>
+    /// <returns>A value indicating which string is &quot;less&quot; or
+    /// &quot;greater&quot;. 0: Both strings are equal or null. Less than
+    /// 0: a is null and b isn&apos;t; or the first code point that&apos;s different
+    /// is less in A than in B; or b starts with a and is longer than a. Greater
+    /// than 0: b is null and a isn&apos;t; or the first code point that&apos;s
+    /// different is greater in A than in B; or a starts with b and is longer than
+    /// b.</returns>
     /// <param name='strA'>The first string.</param>
     /// <param name='strB'>The second string.</param>
     public static int CodePointCompare(String strA, String strB) {
@@ -165,16 +166,16 @@ namespace PeterO {
     }
     /// <summary> Writes a portion of a string in UTF-8 encoding to a data stream.
     /// </summary>
-    /// <param name='str'> A string to write.</param>
-    /// <param name='offset'> The zero-based index where the string portion
+    /// <param name='str'>A string to write.</param>
+    /// <param name='offset'>The zero-based index where the string portion
     /// to write begins.</param>
-    /// <param name='length'> The length of the string portion to write.</param>
-    /// <param name='stream'> A writable data stream.</param>
-    /// <param name='replace'> If true, replaces unpaired surrogate code
+    /// <param name='length'>The length of the string portion to write.</param>
+    /// <param name='stream'>A writable data stream.</param>
+    /// <param name='replace'>If true, replaces unpaired surrogate code
     /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
-    /// <returns> 0 if the entire string portion was written; or -1 if the string
-    /// portion contains an unpaired surrogate code point and "replace"
+    /// <returns>0 if the entire string portion was written; or -1 if the string
+    /// portion contains an unpaired surrogate code point and &quot;replace&quot;
     /// is false.</returns>
     /// <exception cref='System.ArgumentNullException'> "str" is null
     /// or "stream" is null.</exception>
@@ -253,13 +254,13 @@ namespace PeterO {
       return retval;
     }
     /// <summary> Writes a string in UTF-8 encoding to a data stream. </summary>
-    /// <param name='str'> A string to write.</param>
-    /// <param name='stream'> A writable data stream.</param>
-    /// <param name='replace'> If true, replaces unpaired surrogate code
+    /// <param name='str'>A string to write.</param>
+    /// <param name='stream'>A writable data stream.</param>
+    /// <param name='replace'>If true, replaces unpaired surrogate code
     /// points with the replacement character (U+FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
-    /// <returns> 0 if the entire string was written; or -1 if the string contains
-    /// an unpaired surrogate code point and "replace" is false.</returns>
+    /// <returns>0 if the entire string was written; or -1 if the string contains
+    /// an unpaired surrogate code point and &quot;replace&quot; is false.</returns>
     /// <exception cref='System.ArgumentNullException'> "str" is null
     /// or "stream" is null.</exception>
     /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
@@ -268,16 +269,16 @@ namespace PeterO {
       return WriteUtf8(str, 0, str.Length, stream, replace);
     }
     /// <summary> Reads a string in UTF-8 encoding from a byte array. </summary>
-    /// <param name='data'> A byte array containing a UTF-8 string</param>
-    /// <param name='offset'> Offset into the byte array to start reading</param>
-    /// <param name='bytesCount'> Length, in bytes, of the UTF-8 string</param>
-    /// <param name='builder'> A string builder object where the resulting
+    /// <param name='data'>A byte array containing a UTF-8 string</param>
+    /// <param name='offset'>Offset into the byte array to start reading</param>
+    /// <param name='bytesCount'>Length, in bytes, of the UTF-8 string</param>
+    /// <param name='builder'>A string builder object where the resulting
     /// string will be stored.</param>
-    /// <param name='replace'> If true, replaces invalid encoding with
+    /// <param name='replace'>If true, replaces invalid encoding with
     /// the replacement character (U+FFFD). If false, stops processing
     /// when invalid UTF-8 is seen.</param>
-    /// <returns> 0 if the entire string was read without errors, or -1 if the
-    /// string is not valid UTF-8 and "replace" is false.</returns>
+    /// <returns>0 if the entire string was read without errors, or -1 if the
+    /// string is not valid UTF-8 and &quot;replace&quot; is false.</returns>
     /// <exception cref='System.ArgumentNullException'> "data" is null
     /// or "builder" is null.</exception>
     /// <exception cref='System.ArgumentException'> "offset" is less
@@ -369,18 +370,18 @@ namespace PeterO {
       return 0;
     }
     /// <summary> Reads a string in UTF-8 encoding from a data stream. </summary>
-    /// <param name='stream'> A readable data stream.</param>
-    /// <param name='bytesCount'> The length, in bytes, of the string. If
+    /// <param name='stream'>A readable data stream.</param>
+    /// <param name='bytesCount'>The length, in bytes, of the string. If
     /// this is less than 0, this function will read until the end of the stream.</param>
-    /// <param name='builder'> A string builder object where the resulting
+    /// <param name='builder'>A string builder object where the resulting
     /// string will be stored.</param>
-    /// <param name='replace'> If true, replaces invalid encoding with
+    /// <param name='replace'>If true, replaces invalid encoding with
     /// the replacement character (U+FFFD). If false, stops processing
     /// when an unpaired surrogate code point is seen.</param>
-    /// <returns> 0 if the entire string was read without errors, -1 if the
-    /// string is not valid UTF-8 and "replace" is false (even if the end of
-    /// the stream is reached), or -2 if the end of the stream was reached before
-    /// the entire string was read. </returns>
+    /// <returns>0 if the entire string was read without errors, -1 if the
+    /// string is not valid UTF-8 and &quot;replace&quot; is false (even
+    /// if the end of the stream is reached), or -2 if the end of the stream was
+    /// reached before the entire string was read.</returns>
     /// <exception cref='System.IO.IOException'> An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentNullException'> "stream" is
     /// null or "builder" is null.</exception>

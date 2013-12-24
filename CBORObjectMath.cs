@@ -13,9 +13,9 @@ namespace PeterO {
   static class CBORObjectMath {
     private static CBORObject NaN = CBORObject.FromObject(Double.NaN);
     /// <summary> </summary>
-    /// <param name='a'> A CBORObject object.</param>
-    /// <param name='b'> A CBORObject object.</param>
-    /// <returns></returns>
+    /// <param name='a'>A CBORObject object.</param>
+    /// <param name='b'>A CBORObject object.</param>
+    /// <returns>A CBORObject object.</returns>
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");

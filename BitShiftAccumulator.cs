@@ -28,7 +28,7 @@ namespace PeterO {
     FastInteger knownBitLength;
     
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A FastInteger object.</returns>
     public FastInteger GetDigitLength(){
       if (knownBitLength==null) {
         knownBitLength = CalcKnownBitLength();
@@ -108,7 +108,7 @@ namespace PeterO {
       return bsa;
     }
     /// <summary> </summary>
-    /// <param name='fastint'> A FastInteger object.</param>
+    /// <param name='fastint'>A FastInteger object.</param>
     /// <returns></returns>
     public void ShiftRight(FastInteger fastint) {
       if (fastint.Sign <= 0) return;

@@ -17,7 +17,7 @@ namespace PeterO {
   // are specific to the .NET framework.
   public sealed partial class CBORObject {
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>An UInt16 object.</returns>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
       int v = AsInt32();
@@ -26,7 +26,7 @@ namespace PeterO {
       return (ushort)v;
     }
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A 32-bit unsigned integer.</returns>
     [CLSCompliant(false)]
     public uint AsUInt32() {
       ulong v = AsUInt64();
@@ -35,7 +35,7 @@ namespace PeterO {
       return (uint)v;
     }
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A SByte object.</returns>
     [CLSCompliant(false)]
     public sbyte AsSByte() {
       int v = AsInt32();
@@ -117,7 +117,7 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
                            newDecimal.Mantissa.Sign<0);
     }
     /// <summary> Converts this object to a .NET decimal. </summary>
-    /// <returns> The closest big integer to this object.</returns>
+    /// <returns>The closest big integer to this object.</returns>
     /// <exception cref='System.InvalidOperationException'> This object's
     /// type is not a number type. </exception>
     /// <exception cref='System.OverflowException'> This object's value
@@ -153,7 +153,7 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
     }
     /// <summary> Converts this object to a 64-bit unsigned integer. Floating
     /// point values are truncated to an integer. </summary>
-    /// <returns> The closest big integer to this object.</returns>
+    /// <returns>The closest big integer to this object.</returns>
     /// <exception cref='System.InvalidOperationException'> This object's
     /// type is not a number type. </exception>
     /// <exception cref='System.OverflowException'> This object's value
@@ -203,7 +203,7 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
     /// <summary> </summary>
     /// <param name='value'>A SByte object.</param>
     /// <returns></returns>
-    /// <param name='stream'>A Stream object.</param>
+    /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
     public static void Write(sbyte value, Stream stream) {
       Write((long)value, stream);
@@ -211,7 +211,7 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
     /// <summary> </summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns></returns>
-    /// <param name='stream'>A Stream object.</param>
+    /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
       if((stream)==null)throw new ArgumentNullException("stream");
@@ -231,7 +231,7 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
     }
     /// <summary> </summary>
     /// <param name='value'>A Decimal object.</param>
-    /// <returns></returns>
+    /// <returns>A CBORObject object.</returns>
     public static CBORObject FromObject(decimal value) {
       if (Math.Round(value) == value) {
         // This is an integer
@@ -272,43 +272,43 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
     /// <summary> </summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <returns></returns>
-    /// <param name='stream'>A Stream object.</param>
+    /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
     public static void Write(uint value, Stream stream) {
       Write((ulong)value, stream);
     }
     /// <summary> </summary>
-    /// <param name='value'>A UInt16 object.</param>
+    /// <param name='value'>An UInt16 object.</param>
     /// <returns></returns>
-    /// <param name='stream'>A Stream object.</param>
+    /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
     public static void Write(ushort value, Stream stream) {
       Write((ulong)value, stream);
     }
     /// <summary> </summary>
     /// <param name='value'>A SByte object.</param>
-    /// <returns></returns>
+    /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(sbyte value) {
       return FromObject((long)value);
     }
     /// <summary> </summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
-    /// <returns></returns>
+    /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ulong value) {
       return FromObject(DecimalToBigInteger((decimal)value));
     }
     /// <summary> </summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
-    /// <returns></returns>
+    /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(uint value) {
       return FromObject((long)value);
     }
     /// <summary> </summary>
-    /// <param name='value'>A UInt16 object.</param>
-    /// <returns></returns>
+    /// <param name='value'>An UInt16 object.</param>
+    /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ushort value) {
       return FromObject((long)value);
@@ -316,7 +316,7 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
     /// <summary> </summary>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='tag'>A 64-bit unsigned integer.</param>
-    /// <returns></returns>
+    /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, DecimalToBigInteger((decimal)tag));
@@ -363,16 +363,16 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
       return new String(charbuf);
     }
     /// <summary> </summary>
-    /// <param name='value'> A DateTime object.</param>
-    /// <returns></returns>
+    /// <param name='value'>A DateTime object.</param>
+    /// <returns>A CBORObject object.</returns>
     public static CBORObject FromObject(DateTime value) {
       return new CBORObject(
         FromObject(DateTimeToString(value)), 0, 0);
     }
     /// <summary> Writes a date and time in CBOR format to a data stream. </summary>
-    /// <param name='bi'> A DateTime object.</param>
+    /// <param name='bi'>A DateTime object.</param>
     /// <returns></returns>
-    /// <param name='stream'> A Stream object.</param>
+    /// <param name='stream'>A writable data stream.</param>
     public static void Write(DateTime bi, Stream stream) {
       if ((stream) == null) throw new ArgumentNullException("stream");
       stream.WriteByte(0xC0);

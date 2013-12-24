@@ -15,9 +15,9 @@ namespace PeterO {
     private const string Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private const string Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     /// <summary> </summary>
-    /// <param name='str'> A StringBuilder object.</param>
-    /// <param name='data'> A byte[] object.</param>
-    /// <param name='padding'> A Boolean object.</param>
+    /// <param name='str'>A StringBuilder object.</param>
+    /// <param name='data'>A byte[] object.</param>
+    /// <param name='padding'>A Boolean object.</param>
     /// <returns></returns>
     public static void ToBase64(StringBuilder str, byte[] data, bool padding) {
       ToBase64(str, data, Base64, padding);

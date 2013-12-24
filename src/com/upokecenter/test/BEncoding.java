@@ -20,6 +20,7 @@ import java.io.*;
      * strings in UTF-8. This class also demonstrates how CBORObject supports
      * predefined serialization formats.
      * @param stream A readable data stream.
+     * @return A CBORObject object.
      */
   public final class BEncoding {
 private BEncoding(){}

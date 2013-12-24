@@ -20,8 +20,8 @@ namespace PeterO {
     /// <summary> Parses a number whose format follows the JSON specification.
     /// See #ParseJSONNumber(str, integersOnly, parseOnly) for more information.
     /// </summary>
-    /// <param name='str'> A string to parse.</param>
-    /// <returns> A CBOR object that represents the parsed number. This function
+    /// <param name='str'>A string to parse.</param>
+    /// <returns>A CBOR object that represents the parsed number. This function
     /// will return a CBOR object representing positive or negative infinity
     /// if the exponent is greater than 2^64-1 (unless the value is 0), and
     /// will return zero if the exponent is less than -(2^64).</returns>
@@ -33,18 +33,18 @@ namespace PeterO {
     /// minus sign, one or more digits (starting with 1 to 9 unless the only
     /// digit is 0), an optional decimal point with one or more digits, and
     /// an optional letter E or e with one or more digits (the exponent). </summary>
-    /// <param name='str'> A string to parse.</param>
-    /// <param name='integersOnly'> If true, no decimal points or exponents
+    /// <param name='str'>A string to parse.</param>
+    /// <param name='integersOnly'>If true, no decimal points or exponents
     /// are allowed in the string.</param>
-    /// <param name='positiveOnly'> If true, only positive numbers are
+    /// <param name='positiveOnly'>If true, only positive numbers are
     /// allowed (the leading minus is disallowed).</param>
-    /// <param name='failOnExponentOverflow'> If true, this function
+    /// <param name='failOnExponentOverflow'>If true, this function
     /// will return null if the exponent is less than -(2^64) or greater than
     /// 2^64-1 (unless the value is 0). If false, this function will return
     /// a CBOR object representing positive or negative infinity if the exponent
     /// is greater than 2^64-1 (unless the value is 0), and will return zero
     /// if the exponent is less than -(2^64).</param>
-    /// <returns> A CBOR object that represents the parsed number.</returns>
+    /// <returns>A CBOR object that represents the parsed number.</returns>
     public static CBORObject ParseJSONNumber(string str,
                                              bool integersOnly,
                                              bool positiveOnly,

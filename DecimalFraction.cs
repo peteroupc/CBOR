@@ -28,8 +28,8 @@ namespace PeterO {
     #region Equals and GetHashCode implementation
     /// <summary> Determines whether this object's mantissa and exponent
     /// are equal to those of another object. </summary>
-    /// <returns></returns>
-    /// <param name='other'> A DecimalFraction object.</param>
+    /// <returns>A Boolean object.</returns>
+    /// <param name='other'>A DecimalFraction object.</param>
     public bool EqualsInternal(DecimalFraction other) {
       DecimalFraction otherValue = other as DecimalFraction;
       if (otherValue == null)
@@ -41,20 +41,20 @@ namespace PeterO {
     
     /// <summary> </summary>
     /// <param name='other'>A DecimalFraction object.</param>
-    /// <returns></returns>
+    /// <returns>A Boolean object.</returns>
     public bool Equals(DecimalFraction other) {
       return EqualsInternal(other);
     }
     /// <summary> Determines whether this object's mantissa and exponent
     /// are equal to those of another object and that other object is a decimal
     /// fraction. </summary>
-    /// <returns> True if the objects are equal; false otherwise.</returns>
-    /// <param name='obj'> A Object object.</param>
+    /// <returns>True if the objects are equal; false otherwise.</returns>
+    /// <param name='obj'>An arbitrary object.</param>
     public override bool Equals(object obj) {
       return EqualsInternal(obj as DecimalFraction);
     }
     /// <summary> Calculates this object's hash code. </summary>
-    /// <returns> This object's hash code.</returns>
+    /// <returns>This object&apos;s hash code.</returns>
     public override int GetHashCode() {
       int hashCode = 0;
       unchecked {
@@ -66,8 +66,8 @@ namespace PeterO {
     #endregion
     /// <summary> Creates a decimal fraction with the value exponent*10^mantissa.
     /// </summary>
-    /// <param name='mantissa'> The unscaled value.</param>
-    /// <param name='exponent'> The decimal exponent.</param>
+    /// <param name='mantissa'>The unscaled value.</param>
+    /// <param name='exponent'>The decimal exponent.</param>
     public DecimalFraction(BigInteger mantissa, BigInteger exponent) {
       this.exponent = exponent;
       this.mantissa = mantissa;
@@ -88,8 +88,8 @@ namespace PeterO {
     /// <para> The format generally follows the definition in java.math.BigDecimal(),
     /// except that the digits must be ASCII digits ('0' through '9').</para>
     /// </summary>
-    /// <param name='str'> A string that represents a number.</param>
-    /// <returns></returns>
+    /// <param name='str'>A string that represents a number.</param>
+    /// <returns>A DecimalFraction object.</returns>
     public static DecimalFraction FromString(String str) {
       return ExtendedDecimal.FromString(str).ToDecimalFraction();
     }
@@ -387,28 +387,28 @@ namespace PeterO {
     private sealed class DecimalMathHelper : IRadixMathHelper<DecimalFraction> {
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
       public int GetRadix() {
         return 10;
       }
 
     /// <summary> </summary>
     /// <param name='value'>A DecimalFraction object.</param>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
       public int GetSign(DecimalFraction value) {
         return value.Sign;
       }
 
     /// <summary> </summary>
     /// <param name='value'>A DecimalFraction object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
       public BigInteger GetMantissa(DecimalFraction value) {
         return value.mantissa;
       }
 
     /// <summary> </summary>
     /// <param name='value'>A DecimalFraction object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
       public BigInteger GetExponent(DecimalFraction value) {
         return value.exponent;
       }
@@ -417,7 +417,7 @@ namespace PeterO {
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='e1'>A BigInteger object.</param>
     /// <param name='e2'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
         bool negative = (mantissa.Sign < 0);
         if (mantissa.Sign == 0) return BigInteger.Zero;
@@ -433,7 +433,7 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='exponent'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
       public DecimalFraction CreateNew(BigInteger mantissa, BigInteger exponent) {
         return new DecimalFraction(mantissa, exponent);
       }
@@ -441,14 +441,14 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='lastDigit'>A 32-bit signed integer.</param>
     /// <param name='olderDigits'>A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
         return new DigitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new DigitShiftAccumulator(bigint,0,0);
@@ -457,7 +457,7 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='numerator'>A BigInteger object.</param>
     /// <param name='denominator'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A Boolean object.</returns>
       public bool HasTerminatingRadixExpansion(BigInteger numerator, BigInteger denominator) {
         // Simplify denominator based on numerator
         BigInteger gcd = BigInteger.GreatestCommonDivisor(numerator, denominator);
@@ -482,7 +482,7 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='bigint'>A BigInteger object.</param>
     /// <param name='power'>A FastInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.Sign <= 0) return bigint;
         if (bigint.IsZero) return bigint;
@@ -504,7 +504,7 @@ namespace PeterO {
       
     /// <summary> </summary>
     /// <param name='value'>A DecimalFraction object.</param>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(DecimalFraction value)
       {
         return value.mantissa.Sign<0 ? BigNumberFlags.FlagNegative : 0;
@@ -514,7 +514,7 @@ namespace PeterO {
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='exponent'>A BigInteger object.</param>
     /// <param name='flags'>A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
       public DecimalFraction CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags)
       {
         bool neg=(flags&BigNumberFlags.FlagNegative)!=0;
@@ -524,7 +524,7 @@ namespace PeterO {
       }
       
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport()
       {
         return BigNumberFlags.FiniteOnly;
@@ -532,7 +532,7 @@ namespace PeterO {
       
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
 public DecimalFraction ValueOf(int val)
       {
         if(val==0)return Zero;
@@ -575,7 +575,7 @@ public DecimalFraction ValueOf(int val)
     /// <summary> Converts this value to an arbitrary-precision integer.
     /// Any fractional part in this value will be discarded when converting
     /// to a big integer. </summary>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger ToBigInteger() {
       int sign = this.Exponent.Sign;
       if (sign == 0) {
@@ -594,7 +594,7 @@ public DecimalFraction ValueOf(int val)
     }
     /// <summary> Converts this value to a 32-bit floating-point number.
     /// The half-even rounding mode is used. </summary>
-    /// <returns> The closest 32-bit floating-point number to this value.
+    /// <returns>The closest 32-bit floating-point number to this value.
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 32-bit floating point number.</returns>
     public float ToSingle() {
@@ -602,7 +602,7 @@ public DecimalFraction ValueOf(int val)
     }
     /// <summary> Converts this value to a 64-bit floating-point number.
     /// The half-even rounding mode is used. </summary>
-    /// <returns> The closest 64-bit floating-point number to this value.
+    /// <returns>The closest 64-bit floating-point number to this value.
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 64-bit floating point number.</returns>
     public double ToDouble() {
@@ -612,9 +612,9 @@ public DecimalFraction ValueOf(int val)
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
     /// number to a string. </summary>
-    /// <returns> A decimal fraction with the same value as "flt".</returns>
+    /// <returns>A decimal fraction with the same value as &quot;flt&quot;.</returns>
     /// <exception cref='OverflowException'> "flt" is infinity or not-a-number.</exception>
-    /// <param name='flt'> A 32-bit floating-point number.</param>
+    /// <param name='flt'>A 32-bit floating-point number.</param>
     public static DecimalFraction FromSingle(float flt) {
       return ExtendedDecimal.FromSingle(flt).ToDecimalFraction();
     }
@@ -632,8 +632,8 @@ public DecimalFraction ValueOf(int val)
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
     /// number to a string. </summary>
-    /// <param name='dbl'> A 64-bit floating-point number.</param>
-    /// <returns> A decimal fraction with the same value as "dbl"</returns>
+    /// <param name='dbl'>A 64-bit floating-point number.</param>
+    /// <returns>A decimal fraction with the same value as &quot;dbl&quot;</returns>
     /// <exception cref='OverflowException'> "dbl" is infinity or not-a-number.</exception>
     public static DecimalFraction FromDouble(double dbl) {
       return ExtendedDecimal.FromDouble(dbl).ToDecimalFraction();
@@ -641,8 +641,8 @@ public DecimalFraction ValueOf(int val)
 
     /// <summary> Creates a decimal fraction from an arbitrary-precision
     /// binary floating-point number. </summary>
-    /// <param name='bigfloat'> A bigfloat.</param>
-    /// <returns></returns>
+    /// <param name='bigfloat'>A bigfloat.</param>
+    /// <returns>A DecimalFraction object.</returns>
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
       return ExtendedDecimal.FromBigFloat(bigfloat).ToDecimalFraction();
     }
@@ -650,7 +650,7 @@ public DecimalFraction ValueOf(int val)
     /// <summary> Converts this value to a string.The format of the return
     /// value is exactly the same as that of the java.math.BigDecimal.toString()
     /// method. </summary>
-    /// <returns> A string representation of this object.</returns>
+    /// <returns>A string representation of this object.</returns>
     public override string ToString() {
       return ToStringInternal(0);
     }
@@ -658,14 +658,14 @@ public DecimalFraction ValueOf(int val)
     /// it will be a multiple of 3. The format of the return value follows the
     /// format of the java.math.BigDecimal.toEngineeringString() method.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A string object.</returns>
     public string ToEngineeringString() {
       return ToStringInternal(1);
     }
     /// <summary> Converts this value to a string, but without an exponent
     /// part. The format of the return value follows the format of the java.math.BigDecimal.toPlainString()
     /// method. </summary>
-    /// <returns></returns>
+    /// <returns>A string object.</returns>
     public string ToPlainString() {
       return ToStringInternal(2);
     }
@@ -709,14 +709,14 @@ public DecimalFraction ValueOf(int val)
       }
     }
     /// <summary> Gets the absolute value of this object. </summary>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
     public DecimalFraction Abs() {
       return Abs(null);
     }
 
     /// <summary> Gets an object with the same value as this one, but with the
     /// sign reversed. </summary>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
     public DecimalFraction Negate() {
       return Negate(null);
     }
@@ -762,7 +762,7 @@ public DecimalFraction ValueOf(int val)
 
     /// <summary> Removes trailing zeros from this object's mantissa. For
     /// example, 1.000 becomes 1.</summary>
-    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
@@ -771,7 +771,7 @@ public DecimalFraction ValueOf(int val)
     /// there may still be some trailing zeros in the mantissa. If a precision
     /// context is given, returns null if the result of rounding would cause
     /// an overflow. The caller can handle a null return value by treating
-    /// it as positive or negative infinity depending on the sign of this object's
+    /// it as positive or negative infinity depending on the sign of this object&apos;s
     /// value.</returns>
     public DecimalFraction Reduce(
       PrecisionContext ctx) {
@@ -779,7 +779,7 @@ public DecimalFraction ValueOf(int val)
     }
     /// <summary> </summary>
     /// <param name='divisor'>A DecimalFraction object.</param>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
     public DecimalFraction RemainderNaturalScale(
       DecimalFraction divisor
      ) {
@@ -789,7 +789,7 @@ public DecimalFraction ValueOf(int val)
     /// <summary> </summary>
     /// <param name='divisor'>A DecimalFraction object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
     public DecimalFraction RemainderNaturalScale(
       DecimalFraction divisor,
       PrecisionContext ctx
@@ -898,7 +898,7 @@ public DecimalFraction ValueOf(int val)
 
     /// <summary> Finds the absolute value of this object (if it's negative,
     /// it becomes positive).</summary>
-    /// <param name='context'> A precision context to control precision,
+    /// <param name='context'>A precision context to control precision,
     /// rounding, and exponent range of the result. If HasFlags of the context
     /// is true, will also store the flags resulting from the operation (the
     /// flags are in addition to the pre-existing flags). Can be null.</param>
@@ -913,11 +913,11 @@ public DecimalFraction ValueOf(int val)
 
     /// <summary> Returns a decimal fraction with the same value as this object
     /// but with the sign reversed.</summary>
-    /// <param name='context'> A precision context to control precision,
+    /// <param name='context'>A precision context to control precision,
     /// rounding, and exponent range of the result. If HasFlags of the context
     /// is true, will also store the flags resulting from the operation (the
     /// flags are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
     public DecimalFraction Negate(PrecisionContext context) {
       BigInteger neg = -(BigInteger)this.mantissa;
       return new DecimalFraction(neg, this.exponent).RoundToPrecision(context);
@@ -942,7 +942,7 @@ public DecimalFraction ValueOf(int val)
 
     /// <summary>Subtracts a DecimalFraction object from this instance.</summary>
     /// <param name='decfrac'>A DecimalFraction object.</param>
-    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
@@ -954,8 +954,8 @@ public DecimalFraction ValueOf(int val)
     }
     /// <summary> Multiplies two decimal fractions. The resulting scale
     /// will be the sum of the scales of the two decimal fractions. </summary>
-    /// <param name='decfrac'> Another decimal fraction.</param>
-    /// <returns> The product of the two decimal fractions. If a precision
+    /// <param name='decfrac'>Another decimal fraction.</param>
+    /// <returns>The product of the two decimal fractions. If a precision
     /// context is given, returns null if the result of rounding would cause
     /// an overflow. A caller can handle a null return value by treating it
     /// as positive infinity if both operands have the same sign or as negative
@@ -967,9 +967,9 @@ public DecimalFraction ValueOf(int val)
 
     /// <summary> Multiplies by one decimal fraction, and then adds another
     /// decimal fraction. </summary>
-    /// <param name='multiplicand'> The value to multiply.</param>
-    /// <param name='augend'> The value to add.</param>
-    /// <returns> The result this * multiplicand + augend.</returns>
+    /// <param name='multiplicand'>The value to multiply.</param>
+    /// <param name='augend'>The value to add.</param>
+    /// <returns>The result this * multiplicand + augend.</returns>
     public DecimalFraction MultiplyAndAdd(DecimalFraction multiplicand,
                                           DecimalFraction augend) {
       return MultiplyAndAdd(multiplicand,augend,null);
@@ -985,9 +985,9 @@ public DecimalFraction ValueOf(int val)
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision,
     /// rounding, and exponent range of the integer part of the result. Flags
-    /// will be set on the given context only if the context's HasFlags is true
-    /// and the integer part of the result doesn't fit the precision and exponent
-    /// range without rounding.</param>
+    /// will be set on the given context only if the context&apos;s HasFlags
+    /// is true and the integer part of the result doesn&apos;t fit the precision
+    /// and exponent range without rounding.</param>
     /// <returns>The integer part of the quotient of the two objects. Returns
     /// null if the return value would overflow the exponent range. A caller
     /// can handle a null return value by treating it as positive infinity
@@ -1077,8 +1077,8 @@ public DecimalFraction ValueOf(int val)
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the largest value that's less than the given value.
-    /// Returns null if the result is negative infinity.</returns>
+    /// <returns>Returns the largest value that&apos;s less than the given
+    /// value. Returns null if the result is negative infinity.</returns>
     /// <exception cref='System.ArgumentException'>"ctx" is null, the
     /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
     public DecimalFraction NextMinus(
@@ -1093,8 +1093,8 @@ public DecimalFraction ValueOf(int val)
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the smallest value that's greater than the given
-    /// value. Returns null if the result is positive infinity.</returns>
+    /// <returns>Returns the smallest value that&apos;s greater than the
+    /// given value. Returns null if the result is positive infinity.</returns>
     /// <exception cref='System.ArgumentException'>"ctx" is null, the
     /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
     public DecimalFraction NextPlus(
@@ -1110,8 +1110,9 @@ public DecimalFraction ValueOf(int val)
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the next value that is closer to the other object's
-    /// value than this object's value. Returns null if the result is infinity.</returns>
+    /// <returns>Returns the next value that is closer to the other object&apos;s
+    /// value than this object&apos;s value. Returns null if the result is
+    /// infinity.</returns>
     /// <exception cref='System.ArgumentException'>"ctx" is null, the
     /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
     public DecimalFraction NextToward(
@@ -1126,7 +1127,7 @@ public DecimalFraction ValueOf(int val)
     /// object. The preferred exponent for the result is this object's exponent
     /// minus the divisor's exponent.</summary>
     /// <param name='divisor'>The divisor.</param>
-    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
@@ -1150,7 +1151,7 @@ public DecimalFraction ValueOf(int val)
     
     /// <summary> Gets the greater value between two decimal fractions.
     /// </summary>
-    /// <returns> The larger value of the two objects.</returns>
+    /// <returns>The larger value of the two objects.</returns>
     /// <param name='first'>A DecimalFraction object.</param>
     /// <param name='second'>A DecimalFraction object.</param>
     public static DecimalFraction Max(
@@ -1159,7 +1160,7 @@ public DecimalFraction ValueOf(int val)
     }
 
     /// <summary> Gets the lesser value between two decimal fractions. </summary>
-    /// <returns> The smaller value of the two objects.</returns>
+    /// <returns>The smaller value of the two objects.</returns>
     /// <param name='first'>A DecimalFraction object.</param>
     /// <param name='second'>A DecimalFraction object.</param>
     public static DecimalFraction Min(
@@ -1169,7 +1170,7 @@ public DecimalFraction ValueOf(int val)
     /// <summary> Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
     /// <param name='first'>A DecimalFraction object.</param>
     /// <param name='second'>A DecimalFraction object.</param>
     public static DecimalFraction MaxMagnitude(
@@ -1180,7 +1181,7 @@ public DecimalFraction ValueOf(int val)
     /// <summary> Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
     /// <param name='first'>A DecimalFraction object.</param>
     /// <param name='second'>A DecimalFraction object.</param>
     public static DecimalFraction MinMagnitude(
@@ -1192,9 +1193,10 @@ public DecimalFraction ValueOf(int val)
     /// because two different decimal fractions with the same mathematical
     /// value, but different exponents, will compare as equal.</para>
     /// </summary>
-    /// <returns> Less than 0 if this object's value is less than the other
-    /// value, or greater than 0 if this object's value is greater than the
-    /// other value or if "other" is null, or 0 if both values are equal.</returns>
+    /// <returns>Less than 0 if this object&apos;s value is less than the
+    /// other value, or greater than 0 if this object&apos;s value is greater
+    /// than the other value or if &quot;other&quot; is null, or 0 if both values
+    /// are equal.</returns>
     /// <param name='other'>A DecimalFraction object.</param>
     public int CompareTo(
       DecimalFraction other) {
@@ -1204,7 +1206,7 @@ public DecimalFraction ValueOf(int val)
     /// <summary> </summary>
     /// <param name='other'>A DecimalFraction object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
 public DecimalFraction CompareToWithContext(
       DecimalFraction other, PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, false, ctx);
@@ -1213,7 +1215,7 @@ public DecimalFraction CompareToWithContext(
     /// <summary> </summary>
     /// <param name='other'>A DecimalFraction object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns></returns>
+    /// <returns>A DecimalFraction object.</returns>
 public DecimalFraction CompareToSignal(
       DecimalFraction other, PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, true, ctx);
@@ -1221,12 +1223,12 @@ public DecimalFraction CompareToSignal(
 
     /// <summary> Finds the sum of this object and another object. The result's
     /// exponent is set to the lower of the exponents of the two operands. </summary>
-    /// <param name='decfrac'> The number to add to.</param>
-    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// <param name='decfrac'>The number to add to.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns> The sum of thisValue and the other object. Returns null
+    /// <returns>The sum of thisValue and the other object. Returns null
     /// if the result would overflow the exponent range.</returns>
     public DecimalFraction Add(
       DecimalFraction decfrac, PrecisionContext ctx) {
@@ -1236,7 +1238,7 @@ public DecimalFraction CompareToSignal(
     /// <summary> Returns a decimal fraction with the same value but a new
     /// exponent. </summary>
     /// <param name='desiredExponent'>The desired exponent of the result.</param>
-    /// <param name='ctx'> A precision context to control precision and
+    /// <param name='ctx'>A precision context to control precision and
     /// rounding of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition
     /// to the pre-existing flags). Can be null, in which case the default
@@ -1255,7 +1257,7 @@ public DecimalFraction CompareToSignal(
 
     /// <summary> Returns a decimal fraction with the same value but a new
     /// exponent. </summary>
-    /// <param name='ctx'> A precision context to control precision and
+    /// <param name='ctx'>A precision context to control precision and
     /// rounding of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition
     /// to the pre-existing flags). Can be null, in which case the default
@@ -1277,7 +1279,7 @@ public DecimalFraction CompareToSignal(
     /// but with the same exponent as another decimal fraction. </summary>
     /// <param name='otherValue'>A decimal fraction containing the desired
     /// exponent of the result. The mantissa is ignored.</param>
-    /// <param name='ctx'> A precision context to control precision and
+    /// <param name='ctx'>A precision context to control precision and
     /// rounding of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition
     /// to the pre-existing flags). Can be null, in which case the default
@@ -1295,7 +1297,7 @@ public DecimalFraction CompareToSignal(
     }
     /// <summary> Returns a decimal fraction with the same value as this object
     /// but rounded to an integer. </summary>
-    /// <param name='ctx'> A precision context to control precision and
+    /// <param name='ctx'>A precision context to control precision and
     /// rounding of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition
     /// to the pre-existing flags). Can be null, in which case the default
@@ -1314,7 +1316,7 @@ public DecimalFraction CompareToSignal(
     /// <summary> Returns a decimal fraction with the same value as this object
     /// but rounded to an integer, without adding the FlagInexact or FlagRounded
     /// flags. </summary>
-    /// <param name='ctx'> A precision context to control precision and
+    /// <param name='ctx'>A precision context to control precision and
     /// rounding of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition
     /// to the pre-existing flags), except that this function will never
@@ -1340,7 +1342,7 @@ public DecimalFraction CompareToSignal(
     /// places from the number. For example, -3 means round to the thousandth
     /// (10^-3), and 3 means round to the thousand (10^3). A value of 0 rounds
     /// the number to an integer.</param>
-    /// <param name='ctx'> A precision context to control precision and
+    /// <param name='ctx'>A precision context to control precision and
     /// rounding of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition
     /// to the pre-existing flags). Can be null, in which case the default
@@ -1364,17 +1366,17 @@ public DecimalFraction CompareToSignal(
     /// places from the number. For example, -3 means round to the thousandth
     /// (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
     /// value of 0 rounds the number to an integer.</param>
-    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null, in which case
     /// the default rounding mode is HalfEven.</param>
     /// <returns>A decimal fraction rounded to the closest value representable
-    /// in the given precision, meaning if the result can't fit the precision,
+    /// in the given precision, meaning if the result can&apos;t fit the precision,
     /// additional digits are discarded to make it fit. Returns null if the
     /// result of the rounding would cause an overflow. The caller can handle
     /// a null return value by treating it as positive or negative infinity
-    /// depending on the sign of this object's value.</returns>
+    /// depending on the sign of this object&apos;s value.</returns>
     /// <exception cref='System.ArgumentException'>The new exponent
     /// must be changed when rounding and the new exponent is outside of the
     /// valid range of the precision context, if it defines an exponent range.</exception>
@@ -1385,12 +1387,12 @@ public DecimalFraction CompareToSignal(
 
     /// <summary> Multiplies two decimal fractions. The resulting scale
     /// will be the sum of the scales of the two decimal fractions. </summary>
-    /// <param name='op'> Another decimal fraction.</param>
-    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// <param name='op'>Another decimal fraction.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns> The product of the two decimal fractions. If a precision
+    /// <returns>The product of the two decimal fractions. If a precision
     /// context is given, returns null if the result of rounding would cause
     /// an overflow. The caller can handle a null return value by treating
     /// it as negative infinity if this value and the other value have different
@@ -1401,13 +1403,13 @@ public DecimalFraction CompareToSignal(
       return math.Multiply(this, op, ctx);
     }
     /// <summary> Multiplies by one value, and then adds another value. </summary>
-    /// <param name='op'> The value to multiply.</param>
-    /// <param name='augend'> The value to add.</param>
-    /// <param name='ctx'> A precision context to control precision, rounding,
+    /// <param name='op'>The value to multiply.</param>
+    /// <param name='augend'>The value to add.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns> The result thisValue * multiplicand + augend. If a precision
+    /// <returns>The result thisValue * multiplicand + augend. If a precision
     /// context is given, returns null if the result of rounding would cause
     /// an overflow. The caller can handle a null return value by treating
     /// it as negative infinity if this value and the other value have different
@@ -1419,14 +1421,15 @@ public DecimalFraction CompareToSignal(
     }
     /// <summary> Rounds this object's value to a given precision, using
     /// the given rounding mode and range of exponent. </summary>
-    /// <param name='ctx'> A context for controlling the precision, rounding
+    /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. Can be null.</param>
-    /// <returns> The closest value to this object's value, rounded to the
-    /// specified precision. Returns the same value as this object if "context"
-    /// is null or the precision and exponent range are unlimited. Returns
-    /// null if the result of the rounding would cause an overflow. The caller
-    /// can handle a null return value by treating it as positive or negative
-    /// infinity depending on the sign of this object's value.</returns>
+    /// <returns>The closest value to this object&apos;s value, rounded
+    /// to the specified precision. Returns the same value as this object
+    /// if &quot;context&quot; is null or the precision and exponent range
+    /// are unlimited. Returns null if the result of the rounding would cause
+    /// an overflow. The caller can handle a null return value by treating
+    /// it as positive or negative infinity depending on the sign of this object&apos;s
+    /// value.</returns>
     public DecimalFraction RoundToPrecision(
       PrecisionContext ctx) {
       return math.RoundToPrecision(this, ctx);
@@ -1434,15 +1437,16 @@ public DecimalFraction CompareToSignal(
 
     /// <summary> Rounds this object's value to a given maximum bit length,
     /// using the given rounding mode and range of exponent. </summary>
-    /// <param name='ctx'> A context for controlling the precision, rounding
+    /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. The precision is interpreted as the maximum
     /// bit length of the mantissa. Can be null.</param>
-    /// <returns> The closest value to this object's value, rounded to the
-    /// specified precision. Returns the same value as this object if "context"
-    /// is null or the precision and exponent range are unlimited. Returns
-    /// null if the result of the rounding would cause an overflow. The caller
-    /// can handle a null return value by treating it as positive or negative
-    /// infinity depending on the sign of this object's value.</returns>
+    /// <returns>The closest value to this object&apos;s value, rounded
+    /// to the specified precision. Returns the same value as this object
+    /// if &quot;context&quot; is null or the precision and exponent range
+    /// are unlimited. Returns null if the result of the rounding would cause
+    /// an overflow. The caller can handle a null return value by treating
+    /// it as positive or negative infinity depending on the sign of this object&apos;s
+    /// value.</returns>
     public DecimalFraction RoundToBinaryPrecision(
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);

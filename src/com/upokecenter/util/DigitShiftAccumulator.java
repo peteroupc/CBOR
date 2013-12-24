@@ -29,6 +29,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
+     * @return A FastInteger object.
      */
     public FastInteger GetDigitLength() {
       if (knownBitLength==null) {

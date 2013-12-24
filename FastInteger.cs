@@ -64,7 +64,7 @@ namespace PeterO {
       }
       
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
       public BigInteger ToBigInteger() {
         if(wordCount==1 && (data[0]>>31)==0){
           return (BigInteger)((int)data[0]);
@@ -87,19 +87,19 @@ namespace PeterO {
       }
       
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A Boolean object.</returns>
       public bool CanFitInInt32(){
         return wordCount==0 || (wordCount==1 && (data[0]>>31)==0);
       }
       
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
       public int ToInt32(){
         return wordCount==0 ? 0 : data[0];
       }
       
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A MutableNumber object.</returns>
       public MutableNumber Copy(){
         MutableNumber mbi=new MutableNumber(0);
         if(this.wordCount>mbi.data.Length){
@@ -111,8 +111,8 @@ namespace PeterO {
       }
       
     /// <summary> Multiplies this instance by the value of a Int32 object.</summary>
-    /// <param name='multiplicand'> A 32-bit signed integer.</param>
-    /// <returns> The product of the two objects.</returns>
+    /// <param name='multiplicand'>A 32-bit signed integer.</param>
+    /// <returns>The product of the two objects.</returns>
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0)
           throw new ArgumentException("Only positive multiplicands are supported");
@@ -220,7 +220,7 @@ namespace PeterO {
       
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
       public int CompareToInt(int val){
         if(val<0 || wordCount>1)return 1;
         if(wordCount==0){
@@ -344,7 +344,7 @@ namespace PeterO {
       
     /// <summary> </summary>
     /// <param name='augend'> A 32-bit signed integer.</param>
-    /// <returns/>
+    /// <returns></returns>
       public MutableNumber Add(int augend) {
         if (augend < 0)
           throw new ArgumentException("Only positive augends are supported");
@@ -425,7 +425,7 @@ namespace PeterO {
     }
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32() {
       switch(this.integerMode){
         case 0:
@@ -469,7 +469,7 @@ namespace PeterO {
       }
     }
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A FastInteger object.</returns>
     public FastInteger Abs() {
       return (this.Sign < 0) ? Negate() : this;
     }
@@ -495,8 +495,8 @@ namespace PeterO {
     
     /// <summary> Sets this object's value to the current value times another
     /// integer. </summary>
-    /// <param name='val'> The integer to multiply by.</param>
-    /// <returns> This object.</returns>
+    /// <param name='val'>The integer to multiply by.</param>
+    /// <returns>This object.</returns>
     public FastInteger Multiply(int val) {
       if (val == 0) {
         smallValue = 0;
@@ -551,7 +551,7 @@ namespace PeterO {
 
     /// <summary> Sets this object's value to 0 minus its current value (reverses
     /// its sign). </summary>
-    /// <returns> This object.</returns>
+    /// <returns>This object.</returns>
     public FastInteger Negate() {
       switch (integerMode) {
         case 0:
@@ -579,8 +579,8 @@ namespace PeterO {
 
     /// <summary> Sets this object's value to the current value minus the
     /// given FastInteger value. </summary>
-    /// <param name='val'> The subtrahend.</param>
-    /// <returns> This object.</returns>
+    /// <param name='val'>The subtrahend.</param>
+    /// <returns>This object.</returns>
     public FastInteger Subtract(FastInteger val) {
       BigInteger valValue;
       switch (integerMode) {
@@ -628,8 +628,8 @@ namespace PeterO {
     }
     /// <summary> Sets this object's value to the current value minus the
     /// given integer. </summary>
-    /// <param name='val'> The subtrahend.</param>
-    /// <returns> This object.</returns>
+    /// <param name='val'>The subtrahend.</param>
+    /// <returns>This object.</returns>
     public FastInteger SubtractInt(int val) {
       if(val==Int32.MinValue){
         return AddBig(NegativeInt32MinValue);
@@ -642,8 +642,8 @@ namespace PeterO {
 
     /// <summary> Sets this object's value to the current value plus the given
     /// integer. </summary>
-    /// <param name='bigintVal'> The number to add.</param>
-    /// <returns> This object.</returns>
+    /// <param name='bigintVal'>The number to add.</param>
+    /// <returns>This object.</returns>
     public FastInteger AddBig(BigInteger bigintVal) {
       switch (integerMode) {
           case 0:{
@@ -672,8 +672,8 @@ namespace PeterO {
 
     /// <summary> Sets this object's value to the current value minus the
     /// given integer. </summary>
-    /// <param name='bigintVal'> The subtrahend.</param>
-    /// <returns> This object.</returns>
+    /// <param name='bigintVal'>The subtrahend.</param>
+    /// <returns>This object.</returns>
     public FastInteger SubtractBig(BigInteger bigintVal) {
       if (integerMode==2) {
         largeValue -= (BigInteger)bigintVal;
@@ -694,8 +694,8 @@ namespace PeterO {
       }
     }
     /// <summary> </summary>
-    /// <param name='val'> A FastInteger object.</param>
-    /// <returns></returns>
+    /// <param name='val'>A FastInteger object.</param>
+    /// <returns>A FastInteger object.</returns>
     public FastInteger Add(FastInteger val) {
       BigInteger valValue;
       switch (integerMode) {
@@ -744,8 +744,8 @@ namespace PeterO {
     }
     /// <summary> Sets this object's value to the remainder of the current
     /// value divided by the given integer. </summary>
-    /// <param name='divisor'> The divisor.</param>
-    /// <returns> This object.</returns>
+    /// <param name='divisor'>The divisor.</param>
+    /// <returns>This object.</returns>
     public FastInteger Mod(int divisor) {
       // Mod operator will always result in a
       // number that fits an int for int divisors
@@ -775,8 +775,8 @@ namespace PeterO {
     }
 
     /// <summary> Divides this instance by the value of a Int32 object.</summary>
-    /// <param name='divisor'> A 32-bit signed integer.</param>
-    /// <returns> The quotient of the two objects.</returns>
+    /// <param name='divisor'>A 32-bit signed integer.</param>
+    /// <returns>The quotient of the two objects.</returns>
     public FastInteger Divide(int divisor) {
       if (divisor != 0) {
         switch (integerMode) {
@@ -832,7 +832,7 @@ namespace PeterO {
     
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <returns>A FastInteger object.</returns>
     public FastInteger AddInt(int val) {
       BigInteger valValue;
       switch (integerMode) {
@@ -874,7 +874,7 @@ namespace PeterO {
     }
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A Boolean object.</returns>
     public bool CanFitInInt32() {
       int sign;
       switch(this.integerMode){
@@ -894,7 +894,7 @@ namespace PeterO {
     }
 
     /// <summary> Converts this object to a text string.</summary>
-    /// <returns> A string representation of this object.</returns>
+    /// <returns>A string representation of this object.</returns>
     public override string ToString() {
       switch(this.integerMode){
         case 0:
@@ -942,13 +942,13 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
     public int MinInt32(int val) {
       return this.CompareToInt(val)<0 ? this.AsInt32() : val;
     }
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger AsBigInteger() {
       switch(this.integerMode){
         case 0:

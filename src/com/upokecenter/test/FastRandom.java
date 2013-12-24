@@ -41,6 +41,7 @@ package com.upokecenter.test;
     /**
      * 
      * @param v A 32-bit signed integer.
+     * @return A 32-bit signed integer.
      */
 public int NextValue(int v) {
       if((v)<0)throw new IllegalArgumentException(
