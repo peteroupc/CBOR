@@ -2389,6 +2389,7 @@ namespace PeterO {
                                     BigInteger bigintAddend,
                                     BigInteger bigintAugend) {
       int carry;
+      int desiredLength=Math.Max(bigintAddend.reg.Length,bigintAugend.reg.Length);
       if (bigintAddend.reg.Length == bigintAugend.reg.Length)
         carry = Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (int)(bigintAddend.reg.Length));
       else if (bigintAddend.reg.Length > bigintAugend.reg.Length) {
@@ -2410,9 +2411,10 @@ namespace PeterO {
                           (short)carry);
       }
       if (carry != 0) {
-        int len = RoundupSize((sum.reg.Length / 2) + 1);
+        int nextIndex=desiredLength;
+        int len = RoundupSize(nextIndex + 1);
         sum.reg = CleanGrow(sum.reg, len);
-        sum.reg[sum.reg.Length / 2] = (short)1;
+        sum.reg[nextIndex] = (short)carry;
       }
       sum.negative = false;
       sum.wordCount = sum.CalcWordCount();

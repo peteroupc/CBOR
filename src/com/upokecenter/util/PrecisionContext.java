@@ -110,6 +110,14 @@ at: http://peteroupc.github.io/CBOR/
      */
     public static final int FlagClamped = 32;
     /**
+     * 
+     */
+    public static final int FlagInvalid = 64;
+    /**
+     * 
+     */
+    public static final int FlagDivideByZero = 128;
+    /**
      * Gets the flags that are set from converting numbers according to this
      * precision context. If HasFlags is false, this value will be 0.
      */

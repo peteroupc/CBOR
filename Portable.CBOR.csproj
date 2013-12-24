@@ -25,7 +25,6 @@
     <DelaySign>False</DelaySign>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <CodeAnalysisRules>-Microsoft.Design#CA1017;-Microsoft.Globalization#CA1303;-Microsoft.Naming#CA1705;-Microsoft.Naming#CA1708;-Microsoft.Naming#CA1709;-Microsoft.Usage#CA2225</CodeAnalysisRules>
-    <DocumentationFile>bin\Release\CBOR.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -84,11 +83,15 @@
     <Content Include="ProfilingSessions\Session20131220_220040.sdps" />
     <Content Include="ProfilingSessions\Session20131221_011721.sdps" />
     <Content Include="ProfilingSessions\Session20131221_015939.sdps" />
+    <Content Include="ProfilingSessions\Session20131224_073639.sdps" />
+    <Content Include="ProfilingSessions\Session20131224_073756.sdps" />
+    <Content Include="ProfilingSessions\Session20131224_073952.sdps" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigFloat.cs" />
     <Compile Include="BigInteger.cs" />
     <Compile Include="BigIntegerExtra.cs" />
+    <Compile Include="BigNumberFlags.cs" />
     <Compile Include="BitShiftAccumulator.cs" />
     <Compile Include="CBORDataUtilities.cs" />
     <Compile Include="CBORException.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="DataUtilities.cs" />
     <Compile Include="DecimalFraction.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
+    <Compile Include="ExtendedDecimal.cs" />
     <Compile Include="FastInteger.cs" />
     <Compile Include="Extras.cs" />
     <Compile Include="IRadixMathHelper.cs" />

@@ -39,7 +39,7 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='other'>A BigFloat object.</param>
     /// <returns></returns>
-public bool Equals(BigFloat other) {
+    public bool Equals(BigFloat other) {
       return EqualsInternal(other);
     }
     /// <summary> Determines whether this object's mantissa and exponent
@@ -91,10 +91,16 @@ public bool Equals(BigFloat other) {
       return val;
     }
     
+    /// <summary> </summary>
+    /// <param name='bigint'>A BigInteger object.</param>
+    /// <returns></returns>
     public static BigFloat FromBigInteger(BigInteger bigint){
       return new BigFloat(bigint,BigInteger.Zero);
     }
     
+    /// <summary> </summary>
+    /// <param name='numberValue'>A 64-bit signed integer.</param>
+    /// <returns></returns>
     public static BigFloat FromInt64(long numberValue){
       BigInteger bigint=(BigInteger)numberValue;
       return new BigFloat(bigint,BigInteger.Zero);
@@ -195,7 +201,7 @@ public bool Equals(BigFloat other) {
         if ((value >> 31) != 0)
           fpMantissa = -fpMantissa;
       }
-      return new BigFloat((BigInteger)((long)fpMantissa), 
+      return new BigFloat((BigInteger)((long)fpMantissa),
                           (BigInteger)(fpExponent - 150));
     }
     /// <summary> Creates a bigfloat from a 64-bit floating-point number.
@@ -571,6 +577,40 @@ public bool Equals(BigFloat other) {
           return ShiftLeft(bigint, power.AsBigInteger());
         }
       }
+      
+    /// <summary> </summary>
+    /// <param name='value'>A BigFloat object.</param>
+    /// <returns></returns>
+      public int GetFlags(BigFloat value)
+      {
+        return value.mantissa.Sign<0 ? BigNumberFlags.FlagNegative : 0;
+      }
+      
+    /// <summary> </summary>
+    /// <param name='mantissa'>A BigInteger object.</param>
+    /// <param name='exponent'>A BigInteger object.</param>
+    /// <param name='flags'>A 32-bit signed integer.</param>
+    /// <returns></returns>
+      public BigFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags)
+      {
+        bool neg=(flags&BigNumberFlags.FlagNegative)!=0;
+        if((neg && mantissa.Sign>0) || (!neg && mantissa.Sign<0))
+          mantissa=-mantissa;
+        return new BigFloat(mantissa,exponent);
+      }
+    /// <summary> </summary>
+    /// <returns></returns>
+      public int GetArithmeticSupport()
+      {
+        return BigNumberFlags.FiniteOnly;
+      }
+      
+    /// <summary> </summary>
+    /// <param name='val'>A 32-bit signed integer.</param>
+    /// <returns></returns>
+public BigFloat ValueOf(int val){
+        return FromInt64(val);
+      }
     }
 
     /// <summary> Gets this value's sign: -1 if negative; 1 if positive; 0
@@ -703,7 +743,7 @@ public bool Equals(BigFloat other) {
       Rounding rounding
      ) {
       return DivideToExponent(divisor, ((BigInteger)desiredExponentSmall),
-                    PrecisionContext.ForRounding(rounding));
+                              PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two BigFloat objects, and gives a particular exponent
@@ -901,22 +941,67 @@ public bool Equals(BigFloat other) {
       return math.DivideToExponent(this, divisor, exponent, ctx);
     }
 
-    /// <summary> Gets the greater value between two bigfloats. </summary>
+    /// <summary> Gets the greater value between two decimal fractions.
+    /// </summary>
+    /// <returns> The larger value of the two objects.</returns>
+    /// <param name='first'>A BigFloat object.</param>
+    /// <param name='second'>A BigFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    public static BigFloat Max(
+      BigFloat first, BigFloat second, PrecisionContext ctx) {
+      return math.Max(first, second, ctx);
+    }
+
+    /// <summary> Gets the lesser value between two decimal fractions. </summary>
+    /// <returns> The smaller value of the two objects.</returns>
+    /// <param name='first'>A BigFloat object.</param>
+    /// <param name='second'>A BigFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    public static BigFloat Min(
+      BigFloat first, BigFloat second, PrecisionContext ctx) {
+      return math.Min(first, second, ctx);
+    }
+    /// <summary> Gets the greater value between two values, ignoring their
+    /// signs. If the absolute values are equal, has the same effect as Max.
+    /// </summary>
+    /// <returns></returns>
+    /// <param name='first'>A BigFloat object.</param>
+    /// <param name='second'>A BigFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    public static BigFloat MaxMagnitude(
+      BigFloat first, BigFloat second, PrecisionContext ctx) {
+      return math.MaxMagnitude(first, second, ctx);
+    }
+    
+    /// <summary> Gets the lesser value between two values, ignoring their
+    /// signs. If the absolute values are equal, has the same effect as Min.
+    /// </summary>
+    /// <returns></returns>
+    /// <param name='first'>A BigFloat object.</param>
+    /// <param name='second'>A BigFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    public static BigFloat MinMagnitude(
+      BigFloat first, BigFloat second, PrecisionContext ctx) {
+      return math.MinMagnitude(first, second, ctx);
+    }
+    
+    /// <summary> Gets the greater value between two decimal fractions.
+    /// </summary>
     /// <returns> The larger value of the two objects.</returns>
     /// <param name='first'>A BigFloat object.</param>
     /// <param name='second'>A BigFloat object.</param>
     public static BigFloat Max(
       BigFloat first, BigFloat second) {
-      return math.Max(first, second);
+      return Max(first,second,null);
     }
 
-    /// <summary> Gets the lesser value between two bigfloats. </summary>
+    /// <summary> Gets the lesser value between two decimal fractions. </summary>
     /// <returns> The smaller value of the two objects.</returns>
     /// <param name='first'>A BigFloat object.</param>
     /// <param name='second'>A BigFloat object.</param>
     public static BigFloat Min(
       BigFloat first, BigFloat second) {
-      return math.Min(first, second);
+      return Min(first,second,null);
     }
     /// <summary> Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.
@@ -926,8 +1011,9 @@ public bool Equals(BigFloat other) {
     /// <param name='second'>A BigFloat object.</param>
     public static BigFloat MaxMagnitude(
       BigFloat first, BigFloat second) {
-      return math.MaxMagnitude(first, second);
+      return MaxMagnitude(first,second,null);
     }
+    
     /// <summary> Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
@@ -936,7 +1022,7 @@ public bool Equals(BigFloat other) {
     /// <param name='second'>A BigFloat object.</param>
     public static BigFloat MinMagnitude(
       BigFloat first, BigFloat second) {
-      return math.MinMagnitude(first, second);
+      return MinMagnitude(first,second,null);
     }
     /// <summary> Compares the mathematical values of this object and another
     /// object. <para> This method is not consistent with the Equals method
@@ -1002,7 +1088,7 @@ public bool Equals(BigFloat other) {
     /// <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
     public BigFloat Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize( 
+      return Quantize(
         new BigFloat(BigInteger.One,(BigInteger)desiredExponentSmall), ctx);
     }
 
@@ -1153,11 +1239,11 @@ public bool Equals(BigFloat other) {
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
     }
- 
+    
     /// <summary> Represents the number 1. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="BigInteger is immutable")]
     #endif
     public static readonly BigFloat One = new BigFloat(BigInteger.One,BigInteger.Zero);
@@ -1165,14 +1251,14 @@ public bool Equals(BigFloat other) {
     /// <summary> Represents the number 0. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="BigInteger is immutable")]
     #endif
     public static readonly BigFloat Zero = new BigFloat(BigInteger.Zero,BigInteger.Zero);
     /// <summary> Represents the number 10. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="BigInteger is immutable")]
     #endif
     public static readonly BigFloat Ten = FromInt64((long)10);

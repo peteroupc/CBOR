@@ -98,6 +98,10 @@ namespace PeterO {
     /// <summary> Signals that the exponent was adjusted to fit the exponent
     /// range. </summary>
     public const int FlagClamped = 32;
+    /// <summary> </summary>
+    public const int FlagInvalid = 64;
+    /// <summary> </summary>
+    public const int FlagDivideByZero = 128;
     /// <summary> Gets the flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be
     /// 0. </summary>

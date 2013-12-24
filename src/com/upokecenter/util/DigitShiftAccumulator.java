@@ -219,6 +219,8 @@ at: http://peteroupc.github.io/CBOR/
       // Shift by the difference in digit length
       if (digitLength > digits) {
         int digitShift = digitLength - digits;
+        int digitDivide=digitShift;
+        //System.out.println("dlen={0} dshift={1}",digitLength,digitShift);
         int newLength = (int)(digitLength - digitShift);
         if(digitShift<=Integer.MAX_VALUE)
           discardedBitCount.AddInt((int)digitShift);
@@ -232,7 +234,6 @@ at: http://peteroupc.github.io/CBOR/
             break;
           }
         }
-        knownBitLength = new FastInteger(digits);
         if (newLength <= 9) {
           isSmall = true;
           shiftedSmall = FastParseLong(str, 0, newLength);

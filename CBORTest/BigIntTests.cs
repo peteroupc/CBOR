@@ -926,6 +926,13 @@ namespace Test
     }
     
     [Test]
+    public void TestAdd(){
+      TestCommon.DoTestAdd("335104030856920274353771469482036822016",
+                           "11220305413346585490818414845644062848",
+                           "346324336270266859844589884327680884864");
+    }
+    
+    [Test]
     public void TestSquaring(){
       TestCommon.DoTestMultiply("390625","390625","152587890625");
       TestCommon.DoTestPow("5",68,"338813178901720135627329000271856784820556640625");

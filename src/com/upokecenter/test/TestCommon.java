@@ -103,6 +103,15 @@ rembi=divrem[1];
           "but was: ["+(d3.getMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
          ));   }
     }
+    public static void AssertDecFrac(ExtendedDecimal d3, String output) {
+      if(output==null && d3!=null)Assert.fail("d3 must be null");
+      if(output!=null && !d3.toString().equals(output)){
+        ExtendedDecimal d4=ExtendedDecimal.FromString(output);
+        Assert.assertEquals(output,d3.toString(),(
+          "expected: ["+(d4.getMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
+          "but was: ["+(d3.getMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
+         ));   }
+    }
     
     public static BigInteger BigIntParse(String str) {
       return BigInteger.fromString(str);
@@ -116,6 +125,8 @@ rembi=divrem[1];
       Assert.assertEquals("Overflow",(expected&PrecisionContext.FlagOverflow)!=0,(actual&PrecisionContext.FlagOverflow)!=0);
       Assert.assertEquals("Underflow",(expected&PrecisionContext.FlagUnderflow)!=0,(actual&PrecisionContext.FlagUnderflow)!=0);
       Assert.assertEquals("Clamped",(expected&PrecisionContext.FlagClamped)!=0,(actual&PrecisionContext.FlagClamped)!=0);
+      Assert.assertEquals("Invalid",(expected&PrecisionContext.FlagInvalid)!=0,(actual&PrecisionContext.FlagInvalid)!=0);
+      Assert.assertEquals("DivideByZero",(expected&PrecisionContext.FlagDivideByZero)!=0,(actual&PrecisionContext.FlagDivideByZero)!=0);
     }
     
     private static CBORObject FromBytesA(byte[] b) {
