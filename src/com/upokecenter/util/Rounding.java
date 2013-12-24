@@ -51,11 +51,11 @@ at: http://peteroupc.github.io/CBOR/
     Floor,
     /**
      * If there is a fractional part and if the last digit before rounding
-     * is 0 or 5, the number is rounded to the closest representable number
-     * away from zero; otherwise the fractional part is discarded. In overflow,
-     * the fractional part is always discarded. This rounding mode is useful
-     * for rounding intermediate results at a slightly higher precision
-     * than the final precision.
+     * is 0 or half the radix, the number is rounded to the closest representable
+     * number away from zero; otherwise the fractional part is discarded.
+     * In overflow, the fractional part is always discarded. This rounding
+     * mode is useful for rounding intermediate results at a slightly higher
+     * precision than the final precision.
      */
     ZeroFiveUp,
     /**

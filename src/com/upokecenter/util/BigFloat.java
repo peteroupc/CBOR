@@ -44,7 +44,7 @@ at: http://peteroupc.github.io/CBOR/
      * 
      * @param other A BigFloat object.
      */
-public boolean equals(BigFloat other) {
+    public boolean equals(BigFloat other) {
       return EqualsInternal(other);
     }
     /**
@@ -100,10 +100,18 @@ public boolean equals(BigFloat other) {
       return val;
     }
     
+    /**
+     * 
+     * @param bigint A BigInteger object.
+     */
     public static BigFloat FromBigInteger(BigInteger bigint) {
       return new BigFloat(bigint,BigInteger.ZERO);
     }
     
+    /**
+     * 
+     * @param numberValue A 64-bit signed integer.
+     */
     public static BigFloat FromInt64(long numberValue) {
       BigInteger bigint=BigInteger.valueOf(numberValue);
       return new BigFloat(bigint,BigInteger.ZERO);
@@ -209,7 +217,7 @@ remainder=divrem[1];
         if ((value >> 31) != 0)
           fpMantissa = -fpMantissa;
       }
-      return new BigFloat(BigInteger.valueOf((long)fpMantissa), 
+      return new BigFloat(BigInteger.valueOf((long)fpMantissa),
                           BigInteger.valueOf(fpExponent - 150));
     }
     /**
@@ -602,6 +610,41 @@ remainder=divrem[1];
           return ShiftLeft(bigint, power.AsBigInteger());
         }
       }
+      
+    /**
+     * 
+     * @param value A BigFloat object.
+     */
+      public int GetFlags(BigFloat value) {
+        return value.mantissa.signum()<0 ? BigNumberFlags.FlagNegative : 0;
+      }
+      
+    /**
+     * 
+     * @param mantissa A BigInteger object.
+     * @param exponent A BigInteger object.
+     * @param flags A 32-bit signed integer.
+     */
+      public BigFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
+        boolean neg=(flags&BigNumberFlags.FlagNegative)!=0;
+        if((neg && mantissa.signum()>0) || (!neg && mantissa.signum()<0))
+          mantissa=mantissa.negate();
+        return new BigFloat(mantissa,exponent);
+      }
+    /**
+     * 
+     */
+      public int GetArithmeticSupport() {
+        return BigNumberFlags.FiniteOnly;
+      }
+      
+    /**
+     * 
+     * @param val A 32-bit signed integer.
+     */
+public BigFloat ValueOf(int val) {
+        return FromInt64(val);
+      }
     }
 
     /**
@@ -738,7 +781,7 @@ remainder=divrem[1];
       Rounding rounding
      ) {
       return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)),
-                    PrecisionContext.ForRounding(rounding));
+                              PrecisionContext.ForRounding(rounding));
     }
 
     /**
@@ -952,25 +995,72 @@ remainder=divrem[1];
     }
 
     /**
-     * Gets the greater value between two bigfloats.
+     * Gets the greater value between two decimal fractions.
+     * @param first A BigFloat object.
+     * @param second A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     * @return The larger value of the two objects.
+     */
+    public static BigFloat Max(
+      BigFloat first, BigFloat second, PrecisionContext ctx) {
+      return math.Max(first, second, ctx);
+    }
+
+    /**
+     * Gets the lesser value between two decimal fractions.
+     * @param first A BigFloat object.
+     * @param second A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     * @return The smaller value of the two objects.
+     */
+    public static BigFloat Min(
+      BigFloat first, BigFloat second, PrecisionContext ctx) {
+      return math.Min(first, second, ctx);
+    }
+    /**
+     * Gets the greater value between two values, ignoring their signs.
+     * If the absolute values are equal, has the same effect as Max.
+     * @param first A BigFloat object.
+     * @param second A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     */
+    public static BigFloat MaxMagnitude(
+      BigFloat first, BigFloat second, PrecisionContext ctx) {
+      return math.MaxMagnitude(first, second, ctx);
+    }
+    
+    /**
+     * Gets the lesser value between two values, ignoring their signs. If
+     * the absolute values are equal, has the same effect as Min.
+     * @param first A BigFloat object.
+     * @param second A BigFloat object.
+     * @param ctx A PrecisionContext object.
+     */
+    public static BigFloat MinMagnitude(
+      BigFloat first, BigFloat second, PrecisionContext ctx) {
+      return math.MinMagnitude(first, second, ctx);
+    }
+    
+    /**
+     * Gets the greater value between two decimal fractions.
      * @param first A BigFloat object.
      * @param second A BigFloat object.
      * @return The larger value of the two objects.
      */
     public static BigFloat Max(
       BigFloat first, BigFloat second) {
-      return math.Max(first, second);
+      return Max(first,second,null);
     }
 
     /**
-     * Gets the lesser value between two bigfloats.
+     * Gets the lesser value between two decimal fractions.
      * @param first A BigFloat object.
      * @param second A BigFloat object.
      * @return The smaller value of the two objects.
      */
     public static BigFloat Min(
       BigFloat first, BigFloat second) {
-      return math.Min(first, second);
+      return Min(first,second,null);
     }
     /**
      * Gets the greater value between two values, ignoring their signs.
@@ -980,8 +1070,9 @@ remainder=divrem[1];
      */
     public static BigFloat MaxMagnitude(
       BigFloat first, BigFloat second) {
-      return math.MaxMagnitude(first, second);
+      return MaxMagnitude(first,second,null);
     }
+    
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
@@ -990,7 +1081,7 @@ remainder=divrem[1];
      */
     public static BigFloat MinMagnitude(
       BigFloat first, BigFloat second) {
-      return math.MinMagnitude(first, second);
+      return MinMagnitude(first,second,null);
     }
     /**
      * Compares the mathematical values of this object and another object.
@@ -1059,7 +1150,7 @@ remainder=divrem[1];
      */
     public BigFloat Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize( 
+      return Quantize(
         new BigFloat(BigInteger.ONE,BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
@@ -1229,7 +1320,7 @@ remainder=divrem[1];
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
     }
- 
+    
     /**
      * Represents the number 1.
      */

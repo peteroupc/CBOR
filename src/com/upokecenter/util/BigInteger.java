@@ -2398,6 +2398,7 @@ at: http://peteroupc.github.io/CBOR/
                                     BigInteger bigintAddend,
                                     BigInteger bigintAugend) {
       int carry;
+      int desiredLength=Math.max(bigintAddend.reg.length,bigintAugend.reg.length);
       if (bigintAddend.reg.length == bigintAugend.reg.length)
         carry = Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (int)(bigintAddend.reg.length));
       else if (bigintAddend.reg.length > bigintAugend.reg.length) {
@@ -2419,9 +2420,10 @@ at: http://peteroupc.github.io/CBOR/
                           (short)carry);
       }
       if (carry != 0) {
-        int len = RoundupSize((sum.reg.length / 2) + 1);
+        int nextIndex=desiredLength;
+        int len = RoundupSize(nextIndex + 1);
         sum.reg = CleanGrow(sum.reg, len);
-        sum.reg[sum.reg.length / 2] = (short)1;
+        sum.reg[nextIndex] = (short)carry;
       }
       sum.negative = false;
       sum.wordCount = sum.CalcWordCount();

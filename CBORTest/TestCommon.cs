@@ -94,6 +94,15 @@ namespace Test {
           "but was: ["+(d3.Mantissa).ToString()+","+(d3.Exponent).ToString()+"]"
          ));   }
     }
+    public static void AssertDecFrac(ExtendedDecimal d3, string output){
+      if(output==null && d3!=null)Assert.Fail("d3 must be null");
+      if(output!=null && !d3.ToString().Equals(output)){
+        ExtendedDecimal d4=ExtendedDecimal.FromString(output);
+        Assert.AreEqual(output,d3.ToString(),(
+          "expected: ["+(d4.Mantissa).ToString()+","+(d4.Exponent).ToString()+"]\\n"+
+          "but was: ["+(d3.Mantissa).ToString()+","+(d3.Exponent).ToString()+"]"
+         ));   }
+    }
     
     public static BigInteger BigIntParse(string str){
       return BigInteger.fromString(str);
@@ -113,6 +122,10 @@ namespace Test {
                       (actual&PrecisionContext.FlagUnderflow)!=0,"Underflow");
       Assert.AreEqual((expected&PrecisionContext.FlagClamped)!=0,
                       (actual&PrecisionContext.FlagClamped)!=0,"Clamped");
+      Assert.AreEqual((expected&PrecisionContext.FlagInvalid)!=0,
+                      (actual&PrecisionContext.FlagInvalid)!=0,"Invalid");
+      Assert.AreEqual((expected&PrecisionContext.FlagDivideByZero)!=0,
+                      (actual&PrecisionContext.FlagDivideByZero)!=0,"DivideByZero");
     }
     
     private static CBORObject FromBytesA(byte[] b) {

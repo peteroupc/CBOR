@@ -215,6 +215,8 @@ namespace PeterO {
       // Shift by the difference in digit length
       if (digitLength > digits) {
         int digitShift = digitLength - digits;
+        int digitDivide=digitShift;
+        //Console.WriteLine("dlen={0} dshift={1}",digitLength,digitShift);
         int newLength = (int)(digitLength - digitShift);
         if(digitShift<=Int32.MaxValue)
           discardedBitCount.AddInt((int)digitShift);
@@ -228,7 +230,6 @@ namespace PeterO {
             break;
           }
         }
-        knownBitLength = new FastInteger(digits);
         if (newLength <= 9) {
           isSmall = true;
           shiftedSmall = FastParseLong(str, 0, newLength);

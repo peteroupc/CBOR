@@ -30,7 +30,7 @@ namespace PeterO {
       return false;
     }
     public static void Main(string[] args) {
-        String param=null;
+        String param="Extensi";
       if(args.Length>0){
           param=args[0];
         Console.WriteLine(param);

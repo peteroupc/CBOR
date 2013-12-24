@@ -10,14 +10,17 @@ at: http://peteroupc.github.io/CBOR/
 
 
 
+
     /**
      * Represents an arbitrary-precision decimal floating-point number.
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
      * The value of the number is equal to mantissa * 10^exponent.
      */
-  public final class DecimalFraction implements Comparable<DecimalFraction> {
+  public final class ExtendedDecimal implements Comparable<ExtendedDecimal> {
     BigInteger exponent;
     BigInteger mantissa;
+    int flags;
+    
     /**
      * Gets this object's exponent. This object's value will be an integer
      * if the exponent is positive or zero.
@@ -27,26 +30,32 @@ at: http://peteroupc.github.io/CBOR/
      * Gets this object's unscaled value.
      */
     public BigInteger getMantissa() { return mantissa; }
+
+    /**
+     * 
+     */
+public BigInteger getSignedMantissa() { return this.isNegative() ? -mantissa : mantissa; }
+
     
     /**
      * Determines whether this object's mantissa and exponent are equal
      * to those of another object.
-     * @param other A DecimalFraction object.
+     * @param otherValue An ExtendedDecimal object.
      */
-    public boolean EqualsInternal(DecimalFraction other) {
-      DecimalFraction otherValue = ((other instanceof DecimalFraction) ? (DecimalFraction)other : null);
+    public boolean EqualsInternal(ExtendedDecimal otherValue) {
       if (otherValue == null)
         return false;
       return this.exponent.equals(otherValue.exponent) &&
-        this.mantissa.equals(otherValue.mantissa);
+        this.mantissa.equals(otherValue.mantissa) &&
+        this.flags==otherValue.flags;
     }
     
     
     /**
      * 
-     * @param other A DecimalFraction object.
+     * @param other A ExtendedDecimal object.
      */
-    public boolean equals(DecimalFraction other) {
+    public boolean equals(ExtendedDecimal other) {
       return EqualsInternal(other);
     }
     /**
@@ -56,7 +65,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return True if the objects are equal; false otherwise.
      */
     @Override public boolean equals(Object obj) {
-      return EqualsInternal(((obj instanceof DecimalFraction) ? (DecimalFraction)obj : null));
+      return EqualsInternal(((obj instanceof ExtendedDecimal) ? (ExtendedDecimal)obj : null));
     }
     /**
      * Calculates this object's hash code.
@@ -65,8 +74,9 @@ at: http://peteroupc.github.io/CBOR/
     @Override public int hashCode() {
       int hashCode_ = 0;
       {
-        hashCode_ += 1000000007 * exponent.hashCode();
-        hashCode_ += 1000000009 * mantissa.hashCode();
+        hashCode_ = hashCode_ + 1000000007 * exponent.hashCode();
+        hashCode_ = hashCode_ + 1000000009 * mantissa.hashCode();
+        hashCode_ = hashCode_ + 1000000009 * flags;
       }
       return hashCode_;
     }
@@ -76,9 +86,11 @@ at: http://peteroupc.github.io/CBOR/
      * @param mantissa The unscaled value.
      * @param exponent The decimal exponent.
      */
-    public DecimalFraction (BigInteger mantissa, BigInteger exponent) {
+    public ExtendedDecimal (BigInteger mantissa, BigInteger exponent) {
       this.exponent = exponent;
-      this.mantissa = mantissa;
+      int sign=mantissa.signum();
+      this.mantissa = sign<0 ? -mantissa : mantissa;
+      this.flags=(sign<0) ? BigNumberFlags.FlagNegative : 0;
     }
     
     private static final int MaxSafeInt = 214748363;
@@ -95,301 +107,203 @@ at: http://peteroupc.github.io/CBOR/
      * be ASCII digits ('0' through '9').</p>
      * @param str A string that represents a number.
      */
-    public static DecimalFraction FromString(String str) {
-      return ExtendedDecimal.FromString(str).ToDecimalFraction();
-    }
-    
-    static int ShiftLeftOne(int[] arr){
-      {
-        int carry=0;
-        for(int i=0;i<arr.length;i++){
-          int item=arr[i];
-          arr[i]=(int)(arr[i]<<1)|(int)carry;
-          carry=((item>>31)!=0) ? 1 : 0;
-        }
-        return carry;
+    public static ExtendedDecimal FromString(String str) {
+      if (str == null)
+        throw new NullPointerException("str");
+      if (str.length() == 0)
+        throw new NumberFormatException();
+      int offset = 0;
+      boolean negative = false;
+      if (str.charAt(0) == '+' || str.charAt(0) == '-') {
+        negative = (str.charAt(0) == '-');
+        offset++;
       }
-    }
-    
-    static int CountTrailingZeros(int numberValue) {
-      if (numberValue == 0)
-        return 32;
-      int i=0;
-      {
-        if ((numberValue << 16) == 0) {
-          numberValue >>= 16;
-          i += 16;
-        }
-
-        if ((numberValue << 24) == 0) {
-          numberValue >>= 8;
-          i += 8;
-        }
-
-        if ((numberValue << 28) == 0) {
-          numberValue >>= 4;
-          i += 4;
-        }
-
-        if ((numberValue << 30) == 0) {
-          numberValue >>= 2;
-          i += 2;
-        }
-
-        if ((numberValue << 31) == 0)
-          ++i;
+      int mantInt=0;
+      FastInteger mant = null;
+      boolean haveDecimalPoint = false;
+      boolean haveDigits = false;
+      boolean haveExponent = false;
+      int newScaleInt=0;
+      FastInteger newScale = null;
+      int i = offset;
+      if(i+8==str.length()){
+        if((str.charAt(i)=='I' || str.charAt(i)=='i') &&
+           (str.charAt(i+1)=='N' || str.charAt(i+1)=='n') &&
+           (str.charAt(i+2)=='F' || str.charAt(i+2)=='f') &&
+           (str.charAt(i+3)=='I' || str.charAt(i+3)=='i') &&
+           (str.charAt(i+4)=='N' || str.charAt(i+4)=='n') &&
+           (str.charAt(i+5)=='I' || str.charAt(i+5)=='i') &&
+           (str.charAt(i+6)=='T' || str.charAt(i+6)=='t') &&
+           (str.charAt(i+7)=='Y' || str.charAt(i+7)=='y'))
+          return (negative) ? NegativeInfinity : PositiveInfinity;
       }
-      return i;
-    }
-
-    static int BitPrecisionInt(int numberValue) {
-      if (numberValue == 0)
-        return 0;
-      int i=32;
-      {
-        if ((numberValue >> 16) == 0) {
-          numberValue <<= 16;
-          i -= 8;
-        }
-
-        if ((numberValue >> 24) == 0) {
-          numberValue <<= 8;
-          i -= 8;
-        }
-
-        if ((numberValue >> 28) == 0) {
-          numberValue <<= 4;
-          i -= 4;
-        }
-
-        if ((numberValue >> 30) == 0) {
-          numberValue <<= 2;
-          i -= 2;
-        }
-
-        if ((numberValue >> 31) == 0)
-          --i;
+      if(i+3==str.length()){
+        if((str.charAt(i)=='I' || str.charAt(i)=='i') &&
+           (str.charAt(i+1)=='N' || str.charAt(i+1)=='n') &&
+           (str.charAt(i+2)=='F' || str.charAt(i+2)=='f'))
+          return (negative) ? NegativeInfinity : PositiveInfinity;
       }
-      return i;
-    }
-
-    
-    static int ShiftAwayTrailingZerosTwoElements(int[] arr){
-      int a0=arr[0];
-      int a1=arr[1];
-      int tz=CountTrailingZeros(a0);
-      if(tz==0)return 0;
-      {
-        if(tz<32){
-          int carry=a1<<(32-tz);
-          arr[0]=(int)((a0>>tz)&(0x7FFFFFFF>>(tz-1)))|(int)(carry);
-          arr[1]=((a1>>tz)&(0x7FFFFFFF>>(tz-1)));
-          return tz;
-        } else {
-          tz=CountTrailingZeros(a1);
-          if(tz==32){
-            arr[0]=0;
-          } else if(tz>0){
-            arr[0]=((a1>>tz)&(0x7FFFFFFF>>(tz-1)));
+      if(i+3<=str.length()){
+        // Quiet NaN
+        if((str.charAt(i)=='N' || str.charAt(i)=='n') &&
+           (str.charAt(i+1)=='A' || str.charAt(i+1)=='a') &&
+           (str.charAt(i+2)=='N' || str.charAt(i+2)=='n')){
+          if(i+3==str.length()){
+            if(!negative)return NaN;
+            return ExtendedDecimal.CreateWithFlags(
+              BigInteger.ZERO,BigInteger.ZERO,
+              (negative ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagQuietNaN);
+          }
+          i+=3;
+          for (; i < str.length(); i++) {
+            if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+              int thisdigit = (int)(str.charAt(i) - '0');
+              if(mantInt>MaxSafeInt){
+                if(mant==null)
+                  mant=new FastInteger(mantInt);
+                mant.Multiply(10);
+                mant.AddInt(thisdigit);
+              } else {
+                mantInt*=10;
+                mantInt+=thisdigit;
+              }
+            } else {
+              throw new NumberFormatException();
+            }
+          }
+          BigInteger bigmant=(mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
+          return ExtendedDecimal.CreateWithFlags(
+            bigmant,BigInteger.ZERO,
+            (negative ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagQuietNaN);
+        }
+      }
+      if(i+4<=str.length()){
+        // Signaling NaN
+        if((str.charAt(i)=='S' || str.charAt(i)=='s') &&
+           (str.charAt(i+1)=='N' || str.charAt(i+1)=='n') &&
+           (str.charAt(i+2)=='A' || str.charAt(i+2)=='a') &&
+           (str.charAt(i+3)=='N' || str.charAt(i+3)=='n')){
+          if(i+4==str.length()){
+            if(!negative)return SignalingNaN;
+            return ExtendedDecimal.CreateWithFlags(
+              BigInteger.ZERO,
+              BigInteger.ZERO,BigNumberFlags.FlagSignalingNaN);
+          }
+          i+=4;
+          for (; i < str.length(); i++) {
+            if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+              int thisdigit = (int)(str.charAt(i) - '0');
+              if(mantInt>MaxSafeInt){
+                if(mant==null)
+                  mant=new FastInteger(mantInt);
+                mant.Multiply(10);
+                mant.AddInt(thisdigit);
+              } else {
+                mantInt*=10;
+                mantInt+=thisdigit;
+              }
+            } else {
+              throw new NumberFormatException();
+            }
+          }
+          BigInteger bigmant=(mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
+          return ExtendedDecimal.CreateWithFlags(
+            bigmant,BigInteger.ZERO,
+            (negative ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagSignalingNaN);
+        }
+      }
+      for (; i < str.length(); i++) {
+        if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+          int thisdigit = (int)(str.charAt(i) - '0');
+          if(mantInt>MaxSafeInt){
+            if(mant==null)
+              mant=new FastInteger(mantInt);
+            mant.Multiply(10);
+            mant.AddInt(thisdigit);
           } else {
-            arr[0]=a1;
+            mantInt*=10;
+            mantInt+=thisdigit;
           }
-          arr[1]=0;
-          return 32+tz;
-        }
-      }
-    }
-    
-    static boolean HasBitSet(int[] arr, int bit){
-      return ((bit>>5)<arr.length && (arr[bit>>5]&(1<<(bit&31)))!=0);
-    }
-    
-
-    static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
-      if (diff.signum() <= 0) return BigInteger.ONE;
-      BigInteger bigpow = BigInteger.ZERO;
-      FastInteger intcurexp = FastInteger.FromBig(diff);
-      if (intcurexp.CompareToInt(54) <= 0) {
-        return FindPowerOfFive(intcurexp.AsInt32());
-      }
-      BigInteger mantissa = BigInteger.ONE;
-      while (intcurexp.signum() > 0) {
-        if (intcurexp.CompareToInt(27) <= 0) {
-          bigpow = FindPowerOfFive(intcurexp.AsInt32());
-          mantissa=mantissa.multiply(bigpow);
-          break;
-        } else if (intcurexp.CompareToInt(9999999) <= 0) {
-          bigpow = (FindPowerOfFive(1)).pow(intcurexp.AsInt32());
-          mantissa=mantissa.multiply(bigpow);
-          break;
-        } else {
-          if (bigpow.signum()==0)
-            bigpow = (FindPowerOfFive(1)).pow(9999999);
-          mantissa=mantissa.multiply(bigpow);
-          intcurexp.AddInt(-9999999);
-        }
-      }
-      return mantissa;
-    }
-
-    private static BigInteger BigInt36 = BigInteger.valueOf(36);
-
-    static BigInteger FindPowerOfTenFromBig(BigInteger bigintExponent) {
-      if (bigintExponent.signum() <= 0) return BigInteger.ONE;
-      if (bigintExponent.compareTo(BigInt36) <= 0) {
-        return FindPowerOfTen(bigintExponent.intValue());
-      }
-      FastInteger intcurexp = FastInteger.FromBig(bigintExponent);
-      BigInteger mantissa = BigInteger.ONE;
-      BigInteger bigpow = BigInteger.ZERO;
-      while (intcurexp.signum() > 0) {
-        if (intcurexp.CompareToInt(18) <= 0) {
-          bigpow = FindPowerOfTen(intcurexp.AsInt32());
-          mantissa=mantissa.multiply(bigpow);
-          break;
-        } else if (intcurexp.CompareToInt(9999999) <= 0) {
-          int val = intcurexp.AsInt32();
-          bigpow = FindPowerOfFive(val);
-          bigpow=bigpow.shiftLeft(val);
-          mantissa=mantissa.multiply(bigpow);
-          break;
-        } else {
-          if (bigpow.signum()==0) {
-            bigpow = FindPowerOfFive(9999999);
-            bigpow=bigpow.shiftLeft(9999999);
+          haveDigits = true;
+          if (haveDecimalPoint) {
+            if(newScaleInt==Integer.MIN_VALUE){
+              if(newScale==null)
+                newScale=new FastInteger(newScaleInt);
+              newScale.AddInt(-1);
+            } else {
+              newScaleInt--;
+            }
           }
-          mantissa=mantissa.multiply(bigpow);
-          intcurexp.AddInt(-9999999);
+        } else if (str.charAt(i) == '.') {
+          if (haveDecimalPoint)
+            throw new NumberFormatException();
+          haveDecimalPoint = true;
+        } else if (str.charAt(i) == 'E' || str.charAt(i) == 'e') {
+          haveExponent = true;
+          i++;
+          break;
+        } else {
+          throw new NumberFormatException();
         }
       }
-      return mantissa;
+      if (!haveDigits)
+        throw new NumberFormatException();
+      if (haveExponent) {
+        FastInteger exp = null;
+        int expInt=0;
+        offset = 1;
+        haveDigits = false;
+        if (i == str.length()) throw new NumberFormatException();
+        if (str.charAt(i) == '+' || str.charAt(i) == '-') {
+          if (str.charAt(i) == '-') offset = -1;
+          i++;
+        }
+        for (; i < str.length(); i++) {
+          if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+            haveDigits = true;
+            int thisdigit = (int)(str.charAt(i) - '0');
+            if(expInt>MaxSafeInt){
+              if(exp==null)
+                exp=new FastInteger(expInt);
+              exp.Multiply(10);
+              exp.AddInt(thisdigit);
+            } else {
+              expInt*=10;
+              expInt+=thisdigit;
+            }
+          } else {
+            throw new NumberFormatException();
+          }
+        }
+        if (!haveDigits)
+          throw new NumberFormatException();
+        if(offset>=0 && newScaleInt==0 && newScale==null && exp==null){
+          newScaleInt=expInt;
+        } else if(exp==null){
+          if(newScale==null)
+            newScale=new FastInteger(newScaleInt);
+          if (offset < 0)
+            newScale.SubtractInt(expInt);
+          else
+            newScale.AddInt(expInt);
+        } else {
+          if(newScale==null)
+            newScale=new FastInteger(newScaleInt);
+          if (offset < 0)
+            newScale.Subtract(exp);
+          else
+            newScale.Add(exp);
+        }
+      } else if (i != str.length()) {
+        throw new NumberFormatException();
+      }
+      return ExtendedDecimal.CreateWithFlags(
+        (mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
+        (newScale==null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
+        negative ? BigNumberFlags.FlagNegative : 0);
     }
     
-    private static BigInteger FivePower40=(BigInteger.valueOf(95367431640625L)).multiply(BigInteger.valueOf(95367431640625L));
-
-    static BigInteger FindPowerOfFive(int precision) {
-      if (precision <= 0) return BigInteger.ONE;
-      BigInteger bigpow;
-      BigInteger ret;
-      if (precision <= 27)
-        return BigIntPowersOfFive[(int)precision];
-      if(precision==40)
-        return FivePower40;
-      if (precision <= 54) {
-        if((precision&1)==0){
-          ret = BigIntPowersOfFive[(int)(precision>>1)];
-          ret=ret.multiply(ret);
-          return ret;
-        } else {
-          ret = BigIntPowersOfFive[27];
-          bigpow = BigIntPowersOfFive[((int)precision) - 27];
-          ret=ret.multiply(bigpow);
-          return ret;
-        }
-      }
-      if(precision>40 && precision<=94){
-        ret = FivePower40;
-        bigpow = FindPowerOfFive(precision-40);
-        ret=ret.multiply(bigpow);
-        return ret;
-      }
-      ret = BigInteger.ONE;
-      boolean first = true;
-      bigpow = BigInteger.ZERO;
-      while (precision > 0) {
-        if (precision <= 27) {
-          bigpow = BigIntPowersOfFive[(int)precision];
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          break;
-        } else if (precision <= 9999999) {
-          bigpow = (BigIntPowersOfFive[1]).pow((int)precision);
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          break;
-        } else {
-          if (bigpow.signum()==0)
-            bigpow = (BigIntPowersOfFive[1]).pow(9999999);
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          precision -= 9999999;
-        }
-      }
-      return ret;
-    }
-
-    static BigInteger FindPowerOfTen(int precision) {
-      if (precision <= 0) return BigInteger.ONE;
-      BigInteger ret;
-      BigInteger bigpow;
-      if (precision <= 18)
-        return BigIntPowersOfTen[(int)precision];
-      if (precision <= 27) {
-        int prec = (int)precision;
-        ret = BigIntPowersOfFive[prec];
-        ret=ret.shiftLeft(prec);
-        return ret;
-      }
-      if (precision <= 36) {
-        if((precision&1)==0){
-          ret = BigIntPowersOfTen[(int)(precision>>1)];
-          ret=ret.multiply(ret);
-          return ret;
-        } else {
-          ret = BigIntPowersOfTen[18];
-          bigpow = BigIntPowersOfTen[((int)precision) - 18];
-          ret=ret.multiply(bigpow);
-          return ret;
-        }
-      }
-      ret = BigInteger.ONE;
-      boolean first = true;
-      bigpow = BigInteger.ZERO;
-      while (precision > 0) {
-        if (precision <= 18) {
-          bigpow = BigIntPowersOfTen[(int)precision];
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          break;
-        } else if (precision <= 9999999) {
-          int prec = (int)precision;
-          bigpow = FindPowerOfFive(prec);
-          bigpow=bigpow.shiftLeft(prec);
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          break;
-        } else {
-          if (bigpow.signum()==0)
-            bigpow = (BigIntPowersOfTen[1]).pow(9999999);
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          precision -= 9999999;
-        }
-      }
-      return ret;
-    }
-
-    private static DecimalFraction MinusOne=new DecimalFraction(BigInteger.ZERO.subtract(BigInteger.ONE),BigInteger.ZERO);
-    
-    private static final class DecimalMathHelper implements IRadixMathHelper<DecimalFraction> {
+    private static final class DecimalMathHelper implements IRadixMathHelper<ExtendedDecimal> {
 
     /**
      * 
@@ -400,25 +314,25 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
-     * @param value A DecimalFraction object.
+     * @param value A ExtendedDecimal object.
      */
-      public int GetSign(DecimalFraction value) {
+      public int GetSign(ExtendedDecimal value) {
         return value.signum();
       }
 
     /**
      * 
-     * @param value A DecimalFraction object.
+     * @param value A ExtendedDecimal object.
      */
-      public BigInteger GetMantissa(DecimalFraction value) {
+      public BigInteger GetMantissa(ExtendedDecimal value) {
         return value.mantissa;
       }
 
     /**
      * 
-     * @param value A DecimalFraction object.
+     * @param value A ExtendedDecimal object.
      */
-      public BigInteger GetExponent(DecimalFraction value) {
+      public BigInteger GetExponent(ExtendedDecimal value) {
         return value.exponent;
       }
 
@@ -433,9 +347,9 @@ at: http://peteroupc.github.io/CBOR/
         if (mantissa.signum() == 0) return BigInteger.ZERO;
         FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
         if (diff.CanFitInInt32()) {
-          mantissa=mantissa.multiply(FindPowerOfTen(diff.AsInt32()));
+          mantissa=mantissa.multiply(DecimalFraction.FindPowerOfTen(diff.AsInt32()));
         } else {
-          mantissa=mantissa.multiply(FindPowerOfTenFromBig(diff.AsBigInteger()));
+          mantissa=mantissa.multiply(DecimalFraction.FindPowerOfTenFromBig(diff.AsBigInteger()));
         }
         return mantissa;
       }
@@ -445,8 +359,8 @@ at: http://peteroupc.github.io/CBOR/
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
      */
-      public DecimalFraction CreateNew(BigInteger mantissa, BigInteger exponent) {
-        return new DecimalFraction(mantissa, exponent);
+      public ExtendedDecimal CreateNew(BigInteger mantissa, BigInteger exponent) {
+        return new ExtendedDecimal(mantissa, exponent);
       }
 
     /**
@@ -506,26 +420,26 @@ bigrem=divrem[1];
         if (bigint.signum()==0) return bigint;
         if(bigint.compareTo(BigInteger.ONE)!=0){
           if (power.CanFitInInt32()) {
-            bigint=bigint.multiply(FindPowerOfTen(power.AsInt32()));
+            bigint=bigint.multiply(DecimalFraction.FindPowerOfTen(power.AsInt32()));
           } else {
-            bigint=bigint.multiply(FindPowerOfTenFromBig(power.AsBigInteger()));
+            bigint=bigint.multiply(DecimalFraction.FindPowerOfTenFromBig(power.AsBigInteger()));
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return (FindPowerOfTen(power.AsInt32()));
+            return (DecimalFraction.FindPowerOfTen(power.AsInt32()));
           } else {
-            return (FindPowerOfTenFromBig(power.AsBigInteger()));
+            return (DecimalFraction.FindPowerOfTenFromBig(power.AsBigInteger()));
           }
         }
       }
       
     /**
      * 
-     * @param value A DecimalFraction object.
+     * @param value A ExtendedDecimal object.
      */
-      public int GetFlags(DecimalFraction value) {
-        return value.mantissa.signum()<0 ? BigNumberFlags.FlagNegative : 0;
+      public int GetFlags(ExtendedDecimal value) {
+        return value.flags;
       }
       
     /**
@@ -534,62 +448,256 @@ bigrem=divrem[1];
      * @param exponent A BigInteger object.
      * @param flags A 32-bit signed integer.
      */
-      public DecimalFraction CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
-        boolean neg=(flags&BigNumberFlags.FlagNegative)!=0;
-        if((neg && mantissa.signum()>0) || (!neg && mantissa.signum()<0))
-          mantissa=mantissa.negate();
-        return new DecimalFraction(mantissa,exponent);
+      public ExtendedDecimal CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
+        return CreateWithFlags(mantissa,exponent,flags);
       }
-      
     /**
      * 
      */
       public int GetArithmeticSupport() {
-        return BigNumberFlags.FiniteOnly;
+        return BigNumberFlags.FiniteAndNonFinite;
       }
-      
     /**
      * 
      * @param val A 32-bit signed integer.
      */
-public DecimalFraction ValueOf(int val) {
-        if(val==0)return Zero;
-        if(val==1)return One;
-        if(val==-1)return MinusOne;
+public ExtendedDecimal ValueOf(int val) {
         return FromInt64(val);
       }
     }
-    
+
+    private static boolean AppendString(StringBuilder builder, char c, FastInteger count) {
+      if (count.CompareToInt(Integer.MAX_VALUE) > 0 || count.signum() < 0) {
+        throw new UnsupportedOperationException();
+      }
+      int icount = count.AsInt32();
+      for (int i = icount - 1; i >= 0; i--) {
+        builder.append(c);
+      }
+      return true;
+    }
     private String ToStringInternal(int mode) {
-      switch(mode){
-        case 0:
-          return new ExtendedDecimal(this.getMantissa(),this.getExponent()).toString();
-        case 1:
-          return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToEngineeringString();
-        case 2:
-          return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToPlainString();
-        default:
-          throw new IllegalArgumentException();
+      // Using Java's rules for converting ExtendedDecimal
+      // values to a String
+      boolean negative=(this.flags&BigNumberFlags.FlagNegative)!=0;
+      if((this.flags&BigNumberFlags.FlagInfinity)!=0){
+        return negative ? "-Infinity" : "Infinity";
+      }
+      if((this.flags&BigNumberFlags.FlagSignalingNaN)!=0){
+        if(this.mantissa.signum()==0)
+          return negative ? "-sNaN" : "sNaN";
+        return negative ?
+          "-sNaN"+(this.mantissa).abs().toString() :
+          "sNaN"+(this.mantissa).abs().toString();
+      }
+      if((this.flags&BigNumberFlags.FlagQuietNaN)!=0){
+        if(this.mantissa.signum()==0)
+          return negative ? "-NaN" : "NaN";
+        return negative ?
+          "-NaN"+(this.mantissa).abs().toString() :
+          "NaN"+(this.mantissa).abs().toString();
+      }
+      String mantissaString = (this.mantissa).abs().toString();
+      int scaleSign = -this.exponent.signum();
+      if (scaleSign == 0)
+        return negative ? "-"+mantissaString : mantissaString;
+      boolean iszero = (this.mantissa.signum()==0);
+      if (mode == 2 && iszero && scaleSign < 0) {
+        // special case for zero in plain
+        return negative ? "-"+mantissaString : mantissaString;
+      }
+      FastInteger sbLength = new FastInteger(mantissaString.length());
+      FastInteger adjustedExponent = FastInteger.FromBig(this.exponent);
+      FastInteger thisExponent = FastInteger.Copy(adjustedExponent);
+      adjustedExponent.Add(sbLength).AddInt(-1);
+      FastInteger decimalPointAdjust = new FastInteger(1);
+      FastInteger threshold = new FastInteger(-6);
+      if (mode == 1) { // engineering String adjustments
+        FastInteger newExponent = FastInteger.Copy(adjustedExponent);
+        boolean adjExponentNegative = (adjustedExponent.signum() < 0);
+        int intphase = FastInteger.Copy(adjustedExponent).Abs().Mod(3).AsInt32();
+        if (iszero && (adjustedExponent.compareTo(threshold) < 0 ||
+                       scaleSign < 0)) {
+          if (intphase == 1) {
+            if (adjExponentNegative) {
+              decimalPointAdjust.AddInt(1);
+              newExponent.AddInt(1);
+            } else {
+              decimalPointAdjust.AddInt(2);
+              newExponent.AddInt(2);
+            }
+          } else if (intphase == 2) {
+            if (!adjExponentNegative) {
+              decimalPointAdjust.AddInt(1);
+              newExponent.AddInt(1);
+            } else {
+              decimalPointAdjust.AddInt(2);
+              newExponent.AddInt(2);
+            }
+          }
+          threshold.AddInt(1);
+        } else {
+          if (intphase == 1) {
+            if (!adjExponentNegative) {
+              decimalPointAdjust.AddInt(1);
+              newExponent.AddInt(-1);
+            } else {
+              decimalPointAdjust.AddInt(2);
+              newExponent.AddInt(-2);
+            }
+          } else if (intphase == 2) {
+            if (adjExponentNegative) {
+              decimalPointAdjust.AddInt(1);
+              newExponent.AddInt(-1);
+            } else {
+              decimalPointAdjust.AddInt(2);
+              newExponent.AddInt(-2);
+            }
+          }
+        }
+        adjustedExponent = newExponent;
+      }
+      if (mode == 2 || ((adjustedExponent.compareTo(threshold) >= 0 &&
+                         scaleSign >= 0))) {
+        if (scaleSign > 0) {
+          FastInteger decimalPoint = FastInteger.Copy(thisExponent).Add(sbLength);
+          int cmp = decimalPoint.CompareToInt(0);
+          StringBuilder builder = null;
+          if (cmp < 0) {
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            builder = new StringBuilder(
+              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              Integer.MAX_VALUE : tmpFast.AsInt32());
+            if(negative)builder.append('-');
+            builder.append("0.");
+            AppendString(builder, '0', FastInteger.Copy(decimalPoint).Negate());
+            builder.append(mantissaString);
+          } else if (cmp == 0) {
+            if (!decimalPoint.CanFitInInt32())
+              throw new UnsupportedOperationException();
+            int tmpInt = decimalPoint.AsInt32();
+            if (tmpInt < 0) tmpInt = 0;
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            builder = new StringBuilder(
+              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              Integer.MAX_VALUE : tmpFast.AsInt32());
+            if(negative)builder.append('-');
+            builder.append(mantissaString,0,(0)+(tmpInt));
+            builder.append("0.");
+            builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
+          } else if (decimalPoint.CompareToInt(mantissaString.length()) > 0) {
+            FastInteger insertionPoint = sbLength;
+            if (!insertionPoint.CanFitInInt32())
+              throw new UnsupportedOperationException();
+            int tmpInt = insertionPoint.AsInt32();
+            if (tmpInt < 0) tmpInt = 0;
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            builder = new StringBuilder(
+              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              Integer.MAX_VALUE : tmpFast.AsInt32());
+            if(negative)builder.append('-');
+            builder.append(mantissaString,0,(0)+(tmpInt));
+            AppendString(builder, '0',
+                         FastInteger.Copy(decimalPoint).SubtractInt(builder.length()));
+            builder.append('.');
+            builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
+          } else {
+            if (!decimalPoint.CanFitInInt32())
+              throw new UnsupportedOperationException();
+            int tmpInt = decimalPoint.AsInt32();
+            if (tmpInt < 0) tmpInt = 0;
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            builder = new StringBuilder(
+              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              Integer.MAX_VALUE : tmpFast.AsInt32());
+            if(negative)builder.append('-');
+            builder.append(mantissaString,0,(0)+(tmpInt));
+            builder.append('.');
+            builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
+          }
+          return builder.toString();
+        } else if (mode == 2 && scaleSign < 0) {
+          FastInteger negscale = FastInteger.Copy(thisExponent);
+          StringBuilder builder = new StringBuilder();
+          if(negative)builder.append('-');
+          builder.append(mantissaString);
+          AppendString(builder, '0', negscale);
+          return builder.toString();
+        } else if(!negative){
+          return mantissaString;
+        } else {
+          return "-"+mantissaString;
+        }
+      } else {
+        StringBuilder builder = null;
+        if (mode == 1 && iszero && decimalPointAdjust.CompareToInt(1) > 0) {
+          builder = new StringBuilder();
+          if(negative)builder.append('-');
+          builder.append(mantissaString);
+          builder.append('.');
+          AppendString(builder, '0', FastInteger.Copy(decimalPointAdjust).AddInt(-1));
+        } else {
+          FastInteger tmp = FastInteger.Copy(decimalPointAdjust);
+          int cmp = tmp.CompareToInt(mantissaString.length());
+          if (cmp > 0) {
+            tmp.SubtractInt(mantissaString.length());
+            builder = new StringBuilder();
+            if(negative)builder.append('-');
+            builder.append(mantissaString);
+            AppendString(builder, '0', tmp);
+          } else if (cmp < 0) {
+            // Insert a decimal point at the right place
+            if (!tmp.CanFitInInt32())
+              throw new UnsupportedOperationException();
+            int tmpInt = tmp.AsInt32();
+            if (tmp.signum() < 0) tmpInt = 0;
+            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            builder = new StringBuilder(
+              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              Integer.MAX_VALUE : tmpFast.AsInt32());
+            if(negative)builder.append('-');
+            builder.append(mantissaString,0,(0)+(tmpInt));
+            builder.append('.');
+            builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
+          } else if (adjustedExponent.signum() == 0 && !negative) {
+            return mantissaString;
+          } else if (adjustedExponent.signum() == 0 && negative) {
+            return "-"+mantissaString;
+          } else {
+            builder = new StringBuilder();
+            if(negative)builder.append('-');
+            builder.append(mantissaString);
+          }
+        }
+        if (adjustedExponent.signum() != 0) {
+          builder.append(adjustedExponent.signum() < 0 ? "E-" : "E+");
+          adjustedExponent.Abs();
+          StringBuilder builderReversed = new StringBuilder();
+          while (adjustedExponent.signum() != 0) {
+            int digit = FastInteger.Copy(adjustedExponent).Mod(10).AsInt32();
+            // Each digit is retrieved from right to left
+            builderReversed.append((char)('0' + digit));
+            adjustedExponent.Divide(10);
+          }
+          int count = builderReversed.length();
+          for (int i = 0; i < count; i++) {
+            builder.append(builderReversed.charAt(count - 1 - i));
+          }
+        }
+        return builder.toString();
       }
     }
-
-    private static BigInteger[] BigIntPowersOfTen = new BigInteger[]{
-      BigInteger.ONE, BigInteger.TEN, BigInteger.valueOf(100), BigInteger.valueOf(1000), BigInteger.valueOf(10000), BigInteger.valueOf(100000), BigInteger.valueOf(1000000), BigInteger.valueOf(10000000), BigInteger.valueOf(100000000), BigInteger.valueOf(1000000000),
-      BigInteger.valueOf(10000000000L), BigInteger.valueOf(100000000000L), BigInteger.valueOf(1000000000000L), BigInteger.valueOf(10000000000000L),
-      BigInteger.valueOf(100000000000000L), BigInteger.valueOf(1000000000000000L), BigInteger.valueOf(10000000000000000L),
-      BigInteger.valueOf(100000000000000000L), BigInteger.valueOf(1000000000000000000L)
-    };
-
-    private static BigInteger[] BigIntPowersOfFive = new BigInteger[]{
-      BigInteger.ONE, BigInteger.valueOf(5), BigInteger.valueOf(25), BigInteger.valueOf(125), BigInteger.valueOf(625), BigInteger.valueOf(3125), BigInteger.valueOf(15625), BigInteger.valueOf(78125), BigInteger.valueOf(390625),
-      BigInteger.valueOf(1953125), BigInteger.valueOf(9765625), BigInteger.valueOf(48828125), BigInteger.valueOf(244140625), BigInteger.valueOf(1220703125),
-      BigInteger.valueOf(6103515625L), BigInteger.valueOf(30517578125L), BigInteger.valueOf(152587890625L), BigInteger.valueOf(762939453125L),
-      BigInteger.valueOf(3814697265625L), BigInteger.valueOf(19073486328125L), BigInteger.valueOf(95367431640625L),
-      BigInteger.valueOf(476837158203125L), BigInteger.valueOf(2384185791015625L), BigInteger.valueOf(11920928955078125L),
-      BigInteger.valueOf(59604644775390625L), BigInteger.valueOf(298023223876953125L), BigInteger.valueOf(1490116119384765625L),
-      BigInteger.valueOf(7450580596923828125L)
-    };
-
+    
+    /**
+     * 
+     */
+public DecimalFraction ToDecimalFraction() {
+      if(IsNaN() || IsInfinity()){
+        throw new ArithmeticException("Value is infinity or NaN");
+      }
+      return new DecimalFraction(this.getSignedMantissa(),exponent);
+    }
+    
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
@@ -597,16 +705,17 @@ public DecimalFraction ValueOf(int val) {
     public BigInteger ToBigInteger() {
       int sign = this.getExponent().signum();
       if (sign == 0) {
-        return this.getMantissa();
+        BigInteger bigmantissa = this.getSignedMantissa();
+        return bigmantissa;
       } else if (sign > 0) {
-        BigInteger bigmantissa = this.getMantissa();
-        bigmantissa=bigmantissa.multiply(FindPowerOfTenFromBig(this.getExponent()));
+        BigInteger bigmantissa = this.getSignedMantissa();
+        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfTenFromBig(this.getExponent()));
         return bigmantissa;
       } else {
-        BigInteger bigmantissa = this.getMantissa();
+        BigInteger bigmantissa = this.getSignedMantissa();
         BigInteger bigexponent = this.getExponent();
         bigexponent=bigexponent.negate();
-        bigmantissa=bigmantissa.divide(FindPowerOfTenFromBig(bigexponent));
+        bigmantissa=bigmantissa.divide(DecimalFraction.FindPowerOfTenFromBig(bigexponent));
         return bigmantissa;
       }
     }
@@ -618,7 +727,11 @@ public DecimalFraction ValueOf(int val) {
      * this value exceeds the range of a 32-bit floating point number.
      */
     public float ToSingle() {
-      return BigFloat.FromDecimalFraction(this).ToSingle();
+      if(IsPositiveInfinity())
+        return Float.POSITIVE_INFINITY;
+      if(IsNegativeInfinity())
+        return Float.NEGATIVE_INFINITY;
+      throw new UnsupportedOperationException();
     }
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
@@ -628,7 +741,11 @@ public DecimalFraction ValueOf(int val) {
      * this value exceeds the range of a 64-bit floating point number.
      */
     public double ToDouble() {
-      return BigFloat.FromDecimalFraction(this).ToDouble();
+      if(IsPositiveInfinity())
+        return Double.POSITIVE_INFINITY;
+      if(IsNegativeInfinity())
+        return Double.NEGATIVE_INFINITY;
+      throw new UnsupportedOperationException();
     }
     /**
      * Creates a decimal fraction from a 32-bit floating-point number.
@@ -639,17 +756,64 @@ public DecimalFraction ValueOf(int val) {
      * @return A decimal fraction with the same value as "flt".
      * @throws ArithmeticException "flt" is infinity or not-a-number.
      */
-    public static DecimalFraction FromSingle(float flt) {
-      return ExtendedDecimal.FromSingle(flt).ToDecimalFraction();
+    public static ExtendedDecimal FromSingle(float flt) {
+      int value = Float.floatToRawIntBits(flt);
+      boolean neg = ((value >> 31) != 0);
+      int fpExponent = (int)((value >> 23) & 0xFF);
+      int fpMantissa = value & 0x7FFFFF;
+      if (fpExponent == 255){
+        if(fpMantissa==0){
+          return neg ? NegativeInfinity : PositiveInfinity;
+        }
+        // Treat high bit of mantissa as quiet/signaling bit
+        boolean quiet=(fpMantissa&0x400000)!=0;
+        fpMantissa&=0x3FFFFF;
+        BigInteger info=BigInteger.valueOf(fpMantissa);
+        info=info.subtract(BigInteger.ONE);
+        if(info.signum()==0){
+          return quiet ? NaN : SignalingNaN;
+        } else {
+          return CreateWithFlags(info,BigInteger.ZERO,
+                                 (neg ? BigNumberFlags.FlagNegative : 0)|
+                                 (quiet ? BigNumberFlags.FlagQuietNaN :
+                                  BigNumberFlags.FlagSignalingNaN));
+        }
+      }
+      if (fpExponent == 0) fpExponent++;
+      else fpMantissa |= (1 << 23);
+      if (fpMantissa == 0){
+        return neg ? ExtendedDecimal.NegativeZero : ExtendedDecimal.Zero;
+      }
+      fpExponent -= 150;
+      while ((fpMantissa & 1) == 0) {
+        fpExponent++;
+        fpMantissa >>= 1;
+      }
+      if (fpExponent == 0) {
+        if (neg) fpMantissa = -fpMantissa;
+        return ExtendedDecimal.FromInt64(fpMantissa);
+      } else if (fpExponent > 0) {
+        // Value is an integer
+        BigInteger bigmantissa = BigInteger.valueOf(fpMantissa);
+        bigmantissa=bigmantissa.shiftLeft(fpExponent);
+        if (neg) bigmantissa=(bigmantissa).negate();
+        return ExtendedDecimal.FromBigInteger(bigmantissa);
+      } else {
+        // Value has a fractional part
+        BigInteger bigmantissa = BigInteger.valueOf(fpMantissa);
+        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfFive(-fpExponent));
+        if (neg) bigmantissa=(bigmantissa).negate();
+        return new ExtendedDecimal(bigmantissa, BigInteger.valueOf(fpExponent));
+      }
     }
     
-    public static DecimalFraction FromBigInteger(BigInteger bigint) {
-      return new DecimalFraction(bigint,BigInteger.ZERO);
+    public static ExtendedDecimal FromBigInteger(BigInteger bigint) {
+      return new ExtendedDecimal(bigint,BigInteger.ZERO);
     }
     
-    public static DecimalFraction FromInt64(long valueSmall) {
+    public static ExtendedDecimal FromInt64(long valueSmall) {
       BigInteger bigint=BigInteger.valueOf(valueSmall);
-      return new DecimalFraction(bigint,BigInteger.ZERO);
+      return new ExtendedDecimal(bigint,BigInteger.ZERO);
     }
 
     /**
@@ -661,8 +825,54 @@ public DecimalFraction ValueOf(int val) {
      * @return A decimal fraction with the same value as "dbl"
      * @throws ArithmeticException "dbl" is infinity or not-a-number.
      */
-    public static DecimalFraction FromDouble(double dbl) {
-      return ExtendedDecimal.FromDouble(dbl).ToDecimalFraction();
+    public static ExtendedDecimal FromDouble(double dbl) {
+      int[] value = Extras.DoubleToIntegers(dbl);
+      int fpExponent = (int)((value[1] >> 20) & 0x7ff);
+      boolean neg=(value[1]>>31)!=0;
+      if (fpExponent == 2047){
+        if((value[1]&0xFFFFF)==0 && value[0]==0){
+          return neg ? NegativeInfinity : PositiveInfinity;
+        }
+        // Treat high bit of mantissa as quiet/signaling bit
+        boolean quiet=(value[1]&0x80000)!=0;
+        value[1]&=0x7FFFF;
+        BigInteger info=FastInteger.WordsToBigInteger(value);
+        info=info.subtract(BigInteger.ONE);
+        if(info.signum()==0){
+          return quiet ? NaN : SignalingNaN;
+        } else {
+          return CreateWithFlags(info,BigInteger.ZERO,
+                                 (neg ? BigNumberFlags.FlagNegative : 0)|
+                                 (quiet ? BigNumberFlags.FlagQuietNaN :
+                                  BigNumberFlags.FlagSignalingNaN));
+        }
+      }
+      value[1]&=0xFFFFF; // Mask out the exponent and sign
+      if (fpExponent == 0) fpExponent++;
+      else value[1]|=0x100000;
+      if ((value[1]|value[0]) != 0) {
+        fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
+      } else {
+        return neg ? ExtendedDecimal.NegativeZero : ExtendedDecimal.Zero;
+      }
+      fpExponent -= 1075;
+      BigInteger fpMantissaBig=FastInteger.WordsToBigInteger(value);
+      if (fpExponent == 0) {
+        if (neg) fpMantissaBig=fpMantissaBig.negate();
+        return ExtendedDecimal.FromBigInteger(fpMantissaBig);
+      } else if (fpExponent > 0) {
+        // Value is an integer
+        BigInteger bigmantissa = fpMantissaBig;
+        bigmantissa=bigmantissa.shiftLeft(fpExponent);
+        if (neg) bigmantissa=(bigmantissa).negate();
+        return ExtendedDecimal.FromBigInteger(bigmantissa);
+      } else {
+        // Value has a fractional part
+        BigInteger bigmantissa = fpMantissaBig;
+        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfFive(-fpExponent));
+        if (neg) bigmantissa=(bigmantissa).negate();
+        return new ExtendedDecimal(bigmantissa, BigInteger.valueOf(fpExponent));
+      }
     }
 
     /**
@@ -670,8 +880,36 @@ public DecimalFraction ValueOf(int val) {
      * number.
      * @param bigfloat A bigfloat.
      */
-    public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
-      return ExtendedDecimal.FromBigFloat(bigfloat).ToDecimalFraction();
+    public static ExtendedDecimal FromBigFloat(BigFloat bigfloat) {
+      if((bigfloat)==null)throw new NullPointerException("bigfloat");
+      BigInteger bigintExp = bigfloat.getExponent();
+      BigInteger bigintMant = bigfloat.getMantissa();
+      if (bigintExp.signum()==0) {
+        // Integer
+        return ExtendedDecimal.FromBigInteger(bigintMant);
+      } else if (bigintExp.signum() > 0) {
+        // Scaled integer
+        FastInteger intcurexp = FastInteger.FromBig(bigintExp);
+        BigInteger bigmantissa = bigintMant;
+        boolean neg = (bigmantissa.signum() < 0);
+        if (neg) bigmantissa=(bigmantissa).negate();
+        while (intcurexp.signum() > 0) {
+          int shift = 512;
+          if (intcurexp.CompareToInt(512) < 0) {
+            shift = intcurexp.AsInt32();
+          }
+          bigmantissa=bigmantissa.shiftLeft(shift);
+          intcurexp.AddInt(-shift);
+        }
+        if (neg) bigmantissa=(bigmantissa).negate();
+        return ExtendedDecimal.FromBigInteger(bigmantissa);
+      } else {
+        // Fractional number
+        BigInteger bigmantissa = bigintMant;
+        BigInteger negbigintExp=(bigintExp).negate();
+        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfFiveFromBig(negbigintExp));
+        return new ExtendedDecimal(bigmantissa, bigintExp);
+      }
     }
     
     /**
@@ -703,26 +941,112 @@ public DecimalFraction ValueOf(int val) {
      * Represents the number 1.
      */
     
-    public static final DecimalFraction One = new DecimalFraction(BigInteger.ONE,BigInteger.ZERO);
+    public static final ExtendedDecimal One = new ExtendedDecimal(BigInteger.ONE,BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
     
-    public static final DecimalFraction Zero = new DecimalFraction(BigInteger.ZERO,BigInteger.ZERO);
+    public static final ExtendedDecimal Zero = new ExtendedDecimal(BigInteger.ZERO,BigInteger.ZERO);
+    
+    public static final ExtendedDecimal NegativeZero = ExtendedDecimal.CreateWithFlags(
+      BigInteger.ZERO,BigInteger.ZERO,BigNumberFlags.FlagNegative);
     /**
      * Represents the number 10.
      */
     
-    public static final DecimalFraction Ten = new DecimalFraction(BigInteger.TEN,BigInteger.ZERO);
+    public static final ExtendedDecimal Ten = new ExtendedDecimal(BigInteger.TEN,BigInteger.ZERO);
 
     //----------------------------------------------------------------
+
+    private static ExtendedDecimal CreateWithFlags(BigInteger mantissa,
+                                                   BigInteger exponent, int flags) {
+      ExtendedDecimal ext=new ExtendedDecimal(mantissa,exponent);
+      ext.flags=flags;
+      return ext;
+    }
+    
+    /**
+     * 
+     */
+    public static final ExtendedDecimal NaN=CreateWithFlags(
+      BigInteger.ZERO,
+      BigInteger.ZERO,BigNumberFlags.FlagQuietNaN);
+    /**
+     * 
+     */
+    public static final ExtendedDecimal SignalingNaN=CreateWithFlags(
+      BigInteger.ZERO,
+      BigInteger.ZERO,BigNumberFlags.FlagSignalingNaN);
+    /**
+     * 
+     */
+    public static final ExtendedDecimal PositiveInfinity=CreateWithFlags(
+      BigInteger.ZERO,
+      BigInteger.ZERO,BigNumberFlags.FlagInfinity);
+    /**
+     * 
+     */
+    public static final ExtendedDecimal NegativeInfinity=CreateWithFlags(
+      BigInteger.ZERO,
+      BigInteger.ZERO,BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
+    
+    /**
+     * 
+     */
+    public boolean IsPositiveInfinity() {
+      return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
+        (BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
+    }
+    
+    /**
+     * 
+     */
+    public boolean IsNegativeInfinity() {
+      return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
+        (BigNumberFlags.FlagInfinity);
+    }
+    
+    /**
+     * 
+     */
+    public boolean IsNaN() {
+      return (this.flags&(BigNumberFlags.FlagQuietNaN|BigNumberFlags.FlagSignalingNaN))!=0;
+    }
+
+    /**
+     * 
+     */
+public boolean IsInfinity() {
+      return (this.flags&(BigNumberFlags.FlagInfinity))!=0;
+    }
+
+    /**
+     * 
+     */
+public boolean isNegative() {
+        return (this.flags&(BigNumberFlags.FlagNegative))!=0;
+      }
+
+    /**
+     * 
+     */
+    public boolean IsQuietNaN() {
+      return (this.flags&(BigNumberFlags.FlagQuietNaN))!=0;
+    }
+
+    /**
+     * 
+     */
+    public boolean IsSignalingNaN() {
+      return (this.flags&(BigNumberFlags.FlagSignalingNaN))!=0;
+    }
 
     /**
      * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
-        return mantissa.signum();
+        return mantissa.signum()==0 ? 0 : (((this.flags&BigNumberFlags.FlagNegative)!=0) ? -1 : 1);
       }
     /**
      * Gets whether this object's value equals 0.
@@ -733,14 +1057,14 @@ public DecimalFraction ValueOf(int val) {
     /**
      * Gets the absolute value of this object.
      */
-    public DecimalFraction Abs() {
+    public ExtendedDecimal Abs() {
       return Abs(null);
     }
 
     /**
      * Gets an object with the same value as this one, but with the sign reversed.
      */
-    public DecimalFraction Negate() {
+    public ExtendedDecimal Negate() {
       return Negate(null);
     }
 
@@ -753,7 +1077,7 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException The result would have a nonterminating
      * decimal expansion.
      */
-    public DecimalFraction Divide(DecimalFraction divisor) {
+    public ExtendedDecimal Divide(ExtendedDecimal divisor) {
       return Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
 
@@ -768,20 +1092,20 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public DecimalFraction DivideToSameExponent(DecimalFraction divisor, Rounding rounding) {
+    public ExtendedDecimal DivideToSameExponent(ExtendedDecimal divisor, Rounding rounding) {
       return DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
     }
 
     /**
-     * Divides two DecimalFraction objects, and returns the integer part
+     * Divides two ExtendedDecimal objects, and returns the integer part
      * of the result, rounded down, with the preferred exponent set to this
      * value's exponent minus the divisor's exponent.
      * @param divisor The divisor.
      * @return The integer part of the quotient of the two objects.
      * @throws ArithmeticException Attempted to divide by zero.
      */
-    public DecimalFraction DivideToIntegerNaturalScale(
-      DecimalFraction divisor
+    public ExtendedDecimal DivideToIntegerNaturalScale(
+      ExtendedDecimal divisor
      ) {
       return DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
@@ -801,27 +1125,27 @@ public DecimalFraction ValueOf(int val) {
      * it as positive or negative infinity depending on the sign of this object's
      * value.
      */
-    public DecimalFraction Reduce(
+    public ExtendedDecimal Reduce(
       PrecisionContext ctx) {
       return math.Reduce(this, ctx);
     }
     /**
      * 
-     * @param divisor A DecimalFraction object.
+     * @param divisor A ExtendedDecimal object.
      */
-    public DecimalFraction RemainderNaturalScale(
-      DecimalFraction divisor
+    public ExtendedDecimal RemainderNaturalScale(
+      ExtendedDecimal divisor
      ) {
       return RemainderNaturalScale(divisor,null);
     }
 
     /**
      * 
-     * @param divisor A DecimalFraction object.
+     * @param divisor A ExtendedDecimal object.
      * @param ctx A PrecisionContext object.
      */
-    public DecimalFraction RemainderNaturalScale(
-      DecimalFraction divisor,
+    public ExtendedDecimal RemainderNaturalScale(
+      ExtendedDecimal divisor,
       PrecisionContext ctx
      ) {
       return Subtract(this.DivideToIntegerNaturalScale(divisor,null)
@@ -829,9 +1153,9 @@ public DecimalFraction ValueOf(int val) {
     }
 
     /**
-     * Divides two DecimalFraction objects, and gives a particular exponent
+     * Divides two ExtendedDecimal objects, and gives a particular exponent
      * to the result.
-     * @param divisor A DecimalFraction object.
+     * @param divisor A ExtendedDecimal object.
      * @param desiredExponentSmall The desired exponent. A negative number
      * places the cutoff point to the right of the usual decimal point. A positive
      * number places the cutoff point to the left of the usual decimal point.
@@ -849,8 +1173,8 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public DecimalFraction DivideToExponent(
-      DecimalFraction divisor,
+    public ExtendedDecimal DivideToExponent(
+      ExtendedDecimal divisor,
       long desiredExponentSmall,
       PrecisionContext ctx
      ) {
@@ -858,9 +1182,9 @@ public DecimalFraction ValueOf(int val) {
     }
 
     /**
-     * Divides two DecimalFraction objects, and gives a particular exponent
+     * Divides two ExtendedDecimal objects, and gives a particular exponent
      * to the result.
-     * @param divisor A DecimalFraction object.
+     * @param divisor A ExtendedDecimal object.
      * @param desiredExponentSmall The desired exponent. A negative number
      * places the cutoff point to the right of the usual decimal point. A positive
      * number places the cutoff point to the left of the usual decimal point.
@@ -871,8 +1195,8 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public DecimalFraction DivideToExponent(
-      DecimalFraction divisor,
+    public ExtendedDecimal DivideToExponent(
+      ExtendedDecimal divisor,
       long desiredExponentSmall,
       Rounding rounding
      ) {
@@ -880,9 +1204,9 @@ public DecimalFraction ValueOf(int val) {
     }
 
     /**
-     * Divides two DecimalFraction objects, and gives a particular exponent
+     * Divides two ExtendedDecimal objects, and gives a particular exponent
      * to the result.
-     * @param divisor A DecimalFraction object.
+     * @param divisor A ExtendedDecimal object.
      * @param exponent The desired exponent. A negative number places the
      * cutoff point to the right of the usual decimal point. A positive number
      * places the cutoff point to the left of the usual decimal point.
@@ -900,15 +1224,15 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public DecimalFraction DivideToExponent(
-      DecimalFraction divisor, BigInteger exponent, PrecisionContext ctx) {
+    public ExtendedDecimal DivideToExponent(
+      ExtendedDecimal divisor, BigInteger exponent, PrecisionContext ctx) {
       return math.DivideToExponent(this, divisor, exponent, ctx);
     }
 
     /**
-     * Divides two DecimalFraction objects, and gives a particular exponent
+     * Divides two ExtendedDecimal objects, and gives a particular exponent
      * to the result.
-     * @param divisor A DecimalFraction object.
+     * @param divisor A ExtendedDecimal object.
      * @param desiredExponent The desired exponent. A negative number
      * places the cutoff point to the right of the usual decimal point. A positive
      * number places the cutoff point to the left of the usual decimal point.
@@ -919,8 +1243,8 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public DecimalFraction DivideToExponent(
-      DecimalFraction divisor,
+    public ExtendedDecimal DivideToExponent(
+      ExtendedDecimal divisor,
       BigInteger desiredExponent,
       Rounding rounding
      ) {
@@ -936,12 +1260,8 @@ public DecimalFraction ValueOf(int val) {
      * are in addition to the pre-existing flags). Can be null.
      * @return The absolute value of this object.
      */
-    public DecimalFraction Abs(PrecisionContext context) {
-      if (this.signum() < 0) {
-        return Negate(context);
-      } else {
-        return RoundToPrecision(context);
-      }
+    public ExtendedDecimal Abs(PrecisionContext context) {
+      return math.Abs(this,context);
     }
 
     /**
@@ -952,34 +1272,33 @@ public DecimalFraction ValueOf(int val) {
      * will also store the flags resulting from the operation (the flags
      * are in addition to the pre-existing flags). Can be null.
      */
-    public DecimalFraction Negate(PrecisionContext context) {
-      BigInteger neg=(this.mantissa).negate();
-      return new DecimalFraction(neg, this.exponent).RoundToPrecision(context);
+    public ExtendedDecimal Negate(PrecisionContext context) {
+      return math.Negate(this,context);
     }
 
     /**
      * Adds this object and another decimal fraction and returns the result.
-     * @param decfrac A DecimalFraction object.
+     * @param decfrac A ExtendedDecimal object.
      * @return The sum of the two objects.
      */
-    public DecimalFraction Add(DecimalFraction decfrac) {
+    public ExtendedDecimal Add(ExtendedDecimal decfrac) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
     /**
-     * Subtracts a DecimalFraction object from this instance and returns
+     * Subtracts a ExtendedDecimal object from this instance and returns
      * the result..
-     * @param decfrac A DecimalFraction object.
+     * @param decfrac A ExtendedDecimal object.
      * @return The difference of the two objects.
      */
-    public DecimalFraction Subtract(DecimalFraction decfrac) {
+    public ExtendedDecimal Subtract(ExtendedDecimal decfrac) {
       return Subtract(decfrac,null);
     }
 
     /**
-     * Subtracts a DecimalFraction object from this instance.
-     * @param decfrac A DecimalFraction object.
+     * Subtracts a ExtendedDecimal object from this instance.
+     * @param decfrac A ExtendedDecimal object.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -987,9 +1306,13 @@ public DecimalFraction ValueOf(int val) {
      * @return The difference of the two objects. If a precision context
      * is given, returns null if the result of rounding would cause an overflow.
      */
-    public DecimalFraction Subtract(DecimalFraction decfrac, PrecisionContext ctx) {
+    public ExtendedDecimal Subtract(ExtendedDecimal decfrac, PrecisionContext ctx) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
-      return Add(decfrac.Negate(null), ctx);
+      ExtendedDecimal negated=((decfrac.flags&BigNumberFlags.FlagNaN)!=0) ? decfrac :
+        ExtendedDecimal.CreateWithFlags(
+          decfrac.mantissa,decfrac.exponent,
+          decfrac.flags^BigNumberFlags.FlagNegative);
+      return Add(negated, ctx);
     }
     /**
      * Multiplies two decimal fractions. The resulting scale will be the
@@ -1001,7 +1324,7 @@ public DecimalFraction ValueOf(int val) {
      * if both operands have the same sign or as negative infinity if both
      * operands have different signs.
      */
-    public DecimalFraction Multiply(DecimalFraction decfrac) {
+    public ExtendedDecimal Multiply(ExtendedDecimal decfrac) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
       return Multiply(decfrac, PrecisionContext.Unlimited);
     }
@@ -1013,13 +1336,13 @@ public DecimalFraction ValueOf(int val) {
      * @param augend The value to add.
      * @return The result this * multiplicand + augend.
      */
-    public DecimalFraction MultiplyAndAdd(DecimalFraction multiplicand,
-                                          DecimalFraction augend) {
+    public ExtendedDecimal MultiplyAndAdd(ExtendedDecimal multiplicand,
+                                          ExtendedDecimal augend) {
       return MultiplyAndAdd(multiplicand,augend,null);
     }
     //----------------------------------------------------------------
 
-    private static RadixMath<DecimalFraction> math = new RadixMath<DecimalFraction>(
+    private static RadixMath<ExtendedDecimal> math = new RadixMath<ExtendedDecimal>(
       new DecimalMathHelper());
 
     /**
@@ -1041,8 +1364,8 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the integer part of the result is not exact.
      */
-    public DecimalFraction DivideToIntegerNaturalScale(
-      DecimalFraction divisor, PrecisionContext ctx) {
+    public ExtendedDecimal DivideToIntegerNaturalScale(
+      ExtendedDecimal divisor, PrecisionContext ctx) {
       return math.DivideToIntegerNaturalScale(this, divisor, ctx);
     }
 
@@ -1059,13 +1382,13 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException The result doesn't fit the given precision.
      */
-    public DecimalFraction DivideToIntegerZeroScale(
-      DecimalFraction divisor, PrecisionContext ctx) {
+    public ExtendedDecimal DivideToIntegerZeroScale(
+      ExtendedDecimal divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
     
     /**
-     * Finds the remainder that results when dividing two DecimalFraction
+     * Finds the remainder that results when dividing two ExtendedDecimal
      * objects. The remainder is the value that remains when the absolute
      * value of this object is divided by the absolute value of the other object;
      * the remainder has the same sign (positive or negative) as this object.
@@ -1079,8 +1402,8 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException The result of integer division (the
      * quotient, not the remainder) wouldn't fit the given precision.
      */
-    public DecimalFraction Remainder(
-      DecimalFraction divisor, PrecisionContext ctx) {
+    public ExtendedDecimal Remainder(
+      ExtendedDecimal divisor, PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
     }
     /**
@@ -1110,8 +1433,8 @@ public DecimalFraction ValueOf(int val) {
      * @throws ArithmeticException Either the result of integer division
      * (the quotient) or the remainder wouldn't fit the given precision.
      */
-    public DecimalFraction RemainderNear(
-      DecimalFraction divisor, PrecisionContext ctx) {
+    public ExtendedDecimal RemainderNear(
+      ExtendedDecimal divisor, PrecisionContext ctx) {
       return math.RemainderNear(this, divisor, ctx);
     }
 
@@ -1126,7 +1449,7 @@ public DecimalFraction ValueOf(int val) {
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
-    public DecimalFraction NextMinus(
+    public ExtendedDecimal NextMinus(
       PrecisionContext ctx
      ) {
       return math.NextMinus(this,ctx);
@@ -1143,7 +1466,7 @@ public DecimalFraction ValueOf(int val) {
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
-    public DecimalFraction NextPlus(
+    public ExtendedDecimal NextPlus(
       PrecisionContext ctx
      ) {
       return math.NextPlus(this,ctx);
@@ -1152,7 +1475,7 @@ public DecimalFraction ValueOf(int val) {
     /**
      * Finds the next value that is closer to the other object's value than
      * this object's value.
-     * @param otherValue A DecimalFraction object.
+     * @param otherValue A ExtendedDecimal object.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
@@ -1162,8 +1485,8 @@ public DecimalFraction ValueOf(int val) {
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
-    public DecimalFraction NextToward(
-      DecimalFraction otherValue,
+    public ExtendedDecimal NextToward(
+      ExtendedDecimal otherValue,
       PrecisionContext ctx
      ) {
       return math.NextToward(this,otherValue,ctx);
@@ -1171,7 +1494,7 @@ public DecimalFraction ValueOf(int val) {
 
     
     /**
-     * Divides this DecimalFraction object by another DecimalFraction
+     * Divides this ExtendedDecimal object by another ExtendedDecimal
      * object. The preferred exponent for the result is this object's exponent
      * minus the divisor's exponent.
      * @param divisor The divisor.
@@ -1190,87 +1513,134 @@ public DecimalFraction ValueOf(int val) {
      * or, the rounding mode is Rounding.Unnecessary and the result is not
      * exact.
      */
-    public DecimalFraction Divide(
-      DecimalFraction divisor,
+    public ExtendedDecimal Divide(
+      ExtendedDecimal divisor,
       PrecisionContext ctx
      ) {
       return math.Divide(this, divisor, ctx);
     }
-    
+
     /**
      * Gets the greater value between two decimal fractions.
-     * @param first A DecimalFraction object.
-     * @param second A DecimalFraction object.
+     * @param first A ExtendedDecimal object.
+     * @param second A ExtendedDecimal object.
+     * @param ctx A PrecisionContext object.
      * @return The larger value of the two objects.
      */
-    public static DecimalFraction Max(
-      DecimalFraction first, DecimalFraction second) {
-      return math.Max(first, second, null);
+    public static ExtendedDecimal Max(
+      ExtendedDecimal first, ExtendedDecimal second, PrecisionContext ctx) {
+      return math.Max(first, second, ctx);
     }
 
     /**
      * Gets the lesser value between two decimal fractions.
-     * @param first A DecimalFraction object.
-     * @param second A DecimalFraction object.
+     * @param first A ExtendedDecimal object.
+     * @param second A ExtendedDecimal object.
+     * @param ctx A PrecisionContext object.
      * @return The smaller value of the two objects.
      */
-    public static DecimalFraction Min(
-      DecimalFraction first, DecimalFraction second) {
-      return math.Min(first, second, null);
+    public static ExtendedDecimal Min(
+      ExtendedDecimal first, ExtendedDecimal second, PrecisionContext ctx) {
+      return math.Min(first, second, ctx);
     }
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param first A DecimalFraction object.
-     * @param second A DecimalFraction object.
+     * @param first A ExtendedDecimal object.
+     * @param second A ExtendedDecimal object.
+     * @param ctx A PrecisionContext object.
      */
-    public static DecimalFraction MaxMagnitude(
-      DecimalFraction first, DecimalFraction second) {
-      return math.MaxMagnitude(first, second, null);
+    public static ExtendedDecimal MaxMagnitude(
+      ExtendedDecimal first, ExtendedDecimal second, PrecisionContext ctx) {
+      return math.MaxMagnitude(first, second, ctx);
     }
     
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param first A DecimalFraction object.
-     * @param second A DecimalFraction object.
+     * @param first A ExtendedDecimal object.
+     * @param second A ExtendedDecimal object.
+     * @param ctx A PrecisionContext object.
      */
-    public static DecimalFraction MinMagnitude(
-      DecimalFraction first, DecimalFraction second) {
-      return math.MinMagnitude(first, second, null);
+    public static ExtendedDecimal MinMagnitude(
+      ExtendedDecimal first, ExtendedDecimal second, PrecisionContext ctx) {
+      return math.MinMagnitude(first, second, ctx);
+    }
+    
+    /**
+     * Gets the greater value between two decimal fractions.
+     * @param first A ExtendedDecimal object.
+     * @param second A ExtendedDecimal object.
+     * @return The larger value of the two objects.
+     */
+    public static ExtendedDecimal Max(
+      ExtendedDecimal first, ExtendedDecimal second) {
+      return Max(first,second,null);
+    }
+
+    /**
+     * Gets the lesser value between two decimal fractions.
+     * @param first A ExtendedDecimal object.
+     * @param second A ExtendedDecimal object.
+     * @return The smaller value of the two objects.
+     */
+    public static ExtendedDecimal Min(
+      ExtendedDecimal first, ExtendedDecimal second) {
+      return Min(first,second,null);
+    }
+    /**
+     * Gets the greater value between two values, ignoring their signs.
+     * If the absolute values are equal, has the same effect as Max.
+     * @param first A ExtendedDecimal object.
+     * @param second A ExtendedDecimal object.
+     */
+    public static ExtendedDecimal MaxMagnitude(
+      ExtendedDecimal first, ExtendedDecimal second) {
+      return MaxMagnitude(first,second,null);
+    }
+    
+    /**
+     * Gets the lesser value between two values, ignoring their signs. If
+     * the absolute values are equal, has the same effect as Min.
+     * @param first A ExtendedDecimal object.
+     * @param second A ExtendedDecimal object.
+     */
+    public static ExtendedDecimal MinMagnitude(
+      ExtendedDecimal first, ExtendedDecimal second) {
+      return MinMagnitude(first,second,null);
     }
     /**
      * Compares the mathematical values of this object and another object.
      * <p> This method is not consistent with the Equals method because two
      * different decimal fractions with the same mathematical value, but
      * different exponents, will compare as equal.</p>
-     * @param other A DecimalFraction object.
+     * @param other A ExtendedDecimal object.
      * @return Less than 0 if this object's value is less than the other value,
      * or greater than 0 if this object's value is greater than the other value
      * or if "other" is null, or 0 if both values are equal.
      */
     public int compareTo(
-      DecimalFraction other) {
+      ExtendedDecimal other) {
       return math.compareTo(this, other);
     }
-
+    
     /**
      * 
-     * @param other A DecimalFraction object.
+     * @param other An ExtendedDecimal object.
      * @param ctx A PrecisionContext object.
      */
-public DecimalFraction CompareToWithContext(
-      DecimalFraction other, PrecisionContext ctx) {
+public ExtendedDecimal CompareToWithContext(
+      ExtendedDecimal other, PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, false, ctx);
     }
-
+    
     /**
      * 
-     * @param other A DecimalFraction object.
+     * @param other An ExtendedDecimal object.
      * @param ctx A PrecisionContext object.
      */
-public DecimalFraction CompareToSignal(
-      DecimalFraction other, PrecisionContext ctx) {
+public ExtendedDecimal CompareToSignal(
+      ExtendedDecimal other, PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, true, ctx);
     }
 
@@ -1285,8 +1655,8 @@ public DecimalFraction CompareToSignal(
      * @return The sum of thisValue and the other object. Returns null if
      * the result would overflow the exponent range.
      */
-    public DecimalFraction Add(
-      DecimalFraction decfrac, PrecisionContext ctx) {
+    public ExtendedDecimal Add(
+      ExtendedDecimal decfrac, PrecisionContext ctx) {
       return math.Add(this, decfrac, ctx);
     }
 
@@ -1305,9 +1675,9 @@ public DecimalFraction CompareToSignal(
      * @throws java.lang.IllegalArgumentException The exponent is outside of the
      * valid range of the precision context, if it defines an exponent range.
      */
-    public DecimalFraction Quantize(
+    public ExtendedDecimal Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return Quantize(new DecimalFraction(BigInteger.ONE,desiredExponent), ctx);
+      return Quantize(new ExtendedDecimal(BigInteger.ONE,desiredExponent), ctx);
     }
 
     /**
@@ -1325,9 +1695,9 @@ public DecimalFraction CompareToSignal(
      * @throws java.lang.IllegalArgumentException The exponent is outside of the
      * valid range of the precision context, if it defines an exponent range.
      */
-    public DecimalFraction Quantize(
+    public ExtendedDecimal Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize(new DecimalFraction(BigInteger.ONE,BigInteger.valueOf(desiredExponentSmall)), ctx);
+      return Quantize(new ExtendedDecimal(BigInteger.ONE,BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
     /**
@@ -1348,8 +1718,8 @@ public DecimalFraction CompareToSignal(
      * the valid range of the precision context, if it defines an exponent
      * range.
      */
-    public DecimalFraction Quantize(
-      DecimalFraction otherValue, PrecisionContext ctx) {
+    public ExtendedDecimal Quantize(
+      ExtendedDecimal otherValue, PrecisionContext ctx) {
       return math.Quantize(this, otherValue, ctx);
     }
     /**
@@ -1368,7 +1738,7 @@ public DecimalFraction CompareToSignal(
      * to 0 when rounding and 0 is outside of the valid range of the precision
      * context, if it defines an exponent range.
      */
-    public DecimalFraction RoundToIntegralExact(
+    public ExtendedDecimal RoundToIntegralExact(
       PrecisionContext ctx) {
       return math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     }
@@ -1390,7 +1760,7 @@ public DecimalFraction CompareToSignal(
      * to 0 when rounding and 0 is outside of the valid range of the precision
      * context, if it defines an exponent range.
      */
-    public DecimalFraction RoundToIntegralNoRoundedFlag(
+    public ExtendedDecimal RoundToIntegralNoRoundedFlag(
       PrecisionContext ctx) {
       return math.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
     }
@@ -1415,7 +1785,7 @@ public DecimalFraction CompareToSignal(
      * when rounding and the new exponent is outside of the valid range of
      * the precision context, if it defines an exponent range.
      */
-    public DecimalFraction RoundToExponentExact(
+    public ExtendedDecimal RoundToExponentExact(
       BigInteger exponent, PrecisionContext ctx) {
       return math.RoundToExponentExact(this, exponent, ctx);
     }
@@ -1444,7 +1814,7 @@ public DecimalFraction CompareToSignal(
      * when rounding and the new exponent is outside of the valid range of
      * the precision context, if it defines an exponent range.
      */
-    public DecimalFraction RoundToExponent(
+    public ExtendedDecimal RoundToExponent(
       BigInteger exponent, PrecisionContext ctx) {
       return math.RoundToExponentSimple(this, exponent, ctx);
     }
@@ -1464,8 +1834,8 @@ public DecimalFraction CompareToSignal(
      * as positive infinity if this value and the other value have the same
      * sign.
      */
-    public DecimalFraction Multiply(
-      DecimalFraction op, PrecisionContext ctx) {
+    public ExtendedDecimal Multiply(
+      ExtendedDecimal op, PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);
     }
     /**
@@ -1483,10 +1853,26 @@ public DecimalFraction CompareToSignal(
      * signs, or as positive infinity if this value and the other value have
      * the same sign.
      */
-    public DecimalFraction MultiplyAndAdd(
-      DecimalFraction op, DecimalFraction augend, PrecisionContext ctx) {
+    public ExtendedDecimal MultiplyAndAdd(
+      ExtendedDecimal op, ExtendedDecimal augend, PrecisionContext ctx) {
       return math.MultiplyAndAdd(this, op, augend, ctx);
     }
+    /**
+     * 
+     * @param op An ExtendedDecimal object.
+     * @param augend An ExtendedDecimal object.
+     * @param ctx A PrecisionContext object.
+     */
+public ExtendedDecimal MultiplyAndSubtract(
+      ExtendedDecimal op, ExtendedDecimal augend, PrecisionContext ctx) {
+      if((augend)==null)throw new NullPointerException("decfrac");
+      ExtendedDecimal negated=((augend.flags&BigNumberFlags.FlagNaN)!=0) ? augend :
+        ExtendedDecimal.CreateWithFlags(
+          augend.mantissa,augend.exponent,
+          augend.flags^BigNumberFlags.FlagNegative);
+      return math.MultiplyAndAdd(this, op, negated, ctx);
+    }
+
     /**
      * Rounds this object's value to a given precision, using the given rounding
      * mode and range of exponent.
@@ -1499,9 +1885,18 @@ public DecimalFraction CompareToSignal(
      * handle a null return value by treating it as positive or negative infinity
      * depending on the sign of this object's value.
      */
-    public DecimalFraction RoundToPrecision(
+    public ExtendedDecimal RoundToPrecision(
       PrecisionContext ctx) {
       return math.RoundToPrecision(this, ctx);
+    }
+
+    /**
+     * 
+     * @param ctx A PrecisionContext object.
+     */
+public ExtendedDecimal Plus(
+      PrecisionContext ctx) {
+      return math.Plus(this, ctx);
     }
 
     /**
@@ -1517,7 +1912,7 @@ public DecimalFraction CompareToSignal(
      * handle a null return value by treating it as positive or negative infinity
      * depending on the sign of this object's value.
      */
-    public DecimalFraction RoundToBinaryPrecision(
+    public ExtendedDecimal RoundToBinaryPrecision(
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
     }
