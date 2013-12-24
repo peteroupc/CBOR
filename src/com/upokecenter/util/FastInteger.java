@@ -65,6 +65,7 @@ at: http://peteroupc.github.io/CBOR/
       
     /**
      * 
+     * @return A BigInteger object.
      */
       public BigInteger ToBigInteger() {
         if(wordCount==1 && (data[0]>>31)==0){
@@ -89,6 +90,7 @@ at: http://peteroupc.github.io/CBOR/
       
     /**
      * 
+     * @return A Boolean object.
      */
       public boolean CanFitInInt32() {
         return wordCount==0 || (wordCount==1 && (data[0]>>31)==0);
@@ -96,6 +98,7 @@ at: http://peteroupc.github.io/CBOR/
       
     /**
      * 
+     * @return A 32-bit signed integer.
      */
       public int ToInt32() {
         return wordCount==0 ? 0 : data[0];
@@ -103,6 +106,7 @@ at: http://peteroupc.github.io/CBOR/
       
     /**
      * 
+     * @return A MutableNumber object.
      */
       public MutableNumber Copy() {
         MutableNumber mbi=new MutableNumber(0);
@@ -227,6 +231,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param val A 32-bit signed integer.
+     * @return A 32-bit signed integer.
      */
       public int CompareToInt(int val) {
         if(val<0 || wordCount>1)return 1;
@@ -440,6 +445,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
+     * @return A 32-bit signed integer.
      */
     public int AsInt32() {
       switch(this.integerMode){
@@ -487,6 +493,7 @@ at: http://peteroupc.github.io/CBOR/
     }
     /**
      * 
+     * @return A FastInteger object.
      */
     public FastInteger Abs() {
       return (this.signum() < 0) ? Negate() : this;
@@ -722,6 +729,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param val A FastInteger object.
+     * @return A FastInteger object.
      */
     public FastInteger Add(FastInteger val) {
       BigInteger valValue;
@@ -864,6 +872,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param val A 32-bit signed integer.
+     * @return A FastInteger object.
      */
     public FastInteger AddInt(int val) {
       BigInteger valValue;
@@ -907,6 +916,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
+     * @return A Boolean object.
      */
     public boolean CanFitInInt32() {
       int sign;
@@ -980,6 +990,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param val A 32-bit signed integer.
+     * @return A 32-bit signed integer.
      */
     public int MinInt32(int val) {
       return this.CompareToInt(val)<0 ? this.AsInt32() : val;
@@ -987,6 +998,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
+     * @return A BigInteger object.
      */
     public BigInteger AsBigInteger() {
       switch(this.integerMode){

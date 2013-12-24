@@ -426,6 +426,7 @@ package com.upokecenter.util;
      * @param thisValue A T object.
      * @param divisor A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T DivideToIntegerNaturalScale(
       T thisValue,
@@ -500,6 +501,7 @@ bigrem=divrem[1];
      * @param thisValue A T object.
      * @param divisor A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T DivideToIntegerZeroScale(
       T thisValue,
@@ -534,6 +536,7 @@ bigrem=divrem[1];
      * 
      * @param value A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
 public T Abs(T value, PrecisionContext ctx) {
       int flags=helper.GetFlags(value);
@@ -557,6 +560,7 @@ public T Abs(T value, PrecisionContext ctx) {
      * 
      * @param value A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
 public T Negate(T value, PrecisionContext ctx) {
       int flags=helper.GetFlags(value);
@@ -642,6 +646,7 @@ public T Negate(T value, PrecisionContext ctx) {
      * @param thisValue A T object.
      * @param divisor A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T RemainderNear(
       T thisValue,
@@ -682,6 +687,7 @@ public T Negate(T value, PrecisionContext ctx) {
      * 
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T NextMinus(
       T thisValue,
@@ -730,6 +736,7 @@ public T Negate(T value, PrecisionContext ctx) {
      * @param thisValue A T object.
      * @param otherValue A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T NextToward(
       T thisValue,
@@ -812,6 +819,7 @@ public T Negate(T value, PrecisionContext ctx) {
      * 
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T NextPlus(
       T thisValue,
@@ -1272,6 +1280,7 @@ rem=divrem[1];
      * @param a A T object.
      * @param b A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) throw new NullPointerException("a");
@@ -1290,6 +1299,7 @@ rem=divrem[1];
      * @param a A T object.
      * @param b A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) throw new NullPointerException("a");
@@ -1407,6 +1417,7 @@ rem=divrem[1];
      * @param multiplicand A T object.
      * @param augend A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T MultiplyAndAdd(T thisValue, T multiplicand,
                             T augend,
@@ -1421,6 +1432,7 @@ rem=divrem[1];
      * 
      * @param thisValue A T object.
      * @param context A PrecisionContext object.
+     * @return A T object.
      */
     public T RoundToBinaryPrecision(
       T thisValue,
@@ -1500,6 +1512,7 @@ rem=divrem[1];
      * 
      * @param thisValue A T object.
      * @param context A PrecisionContext object.
+     * @return A T object.
      */
     public T Plus(
       T thisValue,
@@ -1511,6 +1524,7 @@ rem=divrem[1];
      * 
      * @param thisValue A T object.
      * @param context A PrecisionContext object.
+     * @return A T object.
      */
     public T RoundToPrecision(
       T thisValue,
@@ -1623,6 +1637,7 @@ rem=divrem[1];
      * @param thisValue A T object.
      * @param otherValue A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T Quantize(
       T thisValue,
@@ -1695,6 +1710,7 @@ rem=divrem[1];
      * @param thisValue A T object.
      * @param expOther A BigInteger object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T RoundToExponentExact(
       T thisValue,
@@ -1720,6 +1736,7 @@ rem=divrem[1];
      * @param thisValue A T object.
      * @param expOther A BigInteger object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T RoundToExponentSimple(
       T thisValue,
@@ -1755,6 +1772,7 @@ rem=divrem[1];
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
      * @param exponent A BigInteger object.
+     * @return A T object.
      */
     public T RoundToExponentNoRoundedFlag(
       T thisValue,
@@ -1774,6 +1792,7 @@ rem=divrem[1];
      * 
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
     public T Reduce(
       T thisValue,
@@ -2139,6 +2158,7 @@ bigrem=divrem[1];
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
      * @param other A T object.
+     * @return A T object.
      */
     public T Add(T thisValue, T other, PrecisionContext ctx) {
       int thisFlags=helper.GetFlags(thisValue);
@@ -2302,6 +2322,7 @@ bigrem=divrem[1];
      * @param decfrac A T object.
      * @param treatQuietNansAsSignaling A Boolean object.
      * @param ctx A PrecisionContext object.
+     * @return A T object.
      */
 public T CompareToWithContext(T thisValue, T decfrac, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
       if(decfrac==null)return SignalInvalid(ctx);

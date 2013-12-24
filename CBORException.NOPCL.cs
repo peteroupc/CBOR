@@ -11,8 +11,8 @@ namespace PeterO {
 [Serializable]
     public partial class CBORException : ISerializable {
     /// <summary> </summary>
-    /// <param name='info'> A SerializationInfo object.</param>
-    /// <param name='context'> A StreamingContext object.</param>
+    /// <param name='info'>A SerializationInfo object.</param>
+    /// <param name='context'>A StreamingContext object.</param>
     protected CBORException(SerializationInfo info, StreamingContext context)
       : base(info, context) {
     }

@@ -155,7 +155,7 @@ namespace PeterO {
       }
     }
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
     public int getOptions() {
       return options;
     }
@@ -227,7 +227,7 @@ namespace PeterO {
       }
     }
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
     public int nextClean() {
       while (true) {
         int c = nextParseComment(-1);
@@ -236,8 +236,8 @@ namespace PeterO {
       }
     }
     /// <summary> </summary>
-    /// <param name='lastChar'> A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <param name='lastChar'>A 32-bit signed integer.</param>
+    /// <returns>A 32-bit signed integer.</returns>
     public int nextClean(int lastChar) {
       while (true) {
         int c = nextParseComment(lastChar);
@@ -449,7 +449,7 @@ namespace PeterO {
       }
     }
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A CBORObject object.</returns>
     public CBORObject ParseJSONObjectOrArray() {
       int c;
       c = this.nextClean();

@@ -1734,7 +1734,7 @@ namespace PeterO {
     /// <summary> Initializes a BigInteger object from an array of bytes.
     /// </summary>
     /// <param name='bytes'>A byte[] object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     /// <param name='littleEndian'>A Boolean object.</param>
     public static BigInteger fromByteArray(byte[] bytes, bool littleEndian){
       BigInteger bigint=new BigInteger();
@@ -1812,7 +1812,7 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <param name='index'>A 32-bit unsigned integer.</param>
-    /// <returns></returns>
+    /// <returns>A Boolean object.</returns>
     public bool testBit(int index) {
       if (index < 0) throw new ArgumentOutOfRangeException("index");
       if (this.Sign < 0) {
@@ -1836,7 +1836,7 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <param name='n'>A 32-bit unsigned integer.</param>
-    /// <returns/>
+    /// <returns></returns>
     private bool GetUnsignedBit(int n) {
       #if DEBUG
       if ((n) < 0) throw new ArgumentException("n" + " not greater or equal to " + "0" + " (" + Convert.ToString((int)(n), System.Globalization.CultureInfo.InvariantCulture) + ")");
@@ -1934,7 +1934,7 @@ namespace PeterO {
     /// <param name='numberBits'>The number of bits to shift. Can be negative,
     /// in which case this is the same as shiftRight with the absolute value
     /// of numberBits.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger shiftLeft(int numberBits) {
       if (numberBits == 0) return this;
       if (numberBits < 0){
@@ -1967,7 +1967,7 @@ namespace PeterO {
       return ret;
     }
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     /// <param name='numberBits'>A 32-bit signed integer.</param>
     public BigInteger shiftRight(int numberBits) {
       if (numberBits == 0) return this;
@@ -1999,7 +1999,7 @@ namespace PeterO {
     }
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     /// <param name='longerValue'>A 64-bit signed integer.</param>
     public static BigInteger valueOf(long longerValue) {
       if (longerValue == 0) return BigInteger.Zero;
@@ -2036,7 +2036,7 @@ namespace PeterO {
     }
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A 32-bit signed integer.</returns>
     public int intValue() {
       int c = (int)this.wordCount;
       if (c == 0) return 0;
@@ -2078,7 +2078,7 @@ namespace PeterO {
     }
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A 64-bit signed integer.</returns>
     public long longValue() {
       int count = this.wordCount;
       if (count == 0) return (long)0;
@@ -2119,7 +2119,7 @@ namespace PeterO {
     }
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     /// <param name='power'>A BigInteger object.</param>
     public BigInteger PowBigIntVar(BigInteger power) {
       if ((power) == null) throw new ArgumentNullException("power");
@@ -2149,7 +2149,7 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <param name='powerSmall'>A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) throw new ArgumentException("power is negative");
       BigInteger thisVar = this;
@@ -2175,7 +2175,7 @@ namespace PeterO {
     }
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger negate() {
       BigInteger bigintRet = new BigInteger();
       bigintRet.reg = this.reg; // use the same reference
@@ -2184,19 +2184,19 @@ namespace PeterO {
       return bigintRet;
     }
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger abs() {
       return this.Sign >= 0 ? this : this.negate();
     }
     
     /// <summary> </summary>
-    /// <returns/>
+    /// <returns></returns>
     private int CalcWordCount() {
       return (int)CountWords(reg, reg.Length);
     }
 
     /// <summary> </summary>
-    /// <returns/>
+    /// <returns></returns>
     private int ByteCount() {
       int wc = this.wordCount;
       if(wc==0)return 0;
@@ -2207,7 +2207,7 @@ namespace PeterO {
     }
 
     /// <summary> </summary>
-    /// <returns/>
+    /// <returns></returns>
     private int BitLength() {
       int wc = this.wordCount;
       if (wc!=0)
@@ -2299,7 +2299,7 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <param name='str'>A string object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public static BigInteger fromString(string str){
       if(str==null)throw new ArgumentNullException("str");
       if((str.Length)<=0)throw new ArgumentException("str.Length"+" not less than "+"0"+" ("+Convert.ToString((long)(long)(str.Length),System.Globalization.CultureInfo.InvariantCulture)+")");
@@ -2333,7 +2333,7 @@ namespace PeterO {
 
     
     /// <summary>Returns the greatest common divisor of two integers. </summary>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     /// <remarks>The greatest common divisor (GCD) is also known as the greatest
     /// common factor (GCF).</remarks>
     /// <param name='bigintSecond'>A BigInteger object.</param>
@@ -2366,7 +2366,7 @@ namespace PeterO {
     /// certain power is divided by another BigInteger. </summary>
     /// <param name='pow'>A BigInteger object.</param>
     /// <param name='mod'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
       if ((pow) == null) throw new ArgumentNullException("pow");
       if (pow.Sign < 0)
@@ -2782,7 +2782,7 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <param name='divisor'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger[] object.</returns>
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
       if ((divisor) == null) throw new ArgumentNullException("divisor");
       BigInteger quotient;
@@ -2844,7 +2844,7 @@ namespace PeterO {
     /// and equals divisor minus normal remainder if the normal remainder
     /// is negative. </summary>
     /// <param name='divisor'>A divisor greater than 0.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger mod(BigInteger divisor) {
       if((divisor)==null)throw new ArgumentNullException("divisor");
       if(divisor.Sign<0){
@@ -2950,7 +2950,7 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <param name='bi'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger Sqrt(BigInteger bi) {
       if (this.Sign < 0)
         return BigInteger.Zero;

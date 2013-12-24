@@ -27,7 +27,7 @@ namespace PeterO {
     FastInteger knownBitLength;
 
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A FastInteger object.</returns>
     public FastInteger GetDigitLength(){
       if (knownBitLength==null) {
         knownBitLength = CalcKnownBitLength();
@@ -216,6 +216,7 @@ namespace PeterO {
       if (digitLength > digits) {
         int digitShift = digitLength - digits;
         int digitDivide=digitShift;
+        knownBitLength.SubtractInt(digitShift);
         //Console.WriteLine("dlen={0} dshift={1}",digitLength,digitShift);
         int newLength = (int)(digitLength - digitShift);
         if(digitShift<=Int32.MaxValue)
@@ -316,7 +317,7 @@ namespace PeterO {
     /// and whether the discarded digits to the right of that digit are set.
     /// Assumes that the big integer being shifted is positive. </summary>
     /// <returns></returns>
-    /// <param name='digits'> A 64-bit signed integer.</param>
+    /// <param name='digits'>A 64-bit signed integer.</param>
     public void ShiftToDigitsInt(int digits) {
       if (isSmall)
         ShiftToBitsSmall(digits);

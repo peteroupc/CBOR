@@ -119,7 +119,7 @@ namespace PeterO {
     
     /// <summary> </summary>
     /// <param name='exponent'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A Boolean object.</returns>
     public bool ExponentWithinRange(BigInteger exponent){
       if((exponent)==null)throw new ArgumentNullException("exponent");
       if(!this.HasExponentRange)
@@ -143,7 +143,7 @@ namespace PeterO {
     
     /// <summary> Copies this PrecisionContext with HasFlags set to true
     /// and a Flags value of 0. </summary>
-    /// <returns></returns>
+    /// <returns>A PrecisionContext object.</returns>
     /// <param name='rounding'>A Rounding object.</param>
     public PrecisionContext WithRounding(Rounding rounding) {
       PrecisionContext pc = this.Copy();
@@ -153,7 +153,7 @@ namespace PeterO {
 
     /// <summary> Copies this PrecisionContext with HasFlags set to true
     /// and a Flags value of 0. </summary>
-    /// <returns></returns>
+    /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithBlankFlags() {
       PrecisionContext pc = this.Copy();
       pc.hasFlags = true;
@@ -163,7 +163,7 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <param name='clamp'>A Boolean object.</param>
-    /// <returns></returns>
+    /// <returns>A PrecisionContext object.</returns>
 public PrecisionContext WithExponentClamp(bool clamp) {
       PrecisionContext pc = this.Copy();
       pc.clampNormalExponents=clamp;
@@ -173,7 +173,7 @@ public PrecisionContext WithExponentClamp(bool clamp) {
     /// <summary> </summary>
     /// <param name='exponentMin'>A BigInteger object.</param>
     /// <param name='exponentMax'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A PrecisionContext object.</returns>
 public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if((exponentMin)==null)throw new ArgumentNullException("exponentMin");
       if(exponentMin.CompareTo(exponentMax)>0)
@@ -187,7 +187,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
 
     /// <summary> Copies this PrecisionContext with HasFlags set to false
     /// and a Flags value of 0. </summary>
-    /// <returns></returns>
+    /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithNoFlags() {
       PrecisionContext pc = this.Copy();
       pc.hasFlags = false;
@@ -196,7 +196,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
     }
     /// <summary> Copies this PrecisionContext with an unlimited exponent
     /// range. </summary>
-    /// <returns></returns>
+    /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithUnlimitedExponents() {
       PrecisionContext pc = this.Copy();
       pc.hasExponentRange = false;
@@ -204,7 +204,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
     }
     /// <summary> Copies this PrecisionContext with a particular precision.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A PrecisionContext object.</returns>
     /// <param name='precision'>Desired precision. 0 means unlimited
     /// precision.</param>
     public PrecisionContext WithPrecision(int precision) {
@@ -216,7 +216,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
 
     /// <summary> </summary>
     /// <param name='bigintPrecision'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A PrecisionContext object.</returns>
 public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
       if((bigintPrecision)==null)throw new ArgumentNullException("bigintPrecision");
       if (bigintPrecision.Sign < 0) throw new ArgumentException(
@@ -229,7 +229,7 @@ public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
 
     /// <summary> Initializes a new PrecisionContext that is a copy of another
     /// PrecisionContext. </summary>
-    /// <returns></returns>
+    /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext Copy() {
       PrecisionContext pcnew=new PrecisionContext(0,this.rounding,0,0,this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;

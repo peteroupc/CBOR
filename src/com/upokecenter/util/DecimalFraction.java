@@ -32,6 +32,7 @@ at: http://peteroupc.github.io/CBOR/
      * Determines whether this object's mantissa and exponent are equal
      * to those of another object.
      * @param other A DecimalFraction object.
+     * @return A Boolean object.
      */
     public boolean EqualsInternal(DecimalFraction other) {
       DecimalFraction otherValue = ((other instanceof DecimalFraction) ? (DecimalFraction)other : null);
@@ -45,6 +46,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param other A DecimalFraction object.
+     * @return A Boolean object.
      */
     public boolean equals(DecimalFraction other) {
       return EqualsInternal(other);
@@ -52,7 +54,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Determines whether this object's mantissa and exponent are equal
      * to those of another object and that other object is a decimal fraction.
-     * @param obj A object object.
+     * @param obj An arbitrary object.
      * @return True if the objects are equal; false otherwise.
      */
     @Override public boolean equals(Object obj) {
@@ -60,7 +62,7 @@ at: http://peteroupc.github.io/CBOR/
     }
     /**
      * Calculates this object's hash code.
-     * @return This object's hash code.
+     * @return This object&apos;s hash code.
      */
     @Override public int hashCode() {
       int hashCode_ = 0;
@@ -94,6 +96,7 @@ at: http://peteroupc.github.io/CBOR/
      * definition in java.math.BigDecimal(), except that the digits must
      * be ASCII digits ('0' through '9').</p>
      * @param str A string that represents a number.
+     * @return A DecimalFraction object.
      */
     public static DecimalFraction FromString(String str) {
       return ExtendedDecimal.FromString(str).ToDecimalFraction();
@@ -393,6 +396,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
+     * @return A 32-bit signed integer.
      */
       public int GetRadix() {
         return 10;
@@ -401,6 +405,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param value A DecimalFraction object.
+     * @return A 32-bit signed integer.
      */
       public int GetSign(DecimalFraction value) {
         return value.signum();
@@ -409,6 +414,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param value A DecimalFraction object.
+     * @return A BigInteger object.
      */
       public BigInteger GetMantissa(DecimalFraction value) {
         return value.mantissa;
@@ -417,6 +423,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param value A DecimalFraction object.
+     * @return A BigInteger object.
      */
       public BigInteger GetExponent(DecimalFraction value) {
         return value.exponent;
@@ -427,6 +434,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param mantissa A BigInteger object.
      * @param e1 A BigInteger object.
      * @param e2 A BigInteger object.
+     * @return A BigInteger object.
      */
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
         boolean negative = (mantissa.signum() < 0);
@@ -444,6 +452,7 @@ at: http://peteroupc.github.io/CBOR/
      * 
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
+     * @return A DecimalFraction object.
      */
       public DecimalFraction CreateNew(BigInteger mantissa, BigInteger exponent) {
         return new DecimalFraction(mantissa, exponent);
@@ -454,6 +463,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.
+     * @return An IShiftAccumulator object.
      */
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
         return new DigitShiftAccumulator(bigint, lastDigit, olderDigits);
@@ -462,6 +472,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param bigint A BigInteger object.
+     * @return An IShiftAccumulator object.
      */
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new DigitShiftAccumulator(bigint,0,0);
@@ -471,6 +482,7 @@ at: http://peteroupc.github.io/CBOR/
      * 
      * @param numerator A BigInteger object.
      * @param denominator A BigInteger object.
+     * @return A Boolean object.
      */
       public boolean HasTerminatingRadixExpansion(BigInteger numerator, BigInteger denominator) {
         // Simplify denominator based on numerator
@@ -500,6 +512,7 @@ bigrem=divrem[1];
      * 
      * @param bigint A BigInteger object.
      * @param power A FastInteger object.
+     * @return A BigInteger object.
      */
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.signum() <= 0) return bigint;
@@ -523,6 +536,7 @@ bigrem=divrem[1];
     /**
      * 
      * @param value A DecimalFraction object.
+     * @return A 32-bit signed integer.
      */
       public int GetFlags(DecimalFraction value) {
         return value.mantissa.signum()<0 ? BigNumberFlags.FlagNegative : 0;
@@ -533,6 +547,7 @@ bigrem=divrem[1];
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
      * @param flags A 32-bit signed integer.
+     * @return A DecimalFraction object.
      */
       public DecimalFraction CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         boolean neg=(flags&BigNumberFlags.FlagNegative)!=0;
@@ -543,6 +558,7 @@ bigrem=divrem[1];
       
     /**
      * 
+     * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteOnly;
@@ -551,6 +567,7 @@ bigrem=divrem[1];
     /**
      * 
      * @param val A 32-bit signed integer.
+     * @return A DecimalFraction object.
      */
 public DecimalFraction ValueOf(int val) {
         if(val==0)return Zero;
@@ -593,6 +610,7 @@ public DecimalFraction ValueOf(int val) {
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
+     * @return A BigInteger object.
      */
     public BigInteger ToBigInteger() {
       int sign = this.getExponent().signum();
@@ -636,7 +654,7 @@ public DecimalFraction ValueOf(int val) {
      * not an approximation, as is often the case by converting the number
      * to a string.
      * @param flt A 32-bit floating-point number.
-     * @return A decimal fraction with the same value as "flt".
+     * @return A decimal fraction with the same value as &quot;flt&quot;.
      * @throws ArithmeticException "flt" is infinity or not-a-number.
      */
     public static DecimalFraction FromSingle(float flt) {
@@ -658,7 +676,7 @@ public DecimalFraction ValueOf(int val) {
      * not an approximation, as is often the case by converting the number
      * to a string.
      * @param dbl A 64-bit floating-point number.
-     * @return A decimal fraction with the same value as "dbl"
+     * @return A decimal fraction with the same value as &quot;dbl&quot;
      * @throws ArithmeticException "dbl" is infinity or not-a-number.
      */
     public static DecimalFraction FromDouble(double dbl) {
@@ -669,6 +687,7 @@ public DecimalFraction ValueOf(int val) {
      * Creates a decimal fraction from an arbitrary-precision binary floating-point
      * number.
      * @param bigfloat A bigfloat.
+     * @return A DecimalFraction object.
      */
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
       return ExtendedDecimal.FromBigFloat(bigfloat).ToDecimalFraction();
@@ -686,6 +705,7 @@ public DecimalFraction ValueOf(int val) {
      * Same as toString(), except that when an exponent is used it will be
      * a multiple of 3. The format of the return value follows the format of
      * the java.math.BigDecimal.toEngineeringString() method.
+     * @return A string object.
      */
     public String ToEngineeringString() {
       return ToStringInternal(1);
@@ -694,6 +714,7 @@ public DecimalFraction ValueOf(int val) {
      * Converts this value to a string, but without an exponent part. The
      * format of the return value follows the format of the java.math.BigDecimal.toPlainString()
      * method.
+     * @return A string object.
      */
     public String ToPlainString() {
       return ToStringInternal(2);
@@ -732,6 +753,7 @@ public DecimalFraction ValueOf(int val) {
       }
     /**
      * Gets the absolute value of this object.
+     * @return A DecimalFraction object.
      */
     public DecimalFraction Abs() {
       return Abs(null);
@@ -739,6 +761,7 @@ public DecimalFraction ValueOf(int val) {
 
     /**
      * Gets an object with the same value as this one, but with the sign reversed.
+     * @return A DecimalFraction object.
      */
     public DecimalFraction Negate() {
       return Negate(null);
@@ -798,7 +821,7 @@ public DecimalFraction ValueOf(int val) {
      * there may still be some trailing zeros in the mantissa. If a precision
      * context is given, returns null if the result of rounding would cause
      * an overflow. The caller can handle a null return value by treating
-     * it as positive or negative infinity depending on the sign of this object's
+     * it as positive or negative infinity depending on the sign of this object&apos;s
      * value.
      */
     public DecimalFraction Reduce(
@@ -808,6 +831,7 @@ public DecimalFraction ValueOf(int val) {
     /**
      * 
      * @param divisor A DecimalFraction object.
+     * @return A DecimalFraction object.
      */
     public DecimalFraction RemainderNaturalScale(
       DecimalFraction divisor
@@ -819,6 +843,7 @@ public DecimalFraction ValueOf(int val) {
      * 
      * @param divisor A DecimalFraction object.
      * @param ctx A PrecisionContext object.
+     * @return A DecimalFraction object.
      */
     public DecimalFraction RemainderNaturalScale(
       DecimalFraction divisor,
@@ -951,6 +976,7 @@ public DecimalFraction ValueOf(int val) {
      * and exponent range of the result. If HasFlags of the context is true,
      * will also store the flags resulting from the operation (the flags
      * are in addition to the pre-existing flags). Can be null.
+     * @return A DecimalFraction object.
      */
     public DecimalFraction Negate(PrecisionContext context) {
       BigInteger neg=(this.mantissa).negate();
@@ -1029,9 +1055,9 @@ public DecimalFraction ValueOf(int val) {
      * @param divisor The divisor.
      * @param ctx A precision context object to control the precision, rounding,
      * and exponent range of the integer part of the result. Flags will be
-     * set on the given context only if the context's HasFlags is true and
-     * the integer part of the result doesn't fit the precision and exponent
-     * range without rounding.
+     * set on the given context only if the context&apos;s HasFlags is true
+     * and the integer part of the result doesn&apos;t fit the precision
+     * and exponent range without rounding.
      * @return The integer part of the quotient of the two objects. Returns
      * null if the return value would overflow the exponent range. A caller
      * can handle a null return value by treating it as positive infinity
@@ -1121,8 +1147,8 @@ public DecimalFraction ValueOf(int val) {
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the largest value that's less than the given value.
-     * Returns null if the result is negative infinity.
+     * @return Returns the largest value that&apos;s less than the given
+     * value. Returns null if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
@@ -1138,8 +1164,8 @@ public DecimalFraction ValueOf(int val) {
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the smallest value that's greater than the given
-     * value. Returns null if the result is positive infinity.
+     * @return Returns the smallest value that&apos;s greater than the
+     * given value. Returns null if the result is positive infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
@@ -1157,8 +1183,9 @@ public DecimalFraction ValueOf(int val) {
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the next value that is closer to the other object's
-     * value than this object's value. Returns null if the result is infinity.
+     * @return Returns the next value that is closer to the other object&apos;s
+     * value than this object&apos;s value. Returns null if the result is
+     * infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
@@ -1223,6 +1250,7 @@ public DecimalFraction ValueOf(int val) {
      * If the absolute values are equal, has the same effect as Max.
      * @param first A DecimalFraction object.
      * @param second A DecimalFraction object.
+     * @return A DecimalFraction object.
      */
     public static DecimalFraction MaxMagnitude(
       DecimalFraction first, DecimalFraction second) {
@@ -1234,6 +1262,7 @@ public DecimalFraction ValueOf(int val) {
      * the absolute values are equal, has the same effect as Min.
      * @param first A DecimalFraction object.
      * @param second A DecimalFraction object.
+     * @return A DecimalFraction object.
      */
     public static DecimalFraction MinMagnitude(
       DecimalFraction first, DecimalFraction second) {
@@ -1245,9 +1274,10 @@ public DecimalFraction ValueOf(int val) {
      * different decimal fractions with the same mathematical value, but
      * different exponents, will compare as equal.</p>
      * @param other A DecimalFraction object.
-     * @return Less than 0 if this object's value is less than the other value,
-     * or greater than 0 if this object's value is greater than the other value
-     * or if "other" is null, or 0 if both values are equal.
+     * @return Less than 0 if this object&apos;s value is less than the other
+     * value, or greater than 0 if this object&apos;s value is greater than
+     * the other value or if &quot;other&quot; is null, or 0 if both values
+     * are equal.
      */
     public int compareTo(
       DecimalFraction other) {
@@ -1258,6 +1288,7 @@ public DecimalFraction ValueOf(int val) {
      * 
      * @param other A DecimalFraction object.
      * @param ctx A PrecisionContext object.
+     * @return A DecimalFraction object.
      */
 public DecimalFraction CompareToWithContext(
       DecimalFraction other, PrecisionContext ctx) {
@@ -1268,6 +1299,7 @@ public DecimalFraction CompareToWithContext(
      * 
      * @param other A DecimalFraction object.
      * @param ctx A PrecisionContext object.
+     * @return A DecimalFraction object.
      */
 public DecimalFraction CompareToSignal(
       DecimalFraction other, PrecisionContext ctx) {
@@ -1435,11 +1467,11 @@ public DecimalFraction CompareToSignal(
      * addition to the pre-existing flags). Can be null, in which case the
      * default rounding mode is HalfEven.
      * @return A decimal fraction rounded to the closest value representable
-     * in the given precision, meaning if the result can't fit the precision,
+     * in the given precision, meaning if the result can&apos;t fit the precision,
      * additional digits are discarded to make it fit. Returns null if the
      * result of the rounding would cause an overflow. The caller can handle
      * a null return value by treating it as positive or negative infinity
-     * depending on the sign of this object's value.
+     * depending on the sign of this object&apos;s value.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
      * when rounding and the new exponent is outside of the valid range of
      * the precision context, if it defines an exponent range.
@@ -1492,12 +1524,13 @@ public DecimalFraction CompareToSignal(
      * mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
-     * @return The closest value to this object's value, rounded to the specified
-     * precision. Returns the same value as this object if "context" is null
-     * or the precision and exponent range are unlimited. Returns null if
-     * the result of the rounding would cause an overflow. The caller can
-     * handle a null return value by treating it as positive or negative infinity
-     * depending on the sign of this object's value.
+     * @return The closest value to this object&apos;s value, rounded to
+     * the specified precision. Returns the same value as this object if
+     * &quot;context&quot; is null or the precision and exponent range
+     * are unlimited. Returns null if the result of the rounding would cause
+     * an overflow. The caller can handle a null return value by treating
+     * it as positive or negative infinity depending on the sign of this object&apos;s
+     * value.
      */
     public DecimalFraction RoundToPrecision(
       PrecisionContext ctx) {
@@ -1510,12 +1543,13 @@ public DecimalFraction CompareToSignal(
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. The precision is interpreted as the maximum bit
      * length of the mantissa. Can be null.
-     * @return The closest value to this object's value, rounded to the specified
-     * precision. Returns the same value as this object if "context" is null
-     * or the precision and exponent range are unlimited. Returns null if
-     * the result of the rounding would cause an overflow. The caller can
-     * handle a null return value by treating it as positive or negative infinity
-     * depending on the sign of this object's value.
+     * @return The closest value to this object&apos;s value, rounded to
+     * the specified precision. Returns the same value as this object if
+     * &quot;context&quot; is null or the precision and exponent range
+     * are unlimited. Returns null if the result of the rounding would cause
+     * an overflow. The caller can handle a null return value by treating
+     * it as positive or negative infinity depending on the sign of this object&apos;s
+     * value.
      */
     public DecimalFraction RoundToBinaryPrecision(
       PrecisionContext ctx) {

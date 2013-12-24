@@ -91,7 +91,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * code point is reached.
      * @param str A string object.
      * @return The number of bytes needed to encode the given string in UTF-8,
-     * or -1 if the string contains an unpaired surrogate code point and "replace"
+     * or -1 if the string contains an unpaired surrogate code point and &quot;replace&quot;
      * is false.
      * @throws java.lang.NullPointerException "s" is null.
      */
@@ -128,12 +128,12 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * are treated as individual code points.
      * @param strA The first string.
      * @param strB The second string.
-     * @return A value indicating which string is "less" or "greater". 0:
-     * Both strings are equal or null. Less than 0: a is null and b isn't; or
-     * the first code point that's different is less in A than in B; or b starts
-     * with a and is longer than a. Greater than 0: b is null and a isn't; or the
-     * first code point that's different is greater in A than in B; or a starts
-     * with b and is longer than b.
+     * @return A value indicating which string is &quot;less&quot; or &quot;greater&quot;.
+     * 0: Both strings are equal or null. Less than 0: a is null and b isn&apos;t;
+     * or the first code point that&apos;s different is less in A than in B;
+     * or b starts with a and is longer than a. Greater than 0: b is null and a
+     * isn&apos;t; or the first code point that&apos;s different is greater
+     * in A than in B; or a starts with b and is longer than b.
      */
     public static int CodePointCompare(String strA, String strB) {
       if (strA == null) return (strB == null) ? 0 : -1;
@@ -189,7 +189,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * with the replacement character (U+FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
      * @return 0 if the entire string portion was written; or -1 if the string
-     * portion contains an unpaired surrogate code point and "replace"
+     * portion contains an unpaired surrogate code point and &quot;replace&quot;
      * is false.
      * @throws java.lang.NullPointerException "str" is null or "stream"
      * is null.
@@ -275,7 +275,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * with the replacement character (U+FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
      * @return 0 if the entire string was written; or -1 if the string contains
-     * an unpaired surrogate code point and "replace" is false.
+     * an unpaired surrogate code point and &quot;replace&quot; is false.
      * @throws java.lang.NullPointerException "str" is null or "stream"
      * is null.
      * @throws java.io.IOException An I/O error occurred.
@@ -295,7 +295,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * character (U+FFFD). If false, stops processing when invalid UTF-8
      * is seen.
      * @return 0 if the entire string was read without errors, or -1 if the
-     * string is not valid UTF-8 and "replace" is false.
+     * string is not valid UTF-8 and &quot;replace&quot; is false.
      * @throws java.lang.NullPointerException "data" is null or "builder"
      * is null.
      * @throws java.lang.IllegalArgumentException "offset" is less than 0, "bytesCount"
@@ -398,9 +398,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * character (U+FFFD). If false, stops processing when an unpaired
      * surrogate code point is seen.
      * @return 0 if the entire string was read without errors, -1 if the string
-     * is not valid UTF-8 and "replace" is false (even if the end of the stream
-     * is reached), or -2 if the end of the stream was reached before the entire
-     * string was read.
+     * is not valid UTF-8 and &quot;replace&quot; is false (even if the end
+     * of the stream is reached), or -2 if the end of the stream was reached
+     * before the entire string was read.
      * @throws java.io.IOException An I/O error occurred.
      * @throws java.lang.NullPointerException "stream" is null or "builder"
      * is null.

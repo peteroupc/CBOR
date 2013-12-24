@@ -38,8 +38,8 @@ namespace Test
     }
     
     /// <summary> </summary>
-    /// <param name='v'> A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <param name='v'>A 32-bit signed integer.</param>
+    /// <returns>A 32-bit signed integer.</returns>
 public int NextValue(int v){
       if((v)<0)throw new ArgumentException(
         "v"+" not greater or equal to "+"0"+" ("+

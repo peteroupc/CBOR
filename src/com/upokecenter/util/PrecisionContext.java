@@ -136,6 +136,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param exponent A BigInteger object.
+     * @return A Boolean object.
      */
     public boolean ExponentWithinRange(BigInteger exponent) {
       if((exponent)==null)throw new NullPointerException("exponent");
@@ -162,6 +163,7 @@ at: http://peteroupc.github.io/CBOR/
      * Copies this PrecisionContext with HasFlags set to true and a Flags
      * value of 0.
      * @param rounding A Rounding object.
+     * @return A PrecisionContext object.
      */
     public PrecisionContext WithRounding(Rounding rounding) {
       PrecisionContext pc = this.Copy();
@@ -172,6 +174,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Copies this PrecisionContext with HasFlags set to true and a Flags
      * value of 0.
+     * @return A PrecisionContext object.
      */
     public PrecisionContext WithBlankFlags() {
       PrecisionContext pc = this.Copy();
@@ -183,6 +186,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param clamp A Boolean object.
+     * @return A PrecisionContext object.
      */
 public PrecisionContext WithExponentClamp(boolean clamp) {
       PrecisionContext pc = this.Copy();
@@ -194,6 +198,7 @@ public PrecisionContext WithExponentClamp(boolean clamp) {
      * 
      * @param exponentMin A BigInteger object.
      * @param exponentMax A BigInteger object.
+     * @return A PrecisionContext object.
      */
 public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if((exponentMin)==null)throw new NullPointerException("exponentMin");
@@ -209,6 +214,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
     /**
      * Copies this PrecisionContext with HasFlags set to false and a Flags
      * value of 0.
+     * @return A PrecisionContext object.
      */
     public PrecisionContext WithNoFlags() {
       PrecisionContext pc = this.Copy();
@@ -218,6 +224,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
     }
     /**
      * Copies this PrecisionContext with an unlimited exponent range.
+     * @return A PrecisionContext object.
      */
     public PrecisionContext WithUnlimitedExponents() {
       PrecisionContext pc = this.Copy();
@@ -227,6 +234,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
     /**
      * Copies this PrecisionContext with a particular precision.
      * @param precision Desired precision. 0 means unlimited precision.
+     * @return A PrecisionContext object.
      */
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+(precision)+")");
@@ -238,6 +246,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
     /**
      * 
      * @param bigintPrecision A BigInteger object.
+     * @return A PrecisionContext object.
      */
 public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
       if((bigintPrecision)==null)throw new NullPointerException("bigintPrecision");
@@ -251,6 +260,7 @@ public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
 
     /**
      * Initializes a new PrecisionContext that is a copy of another PrecisionContext.
+     * @return A PrecisionContext object.
      */
     public PrecisionContext Copy() {
       PrecisionContext pcnew=new PrecisionContext(0,this.rounding,0,0,this.clampNormalExponents);

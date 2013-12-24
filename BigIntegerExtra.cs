@@ -73,7 +73,7 @@ namespace PeterO
     
     /// <summary> </summary>
     /// <param name='bthis'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     /// <param name='numBits'>A 32-bit signed integer.</param>
     public static BigInteger operator<<(BigInteger bthis, int numBits)
     {
@@ -98,7 +98,7 @@ namespace PeterO
     /// <param name='n'>The number of bits to shift to the right. If negative,
     /// this treated as shifting left the absolute value of this number of
     /// bits.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     /// <remarks>For this operation, the BigInteger is treated as a two's
     /// complement representation. Thus, for negative values, the BigInteger
     /// is sign-extended.</remarks>
@@ -110,7 +110,7 @@ namespace PeterO
 
     /// <summary> Negates a BigInteger object. </summary>
     /// <param name='bigValue'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public static BigInteger operator-(BigInteger bigValue){
       if((bigValue)==null)throw new ArgumentNullException("bigValue");
       return bigValue.negate();
@@ -174,7 +174,7 @@ namespace PeterO
     }
 
     /// <summary> </summary>
-    /// <returns/>
+    /// <returns>A Boolean object.</returns>
     public bool IsPowerOfTwo{
       get {
         int bits=BitLength();
@@ -189,7 +189,7 @@ namespace PeterO
     
     /// <summary> </summary>
     /// <param name='thisValue'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     [CLSCompliant(false)]
     public static BigInteger Abs(BigInteger thisValue){
       if((thisValue)==null)throw new ArgumentNullException("thisValue");
@@ -211,7 +211,7 @@ namespace PeterO
     
     /// <summary> </summary>
     /// <param name='index'>A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <returns>A 64-bit signed integer.</returns>
     /// <param name='numberBits'>A 32-bit signed integer.</param>
     public long GetBits(int index, int numberBits)
     {
@@ -227,7 +227,7 @@ namespace PeterO
     /// <param name='dividend'>A BigInteger object.</param>
     /// <param name='divisor'>A BigInteger object.</param>
     /// <param name='remainder'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public static BigInteger DivRem(BigInteger dividend, BigInteger divisor, out BigInteger remainder)
     {
       if((dividend)==null)throw new ArgumentNullException("dividend");
@@ -239,14 +239,14 @@ namespace PeterO
     /// <summary> </summary>
     /// <param name='bigintFirst'>A BigInteger object.</param>
     /// <param name='bigintSecond'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public static BigInteger GreatestCommonDivisor(BigInteger bigintFirst, BigInteger bigintSecond){
       if((bigintFirst)==null)throw new ArgumentNullException("bigintFirst");
       return bigintFirst.gcd(bigintSecond);
     }
     
     /// <summary> </summary>
-    /// <returns></returns>
+    /// <returns>A byte[] object.</returns>
     [CLSCompliant(false)]
     public byte[] ToByteArray(){
       return toByteArray(true);
@@ -255,7 +255,7 @@ namespace PeterO
     /// <summary> </summary>
     /// <param name='bigValue'>A BigInteger object.</param>
     /// <param name='power'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, BigInteger power){
       if((bigValue)==null)throw new ArgumentNullException("bigValue");
@@ -274,7 +274,7 @@ namespace PeterO
     /// <summary> </summary>
     /// <param name='bigValue'>A BigInteger object.</param>
     /// <param name='power'>A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, int power){
       if((bigValue)==null)throw new ArgumentNullException("bigValue");
@@ -314,7 +314,7 @@ namespace PeterO
 
     /// <summary> </summary>
     /// <param name='other'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A Boolean object.</returns>
     public bool Equals(BigInteger other) {
       if (other == null) return false;
       return this.CompareTo(other) == 0;
@@ -322,7 +322,7 @@ namespace PeterO
 
     /// <summary> Returns a BigInteger with every bit flipped. </summary>
     /// <param name='a'>A BigInteger object.</param>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public static BigInteger Not(BigInteger a){
       if((a)==null)throw new ArgumentNullException("a");
       BigInteger xa=new BigInteger().Allocate(a.wordCount);
@@ -342,7 +342,7 @@ namespace PeterO
     /// <param name='b'>Another BigInteger instance.</param>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public static BigInteger And(BigInteger a, BigInteger b){
       if((a)==null)throw new ArgumentNullException("a");
       if((b)==null)throw new ArgumentNullException("b");
@@ -371,7 +371,7 @@ namespace PeterO
     /// </summary>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     /// <param name='first'>A BigInteger object.</param>
     /// <param name='second'>A BigInteger object.</param>
     public static BigInteger Or(BigInteger first, BigInteger second){
@@ -402,7 +402,7 @@ namespace PeterO
     /// <param name='b'>Another BigInteger instance.</param>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
-    /// <returns></returns>
+    /// <returns>A BigInteger object.</returns>
     public static BigInteger Xor(BigInteger a, BigInteger b){
       if((a)==null)throw new ArgumentNullException("a");
       if((b)==null)throw new ArgumentNullException("b");

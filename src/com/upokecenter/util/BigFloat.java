@@ -43,6 +43,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param other A BigFloat object.
+     * @return A Boolean object.
      */
     public boolean equals(BigFloat other) {
       return EqualsInternal(other);
@@ -50,7 +51,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Determines whether this object's mantissa and exponent are equal
      * to those of another object and that object is a Bigfloat.
-     * @param obj A object object.
+     * @param obj An arbitrary object.
      * @return True if the objects are equal; false otherwise.
      */
     @Override public boolean equals(Object obj) {
@@ -58,7 +59,7 @@ at: http://peteroupc.github.io/CBOR/
     }
     /**
      * Calculates this object's hash code.
-     * @return This object's hash code.
+     * @return This object&apos;s hash code.
      */
     @Override public int hashCode() {
       int hashCode_ = 0;
@@ -103,6 +104,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param bigint A BigInteger object.
+     * @return A BigFloat object.
      */
     public static BigFloat FromBigInteger(BigInteger bigint) {
       return new BigFloat(bigint,BigInteger.ZERO);
@@ -111,6 +113,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * 
      * @param numberValue A 64-bit signed integer.
+     * @return A BigFloat object.
      */
     public static BigFloat FromInt64(long numberValue) {
       BigInteger bigint=BigInteger.valueOf(numberValue);
@@ -122,6 +125,7 @@ at: http://peteroupc.github.io/CBOR/
      * Note that if the bigfloat contains a negative exponent, the resulting
      * value might not be exact.
      * @param decfrac A DecimalFraction object.
+     * @return A BigFloat object.
      */
     public static BigFloat FromDecimalFraction(DecimalFraction decfrac) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
@@ -198,7 +202,7 @@ remainder=divrem[1];
     /**
      * Creates a bigfloat from a 32-bit floating-point number.
      * @param flt A 32-bit floating-point number.
-     * @return A bigfloat with the same value as "flt".
+     * @return A bigfloat with the same value as &quot;flt&quot;.
      * @throws ArithmeticException "flt" is infinity or not-a-number.
      */
     public static BigFloat FromSingle(float flt) {
@@ -223,7 +227,7 @@ remainder=divrem[1];
     /**
      * Creates a bigfloat from a 64-bit floating-point number.
      * @param dbl A 64-bit floating-point number.
-     * @return A bigfloat with the same value as "dbl"
+     * @return A bigfloat with the same value as &quot;dbl&quot;
      * @throws ArithmeticException "dbl" is infinity or not-a-number.
      */
     public static BigFloat FromDouble(double dbl) {
@@ -246,6 +250,7 @@ remainder=divrem[1];
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
+     * @return A BigInteger object.
      */
     public BigInteger ToBigInteger() {
       int expsign=this.getExponent().signum();
@@ -494,6 +499,7 @@ remainder=divrem[1];
      * Same as toString(), except that when an exponent is used it will be
      * a multiple of 3. The format of the return value follows the format of
      * the java.math.BigDecimal.toEngineeringString() method.
+     * @return A string object.
      */
     public String ToEngineeringString() {
       return DecimalFraction.FromBigFloat(this).ToEngineeringString();
@@ -502,6 +508,7 @@ remainder=divrem[1];
      * Converts this value to a string, but without an exponent part. The
      * format of the return value follows the format of the java.math.BigDecimal.toPlainString()
      * method.
+     * @return A string object.
      */
     public String ToPlainString() {
       return DecimalFraction.FromBigFloat(this).ToPlainString();
@@ -511,6 +518,7 @@ remainder=divrem[1];
 
     /**
      * 
+     * @return A 32-bit signed integer.
      */
       public int GetRadix() {
         return 2;
@@ -519,6 +527,7 @@ remainder=divrem[1];
     /**
      * 
      * @param value A BigFloat object.
+     * @return A 32-bit signed integer.
      */
       public int GetSign(BigFloat value) {
         return value.signum();
@@ -527,6 +536,7 @@ remainder=divrem[1];
     /**
      * 
      * @param value A BigFloat object.
+     * @return A BigInteger object.
      */
       public BigInteger GetMantissa(BigFloat value) {
         return value.mantissa;
@@ -535,6 +545,7 @@ remainder=divrem[1];
     /**
      * 
      * @param value A BigFloat object.
+     * @return A BigInteger object.
      */
       public BigInteger GetExponent(BigFloat value) {
         return value.exponent;
@@ -545,6 +556,7 @@ remainder=divrem[1];
      * @param mantissa A BigInteger object.
      * @param e1 A BigInteger object.
      * @param e2 A BigInteger object.
+     * @return A BigInteger object.
      */
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
         boolean negative = (mantissa.signum() < 0);
@@ -559,6 +571,7 @@ remainder=divrem[1];
      * 
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
+     * @return A BigFloat object.
      */
       public BigFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
         return new BigFloat(mantissa, exponent);
@@ -569,6 +582,7 @@ remainder=divrem[1];
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.
+     * @return An IShiftAccumulator object.
      */
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
@@ -577,6 +591,7 @@ remainder=divrem[1];
     /**
      * 
      * @param bigint A BigInteger object.
+     * @return An IShiftAccumulator object.
      */
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new BitShiftAccumulator(bigint,0,0);
@@ -586,6 +601,7 @@ remainder=divrem[1];
      * 
      * @param num A BigInteger object.
      * @param den A BigInteger object.
+     * @return A Boolean object.
      */
       public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
         BigInteger gcd = num.gcd(den);
@@ -601,6 +617,7 @@ remainder=divrem[1];
      * 
      * @param bigint A BigInteger object.
      * @param power A FastInteger object.
+     * @return A BigInteger object.
      */
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.signum() <= 0) return bigint;
@@ -614,6 +631,7 @@ remainder=divrem[1];
     /**
      * 
      * @param value A BigFloat object.
+     * @return A 32-bit signed integer.
      */
       public int GetFlags(BigFloat value) {
         return value.mantissa.signum()<0 ? BigNumberFlags.FlagNegative : 0;
@@ -624,6 +642,7 @@ remainder=divrem[1];
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
      * @param flags A 32-bit signed integer.
+     * @return A BigFloat object.
      */
       public BigFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         boolean neg=(flags&BigNumberFlags.FlagNegative)!=0;
@@ -633,6 +652,7 @@ remainder=divrem[1];
       }
     /**
      * 
+     * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteOnly;
@@ -641,6 +661,7 @@ remainder=divrem[1];
     /**
      * 
      * @param val A 32-bit signed integer.
+     * @return A BigFloat object.
      */
 public BigFloat ValueOf(int val) {
         return FromInt64(val);
@@ -661,6 +682,7 @@ public BigFloat ValueOf(int val) {
       }
     /**
      * Gets the absolute value of this object.
+     * @return A BigFloat object.
      */
     public BigFloat Abs() {
       return Abs(null);
@@ -668,6 +690,7 @@ public BigFloat ValueOf(int val) {
 
     /**
      * Gets an object with the same value as this one, but with the sign reversed.
+     * @return A BigFloat object.
      */
     public BigFloat Negate() {
       return Negate(null);
@@ -717,6 +740,7 @@ public BigFloat ValueOf(int val) {
     /**
      * 
      * @param divisor A BigFloat object.
+     * @return A BigFloat object.
      */
     public BigFloat RemainderNaturalScale(
       BigFloat divisor
@@ -728,6 +752,7 @@ public BigFloat ValueOf(int val) {
      * 
      * @param divisor A BigFloat object.
      * @param ctx A PrecisionContext object.
+     * @return A BigFloat object.
      */
     public BigFloat RemainderNaturalScale(
       BigFloat divisor,
@@ -809,6 +834,7 @@ public BigFloat ValueOf(int val) {
     /**
      * 
      * @param context A PrecisionContext object.
+     * @return A BigFloat object.
      */
     public BigFloat Abs(PrecisionContext context) {
       if (this.signum() < 0) {
@@ -821,6 +847,7 @@ public BigFloat ValueOf(int val) {
     /**
      * 
      * @param context A PrecisionContext object.
+     * @return A BigFloat object.
      */
     public BigFloat Negate(PrecisionContext context) {
       BigInteger neg=(this.mantissa).negate();
@@ -830,6 +857,7 @@ public BigFloat ValueOf(int val) {
     /**
      * 
      * @param decfrac A BigFloat object.
+     * @return A BigFloat object.
      */
     public BigFloat Add(BigFloat decfrac) {
       return Add(decfrac, PrecisionContext.Unlimited);
@@ -887,9 +915,9 @@ public BigFloat ValueOf(int val) {
      * @param divisor The divisor.
      * @param ctx A precision context object to control the precision, rounding,
      * and exponent range of the integer part of the result. Flags will be
-     * set on the given context only if the context's HasFlags is true and
-     * the integer part of the result doesn't fit the precision and exponent
-     * range without rounding.
+     * set on the given context only if the context&apos;s HasFlags is true
+     * and the integer part of the result doesn&apos;t fit the precision
+     * and exponent range without rounding.
      * @return The integer part of the quotient of the two objects. Returns
      * null if the return value would overflow the exponent range. A caller
      * can handle a null return value by treating it as positive infinity
@@ -937,6 +965,7 @@ public BigFloat ValueOf(int val) {
      * 
      * @param divisor A BigFloat object.
      * @param ctx A PrecisionContext object.
+     * @return A BigFloat object.
      */
     public BigFloat RemainderNear(
       BigFloat divisor, PrecisionContext ctx) {
@@ -1023,6 +1052,7 @@ public BigFloat ValueOf(int val) {
      * @param first A BigFloat object.
      * @param second A BigFloat object.
      * @param ctx A PrecisionContext object.
+     * @return A BigFloat object.
      */
     public static BigFloat MaxMagnitude(
       BigFloat first, BigFloat second, PrecisionContext ctx) {
@@ -1035,6 +1065,7 @@ public BigFloat ValueOf(int val) {
      * @param first A BigFloat object.
      * @param second A BigFloat object.
      * @param ctx A PrecisionContext object.
+     * @return A BigFloat object.
      */
     public static BigFloat MinMagnitude(
       BigFloat first, BigFloat second, PrecisionContext ctx) {
@@ -1067,6 +1098,7 @@ public BigFloat ValueOf(int val) {
      * If the absolute values are equal, has the same effect as Max.
      * @param first A BigFloat object.
      * @param second A BigFloat object.
+     * @return A BigFloat object.
      */
     public static BigFloat MaxMagnitude(
       BigFloat first, BigFloat second) {
@@ -1078,6 +1110,7 @@ public BigFloat ValueOf(int val) {
      * the absolute values are equal, has the same effect as Min.
      * @param first A BigFloat object.
      * @param second A BigFloat object.
+     * @return A BigFloat object.
      */
     public static BigFloat MinMagnitude(
       BigFloat first, BigFloat second) {
@@ -1089,9 +1122,10 @@ public BigFloat ValueOf(int val) {
      * different bigfloats with the same mathematical value, but different
      * exponents, will compare as equal.</p>
      * @param other A BigFloat object to compare with.
-     * @return Less than 0 if this object's value is less than the other value,
-     * or greater than 0 if this object's value is greater than the other value
-     * or if "other" is null, or 0 if both values are equal.
+     * @return Less than 0 if this object&apos;s value is less than the other
+     * value, or greater than 0 if this object&apos;s value is greater than
+     * the other value or if &quot;other&quot; is null, or 0 if both values
+     * are equal.
      */
     public int compareTo(
       BigFloat other) {
@@ -1175,6 +1209,7 @@ public BigFloat ValueOf(int val) {
     }    /**
      * 
      * @param ctx A PrecisionContext object.
+     * @return A BigFloat object.
      */
     public BigFloat RoundToIntegralExact(
       PrecisionContext ctx) {
@@ -1183,6 +1218,7 @@ public BigFloat ValueOf(int val) {
     /**
      * 
      * @param ctx A PrecisionContext object.
+     * @return A BigFloat object.
      */
     public BigFloat RoundToIntegralNoRoundedFlag(
       PrecisionContext ctx) {
@@ -1200,7 +1236,7 @@ public BigFloat ValueOf(int val) {
      * there may still be some trailing zeros in the mantissa. If a precision
      * context is given, returns null if the result of rounding would cause
      * an overflow. The caller can handle a null return value by treating
-     * it as positive or negative infinity depending on the sign of this object's
+     * it as positive or negative infinity depending on the sign of this object&apos;s
      * value.
      */
     public BigFloat Reduce(
@@ -1215,8 +1251,8 @@ public BigFloat ValueOf(int val) {
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the largest value that's smaller than the given value.
-     * Returns null if the result is negative infinity.
+     * @return Returns the largest value that&apos;s smaller than the given
+     * value. Returns null if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
@@ -1232,8 +1268,8 @@ public BigFloat ValueOf(int val) {
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the smallest value that's greater than the given
-     * value. Returns null if the result is positive infinity.
+     * @return Returns the smallest value that&apos;s greater than the
+     * given value. Returns null if the result is positive infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
@@ -1247,6 +1283,7 @@ public BigFloat ValueOf(int val) {
      * 
      * @param otherValue A BigFloat object.
      * @param ctx A PrecisionContext object.
+     * @return A BigFloat object.
      */
     public BigFloat NextToward(
       BigFloat otherValue,
@@ -1291,12 +1328,13 @@ public BigFloat ValueOf(int val) {
      * mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
-     * @return The closest value to this object's value, rounded to the specified
-     * precision. Returns the same value as this object if "context" is null
-     * or the precision and exponent range are unlimited. Returns null if
-     * the result of the rounding would cause an overflow. The caller can
-     * handle a null return value by treating it as positive or negative infinity
-     * depending on the sign of this object's value.
+     * @return The closest value to this object&apos;s value, rounded to
+     * the specified precision. Returns the same value as this object if
+     * &quot;context&quot; is null or the precision and exponent range
+     * are unlimited. Returns null if the result of the rounding would cause
+     * an overflow. The caller can handle a null return value by treating
+     * it as positive or negative infinity depending on the sign of this object&apos;s
+     * value.
      */
     public BigFloat RoundToPrecision(
       PrecisionContext ctx) {
@@ -1309,12 +1347,13 @@ public BigFloat ValueOf(int val) {
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. The precision is interpreted as the maximum bit
      * length of the mantissa. Can be null.
-     * @return The closest value to this object's value, rounded to the specified
-     * precision. Returns the same value as this object if "context" is null
-     * or the precision and exponent range are unlimited. Returns null if
-     * the result of the rounding would cause an overflow. The caller can
-     * handle a null return value by treating it as positive or negative infinity
-     * depending on the sign of this object's value.
+     * @return The closest value to this object&apos;s value, rounded to
+     * the specified precision. Returns the same value as this object if
+     * &quot;context&quot; is null or the precision and exponent range
+     * are unlimited. Returns null if the result of the rounding would cause
+     * an overflow. The caller can handle a null return value by treating
+     * it as positive or negative infinity depending on the sign of this object&apos;s
+     * value.
      */
     public BigFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {

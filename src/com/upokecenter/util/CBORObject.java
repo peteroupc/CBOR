@@ -164,6 +164,7 @@ import java.io.*;
       }
     /**
      * Gets this object's value with the sign reversed.
+     * @return A CBORObject object.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
      */
@@ -237,6 +238,7 @@ import java.io.*;
       }
     /**
      * Gets whether this CBOR object represents positive infinity.
+     * @return A Boolean object.
      */
     public boolean IsPositiveInfinity() {
       switch (this.getItemType()) {
@@ -254,6 +256,7 @@ import java.io.*;
     }
     /**
      * Gets whether this CBOR object represents negative infinity.
+     * @return A Boolean object.
      */
     public boolean IsNegativeInfinity() {
       switch (this.getItemType()) {
@@ -272,6 +275,7 @@ import java.io.*;
     /**
      * Gets whether this CBOR object represents a not-a-number value (as
      * opposed to whether this object's type is not a number type).
+     * @return A Boolean object.
      */
     public boolean IsNaN() {
       switch (this.getItemType()) {
@@ -801,7 +805,7 @@ hasKey=(valueB==null) ? mapB.containsKey(kvp.getKey()) : true;
     }
     /**
      * Determines whether this object and another object are equal.
-     * @param obj A object object.
+     * @param obj An arbitrary object.
      * @return True if the objects are equal; false otherwise.
      */
     @Override public boolean equals(Object obj) {
@@ -1114,6 +1118,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       }
     /**
      * Gets the byte array used in this object, if this object is a byte string.
+     * @return A byte[] object.
      * @throws IllegalStateException This object is not a byte string.
      */
     public byte[] GetByteString() {
@@ -1156,6 +1161,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     private static BigInteger[] EmptyTags = new BigInteger[0];
     /**
      * Gets a list of all tags, from outermost to innermost.
+     * @return A BigInteger[] object.
      */
     public BigInteger[] GetTags() {
       if (!this.isTagged()) return EmptyTags;
@@ -1445,7 +1451,7 @@ public void set(String key, CBORObject value) {
     }
     /**
      * Converts this object to a decimal fraction.
-     * @return A decimal fraction for this object's value.
+     * @return A decimal fraction for this object&apos;s value.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
      */
@@ -1473,7 +1479,7 @@ public void set(String key, CBORObject value) {
      * Converts this object to an arbitrary-precision binary floating
      * point number.
      * @return An arbitrary-precision binary floating point number for
-     * this object's value. Note that if this object is a decimal fraction
+     * this object&apos;s value. Note that if this object is a decimal fraction
      * with a fractional part, the conversion may lose information depending
      * on the number.
      * @throws java.lang.IllegalStateException This object's type is
@@ -1503,7 +1509,8 @@ public void set(String key, CBORObject value) {
      * Converts this object to a 32-bit floating point number.
      * @return The closest 32-bit floating point number to this object.
      * The return value can be positive infinity or negative infinity if
-     * this object's value exceeds the range of a 32-bit floating point number.
+     * this object&apos;s value exceeds the range of a 32-bit floating point
+     * number.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
      */
@@ -1559,6 +1566,7 @@ public void set(String key, CBORObject value) {
     /**
      * Returns false if this object is False, Null, or Undefined; otherwise,
      * true.
+     * @return A Boolean object.
      */
     public boolean AsBoolean() {
       if (this.isFalse() || this.isNull() || this.isUndefined())
@@ -1715,7 +1723,7 @@ public void set(String key, CBORObject value) {
     }
     /**
      * Gets the value of this object as a string object.
-     * @return Gets this object's string.
+     * @return Gets this object&apos;s string.
      * @throws IllegalStateException This object's type is not a string.
      */
     public String AsString() {
@@ -2141,7 +2149,7 @@ public void set(String key, CBORObject value) {
     /**
      * Writes a Unicode character as a string in CBOR format to a data stream.
      * @param value The value to write
-     * @param stream A InputStream object.
+     * @param stream A writable data stream.
      * @throws java.lang.NullPointerException s is null.
      * @throws java.lang.IllegalArgumentException "s" is a surrogate code point.
      * @throws java.io.IOException An I/O error occurred.
@@ -2155,7 +2163,7 @@ public void set(String key, CBORObject value) {
     /**
      * Writes a Boolean value in CBOR format to a data stream.
      * @param value The value to write
-     * @param stream A InputStream object.
+     * @param stream A writable data stream.
      * @throws java.lang.NullPointerException s is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2166,7 +2174,7 @@ public void set(String key, CBORObject value) {
     /**
      * Writes a byte (0 to 255) in CBOR format to a data stream.
      * @param value The value to write
-     * @param stream A InputStream object.
+     * @param stream A writable data stream.
      * @throws java.lang.NullPointerException s is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2404,6 +2412,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from a string in JavaScript Object Notation
      * (JSON) format. This function only accepts maps and arrays.
      * @param str A string in JSON format.
+     * @return A CBORObject object.
      * @throws java.lang.NullPointerException "str" is null.
      * @throws CBORException The string is not in JSON format.
      */
@@ -2419,6 +2428,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * (JSON) format and UTF-8 encoding. This function only accepts maps
      * and arrays.
      * @param stream A readable data stream.
+     * @return A CBORObject object.
      * @throws java.lang.NullPointerException "stream" is null.
      * @throws java.io.IOException An I/O error occurred.
      * @throws CBORException The data stream contains invalid UTF-8 or
@@ -2483,6 +2493,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Converts this object to a JSON string. This function works not only
      * with arrays and maps (the only proper JSON objects under RFC 4627),
      * but also integers, strings, byte arrays, and other JSON data types.
+     * @return A string object.
      */
     public String ToJSONString() {
       int type = this.getItemType();
@@ -2638,6 +2649,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Finds the sum of two CBOR number objects.
      * @param first A CBORObject object.
      * @param second A CBORObject object.
+     * @return A CBORObject object.
      * @throws java.lang.IllegalArgumentException Either or both operands are not
      * numbers (as opposed to Not-a-Number, NaN).
      */
@@ -2684,6 +2696,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR object from a 64-bit signed integer.
      * @param value A 64-bit signed integer.
+     * @return A CBORObject object.
      */
     public static CBORObject FromObject(long value) {
       return new CBORObject(CBORObjectType_Integer, value);
@@ -2691,7 +2704,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR object from a CBOR object.
      * @param value A CBOR object.
-     * @return Same as "value", or CBORObject.Null if "value" is null.
+     * @return Same as &quot;value&quot;, or CBORObject.Null if &quot;value&quot;
+     * is null.
      */
     public static CBORObject FromObject(CBORObject value) {
       if (value == null) return CBORObject.Null;
@@ -2769,13 +2783,15 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR object from a 32-bit signed integer.
      * @param value A 32-bit signed integer.
+     * @return A CBORObject object.
      */
     public static CBORObject FromObject(int value) {
       return FromObject((long)value);
     }
     /**
      * Generates a CBOR object from a 16-bit signed integer.
-     * @param value A Int16 object.
+     * @param value An Int16 object.
+     * @return A CBORObject object.
      */
     public static CBORObject FromObject(short value) {
       return FromObject((long)value);
@@ -2783,6 +2799,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR string object from a Unicode character.
      * @param value A char object.
+     * @return A CBORObject object.
      */
     public static CBORObject FromObject(char value) {
       return FromObject(new String(new char[] { value }));
@@ -2790,6 +2807,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Returns the CBOR true value or false value, depending on "value".
      * @param value A Boolean object.
+     * @return A CBORObject object.
      */
     public static CBORObject FromObject(boolean value) {
       return (value ? CBORObject.True : CBORObject.False);
@@ -2797,6 +2815,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR object from a byte (0 to 255).
      * @param value A Byte object.
+     * @return A CBORObject object.
      */
     public static CBORObject FromObject(byte value) {
       return FromObject(((int)value) & 0xFF);
@@ -2804,6 +2823,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR object from a 32-bit floating-point number.
      * @param value A 32-bit floating-point number.
+     * @return A CBORObject object.
      */
     public static CBORObject FromObject(float value) {
       return new CBORObject(CBORObjectType_Single, value);
@@ -2811,6 +2831,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR object from a 64-bit floating-point number.
      * @param value A 64-bit floating-point number.
+     * @return A CBORObject object.
      */
     public static CBORObject FromObject(double value) {
       return new CBORObject(CBORObjectType_Double, value);
@@ -2820,7 +2841,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * to a new byte array.
      * @param bytes A byte array. Can be null.
      * @return A CBOR byte string object where each byte of the given byte
-     * array is copied to a new array, or CBORObject.Null if "bytes" is null.
+     * array is copied to a new array, or CBORObject.Null if &quot;bytes&quot;
+     * is null.
      */
     public static CBORObject FromObject(byte[] bytes) {
       if (bytes == null) return CBORObject.Null;
@@ -2832,7 +2854,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from an array of CBOR objects.
      * @param array An array of CBOR objects.
      * @return A CBOR object where each element of the given array is copied
-     * to a new array, or CBORObject.Null if "array" is null.
+     * to a new array, or CBORObject.Null if &quot;array&quot; is null.
      */
     public static CBORObject FromObject(CBORObject[] array) {
       if (array == null) return CBORObject.Null;
@@ -2846,7 +2868,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from an array of 32-bit integers.
      * @param array An array of 32-bit integers.
      * @return A CBOR array object where each element of the given array is
-     * copied to a new array, or CBORObject.Null if "array" is null.
+     * copied to a new array, or CBORObject.Null if &quot;array&quot; is
+     * null.
      */
     public static CBORObject FromObject(int[] array) {
       if (array == null) return CBORObject.Null;
@@ -2860,7 +2883,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from an array of 64-bit integers.
      * @param array An array of 64-bit integers.
      * @return A CBOR array object where each element of the given array is
-     * copied to a new array, or CBORObject.Null if "array" is null.
+     * copied to a new array, or CBORObject.Null if &quot;array&quot; is
+     * null.
      */
     public static CBORObject FromObject(long[] array) {
       if (array == null) return CBORObject.Null;
@@ -2874,7 +2898,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from an list of objects.
      * @param value An array of CBOR objects.
      * @return A CBOR object where each element of the given array is converted
-     * to a CBOR object and copied to a new array, or CBORObject.Null if "value"
+     * to a CBOR object and copied to a new array, or CBORObject.Null if &quot;value&quot;
      * is null.
      */
     public static <T> CBORObject FromObject(List<T> value) {
@@ -2890,7 +2914,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from a map of objects.
      * @param dic A map of CBOR objects.
      * @return A CBOR object where each key and value of the given map is converted
-     * to a CBOR object and copied to a new map, or CBORObject.Null if "dic"
+     * to a CBOR object and copied to a new map, or CBORObject.Null if &quot;dic&quot;
      * is null.
      */
     public static <TKey, TValue> CBORObject FromObject(Map<TKey, TValue> dic) {
@@ -2905,7 +2929,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
     /**
      * Generates a CBORObject from an arbitrary object.
-     * @param obj A object object.
+     * @param obj An arbitrary object.
      * @return A CBOR object corresponding to the given object. Returns
      * CBORObject.Null if the object is null.
      * @throws java.lang.IllegalArgumentException The object's type is not supported.
@@ -2954,8 +2978,8 @@ public static CBORObject FromObject(Object obj) {
      * object a tag.
      * @param o An arbitrary object.
      * @param bigintTag A big integer that specifies a tag number.
-     * @return a CBOR object where the object "o" is converted to a CBOR object
-     * and given the tag "bigintTag".
+     * @return a CBOR object where the object &quot;o&quot; is converted
+     * to a CBOR object and given the tag &quot;bigintTag&quot;.
      * @throws java.lang.IllegalArgumentException "bigintTag" is less than 0 or
      * greater than 2^64-1, or "o"'s type is unsupported.
      */
@@ -2997,8 +3021,8 @@ public static CBORObject FromObject(Object obj) {
      * object a tag.
      * @param obValue An arbitrary object.
      * @param smallTag A 32-bit integer that specifies a tag number.
-     * @return a CBOR object where the object "value" is converted to a CBOR
-     * object and given the tag "smallTag".
+     * @return a CBOR object where the object &quot;value&quot; is converted
+     * to a CBOR object and given the tag &quot;smallTag&quot;.
      * @throws java.lang.IllegalArgumentException "smallTag" is less than 0 or "obValue"'s
      * type is unsupported.
      */
