@@ -1491,9 +1491,7 @@ namespace PeterO {
         case CBORObjectType_Double:
           return BigFloat.FromDouble((double)this.ThisItem);
         case CBORObjectType_ExtendedDecimal:
-          // TODO: Does nothing for now
-          return null;
-          //return BigFloat.FromExtendedDecimal((ExtendedDecimal)this.ThisItem);
+          return ((ExtendedDecimal)this.ThisItem).ToBigFloat();
           case CBORObjectType_BigFloat: {
             return (BigFloat)this.ThisItem;
           }
