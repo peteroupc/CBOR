@@ -94,15 +94,6 @@ rembi=divrem[1];
       AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
     }
     
-    public static void AssertDecFrac(DecimalFraction d3, String output) {
-      if(output==null && d3!=null)Assert.fail("d3 must be null");
-      if(output!=null && !d3.toString().equals(output)){
-        DecimalFraction d4=DecimalFraction.FromString(output);
-        Assert.assertEquals(output,d3.toString(),(
-          "expected: ["+(d4.getMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
-          "but was: ["+(d3.getMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
-         ));   }
-    }
     public static void AssertDecFrac(ExtendedDecimal d3, String output) {
       if(output==null && d3!=null)Assert.fail("d3 must be null");
       if(output!=null && !d3.toString().equals(output)){
@@ -191,10 +182,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         try { o.AsDouble(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
         try { o.AsBigFloat(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
         try { o.AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsDecimalFraction(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
         return;
       }
-      BigInteger df=o.AsDecimalFraction().ToBigInteger();
+      BigInteger df=o.AsExtendedDecimal().ToBigInteger();
       try { o.AsBigInteger(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
       try { o.AsBigFloat(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
       try { o.AsSingle(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }

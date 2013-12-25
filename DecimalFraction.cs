@@ -10,9 +10,10 @@ using System.Text;
 
 namespace PeterO {
     /// <summary> Represents an arbitrary-precision decimal floating-point
-    /// number. Consists of an integer mantissa and an integer exponent,
-    /// both arbitrary-precision. The value of the number is equal to mantissa
-    /// * 10^exponent. </summary>
+    /// number, supporting only finite decimal numbers. Consists of an integer
+    /// mantissa and an integer exponent, both arbitrary-precision. The
+    /// value of the number is equal to mantissa * 10^exponent. </summary>
+  [Obsolete("Use ExtendedDecimal instead, which supports more kinds of values than DecimalFraction.")]
   public sealed class DecimalFraction : IComparable<DecimalFraction>, IEquatable<DecimalFraction> {
     BigInteger exponent;
     BigInteger mantissa;
@@ -89,7 +90,8 @@ namespace PeterO {
     /// <param name='str'>A string that represents a number.</param>
     /// <returns>A DecimalFraction object.</returns>
     public static DecimalFraction FromString(String str) {
-      return ExtendedDecimal.FromString(str).ToDecimalFraction();
+      ExtendedDecimal ed=ExtendedDecimal.FromString(str);
+      return new DecimalFraction(ed.Mantissa,ed.Exponent);
     }
     
 
@@ -280,7 +282,7 @@ namespace PeterO {
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 32-bit floating point number.</returns>
     public float ToSingle() {
-      return BigFloat.FromDecimalFraction(this).ToSingle();
+      return new ExtendedDecimal(this.Mantissa,this.Exponent).ToSingle();
     }
     /// <summary> Converts this value to a 64-bit floating-point number.
     /// The half-even rounding mode is used. </summary>
@@ -288,7 +290,7 @@ namespace PeterO {
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 64-bit floating point number.</returns>
     public double ToDouble() {
-      return BigFloat.FromDecimalFraction(this).ToDouble();
+      return new ExtendedDecimal(this.Mantissa,this.Exponent).ToDouble();
     }
     /// <summary> Creates a decimal fraction from a 32-bit floating-point
     /// number. This method computes the exact value of the floating point
@@ -298,7 +300,8 @@ namespace PeterO {
     /// <exception cref='OverflowException'> "flt" is infinity or not-a-number.</exception>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     public static DecimalFraction FromSingle(float flt) {
-      return ExtendedDecimal.FromSingle(flt).ToDecimalFraction();
+      ExtendedDecimal ed=ExtendedDecimal.FromSingle(flt);
+      return new DecimalFraction(ed.Mantissa,ed.Exponent);
     }
     
     public static DecimalFraction FromBigInteger(BigInteger bigint) {
@@ -318,7 +321,8 @@ namespace PeterO {
     /// <returns>A decimal fraction with the same value as &quot;dbl&quot;</returns>
     /// <exception cref='OverflowException'> "dbl" is infinity or not-a-number.</exception>
     public static DecimalFraction FromDouble(double dbl) {
-      return ExtendedDecimal.FromDouble(dbl).ToDecimalFraction();
+      ExtendedDecimal ed=ExtendedDecimal.FromDouble(dbl);
+      return new DecimalFraction(ed.Mantissa,ed.Exponent);
     }
 
     /// <summary> Creates a decimal fraction from an arbitrary-precision
@@ -326,7 +330,8 @@ namespace PeterO {
     /// <param name='bigfloat'>A bigfloat.</param>
     /// <returns>A DecimalFraction object.</returns>
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
-      return ExtendedDecimal.FromBigFloat(bigfloat).ToDecimalFraction();
+      ExtendedDecimal ed=ExtendedDecimal.FromBigFloat(bigfloat);
+      return new DecimalFraction(ed.Mantissa,ed.Exponent);
     }
     
     /// <summary> Converts this value to a string.The format of the return

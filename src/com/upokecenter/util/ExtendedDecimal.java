@@ -15,8 +15,13 @@ at: http://peteroupc.github.io/CBOR/
      * Represents an arbitrary-precision decimal floating-point number.
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
      * The value of the number is equal to mantissa * 10^exponent. This class
-     * also includes values for negative zero, not-a-number values, and
-     * infinity, unlike DecimalFraction.
+     * also includes values for negative zero, not-a-number (NaN) values,
+     * and infinity, unlike DecimalFraction. <p>Passing a signaling NaN
+     * to any arithmetic operation shown here will signal the flag FlagInvalidOperation
+     * and return a quiet NaN, unless noted otherwise.</p> <p>Passing a
+     * quiet NaN to any arithmetic operation shown here will return a quiet
+     * NaN.</p> <p>When an arithmetic operation signals the flag InvalidOperation,
+     * Overflow, or DivideByZero, it will not throw an exception too.</p>
      */
   public final class ExtendedDecimal implements Comparable<ExtendedDecimal> {
     BigInteger exponent;
@@ -711,17 +716,6 @@ bigrem=divrem[1];
     }
     
     /**
-     * 
-     * @return A DecimalFraction object.
-     */
-    public DecimalFraction ToDecimalFraction() {
-      if(IsNaN() || IsInfinity()){
-        throw new ArithmeticException("Value is infinity or NaN");
-      }
-      return new DecimalFraction(this.getMantissa(),exponent);
-    }
-    
-    /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
@@ -743,9 +737,97 @@ bigrem=divrem[1];
         return bigmantissa;
       }
     }
+    
+    private static BigInteger OneShift62 = BigInteger.ONE.shiftLeft(62);
+
+    /**
+     * Creates a bigfloat from this object's value. Note that if the bigfloat
+     * contains a negative exponent, the resulting value might not be exact.
+     * @return A BigFloat object.
+     * @throws ArithmeticException This object is infinity or NaN.
+     */
+    public BigFloat ToBigFloat() {
+      if(IsNaN() || IsInfinity())
+        throw new ArithmeticException("This value is infinity or NaN");
+      BigInteger bigintExp = this.getExponent();
+      BigInteger bigintMant = this.getMantissa();
+      if (bigintMant.signum()==0)
+        return BigFloat.Zero;
+      if (bigintExp.signum()==0) {
+        // Integer
+        return BigFloat.FromBigInteger(bigintMant);
+      } else if (bigintExp.signum() > 0) {
+        // Scaled integer
+        BigInteger bigmantissa = bigintMant;
+        bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(bigintExp));
+        return BigFloat.FromBigInteger(bigmantissa);
+      } else {
+        // Fractional number
+        FastInteger scale = FastInteger.FromBig(bigintExp);
+        BigInteger bigmantissa = bigintMant;
+        boolean neg = (bigmantissa.signum() < 0);
+        BigInteger remainder;
+        if (neg) bigmantissa=(bigmantissa).negate();
+        FastInteger negscale = FastInteger.Copy(scale).Negate();
+        BigInteger divisor = DecimalUtility.FindPowerOfFiveFromBig(
+          negscale.AsBigInteger());
+        while (true) {
+          BigInteger quotient;
+BigInteger[] divrem=(bigmantissa).divideAndRemainder(divisor);
+quotient=divrem[0];
+remainder=divrem[1];
+          // Ensure that the quotient has enough precision
+          // to be converted accurately to a single or double
+          if (remainder.signum()!=0 &&
+              quotient.compareTo(OneShift62) < 0) {
+            // At this point, the quotient has 62 or fewer bits
+            int[] bits=FastInteger.GetLastWords(quotient,2);
+            int shift=0;
+            if((bits[0]|bits[1])!=0){
+              // Quotient's integer part is nonzero.
+              // Get the number of bits of the quotient
+              int bitPrecision=DecimalUtility.BitPrecisionInt(bits[1]);
+              if(bitPrecision!=0)
+                bitPrecision+=32;
+              else
+                bitPrecision=DecimalUtility.BitPrecisionInt(bits[0]);
+              shift=63-bitPrecision;
+              scale.SubtractInt(shift);
+            } else {
+              // Integer part of quotient is 0
+              shift=1;
+              scale.SubtractInt(shift);
+            }
+            // shift by that many bits, but not less than 1
+            bigmantissa=bigmantissa.shiftLeft(shift);
+          } else {
+            bigmantissa = quotient;
+            break;
+          }
+        }
+        // Round half-even
+        BigInteger halfDivisor = divisor;
+        halfDivisor=halfDivisor.shiftRight(1);
+        int cmp = remainder.compareTo(halfDivisor);
+        // No need to check for exactly half since all powers
+        // of five are odd
+        if (cmp > 0) {
+          // Greater than half
+          bigmantissa=bigmantissa.add(BigInteger.ONE);
+        }
+        if (neg) bigmantissa=(bigmantissa).negate();
+        return new BigFloat(bigmantissa, scale.AsBigInteger());
+      }
+    }
+    
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
-     * rounding mode is used.
+     * rounding mode is used. <p>If this value is a NaN, sets the high bit of
+     * the 32-bit floating point number's mantissa for a quiet NaN, and clears
+     * it for a signaling NaN. Then the next highest bit of the mantissa is
+     * cleared for a quiet NaN, and set for a signaling NaN. Then the other
+     * bits of the mantissa are set to the lowest bits of this object's unsigned
+     * mantissa. </p>
      * @return The closest 32-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
      * this value exceeds the range of a 32-bit floating point number.
@@ -755,11 +837,36 @@ bigrem=divrem[1];
         return Float.POSITIVE_INFINITY;
       if(IsNegativeInfinity())
         return Float.NEGATIVE_INFINITY;
-      throw new UnsupportedOperationException();
+      if(IsNaN()){
+        int nan=0x7F800001;
+        if(this.isNegative())nan|=((int)(1<<31));
+        if(IsQuietNaN())
+          nan|=0x400000; // the quiet bit for X86 at least
+        else {
+          // not really the signaling bit, but done to keep
+          // the mantissa from being zero 
+          nan|=0x200000;
+        }
+        if(!this.getUnsignedMantissa().signum()==0){
+          // Transfer diagnostic information
+          int data=(int)(this.getUnsignedMantissa().remainder(BigInteger.valueOf(0x200000)));
+          nan|=data;
+        }
+        return Float.intBitsToFloat(nan);
+      }
+      if(this.isNegative() && this.signum()==0){
+        return Float.intBitsToFloat(((int)1 << 31));
+      }
+      return ToBigFloat().ToSingle();
     }
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
-     * rounding mode is used.
+     * rounding mode is used. <p>If this value is a NaN, sets the high bit of
+     * the 64-bit floating point number's mantissa for a quiet NaN, and clears
+     * it for a signaling NaN. Then the next highest bit of the mantissa is
+     * cleared for a quiet NaN, and set for a signaling NaN. Then the other
+     * bits of the mantissa are set to the lowest bits of this object's unsigned
+     * mantissa. </p>
      * @return The closest 64-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
      * this value exceeds the range of a 64-bit floating point number.
@@ -769,7 +876,28 @@ bigrem=divrem[1];
         return Double.POSITIVE_INFINITY;
       if(IsNegativeInfinity())
         return Double.NEGATIVE_INFINITY;
-      throw new UnsupportedOperationException();
+      if(IsNaN()){
+        int[] nan=new int[]{1,0x7FF00000};
+        if(this.isNegative())nan[1]|=((int)(1<<31));
+        if(IsQuietNaN())
+          nan[1]|=0x80000; // the quiet bit for X86 at least
+        else {
+          // not really the signaling bit, but done to keep
+          // the mantissa from being zero 
+          nan[1]|=0x40000;
+        }
+        if(!this.getUnsignedMantissa().signum()==0){
+          // Copy diagnostic information
+          int[] ints=FastInteger.GetLastWords(this.getUnsignedMantissa(),2);
+          nan[0]=ints[0];
+          nan[1]=(ints[1]&0x3FFFF);
+        }
+        return Extras.IntegersToDouble(nan);
+      }
+      if(this.isNegative() && this.signum()==0){
+        return Extras.IntegersToDouble(new int[]{((int)(1<<31)),0});
+      }
+      return ToBigFloat().ToDouble();
     }
     /**
      * Creates a decimal number from a 32-bit floating-point number. This
@@ -791,7 +919,7 @@ bigrem=divrem[1];
         }
         // Treat high bit of mantissa as quiet/signaling bit
         boolean quiet=(fpMantissa&0x400000)!=0;
-        fpMantissa&=0x3FFFFF;
+        fpMantissa&=0x1FFFFF;
         BigInteger info=BigInteger.valueOf(fpMantissa);
         info=info.subtract(BigInteger.ONE);
         if(info.signum()==0){
@@ -859,7 +987,7 @@ bigrem=divrem[1];
         }
         // Treat high bit of mantissa as quiet/signaling bit
         boolean quiet=(value[1]&0x80000)!=0;
-        value[1]&=0x7FFFF;
+        value[1]&=0x3FFFF;
         BigInteger info=FastInteger.WordsToBigInteger(value);
         info=info.subtract(BigInteger.ONE);
         if(info.signum()==0){
@@ -1451,10 +1579,10 @@ bigrem=divrem[1];
      * (the rounding mode is always ((treated instanceof HalfEven) ? (HalfEven)treated
      * : null)). No flags will be set from this operation even if HasFlags
      * of the context is true. Can be null.
-     * @return The distance of the closest multiple.
-     * @throws ArithmeticException Attempted to divide by zero.
-     * @throws ArithmeticException Either the result of integer division
-     * (the quotient) or the remainder wouldn't fit the given precision.
+     * @return The distance of the closest multiple. Signals FlagInvalidOperation
+     * and returns NaN if the divisor is 0, or either the result of integer
+     * division (the quotient) or the remainder wouldn&apos;t fit the given
+     * precision.
      */
     public ExtendedDecimal RemainderNear(
       ExtendedDecimal divisor, PrecisionContext ctx) {
@@ -1707,22 +1835,13 @@ bigrem=divrem[1];
       return math.Add(this, decfrac, ctx);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public ExtendedDecimal Quantize(
+    /**
+     * 
+     * @param desiredExponent A BigInteger object.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedDecimal object.
+     */
+public ExtendedDecimal Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
       return Quantize(new ExtendedDecimal(BigInteger.ONE,desiredExponent), ctx);
     }
@@ -1880,19 +1999,22 @@ bigrem=divrem[1];
       return math.MultiplyAndAdd(this, op, augend, ctx);
     }
     /**
-     * 
-     * @param op An ExtendedDecimal object.
-     * @param augend An ExtendedDecimal object.
-     * @param ctx A PrecisionContext object.
-     * @return An ExtendedDecimal object.
+     * Multiplies by one value, and then subtracts another value.
+     * @param op The value to multiply.
+     * @param subtrahend The value to subtract.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
+     * @return The result thisValue * multiplicand + augend.
      */
     public ExtendedDecimal MultiplyAndSubtract(
-      ExtendedDecimal op, ExtendedDecimal augend, PrecisionContext ctx) {
-      if((augend)==null)throw new NullPointerException("decfrac");
-      ExtendedDecimal negated=((augend.flags&BigNumberFlags.FlagNaN)!=0) ? augend :
+      ExtendedDecimal op, ExtendedDecimal subtrahend, PrecisionContext ctx) {
+      if((subtrahend)==null)throw new NullPointerException("decfrac");
+      ExtendedDecimal negated=((subtrahend.flags&BigNumberFlags.FlagNaN)!=0) ? subtrahend :
         ExtendedDecimal.CreateWithFlags(
-          augend.mantissa,augend.exponent,
-          augend.flags^BigNumberFlags.FlagNegative);
+          subtrahend.mantissa,subtrahend.exponent,
+          subtrahend.flags^BigNumberFlags.FlagNegative);
       return math.MultiplyAndAdd(this, op, negated, ctx);
     }
 
@@ -1912,9 +2034,15 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
-     * @param ctx A PrecisionContext object.
-     * @return An ExtendedDecimal object.
+     * Rounds this object's value to a given precision, using the given rounding
+     * mode and range of exponent, and also converts negative zero to positive
+     * zero.
+     * @param ctx A context for controlling the precision, rounding mode,
+     * and exponent range. Can be null.
+     * @return The closest value to this object&apos;s value, rounded to
+     * the specified precision. Returns the same value as this object if
+     * &quot;context&quot; is null or the precision and exponent range
+     * are unlimited.
      */
     public ExtendedDecimal Plus(
       PrecisionContext ctx) {

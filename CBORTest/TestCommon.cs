@@ -85,15 +85,6 @@ namespace Test {
       AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
     }
     
-    public static void AssertDecFrac(DecimalFraction d3, string output){
-      if(output==null && d3!=null)Assert.Fail("d3 must be null");
-      if(output!=null && !d3.ToString().Equals(output)){
-        DecimalFraction d4=DecimalFraction.FromString(output);
-        Assert.AreEqual(output,d3.ToString(),(
-          "expected: ["+(d4.Mantissa).ToString()+","+(d4.Exponent).ToString()+"]\\n"+
-          "but was: ["+(d3.Mantissa).ToString()+","+(d3.Exponent).ToString()+"]"
-         ));   }
-    }
     public static void AssertDecFrac(ExtendedDecimal d3, string output){
       if(output==null && d3!=null)Assert.Fail("d3 must be null");
       if(output!=null && !d3.ToString().Equals(output)){
