@@ -100,6 +100,7 @@ at: http://peteroupc.github.io/CBOR/
       val=val.shiftLeft(lastshift);
       return val;
     }
+
     
     /**
      * 
@@ -121,84 +122,17 @@ at: http://peteroupc.github.io/CBOR/
     }
     
     /**
-     * Creates a bigfloat from an arbitrary-precision decimal fraction.
-     * Note that if the bigfloat contains a negative exponent, the resulting
-     * value might not be exact.
-     * @param decfrac A DecimalFraction object.
+     * Creates a bigfloat from its string representation. Note that if the
+     * bigfloat contains a negative exponent, the resulting value might
+     * not be exact. However, it will contain enough precision to accurately
+     * convert it to a 32-bit or 64-bit floating point number (float or double).
+     * @param str A string object.
      * @return A BigFloat object.
      */
-    public static BigFloat FromDecimalFraction(DecimalFraction decfrac) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
-      BigInteger bigintExp = decfrac.getExponent();
-      BigInteger bigintMant = decfrac.getMantissa();
-      if (bigintMant.signum()==0)
-        return BigFloat.Zero;
-      if (bigintExp.signum()==0) {
-        // Integer
-        return FromBigInteger(bigintMant);
-      } else if (bigintExp.signum() > 0) {
-        // Scaled integer
-        BigInteger bigmantissa = bigintMant;
-        bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(bigintExp));
-        return FromBigInteger(bigmantissa);
-      } else {
-        // Fractional number
-        FastInteger scale = FastInteger.FromBig(bigintExp);
-        BigInteger bigmantissa = bigintMant;
-        boolean neg = (bigmantissa.signum() < 0);
-        BigInteger remainder;
-        if (neg) bigmantissa=(bigmantissa).negate();
-        FastInteger negscale = FastInteger.Copy(scale).Negate();
-        BigInteger divisor = DecimalUtility.FindPowerOfFiveFromBig(
-          negscale.AsBigInteger());
-        while (true) {
-          BigInteger quotient;
-BigInteger[] divrem=(bigmantissa).divideAndRemainder(divisor);
-quotient=divrem[0];
-remainder=divrem[1];
-          // Ensure that the quotient has enough precision
-          // to be converted accurately to a single or double
-          if (remainder.signum()!=0 &&
-              quotient.compareTo(OneShift62) < 0) {
-            // At this point, the quotient has 62 or fewer bits
-            int[] bits=FastInteger.GetLastWords(quotient,2);
-            int shift=0;
-            if((bits[0]|bits[1])!=0){
-              // Quotient's integer part is nonzero.
-              // Get the number of bits of the quotient
-              int bitPrecision=DecimalUtility.BitPrecisionInt(bits[1]);
-              if(bitPrecision!=0)
-                bitPrecision+=32;
-              else
-                bitPrecision=DecimalUtility.BitPrecisionInt(bits[0]);
-              shift=63-bitPrecision;
-              scale.SubtractInt(shift);
-            } else {
-              // Integer part of quotient is 0
-              shift=1;
-              scale.SubtractInt(shift);
-            }
-            // shift by that many bits, but not less than 1
-            bigmantissa=bigmantissa.shiftLeft(shift);
-          } else {
-            bigmantissa = quotient;
-            break;
-          }
-        }
-        // Round half-even
-        BigInteger halfDivisor = divisor;
-        halfDivisor=halfDivisor.shiftRight(1);
-        int cmp = remainder.compareTo(halfDivisor);
-        // No need to check for exactly half since all powers
-        // of five are odd
-        if (cmp > 0) {
-          // Greater than half
-          bigmantissa=bigmantissa.add(BigInteger.ONE);
-        }
-        if (neg) bigmantissa=(bigmantissa).negate();
-        return new BigFloat(bigmantissa, scale.AsBigInteger());
-      }
+    public static BigFloat FromString(String str) {
+      return ExtendedDecimal.FromString(str).ToBigFloat();
     }
+
     /**
      * Creates a bigfloat from a 32-bit floating-point number.
      * @param flt A 32-bit floating-point number.
@@ -299,7 +233,6 @@ remainder=divrem[1];
 
     private static BigInteger OneShift23 = BigInteger.ONE.shiftLeft(23);
     private static BigInteger OneShift52 = BigInteger.ONE.shiftLeft(52);
-    private static BigInteger OneShift62 = BigInteger.ONE.shiftLeft(62);
 
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
@@ -425,7 +358,7 @@ remainder=divrem[1];
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                              !DecimalUtility.HasBitSet(mantissaBits,0))) {
+                              DecimalUtility.HasBitSet(mantissaBits,0))) {
         // Add 1 to the bits
         mantissaBits[0]=((int)(mantissaBits[0]+1));
         if(mantissaBits[0]==0)
@@ -456,7 +389,7 @@ remainder=divrem[1];
         mantissaBits=FastInteger.GetLastWords(accum.getShiftedInt(),2);
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                                !DecimalUtility.HasBitSet(mantissaBits,0))) {
+                                DecimalUtility.HasBitSet(mantissaBits,0))) {
           // Add 1 to the bits
           mantissaBits[0]=((int)(mantissaBits[0]+1));
           if(mantissaBits[0]==0)
@@ -493,7 +426,7 @@ remainder=divrem[1];
      * @return A string representation of this object.
      */
     @Override public String toString() {
-      return DecimalFraction.FromBigFloat(this).toString();
+      return ExtendedDecimal.FromBigFloat(this).toString();
     }
     /**
      * Same as toString(), except that when an exponent is used it will be
@@ -501,8 +434,8 @@ remainder=divrem[1];
      * the java.math.BigDecimal.toEngineeringString() method.
      * @return A string object.
      */
-    public String ToEngineeringString() {
-      return DecimalFraction.FromBigFloat(this).ToEngineeringString();
+    public String ToEngineeringString() { 
+      return ExtendedDecimal.FromBigFloat(this).ToEngineeringString();
     }
     /**
      * Converts this value to a string, but without an exponent part. The
@@ -511,7 +444,7 @@ remainder=divrem[1];
      * @return A string object.
      */
     public String ToPlainString() {
-      return DecimalFraction.FromBigFloat(this).ToPlainString();
+      return ExtendedDecimal.FromBigFloat(this).ToPlainString();
     }
     
     /**

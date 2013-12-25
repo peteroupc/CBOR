@@ -1497,9 +1497,7 @@ public void set(String key, CBORObject value) {
         case CBORObjectType_Double:
           return BigFloat.FromDouble(((Double)this.getThisItem()).doubleValue());
         case CBORObjectType_ExtendedDecimal:
-          // TODO: Does nothing for now
-          return null;
-          //return BigFloat.FromExtendedDecimal((ExtendedDecimal)this.getThisItem());
+          return ((ExtendedDecimal)this.getThisItem()).ToBigFloat();
           case CBORObjectType_BigFloat: {
             return (BigFloat)this.getThisItem();
           }

@@ -10,6 +10,9 @@ using System;
 namespace PeterO {
     /// <summary> Implements arithmetic operations with CBOR objects.
     /// </summary>
+    /// <returns>A CBORObject object.</returns>
+    /// <param name='a'>A CBORObject object.</param>
+    /// <param name='b'>A CBORObject object.</param>
   static class CBORObjectMath {
       
     public static CBORObject Addition(CBORObject a, CBORObject b) {

@@ -108,25 +108,15 @@ namespace PeterO {
       return new BigFloat(bigint,BigInteger.Zero);
     }
     
-    /// <summary> Creates a bigfloat from its string representation. 
-    /// Note that if the bigfloat contains a negative exponent,
-    /// the resulting value might not be exact.  However, it will contain enough
-    /// precision to accurately convert it to a 32-bit or 64-bit floating point
-    /// number (float or double).</summary>
-    public static BigFloat FromString(String str){
-      return FromDecimalFraction(DecimalFraction.FromString(str));
-    }
-
-    /// <summary> Creates a bigfloat from an arbitrary-precision decimal
-    /// fraction. Note that if the bigfloat contains a negative exponent,
-    /// the resulting value might not be exact. However, it will contain enough
-    /// precision to accurately convert it to a 32-bit or 64-bit floating point
-    /// number (float or double).</summary>
+    /// <summary> Creates a bigfloat from its string representation. Note
+    /// that if the bigfloat contains a negative exponent, the resulting
+    /// value might not be exact. However, it will contain enough precision
+    /// to accurately convert it to a 32-bit or 64-bit floating point number
+    /// (float or double).</summary>
     /// <returns>A BigFloat object.</returns>
-    /// <param name='decfrac'>A DecimalFraction object.</param>
-    public static BigFloat FromDecimalFraction(DecimalFraction decfrac) {
-      if((decfrac)==null)throw new ArgumentNullException("decfrac");
-      return new ExtendedDecimal(decfrac.Mantissa,decfrac.Exponent).ToBigFloat();
+    /// <param name='str'>A String object.</param>
+    public static BigFloat FromString(String str){
+      return ExtendedDecimal.FromString(str).ToBigFloat();
     }
 
     /// <summary> Creates a bigfloat from a 32-bit floating-point number.
@@ -414,7 +404,7 @@ namespace PeterO {
     /// method. </summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
-      return DecimalFraction.FromBigFloat(this).ToString();
+      return ExtendedDecimal.FromBigFloat(this).ToString();
     }
     /// <summary> Same as toString(), except that when an exponent is used
     /// it will be a multiple of 3. The format of the return value follows the
@@ -422,14 +412,14 @@ namespace PeterO {
     /// </summary>
     /// <returns>A string object.</returns>
     public string ToEngineeringString() { 
-      return DecimalFraction.FromBigFloat(this).ToEngineeringString();
+      return ExtendedDecimal.FromBigFloat(this).ToEngineeringString();
     }
     /// <summary> Converts this value to a string, but without an exponent
     /// part. The format of the return value follows the format of the java.math.BigDecimal.toPlainString()
     /// method. </summary>
     /// <returns>A string object.</returns>
     public string ToPlainString() {
-      return DecimalFraction.FromBigFloat(this).ToPlainString();
+      return ExtendedDecimal.FromBigFloat(this).ToPlainString();
     }
     
     /// <summary> Represents the number 1. </summary>

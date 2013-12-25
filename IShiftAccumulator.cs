@@ -2,11 +2,9 @@ using System;
 //using System.Numerics;
 
 namespace PeterO {
-  /// <summary>
-  /// Common interface for classes that shift a number
-  /// of digits and record information on whether a non-zero
-  /// digit was discarded this way.
-  /// </summary>
+    /// <summary> Common interface for classes that shift a number of digits
+    /// and record information on whether a non-zero digit was discarded
+    /// this way. </summary>
   interface IShiftAccumulator {
     BigInteger ShiftedInt { get; }
     FastInteger GetDigitLength();

@@ -11,10 +11,13 @@ at: http://peteroupc.github.io/CBOR/
 
 
     /**
-     * Represents an arbitrary-precision decimal floating-point number.
-     * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
-     * The value of the number is equal to mantissa * 10^exponent.
-     */
+     * Represents an arbitrary-precision decimal floating-point number,
+     * supporting only finite decimal numbers. Consists of an integer mantissa
+     * and an integer exponent, both arbitrary-precision. The value of
+     * the number is equal to mantissa * 10^exponent.
+     * @deprecated Use ExtendedDecimal instead, which supports more kinds of values than DecimalFraction. 
+ */
+@Deprecated
   public final class DecimalFraction implements Comparable<DecimalFraction> {
     BigInteger exponent;
     BigInteger mantissa;
@@ -97,7 +100,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A DecimalFraction object.
      */
     public static DecimalFraction FromString(String str) {
-      return ExtendedDecimal.FromString(str).ToDecimalFraction();
+      ExtendedDecimal ed=ExtendedDecimal.FromString(str);
+      return new DecimalFraction(ed.getMantissa(),ed.getExponent());
     }
     
 
@@ -318,7 +322,7 @@ bigrem=divrem[1];
      * this value exceeds the range of a 32-bit floating point number.
      */
     public float ToSingle() {
-      return BigFloat.FromDecimalFraction(this).ToSingle();
+      return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToSingle();
     }
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
@@ -328,7 +332,7 @@ bigrem=divrem[1];
      * this value exceeds the range of a 64-bit floating point number.
      */
     public double ToDouble() {
-      return BigFloat.FromDecimalFraction(this).ToDouble();
+      return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToDouble();
     }
     /**
      * Creates a decimal fraction from a 32-bit floating-point number.
@@ -340,7 +344,8 @@ bigrem=divrem[1];
      * @throws ArithmeticException "flt" is infinity or not-a-number.
      */
     public static DecimalFraction FromSingle(float flt) {
-      return ExtendedDecimal.FromSingle(flt).ToDecimalFraction();
+      ExtendedDecimal ed=ExtendedDecimal.FromSingle(flt);
+      return new DecimalFraction(ed.getMantissa(),ed.getExponent());
     }
     
     public static DecimalFraction FromBigInteger(BigInteger bigint) {
@@ -362,7 +367,8 @@ bigrem=divrem[1];
      * @throws ArithmeticException "dbl" is infinity or not-a-number.
      */
     public static DecimalFraction FromDouble(double dbl) {
-      return ExtendedDecimal.FromDouble(dbl).ToDecimalFraction();
+      ExtendedDecimal ed=ExtendedDecimal.FromDouble(dbl);
+      return new DecimalFraction(ed.getMantissa(),ed.getExponent());
     }
 
     /**
@@ -372,7 +378,8 @@ bigrem=divrem[1];
      * @return A DecimalFraction object.
      */
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
-      return ExtendedDecimal.FromBigFloat(bigfloat).ToDecimalFraction();
+      ExtendedDecimal ed=ExtendedDecimal.FromBigFloat(bigfloat);
+      return new DecimalFraction(ed.getMantissa(),ed.getExponent());
     }
     
     /**

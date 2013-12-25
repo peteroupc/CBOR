@@ -54,7 +54,7 @@ import org.junit.Test;
         case 3:
           return CBORObject.FromObject(RandomBigFloat(rand));
         case 4:
-          return CBORObject.FromObject(RandomDecimalFraction(rand));
+          return CBORObject.FromObject(RandomExtendedDecimal(rand));
         case 5:
           return CBORObject.FromObject(RandomInt64(rand));
         default:
@@ -98,8 +98,8 @@ import org.junit.Test;
       r |= ((int)exponent) << 23; // set exponent
       return Float.intBitsToFloat(r);
     }
-    public static DecimalFraction RandomDecimalFraction(FastRandom r) {
-      return DecimalFraction.FromString(RandomDecimalString(r));
+    public static ExtendedDecimal RandomExtendedDecimal(FastRandom r) {
+      return ExtendedDecimal.FromString(RandomDecimalString(r));
     }
     public static BigInteger RandomBigInteger(FastRandom r) {
       return BigInteger.fromString(RandomBigIntString(r));
@@ -147,7 +147,7 @@ import org.junit.Test;
       return sb.toString();
     }
     private static void TestDecimalString(String r) {
-      CBORObject o = CBORObject.FromObject(DecimalFraction.FromString(r));
+      CBORObject o = CBORObject.FromObject(ExtendedDecimal.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
       CompareTestEqual(o,o2);
     }
@@ -161,8 +161,8 @@ import org.junit.Test;
       for (int i = 0; i < 3000; i++) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
-        DecimalFraction cmpDecFrac = o1.AsDecimalFraction().Add(o2.AsDecimalFraction());
-        DecimalFraction cmpCobj = CBORObject.Addition(o1,o2).AsDecimalFraction();
+        ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
+        ExtendedDecimal cmpCobj = CBORObject.Addition(o1,o2).AsExtendedDecimal();
         if (cmpDecFrac.compareTo(cmpCobj)!=0) {
           Assert.assertEquals(ObjectMessages(o1,o2,"Results don't match"),0,cmpDecFrac.compareTo(cmpCobj));
         }
@@ -179,8 +179,8 @@ import org.junit.Test;
       for (int i = 0; i < 3000; i++) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
-        DecimalFraction cmpDecFrac = o1.AsDecimalFraction().Subtract(o2.AsDecimalFraction());
-        DecimalFraction cmpCobj = CBORObject.Subtract(o1,o2).AsDecimalFraction();
+        ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Subtract(o2.AsExtendedDecimal());
+        ExtendedDecimal cmpCobj = CBORObject.Subtract(o1,o2).AsExtendedDecimal();
         if (cmpDecFrac.compareTo(cmpCobj)!=0) {
           Assert.assertEquals(ObjectMessages(o1,o2,"Results don't match"),0,cmpDecFrac.compareTo(cmpCobj));
         }
@@ -191,7 +191,7 @@ import org.junit.Test;
     private static String ObjectMessages(CBORObject o1, CBORObject o2, String s) {
       if(o1.getType()== CBORType.Number && o2.getType()== CBORType.Number){
         return s+":\n" + o1.toString() + " and\n" + o2.toString()+"\nOR\n"+
-          o1.AsDecimalFraction().toString() + " and\n" + o2.AsDecimalFraction().toString()+"\nOR\n"+
+          o1.AsExtendedDecimal().toString() + " and\n" + o2.AsExtendedDecimal().toString()+"\nOR\n"+
           "AddSubCompare("+ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2)+");";
       } else {
         return s+":\n" + o1.toString() + " and\n" + o2.toString()+"\nOR\n"+
@@ -240,8 +240,8 @@ import org.junit.Test;
     
     @Test
     public void TestDecFracCompareIntegerVsBigFraction() {
-      DecimalFraction a=DecimalFraction.FromString("7.004689238424764477580371752455515117709288087566222056632084784688080253355047487262563521426272927783429622650146484375");
-      DecimalFraction b=DecimalFraction.FromString("5");
+      ExtendedDecimal a=ExtendedDecimal.FromString("7.004689238424764477580371752455515117709288087566222056632084784688080253355047487262563521426272927783429622650146484375");
+      ExtendedDecimal b=ExtendedDecimal.FromString("5");
       Assert.assertEquals(1,a.compareTo(b));
       Assert.assertEquals(-1,b.compareTo(a));
       CBORObject o1=null;
@@ -254,7 +254,7 @@ import org.junit.Test;
     }
     
     private static void CompareDecimals(CBORObject o1, CBORObject o2) {
-      int cmpDecFrac = o1.AsDecimalFraction().compareTo(o2.AsDecimalFraction());
+      int cmpDecFrac = o1.AsExtendedDecimal().compareTo(o2.AsExtendedDecimal());
       int cmpCobj = CompareTestReciprocal(o1,o2);
       if (cmpDecFrac != cmpCobj) {
         Assert.assertEquals(ObjectMessages(o1,o2,"Compare: Results don't match"),cmpDecFrac,cmpCobj);
@@ -264,13 +264,13 @@ import org.junit.Test;
     }
     
     private static void AddSubCompare(CBORObject o1, CBORObject o2) {
-      DecimalFraction cmpDecFrac = o1.AsDecimalFraction().Add(o2.AsDecimalFraction());
-      DecimalFraction cmpCobj = CBORObject.Addition(o1,o2).AsDecimalFraction();
+      ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
+      ExtendedDecimal cmpCobj = CBORObject.Addition(o1,o2).AsExtendedDecimal();
       if (cmpDecFrac.compareTo(cmpCobj)!=0) {
         Assert.assertEquals(ObjectMessages(o1,o2,"Add: Results don't match:\n"+cmpDecFrac+" vs\n"+cmpCobj),0,cmpDecFrac.compareTo(cmpCobj));
       }
-      cmpDecFrac = o1.AsDecimalFraction().Subtract(o2.AsDecimalFraction());
-      cmpCobj = CBORObject.Subtract(o1,o2).AsDecimalFraction();
+      cmpDecFrac = o1.AsExtendedDecimal().Subtract(o2.AsExtendedDecimal());
+      cmpCobj = CBORObject.Subtract(o1,o2).AsExtendedDecimal();
       if (cmpDecFrac.compareTo(cmpCobj)!=0) {
         Assert.assertEquals(ObjectMessages(o1,o2,"Subtract: Results don't match:\n"+cmpDecFrac+" vs\n"+cmpCobj),0,cmpDecFrac.compareTo(cmpCobj));
       }
@@ -295,18 +295,22 @@ import org.junit.Test;
     
     @Test
     public void ExtraDecimalTests() {
-      Assert.assertEquals(null,DecimalFraction.FromString("-79228162514264337593543950336").
+      Assert.assertEquals(ExtendedDecimal.NegativeInfinity,
+                      ExtendedDecimal.FromString("-79228162514264337593543950336").
                       RoundToBinaryPrecision(PrecisionContext.CliDecimal));
-      Assert.assertEquals(null,DecimalFraction.FromString("8.782580686213340724E+28").
+      Assert.assertEquals(ExtendedDecimal.PositiveInfinity,
+                      ExtendedDecimal.FromString("8.782580686213340724E+28").
                       RoundToBinaryPrecision(PrecisionContext.CliDecimal));
-      Assert.assertEquals(null,DecimalFraction.FromString("-9.3168444507547E+28").
+      Assert.assertEquals(ExtendedDecimal.NegativeInfinity,ExtendedDecimal.FromString("-9.3168444507547E+28").
                       RoundToBinaryPrecision(PrecisionContext.CliDecimal));
-      Assert.assertEquals("-9344285899206687626894794544",DecimalFraction.FromString(
+      Assert.assertEquals("-9344285899206687626894794544",ExtendedDecimal.FromString(
         "-9344285899206687626894794544.04982268810272216796875").RoundToBinaryPrecision(
                         new PrecisionContext(96,Rounding.HalfEven,0,28,false)).ToPlainString());
-      Assert.assertEquals(null,DecimalFraction.FromString("96148154858060747311034406200").
+      Assert.assertEquals(ExtendedDecimal.PositiveInfinity,
+                      ExtendedDecimal.FromString("96148154858060747311034406200").
                       RoundToBinaryPrecision(PrecisionContext.CliDecimal));
-      Assert.assertEquals(null,DecimalFraction.FromString("90246605365627217170000000000").
+      Assert.assertEquals(ExtendedDecimal.PositiveInfinity,
+                      ExtendedDecimal.FromString("90246605365627217170000000000").
                       RoundToBinaryPrecision(PrecisionContext.CliDecimal));
     }
     
@@ -422,8 +426,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         TestBigFloatSingleCore(RandomSingle(rand, i), null);
         TestBigFloatSingleCore(RandomSingle(rand, i), null);
       }
-    }
-    
+    }    
+        
     /**
      * 
      */
@@ -591,12 +595,18 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void TestDecFracOverflow() {
-      try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Float.NaN).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Double.NaN).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal());
+      Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedDecimal());
+      Assert.isTrue(CBORObject.FromObject(Float.NaN).AsExtendedDecimal().IsNaN());
+      Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal());
+      Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
+      Assert.isTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
+      try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(Float.NaN).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
+      try { CBORObject.FromObject(Double.NaN).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsBigFloat(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsBigFloat(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
       try { CBORObject.FromObject(Float.NaN).AsBigFloat(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
@@ -635,72 +645,72 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void TestDecFracFP() {
-      Assert.assertEquals("0.75", DecimalFraction.FromDouble(0.75).toString());
-      Assert.assertEquals("0.5", DecimalFraction.FromDouble(0.5).toString());
-      Assert.assertEquals("0.25", DecimalFraction.FromDouble(0.25).toString());
-      Assert.assertEquals("0.875", DecimalFraction.FromDouble(0.875).toString());
-      Assert.assertEquals("0.125", DecimalFraction.FromDouble(0.125).toString());
-      Assert.assertEquals("0.75", DecimalFraction.FromSingle(0.75f).toString());
-      Assert.assertEquals("0.5", DecimalFraction.FromSingle(0.5f).toString());
-      Assert.assertEquals("0.25", DecimalFraction.FromSingle(0.25f).toString());
-      Assert.assertEquals("0.875", DecimalFraction.FromSingle(0.875f).toString());
-      Assert.assertEquals("0.125", DecimalFraction.FromSingle(0.125f).toString());
+      Assert.assertEquals("0.75", ExtendedDecimal.FromDouble(0.75).toString());
+      Assert.assertEquals("0.5", ExtendedDecimal.FromDouble(0.5).toString());
+      Assert.assertEquals("0.25", ExtendedDecimal.FromDouble(0.25).toString());
+      Assert.assertEquals("0.875", ExtendedDecimal.FromDouble(0.875).toString());
+      Assert.assertEquals("0.125", ExtendedDecimal.FromDouble(0.125).toString());
+      Assert.assertEquals("0.75", ExtendedDecimal.FromSingle(0.75f).toString());
+      Assert.assertEquals("0.5", ExtendedDecimal.FromSingle(0.5f).toString());
+      Assert.assertEquals("0.25", ExtendedDecimal.FromSingle(0.25f).toString());
+      Assert.assertEquals("0.875", ExtendedDecimal.FromSingle(0.875f).toString());
+      Assert.assertEquals("0.125", ExtendedDecimal.FromSingle(0.125f).toString());
     }
     /**
      * 
      */
     @Test
     public void ScaleTest() {
-      Assert.assertEquals(BigInteger.valueOf(-7), DecimalFraction.FromString("1.265e-4").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-4), DecimalFraction.FromString("0.000E-1").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-16), DecimalFraction.FromString("0.57484848535648e-2").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-22), DecimalFraction.FromString("0.485448e-16").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-20), DecimalFraction.FromString("0.5657575351495151495649565150e+8").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-10), DecimalFraction.FromString("0e-10").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-17), DecimalFraction.FromString("0.504952e-11").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-13), DecimalFraction.FromString("0e-13").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-43), DecimalFraction.FromString("0.49495052535648555757515648e-17").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(7), DecimalFraction.FromString("0.485654575150e+19").getExponent());
-      Assert.assertEquals(BigInteger.ZERO, DecimalFraction.FromString("0.48515648e+8").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-45), DecimalFraction.FromString("0.49485251485649535552535451544956e-13").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-6), DecimalFraction.FromString("0.565754515152575448505257e+18").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(16), DecimalFraction.FromString("0e+16").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(6), DecimalFraction.FromString("0.5650e+10").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-5), DecimalFraction.FromString("0.49555554575756575556e+15").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-37), DecimalFraction.FromString("0.57494855545057534955e-17").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-25), DecimalFraction.FromString("0.4956504855525748575456e-3").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-26), DecimalFraction.FromString("0.55575355495654484948525354545053494854e+12").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-22), DecimalFraction.FromString("0.484853575350494950575749545057e+8").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(11), DecimalFraction.FromString("0.52545451e+19").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-29), DecimalFraction.FromString("0.48485654495751485754e-9").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-38), DecimalFraction.FromString("0.56525456555549545257535556495655574848e+0").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-15), DecimalFraction.FromString("0.485456485657545752495450554857e+15").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-37), DecimalFraction.FromString("0.485448525554495048e-19").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-29), DecimalFraction.FromString("0.494952485550514953565655e-5").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-8), DecimalFraction.FromString("0.50495454554854505051534950e+18").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-37), DecimalFraction.FromString("0.5156524853575655535351554949525449e-3").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(3), DecimalFraction.FromString("0e+3").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-8), DecimalFraction.FromString("0.51505056554957575255555250e+18").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-14), DecimalFraction.FromString("0.5456e-10").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-36), DecimalFraction.FromString("0.494850515656505252555154e-12").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-42), DecimalFraction.FromString("0.535155525253485757525253555749575749e-6").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-29), DecimalFraction.FromString("0.56554952554850525552515549564948e+3").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-40), DecimalFraction.FromString("0.494855545257545656515554495057e-10").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-18), DecimalFraction.FromString("0.5656504948515252555456e+4").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-17), DecimalFraction.FromString("0e-17").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-32), DecimalFraction.FromString("0.55535551515249535049495256e-6").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-31), DecimalFraction.FromString("0.4948534853564853565654514855e-3").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-38), DecimalFraction.FromString("0.5048485057535249555455e-16").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-16), DecimalFraction.FromString("0e-16").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(5), DecimalFraction.FromString("0.5354e+9").getExponent());
-      Assert.assertEquals(BigInteger.ONE, DecimalFraction.FromString("0.54e+3").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-38), DecimalFraction.FromString("0.4849525755545751574853494948e-10").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-33), DecimalFraction.FromString("0.52514853565252565251565548e-7").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-13), DecimalFraction.FromString("0.575151545652e-1").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-22), DecimalFraction.FromString("0.49515354514852e-8").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-24), DecimalFraction.FromString("0.54535357515356545554e-4").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-11), DecimalFraction.FromString("0.574848e-5").getExponent());
-      Assert.assertEquals(BigInteger.valueOf(-3), DecimalFraction.FromString("0.565055e+3").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-7), ExtendedDecimal.FromString("1.265e-4").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-4), ExtendedDecimal.FromString("0.000E-1").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-16), ExtendedDecimal.FromString("0.57484848535648e-2").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-22), ExtendedDecimal.FromString("0.485448e-16").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-20), ExtendedDecimal.FromString("0.5657575351495151495649565150e+8").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-10), ExtendedDecimal.FromString("0e-10").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-17), ExtendedDecimal.FromString("0.504952e-11").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-13), ExtendedDecimal.FromString("0e-13").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-43), ExtendedDecimal.FromString("0.49495052535648555757515648e-17").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(7), ExtendedDecimal.FromString("0.485654575150e+19").getExponent());
+      Assert.assertEquals(BigInteger.ZERO, ExtendedDecimal.FromString("0.48515648e+8").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-45), ExtendedDecimal.FromString("0.49485251485649535552535451544956e-13").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-6), ExtendedDecimal.FromString("0.565754515152575448505257e+18").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(16), ExtendedDecimal.FromString("0e+16").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(6), ExtendedDecimal.FromString("0.5650e+10").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-5), ExtendedDecimal.FromString("0.49555554575756575556e+15").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-37), ExtendedDecimal.FromString("0.57494855545057534955e-17").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-25), ExtendedDecimal.FromString("0.4956504855525748575456e-3").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-26), ExtendedDecimal.FromString("0.55575355495654484948525354545053494854e+12").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-22), ExtendedDecimal.FromString("0.484853575350494950575749545057e+8").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(11), ExtendedDecimal.FromString("0.52545451e+19").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-29), ExtendedDecimal.FromString("0.48485654495751485754e-9").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-38), ExtendedDecimal.FromString("0.56525456555549545257535556495655574848e+0").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-15), ExtendedDecimal.FromString("0.485456485657545752495450554857e+15").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-37), ExtendedDecimal.FromString("0.485448525554495048e-19").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-29), ExtendedDecimal.FromString("0.494952485550514953565655e-5").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-8), ExtendedDecimal.FromString("0.50495454554854505051534950e+18").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-37), ExtendedDecimal.FromString("0.5156524853575655535351554949525449e-3").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(3), ExtendedDecimal.FromString("0e+3").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-8), ExtendedDecimal.FromString("0.51505056554957575255555250e+18").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-14), ExtendedDecimal.FromString("0.5456e-10").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-36), ExtendedDecimal.FromString("0.494850515656505252555154e-12").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-42), ExtendedDecimal.FromString("0.535155525253485757525253555749575749e-6").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-29), ExtendedDecimal.FromString("0.56554952554850525552515549564948e+3").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-40), ExtendedDecimal.FromString("0.494855545257545656515554495057e-10").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-18), ExtendedDecimal.FromString("0.5656504948515252555456e+4").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-17), ExtendedDecimal.FromString("0e-17").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-32), ExtendedDecimal.FromString("0.55535551515249535049495256e-6").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-31), ExtendedDecimal.FromString("0.4948534853564853565654514855e-3").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-38), ExtendedDecimal.FromString("0.5048485057535249555455e-16").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-16), ExtendedDecimal.FromString("0e-16").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(5), ExtendedDecimal.FromString("0.5354e+9").getExponent());
+      Assert.assertEquals(BigInteger.ONE, ExtendedDecimal.FromString("0.54e+3").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-38), ExtendedDecimal.FromString("0.4849525755545751574853494948e-10").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-33), ExtendedDecimal.FromString("0.52514853565252565251565548e-7").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-13), ExtendedDecimal.FromString("0.575151545652e-1").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-22), ExtendedDecimal.FromString("0.49515354514852e-8").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-24), ExtendedDecimal.FromString("0.54535357515356545554e-4").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-11), ExtendedDecimal.FromString("0.574848e-5").getExponent());
+      Assert.assertEquals(BigInteger.valueOf(-3), ExtendedDecimal.FromString("0.565055e+3").getExponent());
     }
     /**
      * 
@@ -868,306 +878,306 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void ZeroStringTests2() {
-      Assert.assertEquals("0.0001265", DecimalFraction.FromString("1.265e-4").toString());
-      Assert.assertEquals("0.0001265", DecimalFraction.FromString("1.265e-4").ToEngineeringString());
-      Assert.assertEquals("0.0001265", DecimalFraction.FromString("1.265e-4").ToPlainString());
-      Assert.assertEquals("0.0000", DecimalFraction.FromString("0.000E-1").toString());
-      Assert.assertEquals("0.0000", DecimalFraction.FromString("0.000E-1").ToEngineeringString());
-      Assert.assertEquals("0.0000", DecimalFraction.FromString("0.000E-1").ToPlainString());
-      Assert.assertEquals("0E-16", DecimalFraction.FromString("0.0000000000000e-3").toString());
-      Assert.assertEquals("0.0E-15", DecimalFraction.FromString("0.0000000000000e-3").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000", DecimalFraction.FromString("0.0000000000000e-3").ToPlainString());
-      Assert.assertEquals("0E-8", DecimalFraction.FromString("0.000000000e+1").toString());
-      Assert.assertEquals("0.00E-6", DecimalFraction.FromString("0.000000000e+1").ToEngineeringString());
-      Assert.assertEquals("0.00000000", DecimalFraction.FromString("0.000000000e+1").ToPlainString());
-      Assert.assertEquals("0.000", DecimalFraction.FromString("0.000000000000000e+12").toString());
-      Assert.assertEquals("0.000", DecimalFraction.FromString("0.000000000000000e+12").ToEngineeringString());
-      Assert.assertEquals("0.000", DecimalFraction.FromString("0.000000000000000e+12").ToPlainString());
-      Assert.assertEquals("0E-25", DecimalFraction.FromString("0.00000000000000e-11").toString());
-      Assert.assertEquals("0.0E-24", DecimalFraction.FromString("0.00000000000000e-11").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000000000", DecimalFraction.FromString("0.00000000000000e-11").ToPlainString());
-      Assert.assertEquals("0E-7", DecimalFraction.FromString("0.000000000000e+5").toString());
-      Assert.assertEquals("0.0E-6", DecimalFraction.FromString("0.000000000000e+5").ToEngineeringString());
-      Assert.assertEquals("0.0000000", DecimalFraction.FromString("0.000000000000e+5").ToPlainString());
-      Assert.assertEquals("0E-8", DecimalFraction.FromString("0.0000e-4").toString());
-      Assert.assertEquals("0.00E-6", DecimalFraction.FromString("0.0000e-4").ToEngineeringString());
-      Assert.assertEquals("0.00000000", DecimalFraction.FromString("0.0000e-4").ToPlainString());
-      Assert.assertEquals("0.0000", DecimalFraction.FromString("0.000000e+2").toString());
-      Assert.assertEquals("0.0000", DecimalFraction.FromString("0.000000e+2").ToEngineeringString());
-      Assert.assertEquals("0.0000", DecimalFraction.FromString("0.000000e+2").ToPlainString());
-      Assert.assertEquals("0E+2", DecimalFraction.FromString("0.0e+3").toString());
-      Assert.assertEquals("0.0E+3", DecimalFraction.FromString("0.0e+3").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.0e+3").ToPlainString());
-      Assert.assertEquals("0E-7", DecimalFraction.FromString("0.000000000000000e+8").toString());
-      Assert.assertEquals("0.0E-6", DecimalFraction.FromString("0.000000000000000e+8").ToEngineeringString());
-      Assert.assertEquals("0.0000000", DecimalFraction.FromString("0.000000000000000e+8").ToPlainString());
-      Assert.assertEquals("0E+7", DecimalFraction.FromString("0.000e+10").toString());
-      Assert.assertEquals("0.00E+9", DecimalFraction.FromString("0.000e+10").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000e+10").ToPlainString());
-      Assert.assertEquals("0E-31", DecimalFraction.FromString("0.0000000000000000000e-12").toString());
-      Assert.assertEquals("0.0E-30", DecimalFraction.FromString("0.0000000000000000000e-12").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000000000000000", DecimalFraction.FromString("0.0000000000000000000e-12").ToPlainString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.0000e-1").toString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.0000e-1").ToEngineeringString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.0000e-1").ToPlainString());
-      Assert.assertEquals("0E-22", DecimalFraction.FromString("0.00000000000e-11").toString());
-      Assert.assertEquals("0.0E-21", DecimalFraction.FromString("0.00000000000e-11").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000000", DecimalFraction.FromString("0.00000000000e-11").ToPlainString());
-      Assert.assertEquals("0E-28", DecimalFraction.FromString("0.00000000000e-17").toString());
-      Assert.assertEquals("0.0E-27", DecimalFraction.FromString("0.00000000000e-17").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000000000000", DecimalFraction.FromString("0.00000000000e-17").ToPlainString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.00000000000000e+9").toString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.00000000000000e+9").ToEngineeringString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.00000000000000e+9").ToPlainString());
-      Assert.assertEquals("0E-28", DecimalFraction.FromString("0.0000000000e-18").toString());
-      Assert.assertEquals("0.0E-27", DecimalFraction.FromString("0.0000000000e-18").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000000000000", DecimalFraction.FromString("0.0000000000e-18").ToPlainString());
-      Assert.assertEquals("0E-14", DecimalFraction.FromString("0.0e-13").toString());
-      Assert.assertEquals("0.00E-12", DecimalFraction.FromString("0.0e-13").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000", DecimalFraction.FromString("0.0e-13").ToPlainString());
-      Assert.assertEquals("0E-8", DecimalFraction.FromString("0.000000000000000000e+10").toString());
-      Assert.assertEquals("0.00E-6", DecimalFraction.FromString("0.000000000000000000e+10").ToEngineeringString());
-      Assert.assertEquals("0.00000000", DecimalFraction.FromString("0.000000000000000000e+10").ToPlainString());
-      Assert.assertEquals("0E+15", DecimalFraction.FromString("0.0000e+19").toString());
-      Assert.assertEquals("0E+15", DecimalFraction.FromString("0.0000e+19").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.0000e+19").ToPlainString());
-      Assert.assertEquals("0E-13", DecimalFraction.FromString("0.00000e-8").toString());
-      Assert.assertEquals("0.0E-12", DecimalFraction.FromString("0.00000e-8").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000", DecimalFraction.FromString("0.00000e-8").ToPlainString());
-      Assert.assertEquals("0E+3", DecimalFraction.FromString("0.00000000000e+14").toString());
-      Assert.assertEquals("0E+3", DecimalFraction.FromString("0.00000000000e+14").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.00000000000e+14").ToPlainString());
-      Assert.assertEquals("0E-17", DecimalFraction.FromString("0.000e-14").toString());
-      Assert.assertEquals("0.00E-15", DecimalFraction.FromString("0.000e-14").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000", DecimalFraction.FromString("0.000e-14").ToPlainString());
-      Assert.assertEquals("0E-25", DecimalFraction.FromString("0.000000e-19").toString());
-      Assert.assertEquals("0.0E-24", DecimalFraction.FromString("0.000000e-19").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000000000", DecimalFraction.FromString("0.000000e-19").ToPlainString());
-      Assert.assertEquals("0E+7", DecimalFraction.FromString("0.000000000000e+19").toString());
-      Assert.assertEquals("0.00E+9", DecimalFraction.FromString("0.000000000000e+19").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000000000000e+19").ToPlainString());
-      Assert.assertEquals("0E+5", DecimalFraction.FromString("0.0000000000000e+18").toString());
-      Assert.assertEquals("0.0E+6", DecimalFraction.FromString("0.0000000000000e+18").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.0000000000000e+18").ToPlainString());
-      Assert.assertEquals("0E-16", DecimalFraction.FromString("0.00000000000000e-2").toString());
-      Assert.assertEquals("0.0E-15", DecimalFraction.FromString("0.00000000000000e-2").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000", DecimalFraction.FromString("0.00000000000000e-2").ToPlainString());
-      Assert.assertEquals("0E-31", DecimalFraction.FromString("0.0000000000000e-18").toString());
-      Assert.assertEquals("0.0E-30", DecimalFraction.FromString("0.0000000000000e-18").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000000000000000", DecimalFraction.FromString("0.0000000000000e-18").ToPlainString());
-      Assert.assertEquals("0E-17", DecimalFraction.FromString("0e-17").toString());
-      Assert.assertEquals("0.00E-15", DecimalFraction.FromString("0e-17").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000", DecimalFraction.FromString("0e-17").ToPlainString());
-      Assert.assertEquals("0E+17", DecimalFraction.FromString("0e+17").toString());
-      Assert.assertEquals("0.0E+18", DecimalFraction.FromString("0e+17").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0e+17").ToPlainString());
-      Assert.assertEquals("0E-17", DecimalFraction.FromString("0.00000000000000000e+0").toString());
-      Assert.assertEquals("0.00E-15", DecimalFraction.FromString("0.00000000000000000e+0").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000", DecimalFraction.FromString("0.00000000000000000e+0").ToPlainString());
-      Assert.assertEquals("0E-13", DecimalFraction.FromString("0.0000000000000e+0").toString());
-      Assert.assertEquals("0.0E-12", DecimalFraction.FromString("0.0000000000000e+0").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000", DecimalFraction.FromString("0.0000000000000e+0").ToPlainString());
-      Assert.assertEquals("0E-31", DecimalFraction.FromString("0.0000000000000000000e-12").toString());
-      Assert.assertEquals("0.0E-30", DecimalFraction.FromString("0.0000000000000000000e-12").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000000000000000", DecimalFraction.FromString("0.0000000000000000000e-12").ToPlainString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.0000000000000000000e+10").toString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.0000000000000000000e+10").ToEngineeringString());
-      Assert.assertEquals("0.000000000", DecimalFraction.FromString("0.0000000000000000000e+10").ToPlainString());
-      Assert.assertEquals("0E-7", DecimalFraction.FromString("0.00000e-2").toString());
-      Assert.assertEquals("0.0E-6", DecimalFraction.FromString("0.00000e-2").ToEngineeringString());
-      Assert.assertEquals("0.0000000", DecimalFraction.FromString("0.00000e-2").ToPlainString());
-      Assert.assertEquals("0E+9", DecimalFraction.FromString("0.000000e+15").toString());
-      Assert.assertEquals("0E+9", DecimalFraction.FromString("0.000000e+15").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000000e+15").ToPlainString());
-      Assert.assertEquals("0E-19", DecimalFraction.FromString("0.000000000e-10").toString());
-      Assert.assertEquals("0.0E-18", DecimalFraction.FromString("0.000000000e-10").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000", DecimalFraction.FromString("0.000000000e-10").ToPlainString());
-      Assert.assertEquals("0E-8", DecimalFraction.FromString("0.00000000000000e+6").toString());
-      Assert.assertEquals("0.00E-6", DecimalFraction.FromString("0.00000000000000e+6").ToEngineeringString());
-      Assert.assertEquals("0.00000000", DecimalFraction.FromString("0.00000000000000e+6").ToPlainString());
-      Assert.assertEquals("0E+12", DecimalFraction.FromString("0.00000e+17").toString());
-      Assert.assertEquals("0E+12", DecimalFraction.FromString("0.00000e+17").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.00000e+17").ToPlainString());
-      Assert.assertEquals("0E-18", DecimalFraction.FromString("0.000000000000000000e-0").toString());
-      Assert.assertEquals("0E-18", DecimalFraction.FromString("0.000000000000000000e-0").ToEngineeringString());
-      Assert.assertEquals("0.000000000000000000", DecimalFraction.FromString("0.000000000000000000e-0").ToPlainString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.0000000000000000e+11").toString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.0000000000000000e+11").ToEngineeringString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.0000000000000000e+11").ToPlainString());
-      Assert.assertEquals("0E+3", DecimalFraction.FromString("0.000000000000e+15").toString());
-      Assert.assertEquals("0E+3", DecimalFraction.FromString("0.000000000000e+15").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000000000000e+15").ToPlainString());
-      Assert.assertEquals("0E-27", DecimalFraction.FromString("0.00000000e-19").toString());
-      Assert.assertEquals("0E-27", DecimalFraction.FromString("0.00000000e-19").ToEngineeringString());
-      Assert.assertEquals("0.000000000000000000000000000", DecimalFraction.FromString("0.00000000e-19").ToPlainString());
-      Assert.assertEquals("0E-11", DecimalFraction.FromString("0.00000e-6").toString());
-      Assert.assertEquals("0.00E-9", DecimalFraction.FromString("0.00000e-6").ToEngineeringString());
-      Assert.assertEquals("0.00000000000", DecimalFraction.FromString("0.00000e-6").ToPlainString());
-      Assert.assertEquals("0E-14", DecimalFraction.FromString("0e-14").toString());
-      Assert.assertEquals("0.00E-12", DecimalFraction.FromString("0e-14").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000", DecimalFraction.FromString("0e-14").ToPlainString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000000000e+9").toString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000000000e+9").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000000000e+9").ToPlainString());
-      Assert.assertEquals("0E+8", DecimalFraction.FromString("0.00000e+13").toString());
-      Assert.assertEquals("0.0E+9", DecimalFraction.FromString("0.00000e+13").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.00000e+13").ToPlainString());
-      Assert.assertEquals("0.000", DecimalFraction.FromString("0.000e-0").toString());
-      Assert.assertEquals("0.000", DecimalFraction.FromString("0.000e-0").ToEngineeringString());
-      Assert.assertEquals("0.000", DecimalFraction.FromString("0.000e-0").ToPlainString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.000000000000000e+6").toString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.000000000000000e+6").ToEngineeringString());
-      Assert.assertEquals("0.000000000", DecimalFraction.FromString("0.000000000000000e+6").ToPlainString());
-      Assert.assertEquals("0E+8", DecimalFraction.FromString("0.000000000e+17").toString());
-      Assert.assertEquals("0.0E+9", DecimalFraction.FromString("0.000000000e+17").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000000000e+17").ToPlainString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.00000000000e+6").toString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.00000000000e+6").ToEngineeringString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.00000000000e+6").ToPlainString());
-      Assert.assertEquals("0E-11", DecimalFraction.FromString("0.00000000000000e+3").toString());
-      Assert.assertEquals("0.00E-9", DecimalFraction.FromString("0.00000000000000e+3").ToEngineeringString());
-      Assert.assertEquals("0.00000000000", DecimalFraction.FromString("0.00000000000000e+3").ToPlainString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0e+0").toString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0e+0").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0e+0").ToPlainString());
-      Assert.assertEquals("0E+9", DecimalFraction.FromString("0.000e+12").toString());
-      Assert.assertEquals("0E+9", DecimalFraction.FromString("0.000e+12").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000e+12").ToPlainString());
-      Assert.assertEquals("0.00", DecimalFraction.FromString("0.00000000000e+9").toString());
-      Assert.assertEquals("0.00", DecimalFraction.FromString("0.00000000000e+9").ToEngineeringString());
-      Assert.assertEquals("0.00", DecimalFraction.FromString("0.00000000000e+9").ToPlainString());
-      Assert.assertEquals("0E-23", DecimalFraction.FromString("0.00000000000000e-9").toString());
-      Assert.assertEquals("0.00E-21", DecimalFraction.FromString("0.00000000000000e-9").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000000000", DecimalFraction.FromString("0.00000000000000e-9").ToPlainString());
-      Assert.assertEquals("0.0", DecimalFraction.FromString("0e-1").toString());
-      Assert.assertEquals("0.0", DecimalFraction.FromString("0e-1").ToEngineeringString());
-      Assert.assertEquals("0.0", DecimalFraction.FromString("0e-1").ToPlainString());
-      Assert.assertEquals("0E-17", DecimalFraction.FromString("0.0000e-13").toString());
-      Assert.assertEquals("0.00E-15", DecimalFraction.FromString("0.0000e-13").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000", DecimalFraction.FromString("0.0000e-13").ToPlainString());
-      Assert.assertEquals("0E-18", DecimalFraction.FromString("0.00000000000e-7").toString());
-      Assert.assertEquals("0E-18", DecimalFraction.FromString("0.00000000000e-7").ToEngineeringString());
-      Assert.assertEquals("0.000000000000000000", DecimalFraction.FromString("0.00000000000e-7").ToPlainString());
-      Assert.assertEquals("0E-10", DecimalFraction.FromString("0.00000000000000e+4").toString());
-      Assert.assertEquals("0.0E-9", DecimalFraction.FromString("0.00000000000000e+4").ToEngineeringString());
-      Assert.assertEquals("0.0000000000", DecimalFraction.FromString("0.00000000000000e+4").ToPlainString());
-      Assert.assertEquals("0E-16", DecimalFraction.FromString("0.00000000e-8").toString());
-      Assert.assertEquals("0.0E-15", DecimalFraction.FromString("0.00000000e-8").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000", DecimalFraction.FromString("0.00000000e-8").ToPlainString());
-      Assert.assertEquals("0E-8", DecimalFraction.FromString("0.00e-6").toString());
-      Assert.assertEquals("0.00E-6", DecimalFraction.FromString("0.00e-6").ToEngineeringString());
-      Assert.assertEquals("0.00000000", DecimalFraction.FromString("0.00e-6").ToPlainString());
-      Assert.assertEquals("0.00", DecimalFraction.FromString("0.0e-1").toString());
-      Assert.assertEquals("0.00", DecimalFraction.FromString("0.0e-1").ToEngineeringString());
-      Assert.assertEquals("0.00", DecimalFraction.FromString("0.0e-1").ToPlainString());
-      Assert.assertEquals("0E-26", DecimalFraction.FromString("0.0000000000000000e-10").toString());
-      Assert.assertEquals("0.00E-24", DecimalFraction.FromString("0.0000000000000000e-10").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000000000000", DecimalFraction.FromString("0.0000000000000000e-10").ToPlainString());
-      Assert.assertEquals("0E+12", DecimalFraction.FromString("0.00e+14").toString());
-      Assert.assertEquals("0E+12", DecimalFraction.FromString("0.00e+14").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.00e+14").ToPlainString());
-      Assert.assertEquals("0E-13", DecimalFraction.FromString("0.000000000000000000e+5").toString());
-      Assert.assertEquals("0.0E-12", DecimalFraction.FromString("0.000000000000000000e+5").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000", DecimalFraction.FromString("0.000000000000000000e+5").ToPlainString());
-      Assert.assertEquals("0E+6", DecimalFraction.FromString("0.0e+7").toString());
-      Assert.assertEquals("0E+6", DecimalFraction.FromString("0.0e+7").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.0e+7").ToPlainString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.00000000e+8").toString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.00000000e+8").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.00000000e+8").ToPlainString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.000000000e+0").toString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.000000000e+0").ToEngineeringString());
-      Assert.assertEquals("0.000000000", DecimalFraction.FromString("0.000000000e+0").ToPlainString());
-      Assert.assertEquals("0E+10", DecimalFraction.FromString("0.000e+13").toString());
-      Assert.assertEquals("0.00E+12", DecimalFraction.FromString("0.000e+13").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000e+13").ToPlainString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.0000000000000000e+16").toString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.0000000000000000e+16").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.0000000000000000e+16").ToPlainString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.00000000e-1").toString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.00000000e-1").ToEngineeringString());
-      Assert.assertEquals("0.000000000", DecimalFraction.FromString("0.00000000e-1").ToPlainString());
-      Assert.assertEquals("0E-26", DecimalFraction.FromString("0.00000000000e-15").toString());
-      Assert.assertEquals("0.00E-24", DecimalFraction.FromString("0.00000000000e-15").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000000000000", DecimalFraction.FromString("0.00000000000e-15").ToPlainString());
-      Assert.assertEquals("0E+10", DecimalFraction.FromString("0.0e+11").toString());
-      Assert.assertEquals("0.00E+12", DecimalFraction.FromString("0.0e+11").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.0e+11").ToPlainString());
-      Assert.assertEquals("0E+2", DecimalFraction.FromString("0.00000e+7").toString());
-      Assert.assertEquals("0.0E+3", DecimalFraction.FromString("0.00000e+7").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.00000e+7").ToPlainString());
-      Assert.assertEquals("0E-38", DecimalFraction.FromString("0.0000000000000000000e-19").toString());
-      Assert.assertEquals("0.00E-36", DecimalFraction.FromString("0.0000000000000000000e-19").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000000000000000000000000", DecimalFraction.FromString("0.0000000000000000000e-19").ToPlainString());
-      Assert.assertEquals("0E-16", DecimalFraction.FromString("0.0000000000e-6").toString());
-      Assert.assertEquals("0.0E-15", DecimalFraction.FromString("0.0000000000e-6").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000", DecimalFraction.FromString("0.0000000000e-6").ToPlainString());
-      Assert.assertEquals("0E-32", DecimalFraction.FromString("0.00000000000000000e-15").toString());
-      Assert.assertEquals("0.00E-30", DecimalFraction.FromString("0.00000000000000000e-15").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000000000000000000", DecimalFraction.FromString("0.00000000000000000e-15").ToPlainString());
-      Assert.assertEquals("0E-13", DecimalFraction.FromString("0.000000000000000e+2").toString());
-      Assert.assertEquals("0.0E-12", DecimalFraction.FromString("0.000000000000000e+2").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000", DecimalFraction.FromString("0.000000000000000e+2").ToPlainString());
-      Assert.assertEquals("0E-19", DecimalFraction.FromString("0.0e-18").toString());
-      Assert.assertEquals("0.0E-18", DecimalFraction.FromString("0.0e-18").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000", DecimalFraction.FromString("0.0e-18").ToPlainString());
-      Assert.assertEquals("0E-20", DecimalFraction.FromString("0.00000000000000e-6").toString());
-      Assert.assertEquals("0.00E-18", DecimalFraction.FromString("0.00000000000000e-6").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000000", DecimalFraction.FromString("0.00000000000000e-6").ToPlainString());
-      Assert.assertEquals("0E-20", DecimalFraction.FromString("0.000e-17").toString());
-      Assert.assertEquals("0.00E-18", DecimalFraction.FromString("0.000e-17").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000000", DecimalFraction.FromString("0.000e-17").ToPlainString());
-      Assert.assertEquals("0E-21", DecimalFraction.FromString("0.00000000000000e-7").toString());
-      Assert.assertEquals("0E-21", DecimalFraction.FromString("0.00000000000000e-7").ToEngineeringString());
-      Assert.assertEquals("0.000000000000000000000", DecimalFraction.FromString("0.00000000000000e-7").ToPlainString());
-      Assert.assertEquals("0E-15", DecimalFraction.FromString("0.000000e-9").toString());
-      Assert.assertEquals("0E-15", DecimalFraction.FromString("0.000000e-9").ToEngineeringString());
-      Assert.assertEquals("0.000000000000000", DecimalFraction.FromString("0.000000e-9").ToPlainString());
-      Assert.assertEquals("0E-11", DecimalFraction.FromString("0e-11").toString());
-      Assert.assertEquals("0.00E-9", DecimalFraction.FromString("0e-11").ToEngineeringString());
-      Assert.assertEquals("0.00000000000", DecimalFraction.FromString("0e-11").ToPlainString());
-      Assert.assertEquals("0E+2", DecimalFraction.FromString("0.000000000e+11").toString());
-      Assert.assertEquals("0.0E+3", DecimalFraction.FromString("0.000000000e+11").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.000000000e+11").ToPlainString());
-      Assert.assertEquals("0.0", DecimalFraction.FromString("0.0000000000000000e+15").toString());
-      Assert.assertEquals("0.0", DecimalFraction.FromString("0.0000000000000000e+15").ToEngineeringString());
-      Assert.assertEquals("0.0", DecimalFraction.FromString("0.0000000000000000e+15").ToPlainString());
-      Assert.assertEquals("0.000000", DecimalFraction.FromString("0.0000000000000000e+10").toString());
-      Assert.assertEquals("0.000000", DecimalFraction.FromString("0.0000000000000000e+10").ToEngineeringString());
-      Assert.assertEquals("0.000000", DecimalFraction.FromString("0.0000000000000000e+10").ToPlainString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.000000000e+4").toString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.000000000e+4").ToEngineeringString());
-      Assert.assertEquals("0.00000", DecimalFraction.FromString("0.000000000e+4").ToPlainString());
-      Assert.assertEquals("0E-28", DecimalFraction.FromString("0.000000000000000e-13").toString());
-      Assert.assertEquals("0.0E-27", DecimalFraction.FromString("0.000000000000000e-13").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000000000000000", DecimalFraction.FromString("0.000000000000000e-13").ToPlainString());
-      Assert.assertEquals("0E-27", DecimalFraction.FromString("0.0000000000000000000e-8").toString());
-      Assert.assertEquals("0E-27", DecimalFraction.FromString("0.0000000000000000000e-8").ToEngineeringString());
-      Assert.assertEquals("0.000000000000000000000000000", DecimalFraction.FromString("0.0000000000000000000e-8").ToPlainString());
-      Assert.assertEquals("0E-26", DecimalFraction.FromString("0.00000000000e-15").toString());
-      Assert.assertEquals("0.00E-24", DecimalFraction.FromString("0.00000000000e-15").ToEngineeringString());
-      Assert.assertEquals("0.00000000000000000000000000", DecimalFraction.FromString("0.00000000000e-15").ToPlainString());
-      Assert.assertEquals("0E+10", DecimalFraction.FromString("0.00e+12").toString());
-      Assert.assertEquals("0.00E+12", DecimalFraction.FromString("0.00e+12").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.00e+12").ToPlainString());
-      Assert.assertEquals("0E+4", DecimalFraction.FromString("0.0e+5").toString());
-      Assert.assertEquals("0.00E+6", DecimalFraction.FromString("0.0e+5").ToEngineeringString());
-      Assert.assertEquals("0", DecimalFraction.FromString("0.0e+5").ToPlainString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.0000000000000000e+7").toString());
-      Assert.assertEquals("0E-9", DecimalFraction.FromString("0.0000000000000000e+7").ToEngineeringString());
-      Assert.assertEquals("0.000000000", DecimalFraction.FromString("0.0000000000000000e+7").ToPlainString());
-      Assert.assertEquals("0E-16", DecimalFraction.FromString("0.0000000000000000e-0").toString());
-      Assert.assertEquals("0.0E-15", DecimalFraction.FromString("0.0000000000000000e-0").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000000", DecimalFraction.FromString("0.0000000000000000e-0").ToPlainString());
-      Assert.assertEquals("0.00", DecimalFraction.FromString("0.000000000000000e+13").toString());
-      Assert.assertEquals("0.00", DecimalFraction.FromString("0.000000000000000e+13").ToEngineeringString());
-      Assert.assertEquals("0.00", DecimalFraction.FromString("0.000000000000000e+13").ToPlainString());
-      Assert.assertEquals("0E-24", DecimalFraction.FromString("0.00000000000e-13").toString());
-      Assert.assertEquals("0E-24", DecimalFraction.FromString("0.00000000000e-13").ToEngineeringString());
-      Assert.assertEquals("0.000000000000000000000000", DecimalFraction.FromString("0.00000000000e-13").ToPlainString());
-      Assert.assertEquals("0E-13", DecimalFraction.FromString("0.000e-10").toString());
-      Assert.assertEquals("0.0E-12", DecimalFraction.FromString("0.000e-10").ToEngineeringString());
-      Assert.assertEquals("0.0000000000000", DecimalFraction.FromString("0.000e-10").ToPlainString());
+      Assert.assertEquals("0.0001265", ExtendedDecimal.FromString("1.265e-4").toString());
+      Assert.assertEquals("0.0001265", ExtendedDecimal.FromString("1.265e-4").ToEngineeringString());
+      Assert.assertEquals("0.0001265", ExtendedDecimal.FromString("1.265e-4").ToPlainString());
+      Assert.assertEquals("0.0000", ExtendedDecimal.FromString("0.000E-1").toString());
+      Assert.assertEquals("0.0000", ExtendedDecimal.FromString("0.000E-1").ToEngineeringString());
+      Assert.assertEquals("0.0000", ExtendedDecimal.FromString("0.000E-1").ToPlainString());
+      Assert.assertEquals("0E-16", ExtendedDecimal.FromString("0.0000000000000e-3").toString());
+      Assert.assertEquals("0.0E-15", ExtendedDecimal.FromString("0.0000000000000e-3").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000", ExtendedDecimal.FromString("0.0000000000000e-3").ToPlainString());
+      Assert.assertEquals("0E-8", ExtendedDecimal.FromString("0.000000000e+1").toString());
+      Assert.assertEquals("0.00E-6", ExtendedDecimal.FromString("0.000000000e+1").ToEngineeringString());
+      Assert.assertEquals("0.00000000", ExtendedDecimal.FromString("0.000000000e+1").ToPlainString());
+      Assert.assertEquals("0.000", ExtendedDecimal.FromString("0.000000000000000e+12").toString());
+      Assert.assertEquals("0.000", ExtendedDecimal.FromString("0.000000000000000e+12").ToEngineeringString());
+      Assert.assertEquals("0.000", ExtendedDecimal.FromString("0.000000000000000e+12").ToPlainString());
+      Assert.assertEquals("0E-25", ExtendedDecimal.FromString("0.00000000000000e-11").toString());
+      Assert.assertEquals("0.0E-24", ExtendedDecimal.FromString("0.00000000000000e-11").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000000000", ExtendedDecimal.FromString("0.00000000000000e-11").ToPlainString());
+      Assert.assertEquals("0E-7", ExtendedDecimal.FromString("0.000000000000e+5").toString());
+      Assert.assertEquals("0.0E-6", ExtendedDecimal.FromString("0.000000000000e+5").ToEngineeringString());
+      Assert.assertEquals("0.0000000", ExtendedDecimal.FromString("0.000000000000e+5").ToPlainString());
+      Assert.assertEquals("0E-8", ExtendedDecimal.FromString("0.0000e-4").toString());
+      Assert.assertEquals("0.00E-6", ExtendedDecimal.FromString("0.0000e-4").ToEngineeringString());
+      Assert.assertEquals("0.00000000", ExtendedDecimal.FromString("0.0000e-4").ToPlainString());
+      Assert.assertEquals("0.0000", ExtendedDecimal.FromString("0.000000e+2").toString());
+      Assert.assertEquals("0.0000", ExtendedDecimal.FromString("0.000000e+2").ToEngineeringString());
+      Assert.assertEquals("0.0000", ExtendedDecimal.FromString("0.000000e+2").ToPlainString());
+      Assert.assertEquals("0E+2", ExtendedDecimal.FromString("0.0e+3").toString());
+      Assert.assertEquals("0.0E+3", ExtendedDecimal.FromString("0.0e+3").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.0e+3").ToPlainString());
+      Assert.assertEquals("0E-7", ExtendedDecimal.FromString("0.000000000000000e+8").toString());
+      Assert.assertEquals("0.0E-6", ExtendedDecimal.FromString("0.000000000000000e+8").ToEngineeringString());
+      Assert.assertEquals("0.0000000", ExtendedDecimal.FromString("0.000000000000000e+8").ToPlainString());
+      Assert.assertEquals("0E+7", ExtendedDecimal.FromString("0.000e+10").toString());
+      Assert.assertEquals("0.00E+9", ExtendedDecimal.FromString("0.000e+10").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000e+10").ToPlainString());
+      Assert.assertEquals("0E-31", ExtendedDecimal.FromString("0.0000000000000000000e-12").toString());
+      Assert.assertEquals("0.0E-30", ExtendedDecimal.FromString("0.0000000000000000000e-12").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000000000000000", ExtendedDecimal.FromString("0.0000000000000000000e-12").ToPlainString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.0000e-1").toString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.0000e-1").ToEngineeringString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.0000e-1").ToPlainString());
+      Assert.assertEquals("0E-22", ExtendedDecimal.FromString("0.00000000000e-11").toString());
+      Assert.assertEquals("0.0E-21", ExtendedDecimal.FromString("0.00000000000e-11").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000000", ExtendedDecimal.FromString("0.00000000000e-11").ToPlainString());
+      Assert.assertEquals("0E-28", ExtendedDecimal.FromString("0.00000000000e-17").toString());
+      Assert.assertEquals("0.0E-27", ExtendedDecimal.FromString("0.00000000000e-17").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000000000000", ExtendedDecimal.FromString("0.00000000000e-17").ToPlainString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.00000000000000e+9").toString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.00000000000000e+9").ToEngineeringString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.00000000000000e+9").ToPlainString());
+      Assert.assertEquals("0E-28", ExtendedDecimal.FromString("0.0000000000e-18").toString());
+      Assert.assertEquals("0.0E-27", ExtendedDecimal.FromString("0.0000000000e-18").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000000000000", ExtendedDecimal.FromString("0.0000000000e-18").ToPlainString());
+      Assert.assertEquals("0E-14", ExtendedDecimal.FromString("0.0e-13").toString());
+      Assert.assertEquals("0.00E-12", ExtendedDecimal.FromString("0.0e-13").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000", ExtendedDecimal.FromString("0.0e-13").ToPlainString());
+      Assert.assertEquals("0E-8", ExtendedDecimal.FromString("0.000000000000000000e+10").toString());
+      Assert.assertEquals("0.00E-6", ExtendedDecimal.FromString("0.000000000000000000e+10").ToEngineeringString());
+      Assert.assertEquals("0.00000000", ExtendedDecimal.FromString("0.000000000000000000e+10").ToPlainString());
+      Assert.assertEquals("0E+15", ExtendedDecimal.FromString("0.0000e+19").toString());
+      Assert.assertEquals("0E+15", ExtendedDecimal.FromString("0.0000e+19").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.0000e+19").ToPlainString());
+      Assert.assertEquals("0E-13", ExtendedDecimal.FromString("0.00000e-8").toString());
+      Assert.assertEquals("0.0E-12", ExtendedDecimal.FromString("0.00000e-8").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000", ExtendedDecimal.FromString("0.00000e-8").ToPlainString());
+      Assert.assertEquals("0E+3", ExtendedDecimal.FromString("0.00000000000e+14").toString());
+      Assert.assertEquals("0E+3", ExtendedDecimal.FromString("0.00000000000e+14").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.00000000000e+14").ToPlainString());
+      Assert.assertEquals("0E-17", ExtendedDecimal.FromString("0.000e-14").toString());
+      Assert.assertEquals("0.00E-15", ExtendedDecimal.FromString("0.000e-14").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000", ExtendedDecimal.FromString("0.000e-14").ToPlainString());
+      Assert.assertEquals("0E-25", ExtendedDecimal.FromString("0.000000e-19").toString());
+      Assert.assertEquals("0.0E-24", ExtendedDecimal.FromString("0.000000e-19").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000000000", ExtendedDecimal.FromString("0.000000e-19").ToPlainString());
+      Assert.assertEquals("0E+7", ExtendedDecimal.FromString("0.000000000000e+19").toString());
+      Assert.assertEquals("0.00E+9", ExtendedDecimal.FromString("0.000000000000e+19").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000000000000e+19").ToPlainString());
+      Assert.assertEquals("0E+5", ExtendedDecimal.FromString("0.0000000000000e+18").toString());
+      Assert.assertEquals("0.0E+6", ExtendedDecimal.FromString("0.0000000000000e+18").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.0000000000000e+18").ToPlainString());
+      Assert.assertEquals("0E-16", ExtendedDecimal.FromString("0.00000000000000e-2").toString());
+      Assert.assertEquals("0.0E-15", ExtendedDecimal.FromString("0.00000000000000e-2").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000", ExtendedDecimal.FromString("0.00000000000000e-2").ToPlainString());
+      Assert.assertEquals("0E-31", ExtendedDecimal.FromString("0.0000000000000e-18").toString());
+      Assert.assertEquals("0.0E-30", ExtendedDecimal.FromString("0.0000000000000e-18").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000000000000000", ExtendedDecimal.FromString("0.0000000000000e-18").ToPlainString());
+      Assert.assertEquals("0E-17", ExtendedDecimal.FromString("0e-17").toString());
+      Assert.assertEquals("0.00E-15", ExtendedDecimal.FromString("0e-17").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000", ExtendedDecimal.FromString("0e-17").ToPlainString());
+      Assert.assertEquals("0E+17", ExtendedDecimal.FromString("0e+17").toString());
+      Assert.assertEquals("0.0E+18", ExtendedDecimal.FromString("0e+17").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0e+17").ToPlainString());
+      Assert.assertEquals("0E-17", ExtendedDecimal.FromString("0.00000000000000000e+0").toString());
+      Assert.assertEquals("0.00E-15", ExtendedDecimal.FromString("0.00000000000000000e+0").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000", ExtendedDecimal.FromString("0.00000000000000000e+0").ToPlainString());
+      Assert.assertEquals("0E-13", ExtendedDecimal.FromString("0.0000000000000e+0").toString());
+      Assert.assertEquals("0.0E-12", ExtendedDecimal.FromString("0.0000000000000e+0").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000", ExtendedDecimal.FromString("0.0000000000000e+0").ToPlainString());
+      Assert.assertEquals("0E-31", ExtendedDecimal.FromString("0.0000000000000000000e-12").toString());
+      Assert.assertEquals("0.0E-30", ExtendedDecimal.FromString("0.0000000000000000000e-12").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000000000000000", ExtendedDecimal.FromString("0.0000000000000000000e-12").ToPlainString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.0000000000000000000e+10").toString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.0000000000000000000e+10").ToEngineeringString());
+      Assert.assertEquals("0.000000000", ExtendedDecimal.FromString("0.0000000000000000000e+10").ToPlainString());
+      Assert.assertEquals("0E-7", ExtendedDecimal.FromString("0.00000e-2").toString());
+      Assert.assertEquals("0.0E-6", ExtendedDecimal.FromString("0.00000e-2").ToEngineeringString());
+      Assert.assertEquals("0.0000000", ExtendedDecimal.FromString("0.00000e-2").ToPlainString());
+      Assert.assertEquals("0E+9", ExtendedDecimal.FromString("0.000000e+15").toString());
+      Assert.assertEquals("0E+9", ExtendedDecimal.FromString("0.000000e+15").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000000e+15").ToPlainString());
+      Assert.assertEquals("0E-19", ExtendedDecimal.FromString("0.000000000e-10").toString());
+      Assert.assertEquals("0.0E-18", ExtendedDecimal.FromString("0.000000000e-10").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000", ExtendedDecimal.FromString("0.000000000e-10").ToPlainString());
+      Assert.assertEquals("0E-8", ExtendedDecimal.FromString("0.00000000000000e+6").toString());
+      Assert.assertEquals("0.00E-6", ExtendedDecimal.FromString("0.00000000000000e+6").ToEngineeringString());
+      Assert.assertEquals("0.00000000", ExtendedDecimal.FromString("0.00000000000000e+6").ToPlainString());
+      Assert.assertEquals("0E+12", ExtendedDecimal.FromString("0.00000e+17").toString());
+      Assert.assertEquals("0E+12", ExtendedDecimal.FromString("0.00000e+17").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.00000e+17").ToPlainString());
+      Assert.assertEquals("0E-18", ExtendedDecimal.FromString("0.000000000000000000e-0").toString());
+      Assert.assertEquals("0E-18", ExtendedDecimal.FromString("0.000000000000000000e-0").ToEngineeringString());
+      Assert.assertEquals("0.000000000000000000", ExtendedDecimal.FromString("0.000000000000000000e-0").ToPlainString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.0000000000000000e+11").toString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.0000000000000000e+11").ToEngineeringString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.0000000000000000e+11").ToPlainString());
+      Assert.assertEquals("0E+3", ExtendedDecimal.FromString("0.000000000000e+15").toString());
+      Assert.assertEquals("0E+3", ExtendedDecimal.FromString("0.000000000000e+15").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000000000000e+15").ToPlainString());
+      Assert.assertEquals("0E-27", ExtendedDecimal.FromString("0.00000000e-19").toString());
+      Assert.assertEquals("0E-27", ExtendedDecimal.FromString("0.00000000e-19").ToEngineeringString());
+      Assert.assertEquals("0.000000000000000000000000000", ExtendedDecimal.FromString("0.00000000e-19").ToPlainString());
+      Assert.assertEquals("0E-11", ExtendedDecimal.FromString("0.00000e-6").toString());
+      Assert.assertEquals("0.00E-9", ExtendedDecimal.FromString("0.00000e-6").ToEngineeringString());
+      Assert.assertEquals("0.00000000000", ExtendedDecimal.FromString("0.00000e-6").ToPlainString());
+      Assert.assertEquals("0E-14", ExtendedDecimal.FromString("0e-14").toString());
+      Assert.assertEquals("0.00E-12", ExtendedDecimal.FromString("0e-14").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000", ExtendedDecimal.FromString("0e-14").ToPlainString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000000000e+9").toString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000000000e+9").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000000000e+9").ToPlainString());
+      Assert.assertEquals("0E+8", ExtendedDecimal.FromString("0.00000e+13").toString());
+      Assert.assertEquals("0.0E+9", ExtendedDecimal.FromString("0.00000e+13").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.00000e+13").ToPlainString());
+      Assert.assertEquals("0.000", ExtendedDecimal.FromString("0.000e-0").toString());
+      Assert.assertEquals("0.000", ExtendedDecimal.FromString("0.000e-0").ToEngineeringString());
+      Assert.assertEquals("0.000", ExtendedDecimal.FromString("0.000e-0").ToPlainString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.000000000000000e+6").toString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.000000000000000e+6").ToEngineeringString());
+      Assert.assertEquals("0.000000000", ExtendedDecimal.FromString("0.000000000000000e+6").ToPlainString());
+      Assert.assertEquals("0E+8", ExtendedDecimal.FromString("0.000000000e+17").toString());
+      Assert.assertEquals("0.0E+9", ExtendedDecimal.FromString("0.000000000e+17").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000000000e+17").ToPlainString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.00000000000e+6").toString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.00000000000e+6").ToEngineeringString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.00000000000e+6").ToPlainString());
+      Assert.assertEquals("0E-11", ExtendedDecimal.FromString("0.00000000000000e+3").toString());
+      Assert.assertEquals("0.00E-9", ExtendedDecimal.FromString("0.00000000000000e+3").ToEngineeringString());
+      Assert.assertEquals("0.00000000000", ExtendedDecimal.FromString("0.00000000000000e+3").ToPlainString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0e+0").toString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0e+0").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0e+0").ToPlainString());
+      Assert.assertEquals("0E+9", ExtendedDecimal.FromString("0.000e+12").toString());
+      Assert.assertEquals("0E+9", ExtendedDecimal.FromString("0.000e+12").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000e+12").ToPlainString());
+      Assert.assertEquals("0.00", ExtendedDecimal.FromString("0.00000000000e+9").toString());
+      Assert.assertEquals("0.00", ExtendedDecimal.FromString("0.00000000000e+9").ToEngineeringString());
+      Assert.assertEquals("0.00", ExtendedDecimal.FromString("0.00000000000e+9").ToPlainString());
+      Assert.assertEquals("0E-23", ExtendedDecimal.FromString("0.00000000000000e-9").toString());
+      Assert.assertEquals("0.00E-21", ExtendedDecimal.FromString("0.00000000000000e-9").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000000000", ExtendedDecimal.FromString("0.00000000000000e-9").ToPlainString());
+      Assert.assertEquals("0.0", ExtendedDecimal.FromString("0e-1").toString());
+      Assert.assertEquals("0.0", ExtendedDecimal.FromString("0e-1").ToEngineeringString());
+      Assert.assertEquals("0.0", ExtendedDecimal.FromString("0e-1").ToPlainString());
+      Assert.assertEquals("0E-17", ExtendedDecimal.FromString("0.0000e-13").toString());
+      Assert.assertEquals("0.00E-15", ExtendedDecimal.FromString("0.0000e-13").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000", ExtendedDecimal.FromString("0.0000e-13").ToPlainString());
+      Assert.assertEquals("0E-18", ExtendedDecimal.FromString("0.00000000000e-7").toString());
+      Assert.assertEquals("0E-18", ExtendedDecimal.FromString("0.00000000000e-7").ToEngineeringString());
+      Assert.assertEquals("0.000000000000000000", ExtendedDecimal.FromString("0.00000000000e-7").ToPlainString());
+      Assert.assertEquals("0E-10", ExtendedDecimal.FromString("0.00000000000000e+4").toString());
+      Assert.assertEquals("0.0E-9", ExtendedDecimal.FromString("0.00000000000000e+4").ToEngineeringString());
+      Assert.assertEquals("0.0000000000", ExtendedDecimal.FromString("0.00000000000000e+4").ToPlainString());
+      Assert.assertEquals("0E-16", ExtendedDecimal.FromString("0.00000000e-8").toString());
+      Assert.assertEquals("0.0E-15", ExtendedDecimal.FromString("0.00000000e-8").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000", ExtendedDecimal.FromString("0.00000000e-8").ToPlainString());
+      Assert.assertEquals("0E-8", ExtendedDecimal.FromString("0.00e-6").toString());
+      Assert.assertEquals("0.00E-6", ExtendedDecimal.FromString("0.00e-6").ToEngineeringString());
+      Assert.assertEquals("0.00000000", ExtendedDecimal.FromString("0.00e-6").ToPlainString());
+      Assert.assertEquals("0.00", ExtendedDecimal.FromString("0.0e-1").toString());
+      Assert.assertEquals("0.00", ExtendedDecimal.FromString("0.0e-1").ToEngineeringString());
+      Assert.assertEquals("0.00", ExtendedDecimal.FromString("0.0e-1").ToPlainString());
+      Assert.assertEquals("0E-26", ExtendedDecimal.FromString("0.0000000000000000e-10").toString());
+      Assert.assertEquals("0.00E-24", ExtendedDecimal.FromString("0.0000000000000000e-10").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000000000000", ExtendedDecimal.FromString("0.0000000000000000e-10").ToPlainString());
+      Assert.assertEquals("0E+12", ExtendedDecimal.FromString("0.00e+14").toString());
+      Assert.assertEquals("0E+12", ExtendedDecimal.FromString("0.00e+14").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.00e+14").ToPlainString());
+      Assert.assertEquals("0E-13", ExtendedDecimal.FromString("0.000000000000000000e+5").toString());
+      Assert.assertEquals("0.0E-12", ExtendedDecimal.FromString("0.000000000000000000e+5").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000", ExtendedDecimal.FromString("0.000000000000000000e+5").ToPlainString());
+      Assert.assertEquals("0E+6", ExtendedDecimal.FromString("0.0e+7").toString());
+      Assert.assertEquals("0E+6", ExtendedDecimal.FromString("0.0e+7").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.0e+7").ToPlainString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.00000000e+8").toString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.00000000e+8").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.00000000e+8").ToPlainString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.000000000e+0").toString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.000000000e+0").ToEngineeringString());
+      Assert.assertEquals("0.000000000", ExtendedDecimal.FromString("0.000000000e+0").ToPlainString());
+      Assert.assertEquals("0E+10", ExtendedDecimal.FromString("0.000e+13").toString());
+      Assert.assertEquals("0.00E+12", ExtendedDecimal.FromString("0.000e+13").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000e+13").ToPlainString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.0000000000000000e+16").toString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.0000000000000000e+16").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.0000000000000000e+16").ToPlainString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.00000000e-1").toString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.00000000e-1").ToEngineeringString());
+      Assert.assertEquals("0.000000000", ExtendedDecimal.FromString("0.00000000e-1").ToPlainString());
+      Assert.assertEquals("0E-26", ExtendedDecimal.FromString("0.00000000000e-15").toString());
+      Assert.assertEquals("0.00E-24", ExtendedDecimal.FromString("0.00000000000e-15").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000000000000", ExtendedDecimal.FromString("0.00000000000e-15").ToPlainString());
+      Assert.assertEquals("0E+10", ExtendedDecimal.FromString("0.0e+11").toString());
+      Assert.assertEquals("0.00E+12", ExtendedDecimal.FromString("0.0e+11").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.0e+11").ToPlainString());
+      Assert.assertEquals("0E+2", ExtendedDecimal.FromString("0.00000e+7").toString());
+      Assert.assertEquals("0.0E+3", ExtendedDecimal.FromString("0.00000e+7").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.00000e+7").ToPlainString());
+      Assert.assertEquals("0E-38", ExtendedDecimal.FromString("0.0000000000000000000e-19").toString());
+      Assert.assertEquals("0.00E-36", ExtendedDecimal.FromString("0.0000000000000000000e-19").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000000000000000000000000", ExtendedDecimal.FromString("0.0000000000000000000e-19").ToPlainString());
+      Assert.assertEquals("0E-16", ExtendedDecimal.FromString("0.0000000000e-6").toString());
+      Assert.assertEquals("0.0E-15", ExtendedDecimal.FromString("0.0000000000e-6").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000", ExtendedDecimal.FromString("0.0000000000e-6").ToPlainString());
+      Assert.assertEquals("0E-32", ExtendedDecimal.FromString("0.00000000000000000e-15").toString());
+      Assert.assertEquals("0.00E-30", ExtendedDecimal.FromString("0.00000000000000000e-15").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000000000000000000", ExtendedDecimal.FromString("0.00000000000000000e-15").ToPlainString());
+      Assert.assertEquals("0E-13", ExtendedDecimal.FromString("0.000000000000000e+2").toString());
+      Assert.assertEquals("0.0E-12", ExtendedDecimal.FromString("0.000000000000000e+2").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000", ExtendedDecimal.FromString("0.000000000000000e+2").ToPlainString());
+      Assert.assertEquals("0E-19", ExtendedDecimal.FromString("0.0e-18").toString());
+      Assert.assertEquals("0.0E-18", ExtendedDecimal.FromString("0.0e-18").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000", ExtendedDecimal.FromString("0.0e-18").ToPlainString());
+      Assert.assertEquals("0E-20", ExtendedDecimal.FromString("0.00000000000000e-6").toString());
+      Assert.assertEquals("0.00E-18", ExtendedDecimal.FromString("0.00000000000000e-6").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000000", ExtendedDecimal.FromString("0.00000000000000e-6").ToPlainString());
+      Assert.assertEquals("0E-20", ExtendedDecimal.FromString("0.000e-17").toString());
+      Assert.assertEquals("0.00E-18", ExtendedDecimal.FromString("0.000e-17").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000000", ExtendedDecimal.FromString("0.000e-17").ToPlainString());
+      Assert.assertEquals("0E-21", ExtendedDecimal.FromString("0.00000000000000e-7").toString());
+      Assert.assertEquals("0E-21", ExtendedDecimal.FromString("0.00000000000000e-7").ToEngineeringString());
+      Assert.assertEquals("0.000000000000000000000", ExtendedDecimal.FromString("0.00000000000000e-7").ToPlainString());
+      Assert.assertEquals("0E-15", ExtendedDecimal.FromString("0.000000e-9").toString());
+      Assert.assertEquals("0E-15", ExtendedDecimal.FromString("0.000000e-9").ToEngineeringString());
+      Assert.assertEquals("0.000000000000000", ExtendedDecimal.FromString("0.000000e-9").ToPlainString());
+      Assert.assertEquals("0E-11", ExtendedDecimal.FromString("0e-11").toString());
+      Assert.assertEquals("0.00E-9", ExtendedDecimal.FromString("0e-11").ToEngineeringString());
+      Assert.assertEquals("0.00000000000", ExtendedDecimal.FromString("0e-11").ToPlainString());
+      Assert.assertEquals("0E+2", ExtendedDecimal.FromString("0.000000000e+11").toString());
+      Assert.assertEquals("0.0E+3", ExtendedDecimal.FromString("0.000000000e+11").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.000000000e+11").ToPlainString());
+      Assert.assertEquals("0.0", ExtendedDecimal.FromString("0.0000000000000000e+15").toString());
+      Assert.assertEquals("0.0", ExtendedDecimal.FromString("0.0000000000000000e+15").ToEngineeringString());
+      Assert.assertEquals("0.0", ExtendedDecimal.FromString("0.0000000000000000e+15").ToPlainString());
+      Assert.assertEquals("0.000000", ExtendedDecimal.FromString("0.0000000000000000e+10").toString());
+      Assert.assertEquals("0.000000", ExtendedDecimal.FromString("0.0000000000000000e+10").ToEngineeringString());
+      Assert.assertEquals("0.000000", ExtendedDecimal.FromString("0.0000000000000000e+10").ToPlainString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.000000000e+4").toString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.000000000e+4").ToEngineeringString());
+      Assert.assertEquals("0.00000", ExtendedDecimal.FromString("0.000000000e+4").ToPlainString());
+      Assert.assertEquals("0E-28", ExtendedDecimal.FromString("0.000000000000000e-13").toString());
+      Assert.assertEquals("0.0E-27", ExtendedDecimal.FromString("0.000000000000000e-13").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000000000000000", ExtendedDecimal.FromString("0.000000000000000e-13").ToPlainString());
+      Assert.assertEquals("0E-27", ExtendedDecimal.FromString("0.0000000000000000000e-8").toString());
+      Assert.assertEquals("0E-27", ExtendedDecimal.FromString("0.0000000000000000000e-8").ToEngineeringString());
+      Assert.assertEquals("0.000000000000000000000000000", ExtendedDecimal.FromString("0.0000000000000000000e-8").ToPlainString());
+      Assert.assertEquals("0E-26", ExtendedDecimal.FromString("0.00000000000e-15").toString());
+      Assert.assertEquals("0.00E-24", ExtendedDecimal.FromString("0.00000000000e-15").ToEngineeringString());
+      Assert.assertEquals("0.00000000000000000000000000", ExtendedDecimal.FromString("0.00000000000e-15").ToPlainString());
+      Assert.assertEquals("0E+10", ExtendedDecimal.FromString("0.00e+12").toString());
+      Assert.assertEquals("0.00E+12", ExtendedDecimal.FromString("0.00e+12").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.00e+12").ToPlainString());
+      Assert.assertEquals("0E+4", ExtendedDecimal.FromString("0.0e+5").toString());
+      Assert.assertEquals("0.00E+6", ExtendedDecimal.FromString("0.0e+5").ToEngineeringString());
+      Assert.assertEquals("0", ExtendedDecimal.FromString("0.0e+5").ToPlainString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.0000000000000000e+7").toString());
+      Assert.assertEquals("0E-9", ExtendedDecimal.FromString("0.0000000000000000e+7").ToEngineeringString());
+      Assert.assertEquals("0.000000000", ExtendedDecimal.FromString("0.0000000000000000e+7").ToPlainString());
+      Assert.assertEquals("0E-16", ExtendedDecimal.FromString("0.0000000000000000e-0").toString());
+      Assert.assertEquals("0.0E-15", ExtendedDecimal.FromString("0.0000000000000000e-0").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000000", ExtendedDecimal.FromString("0.0000000000000000e-0").ToPlainString());
+      Assert.assertEquals("0.00", ExtendedDecimal.FromString("0.000000000000000e+13").toString());
+      Assert.assertEquals("0.00", ExtendedDecimal.FromString("0.000000000000000e+13").ToEngineeringString());
+      Assert.assertEquals("0.00", ExtendedDecimal.FromString("0.000000000000000e+13").ToPlainString());
+      Assert.assertEquals("0E-24", ExtendedDecimal.FromString("0.00000000000e-13").toString());
+      Assert.assertEquals("0E-24", ExtendedDecimal.FromString("0.00000000000e-13").ToEngineeringString());
+      Assert.assertEquals("0.000000000000000000000000", ExtendedDecimal.FromString("0.00000000000e-13").ToPlainString());
+      Assert.assertEquals("0E-13", ExtendedDecimal.FromString("0.000e-10").toString());
+      Assert.assertEquals("0.0E-12", ExtendedDecimal.FromString("0.000e-10").ToEngineeringString());
+      Assert.assertEquals("0.0000000000000", ExtendedDecimal.FromString("0.000e-10").ToPlainString());
     }
     // Tests whether AsInt32/64/16/AsByte properly truncate floats
     // and doubles before bounds checking
@@ -1612,318 +1622,318 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void FromDoubleTest() {
-      Assert.assertEquals("0.213299999999999989608312489508534781634807586669921875", DecimalFraction.FromDouble(0.2133).toString());
-      Assert.assertEquals("2.29360000000000010330982488752915582352898127282969653606414794921875E-7", DecimalFraction.FromDouble(2.2936E-7).toString());
-      Assert.assertEquals("3893200000", DecimalFraction.FromDouble(3.8932E9).toString());
-      Assert.assertEquals("128230", DecimalFraction.FromDouble(128230.0).toString());
-      Assert.assertEquals("127210", DecimalFraction.FromDouble(127210.0).toString());
-      Assert.assertEquals("0.267230000000000023074875343809253536164760589599609375", DecimalFraction.FromDouble(0.26723).toString());
-      Assert.assertEquals("0.302329999999999987636556397774256765842437744140625", DecimalFraction.FromDouble(0.30233).toString());
-      Assert.assertEquals("0.0000019512000000000000548530838806460252499164198525249958038330078125", DecimalFraction.FromDouble(1.9512E-6).toString());
-      Assert.assertEquals("199500", DecimalFraction.FromDouble(199500.0).toString());
-      Assert.assertEquals("36214000", DecimalFraction.FromDouble(3.6214E7).toString());
-      Assert.assertEquals("1913300000000", DecimalFraction.FromDouble(1.9133E12).toString());
-      Assert.assertEquals("0.0002173499999999999976289799530349000633577816188335418701171875", DecimalFraction.FromDouble(2.1735E-4).toString());
-      Assert.assertEquals("0.0000310349999999999967797807698399736864303122274577617645263671875", DecimalFraction.FromDouble(3.1035E-5).toString());
-      Assert.assertEquals("1.274999999999999911182158029987476766109466552734375", DecimalFraction.FromDouble(1.275).toString());
-      Assert.assertEquals("214190", DecimalFraction.FromDouble(214190.0).toString());
-      Assert.assertEquals("3981300000", DecimalFraction.FromDouble(3.9813E9).toString());
-      Assert.assertEquals("1092700", DecimalFraction.FromDouble(1092700.0).toString());
-      Assert.assertEquals("0.023609999999999999042987752773115062154829502105712890625", DecimalFraction.FromDouble(0.02361).toString());
-      Assert.assertEquals("12.321999999999999175770426518283784389495849609375", DecimalFraction.FromDouble(12.322).toString());
-      Assert.assertEquals("0.002586999999999999889921387108415729016996920108795166015625", DecimalFraction.FromDouble(0.002587).toString());
-      Assert.assertEquals("1322000000", DecimalFraction.FromDouble(1.322E9).toString());
-      Assert.assertEquals("95310000000", DecimalFraction.FromDouble(9.531E10).toString());
-      Assert.assertEquals("142.3799999999999954525264911353588104248046875", DecimalFraction.FromDouble(142.38).toString());
-      Assert.assertEquals("2252.5", DecimalFraction.FromDouble(2252.5).toString());
-      Assert.assertEquals("363600000000", DecimalFraction.FromDouble(3.636E11).toString());
-      Assert.assertEquals("0.00000323700000000000009386523676380154057596882921643555164337158203125", DecimalFraction.FromDouble(3.237E-6).toString());
-      Assert.assertEquals("728000", DecimalFraction.FromDouble(728000.0).toString());
-      Assert.assertEquals("25818000", DecimalFraction.FromDouble(2.5818E7).toString());
-      Assert.assertEquals("1090000", DecimalFraction.FromDouble(1090000.0).toString());
-      Assert.assertEquals("1.5509999999999999342747969421907328069210052490234375", DecimalFraction.FromDouble(1.551).toString());
-      Assert.assertEquals("26.035000000000000142108547152020037174224853515625", DecimalFraction.FromDouble(26.035).toString());
-      Assert.assertEquals("833000000", DecimalFraction.FromDouble(8.33E8).toString());
-      Assert.assertEquals("812300000000", DecimalFraction.FromDouble(8.123E11).toString());
-      Assert.assertEquals("2622.90000000000009094947017729282379150390625", DecimalFraction.FromDouble(2622.9).toString());
-      Assert.assertEquals("1.290999999999999925393012745189480483531951904296875", DecimalFraction.FromDouble(1.291).toString());
-      Assert.assertEquals("286140", DecimalFraction.FromDouble(286140.0).toString());
-      Assert.assertEquals("0.06733000000000000095923269327613525092601776123046875", DecimalFraction.FromDouble(0.06733).toString());
-      Assert.assertEquals("0.000325160000000000010654532811571471029310487210750579833984375", DecimalFraction.FromDouble(3.2516E-4).toString());
-      Assert.assertEquals("383230000", DecimalFraction.FromDouble(3.8323E8).toString());
-      Assert.assertEquals("0.02843299999999999994049204588009160943329334259033203125", DecimalFraction.FromDouble(0.028433).toString());
-      Assert.assertEquals("837000000", DecimalFraction.FromDouble(8.37E8).toString());
-      Assert.assertEquals("0.0160800000000000005428990590417015482671558856964111328125", DecimalFraction.FromDouble(0.01608).toString());
-      Assert.assertEquals("3621000000000", DecimalFraction.FromDouble(3.621E12).toString());
-      Assert.assertEquals("78.1200000000000045474735088646411895751953125", DecimalFraction.FromDouble(78.12).toString());
-      Assert.assertEquals("1308000000", DecimalFraction.FromDouble(1.308E9).toString());
-      Assert.assertEquals("0.031937000000000000110578213252665591426193714141845703125", DecimalFraction.FromDouble(0.031937).toString());
-      Assert.assertEquals("1581500", DecimalFraction.FromDouble(1581500.0).toString());
-      Assert.assertEquals("244200", DecimalFraction.FromDouble(244200.0).toString());
-      Assert.assertEquals("2.28179999999999995794237200343046456652018605382181704044342041015625E-7", DecimalFraction.FromDouble(2.2818E-7).toString());
-      Assert.assertEquals("39.73400000000000176214598468504846096038818359375", DecimalFraction.FromDouble(39.734).toString());
-      Assert.assertEquals("1614", DecimalFraction.FromDouble(1614.0).toString());
-      Assert.assertEquals("0.0003831899999999999954607143859419693399104289710521697998046875", DecimalFraction.FromDouble(3.8319E-4).toString());
-      Assert.assertEquals("543.3999999999999772626324556767940521240234375", DecimalFraction.FromDouble(543.4).toString());
-      Assert.assertEquals("319310000", DecimalFraction.FromDouble(3.1931E8).toString());
-      Assert.assertEquals("1429000", DecimalFraction.FromDouble(1429000.0).toString());
-      Assert.assertEquals("2653700000000", DecimalFraction.FromDouble(2.6537E12).toString());
-      Assert.assertEquals("722000000", DecimalFraction.FromDouble(7.22E8).toString());
-      Assert.assertEquals("27.199999999999999289457264239899814128875732421875", DecimalFraction.FromDouble(27.2).toString());
-      Assert.assertEquals("0.00000380250000000000001586513038998038638283105683512985706329345703125", DecimalFraction.FromDouble(3.8025E-6).toString());
-      Assert.assertEquals("0.0000364159999999999982843446044711299691698513925075531005859375", DecimalFraction.FromDouble(3.6416E-5).toString());
-      Assert.assertEquals("2006000", DecimalFraction.FromDouble(2006000.0).toString());
-      Assert.assertEquals("2681200000", DecimalFraction.FromDouble(2.6812E9).toString());
-      Assert.assertEquals("27534000000", DecimalFraction.FromDouble(2.7534E10).toString());
-      Assert.assertEquals("3.911600000000000165617541382501176627783934236504137516021728515625E-7", DecimalFraction.FromDouble(3.9116E-7).toString());
-      Assert.assertEquals("0.0028135000000000000286437540353290387429296970367431640625", DecimalFraction.FromDouble(0.0028135).toString());
-      Assert.assertEquals("0.91190000000000004387601393318618647754192352294921875", DecimalFraction.FromDouble(0.9119).toString());
-      Assert.assertEquals("2241200", DecimalFraction.FromDouble(2241200.0).toString());
-      Assert.assertEquals("32.4500000000000028421709430404007434844970703125", DecimalFraction.FromDouble(32.45).toString());
-      Assert.assertEquals("13800000000", DecimalFraction.FromDouble(1.38E10).toString());
-      Assert.assertEquals("0.047300000000000001765254609153998899273574352264404296875", DecimalFraction.FromDouble(0.0473).toString());
-      Assert.assertEquals("205.340000000000003410605131648480892181396484375", DecimalFraction.FromDouble(205.34).toString());
-      Assert.assertEquals("3.981899999999999995026200849679298698902130126953125", DecimalFraction.FromDouble(3.9819).toString());
-      Assert.assertEquals("1152.799999999999954525264911353588104248046875", DecimalFraction.FromDouble(1152.8).toString());
-      Assert.assertEquals("1322000", DecimalFraction.FromDouble(1322000.0).toString());
-      Assert.assertEquals("0.00013414000000000001334814203612921801322954706847667694091796875", DecimalFraction.FromDouble(1.3414E-4).toString());
-      Assert.assertEquals("3.4449999999999999446924077266263264363033158588223159313201904296875E-7", DecimalFraction.FromDouble(3.445E-7).toString());
-      Assert.assertEquals("1.3610000000000000771138253079228785935583800892345607280731201171875E-7", DecimalFraction.FromDouble(1.361E-7).toString());
-      Assert.assertEquals("26090000", DecimalFraction.FromDouble(2.609E7).toString());
-      Assert.assertEquals("9.93599999999999994315658113919198513031005859375", DecimalFraction.FromDouble(9.936).toString());
-      Assert.assertEquals("0.00000600000000000000015200514458246772164784488268196582794189453125", DecimalFraction.FromDouble(6.0E-6).toString());
-      Assert.assertEquals("260.31000000000000227373675443232059478759765625", DecimalFraction.FromDouble(260.31).toString());
-      Assert.assertEquals("344.6000000000000227373675443232059478759765625", DecimalFraction.FromDouble(344.6).toString());
-      Assert.assertEquals("3.423700000000000187583282240666449069976806640625", DecimalFraction.FromDouble(3.4237).toString());
-      Assert.assertEquals("2342100000", DecimalFraction.FromDouble(2.3421E9).toString());
-      Assert.assertEquals("0.00023310000000000000099260877295392901942250318825244903564453125", DecimalFraction.FromDouble(2.331E-4).toString());
-      Assert.assertEquals("0.7339999999999999857891452847979962825775146484375", DecimalFraction.FromDouble(0.734).toString());
-      Assert.assertEquals("0.01541499999999999988287147090204598498530685901641845703125", DecimalFraction.FromDouble(0.015415).toString());
-      Assert.assertEquals("0.0035311000000000001240729741169843691750429570674896240234375", DecimalFraction.FromDouble(0.0035311).toString());
-      Assert.assertEquals("1221700000000", DecimalFraction.FromDouble(1.2217E12).toString());
-      Assert.assertEquals("0.48299999999999998490096686509787105023860931396484375", DecimalFraction.FromDouble(0.483).toString());
-      Assert.assertEquals("0.0002871999999999999878506906636488338335766457021236419677734375", DecimalFraction.FromDouble(2.872E-4).toString());
-      Assert.assertEquals("96.1099999999999994315658113919198513031005859375", DecimalFraction.FromDouble(96.11).toString());
-      Assert.assertEquals("36570", DecimalFraction.FromDouble(36570.0).toString());
-      Assert.assertEquals("0.00001830000000000000097183545932910675446692039258778095245361328125", DecimalFraction.FromDouble(1.83E-5).toString());
-      Assert.assertEquals("301310000", DecimalFraction.FromDouble(3.0131E8).toString());
-      Assert.assertEquals("382200", DecimalFraction.FromDouble(382200.0).toString());
-      Assert.assertEquals("248350000", DecimalFraction.FromDouble(2.4835E8).toString());
-      Assert.assertEquals("0.0015839999999999999046040866090834242640994489192962646484375", DecimalFraction.FromDouble(0.001584).toString());
-      Assert.assertEquals("0.000761999999999999982035203682784185730270110070705413818359375", DecimalFraction.FromDouble(7.62E-4).toString());
-      Assert.assertEquals("313300000000", DecimalFraction.FromDouble(3.133E11).toString());
+      Assert.assertEquals("0.213299999999999989608312489508534781634807586669921875", ExtendedDecimal.FromDouble(0.2133).toString());
+      Assert.assertEquals("2.29360000000000010330982488752915582352898127282969653606414794921875E-7", ExtendedDecimal.FromDouble(2.2936E-7).toString());
+      Assert.assertEquals("3893200000", ExtendedDecimal.FromDouble(3.8932E9).toString());
+      Assert.assertEquals("128230", ExtendedDecimal.FromDouble(128230.0).toString());
+      Assert.assertEquals("127210", ExtendedDecimal.FromDouble(127210.0).toString());
+      Assert.assertEquals("0.267230000000000023074875343809253536164760589599609375", ExtendedDecimal.FromDouble(0.26723).toString());
+      Assert.assertEquals("0.302329999999999987636556397774256765842437744140625", ExtendedDecimal.FromDouble(0.30233).toString());
+      Assert.assertEquals("0.0000019512000000000000548530838806460252499164198525249958038330078125", ExtendedDecimal.FromDouble(1.9512E-6).toString());
+      Assert.assertEquals("199500", ExtendedDecimal.FromDouble(199500.0).toString());
+      Assert.assertEquals("36214000", ExtendedDecimal.FromDouble(3.6214E7).toString());
+      Assert.assertEquals("1913300000000", ExtendedDecimal.FromDouble(1.9133E12).toString());
+      Assert.assertEquals("0.0002173499999999999976289799530349000633577816188335418701171875", ExtendedDecimal.FromDouble(2.1735E-4).toString());
+      Assert.assertEquals("0.0000310349999999999967797807698399736864303122274577617645263671875", ExtendedDecimal.FromDouble(3.1035E-5).toString());
+      Assert.assertEquals("1.274999999999999911182158029987476766109466552734375", ExtendedDecimal.FromDouble(1.275).toString());
+      Assert.assertEquals("214190", ExtendedDecimal.FromDouble(214190.0).toString());
+      Assert.assertEquals("3981300000", ExtendedDecimal.FromDouble(3.9813E9).toString());
+      Assert.assertEquals("1092700", ExtendedDecimal.FromDouble(1092700.0).toString());
+      Assert.assertEquals("0.023609999999999999042987752773115062154829502105712890625", ExtendedDecimal.FromDouble(0.02361).toString());
+      Assert.assertEquals("12.321999999999999175770426518283784389495849609375", ExtendedDecimal.FromDouble(12.322).toString());
+      Assert.assertEquals("0.002586999999999999889921387108415729016996920108795166015625", ExtendedDecimal.FromDouble(0.002587).toString());
+      Assert.assertEquals("1322000000", ExtendedDecimal.FromDouble(1.322E9).toString());
+      Assert.assertEquals("95310000000", ExtendedDecimal.FromDouble(9.531E10).toString());
+      Assert.assertEquals("142.3799999999999954525264911353588104248046875", ExtendedDecimal.FromDouble(142.38).toString());
+      Assert.assertEquals("2252.5", ExtendedDecimal.FromDouble(2252.5).toString());
+      Assert.assertEquals("363600000000", ExtendedDecimal.FromDouble(3.636E11).toString());
+      Assert.assertEquals("0.00000323700000000000009386523676380154057596882921643555164337158203125", ExtendedDecimal.FromDouble(3.237E-6).toString());
+      Assert.assertEquals("728000", ExtendedDecimal.FromDouble(728000.0).toString());
+      Assert.assertEquals("25818000", ExtendedDecimal.FromDouble(2.5818E7).toString());
+      Assert.assertEquals("1090000", ExtendedDecimal.FromDouble(1090000.0).toString());
+      Assert.assertEquals("1.5509999999999999342747969421907328069210052490234375", ExtendedDecimal.FromDouble(1.551).toString());
+      Assert.assertEquals("26.035000000000000142108547152020037174224853515625", ExtendedDecimal.FromDouble(26.035).toString());
+      Assert.assertEquals("833000000", ExtendedDecimal.FromDouble(8.33E8).toString());
+      Assert.assertEquals("812300000000", ExtendedDecimal.FromDouble(8.123E11).toString());
+      Assert.assertEquals("2622.90000000000009094947017729282379150390625", ExtendedDecimal.FromDouble(2622.9).toString());
+      Assert.assertEquals("1.290999999999999925393012745189480483531951904296875", ExtendedDecimal.FromDouble(1.291).toString());
+      Assert.assertEquals("286140", ExtendedDecimal.FromDouble(286140.0).toString());
+      Assert.assertEquals("0.06733000000000000095923269327613525092601776123046875", ExtendedDecimal.FromDouble(0.06733).toString());
+      Assert.assertEquals("0.000325160000000000010654532811571471029310487210750579833984375", ExtendedDecimal.FromDouble(3.2516E-4).toString());
+      Assert.assertEquals("383230000", ExtendedDecimal.FromDouble(3.8323E8).toString());
+      Assert.assertEquals("0.02843299999999999994049204588009160943329334259033203125", ExtendedDecimal.FromDouble(0.028433).toString());
+      Assert.assertEquals("837000000", ExtendedDecimal.FromDouble(8.37E8).toString());
+      Assert.assertEquals("0.0160800000000000005428990590417015482671558856964111328125", ExtendedDecimal.FromDouble(0.01608).toString());
+      Assert.assertEquals("3621000000000", ExtendedDecimal.FromDouble(3.621E12).toString());
+      Assert.assertEquals("78.1200000000000045474735088646411895751953125", ExtendedDecimal.FromDouble(78.12).toString());
+      Assert.assertEquals("1308000000", ExtendedDecimal.FromDouble(1.308E9).toString());
+      Assert.assertEquals("0.031937000000000000110578213252665591426193714141845703125", ExtendedDecimal.FromDouble(0.031937).toString());
+      Assert.assertEquals("1581500", ExtendedDecimal.FromDouble(1581500.0).toString());
+      Assert.assertEquals("244200", ExtendedDecimal.FromDouble(244200.0).toString());
+      Assert.assertEquals("2.28179999999999995794237200343046456652018605382181704044342041015625E-7", ExtendedDecimal.FromDouble(2.2818E-7).toString());
+      Assert.assertEquals("39.73400000000000176214598468504846096038818359375", ExtendedDecimal.FromDouble(39.734).toString());
+      Assert.assertEquals("1614", ExtendedDecimal.FromDouble(1614.0).toString());
+      Assert.assertEquals("0.0003831899999999999954607143859419693399104289710521697998046875", ExtendedDecimal.FromDouble(3.8319E-4).toString());
+      Assert.assertEquals("543.3999999999999772626324556767940521240234375", ExtendedDecimal.FromDouble(543.4).toString());
+      Assert.assertEquals("319310000", ExtendedDecimal.FromDouble(3.1931E8).toString());
+      Assert.assertEquals("1429000", ExtendedDecimal.FromDouble(1429000.0).toString());
+      Assert.assertEquals("2653700000000", ExtendedDecimal.FromDouble(2.6537E12).toString());
+      Assert.assertEquals("722000000", ExtendedDecimal.FromDouble(7.22E8).toString());
+      Assert.assertEquals("27.199999999999999289457264239899814128875732421875", ExtendedDecimal.FromDouble(27.2).toString());
+      Assert.assertEquals("0.00000380250000000000001586513038998038638283105683512985706329345703125", ExtendedDecimal.FromDouble(3.8025E-6).toString());
+      Assert.assertEquals("0.0000364159999999999982843446044711299691698513925075531005859375", ExtendedDecimal.FromDouble(3.6416E-5).toString());
+      Assert.assertEquals("2006000", ExtendedDecimal.FromDouble(2006000.0).toString());
+      Assert.assertEquals("2681200000", ExtendedDecimal.FromDouble(2.6812E9).toString());
+      Assert.assertEquals("27534000000", ExtendedDecimal.FromDouble(2.7534E10).toString());
+      Assert.assertEquals("3.911600000000000165617541382501176627783934236504137516021728515625E-7", ExtendedDecimal.FromDouble(3.9116E-7).toString());
+      Assert.assertEquals("0.0028135000000000000286437540353290387429296970367431640625", ExtendedDecimal.FromDouble(0.0028135).toString());
+      Assert.assertEquals("0.91190000000000004387601393318618647754192352294921875", ExtendedDecimal.FromDouble(0.9119).toString());
+      Assert.assertEquals("2241200", ExtendedDecimal.FromDouble(2241200.0).toString());
+      Assert.assertEquals("32.4500000000000028421709430404007434844970703125", ExtendedDecimal.FromDouble(32.45).toString());
+      Assert.assertEquals("13800000000", ExtendedDecimal.FromDouble(1.38E10).toString());
+      Assert.assertEquals("0.047300000000000001765254609153998899273574352264404296875", ExtendedDecimal.FromDouble(0.0473).toString());
+      Assert.assertEquals("205.340000000000003410605131648480892181396484375", ExtendedDecimal.FromDouble(205.34).toString());
+      Assert.assertEquals("3.981899999999999995026200849679298698902130126953125", ExtendedDecimal.FromDouble(3.9819).toString());
+      Assert.assertEquals("1152.799999999999954525264911353588104248046875", ExtendedDecimal.FromDouble(1152.8).toString());
+      Assert.assertEquals("1322000", ExtendedDecimal.FromDouble(1322000.0).toString());
+      Assert.assertEquals("0.00013414000000000001334814203612921801322954706847667694091796875", ExtendedDecimal.FromDouble(1.3414E-4).toString());
+      Assert.assertEquals("3.4449999999999999446924077266263264363033158588223159313201904296875E-7", ExtendedDecimal.FromDouble(3.445E-7).toString());
+      Assert.assertEquals("1.3610000000000000771138253079228785935583800892345607280731201171875E-7", ExtendedDecimal.FromDouble(1.361E-7).toString());
+      Assert.assertEquals("26090000", ExtendedDecimal.FromDouble(2.609E7).toString());
+      Assert.assertEquals("9.93599999999999994315658113919198513031005859375", ExtendedDecimal.FromDouble(9.936).toString());
+      Assert.assertEquals("0.00000600000000000000015200514458246772164784488268196582794189453125", ExtendedDecimal.FromDouble(6.0E-6).toString());
+      Assert.assertEquals("260.31000000000000227373675443232059478759765625", ExtendedDecimal.FromDouble(260.31).toString());
+      Assert.assertEquals("344.6000000000000227373675443232059478759765625", ExtendedDecimal.FromDouble(344.6).toString());
+      Assert.assertEquals("3.423700000000000187583282240666449069976806640625", ExtendedDecimal.FromDouble(3.4237).toString());
+      Assert.assertEquals("2342100000", ExtendedDecimal.FromDouble(2.3421E9).toString());
+      Assert.assertEquals("0.00023310000000000000099260877295392901942250318825244903564453125", ExtendedDecimal.FromDouble(2.331E-4).toString());
+      Assert.assertEquals("0.7339999999999999857891452847979962825775146484375", ExtendedDecimal.FromDouble(0.734).toString());
+      Assert.assertEquals("0.01541499999999999988287147090204598498530685901641845703125", ExtendedDecimal.FromDouble(0.015415).toString());
+      Assert.assertEquals("0.0035311000000000001240729741169843691750429570674896240234375", ExtendedDecimal.FromDouble(0.0035311).toString());
+      Assert.assertEquals("1221700000000", ExtendedDecimal.FromDouble(1.2217E12).toString());
+      Assert.assertEquals("0.48299999999999998490096686509787105023860931396484375", ExtendedDecimal.FromDouble(0.483).toString());
+      Assert.assertEquals("0.0002871999999999999878506906636488338335766457021236419677734375", ExtendedDecimal.FromDouble(2.872E-4).toString());
+      Assert.assertEquals("96.1099999999999994315658113919198513031005859375", ExtendedDecimal.FromDouble(96.11).toString());
+      Assert.assertEquals("36570", ExtendedDecimal.FromDouble(36570.0).toString());
+      Assert.assertEquals("0.00001830000000000000097183545932910675446692039258778095245361328125", ExtendedDecimal.FromDouble(1.83E-5).toString());
+      Assert.assertEquals("301310000", ExtendedDecimal.FromDouble(3.0131E8).toString());
+      Assert.assertEquals("382200", ExtendedDecimal.FromDouble(382200.0).toString());
+      Assert.assertEquals("248350000", ExtendedDecimal.FromDouble(2.4835E8).toString());
+      Assert.assertEquals("0.0015839999999999999046040866090834242640994489192962646484375", ExtendedDecimal.FromDouble(0.001584).toString());
+      Assert.assertEquals("0.000761999999999999982035203682784185730270110070705413818359375", ExtendedDecimal.FromDouble(7.62E-4).toString());
+      Assert.assertEquals("313300000000", ExtendedDecimal.FromDouble(3.133E11).toString());
     }
     /**
      * 
      */
     @Test
     public void ToPlainStringTest() {
-      Assert.assertEquals("277220000000", DecimalFraction.FromString("277.22E9").ToPlainString());
-      Assert.assertEquals("3911900", DecimalFraction.FromString("391.19E4").ToPlainString());
-      Assert.assertEquals("0.00000038327", DecimalFraction.FromString("383.27E-9").ToPlainString());
-      Assert.assertEquals("47330000000", DecimalFraction.FromString("47.33E9").ToPlainString());
-      Assert.assertEquals("322210", DecimalFraction.FromString("322.21E3").ToPlainString());
-      Assert.assertEquals("1.913", DecimalFraction.FromString("191.3E-2").ToPlainString());
-      Assert.assertEquals("11917", DecimalFraction.FromString("119.17E2").ToPlainString());
-      Assert.assertEquals("0.0001596", DecimalFraction.FromString("159.6E-6").ToPlainString());
-      Assert.assertEquals("70160000000", DecimalFraction.FromString("70.16E9").ToPlainString());
-      Assert.assertEquals("166240000000", DecimalFraction.FromString("166.24E9").ToPlainString());
-      Assert.assertEquals("235250", DecimalFraction.FromString("235.25E3").ToPlainString());
-      Assert.assertEquals("372200000", DecimalFraction.FromString("37.22E7").ToPlainString());
-      Assert.assertEquals("32026000000", DecimalFraction.FromString("320.26E8").ToPlainString());
-      Assert.assertEquals("0.00000012711", DecimalFraction.FromString("127.11E-9").ToPlainString());
-      Assert.assertEquals("0.000009729", DecimalFraction.FromString("97.29E-7").ToPlainString());
-      Assert.assertEquals("175130000000", DecimalFraction.FromString("175.13E9").ToPlainString());
-      Assert.assertEquals("0.000003821", DecimalFraction.FromString("38.21E-7").ToPlainString());
-      Assert.assertEquals("62.8", DecimalFraction.FromString("6.28E1").ToPlainString());
-      Assert.assertEquals("138290000", DecimalFraction.FromString("138.29E6").ToPlainString());
-      Assert.assertEquals("1601.9", DecimalFraction.FromString("160.19E1").ToPlainString());
-      Assert.assertEquals("35812", DecimalFraction.FromString("358.12E2").ToPlainString());
-      Assert.assertEquals("2492800000000", DecimalFraction.FromString("249.28E10").ToPlainString());
-      Assert.assertEquals("0.00031123", DecimalFraction.FromString("311.23E-6").ToPlainString());
-      Assert.assertEquals("0.16433", DecimalFraction.FromString("164.33E-3").ToPlainString());
-      Assert.assertEquals("29.920", DecimalFraction.FromString("299.20E-1").ToPlainString());
-      Assert.assertEquals("105390", DecimalFraction.FromString("105.39E3").ToPlainString());
-      Assert.assertEquals("3825000", DecimalFraction.FromString("382.5E4").ToPlainString());
-      Assert.assertEquals("909", DecimalFraction.FromString("90.9E1").ToPlainString());
-      Assert.assertEquals("32915000000", DecimalFraction.FromString("329.15E8").ToPlainString());
-      Assert.assertEquals("24523000000", DecimalFraction.FromString("245.23E8").ToPlainString());
-      Assert.assertEquals("0.0000009719", DecimalFraction.FromString("97.19E-8").ToPlainString());
-      Assert.assertEquals("551200000", DecimalFraction.FromString("55.12E7").ToPlainString());
-      Assert.assertEquals("1238", DecimalFraction.FromString("12.38E2").ToPlainString());
-      Assert.assertEquals("0.0025020", DecimalFraction.FromString("250.20E-5").ToPlainString());
-      Assert.assertEquals("5320", DecimalFraction.FromString("53.20E2").ToPlainString());
-      Assert.assertEquals("14150000000", DecimalFraction.FromString("141.5E8").ToPlainString());
-      Assert.assertEquals("0.0033834", DecimalFraction.FromString("338.34E-5").ToPlainString());
-      Assert.assertEquals("160390000000", DecimalFraction.FromString("160.39E9").ToPlainString());
-      Assert.assertEquals("152170000", DecimalFraction.FromString("152.17E6").ToPlainString());
-      Assert.assertEquals("13300000000", DecimalFraction.FromString("13.3E9").ToPlainString());
-      Assert.assertEquals("13.8", DecimalFraction.FromString("1.38E1").ToPlainString());
-      Assert.assertEquals("0.00000034821", DecimalFraction.FromString("348.21E-9").ToPlainString());
-      Assert.assertEquals("525000000", DecimalFraction.FromString("52.5E7").ToPlainString());
-      Assert.assertEquals("2152100000000", DecimalFraction.FromString("215.21E10").ToPlainString());
-      Assert.assertEquals("234280000000", DecimalFraction.FromString("234.28E9").ToPlainString());
-      Assert.assertEquals("310240000000", DecimalFraction.FromString("310.24E9").ToPlainString());
-      Assert.assertEquals("345390000000", DecimalFraction.FromString("345.39E9").ToPlainString());
-      Assert.assertEquals("0.00000011638", DecimalFraction.FromString("116.38E-9").ToPlainString());
-      Assert.assertEquals("2762500000000", DecimalFraction.FromString("276.25E10").ToPlainString());
-      Assert.assertEquals("0.0000015832", DecimalFraction.FromString("158.32E-8").ToPlainString());
-      Assert.assertEquals("27250", DecimalFraction.FromString("272.5E2").ToPlainString());
-      Assert.assertEquals("0.00000038933", DecimalFraction.FromString("389.33E-9").ToPlainString());
-      Assert.assertEquals("3811500000", DecimalFraction.FromString("381.15E7").ToPlainString());
-      Assert.assertEquals("280000", DecimalFraction.FromString("280.0E3").ToPlainString());
-      Assert.assertEquals("0.0002742", DecimalFraction.FromString("274.2E-6").ToPlainString());
-      Assert.assertEquals("0.000038714", DecimalFraction.FromString("387.14E-7").ToPlainString());
-      Assert.assertEquals("0.00002277", DecimalFraction.FromString("227.7E-7").ToPlainString());
-      Assert.assertEquals("20121", DecimalFraction.FromString("201.21E2").ToPlainString());
-      Assert.assertEquals("255400", DecimalFraction.FromString("255.4E3").ToPlainString());
-      Assert.assertEquals("0.000018727", DecimalFraction.FromString("187.27E-7").ToPlainString());
-      Assert.assertEquals("0.01697", DecimalFraction.FromString("169.7E-4").ToPlainString());
-      Assert.assertEquals("69900000000", DecimalFraction.FromString("69.9E9").ToPlainString());
-      Assert.assertEquals("0.0320", DecimalFraction.FromString("3.20E-2").ToPlainString());
-      Assert.assertEquals("23630", DecimalFraction.FromString("236.30E2").ToPlainString());
-      Assert.assertEquals("0.00000022022", DecimalFraction.FromString("220.22E-9").ToPlainString());
-      Assert.assertEquals("28.730", DecimalFraction.FromString("287.30E-1").ToPlainString());
-      Assert.assertEquals("0.0000001563", DecimalFraction.FromString("156.3E-9").ToPlainString());
-      Assert.assertEquals("13.623", DecimalFraction.FromString("136.23E-1").ToPlainString());
-      Assert.assertEquals("12527000000", DecimalFraction.FromString("125.27E8").ToPlainString());
-      Assert.assertEquals("0.000018030", DecimalFraction.FromString("180.30E-7").ToPlainString());
-      Assert.assertEquals("3515000000", DecimalFraction.FromString("351.5E7").ToPlainString());
-      Assert.assertEquals("28280000000", DecimalFraction.FromString("28.28E9").ToPlainString());
-      Assert.assertEquals("0.2884", DecimalFraction.FromString("288.4E-3").ToPlainString());
-      Assert.assertEquals("122200", DecimalFraction.FromString("12.22E4").ToPlainString());
-      Assert.assertEquals("0.002575", DecimalFraction.FromString("257.5E-5").ToPlainString());
-      Assert.assertEquals("389200", DecimalFraction.FromString("389.20E3").ToPlainString());
-      Assert.assertEquals("0.03949", DecimalFraction.FromString("394.9E-4").ToPlainString());
-      Assert.assertEquals("0.000013426", DecimalFraction.FromString("134.26E-7").ToPlainString());
-      Assert.assertEquals("5829000", DecimalFraction.FromString("58.29E5").ToPlainString());
-      Assert.assertEquals("0.000885", DecimalFraction.FromString("88.5E-5").ToPlainString());
-      Assert.assertEquals("0.019329", DecimalFraction.FromString("193.29E-4").ToPlainString());
-      Assert.assertEquals("713500000000", DecimalFraction.FromString("71.35E10").ToPlainString());
-      Assert.assertEquals("2520", DecimalFraction.FromString("252.0E1").ToPlainString());
-      Assert.assertEquals("0.000000532", DecimalFraction.FromString("53.2E-8").ToPlainString());
-      Assert.assertEquals("18.120", DecimalFraction.FromString("181.20E-1").ToPlainString());
-      Assert.assertEquals("0.00000005521", DecimalFraction.FromString("55.21E-9").ToPlainString());
-      Assert.assertEquals("57.31", DecimalFraction.FromString("57.31E0").ToPlainString());
-      Assert.assertEquals("0.00000011313", DecimalFraction.FromString("113.13E-9").ToPlainString());
-      Assert.assertEquals("532.3", DecimalFraction.FromString("53.23E1").ToPlainString());
-      Assert.assertEquals("0.000036837", DecimalFraction.FromString("368.37E-7").ToPlainString());
-      Assert.assertEquals("0.01874", DecimalFraction.FromString("187.4E-4").ToPlainString());
-      Assert.assertEquals("526000000", DecimalFraction.FromString("5.26E8").ToPlainString());
-      Assert.assertEquals("3083200", DecimalFraction.FromString("308.32E4").ToPlainString());
-      Assert.assertEquals("0.7615", DecimalFraction.FromString("76.15E-2").ToPlainString());
-      Assert.assertEquals("1173800000", DecimalFraction.FromString("117.38E7").ToPlainString());
-      Assert.assertEquals("0.001537", DecimalFraction.FromString("15.37E-4").ToPlainString());
-      Assert.assertEquals("145.3", DecimalFraction.FromString("145.3E0").ToPlainString());
-      Assert.assertEquals("22629000000", DecimalFraction.FromString("226.29E8").ToPlainString());
-      Assert.assertEquals("2242600000000", DecimalFraction.FromString("224.26E10").ToPlainString());
-      Assert.assertEquals("0.00000026818", DecimalFraction.FromString("268.18E-9").ToPlainString());
+      Assert.assertEquals("277220000000", ExtendedDecimal.FromString("277.22E9").ToPlainString());
+      Assert.assertEquals("3911900", ExtendedDecimal.FromString("391.19E4").ToPlainString());
+      Assert.assertEquals("0.00000038327", ExtendedDecimal.FromString("383.27E-9").ToPlainString());
+      Assert.assertEquals("47330000000", ExtendedDecimal.FromString("47.33E9").ToPlainString());
+      Assert.assertEquals("322210", ExtendedDecimal.FromString("322.21E3").ToPlainString());
+      Assert.assertEquals("1.913", ExtendedDecimal.FromString("191.3E-2").ToPlainString());
+      Assert.assertEquals("11917", ExtendedDecimal.FromString("119.17E2").ToPlainString());
+      Assert.assertEquals("0.0001596", ExtendedDecimal.FromString("159.6E-6").ToPlainString());
+      Assert.assertEquals("70160000000", ExtendedDecimal.FromString("70.16E9").ToPlainString());
+      Assert.assertEquals("166240000000", ExtendedDecimal.FromString("166.24E9").ToPlainString());
+      Assert.assertEquals("235250", ExtendedDecimal.FromString("235.25E3").ToPlainString());
+      Assert.assertEquals("372200000", ExtendedDecimal.FromString("37.22E7").ToPlainString());
+      Assert.assertEquals("32026000000", ExtendedDecimal.FromString("320.26E8").ToPlainString());
+      Assert.assertEquals("0.00000012711", ExtendedDecimal.FromString("127.11E-9").ToPlainString());
+      Assert.assertEquals("0.000009729", ExtendedDecimal.FromString("97.29E-7").ToPlainString());
+      Assert.assertEquals("175130000000", ExtendedDecimal.FromString("175.13E9").ToPlainString());
+      Assert.assertEquals("0.000003821", ExtendedDecimal.FromString("38.21E-7").ToPlainString());
+      Assert.assertEquals("62.8", ExtendedDecimal.FromString("6.28E1").ToPlainString());
+      Assert.assertEquals("138290000", ExtendedDecimal.FromString("138.29E6").ToPlainString());
+      Assert.assertEquals("1601.9", ExtendedDecimal.FromString("160.19E1").ToPlainString());
+      Assert.assertEquals("35812", ExtendedDecimal.FromString("358.12E2").ToPlainString());
+      Assert.assertEquals("2492800000000", ExtendedDecimal.FromString("249.28E10").ToPlainString());
+      Assert.assertEquals("0.00031123", ExtendedDecimal.FromString("311.23E-6").ToPlainString());
+      Assert.assertEquals("0.16433", ExtendedDecimal.FromString("164.33E-3").ToPlainString());
+      Assert.assertEquals("29.920", ExtendedDecimal.FromString("299.20E-1").ToPlainString());
+      Assert.assertEquals("105390", ExtendedDecimal.FromString("105.39E3").ToPlainString());
+      Assert.assertEquals("3825000", ExtendedDecimal.FromString("382.5E4").ToPlainString());
+      Assert.assertEquals("909", ExtendedDecimal.FromString("90.9E1").ToPlainString());
+      Assert.assertEquals("32915000000", ExtendedDecimal.FromString("329.15E8").ToPlainString());
+      Assert.assertEquals("24523000000", ExtendedDecimal.FromString("245.23E8").ToPlainString());
+      Assert.assertEquals("0.0000009719", ExtendedDecimal.FromString("97.19E-8").ToPlainString());
+      Assert.assertEquals("551200000", ExtendedDecimal.FromString("55.12E7").ToPlainString());
+      Assert.assertEquals("1238", ExtendedDecimal.FromString("12.38E2").ToPlainString());
+      Assert.assertEquals("0.0025020", ExtendedDecimal.FromString("250.20E-5").ToPlainString());
+      Assert.assertEquals("5320", ExtendedDecimal.FromString("53.20E2").ToPlainString());
+      Assert.assertEquals("14150000000", ExtendedDecimal.FromString("141.5E8").ToPlainString());
+      Assert.assertEquals("0.0033834", ExtendedDecimal.FromString("338.34E-5").ToPlainString());
+      Assert.assertEquals("160390000000", ExtendedDecimal.FromString("160.39E9").ToPlainString());
+      Assert.assertEquals("152170000", ExtendedDecimal.FromString("152.17E6").ToPlainString());
+      Assert.assertEquals("13300000000", ExtendedDecimal.FromString("13.3E9").ToPlainString());
+      Assert.assertEquals("13.8", ExtendedDecimal.FromString("1.38E1").ToPlainString());
+      Assert.assertEquals("0.00000034821", ExtendedDecimal.FromString("348.21E-9").ToPlainString());
+      Assert.assertEquals("525000000", ExtendedDecimal.FromString("52.5E7").ToPlainString());
+      Assert.assertEquals("2152100000000", ExtendedDecimal.FromString("215.21E10").ToPlainString());
+      Assert.assertEquals("234280000000", ExtendedDecimal.FromString("234.28E9").ToPlainString());
+      Assert.assertEquals("310240000000", ExtendedDecimal.FromString("310.24E9").ToPlainString());
+      Assert.assertEquals("345390000000", ExtendedDecimal.FromString("345.39E9").ToPlainString());
+      Assert.assertEquals("0.00000011638", ExtendedDecimal.FromString("116.38E-9").ToPlainString());
+      Assert.assertEquals("2762500000000", ExtendedDecimal.FromString("276.25E10").ToPlainString());
+      Assert.assertEquals("0.0000015832", ExtendedDecimal.FromString("158.32E-8").ToPlainString());
+      Assert.assertEquals("27250", ExtendedDecimal.FromString("272.5E2").ToPlainString());
+      Assert.assertEquals("0.00000038933", ExtendedDecimal.FromString("389.33E-9").ToPlainString());
+      Assert.assertEquals("3811500000", ExtendedDecimal.FromString("381.15E7").ToPlainString());
+      Assert.assertEquals("280000", ExtendedDecimal.FromString("280.0E3").ToPlainString());
+      Assert.assertEquals("0.0002742", ExtendedDecimal.FromString("274.2E-6").ToPlainString());
+      Assert.assertEquals("0.000038714", ExtendedDecimal.FromString("387.14E-7").ToPlainString());
+      Assert.assertEquals("0.00002277", ExtendedDecimal.FromString("227.7E-7").ToPlainString());
+      Assert.assertEquals("20121", ExtendedDecimal.FromString("201.21E2").ToPlainString());
+      Assert.assertEquals("255400", ExtendedDecimal.FromString("255.4E3").ToPlainString());
+      Assert.assertEquals("0.000018727", ExtendedDecimal.FromString("187.27E-7").ToPlainString());
+      Assert.assertEquals("0.01697", ExtendedDecimal.FromString("169.7E-4").ToPlainString());
+      Assert.assertEquals("69900000000", ExtendedDecimal.FromString("69.9E9").ToPlainString());
+      Assert.assertEquals("0.0320", ExtendedDecimal.FromString("3.20E-2").ToPlainString());
+      Assert.assertEquals("23630", ExtendedDecimal.FromString("236.30E2").ToPlainString());
+      Assert.assertEquals("0.00000022022", ExtendedDecimal.FromString("220.22E-9").ToPlainString());
+      Assert.assertEquals("28.730", ExtendedDecimal.FromString("287.30E-1").ToPlainString());
+      Assert.assertEquals("0.0000001563", ExtendedDecimal.FromString("156.3E-9").ToPlainString());
+      Assert.assertEquals("13.623", ExtendedDecimal.FromString("136.23E-1").ToPlainString());
+      Assert.assertEquals("12527000000", ExtendedDecimal.FromString("125.27E8").ToPlainString());
+      Assert.assertEquals("0.000018030", ExtendedDecimal.FromString("180.30E-7").ToPlainString());
+      Assert.assertEquals("3515000000", ExtendedDecimal.FromString("351.5E7").ToPlainString());
+      Assert.assertEquals("28280000000", ExtendedDecimal.FromString("28.28E9").ToPlainString());
+      Assert.assertEquals("0.2884", ExtendedDecimal.FromString("288.4E-3").ToPlainString());
+      Assert.assertEquals("122200", ExtendedDecimal.FromString("12.22E4").ToPlainString());
+      Assert.assertEquals("0.002575", ExtendedDecimal.FromString("257.5E-5").ToPlainString());
+      Assert.assertEquals("389200", ExtendedDecimal.FromString("389.20E3").ToPlainString());
+      Assert.assertEquals("0.03949", ExtendedDecimal.FromString("394.9E-4").ToPlainString());
+      Assert.assertEquals("0.000013426", ExtendedDecimal.FromString("134.26E-7").ToPlainString());
+      Assert.assertEquals("5829000", ExtendedDecimal.FromString("58.29E5").ToPlainString());
+      Assert.assertEquals("0.000885", ExtendedDecimal.FromString("88.5E-5").ToPlainString());
+      Assert.assertEquals("0.019329", ExtendedDecimal.FromString("193.29E-4").ToPlainString());
+      Assert.assertEquals("713500000000", ExtendedDecimal.FromString("71.35E10").ToPlainString());
+      Assert.assertEquals("2520", ExtendedDecimal.FromString("252.0E1").ToPlainString());
+      Assert.assertEquals("0.000000532", ExtendedDecimal.FromString("53.2E-8").ToPlainString());
+      Assert.assertEquals("18.120", ExtendedDecimal.FromString("181.20E-1").ToPlainString());
+      Assert.assertEquals("0.00000005521", ExtendedDecimal.FromString("55.21E-9").ToPlainString());
+      Assert.assertEquals("57.31", ExtendedDecimal.FromString("57.31E0").ToPlainString());
+      Assert.assertEquals("0.00000011313", ExtendedDecimal.FromString("113.13E-9").ToPlainString());
+      Assert.assertEquals("532.3", ExtendedDecimal.FromString("53.23E1").ToPlainString());
+      Assert.assertEquals("0.000036837", ExtendedDecimal.FromString("368.37E-7").ToPlainString());
+      Assert.assertEquals("0.01874", ExtendedDecimal.FromString("187.4E-4").ToPlainString());
+      Assert.assertEquals("526000000", ExtendedDecimal.FromString("5.26E8").ToPlainString());
+      Assert.assertEquals("3083200", ExtendedDecimal.FromString("308.32E4").ToPlainString());
+      Assert.assertEquals("0.7615", ExtendedDecimal.FromString("76.15E-2").ToPlainString());
+      Assert.assertEquals("1173800000", ExtendedDecimal.FromString("117.38E7").ToPlainString());
+      Assert.assertEquals("0.001537", ExtendedDecimal.FromString("15.37E-4").ToPlainString());
+      Assert.assertEquals("145.3", ExtendedDecimal.FromString("145.3E0").ToPlainString());
+      Assert.assertEquals("22629000000", ExtendedDecimal.FromString("226.29E8").ToPlainString());
+      Assert.assertEquals("2242600000000", ExtendedDecimal.FromString("224.26E10").ToPlainString());
+      Assert.assertEquals("0.00000026818", ExtendedDecimal.FromString("268.18E-9").ToPlainString());
     }
     /**
      * 
      */
     @Test
     public void ToEngineeringStringTest() {
-      Assert.assertEquals("8.912", DecimalFraction.FromString("89.12E-1").ToEngineeringString());
-      Assert.assertEquals("0.024231", DecimalFraction.FromString("242.31E-4").ToEngineeringString());
-      Assert.assertEquals("22.918E+6", DecimalFraction.FromString("229.18E5").ToEngineeringString());
-      Assert.assertEquals("0.000032618", DecimalFraction.FromString("326.18E-7").ToEngineeringString());
-      Assert.assertEquals("55.0E+6", DecimalFraction.FromString("55.0E6").ToEngineeringString());
-      Assert.assertEquals("224.36E+3", DecimalFraction.FromString("224.36E3").ToEngineeringString());
-      Assert.assertEquals("230.12E+9", DecimalFraction.FromString("230.12E9").ToEngineeringString());
-      Assert.assertEquals("0.000011320", DecimalFraction.FromString("113.20E-7").ToEngineeringString());
-      Assert.assertEquals("317.7E-9", DecimalFraction.FromString("317.7E-9").ToEngineeringString());
-      Assert.assertEquals("3.393", DecimalFraction.FromString("339.3E-2").ToEngineeringString());
-      Assert.assertEquals("27.135E+9", DecimalFraction.FromString("271.35E8").ToEngineeringString());
-      Assert.assertEquals("377.19E-9", DecimalFraction.FromString("377.19E-9").ToEngineeringString());
-      Assert.assertEquals("3.2127E+9", DecimalFraction.FromString("321.27E7").ToEngineeringString());
-      Assert.assertEquals("2.9422", DecimalFraction.FromString("294.22E-2").ToEngineeringString());
-      Assert.assertEquals("0.0000011031", DecimalFraction.FromString("110.31E-8").ToEngineeringString());
-      Assert.assertEquals("2.4324", DecimalFraction.FromString("243.24E-2").ToEngineeringString());
-      Assert.assertEquals("0.0006412", DecimalFraction.FromString("64.12E-5").ToEngineeringString());
-      Assert.assertEquals("1422.3", DecimalFraction.FromString("142.23E1").ToEngineeringString());
-      Assert.assertEquals("293.0", DecimalFraction.FromString("293.0E0").ToEngineeringString());
-      Assert.assertEquals("0.0000025320", DecimalFraction.FromString("253.20E-8").ToEngineeringString());
-      Assert.assertEquals("36.66E+9", DecimalFraction.FromString("366.6E8").ToEngineeringString());
-      Assert.assertEquals("3.4526E+12", DecimalFraction.FromString("345.26E10").ToEngineeringString());
-      Assert.assertEquals("2.704", DecimalFraction.FromString("270.4E-2").ToEngineeringString());
-      Assert.assertEquals("432E+6", DecimalFraction.FromString("4.32E8").ToEngineeringString());
-      Assert.assertEquals("224.22", DecimalFraction.FromString("224.22E0").ToEngineeringString());
-      Assert.assertEquals("0.000031530", DecimalFraction.FromString("315.30E-7").ToEngineeringString());
-      Assert.assertEquals("11.532E+6", DecimalFraction.FromString("115.32E5").ToEngineeringString());
-      Assert.assertEquals("39420", DecimalFraction.FromString("394.20E2").ToEngineeringString());
-      Assert.assertEquals("67.24E-9", DecimalFraction.FromString("67.24E-9").ToEngineeringString());
-      Assert.assertEquals("34933", DecimalFraction.FromString("349.33E2").ToEngineeringString());
-      Assert.assertEquals("67.8E-9", DecimalFraction.FromString("67.8E-9").ToEngineeringString());
-      Assert.assertEquals("19.231E+6", DecimalFraction.FromString("192.31E5").ToEngineeringString());
-      Assert.assertEquals("1.7317E+9", DecimalFraction.FromString("173.17E7").ToEngineeringString());
-      Assert.assertEquals("43.9", DecimalFraction.FromString("43.9E0").ToEngineeringString());
-      Assert.assertEquals("0.0000016812", DecimalFraction.FromString("168.12E-8").ToEngineeringString());
-      Assert.assertEquals("3.715E+12", DecimalFraction.FromString("371.5E10").ToEngineeringString());
-      Assert.assertEquals("424E-9", DecimalFraction.FromString("42.4E-8").ToEngineeringString());
-      Assert.assertEquals("1.6123E+12", DecimalFraction.FromString("161.23E10").ToEngineeringString());
-      Assert.assertEquals("302.8E+6", DecimalFraction.FromString("302.8E6").ToEngineeringString());
-      Assert.assertEquals("175.13", DecimalFraction.FromString("175.13E0").ToEngineeringString());
-      Assert.assertEquals("298.20E-9", DecimalFraction.FromString("298.20E-9").ToEngineeringString());
-      Assert.assertEquals("36.223E+9", DecimalFraction.FromString("362.23E8").ToEngineeringString());
-      Assert.assertEquals("27739", DecimalFraction.FromString("277.39E2").ToEngineeringString());
-      Assert.assertEquals("0.011734", DecimalFraction.FromString("117.34E-4").ToEngineeringString());
-      Assert.assertEquals("190.13E-9", DecimalFraction.FromString("190.13E-9").ToEngineeringString());
-      Assert.assertEquals("3.5019", DecimalFraction.FromString("350.19E-2").ToEngineeringString());
-      Assert.assertEquals("383.27E-9", DecimalFraction.FromString("383.27E-9").ToEngineeringString());
-      Assert.assertEquals("24.217E+6", DecimalFraction.FromString("242.17E5").ToEngineeringString());
-      Assert.assertEquals("2.9923E+9", DecimalFraction.FromString("299.23E7").ToEngineeringString());
-      Assert.assertEquals("3.0222", DecimalFraction.FromString("302.22E-2").ToEngineeringString());
-      Assert.assertEquals("0.04521", DecimalFraction.FromString("45.21E-3").ToEngineeringString());
-      Assert.assertEquals("15.00", DecimalFraction.FromString("150.0E-1").ToEngineeringString());
-      Assert.assertEquals("290E+3", DecimalFraction.FromString("29.0E4").ToEngineeringString());
-      Assert.assertEquals("263.37E+3", DecimalFraction.FromString("263.37E3").ToEngineeringString());
-      Assert.assertEquals("28.321", DecimalFraction.FromString("283.21E-1").ToEngineeringString());
-      Assert.assertEquals("21.32", DecimalFraction.FromString("21.32E0").ToEngineeringString());
-      Assert.assertEquals("0.00006920", DecimalFraction.FromString("69.20E-6").ToEngineeringString());
-      Assert.assertEquals("0.0728", DecimalFraction.FromString("72.8E-3").ToEngineeringString());
-      Assert.assertEquals("1.646E+9", DecimalFraction.FromString("164.6E7").ToEngineeringString());
-      Assert.assertEquals("1.1817", DecimalFraction.FromString("118.17E-2").ToEngineeringString());
-      Assert.assertEquals("0.000026235", DecimalFraction.FromString("262.35E-7").ToEngineeringString());
-      Assert.assertEquals("23.37E+6", DecimalFraction.FromString("233.7E5").ToEngineeringString());
-      Assert.assertEquals("391.24", DecimalFraction.FromString("391.24E0").ToEngineeringString());
-      Assert.assertEquals("2213.6", DecimalFraction.FromString("221.36E1").ToEngineeringString());
-      Assert.assertEquals("353.32", DecimalFraction.FromString("353.32E0").ToEngineeringString());
-      Assert.assertEquals("0.012931", DecimalFraction.FromString("129.31E-4").ToEngineeringString());
-      Assert.assertEquals("0.0017626", DecimalFraction.FromString("176.26E-5").ToEngineeringString());
-      Assert.assertEquals("207.5E+3", DecimalFraction.FromString("207.5E3").ToEngineeringString());
-      Assert.assertEquals("314.10", DecimalFraction.FromString("314.10E0").ToEngineeringString());
-      Assert.assertEquals("379.20E+9", DecimalFraction.FromString("379.20E9").ToEngineeringString());
-      Assert.assertEquals("0.00037912", DecimalFraction.FromString("379.12E-6").ToEngineeringString());
-      Assert.assertEquals("743.8E-9", DecimalFraction.FromString("74.38E-8").ToEngineeringString());
-      Assert.assertEquals("234.17E-9", DecimalFraction.FromString("234.17E-9").ToEngineeringString());
-      Assert.assertEquals("132.6E+6", DecimalFraction.FromString("13.26E7").ToEngineeringString());
-      Assert.assertEquals("25.15E+6", DecimalFraction.FromString("251.5E5").ToEngineeringString());
-      Assert.assertEquals("87.32", DecimalFraction.FromString("87.32E0").ToEngineeringString());
-      Assert.assertEquals("3.3116E+9", DecimalFraction.FromString("331.16E7").ToEngineeringString());
-      Assert.assertEquals("6.14E+9", DecimalFraction.FromString("61.4E8").ToEngineeringString());
-      Assert.assertEquals("0.0002097", DecimalFraction.FromString("209.7E-6").ToEngineeringString());
-      Assert.assertEquals("5.4E+6", DecimalFraction.FromString("5.4E6").ToEngineeringString());
-      Assert.assertEquals("219.9", DecimalFraction.FromString("219.9E0").ToEngineeringString());
-      Assert.assertEquals("0.00002631", DecimalFraction.FromString("26.31E-6").ToEngineeringString());
-      Assert.assertEquals("482.8E+6", DecimalFraction.FromString("48.28E7").ToEngineeringString());
-      Assert.assertEquals("267.8", DecimalFraction.FromString("267.8E0").ToEngineeringString());
-      Assert.assertEquals("0.3209", DecimalFraction.FromString("320.9E-3").ToEngineeringString());
-      Assert.assertEquals("0.30015", DecimalFraction.FromString("300.15E-3").ToEngineeringString());
-      Assert.assertEquals("2.6011E+6", DecimalFraction.FromString("260.11E4").ToEngineeringString());
-      Assert.assertEquals("1.1429", DecimalFraction.FromString("114.29E-2").ToEngineeringString());
-      Assert.assertEquals("0.0003060", DecimalFraction.FromString("306.0E-6").ToEngineeringString());
-      Assert.assertEquals("97.7E+3", DecimalFraction.FromString("97.7E3").ToEngineeringString());
-      Assert.assertEquals("12.229E+9", DecimalFraction.FromString("122.29E8").ToEngineeringString());
-      Assert.assertEquals("6.94E+3", DecimalFraction.FromString("69.4E2").ToEngineeringString());
-      Assert.assertEquals("383.5", DecimalFraction.FromString("383.5E0").ToEngineeringString());
-      Assert.assertEquals("315.30E+3", DecimalFraction.FromString("315.30E3").ToEngineeringString());
-      Assert.assertEquals("130.38E+9", DecimalFraction.FromString("130.38E9").ToEngineeringString());
-      Assert.assertEquals("206.16E+9", DecimalFraction.FromString("206.16E9").ToEngineeringString());
-      Assert.assertEquals("304.28E-9", DecimalFraction.FromString("304.28E-9").ToEngineeringString());
-      Assert.assertEquals("661.3E+3", DecimalFraction.FromString("66.13E4").ToEngineeringString());
-      Assert.assertEquals("1.8533", DecimalFraction.FromString("185.33E-2").ToEngineeringString());
-      Assert.assertEquals("70.7E+6", DecimalFraction.FromString("70.7E6").ToEngineeringString());
+      Assert.assertEquals("8.912", ExtendedDecimal.FromString("89.12E-1").ToEngineeringString());
+      Assert.assertEquals("0.024231", ExtendedDecimal.FromString("242.31E-4").ToEngineeringString());
+      Assert.assertEquals("22.918E+6", ExtendedDecimal.FromString("229.18E5").ToEngineeringString());
+      Assert.assertEquals("0.000032618", ExtendedDecimal.FromString("326.18E-7").ToEngineeringString());
+      Assert.assertEquals("55.0E+6", ExtendedDecimal.FromString("55.0E6").ToEngineeringString());
+      Assert.assertEquals("224.36E+3", ExtendedDecimal.FromString("224.36E3").ToEngineeringString());
+      Assert.assertEquals("230.12E+9", ExtendedDecimal.FromString("230.12E9").ToEngineeringString());
+      Assert.assertEquals("0.000011320", ExtendedDecimal.FromString("113.20E-7").ToEngineeringString());
+      Assert.assertEquals("317.7E-9", ExtendedDecimal.FromString("317.7E-9").ToEngineeringString());
+      Assert.assertEquals("3.393", ExtendedDecimal.FromString("339.3E-2").ToEngineeringString());
+      Assert.assertEquals("27.135E+9", ExtendedDecimal.FromString("271.35E8").ToEngineeringString());
+      Assert.assertEquals("377.19E-9", ExtendedDecimal.FromString("377.19E-9").ToEngineeringString());
+      Assert.assertEquals("3.2127E+9", ExtendedDecimal.FromString("321.27E7").ToEngineeringString());
+      Assert.assertEquals("2.9422", ExtendedDecimal.FromString("294.22E-2").ToEngineeringString());
+      Assert.assertEquals("0.0000011031", ExtendedDecimal.FromString("110.31E-8").ToEngineeringString());
+      Assert.assertEquals("2.4324", ExtendedDecimal.FromString("243.24E-2").ToEngineeringString());
+      Assert.assertEquals("0.0006412", ExtendedDecimal.FromString("64.12E-5").ToEngineeringString());
+      Assert.assertEquals("1422.3", ExtendedDecimal.FromString("142.23E1").ToEngineeringString());
+      Assert.assertEquals("293.0", ExtendedDecimal.FromString("293.0E0").ToEngineeringString());
+      Assert.assertEquals("0.0000025320", ExtendedDecimal.FromString("253.20E-8").ToEngineeringString());
+      Assert.assertEquals("36.66E+9", ExtendedDecimal.FromString("366.6E8").ToEngineeringString());
+      Assert.assertEquals("3.4526E+12", ExtendedDecimal.FromString("345.26E10").ToEngineeringString());
+      Assert.assertEquals("2.704", ExtendedDecimal.FromString("270.4E-2").ToEngineeringString());
+      Assert.assertEquals("432E+6", ExtendedDecimal.FromString("4.32E8").ToEngineeringString());
+      Assert.assertEquals("224.22", ExtendedDecimal.FromString("224.22E0").ToEngineeringString());
+      Assert.assertEquals("0.000031530", ExtendedDecimal.FromString("315.30E-7").ToEngineeringString());
+      Assert.assertEquals("11.532E+6", ExtendedDecimal.FromString("115.32E5").ToEngineeringString());
+      Assert.assertEquals("39420", ExtendedDecimal.FromString("394.20E2").ToEngineeringString());
+      Assert.assertEquals("67.24E-9", ExtendedDecimal.FromString("67.24E-9").ToEngineeringString());
+      Assert.assertEquals("34933", ExtendedDecimal.FromString("349.33E2").ToEngineeringString());
+      Assert.assertEquals("67.8E-9", ExtendedDecimal.FromString("67.8E-9").ToEngineeringString());
+      Assert.assertEquals("19.231E+6", ExtendedDecimal.FromString("192.31E5").ToEngineeringString());
+      Assert.assertEquals("1.7317E+9", ExtendedDecimal.FromString("173.17E7").ToEngineeringString());
+      Assert.assertEquals("43.9", ExtendedDecimal.FromString("43.9E0").ToEngineeringString());
+      Assert.assertEquals("0.0000016812", ExtendedDecimal.FromString("168.12E-8").ToEngineeringString());
+      Assert.assertEquals("3.715E+12", ExtendedDecimal.FromString("371.5E10").ToEngineeringString());
+      Assert.assertEquals("424E-9", ExtendedDecimal.FromString("42.4E-8").ToEngineeringString());
+      Assert.assertEquals("1.6123E+12", ExtendedDecimal.FromString("161.23E10").ToEngineeringString());
+      Assert.assertEquals("302.8E+6", ExtendedDecimal.FromString("302.8E6").ToEngineeringString());
+      Assert.assertEquals("175.13", ExtendedDecimal.FromString("175.13E0").ToEngineeringString());
+      Assert.assertEquals("298.20E-9", ExtendedDecimal.FromString("298.20E-9").ToEngineeringString());
+      Assert.assertEquals("36.223E+9", ExtendedDecimal.FromString("362.23E8").ToEngineeringString());
+      Assert.assertEquals("27739", ExtendedDecimal.FromString("277.39E2").ToEngineeringString());
+      Assert.assertEquals("0.011734", ExtendedDecimal.FromString("117.34E-4").ToEngineeringString());
+      Assert.assertEquals("190.13E-9", ExtendedDecimal.FromString("190.13E-9").ToEngineeringString());
+      Assert.assertEquals("3.5019", ExtendedDecimal.FromString("350.19E-2").ToEngineeringString());
+      Assert.assertEquals("383.27E-9", ExtendedDecimal.FromString("383.27E-9").ToEngineeringString());
+      Assert.assertEquals("24.217E+6", ExtendedDecimal.FromString("242.17E5").ToEngineeringString());
+      Assert.assertEquals("2.9923E+9", ExtendedDecimal.FromString("299.23E7").ToEngineeringString());
+      Assert.assertEquals("3.0222", ExtendedDecimal.FromString("302.22E-2").ToEngineeringString());
+      Assert.assertEquals("0.04521", ExtendedDecimal.FromString("45.21E-3").ToEngineeringString());
+      Assert.assertEquals("15.00", ExtendedDecimal.FromString("150.0E-1").ToEngineeringString());
+      Assert.assertEquals("290E+3", ExtendedDecimal.FromString("29.0E4").ToEngineeringString());
+      Assert.assertEquals("263.37E+3", ExtendedDecimal.FromString("263.37E3").ToEngineeringString());
+      Assert.assertEquals("28.321", ExtendedDecimal.FromString("283.21E-1").ToEngineeringString());
+      Assert.assertEquals("21.32", ExtendedDecimal.FromString("21.32E0").ToEngineeringString());
+      Assert.assertEquals("0.00006920", ExtendedDecimal.FromString("69.20E-6").ToEngineeringString());
+      Assert.assertEquals("0.0728", ExtendedDecimal.FromString("72.8E-3").ToEngineeringString());
+      Assert.assertEquals("1.646E+9", ExtendedDecimal.FromString("164.6E7").ToEngineeringString());
+      Assert.assertEquals("1.1817", ExtendedDecimal.FromString("118.17E-2").ToEngineeringString());
+      Assert.assertEquals("0.000026235", ExtendedDecimal.FromString("262.35E-7").ToEngineeringString());
+      Assert.assertEquals("23.37E+6", ExtendedDecimal.FromString("233.7E5").ToEngineeringString());
+      Assert.assertEquals("391.24", ExtendedDecimal.FromString("391.24E0").ToEngineeringString());
+      Assert.assertEquals("2213.6", ExtendedDecimal.FromString("221.36E1").ToEngineeringString());
+      Assert.assertEquals("353.32", ExtendedDecimal.FromString("353.32E0").ToEngineeringString());
+      Assert.assertEquals("0.012931", ExtendedDecimal.FromString("129.31E-4").ToEngineeringString());
+      Assert.assertEquals("0.0017626", ExtendedDecimal.FromString("176.26E-5").ToEngineeringString());
+      Assert.assertEquals("207.5E+3", ExtendedDecimal.FromString("207.5E3").ToEngineeringString());
+      Assert.assertEquals("314.10", ExtendedDecimal.FromString("314.10E0").ToEngineeringString());
+      Assert.assertEquals("379.20E+9", ExtendedDecimal.FromString("379.20E9").ToEngineeringString());
+      Assert.assertEquals("0.00037912", ExtendedDecimal.FromString("379.12E-6").ToEngineeringString());
+      Assert.assertEquals("743.8E-9", ExtendedDecimal.FromString("74.38E-8").ToEngineeringString());
+      Assert.assertEquals("234.17E-9", ExtendedDecimal.FromString("234.17E-9").ToEngineeringString());
+      Assert.assertEquals("132.6E+6", ExtendedDecimal.FromString("13.26E7").ToEngineeringString());
+      Assert.assertEquals("25.15E+6", ExtendedDecimal.FromString("251.5E5").ToEngineeringString());
+      Assert.assertEquals("87.32", ExtendedDecimal.FromString("87.32E0").ToEngineeringString());
+      Assert.assertEquals("3.3116E+9", ExtendedDecimal.FromString("331.16E7").ToEngineeringString());
+      Assert.assertEquals("6.14E+9", ExtendedDecimal.FromString("61.4E8").ToEngineeringString());
+      Assert.assertEquals("0.0002097", ExtendedDecimal.FromString("209.7E-6").ToEngineeringString());
+      Assert.assertEquals("5.4E+6", ExtendedDecimal.FromString("5.4E6").ToEngineeringString());
+      Assert.assertEquals("219.9", ExtendedDecimal.FromString("219.9E0").ToEngineeringString());
+      Assert.assertEquals("0.00002631", ExtendedDecimal.FromString("26.31E-6").ToEngineeringString());
+      Assert.assertEquals("482.8E+6", ExtendedDecimal.FromString("48.28E7").ToEngineeringString());
+      Assert.assertEquals("267.8", ExtendedDecimal.FromString("267.8E0").ToEngineeringString());
+      Assert.assertEquals("0.3209", ExtendedDecimal.FromString("320.9E-3").ToEngineeringString());
+      Assert.assertEquals("0.30015", ExtendedDecimal.FromString("300.15E-3").ToEngineeringString());
+      Assert.assertEquals("2.6011E+6", ExtendedDecimal.FromString("260.11E4").ToEngineeringString());
+      Assert.assertEquals("1.1429", ExtendedDecimal.FromString("114.29E-2").ToEngineeringString());
+      Assert.assertEquals("0.0003060", ExtendedDecimal.FromString("306.0E-6").ToEngineeringString());
+      Assert.assertEquals("97.7E+3", ExtendedDecimal.FromString("97.7E3").ToEngineeringString());
+      Assert.assertEquals("12.229E+9", ExtendedDecimal.FromString("122.29E8").ToEngineeringString());
+      Assert.assertEquals("6.94E+3", ExtendedDecimal.FromString("69.4E2").ToEngineeringString());
+      Assert.assertEquals("383.5", ExtendedDecimal.FromString("383.5E0").ToEngineeringString());
+      Assert.assertEquals("315.30E+3", ExtendedDecimal.FromString("315.30E3").ToEngineeringString());
+      Assert.assertEquals("130.38E+9", ExtendedDecimal.FromString("130.38E9").ToEngineeringString());
+      Assert.assertEquals("206.16E+9", ExtendedDecimal.FromString("206.16E9").ToEngineeringString());
+      Assert.assertEquals("304.28E-9", ExtendedDecimal.FromString("304.28E-9").ToEngineeringString());
+      Assert.assertEquals("661.3E+3", ExtendedDecimal.FromString("66.13E4").ToEngineeringString());
+      Assert.assertEquals("1.8533", ExtendedDecimal.FromString("185.33E-2").ToEngineeringString());
+      Assert.assertEquals("70.7E+6", ExtendedDecimal.FromString("70.7E6").ToEngineeringString());
     }
     /**
      * 
@@ -2036,42 +2046,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * 
      */
     @Test
-    public void TestSubtractNonFinite() {
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(99.74439f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(0.04503661680757691d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(DecimalFraction.FromString("961.056025725133"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(-2.66673f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NaN), CBORObject.FromObject(-3249200021658530613L)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(-3082676751896642153L)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(0.37447542485458996d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(DecimalFraction.FromString("6695270"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(8.645616f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.POSITIVE_INFINITY), CBORObject.FromObject(10.918599534632621d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NEGATIVE_INFINITY), CBORObject.FromObject(1.1195766122143437E-7d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NEGATIVE_INFINITY), CBORObject.FromObject(-27.678854f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NEGATIVE_INFINITY), CBORObject.FromObject(DecimalFraction.FromString("51444344646435.890"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NEGATIVE_INFINITY), CBORObject.FromObject(DecimalFraction.FromString("-795755897.41124405443"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Double.NEGATIVE_INFINITY), CBORObject.FromObject(DecimalFraction.FromString("282349190160173.8945458982215192141"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NaN), CBORObject.FromObject(-4742894673080640195L)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NaN), CBORObject.FromObject(-8.057984695058738E-10d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NaN), CBORObject.FromObject(-6832707275063219586L)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NaN), CBORObject.FromObject(BigInteger.fromString("3037587108614072"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NaN), CBORObject.FromObject(DecimalFraction.FromString("-21687"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(21.02954f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(-280.74258f)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(3.295564645540288E-15d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(-1.8643148756498468E-14d)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.POSITIVE_INFINITY), CBORObject.FromObject(DecimalFraction.FromString("56E-9"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(BigInteger.fromString("06842884252556766213171069781"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(-6381263349646471084L)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(9127378784365184230L)).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(BigInteger.fromString("300921783316"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.Subtract(CBORObject.FromObject(Float.NEGATIVE_INFINITY), CBORObject.FromObject(BigInteger.fromString("-5806763724610384900094490266237212718"))).AsDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-    }
-    /**
-     * 
-     */
-    @Test
     public void TestAsByte() {
       for(int i=0;i<255;i++){
         Assert.assertEquals((byte)i,CBORObject.FromObject(i).AsByte());
@@ -2095,423 +2069,423 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public void TestBigFloatDecFrac() {
       BigFloat bf;
       bf = BigFloat.FromInt64(20);
-      Assert.assertEquals("20", DecimalFraction.FromBigFloat(bf).toString());
+      Assert.assertEquals("20", ExtendedDecimal.FromBigFloat(bf).toString());
       bf = new BigFloat(BigInteger.valueOf(3), BigInteger.valueOf(-1));
-      Assert.assertEquals("1.5", DecimalFraction.FromBigFloat(bf).toString());
+      Assert.assertEquals("1.5", ExtendedDecimal.FromBigFloat(bf).toString());
       bf = new BigFloat(BigInteger.valueOf(-3), BigInteger.valueOf(-1));
-      Assert.assertEquals("-1.5", DecimalFraction.FromBigFloat(bf).toString());
-      DecimalFraction df;
-      df = DecimalFraction.FromInt64(20);
-      Assert.assertEquals("20", BigFloat.FromDecimalFraction(df).toString());
-      df = DecimalFraction.FromInt64(-20);
-      Assert.assertEquals("-20", BigFloat.FromDecimalFraction(df).toString());
-      df = new DecimalFraction(BigInteger.valueOf(15), -1);
-      Assert.assertEquals("1.5", BigFloat.FromDecimalFraction(df).toString());
-      df = new DecimalFraction(BigInteger.valueOf(-15), -1);
-      Assert.assertEquals("-1.5", BigFloat.FromDecimalFraction(df).toString());
+      Assert.assertEquals("-1.5", ExtendedDecimal.FromBigFloat(bf).toString());
+      ExtendedDecimal df;
+      df = ExtendedDecimal.FromInt64(20);
+      Assert.assertEquals("20", df.ToBigFloat().toString());
+      df = ExtendedDecimal.FromInt64(-20);
+      Assert.assertEquals("-20", df.ToBigFloat().toString());
+      df = new ExtendedDecimal(BigInteger.valueOf(15), -1);
+      Assert.assertEquals("1.5", df.ToBigFloat().toString());
+      df = new ExtendedDecimal(BigInteger.valueOf(-15), -1);
+      Assert.assertEquals("-1.5", df.ToBigFloat().toString());
     }
     @Test
     public void TestDecFracToSingleDoubleHighExponents() {
-      if(-5.731800748367376E125d!=DecimalFraction.FromString("-57318007483673759194E+106").ToDouble())
-        Assert.fail("decfrac double -57318007483673759194E+106\nExpected: -5.731800748367376E125d\nWas: "+DecimalFraction.FromString("-57318007483673759194E+106").ToDouble());
-      if(914323.0f!=DecimalFraction.FromString("914323").ToSingle())
-        Assert.fail("decfrac single 914323\nExpected: 914323.0f\nWas: "+DecimalFraction.FromString("914323").ToSingle());
-      if(914323.0d!=DecimalFraction.FromString("914323").ToDouble())
-        Assert.fail("decfrac double 914323\nExpected: 914323.0d\nWas: "+DecimalFraction.FromString("914323").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-57318007483673759194E+106").ToSingle())
-        Assert.fail("decfrac single -57318007483673759194E+106\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-57318007483673759194E+106").ToSingle());
-      if(0.0f!=DecimalFraction.FromString("420685230629E-264").ToSingle())
-        Assert.fail("decfrac single 420685230629E-264\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("420685230629E-264").ToSingle());
-      if(4.20685230629E-253d!=DecimalFraction.FromString("420685230629E-264").ToDouble())
-        Assert.fail("decfrac double 420685230629E-264\nExpected: 4.20685230629E-253d\nWas: "+DecimalFraction.FromString("420685230629E-264").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("1089152800893419E+168").ToSingle())
-        Assert.fail("decfrac single 1089152800893419E+168\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("1089152800893419E+168").ToSingle());
-      if(1.089152800893419E183d!=DecimalFraction.FromString("1089152800893419E+168").ToDouble())
-        Assert.fail("decfrac double 1089152800893419E+168\nExpected: 1.089152800893419E183d\nWas: "+DecimalFraction.FromString("1089152800893419E+168").ToDouble());
-      if(1.5936804E7f!=DecimalFraction.FromString("15936804").ToSingle())
-        Assert.fail("decfrac single 15936804\nExpected: 1.5936804E7f\nWas: "+DecimalFraction.FromString("15936804").ToSingle());
-      if(1.5936804E7d!=DecimalFraction.FromString("15936804").ToDouble())
-        Assert.fail("decfrac double 15936804\nExpected: 1.5936804E7d\nWas: "+DecimalFraction.FromString("15936804").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-24681.2332E+61").ToSingle())
-        Assert.fail("decfrac single -24681.2332E+61\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-24681.2332E+61").ToSingle());
-      if(-2.46812332E65d!=DecimalFraction.FromString("-24681.2332E+61").ToDouble())
-        Assert.fail("decfrac double -24681.2332E+61\nExpected: -2.46812332E65d\nWas: "+DecimalFraction.FromString("-24681.2332E+61").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-417509591569.6827833177512321E-93").ToSingle())
-        Assert.fail("decfrac single -417509591569.6827833177512321E-93\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-417509591569.6827833177512321E-93").ToSingle());
-      if(-4.175095915696828E-82d!=DecimalFraction.FromString("-417509591569.6827833177512321E-93").ToDouble())
-        Assert.fail("decfrac double -417509591569.6827833177512321E-93\nExpected: -4.175095915696828E-82d\nWas: "+DecimalFraction.FromString("-417509591569.6827833177512321E-93").ToDouble());
-      if(5.38988331E17f!=DecimalFraction.FromString("538988338119784732").ToSingle())
-        Assert.fail("decfrac single 538988338119784732\nExpected: 5.38988331E17f\nWas: "+DecimalFraction.FromString("538988338119784732").ToSingle());
-      if(5.389883381197847E17d!=DecimalFraction.FromString("538988338119784732").ToDouble())
-        Assert.fail("decfrac double 538988338119784732\nExpected: 5.389883381197847E17d\nWas: "+DecimalFraction.FromString("538988338119784732").ToDouble());
-      if(260.14423f!=DecimalFraction.FromString("260.1442248").ToSingle())
-        Assert.fail("decfrac single 260.1442248\nExpected: 260.14423f\nWas: "+DecimalFraction.FromString("260.1442248").ToSingle());
-      if(260.1442248d!=DecimalFraction.FromString("260.1442248").ToDouble())
-        Assert.fail("decfrac double 260.1442248\nExpected: 260.1442248d\nWas: "+DecimalFraction.FromString("260.1442248").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-8457715957008143770.130850853640402959E-181").ToSingle())
-        Assert.fail("decfrac single -8457715957008143770.130850853640402959E-181\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-8457715957008143770.130850853640402959E-181").ToSingle());
-      if(-8.457715957008144E-163d!=DecimalFraction.FromString("-8457715957008143770.130850853640402959E-181").ToDouble())
-        Assert.fail("decfrac double -8457715957008143770.130850853640402959E-181\nExpected: -8.457715957008144E-163d\nWas: "+DecimalFraction.FromString("-8457715957008143770.130850853640402959E-181").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("22.7178448747E-225").ToSingle())
-        Assert.fail("decfrac single 22.7178448747E-225\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("22.7178448747E-225").ToSingle());
-      if(2.27178448747E-224d!=DecimalFraction.FromString("22.7178448747E-225").ToDouble())
-        Assert.fail("decfrac double 22.7178448747E-225\nExpected: 2.27178448747E-224d\nWas: "+DecimalFraction.FromString("22.7178448747E-225").ToDouble());
-      if(-790581.44f!=DecimalFraction.FromString("-790581.4576317018014").ToSingle())
-        Assert.fail("decfrac single -790581.4576317018014\nExpected: -790581.44f\nWas: "+DecimalFraction.FromString("-790581.4576317018014").ToSingle());
-      if(-790581.4576317018d!=DecimalFraction.FromString("-790581.4576317018014").ToDouble())
-        Assert.fail("decfrac double -790581.4576317018014\nExpected: -790581.4576317018d\nWas: "+DecimalFraction.FromString("-790581.4576317018014").ToDouble());
-      if(-1.80151695E16f!=DecimalFraction.FromString("-18015168704168440").ToSingle())
-        Assert.fail("decfrac single -18015168704168440\nExpected: -1.80151695E16f\nWas: "+DecimalFraction.FromString("-18015168704168440").ToSingle());
-      if(-1.801516870416844E16d!=DecimalFraction.FromString("-18015168704168440").ToDouble())
-        Assert.fail("decfrac double -18015168704168440\nExpected: -1.801516870416844E16d\nWas: "+DecimalFraction.FromString("-18015168704168440").ToDouble());
-      if(-36.0f!=DecimalFraction.FromString("-36").ToSingle())
-        Assert.fail("decfrac single -36\nExpected: -36.0f\nWas: "+DecimalFraction.FromString("-36").ToSingle());
-      if(-36.0d!=DecimalFraction.FromString("-36").ToDouble())
-        Assert.fail("decfrac double -36\nExpected: -36.0d\nWas: "+DecimalFraction.FromString("-36").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("653060307988076E-230").ToSingle())
-        Assert.fail("decfrac single 653060307988076E-230\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("653060307988076E-230").ToSingle());
-      if(6.53060307988076E-216d!=DecimalFraction.FromString("653060307988076E-230").ToDouble())
-        Assert.fail("decfrac double 653060307988076E-230\nExpected: 6.53060307988076E-216d\nWas: "+DecimalFraction.FromString("653060307988076E-230").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-4446345.5911E+316").ToSingle())
-        Assert.fail("decfrac single -4446345.5911E+316\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-4446345.5911E+316").ToSingle());
-      if(Double.NEGATIVE_INFINITY!=DecimalFraction.FromString("-4446345.5911E+316").ToDouble())
-        Assert.fail("decfrac double -4446345.5911E+316\nExpected: Double.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-4446345.5911E+316").ToDouble());
-      if(-5.3940226E15f!=DecimalFraction.FromString("-5394022706804125.84338479899885").ToSingle())
-        Assert.fail("decfrac single -5394022706804125.84338479899885\nExpected: -5.3940226E15f\nWas: "+DecimalFraction.FromString("-5394022706804125.84338479899885").ToSingle());
-      if(-5.394022706804126E15d!=DecimalFraction.FromString("-5394022706804125.84338479899885").ToDouble())
-        Assert.fail("decfrac double -5394022706804125.84338479899885\nExpected: -5.394022706804126E15d\nWas: "+DecimalFraction.FromString("-5394022706804125.84338479899885").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("310504020304E+181").ToSingle())
-        Assert.fail("decfrac single 310504020304E+181\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("310504020304E+181").ToSingle());
-      if(3.10504020304E192d!=DecimalFraction.FromString("310504020304E+181").ToDouble())
-        Assert.fail("decfrac double 310504020304E+181\nExpected: 3.10504020304E192d\nWas: "+DecimalFraction.FromString("310504020304E+181").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-164609450222646.21988340572652533E+317").ToSingle())
-        Assert.fail("decfrac single -164609450222646.21988340572652533E+317\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-164609450222646.21988340572652533E+317").ToSingle());
-      if(Double.NEGATIVE_INFINITY!=DecimalFraction.FromString("-164609450222646.21988340572652533E+317").ToDouble())
-        Assert.fail("decfrac double -164609450222646.21988340572652533E+317\nExpected: Double.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-164609450222646.21988340572652533E+317").ToDouble());
-      if(7.1524661E18f!=DecimalFraction.FromString("7152466127871812565.075310").ToSingle())
-        Assert.fail("decfrac single 7152466127871812565.075310\nExpected: 7.1524661E18f\nWas: "+DecimalFraction.FromString("7152466127871812565.075310").ToSingle());
-      if(7.1524661278718126E18d!=DecimalFraction.FromString("7152466127871812565.075310").ToDouble())
-        Assert.fail("decfrac double 7152466127871812565.075310\nExpected: 7.1524661278718126E18d\nWas: "+DecimalFraction.FromString("7152466127871812565.075310").ToDouble());
-      if(925.0f!=DecimalFraction.FromString("925").ToSingle())
-        Assert.fail("decfrac single 925\nExpected: 925.0f\nWas: "+DecimalFraction.FromString("925").ToSingle());
-      if(925.0d!=DecimalFraction.FromString("925").ToDouble())
-        Assert.fail("decfrac double 925\nExpected: 925.0d\nWas: "+DecimalFraction.FromString("925").ToDouble());
-      if(34794.0f!=DecimalFraction.FromString("34794").ToSingle())
-        Assert.fail("decfrac single 34794\nExpected: 34794.0f\nWas: "+DecimalFraction.FromString("34794").ToSingle());
-      if(34794.0d!=DecimalFraction.FromString("34794").ToDouble())
-        Assert.fail("decfrac double 34794\nExpected: 34794.0d\nWas: "+DecimalFraction.FromString("34794").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-337655705333269E-276").ToSingle())
-        Assert.fail("decfrac single -337655705333269E-276\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-337655705333269E-276").ToSingle());
-      if(-3.37655705333269E-262d!=DecimalFraction.FromString("-337655705333269E-276").ToDouble())
-        Assert.fail("decfrac double -337655705333269E-276\nExpected: -3.37655705333269E-262d\nWas: "+DecimalFraction.FromString("-337655705333269E-276").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-564484627E-81").ToSingle())
-        Assert.fail("decfrac single -564484627E-81\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-564484627E-81").ToSingle());
-      if(-5.64484627E-73d!=DecimalFraction.FromString("-564484627E-81").ToDouble())
-        Assert.fail("decfrac double -564484627E-81\nExpected: -5.64484627E-73d\nWas: "+DecimalFraction.FromString("-564484627E-81").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-249095219081.80985049618E+175").ToSingle())
-        Assert.fail("decfrac single -249095219081.80985049618E+175\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-249095219081.80985049618E+175").ToSingle());
-      if(-2.4909521908180986E186d!=DecimalFraction.FromString("-249095219081.80985049618E+175").ToDouble())
-        Assert.fail("decfrac double -249095219081.80985049618E+175\nExpected: -2.4909521908180986E186d\nWas: "+DecimalFraction.FromString("-249095219081.80985049618E+175").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-1696361380616078392E+221").ToSingle())
-        Assert.fail("decfrac single -1696361380616078392E+221\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-1696361380616078392E+221").ToSingle());
-      if(-1.6963613806160784E239d!=DecimalFraction.FromString("-1696361380616078392E+221").ToDouble())
-        Assert.fail("decfrac double -1696361380616078392E+221\nExpected: -1.6963613806160784E239d\nWas: "+DecimalFraction.FromString("-1696361380616078392E+221").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("61520501993928105481.8536829047214988E+205").ToSingle())
-        Assert.fail("decfrac single 61520501993928105481.8536829047214988E+205\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("61520501993928105481.8536829047214988E+205").ToSingle());
-      if(6.15205019939281E224d!=DecimalFraction.FromString("61520501993928105481.8536829047214988E+205").ToDouble())
-        Assert.fail("decfrac double 61520501993928105481.8536829047214988E+205\nExpected: 6.15205019939281E224d\nWas: "+DecimalFraction.FromString("61520501993928105481.8536829047214988E+205").ToDouble());
-      if(2.08756651E14f!=DecimalFraction.FromString("208756654290770").ToSingle())
-        Assert.fail("decfrac single 208756654290770\nExpected: 2.08756651E14f\nWas: "+DecimalFraction.FromString("208756654290770").ToSingle());
-      if(2.0875665429077E14d!=DecimalFraction.FromString("208756654290770").ToDouble())
-        Assert.fail("decfrac double 208756654290770\nExpected: 2.0875665429077E14d\nWas: "+DecimalFraction.FromString("208756654290770").ToDouble());
-      if(-1.31098592E13f!=DecimalFraction.FromString("-13109858687380").ToSingle())
-        Assert.fail("decfrac single -13109858687380\nExpected: -1.31098592E13f\nWas: "+DecimalFraction.FromString("-13109858687380").ToSingle());
-      if(-1.310985868738E13d!=DecimalFraction.FromString("-13109858687380").ToDouble())
-        Assert.fail("decfrac double -13109858687380\nExpected: -1.310985868738E13d\nWas: "+DecimalFraction.FromString("-13109858687380").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("6650596004E+280").ToSingle())
-        Assert.fail("decfrac single 6650596004E+280\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("6650596004E+280").ToSingle());
-      if(6.650596004E289d!=DecimalFraction.FromString("6650596004E+280").ToDouble())
-        Assert.fail("decfrac double 6650596004E+280\nExpected: 6.650596004E289d\nWas: "+DecimalFraction.FromString("6650596004E+280").ToDouble());
-      if(-9.2917935E13f!=DecimalFraction.FromString("-92917937534357E0").ToSingle())
-        Assert.fail("decfrac single -92917937534357E0\nExpected: -9.2917935E13f\nWas: "+DecimalFraction.FromString("-92917937534357E0").ToSingle());
-      if(-9.2917937534357E13d!=DecimalFraction.FromString("-92917937534357E0").ToDouble())
-        Assert.fail("decfrac double -92917937534357E0\nExpected: -9.2917937534357E13d\nWas: "+DecimalFraction.FromString("-92917937534357E0").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-46E-153").ToSingle())
-        Assert.fail("decfrac single -46E-153\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-46E-153").ToSingle());
-      if(-4.6E-152d!=DecimalFraction.FromString("-46E-153").ToDouble())
-        Assert.fail("decfrac double -46E-153\nExpected: -4.6E-152d\nWas: "+DecimalFraction.FromString("-46E-153").ToDouble());
-      if(1.05161414E13f!=DecimalFraction.FromString("10516141645281.77872161523035480").ToSingle())
-        Assert.fail("decfrac single 10516141645281.77872161523035480\nExpected: 1.05161414E13f\nWas: "+DecimalFraction.FromString("10516141645281.77872161523035480").ToSingle());
-      if(1.051614164528178E13d!=DecimalFraction.FromString("10516141645281.77872161523035480").ToDouble())
-        Assert.fail("decfrac double 10516141645281.77872161523035480\nExpected: 1.051614164528178E13d\nWas: "+DecimalFraction.FromString("10516141645281.77872161523035480").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-8312147094254E+299").ToSingle())
-        Assert.fail("decfrac single -8312147094254E+299\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-8312147094254E+299").ToSingle());
-      if(Double.NEGATIVE_INFINITY!=DecimalFraction.FromString("-8312147094254E+299").ToDouble())
-        Assert.fail("decfrac double -8312147094254E+299\nExpected: Double.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-8312147094254E+299").ToDouble());
-      if(5.10270368E8f!=DecimalFraction.FromString("510270376.1879").ToSingle())
-        Assert.fail("decfrac single 510270376.1879\nExpected: 5.10270368E8f\nWas: "+DecimalFraction.FromString("510270376.1879").ToSingle());
-      if(5.102703761879E8d!=DecimalFraction.FromString("510270376.1879").ToDouble())
-        Assert.fail("decfrac double 510270376.1879\nExpected: 5.102703761879E8d\nWas: "+DecimalFraction.FromString("510270376.1879").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-693696E-143").ToSingle())
-        Assert.fail("decfrac single -693696E-143\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-693696E-143").ToSingle());
-      if(-6.93696E-138d!=DecimalFraction.FromString("-693696E-143").ToDouble())
-        Assert.fail("decfrac double -693696E-143\nExpected: -6.93696E-138d\nWas: "+DecimalFraction.FromString("-693696E-143").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-91.43E+139").ToSingle())
-        Assert.fail("decfrac single -91.43E+139\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-91.43E+139").ToSingle());
-      if(-9.143E140d!=DecimalFraction.FromString("-91.43E+139").ToDouble())
-        Assert.fail("decfrac double -91.43E+139\nExpected: -9.143E140d\nWas: "+DecimalFraction.FromString("-91.43E+139").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-4103819741762400.45807953367286162E+235").ToSingle())
-        Assert.fail("decfrac single -4103819741762400.45807953367286162E+235\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-4103819741762400.45807953367286162E+235").ToSingle());
-      if(-4.1038197417624E250d!=DecimalFraction.FromString("-4103819741762400.45807953367286162E+235").ToDouble())
-        Assert.fail("decfrac double -4103819741762400.45807953367286162E+235\nExpected: -4.1038197417624E250d\nWas: "+DecimalFraction.FromString("-4103819741762400.45807953367286162E+235").ToDouble());
-      if(-1.44700998E11f!=DecimalFraction.FromString("-144701002301.18954542331279957").ToSingle())
-        Assert.fail("decfrac single -144701002301.18954542331279957\nExpected: -1.44700998E11f\nWas: "+DecimalFraction.FromString("-144701002301.18954542331279957").ToSingle());
-      if(-1.4470100230118954E11d!=DecimalFraction.FromString("-144701002301.18954542331279957").ToDouble())
-        Assert.fail("decfrac double -144701002301.18954542331279957\nExpected: -1.4470100230118954E11d\nWas: "+DecimalFraction.FromString("-144701002301.18954542331279957").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("73.01E+211").ToSingle())
-        Assert.fail("decfrac single 73.01E+211\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("73.01E+211").ToSingle());
-      if(7.301E212d!=DecimalFraction.FromString("73.01E+211").ToDouble())
-        Assert.fail("decfrac double 73.01E+211\nExpected: 7.301E212d\nWas: "+DecimalFraction.FromString("73.01E+211").ToDouble());
-      if(-4.4030403E9f!=DecimalFraction.FromString("-4403040441").ToSingle())
-        Assert.fail("decfrac single -4403040441\nExpected: -4.4030403E9f\nWas: "+DecimalFraction.FromString("-4403040441").ToSingle());
-      if(-4.403040441E9d!=DecimalFraction.FromString("-4403040441").ToDouble())
-        Assert.fail("decfrac double -4403040441\nExpected: -4.403040441E9d\nWas: "+DecimalFraction.FromString("-4403040441").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-19E+64").ToSingle())
-        Assert.fail("decfrac single -19E+64\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-19E+64").ToSingle());
-      if(-1.9E65d!=DecimalFraction.FromString("-19E+64").ToDouble())
-        Assert.fail("decfrac double -19E+64\nExpected: -1.9E65d\nWas: "+DecimalFraction.FromString("-19E+64").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("6454087684516815.5353496080253E-144").ToSingle())
-        Assert.fail("decfrac single 6454087684516815.5353496080253E-144\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("6454087684516815.5353496080253E-144").ToSingle());
-      if(6.454087684516816E-129d!=DecimalFraction.FromString("6454087684516815.5353496080253E-144").ToDouble())
-        Assert.fail("decfrac double 6454087684516815.5353496080253E-144\nExpected: 6.454087684516816E-129d\nWas: "+DecimalFraction.FromString("6454087684516815.5353496080253E-144").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("1051852710343668.522107559786846776E+278").ToSingle())
-        Assert.fail("decfrac single 1051852710343668.522107559786846776E+278\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("1051852710343668.522107559786846776E+278").ToSingle());
-      if(1.0518527103436685E293d!=DecimalFraction.FromString("1051852710343668.522107559786846776E+278").ToDouble())
-        Assert.fail("decfrac double 1051852710343668.522107559786846776E+278\nExpected: 1.0518527103436685E293d\nWas: "+DecimalFraction.FromString("1051852710343668.522107559786846776E+278").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("86077128802.374518623891E+218").ToSingle())
-        Assert.fail("decfrac single 86077128802.374518623891E+218\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("86077128802.374518623891E+218").ToSingle());
-      if(8.607712880237452E228d!=DecimalFraction.FromString("86077128802.374518623891E+218").ToDouble())
-        Assert.fail("decfrac double 86077128802.374518623891E+218\nExpected: 8.607712880237452E228d\nWas: "+DecimalFraction.FromString("86077128802.374518623891E+218").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("367820230207102E-199").ToSingle())
-        Assert.fail("decfrac single 367820230207102E-199\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("367820230207102E-199").ToSingle());
-      if(3.67820230207102E-185d!=DecimalFraction.FromString("367820230207102E-199").ToDouble())
-        Assert.fail("decfrac double 367820230207102E-199\nExpected: 3.67820230207102E-185d\nWas: "+DecimalFraction.FromString("367820230207102E-199").ToDouble());
-      if(9.105086E-27f!=DecimalFraction.FromString("91050857573912688994E-46").ToSingle())
-        Assert.fail("decfrac single 91050857573912688994E-46\nExpected: 9.105086E-27f\nWas: "+DecimalFraction.FromString("91050857573912688994E-46").ToSingle());
-      if(9.105085757391269E-27d!=DecimalFraction.FromString("91050857573912688994E-46").ToDouble())
-        Assert.fail("decfrac double 91050857573912688994E-46\nExpected: 9.105085757391269E-27d\nWas: "+DecimalFraction.FromString("91050857573912688994E-46").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("73.895899E+102").ToSingle())
-        Assert.fail("decfrac single 73.895899E+102\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("73.895899E+102").ToSingle());
-      if(7.3895899E103d!=DecimalFraction.FromString("73.895899E+102").ToDouble())
-        Assert.fail("decfrac double 73.895899E+102\nExpected: 7.3895899E103d\nWas: "+DecimalFraction.FromString("73.895899E+102").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-796808893178.891470585829021E+330").ToSingle())
-        Assert.fail("decfrac single -796808893178.891470585829021E+330\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-796808893178.891470585829021E+330").ToSingle());
-      if(Double.NEGATIVE_INFINITY!=DecimalFraction.FromString("-796808893178.891470585829021E+330").ToDouble())
-        Assert.fail("decfrac double -796808893178.891470585829021E+330\nExpected: Double.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-796808893178.891470585829021E+330").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("275081E-206").ToSingle())
-        Assert.fail("decfrac single 275081E-206\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("275081E-206").ToSingle());
-      if(2.75081E-201d!=DecimalFraction.FromString("275081E-206").ToDouble())
-        Assert.fail("decfrac double 275081E-206\nExpected: 2.75081E-201d\nWas: "+DecimalFraction.FromString("275081E-206").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-4322898910615499.82096E-95").ToSingle())
-        Assert.fail("decfrac single -4322898910615499.82096E-95\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-4322898910615499.82096E-95").ToSingle());
-      if(-4.3228989106155E-80d!=DecimalFraction.FromString("-4322898910615499.82096E-95").ToDouble())
-        Assert.fail("decfrac double -4322898910615499.82096E-95\nExpected: -4.3228989106155E-80d\nWas: "+DecimalFraction.FromString("-4322898910615499.82096E-95").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("143343913109764E+63").ToSingle())
-        Assert.fail("decfrac single 143343913109764E+63\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("143343913109764E+63").ToSingle());
-      if(1.43343913109764E77d!=DecimalFraction.FromString("143343913109764E+63").ToDouble())
-        Assert.fail("decfrac double 143343913109764E+63\nExpected: 1.43343913109764E77d\nWas: "+DecimalFraction.FromString("143343913109764E+63").ToDouble());
-      if(-7.9102981E16f!=DecimalFraction.FromString("-79102983237104015").ToSingle())
-        Assert.fail("decfrac single -79102983237104015\nExpected: -7.9102981E16f\nWas: "+DecimalFraction.FromString("-79102983237104015").ToSingle());
-      if(-7.9102983237104016E16d!=DecimalFraction.FromString("-79102983237104015").ToDouble())
-        Assert.fail("decfrac double -79102983237104015\nExpected: -7.9102983237104016E16d\nWas: "+DecimalFraction.FromString("-79102983237104015").ToDouble());
-      if(-9.07E-10f!=DecimalFraction.FromString("-907E-12").ToSingle())
-        Assert.fail("decfrac single -907E-12\nExpected: -9.07E-10f\nWas: "+DecimalFraction.FromString("-907E-12").ToSingle());
-      if(-9.07E-10d!=DecimalFraction.FromString("-907E-12").ToDouble())
-        Assert.fail("decfrac double -907E-12\nExpected: -9.07E-10d\nWas: "+DecimalFraction.FromString("-907E-12").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("191682103431.217475E-84").ToSingle())
-        Assert.fail("decfrac single 191682103431.217475E-84\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("191682103431.217475E-84").ToSingle());
-      if(1.9168210343121748E-73d!=DecimalFraction.FromString("191682103431.217475E-84").ToDouble())
-        Assert.fail("decfrac double 191682103431.217475E-84\nExpected: 1.9168210343121748E-73d\nWas: "+DecimalFraction.FromString("191682103431.217475E-84").ToDouble());
-      if(-5.6E-45f!=DecimalFraction.FromString("-492913.1840948615992120438E-50").ToSingle())
-        Assert.fail("decfrac single -492913.1840948615992120438E-50\nExpected: -5.6E-45f\nWas: "+DecimalFraction.FromString("-492913.1840948615992120438E-50").ToSingle());
-      if(-4.929131840948616E-45d!=DecimalFraction.FromString("-492913.1840948615992120438E-50").ToDouble())
-        Assert.fail("decfrac double -492913.1840948615992120438E-50\nExpected: -4.929131840948616E-45d\nWas: "+DecimalFraction.FromString("-492913.1840948615992120438E-50").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-752873150058767E+272").ToSingle())
-        Assert.fail("decfrac single -752873150058767E+272\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-752873150058767E+272").ToSingle());
-      if(-7.52873150058767E286d!=DecimalFraction.FromString("-752873150058767E+272").ToDouble())
-        Assert.fail("decfrac double -752873150058767E+272\nExpected: -7.52873150058767E286d\nWas: "+DecimalFraction.FromString("-752873150058767E+272").ToDouble());
-      if(27.311937f!=DecimalFraction.FromString("27.311937404").ToSingle())
-        Assert.fail("decfrac single 27.311937404\nExpected: 27.311937f\nWas: "+DecimalFraction.FromString("27.311937404").ToSingle());
-      if(27.311937404d!=DecimalFraction.FromString("27.311937404").ToDouble())
-        Assert.fail("decfrac double 27.311937404\nExpected: 27.311937404d\nWas: "+DecimalFraction.FromString("27.311937404").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("39147083343918E-143").ToSingle())
-        Assert.fail("decfrac single 39147083343918E-143\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("39147083343918E-143").ToSingle());
-      if(3.9147083343918E-130d!=DecimalFraction.FromString("39147083343918E-143").ToDouble())
-        Assert.fail("decfrac double 39147083343918E-143\nExpected: 3.9147083343918E-130d\nWas: "+DecimalFraction.FromString("39147083343918E-143").ToDouble());
-      if(-1.97684019E11f!=DecimalFraction.FromString("-197684018253").ToSingle())
-        Assert.fail("decfrac single -197684018253\nExpected: -1.97684019E11f\nWas: "+DecimalFraction.FromString("-197684018253").ToSingle());
-      if(-1.97684018253E11d!=DecimalFraction.FromString("-197684018253").ToDouble())
-        Assert.fail("decfrac double -197684018253\nExpected: -1.97684018253E11d\nWas: "+DecimalFraction.FromString("-197684018253").ToDouble());
-      if(6.400822E14f!=DecimalFraction.FromString("640082188903507").ToSingle())
-        Assert.fail("decfrac single 640082188903507\nExpected: 6.400822E14f\nWas: "+DecimalFraction.FromString("640082188903507").ToSingle());
-      if(6.40082188903507E14d!=DecimalFraction.FromString("640082188903507").ToDouble())
-        Assert.fail("decfrac double 640082188903507\nExpected: 6.40082188903507E14d\nWas: "+DecimalFraction.FromString("640082188903507").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-913144352720144E-312").ToSingle())
-        Assert.fail("decfrac single -913144352720144E-312\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-913144352720144E-312").ToSingle());
-      if(-9.13144352720144E-298d!=DecimalFraction.FromString("-913144352720144E-312").ToDouble())
-        Assert.fail("decfrac double -913144352720144E-312\nExpected: -9.13144352720144E-298d\nWas: "+DecimalFraction.FromString("-913144352720144E-312").ToDouble());
-      if(-3.68781005E15f!=DecimalFraction.FromString("-3687809947210631").ToSingle())
-        Assert.fail("decfrac single -3687809947210631\nExpected: -3.68781005E15f\nWas: "+DecimalFraction.FromString("-3687809947210631").ToSingle());
-      if(-3.687809947210631E15d!=DecimalFraction.FromString("-3687809947210631").ToDouble())
-        Assert.fail("decfrac double -3687809947210631\nExpected: -3.687809947210631E15d\nWas: "+DecimalFraction.FromString("-3687809947210631").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("53083788630724917310.06236692262351E+169").ToSingle())
-        Assert.fail("decfrac single 53083788630724917310.06236692262351E+169\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("53083788630724917310.06236692262351E+169").ToSingle());
-      if(5.3083788630724916E188d!=DecimalFraction.FromString("53083788630724917310.06236692262351E+169").ToDouble())
-        Assert.fail("decfrac double 53083788630724917310.06236692262351E+169\nExpected: 5.3083788630724916E188d\nWas: "+DecimalFraction.FromString("53083788630724917310.06236692262351E+169").ToDouble());
-      if(-7.0943446E19f!=DecimalFraction.FromString("-70943446332471357958").ToSingle())
-        Assert.fail("decfrac single -70943446332471357958\nExpected: -7.0943446E19f\nWas: "+DecimalFraction.FromString("-70943446332471357958").ToSingle());
-      if(-7.094344633247136E19d!=DecimalFraction.FromString("-70943446332471357958").ToDouble())
-        Assert.fail("decfrac double -70943446332471357958\nExpected: -7.094344633247136E19d\nWas: "+DecimalFraction.FromString("-70943446332471357958").ToDouble());
-      if(63367.23f!=DecimalFraction.FromString("63367.23157744207").ToSingle())
-        Assert.fail("decfrac single 63367.23157744207\nExpected: 63367.23f\nWas: "+DecimalFraction.FromString("63367.23157744207").ToSingle());
-      if(63367.23157744207d!=DecimalFraction.FromString("63367.23157744207").ToDouble())
-        Assert.fail("decfrac double 63367.23157744207\nExpected: 63367.23157744207d\nWas: "+DecimalFraction.FromString("63367.23157744207").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("2100535E+120").ToSingle())
-        Assert.fail("decfrac single 2100535E+120\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("2100535E+120").ToSingle());
-      if(2.100535E126d!=DecimalFraction.FromString("2100535E+120").ToDouble())
-        Assert.fail("decfrac double 2100535E+120\nExpected: 2.100535E126d\nWas: "+DecimalFraction.FromString("2100535E+120").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("914534543212037911E-174").ToSingle())
-        Assert.fail("decfrac single 914534543212037911E-174\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("914534543212037911E-174").ToSingle());
-      if(9.14534543212038E-157d!=DecimalFraction.FromString("914534543212037911E-174").ToDouble())
-        Assert.fail("decfrac double 914534543212037911E-174\nExpected: 9.14534543212038E-157d\nWas: "+DecimalFraction.FromString("914534543212037911E-174").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-12437185743660570E-180").ToSingle())
-        Assert.fail("decfrac single -12437185743660570E-180\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-12437185743660570E-180").ToSingle());
-      if(-1.243718574366057E-164d!=DecimalFraction.FromString("-12437185743660570E-180").ToDouble())
-        Assert.fail("decfrac double -12437185743660570E-180\nExpected: -1.243718574366057E-164d\nWas: "+DecimalFraction.FromString("-12437185743660570E-180").ToDouble());
-      if(-3.3723915E19f!=DecimalFraction.FromString("-33723915695913879E+3").ToSingle())
-        Assert.fail("decfrac single -33723915695913879E+3\nExpected: -3.3723915E19f\nWas: "+DecimalFraction.FromString("-33723915695913879E+3").ToSingle());
-      if(-3.3723915695913878E19d!=DecimalFraction.FromString("-33723915695913879E+3").ToDouble())
-        Assert.fail("decfrac double -33723915695913879E+3\nExpected: -3.3723915695913878E19d\nWas: "+DecimalFraction.FromString("-33723915695913879E+3").ToDouble());
-      if(6.3664833E10f!=DecimalFraction.FromString("63664831787").ToSingle())
-        Assert.fail("decfrac single 63664831787\nExpected: 6.3664833E10f\nWas: "+DecimalFraction.FromString("63664831787").ToSingle());
-      if(6.3664831787E10d!=DecimalFraction.FromString("63664831787").ToDouble())
-        Assert.fail("decfrac double 63664831787\nExpected: 6.3664831787E10d\nWas: "+DecimalFraction.FromString("63664831787").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("432187105445201137.3321724908E+97").ToSingle())
-        Assert.fail("decfrac single 432187105445201137.3321724908E+97\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("432187105445201137.3321724908E+97").ToSingle());
-      if(4.321871054452011E114d!=DecimalFraction.FromString("432187105445201137.3321724908E+97").ToDouble())
-        Assert.fail("decfrac double 432187105445201137.3321724908E+97\nExpected: 4.321871054452011E114d\nWas: "+DecimalFraction.FromString("432187105445201137.3321724908E+97").ToDouble());
-      if(-5.1953271E13f!=DecimalFraction.FromString("-51953270775979").ToSingle())
-        Assert.fail("decfrac single -51953270775979\nExpected: -5.1953271E13f\nWas: "+DecimalFraction.FromString("-51953270775979").ToSingle());
-      if(-5.1953270775979E13d!=DecimalFraction.FromString("-51953270775979").ToDouble())
-        Assert.fail("decfrac double -51953270775979\nExpected: -5.1953270775979E13d\nWas: "+DecimalFraction.FromString("-51953270775979").ToDouble());
-      if(2.14953088E9f!=DecimalFraction.FromString("2149530805").ToSingle())
-        Assert.fail("decfrac single 2149530805\nExpected: 2.14953088E9f\nWas: "+DecimalFraction.FromString("2149530805").ToSingle());
-      if(2.149530805E9d!=DecimalFraction.FromString("2149530805").ToDouble())
-        Assert.fail("decfrac double 2149530805\nExpected: 2.149530805E9d\nWas: "+DecimalFraction.FromString("2149530805").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-4672759140.6362E-223").ToSingle())
-        Assert.fail("decfrac single -4672759140.6362E-223\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-4672759140.6362E-223").ToSingle());
-      if(-4.6727591406362E-214d!=DecimalFraction.FromString("-4672759140.6362E-223").ToDouble())
-        Assert.fail("decfrac double -4672759140.6362E-223\nExpected: -4.6727591406362E-214d\nWas: "+DecimalFraction.FromString("-4672759140.6362E-223").ToDouble());
-      if(-9.0f!=DecimalFraction.FromString("-9").ToSingle())
-        Assert.fail("decfrac single -9\nExpected: -9.0f\nWas: "+DecimalFraction.FromString("-9").ToSingle());
-      if(-9.0d!=DecimalFraction.FromString("-9").ToDouble())
-        Assert.fail("decfrac double -9\nExpected: -9.0d\nWas: "+DecimalFraction.FromString("-9").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-1903960322936E+304").ToSingle())
-        Assert.fail("decfrac single -1903960322936E+304\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-1903960322936E+304").ToSingle());
-      if(Double.NEGATIVE_INFINITY!=DecimalFraction.FromString("-1903960322936E+304").ToDouble())
-        Assert.fail("decfrac double -1903960322936E+304\nExpected: Double.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-1903960322936E+304").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("405766405417980707E+316").ToSingle())
-        Assert.fail("decfrac single 405766405417980707E+316\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("405766405417980707E+316").ToSingle());
-      if(Double.POSITIVE_INFINITY!=DecimalFraction.FromString("405766405417980707E+316").ToDouble())
-        Assert.fail("decfrac double 405766405417980707E+316\nExpected: Double.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("405766405417980707E+316").ToDouble());
-      if(-166174.94f!=DecimalFraction.FromString("-1661749343992047E-10").ToSingle())
-        Assert.fail("decfrac single -1661749343992047E-10\nExpected: -166174.94f\nWas: "+DecimalFraction.FromString("-1661749343992047E-10").ToSingle());
-      if(-166174.9343992047d!=DecimalFraction.FromString("-1661749343992047E-10").ToDouble())
-        Assert.fail("decfrac double -1661749343992047E-10\nExpected: -166174.9343992047d\nWas: "+DecimalFraction.FromString("-1661749343992047E-10").ToDouble());
-      if(5893094.0f!=DecimalFraction.FromString("5893094.099969899224047667").ToSingle())
-        Assert.fail("decfrac single 5893094.099969899224047667\nExpected: 5893094.0f\nWas: "+DecimalFraction.FromString("5893094.099969899224047667").ToSingle());
-      if(5893094.099969899d!=DecimalFraction.FromString("5893094.099969899224047667").ToDouble())
-        Assert.fail("decfrac double 5893094.099969899224047667\nExpected: 5893094.099969899d\nWas: "+DecimalFraction.FromString("5893094.099969899224047667").ToDouble());
-      if(-3.4023195E17f!=DecimalFraction.FromString("-340231946762317122").ToSingle())
-        Assert.fail("decfrac single -340231946762317122\nExpected: -3.4023195E17f\nWas: "+DecimalFraction.FromString("-340231946762317122").ToSingle());
-      if(-3.4023194676231712E17d!=DecimalFraction.FromString("-340231946762317122").ToDouble())
-        Assert.fail("decfrac double -340231946762317122\nExpected: -3.4023194676231712E17d\nWas: "+DecimalFraction.FromString("-340231946762317122").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("3.10041643978E+236").ToSingle())
-        Assert.fail("decfrac single 3.10041643978E+236\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("3.10041643978E+236").ToSingle());
-      if(3.10041643978E236d!=DecimalFraction.FromString("3.10041643978E+236").ToDouble())
-        Assert.fail("decfrac double 3.10041643978E+236\nExpected: 3.10041643978E236d\nWas: "+DecimalFraction.FromString("3.10041643978E+236").ToDouble());
-      if(1.43429217E13f!=DecimalFraction.FromString("14342921940186").ToSingle())
-        Assert.fail("decfrac single 14342921940186\nExpected: 1.43429217E13f\nWas: "+DecimalFraction.FromString("14342921940186").ToSingle());
-      if(1.4342921940186E13d!=DecimalFraction.FromString("14342921940186").ToDouble())
-        Assert.fail("decfrac double 14342921940186\nExpected: 1.4342921940186E13d\nWas: "+DecimalFraction.FromString("14342921940186").ToDouble());
-      if(1.97766234E9f!=DecimalFraction.FromString("1977662368").ToSingle())
-        Assert.fail("decfrac single 1977662368\nExpected: 1.97766234E9f\nWas: "+DecimalFraction.FromString("1977662368").ToSingle());
-      if(1.977662368E9d!=DecimalFraction.FromString("1977662368").ToDouble())
-        Assert.fail("decfrac double 1977662368\nExpected: 1.977662368E9d\nWas: "+DecimalFraction.FromString("1977662368").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("891.32009975058011674E-268").ToSingle())
-        Assert.fail("decfrac single 891.32009975058011674E-268\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("891.32009975058011674E-268").ToSingle());
-      if(8.913200997505801E-266d!=DecimalFraction.FromString("891.32009975058011674E-268").ToDouble())
-        Assert.fail("decfrac double 891.32009975058011674E-268\nExpected: 8.913200997505801E-266d\nWas: "+DecimalFraction.FromString("891.32009975058011674E-268").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-895468936291.471679344983419E+316").ToSingle())
-        Assert.fail("decfrac single -895468936291.471679344983419E+316\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-895468936291.471679344983419E+316").ToSingle());
-      if(Double.NEGATIVE_INFINITY!=DecimalFraction.FromString("-895468936291.471679344983419E+316").ToDouble())
-        Assert.fail("decfrac double -895468936291.471679344983419E+316\nExpected: Double.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-895468936291.471679344983419E+316").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("61308E-104").ToSingle())
-        Assert.fail("decfrac single 61308E-104\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("61308E-104").ToSingle());
-      if(6.1308E-100d!=DecimalFraction.FromString("61308E-104").ToDouble())
-        Assert.fail("decfrac double 61308E-104\nExpected: 6.1308E-100d\nWas: "+DecimalFraction.FromString("61308E-104").ToDouble());
-      if(-5362.791f!=DecimalFraction.FromString("-5362.79122778669072").ToSingle())
-        Assert.fail("decfrac single -5362.79122778669072\nExpected: -5362.791f\nWas: "+DecimalFraction.FromString("-5362.79122778669072").ToSingle());
-      if(-5362.791227786691d!=DecimalFraction.FromString("-5362.79122778669072").ToDouble())
-        Assert.fail("decfrac double -5362.79122778669072\nExpected: -5362.791227786691d\nWas: "+DecimalFraction.FromString("-5362.79122778669072").ToDouble());
-      if(0.0f!=DecimalFraction.FromString("861664379590901308.23330613776542261919E-101").ToSingle())
-        Assert.fail("decfrac single 861664379590901308.23330613776542261919E-101\nExpected: 0.0f\nWas: "+DecimalFraction.FromString("861664379590901308.23330613776542261919E-101").ToSingle());
-      if(8.616643795909013E-84d!=DecimalFraction.FromString("861664379590901308.23330613776542261919E-101").ToDouble())
-        Assert.fail("decfrac double 861664379590901308.23330613776542261919E-101\nExpected: 8.616643795909013E-84d\nWas: "+DecimalFraction.FromString("861664379590901308.23330613776542261919E-101").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-1884773180.50192918329237967651E+204").ToSingle())
-        Assert.fail("decfrac single -1884773180.50192918329237967651E+204\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-1884773180.50192918329237967651E+204").ToSingle());
-      if(-1.884773180501929E213d!=DecimalFraction.FromString("-1884773180.50192918329237967651E+204").ToDouble())
-        Assert.fail("decfrac double -1884773180.50192918329237967651E+204\nExpected: -1.884773180501929E213d\nWas: "+DecimalFraction.FromString("-1884773180.50192918329237967651E+204").ToDouble());
-      if(1.89187207E13f!=DecimalFraction.FromString("18918720095123.6152").ToSingle())
-        Assert.fail("decfrac single 18918720095123.6152\nExpected: 1.89187207E13f\nWas: "+DecimalFraction.FromString("18918720095123.6152").ToSingle());
-      if(1.8918720095123613E13d!=DecimalFraction.FromString("18918720095123.6152").ToDouble())
-        Assert.fail("decfrac double 18918720095123.6152\nExpected: 1.8918720095123613E13d\nWas: "+DecimalFraction.FromString("18918720095123.6152").ToDouble());
-      if(94667.95f!=DecimalFraction.FromString("94667.95264211741602").ToSingle())
-        Assert.fail("decfrac single 94667.95264211741602\nExpected: 94667.95f\nWas: "+DecimalFraction.FromString("94667.95264211741602").ToSingle());
-      if(94667.95264211742d!=DecimalFraction.FromString("94667.95264211741602").ToDouble())
-        Assert.fail("decfrac double 94667.95264211741602\nExpected: 94667.95264211742d\nWas: "+DecimalFraction.FromString("94667.95264211741602").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("1230618521424E+134").ToSingle())
-        Assert.fail("decfrac single 1230618521424E+134\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("1230618521424E+134").ToSingle());
-      if(1.230618521424E146d!=DecimalFraction.FromString("1230618521424E+134").ToDouble())
-        Assert.fail("decfrac double 1230618521424E+134\nExpected: 1.230618521424E146d\nWas: "+DecimalFraction.FromString("1230618521424E+134").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("3022403935588782E+85").ToSingle())
-        Assert.fail("decfrac single 3022403935588782E+85\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("3022403935588782E+85").ToSingle());
-      if(3.022403935588782E100d!=DecimalFraction.FromString("3022403935588782E+85").ToDouble())
-        Assert.fail("decfrac double 3022403935588782E+85\nExpected: 3.022403935588782E100d\nWas: "+DecimalFraction.FromString("3022403935588782E+85").ToDouble());
-      if(Float.POSITIVE_INFINITY!=DecimalFraction.FromString("64543E+274").ToSingle())
-        Assert.fail("decfrac single 64543E+274\nExpected: Float.POSITIVE_INFINITY\nWas: "+DecimalFraction.FromString("64543E+274").ToSingle());
-      if(6.4543E278d!=DecimalFraction.FromString("64543E+274").ToDouble())
-        Assert.fail("decfrac double 64543E+274\nExpected: 6.4543E278d\nWas: "+DecimalFraction.FromString("64543E+274").ToDouble());
-      if(6.7181355E10f!=DecimalFraction.FromString("67181356837.903551518080873954").ToSingle())
-        Assert.fail("decfrac single 67181356837.903551518080873954\nExpected: 6.7181355E10f\nWas: "+DecimalFraction.FromString("67181356837.903551518080873954").ToSingle());
-      if(6.718135683790355E10d!=DecimalFraction.FromString("67181356837.903551518080873954").ToDouble())
-        Assert.fail("decfrac double 67181356837.903551518080873954\nExpected: 6.718135683790355E10d\nWas: "+DecimalFraction.FromString("67181356837.903551518080873954").ToDouble());
-      if(-0.0f!=DecimalFraction.FromString("-4508016E-321").ToSingle())
-        Assert.fail("decfrac single -4508016E-321\nExpected: -0.0f\nWas: "+DecimalFraction.FromString("-4508016E-321").ToSingle());
-      if(-4.508016E-315d!=DecimalFraction.FromString("-4508016E-321").ToDouble())
-        Assert.fail("decfrac double -4508016E-321\nExpected: -4.508016E-315d\nWas: "+DecimalFraction.FromString("-4508016E-321").ToDouble());
-      if(Float.NEGATIVE_INFINITY!=DecimalFraction.FromString("-62855032520.512452348497E+39").ToSingle())
-        Assert.fail("decfrac single -62855032520.512452348497E+39\nExpected: Float.NEGATIVE_INFINITY\nWas: "+DecimalFraction.FromString("-62855032520.512452348497E+39").ToSingle());
-      if(-6.285503252051245E49d!=DecimalFraction.FromString("-62855032520.512452348497E+39").ToDouble())
-        Assert.fail("decfrac double -62855032520.512452348497E+39\nExpected: -6.285503252051245E49d\nWas: "+DecimalFraction.FromString("-62855032520.512452348497E+39").ToDouble());
-      if(3177.2236f!=DecimalFraction.FromString("3177.2237286").ToSingle())
-        Assert.fail("decfrac single 3177.2237286\nExpected: 3177.2236f\nWas: "+DecimalFraction.FromString("3177.2237286").ToSingle());
-      if(3177.2237286d!=DecimalFraction.FromString("3177.2237286").ToDouble())
-        Assert.fail("decfrac double 3177.2237286\nExpected: 3177.2237286d\nWas: "+DecimalFraction.FromString("3177.2237286").ToDouble());
-      if(-7.950583E8f!=DecimalFraction.FromString("-795058316.9186492185346968").ToSingle())
-        Assert.fail("decfrac single -795058316.9186492185346968\nExpected: -7.950583E8f\nWas: "+DecimalFraction.FromString("-795058316.9186492185346968").ToSingle());
-      if(-7.950583169186492E8d!=DecimalFraction.FromString("-795058316.9186492185346968").ToDouble())
-        Assert.fail("decfrac double -795058316.9186492185346968\nExpected: -7.950583169186492E8d\nWas: "+DecimalFraction.FromString("-795058316.9186492185346968").ToDouble());
+      if(-5.731800748367376E125d!=ExtendedDecimal.FromString("-57318007483673759194E+106").ToDouble())
+        Assert.fail("decfrac double -57318007483673759194E+106\nExpected: -5.731800748367376E125d\nWas: "+ExtendedDecimal.FromString("-57318007483673759194E+106").ToDouble());
+      if(914323.0f!=ExtendedDecimal.FromString("914323").ToSingle())
+        Assert.fail("decfrac single 914323\nExpected: 914323.0f\nWas: "+ExtendedDecimal.FromString("914323").ToSingle());
+      if(914323.0d!=ExtendedDecimal.FromString("914323").ToDouble())
+        Assert.fail("decfrac double 914323\nExpected: 914323.0d\nWas: "+ExtendedDecimal.FromString("914323").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-57318007483673759194E+106").ToSingle())
+        Assert.fail("decfrac single -57318007483673759194E+106\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-57318007483673759194E+106").ToSingle());
+      if(0.0f!=ExtendedDecimal.FromString("420685230629E-264").ToSingle())
+        Assert.fail("decfrac single 420685230629E-264\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("420685230629E-264").ToSingle());
+      if(4.20685230629E-253d!=ExtendedDecimal.FromString("420685230629E-264").ToDouble())
+        Assert.fail("decfrac double 420685230629E-264\nExpected: 4.20685230629E-253d\nWas: "+ExtendedDecimal.FromString("420685230629E-264").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("1089152800893419E+168").ToSingle())
+        Assert.fail("decfrac single 1089152800893419E+168\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("1089152800893419E+168").ToSingle());
+      if(1.089152800893419E183d!=ExtendedDecimal.FromString("1089152800893419E+168").ToDouble())
+        Assert.fail("decfrac double 1089152800893419E+168\nExpected: 1.089152800893419E183d\nWas: "+ExtendedDecimal.FromString("1089152800893419E+168").ToDouble());
+      if(1.5936804E7f!=ExtendedDecimal.FromString("15936804").ToSingle())
+        Assert.fail("decfrac single 15936804\nExpected: 1.5936804E7f\nWas: "+ExtendedDecimal.FromString("15936804").ToSingle());
+      if(1.5936804E7d!=ExtendedDecimal.FromString("15936804").ToDouble())
+        Assert.fail("decfrac double 15936804\nExpected: 1.5936804E7d\nWas: "+ExtendedDecimal.FromString("15936804").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-24681.2332E+61").ToSingle())
+        Assert.fail("decfrac single -24681.2332E+61\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-24681.2332E+61").ToSingle());
+      if(-2.46812332E65d!=ExtendedDecimal.FromString("-24681.2332E+61").ToDouble())
+        Assert.fail("decfrac double -24681.2332E+61\nExpected: -2.46812332E65d\nWas: "+ExtendedDecimal.FromString("-24681.2332E+61").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToSingle())
+        Assert.fail("decfrac single -417509591569.6827833177512321E-93\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToSingle());
+      if(-4.175095915696828E-82d!=ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToDouble())
+        Assert.fail("decfrac double -417509591569.6827833177512321E-93\nExpected: -4.175095915696828E-82d\nWas: "+ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToDouble());
+      if(5.38988331E17f!=ExtendedDecimal.FromString("538988338119784732").ToSingle())
+        Assert.fail("decfrac single 538988338119784732\nExpected: 5.38988331E17f\nWas: "+ExtendedDecimal.FromString("538988338119784732").ToSingle());
+      if(5.389883381197847E17d!=ExtendedDecimal.FromString("538988338119784732").ToDouble())
+        Assert.fail("decfrac double 538988338119784732\nExpected: 5.389883381197847E17d\nWas: "+ExtendedDecimal.FromString("538988338119784732").ToDouble());
+      if(260.14423f!=ExtendedDecimal.FromString("260.1442248").ToSingle())
+        Assert.fail("decfrac single 260.1442248\nExpected: 260.14423f\nWas: "+ExtendedDecimal.FromString("260.1442248").ToSingle());
+      if(260.1442248d!=ExtendedDecimal.FromString("260.1442248").ToDouble())
+        Assert.fail("decfrac double 260.1442248\nExpected: 260.1442248d\nWas: "+ExtendedDecimal.FromString("260.1442248").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToSingle())
+        Assert.fail("decfrac single -8457715957008143770.130850853640402959E-181\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToSingle());
+      if(-8.457715957008144E-163d!=ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToDouble())
+        Assert.fail("decfrac double -8457715957008143770.130850853640402959E-181\nExpected: -8.457715957008144E-163d\nWas: "+ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("22.7178448747E-225").ToSingle())
+        Assert.fail("decfrac single 22.7178448747E-225\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("22.7178448747E-225").ToSingle());
+      if(2.27178448747E-224d!=ExtendedDecimal.FromString("22.7178448747E-225").ToDouble())
+        Assert.fail("decfrac double 22.7178448747E-225\nExpected: 2.27178448747E-224d\nWas: "+ExtendedDecimal.FromString("22.7178448747E-225").ToDouble());
+      if(-790581.44f!=ExtendedDecimal.FromString("-790581.4576317018014").ToSingle())
+        Assert.fail("decfrac single -790581.4576317018014\nExpected: -790581.44f\nWas: "+ExtendedDecimal.FromString("-790581.4576317018014").ToSingle());
+      if(-790581.4576317018d!=ExtendedDecimal.FromString("-790581.4576317018014").ToDouble())
+        Assert.fail("decfrac double -790581.4576317018014\nExpected: -790581.4576317018d\nWas: "+ExtendedDecimal.FromString("-790581.4576317018014").ToDouble());
+      if(-1.80151695E16f!=ExtendedDecimal.FromString("-18015168704168440").ToSingle())
+        Assert.fail("decfrac single -18015168704168440\nExpected: -1.80151695E16f\nWas: "+ExtendedDecimal.FromString("-18015168704168440").ToSingle());
+      if(-1.801516870416844E16d!=ExtendedDecimal.FromString("-18015168704168440").ToDouble())
+        Assert.fail("decfrac double -18015168704168440\nExpected: -1.801516870416844E16d\nWas: "+ExtendedDecimal.FromString("-18015168704168440").ToDouble());
+      if(-36.0f!=ExtendedDecimal.FromString("-36").ToSingle())
+        Assert.fail("decfrac single -36\nExpected: -36.0f\nWas: "+ExtendedDecimal.FromString("-36").ToSingle());
+      if(-36.0d!=ExtendedDecimal.FromString("-36").ToDouble())
+        Assert.fail("decfrac double -36\nExpected: -36.0d\nWas: "+ExtendedDecimal.FromString("-36").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("653060307988076E-230").ToSingle())
+        Assert.fail("decfrac single 653060307988076E-230\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("653060307988076E-230").ToSingle());
+      if(6.53060307988076E-216d!=ExtendedDecimal.FromString("653060307988076E-230").ToDouble())
+        Assert.fail("decfrac double 653060307988076E-230\nExpected: 6.53060307988076E-216d\nWas: "+ExtendedDecimal.FromString("653060307988076E-230").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-4446345.5911E+316").ToSingle())
+        Assert.fail("decfrac single -4446345.5911E+316\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-4446345.5911E+316").ToSingle());
+      if(Double.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-4446345.5911E+316").ToDouble())
+        Assert.fail("decfrac double -4446345.5911E+316\nExpected: Double.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-4446345.5911E+316").ToDouble());
+      if(-5.3940226E15f!=ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToSingle())
+        Assert.fail("decfrac single -5394022706804125.84338479899885\nExpected: -5.3940226E15f\nWas: "+ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToSingle());
+      if(-5.394022706804126E15d!=ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToDouble())
+        Assert.fail("decfrac double -5394022706804125.84338479899885\nExpected: -5.394022706804126E15d\nWas: "+ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("310504020304E+181").ToSingle())
+        Assert.fail("decfrac single 310504020304E+181\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("310504020304E+181").ToSingle());
+      if(3.10504020304E192d!=ExtendedDecimal.FromString("310504020304E+181").ToDouble())
+        Assert.fail("decfrac double 310504020304E+181\nExpected: 3.10504020304E192d\nWas: "+ExtendedDecimal.FromString("310504020304E+181").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToSingle())
+        Assert.fail("decfrac single -164609450222646.21988340572652533E+317\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToSingle());
+      if(Double.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToDouble())
+        Assert.fail("decfrac double -164609450222646.21988340572652533E+317\nExpected: Double.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToDouble());
+      if(7.1524661E18f!=ExtendedDecimal.FromString("7152466127871812565.075310").ToSingle())
+        Assert.fail("decfrac single 7152466127871812565.075310\nExpected: 7.1524661E18f\nWas: "+ExtendedDecimal.FromString("7152466127871812565.075310").ToSingle());
+      if(7.1524661278718126E18d!=ExtendedDecimal.FromString("7152466127871812565.075310").ToDouble())
+        Assert.fail("decfrac double 7152466127871812565.075310\nExpected: 7.1524661278718126E18d\nWas: "+ExtendedDecimal.FromString("7152466127871812565.075310").ToDouble());
+      if(925.0f!=ExtendedDecimal.FromString("925").ToSingle())
+        Assert.fail("decfrac single 925\nExpected: 925.0f\nWas: "+ExtendedDecimal.FromString("925").ToSingle());
+      if(925.0d!=ExtendedDecimal.FromString("925").ToDouble())
+        Assert.fail("decfrac double 925\nExpected: 925.0d\nWas: "+ExtendedDecimal.FromString("925").ToDouble());
+      if(34794.0f!=ExtendedDecimal.FromString("34794").ToSingle())
+        Assert.fail("decfrac single 34794\nExpected: 34794.0f\nWas: "+ExtendedDecimal.FromString("34794").ToSingle());
+      if(34794.0d!=ExtendedDecimal.FromString("34794").ToDouble())
+        Assert.fail("decfrac double 34794\nExpected: 34794.0d\nWas: "+ExtendedDecimal.FromString("34794").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-337655705333269E-276").ToSingle())
+        Assert.fail("decfrac single -337655705333269E-276\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-337655705333269E-276").ToSingle());
+      if(-3.37655705333269E-262d!=ExtendedDecimal.FromString("-337655705333269E-276").ToDouble())
+        Assert.fail("decfrac double -337655705333269E-276\nExpected: -3.37655705333269E-262d\nWas: "+ExtendedDecimal.FromString("-337655705333269E-276").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-564484627E-81").ToSingle())
+        Assert.fail("decfrac single -564484627E-81\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-564484627E-81").ToSingle());
+      if(-5.64484627E-73d!=ExtendedDecimal.FromString("-564484627E-81").ToDouble())
+        Assert.fail("decfrac double -564484627E-81\nExpected: -5.64484627E-73d\nWas: "+ExtendedDecimal.FromString("-564484627E-81").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToSingle())
+        Assert.fail("decfrac single -249095219081.80985049618E+175\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToSingle());
+      if(-2.4909521908180986E186d!=ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToDouble())
+        Assert.fail("decfrac double -249095219081.80985049618E+175\nExpected: -2.4909521908180986E186d\nWas: "+ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-1696361380616078392E+221").ToSingle())
+        Assert.fail("decfrac single -1696361380616078392E+221\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-1696361380616078392E+221").ToSingle());
+      if(-1.6963613806160784E239d!=ExtendedDecimal.FromString("-1696361380616078392E+221").ToDouble())
+        Assert.fail("decfrac double -1696361380616078392E+221\nExpected: -1.6963613806160784E239d\nWas: "+ExtendedDecimal.FromString("-1696361380616078392E+221").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToSingle())
+        Assert.fail("decfrac single 61520501993928105481.8536829047214988E+205\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToSingle());
+      if(6.15205019939281E224d!=ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToDouble())
+        Assert.fail("decfrac double 61520501993928105481.8536829047214988E+205\nExpected: 6.15205019939281E224d\nWas: "+ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToDouble());
+      if(2.08756651E14f!=ExtendedDecimal.FromString("208756654290770").ToSingle())
+        Assert.fail("decfrac single 208756654290770\nExpected: 2.08756651E14f\nWas: "+ExtendedDecimal.FromString("208756654290770").ToSingle());
+      if(2.0875665429077E14d!=ExtendedDecimal.FromString("208756654290770").ToDouble())
+        Assert.fail("decfrac double 208756654290770\nExpected: 2.0875665429077E14d\nWas: "+ExtendedDecimal.FromString("208756654290770").ToDouble());
+      if(-1.31098592E13f!=ExtendedDecimal.FromString("-13109858687380").ToSingle())
+        Assert.fail("decfrac single -13109858687380\nExpected: -1.31098592E13f\nWas: "+ExtendedDecimal.FromString("-13109858687380").ToSingle());
+      if(-1.310985868738E13d!=ExtendedDecimal.FromString("-13109858687380").ToDouble())
+        Assert.fail("decfrac double -13109858687380\nExpected: -1.310985868738E13d\nWas: "+ExtendedDecimal.FromString("-13109858687380").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("6650596004E+280").ToSingle())
+        Assert.fail("decfrac single 6650596004E+280\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("6650596004E+280").ToSingle());
+      if(6.650596004E289d!=ExtendedDecimal.FromString("6650596004E+280").ToDouble())
+        Assert.fail("decfrac double 6650596004E+280\nExpected: 6.650596004E289d\nWas: "+ExtendedDecimal.FromString("6650596004E+280").ToDouble());
+      if(-9.2917935E13f!=ExtendedDecimal.FromString("-92917937534357E0").ToSingle())
+        Assert.fail("decfrac single -92917937534357E0\nExpected: -9.2917935E13f\nWas: "+ExtendedDecimal.FromString("-92917937534357E0").ToSingle());
+      if(-9.2917937534357E13d!=ExtendedDecimal.FromString("-92917937534357E0").ToDouble())
+        Assert.fail("decfrac double -92917937534357E0\nExpected: -9.2917937534357E13d\nWas: "+ExtendedDecimal.FromString("-92917937534357E0").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-46E-153").ToSingle())
+        Assert.fail("decfrac single -46E-153\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-46E-153").ToSingle());
+      if(-4.6E-152d!=ExtendedDecimal.FromString("-46E-153").ToDouble())
+        Assert.fail("decfrac double -46E-153\nExpected: -4.6E-152d\nWas: "+ExtendedDecimal.FromString("-46E-153").ToDouble());
+      if(1.05161414E13f!=ExtendedDecimal.FromString("10516141645281.77872161523035480").ToSingle())
+        Assert.fail("decfrac single 10516141645281.77872161523035480\nExpected: 1.05161414E13f\nWas: "+ExtendedDecimal.FromString("10516141645281.77872161523035480").ToSingle());
+      if(1.051614164528178E13d!=ExtendedDecimal.FromString("10516141645281.77872161523035480").ToDouble())
+        Assert.fail("decfrac double 10516141645281.77872161523035480\nExpected: 1.051614164528178E13d\nWas: "+ExtendedDecimal.FromString("10516141645281.77872161523035480").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-8312147094254E+299").ToSingle())
+        Assert.fail("decfrac single -8312147094254E+299\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-8312147094254E+299").ToSingle());
+      if(Double.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-8312147094254E+299").ToDouble())
+        Assert.fail("decfrac double -8312147094254E+299\nExpected: Double.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-8312147094254E+299").ToDouble());
+      if(5.10270368E8f!=ExtendedDecimal.FromString("510270376.1879").ToSingle())
+        Assert.fail("decfrac single 510270376.1879\nExpected: 5.10270368E8f\nWas: "+ExtendedDecimal.FromString("510270376.1879").ToSingle());
+      if(5.102703761879E8d!=ExtendedDecimal.FromString("510270376.1879").ToDouble())
+        Assert.fail("decfrac double 510270376.1879\nExpected: 5.102703761879E8d\nWas: "+ExtendedDecimal.FromString("510270376.1879").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-693696E-143").ToSingle())
+        Assert.fail("decfrac single -693696E-143\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-693696E-143").ToSingle());
+      if(-6.93696E-138d!=ExtendedDecimal.FromString("-693696E-143").ToDouble())
+        Assert.fail("decfrac double -693696E-143\nExpected: -6.93696E-138d\nWas: "+ExtendedDecimal.FromString("-693696E-143").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-91.43E+139").ToSingle())
+        Assert.fail("decfrac single -91.43E+139\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-91.43E+139").ToSingle());
+      if(-9.143E140d!=ExtendedDecimal.FromString("-91.43E+139").ToDouble())
+        Assert.fail("decfrac double -91.43E+139\nExpected: -9.143E140d\nWas: "+ExtendedDecimal.FromString("-91.43E+139").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToSingle())
+        Assert.fail("decfrac single -4103819741762400.45807953367286162E+235\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToSingle());
+      if(-4.1038197417624E250d!=ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToDouble())
+        Assert.fail("decfrac double -4103819741762400.45807953367286162E+235\nExpected: -4.1038197417624E250d\nWas: "+ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToDouble());
+      if(-1.44700998E11f!=ExtendedDecimal.FromString("-144701002301.18954542331279957").ToSingle())
+        Assert.fail("decfrac single -144701002301.18954542331279957\nExpected: -1.44700998E11f\nWas: "+ExtendedDecimal.FromString("-144701002301.18954542331279957").ToSingle());
+      if(-1.4470100230118954E11d!=ExtendedDecimal.FromString("-144701002301.18954542331279957").ToDouble())
+        Assert.fail("decfrac double -144701002301.18954542331279957\nExpected: -1.4470100230118954E11d\nWas: "+ExtendedDecimal.FromString("-144701002301.18954542331279957").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("73.01E+211").ToSingle())
+        Assert.fail("decfrac single 73.01E+211\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("73.01E+211").ToSingle());
+      if(7.301E212d!=ExtendedDecimal.FromString("73.01E+211").ToDouble())
+        Assert.fail("decfrac double 73.01E+211\nExpected: 7.301E212d\nWas: "+ExtendedDecimal.FromString("73.01E+211").ToDouble());
+      if(-4.4030403E9f!=ExtendedDecimal.FromString("-4403040441").ToSingle())
+        Assert.fail("decfrac single -4403040441\nExpected: -4.4030403E9f\nWas: "+ExtendedDecimal.FromString("-4403040441").ToSingle());
+      if(-4.403040441E9d!=ExtendedDecimal.FromString("-4403040441").ToDouble())
+        Assert.fail("decfrac double -4403040441\nExpected: -4.403040441E9d\nWas: "+ExtendedDecimal.FromString("-4403040441").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-19E+64").ToSingle())
+        Assert.fail("decfrac single -19E+64\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-19E+64").ToSingle());
+      if(-1.9E65d!=ExtendedDecimal.FromString("-19E+64").ToDouble())
+        Assert.fail("decfrac double -19E+64\nExpected: -1.9E65d\nWas: "+ExtendedDecimal.FromString("-19E+64").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToSingle())
+        Assert.fail("decfrac single 6454087684516815.5353496080253E-144\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToSingle());
+      if(6.454087684516816E-129d!=ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToDouble())
+        Assert.fail("decfrac double 6454087684516815.5353496080253E-144\nExpected: 6.454087684516816E-129d\nWas: "+ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToSingle())
+        Assert.fail("decfrac single 1051852710343668.522107559786846776E+278\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToSingle());
+      if(1.0518527103436685E293d!=ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToDouble())
+        Assert.fail("decfrac double 1051852710343668.522107559786846776E+278\nExpected: 1.0518527103436685E293d\nWas: "+ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("86077128802.374518623891E+218").ToSingle())
+        Assert.fail("decfrac single 86077128802.374518623891E+218\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("86077128802.374518623891E+218").ToSingle());
+      if(8.607712880237452E228d!=ExtendedDecimal.FromString("86077128802.374518623891E+218").ToDouble())
+        Assert.fail("decfrac double 86077128802.374518623891E+218\nExpected: 8.607712880237452E228d\nWas: "+ExtendedDecimal.FromString("86077128802.374518623891E+218").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("367820230207102E-199").ToSingle())
+        Assert.fail("decfrac single 367820230207102E-199\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("367820230207102E-199").ToSingle());
+      if(3.67820230207102E-185d!=ExtendedDecimal.FromString("367820230207102E-199").ToDouble())
+        Assert.fail("decfrac double 367820230207102E-199\nExpected: 3.67820230207102E-185d\nWas: "+ExtendedDecimal.FromString("367820230207102E-199").ToDouble());
+      if(9.105086E-27f!=ExtendedDecimal.FromString("91050857573912688994E-46").ToSingle())
+        Assert.fail("decfrac single 91050857573912688994E-46\nExpected: 9.105086E-27f\nWas: "+ExtendedDecimal.FromString("91050857573912688994E-46").ToSingle());
+      if(9.105085757391269E-27d!=ExtendedDecimal.FromString("91050857573912688994E-46").ToDouble())
+        Assert.fail("decfrac double 91050857573912688994E-46\nExpected: 9.105085757391269E-27d\nWas: "+ExtendedDecimal.FromString("91050857573912688994E-46").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("73.895899E+102").ToSingle())
+        Assert.fail("decfrac single 73.895899E+102\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("73.895899E+102").ToSingle());
+      if(7.3895899E103d!=ExtendedDecimal.FromString("73.895899E+102").ToDouble())
+        Assert.fail("decfrac double 73.895899E+102\nExpected: 7.3895899E103d\nWas: "+ExtendedDecimal.FromString("73.895899E+102").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToSingle())
+        Assert.fail("decfrac single -796808893178.891470585829021E+330\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToSingle());
+      if(Double.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToDouble())
+        Assert.fail("decfrac double -796808893178.891470585829021E+330\nExpected: Double.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("275081E-206").ToSingle())
+        Assert.fail("decfrac single 275081E-206\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("275081E-206").ToSingle());
+      if(2.75081E-201d!=ExtendedDecimal.FromString("275081E-206").ToDouble())
+        Assert.fail("decfrac double 275081E-206\nExpected: 2.75081E-201d\nWas: "+ExtendedDecimal.FromString("275081E-206").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToSingle())
+        Assert.fail("decfrac single -4322898910615499.82096E-95\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToSingle());
+      if(-4.3228989106155E-80d!=ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToDouble())
+        Assert.fail("decfrac double -4322898910615499.82096E-95\nExpected: -4.3228989106155E-80d\nWas: "+ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("143343913109764E+63").ToSingle())
+        Assert.fail("decfrac single 143343913109764E+63\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("143343913109764E+63").ToSingle());
+      if(1.43343913109764E77d!=ExtendedDecimal.FromString("143343913109764E+63").ToDouble())
+        Assert.fail("decfrac double 143343913109764E+63\nExpected: 1.43343913109764E77d\nWas: "+ExtendedDecimal.FromString("143343913109764E+63").ToDouble());
+      if(-7.9102981E16f!=ExtendedDecimal.FromString("-79102983237104015").ToSingle())
+        Assert.fail("decfrac single -79102983237104015\nExpected: -7.9102981E16f\nWas: "+ExtendedDecimal.FromString("-79102983237104015").ToSingle());
+      if(-7.9102983237104016E16d!=ExtendedDecimal.FromString("-79102983237104015").ToDouble())
+        Assert.fail("decfrac double -79102983237104015\nExpected: -7.9102983237104016E16d\nWas: "+ExtendedDecimal.FromString("-79102983237104015").ToDouble());
+      if(-9.07E-10f!=ExtendedDecimal.FromString("-907E-12").ToSingle())
+        Assert.fail("decfrac single -907E-12\nExpected: -9.07E-10f\nWas: "+ExtendedDecimal.FromString("-907E-12").ToSingle());
+      if(-9.07E-10d!=ExtendedDecimal.FromString("-907E-12").ToDouble())
+        Assert.fail("decfrac double -907E-12\nExpected: -9.07E-10d\nWas: "+ExtendedDecimal.FromString("-907E-12").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("191682103431.217475E-84").ToSingle())
+        Assert.fail("decfrac single 191682103431.217475E-84\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("191682103431.217475E-84").ToSingle());
+      if(1.9168210343121748E-73d!=ExtendedDecimal.FromString("191682103431.217475E-84").ToDouble())
+        Assert.fail("decfrac double 191682103431.217475E-84\nExpected: 1.9168210343121748E-73d\nWas: "+ExtendedDecimal.FromString("191682103431.217475E-84").ToDouble());
+      if(-5.6E-45f!=ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToSingle())
+        Assert.fail("decfrac single -492913.1840948615992120438E-50\nExpected: -5.6E-45f\nWas: "+ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToSingle());
+      if(-4.929131840948616E-45d!=ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToDouble())
+        Assert.fail("decfrac double -492913.1840948615992120438E-50\nExpected: -4.929131840948616E-45d\nWas: "+ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-752873150058767E+272").ToSingle())
+        Assert.fail("decfrac single -752873150058767E+272\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-752873150058767E+272").ToSingle());
+      if(-7.52873150058767E286d!=ExtendedDecimal.FromString("-752873150058767E+272").ToDouble())
+        Assert.fail("decfrac double -752873150058767E+272\nExpected: -7.52873150058767E286d\nWas: "+ExtendedDecimal.FromString("-752873150058767E+272").ToDouble());
+      if(27.311937f!=ExtendedDecimal.FromString("27.311937404").ToSingle())
+        Assert.fail("decfrac single 27.311937404\nExpected: 27.311937f\nWas: "+ExtendedDecimal.FromString("27.311937404").ToSingle());
+      if(27.311937404d!=ExtendedDecimal.FromString("27.311937404").ToDouble())
+        Assert.fail("decfrac double 27.311937404\nExpected: 27.311937404d\nWas: "+ExtendedDecimal.FromString("27.311937404").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("39147083343918E-143").ToSingle())
+        Assert.fail("decfrac single 39147083343918E-143\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("39147083343918E-143").ToSingle());
+      if(3.9147083343918E-130d!=ExtendedDecimal.FromString("39147083343918E-143").ToDouble())
+        Assert.fail("decfrac double 39147083343918E-143\nExpected: 3.9147083343918E-130d\nWas: "+ExtendedDecimal.FromString("39147083343918E-143").ToDouble());
+      if(-1.97684019E11f!=ExtendedDecimal.FromString("-197684018253").ToSingle())
+        Assert.fail("decfrac single -197684018253\nExpected: -1.97684019E11f\nWas: "+ExtendedDecimal.FromString("-197684018253").ToSingle());
+      if(-1.97684018253E11d!=ExtendedDecimal.FromString("-197684018253").ToDouble())
+        Assert.fail("decfrac double -197684018253\nExpected: -1.97684018253E11d\nWas: "+ExtendedDecimal.FromString("-197684018253").ToDouble());
+      if(6.400822E14f!=ExtendedDecimal.FromString("640082188903507").ToSingle())
+        Assert.fail("decfrac single 640082188903507\nExpected: 6.400822E14f\nWas: "+ExtendedDecimal.FromString("640082188903507").ToSingle());
+      if(6.40082188903507E14d!=ExtendedDecimal.FromString("640082188903507").ToDouble())
+        Assert.fail("decfrac double 640082188903507\nExpected: 6.40082188903507E14d\nWas: "+ExtendedDecimal.FromString("640082188903507").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-913144352720144E-312").ToSingle())
+        Assert.fail("decfrac single -913144352720144E-312\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-913144352720144E-312").ToSingle());
+      if(-9.13144352720144E-298d!=ExtendedDecimal.FromString("-913144352720144E-312").ToDouble())
+        Assert.fail("decfrac double -913144352720144E-312\nExpected: -9.13144352720144E-298d\nWas: "+ExtendedDecimal.FromString("-913144352720144E-312").ToDouble());
+      if(-3.68781005E15f!=ExtendedDecimal.FromString("-3687809947210631").ToSingle())
+        Assert.fail("decfrac single -3687809947210631\nExpected: -3.68781005E15f\nWas: "+ExtendedDecimal.FromString("-3687809947210631").ToSingle());
+      if(-3.687809947210631E15d!=ExtendedDecimal.FromString("-3687809947210631").ToDouble())
+        Assert.fail("decfrac double -3687809947210631\nExpected: -3.687809947210631E15d\nWas: "+ExtendedDecimal.FromString("-3687809947210631").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToSingle())
+        Assert.fail("decfrac single 53083788630724917310.06236692262351E+169\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToSingle());
+      if(5.3083788630724916E188d!=ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToDouble())
+        Assert.fail("decfrac double 53083788630724917310.06236692262351E+169\nExpected: 5.3083788630724916E188d\nWas: "+ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToDouble());
+      if(-7.0943446E19f!=ExtendedDecimal.FromString("-70943446332471357958").ToSingle())
+        Assert.fail("decfrac single -70943446332471357958\nExpected: -7.0943446E19f\nWas: "+ExtendedDecimal.FromString("-70943446332471357958").ToSingle());
+      if(-7.094344633247136E19d!=ExtendedDecimal.FromString("-70943446332471357958").ToDouble())
+        Assert.fail("decfrac double -70943446332471357958\nExpected: -7.094344633247136E19d\nWas: "+ExtendedDecimal.FromString("-70943446332471357958").ToDouble());
+      if(63367.23f!=ExtendedDecimal.FromString("63367.23157744207").ToSingle())
+        Assert.fail("decfrac single 63367.23157744207\nExpected: 63367.23f\nWas: "+ExtendedDecimal.FromString("63367.23157744207").ToSingle());
+      if(63367.23157744207d!=ExtendedDecimal.FromString("63367.23157744207").ToDouble())
+        Assert.fail("decfrac double 63367.23157744207\nExpected: 63367.23157744207d\nWas: "+ExtendedDecimal.FromString("63367.23157744207").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("2100535E+120").ToSingle())
+        Assert.fail("decfrac single 2100535E+120\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("2100535E+120").ToSingle());
+      if(2.100535E126d!=ExtendedDecimal.FromString("2100535E+120").ToDouble())
+        Assert.fail("decfrac double 2100535E+120\nExpected: 2.100535E126d\nWas: "+ExtendedDecimal.FromString("2100535E+120").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("914534543212037911E-174").ToSingle())
+        Assert.fail("decfrac single 914534543212037911E-174\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("914534543212037911E-174").ToSingle());
+      if(9.14534543212038E-157d!=ExtendedDecimal.FromString("914534543212037911E-174").ToDouble())
+        Assert.fail("decfrac double 914534543212037911E-174\nExpected: 9.14534543212038E-157d\nWas: "+ExtendedDecimal.FromString("914534543212037911E-174").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-12437185743660570E-180").ToSingle())
+        Assert.fail("decfrac single -12437185743660570E-180\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-12437185743660570E-180").ToSingle());
+      if(-1.243718574366057E-164d!=ExtendedDecimal.FromString("-12437185743660570E-180").ToDouble())
+        Assert.fail("decfrac double -12437185743660570E-180\nExpected: -1.243718574366057E-164d\nWas: "+ExtendedDecimal.FromString("-12437185743660570E-180").ToDouble());
+      if(-3.3723915E19f!=ExtendedDecimal.FromString("-33723915695913879E+3").ToSingle())
+        Assert.fail("decfrac single -33723915695913879E+3\nExpected: -3.3723915E19f\nWas: "+ExtendedDecimal.FromString("-33723915695913879E+3").ToSingle());
+      if(-3.3723915695913878E19d!=ExtendedDecimal.FromString("-33723915695913879E+3").ToDouble())
+        Assert.fail("decfrac double -33723915695913879E+3\nExpected: -3.3723915695913878E19d\nWas: "+ExtendedDecimal.FromString("-33723915695913879E+3").ToDouble());
+      if(6.3664833E10f!=ExtendedDecimal.FromString("63664831787").ToSingle())
+        Assert.fail("decfrac single 63664831787\nExpected: 6.3664833E10f\nWas: "+ExtendedDecimal.FromString("63664831787").ToSingle());
+      if(6.3664831787E10d!=ExtendedDecimal.FromString("63664831787").ToDouble())
+        Assert.fail("decfrac double 63664831787\nExpected: 6.3664831787E10d\nWas: "+ExtendedDecimal.FromString("63664831787").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToSingle())
+        Assert.fail("decfrac single 432187105445201137.3321724908E+97\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToSingle());
+      if(4.321871054452011E114d!=ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToDouble())
+        Assert.fail("decfrac double 432187105445201137.3321724908E+97\nExpected: 4.321871054452011E114d\nWas: "+ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToDouble());
+      if(-5.1953271E13f!=ExtendedDecimal.FromString("-51953270775979").ToSingle())
+        Assert.fail("decfrac single -51953270775979\nExpected: -5.1953271E13f\nWas: "+ExtendedDecimal.FromString("-51953270775979").ToSingle());
+      if(-5.1953270775979E13d!=ExtendedDecimal.FromString("-51953270775979").ToDouble())
+        Assert.fail("decfrac double -51953270775979\nExpected: -5.1953270775979E13d\nWas: "+ExtendedDecimal.FromString("-51953270775979").ToDouble());
+      if(2.14953088E9f!=ExtendedDecimal.FromString("2149530805").ToSingle())
+        Assert.fail("decfrac single 2149530805\nExpected: 2.14953088E9f\nWas: "+ExtendedDecimal.FromString("2149530805").ToSingle());
+      if(2.149530805E9d!=ExtendedDecimal.FromString("2149530805").ToDouble())
+        Assert.fail("decfrac double 2149530805\nExpected: 2.149530805E9d\nWas: "+ExtendedDecimal.FromString("2149530805").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-4672759140.6362E-223").ToSingle())
+        Assert.fail("decfrac single -4672759140.6362E-223\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-4672759140.6362E-223").ToSingle());
+      if(-4.6727591406362E-214d!=ExtendedDecimal.FromString("-4672759140.6362E-223").ToDouble())
+        Assert.fail("decfrac double -4672759140.6362E-223\nExpected: -4.6727591406362E-214d\nWas: "+ExtendedDecimal.FromString("-4672759140.6362E-223").ToDouble());
+      if(-9.0f!=ExtendedDecimal.FromString("-9").ToSingle())
+        Assert.fail("decfrac single -9\nExpected: -9.0f\nWas: "+ExtendedDecimal.FromString("-9").ToSingle());
+      if(-9.0d!=ExtendedDecimal.FromString("-9").ToDouble())
+        Assert.fail("decfrac double -9\nExpected: -9.0d\nWas: "+ExtendedDecimal.FromString("-9").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-1903960322936E+304").ToSingle())
+        Assert.fail("decfrac single -1903960322936E+304\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-1903960322936E+304").ToSingle());
+      if(Double.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-1903960322936E+304").ToDouble())
+        Assert.fail("decfrac double -1903960322936E+304\nExpected: Double.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-1903960322936E+304").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("405766405417980707E+316").ToSingle())
+        Assert.fail("decfrac single 405766405417980707E+316\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("405766405417980707E+316").ToSingle());
+      if(Double.POSITIVE_INFINITY!=ExtendedDecimal.FromString("405766405417980707E+316").ToDouble())
+        Assert.fail("decfrac double 405766405417980707E+316\nExpected: Double.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("405766405417980707E+316").ToDouble());
+      if(-166174.94f!=ExtendedDecimal.FromString("-1661749343992047E-10").ToSingle())
+        Assert.fail("decfrac single -1661749343992047E-10\nExpected: -166174.94f\nWas: "+ExtendedDecimal.FromString("-1661749343992047E-10").ToSingle());
+      if(-166174.9343992047d!=ExtendedDecimal.FromString("-1661749343992047E-10").ToDouble())
+        Assert.fail("decfrac double -1661749343992047E-10\nExpected: -166174.9343992047d\nWas: "+ExtendedDecimal.FromString("-1661749343992047E-10").ToDouble());
+      if(5893094.0f!=ExtendedDecimal.FromString("5893094.099969899224047667").ToSingle())
+        Assert.fail("decfrac single 5893094.099969899224047667\nExpected: 5893094.0f\nWas: "+ExtendedDecimal.FromString("5893094.099969899224047667").ToSingle());
+      if(5893094.099969899d!=ExtendedDecimal.FromString("5893094.099969899224047667").ToDouble())
+        Assert.fail("decfrac double 5893094.099969899224047667\nExpected: 5893094.099969899d\nWas: "+ExtendedDecimal.FromString("5893094.099969899224047667").ToDouble());
+      if(-3.4023195E17f!=ExtendedDecimal.FromString("-340231946762317122").ToSingle())
+        Assert.fail("decfrac single -340231946762317122\nExpected: -3.4023195E17f\nWas: "+ExtendedDecimal.FromString("-340231946762317122").ToSingle());
+      if(-3.4023194676231712E17d!=ExtendedDecimal.FromString("-340231946762317122").ToDouble())
+        Assert.fail("decfrac double -340231946762317122\nExpected: -3.4023194676231712E17d\nWas: "+ExtendedDecimal.FromString("-340231946762317122").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("3.10041643978E+236").ToSingle())
+        Assert.fail("decfrac single 3.10041643978E+236\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("3.10041643978E+236").ToSingle());
+      if(3.10041643978E236d!=ExtendedDecimal.FromString("3.10041643978E+236").ToDouble())
+        Assert.fail("decfrac double 3.10041643978E+236\nExpected: 3.10041643978E236d\nWas: "+ExtendedDecimal.FromString("3.10041643978E+236").ToDouble());
+      if(1.43429217E13f!=ExtendedDecimal.FromString("14342921940186").ToSingle())
+        Assert.fail("decfrac single 14342921940186\nExpected: 1.43429217E13f\nWas: "+ExtendedDecimal.FromString("14342921940186").ToSingle());
+      if(1.4342921940186E13d!=ExtendedDecimal.FromString("14342921940186").ToDouble())
+        Assert.fail("decfrac double 14342921940186\nExpected: 1.4342921940186E13d\nWas: "+ExtendedDecimal.FromString("14342921940186").ToDouble());
+      if(1.97766234E9f!=ExtendedDecimal.FromString("1977662368").ToSingle())
+        Assert.fail("decfrac single 1977662368\nExpected: 1.97766234E9f\nWas: "+ExtendedDecimal.FromString("1977662368").ToSingle());
+      if(1.977662368E9d!=ExtendedDecimal.FromString("1977662368").ToDouble())
+        Assert.fail("decfrac double 1977662368\nExpected: 1.977662368E9d\nWas: "+ExtendedDecimal.FromString("1977662368").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("891.32009975058011674E-268").ToSingle())
+        Assert.fail("decfrac single 891.32009975058011674E-268\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("891.32009975058011674E-268").ToSingle());
+      if(8.913200997505801E-266d!=ExtendedDecimal.FromString("891.32009975058011674E-268").ToDouble())
+        Assert.fail("decfrac double 891.32009975058011674E-268\nExpected: 8.913200997505801E-266d\nWas: "+ExtendedDecimal.FromString("891.32009975058011674E-268").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToSingle())
+        Assert.fail("decfrac single -895468936291.471679344983419E+316\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToSingle());
+      if(Double.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToDouble())
+        Assert.fail("decfrac double -895468936291.471679344983419E+316\nExpected: Double.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("61308E-104").ToSingle())
+        Assert.fail("decfrac single 61308E-104\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("61308E-104").ToSingle());
+      if(6.1308E-100d!=ExtendedDecimal.FromString("61308E-104").ToDouble())
+        Assert.fail("decfrac double 61308E-104\nExpected: 6.1308E-100d\nWas: "+ExtendedDecimal.FromString("61308E-104").ToDouble());
+      if(-5362.791f!=ExtendedDecimal.FromString("-5362.79122778669072").ToSingle())
+        Assert.fail("decfrac single -5362.79122778669072\nExpected: -5362.791f\nWas: "+ExtendedDecimal.FromString("-5362.79122778669072").ToSingle());
+      if(-5362.791227786691d!=ExtendedDecimal.FromString("-5362.79122778669072").ToDouble())
+        Assert.fail("decfrac double -5362.79122778669072\nExpected: -5362.791227786691d\nWas: "+ExtendedDecimal.FromString("-5362.79122778669072").ToDouble());
+      if(0.0f!=ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToSingle())
+        Assert.fail("decfrac single 861664379590901308.23330613776542261919E-101\nExpected: 0.0f\nWas: "+ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToSingle());
+      if(8.616643795909013E-84d!=ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToDouble())
+        Assert.fail("decfrac double 861664379590901308.23330613776542261919E-101\nExpected: 8.616643795909013E-84d\nWas: "+ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToSingle())
+        Assert.fail("decfrac single -1884773180.50192918329237967651E+204\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToSingle());
+      if(-1.884773180501929E213d!=ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToDouble())
+        Assert.fail("decfrac double -1884773180.50192918329237967651E+204\nExpected: -1.884773180501929E213d\nWas: "+ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToDouble());
+      if(1.89187207E13f!=ExtendedDecimal.FromString("18918720095123.6152").ToSingle())
+        Assert.fail("decfrac single 18918720095123.6152\nExpected: 1.89187207E13f\nWas: "+ExtendedDecimal.FromString("18918720095123.6152").ToSingle());
+      if(1.8918720095123613E13d!=ExtendedDecimal.FromString("18918720095123.6152").ToDouble())
+        Assert.fail("decfrac double 18918720095123.6152\nExpected: 1.8918720095123613E13d\nWas: "+ExtendedDecimal.FromString("18918720095123.6152").ToDouble());
+      if(94667.95f!=ExtendedDecimal.FromString("94667.95264211741602").ToSingle())
+        Assert.fail("decfrac single 94667.95264211741602\nExpected: 94667.95f\nWas: "+ExtendedDecimal.FromString("94667.95264211741602").ToSingle());
+      if(94667.95264211742d!=ExtendedDecimal.FromString("94667.95264211741602").ToDouble())
+        Assert.fail("decfrac double 94667.95264211741602\nExpected: 94667.95264211742d\nWas: "+ExtendedDecimal.FromString("94667.95264211741602").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("1230618521424E+134").ToSingle())
+        Assert.fail("decfrac single 1230618521424E+134\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("1230618521424E+134").ToSingle());
+      if(1.230618521424E146d!=ExtendedDecimal.FromString("1230618521424E+134").ToDouble())
+        Assert.fail("decfrac double 1230618521424E+134\nExpected: 1.230618521424E146d\nWas: "+ExtendedDecimal.FromString("1230618521424E+134").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("3022403935588782E+85").ToSingle())
+        Assert.fail("decfrac single 3022403935588782E+85\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("3022403935588782E+85").ToSingle());
+      if(3.022403935588782E100d!=ExtendedDecimal.FromString("3022403935588782E+85").ToDouble())
+        Assert.fail("decfrac double 3022403935588782E+85\nExpected: 3.022403935588782E100d\nWas: "+ExtendedDecimal.FromString("3022403935588782E+85").ToDouble());
+      if(Float.POSITIVE_INFINITY!=ExtendedDecimal.FromString("64543E+274").ToSingle())
+        Assert.fail("decfrac single 64543E+274\nExpected: Float.POSITIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("64543E+274").ToSingle());
+      if(6.4543E278d!=ExtendedDecimal.FromString("64543E+274").ToDouble())
+        Assert.fail("decfrac double 64543E+274\nExpected: 6.4543E278d\nWas: "+ExtendedDecimal.FromString("64543E+274").ToDouble());
+      if(6.7181355E10f!=ExtendedDecimal.FromString("67181356837.903551518080873954").ToSingle())
+        Assert.fail("decfrac single 67181356837.903551518080873954\nExpected: 6.7181355E10f\nWas: "+ExtendedDecimal.FromString("67181356837.903551518080873954").ToSingle());
+      if(6.718135683790355E10d!=ExtendedDecimal.FromString("67181356837.903551518080873954").ToDouble())
+        Assert.fail("decfrac double 67181356837.903551518080873954\nExpected: 6.718135683790355E10d\nWas: "+ExtendedDecimal.FromString("67181356837.903551518080873954").ToDouble());
+      if(-0.0f!=ExtendedDecimal.FromString("-4508016E-321").ToSingle())
+        Assert.fail("decfrac single -4508016E-321\nExpected: -0.0f\nWas: "+ExtendedDecimal.FromString("-4508016E-321").ToSingle());
+      if(-4.508016E-315d!=ExtendedDecimal.FromString("-4508016E-321").ToDouble())
+        Assert.fail("decfrac double -4508016E-321\nExpected: -4.508016E-315d\nWas: "+ExtendedDecimal.FromString("-4508016E-321").ToDouble());
+      if(Float.NEGATIVE_INFINITY!=ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToSingle())
+        Assert.fail("decfrac single -62855032520.512452348497E+39\nExpected: Float.NEGATIVE_INFINITY\nWas: "+ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToSingle());
+      if(-6.285503252051245E49d!=ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToDouble())
+        Assert.fail("decfrac double -62855032520.512452348497E+39\nExpected: -6.285503252051245E49d\nWas: "+ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToDouble());
+      if(3177.2236f!=ExtendedDecimal.FromString("3177.2237286").ToSingle())
+        Assert.fail("decfrac single 3177.2237286\nExpected: 3177.2236f\nWas: "+ExtendedDecimal.FromString("3177.2237286").ToSingle());
+      if(3177.2237286d!=ExtendedDecimal.FromString("3177.2237286").ToDouble())
+        Assert.fail("decfrac double 3177.2237286\nExpected: 3177.2237286d\nWas: "+ExtendedDecimal.FromString("3177.2237286").ToDouble());
+      if(-7.950583E8f!=ExtendedDecimal.FromString("-795058316.9186492185346968").ToSingle())
+        Assert.fail("decfrac single -795058316.9186492185346968\nExpected: -7.950583E8f\nWas: "+ExtendedDecimal.FromString("-795058316.9186492185346968").ToSingle());
+      if(-7.950583169186492E8d!=ExtendedDecimal.FromString("-795058316.9186492185346968").ToDouble())
+        Assert.fail("decfrac double -795058316.9186492185346968\nExpected: -7.950583169186492E8d\nWas: "+ExtendedDecimal.FromString("-795058316.9186492185346968").ToDouble());
     }
     
     /**
@@ -2519,406 +2493,406 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void TestDecFracIntegersToSingleDouble() {
-      if(-5.7703064E7f!=DecimalFraction.FromString("-57703066").ToSingle())
-        Assert.fail("decfrac single -57703066\nExpected: -5.7703064E7f\nWas: "+DecimalFraction.FromString("-57703066").ToSingle());
-      if(-5.7703066E7d!=DecimalFraction.FromString("-57703066").ToDouble())
-        Assert.fail("decfrac double -57703066\nExpected: -5.7703066E7d\nWas: "+DecimalFraction.FromString("-57703066").ToDouble());
-      if(1590432.0f!=DecimalFraction.FromString("1590432").ToSingle())
-        Assert.fail("decfrac single 1590432\nExpected: 1590432.0f\nWas: "+DecimalFraction.FromString("1590432").ToSingle());
-      if(1590432.0d!=DecimalFraction.FromString("1590432").ToDouble())
-        Assert.fail("decfrac double 1590432\nExpected: 1590432.0d\nWas: "+DecimalFraction.FromString("1590432").ToDouble());
-      if(9.5464253E9f!=DecimalFraction.FromString("9546425267").ToSingle())
-        Assert.fail("decfrac single 9546425267\nExpected: 9.5464253E9f\nWas: "+DecimalFraction.FromString("9546425267").ToSingle());
-      if(9.546425267E9d!=DecimalFraction.FromString("9546425267").ToDouble())
-        Assert.fail("decfrac double 9546425267\nExpected: 9.546425267E9d\nWas: "+DecimalFraction.FromString("9546425267").ToDouble());
-      if(7.3227311E16f!=DecimalFraction.FromString("73227309698439247").ToSingle())
-        Assert.fail("decfrac single 73227309698439247\nExpected: 7.3227311E16f\nWas: "+DecimalFraction.FromString("73227309698439247").ToSingle());
-      if(7.3227309698439248E16d!=DecimalFraction.FromString("73227309698439247").ToDouble())
-        Assert.fail("decfrac double 73227309698439247\nExpected: 7.3227309698439248E16d\nWas: "+DecimalFraction.FromString("73227309698439247").ToDouble());
-      if(75114.0f!=DecimalFraction.FromString("75114").ToSingle())
-        Assert.fail("decfrac single 75114\nExpected: 75114.0f\nWas: "+DecimalFraction.FromString("75114").ToSingle());
-      if(75114.0d!=DecimalFraction.FromString("75114").ToDouble())
-        Assert.fail("decfrac double 75114\nExpected: 75114.0d\nWas: "+DecimalFraction.FromString("75114").ToDouble());
-      if(64.0f!=DecimalFraction.FromString("64").ToSingle())
-        Assert.fail("decfrac single 64\nExpected: 64.0f\nWas: "+DecimalFraction.FromString("64").ToSingle());
-      if(64.0d!=DecimalFraction.FromString("64").ToDouble())
-        Assert.fail("decfrac double 64\nExpected: 64.0d\nWas: "+DecimalFraction.FromString("64").ToDouble());
-      if(8.6352293E15f!=DecimalFraction.FromString("8635229353951207").ToSingle())
-        Assert.fail("decfrac single 8635229353951207\nExpected: 8.6352293E15f\nWas: "+DecimalFraction.FromString("8635229353951207").ToSingle());
-      if(8.635229353951207E15d!=DecimalFraction.FromString("8635229353951207").ToDouble())
-        Assert.fail("decfrac double 8635229353951207\nExpected: 8.635229353951207E15d\nWas: "+DecimalFraction.FromString("8635229353951207").ToDouble());
-      if(-8.056573E19f!=DecimalFraction.FromString("-80565729661447979457").ToSingle())
-        Assert.fail("decfrac single -80565729661447979457\nExpected: -8.056573E19f\nWas: "+DecimalFraction.FromString("-80565729661447979457").ToSingle());
-      if(-8.056572966144798E19d!=DecimalFraction.FromString("-80565729661447979457").ToDouble())
-        Assert.fail("decfrac double -80565729661447979457\nExpected: -8.056572966144798E19d\nWas: "+DecimalFraction.FromString("-80565729661447979457").ToDouble());
-      if(8.1540558E14f!=DecimalFraction.FromString("815405565228754").ToSingle())
-        Assert.fail("decfrac single 815405565228754\nExpected: 8.1540558E14f\nWas: "+DecimalFraction.FromString("815405565228754").ToSingle());
-      if(8.15405565228754E14d!=DecimalFraction.FromString("815405565228754").ToDouble())
-        Assert.fail("decfrac double 815405565228754\nExpected: 8.15405565228754E14d\nWas: "+DecimalFraction.FromString("815405565228754").ToDouble());
-      if(-6.1008438E16f!=DecimalFraction.FromString("-61008438357089231").ToSingle())
-        Assert.fail("decfrac single -61008438357089231\nExpected: -6.1008438E16f\nWas: "+DecimalFraction.FromString("-61008438357089231").ToSingle());
-      if(-6.1008438357089232E16d!=DecimalFraction.FromString("-61008438357089231").ToDouble())
-        Assert.fail("decfrac double -61008438357089231\nExpected: -6.1008438357089232E16d\nWas: "+DecimalFraction.FromString("-61008438357089231").ToDouble());
-      if(-46526.0f!=DecimalFraction.FromString("-46526").ToSingle())
-        Assert.fail("decfrac single -46526\nExpected: -46526.0f\nWas: "+DecimalFraction.FromString("-46526").ToSingle());
-      if(-46526.0d!=DecimalFraction.FromString("-46526").ToDouble())
-        Assert.fail("decfrac double -46526\nExpected: -46526.0d\nWas: "+DecimalFraction.FromString("-46526").ToDouble());
-      if(5.1199847E18f!=DecimalFraction.FromString("5119984668352258853").ToSingle())
-        Assert.fail("decfrac single 5119984668352258853\nExpected: 5.1199847E18f\nWas: "+DecimalFraction.FromString("5119984668352258853").ToSingle());
-      if(5.1199846683522591E18d!=DecimalFraction.FromString("5119984668352258853").ToDouble())
-        Assert.fail("decfrac double 5119984668352258853\nExpected: 5.1199846683522591E18d\nWas: "+DecimalFraction.FromString("5119984668352258853").ToDouble());
-      if(1851.0f!=DecimalFraction.FromString("1851").ToSingle())
-        Assert.fail("decfrac single 1851\nExpected: 1851.0f\nWas: "+DecimalFraction.FromString("1851").ToSingle());
-      if(1851.0d!=DecimalFraction.FromString("1851").ToDouble())
-        Assert.fail("decfrac double 1851\nExpected: 1851.0d\nWas: "+DecimalFraction.FromString("1851").ToDouble());
-      if(8.7587332E15f!=DecimalFraction.FromString("8758733009763848").ToSingle())
-        Assert.fail("decfrac single 8758733009763848\nExpected: 8.7587332E15f\nWas: "+DecimalFraction.FromString("8758733009763848").ToSingle());
-      if(8.758733009763848E15d!=DecimalFraction.FromString("8758733009763848").ToDouble())
-        Assert.fail("decfrac double 8758733009763848\nExpected: 8.758733009763848E15d\nWas: "+DecimalFraction.FromString("8758733009763848").ToDouble());
-      if(51.0f!=DecimalFraction.FromString("51").ToSingle())
-        Assert.fail("decfrac single 51\nExpected: 51.0f\nWas: "+DecimalFraction.FromString("51").ToSingle());
-      if(51.0d!=DecimalFraction.FromString("51").ToDouble())
-        Assert.fail("decfrac double 51\nExpected: 51.0d\nWas: "+DecimalFraction.FromString("51").ToDouble());
-      if(9.4281774E11f!=DecimalFraction.FromString("942817726107").ToSingle())
-        Assert.fail("decfrac single 942817726107\nExpected: 9.4281774E11f\nWas: "+DecimalFraction.FromString("942817726107").ToSingle());
-      if(9.42817726107E11d!=DecimalFraction.FromString("942817726107").ToDouble())
-        Assert.fail("decfrac double 942817726107\nExpected: 9.42817726107E11d\nWas: "+DecimalFraction.FromString("942817726107").ToDouble());
-      if(186575.0f!=DecimalFraction.FromString("186575").ToSingle())
-        Assert.fail("decfrac single 186575\nExpected: 186575.0f\nWas: "+DecimalFraction.FromString("186575").ToSingle());
-      if(186575.0d!=DecimalFraction.FromString("186575").ToDouble())
-        Assert.fail("decfrac double 186575\nExpected: 186575.0d\nWas: "+DecimalFraction.FromString("186575").ToDouble());
-      if(-3.47313997E9f!=DecimalFraction.FromString("-3473140020").ToSingle())
-        Assert.fail("decfrac single -3473140020\nExpected: -3.47313997E9f\nWas: "+DecimalFraction.FromString("-3473140020").ToSingle());
-      if(-3.47314002E9d!=DecimalFraction.FromString("-3473140020").ToDouble())
-        Assert.fail("decfrac double -3473140020\nExpected: -3.47314002E9d\nWas: "+DecimalFraction.FromString("-3473140020").ToDouble());
-      if(2.66134912E8f!=DecimalFraction.FromString("266134912").ToSingle())
-        Assert.fail("decfrac single 266134912\nExpected: 2.66134912E8f\nWas: "+DecimalFraction.FromString("266134912").ToSingle());
-      if(2.66134912E8d!=DecimalFraction.FromString("266134912").ToDouble())
-        Assert.fail("decfrac double 266134912\nExpected: 2.66134912E8d\nWas: "+DecimalFraction.FromString("266134912").ToDouble());
-      if(5209.0f!=DecimalFraction.FromString("5209").ToSingle())
-        Assert.fail("decfrac single 5209\nExpected: 5209.0f\nWas: "+DecimalFraction.FromString("5209").ToSingle());
-      if(5209.0d!=DecimalFraction.FromString("5209").ToDouble())
-        Assert.fail("decfrac double 5209\nExpected: 5209.0d\nWas: "+DecimalFraction.FromString("5209").ToDouble());
-      if(70489.0f!=DecimalFraction.FromString("70489").ToSingle())
-        Assert.fail("decfrac single 70489\nExpected: 70489.0f\nWas: "+DecimalFraction.FromString("70489").ToSingle());
-      if(70489.0d!=DecimalFraction.FromString("70489").ToDouble())
-        Assert.fail("decfrac double 70489\nExpected: 70489.0d\nWas: "+DecimalFraction.FromString("70489").ToDouble());
-      if(-6.1383652E14f!=DecimalFraction.FromString("-613836517344428").ToSingle())
-        Assert.fail("decfrac single -613836517344428\nExpected: -6.1383652E14f\nWas: "+DecimalFraction.FromString("-613836517344428").ToSingle());
-      if(-6.13836517344428E14d!=DecimalFraction.FromString("-613836517344428").ToDouble())
-        Assert.fail("decfrac double -613836517344428\nExpected: -6.13836517344428E14d\nWas: "+DecimalFraction.FromString("-613836517344428").ToDouble());
-      if(-3.47896388E16f!=DecimalFraction.FromString("-34789639317051875E0").ToSingle())
-        Assert.fail("decfrac single -34789639317051875E0\nExpected: -3.47896388E16f\nWas: "+DecimalFraction.FromString("-34789639317051875E0").ToSingle());
-      if(-3.4789639317051876E16d!=DecimalFraction.FromString("-34789639317051875E0").ToDouble())
-        Assert.fail("decfrac double -34789639317051875E0\nExpected: -3.4789639317051876E16d\nWas: "+DecimalFraction.FromString("-34789639317051875E0").ToDouble());
-      if(-8.4833942E13f!=DecimalFraction.FromString("-84833938642058").ToSingle())
-        Assert.fail("decfrac single -84833938642058\nExpected: -8.4833942E13f\nWas: "+DecimalFraction.FromString("-84833938642058").ToSingle());
-      if(-8.4833938642058E13d!=DecimalFraction.FromString("-84833938642058").ToDouble())
-        Assert.fail("decfrac double -84833938642058\nExpected: -8.4833938642058E13d\nWas: "+DecimalFraction.FromString("-84833938642058").ToDouble());
-      if(-359.0f!=DecimalFraction.FromString("-359").ToSingle())
-        Assert.fail("decfrac single -359\nExpected: -359.0f\nWas: "+DecimalFraction.FromString("-359").ToSingle());
-      if(-359.0d!=DecimalFraction.FromString("-359").ToDouble())
-        Assert.fail("decfrac double -359\nExpected: -359.0d\nWas: "+DecimalFraction.FromString("-359").ToDouble());
-      if(365981.0f!=DecimalFraction.FromString("365981").ToSingle())
-        Assert.fail("decfrac single 365981\nExpected: 365981.0f\nWas: "+DecimalFraction.FromString("365981").ToSingle());
-      if(365981.0d!=DecimalFraction.FromString("365981").ToDouble())
-        Assert.fail("decfrac double 365981\nExpected: 365981.0d\nWas: "+DecimalFraction.FromString("365981").ToDouble());
-      if(9103.0f!=DecimalFraction.FromString("9103").ToSingle())
-        Assert.fail("decfrac single 9103\nExpected: 9103.0f\nWas: "+DecimalFraction.FromString("9103").ToSingle());
-      if(9103.0d!=DecimalFraction.FromString("9103").ToDouble())
-        Assert.fail("decfrac double 9103\nExpected: 9103.0d\nWas: "+DecimalFraction.FromString("9103").ToDouble());
-      if(9.822906E11f!=DecimalFraction.FromString("982290625898").ToSingle())
-        Assert.fail("decfrac single 982290625898\nExpected: 9.822906E11f\nWas: "+DecimalFraction.FromString("982290625898").ToSingle());
-      if(9.82290625898E11d!=DecimalFraction.FromString("982290625898").ToDouble())
-        Assert.fail("decfrac double 982290625898\nExpected: 9.82290625898E11d\nWas: "+DecimalFraction.FromString("982290625898").ToDouble());
-      if(11.0f!=DecimalFraction.FromString("11").ToSingle())
-        Assert.fail("decfrac single 11\nExpected: 11.0f\nWas: "+DecimalFraction.FromString("11").ToSingle());
-      if(11.0d!=DecimalFraction.FromString("11").ToDouble())
-        Assert.fail("decfrac double 11\nExpected: 11.0d\nWas: "+DecimalFraction.FromString("11").ToDouble());
-      if(-2823.0f!=DecimalFraction.FromString("-2823").ToSingle())
-        Assert.fail("decfrac single -2823\nExpected: -2823.0f\nWas: "+DecimalFraction.FromString("-2823").ToSingle());
-      if(-2823.0d!=DecimalFraction.FromString("-2823").ToDouble())
-        Assert.fail("decfrac double -2823\nExpected: -2823.0d\nWas: "+DecimalFraction.FromString("-2823").ToDouble());
-      if(1.5945044E10f!=DecimalFraction.FromString("15945044029").ToSingle())
-        Assert.fail("decfrac single 15945044029\nExpected: 1.5945044E10f\nWas: "+DecimalFraction.FromString("15945044029").ToSingle());
-      if(1.5945044029E10d!=DecimalFraction.FromString("15945044029").ToDouble())
-        Assert.fail("decfrac double 15945044029\nExpected: 1.5945044029E10d\nWas: "+DecimalFraction.FromString("15945044029").ToDouble());
-      if(-1.69193578E18f!=DecimalFraction.FromString("-1691935711084975329").ToSingle())
-        Assert.fail("decfrac single -1691935711084975329\nExpected: -1.69193578E18f\nWas: "+DecimalFraction.FromString("-1691935711084975329").ToSingle());
-      if(-1.69193571108497536E18d!=DecimalFraction.FromString("-1691935711084975329").ToDouble())
-        Assert.fail("decfrac double -1691935711084975329\nExpected: -1.69193571108497536E18d\nWas: "+DecimalFraction.FromString("-1691935711084975329").ToDouble());
-      if(611.0f!=DecimalFraction.FromString("611").ToSingle())
-        Assert.fail("decfrac single 611\nExpected: 611.0f\nWas: "+DecimalFraction.FromString("611").ToSingle());
-      if(611.0d!=DecimalFraction.FromString("611").ToDouble())
-        Assert.fail("decfrac double 611\nExpected: 611.0d\nWas: "+DecimalFraction.FromString("611").ToDouble());
-      if(8.1338793E9f!=DecimalFraction.FromString("8133879260").ToSingle())
-        Assert.fail("decfrac single 8133879260\nExpected: 8.1338793E9f\nWas: "+DecimalFraction.FromString("8133879260").ToSingle());
-      if(8.13387926E9d!=DecimalFraction.FromString("8133879260").ToDouble())
-        Assert.fail("decfrac double 8133879260\nExpected: 8.13387926E9d\nWas: "+DecimalFraction.FromString("8133879260").ToDouble());
-      if(7.8632614E13f!=DecimalFraction.FromString("78632613962905").ToSingle())
-        Assert.fail("decfrac single 78632613962905\nExpected: 7.8632614E13f\nWas: "+DecimalFraction.FromString("78632613962905").ToSingle());
-      if(7.8632613962905E13d!=DecimalFraction.FromString("78632613962905").ToDouble())
-        Assert.fail("decfrac double 78632613962905\nExpected: 7.8632613962905E13d\nWas: "+DecimalFraction.FromString("78632613962905").ToDouble());
-      if(8.686342E19f!=DecimalFraction.FromString("86863421212032782386").ToSingle())
-        Assert.fail("decfrac single 86863421212032782386\nExpected: 8.686342E19f\nWas: "+DecimalFraction.FromString("86863421212032782386").ToSingle());
-      if(8.686342121203278E19d!=DecimalFraction.FromString("86863421212032782386").ToDouble())
-        Assert.fail("decfrac double 86863421212032782386\nExpected: 8.686342121203278E19d\nWas: "+DecimalFraction.FromString("86863421212032782386").ToDouble());
-      if(2.46595376E8f!=DecimalFraction.FromString("246595381").ToSingle())
-        Assert.fail("decfrac single 246595381\nExpected: 2.46595376E8f\nWas: "+DecimalFraction.FromString("246595381").ToSingle());
-      if(2.46595381E8d!=DecimalFraction.FromString("246595381").ToDouble())
-        Assert.fail("decfrac double 246595381\nExpected: 2.46595381E8d\nWas: "+DecimalFraction.FromString("246595381").ToDouble());
-      if(5.128928E16f!=DecimalFraction.FromString("51289277641921518E0").ToSingle())
-        Assert.fail("decfrac single 51289277641921518E0\nExpected: 5.128928E16f\nWas: "+DecimalFraction.FromString("51289277641921518E0").ToSingle());
-      if(5.128927764192152E16d!=DecimalFraction.FromString("51289277641921518E0").ToDouble())
-        Assert.fail("decfrac double 51289277641921518E0\nExpected: 5.128927764192152E16d\nWas: "+DecimalFraction.FromString("51289277641921518E0").ToDouble());
-      if(41105.0f!=DecimalFraction.FromString("41105").ToSingle())
-        Assert.fail("decfrac single 41105\nExpected: 41105.0f\nWas: "+DecimalFraction.FromString("41105").ToSingle());
-      if(41105.0d!=DecimalFraction.FromString("41105").ToDouble())
-        Assert.fail("decfrac double 41105\nExpected: 41105.0d\nWas: "+DecimalFraction.FromString("41105").ToDouble());
-      if(4.5854699E16f!=DecimalFraction.FromString("45854697039925162E0").ToSingle())
-        Assert.fail("decfrac single 45854697039925162E0\nExpected: 4.5854699E16f\nWas: "+DecimalFraction.FromString("45854697039925162E0").ToSingle());
-      if(4.585469703992516E16d!=DecimalFraction.FromString("45854697039925162E0").ToDouble())
-        Assert.fail("decfrac double 45854697039925162E0\nExpected: 4.585469703992516E16d\nWas: "+DecimalFraction.FromString("45854697039925162E0").ToDouble());
-      if(357.0f!=DecimalFraction.FromString("357").ToSingle())
-        Assert.fail("decfrac single 357\nExpected: 357.0f\nWas: "+DecimalFraction.FromString("357").ToSingle());
-      if(357.0d!=DecimalFraction.FromString("357").ToDouble())
-        Assert.fail("decfrac double 357\nExpected: 357.0d\nWas: "+DecimalFraction.FromString("357").ToDouble());
-      if(4055.0f!=DecimalFraction.FromString("4055").ToSingle())
-        Assert.fail("decfrac single 4055\nExpected: 4055.0f\nWas: "+DecimalFraction.FromString("4055").ToSingle());
-      if(4055.0d!=DecimalFraction.FromString("4055").ToDouble())
-        Assert.fail("decfrac double 4055\nExpected: 4055.0d\nWas: "+DecimalFraction.FromString("4055").ToDouble());
-      if(-75211.0f!=DecimalFraction.FromString("-75211").ToSingle())
-        Assert.fail("decfrac single -75211\nExpected: -75211.0f\nWas: "+DecimalFraction.FromString("-75211").ToSingle());
-      if(-75211.0d!=DecimalFraction.FromString("-75211").ToDouble())
-        Assert.fail("decfrac double -75211\nExpected: -75211.0d\nWas: "+DecimalFraction.FromString("-75211").ToDouble());
-      if(-8.718763E19f!=DecimalFraction.FromString("-87187631416675804676").ToSingle())
-        Assert.fail("decfrac single -87187631416675804676\nExpected: -8.718763E19f\nWas: "+DecimalFraction.FromString("-87187631416675804676").ToSingle());
-      if(-8.718763141667581E19d!=DecimalFraction.FromString("-87187631416675804676").ToDouble())
-        Assert.fail("decfrac double -87187631416675804676\nExpected: -8.718763141667581E19d\nWas: "+DecimalFraction.FromString("-87187631416675804676").ToDouble());
-      if(-5.6423271E13f!=DecimalFraction.FromString("-56423269820314").ToSingle())
-        Assert.fail("decfrac single -56423269820314\nExpected: -5.6423271E13f\nWas: "+DecimalFraction.FromString("-56423269820314").ToSingle());
-      if(-5.6423269820314E13d!=DecimalFraction.FromString("-56423269820314").ToDouble())
-        Assert.fail("decfrac double -56423269820314\nExpected: -5.6423269820314E13d\nWas: "+DecimalFraction.FromString("-56423269820314").ToDouble());
-      if(-884958.0f!=DecimalFraction.FromString("-884958").ToSingle())
-        Assert.fail("decfrac single -884958\nExpected: -884958.0f\nWas: "+DecimalFraction.FromString("-884958").ToSingle());
-      if(-884958.0d!=DecimalFraction.FromString("-884958").ToDouble())
-        Assert.fail("decfrac double -884958\nExpected: -884958.0d\nWas: "+DecimalFraction.FromString("-884958").ToDouble());
-      if(-9.5231607E11f!=DecimalFraction.FromString("-952316071356").ToSingle())
-        Assert.fail("decfrac single -952316071356\nExpected: -9.5231607E11f\nWas: "+DecimalFraction.FromString("-952316071356").ToSingle());
-      if(-9.52316071356E11d!=DecimalFraction.FromString("-952316071356").ToDouble())
-        Assert.fail("decfrac double -952316071356\nExpected: -9.52316071356E11d\nWas: "+DecimalFraction.FromString("-952316071356").ToDouble());
-      if(1.07800844E17f!=DecimalFraction.FromString("107800846902684870").ToSingle())
-        Assert.fail("decfrac single 107800846902684870\nExpected: 1.07800844E17f\nWas: "+DecimalFraction.FromString("107800846902684870").ToSingle());
-      if(1.07800846902684864E17d!=DecimalFraction.FromString("107800846902684870").ToDouble())
-        Assert.fail("decfrac double 107800846902684870\nExpected: 1.07800846902684864E17d\nWas: "+DecimalFraction.FromString("107800846902684870").ToDouble());
-      if(-8.1588551E18f!=DecimalFraction.FromString("-8158855313340166027").ToSingle())
-        Assert.fail("decfrac single -8158855313340166027\nExpected: -8.1588551E18f\nWas: "+DecimalFraction.FromString("-8158855313340166027").ToSingle());
-      if(-8.1588553133401661E18d!=DecimalFraction.FromString("-8158855313340166027").ToDouble())
-        Assert.fail("decfrac double -8158855313340166027\nExpected: -8.1588553133401661E18d\nWas: "+DecimalFraction.FromString("-8158855313340166027").ToDouble());
-      if(1.52743454E18f!=DecimalFraction.FromString("1527434477600178421").ToSingle())
-        Assert.fail("decfrac single 1527434477600178421\nExpected: 1.52743454E18f\nWas: "+DecimalFraction.FromString("1527434477600178421").ToSingle());
-      if(1.52743447760017843E18d!=DecimalFraction.FromString("1527434477600178421").ToDouble())
-        Assert.fail("decfrac double 1527434477600178421\nExpected: 1.52743447760017843E18d\nWas: "+DecimalFraction.FromString("1527434477600178421").ToDouble());
-      if(-1.25374015E15f!=DecimalFraction.FromString("-1253740164504924").ToSingle())
-        Assert.fail("decfrac single -1253740164504924\nExpected: -1.25374015E15f\nWas: "+DecimalFraction.FromString("-1253740164504924").ToSingle());
-      if(-1.253740164504924E15d!=DecimalFraction.FromString("-1253740164504924").ToDouble())
-        Assert.fail("decfrac double -1253740164504924\nExpected: -1.253740164504924E15d\nWas: "+DecimalFraction.FromString("-1253740164504924").ToDouble());
-      if(9.333153E10f!=DecimalFraction.FromString("93331529453").ToSingle())
-        Assert.fail("decfrac single 93331529453\nExpected: 9.333153E10f\nWas: "+DecimalFraction.FromString("93331529453").ToSingle());
-      if(9.3331529453E10d!=DecimalFraction.FromString("93331529453").ToDouble())
-        Assert.fail("decfrac double 93331529453\nExpected: 9.3331529453E10d\nWas: "+DecimalFraction.FromString("93331529453").ToDouble());
-      if(-26195.0f!=DecimalFraction.FromString("-26195").ToSingle())
-        Assert.fail("decfrac single -26195\nExpected: -26195.0f\nWas: "+DecimalFraction.FromString("-26195").ToSingle());
-      if(-26195.0d!=DecimalFraction.FromString("-26195").ToDouble())
-        Assert.fail("decfrac double -26195\nExpected: -26195.0d\nWas: "+DecimalFraction.FromString("-26195").ToDouble());
-      if(-369.0f!=DecimalFraction.FromString("-369").ToSingle())
-        Assert.fail("decfrac single -369\nExpected: -369.0f\nWas: "+DecimalFraction.FromString("-369").ToSingle());
-      if(-369.0d!=DecimalFraction.FromString("-369").ToDouble())
-        Assert.fail("decfrac double -369\nExpected: -369.0d\nWas: "+DecimalFraction.FromString("-369").ToDouble());
-      if(-831.0f!=DecimalFraction.FromString("-831").ToSingle())
-        Assert.fail("decfrac single -831\nExpected: -831.0f\nWas: "+DecimalFraction.FromString("-831").ToSingle());
-      if(-831.0d!=DecimalFraction.FromString("-831").ToDouble())
-        Assert.fail("decfrac double -831\nExpected: -831.0d\nWas: "+DecimalFraction.FromString("-831").ToDouble());
-      if(4.11190218E12f!=DecimalFraction.FromString("4111902130704").ToSingle())
-        Assert.fail("decfrac single 4111902130704\nExpected: 4.11190218E12f\nWas: "+DecimalFraction.FromString("4111902130704").ToSingle());
-      if(4.111902130704E12d!=DecimalFraction.FromString("4111902130704").ToDouble())
-        Assert.fail("decfrac double 4111902130704\nExpected: 4.111902130704E12d\nWas: "+DecimalFraction.FromString("4111902130704").ToDouble());
-      if(-7.419975E34f!=DecimalFraction.FromString("-7419975014712636689.1578027201500774E+16").ToSingle())
-        Assert.fail("decfrac single -7419975014712636689.1578027201500774E+16\nExpected: -7.419975E34f\nWas: "+DecimalFraction.FromString("-7419975014712636689.1578027201500774E+16").ToSingle());
-      if(-7.419975014712636E34d!=DecimalFraction.FromString("-7419975014712636689.1578027201500774E+16").ToDouble())
-        Assert.fail("decfrac double -7419975014712636689.1578027201500774E+16\nExpected: -7.419975014712636E34d\nWas: "+DecimalFraction.FromString("-7419975014712636689.1578027201500774E+16").ToDouble());
-      if(-1.7915818E7f!=DecimalFraction.FromString("-17915818").ToSingle())
-        Assert.fail("decfrac single -17915818\nExpected: -1.7915818E7f\nWas: "+DecimalFraction.FromString("-17915818").ToSingle());
-      if(-1.7915818E7d!=DecimalFraction.FromString("-17915818").ToDouble())
-        Assert.fail("decfrac double -17915818\nExpected: -1.7915818E7d\nWas: "+DecimalFraction.FromString("-17915818").ToDouble());
-      if(-122.0f!=DecimalFraction.FromString("-122").ToSingle())
-        Assert.fail("decfrac single -122\nExpected: -122.0f\nWas: "+DecimalFraction.FromString("-122").ToSingle());
-      if(-122.0d!=DecimalFraction.FromString("-122").ToDouble())
-        Assert.fail("decfrac double -122\nExpected: -122.0d\nWas: "+DecimalFraction.FromString("-122").ToDouble());
-      if(-363975.0f!=DecimalFraction.FromString("-363975").ToSingle())
-        Assert.fail("decfrac single -363975\nExpected: -363975.0f\nWas: "+DecimalFraction.FromString("-363975").ToSingle());
-      if(-363975.0d!=DecimalFraction.FromString("-363975").ToDouble())
-        Assert.fail("decfrac double -363975\nExpected: -363975.0d\nWas: "+DecimalFraction.FromString("-363975").ToDouble());
-      if(3.22466716E12f!=DecimalFraction.FromString("3224667065103").ToSingle())
-        Assert.fail("decfrac single 3224667065103\nExpected: 3.22466716E12f\nWas: "+DecimalFraction.FromString("3224667065103").ToSingle());
-      if(3.224667065103E12d!=DecimalFraction.FromString("3224667065103").ToDouble())
-        Assert.fail("decfrac double 3224667065103\nExpected: 3.224667065103E12d\nWas: "+DecimalFraction.FromString("3224667065103").ToDouble());
-      if(-9.6666224E7f!=DecimalFraction.FromString("-96666228").ToSingle())
-        Assert.fail("decfrac single -96666228\nExpected: -9.6666224E7f\nWas: "+DecimalFraction.FromString("-96666228").ToSingle());
-      if(-9.6666228E7d!=DecimalFraction.FromString("-96666228").ToDouble())
-        Assert.fail("decfrac double -96666228\nExpected: -9.6666228E7d\nWas: "+DecimalFraction.FromString("-96666228").ToDouble());
-      if(-6.3737765E19f!=DecimalFraction.FromString("-63737764614634686933").ToSingle())
-        Assert.fail("decfrac single -63737764614634686933\nExpected: -6.3737765E19f\nWas: "+DecimalFraction.FromString("-63737764614634686933").ToSingle());
-      if(-6.3737764614634684E19d!=DecimalFraction.FromString("-63737764614634686933").ToDouble())
-        Assert.fail("decfrac double -63737764614634686933\nExpected: -6.3737764614634684E19d\nWas: "+DecimalFraction.FromString("-63737764614634686933").ToDouble());
-      if(-45065.0f!=DecimalFraction.FromString("-45065").ToSingle())
-        Assert.fail("decfrac single -45065\nExpected: -45065.0f\nWas: "+DecimalFraction.FromString("-45065").ToSingle());
-      if(-45065.0d!=DecimalFraction.FromString("-45065").ToDouble())
-        Assert.fail("decfrac double -45065\nExpected: -45065.0d\nWas: "+DecimalFraction.FromString("-45065").ToDouble());
-      if(18463.0f!=DecimalFraction.FromString("18463").ToSingle())
-        Assert.fail("decfrac single 18463\nExpected: 18463.0f\nWas: "+DecimalFraction.FromString("18463").ToSingle());
-      if(18463.0d!=DecimalFraction.FromString("18463").ToDouble())
-        Assert.fail("decfrac double 18463\nExpected: 18463.0d\nWas: "+DecimalFraction.FromString("18463").ToDouble());
-      if(-5.2669409E15f!=DecimalFraction.FromString("-5266940927335870").ToSingle())
-        Assert.fail("decfrac single -5266940927335870\nExpected: -5.2669409E15f\nWas: "+DecimalFraction.FromString("-5266940927335870").ToSingle());
-      if(-5.26694092733587E15d!=DecimalFraction.FromString("-5266940927335870").ToDouble())
-        Assert.fail("decfrac double -5266940927335870\nExpected: -5.26694092733587E15d\nWas: "+DecimalFraction.FromString("-5266940927335870").ToDouble());
-      if(-3.61275925E15f!=DecimalFraction.FromString("-3612759343074710").ToSingle())
-        Assert.fail("decfrac single -3612759343074710\nExpected: -3.61275925E15f\nWas: "+DecimalFraction.FromString("-3612759343074710").ToSingle());
-      if(-3.61275934307471E15d!=DecimalFraction.FromString("-3612759343074710").ToDouble())
-        Assert.fail("decfrac double -3612759343074710\nExpected: -3.61275934307471E15d\nWas: "+DecimalFraction.FromString("-3612759343074710").ToDouble());
-      if(-1.49784412E11f!=DecimalFraction.FromString("-149784410976").ToSingle())
-        Assert.fail("decfrac single -149784410976\nExpected: -1.49784412E11f\nWas: "+DecimalFraction.FromString("-149784410976").ToSingle());
-      if(-1.49784410976E11d!=DecimalFraction.FromString("-149784410976").ToDouble())
-        Assert.fail("decfrac double -149784410976\nExpected: -1.49784410976E11d\nWas: "+DecimalFraction.FromString("-149784410976").ToDouble());
-      if(-1.01285276E17f!=DecimalFraction.FromString("-101285275020696035").ToSingle())
-        Assert.fail("decfrac single -101285275020696035\nExpected: -1.01285276E17f\nWas: "+DecimalFraction.FromString("-101285275020696035").ToSingle());
-      if(-1.01285275020696032E17d!=DecimalFraction.FromString("-101285275020696035").ToDouble())
-        Assert.fail("decfrac double -101285275020696035\nExpected: -1.01285275020696032E17d\nWas: "+DecimalFraction.FromString("-101285275020696035").ToDouble());
-      if(-34.0f!=DecimalFraction.FromString("-34").ToSingle())
-        Assert.fail("decfrac single -34\nExpected: -34.0f\nWas: "+DecimalFraction.FromString("-34").ToSingle());
-      if(-34.0d!=DecimalFraction.FromString("-34").ToDouble())
-        Assert.fail("decfrac double -34\nExpected: -34.0d\nWas: "+DecimalFraction.FromString("-34").ToDouble());
-      if(-6.9963739E17f!=DecimalFraction.FromString("-699637360432542026").ToSingle())
-        Assert.fail("decfrac single -699637360432542026\nExpected: -6.9963739E17f\nWas: "+DecimalFraction.FromString("-699637360432542026").ToSingle());
-      if(-6.9963736043254208E17d!=DecimalFraction.FromString("-699637360432542026").ToDouble())
-        Assert.fail("decfrac double -699637360432542026\nExpected: -6.9963736043254208E17d\nWas: "+DecimalFraction.FromString("-699637360432542026").ToDouble());
-      if(-8131.0f!=DecimalFraction.FromString("-8131").ToSingle())
-        Assert.fail("decfrac single -8131\nExpected: -8131.0f\nWas: "+DecimalFraction.FromString("-8131").ToSingle());
-      if(-8131.0d!=DecimalFraction.FromString("-8131").ToDouble())
-        Assert.fail("decfrac double -8131\nExpected: -8131.0d\nWas: "+DecimalFraction.FromString("-8131").ToDouble());
-      if(6.1692147E8f!=DecimalFraction.FromString("616921472").ToSingle())
-        Assert.fail("decfrac single 616921472\nExpected: 6.1692147E8f\nWas: "+DecimalFraction.FromString("616921472").ToSingle());
-      if(6.16921472E8d!=DecimalFraction.FromString("616921472").ToDouble())
-        Assert.fail("decfrac double 616921472\nExpected: 6.16921472E8d\nWas: "+DecimalFraction.FromString("616921472").ToDouble());
-      if(447272.0f!=DecimalFraction.FromString("447272").ToSingle())
-        Assert.fail("decfrac single 447272\nExpected: 447272.0f\nWas: "+DecimalFraction.FromString("447272").ToSingle());
-      if(447272.0d!=DecimalFraction.FromString("447272").ToDouble())
-        Assert.fail("decfrac double 447272\nExpected: 447272.0d\nWas: "+DecimalFraction.FromString("447272").ToDouble());
-      if(9.719524E17f!=DecimalFraction.FromString("971952376640924713").ToSingle())
-        Assert.fail("decfrac single 971952376640924713\nExpected: 9.719524E17f\nWas: "+DecimalFraction.FromString("971952376640924713").ToSingle());
-      if(9.7195237664092467E17d!=DecimalFraction.FromString("971952376640924713").ToDouble())
-        Assert.fail("decfrac double 971952376640924713\nExpected: 9.7195237664092467E17d\nWas: "+DecimalFraction.FromString("971952376640924713").ToDouble());
-      if(-8622.0f!=DecimalFraction.FromString("-8622").ToSingle())
-        Assert.fail("decfrac single -8622\nExpected: -8622.0f\nWas: "+DecimalFraction.FromString("-8622").ToSingle());
-      if(-8622.0d!=DecimalFraction.FromString("-8622").ToDouble())
-        Assert.fail("decfrac double -8622\nExpected: -8622.0d\nWas: "+DecimalFraction.FromString("-8622").ToDouble());
-      if(-9.8425534E13f!=DecimalFraction.FromString("-98425536547570").ToSingle())
-        Assert.fail("decfrac single -98425536547570\nExpected: -9.8425534E13f\nWas: "+DecimalFraction.FromString("-98425536547570").ToSingle());
-      if(-9.842553654757E13d!=DecimalFraction.FromString("-98425536547570").ToDouble())
-        Assert.fail("decfrac double -98425536547570\nExpected: -9.842553654757E13d\nWas: "+DecimalFraction.FromString("-98425536547570").ToDouble());
-      if(-1.3578545E14f!=DecimalFraction.FromString("-135785450228746").ToSingle())
-        Assert.fail("decfrac single -135785450228746\nExpected: -1.3578545E14f\nWas: "+DecimalFraction.FromString("-135785450228746").ToSingle());
-      if(-1.35785450228746E14d!=DecimalFraction.FromString("-135785450228746").ToDouble())
-        Assert.fail("decfrac double -135785450228746\nExpected: -1.35785450228746E14d\nWas: "+DecimalFraction.FromString("-135785450228746").ToDouble());
-      if(935.0f!=DecimalFraction.FromString("935").ToSingle())
-        Assert.fail("decfrac single 935\nExpected: 935.0f\nWas: "+DecimalFraction.FromString("935").ToSingle());
-      if(935.0d!=DecimalFraction.FromString("935").ToDouble())
-        Assert.fail("decfrac double 935\nExpected: 935.0d\nWas: "+DecimalFraction.FromString("935").ToDouble());
-      if(-7890.0f!=DecimalFraction.FromString("-7890E0").ToSingle())
-        Assert.fail("decfrac single -7890E0\nExpected: -7890.0f\nWas: "+DecimalFraction.FromString("-7890E0").ToSingle());
-      if(-7890.0d!=DecimalFraction.FromString("-7890E0").ToDouble())
-        Assert.fail("decfrac double -7890E0\nExpected: -7890.0d\nWas: "+DecimalFraction.FromString("-7890E0").ToDouble());
-      if(4.5492643E12f!=DecimalFraction.FromString("45.49264316782E+11").ToSingle())
-        Assert.fail("decfrac single 45.49264316782E+11\nExpected: 4.5492643E12f\nWas: "+DecimalFraction.FromString("45.49264316782E+11").ToSingle());
-      if(4.549264316782E12d!=DecimalFraction.FromString("45.49264316782E+11").ToDouble())
-        Assert.fail("decfrac double 45.49264316782E+11\nExpected: 4.549264316782E12d\nWas: "+DecimalFraction.FromString("45.49264316782E+11").ToDouble());
-      if(-7684.0f!=DecimalFraction.FromString("-7684").ToSingle())
-        Assert.fail("decfrac single -7684\nExpected: -7684.0f\nWas: "+DecimalFraction.FromString("-7684").ToSingle());
-      if(-7684.0d!=DecimalFraction.FromString("-7684").ToDouble())
-        Assert.fail("decfrac double -7684\nExpected: -7684.0d\nWas: "+DecimalFraction.FromString("-7684").ToDouble());
-      if(734069.0f!=DecimalFraction.FromString("734069").ToSingle())
-        Assert.fail("decfrac single 734069\nExpected: 734069.0f\nWas: "+DecimalFraction.FromString("734069").ToSingle());
-      if(734069.0d!=DecimalFraction.FromString("734069").ToDouble())
-        Assert.fail("decfrac double 734069\nExpected: 734069.0d\nWas: "+DecimalFraction.FromString("734069").ToDouble());
-      if(-3.51801573E12f!=DecimalFraction.FromString("-3518015796477").ToSingle())
-        Assert.fail("decfrac single -3518015796477\nExpected: -3.51801573E12f\nWas: "+DecimalFraction.FromString("-3518015796477").ToSingle());
-      if(-3.518015796477E12d!=DecimalFraction.FromString("-3518015796477").ToDouble())
-        Assert.fail("decfrac double -3518015796477\nExpected: -3.518015796477E12d\nWas: "+DecimalFraction.FromString("-3518015796477").ToDouble());
-      if(-411720.0f!=DecimalFraction.FromString("-411720").ToSingle())
-        Assert.fail("decfrac single -411720\nExpected: -411720.0f\nWas: "+DecimalFraction.FromString("-411720").ToSingle());
-      if(-411720.0d!=DecimalFraction.FromString("-411720").ToDouble())
-        Assert.fail("decfrac double -411720\nExpected: -411720.0d\nWas: "+DecimalFraction.FromString("-411720").ToDouble());
-      if(5.14432512E8f!=DecimalFraction.FromString("514432504").ToSingle())
-        Assert.fail("decfrac single 514432504\nExpected: 5.14432512E8f\nWas: "+DecimalFraction.FromString("514432504").ToSingle());
-      if(5.14432504E8d!=DecimalFraction.FromString("514432504").ToDouble())
-        Assert.fail("decfrac double 514432504\nExpected: 5.14432504E8d\nWas: "+DecimalFraction.FromString("514432504").ToDouble());
-      if(3970.0f!=DecimalFraction.FromString("3970").ToSingle())
-        Assert.fail("decfrac single 3970\nExpected: 3970.0f\nWas: "+DecimalFraction.FromString("3970").ToSingle());
-      if(3970.0d!=DecimalFraction.FromString("3970").ToDouble())
-        Assert.fail("decfrac double 3970\nExpected: 3970.0d\nWas: "+DecimalFraction.FromString("3970").ToDouble());
-      if(-1.89642527E10f!=DecimalFraction.FromString("-18964252847").ToSingle())
-        Assert.fail("decfrac single -18964252847\nExpected: -1.89642527E10f\nWas: "+DecimalFraction.FromString("-18964252847").ToSingle());
-      if(-1.8964252847E10d!=DecimalFraction.FromString("-18964252847").ToDouble())
-        Assert.fail("decfrac double -18964252847\nExpected: -1.8964252847E10d\nWas: "+DecimalFraction.FromString("-18964252847").ToDouble());
-      if(-9.5766118E10f!=DecimalFraction.FromString("-95766116842").ToSingle())
-        Assert.fail("decfrac single -95766116842\nExpected: -9.5766118E10f\nWas: "+DecimalFraction.FromString("-95766116842").ToSingle());
-      if(-9.5766116842E10d!=DecimalFraction.FromString("-95766116842").ToDouble())
-        Assert.fail("decfrac double -95766116842\nExpected: -9.5766116842E10d\nWas: "+DecimalFraction.FromString("-95766116842").ToDouble());
-      if(-4.5759559E15f!=DecimalFraction.FromString("-4575956051893063").ToSingle())
-        Assert.fail("decfrac single -4575956051893063\nExpected: -4.5759559E15f\nWas: "+DecimalFraction.FromString("-4575956051893063").ToSingle());
-      if(-4.575956051893063E15d!=DecimalFraction.FromString("-4575956051893063").ToDouble())
-        Assert.fail("decfrac double -4575956051893063\nExpected: -4.575956051893063E15d\nWas: "+DecimalFraction.FromString("-4575956051893063").ToDouble());
-      if(5.2050934E9f!=DecimalFraction.FromString("5205093392").ToSingle())
-        Assert.fail("decfrac single 5205093392\nExpected: 5.2050934E9f\nWas: "+DecimalFraction.FromString("5205093392").ToSingle());
-      if(5.205093392E9d!=DecimalFraction.FromString("5205093392").ToDouble())
-        Assert.fail("decfrac double 5205093392\nExpected: 5.205093392E9d\nWas: "+DecimalFraction.FromString("5205093392").ToDouble());
-      if(-7.0079627E12f!=DecimalFraction.FromString("-7007962583042").ToSingle())
-        Assert.fail("decfrac single -7007962583042\nExpected: -7.0079627E12f\nWas: "+DecimalFraction.FromString("-7007962583042").ToSingle());
-      if(-7.007962583042E12d!=DecimalFraction.FromString("-7007962583042").ToDouble())
-        Assert.fail("decfrac double -7007962583042\nExpected: -7.007962583042E12d\nWas: "+DecimalFraction.FromString("-7007962583042").ToDouble());
-      if(59.0f!=DecimalFraction.FromString("59").ToSingle())
-        Assert.fail("decfrac single 59\nExpected: 59.0f\nWas: "+DecimalFraction.FromString("59").ToSingle());
-      if(59.0d!=DecimalFraction.FromString("59").ToDouble())
-        Assert.fail("decfrac double 59\nExpected: 59.0d\nWas: "+DecimalFraction.FromString("59").ToDouble());
-      if(-5.5095849E16f!=DecimalFraction.FromString("-55095850956259910").ToSingle())
-        Assert.fail("decfrac single -55095850956259910\nExpected: -5.5095849E16f\nWas: "+DecimalFraction.FromString("-55095850956259910").ToSingle());
-      if(-5.5095850956259912E16d!=DecimalFraction.FromString("-55095850956259910").ToDouble())
-        Assert.fail("decfrac double -55095850956259910\nExpected: -5.5095850956259912E16d\nWas: "+DecimalFraction.FromString("-55095850956259910").ToDouble());
-      if(1.0f!=DecimalFraction.FromString("1").ToSingle())
-        Assert.fail("decfrac single 1\nExpected: 1.0f\nWas: "+DecimalFraction.FromString("1").ToSingle());
-      if(1.0d!=DecimalFraction.FromString("1").ToDouble())
-        Assert.fail("decfrac double 1\nExpected: 1.0d\nWas: "+DecimalFraction.FromString("1").ToDouble());
-      if(598.0f!=DecimalFraction.FromString("598").ToSingle())
-        Assert.fail("decfrac single 598\nExpected: 598.0f\nWas: "+DecimalFraction.FromString("598").ToSingle());
-      if(598.0d!=DecimalFraction.FromString("598").ToDouble())
-        Assert.fail("decfrac double 598\nExpected: 598.0d\nWas: "+DecimalFraction.FromString("598").ToDouble());
-      if(957.0f!=DecimalFraction.FromString("957").ToSingle())
-        Assert.fail("decfrac single 957\nExpected: 957.0f\nWas: "+DecimalFraction.FromString("957").ToSingle());
-      if(957.0d!=DecimalFraction.FromString("957").ToDouble())
-        Assert.fail("decfrac double 957\nExpected: 957.0d\nWas: "+DecimalFraction.FromString("957").ToDouble());
-      if(-1.4772274E7f!=DecimalFraction.FromString("-14772274").ToSingle())
-        Assert.fail("decfrac single -14772274\nExpected: -1.4772274E7f\nWas: "+DecimalFraction.FromString("-14772274").ToSingle());
-      if(-1.4772274E7d!=DecimalFraction.FromString("-14772274").ToDouble())
-        Assert.fail("decfrac double -14772274\nExpected: -1.4772274E7d\nWas: "+DecimalFraction.FromString("-14772274").ToDouble());
-      if(-3006.0f!=DecimalFraction.FromString("-3006").ToSingle())
-        Assert.fail("decfrac single -3006\nExpected: -3006.0f\nWas: "+DecimalFraction.FromString("-3006").ToSingle());
-      if(-3006.0d!=DecimalFraction.FromString("-3006").ToDouble())
-        Assert.fail("decfrac double -3006\nExpected: -3006.0d\nWas: "+DecimalFraction.FromString("-3006").ToDouble());
-      if(3.07120343E18f!=DecimalFraction.FromString("3071203450148698328").ToSingle())
-        Assert.fail("decfrac single 3071203450148698328\nExpected: 3.07120343E18f\nWas: "+DecimalFraction.FromString("3071203450148698328").ToSingle());
-      if(3.0712034501486981E18d!=DecimalFraction.FromString("3071203450148698328").ToDouble())
-        Assert.fail("decfrac double 3071203450148698328\nExpected: 3.0712034501486981E18d\nWas: "+DecimalFraction.FromString("3071203450148698328").ToDouble());
+      if(-5.7703064E7f!=ExtendedDecimal.FromString("-57703066").ToSingle())
+        Assert.fail("decfrac single -57703066\nExpected: -5.7703064E7f\nWas: "+ExtendedDecimal.FromString("-57703066").ToSingle());
+      if(-5.7703066E7d!=ExtendedDecimal.FromString("-57703066").ToDouble())
+        Assert.fail("decfrac double -57703066\nExpected: -5.7703066E7d\nWas: "+ExtendedDecimal.FromString("-57703066").ToDouble());
+      if(1590432.0f!=ExtendedDecimal.FromString("1590432").ToSingle())
+        Assert.fail("decfrac single 1590432\nExpected: 1590432.0f\nWas: "+ExtendedDecimal.FromString("1590432").ToSingle());
+      if(1590432.0d!=ExtendedDecimal.FromString("1590432").ToDouble())
+        Assert.fail("decfrac double 1590432\nExpected: 1590432.0d\nWas: "+ExtendedDecimal.FromString("1590432").ToDouble());
+      if(9.5464253E9f!=ExtendedDecimal.FromString("9546425267").ToSingle())
+        Assert.fail("decfrac single 9546425267\nExpected: 9.5464253E9f\nWas: "+ExtendedDecimal.FromString("9546425267").ToSingle());
+      if(9.546425267E9d!=ExtendedDecimal.FromString("9546425267").ToDouble())
+        Assert.fail("decfrac double 9546425267\nExpected: 9.546425267E9d\nWas: "+ExtendedDecimal.FromString("9546425267").ToDouble());
+      if(7.3227311E16f!=ExtendedDecimal.FromString("73227309698439247").ToSingle())
+        Assert.fail("decfrac single 73227309698439247\nExpected: 7.3227311E16f\nWas: "+ExtendedDecimal.FromString("73227309698439247").ToSingle());
+      if(7.3227309698439248E16d!=ExtendedDecimal.FromString("73227309698439247").ToDouble())
+        Assert.fail("decfrac double 73227309698439247\nExpected: 7.3227309698439248E16d\nWas: "+ExtendedDecimal.FromString("73227309698439247").ToDouble());
+      if(75114.0f!=ExtendedDecimal.FromString("75114").ToSingle())
+        Assert.fail("decfrac single 75114\nExpected: 75114.0f\nWas: "+ExtendedDecimal.FromString("75114").ToSingle());
+      if(75114.0d!=ExtendedDecimal.FromString("75114").ToDouble())
+        Assert.fail("decfrac double 75114\nExpected: 75114.0d\nWas: "+ExtendedDecimal.FromString("75114").ToDouble());
+      if(64.0f!=ExtendedDecimal.FromString("64").ToSingle())
+        Assert.fail("decfrac single 64\nExpected: 64.0f\nWas: "+ExtendedDecimal.FromString("64").ToSingle());
+      if(64.0d!=ExtendedDecimal.FromString("64").ToDouble())
+        Assert.fail("decfrac double 64\nExpected: 64.0d\nWas: "+ExtendedDecimal.FromString("64").ToDouble());
+      if(8.6352293E15f!=ExtendedDecimal.FromString("8635229353951207").ToSingle())
+        Assert.fail("decfrac single 8635229353951207\nExpected: 8.6352293E15f\nWas: "+ExtendedDecimal.FromString("8635229353951207").ToSingle());
+      if(8.635229353951207E15d!=ExtendedDecimal.FromString("8635229353951207").ToDouble())
+        Assert.fail("decfrac double 8635229353951207\nExpected: 8.635229353951207E15d\nWas: "+ExtendedDecimal.FromString("8635229353951207").ToDouble());
+      if(-8.056573E19f!=ExtendedDecimal.FromString("-80565729661447979457").ToSingle())
+        Assert.fail("decfrac single -80565729661447979457\nExpected: -8.056573E19f\nWas: "+ExtendedDecimal.FromString("-80565729661447979457").ToSingle());
+      if(-8.056572966144798E19d!=ExtendedDecimal.FromString("-80565729661447979457").ToDouble())
+        Assert.fail("decfrac double -80565729661447979457\nExpected: -8.056572966144798E19d\nWas: "+ExtendedDecimal.FromString("-80565729661447979457").ToDouble());
+      if(8.1540558E14f!=ExtendedDecimal.FromString("815405565228754").ToSingle())
+        Assert.fail("decfrac single 815405565228754\nExpected: 8.1540558E14f\nWas: "+ExtendedDecimal.FromString("815405565228754").ToSingle());
+      if(8.15405565228754E14d!=ExtendedDecimal.FromString("815405565228754").ToDouble())
+        Assert.fail("decfrac double 815405565228754\nExpected: 8.15405565228754E14d\nWas: "+ExtendedDecimal.FromString("815405565228754").ToDouble());
+      if(-6.1008438E16f!=ExtendedDecimal.FromString("-61008438357089231").ToSingle())
+        Assert.fail("decfrac single -61008438357089231\nExpected: -6.1008438E16f\nWas: "+ExtendedDecimal.FromString("-61008438357089231").ToSingle());
+      if(-6.1008438357089232E16d!=ExtendedDecimal.FromString("-61008438357089231").ToDouble())
+        Assert.fail("decfrac double -61008438357089231\nExpected: -6.1008438357089232E16d\nWas: "+ExtendedDecimal.FromString("-61008438357089231").ToDouble());
+      if(-46526.0f!=ExtendedDecimal.FromString("-46526").ToSingle())
+        Assert.fail("decfrac single -46526\nExpected: -46526.0f\nWas: "+ExtendedDecimal.FromString("-46526").ToSingle());
+      if(-46526.0d!=ExtendedDecimal.FromString("-46526").ToDouble())
+        Assert.fail("decfrac double -46526\nExpected: -46526.0d\nWas: "+ExtendedDecimal.FromString("-46526").ToDouble());
+      if(5.1199847E18f!=ExtendedDecimal.FromString("5119984668352258853").ToSingle())
+        Assert.fail("decfrac single 5119984668352258853\nExpected: 5.1199847E18f\nWas: "+ExtendedDecimal.FromString("5119984668352258853").ToSingle());
+      if(5.1199846683522591E18d!=ExtendedDecimal.FromString("5119984668352258853").ToDouble())
+        Assert.fail("decfrac double 5119984668352258853\nExpected: 5.1199846683522591E18d\nWas: "+ExtendedDecimal.FromString("5119984668352258853").ToDouble());
+      if(1851.0f!=ExtendedDecimal.FromString("1851").ToSingle())
+        Assert.fail("decfrac single 1851\nExpected: 1851.0f\nWas: "+ExtendedDecimal.FromString("1851").ToSingle());
+      if(1851.0d!=ExtendedDecimal.FromString("1851").ToDouble())
+        Assert.fail("decfrac double 1851\nExpected: 1851.0d\nWas: "+ExtendedDecimal.FromString("1851").ToDouble());
+      if(8.7587332E15f!=ExtendedDecimal.FromString("8758733009763848").ToSingle())
+        Assert.fail("decfrac single 8758733009763848\nExpected: 8.7587332E15f\nWas: "+ExtendedDecimal.FromString("8758733009763848").ToSingle());
+      if(8.758733009763848E15d!=ExtendedDecimal.FromString("8758733009763848").ToDouble())
+        Assert.fail("decfrac double 8758733009763848\nExpected: 8.758733009763848E15d\nWas: "+ExtendedDecimal.FromString("8758733009763848").ToDouble());
+      if(51.0f!=ExtendedDecimal.FromString("51").ToSingle())
+        Assert.fail("decfrac single 51\nExpected: 51.0f\nWas: "+ExtendedDecimal.FromString("51").ToSingle());
+      if(51.0d!=ExtendedDecimal.FromString("51").ToDouble())
+        Assert.fail("decfrac double 51\nExpected: 51.0d\nWas: "+ExtendedDecimal.FromString("51").ToDouble());
+      if(9.4281774E11f!=ExtendedDecimal.FromString("942817726107").ToSingle())
+        Assert.fail("decfrac single 942817726107\nExpected: 9.4281774E11f\nWas: "+ExtendedDecimal.FromString("942817726107").ToSingle());
+      if(9.42817726107E11d!=ExtendedDecimal.FromString("942817726107").ToDouble())
+        Assert.fail("decfrac double 942817726107\nExpected: 9.42817726107E11d\nWas: "+ExtendedDecimal.FromString("942817726107").ToDouble());
+      if(186575.0f!=ExtendedDecimal.FromString("186575").ToSingle())
+        Assert.fail("decfrac single 186575\nExpected: 186575.0f\nWas: "+ExtendedDecimal.FromString("186575").ToSingle());
+      if(186575.0d!=ExtendedDecimal.FromString("186575").ToDouble())
+        Assert.fail("decfrac double 186575\nExpected: 186575.0d\nWas: "+ExtendedDecimal.FromString("186575").ToDouble());
+      if(-3.47313997E9f!=ExtendedDecimal.FromString("-3473140020").ToSingle())
+        Assert.fail("decfrac single -3473140020\nExpected: -3.47313997E9f\nWas: "+ExtendedDecimal.FromString("-3473140020").ToSingle());
+      if(-3.47314002E9d!=ExtendedDecimal.FromString("-3473140020").ToDouble())
+        Assert.fail("decfrac double -3473140020\nExpected: -3.47314002E9d\nWas: "+ExtendedDecimal.FromString("-3473140020").ToDouble());
+      if(2.66134912E8f!=ExtendedDecimal.FromString("266134912").ToSingle())
+        Assert.fail("decfrac single 266134912\nExpected: 2.66134912E8f\nWas: "+ExtendedDecimal.FromString("266134912").ToSingle());
+      if(2.66134912E8d!=ExtendedDecimal.FromString("266134912").ToDouble())
+        Assert.fail("decfrac double 266134912\nExpected: 2.66134912E8d\nWas: "+ExtendedDecimal.FromString("266134912").ToDouble());
+      if(5209.0f!=ExtendedDecimal.FromString("5209").ToSingle())
+        Assert.fail("decfrac single 5209\nExpected: 5209.0f\nWas: "+ExtendedDecimal.FromString("5209").ToSingle());
+      if(5209.0d!=ExtendedDecimal.FromString("5209").ToDouble())
+        Assert.fail("decfrac double 5209\nExpected: 5209.0d\nWas: "+ExtendedDecimal.FromString("5209").ToDouble());
+      if(70489.0f!=ExtendedDecimal.FromString("70489").ToSingle())
+        Assert.fail("decfrac single 70489\nExpected: 70489.0f\nWas: "+ExtendedDecimal.FromString("70489").ToSingle());
+      if(70489.0d!=ExtendedDecimal.FromString("70489").ToDouble())
+        Assert.fail("decfrac double 70489\nExpected: 70489.0d\nWas: "+ExtendedDecimal.FromString("70489").ToDouble());
+      if(-6.1383652E14f!=ExtendedDecimal.FromString("-613836517344428").ToSingle())
+        Assert.fail("decfrac single -613836517344428\nExpected: -6.1383652E14f\nWas: "+ExtendedDecimal.FromString("-613836517344428").ToSingle());
+      if(-6.13836517344428E14d!=ExtendedDecimal.FromString("-613836517344428").ToDouble())
+        Assert.fail("decfrac double -613836517344428\nExpected: -6.13836517344428E14d\nWas: "+ExtendedDecimal.FromString("-613836517344428").ToDouble());
+      if(-3.47896388E16f!=ExtendedDecimal.FromString("-34789639317051875E0").ToSingle())
+        Assert.fail("decfrac single -34789639317051875E0\nExpected: -3.47896388E16f\nWas: "+ExtendedDecimal.FromString("-34789639317051875E0").ToSingle());
+      if(-3.4789639317051876E16d!=ExtendedDecimal.FromString("-34789639317051875E0").ToDouble())
+        Assert.fail("decfrac double -34789639317051875E0\nExpected: -3.4789639317051876E16d\nWas: "+ExtendedDecimal.FromString("-34789639317051875E0").ToDouble());
+      if(-8.4833942E13f!=ExtendedDecimal.FromString("-84833938642058").ToSingle())
+        Assert.fail("decfrac single -84833938642058\nExpected: -8.4833942E13f\nWas: "+ExtendedDecimal.FromString("-84833938642058").ToSingle());
+      if(-8.4833938642058E13d!=ExtendedDecimal.FromString("-84833938642058").ToDouble())
+        Assert.fail("decfrac double -84833938642058\nExpected: -8.4833938642058E13d\nWas: "+ExtendedDecimal.FromString("-84833938642058").ToDouble());
+      if(-359.0f!=ExtendedDecimal.FromString("-359").ToSingle())
+        Assert.fail("decfrac single -359\nExpected: -359.0f\nWas: "+ExtendedDecimal.FromString("-359").ToSingle());
+      if(-359.0d!=ExtendedDecimal.FromString("-359").ToDouble())
+        Assert.fail("decfrac double -359\nExpected: -359.0d\nWas: "+ExtendedDecimal.FromString("-359").ToDouble());
+      if(365981.0f!=ExtendedDecimal.FromString("365981").ToSingle())
+        Assert.fail("decfrac single 365981\nExpected: 365981.0f\nWas: "+ExtendedDecimal.FromString("365981").ToSingle());
+      if(365981.0d!=ExtendedDecimal.FromString("365981").ToDouble())
+        Assert.fail("decfrac double 365981\nExpected: 365981.0d\nWas: "+ExtendedDecimal.FromString("365981").ToDouble());
+      if(9103.0f!=ExtendedDecimal.FromString("9103").ToSingle())
+        Assert.fail("decfrac single 9103\nExpected: 9103.0f\nWas: "+ExtendedDecimal.FromString("9103").ToSingle());
+      if(9103.0d!=ExtendedDecimal.FromString("9103").ToDouble())
+        Assert.fail("decfrac double 9103\nExpected: 9103.0d\nWas: "+ExtendedDecimal.FromString("9103").ToDouble());
+      if(9.822906E11f!=ExtendedDecimal.FromString("982290625898").ToSingle())
+        Assert.fail("decfrac single 982290625898\nExpected: 9.822906E11f\nWas: "+ExtendedDecimal.FromString("982290625898").ToSingle());
+      if(9.82290625898E11d!=ExtendedDecimal.FromString("982290625898").ToDouble())
+        Assert.fail("decfrac double 982290625898\nExpected: 9.82290625898E11d\nWas: "+ExtendedDecimal.FromString("982290625898").ToDouble());
+      if(11.0f!=ExtendedDecimal.FromString("11").ToSingle())
+        Assert.fail("decfrac single 11\nExpected: 11.0f\nWas: "+ExtendedDecimal.FromString("11").ToSingle());
+      if(11.0d!=ExtendedDecimal.FromString("11").ToDouble())
+        Assert.fail("decfrac double 11\nExpected: 11.0d\nWas: "+ExtendedDecimal.FromString("11").ToDouble());
+      if(-2823.0f!=ExtendedDecimal.FromString("-2823").ToSingle())
+        Assert.fail("decfrac single -2823\nExpected: -2823.0f\nWas: "+ExtendedDecimal.FromString("-2823").ToSingle());
+      if(-2823.0d!=ExtendedDecimal.FromString("-2823").ToDouble())
+        Assert.fail("decfrac double -2823\nExpected: -2823.0d\nWas: "+ExtendedDecimal.FromString("-2823").ToDouble());
+      if(1.5945044E10f!=ExtendedDecimal.FromString("15945044029").ToSingle())
+        Assert.fail("decfrac single 15945044029\nExpected: 1.5945044E10f\nWas: "+ExtendedDecimal.FromString("15945044029").ToSingle());
+      if(1.5945044029E10d!=ExtendedDecimal.FromString("15945044029").ToDouble())
+        Assert.fail("decfrac double 15945044029\nExpected: 1.5945044029E10d\nWas: "+ExtendedDecimal.FromString("15945044029").ToDouble());
+      if(-1.69193578E18f!=ExtendedDecimal.FromString("-1691935711084975329").ToSingle())
+        Assert.fail("decfrac single -1691935711084975329\nExpected: -1.69193578E18f\nWas: "+ExtendedDecimal.FromString("-1691935711084975329").ToSingle());
+      if(-1.69193571108497536E18d!=ExtendedDecimal.FromString("-1691935711084975329").ToDouble())
+        Assert.fail("decfrac double -1691935711084975329\nExpected: -1.69193571108497536E18d\nWas: "+ExtendedDecimal.FromString("-1691935711084975329").ToDouble());
+      if(611.0f!=ExtendedDecimal.FromString("611").ToSingle())
+        Assert.fail("decfrac single 611\nExpected: 611.0f\nWas: "+ExtendedDecimal.FromString("611").ToSingle());
+      if(611.0d!=ExtendedDecimal.FromString("611").ToDouble())
+        Assert.fail("decfrac double 611\nExpected: 611.0d\nWas: "+ExtendedDecimal.FromString("611").ToDouble());
+      if(8.1338793E9f!=ExtendedDecimal.FromString("8133879260").ToSingle())
+        Assert.fail("decfrac single 8133879260\nExpected: 8.1338793E9f\nWas: "+ExtendedDecimal.FromString("8133879260").ToSingle());
+      if(8.13387926E9d!=ExtendedDecimal.FromString("8133879260").ToDouble())
+        Assert.fail("decfrac double 8133879260\nExpected: 8.13387926E9d\nWas: "+ExtendedDecimal.FromString("8133879260").ToDouble());
+      if(7.8632614E13f!=ExtendedDecimal.FromString("78632613962905").ToSingle())
+        Assert.fail("decfrac single 78632613962905\nExpected: 7.8632614E13f\nWas: "+ExtendedDecimal.FromString("78632613962905").ToSingle());
+      if(7.8632613962905E13d!=ExtendedDecimal.FromString("78632613962905").ToDouble())
+        Assert.fail("decfrac double 78632613962905\nExpected: 7.8632613962905E13d\nWas: "+ExtendedDecimal.FromString("78632613962905").ToDouble());
+      if(8.686342E19f!=ExtendedDecimal.FromString("86863421212032782386").ToSingle())
+        Assert.fail("decfrac single 86863421212032782386\nExpected: 8.686342E19f\nWas: "+ExtendedDecimal.FromString("86863421212032782386").ToSingle());
+      if(8.686342121203278E19d!=ExtendedDecimal.FromString("86863421212032782386").ToDouble())
+        Assert.fail("decfrac double 86863421212032782386\nExpected: 8.686342121203278E19d\nWas: "+ExtendedDecimal.FromString("86863421212032782386").ToDouble());
+      if(2.46595376E8f!=ExtendedDecimal.FromString("246595381").ToSingle())
+        Assert.fail("decfrac single 246595381\nExpected: 2.46595376E8f\nWas: "+ExtendedDecimal.FromString("246595381").ToSingle());
+      if(2.46595381E8d!=ExtendedDecimal.FromString("246595381").ToDouble())
+        Assert.fail("decfrac double 246595381\nExpected: 2.46595381E8d\nWas: "+ExtendedDecimal.FromString("246595381").ToDouble());
+      if(5.128928E16f!=ExtendedDecimal.FromString("51289277641921518E0").ToSingle())
+        Assert.fail("decfrac single 51289277641921518E0\nExpected: 5.128928E16f\nWas: "+ExtendedDecimal.FromString("51289277641921518E0").ToSingle());
+      if(5.128927764192152E16d!=ExtendedDecimal.FromString("51289277641921518E0").ToDouble())
+        Assert.fail("decfrac double 51289277641921518E0\nExpected: 5.128927764192152E16d\nWas: "+ExtendedDecimal.FromString("51289277641921518E0").ToDouble());
+      if(41105.0f!=ExtendedDecimal.FromString("41105").ToSingle())
+        Assert.fail("decfrac single 41105\nExpected: 41105.0f\nWas: "+ExtendedDecimal.FromString("41105").ToSingle());
+      if(41105.0d!=ExtendedDecimal.FromString("41105").ToDouble())
+        Assert.fail("decfrac double 41105\nExpected: 41105.0d\nWas: "+ExtendedDecimal.FromString("41105").ToDouble());
+      if(4.5854699E16f!=ExtendedDecimal.FromString("45854697039925162E0").ToSingle())
+        Assert.fail("decfrac single 45854697039925162E0\nExpected: 4.5854699E16f\nWas: "+ExtendedDecimal.FromString("45854697039925162E0").ToSingle());
+      if(4.585469703992516E16d!=ExtendedDecimal.FromString("45854697039925162E0").ToDouble())
+        Assert.fail("decfrac double 45854697039925162E0\nExpected: 4.585469703992516E16d\nWas: "+ExtendedDecimal.FromString("45854697039925162E0").ToDouble());
+      if(357.0f!=ExtendedDecimal.FromString("357").ToSingle())
+        Assert.fail("decfrac single 357\nExpected: 357.0f\nWas: "+ExtendedDecimal.FromString("357").ToSingle());
+      if(357.0d!=ExtendedDecimal.FromString("357").ToDouble())
+        Assert.fail("decfrac double 357\nExpected: 357.0d\nWas: "+ExtendedDecimal.FromString("357").ToDouble());
+      if(4055.0f!=ExtendedDecimal.FromString("4055").ToSingle())
+        Assert.fail("decfrac single 4055\nExpected: 4055.0f\nWas: "+ExtendedDecimal.FromString("4055").ToSingle());
+      if(4055.0d!=ExtendedDecimal.FromString("4055").ToDouble())
+        Assert.fail("decfrac double 4055\nExpected: 4055.0d\nWas: "+ExtendedDecimal.FromString("4055").ToDouble());
+      if(-75211.0f!=ExtendedDecimal.FromString("-75211").ToSingle())
+        Assert.fail("decfrac single -75211\nExpected: -75211.0f\nWas: "+ExtendedDecimal.FromString("-75211").ToSingle());
+      if(-75211.0d!=ExtendedDecimal.FromString("-75211").ToDouble())
+        Assert.fail("decfrac double -75211\nExpected: -75211.0d\nWas: "+ExtendedDecimal.FromString("-75211").ToDouble());
+      if(-8.718763E19f!=ExtendedDecimal.FromString("-87187631416675804676").ToSingle())
+        Assert.fail("decfrac single -87187631416675804676\nExpected: -8.718763E19f\nWas: "+ExtendedDecimal.FromString("-87187631416675804676").ToSingle());
+      if(-8.718763141667581E19d!=ExtendedDecimal.FromString("-87187631416675804676").ToDouble())
+        Assert.fail("decfrac double -87187631416675804676\nExpected: -8.718763141667581E19d\nWas: "+ExtendedDecimal.FromString("-87187631416675804676").ToDouble());
+      if(-5.6423271E13f!=ExtendedDecimal.FromString("-56423269820314").ToSingle())
+        Assert.fail("decfrac single -56423269820314\nExpected: -5.6423271E13f\nWas: "+ExtendedDecimal.FromString("-56423269820314").ToSingle());
+      if(-5.6423269820314E13d!=ExtendedDecimal.FromString("-56423269820314").ToDouble())
+        Assert.fail("decfrac double -56423269820314\nExpected: -5.6423269820314E13d\nWas: "+ExtendedDecimal.FromString("-56423269820314").ToDouble());
+      if(-884958.0f!=ExtendedDecimal.FromString("-884958").ToSingle())
+        Assert.fail("decfrac single -884958\nExpected: -884958.0f\nWas: "+ExtendedDecimal.FromString("-884958").ToSingle());
+      if(-884958.0d!=ExtendedDecimal.FromString("-884958").ToDouble())
+        Assert.fail("decfrac double -884958\nExpected: -884958.0d\nWas: "+ExtendedDecimal.FromString("-884958").ToDouble());
+      if(-9.5231607E11f!=ExtendedDecimal.FromString("-952316071356").ToSingle())
+        Assert.fail("decfrac single -952316071356\nExpected: -9.5231607E11f\nWas: "+ExtendedDecimal.FromString("-952316071356").ToSingle());
+      if(-9.52316071356E11d!=ExtendedDecimal.FromString("-952316071356").ToDouble())
+        Assert.fail("decfrac double -952316071356\nExpected: -9.52316071356E11d\nWas: "+ExtendedDecimal.FromString("-952316071356").ToDouble());
+      if(1.07800844E17f!=ExtendedDecimal.FromString("107800846902684870").ToSingle())
+        Assert.fail("decfrac single 107800846902684870\nExpected: 1.07800844E17f\nWas: "+ExtendedDecimal.FromString("107800846902684870").ToSingle());
+      if(1.07800846902684864E17d!=ExtendedDecimal.FromString("107800846902684870").ToDouble())
+        Assert.fail("decfrac double 107800846902684870\nExpected: 1.07800846902684864E17d\nWas: "+ExtendedDecimal.FromString("107800846902684870").ToDouble());
+      if(-8.1588551E18f!=ExtendedDecimal.FromString("-8158855313340166027").ToSingle())
+        Assert.fail("decfrac single -8158855313340166027\nExpected: -8.1588551E18f\nWas: "+ExtendedDecimal.FromString("-8158855313340166027").ToSingle());
+      if(-8.1588553133401661E18d!=ExtendedDecimal.FromString("-8158855313340166027").ToDouble())
+        Assert.fail("decfrac double -8158855313340166027\nExpected: -8.1588553133401661E18d\nWas: "+ExtendedDecimal.FromString("-8158855313340166027").ToDouble());
+      if(1.52743454E18f!=ExtendedDecimal.FromString("1527434477600178421").ToSingle())
+        Assert.fail("decfrac single 1527434477600178421\nExpected: 1.52743454E18f\nWas: "+ExtendedDecimal.FromString("1527434477600178421").ToSingle());
+      if(1.52743447760017843E18d!=ExtendedDecimal.FromString("1527434477600178421").ToDouble())
+        Assert.fail("decfrac double 1527434477600178421\nExpected: 1.52743447760017843E18d\nWas: "+ExtendedDecimal.FromString("1527434477600178421").ToDouble());
+      if(-1.25374015E15f!=ExtendedDecimal.FromString("-1253740164504924").ToSingle())
+        Assert.fail("decfrac single -1253740164504924\nExpected: -1.25374015E15f\nWas: "+ExtendedDecimal.FromString("-1253740164504924").ToSingle());
+      if(-1.253740164504924E15d!=ExtendedDecimal.FromString("-1253740164504924").ToDouble())
+        Assert.fail("decfrac double -1253740164504924\nExpected: -1.253740164504924E15d\nWas: "+ExtendedDecimal.FromString("-1253740164504924").ToDouble());
+      if(9.333153E10f!=ExtendedDecimal.FromString("93331529453").ToSingle())
+        Assert.fail("decfrac single 93331529453\nExpected: 9.333153E10f\nWas: "+ExtendedDecimal.FromString("93331529453").ToSingle());
+      if(9.3331529453E10d!=ExtendedDecimal.FromString("93331529453").ToDouble())
+        Assert.fail("decfrac double 93331529453\nExpected: 9.3331529453E10d\nWas: "+ExtendedDecimal.FromString("93331529453").ToDouble());
+      if(-26195.0f!=ExtendedDecimal.FromString("-26195").ToSingle())
+        Assert.fail("decfrac single -26195\nExpected: -26195.0f\nWas: "+ExtendedDecimal.FromString("-26195").ToSingle());
+      if(-26195.0d!=ExtendedDecimal.FromString("-26195").ToDouble())
+        Assert.fail("decfrac double -26195\nExpected: -26195.0d\nWas: "+ExtendedDecimal.FromString("-26195").ToDouble());
+      if(-369.0f!=ExtendedDecimal.FromString("-369").ToSingle())
+        Assert.fail("decfrac single -369\nExpected: -369.0f\nWas: "+ExtendedDecimal.FromString("-369").ToSingle());
+      if(-369.0d!=ExtendedDecimal.FromString("-369").ToDouble())
+        Assert.fail("decfrac double -369\nExpected: -369.0d\nWas: "+ExtendedDecimal.FromString("-369").ToDouble());
+      if(-831.0f!=ExtendedDecimal.FromString("-831").ToSingle())
+        Assert.fail("decfrac single -831\nExpected: -831.0f\nWas: "+ExtendedDecimal.FromString("-831").ToSingle());
+      if(-831.0d!=ExtendedDecimal.FromString("-831").ToDouble())
+        Assert.fail("decfrac double -831\nExpected: -831.0d\nWas: "+ExtendedDecimal.FromString("-831").ToDouble());
+      if(4.11190218E12f!=ExtendedDecimal.FromString("4111902130704").ToSingle())
+        Assert.fail("decfrac single 4111902130704\nExpected: 4.11190218E12f\nWas: "+ExtendedDecimal.FromString("4111902130704").ToSingle());
+      if(4.111902130704E12d!=ExtendedDecimal.FromString("4111902130704").ToDouble())
+        Assert.fail("decfrac double 4111902130704\nExpected: 4.111902130704E12d\nWas: "+ExtendedDecimal.FromString("4111902130704").ToDouble());
+      if(-7.419975E34f!=ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToSingle())
+        Assert.fail("decfrac single -7419975014712636689.1578027201500774E+16\nExpected: -7.419975E34f\nWas: "+ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToSingle());
+      if(-7.419975014712636E34d!=ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToDouble())
+        Assert.fail("decfrac double -7419975014712636689.1578027201500774E+16\nExpected: -7.419975014712636E34d\nWas: "+ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToDouble());
+      if(-1.7915818E7f!=ExtendedDecimal.FromString("-17915818").ToSingle())
+        Assert.fail("decfrac single -17915818\nExpected: -1.7915818E7f\nWas: "+ExtendedDecimal.FromString("-17915818").ToSingle());
+      if(-1.7915818E7d!=ExtendedDecimal.FromString("-17915818").ToDouble())
+        Assert.fail("decfrac double -17915818\nExpected: -1.7915818E7d\nWas: "+ExtendedDecimal.FromString("-17915818").ToDouble());
+      if(-122.0f!=ExtendedDecimal.FromString("-122").ToSingle())
+        Assert.fail("decfrac single -122\nExpected: -122.0f\nWas: "+ExtendedDecimal.FromString("-122").ToSingle());
+      if(-122.0d!=ExtendedDecimal.FromString("-122").ToDouble())
+        Assert.fail("decfrac double -122\nExpected: -122.0d\nWas: "+ExtendedDecimal.FromString("-122").ToDouble());
+      if(-363975.0f!=ExtendedDecimal.FromString("-363975").ToSingle())
+        Assert.fail("decfrac single -363975\nExpected: -363975.0f\nWas: "+ExtendedDecimal.FromString("-363975").ToSingle());
+      if(-363975.0d!=ExtendedDecimal.FromString("-363975").ToDouble())
+        Assert.fail("decfrac double -363975\nExpected: -363975.0d\nWas: "+ExtendedDecimal.FromString("-363975").ToDouble());
+      if(3.22466716E12f!=ExtendedDecimal.FromString("3224667065103").ToSingle())
+        Assert.fail("decfrac single 3224667065103\nExpected: 3.22466716E12f\nWas: "+ExtendedDecimal.FromString("3224667065103").ToSingle());
+      if(3.224667065103E12d!=ExtendedDecimal.FromString("3224667065103").ToDouble())
+        Assert.fail("decfrac double 3224667065103\nExpected: 3.224667065103E12d\nWas: "+ExtendedDecimal.FromString("3224667065103").ToDouble());
+      if(-9.6666224E7f!=ExtendedDecimal.FromString("-96666228").ToSingle())
+        Assert.fail("decfrac single -96666228\nExpected: -9.6666224E7f\nWas: "+ExtendedDecimal.FromString("-96666228").ToSingle());
+      if(-9.6666228E7d!=ExtendedDecimal.FromString("-96666228").ToDouble())
+        Assert.fail("decfrac double -96666228\nExpected: -9.6666228E7d\nWas: "+ExtendedDecimal.FromString("-96666228").ToDouble());
+      if(-6.3737765E19f!=ExtendedDecimal.FromString("-63737764614634686933").ToSingle())
+        Assert.fail("decfrac single -63737764614634686933\nExpected: -6.3737765E19f\nWas: "+ExtendedDecimal.FromString("-63737764614634686933").ToSingle());
+      if(-6.3737764614634684E19d!=ExtendedDecimal.FromString("-63737764614634686933").ToDouble())
+        Assert.fail("decfrac double -63737764614634686933\nExpected: -6.3737764614634684E19d\nWas: "+ExtendedDecimal.FromString("-63737764614634686933").ToDouble());
+      if(-45065.0f!=ExtendedDecimal.FromString("-45065").ToSingle())
+        Assert.fail("decfrac single -45065\nExpected: -45065.0f\nWas: "+ExtendedDecimal.FromString("-45065").ToSingle());
+      if(-45065.0d!=ExtendedDecimal.FromString("-45065").ToDouble())
+        Assert.fail("decfrac double -45065\nExpected: -45065.0d\nWas: "+ExtendedDecimal.FromString("-45065").ToDouble());
+      if(18463.0f!=ExtendedDecimal.FromString("18463").ToSingle())
+        Assert.fail("decfrac single 18463\nExpected: 18463.0f\nWas: "+ExtendedDecimal.FromString("18463").ToSingle());
+      if(18463.0d!=ExtendedDecimal.FromString("18463").ToDouble())
+        Assert.fail("decfrac double 18463\nExpected: 18463.0d\nWas: "+ExtendedDecimal.FromString("18463").ToDouble());
+      if(-5.2669409E15f!=ExtendedDecimal.FromString("-5266940927335870").ToSingle())
+        Assert.fail("decfrac single -5266940927335870\nExpected: -5.2669409E15f\nWas: "+ExtendedDecimal.FromString("-5266940927335870").ToSingle());
+      if(-5.26694092733587E15d!=ExtendedDecimal.FromString("-5266940927335870").ToDouble())
+        Assert.fail("decfrac double -5266940927335870\nExpected: -5.26694092733587E15d\nWas: "+ExtendedDecimal.FromString("-5266940927335870").ToDouble());
+      if(-3.61275925E15f!=ExtendedDecimal.FromString("-3612759343074710").ToSingle())
+        Assert.fail("decfrac single -3612759343074710\nExpected: -3.61275925E15f\nWas: "+ExtendedDecimal.FromString("-3612759343074710").ToSingle());
+      if(-3.61275934307471E15d!=ExtendedDecimal.FromString("-3612759343074710").ToDouble())
+        Assert.fail("decfrac double -3612759343074710\nExpected: -3.61275934307471E15d\nWas: "+ExtendedDecimal.FromString("-3612759343074710").ToDouble());
+      if(-1.49784412E11f!=ExtendedDecimal.FromString("-149784410976").ToSingle())
+        Assert.fail("decfrac single -149784410976\nExpected: -1.49784412E11f\nWas: "+ExtendedDecimal.FromString("-149784410976").ToSingle());
+      if(-1.49784410976E11d!=ExtendedDecimal.FromString("-149784410976").ToDouble())
+        Assert.fail("decfrac double -149784410976\nExpected: -1.49784410976E11d\nWas: "+ExtendedDecimal.FromString("-149784410976").ToDouble());
+      if(-1.01285276E17f!=ExtendedDecimal.FromString("-101285275020696035").ToSingle())
+        Assert.fail("decfrac single -101285275020696035\nExpected: -1.01285276E17f\nWas: "+ExtendedDecimal.FromString("-101285275020696035").ToSingle());
+      if(-1.01285275020696032E17d!=ExtendedDecimal.FromString("-101285275020696035").ToDouble())
+        Assert.fail("decfrac double -101285275020696035\nExpected: -1.01285275020696032E17d\nWas: "+ExtendedDecimal.FromString("-101285275020696035").ToDouble());
+      if(-34.0f!=ExtendedDecimal.FromString("-34").ToSingle())
+        Assert.fail("decfrac single -34\nExpected: -34.0f\nWas: "+ExtendedDecimal.FromString("-34").ToSingle());
+      if(-34.0d!=ExtendedDecimal.FromString("-34").ToDouble())
+        Assert.fail("decfrac double -34\nExpected: -34.0d\nWas: "+ExtendedDecimal.FromString("-34").ToDouble());
+      if(-6.9963739E17f!=ExtendedDecimal.FromString("-699637360432542026").ToSingle())
+        Assert.fail("decfrac single -699637360432542026\nExpected: -6.9963739E17f\nWas: "+ExtendedDecimal.FromString("-699637360432542026").ToSingle());
+      if(-6.9963736043254208E17d!=ExtendedDecimal.FromString("-699637360432542026").ToDouble())
+        Assert.fail("decfrac double -699637360432542026\nExpected: -6.9963736043254208E17d\nWas: "+ExtendedDecimal.FromString("-699637360432542026").ToDouble());
+      if(-8131.0f!=ExtendedDecimal.FromString("-8131").ToSingle())
+        Assert.fail("decfrac single -8131\nExpected: -8131.0f\nWas: "+ExtendedDecimal.FromString("-8131").ToSingle());
+      if(-8131.0d!=ExtendedDecimal.FromString("-8131").ToDouble())
+        Assert.fail("decfrac double -8131\nExpected: -8131.0d\nWas: "+ExtendedDecimal.FromString("-8131").ToDouble());
+      if(6.1692147E8f!=ExtendedDecimal.FromString("616921472").ToSingle())
+        Assert.fail("decfrac single 616921472\nExpected: 6.1692147E8f\nWas: "+ExtendedDecimal.FromString("616921472").ToSingle());
+      if(6.16921472E8d!=ExtendedDecimal.FromString("616921472").ToDouble())
+        Assert.fail("decfrac double 616921472\nExpected: 6.16921472E8d\nWas: "+ExtendedDecimal.FromString("616921472").ToDouble());
+      if(447272.0f!=ExtendedDecimal.FromString("447272").ToSingle())
+        Assert.fail("decfrac single 447272\nExpected: 447272.0f\nWas: "+ExtendedDecimal.FromString("447272").ToSingle());
+      if(447272.0d!=ExtendedDecimal.FromString("447272").ToDouble())
+        Assert.fail("decfrac double 447272\nExpected: 447272.0d\nWas: "+ExtendedDecimal.FromString("447272").ToDouble());
+      if(9.719524E17f!=ExtendedDecimal.FromString("971952376640924713").ToSingle())
+        Assert.fail("decfrac single 971952376640924713\nExpected: 9.719524E17f\nWas: "+ExtendedDecimal.FromString("971952376640924713").ToSingle());
+      if(9.7195237664092467E17d!=ExtendedDecimal.FromString("971952376640924713").ToDouble())
+        Assert.fail("decfrac double 971952376640924713\nExpected: 9.7195237664092467E17d\nWas: "+ExtendedDecimal.FromString("971952376640924713").ToDouble());
+      if(-8622.0f!=ExtendedDecimal.FromString("-8622").ToSingle())
+        Assert.fail("decfrac single -8622\nExpected: -8622.0f\nWas: "+ExtendedDecimal.FromString("-8622").ToSingle());
+      if(-8622.0d!=ExtendedDecimal.FromString("-8622").ToDouble())
+        Assert.fail("decfrac double -8622\nExpected: -8622.0d\nWas: "+ExtendedDecimal.FromString("-8622").ToDouble());
+      if(-9.8425534E13f!=ExtendedDecimal.FromString("-98425536547570").ToSingle())
+        Assert.fail("decfrac single -98425536547570\nExpected: -9.8425534E13f\nWas: "+ExtendedDecimal.FromString("-98425536547570").ToSingle());
+      if(-9.842553654757E13d!=ExtendedDecimal.FromString("-98425536547570").ToDouble())
+        Assert.fail("decfrac double -98425536547570\nExpected: -9.842553654757E13d\nWas: "+ExtendedDecimal.FromString("-98425536547570").ToDouble());
+      if(-1.3578545E14f!=ExtendedDecimal.FromString("-135785450228746").ToSingle())
+        Assert.fail("decfrac single -135785450228746\nExpected: -1.3578545E14f\nWas: "+ExtendedDecimal.FromString("-135785450228746").ToSingle());
+      if(-1.35785450228746E14d!=ExtendedDecimal.FromString("-135785450228746").ToDouble())
+        Assert.fail("decfrac double -135785450228746\nExpected: -1.35785450228746E14d\nWas: "+ExtendedDecimal.FromString("-135785450228746").ToDouble());
+      if(935.0f!=ExtendedDecimal.FromString("935").ToSingle())
+        Assert.fail("decfrac single 935\nExpected: 935.0f\nWas: "+ExtendedDecimal.FromString("935").ToSingle());
+      if(935.0d!=ExtendedDecimal.FromString("935").ToDouble())
+        Assert.fail("decfrac double 935\nExpected: 935.0d\nWas: "+ExtendedDecimal.FromString("935").ToDouble());
+      if(-7890.0f!=ExtendedDecimal.FromString("-7890E0").ToSingle())
+        Assert.fail("decfrac single -7890E0\nExpected: -7890.0f\nWas: "+ExtendedDecimal.FromString("-7890E0").ToSingle());
+      if(-7890.0d!=ExtendedDecimal.FromString("-7890E0").ToDouble())
+        Assert.fail("decfrac double -7890E0\nExpected: -7890.0d\nWas: "+ExtendedDecimal.FromString("-7890E0").ToDouble());
+      if(4.5492643E12f!=ExtendedDecimal.FromString("45.49264316782E+11").ToSingle())
+        Assert.fail("decfrac single 45.49264316782E+11\nExpected: 4.5492643E12f\nWas: "+ExtendedDecimal.FromString("45.49264316782E+11").ToSingle());
+      if(4.549264316782E12d!=ExtendedDecimal.FromString("45.49264316782E+11").ToDouble())
+        Assert.fail("decfrac double 45.49264316782E+11\nExpected: 4.549264316782E12d\nWas: "+ExtendedDecimal.FromString("45.49264316782E+11").ToDouble());
+      if(-7684.0f!=ExtendedDecimal.FromString("-7684").ToSingle())
+        Assert.fail("decfrac single -7684\nExpected: -7684.0f\nWas: "+ExtendedDecimal.FromString("-7684").ToSingle());
+      if(-7684.0d!=ExtendedDecimal.FromString("-7684").ToDouble())
+        Assert.fail("decfrac double -7684\nExpected: -7684.0d\nWas: "+ExtendedDecimal.FromString("-7684").ToDouble());
+      if(734069.0f!=ExtendedDecimal.FromString("734069").ToSingle())
+        Assert.fail("decfrac single 734069\nExpected: 734069.0f\nWas: "+ExtendedDecimal.FromString("734069").ToSingle());
+      if(734069.0d!=ExtendedDecimal.FromString("734069").ToDouble())
+        Assert.fail("decfrac double 734069\nExpected: 734069.0d\nWas: "+ExtendedDecimal.FromString("734069").ToDouble());
+      if(-3.51801573E12f!=ExtendedDecimal.FromString("-3518015796477").ToSingle())
+        Assert.fail("decfrac single -3518015796477\nExpected: -3.51801573E12f\nWas: "+ExtendedDecimal.FromString("-3518015796477").ToSingle());
+      if(-3.518015796477E12d!=ExtendedDecimal.FromString("-3518015796477").ToDouble())
+        Assert.fail("decfrac double -3518015796477\nExpected: -3.518015796477E12d\nWas: "+ExtendedDecimal.FromString("-3518015796477").ToDouble());
+      if(-411720.0f!=ExtendedDecimal.FromString("-411720").ToSingle())
+        Assert.fail("decfrac single -411720\nExpected: -411720.0f\nWas: "+ExtendedDecimal.FromString("-411720").ToSingle());
+      if(-411720.0d!=ExtendedDecimal.FromString("-411720").ToDouble())
+        Assert.fail("decfrac double -411720\nExpected: -411720.0d\nWas: "+ExtendedDecimal.FromString("-411720").ToDouble());
+      if(5.14432512E8f!=ExtendedDecimal.FromString("514432504").ToSingle())
+        Assert.fail("decfrac single 514432504\nExpected: 5.14432512E8f\nWas: "+ExtendedDecimal.FromString("514432504").ToSingle());
+      if(5.14432504E8d!=ExtendedDecimal.FromString("514432504").ToDouble())
+        Assert.fail("decfrac double 514432504\nExpected: 5.14432504E8d\nWas: "+ExtendedDecimal.FromString("514432504").ToDouble());
+      if(3970.0f!=ExtendedDecimal.FromString("3970").ToSingle())
+        Assert.fail("decfrac single 3970\nExpected: 3970.0f\nWas: "+ExtendedDecimal.FromString("3970").ToSingle());
+      if(3970.0d!=ExtendedDecimal.FromString("3970").ToDouble())
+        Assert.fail("decfrac double 3970\nExpected: 3970.0d\nWas: "+ExtendedDecimal.FromString("3970").ToDouble());
+      if(-1.89642527E10f!=ExtendedDecimal.FromString("-18964252847").ToSingle())
+        Assert.fail("decfrac single -18964252847\nExpected: -1.89642527E10f\nWas: "+ExtendedDecimal.FromString("-18964252847").ToSingle());
+      if(-1.8964252847E10d!=ExtendedDecimal.FromString("-18964252847").ToDouble())
+        Assert.fail("decfrac double -18964252847\nExpected: -1.8964252847E10d\nWas: "+ExtendedDecimal.FromString("-18964252847").ToDouble());
+      if(-9.5766118E10f!=ExtendedDecimal.FromString("-95766116842").ToSingle())
+        Assert.fail("decfrac single -95766116842\nExpected: -9.5766118E10f\nWas: "+ExtendedDecimal.FromString("-95766116842").ToSingle());
+      if(-9.5766116842E10d!=ExtendedDecimal.FromString("-95766116842").ToDouble())
+        Assert.fail("decfrac double -95766116842\nExpected: -9.5766116842E10d\nWas: "+ExtendedDecimal.FromString("-95766116842").ToDouble());
+      if(-4.5759559E15f!=ExtendedDecimal.FromString("-4575956051893063").ToSingle())
+        Assert.fail("decfrac single -4575956051893063\nExpected: -4.5759559E15f\nWas: "+ExtendedDecimal.FromString("-4575956051893063").ToSingle());
+      if(-4.575956051893063E15d!=ExtendedDecimal.FromString("-4575956051893063").ToDouble())
+        Assert.fail("decfrac double -4575956051893063\nExpected: -4.575956051893063E15d\nWas: "+ExtendedDecimal.FromString("-4575956051893063").ToDouble());
+      if(5.2050934E9f!=ExtendedDecimal.FromString("5205093392").ToSingle())
+        Assert.fail("decfrac single 5205093392\nExpected: 5.2050934E9f\nWas: "+ExtendedDecimal.FromString("5205093392").ToSingle());
+      if(5.205093392E9d!=ExtendedDecimal.FromString("5205093392").ToDouble())
+        Assert.fail("decfrac double 5205093392\nExpected: 5.205093392E9d\nWas: "+ExtendedDecimal.FromString("5205093392").ToDouble());
+      if(-7.0079627E12f!=ExtendedDecimal.FromString("-7007962583042").ToSingle())
+        Assert.fail("decfrac single -7007962583042\nExpected: -7.0079627E12f\nWas: "+ExtendedDecimal.FromString("-7007962583042").ToSingle());
+      if(-7.007962583042E12d!=ExtendedDecimal.FromString("-7007962583042").ToDouble())
+        Assert.fail("decfrac double -7007962583042\nExpected: -7.007962583042E12d\nWas: "+ExtendedDecimal.FromString("-7007962583042").ToDouble());
+      if(59.0f!=ExtendedDecimal.FromString("59").ToSingle())
+        Assert.fail("decfrac single 59\nExpected: 59.0f\nWas: "+ExtendedDecimal.FromString("59").ToSingle());
+      if(59.0d!=ExtendedDecimal.FromString("59").ToDouble())
+        Assert.fail("decfrac double 59\nExpected: 59.0d\nWas: "+ExtendedDecimal.FromString("59").ToDouble());
+      if(-5.5095849E16f!=ExtendedDecimal.FromString("-55095850956259910").ToSingle())
+        Assert.fail("decfrac single -55095850956259910\nExpected: -5.5095849E16f\nWas: "+ExtendedDecimal.FromString("-55095850956259910").ToSingle());
+      if(-5.5095850956259912E16d!=ExtendedDecimal.FromString("-55095850956259910").ToDouble())
+        Assert.fail("decfrac double -55095850956259910\nExpected: -5.5095850956259912E16d\nWas: "+ExtendedDecimal.FromString("-55095850956259910").ToDouble());
+      if(1.0f!=ExtendedDecimal.FromString("1").ToSingle())
+        Assert.fail("decfrac single 1\nExpected: 1.0f\nWas: "+ExtendedDecimal.FromString("1").ToSingle());
+      if(1.0d!=ExtendedDecimal.FromString("1").ToDouble())
+        Assert.fail("decfrac double 1\nExpected: 1.0d\nWas: "+ExtendedDecimal.FromString("1").ToDouble());
+      if(598.0f!=ExtendedDecimal.FromString("598").ToSingle())
+        Assert.fail("decfrac single 598\nExpected: 598.0f\nWas: "+ExtendedDecimal.FromString("598").ToSingle());
+      if(598.0d!=ExtendedDecimal.FromString("598").ToDouble())
+        Assert.fail("decfrac double 598\nExpected: 598.0d\nWas: "+ExtendedDecimal.FromString("598").ToDouble());
+      if(957.0f!=ExtendedDecimal.FromString("957").ToSingle())
+        Assert.fail("decfrac single 957\nExpected: 957.0f\nWas: "+ExtendedDecimal.FromString("957").ToSingle());
+      if(957.0d!=ExtendedDecimal.FromString("957").ToDouble())
+        Assert.fail("decfrac double 957\nExpected: 957.0d\nWas: "+ExtendedDecimal.FromString("957").ToDouble());
+      if(-1.4772274E7f!=ExtendedDecimal.FromString("-14772274").ToSingle())
+        Assert.fail("decfrac single -14772274\nExpected: -1.4772274E7f\nWas: "+ExtendedDecimal.FromString("-14772274").ToSingle());
+      if(-1.4772274E7d!=ExtendedDecimal.FromString("-14772274").ToDouble())
+        Assert.fail("decfrac double -14772274\nExpected: -1.4772274E7d\nWas: "+ExtendedDecimal.FromString("-14772274").ToDouble());
+      if(-3006.0f!=ExtendedDecimal.FromString("-3006").ToSingle())
+        Assert.fail("decfrac single -3006\nExpected: -3006.0f\nWas: "+ExtendedDecimal.FromString("-3006").ToSingle());
+      if(-3006.0d!=ExtendedDecimal.FromString("-3006").ToDouble())
+        Assert.fail("decfrac double -3006\nExpected: -3006.0d\nWas: "+ExtendedDecimal.FromString("-3006").ToDouble());
+      if(3.07120343E18f!=ExtendedDecimal.FromString("3071203450148698328").ToSingle())
+        Assert.fail("decfrac single 3071203450148698328\nExpected: 3.07120343E18f\nWas: "+ExtendedDecimal.FromString("3071203450148698328").ToSingle());
+      if(3.0712034501486981E18d!=ExtendedDecimal.FromString("3071203450148698328").ToDouble())
+        Assert.fail("decfrac double 3071203450148698328\nExpected: 3.0712034501486981E18d\nWas: "+ExtendedDecimal.FromString("3071203450148698328").ToDouble());
     }
     
     /**
@@ -2926,406 +2900,406 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void TestDecFracToSingleDouble() {
-      if(-4348.0f!=DecimalFraction.FromString("-4348").ToSingle())
-        Assert.fail("decfrac single -4348\nExpected: -4348.0f\nWas: "+DecimalFraction.FromString("-4348").ToSingle());
-      if(-4348.0d!=DecimalFraction.FromString("-4348").ToDouble())
-        Assert.fail("decfrac double -4348\nExpected: -4348.0d\nWas: "+DecimalFraction.FromString("-4348").ToDouble());
-      if(-9.85323f!=DecimalFraction.FromString("-9.85323086293411065").ToSingle())
-        Assert.fail("decfrac single -9.85323086293411065\nExpected: -9.85323f\nWas: "+DecimalFraction.FromString("-9.85323086293411065").ToSingle());
-      if(-9.85323086293411d!=DecimalFraction.FromString("-9.85323086293411065").ToDouble())
-        Assert.fail("decfrac double -9.85323086293411065\nExpected: -9.85323086293411d\nWas: "+DecimalFraction.FromString("-9.85323086293411065").ToDouble());
-      if(-5.2317E9f!=DecimalFraction.FromString("-5231.7E+6").ToSingle())
-        Assert.fail("decfrac single -5231.7E+6\nExpected: -5.2317E9f\nWas: "+DecimalFraction.FromString("-5231.7E+6").ToSingle());
-      if(-5.2317E9d!=DecimalFraction.FromString("-5231.7E+6").ToDouble())
-        Assert.fail("decfrac double -5231.7E+6\nExpected: -5.2317E9d\nWas: "+DecimalFraction.FromString("-5231.7E+6").ToDouble());
-      if(5.7991604E7f!=DecimalFraction.FromString("579916024.449917729730457E-1").ToSingle())
-        Assert.fail("decfrac single 579916024.449917729730457E-1\nExpected: 5.7991604E7f\nWas: "+DecimalFraction.FromString("579916024.449917729730457E-1").ToSingle());
-      if(5.7991602444991775E7d!=DecimalFraction.FromString("579916024.449917729730457E-1").ToDouble())
-        Assert.fail("decfrac double 579916024.449917729730457E-1\nExpected: 5.7991602444991775E7d\nWas: "+DecimalFraction.FromString("579916024.449917729730457E-1").ToDouble());
-      if(-515.02563f!=DecimalFraction.FromString("-515025607547098618E-15").ToSingle())
-        Assert.fail("decfrac single -515025607547098618E-15\nExpected: -515.02563f\nWas: "+DecimalFraction.FromString("-515025607547098618E-15").ToSingle());
-      if(-515.0256075470986d!=DecimalFraction.FromString("-515025607547098618E-15").ToDouble())
-        Assert.fail("decfrac double -515025607547098618E-15\nExpected: -515.0256075470986d\nWas: "+DecimalFraction.FromString("-515025607547098618E-15").ToDouble());
-      if(-9.3541843E10f!=DecimalFraction.FromString("-93541840706").ToSingle())
-        Assert.fail("decfrac single -93541840706\nExpected: -9.3541843E10f\nWas: "+DecimalFraction.FromString("-93541840706").ToSingle());
-      if(-9.3541840706E10d!=DecimalFraction.FromString("-93541840706").ToDouble())
-        Assert.fail("decfrac double -93541840706\nExpected: -9.3541840706E10d\nWas: "+DecimalFraction.FromString("-93541840706").ToDouble());
-      if(3.8568078E23f!=DecimalFraction.FromString("38568076767380659.6E+7").ToSingle())
-        Assert.fail("decfrac single 38568076767380659.6E+7\nExpected: 3.8568078E23f\nWas: "+DecimalFraction.FromString("38568076767380659.6E+7").ToSingle());
-      if(3.8568076767380657E23d!=DecimalFraction.FromString("38568076767380659.6E+7").ToDouble())
-        Assert.fail("decfrac double 38568076767380659.6E+7\nExpected: 3.8568076767380657E23d\nWas: "+DecimalFraction.FromString("38568076767380659.6E+7").ToDouble());
-      if(4682.1987f!=DecimalFraction.FromString("468219867826E-8").ToSingle())
-        Assert.fail("decfrac single 468219867826E-8\nExpected: 4682.1987f\nWas: "+DecimalFraction.FromString("468219867826E-8").ToSingle());
-      if(4682.19867826d!=DecimalFraction.FromString("468219867826E-8").ToDouble())
-        Assert.fail("decfrac double 468219867826E-8\nExpected: 4682.19867826d\nWas: "+DecimalFraction.FromString("468219867826E-8").ToDouble());
-      if(7.3869363E-4f!=DecimalFraction.FromString("73869365.3859328709200790828E-11").ToSingle())
-        Assert.fail("decfrac single 73869365.3859328709200790828E-11\nExpected: 7.3869363E-4f\nWas: "+DecimalFraction.FromString("73869365.3859328709200790828E-11").ToSingle());
-      if(7.386936538593287E-4d!=DecimalFraction.FromString("73869365.3859328709200790828E-11").ToDouble())
-        Assert.fail("decfrac double 73869365.3859328709200790828E-11\nExpected: 7.386936538593287E-4d\nWas: "+DecimalFraction.FromString("73869365.3859328709200790828E-11").ToDouble());
-      if(2.3f!=DecimalFraction.FromString("2.3E0").ToSingle())
-        Assert.fail("decfrac single 2.3E0\nExpected: 2.3f\nWas: "+DecimalFraction.FromString("2.3E0").ToSingle());
-      if(2.3d!=DecimalFraction.FromString("2.3E0").ToDouble())
-        Assert.fail("decfrac double 2.3E0\nExpected: 2.3d\nWas: "+DecimalFraction.FromString("2.3E0").ToDouble());
-      if(3.3713182E15f!=DecimalFraction.FromString("3371318258253373.59498533176159560").ToSingle())
-        Assert.fail("decfrac single 3371318258253373.59498533176159560\nExpected: 3.3713182E15f\nWas: "+DecimalFraction.FromString("3371318258253373.59498533176159560").ToSingle());
-      if(3.3713182582533735E15d!=DecimalFraction.FromString("3371318258253373.59498533176159560").ToDouble())
-        Assert.fail("decfrac double 3371318258253373.59498533176159560\nExpected: 3.3713182582533735E15d\nWas: "+DecimalFraction.FromString("3371318258253373.59498533176159560").ToDouble());
-      if(0.08044683f!=DecimalFraction.FromString("804468350612974.6118902086132089233E-16").ToSingle())
-        Assert.fail("decfrac single 804468350612974.6118902086132089233E-16\nExpected: 0.08044683f\nWas: "+DecimalFraction.FromString("804468350612974.6118902086132089233E-16").ToSingle());
-      if(0.08044683506129746d!=DecimalFraction.FromString("804468350612974.6118902086132089233E-16").ToDouble())
-        Assert.fail("decfrac double 804468350612974.6118902086132089233E-16\nExpected: 0.08044683506129746d\nWas: "+DecimalFraction.FromString("804468350612974.6118902086132089233E-16").ToDouble());
-      if(-7.222071E19f!=DecimalFraction.FromString("-72220708347127407337.28").ToSingle())
-        Assert.fail("decfrac single -72220708347127407337.28\nExpected: -7.222071E19f\nWas: "+DecimalFraction.FromString("-72220708347127407337.28").ToSingle());
-      if(-7.222070834712741E19d!=DecimalFraction.FromString("-72220708347127407337.28").ToDouble())
-        Assert.fail("decfrac double -72220708347127407337.28\nExpected: -7.222070834712741E19d\nWas: "+DecimalFraction.FromString("-72220708347127407337.28").ToDouble());
-      if(9715796.0f!=DecimalFraction.FromString("9715796.4299331966870989").ToSingle())
-        Assert.fail("decfrac single 9715796.4299331966870989\nExpected: 9715796.0f\nWas: "+DecimalFraction.FromString("9715796.4299331966870989").ToSingle());
-      if(9715796.429933196d!=DecimalFraction.FromString("9715796.4299331966870989").ToDouble())
-        Assert.fail("decfrac double 9715796.4299331966870989\nExpected: 9715796.429933196d\nWas: "+DecimalFraction.FromString("9715796.4299331966870989").ToDouble());
-      if(9.3596612E14f!=DecimalFraction.FromString("93596609961883873.8463754373628236E-2").ToSingle())
-        Assert.fail("decfrac single 93596609961883873.8463754373628236E-2\nExpected: 9.3596612E14f\nWas: "+DecimalFraction.FromString("93596609961883873.8463754373628236E-2").ToSingle());
-      if(9.359660996188388E14d!=DecimalFraction.FromString("93596609961883873.8463754373628236E-2").ToDouble())
-        Assert.fail("decfrac double 93596609961883873.8463754373628236E-2\nExpected: 9.359660996188388E14d\nWas: "+DecimalFraction.FromString("93596609961883873.8463754373628236E-2").ToDouble());
-      if(4.82799354E14f!=DecimalFraction.FromString("482799357899450").ToSingle())
-        Assert.fail("decfrac single 482799357899450\nExpected: 4.82799354E14f\nWas: "+DecimalFraction.FromString("482799357899450").ToSingle());
-      if(4.8279935789945E14d!=DecimalFraction.FromString("482799357899450").ToDouble())
-        Assert.fail("decfrac double 482799357899450\nExpected: 4.8279935789945E14d\nWas: "+DecimalFraction.FromString("482799357899450").ToDouble());
-      if(3.8193924E25f!=DecimalFraction.FromString("381939236989E+14").ToSingle())
-        Assert.fail("decfrac single 381939236989E+14\nExpected: 3.8193924E25f\nWas: "+DecimalFraction.FromString("381939236989E+14").ToSingle());
-      if(3.81939236989E25d!=DecimalFraction.FromString("381939236989E+14").ToDouble())
-        Assert.fail("decfrac double 381939236989E+14\nExpected: 3.81939236989E25d\nWas: "+DecimalFraction.FromString("381939236989E+14").ToDouble());
-      if(-3.1092332E27f!=DecimalFraction.FromString("-3109233371824024E+12").ToSingle())
-        Assert.fail("decfrac single -3109233371824024E+12\nExpected: -3.1092332E27f\nWas: "+DecimalFraction.FromString("-3109233371824024E+12").ToSingle());
-      if(-3.109233371824024E27d!=DecimalFraction.FromString("-3109233371824024E+12").ToDouble())
-        Assert.fail("decfrac double -3109233371824024E+12\nExpected: -3.109233371824024E27d\nWas: "+DecimalFraction.FromString("-3109233371824024E+12").ToDouble());
-      if(-0.006658507f!=DecimalFraction.FromString("-66585.07E-7").ToSingle())
-        Assert.fail("decfrac single -66585.07E-7\nExpected: -0.006658507f\nWas: "+DecimalFraction.FromString("-66585.07E-7").ToSingle());
-      if(-0.006658507d!=DecimalFraction.FromString("-66585.07E-7").ToDouble())
-        Assert.fail("decfrac double -66585.07E-7\nExpected: -0.006658507d\nWas: "+DecimalFraction.FromString("-66585.07E-7").ToDouble());
-      if(17.276796f!=DecimalFraction.FromString("17.276795549708").ToSingle())
-        Assert.fail("decfrac single 17.276795549708\nExpected: 17.276796f\nWas: "+DecimalFraction.FromString("17.276795549708").ToSingle());
-      if(17.276795549708d!=DecimalFraction.FromString("17.276795549708").ToDouble())
-        Assert.fail("decfrac double 17.276795549708\nExpected: 17.276795549708d\nWas: "+DecimalFraction.FromString("17.276795549708").ToDouble());
-      if(-3210939.5f!=DecimalFraction.FromString("-321093943510192.3307E-8").ToSingle())
-        Assert.fail("decfrac single -321093943510192.3307E-8\nExpected: -3210939.5f\nWas: "+DecimalFraction.FromString("-321093943510192.3307E-8").ToSingle());
-      if(-3210939.4351019235d!=DecimalFraction.FromString("-321093943510192.3307E-8").ToDouble())
-        Assert.fail("decfrac double -321093943510192.3307E-8\nExpected: -3210939.4351019235d\nWas: "+DecimalFraction.FromString("-321093943510192.3307E-8").ToDouble());
-      if(-976.9676f!=DecimalFraction.FromString("-976.967597776185553735").ToSingle())
-        Assert.fail("decfrac single -976.967597776185553735\nExpected: -976.9676f\nWas: "+DecimalFraction.FromString("-976.967597776185553735").ToSingle());
-      if(-976.9675977761856d!=DecimalFraction.FromString("-976.967597776185553735").ToDouble())
-        Assert.fail("decfrac double -976.967597776185553735\nExpected: -976.9675977761856d\nWas: "+DecimalFraction.FromString("-976.967597776185553735").ToDouble());
-      if(-3.49712614E9f!=DecimalFraction.FromString("-3497126138").ToSingle())
-        Assert.fail("decfrac single -3497126138\nExpected: -3.49712614E9f\nWas: "+DecimalFraction.FromString("-3497126138").ToSingle());
-      if(-3.497126138E9d!=DecimalFraction.FromString("-3497126138").ToDouble())
-        Assert.fail("decfrac double -3497126138\nExpected: -3.497126138E9d\nWas: "+DecimalFraction.FromString("-3497126138").ToDouble());
-      if(-2.63418028E14f!=DecimalFraction.FromString("-2634180.2455697965376217503E+8").ToSingle())
-        Assert.fail("decfrac single -2634180.2455697965376217503E+8\nExpected: -2.63418028E14f\nWas: "+DecimalFraction.FromString("-2634180.2455697965376217503E+8").ToSingle());
-      if(-2.6341802455697966E14d!=DecimalFraction.FromString("-2634180.2455697965376217503E+8").ToDouble())
-        Assert.fail("decfrac double -2634180.2455697965376217503E+8\nExpected: -2.6341802455697966E14d\nWas: "+DecimalFraction.FromString("-2634180.2455697965376217503E+8").ToDouble());
-      if(3.25314253E10f!=DecimalFraction.FromString("32531426161").ToSingle())
-        Assert.fail("decfrac single 32531426161\nExpected: 3.25314253E10f\nWas: "+DecimalFraction.FromString("32531426161").ToSingle());
-      if(3.2531426161E10d!=DecimalFraction.FromString("32531426161").ToDouble())
-        Assert.fail("decfrac double 32531426161\nExpected: 3.2531426161E10d\nWas: "+DecimalFraction.FromString("32531426161").ToDouble());
-      if(-83825.7f!=DecimalFraction.FromString("-83825.7").ToSingle())
-        Assert.fail("decfrac single -83825.7\nExpected: -83825.7f\nWas: "+DecimalFraction.FromString("-83825.7").ToSingle());
-      if(-83825.7d!=DecimalFraction.FromString("-83825.7").ToDouble())
-        Assert.fail("decfrac double -83825.7\nExpected: -83825.7d\nWas: "+DecimalFraction.FromString("-83825.7").ToDouble());
-      if(9347.0f!=DecimalFraction.FromString("9347").ToSingle())
-        Assert.fail("decfrac single 9347\nExpected: 9347.0f\nWas: "+DecimalFraction.FromString("9347").ToSingle());
-      if(9347.0d!=DecimalFraction.FromString("9347").ToDouble())
-        Assert.fail("decfrac double 9347\nExpected: 9347.0d\nWas: "+DecimalFraction.FromString("9347").ToDouble());
-      if(4039.426f!=DecimalFraction.FromString("403942604431E-8").ToSingle())
-        Assert.fail("decfrac single 403942604431E-8\nExpected: 4039.426f\nWas: "+DecimalFraction.FromString("403942604431E-8").ToSingle());
-      if(4039.42604431d!=DecimalFraction.FromString("403942604431E-8").ToDouble())
-        Assert.fail("decfrac double 403942604431E-8\nExpected: 4039.42604431d\nWas: "+DecimalFraction.FromString("403942604431E-8").ToDouble());
-      if(9.821772E-8f!=DecimalFraction.FromString("9821771729.481512E-17").ToSingle())
-        Assert.fail("decfrac single 9821771729.481512E-17\nExpected: 9.821772E-8f\nWas: "+DecimalFraction.FromString("9821771729.481512E-17").ToSingle());
-      if(9.821771729481512E-8d!=DecimalFraction.FromString("9821771729.481512E-17").ToDouble())
-        Assert.fail("decfrac double 9821771729.481512E-17\nExpected: 9.821771729481512E-8d\nWas: "+DecimalFraction.FromString("9821771729.481512E-17").ToDouble());
-      if(1.47027E24f!=DecimalFraction.FromString("1470270E+18").ToSingle())
-        Assert.fail("decfrac single 1470270E+18\nExpected: 1.47027E24f\nWas: "+DecimalFraction.FromString("1470270E+18").ToSingle());
-      if(1.47027E24d!=DecimalFraction.FromString("1470270E+18").ToDouble())
-        Assert.fail("decfrac double 1470270E+18\nExpected: 1.47027E24d\nWas: "+DecimalFraction.FromString("1470270E+18").ToDouble());
-      if(504.07468f!=DecimalFraction.FromString("504.074687047275").ToSingle())
-        Assert.fail("decfrac single 504.074687047275\nExpected: 504.07468f\nWas: "+DecimalFraction.FromString("504.074687047275").ToSingle());
-      if(504.074687047275d!=DecimalFraction.FromString("504.074687047275").ToDouble())
-        Assert.fail("decfrac double 504.074687047275\nExpected: 504.074687047275d\nWas: "+DecimalFraction.FromString("504.074687047275").ToDouble());
-      if(8.051101E-11f!=DecimalFraction.FromString("8051.10083245768396604E-14").ToSingle())
-        Assert.fail("decfrac single 8051.10083245768396604E-14\nExpected: 8.051101E-11f\nWas: "+DecimalFraction.FromString("8051.10083245768396604E-14").ToSingle());
-      if(8.051100832457683E-11d!=DecimalFraction.FromString("8051.10083245768396604E-14").ToDouble())
-        Assert.fail("decfrac double 8051.10083245768396604E-14\nExpected: 8.051100832457683E-11d\nWas: "+DecimalFraction.FromString("8051.10083245768396604E-14").ToDouble());
-      if(-9789.0f!=DecimalFraction.FromString("-9789").ToSingle())
-        Assert.fail("decfrac single -9789\nExpected: -9789.0f\nWas: "+DecimalFraction.FromString("-9789").ToSingle());
-      if(-9789.0d!=DecimalFraction.FromString("-9789").ToDouble())
-        Assert.fail("decfrac double -9789\nExpected: -9789.0d\nWas: "+DecimalFraction.FromString("-9789").ToDouble());
-      if(-2.95046595E10f!=DecimalFraction.FromString("-295046585154199748.8456E-7").ToSingle())
-        Assert.fail("decfrac single -295046585154199748.8456E-7\nExpected: -2.95046595E10f\nWas: "+DecimalFraction.FromString("-295046585154199748.8456E-7").ToSingle());
-      if(-2.9504658515419975E10d!=DecimalFraction.FromString("-295046585154199748.8456E-7").ToDouble())
-        Assert.fail("decfrac double -295046585154199748.8456E-7\nExpected: -2.9504658515419975E10d\nWas: "+DecimalFraction.FromString("-295046585154199748.8456E-7").ToDouble());
-      if(5.8642877E23f!=DecimalFraction.FromString("58642877210005207.915393764393974811E+7").ToSingle())
-        Assert.fail("decfrac single 58642877210005207.915393764393974811E+7\nExpected: 5.8642877E23f\nWas: "+DecimalFraction.FromString("58642877210005207.915393764393974811E+7").ToSingle());
-      if(5.864287721000521E23d!=DecimalFraction.FromString("58642877210005207.915393764393974811E+7").ToDouble())
-        Assert.fail("decfrac double 58642877210005207.915393764393974811E+7\nExpected: 5.864287721000521E23d\nWas: "+DecimalFraction.FromString("58642877210005207.915393764393974811E+7").ToDouble());
-      if(-5.13554645E11f!=DecimalFraction.FromString("-513554652569").ToSingle())
-        Assert.fail("decfrac single -513554652569\nExpected: -5.13554645E11f\nWas: "+DecimalFraction.FromString("-513554652569").ToSingle());
-      if(-5.13554652569E11d!=DecimalFraction.FromString("-513554652569").ToDouble())
-        Assert.fail("decfrac double -513554652569\nExpected: -5.13554652569E11d\nWas: "+DecimalFraction.FromString("-513554652569").ToDouble());
-      if(-1.66059725E10f!=DecimalFraction.FromString("-166059726561900E-4").ToSingle())
-        Assert.fail("decfrac single -166059726561900E-4\nExpected: -1.66059725E10f\nWas: "+DecimalFraction.FromString("-166059726561900E-4").ToSingle());
-      if(-1.660597265619E10d!=DecimalFraction.FromString("-166059726561900E-4").ToDouble())
-        Assert.fail("decfrac double -166059726561900E-4\nExpected: -1.660597265619E10d\nWas: "+DecimalFraction.FromString("-166059726561900E-4").ToDouble());
-      if(-3.66681318E9f!=DecimalFraction.FromString("-3666813090").ToSingle())
-        Assert.fail("decfrac single -3666813090\nExpected: -3.66681318E9f\nWas: "+DecimalFraction.FromString("-3666813090").ToSingle());
-      if(-3.66681309E9d!=DecimalFraction.FromString("-3666813090").ToDouble())
-        Assert.fail("decfrac double -3666813090\nExpected: -3.66681309E9d\nWas: "+DecimalFraction.FromString("-3666813090").ToDouble());
-      if(-741.0616f!=DecimalFraction.FromString("-741.061579731811").ToSingle())
-        Assert.fail("decfrac single -741.061579731811\nExpected: -741.0616f\nWas: "+DecimalFraction.FromString("-741.061579731811").ToSingle());
-      if(-741.061579731811d!=DecimalFraction.FromString("-741.061579731811").ToDouble())
-        Assert.fail("decfrac double -741.061579731811\nExpected: -741.061579731811d\nWas: "+DecimalFraction.FromString("-741.061579731811").ToDouble());
-      if(-2264.0f!=DecimalFraction.FromString("-2264").ToSingle())
-        Assert.fail("decfrac single -2264\nExpected: -2264.0f\nWas: "+DecimalFraction.FromString("-2264").ToSingle());
-      if(-2264.0d!=DecimalFraction.FromString("-2264").ToDouble())
-        Assert.fail("decfrac double -2264\nExpected: -2264.0d\nWas: "+DecimalFraction.FromString("-2264").ToDouble());
-      if(9.2388336E10f!=DecimalFraction.FromString("92388332924").ToSingle())
-        Assert.fail("decfrac single 92388332924\nExpected: 9.2388336E10f\nWas: "+DecimalFraction.FromString("92388332924").ToSingle());
-      if(9.2388332924E10d!=DecimalFraction.FromString("92388332924").ToDouble())
-        Assert.fail("decfrac double 92388332924\nExpected: 9.2388332924E10d\nWas: "+DecimalFraction.FromString("92388332924").ToDouble());
-      if(4991.7646f!=DecimalFraction.FromString("4991.764823290772791").ToSingle())
-        Assert.fail("decfrac single 4991.764823290772791\nExpected: 4991.7646f\nWas: "+DecimalFraction.FromString("4991.764823290772791").ToSingle());
-      if(4991.764823290773d!=DecimalFraction.FromString("4991.764823290772791").ToDouble())
-        Assert.fail("decfrac double 4991.764823290772791\nExpected: 4991.764823290773d\nWas: "+DecimalFraction.FromString("4991.764823290772791").ToDouble());
-      if(-31529.82f!=DecimalFraction.FromString("-3152982E-2").ToSingle())
-        Assert.fail("decfrac single -3152982E-2\nExpected: -31529.82f\nWas: "+DecimalFraction.FromString("-3152982E-2").ToSingle());
-      if(-31529.82d!=DecimalFraction.FromString("-3152982E-2").ToDouble())
-        Assert.fail("decfrac double -3152982E-2\nExpected: -31529.82d\nWas: "+DecimalFraction.FromString("-3152982E-2").ToDouble());
-      if(-2.96352045E15f!=DecimalFraction.FromString("-2963520450661169.515038656").ToSingle())
-        Assert.fail("decfrac single -2963520450661169.515038656\nExpected: -2.96352045E15f\nWas: "+DecimalFraction.FromString("-2963520450661169.515038656").ToSingle());
-      if(-2.9635204506611695E15d!=DecimalFraction.FromString("-2963520450661169.515038656").ToDouble())
-        Assert.fail("decfrac double -2963520450661169.515038656\nExpected: -2.9635204506611695E15d\nWas: "+DecimalFraction.FromString("-2963520450661169.515038656").ToDouble());
-      if(-9.0629749E13f!=DecimalFraction.FromString("-9062974752750092585.8070204683471E-5").ToSingle())
-        Assert.fail("decfrac single -9062974752750092585.8070204683471E-5\nExpected: -9.0629749E13f\nWas: "+DecimalFraction.FromString("-9062974752750092585.8070204683471E-5").ToSingle());
-      if(-9.062974752750092E13d!=DecimalFraction.FromString("-9062974752750092585.8070204683471E-5").ToDouble())
-        Assert.fail("decfrac double -9062974752750092585.8070204683471E-5\nExpected: -9.062974752750092E13d\nWas: "+DecimalFraction.FromString("-9062974752750092585.8070204683471E-5").ToDouble());
-      if(1.32708426E11f!=DecimalFraction.FromString("1327.08423724267788662E+8").ToSingle())
-        Assert.fail("decfrac single 1327.08423724267788662E+8\nExpected: 1.32708426E11f\nWas: "+DecimalFraction.FromString("1327.08423724267788662E+8").ToSingle());
-      if(1.3270842372426779E11d!=DecimalFraction.FromString("1327.08423724267788662E+8").ToDouble())
-        Assert.fail("decfrac double 1327.08423724267788662E+8\nExpected: 1.3270842372426779E11d\nWas: "+DecimalFraction.FromString("1327.08423724267788662E+8").ToDouble());
-      if(3.03766274E11f!=DecimalFraction.FromString("3037662626861314743.2222785E-7").ToSingle())
-        Assert.fail("decfrac single 3037662626861314743.2222785E-7\nExpected: 3.03766274E11f\nWas: "+DecimalFraction.FromString("3037662626861314743.2222785E-7").ToSingle());
-      if(3.037662626861315E11d!=DecimalFraction.FromString("3037662626861314743.2222785E-7").ToDouble())
-        Assert.fail("decfrac double 3037662626861314743.2222785E-7\nExpected: 3.037662626861315E11d\nWas: "+DecimalFraction.FromString("3037662626861314743.2222785E-7").ToDouble());
-      if(5.3666539E12f!=DecimalFraction.FromString("5366653818787.5E0").ToSingle())
-        Assert.fail("decfrac single 5366653818787.5E0\nExpected: 5.3666539E12f\nWas: "+DecimalFraction.FromString("5366653818787.5E0").ToSingle());
-      if(5.3666538187875E12d!=DecimalFraction.FromString("5366653818787.5E0").ToDouble())
-        Assert.fail("decfrac double 5366653818787.5E0\nExpected: 5.3666538187875E12d\nWas: "+DecimalFraction.FromString("5366653818787.5E0").ToDouble());
-      if(-0.09572517f!=DecimalFraction.FromString("-957251.70125291697919424260E-7").ToSingle())
-        Assert.fail("decfrac single -957251.70125291697919424260E-7\nExpected: -0.09572517f\nWas: "+DecimalFraction.FromString("-957251.70125291697919424260E-7").ToSingle());
-      if(-0.09572517012529169d!=DecimalFraction.FromString("-957251.70125291697919424260E-7").ToDouble())
-        Assert.fail("decfrac double -957251.70125291697919424260E-7\nExpected: -0.09572517012529169d\nWas: "+DecimalFraction.FromString("-957251.70125291697919424260E-7").ToDouble());
-      if(8.4375632E7f!=DecimalFraction.FromString("8437563497492.8514E-5").ToSingle())
-        Assert.fail("decfrac single 8437563497492.8514E-5\nExpected: 8.4375632E7f\nWas: "+DecimalFraction.FromString("8437563497492.8514E-5").ToSingle());
-      if(8.437563497492851E7d!=DecimalFraction.FromString("8437563497492.8514E-5").ToDouble())
-        Assert.fail("decfrac double 8437563497492.8514E-5\nExpected: 8.437563497492851E7d\nWas: "+DecimalFraction.FromString("8437563497492.8514E-5").ToDouble());
-      if(7.7747428E15f!=DecimalFraction.FromString("7774742890322348.749566199224594").ToSingle())
-        Assert.fail("decfrac single 7774742890322348.749566199224594\nExpected: 7.7747428E15f\nWas: "+DecimalFraction.FromString("7774742890322348.749566199224594").ToSingle());
-      if(7.774742890322349E15d!=DecimalFraction.FromString("7774742890322348.749566199224594").ToDouble())
-        Assert.fail("decfrac double 7774742890322348.749566199224594\nExpected: 7.774742890322349E15d\nWas: "+DecimalFraction.FromString("7774742890322348.749566199224594").ToDouble());
-      if(-6.3523806E18f!=DecimalFraction.FromString("-6352380631468114E+3").ToSingle())
-        Assert.fail("decfrac single -6352380631468114E+3\nExpected: -6.3523806E18f\nWas: "+DecimalFraction.FromString("-6352380631468114E+3").ToSingle());
-      if(-6.3523806314681139E18d!=DecimalFraction.FromString("-6352380631468114E+3").ToDouble())
-        Assert.fail("decfrac double -6352380631468114E+3\nExpected: -6.3523806314681139E18d\nWas: "+DecimalFraction.FromString("-6352380631468114E+3").ToDouble());
-      if(-8.1199685E23f!=DecimalFraction.FromString("-8119968851439E+11").ToSingle())
-        Assert.fail("decfrac single -8119968851439E+11\nExpected: -8.1199685E23f\nWas: "+DecimalFraction.FromString("-8119968851439E+11").ToSingle());
-      if(-8.119968851439E23d!=DecimalFraction.FromString("-8119968851439E+11").ToDouble())
-        Assert.fail("decfrac double -8119968851439E+11\nExpected: -8.119968851439E23d\nWas: "+DecimalFraction.FromString("-8119968851439E+11").ToDouble());
-      if(-3.201959E23f!=DecimalFraction.FromString("-3201959209367.08531737604446E+11").ToSingle())
-        Assert.fail("decfrac single -3201959209367.08531737604446E+11\nExpected: -3.201959E23f\nWas: "+DecimalFraction.FromString("-3201959209367.08531737604446E+11").ToSingle());
-      if(-3.201959209367085E23d!=DecimalFraction.FromString("-3201959209367.08531737604446E+11").ToDouble())
-        Assert.fail("decfrac double -3201959209367.08531737604446E+11\nExpected: -3.201959209367085E23d\nWas: "+DecimalFraction.FromString("-3201959209367.08531737604446E+11").ToDouble());
-      if(-6.0171188E7f!=DecimalFraction.FromString("-60171187").ToSingle())
-        Assert.fail("decfrac single -60171187\nExpected: -6.0171188E7f\nWas: "+DecimalFraction.FromString("-60171187").ToSingle());
-      if(-6.0171187E7d!=DecimalFraction.FromString("-60171187").ToDouble())
-        Assert.fail("decfrac double -60171187\nExpected: -6.0171187E7d\nWas: "+DecimalFraction.FromString("-60171187").ToDouble());
-      if(-6.6884155E-7f!=DecimalFraction.FromString("-66.884154716131E-8").ToSingle())
-        Assert.fail("decfrac single -66.884154716131E-8\nExpected: -6.6884155E-7f\nWas: "+DecimalFraction.FromString("-66.884154716131E-8").ToSingle());
-      if(-6.6884154716131E-7d!=DecimalFraction.FromString("-66.884154716131E-8").ToDouble())
-        Assert.fail("decfrac double -66.884154716131E-8\nExpected: -6.6884154716131E-7d\nWas: "+DecimalFraction.FromString("-66.884154716131E-8").ToDouble());
-      if(923595.4f!=DecimalFraction.FromString("923595.376427445").ToSingle())
-        Assert.fail("decfrac single 923595.376427445\nExpected: 923595.4f\nWas: "+DecimalFraction.FromString("923595.376427445").ToSingle());
-      if(923595.376427445d!=DecimalFraction.FromString("923595.376427445").ToDouble())
-        Assert.fail("decfrac double 923595.376427445\nExpected: 923595.376427445d\nWas: "+DecimalFraction.FromString("923595.376427445").ToDouble());
-      if(-5.0f!=DecimalFraction.FromString("-5").ToSingle())
-        Assert.fail("decfrac single -5\nExpected: -5.0f\nWas: "+DecimalFraction.FromString("-5").ToSingle());
-      if(-5.0d!=DecimalFraction.FromString("-5").ToDouble())
-        Assert.fail("decfrac double -5\nExpected: -5.0d\nWas: "+DecimalFraction.FromString("-5").ToDouble());
-      if(4.7380017E10f!=DecimalFraction.FromString("47380017776.35").ToSingle())
-        Assert.fail("decfrac single 47380017776.35\nExpected: 4.7380017E10f\nWas: "+DecimalFraction.FromString("47380017776.35").ToSingle());
-      if(4.738001777635E10d!=DecimalFraction.FromString("47380017776.35").ToDouble())
-        Assert.fail("decfrac double 47380017776.35\nExpected: 4.738001777635E10d\nWas: "+DecimalFraction.FromString("47380017776.35").ToDouble());
-      if(8139584.0f!=DecimalFraction.FromString("8139584.242987").ToSingle())
-        Assert.fail("decfrac single 8139584.242987\nExpected: 8139584.0f\nWas: "+DecimalFraction.FromString("8139584.242987").ToSingle());
-      if(8139584.242987d!=DecimalFraction.FromString("8139584.242987").ToDouble())
-        Assert.fail("decfrac double 8139584.242987\nExpected: 8139584.242987d\nWas: "+DecimalFraction.FromString("8139584.242987").ToDouble());
-      if(5.0f!=DecimalFraction.FromString("5").ToSingle())
-        Assert.fail("decfrac single 5\nExpected: 5.0f\nWas: "+DecimalFraction.FromString("5").ToSingle());
-      if(5.0d!=DecimalFraction.FromString("5").ToDouble())
-        Assert.fail("decfrac double 5\nExpected: 5.0d\nWas: "+DecimalFraction.FromString("5").ToDouble());
-      if(-3.6578223E27f!=DecimalFraction.FromString("-365782224812843E+13").ToSingle())
-        Assert.fail("decfrac single -365782224812843E+13\nExpected: -3.6578223E27f\nWas: "+DecimalFraction.FromString("-365782224812843E+13").ToSingle());
-      if(-3.65782224812843E27d!=DecimalFraction.FromString("-365782224812843E+13").ToDouble())
-        Assert.fail("decfrac double -365782224812843E+13\nExpected: -3.65782224812843E27d\nWas: "+DecimalFraction.FromString("-365782224812843E+13").ToDouble());
-      if(6.263606E23f!=DecimalFraction.FromString("626360584867890223E+6").ToSingle())
-        Assert.fail("decfrac single 626360584867890223E+6\nExpected: 6.263606E23f\nWas: "+DecimalFraction.FromString("626360584867890223E+6").ToSingle());
-      if(6.263605848678903E23d!=DecimalFraction.FromString("626360584867890223E+6").ToDouble())
-        Assert.fail("decfrac double 626360584867890223E+6\nExpected: 6.263605848678903E23d\nWas: "+DecimalFraction.FromString("626360584867890223E+6").ToDouble());
-      if(-1.26830412E18f!=DecimalFraction.FromString("-12683040859E+8").ToSingle())
-        Assert.fail("decfrac single -12683040859E+8\nExpected: -1.26830412E18f\nWas: "+DecimalFraction.FromString("-12683040859E+8").ToSingle());
-      if(-1.2683040859E18d!=DecimalFraction.FromString("-12683040859E+8").ToDouble())
-        Assert.fail("decfrac double -12683040859E+8\nExpected: -1.2683040859E18d\nWas: "+DecimalFraction.FromString("-12683040859E+8").ToDouble());
-      if(8.9906433E13f!=DecimalFraction.FromString("89906433733052.14691421345561385").ToSingle())
-        Assert.fail("decfrac single 89906433733052.14691421345561385\nExpected: 8.9906433E13f\nWas: "+DecimalFraction.FromString("89906433733052.14691421345561385").ToSingle());
-      if(8.990643373305214E13d!=DecimalFraction.FromString("89906433733052.14691421345561385").ToDouble())
-        Assert.fail("decfrac double 89906433733052.14691421345561385\nExpected: 8.990643373305214E13d\nWas: "+DecimalFraction.FromString("89906433733052.14691421345561385").ToDouble());
-      if(82.0f!=DecimalFraction.FromString("82").ToSingle())
-        Assert.fail("decfrac single 82\nExpected: 82.0f\nWas: "+DecimalFraction.FromString("82").ToSingle());
-      if(82.0d!=DecimalFraction.FromString("82").ToDouble())
-        Assert.fail("decfrac double 82\nExpected: 82.0d\nWas: "+DecimalFraction.FromString("82").ToDouble());
-      if(9.5523543E16f!=DecimalFraction.FromString("95523541216159667").ToSingle())
-        Assert.fail("decfrac single 95523541216159667\nExpected: 9.5523543E16f\nWas: "+DecimalFraction.FromString("95523541216159667").ToSingle());
-      if(9.5523541216159664E16d!=DecimalFraction.FromString("95523541216159667").ToDouble())
-        Assert.fail("decfrac double 95523541216159667\nExpected: 9.5523541216159664E16d\nWas: "+DecimalFraction.FromString("95523541216159667").ToDouble());
-      if(-0.040098447f!=DecimalFraction.FromString("-400984.46498769274346390686E-7").ToSingle())
-        Assert.fail("decfrac single -400984.46498769274346390686E-7\nExpected: -0.040098447f\nWas: "+DecimalFraction.FromString("-400984.46498769274346390686E-7").ToSingle());
-      if(-0.04009844649876927d!=DecimalFraction.FromString("-400984.46498769274346390686E-7").ToDouble())
-        Assert.fail("decfrac double -400984.46498769274346390686E-7\nExpected: -0.04009844649876927d\nWas: "+DecimalFraction.FromString("-400984.46498769274346390686E-7").ToDouble());
-      if(9.9082332E14f!=DecimalFraction.FromString("990823307532E+3").ToSingle())
-        Assert.fail("decfrac single 990823307532E+3\nExpected: 9.9082332E14f\nWas: "+DecimalFraction.FromString("990823307532E+3").ToSingle());
-      if(9.90823307532E14d!=DecimalFraction.FromString("990823307532E+3").ToDouble())
-        Assert.fail("decfrac double 990823307532E+3\nExpected: 9.90823307532E14d\nWas: "+DecimalFraction.FromString("990823307532E+3").ToDouble());
-      if(-8.969879E8f!=DecimalFraction.FromString("-896987890").ToSingle())
-        Assert.fail("decfrac single -896987890\nExpected: -8.969879E8f\nWas: "+DecimalFraction.FromString("-896987890").ToSingle());
-      if(-8.9698789E8d!=DecimalFraction.FromString("-896987890").ToDouble())
-        Assert.fail("decfrac double -896987890\nExpected: -8.9698789E8d\nWas: "+DecimalFraction.FromString("-896987890").ToDouble());
-      if(-5.1842734E9f!=DecimalFraction.FromString("-5184273642.760").ToSingle())
-        Assert.fail("decfrac single -5184273642.760\nExpected: -5.1842734E9f\nWas: "+DecimalFraction.FromString("-5184273642.760").ToSingle());
-      if(-5.18427364276E9d!=DecimalFraction.FromString("-5184273642.760").ToDouble())
-        Assert.fail("decfrac double -5184273642.760\nExpected: -5.18427364276E9d\nWas: "+DecimalFraction.FromString("-5184273642.760").ToDouble());
-      if(5.03393772E17f!=DecimalFraction.FromString("503393788336283974").ToSingle())
-        Assert.fail("decfrac single 503393788336283974\nExpected: 5.03393772E17f\nWas: "+DecimalFraction.FromString("503393788336283974").ToSingle());
-      if(5.0339378833628397E17d!=DecimalFraction.FromString("503393788336283974").ToDouble())
-        Assert.fail("decfrac double 503393788336283974\nExpected: 5.0339378833628397E17d\nWas: "+DecimalFraction.FromString("503393788336283974").ToDouble());
-      if(-5.50587E15f!=DecimalFraction.FromString("-550587E+10").ToSingle())
-        Assert.fail("decfrac single -550587E+10\nExpected: -5.50587E15f\nWas: "+DecimalFraction.FromString("-550587E+10").ToSingle());
-      if(-5.50587E15d!=DecimalFraction.FromString("-550587E+10").ToDouble())
-        Assert.fail("decfrac double -550587E+10\nExpected: -5.50587E15d\nWas: "+DecimalFraction.FromString("-550587E+10").ToDouble());
-      if(-4.0559753E-5f!=DecimalFraction.FromString("-405597523930.814E-16").ToSingle())
-        Assert.fail("decfrac single -405597523930.814E-16\nExpected: -4.0559753E-5f\nWas: "+DecimalFraction.FromString("-405597523930.814E-16").ToSingle());
-      if(-4.05597523930814E-5d!=DecimalFraction.FromString("-405597523930.814E-16").ToDouble())
-        Assert.fail("decfrac double -405597523930.814E-16\nExpected: -4.05597523930814E-5d\nWas: "+DecimalFraction.FromString("-405597523930.814E-16").ToDouble());
-      if(-5.326398E9f!=DecimalFraction.FromString("-5326397977").ToSingle())
-        Assert.fail("decfrac single -5326397977\nExpected: -5.326398E9f\nWas: "+DecimalFraction.FromString("-5326397977").ToSingle());
-      if(-5.326397977E9d!=DecimalFraction.FromString("-5326397977").ToDouble())
-        Assert.fail("decfrac double -5326397977\nExpected: -5.326397977E9d\nWas: "+DecimalFraction.FromString("-5326397977").ToDouble());
-      if(-9997.447f!=DecimalFraction.FromString("-9997.44701170").ToSingle())
-        Assert.fail("decfrac single -9997.44701170\nExpected: -9997.447f\nWas: "+DecimalFraction.FromString("-9997.44701170").ToSingle());
-      if(-9997.4470117d!=DecimalFraction.FromString("-9997.44701170").ToDouble())
-        Assert.fail("decfrac double -9997.44701170\nExpected: -9997.4470117d\nWas: "+DecimalFraction.FromString("-9997.44701170").ToDouble());
-      if(7.3258664E7f!=DecimalFraction.FromString("73258664.23970751611061").ToSingle())
-        Assert.fail("decfrac single 73258664.23970751611061\nExpected: 7.3258664E7f\nWas: "+DecimalFraction.FromString("73258664.23970751611061").ToSingle());
-      if(7.325866423970751E7d!=DecimalFraction.FromString("73258664.23970751611061").ToDouble())
-        Assert.fail("decfrac double 73258664.23970751611061\nExpected: 7.325866423970751E7d\nWas: "+DecimalFraction.FromString("73258664.23970751611061").ToDouble());
-      if(-7.9944785E13f!=DecimalFraction.FromString("-79944788804361.667255656660").ToSingle())
-        Assert.fail("decfrac single -79944788804361.667255656660\nExpected: -7.9944785E13f\nWas: "+DecimalFraction.FromString("-79944788804361.667255656660").ToSingle());
-      if(-7.994478880436167E13d!=DecimalFraction.FromString("-79944788804361.667255656660").ToDouble())
-        Assert.fail("decfrac double -79944788804361.667255656660\nExpected: -7.994478880436167E13d\nWas: "+DecimalFraction.FromString("-79944788804361.667255656660").ToDouble());
-      if(9.852337E19f!=DecimalFraction.FromString("98523363000987953313E0").ToSingle())
-        Assert.fail("decfrac single 98523363000987953313E0\nExpected: 9.852337E19f\nWas: "+DecimalFraction.FromString("98523363000987953313E0").ToSingle());
-      if(9.852336300098796E19d!=DecimalFraction.FromString("98523363000987953313E0").ToDouble())
-        Assert.fail("decfrac double 98523363000987953313E0\nExpected: 9.852336300098796E19d\nWas: "+DecimalFraction.FromString("98523363000987953313E0").ToDouble());
-      if(5.981638E15f!=DecimalFraction.FromString("5981637941716431.55749471240993").ToSingle())
-        Assert.fail("decfrac single 5981637941716431.55749471240993\nExpected: 5.981638E15f\nWas: "+DecimalFraction.FromString("5981637941716431.55749471240993").ToSingle());
-      if(5.981637941716432E15d!=DecimalFraction.FromString("5981637941716431.55749471240993").ToDouble())
-        Assert.fail("decfrac double 5981637941716431.55749471240993\nExpected: 5.981637941716432E15d\nWas: "+DecimalFraction.FromString("5981637941716431.55749471240993").ToDouble());
-      if(-1.995E-9f!=DecimalFraction.FromString("-1995E-12").ToSingle())
-        Assert.fail("decfrac single -1995E-12\nExpected: -1.995E-9f\nWas: "+DecimalFraction.FromString("-1995E-12").ToSingle());
-      if(-1.995E-9d!=DecimalFraction.FromString("-1995E-12").ToDouble())
-        Assert.fail("decfrac double -1995E-12\nExpected: -1.995E-9d\nWas: "+DecimalFraction.FromString("-1995E-12").ToDouble());
-      if(2.59017677E9f!=DecimalFraction.FromString("2590176810").ToSingle())
-        Assert.fail("decfrac single 2590176810\nExpected: 2.59017677E9f\nWas: "+DecimalFraction.FromString("2590176810").ToSingle());
-      if(2.59017681E9d!=DecimalFraction.FromString("2590176810").ToDouble())
-        Assert.fail("decfrac double 2590176810\nExpected: 2.59017681E9d\nWas: "+DecimalFraction.FromString("2590176810").ToDouble());
-      if(2.9604614f!=DecimalFraction.FromString("2.960461297").ToSingle())
-        Assert.fail("decfrac single 2.960461297\nExpected: 2.9604614f\nWas: "+DecimalFraction.FromString("2.960461297").ToSingle());
-      if(2.960461297d!=DecimalFraction.FromString("2.960461297").ToDouble())
-        Assert.fail("decfrac double 2.960461297\nExpected: 2.960461297d\nWas: "+DecimalFraction.FromString("2.960461297").ToDouble());
-      if(768802.0f!=DecimalFraction.FromString("768802").ToSingle())
-        Assert.fail("decfrac single 768802\nExpected: 768802.0f\nWas: "+DecimalFraction.FromString("768802").ToSingle());
-      if(768802.0d!=DecimalFraction.FromString("768802").ToDouble())
-        Assert.fail("decfrac double 768802\nExpected: 768802.0d\nWas: "+DecimalFraction.FromString("768802").ToDouble());
-      if(145417.38f!=DecimalFraction.FromString("145417.373").ToSingle())
-        Assert.fail("decfrac single 145417.373\nExpected: 145417.38f\nWas: "+DecimalFraction.FromString("145417.373").ToSingle());
-      if(145417.373d!=DecimalFraction.FromString("145417.373").ToDouble())
-        Assert.fail("decfrac double 145417.373\nExpected: 145417.373d\nWas: "+DecimalFraction.FromString("145417.373").ToDouble());
-      if(540905.0f!=DecimalFraction.FromString("540905").ToSingle())
-        Assert.fail("decfrac single 540905\nExpected: 540905.0f\nWas: "+DecimalFraction.FromString("540905").ToSingle());
-      if(540905.0d!=DecimalFraction.FromString("540905").ToDouble())
-        Assert.fail("decfrac double 540905\nExpected: 540905.0d\nWas: "+DecimalFraction.FromString("540905").ToDouble());
-      if(-6.811958E20f!=DecimalFraction.FromString("-681.1958019894E+18").ToSingle())
-        Assert.fail("decfrac single -681.1958019894E+18\nExpected: -6.811958E20f\nWas: "+DecimalFraction.FromString("-681.1958019894E+18").ToSingle());
-      if(-6.811958019894E20d!=DecimalFraction.FromString("-681.1958019894E+18").ToDouble())
-        Assert.fail("decfrac double -681.1958019894E+18\nExpected: -6.811958019894E20d\nWas: "+DecimalFraction.FromString("-681.1958019894E+18").ToDouble());
-      if(54846.0f!=DecimalFraction.FromString("54846.0").ToSingle())
-        Assert.fail("decfrac single 54846.0\nExpected: 54846.0f\nWas: "+DecimalFraction.FromString("54846.0").ToSingle());
-      if(54846.0d!=DecimalFraction.FromString("54846.0").ToDouble())
-        Assert.fail("decfrac double 54846.0\nExpected: 54846.0d\nWas: "+DecimalFraction.FromString("54846.0").ToDouble());
-      if(9.7245E9f!=DecimalFraction.FromString("97245E+5").ToSingle())
-        Assert.fail("decfrac single 97245E+5\nExpected: 9.7245E9f\nWas: "+DecimalFraction.FromString("97245E+5").ToSingle());
-      if(9.7245E9d!=DecimalFraction.FromString("97245E+5").ToDouble())
-        Assert.fail("decfrac double 97245E+5\nExpected: 9.7245E9d\nWas: "+DecimalFraction.FromString("97245E+5").ToDouble());
-      if(-26.0f!=DecimalFraction.FromString("-26").ToSingle())
-        Assert.fail("decfrac single -26\nExpected: -26.0f\nWas: "+DecimalFraction.FromString("-26").ToSingle());
-      if(-26.0d!=DecimalFraction.FromString("-26").ToDouble())
-        Assert.fail("decfrac double -26\nExpected: -26.0d\nWas: "+DecimalFraction.FromString("-26").ToDouble());
-      if(4.15749164E12f!=DecimalFraction.FromString("4157491532482.05").ToSingle())
-        Assert.fail("decfrac single 4157491532482.05\nExpected: 4.15749164E12f\nWas: "+DecimalFraction.FromString("4157491532482.05").ToSingle());
-      if(4.15749153248205E12d!=DecimalFraction.FromString("4157491532482.05").ToDouble())
-        Assert.fail("decfrac double 4157491532482.05\nExpected: 4.15749153248205E12d\nWas: "+DecimalFraction.FromString("4157491532482.05").ToDouble());
-      if(4.7747967E15f!=DecimalFraction.FromString("4774796769101.23808389660855287E+3").ToSingle())
-        Assert.fail("decfrac single 4774796769101.23808389660855287E+3\nExpected: 4.7747967E15f\nWas: "+DecimalFraction.FromString("4774796769101.23808389660855287E+3").ToSingle());
-      if(4.774796769101238E15d!=DecimalFraction.FromString("4774796769101.23808389660855287E+3").ToDouble())
-        Assert.fail("decfrac double 4774796769101.23808389660855287E+3\nExpected: 4.774796769101238E15d\nWas: "+DecimalFraction.FromString("4774796769101.23808389660855287E+3").ToDouble());
-      if(-9.8263879E14f!=DecimalFraction.FromString("-982638781021905").ToSingle())
-        Assert.fail("decfrac single -982638781021905\nExpected: -9.8263879E14f\nWas: "+DecimalFraction.FromString("-982638781021905").ToSingle());
-      if(-9.82638781021905E14d!=DecimalFraction.FromString("-982638781021905").ToDouble())
-        Assert.fail("decfrac double -982638781021905\nExpected: -9.82638781021905E14d\nWas: "+DecimalFraction.FromString("-982638781021905").ToDouble());
-      if(8.8043432E18f!=DecimalFraction.FromString("8804343287262864743").ToSingle())
-        Assert.fail("decfrac single 8804343287262864743\nExpected: 8.8043432E18f\nWas: "+DecimalFraction.FromString("8804343287262864743").ToSingle());
-      if(8.8043432872628644E18d!=DecimalFraction.FromString("8804343287262864743").ToDouble())
-        Assert.fail("decfrac double 8804343287262864743\nExpected: 8.8043432872628644E18d\nWas: "+DecimalFraction.FromString("8804343287262864743").ToDouble());
-      if(-6.5138669E13f!=DecimalFraction.FromString("-65138668135711").ToSingle())
-        Assert.fail("decfrac single -65138668135711\nExpected: -6.5138669E13f\nWas: "+DecimalFraction.FromString("-65138668135711").ToSingle());
-      if(-6.5138668135711E13d!=DecimalFraction.FromString("-65138668135711").ToDouble())
-        Assert.fail("decfrac double -65138668135711\nExpected: -6.5138668135711E13d\nWas: "+DecimalFraction.FromString("-65138668135711").ToDouble());
-      if(-5.9235733E15f!=DecimalFraction.FromString("-5923573055061163").ToSingle())
-        Assert.fail("decfrac single -5923573055061163\nExpected: -5.9235733E15f\nWas: "+DecimalFraction.FromString("-5923573055061163").ToSingle());
-      if(-5.923573055061163E15d!=DecimalFraction.FromString("-5923573055061163").ToDouble())
-        Assert.fail("decfrac double -5923573055061163\nExpected: -5.923573055061163E15d\nWas: "+DecimalFraction.FromString("-5923573055061163").ToDouble());
-      if(-8.6853E-8f!=DecimalFraction.FromString("-8.6853E-8").ToSingle())
-        Assert.fail("decfrac single -8.6853E-8\nExpected: -8.6853E-8f\nWas: "+DecimalFraction.FromString("-8.6853E-8").ToSingle());
-      if(-8.6853E-8d!=DecimalFraction.FromString("-8.6853E-8").ToDouble())
-        Assert.fail("decfrac double -8.6853E-8\nExpected: -8.6853E-8d\nWas: "+DecimalFraction.FromString("-8.6853E-8").ToDouble());
-      if(19707.0f!=DecimalFraction.FromString("19707").ToSingle())
-        Assert.fail("decfrac single 19707\nExpected: 19707.0f\nWas: "+DecimalFraction.FromString("19707").ToSingle());
-      if(19707.0d!=DecimalFraction.FromString("19707").ToDouble())
-        Assert.fail("decfrac double 19707\nExpected: 19707.0d\nWas: "+DecimalFraction.FromString("19707").ToDouble());
-      if(-8.8478554E14f!=DecimalFraction.FromString("-884785536200446.1859332080").ToSingle())
-        Assert.fail("decfrac single -884785536200446.1859332080\nExpected: -8.8478554E14f\nWas: "+DecimalFraction.FromString("-884785536200446.1859332080").ToSingle());
-      if(-8.847855362004461E14d!=DecimalFraction.FromString("-884785536200446.1859332080").ToDouble())
-        Assert.fail("decfrac double -884785536200446.1859332080\nExpected: -8.847855362004461E14d\nWas: "+DecimalFraction.FromString("-884785536200446.1859332080").ToDouble());
-      if(-1.0f!=DecimalFraction.FromString("-1").ToSingle())
-        Assert.fail("decfrac single -1\nExpected: -1.0f\nWas: "+DecimalFraction.FromString("-1").ToSingle());
-      if(-1.0d!=DecimalFraction.FromString("-1").ToDouble())
-        Assert.fail("decfrac double -1\nExpected: -1.0d\nWas: "+DecimalFraction.FromString("-1").ToDouble());
+      if(-4348.0f!=ExtendedDecimal.FromString("-4348").ToSingle())
+        Assert.fail("decfrac single -4348\nExpected: -4348.0f\nWas: "+ExtendedDecimal.FromString("-4348").ToSingle());
+      if(-4348.0d!=ExtendedDecimal.FromString("-4348").ToDouble())
+        Assert.fail("decfrac double -4348\nExpected: -4348.0d\nWas: "+ExtendedDecimal.FromString("-4348").ToDouble());
+      if(-9.85323f!=ExtendedDecimal.FromString("-9.85323086293411065").ToSingle())
+        Assert.fail("decfrac single -9.85323086293411065\nExpected: -9.85323f\nWas: "+ExtendedDecimal.FromString("-9.85323086293411065").ToSingle());
+      if(-9.85323086293411d!=ExtendedDecimal.FromString("-9.85323086293411065").ToDouble())
+        Assert.fail("decfrac double -9.85323086293411065\nExpected: -9.85323086293411d\nWas: "+ExtendedDecimal.FromString("-9.85323086293411065").ToDouble());
+      if(-5.2317E9f!=ExtendedDecimal.FromString("-5231.7E+6").ToSingle())
+        Assert.fail("decfrac single -5231.7E+6\nExpected: -5.2317E9f\nWas: "+ExtendedDecimal.FromString("-5231.7E+6").ToSingle());
+      if(-5.2317E9d!=ExtendedDecimal.FromString("-5231.7E+6").ToDouble())
+        Assert.fail("decfrac double -5231.7E+6\nExpected: -5.2317E9d\nWas: "+ExtendedDecimal.FromString("-5231.7E+6").ToDouble());
+      if(5.7991604E7f!=ExtendedDecimal.FromString("579916024.449917729730457E-1").ToSingle())
+        Assert.fail("decfrac single 579916024.449917729730457E-1\nExpected: 5.7991604E7f\nWas: "+ExtendedDecimal.FromString("579916024.449917729730457E-1").ToSingle());
+      if(5.7991602444991775E7d!=ExtendedDecimal.FromString("579916024.449917729730457E-1").ToDouble())
+        Assert.fail("decfrac double 579916024.449917729730457E-1\nExpected: 5.7991602444991775E7d\nWas: "+ExtendedDecimal.FromString("579916024.449917729730457E-1").ToDouble());
+      if(-515.02563f!=ExtendedDecimal.FromString("-515025607547098618E-15").ToSingle())
+        Assert.fail("decfrac single -515025607547098618E-15\nExpected: -515.02563f\nWas: "+ExtendedDecimal.FromString("-515025607547098618E-15").ToSingle());
+      if(-515.0256075470986d!=ExtendedDecimal.FromString("-515025607547098618E-15").ToDouble())
+        Assert.fail("decfrac double -515025607547098618E-15\nExpected: -515.0256075470986d\nWas: "+ExtendedDecimal.FromString("-515025607547098618E-15").ToDouble());
+      if(-9.3541843E10f!=ExtendedDecimal.FromString("-93541840706").ToSingle())
+        Assert.fail("decfrac single -93541840706\nExpected: -9.3541843E10f\nWas: "+ExtendedDecimal.FromString("-93541840706").ToSingle());
+      if(-9.3541840706E10d!=ExtendedDecimal.FromString("-93541840706").ToDouble())
+        Assert.fail("decfrac double -93541840706\nExpected: -9.3541840706E10d\nWas: "+ExtendedDecimal.FromString("-93541840706").ToDouble());
+      if(3.8568078E23f!=ExtendedDecimal.FromString("38568076767380659.6E+7").ToSingle())
+        Assert.fail("decfrac single 38568076767380659.6E+7\nExpected: 3.8568078E23f\nWas: "+ExtendedDecimal.FromString("38568076767380659.6E+7").ToSingle());
+      if(3.8568076767380657E23d!=ExtendedDecimal.FromString("38568076767380659.6E+7").ToDouble())
+        Assert.fail("decfrac double 38568076767380659.6E+7\nExpected: 3.8568076767380657E23d\nWas: "+ExtendedDecimal.FromString("38568076767380659.6E+7").ToDouble());
+      if(4682.1987f!=ExtendedDecimal.FromString("468219867826E-8").ToSingle())
+        Assert.fail("decfrac single 468219867826E-8\nExpected: 4682.1987f\nWas: "+ExtendedDecimal.FromString("468219867826E-8").ToSingle());
+      if(4682.19867826d!=ExtendedDecimal.FromString("468219867826E-8").ToDouble())
+        Assert.fail("decfrac double 468219867826E-8\nExpected: 4682.19867826d\nWas: "+ExtendedDecimal.FromString("468219867826E-8").ToDouble());
+      if(7.3869363E-4f!=ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToSingle())
+        Assert.fail("decfrac single 73869365.3859328709200790828E-11\nExpected: 7.3869363E-4f\nWas: "+ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToSingle());
+      if(7.386936538593287E-4d!=ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToDouble())
+        Assert.fail("decfrac double 73869365.3859328709200790828E-11\nExpected: 7.386936538593287E-4d\nWas: "+ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToDouble());
+      if(2.3f!=ExtendedDecimal.FromString("2.3E0").ToSingle())
+        Assert.fail("decfrac single 2.3E0\nExpected: 2.3f\nWas: "+ExtendedDecimal.FromString("2.3E0").ToSingle());
+      if(2.3d!=ExtendedDecimal.FromString("2.3E0").ToDouble())
+        Assert.fail("decfrac double 2.3E0\nExpected: 2.3d\nWas: "+ExtendedDecimal.FromString("2.3E0").ToDouble());
+      if(3.3713182E15f!=ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToSingle())
+        Assert.fail("decfrac single 3371318258253373.59498533176159560\nExpected: 3.3713182E15f\nWas: "+ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToSingle());
+      if(3.3713182582533735E15d!=ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToDouble())
+        Assert.fail("decfrac double 3371318258253373.59498533176159560\nExpected: 3.3713182582533735E15d\nWas: "+ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToDouble());
+      if(0.08044683f!=ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToSingle())
+        Assert.fail("decfrac single 804468350612974.6118902086132089233E-16\nExpected: 0.08044683f\nWas: "+ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToSingle());
+      if(0.08044683506129746d!=ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToDouble())
+        Assert.fail("decfrac double 804468350612974.6118902086132089233E-16\nExpected: 0.08044683506129746d\nWas: "+ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToDouble());
+      if(-7.222071E19f!=ExtendedDecimal.FromString("-72220708347127407337.28").ToSingle())
+        Assert.fail("decfrac single -72220708347127407337.28\nExpected: -7.222071E19f\nWas: "+ExtendedDecimal.FromString("-72220708347127407337.28").ToSingle());
+      if(-7.222070834712741E19d!=ExtendedDecimal.FromString("-72220708347127407337.28").ToDouble())
+        Assert.fail("decfrac double -72220708347127407337.28\nExpected: -7.222070834712741E19d\nWas: "+ExtendedDecimal.FromString("-72220708347127407337.28").ToDouble());
+      if(9715796.0f!=ExtendedDecimal.FromString("9715796.4299331966870989").ToSingle())
+        Assert.fail("decfrac single 9715796.4299331966870989\nExpected: 9715796.0f\nWas: "+ExtendedDecimal.FromString("9715796.4299331966870989").ToSingle());
+      if(9715796.429933196d!=ExtendedDecimal.FromString("9715796.4299331966870989").ToDouble())
+        Assert.fail("decfrac double 9715796.4299331966870989\nExpected: 9715796.429933196d\nWas: "+ExtendedDecimal.FromString("9715796.4299331966870989").ToDouble());
+      if(9.3596612E14f!=ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToSingle())
+        Assert.fail("decfrac single 93596609961883873.8463754373628236E-2\nExpected: 9.3596612E14f\nWas: "+ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToSingle());
+      if(9.359660996188388E14d!=ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToDouble())
+        Assert.fail("decfrac double 93596609961883873.8463754373628236E-2\nExpected: 9.359660996188388E14d\nWas: "+ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToDouble());
+      if(4.82799354E14f!=ExtendedDecimal.FromString("482799357899450").ToSingle())
+        Assert.fail("decfrac single 482799357899450\nExpected: 4.82799354E14f\nWas: "+ExtendedDecimal.FromString("482799357899450").ToSingle());
+      if(4.8279935789945E14d!=ExtendedDecimal.FromString("482799357899450").ToDouble())
+        Assert.fail("decfrac double 482799357899450\nExpected: 4.8279935789945E14d\nWas: "+ExtendedDecimal.FromString("482799357899450").ToDouble());
+      if(3.8193924E25f!=ExtendedDecimal.FromString("381939236989E+14").ToSingle())
+        Assert.fail("decfrac single 381939236989E+14\nExpected: 3.8193924E25f\nWas: "+ExtendedDecimal.FromString("381939236989E+14").ToSingle());
+      if(3.81939236989E25d!=ExtendedDecimal.FromString("381939236989E+14").ToDouble())
+        Assert.fail("decfrac double 381939236989E+14\nExpected: 3.81939236989E25d\nWas: "+ExtendedDecimal.FromString("381939236989E+14").ToDouble());
+      if(-3.1092332E27f!=ExtendedDecimal.FromString("-3109233371824024E+12").ToSingle())
+        Assert.fail("decfrac single -3109233371824024E+12\nExpected: -3.1092332E27f\nWas: "+ExtendedDecimal.FromString("-3109233371824024E+12").ToSingle());
+      if(-3.109233371824024E27d!=ExtendedDecimal.FromString("-3109233371824024E+12").ToDouble())
+        Assert.fail("decfrac double -3109233371824024E+12\nExpected: -3.109233371824024E27d\nWas: "+ExtendedDecimal.FromString("-3109233371824024E+12").ToDouble());
+      if(-0.006658507f!=ExtendedDecimal.FromString("-66585.07E-7").ToSingle())
+        Assert.fail("decfrac single -66585.07E-7\nExpected: -0.006658507f\nWas: "+ExtendedDecimal.FromString("-66585.07E-7").ToSingle());
+      if(-0.006658507d!=ExtendedDecimal.FromString("-66585.07E-7").ToDouble())
+        Assert.fail("decfrac double -66585.07E-7\nExpected: -0.006658507d\nWas: "+ExtendedDecimal.FromString("-66585.07E-7").ToDouble());
+      if(17.276796f!=ExtendedDecimal.FromString("17.276795549708").ToSingle())
+        Assert.fail("decfrac single 17.276795549708\nExpected: 17.276796f\nWas: "+ExtendedDecimal.FromString("17.276795549708").ToSingle());
+      if(17.276795549708d!=ExtendedDecimal.FromString("17.276795549708").ToDouble())
+        Assert.fail("decfrac double 17.276795549708\nExpected: 17.276795549708d\nWas: "+ExtendedDecimal.FromString("17.276795549708").ToDouble());
+      if(-3210939.5f!=ExtendedDecimal.FromString("-321093943510192.3307E-8").ToSingle())
+        Assert.fail("decfrac single -321093943510192.3307E-8\nExpected: -3210939.5f\nWas: "+ExtendedDecimal.FromString("-321093943510192.3307E-8").ToSingle());
+      if(-3210939.4351019235d!=ExtendedDecimal.FromString("-321093943510192.3307E-8").ToDouble())
+        Assert.fail("decfrac double -321093943510192.3307E-8\nExpected: -3210939.4351019235d\nWas: "+ExtendedDecimal.FromString("-321093943510192.3307E-8").ToDouble());
+      if(-976.9676f!=ExtendedDecimal.FromString("-976.967597776185553735").ToSingle())
+        Assert.fail("decfrac single -976.967597776185553735\nExpected: -976.9676f\nWas: "+ExtendedDecimal.FromString("-976.967597776185553735").ToSingle());
+      if(-976.9675977761856d!=ExtendedDecimal.FromString("-976.967597776185553735").ToDouble())
+        Assert.fail("decfrac double -976.967597776185553735\nExpected: -976.9675977761856d\nWas: "+ExtendedDecimal.FromString("-976.967597776185553735").ToDouble());
+      if(-3.49712614E9f!=ExtendedDecimal.FromString("-3497126138").ToSingle())
+        Assert.fail("decfrac single -3497126138\nExpected: -3.49712614E9f\nWas: "+ExtendedDecimal.FromString("-3497126138").ToSingle());
+      if(-3.497126138E9d!=ExtendedDecimal.FromString("-3497126138").ToDouble())
+        Assert.fail("decfrac double -3497126138\nExpected: -3.497126138E9d\nWas: "+ExtendedDecimal.FromString("-3497126138").ToDouble());
+      if(-2.63418028E14f!=ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToSingle())
+        Assert.fail("decfrac single -2634180.2455697965376217503E+8\nExpected: -2.63418028E14f\nWas: "+ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToSingle());
+      if(-2.6341802455697966E14d!=ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToDouble())
+        Assert.fail("decfrac double -2634180.2455697965376217503E+8\nExpected: -2.6341802455697966E14d\nWas: "+ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToDouble());
+      if(3.25314253E10f!=ExtendedDecimal.FromString("32531426161").ToSingle())
+        Assert.fail("decfrac single 32531426161\nExpected: 3.25314253E10f\nWas: "+ExtendedDecimal.FromString("32531426161").ToSingle());
+      if(3.2531426161E10d!=ExtendedDecimal.FromString("32531426161").ToDouble())
+        Assert.fail("decfrac double 32531426161\nExpected: 3.2531426161E10d\nWas: "+ExtendedDecimal.FromString("32531426161").ToDouble());
+      if(-83825.7f!=ExtendedDecimal.FromString("-83825.7").ToSingle())
+        Assert.fail("decfrac single -83825.7\nExpected: -83825.7f\nWas: "+ExtendedDecimal.FromString("-83825.7").ToSingle());
+      if(-83825.7d!=ExtendedDecimal.FromString("-83825.7").ToDouble())
+        Assert.fail("decfrac double -83825.7\nExpected: -83825.7d\nWas: "+ExtendedDecimal.FromString("-83825.7").ToDouble());
+      if(9347.0f!=ExtendedDecimal.FromString("9347").ToSingle())
+        Assert.fail("decfrac single 9347\nExpected: 9347.0f\nWas: "+ExtendedDecimal.FromString("9347").ToSingle());
+      if(9347.0d!=ExtendedDecimal.FromString("9347").ToDouble())
+        Assert.fail("decfrac double 9347\nExpected: 9347.0d\nWas: "+ExtendedDecimal.FromString("9347").ToDouble());
+      if(4039.426f!=ExtendedDecimal.FromString("403942604431E-8").ToSingle())
+        Assert.fail("decfrac single 403942604431E-8\nExpected: 4039.426f\nWas: "+ExtendedDecimal.FromString("403942604431E-8").ToSingle());
+      if(4039.42604431d!=ExtendedDecimal.FromString("403942604431E-8").ToDouble())
+        Assert.fail("decfrac double 403942604431E-8\nExpected: 4039.42604431d\nWas: "+ExtendedDecimal.FromString("403942604431E-8").ToDouble());
+      if(9.821772E-8f!=ExtendedDecimal.FromString("9821771729.481512E-17").ToSingle())
+        Assert.fail("decfrac single 9821771729.481512E-17\nExpected: 9.821772E-8f\nWas: "+ExtendedDecimal.FromString("9821771729.481512E-17").ToSingle());
+      if(9.821771729481512E-8d!=ExtendedDecimal.FromString("9821771729.481512E-17").ToDouble())
+        Assert.fail("decfrac double 9821771729.481512E-17\nExpected: 9.821771729481512E-8d\nWas: "+ExtendedDecimal.FromString("9821771729.481512E-17").ToDouble());
+      if(1.47027E24f!=ExtendedDecimal.FromString("1470270E+18").ToSingle())
+        Assert.fail("decfrac single 1470270E+18\nExpected: 1.47027E24f\nWas: "+ExtendedDecimal.FromString("1470270E+18").ToSingle());
+      if(1.47027E24d!=ExtendedDecimal.FromString("1470270E+18").ToDouble())
+        Assert.fail("decfrac double 1470270E+18\nExpected: 1.47027E24d\nWas: "+ExtendedDecimal.FromString("1470270E+18").ToDouble());
+      if(504.07468f!=ExtendedDecimal.FromString("504.074687047275").ToSingle())
+        Assert.fail("decfrac single 504.074687047275\nExpected: 504.07468f\nWas: "+ExtendedDecimal.FromString("504.074687047275").ToSingle());
+      if(504.074687047275d!=ExtendedDecimal.FromString("504.074687047275").ToDouble())
+        Assert.fail("decfrac double 504.074687047275\nExpected: 504.074687047275d\nWas: "+ExtendedDecimal.FromString("504.074687047275").ToDouble());
+      if(8.051101E-11f!=ExtendedDecimal.FromString("8051.10083245768396604E-14").ToSingle())
+        Assert.fail("decfrac single 8051.10083245768396604E-14\nExpected: 8.051101E-11f\nWas: "+ExtendedDecimal.FromString("8051.10083245768396604E-14").ToSingle());
+      if(8.051100832457683E-11d!=ExtendedDecimal.FromString("8051.10083245768396604E-14").ToDouble())
+        Assert.fail("decfrac double 8051.10083245768396604E-14\nExpected: 8.051100832457683E-11d\nWas: "+ExtendedDecimal.FromString("8051.10083245768396604E-14").ToDouble());
+      if(-9789.0f!=ExtendedDecimal.FromString("-9789").ToSingle())
+        Assert.fail("decfrac single -9789\nExpected: -9789.0f\nWas: "+ExtendedDecimal.FromString("-9789").ToSingle());
+      if(-9789.0d!=ExtendedDecimal.FromString("-9789").ToDouble())
+        Assert.fail("decfrac double -9789\nExpected: -9789.0d\nWas: "+ExtendedDecimal.FromString("-9789").ToDouble());
+      if(-2.95046595E10f!=ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToSingle())
+        Assert.fail("decfrac single -295046585154199748.8456E-7\nExpected: -2.95046595E10f\nWas: "+ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToSingle());
+      if(-2.9504658515419975E10d!=ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToDouble())
+        Assert.fail("decfrac double -295046585154199748.8456E-7\nExpected: -2.9504658515419975E10d\nWas: "+ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToDouble());
+      if(5.8642877E23f!=ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToSingle())
+        Assert.fail("decfrac single 58642877210005207.915393764393974811E+7\nExpected: 5.8642877E23f\nWas: "+ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToSingle());
+      if(5.864287721000521E23d!=ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToDouble())
+        Assert.fail("decfrac double 58642877210005207.915393764393974811E+7\nExpected: 5.864287721000521E23d\nWas: "+ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToDouble());
+      if(-5.13554645E11f!=ExtendedDecimal.FromString("-513554652569").ToSingle())
+        Assert.fail("decfrac single -513554652569\nExpected: -5.13554645E11f\nWas: "+ExtendedDecimal.FromString("-513554652569").ToSingle());
+      if(-5.13554652569E11d!=ExtendedDecimal.FromString("-513554652569").ToDouble())
+        Assert.fail("decfrac double -513554652569\nExpected: -5.13554652569E11d\nWas: "+ExtendedDecimal.FromString("-513554652569").ToDouble());
+      if(-1.66059725E10f!=ExtendedDecimal.FromString("-166059726561900E-4").ToSingle())
+        Assert.fail("decfrac single -166059726561900E-4\nExpected: -1.66059725E10f\nWas: "+ExtendedDecimal.FromString("-166059726561900E-4").ToSingle());
+      if(-1.660597265619E10d!=ExtendedDecimal.FromString("-166059726561900E-4").ToDouble())
+        Assert.fail("decfrac double -166059726561900E-4\nExpected: -1.660597265619E10d\nWas: "+ExtendedDecimal.FromString("-166059726561900E-4").ToDouble());
+      if(-3.66681318E9f!=ExtendedDecimal.FromString("-3666813090").ToSingle())
+        Assert.fail("decfrac single -3666813090\nExpected: -3.66681318E9f\nWas: "+ExtendedDecimal.FromString("-3666813090").ToSingle());
+      if(-3.66681309E9d!=ExtendedDecimal.FromString("-3666813090").ToDouble())
+        Assert.fail("decfrac double -3666813090\nExpected: -3.66681309E9d\nWas: "+ExtendedDecimal.FromString("-3666813090").ToDouble());
+      if(-741.0616f!=ExtendedDecimal.FromString("-741.061579731811").ToSingle())
+        Assert.fail("decfrac single -741.061579731811\nExpected: -741.0616f\nWas: "+ExtendedDecimal.FromString("-741.061579731811").ToSingle());
+      if(-741.061579731811d!=ExtendedDecimal.FromString("-741.061579731811").ToDouble())
+        Assert.fail("decfrac double -741.061579731811\nExpected: -741.061579731811d\nWas: "+ExtendedDecimal.FromString("-741.061579731811").ToDouble());
+      if(-2264.0f!=ExtendedDecimal.FromString("-2264").ToSingle())
+        Assert.fail("decfrac single -2264\nExpected: -2264.0f\nWas: "+ExtendedDecimal.FromString("-2264").ToSingle());
+      if(-2264.0d!=ExtendedDecimal.FromString("-2264").ToDouble())
+        Assert.fail("decfrac double -2264\nExpected: -2264.0d\nWas: "+ExtendedDecimal.FromString("-2264").ToDouble());
+      if(9.2388336E10f!=ExtendedDecimal.FromString("92388332924").ToSingle())
+        Assert.fail("decfrac single 92388332924\nExpected: 9.2388336E10f\nWas: "+ExtendedDecimal.FromString("92388332924").ToSingle());
+      if(9.2388332924E10d!=ExtendedDecimal.FromString("92388332924").ToDouble())
+        Assert.fail("decfrac double 92388332924\nExpected: 9.2388332924E10d\nWas: "+ExtendedDecimal.FromString("92388332924").ToDouble());
+      if(4991.7646f!=ExtendedDecimal.FromString("4991.764823290772791").ToSingle())
+        Assert.fail("decfrac single 4991.764823290772791\nExpected: 4991.7646f\nWas: "+ExtendedDecimal.FromString("4991.764823290772791").ToSingle());
+      if(4991.764823290773d!=ExtendedDecimal.FromString("4991.764823290772791").ToDouble())
+        Assert.fail("decfrac double 4991.764823290772791\nExpected: 4991.764823290773d\nWas: "+ExtendedDecimal.FromString("4991.764823290772791").ToDouble());
+      if(-31529.82f!=ExtendedDecimal.FromString("-3152982E-2").ToSingle())
+        Assert.fail("decfrac single -3152982E-2\nExpected: -31529.82f\nWas: "+ExtendedDecimal.FromString("-3152982E-2").ToSingle());
+      if(-31529.82d!=ExtendedDecimal.FromString("-3152982E-2").ToDouble())
+        Assert.fail("decfrac double -3152982E-2\nExpected: -31529.82d\nWas: "+ExtendedDecimal.FromString("-3152982E-2").ToDouble());
+      if(-2.96352045E15f!=ExtendedDecimal.FromString("-2963520450661169.515038656").ToSingle())
+        Assert.fail("decfrac single -2963520450661169.515038656\nExpected: -2.96352045E15f\nWas: "+ExtendedDecimal.FromString("-2963520450661169.515038656").ToSingle());
+      if(-2.9635204506611695E15d!=ExtendedDecimal.FromString("-2963520450661169.515038656").ToDouble())
+        Assert.fail("decfrac double -2963520450661169.515038656\nExpected: -2.9635204506611695E15d\nWas: "+ExtendedDecimal.FromString("-2963520450661169.515038656").ToDouble());
+      if(-9.0629749E13f!=ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToSingle())
+        Assert.fail("decfrac single -9062974752750092585.8070204683471E-5\nExpected: -9.0629749E13f\nWas: "+ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToSingle());
+      if(-9.062974752750092E13d!=ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToDouble())
+        Assert.fail("decfrac double -9062974752750092585.8070204683471E-5\nExpected: -9.062974752750092E13d\nWas: "+ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToDouble());
+      if(1.32708426E11f!=ExtendedDecimal.FromString("1327.08423724267788662E+8").ToSingle())
+        Assert.fail("decfrac single 1327.08423724267788662E+8\nExpected: 1.32708426E11f\nWas: "+ExtendedDecimal.FromString("1327.08423724267788662E+8").ToSingle());
+      if(1.3270842372426779E11d!=ExtendedDecimal.FromString("1327.08423724267788662E+8").ToDouble())
+        Assert.fail("decfrac double 1327.08423724267788662E+8\nExpected: 1.3270842372426779E11d\nWas: "+ExtendedDecimal.FromString("1327.08423724267788662E+8").ToDouble());
+      if(3.03766274E11f!=ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToSingle())
+        Assert.fail("decfrac single 3037662626861314743.2222785E-7\nExpected: 3.03766274E11f\nWas: "+ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToSingle());
+      if(3.037662626861315E11d!=ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToDouble())
+        Assert.fail("decfrac double 3037662626861314743.2222785E-7\nExpected: 3.037662626861315E11d\nWas: "+ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToDouble());
+      if(5.3666539E12f!=ExtendedDecimal.FromString("5366653818787.5E0").ToSingle())
+        Assert.fail("decfrac single 5366653818787.5E0\nExpected: 5.3666539E12f\nWas: "+ExtendedDecimal.FromString("5366653818787.5E0").ToSingle());
+      if(5.3666538187875E12d!=ExtendedDecimal.FromString("5366653818787.5E0").ToDouble())
+        Assert.fail("decfrac double 5366653818787.5E0\nExpected: 5.3666538187875E12d\nWas: "+ExtendedDecimal.FromString("5366653818787.5E0").ToDouble());
+      if(-0.09572517f!=ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToSingle())
+        Assert.fail("decfrac single -957251.70125291697919424260E-7\nExpected: -0.09572517f\nWas: "+ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToSingle());
+      if(-0.09572517012529169d!=ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToDouble())
+        Assert.fail("decfrac double -957251.70125291697919424260E-7\nExpected: -0.09572517012529169d\nWas: "+ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToDouble());
+      if(8.4375632E7f!=ExtendedDecimal.FromString("8437563497492.8514E-5").ToSingle())
+        Assert.fail("decfrac single 8437563497492.8514E-5\nExpected: 8.4375632E7f\nWas: "+ExtendedDecimal.FromString("8437563497492.8514E-5").ToSingle());
+      if(8.437563497492851E7d!=ExtendedDecimal.FromString("8437563497492.8514E-5").ToDouble())
+        Assert.fail("decfrac double 8437563497492.8514E-5\nExpected: 8.437563497492851E7d\nWas: "+ExtendedDecimal.FromString("8437563497492.8514E-5").ToDouble());
+      if(7.7747428E15f!=ExtendedDecimal.FromString("7774742890322348.749566199224594").ToSingle())
+        Assert.fail("decfrac single 7774742890322348.749566199224594\nExpected: 7.7747428E15f\nWas: "+ExtendedDecimal.FromString("7774742890322348.749566199224594").ToSingle());
+      if(7.774742890322349E15d!=ExtendedDecimal.FromString("7774742890322348.749566199224594").ToDouble())
+        Assert.fail("decfrac double 7774742890322348.749566199224594\nExpected: 7.774742890322349E15d\nWas: "+ExtendedDecimal.FromString("7774742890322348.749566199224594").ToDouble());
+      if(-6.3523806E18f!=ExtendedDecimal.FromString("-6352380631468114E+3").ToSingle())
+        Assert.fail("decfrac single -6352380631468114E+3\nExpected: -6.3523806E18f\nWas: "+ExtendedDecimal.FromString("-6352380631468114E+3").ToSingle());
+      if(-6.3523806314681139E18d!=ExtendedDecimal.FromString("-6352380631468114E+3").ToDouble())
+        Assert.fail("decfrac double -6352380631468114E+3\nExpected: -6.3523806314681139E18d\nWas: "+ExtendedDecimal.FromString("-6352380631468114E+3").ToDouble());
+      if(-8.1199685E23f!=ExtendedDecimal.FromString("-8119968851439E+11").ToSingle())
+        Assert.fail("decfrac single -8119968851439E+11\nExpected: -8.1199685E23f\nWas: "+ExtendedDecimal.FromString("-8119968851439E+11").ToSingle());
+      if(-8.119968851439E23d!=ExtendedDecimal.FromString("-8119968851439E+11").ToDouble())
+        Assert.fail("decfrac double -8119968851439E+11\nExpected: -8.119968851439E23d\nWas: "+ExtendedDecimal.FromString("-8119968851439E+11").ToDouble());
+      if(-3.201959E23f!=ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToSingle())
+        Assert.fail("decfrac single -3201959209367.08531737604446E+11\nExpected: -3.201959E23f\nWas: "+ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToSingle());
+      if(-3.201959209367085E23d!=ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToDouble())
+        Assert.fail("decfrac double -3201959209367.08531737604446E+11\nExpected: -3.201959209367085E23d\nWas: "+ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToDouble());
+      if(-6.0171188E7f!=ExtendedDecimal.FromString("-60171187").ToSingle())
+        Assert.fail("decfrac single -60171187\nExpected: -6.0171188E7f\nWas: "+ExtendedDecimal.FromString("-60171187").ToSingle());
+      if(-6.0171187E7d!=ExtendedDecimal.FromString("-60171187").ToDouble())
+        Assert.fail("decfrac double -60171187\nExpected: -6.0171187E7d\nWas: "+ExtendedDecimal.FromString("-60171187").ToDouble());
+      if(-6.6884155E-7f!=ExtendedDecimal.FromString("-66.884154716131E-8").ToSingle())
+        Assert.fail("decfrac single -66.884154716131E-8\nExpected: -6.6884155E-7f\nWas: "+ExtendedDecimal.FromString("-66.884154716131E-8").ToSingle());
+      if(-6.6884154716131E-7d!=ExtendedDecimal.FromString("-66.884154716131E-8").ToDouble())
+        Assert.fail("decfrac double -66.884154716131E-8\nExpected: -6.6884154716131E-7d\nWas: "+ExtendedDecimal.FromString("-66.884154716131E-8").ToDouble());
+      if(923595.4f!=ExtendedDecimal.FromString("923595.376427445").ToSingle())
+        Assert.fail("decfrac single 923595.376427445\nExpected: 923595.4f\nWas: "+ExtendedDecimal.FromString("923595.376427445").ToSingle());
+      if(923595.376427445d!=ExtendedDecimal.FromString("923595.376427445").ToDouble())
+        Assert.fail("decfrac double 923595.376427445\nExpected: 923595.376427445d\nWas: "+ExtendedDecimal.FromString("923595.376427445").ToDouble());
+      if(-5.0f!=ExtendedDecimal.FromString("-5").ToSingle())
+        Assert.fail("decfrac single -5\nExpected: -5.0f\nWas: "+ExtendedDecimal.FromString("-5").ToSingle());
+      if(-5.0d!=ExtendedDecimal.FromString("-5").ToDouble())
+        Assert.fail("decfrac double -5\nExpected: -5.0d\nWas: "+ExtendedDecimal.FromString("-5").ToDouble());
+      if(4.7380017E10f!=ExtendedDecimal.FromString("47380017776.35").ToSingle())
+        Assert.fail("decfrac single 47380017776.35\nExpected: 4.7380017E10f\nWas: "+ExtendedDecimal.FromString("47380017776.35").ToSingle());
+      if(4.738001777635E10d!=ExtendedDecimal.FromString("47380017776.35").ToDouble())
+        Assert.fail("decfrac double 47380017776.35\nExpected: 4.738001777635E10d\nWas: "+ExtendedDecimal.FromString("47380017776.35").ToDouble());
+      if(8139584.0f!=ExtendedDecimal.FromString("8139584.242987").ToSingle())
+        Assert.fail("decfrac single 8139584.242987\nExpected: 8139584.0f\nWas: "+ExtendedDecimal.FromString("8139584.242987").ToSingle());
+      if(8139584.242987d!=ExtendedDecimal.FromString("8139584.242987").ToDouble())
+        Assert.fail("decfrac double 8139584.242987\nExpected: 8139584.242987d\nWas: "+ExtendedDecimal.FromString("8139584.242987").ToDouble());
+      if(5.0f!=ExtendedDecimal.FromString("5").ToSingle())
+        Assert.fail("decfrac single 5\nExpected: 5.0f\nWas: "+ExtendedDecimal.FromString("5").ToSingle());
+      if(5.0d!=ExtendedDecimal.FromString("5").ToDouble())
+        Assert.fail("decfrac double 5\nExpected: 5.0d\nWas: "+ExtendedDecimal.FromString("5").ToDouble());
+      if(-3.6578223E27f!=ExtendedDecimal.FromString("-365782224812843E+13").ToSingle())
+        Assert.fail("decfrac single -365782224812843E+13\nExpected: -3.6578223E27f\nWas: "+ExtendedDecimal.FromString("-365782224812843E+13").ToSingle());
+      if(-3.65782224812843E27d!=ExtendedDecimal.FromString("-365782224812843E+13").ToDouble())
+        Assert.fail("decfrac double -365782224812843E+13\nExpected: -3.65782224812843E27d\nWas: "+ExtendedDecimal.FromString("-365782224812843E+13").ToDouble());
+      if(6.263606E23f!=ExtendedDecimal.FromString("626360584867890223E+6").ToSingle())
+        Assert.fail("decfrac single 626360584867890223E+6\nExpected: 6.263606E23f\nWas: "+ExtendedDecimal.FromString("626360584867890223E+6").ToSingle());
+      if(6.263605848678903E23d!=ExtendedDecimal.FromString("626360584867890223E+6").ToDouble())
+        Assert.fail("decfrac double 626360584867890223E+6\nExpected: 6.263605848678903E23d\nWas: "+ExtendedDecimal.FromString("626360584867890223E+6").ToDouble());
+      if(-1.26830412E18f!=ExtendedDecimal.FromString("-12683040859E+8").ToSingle())
+        Assert.fail("decfrac single -12683040859E+8\nExpected: -1.26830412E18f\nWas: "+ExtendedDecimal.FromString("-12683040859E+8").ToSingle());
+      if(-1.2683040859E18d!=ExtendedDecimal.FromString("-12683040859E+8").ToDouble())
+        Assert.fail("decfrac double -12683040859E+8\nExpected: -1.2683040859E18d\nWas: "+ExtendedDecimal.FromString("-12683040859E+8").ToDouble());
+      if(8.9906433E13f!=ExtendedDecimal.FromString("89906433733052.14691421345561385").ToSingle())
+        Assert.fail("decfrac single 89906433733052.14691421345561385\nExpected: 8.9906433E13f\nWas: "+ExtendedDecimal.FromString("89906433733052.14691421345561385").ToSingle());
+      if(8.990643373305214E13d!=ExtendedDecimal.FromString("89906433733052.14691421345561385").ToDouble())
+        Assert.fail("decfrac double 89906433733052.14691421345561385\nExpected: 8.990643373305214E13d\nWas: "+ExtendedDecimal.FromString("89906433733052.14691421345561385").ToDouble());
+      if(82.0f!=ExtendedDecimal.FromString("82").ToSingle())
+        Assert.fail("decfrac single 82\nExpected: 82.0f\nWas: "+ExtendedDecimal.FromString("82").ToSingle());
+      if(82.0d!=ExtendedDecimal.FromString("82").ToDouble())
+        Assert.fail("decfrac double 82\nExpected: 82.0d\nWas: "+ExtendedDecimal.FromString("82").ToDouble());
+      if(9.5523543E16f!=ExtendedDecimal.FromString("95523541216159667").ToSingle())
+        Assert.fail("decfrac single 95523541216159667\nExpected: 9.5523543E16f\nWas: "+ExtendedDecimal.FromString("95523541216159667").ToSingle());
+      if(9.5523541216159664E16d!=ExtendedDecimal.FromString("95523541216159667").ToDouble())
+        Assert.fail("decfrac double 95523541216159667\nExpected: 9.5523541216159664E16d\nWas: "+ExtendedDecimal.FromString("95523541216159667").ToDouble());
+      if(-0.040098447f!=ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToSingle())
+        Assert.fail("decfrac single -400984.46498769274346390686E-7\nExpected: -0.040098447f\nWas: "+ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToSingle());
+      if(-0.04009844649876927d!=ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToDouble())
+        Assert.fail("decfrac double -400984.46498769274346390686E-7\nExpected: -0.04009844649876927d\nWas: "+ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToDouble());
+      if(9.9082332E14f!=ExtendedDecimal.FromString("990823307532E+3").ToSingle())
+        Assert.fail("decfrac single 990823307532E+3\nExpected: 9.9082332E14f\nWas: "+ExtendedDecimal.FromString("990823307532E+3").ToSingle());
+      if(9.90823307532E14d!=ExtendedDecimal.FromString("990823307532E+3").ToDouble())
+        Assert.fail("decfrac double 990823307532E+3\nExpected: 9.90823307532E14d\nWas: "+ExtendedDecimal.FromString("990823307532E+3").ToDouble());
+      if(-8.969879E8f!=ExtendedDecimal.FromString("-896987890").ToSingle())
+        Assert.fail("decfrac single -896987890\nExpected: -8.969879E8f\nWas: "+ExtendedDecimal.FromString("-896987890").ToSingle());
+      if(-8.9698789E8d!=ExtendedDecimal.FromString("-896987890").ToDouble())
+        Assert.fail("decfrac double -896987890\nExpected: -8.9698789E8d\nWas: "+ExtendedDecimal.FromString("-896987890").ToDouble());
+      if(-5.1842734E9f!=ExtendedDecimal.FromString("-5184273642.760").ToSingle())
+        Assert.fail("decfrac single -5184273642.760\nExpected: -5.1842734E9f\nWas: "+ExtendedDecimal.FromString("-5184273642.760").ToSingle());
+      if(-5.18427364276E9d!=ExtendedDecimal.FromString("-5184273642.760").ToDouble())
+        Assert.fail("decfrac double -5184273642.760\nExpected: -5.18427364276E9d\nWas: "+ExtendedDecimal.FromString("-5184273642.760").ToDouble());
+      if(5.03393772E17f!=ExtendedDecimal.FromString("503393788336283974").ToSingle())
+        Assert.fail("decfrac single 503393788336283974\nExpected: 5.03393772E17f\nWas: "+ExtendedDecimal.FromString("503393788336283974").ToSingle());
+      if(5.0339378833628397E17d!=ExtendedDecimal.FromString("503393788336283974").ToDouble())
+        Assert.fail("decfrac double 503393788336283974\nExpected: 5.0339378833628397E17d\nWas: "+ExtendedDecimal.FromString("503393788336283974").ToDouble());
+      if(-5.50587E15f!=ExtendedDecimal.FromString("-550587E+10").ToSingle())
+        Assert.fail("decfrac single -550587E+10\nExpected: -5.50587E15f\nWas: "+ExtendedDecimal.FromString("-550587E+10").ToSingle());
+      if(-5.50587E15d!=ExtendedDecimal.FromString("-550587E+10").ToDouble())
+        Assert.fail("decfrac double -550587E+10\nExpected: -5.50587E15d\nWas: "+ExtendedDecimal.FromString("-550587E+10").ToDouble());
+      if(-4.0559753E-5f!=ExtendedDecimal.FromString("-405597523930.814E-16").ToSingle())
+        Assert.fail("decfrac single -405597523930.814E-16\nExpected: -4.0559753E-5f\nWas: "+ExtendedDecimal.FromString("-405597523930.814E-16").ToSingle());
+      if(-4.05597523930814E-5d!=ExtendedDecimal.FromString("-405597523930.814E-16").ToDouble())
+        Assert.fail("decfrac double -405597523930.814E-16\nExpected: -4.05597523930814E-5d\nWas: "+ExtendedDecimal.FromString("-405597523930.814E-16").ToDouble());
+      if(-5.326398E9f!=ExtendedDecimal.FromString("-5326397977").ToSingle())
+        Assert.fail("decfrac single -5326397977\nExpected: -5.326398E9f\nWas: "+ExtendedDecimal.FromString("-5326397977").ToSingle());
+      if(-5.326397977E9d!=ExtendedDecimal.FromString("-5326397977").ToDouble())
+        Assert.fail("decfrac double -5326397977\nExpected: -5.326397977E9d\nWas: "+ExtendedDecimal.FromString("-5326397977").ToDouble());
+      if(-9997.447f!=ExtendedDecimal.FromString("-9997.44701170").ToSingle())
+        Assert.fail("decfrac single -9997.44701170\nExpected: -9997.447f\nWas: "+ExtendedDecimal.FromString("-9997.44701170").ToSingle());
+      if(-9997.4470117d!=ExtendedDecimal.FromString("-9997.44701170").ToDouble())
+        Assert.fail("decfrac double -9997.44701170\nExpected: -9997.4470117d\nWas: "+ExtendedDecimal.FromString("-9997.44701170").ToDouble());
+      if(7.3258664E7f!=ExtendedDecimal.FromString("73258664.23970751611061").ToSingle())
+        Assert.fail("decfrac single 73258664.23970751611061\nExpected: 7.3258664E7f\nWas: "+ExtendedDecimal.FromString("73258664.23970751611061").ToSingle());
+      if(7.325866423970751E7d!=ExtendedDecimal.FromString("73258664.23970751611061").ToDouble())
+        Assert.fail("decfrac double 73258664.23970751611061\nExpected: 7.325866423970751E7d\nWas: "+ExtendedDecimal.FromString("73258664.23970751611061").ToDouble());
+      if(-7.9944785E13f!=ExtendedDecimal.FromString("-79944788804361.667255656660").ToSingle())
+        Assert.fail("decfrac single -79944788804361.667255656660\nExpected: -7.9944785E13f\nWas: "+ExtendedDecimal.FromString("-79944788804361.667255656660").ToSingle());
+      if(-7.994478880436167E13d!=ExtendedDecimal.FromString("-79944788804361.667255656660").ToDouble())
+        Assert.fail("decfrac double -79944788804361.667255656660\nExpected: -7.994478880436167E13d\nWas: "+ExtendedDecimal.FromString("-79944788804361.667255656660").ToDouble());
+      if(9.852337E19f!=ExtendedDecimal.FromString("98523363000987953313E0").ToSingle())
+        Assert.fail("decfrac single 98523363000987953313E0\nExpected: 9.852337E19f\nWas: "+ExtendedDecimal.FromString("98523363000987953313E0").ToSingle());
+      if(9.852336300098796E19d!=ExtendedDecimal.FromString("98523363000987953313E0").ToDouble())
+        Assert.fail("decfrac double 98523363000987953313E0\nExpected: 9.852336300098796E19d\nWas: "+ExtendedDecimal.FromString("98523363000987953313E0").ToDouble());
+      if(5.981638E15f!=ExtendedDecimal.FromString("5981637941716431.55749471240993").ToSingle())
+        Assert.fail("decfrac single 5981637941716431.55749471240993\nExpected: 5.981638E15f\nWas: "+ExtendedDecimal.FromString("5981637941716431.55749471240993").ToSingle());
+      if(5.981637941716432E15d!=ExtendedDecimal.FromString("5981637941716431.55749471240993").ToDouble())
+        Assert.fail("decfrac double 5981637941716431.55749471240993\nExpected: 5.981637941716432E15d\nWas: "+ExtendedDecimal.FromString("5981637941716431.55749471240993").ToDouble());
+      if(-1.995E-9f!=ExtendedDecimal.FromString("-1995E-12").ToSingle())
+        Assert.fail("decfrac single -1995E-12\nExpected: -1.995E-9f\nWas: "+ExtendedDecimal.FromString("-1995E-12").ToSingle());
+      if(-1.995E-9d!=ExtendedDecimal.FromString("-1995E-12").ToDouble())
+        Assert.fail("decfrac double -1995E-12\nExpected: -1.995E-9d\nWas: "+ExtendedDecimal.FromString("-1995E-12").ToDouble());
+      if(2.59017677E9f!=ExtendedDecimal.FromString("2590176810").ToSingle())
+        Assert.fail("decfrac single 2590176810\nExpected: 2.59017677E9f\nWas: "+ExtendedDecimal.FromString("2590176810").ToSingle());
+      if(2.59017681E9d!=ExtendedDecimal.FromString("2590176810").ToDouble())
+        Assert.fail("decfrac double 2590176810\nExpected: 2.59017681E9d\nWas: "+ExtendedDecimal.FromString("2590176810").ToDouble());
+      if(2.9604614f!=ExtendedDecimal.FromString("2.960461297").ToSingle())
+        Assert.fail("decfrac single 2.960461297\nExpected: 2.9604614f\nWas: "+ExtendedDecimal.FromString("2.960461297").ToSingle());
+      if(2.960461297d!=ExtendedDecimal.FromString("2.960461297").ToDouble())
+        Assert.fail("decfrac double 2.960461297\nExpected: 2.960461297d\nWas: "+ExtendedDecimal.FromString("2.960461297").ToDouble());
+      if(768802.0f!=ExtendedDecimal.FromString("768802").ToSingle())
+        Assert.fail("decfrac single 768802\nExpected: 768802.0f\nWas: "+ExtendedDecimal.FromString("768802").ToSingle());
+      if(768802.0d!=ExtendedDecimal.FromString("768802").ToDouble())
+        Assert.fail("decfrac double 768802\nExpected: 768802.0d\nWas: "+ExtendedDecimal.FromString("768802").ToDouble());
+      if(145417.38f!=ExtendedDecimal.FromString("145417.373").ToSingle())
+        Assert.fail("decfrac single 145417.373\nExpected: 145417.38f\nWas: "+ExtendedDecimal.FromString("145417.373").ToSingle());
+      if(145417.373d!=ExtendedDecimal.FromString("145417.373").ToDouble())
+        Assert.fail("decfrac double 145417.373\nExpected: 145417.373d\nWas: "+ExtendedDecimal.FromString("145417.373").ToDouble());
+      if(540905.0f!=ExtendedDecimal.FromString("540905").ToSingle())
+        Assert.fail("decfrac single 540905\nExpected: 540905.0f\nWas: "+ExtendedDecimal.FromString("540905").ToSingle());
+      if(540905.0d!=ExtendedDecimal.FromString("540905").ToDouble())
+        Assert.fail("decfrac double 540905\nExpected: 540905.0d\nWas: "+ExtendedDecimal.FromString("540905").ToDouble());
+      if(-6.811958E20f!=ExtendedDecimal.FromString("-681.1958019894E+18").ToSingle())
+        Assert.fail("decfrac single -681.1958019894E+18\nExpected: -6.811958E20f\nWas: "+ExtendedDecimal.FromString("-681.1958019894E+18").ToSingle());
+      if(-6.811958019894E20d!=ExtendedDecimal.FromString("-681.1958019894E+18").ToDouble())
+        Assert.fail("decfrac double -681.1958019894E+18\nExpected: -6.811958019894E20d\nWas: "+ExtendedDecimal.FromString("-681.1958019894E+18").ToDouble());
+      if(54846.0f!=ExtendedDecimal.FromString("54846.0").ToSingle())
+        Assert.fail("decfrac single 54846.0\nExpected: 54846.0f\nWas: "+ExtendedDecimal.FromString("54846.0").ToSingle());
+      if(54846.0d!=ExtendedDecimal.FromString("54846.0").ToDouble())
+        Assert.fail("decfrac double 54846.0\nExpected: 54846.0d\nWas: "+ExtendedDecimal.FromString("54846.0").ToDouble());
+      if(9.7245E9f!=ExtendedDecimal.FromString("97245E+5").ToSingle())
+        Assert.fail("decfrac single 97245E+5\nExpected: 9.7245E9f\nWas: "+ExtendedDecimal.FromString("97245E+5").ToSingle());
+      if(9.7245E9d!=ExtendedDecimal.FromString("97245E+5").ToDouble())
+        Assert.fail("decfrac double 97245E+5\nExpected: 9.7245E9d\nWas: "+ExtendedDecimal.FromString("97245E+5").ToDouble());
+      if(-26.0f!=ExtendedDecimal.FromString("-26").ToSingle())
+        Assert.fail("decfrac single -26\nExpected: -26.0f\nWas: "+ExtendedDecimal.FromString("-26").ToSingle());
+      if(-26.0d!=ExtendedDecimal.FromString("-26").ToDouble())
+        Assert.fail("decfrac double -26\nExpected: -26.0d\nWas: "+ExtendedDecimal.FromString("-26").ToDouble());
+      if(4.15749164E12f!=ExtendedDecimal.FromString("4157491532482.05").ToSingle())
+        Assert.fail("decfrac single 4157491532482.05\nExpected: 4.15749164E12f\nWas: "+ExtendedDecimal.FromString("4157491532482.05").ToSingle());
+      if(4.15749153248205E12d!=ExtendedDecimal.FromString("4157491532482.05").ToDouble())
+        Assert.fail("decfrac double 4157491532482.05\nExpected: 4.15749153248205E12d\nWas: "+ExtendedDecimal.FromString("4157491532482.05").ToDouble());
+      if(4.7747967E15f!=ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToSingle())
+        Assert.fail("decfrac single 4774796769101.23808389660855287E+3\nExpected: 4.7747967E15f\nWas: "+ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToSingle());
+      if(4.774796769101238E15d!=ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToDouble())
+        Assert.fail("decfrac double 4774796769101.23808389660855287E+3\nExpected: 4.774796769101238E15d\nWas: "+ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToDouble());
+      if(-9.8263879E14f!=ExtendedDecimal.FromString("-982638781021905").ToSingle())
+        Assert.fail("decfrac single -982638781021905\nExpected: -9.8263879E14f\nWas: "+ExtendedDecimal.FromString("-982638781021905").ToSingle());
+      if(-9.82638781021905E14d!=ExtendedDecimal.FromString("-982638781021905").ToDouble())
+        Assert.fail("decfrac double -982638781021905\nExpected: -9.82638781021905E14d\nWas: "+ExtendedDecimal.FromString("-982638781021905").ToDouble());
+      if(8.8043432E18f!=ExtendedDecimal.FromString("8804343287262864743").ToSingle())
+        Assert.fail("decfrac single 8804343287262864743\nExpected: 8.8043432E18f\nWas: "+ExtendedDecimal.FromString("8804343287262864743").ToSingle());
+      if(8.8043432872628644E18d!=ExtendedDecimal.FromString("8804343287262864743").ToDouble())
+        Assert.fail("decfrac double 8804343287262864743\nExpected: 8.8043432872628644E18d\nWas: "+ExtendedDecimal.FromString("8804343287262864743").ToDouble());
+      if(-6.5138669E13f!=ExtendedDecimal.FromString("-65138668135711").ToSingle())
+        Assert.fail("decfrac single -65138668135711\nExpected: -6.5138669E13f\nWas: "+ExtendedDecimal.FromString("-65138668135711").ToSingle());
+      if(-6.5138668135711E13d!=ExtendedDecimal.FromString("-65138668135711").ToDouble())
+        Assert.fail("decfrac double -65138668135711\nExpected: -6.5138668135711E13d\nWas: "+ExtendedDecimal.FromString("-65138668135711").ToDouble());
+      if(-5.9235733E15f!=ExtendedDecimal.FromString("-5923573055061163").ToSingle())
+        Assert.fail("decfrac single -5923573055061163\nExpected: -5.9235733E15f\nWas: "+ExtendedDecimal.FromString("-5923573055061163").ToSingle());
+      if(-5.923573055061163E15d!=ExtendedDecimal.FromString("-5923573055061163").ToDouble())
+        Assert.fail("decfrac double -5923573055061163\nExpected: -5.923573055061163E15d\nWas: "+ExtendedDecimal.FromString("-5923573055061163").ToDouble());
+      if(-8.6853E-8f!=ExtendedDecimal.FromString("-8.6853E-8").ToSingle())
+        Assert.fail("decfrac single -8.6853E-8\nExpected: -8.6853E-8f\nWas: "+ExtendedDecimal.FromString("-8.6853E-8").ToSingle());
+      if(-8.6853E-8d!=ExtendedDecimal.FromString("-8.6853E-8").ToDouble())
+        Assert.fail("decfrac double -8.6853E-8\nExpected: -8.6853E-8d\nWas: "+ExtendedDecimal.FromString("-8.6853E-8").ToDouble());
+      if(19707.0f!=ExtendedDecimal.FromString("19707").ToSingle())
+        Assert.fail("decfrac single 19707\nExpected: 19707.0f\nWas: "+ExtendedDecimal.FromString("19707").ToSingle());
+      if(19707.0d!=ExtendedDecimal.FromString("19707").ToDouble())
+        Assert.fail("decfrac double 19707\nExpected: 19707.0d\nWas: "+ExtendedDecimal.FromString("19707").ToDouble());
+      if(-8.8478554E14f!=ExtendedDecimal.FromString("-884785536200446.1859332080").ToSingle())
+        Assert.fail("decfrac single -884785536200446.1859332080\nExpected: -8.8478554E14f\nWas: "+ExtendedDecimal.FromString("-884785536200446.1859332080").ToSingle());
+      if(-8.847855362004461E14d!=ExtendedDecimal.FromString("-884785536200446.1859332080").ToDouble())
+        Assert.fail("decfrac double -884785536200446.1859332080\nExpected: -8.847855362004461E14d\nWas: "+ExtendedDecimal.FromString("-884785536200446.1859332080").ToDouble());
+      if(-1.0f!=ExtendedDecimal.FromString("-1").ToSingle())
+        Assert.fail("decfrac single -1\nExpected: -1.0f\nWas: "+ExtendedDecimal.FromString("-1").ToSingle());
+      if(-1.0d!=ExtendedDecimal.FromString("-1").ToDouble())
+        Assert.fail("decfrac double -1\nExpected: -1.0d\nWas: "+ExtendedDecimal.FromString("-1").ToDouble());
     }
     /**
      * 
@@ -3377,7 +3351,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o=TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, 0x3, (byte)0xc2, 0x41, 1 });
-      Assert.assertEquals(new DecimalFraction(1,3),o.AsDecimalFraction());
+      Assert.assertEquals(new ExtendedDecimal(1,3),o.AsExtendedDecimal());
     }
     /**
      * 
