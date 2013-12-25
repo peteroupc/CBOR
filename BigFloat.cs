@@ -91,6 +91,7 @@ namespace PeterO {
       val <<= lastshift;
       return val;
     }
+
     
     /// <summary> </summary>
     /// <param name='bigint'>A BigInteger object.</param>
@@ -107,80 +108,27 @@ namespace PeterO {
       return new BigFloat(bigint,BigInteger.Zero);
     }
     
+    /// <summary> Creates a bigfloat from its string representation. 
+    /// Note that if the bigfloat contains a negative exponent,
+    /// the resulting value might not be exact.  However, it will contain enough
+    /// precision to accurately convert it to a 32-bit or 64-bit floating point
+    /// number (float or double).</summary>
+    public static BigFloat FromString(String str){
+      return FromDecimalFraction(DecimalFraction.FromString(str));
+    }
+
     /// <summary> Creates a bigfloat from an arbitrary-precision decimal
     /// fraction. Note that if the bigfloat contains a negative exponent,
-    /// the resulting value might not be exact. </summary>
+    /// the resulting value might not be exact. However, it will contain enough
+    /// precision to accurately convert it to a 32-bit or 64-bit floating point
+    /// number (float or double).</summary>
     /// <returns>A BigFloat object.</returns>
     /// <param name='decfrac'>A DecimalFraction object.</param>
     public static BigFloat FromDecimalFraction(DecimalFraction decfrac) {
       if((decfrac)==null)throw new ArgumentNullException("decfrac");
-      BigInteger bigintExp = decfrac.Exponent;
-      BigInteger bigintMant = decfrac.Mantissa;
-      if (bigintMant.IsZero)
-        return BigFloat.Zero;
-      if (bigintExp.IsZero) {
-        // Integer
-        return FromBigInteger(bigintMant);
-      } else if (bigintExp.Sign > 0) {
-        // Scaled integer
-        BigInteger bigmantissa = bigintMant;
-        bigmantissa *= (BigInteger)(DecimalUtility.FindPowerOfTenFromBig(bigintExp));
-        return FromBigInteger(bigmantissa);
-      } else {
-        // Fractional number
-        FastInteger scale = FastInteger.FromBig(bigintExp);
-        BigInteger bigmantissa = bigintMant;
-        bool neg = (bigmantissa.Sign < 0);
-        BigInteger remainder;
-        if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        FastInteger negscale = FastInteger.Copy(scale).Negate();
-        BigInteger divisor = DecimalUtility.FindPowerOfFiveFromBig(
-          negscale.AsBigInteger());
-        while (true) {
-          BigInteger quotient = BigInteger.DivRem(bigmantissa, divisor, out remainder);
-          // Ensure that the quotient has enough precision
-          // to be converted accurately to a single or double
-          if (!remainder.IsZero &&
-              quotient.CompareTo(OneShift62) < 0) {
-            // At this point, the quotient has 62 or fewer bits
-            int[] bits=FastInteger.GetLastWords(quotient,2);
-            int shift=0;
-            if((bits[0]|bits[1])!=0){
-              // Quotient's integer part is nonzero.
-              // Get the number of bits of the quotient
-              int bitPrecision=DecimalUtility.BitPrecisionInt(bits[1]);
-              if(bitPrecision!=0)
-                bitPrecision+=32;
-              else
-                bitPrecision=DecimalUtility.BitPrecisionInt(bits[0]);
-              shift=63-bitPrecision;
-              scale.SubtractInt(shift);
-            } else {
-              // Integer part of quotient is 0
-              shift=1;
-              scale.SubtractInt(shift);
-            }
-            // shift by that many bits, but not less than 1
-            bigmantissa<<=shift;
-          } else {
-            bigmantissa = quotient;
-            break;
-          }
-        }
-        // Round half-even
-        BigInteger halfDivisor = divisor;
-        halfDivisor >>= 1;
-        int cmp = remainder.CompareTo(halfDivisor);
-        // No need to check for exactly half since all powers
-        // of five are odd
-        if (cmp > 0) {
-          // Greater than half
-          bigmantissa += BigInteger.One;
-        }
-        if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new BigFloat(bigmantissa, scale.AsBigInteger());
-      }
+      return new ExtendedDecimal(decfrac.Mantissa,decfrac.Exponent).ToBigFloat();
     }
+
     /// <summary> Creates a bigfloat from a 32-bit floating-point number.
     /// </summary>
     /// <param name='flt'>A 32-bit floating-point number.</param>
@@ -278,7 +226,6 @@ namespace PeterO {
 
     private static BigInteger OneShift23 = BigInteger.One << 23;
     private static BigInteger OneShift52 = BigInteger.One << 52;
-    private static BigInteger OneShift62 = BigInteger.One << 62;
 
     /// <summary> Converts this value to a 32-bit floating-point number.
     /// The half-even rounding mode is used. </summary>
@@ -400,7 +347,7 @@ namespace PeterO {
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                              !DecimalUtility.HasBitSet(mantissaBits,0))) {
+                              DecimalUtility.HasBitSet(mantissaBits,0))) {
         // Add 1 to the bits
         mantissaBits[0]=unchecked((int)(mantissaBits[0]+1));
         if(mantissaBits[0]==0)
@@ -431,7 +378,7 @@ namespace PeterO {
         mantissaBits=FastInteger.GetLastWords(accum.ShiftedInt,2);
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                                !DecimalUtility.HasBitSet(mantissaBits,0))) {
+                                DecimalUtility.HasBitSet(mantissaBits,0))) {
           // Add 1 to the bits
           mantissaBits[0]=unchecked((int)(mantissaBits[0]+1));
           if(mantissaBits[0]==0)
@@ -474,7 +421,7 @@ namespace PeterO {
     /// format of the java.math.BigDecimal.toEngineeringString() method.
     /// </summary>
     /// <returns>A string object.</returns>
-    public string ToEngineeringString() {
+    public string ToEngineeringString() { 
       return DecimalFraction.FromBigFloat(this).ToEngineeringString();
     }
     /// <summary> Converts this value to a string, but without an exponent
