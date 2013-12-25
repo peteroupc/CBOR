@@ -2302,7 +2302,7 @@ namespace PeterO {
     /// <returns>A BigInteger object.</returns>
     public static BigInteger fromString(string str){
       if(str==null)throw new ArgumentNullException("str");
-      if((str.Length)<=0)throw new ArgumentException("str.Length"+" not less than "+"0"+" ("+Convert.ToString((long)(long)(str.Length),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((str.Length)<=0)throw new ArgumentException("str.Length"+" not less than "+"0"+" ("+Convert.ToString((long)(str.Length),System.Globalization.CultureInfo.InvariantCulture)+")");
       int offset=0;
       bool negative=false;
       if(str[0]=='-'){

@@ -54,7 +54,7 @@ namespace PeterO {
     internal const int CBORObjectType_SimpleValue = 6;
     internal const int CBORObjectType_Single = 7;
     internal const int CBORObjectType_Double = 8;
-    internal const int CBORObjectType_DecimalFraction = 9;
+    internal const int CBORObjectType_ExtendedDecimal = 9;
     internal const int CBORObjectType_Tagged = 10;
     internal const int CBORObjectType_BigFloat = 11;
     private static readonly BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
@@ -114,7 +114,7 @@ namespace PeterO {
           case CBORObjectType_BigInteger:
           case CBORObjectType_Single:
           case CBORObjectType_Double:
-          case CBORObjectType_DecimalFraction:
+          case CBORObjectType_ExtendedDecimal:
           case CBORObjectType_BigFloat:
             return CBORType.Number;
           case CBORObjectType_SimpleValue:
@@ -171,8 +171,8 @@ namespace PeterO {
             return ((float)this.ThisItem) == 0;
           case CBORObject.CBORObjectType_Double:
             return ((double)this.ThisItem) == 0;
-          case CBORObject.CBORObjectType_DecimalFraction:
-            return ((DecimalFraction)this.ThisItem).IsZero;
+          case CBORObject.CBORObjectType_ExtendedDecimal:
+            return ((ExtendedDecimal)this.ThisItem).IsZero;
           case CBORObject.CBORObjectType_BigFloat:
             return ((BigFloat)this.ThisItem).IsZero;
           default:
@@ -199,8 +199,8 @@ namespace PeterO {
           return CBORObject.FromObject(-((float)this.ThisItem));
         case CBORObject.CBORObjectType_Double:
           return CBORObject.FromObject(-((double)this.ThisItem));
-        case CBORObject.CBORObjectType_DecimalFraction:
-          return CBORObject.FromObject(((DecimalFraction)this.ThisItem).Negate());
+        case CBORObject.CBORObjectType_ExtendedDecimal:
+          return CBORObject.FromObject(((ExtendedDecimal)this.ThisItem).Negate());
         case CBORObject.CBORObjectType_BigFloat:
           return CBORObject.FromObject(((BigFloat)this.ThisItem).Negate());
         default:
@@ -233,8 +233,8 @@ namespace PeterO {
                 throw new InvalidOperationException("This object is not a number.");
             return (int)Math.Sign(value);
           }
-        case CBORObject.CBORObjectType_DecimalFraction:
-          return ((DecimalFraction)obj).Sign;
+        case CBORObject.CBORObjectType_ExtendedDecimal:
+          return ((ExtendedDecimal)obj).Sign;
         case CBORObject.CBORObjectType_BigFloat:
           return ((BigFloat)obj).Sign;
         default:
@@ -395,9 +395,9 @@ namespace PeterO {
               if (a == b) return 0;
               return (a < b) ? -1 : 1;
             }
-            case CBORObjectType_DecimalFraction: {
-              return ((DecimalFraction)objA).CompareTo(
-                ((DecimalFraction)objB));
+            case CBORObjectType_ExtendedDecimal: {
+              return ((ExtendedDecimal)objA).CompareTo(
+                ((ExtendedDecimal)objB));
             }
             case CBORObjectType_BigFloat: {
               return ((BigFloat)objA).CompareTo(
@@ -439,8 +439,8 @@ namespace PeterO {
         BigInteger bigintXb;
         BigFloat bigfloatXa;
         BigFloat bigfloatXb;
-        DecimalFraction decfracXa;
-        DecimalFraction decfracXb;
+        ExtendedDecimal decfracXa;
+        ExtendedDecimal decfracXb;
         switch (combo) {
             case (CBORObjectType_Integer << 4) | CBORObjectType_BigInteger: {
               bigintXa = (BigInteger)(long)objA;
@@ -463,9 +463,9 @@ namespace PeterO {
               bigfloatXb = BigFloat.FromDouble(sf);
               return bigfloatXa.CompareTo(bigfloatXb);
             }
-            case (CBORObjectType_Integer << 4) | CBORObjectType_DecimalFraction: {
-              decfracXa = DecimalFraction.FromInt64((long)objA);
-              decfracXb = (DecimalFraction)objB;
+            case (CBORObjectType_Integer << 4) | CBORObjectType_ExtendedDecimal: {
+              decfracXa = ExtendedDecimal.FromInt64((long)objA);
+              decfracXb = (ExtendedDecimal)objB;
               return decfracXa.CompareTo(decfracXb);
             }
             case (CBORObjectType_Integer << 4) | CBORObjectType_BigFloat: {
@@ -494,9 +494,9 @@ namespace PeterO {
               bigfloatXb = BigFloat.FromDouble(sf);
               return bigfloatXa.CompareTo(bigfloatXb);
             }
-            case (CBORObjectType_BigInteger << 4) | CBORObjectType_DecimalFraction: {
-              decfracXa = DecimalFraction.FromBigInteger((BigInteger)objA);
-              decfracXb = (DecimalFraction)objB;
+            case (CBORObjectType_BigInteger << 4) | CBORObjectType_ExtendedDecimal: {
+              decfracXa = ExtendedDecimal.FromBigInteger((BigInteger)objA);
+              decfracXb = (ExtendedDecimal)objB;
               return decfracXa.CompareTo(decfracXb);
             }
             case (CBORObjectType_BigInteger << 4) | CBORObjectType_BigFloat: {
@@ -534,12 +534,12 @@ namespace PeterO {
               if (a == b) return 0;
               return (a < b) ? -1 : 1;
             }
-            case (CBORObjectType_Single << 4) | CBORObjectType_DecimalFraction: {
+            case (CBORObjectType_Single << 4) | CBORObjectType_ExtendedDecimal: {
               float sf = (float)objA;
               if (Single.IsInfinity(sf)) return (sf < 0 ? -1 : 1);
               if (Single.IsNaN(sf)) return 1;
-              decfracXa = DecimalFraction.FromSingle(sf);
-              decfracXb = (DecimalFraction)objB;
+              decfracXa = ExtendedDecimal.FromSingle(sf);
+              decfracXb = (ExtendedDecimal)objB;
               return decfracXa.CompareTo(decfracXb);
             }
             case (CBORObjectType_Single << 4) | CBORObjectType_BigFloat: {
@@ -579,12 +579,12 @@ namespace PeterO {
               if (a == b) return 0;
               return (a < b) ? -1 : 1;
             }
-            case (CBORObjectType_Double << 4) | CBORObjectType_DecimalFraction: {
+            case (CBORObjectType_Double << 4) | CBORObjectType_ExtendedDecimal: {
               double sf = (double)objA;
               if (Double.IsInfinity(sf)) return (sf < 0 ? -1 : 1);
               if (Double.IsNaN(sf)) return 1;
-              decfracXa = DecimalFraction.FromDouble(sf);
-              decfracXb = (DecimalFraction)objB;
+              decfracXa = ExtendedDecimal.FromDouble(sf);
+              decfracXb = (ExtendedDecimal)objB;
               return decfracXa.CompareTo(decfracXb);
             }
             case (CBORObjectType_Double << 4) | CBORObjectType_BigFloat: {
@@ -595,35 +595,35 @@ namespace PeterO {
               bigfloatXb = (BigFloat)objB;
               return bigfloatXa.CompareTo(bigfloatXb);
             }
-            case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Integer: {
-              decfracXa = (DecimalFraction)objA;
-              decfracXb = DecimalFraction.FromInt64((long)objB);
+            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Integer: {
+              decfracXa = (ExtendedDecimal)objA;
+              decfracXb = ExtendedDecimal.FromInt64((long)objB);
               return decfracXa.CompareTo(decfracXb);
             }
-            case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_BigInteger: {
-              decfracXa = (DecimalFraction)objA;
-              decfracXb = DecimalFraction.FromBigInteger((BigInteger)objB);
+            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_BigInteger: {
+              decfracXa = (ExtendedDecimal)objA;
+              decfracXb = ExtendedDecimal.FromBigInteger((BigInteger)objB);
               return decfracXa.CompareTo(decfracXb);
             }
-            case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Single: {
+            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Single: {
               float sf = (float)objB;
               if (Single.IsInfinity(sf)) return (sf < 0 ? 1 : -1);
               if (Single.IsNaN(sf)) return -1;
-              decfracXa = (DecimalFraction)objA;
-              decfracXb = DecimalFraction.FromSingle(sf);
+              decfracXa = (ExtendedDecimal)objA;
+              decfracXb = ExtendedDecimal.FromSingle(sf);
               return decfracXa.CompareTo(decfracXb);
             }
-            case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Double: {
+            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Double: {
               double sf = (double)objB;
               if (Double.IsInfinity(sf)) return (sf < 0 ? 1 : -1);
               if (Double.IsNaN(sf)) return -1;
-              decfracXa = (DecimalFraction)objA;
-              decfracXb = DecimalFraction.FromDouble(sf);
+              decfracXa = (ExtendedDecimal)objA;
+              decfracXb = ExtendedDecimal.FromDouble(sf);
               return decfracXa.CompareTo(decfracXb);
             }
-            case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_BigFloat: {
-              decfracXa = (DecimalFraction)objA;
-              decfracXb = DecimalFraction.FromBigFloat((BigFloat)objB);
+            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_BigFloat: {
+              decfracXa = (ExtendedDecimal)objA;
+              decfracXb = ExtendedDecimal.FromBigFloat((BigFloat)objB);
               return decfracXa.CompareTo(decfracXb);
             }
             case (CBORObjectType_BigFloat << 4) | CBORObjectType_Integer: {
@@ -652,9 +652,9 @@ namespace PeterO {
               bigfloatXb = BigFloat.FromDouble(sf);
               return bigfloatXa.CompareTo(bigfloatXb);
             }
-            case (CBORObjectType_BigFloat << 4) | CBORObjectType_DecimalFraction: {
-              decfracXa = DecimalFraction.FromBigFloat((BigFloat)objA);
-              decfracXb = (DecimalFraction)objB;
+            case (CBORObjectType_BigFloat << 4) | CBORObjectType_ExtendedDecimal: {
+              decfracXa = ExtendedDecimal.FromBigFloat((BigFloat)objA);
+              decfracXb = (ExtendedDecimal)objB;
               return decfracXa.CompareTo(decfracXb);
             }
           case (CBORObjectType_BigFloat << 4) | CBORObjectType_SimpleValue:
@@ -689,11 +689,11 @@ namespace PeterO {
           case (CBORObjectType_Double << 4) | CBORObjectType_TextString:
           case (CBORObjectType_Double << 4) | CBORObjectType_Array:
           case (CBORObjectType_Double << 4) | CBORObjectType_Map:
-          case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Array:
-          case (CBORObjectType_DecimalFraction << 4) | CBORObjectType_Map:
+          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_SimpleValue:
+          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_ByteString:
+          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_TextString:
+          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Array:
+          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Map:
           case (CBORObjectType_SimpleValue << 4) | CBORObjectType_ByteString:
           case (CBORObjectType_SimpleValue << 4) | CBORObjectType_TextString:
           case (CBORObjectType_SimpleValue << 4) | CBORObjectType_Array:
@@ -709,25 +709,25 @@ namespace PeterO {
           case (CBORObjectType_SimpleValue << 4) | CBORObjectType_BigInteger:
           case (CBORObjectType_SimpleValue << 4) | CBORObjectType_Single:
           case (CBORObjectType_SimpleValue << 4) | CBORObjectType_Double:
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_DecimalFraction:
+          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_ExtendedDecimal:
           case (CBORObjectType_ByteString << 4) | CBORObjectType_Integer:
           case (CBORObjectType_ByteString << 4) | CBORObjectType_BigInteger:
           case (CBORObjectType_ByteString << 4) | CBORObjectType_Single:
           case (CBORObjectType_ByteString << 4) | CBORObjectType_Double:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_DecimalFraction:
+          case (CBORObjectType_ByteString << 4) | CBORObjectType_ExtendedDecimal:
           case (CBORObjectType_ByteString << 4) | CBORObjectType_SimpleValue:
           case (CBORObjectType_TextString << 4) | CBORObjectType_Integer:
           case (CBORObjectType_TextString << 4) | CBORObjectType_BigInteger:
           case (CBORObjectType_TextString << 4) | CBORObjectType_Single:
           case (CBORObjectType_TextString << 4) | CBORObjectType_Double:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_DecimalFraction:
+          case (CBORObjectType_TextString << 4) | CBORObjectType_ExtendedDecimal:
           case (CBORObjectType_TextString << 4) | CBORObjectType_SimpleValue:
           case (CBORObjectType_TextString << 4) | CBORObjectType_ByteString:
           case (CBORObjectType_Array << 4) | CBORObjectType_Integer:
           case (CBORObjectType_Array << 4) | CBORObjectType_BigInteger:
           case (CBORObjectType_Array << 4) | CBORObjectType_Single:
           case (CBORObjectType_Array << 4) | CBORObjectType_Double:
-          case (CBORObjectType_Array << 4) | CBORObjectType_DecimalFraction:
+          case (CBORObjectType_Array << 4) | CBORObjectType_ExtendedDecimal:
           case (CBORObjectType_Array << 4) | CBORObjectType_SimpleValue:
           case (CBORObjectType_Array << 4) | CBORObjectType_ByteString:
           case (CBORObjectType_Array << 4) | CBORObjectType_TextString:
@@ -735,7 +735,7 @@ namespace PeterO {
           case (CBORObjectType_Map << 4) | CBORObjectType_BigInteger:
           case (CBORObjectType_Map << 4) | CBORObjectType_Single:
           case (CBORObjectType_Map << 4) | CBORObjectType_Double:
-          case (CBORObjectType_Map << 4) | CBORObjectType_DecimalFraction:
+          case (CBORObjectType_Map << 4) | CBORObjectType_ExtendedDecimal:
           case (CBORObjectType_Map << 4) | CBORObjectType_SimpleValue:
           case (CBORObjectType_Map << 4) | CBORObjectType_ByteString:
           case (CBORObjectType_Map << 4) | CBORObjectType_TextString:
@@ -1437,8 +1437,8 @@ namespace PeterO {
           return (double)(float)this.ThisItem;
         case CBORObjectType_Double:
           return (double)this.ThisItem;
-          case CBORObjectType_DecimalFraction: {
-            return ((DecimalFraction)this.ThisItem).ToDouble();
+          case CBORObjectType_ExtendedDecimal: {
+            return ((ExtendedDecimal)this.ThisItem).ToDouble();
           }
           case CBORObjectType_BigFloat: {
             return ((BigFloat)this.ThisItem).ToDouble();
@@ -1451,21 +1451,21 @@ namespace PeterO {
     /// <returns>A decimal fraction for this object&apos;s value.</returns>
     /// <exception cref='System.InvalidOperationException'> This object's
     /// type is not a number type. </exception>
-    public DecimalFraction AsDecimalFraction() {
+    public ExtendedDecimal AsExtendedDecimal() {
       int type = this.ItemType;
       switch (type) {
         case CBORObjectType_Integer:
-          return DecimalFraction.FromInt64((long)this.ThisItem);
+          return ExtendedDecimal.FromInt64((long)this.ThisItem);
         case CBORObjectType_BigInteger:
-          return DecimalFraction.FromBigInteger((BigInteger)this.ThisItem);
+          return ExtendedDecimal.FromBigInteger((BigInteger)this.ThisItem);
         case CBORObjectType_Single:
-          return DecimalFraction.FromSingle((float)this.ThisItem);
+          return ExtendedDecimal.FromSingle((float)this.ThisItem);
         case CBORObjectType_Double:
-          return DecimalFraction.FromDouble((double)this.ThisItem);
-        case CBORObjectType_DecimalFraction:
-          return (DecimalFraction)this.ThisItem;
+          return ExtendedDecimal.FromDouble((double)this.ThisItem);
+        case CBORObjectType_ExtendedDecimal:
+          return (ExtendedDecimal)this.ThisItem;
           case CBORObjectType_BigFloat: {
-            return DecimalFraction.FromBigFloat((BigFloat)this.ThisItem);
+            return ExtendedDecimal.FromBigFloat((BigFloat)this.ThisItem);
           }
         default:
           throw new InvalidOperationException("Not a number type");
@@ -1490,8 +1490,10 @@ namespace PeterO {
           return BigFloat.FromSingle((float)this.ThisItem);
         case CBORObjectType_Double:
           return BigFloat.FromDouble((double)this.ThisItem);
-        case CBORObjectType_DecimalFraction:
-          return BigFloat.FromDecimalFraction((DecimalFraction)this.ThisItem);
+        case CBORObjectType_ExtendedDecimal:
+          // TODO: Does nothing for now
+          return null;
+          //return BigFloat.FromExtendedDecimal((ExtendedDecimal)this.ThisItem);
           case CBORObjectType_BigFloat: {
             return (BigFloat)this.ThisItem;
           }
@@ -1518,8 +1520,8 @@ namespace PeterO {
           return (float)this.ThisItem;
         case CBORObjectType_Double:
           return (float)(double)this.ThisItem;
-          case CBORObjectType_DecimalFraction: {
-            return ((DecimalFraction)this.ThisItem).ToSingle();
+          case CBORObjectType_ExtendedDecimal: {
+            return ((ExtendedDecimal)this.ThisItem).ToSingle();
           }
           case CBORObjectType_BigFloat: {
             return ((BigFloat)this.ThisItem).ToSingle();
@@ -1544,8 +1546,8 @@ namespace PeterO {
           return CBORUtilities.BigIntegerFromSingle((float)this.ThisItem);
         case CBORObjectType_Double:
           return CBORUtilities.BigIntegerFromDouble((double)this.ThisItem);
-          case CBORObjectType_DecimalFraction: {
-            return ((DecimalFraction)this.ThisItem).ToBigInteger();
+          case CBORObjectType_ExtendedDecimal: {
+            return ((ExtendedDecimal)this.ThisItem).ToBigInteger();
           }
           case CBORObjectType_BigFloat: {
             return ((BigFloat)this.ThisItem).ToBigInteger();
@@ -1620,8 +1622,8 @@ namespace PeterO {
               return (long)fltItem;
             throw new OverflowException("This object's value is out of range");
           }
-          case CBORObjectType_DecimalFraction: {
-            BigInteger bi = ((DecimalFraction)this.ThisItem).ToBigInteger();
+          case CBORObjectType_ExtendedDecimal: {
+            BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
             if (bi.CompareTo(Int64MaxValue) > 0 ||
                 bi.CompareTo(Int64MinValue) < 0)
               throw new OverflowException("This object's value is out of range");
@@ -1673,8 +1675,8 @@ namespace PeterO {
               return (int)fltItem;
             throw new OverflowException("This object's value is out of range");
           }
-          case CBORObjectType_DecimalFraction: {
-            BigInteger bi = ((DecimalFraction)this.ThisItem).ToBigInteger();
+          case CBORObjectType_ExtendedDecimal: {
+            BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
             if (bi.CompareTo((BigInteger)maxValue) > 0 ||
                 bi.CompareTo((BigInteger)minValue) < 0)
               throw new OverflowException("This object's value is out of range");
@@ -1948,10 +1950,14 @@ namespace PeterO {
     /// <exception cref='System.ArgumentException'> The value's exponent
     /// is less than -(2^64) or greater than (2^64-1).</exception>
     /// <returns></returns>
-    public static void Write(DecimalFraction bignum, Stream stream) {
+    public static void Write(ExtendedDecimal bignum, Stream stream) {
       if ((stream) == null) throw new ArgumentNullException("stream");
       if (bignum == null) {
         stream.WriteByte(0xf6);
+        return;
+      }
+      if((bignum.IsZero && bignum.IsNegative) || bignum.IsInfinity() || bignum.IsNaN()){
+        Write(bignum.ToDouble(),stream);
         return;
       }
       BigInteger exponent = bignum.Exponent;
@@ -2059,8 +2065,8 @@ namespace PeterO {
         Write((string)this.ThisItem, stream);
       } else if (type == CBORObjectType_Array) {
         WriteObjectArray(AsList(), stream);
-      } else if (type == CBORObjectType_DecimalFraction) {
-        DecimalFraction dec = (DecimalFraction)this.ThisItem;
+      } else if (type == CBORObjectType_ExtendedDecimal) {
+        ExtendedDecimal dec = (ExtendedDecimal)this.ThisItem;
         Write(dec, stream);
       } else if (type == CBORObjectType_BigFloat) {
         BigFloat dec = (BigFloat)this.ThisItem;
@@ -2487,8 +2493,8 @@ namespace PeterO {
           case (CBORObjectType_BigInteger): {
             return CBORUtilities.BigIntToString((BigInteger)this.ThisItem);
           }
-          case (CBORObjectType_DecimalFraction): {
-            return ((DecimalFraction)this.ThisItem).ToString();
+          case (CBORObjectType_ExtendedDecimal): {
+            return ((ExtendedDecimal)this.ThisItem).ToString();
           }
           case (CBORObjectType_BigFloat): {
             return ((BigFloat)this.ThisItem).ToString();
@@ -2509,7 +2515,7 @@ namespace PeterO {
         case CBORObjectType_Double:
         case CBORObjectType_Integer:
         case CBORObjectType_BigInteger:
-        case CBORObjectType_DecimalFraction:
+        case CBORObjectType_ExtendedDecimal:
         case CBORObjectType_BigFloat:
           sb.Append(ToJSONString());
           break;
@@ -2697,16 +2703,22 @@ namespace PeterO {
     /// <returns>A CBOR number object.</returns>
     /// <exception cref='System.ArgumentException'> The value's exponent
     /// is less than -(2^64) or greater than (2^64-1).</exception>
-    public static CBORObject FromObject(DecimalFraction decfrac) {
+    public static CBORObject FromObject(ExtendedDecimal decfrac) {
       if ((object)decfrac == (object)null)
         return CBORObject.Null;
+      if(decfrac.IsZero && decfrac.IsNegative){
+        return FromObject(Extras.IntegersToDouble(new int[]{unchecked((int)(1<<31)),0}));
+      }
+      if(decfrac.IsNaN() || decfrac.IsInfinity()){
+        return FromObject(decfrac.ToDouble());
+      }
       BigInteger bigintExponent = decfrac.Exponent;
       if (bigintExponent.IsZero) {
         return FromObject(decfrac.Mantissa);
       } else {
         if (!BigIntFits(bigintExponent))
           throw new ArgumentException("Exponent is too low or too high");
-        return new CBORObject(CBORObjectType_DecimalFraction, decfrac);
+        return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);
       }
     }
     /// <summary> Generates a CBOR object from a string. </summary>
@@ -2859,7 +2871,7 @@ namespace PeterO {
       if (obj is long) return FromObject((long)obj);
       if (obj is CBORObject) return FromObject((CBORObject)obj);
       if (obj is BigInteger) return FromObject((BigInteger)obj);
-      DecimalFraction df=(obj as DecimalFraction);
+      ExtendedDecimal df=(obj as ExtendedDecimal);
       if (df!=null) return FromObject(df);
       BigFloat bf=(obj as BigFloat);
       if (bf!=null) return FromObject(bf);
@@ -3103,7 +3115,7 @@ namespace PeterO {
           sb.Append(this.AsString());
           sb.Append('\"');
         }
-      } else if (type == CBORObjectType_DecimalFraction) {
+      } else if (type == CBORObjectType_ExtendedDecimal) {
         return ToJSONString();
       } else if (type == CBORObjectType_BigFloat) {
         return ToJSONString();
@@ -3207,10 +3219,10 @@ namespace PeterO {
             return value >= -18446744073709551616.0 &&
               value <= 18446744073709549568.0; // Highest double less or eq. to UInt64.MaxValue
           }
-          case CBORObjectType_DecimalFraction: {
-            DecimalFraction value = (DecimalFraction)this.ThisItem;
-            return value.CompareTo(DecimalFraction.FromBigInteger(LowestMajorType1)) >= 0 &&
-              value.CompareTo(DecimalFraction.FromBigInteger(UInt64MaxValue)) <= 0;
+          case CBORObjectType_ExtendedDecimal: {
+            ExtendedDecimal value = (ExtendedDecimal)this.ThisItem;
+            return value.CompareTo(ExtendedDecimal.FromBigInteger(LowestMajorType1)) >= 0 &&
+              value.CompareTo(ExtendedDecimal.FromBigInteger(UInt64MaxValue)) <= 0;
           }
           case CBORObjectType_BigFloat: {
             BigFloat value = (BigFloat)this.ThisItem;
@@ -3249,8 +3261,8 @@ namespace PeterO {
       }
       if (isDecimal) {
         return RewrapObject(o, new CBORObject(
-          CBORObjectType_DecimalFraction,
-          new DecimalFraction(list[1].AsBigInteger(), list[0].AsBigInteger())));
+          CBORObjectType_ExtendedDecimal,
+          new ExtendedDecimal(list[1].AsBigInteger(), list[0].AsBigInteger())));
       } else {
         return RewrapObject(o, new CBORObject(
           CBORObjectType_BigFloat,

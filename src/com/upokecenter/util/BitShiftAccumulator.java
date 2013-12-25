@@ -19,12 +19,15 @@ at: http://peteroupc.github.io/CBOR/
     public int getLastDiscardedDigit() { return bitLeftmost; }
     int bitsAfterLeftmost;
     private static final int SmallBitLength = 32;
+    
 
     /**
      * Gets whether any of the discarded bits to the right of the last one was
      * set.
      */
     public int getOlderDiscardedDigits() { return bitsAfterLeftmost; }
+    
+    
     BigInteger shiftedBigInt;
     FastInteger knownBitLength;
     

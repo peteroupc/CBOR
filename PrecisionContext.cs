@@ -77,7 +77,6 @@ namespace PeterO {
     public bool HasFlags {
       get { return hasFlags; }
     }
-
     /// <summary> Signals that the result was rounded to a different mathematical
     /// value, but as close as possible to the original. </summary>
     public const int FlagInexact = 1;
@@ -141,8 +140,8 @@ namespace PeterO {
       }
     }
     
-    /// <summary> Copies this PrecisionContext with HasFlags set to true
-    /// and a Flags value of 0. </summary>
+    /// <summary> Copies this PrecisionContext with the specified rounding
+    /// mode. </summary>
     /// <returns>A PrecisionContext object.</returns>
     /// <param name='rounding'>A Rounding object.</param>
     public PrecisionContext WithRounding(Rounding rounding) {
@@ -161,10 +160,11 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary> </summary>
+    /// <summary> Copies this precision context and sets the copy's "ClampNormalExponents"
+    /// flag to the given value.</summary>
     /// <param name='clamp'>A Boolean object.</param>
     /// <returns>A PrecisionContext object.</returns>
-public PrecisionContext WithExponentClamp(bool clamp) {
+    public PrecisionContext WithExponentClamp(bool clamp) {
       PrecisionContext pc = this.Copy();
       pc.clampNormalExponents=clamp;
       return pc;
@@ -174,7 +174,7 @@ public PrecisionContext WithExponentClamp(bool clamp) {
     /// <param name='exponentMin'>A BigInteger object.</param>
     /// <param name='exponentMax'>A BigInteger object.</param>
     /// <returns>A PrecisionContext object.</returns>
-public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
+    public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if((exponentMin)==null)throw new ArgumentNullException("exponentMin");
       if(exponentMin.CompareTo(exponentMax)>0)
         throw new ArgumentException("exponentMin greater than exponentMax");
@@ -202,8 +202,8 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
       pc.hasExponentRange = false;
       return pc;
     }
-    /// <summary> Copies this PrecisionContext with a particular precision.
-    /// </summary>
+    /// <summary> Copies this PrecisionContext and gives it a particular
+    /// precision value.</summary>
     /// <returns>A PrecisionContext object.</returns>
     /// <param name='precision'>Desired precision. 0 means unlimited
     /// precision.</param>
@@ -217,7 +217,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
     /// <summary> </summary>
     /// <param name='bigintPrecision'>A BigInteger object.</param>
     /// <returns>A PrecisionContext object.</returns>
-public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
+    public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
       if((bigintPrecision)==null)throw new ArgumentNullException("bigintPrecision");
       if (bigintPrecision.Sign < 0) throw new ArgumentException(
         "precision" + " not greater or equal to " + "0" + " (" +
@@ -268,7 +268,7 @@ public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
     /// <summary> Unlimited precision context. Rounding mode HalfUp.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
@@ -276,7 +276,7 @@ public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
     /// </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext Decimal32 =
@@ -285,7 +285,7 @@ public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
     /// </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext Decimal64 =
@@ -294,7 +294,7 @@ public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
     /// </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext Decimal128 =
@@ -304,7 +304,7 @@ public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
     /// to round a decimal fraction to this format. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104", 
+      "Microsoft.Security","CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext CliDecimal =

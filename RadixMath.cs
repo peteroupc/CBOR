@@ -3,9 +3,9 @@ using System.Text;
 //using System.Numerics;
 
 namespace PeterO {
-  /// <summary> Encapsulates radix-independent arithmetic. </summary>
-  /// <typeparam name='T'>Data type for a numeric value in a particular
-  /// radix.</typeparam>
+    /// <summary> Encapsulates radix-independent arithmetic. </summary>
+    /// <typeparam name='T'>Data type for a numeric value in a particular
+    /// radix.</typeparam>
   class RadixMath<T> {
     
     IRadixMathHelper<T> helper;
@@ -293,6 +293,14 @@ namespace PeterO {
       }
       return helper.CreateNewWithFlags(BigInteger.Zero,BigInteger.Zero,BigNumberFlags.FlagQuietNaN);
     }
+    
+    private T SignalOverflow(bool neg){
+      return support==BigNumberFlags.FiniteOnly ? default(T) :
+        helper.CreateNewWithFlags(
+          BigInteger.Zero,BigInteger.Zero,
+          (neg ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagInfinity);
+    }
+    
     private T SignalDivideByZero(PrecisionContext ctx, bool neg){
       if(support==BigNumberFlags.FiniteOnly)
         throw new DivideByZeroException("Division by zero");
@@ -1495,6 +1503,8 @@ namespace PeterO {
       bool adjustNegativeZero
      ) {
       if ((context) == null) return thisValue;
+      // If context has unlimited precision and exponent range,
+      // and no discarded digits or shifting
       if ((context.Precision).IsZero && !context.HasExponentRange &&
           (lastDiscarded | olderDiscarded) == 0 && shift.Sign==0)
         return thisValue;
@@ -1703,7 +1713,7 @@ namespace PeterO {
         return RoundToPrecision(thisValue, ctx);
       } else {
         if(ctx!=null && !ctx.ExponentWithinRange(expOther))
-          throw new ArithmeticException("Exponent not within exponent range: "+expOther.ToString());
+          return SignalInvalidWithMessage(ctx,"Exponent not within exponent range: "+expOther.ToString());
         BigInteger bigmantissa=BigInteger.Abs(helper.GetMantissa(thisValue));
         FastInteger shift=FastInteger.FromBig(expOther).SubtractBig(helper.GetExponent(thisValue));
         IShiftAccumulator accum=helper.CreateShiftAccumulator(bigmantissa);
@@ -1933,10 +1943,7 @@ namespace PeterO {
                                           );
         }
         if (signals != null) signals[0] = flags;
-        return support==BigNumberFlags.FiniteOnly ? default(T) :
-          helper.CreateNewWithFlags(
-            BigInteger.Zero,BigInteger.Zero,
-            (neg ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagInfinity);
+        return SignalOverflow(neg);
       } else if (fastEMin != null && adjExponent.CompareTo(fastEMin) < 0) {
         // Subnormal
         FastInteger fastETiny = FastInteger.Copy(fastEMin)
@@ -2058,10 +2065,7 @@ namespace PeterO {
                                              neg ? BigNumberFlags.FlagNegative : 0);
           }
           if (signals != null) signals[0] = flags;
-          return support==BigNumberFlags.FiniteOnly ? default(T) :
-            helper.CreateNewWithFlags(
-              BigInteger.Zero,BigInteger.Zero,
-              (neg ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagInfinity);
+          return SignalOverflow(neg);
         }
       }
       if (signals != null) signals[0] = flags;
@@ -2265,7 +2269,7 @@ namespace PeterO {
       return retval;
     }
     
-    /// <summary> </summary>
+    /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='decfrac'>A T object.</param>
     /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>

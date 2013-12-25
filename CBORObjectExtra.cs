@@ -107,8 +107,8 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
       return bigint;
     }
     
-    private static decimal DecimalFractionToDecimal(DecimalFraction decfrac) {
-      DecimalFraction newDecimal=decfrac.RoundToBinaryPrecision(
+    private static decimal ExtendedDecimalToDecimal(ExtendedDecimal decfrac) {
+      ExtendedDecimal newDecimal=decfrac.RoundToBinaryPrecision(
         PrecisionContext.CliDecimal);
       if(newDecimal==null)
         throw new OverflowException("This object's value is out of range");
@@ -143,11 +143,11 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
             (double)this.ThisItem < (double)Decimal.MinValue)
           throw new OverflowException("This object's value is out of range");
         return (decimal)(double)this.ThisItem;
-      } else if (this.ItemType == CBORObjectType_DecimalFraction) {
-        return DecimalFractionToDecimal((DecimalFraction)this.ThisItem);
+      } else if (this.ItemType == CBORObjectType_ExtendedDecimal) {
+        return ExtendedDecimalToDecimal((ExtendedDecimal)this.ThisItem);
       } else if (this.ItemType == CBORObjectType_BigFloat) {
-        return DecimalFractionToDecimal(
-          DecimalFraction.FromBigFloat((BigFloat)this.ThisItem));
+        return ExtendedDecimalToDecimal(
+          ExtendedDecimal.FromBigFloat((BigFloat)this.ThisItem));
       } else
         throw new InvalidOperationException("Not a number type");
     }
@@ -185,8 +185,8 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
         if (fltItem >= 0 && fltItem <= UInt64.MaxValue)
           return (ulong)fltItem;
         throw new OverflowException("This object's value is out of range");
-      } else if (this.ItemType == CBORObjectType_DecimalFraction) {
-        BigInteger bi = ((DecimalFraction)this.ThisItem).ToBigInteger();
+      } else if (this.ItemType == CBORObjectType_ExtendedDecimal) {
+        BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
         if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
             bi.Sign < 0)
           throw new OverflowException("This object's value is out of range");

@@ -2323,7 +2323,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public static BigInteger fromString(String str) {
       if(str==null)throw new NullPointerException("str");
-      if((str.length())<=0)throw new IllegalArgumentException("str.length()"+" not less than "+"0"+" ("+Long.toString((long)(long)(str.length()))+")");
+      if((str.length())<=0)throw new IllegalArgumentException("str.length()"+" not less than "+"0"+" ("+Long.toString((long)(str.length()))+")");
       int offset=0;
       boolean negative=false;
       if(str.charAt(0)=='-'){

@@ -124,7 +124,7 @@ namespace PeterO {
       } else if (bigintExp.Sign > 0) {
         // Scaled integer
         BigInteger bigmantissa = bigintMant;
-        bigmantissa *= (BigInteger)(DecimalFraction.FindPowerOfTenFromBig(bigintExp));
+        bigmantissa *= (BigInteger)(DecimalUtility.FindPowerOfTenFromBig(bigintExp));
         return FromBigInteger(bigmantissa);
       } else {
         // Fractional number
@@ -134,7 +134,7 @@ namespace PeterO {
         BigInteger remainder;
         if (neg) bigmantissa = -(BigInteger)bigmantissa;
         FastInteger negscale = FastInteger.Copy(scale).Negate();
-        BigInteger divisor = DecimalFraction.FindPowerOfFiveFromBig(
+        BigInteger divisor = DecimalUtility.FindPowerOfFiveFromBig(
           negscale.AsBigInteger());
         while (true) {
           BigInteger quotient = BigInteger.DivRem(bigmantissa, divisor, out remainder);
@@ -148,11 +148,11 @@ namespace PeterO {
             if((bits[0]|bits[1])!=0){
               // Quotient's integer part is nonzero.
               // Get the number of bits of the quotient
-              int bitPrecision=DecimalFraction.BitPrecisionInt(bits[1]);
+              int bitPrecision=DecimalUtility.BitPrecisionInt(bits[1]);
               if(bitPrecision!=0)
                 bitPrecision+=32;
               else
-                bitPrecision=DecimalFraction.BitPrecisionInt(bits[0]);
+                bitPrecision=DecimalUtility.BitPrecisionInt(bits[0]);
               shift=63-bitPrecision;
               scale.SubtractInt(shift);
             } else {
@@ -220,7 +220,7 @@ namespace PeterO {
       if (fpExponent == 0) fpExponent++;
       else value[1]|=0x100000;
       if ((value[1]|value[0]) != 0) {
-        fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
+        fpExponent+=DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
       }
       BigFloat ret=new BigFloat(FastInteger.WordsToBigInteger(value),
                                 (BigInteger)(fpExponent - 1075));
@@ -386,8 +386,8 @@ namespace PeterO {
         // This will be an infinite loop if both elements
         // of the bits array are 0, but the check for
         // 0 was already done above
-        while (!DecimalFraction.HasBitSet(mantissaBits,52)) {
-          DecimalFraction.ShiftLeftOne(mantissaBits);
+        while (!DecimalUtility.HasBitSet(mantissaBits,52)) {
+          DecimalUtility.ShiftLeftOne(mantissaBits);
           bigexponent.SubtractInt(1);
         }
       } else {
@@ -400,7 +400,7 @@ namespace PeterO {
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                              !DecimalFraction.HasBitSet(mantissaBits,0))) {
+                              !DecimalUtility.HasBitSet(mantissaBits,0))) {
         // Add 1 to the bits
         mantissaBits[0]=unchecked((int)(mantissaBits[0]+1));
         if(mantissaBits[0]==0)
@@ -431,7 +431,7 @@ namespace PeterO {
         mantissaBits=FastInteger.GetLastWords(accum.ShiftedInt,2);
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                                !DecimalFraction.HasBitSet(mantissaBits,0))) {
+                                !DecimalUtility.HasBitSet(mantissaBits,0))) {
           // Add 1 to the bits
           mantissaBits[0]=unchecked((int)(mantissaBits[0]+1));
           if(mantissaBits[0]==0)
@@ -484,6 +484,29 @@ namespace PeterO {
     public string ToPlainString() {
       return DecimalFraction.FromBigFloat(this).ToPlainString();
     }
+    
+    /// <summary> Represents the number 1. </summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104",
+      Justification="BigFloat is immutable")]
+    #endif
+    public static readonly BigFloat One = new BigFloat(BigInteger.One,BigInteger.Zero);
+
+    /// <summary> Represents the number 0. </summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104",
+      Justification="BigFloat is immutable")]
+    #endif
+    public static readonly BigFloat Zero = new BigFloat(BigInteger.Zero,BigInteger.Zero);
+    /// <summary> Represents the number 10. </summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security","CA2104",
+      Justification="BigFloat is immutable")]
+    #endif
+    public static readonly BigFloat Ten = FromInt64((long)10);
 
     private sealed class BinaryMathHelper : IRadixMathHelper<BigFloat> {
 
@@ -613,7 +636,8 @@ public BigFloat ValueOf(int val){
         return FromInt64(val);
       }
     }
-
+    
+    //----------------------------
     /// <summary> Gets this value's sign: -1 if negative; 1 if positive; 0
     /// if zero. </summary>
     public int Sign {
@@ -641,7 +665,7 @@ public BigFloat ValueOf(int val){
     }
 
     /// <summary> Divides this object by another bigfloat and returns the
-    /// exact result. </summary>
+    /// result. When possible, the result will be exact.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>The quotient of the two numbers.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
@@ -663,7 +687,7 @@ public BigFloat ValueOf(int val){
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
     public BigFloat DivideToSameExponent(BigFloat divisor, Rounding rounding) {
-      return DivideToExponent(divisor, this.exponent,  PrecisionContext.ForRounding(rounding));
+      return DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two BigFloat objects, and returns the integer
@@ -679,6 +703,21 @@ public BigFloat ValueOf(int val){
       return DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
 
+    /// <summary> Removes trailing zeros from this object's mantissa. For
+    /// example, 1.000 becomes 1.</summary>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). Can be null.</param>
+    /// <returns>This value with trailing zeros removed. Note that if the
+    /// result has a very high exponent and the context says to clamp high exponents,
+    /// there may still be some trailing zeros in the mantissa. If a precision
+    /// context is given, returns null if the result of the rounding overflowed
+    /// the exponent range.</returns>
+    public BigFloat Reduce(
+      PrecisionContext ctx) {
+      return math.Reduce(this, ctx);
+    }
     /// <summary> </summary>
     /// <param name='divisor'>A BigFloat object.</param>
     /// <returns>A BigFloat object.</returns>
@@ -690,8 +729,8 @@ public BigFloat ValueOf(int val){
 
     /// <summary> </summary>
     /// <param name='divisor'>A BigFloat object.</param>
-    /// <returns>A BigFloat object.</returns>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A BigFloat object.</returns>
     public BigFloat RemainderNaturalScale(
       BigFloat divisor,
       PrecisionContext ctx
@@ -699,6 +738,7 @@ public BigFloat ValueOf(int val){
       return Subtract(this.DivideToIntegerNaturalScale(divisor,null)
                       .Multiply(divisor,null),ctx);
     }
+
     /// <summary>Divides two BigFloat objects, and gives a particular exponent
     /// to the result.</summary>
     /// <param name='divisor'>A BigFloat object.</param>
@@ -707,13 +747,17 @@ public BigFloat ValueOf(int val){
     /// A positive number places the cutoff point to the left of the usual decimal
     /// point.</param>
     /// <param name='ctx'>A precision context object to control the rounding
-    /// mode. The precision and exponent range settings of this context are
-    /// ignored. If HasFlags of the context is true, will also store the flags
-    /// resulting from the operation (the flags are in addition to the pre-existing
+    /// mode to use if the result must be scaled down to have the same exponent
+    /// as this value. The precision setting of this context is ignored. If
+    /// HasFlags of the context is true, will also store the flags resulting
+    /// from the operation (the flags are in addition to the pre-existing
     /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
+    /// <exception cref='ArithmeticException'>The desired exponent
+    /// is outside of the valid range of the precision context, if it defines
+    /// an exponent range.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
     public BigFloat DivideToExponent(
@@ -732,19 +776,43 @@ public BigFloat ValueOf(int val){
     /// A positive number places the cutoff point to the left of the usual decimal
     /// point.</param>
     /// <param name='rounding'>The rounding mode to use if the result must
-    /// be scaled down to fit the desired exponent.</param>
-    /// <returns>The quotient of the two objects.</returns>
+    /// be scaled down to have the same exponent as this value.</param>
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
+    /// <returns>The quotient of the two objects.</returns>
     public BigFloat DivideToExponent(
       BigFloat divisor,
       long desiredExponentSmall,
       Rounding rounding
      ) {
-      return DivideToExponent(divisor, ((BigInteger)desiredExponentSmall),
-                              PrecisionContext.ForRounding(rounding));
+      return DivideToExponent(divisor, ((BigInteger)desiredExponentSmall), PrecisionContext.ForRounding(rounding));
+    }
+
+    /// <summary>Divides two BigFloat objects, and gives a particular exponent
+    /// to the result.</summary>
+    /// <param name='divisor'>A BigFloat object.</param>
+    /// <param name='exponent'>The desired exponent. A negative number
+    /// places the cutoff point to the right of the usual decimal point. A positive
+    /// number places the cutoff point to the left of the usual decimal point.</param>
+    /// <param name='ctx'>A precision context object to control the rounding
+    /// mode to use if the result must be scaled down to have the same exponent
+    /// as this value. The precision setting of this context is ignored. If
+    /// HasFlags of the context is true, will also store the flags resulting
+    /// from the operation (the flags are in addition to the pre-existing
+    /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
+    /// <returns>The quotient of the two objects.</returns>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
+    /// <exception cref='ArithmeticException'>The desired exponent
+    /// is outside of the valid range of the precision context, if it defines
+    /// an exponent range.</exception>
+    /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
+    /// and the result is not exact.</exception>
+    public BigFloat DivideToExponent(
+      BigFloat divisor, BigInteger exponent, PrecisionContext ctx) {
+      return math.DivideToExponent(this, divisor, exponent, ctx);
     }
 
     /// <summary>Divides two BigFloat objects, and gives a particular exponent
@@ -755,7 +823,7 @@ public BigFloat ValueOf(int val){
     /// A positive number places the cutoff point to the left of the usual decimal
     /// point.</param>
     /// <param name='rounding'>The rounding mode to use if the result must
-    /// be scaled down to fit the desired exponent.</param>
+    /// be scaled down to have the same exponent as this value.</param>
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
@@ -769,9 +837,13 @@ public BigFloat ValueOf(int val){
       return DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
 
-    /// <summary> </summary>
-    /// <param name='context'>A PrecisionContext object.</param>
-    /// <returns>A BigFloat object.</returns>
+    /// <summary> Finds the absolute value of this object (if it's negative,
+    /// it becomes positive).</summary>
+    /// <param name='context'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the context
+    /// is true, will also store the flags resulting from the operation (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// <returns>The absolute value of this object.</returns>
     public BigFloat Abs(PrecisionContext context) {
       if (this.Sign < 0) {
         return Negate(context);
@@ -780,32 +852,43 @@ public BigFloat ValueOf(int val){
       }
     }
 
-    /// <summary> </summary>
-    /// <param name='context'>A PrecisionContext object.</param>
+    /// <summary> Returns a bigfloat with the same value as this object but
+    /// with the sign reversed.</summary>
+    /// <param name='context'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the context
+    /// is true, will also store the flags resulting from the operation (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>A BigFloat object.</returns>
     public BigFloat Negate(PrecisionContext context) {
       BigInteger neg = -(BigInteger)this.mantissa;
       return new BigFloat(neg, this.exponent).RoundToPrecision(context);
     }
 
-    /// <summary> </summary>
+    /// <summary> Adds this object and another bigfloat and returns the result.</summary>
     /// <param name='decfrac'>A BigFloat object.</param>
-    /// <returns>A BigFloat object.</returns>
+    /// <returns>The sum of the two objects.</returns>
     public BigFloat Add(BigFloat decfrac) {
+      if((decfrac)==null)throw new ArgumentNullException("decfrac");
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
-    /// <summary>Subtracts a BigFloat object from this instance.</summary>
+    /// <summary>Subtracts a BigFloat object from this instance and returns
+    /// the result.</summary>
     /// <param name='decfrac'>A BigFloat object.</param>
     /// <returns>The difference of the two objects.</returns>
     public BigFloat Subtract(BigFloat decfrac) {
       return Subtract(decfrac,null);
     }
 
-    /// <summary>Subtracts a BigFloat object from another BigFloat object.</summary>
+    /// <summary>Subtracts a BigFloat object from this instance.</summary>
     /// <param name='decfrac'>A BigFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>The difference of the two objects.</returns>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). Can be null.</param>
+    /// <returns>The difference of the two objects. If a precision context
+    /// is given, returns null if the result of the rounding overflowed the
+    /// exponent range.</returns>
     public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
       if((decfrac)==null)throw new ArgumentNullException("decfrac");
       return Add(decfrac.Negate(null), ctx);
@@ -814,8 +897,10 @@ public BigFloat ValueOf(int val){
     /// the sum of the scales of the two bigfloats. </summary>
     /// <param name='decfrac'>Another bigfloat.</param>
     /// <returns>The product of the two bigfloats. If a precision context
-    /// is given, returns null if the result of rounding would cause an overflow.</returns>
+    /// is given, returns null if the result of the rounding overflowed the
+    /// exponent range.</returns>
     public BigFloat Multiply(BigFloat decfrac) {
+      if((decfrac)==null)throw new ArgumentNullException("decfrac");
       return Multiply(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -825,7 +910,7 @@ public BigFloat ValueOf(int val){
     /// <param name='augend'>The value to add.</param>
     /// <returns>The result this * multiplicand + augend.</returns>
     public BigFloat MultiplyAndAdd(BigFloat multiplicand,
-                                   BigFloat augend) {
+                                          BigFloat augend) {
       return MultiplyAndAdd(multiplicand,augend,null);
     }
     //----------------------------------------------------------------
@@ -842,11 +927,9 @@ public BigFloat ValueOf(int val){
     /// will be set on the given context only if the context&apos;s HasFlags
     /// is true and the integer part of the result doesn&apos;t fit the precision
     /// and exponent range without rounding.</param>
-    /// <returns>The integer part of the quotient of the two objects. Returns
-    /// null if the return value would overflow the exponent range. A caller
-    /// can handle a null return value by treating it as positive infinity
-    /// if both operands have the same sign or as negative infinity if both
-    /// operands have different signs.</returns>
+    /// <returns>The integer part of the quotient of the two objects. If a
+    /// precision context is given, returns null if the result of the rounding
+    /// overflowed the exponent range.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
@@ -873,26 +956,110 @@ public BigFloat ValueOf(int val){
       BigFloat divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
-
+    
     /// <summary>Finds the remainder that results when dividing two BigFloat
-    /// objects.</summary>
-    /// <param name='divisor'>A BigFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// objects. The remainder is the value that remains when the absolute
+    /// value of this object is divided by the absolute value of the other object;
+    /// the remainder has the same sign (positive or negative) as this object.</summary>
+    /// <param name='divisor'>The divisor.</param>
+    /// <param name='ctx'>A precision context object to control the precision.
+    /// The rounding and exponent range settings of this context are ignored.
+    /// No flags will be set from this operation even if HasFlags of the context
+    /// is true. Can be null.</param>
     /// <returns>The remainder of the two objects.</returns>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
+    /// <exception cref='ArithmeticException'>The result of integer
+    /// division (the quotient, not the remainder) wouldn't fit the given
+    /// precision.</exception>
     public BigFloat Remainder(
       BigFloat divisor, PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
     }
-
-    /// <summary> </summary>
-    /// <param name='divisor'>A BigFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A BigFloat object.</returns>
+    /// <summary>Finds the distance to the closest multiple of the given
+    /// divisor, based on the result of dividing this object's value by another
+    /// object's value. <list type=''> <item> If this and the other object
+    /// divide evenly, the result is 0.</item>
+    /// <item>If the remainder's absolute value is less than half of the divisor's
+    /// absolute value, the result has the same sign as this object and will
+    /// be the distance to the closest multiple.</item>
+    /// <item>If the remainder's absolute value is more than half of the divisor's
+    /// absolute value, the result has the opposite sign of this object and
+    /// will be the distance to the closest multiple.</item>
+    /// <item>If the remainder's absolute value is exactly half of the divisor's
+    /// absolute value, the result has the opposite sign of this object if
+    /// the quotient, rounded down, is odd, and has the same sign as this object
+    /// if the quotient, rounded down, is even, and the result's absolute
+    /// value is half of the divisor's absolute value.</item>
+    /// </list>
+    /// This function is also known as the "IEEE Remainder" function. </summary>
+    /// <param name='divisor'>The divisor.</param>
+    /// <param name='ctx'>A precision context object to control the precision.
+    /// The rounding and exponent range settings of this context are ignored
+    /// (the rounding mode is always treated as HalfEven). No flags will be
+    /// set from this operation even if HasFlags of the context is true. Can
+    /// be null.</param>
+    /// <returns>The distance of the closest multiple.</returns>
+    /// <exception cref='DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
+    /// <exception cref='ArithmeticException'>Either the result of integer
+    /// division (the quotient) or the remainder wouldn't fit the given precision.</exception>
     public BigFloat RemainderNear(
       BigFloat divisor, PrecisionContext ctx) {
       return math.RemainderNear(this, divisor, ctx);
     }
 
+    /// <summary> Finds the largest value that's smaller than the given value.</summary>
+    /// <param name='ctx'>A precision context object to control the precision
+    /// and exponent range of the result. The rounding mode from this context
+    /// is ignored. No flags will be set from this operation even if HasFlags
+    /// of the context is true.</param>
+    /// <returns>Returns the largest value that&apos;s less than the given
+    /// value. Returns null if the result is negative infinity.</returns>
+    /// <exception cref='System.ArgumentException'>"ctx" is null, the
+    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    public BigFloat NextMinus(
+      PrecisionContext ctx
+     ){
+      return math.NextMinus(this,ctx);
+    }
+
+    /// <summary> Finds the smallest value that's greater than the given
+    /// value.</summary>
+    /// <param name='ctx'>A precision context object to control the precision
+    /// and exponent range of the result. The rounding mode from this context
+    /// is ignored. No flags will be set from this operation even if HasFlags
+    /// of the context is true.</param>
+    /// <returns>Returns the smallest value that&apos;s greater than the
+    /// given value. Returns null if the result is positive infinity.</returns>
+    /// <exception cref='System.ArgumentException'>"ctx" is null, the
+    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    public BigFloat NextPlus(
+      PrecisionContext ctx
+     ){
+      return math.NextPlus(this,ctx);
+    }
+    
+    /// <summary> Finds the next value that is closer to the other object's
+    /// value than this object's value.</summary>
+    /// <param name='otherValue'>A BigFloat object.</param>
+    /// <param name='ctx'>A precision context object to control the precision
+    /// and exponent range of the result. The rounding mode from this context
+    /// is ignored. No flags will be set from this operation even if HasFlags
+    /// of the context is true.</param>
+    /// <returns>Returns the next value that is closer to the other object&apos;s
+    /// value than this object&apos;s value. Returns null if the result is
+    /// infinity.</returns>
+    /// <exception cref='System.ArgumentException'>"ctx" is null, the
+    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    public BigFloat NextToward(
+      BigFloat otherValue,
+      PrecisionContext ctx
+     ){
+      return math.NextToward(this,otherValue,ctx);
+    }
+
+    
     /// <summary>Divides this BigFloat object by another BigFloat object.
     /// The preferred exponent for the result is this object's exponent minus
     /// the divisor's exponent.</summary>
@@ -901,11 +1068,9 @@ public BigFloat ValueOf(int val){
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns>The quotient of the two objects. Returns null if the return
-    /// value would overflow the exponent range. A caller can handle a null
-    /// return value by treating it as positive infinity if both operands
-    /// have the same sign or as negative infinity if both operands have different
-    /// signs.</returns>
+    /// <returns>The quotient of the two objects. If a precision context
+    /// is given, returns null if the result of the rounding overflowed the
+    /// exponent range.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
     /// <exception cref='ArithmeticException'>Either ctx is null or ctx's
@@ -918,91 +1083,23 @@ public BigFloat ValueOf(int val){
      ) {
       return math.Divide(this, divisor, ctx);
     }
-
-    /// <summary>Divides this object by another object, and gives a particular
-    /// exponent to the result.</summary>
-    /// <param name='divisor'>The divisor.</param>
-    /// <param name='ctx'>A precision context object to control the rounding
-    /// mode. The precision and exponent range settings of this context are
-    /// ignored. If HasFlags of the context is true, will also store the flags
-    /// resulting from the operation (the flags are in addition to the pre-existing
-    /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
-    /// <returns>The quotient of the two objects. Returns null if the return
-    /// value would overflow the exponent range. A caller can handle a null
-    /// return value by treating it as positive infinity if both operands
-    /// have the same sign or as negative infinity if both operands have different
-    /// signs.</returns>
-    /// <exception cref='DivideByZeroException'>Attempted to divide
-    /// by zero.</exception>
-    /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
-    /// and the result is not exact.</exception>
-    /// <param name='exponent'>A BigInteger object.</param>
-    public BigFloat DivideToExponent(
-      BigFloat divisor, BigInteger exponent, PrecisionContext ctx) {
-      return math.DivideToExponent(this, divisor, exponent, ctx);
-    }
-
-    /// <summary> Gets the greater value between two decimal fractions.
-    /// </summary>
-    /// <returns>The larger value of the two objects.</returns>
-    /// <param name='first'>A BigFloat object.</param>
-    /// <param name='second'>A BigFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    public static BigFloat Max(
-      BigFloat first, BigFloat second, PrecisionContext ctx) {
-      return math.Max(first, second, ctx);
-    }
-
-    /// <summary> Gets the lesser value between two decimal fractions. </summary>
-    /// <returns>The smaller value of the two objects.</returns>
-    /// <param name='first'>A BigFloat object.</param>
-    /// <param name='second'>A BigFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    public static BigFloat Min(
-      BigFloat first, BigFloat second, PrecisionContext ctx) {
-      return math.Min(first, second, ctx);
-    }
-    /// <summary> Gets the greater value between two values, ignoring their
-    /// signs. If the absolute values are equal, has the same effect as Max.
-    /// </summary>
-    /// <returns>A BigFloat object.</returns>
-    /// <param name='first'>A BigFloat object.</param>
-    /// <param name='second'>A BigFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    public static BigFloat MaxMagnitude(
-      BigFloat first, BigFloat second, PrecisionContext ctx) {
-      return math.MaxMagnitude(first, second, ctx);
-    }
     
-    /// <summary> Gets the lesser value between two values, ignoring their
-    /// signs. If the absolute values are equal, has the same effect as Min.
-    /// </summary>
-    /// <returns>A BigFloat object.</returns>
-    /// <param name='first'>A BigFloat object.</param>
-    /// <param name='second'>A BigFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    public static BigFloat MinMagnitude(
-      BigFloat first, BigFloat second, PrecisionContext ctx) {
-      return math.MinMagnitude(first, second, ctx);
-    }
-    
-    /// <summary> Gets the greater value between two decimal fractions.
-    /// </summary>
+    /// <summary> Gets the greater value between two bigfloats. </summary>
     /// <returns>The larger value of the two objects.</returns>
     /// <param name='first'>A BigFloat object.</param>
     /// <param name='second'>A BigFloat object.</param>
     public static BigFloat Max(
       BigFloat first, BigFloat second) {
-      return Max(first,second,null);
+      return math.Max(first, second, null);
     }
 
-    /// <summary> Gets the lesser value between two decimal fractions. </summary>
+    /// <summary> Gets the lesser value between two bigfloats. </summary>
     /// <returns>The smaller value of the two objects.</returns>
     /// <param name='first'>A BigFloat object.</param>
     /// <param name='second'>A BigFloat object.</param>
     public static BigFloat Min(
       BigFloat first, BigFloat second) {
-      return Min(first,second,null);
+      return math.Min(first, second, null);
     }
     /// <summary> Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.
@@ -1012,7 +1109,7 @@ public BigFloat ValueOf(int val){
     /// <param name='second'>A BigFloat object.</param>
     public static BigFloat MaxMagnitude(
       BigFloat first, BigFloat second) {
-      return MaxMagnitude(first,second,null);
+      return math.MaxMagnitude(first, second, null);
     }
     
     /// <summary> Gets the lesser value between two values, ignoring their
@@ -1023,7 +1120,7 @@ public BigFloat ValueOf(int val){
     /// <param name='second'>A BigFloat object.</param>
     public static BigFloat MinMagnitude(
       BigFloat first, BigFloat second) {
-      return MinMagnitude(first,second,null);
+      return math.MinMagnitude(first, second, null);
     }
     /// <summary> Compares the mathematical values of this object and another
     /// object. <para> This method is not consistent with the Equals method
@@ -1034,11 +1131,30 @@ public BigFloat ValueOf(int val){
     /// other value, or greater than 0 if this object&apos;s value is greater
     /// than the other value or if &quot;other&quot; is null, or 0 if both values
     /// are equal.</returns>
-    /// <param name='other'>A BigFloat object to compare with.</param>
+    /// <param name='other'>A BigFloat object.</param>
     public int CompareTo(
       BigFloat other) {
       return math.CompareTo(this, other);
     }
+
+    /// <summary>Compares a BigFloat object with this instance.</summary>
+    /// <param name='other'>A BigFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A BigFloat object.</returns>
+    public BigFloat CompareToWithContext(
+      BigFloat other, PrecisionContext ctx) {
+      return math.CompareToWithContext(this, other, false, ctx);
+    }
+
+    /// <summary>Compares a BigFloat object with this instance.</summary>
+    /// <param name='other'>A BigFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A BigFloat object.</returns>
+    public BigFloat CompareToSignal(
+      BigFloat other, PrecisionContext ctx) {
+      return math.CompareToWithContext(this, other, true, ctx);
+    }
+
     /// <summary> Finds the sum of this object and another object. The result's
     /// exponent is set to the lower of the exponents of the two operands. </summary>
     /// <param name='decfrac'>The number to add to.</param>
@@ -1046,8 +1162,9 @@ public BigFloat ValueOf(int val){
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns>The sum of thisValue and the other object. Returns null
-    /// if the result would overflow the exponent range.</returns>
+    /// <returns>The sum of thisValue and the other object. If a precision
+    /// context is given, returns null if the result of the rounding overflowed
+    /// the exponent range.</returns>
     public BigFloat Add(
       BigFloat decfrac, PrecisionContext ctx) {
       return math.Add(this, decfrac, ctx);
@@ -1090,8 +1207,7 @@ public BigFloat ValueOf(int val){
     /// <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
     public BigFloat Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize(
-        new BigFloat(BigInteger.One,(BigInteger)desiredExponentSmall), ctx);
+      return Quantize(new BigFloat(BigInteger.One,(BigInteger)desiredExponentSmall), ctx);
     }
 
     /// <summary> Returns a bigfloat with the same value as this object but
@@ -1107,109 +1223,129 @@ public BigFloat ValueOf(int val){
     /// exponent changed.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
     /// or the result can't fit the given precision without rounding.</exception>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// is outside of the valid range of the precision context, if it defines
+    /// an exponent range.</exception>
     public BigFloat Quantize(
       BigFloat otherValue, PrecisionContext ctx) {
       return math.Quantize(this, otherValue, ctx);
-    }    /// <summary> </summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A BigFloat object.</returns>
+    }
+    /// <summary> Returns a bigfloat with the same value as this object but
+    /// rounded to an integer. </summary>
+    /// <param name='ctx'>A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
+    /// <returns>A bigfloat with the same value as this object but rounded
+    /// to an integer.</returns>
+    /// <exception cref='ArithmeticException'>An overflow error occurred,
+    /// or the result can't fit the given precision without rounding.</exception>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// must be changed to 0 when rounding and 0 is outside of the valid range
+    /// of the precision context, if it defines an exponent range.</exception>
     public BigFloat RoundToIntegralExact(
       PrecisionContext ctx) {
       return math.RoundToExponentExact(this, BigInteger.Zero, ctx);
     }
-    /// <summary> </summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A BigFloat object.</returns>
+    /// <summary> Returns a bigfloat with the same value as this object but
+    /// rounded to an integer, without adding the FlagInexact or FlagRounded
+    /// flags. </summary>
+    /// <param name='ctx'>A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags), except that this function will never
+    /// add the FlagRounded and FlagInexact flags (the only difference between
+    /// this and RoundToExponentExact). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
+    /// <returns>A bigfloat with the same value as this object but rounded
+    /// to an integer.</returns>
+    /// <exception cref='ArithmeticException'>An overflow error occurred,
+    /// or the result can't fit the given precision without rounding.</exception>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// must be changed to 0 when rounding and 0 is outside of the valid range
+    /// of the precision context, if it defines an exponent range.</exception>
     public BigFloat RoundToIntegralNoRoundedFlag(
       PrecisionContext ctx) {
       return math.RoundToExponentNoRoundedFlag(this, BigInteger.Zero, ctx);
     }
-    /// <summary> Removes trailing zeros from this object's mantissa. For
-    /// example, 1.000 becomes 1.</summary>
+    /// <summary> Returns a bigfloat with the same value as this object but
+    /// rounded to a given exponent. </summary>
+    /// <param name='exponent'>The minimum exponent the result can have.
+    /// This is the maximum number of fractional digits in the result, expressed
+    /// as a negative number. Can also be positive, which eliminates lower-order
+    /// places from the number. For example, -3 means round to the thousandth
+    /// (10^-3), and 3 means round to the thousand (10^3). A value of 0 rounds
+    /// the number to an integer.</param>
+    /// <param name='ctx'>A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
+    /// <returns>A bigfloat rounded to the given exponent.</returns>
+    /// <exception cref='ArithmeticException'>An overflow error occurred,
+    /// or the result can't fit the given precision without rounding.</exception>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// must be changed when rounding and the new exponent is outside of the
+    /// valid range of the precision context, if it defines an exponent range.</exception>
+    public BigFloat RoundToExponentExact(
+      BigInteger exponent, PrecisionContext ctx) {
+      return math.RoundToExponentExact(this, exponent, ctx);
+    }
+    /// <summary> Returns a bigfloat with the same value as this object but
+    /// rounded to a given exponent, without throwing an exception if the
+    /// result overflows or doesn't fit the precision range. </summary>
+    /// <param name='exponent'>The minimum exponent the result can have.
+    /// This is the maximum number of fractional digits in the result, expressed
+    /// as a negative number. Can also be positive, which eliminates lower-order
+    /// places from the number. For example, -3 means round to the thousandth
+    /// (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+    /// value of 0 rounds the number to an integer.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). Can be null, in which case
+    /// the default rounding mode is HalfEven.</param>
+    /// <returns>A bigfloat rounded to the closest value representable
+    /// in the given precision, meaning if the result can&apos;t fit the precision,
+    /// additional digits are discarded to make it fit. If a precision context
+    /// is given, returns null if the result of the rounding overflowed the
+    /// exponent range.</returns>
+    /// <exception cref='System.ArgumentException'>The new exponent
+    /// must be changed when rounding and the new exponent is outside of the
+    /// valid range of the precision context, if it defines an exponent range.</exception>
+    public BigFloat RoundToExponent(
+      BigInteger exponent, PrecisionContext ctx) {
+      return math.RoundToExponentSimple(this, exponent, ctx);
+    }
+
+    /// <summary> Multiplies two bigfloats. The resulting scale will be
+    /// the sum of the scales of the two bigfloats. </summary>
+    /// <param name='op'>Another bigfloat.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns>This value with trailing zeros removed. Note that if the
-    /// value has a very high exponent and the context says to clamp high exponents,
-    /// there may still be some trailing zeros in the mantissa. If a precision
-    /// context is given, returns null if the result of rounding would cause
-    /// an overflow. The caller can handle a null return value by treating
-    /// it as positive or negative infinity depending on the sign of this object&apos;s
-    /// value.</returns>
-    public BigFloat Reduce(
-      PrecisionContext ctx) {
-      return math.Reduce(this, ctx);
-    }
-    
-    
-    /// <summary> Gets the largest value that's smaller than the given value.</summary>
-    /// <param name='ctx'>A precision context object to control the precision
-    /// and exponent range of the result. The rounding mode from this context
-    /// is ignored. No flags will be set from this operation even if HasFlags
-    /// of the context is true.</param>
-    /// <returns>Returns the largest value that&apos;s smaller than the
-    /// given value. Returns null if the result is negative infinity.</returns>
-    /// <exception cref='System.ArgumentException'>"ctx" is null, the
-    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
-    public BigFloat NextMinus(
-      PrecisionContext ctx
-     ){
-      return math.NextMinus(this,ctx);
-    }
-
-    /// <summary> Gets the smallest value that's greater than the given value.</summary>
-    /// <param name='ctx'>A precision context object to control the precision
-    /// and exponent range of the result. The rounding mode from this context
-    /// is ignored. No flags will be set from this operation even if HasFlags
-    /// of the context is true.</param>
-    /// <returns>Returns the smallest value that&apos;s greater than the
-    /// given value. Returns null if the result is positive infinity.</returns>
-    /// <exception cref='System.ArgumentException'>"ctx" is null, the
-    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
-    public BigFloat NextPlus(
-      PrecisionContext ctx
-     ){
-      return math.NextPlus(this,ctx);
-    }
-
-    /// <summary> </summary>
-    /// <param name='otherValue'>A BigFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A BigFloat object.</returns>
-    public BigFloat NextToward(
-      BigFloat otherValue,
-      PrecisionContext ctx
-     ){
-      return math.NextToward(this,otherValue,ctx);
-    }
-
-    /// <summary>Multiplies two BigFloat objects.</summary>
-    /// <param name='op'>A BigFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>The product of the two objects. Returns null if the return
-    /// value would overflow the exponent range. A caller can handle a null
-    /// return value by treating it as positive infinity if both operands
-    /// have the same sign or as negative infinity if both operands have different
-    /// signs.</returns>
+    /// <returns>The product of the two bigfloats. If a precision context
+    /// is given, returns null if the result of the rounding overflowed the
+    /// exponent range.</returns>
     public BigFloat Multiply(
       BigFloat op, PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);
     }
-
     /// <summary> Multiplies by one value, and then adds another value. </summary>
-    /// <param name='multiplicand'>The value to multiply.</param>
+    /// <param name='op'>The value to multiply.</param>
     /// <param name='augend'>The value to add.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The result thisValue * multiplicand + augend. If a precision
-    /// context is given, returns null if the result of rounding would cause
-    /// an overflow.</returns>
+    /// context is given, returns null if the result of the rounding overflowed
+    /// the exponent range.</returns>
     public BigFloat MultiplyAndAdd(
-      BigFloat multiplicand, BigFloat augend, PrecisionContext ctx) {
-      return math.MultiplyAndAdd(this, multiplicand, augend, ctx);
+      BigFloat op, BigFloat augend, PrecisionContext ctx) {
+      return math.MultiplyAndAdd(this, op, augend, ctx);
     }
     /// <summary> Rounds this object's value to a given precision, using
     /// the given rounding mode and range of exponent. </summary>
@@ -1218,10 +1354,8 @@ public BigFloat ValueOf(int val){
     /// <returns>The closest value to this object&apos;s value, rounded
     /// to the specified precision. Returns the same value as this object
     /// if &quot;context&quot; is null or the precision and exponent range
-    /// are unlimited. Returns null if the result of the rounding would cause
-    /// an overflow. The caller can handle a null return value by treating
-    /// it as positive or negative infinity depending on the sign of this object&apos;s
-    /// value.</returns>
+    /// are unlimited. If a precision context is given, returns null if the
+    /// result of the rounding overflowed the exponent range.</returns>
     public BigFloat RoundToPrecision(
       PrecisionContext ctx) {
       return math.RoundToPrecision(this, ctx);
@@ -1235,38 +1369,12 @@ public BigFloat ValueOf(int val){
     /// <returns>The closest value to this object&apos;s value, rounded
     /// to the specified precision. Returns the same value as this object
     /// if &quot;context&quot; is null or the precision and exponent range
-    /// are unlimited. Returns null if the result of the rounding would cause
-    /// an overflow. The caller can handle a null return value by treating
-    /// it as positive or negative infinity depending on the sign of this object&apos;s
-    /// value.</returns>
+    /// are unlimited. Returns null if the result of the rounding overflowed
+    /// the exponent range.</returns>
     public BigFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
     }
-    
-    /// <summary> Represents the number 1. </summary>
-    #if CODE_ANALYSIS
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104",
-      Justification="BigInteger is immutable")]
-    #endif
-    public static readonly BigFloat One = new BigFloat(BigInteger.One,BigInteger.Zero);
-
-    /// <summary> Represents the number 0. </summary>
-    #if CODE_ANALYSIS
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104",
-      Justification="BigInteger is immutable")]
-    #endif
-    public static readonly BigFloat Zero = new BigFloat(BigInteger.Zero,BigInteger.Zero);
-    /// <summary> Represents the number 10. </summary>
-    #if CODE_ANALYSIS
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104",
-      Justification="BigInteger is immutable")]
-    #endif
-    public static readonly BigFloat Ten = FromInt64((long)10);
-
     
   }
 

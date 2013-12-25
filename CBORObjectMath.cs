@@ -20,8 +20,8 @@ namespace PeterO {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");
       int combo = (a.ItemType << 4) | b.ItemType;
-      DecimalFraction decfracValueA;
-      DecimalFraction decfracValueB;
+      ExtendedDecimal decfracValueA;
+      ExtendedDecimal decfracValueB;
       BigFloat bigfloatValueA;
       BigFloat bigfloatValueB;
       BigInteger bvalueA;
@@ -62,9 +62,9 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = DecimalFraction.FromInt64((long)a.ThisItem);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = ExtendedDecimal.FromInt64((long)a.ThisItem);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -102,9 +102,9 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = DecimalFraction.FromBigInteger((BigInteger)a.ThisItem);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = ExtendedDecimal.FromBigInteger((BigInteger)a.ThisItem);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -166,14 +166,14 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_DecimalFraction: {
+        case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
             float sa = (float)a.ThisItem;
             if (Single.IsNaN(sa)) return CBORObjectMath.NaN;
             if (Single.IsInfinity(sa)) {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
-            decfracValueA = DecimalFraction.FromSingle((float)sa);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+            decfracValueA = ExtendedDecimal.FromSingle((float)sa);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -240,14 +240,14 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_DecimalFraction: {
+        case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
             double sa = (double)a.ThisItem;
             if (Double.IsNaN(sa)) return CBORObjectMath.NaN;
             if (Double.IsInfinity(sa)) {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
-            decfracValueA = DecimalFraction.FromDouble((double)sa);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+            decfracValueA = ExtendedDecimal.FromDouble((double)sa);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -260,44 +260,44 @@ namespace PeterO {
             bigfloatValueB = (BigFloat)b.ThisItem;
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Integer: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromInt64((long)b.ThisItem);
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_Integer: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_BigInteger: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromBigInteger((BigInteger)b.ThisItem);
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_BigInteger: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Single: {
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_Single: {
             float sb = (float)b.ThisItem;
             if (Single.IsNaN(sb)) return CBORObjectMath.NaN;
             if (Single.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromSingle((float)sb);
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromSingle((float)sb);
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Double: {
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_Double: {
             double sb = (double)b.ThisItem;
             if (Double.IsNaN(sb)) return CBORObjectMath.NaN;
             if (Double.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromDouble((double)sb);
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromDouble((double)sb);
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_BigFloat: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromBigFloat((BigFloat)b.ThisItem);
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_BigFloat: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromBigFloat((BigFloat)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_Integer: {
@@ -330,9 +330,9 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Add(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = DecimalFraction.FromBigFloat((BigFloat)a.ThisItem);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = ExtendedDecimal.FromBigFloat((BigFloat)a.ThisItem);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Add(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -348,8 +348,8 @@ namespace PeterO {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");
       int combo = (a.ItemType << 4) | b.ItemType;
-      DecimalFraction decfracValueA;
-      DecimalFraction decfracValueB;
+      ExtendedDecimal decfracValueA;
+      ExtendedDecimal decfracValueB;
       BigFloat bigfloatValueA;
       BigFloat bigfloatValueB;
       BigInteger bvalueA;
@@ -390,9 +390,9 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = DecimalFraction.FromInt64((long)a.ThisItem);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = ExtendedDecimal.FromInt64((long)a.ThisItem);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -430,9 +430,9 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = DecimalFraction.FromBigInteger((BigInteger)a.ThisItem);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = ExtendedDecimal.FromBigInteger((BigInteger)a.ThisItem);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -494,14 +494,14 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_DecimalFraction: {
+        case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
             float sa = (float)a.ThisItem;
             if (Single.IsNaN(sa)) return CBORObjectMath.NaN;
             if (Single.IsInfinity(sa)) {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
-            decfracValueA = DecimalFraction.FromSingle((float)sa);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+            decfracValueA = ExtendedDecimal.FromSingle((float)sa);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -568,14 +568,14 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_DecimalFraction: {
+        case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
             double sa = (double)a.ThisItem;
             if (Double.IsNaN(sa)) return CBORObjectMath.NaN;
             if (Double.IsInfinity(sa)) {
               return a; // +/-infinity plus or minus any finite number is unchanged
             }
-            decfracValueA = DecimalFraction.FromDouble((double)sa);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+            decfracValueA = ExtendedDecimal.FromDouble((double)sa);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -588,44 +588,44 @@ namespace PeterO {
             bigfloatValueB = (BigFloat)b.ThisItem;
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Integer: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromInt64((long)b.ThisItem);
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_Integer: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_BigInteger: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromBigInteger((BigInteger)b.ThisItem);
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_BigInteger: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Single: {
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_Single: {
             float sb = (float)b.ThisItem;
             if (Single.IsNaN(sb)) return CBORObjectMath.NaN;
             if (Single.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromSingle((float)sb);
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromSingle((float)sb);
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Double: {
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_Double: {
             double sb = (double)b.ThisItem;
             if (Double.IsNaN(sb)) return CBORObjectMath.NaN;
             if (Double.IsInfinity(sb)) {
               return b; // +/-infinity plus or minus any finite number is unchanged
             }
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromDouble((double)sb);
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromDouble((double)sb);
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_BigFloat: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromBigFloat((BigFloat)b.ThisItem);
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_BigFloat: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromBigFloat((BigFloat)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_Integer: {
@@ -658,9 +658,9 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Subtract(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = DecimalFraction.FromBigFloat((BigFloat)a.ThisItem);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = ExtendedDecimal.FromBigFloat((BigFloat)a.ThisItem);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Subtract(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -676,8 +676,8 @@ namespace PeterO {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");
       int combo = (a.ItemType << 4) | b.ItemType;
-      DecimalFraction decfracValueA;
-      DecimalFraction decfracValueB;
+      ExtendedDecimal decfracValueA;
+      ExtendedDecimal decfracValueB;
       BigFloat bigfloatValueA;
       BigFloat bigfloatValueB;
       BigInteger bvalueA;
@@ -726,9 +726,9 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = DecimalFraction.FromInt64((long)a.ThisItem);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = ExtendedDecimal.FromInt64((long)a.ThisItem);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -768,9 +768,9 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = DecimalFraction.FromBigInteger((BigInteger)a.ThisItem);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = ExtendedDecimal.FromBigInteger((BigInteger)a.ThisItem);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -834,15 +834,15 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_DecimalFraction: {
+        case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
             float sa = (float)a.ThisItem;
             if (Single.IsNaN(sa)) return CBORObjectMath.NaN;
             if (Single.IsInfinity(sa)) {
-              int s = ((DecimalFraction)b.ThisItem).Sign;
+              int s = ((ExtendedDecimal)b.ThisItem).Sign;
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sa : sa));
             }
-            decfracValueA = DecimalFraction.FromSingle((float)sa);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+            decfracValueA = ExtendedDecimal.FromSingle((float)sa);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Single << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -912,15 +912,15 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_DecimalFraction: {
+        case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
             double sa = (double)a.ThisItem;
             if (Double.IsNaN(sa)) return CBORObjectMath.NaN;
             if (Double.IsInfinity(sa)) {
-              int s = ((DecimalFraction)b.ThisItem).Sign;
+              int s = ((ExtendedDecimal)b.ThisItem).Sign;
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sa : sa));
             }
-            decfracValueA = DecimalFraction.FromDouble((double)sa);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+            decfracValueA = ExtendedDecimal.FromDouble((double)sa);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_Double << 4) | CBORObject.CBORObjectType_BigFloat: {
@@ -934,46 +934,46 @@ namespace PeterO {
             bigfloatValueB = (BigFloat)b.ThisItem;
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Integer: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromInt64((long)b.ThisItem);
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_Integer: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromInt64((long)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_BigInteger: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromBigInteger((BigInteger)b.ThisItem);
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_BigInteger: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromBigInteger((BigInteger)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Single: {
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_Single: {
             float sb = (float)b.ThisItem;
             if (Single.IsNaN(sb)) return CBORObjectMath.NaN;
             if (Single.IsInfinity(sb)) {
-              int s = ((DecimalFraction)a.ThisItem).Sign;
+              int s = ((ExtendedDecimal)a.ThisItem).Sign;
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sb : sb));
             }
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromSingle((float)sb);
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromSingle((float)sb);
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_Double: {
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_Double: {
             double sb = (double)b.ThisItem;
             if (Double.IsNaN(sb)) return CBORObjectMath.NaN;
             if (Double.IsInfinity(sb)) {
-              int s = ((DecimalFraction)a.ThisItem).Sign;
+              int s = ((ExtendedDecimal)a.ThisItem).Sign;
               return (s == 0 ? CBORObjectMath.NaN : CBORObject.FromObject(s < 0 ? -sb : sb));
             }
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromDouble((double)sb);
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromDouble((double)sb);
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
-        case (CBORObject.CBORObjectType_DecimalFraction << 4) | CBORObject.CBORObjectType_BigFloat: {
-            decfracValueA = (DecimalFraction)a.ThisItem;
-            decfracValueB = DecimalFraction.FromBigFloat((BigFloat)b.ThisItem);
+        case (CBORObject.CBORObjectType_ExtendedDecimal << 4) | CBORObject.CBORObjectType_BigFloat: {
+            decfracValueA = (ExtendedDecimal)a.ThisItem;
+            decfracValueB = ExtendedDecimal.FromBigFloat((BigFloat)b.ThisItem);
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_Integer: {
@@ -1008,9 +1008,9 @@ namespace PeterO {
             bigfloatValueB = BigFloat.FromDouble((double)sb);
             return CBORObject.FromObject(bigfloatValueA.Multiply(bigfloatValueB));
           }
-        case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_DecimalFraction: {
-            decfracValueA = DecimalFraction.FromBigFloat((BigFloat)a.ThisItem);
-            decfracValueB = (DecimalFraction)b.ThisItem;
+        case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_ExtendedDecimal: {
+            decfracValueA = ExtendedDecimal.FromBigFloat((BigFloat)a.ThisItem);
+            decfracValueB = (ExtendedDecimal)b.ThisItem;
             return CBORObject.FromObject(decfracValueA.Multiply(decfracValueB));
           }
         case (CBORObject.CBORObjectType_BigFloat << 4) | CBORObject.CBORObjectType_BigFloat: {

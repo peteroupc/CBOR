@@ -218,7 +218,7 @@ namespace PeterO {
         }
       }
       
-    /// <summary> </summary>
+    /// <summary>Compares a Int32 object with this instance.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int CompareToInt(int val){

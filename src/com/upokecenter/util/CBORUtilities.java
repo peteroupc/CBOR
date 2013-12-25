@@ -141,7 +141,7 @@ private CBORUtilities(){}
       if (fpExponent == 0) fpExponent++;
       else value[1]|=0x100000;
       if ((value[1]|value[0]) != 0) {
-        fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
+        fpExponent+=DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
       }
       fpExponent -= 1075;
       BigInteger bigmantissa=FastInteger.WordsToBigInteger(value);

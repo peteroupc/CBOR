@@ -99,8 +99,8 @@ namespace Test {
       if(output!=null && !d3.ToString().Equals(output)){
         ExtendedDecimal d4=ExtendedDecimal.FromString(output);
         Assert.AreEqual(output,d3.ToString(),(
-          "expected: ["+(d4.Mantissa).ToString()+","+(d4.Exponent).ToString()+"]\\n"+
-          "but was: ["+(d3.Mantissa).ToString()+","+(d3.Exponent).ToString()+"]"
+          "expected: ["+(d4.UnsignedMantissa).ToString()+","+(d4.Exponent).ToString()+"]\\n"+
+          "but was: ["+(d3.UnsignedMantissa).ToString()+","+(d3.Exponent).ToString()+"]"
          ));   }
     }
     

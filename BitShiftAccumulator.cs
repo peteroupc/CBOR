@@ -18,12 +18,15 @@ namespace PeterO {
     }
     int bitsAfterLeftmost;
     private const int SmallBitLength = 32;
+    
 
     /// <summary> Gets whether any of the discarded bits to the right of the
     /// last one was set. </summary>
     public int OlderDiscardedDigits {
       get { return bitsAfterLeftmost; }
     }
+    
+    
     BigInteger shiftedBigInt;
     FastInteger knownBitLength;
     

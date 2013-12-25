@@ -102,6 +102,7 @@
     <Compile Include="CBORUtilities.cs" />
     <Compile Include="DataUtilities.cs" />
     <Compile Include="DecimalFraction.cs" />
+    <Compile Include="DecimalUtility.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
     <Compile Include="ExtendedDecimal.cs" />
     <Compile Include="FastInteger.cs" />
