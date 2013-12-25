@@ -186,10 +186,9 @@ namespace Test {
         try { o.AsDouble(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
         try { o.AsBigFloat(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
         try { o.AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsDecimalFraction(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
         return;
       }
-      BigInteger df=o.AsDecimalFraction().ToBigInteger();
+      BigInteger df=o.AsExtendedDecimal().ToBigInteger();
       try { o.AsBigInteger(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
       try { o.AsBigFloat(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
       try { o.AsSingle(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }

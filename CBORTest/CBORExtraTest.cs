@@ -24,7 +24,7 @@ namespace Test {
       FastRandom r = new FastRandom();
       for(int i=0;i<5000;i++){
         CBORObject o1=CBORTest.RandomNumber(r);
-        var df=o1.AsDecimalFraction();
+        var df=o1.AsExtendedDecimal();
         try {
           decimal s=Decimal.Parse(df.ToPlainString());
           try {
@@ -36,7 +36,7 @@ namespace Test {
             Assert.AreEqual(s.ToString(),df2.ToPlainString());
           } catch(Exception){
             Console.WriteLine(
-              "Assert.AreEqual(\""+s.ToString()+"\",DecimalFraction.FromString(\""+df.ToString()+"\")"+
+              "Assert.AreEqual(\""+s.ToString()+"\",ExtendedDecimal.FromString(\""+df.ToString()+"\")"+
               ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)).ToPlainString());"
              );
             throw;
@@ -47,7 +47,7 @@ namespace Test {
               new PrecisionContext(96,Rounding.HalfEven,0,28,false)));
           } catch(Exception){
             Console.WriteLine(
-              "Assert.AreEqual(null,DecimalFraction.FromString(\""+df.ToString()+"\")"+
+              "Assert.AreEqual(null,ExtendedDecimal.FromString(\""+df.ToString()+"\")"+
               ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)));"
              );
             throw;
