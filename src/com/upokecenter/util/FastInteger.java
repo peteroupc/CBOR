@@ -229,7 +229,7 @@ at: http://peteroupc.github.io/CBOR/
         }
       
     /**
-     * 
+     * Compares a Int32 object with this instance.
      * @param val A 32-bit signed integer.
      * @return A 32-bit signed integer.
      */

@@ -78,7 +78,6 @@ at: http://peteroupc.github.io/CBOR/
      * Returns whether this context has a mutable Flags field.
      */
     public boolean getHasFlags() { return hasFlags; }
-
     /**
      * Signals that the result was rounded to a different mathematical value,
      * but as close as possible to the original.
@@ -160,8 +159,7 @@ at: http://peteroupc.github.io/CBOR/
     }
     
     /**
-     * Copies this PrecisionContext with HasFlags set to true and a Flags
-     * value of 0.
+     * Copies this PrecisionContext with the specified rounding mode.
      * @param rounding A Rounding object.
      * @return A PrecisionContext object.
      */
@@ -184,11 +182,12 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     * Copies this precision context and sets the copy's "ClampNormalExponents"
+     * flag to the given value.
      * @param clamp A Boolean object.
      * @return A PrecisionContext object.
      */
-public PrecisionContext WithExponentClamp(boolean clamp) {
+    public PrecisionContext WithExponentClamp(boolean clamp) {
       PrecisionContext pc = this.Copy();
       pc.clampNormalExponents=clamp;
       return pc;
@@ -200,7 +199,7 @@ public PrecisionContext WithExponentClamp(boolean clamp) {
      * @param exponentMax A BigInteger object.
      * @return A PrecisionContext object.
      */
-public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
+    public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if((exponentMin)==null)throw new NullPointerException("exponentMin");
       if(exponentMin.compareTo(exponentMax)>0)
         throw new IllegalArgumentException("exponentMin greater than exponentMax");
@@ -232,7 +231,8 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
       return pc;
     }
     /**
-     * Copies this PrecisionContext with a particular precision.
+     * Copies this PrecisionContext and gives it a particular precision
+     * value.
      * @param precision Desired precision. 0 means unlimited precision.
      * @return A PrecisionContext object.
      */
@@ -248,7 +248,7 @@ public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exp
      * @param bigintPrecision A BigInteger object.
      * @return A PrecisionContext object.
      */
-public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
+    public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
       if((bigintPrecision)==null)throw new NullPointerException("bigintPrecision");
       if (bigintPrecision.signum() < 0) throw new IllegalArgumentException(
         "precision" + " not greater or equal to " + "0" + " (" +

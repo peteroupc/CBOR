@@ -83,8 +83,6 @@ at: http://peteroupc.github.io/CBOR/
       this.mantissa = mantissa;
     }
     
-    private static final int MaxSafeInt = 214748363;
-    
     /**
      * Creates a decimal fraction from a string that represents a number.
      * <p> The format of the string generally consists of:<ul> <li> An optional
@@ -102,293 +100,6 @@ at: http://peteroupc.github.io/CBOR/
       return ExtendedDecimal.FromString(str).ToDecimalFraction();
     }
     
-    static int ShiftLeftOne(int[] arr){
-      {
-        int carry=0;
-        for(int i=0;i<arr.length;i++){
-          int item=arr[i];
-          arr[i]=(int)(arr[i]<<1)|(int)carry;
-          carry=((item>>31)!=0) ? 1 : 0;
-        }
-        return carry;
-      }
-    }
-    
-    static int CountTrailingZeros(int numberValue) {
-      if (numberValue == 0)
-        return 32;
-      int i=0;
-      {
-        if ((numberValue << 16) == 0) {
-          numberValue >>= 16;
-          i += 16;
-        }
-
-        if ((numberValue << 24) == 0) {
-          numberValue >>= 8;
-          i += 8;
-        }
-
-        if ((numberValue << 28) == 0) {
-          numberValue >>= 4;
-          i += 4;
-        }
-
-        if ((numberValue << 30) == 0) {
-          numberValue >>= 2;
-          i += 2;
-        }
-
-        if ((numberValue << 31) == 0)
-          ++i;
-      }
-      return i;
-    }
-
-    static int BitPrecisionInt(int numberValue) {
-      if (numberValue == 0)
-        return 0;
-      int i=32;
-      {
-        if ((numberValue >> 16) == 0) {
-          numberValue <<= 16;
-          i -= 8;
-        }
-
-        if ((numberValue >> 24) == 0) {
-          numberValue <<= 8;
-          i -= 8;
-        }
-
-        if ((numberValue >> 28) == 0) {
-          numberValue <<= 4;
-          i -= 4;
-        }
-
-        if ((numberValue >> 30) == 0) {
-          numberValue <<= 2;
-          i -= 2;
-        }
-
-        if ((numberValue >> 31) == 0)
-          --i;
-      }
-      return i;
-    }
-
-    
-    static int ShiftAwayTrailingZerosTwoElements(int[] arr){
-      int a0=arr[0];
-      int a1=arr[1];
-      int tz=CountTrailingZeros(a0);
-      if(tz==0)return 0;
-      {
-        if(tz<32){
-          int carry=a1<<(32-tz);
-          arr[0]=(int)((a0>>tz)&(0x7FFFFFFF>>(tz-1)))|(int)(carry);
-          arr[1]=((a1>>tz)&(0x7FFFFFFF>>(tz-1)));
-          return tz;
-        } else {
-          tz=CountTrailingZeros(a1);
-          if(tz==32){
-            arr[0]=0;
-          } else if(tz>0){
-            arr[0]=((a1>>tz)&(0x7FFFFFFF>>(tz-1)));
-          } else {
-            arr[0]=a1;
-          }
-          arr[1]=0;
-          return 32+tz;
-        }
-      }
-    }
-    
-    static boolean HasBitSet(int[] arr, int bit){
-      return ((bit>>5)<arr.length && (arr[bit>>5]&(1<<(bit&31)))!=0);
-    }
-    
-
-    static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
-      if (diff.signum() <= 0) return BigInteger.ONE;
-      BigInteger bigpow = BigInteger.ZERO;
-      FastInteger intcurexp = FastInteger.FromBig(diff);
-      if (intcurexp.CompareToInt(54) <= 0) {
-        return FindPowerOfFive(intcurexp.AsInt32());
-      }
-      BigInteger mantissa = BigInteger.ONE;
-      while (intcurexp.signum() > 0) {
-        if (intcurexp.CompareToInt(27) <= 0) {
-          bigpow = FindPowerOfFive(intcurexp.AsInt32());
-          mantissa=mantissa.multiply(bigpow);
-          break;
-        } else if (intcurexp.CompareToInt(9999999) <= 0) {
-          bigpow = (FindPowerOfFive(1)).pow(intcurexp.AsInt32());
-          mantissa=mantissa.multiply(bigpow);
-          break;
-        } else {
-          if (bigpow.signum()==0)
-            bigpow = (FindPowerOfFive(1)).pow(9999999);
-          mantissa=mantissa.multiply(bigpow);
-          intcurexp.AddInt(-9999999);
-        }
-      }
-      return mantissa;
-    }
-
-    private static BigInteger BigInt36 = BigInteger.valueOf(36);
-
-    static BigInteger FindPowerOfTenFromBig(BigInteger bigintExponent) {
-      if (bigintExponent.signum() <= 0) return BigInteger.ONE;
-      if (bigintExponent.compareTo(BigInt36) <= 0) {
-        return FindPowerOfTen(bigintExponent.intValue());
-      }
-      FastInteger intcurexp = FastInteger.FromBig(bigintExponent);
-      BigInteger mantissa = BigInteger.ONE;
-      BigInteger bigpow = BigInteger.ZERO;
-      while (intcurexp.signum() > 0) {
-        if (intcurexp.CompareToInt(18) <= 0) {
-          bigpow = FindPowerOfTen(intcurexp.AsInt32());
-          mantissa=mantissa.multiply(bigpow);
-          break;
-        } else if (intcurexp.CompareToInt(9999999) <= 0) {
-          int val = intcurexp.AsInt32();
-          bigpow = FindPowerOfFive(val);
-          bigpow=bigpow.shiftLeft(val);
-          mantissa=mantissa.multiply(bigpow);
-          break;
-        } else {
-          if (bigpow.signum()==0) {
-            bigpow = FindPowerOfFive(9999999);
-            bigpow=bigpow.shiftLeft(9999999);
-          }
-          mantissa=mantissa.multiply(bigpow);
-          intcurexp.AddInt(-9999999);
-        }
-      }
-      return mantissa;
-    }
-    
-    private static BigInteger FivePower40=(BigInteger.valueOf(95367431640625L)).multiply(BigInteger.valueOf(95367431640625L));
-
-    static BigInteger FindPowerOfFive(int precision) {
-      if (precision <= 0) return BigInteger.ONE;
-      BigInteger bigpow;
-      BigInteger ret;
-      if (precision <= 27)
-        return BigIntPowersOfFive[(int)precision];
-      if(precision==40)
-        return FivePower40;
-      if (precision <= 54) {
-        if((precision&1)==0){
-          ret = BigIntPowersOfFive[(int)(precision>>1)];
-          ret=ret.multiply(ret);
-          return ret;
-        } else {
-          ret = BigIntPowersOfFive[27];
-          bigpow = BigIntPowersOfFive[((int)precision) - 27];
-          ret=ret.multiply(bigpow);
-          return ret;
-        }
-      }
-      if(precision>40 && precision<=94){
-        ret = FivePower40;
-        bigpow = FindPowerOfFive(precision-40);
-        ret=ret.multiply(bigpow);
-        return ret;
-      }
-      ret = BigInteger.ONE;
-      boolean first = true;
-      bigpow = BigInteger.ZERO;
-      while (precision > 0) {
-        if (precision <= 27) {
-          bigpow = BigIntPowersOfFive[(int)precision];
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          break;
-        } else if (precision <= 9999999) {
-          bigpow = (BigIntPowersOfFive[1]).pow((int)precision);
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          break;
-        } else {
-          if (bigpow.signum()==0)
-            bigpow = (BigIntPowersOfFive[1]).pow(9999999);
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          precision -= 9999999;
-        }
-      }
-      return ret;
-    }
-
-    static BigInteger FindPowerOfTen(int precision) {
-      if (precision <= 0) return BigInteger.ONE;
-      BigInteger ret;
-      BigInteger bigpow;
-      if (precision <= 18)
-        return BigIntPowersOfTen[(int)precision];
-      if (precision <= 27) {
-        int prec = (int)precision;
-        ret = BigIntPowersOfFive[prec];
-        ret=ret.shiftLeft(prec);
-        return ret;
-      }
-      if (precision <= 36) {
-        if((precision&1)==0){
-          ret = BigIntPowersOfTen[(int)(precision>>1)];
-          ret=ret.multiply(ret);
-          return ret;
-        } else {
-          ret = BigIntPowersOfTen[18];
-          bigpow = BigIntPowersOfTen[((int)precision) - 18];
-          ret=ret.multiply(bigpow);
-          return ret;
-        }
-      }
-      ret = BigInteger.ONE;
-      boolean first = true;
-      bigpow = BigInteger.ZERO;
-      while (precision > 0) {
-        if (precision <= 18) {
-          bigpow = BigIntPowersOfTen[(int)precision];
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          break;
-        } else if (precision <= 9999999) {
-          int prec = (int)precision;
-          bigpow = FindPowerOfFive(prec);
-          bigpow=bigpow.shiftLeft(prec);
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          break;
-        } else {
-          if (bigpow.signum()==0)
-            bigpow = (BigIntPowersOfTen[1]).pow(9999999);
-          if (first)
-            ret = bigpow;
-          else
-            ret=ret.multiply(bigpow);
-          first = false;
-          precision -= 9999999;
-        }
-      }
-      return ret;
-    }
 
     private static DecimalFraction MinusOne=new DecimalFraction(BigInteger.ZERO.subtract(BigInteger.ONE),BigInteger.ZERO);
     
@@ -441,9 +152,9 @@ at: http://peteroupc.github.io/CBOR/
         if (mantissa.signum() == 0) return BigInteger.ZERO;
         FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
         if (diff.CanFitInInt32()) {
-          mantissa=mantissa.multiply(FindPowerOfTen(diff.AsInt32()));
+          mantissa=mantissa.multiply(DecimalUtility.FindPowerOfTen(diff.AsInt32()));
         } else {
-          mantissa=mantissa.multiply(FindPowerOfTenFromBig(diff.AsBigInteger()));
+          mantissa=mantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(diff.AsBigInteger()));
         }
         return mantissa;
       }
@@ -519,16 +230,16 @@ bigrem=divrem[1];
         if (bigint.signum()==0) return bigint;
         if(bigint.compareTo(BigInteger.ONE)!=0){
           if (power.CanFitInInt32()) {
-            bigint=bigint.multiply(FindPowerOfTen(power.AsInt32()));
+            bigint=bigint.multiply(DecimalUtility.FindPowerOfTen(power.AsInt32()));
           } else {
-            bigint=bigint.multiply(FindPowerOfTenFromBig(power.AsBigInteger()));
+            bigint=bigint.multiply(DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger()));
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return (FindPowerOfTen(power.AsInt32()));
+            return (DecimalUtility.FindPowerOfTen(power.AsInt32()));
           } else {
-            return (FindPowerOfTenFromBig(power.AsBigInteger()));
+            return (DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger()));
           }
         }
       }
@@ -569,13 +280,14 @@ bigrem=divrem[1];
      * @param val A 32-bit signed integer.
      * @return A DecimalFraction object.
      */
-public DecimalFraction ValueOf(int val) {
+      public DecimalFraction ValueOf(int val) {
         if(val==0)return Zero;
         if(val==1)return One;
         if(val==-1)return MinusOne;
         return FromInt64(val);
       }
     }
+
     
     private String ToStringInternal(int mode) {
       switch(mode){
@@ -590,43 +302,13 @@ public DecimalFraction ValueOf(int val) {
       }
     }
 
-    private static BigInteger[] BigIntPowersOfTen = new BigInteger[]{
-      BigInteger.ONE, BigInteger.TEN, BigInteger.valueOf(100), BigInteger.valueOf(1000), BigInteger.valueOf(10000), BigInteger.valueOf(100000), BigInteger.valueOf(1000000), BigInteger.valueOf(10000000), BigInteger.valueOf(100000000), BigInteger.valueOf(1000000000),
-      BigInteger.valueOf(10000000000L), BigInteger.valueOf(100000000000L), BigInteger.valueOf(1000000000000L), BigInteger.valueOf(10000000000000L),
-      BigInteger.valueOf(100000000000000L), BigInteger.valueOf(1000000000000000L), BigInteger.valueOf(10000000000000000L),
-      BigInteger.valueOf(100000000000000000L), BigInteger.valueOf(1000000000000000000L)
-    };
-
-    private static BigInteger[] BigIntPowersOfFive = new BigInteger[]{
-      BigInteger.ONE, BigInteger.valueOf(5), BigInteger.valueOf(25), BigInteger.valueOf(125), BigInteger.valueOf(625), BigInteger.valueOf(3125), BigInteger.valueOf(15625), BigInteger.valueOf(78125), BigInteger.valueOf(390625),
-      BigInteger.valueOf(1953125), BigInteger.valueOf(9765625), BigInteger.valueOf(48828125), BigInteger.valueOf(244140625), BigInteger.valueOf(1220703125),
-      BigInteger.valueOf(6103515625L), BigInteger.valueOf(30517578125L), BigInteger.valueOf(152587890625L), BigInteger.valueOf(762939453125L),
-      BigInteger.valueOf(3814697265625L), BigInteger.valueOf(19073486328125L), BigInteger.valueOf(95367431640625L),
-      BigInteger.valueOf(476837158203125L), BigInteger.valueOf(2384185791015625L), BigInteger.valueOf(11920928955078125L),
-      BigInteger.valueOf(59604644775390625L), BigInteger.valueOf(298023223876953125L), BigInteger.valueOf(1490116119384765625L),
-      BigInteger.valueOf(7450580596923828125L)
-    };
-
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
      */
     public BigInteger ToBigInteger() {
-      int sign = this.getExponent().signum();
-      if (sign == 0) {
-        return this.getMantissa();
-      } else if (sign > 0) {
-        BigInteger bigmantissa = this.getMantissa();
-        bigmantissa=bigmantissa.multiply(FindPowerOfTenFromBig(this.getExponent()));
-        return bigmantissa;
-      } else {
-        BigInteger bigmantissa = this.getMantissa();
-        BigInteger bigexponent = this.getExponent();
-        bigexponent=bigexponent.negate();
-        bigmantissa=bigmantissa.divide(FindPowerOfTenFromBig(bigexponent));
-        return bigmantissa;
-      }
+      return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToBigInteger();
     }
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
@@ -819,10 +501,8 @@ public DecimalFraction ValueOf(int val) {
      * @return This value with trailing zeros removed. Note that if the result
      * has a very high exponent and the context says to clamp high exponents,
      * there may still be some trailing zeros in the mantissa. If a precision
-     * context is given, returns null if the result of rounding would cause
-     * an overflow. The caller can handle a null return value by treating
-     * it as positive or negative infinity depending on the sign of this object&apos;s
-     * value.
+     * context is given, returns null if the result of the rounding overflowed
+     * the exponent range.
      */
     public DecimalFraction Reduce(
       PrecisionContext ctx) {
@@ -995,7 +675,7 @@ public DecimalFraction ValueOf(int val) {
 
     /**
      * Subtracts a DecimalFraction object from this instance and returns
-     * the result..
+     * the result.
      * @param decfrac A DecimalFraction object.
      * @return The difference of the two objects.
      */
@@ -1011,7 +691,8 @@ public DecimalFraction ValueOf(int val) {
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The difference of the two objects. If a precision context
-     * is given, returns null if the result of rounding would cause an overflow.
+     * is given, returns null if the result of the rounding overflowed the
+     * exponent range.
      */
     public DecimalFraction Subtract(DecimalFraction decfrac, PrecisionContext ctx) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
@@ -1022,10 +703,8 @@ public DecimalFraction ValueOf(int val) {
      * sum of the scales of the two decimal fractions.
      * @param decfrac Another decimal fraction.
      * @return The product of the two decimal fractions. If a precision context
-     * is given, returns null if the result of rounding would cause an overflow.
-     * A caller can handle a null return value by treating it as positive infinity
-     * if both operands have the same sign or as negative infinity if both
-     * operands have different signs.
+     * is given, returns null if the result of the rounding overflowed the
+     * exponent range.
      */
     public DecimalFraction Multiply(DecimalFraction decfrac) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
@@ -1058,11 +737,9 @@ public DecimalFraction ValueOf(int val) {
      * set on the given context only if the context&apos;s HasFlags is true
      * and the integer part of the result doesn&apos;t fit the precision
      * and exponent range without rounding.
-     * @return The integer part of the quotient of the two objects. Returns
-     * null if the return value would overflow the exponent range. A caller
-     * can handle a null return value by treating it as positive infinity
-     * if both operands have the same sign or as negative infinity if both
-     * operands have different signs.
+     * @return The integer part of the quotient of the two objects. If a precision
+     * context is given, returns null if the result of the rounding overflowed
+     * the exponent range.
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the integer part of the result is not exact.
@@ -1206,11 +883,9 @@ public DecimalFraction ValueOf(int val) {
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
-     * @return The quotient of the two objects. Returns null if the return
-     * value would overflow the exponent range. A caller can handle a null
-     * return value by treating it as positive infinity if both operands
-     * have the same sign or as negative infinity if both operands have different
-     * signs.
+     * @return The quotient of the two objects. If a precision context is
+     * given, returns null if the result of the rounding overflowed the exponent
+     * range.
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException Either ctx is null or ctx's precision
      * is 0, and the result would have a nonterminating decimal expansion;
@@ -1285,23 +960,23 @@ public DecimalFraction ValueOf(int val) {
     }
 
     /**
-     * 
+     * Compares a DecimalFraction object with this instance.
      * @param other A DecimalFraction object.
      * @param ctx A PrecisionContext object.
      * @return A DecimalFraction object.
      */
-public DecimalFraction CompareToWithContext(
+    public DecimalFraction CompareToWithContext(
       DecimalFraction other, PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, false, ctx);
     }
 
     /**
-     * 
+     * Compares a DecimalFraction object with this instance.
      * @param other A DecimalFraction object.
      * @param ctx A PrecisionContext object.
      * @return A DecimalFraction object.
      */
-public DecimalFraction CompareToSignal(
+    public DecimalFraction CompareToSignal(
       DecimalFraction other, PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, true, ctx);
     }
@@ -1314,8 +989,9 @@ public DecimalFraction CompareToSignal(
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
-     * @return The sum of thisValue and the other object. Returns null if
-     * the result would overflow the exponent range.
+     * @return The sum of thisValue and the other object. If a precision context
+     * is given, returns null if the result of the rounding overflowed the
+     * exponent range.
      */
     public DecimalFraction Add(
       DecimalFraction decfrac, PrecisionContext ctx) {
@@ -1468,10 +1144,9 @@ public DecimalFraction CompareToSignal(
      * default rounding mode is HalfEven.
      * @return A decimal fraction rounded to the closest value representable
      * in the given precision, meaning if the result can&apos;t fit the precision,
-     * additional digits are discarded to make it fit. Returns null if the
-     * result of the rounding would cause an overflow. The caller can handle
-     * a null return value by treating it as positive or negative infinity
-     * depending on the sign of this object&apos;s value.
+     * additional digits are discarded to make it fit. If a precision context
+     * is given, returns null if the result of the rounding overflowed the
+     * exponent range.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
      * when rounding and the new exponent is outside of the valid range of
      * the precision context, if it defines an exponent range.
@@ -1490,11 +1165,8 @@ public DecimalFraction CompareToSignal(
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The product of the two decimal fractions. If a precision context
-     * is given, returns null if the result of rounding would cause an overflow.
-     * The caller can handle a null return value by treating it as negative
-     * infinity if this value and the other value have different signs, or
-     * as positive infinity if this value and the other value have the same
-     * sign.
+     * is given, returns null if the result of the rounding overflowed the
+     * exponent range.
      */
     public DecimalFraction Multiply(
       DecimalFraction op, PrecisionContext ctx) {
@@ -1509,11 +1181,8 @@ public DecimalFraction CompareToSignal(
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The result thisValue * multiplicand + augend. If a precision
-     * context is given, returns null if the result of rounding would cause
-     * an overflow. The caller can handle a null return value by treating
-     * it as negative infinity if this value and the other value have different
-     * signs, or as positive infinity if this value and the other value have
-     * the same sign.
+     * context is given, returns null if the result of the rounding overflowed
+     * the exponent range.
      */
     public DecimalFraction MultiplyAndAdd(
       DecimalFraction op, DecimalFraction augend, PrecisionContext ctx) {
@@ -1527,10 +1196,8 @@ public DecimalFraction CompareToSignal(
      * @return The closest value to this object&apos;s value, rounded to
      * the specified precision. Returns the same value as this object if
      * &quot;context&quot; is null or the precision and exponent range
-     * are unlimited. Returns null if the result of the rounding would cause
-     * an overflow. The caller can handle a null return value by treating
-     * it as positive or negative infinity depending on the sign of this object&apos;s
-     * value.
+     * are unlimited. If a precision context is given, returns null if the
+     * result of the rounding overflowed the exponent range.
      */
     public DecimalFraction RoundToPrecision(
       PrecisionContext ctx) {
@@ -1546,10 +1213,8 @@ public DecimalFraction CompareToSignal(
      * @return The closest value to this object&apos;s value, rounded to
      * the specified precision. Returns the same value as this object if
      * &quot;context&quot; is null or the precision and exponent range
-     * are unlimited. Returns null if the result of the rounding would cause
-     * an overflow. The caller can handle a null return value by treating
-     * it as positive or negative infinity depending on the sign of this object&apos;s
-     * value.
+     * are unlimited. Returns null if the result of the rounding overflowed
+     * the exponent range.
      */
     public DecimalFraction RoundToBinaryPrecision(
       PrecisionContext ctx) {

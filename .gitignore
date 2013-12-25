@@ -7,6 +7,7 @@ CBORTest/bin/
 CBORTest/obj/
 CBORTest/OpenCover/
 js/*.ht*
+js/DecTest.*
 ProfilingSessions/
 CBORTest/ProfilingSessions/
 .project
@@ -16,3 +17,4 @@ CBORTest/ProfilingSessions/
 *.suo
 *.log
 .pmd
+CBORTest/ExtensiveTest.*

@@ -108,8 +108,8 @@ rembi=divrem[1];
       if(output!=null && !d3.toString().equals(output)){
         ExtendedDecimal d4=ExtendedDecimal.FromString(output);
         Assert.assertEquals(output,d3.toString(),(
-          "expected: ["+(d4.getMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
-          "but was: ["+(d3.getMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
+          "expected: ["+(d4.getUnsignedMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
+          "but was: ["+(d3.getUnsignedMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
          ));   }
     }
     

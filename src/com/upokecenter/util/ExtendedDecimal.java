@@ -29,14 +29,14 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger getExponent() { return exponent; }
     /**
-     * Gets this object's unscaled value.
+     * Gets the absolute value of this object's unscaled value.
      */
-    public BigInteger getMantissa() { return mantissa; }
+    public BigInteger getUnsignedMantissa() { return mantissa; }
 
     /**
-     * 
+     * Gets this object's unscaled value.
      */
-    public BigInteger getSignedMantissa() { return this.isNegative() ? -mantissa : mantissa; }
+    public BigInteger getMantissa() { return this.isNegative() ? -mantissa : mantissa; }
 
     
     /**
@@ -86,7 +86,7 @@ at: http://peteroupc.github.io/CBOR/
     }
     
     /**
-     * Creates a decimal fraction with the value exponent*10^mantissa.
+     * Creates a decimal number with the value exponent*10^mantissa.
      * @param mantissa The unscaled value.
      * @param exponent The decimal exponent.
      */
@@ -100,8 +100,8 @@ at: http://peteroupc.github.io/CBOR/
     private static final int MaxSafeInt = 214748363;
     
     /**
-     * Creates a decimal fraction from a string that represents a number.
-     * <p> The format of the string generally consists of:<ul> <li> An optional
+     * Creates a decimal number from a string that represents a number. <p>
+     * The format of the string generally consists of:<ul> <li> An optional
      * '-' or '+' character (if '-', the value is negative.)</li> <li> One
      * or more digits, with a single optional decimal point after the first
      * digit and before the last digit.</li> <li> Optionally, E+ (positive
@@ -360,9 +360,9 @@ at: http://peteroupc.github.io/CBOR/
         if (mantissa.signum() == 0) return BigInteger.ZERO;
         FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
         if (diff.CanFitInInt32()) {
-          mantissa=mantissa.multiply(DecimalFraction.FindPowerOfTen(diff.AsInt32()));
+          mantissa=mantissa.multiply(DecimalUtility.FindPowerOfTen(diff.AsInt32()));
         } else {
-          mantissa=mantissa.multiply(DecimalFraction.FindPowerOfTenFromBig(diff.AsBigInteger()));
+          mantissa=mantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(diff.AsBigInteger()));
         }
         return mantissa;
       }
@@ -438,16 +438,16 @@ bigrem=divrem[1];
         if (bigint.signum()==0) return bigint;
         if(bigint.compareTo(BigInteger.ONE)!=0){
           if (power.CanFitInInt32()) {
-            bigint=bigint.multiply(DecimalFraction.FindPowerOfTen(power.AsInt32()));
+            bigint=bigint.multiply(DecimalUtility.FindPowerOfTen(power.AsInt32()));
           } else {
-            bigint=bigint.multiply(DecimalFraction.FindPowerOfTenFromBig(power.AsBigInteger()));
+            bigint=bigint.multiply(DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger()));
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return (DecimalFraction.FindPowerOfTen(power.AsInt32()));
+            return (DecimalUtility.FindPowerOfTen(power.AsInt32()));
           } else {
-            return (DecimalFraction.FindPowerOfTenFromBig(power.AsBigInteger()));
+            return (DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger()));
           }
         }
       }
@@ -718,7 +718,7 @@ bigrem=divrem[1];
       if(IsNaN() || IsInfinity()){
         throw new ArithmeticException("Value is infinity or NaN");
       }
-      return new DecimalFraction(this.getSignedMantissa(),exponent);
+      return new DecimalFraction(this.getMantissa(),exponent);
     }
     
     /**
@@ -729,17 +729,17 @@ bigrem=divrem[1];
     public BigInteger ToBigInteger() {
       int sign = this.getExponent().signum();
       if (sign == 0) {
-        BigInteger bigmantissa = this.getSignedMantissa();
+        BigInteger bigmantissa = this.getMantissa();
         return bigmantissa;
       } else if (sign > 0) {
-        BigInteger bigmantissa = this.getSignedMantissa();
-        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfTenFromBig(this.getExponent()));
+        BigInteger bigmantissa = this.getMantissa();
+        bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(this.getExponent()));
         return bigmantissa;
       } else {
-        BigInteger bigmantissa = this.getSignedMantissa();
+        BigInteger bigmantissa = this.getMantissa();
         BigInteger bigexponent = this.getExponent();
         bigexponent=bigexponent.negate();
-        bigmantissa=bigmantissa.divide(DecimalFraction.FindPowerOfTenFromBig(bigexponent));
+        bigmantissa=bigmantissa.divide(DecimalUtility.FindPowerOfTenFromBig(bigexponent));
         return bigmantissa;
       }
     }
@@ -772,12 +772,12 @@ bigrem=divrem[1];
       throw new UnsupportedOperationException();
     }
     /**
-     * Creates a decimal fraction from a 32-bit floating-point number.
-     * This method computes the exact value of the floating point number,
-     * not an approximation, as is often the case by converting the number
-     * to a string.
+     * Creates a decimal number from a 32-bit floating-point number. This
+     * method computes the exact value of the floating point number, not
+     * an approximation, as is often the case by converting the number to
+     * a string.
      * @param flt A 32-bit floating-point number.
-     * @return A decimal fraction with the same value as &quot;flt&quot;.
+     * @return A decimal number with the same value as &quot;flt&quot;.
      * @throws ArithmeticException "flt" is infinity or not-a-number.
      */
     public static ExtendedDecimal FromSingle(float flt) {
@@ -825,7 +825,7 @@ bigrem=divrem[1];
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = BigInteger.valueOf(fpMantissa);
-        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfFive(-fpExponent));
+        bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa=(bigmantissa).negate();
         return new ExtendedDecimal(bigmantissa, BigInteger.valueOf(fpExponent));
       }
@@ -841,12 +841,12 @@ bigrem=divrem[1];
     }
 
     /**
-     * Creates a decimal fraction from a 64-bit floating-point number.
-     * This method computes the exact value of the floating point number,
-     * not an approximation, as is often the case by converting the number
-     * to a string.
+     * Creates a decimal number from a 64-bit floating-point number. This
+     * method computes the exact value of the floating point number, not
+     * an approximation, as is often the case by converting the number to
+     * a string.
      * @param dbl A 64-bit floating-point number.
-     * @return A decimal fraction with the same value as &quot;dbl&quot;
+     * @return A decimal number with the same value as &quot;dbl&quot;
      * @throws ArithmeticException "dbl" is infinity or not-a-number.
      */
     public static ExtendedDecimal FromDouble(double dbl) {
@@ -875,7 +875,7 @@ bigrem=divrem[1];
       if (fpExponent == 0) fpExponent++;
       else value[1]|=0x100000;
       if ((value[1]|value[0]) != 0) {
-        fpExponent+=DecimalFraction.ShiftAwayTrailingZerosTwoElements(value);
+        fpExponent+=DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
       } else {
         return neg ? ExtendedDecimal.NegativeZero : ExtendedDecimal.Zero;
       }
@@ -893,14 +893,14 @@ bigrem=divrem[1];
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = fpMantissaBig;
-        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfFive(-fpExponent));
+        bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa=(bigmantissa).negate();
         return new ExtendedDecimal(bigmantissa, BigInteger.valueOf(fpExponent));
       }
     }
 
     /**
-     * Creates a decimal fraction from an arbitrary-precision binary floating-point
+     * Creates a decimal number from an arbitrary-precision binary floating-point
      * number.
      * @param bigfloat A bigfloat.
      * @return An ExtendedDecimal object.
@@ -932,14 +932,13 @@ bigrem=divrem[1];
         // Fractional number
         BigInteger bigmantissa = bigintMant;
         BigInteger negbigintExp=(bigintExp).negate();
-        bigmantissa=bigmantissa.multiply(DecimalFraction.FindPowerOfFiveFromBig(negbigintExp));
+        bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfFiveFromBig(negbigintExp));
         return new ExtendedDecimal(bigmantissa, bigintExp);
       }
     }
     
     /**
-     * Converts this value to a string.The format of the return value is exactly
-     * the same as that of the java.math.BigDecimal.toString() method.
+     * Converts this value to a string.
      * @return A string representation of this object.
      */
     @Override public String toString() {
@@ -1046,7 +1045,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     * Gets whether this object is positive or negative infinity.
      * @return A Boolean object.
      */
     public boolean IsInfinity() {
@@ -1054,14 +1053,14 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     * Gets whether this object is negative, including negative zero.
      */
     public boolean isNegative() {
         return (this.flags&(BigNumberFlags.FlagNegative))!=0;
       }
 
     /**
-     * 
+     * Gets whether this object is a quiet not-a-number value.
      * @return A Boolean object.
      */
     public boolean IsQuietNaN() {
@@ -1069,7 +1068,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     * Gets whether this object is a signaling not-a-number value.
      * @return A Boolean object.
      */
     public boolean IsSignalingNaN() {
@@ -1105,7 +1104,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * Divides this object by another decimal fraction and returns the result.
+     * Divides this object by another decimal number and returns the result.
      * When possible, the result will be exact.
      * @param divisor The divisor.
      * @return The quotient of the two numbers.
@@ -1118,7 +1117,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * Divides this object by another decimal fraction and returns a result
+     * Divides this object by another decimal number and returns a result
      * with the same exponent as this object (the dividend).
      * @param divisor The divisor.
      * @param rounding The rounding mode to use if the result must be scaled
@@ -1299,7 +1298,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * Returns a decimal fraction with the same value as this object but with
+     * Returns a decimal number with the same value as this object but with
      * the sign reversed.
      * @param context A precision context to control precision, rounding,
      * and exponent range of the result. If HasFlags of the context is true,
@@ -1312,7 +1311,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * Adds this object and another decimal fraction and returns the result.
+     * Adds this object and another decimal number and returns the result.
      * @param decfrac An ExtendedDecimal object.
      * @return The sum of the two objects.
      */
@@ -1349,10 +1348,10 @@ bigrem=divrem[1];
       return Add(negated, ctx);
     }
     /**
-     * Multiplies two decimal fractions. The resulting exponent will be
-     * the sum of the exponents of the two decimal fractions.
-     * @param decfrac Another decimal fraction.
-     * @return The product of the two decimal fractions.
+     * Multiplies two decimal numbers. The resulting exponent will be the
+     * sum of the exponents of the two decimal numbers.
+     * @param decfrac Another decimal number.
+     * @return The product of the two decimal numbers.
      */
     public ExtendedDecimal Multiply(ExtendedDecimal decfrac) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
@@ -1360,8 +1359,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * Multiplies by one decimal fraction, and then adds another decimal
-     * fraction.
+     * Multiplies by one decimal number, and then adds another decimal number.
      * @param multiplicand The value to multiply.
      * @param augend The value to add.
      * @return The result this * multiplicand + augend.
@@ -1389,8 +1387,9 @@ bigrem=divrem[1];
      * null if the return value would overflow the exponent range. A caller
      * can handle a null return value by treating it as positive infinity
      * if both operands have the same sign or as negative infinity if both
-     * operands have different signs.
-     * @throws ArithmeticException Attempted to divide by zero.
+     * operands have different signs. Signals FlagDivideByZero and returns
+     * infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid
+     * and returns NaN if the divisor and the dividend are 0.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the integer part of the result is not exact.
      */
@@ -1408,8 +1407,9 @@ bigrem=divrem[1];
      * No flags will be set from this operation even if HasFlags of the context
      * is true. Can be null.
      * @return The integer part of the quotient of the two objects. The exponent
-     * will be set to 0.
-     * @throws ArithmeticException Attempted to divide by zero.
+     * will be set to 0. Signals FlagDivideByZero and returns infinity if
+     * the divisor is 0 and the dividend is nonzero. Signals FlagInvalid
+     * and returns NaN if the divisor and the dividend are 0.
      * @throws ArithmeticException The result doesn't fit the given precision.
      */
     public ExtendedDecimal DivideToIntegerZeroScale(
@@ -1425,7 +1425,7 @@ bigrem=divrem[1];
      * @param ctx A PrecisionContext object.
      * @return The remainder of the two objects.
      */
-public ExtendedDecimal Remainder(
+    public ExtendedDecimal Remainder(
       ExtendedDecimal divisor, PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
     }
@@ -1540,10 +1540,13 @@ public ExtendedDecimal Remainder(
     }
 
     /**
-     * Gets the greater value between two decimal fractions.
+     * Gets the greater value between two decimal numbers.
      * @param first An ExtendedDecimal object.
      * @param second An ExtendedDecimal object.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
      * @return The larger value of the two objects.
      */
     public static ExtendedDecimal Max(
@@ -1552,10 +1555,13 @@ public ExtendedDecimal Remainder(
     }
 
     /**
-     * Gets the lesser value between two decimal fractions.
+     * Gets the lesser value between two decimal numbers.
      * @param first An ExtendedDecimal object.
      * @param second An ExtendedDecimal object.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
      * @return The smaller value of the two objects.
      */
     public static ExtendedDecimal Min(
@@ -1567,7 +1573,10 @@ public ExtendedDecimal Remainder(
      * If the absolute values are equal, has the same effect as Max.
      * @param first An ExtendedDecimal object.
      * @param second An ExtendedDecimal object.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
      * @return An ExtendedDecimal object.
      */
     public static ExtendedDecimal MaxMagnitude(
@@ -1580,7 +1589,10 @@ public ExtendedDecimal Remainder(
      * the absolute values are equal, has the same effect as Min.
      * @param first An ExtendedDecimal object.
      * @param second An ExtendedDecimal object.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
      * @return An ExtendedDecimal object.
      */
     public static ExtendedDecimal MinMagnitude(
@@ -1589,7 +1601,7 @@ public ExtendedDecimal Remainder(
     }
     
     /**
-     * Gets the greater value between two decimal fractions.
+     * Gets the greater value between two decimal numbers.
      * @param first An ExtendedDecimal object.
      * @param second An ExtendedDecimal object.
      * @return The larger value of the two objects.
@@ -1600,7 +1612,7 @@ public ExtendedDecimal Remainder(
     }
 
     /**
-     * Gets the lesser value between two decimal fractions.
+     * Gets the lesser value between two decimal numbers.
      * @param first An ExtendedDecimal object.
      * @param second An ExtendedDecimal object.
      * @return The smaller value of the two objects.
@@ -1635,7 +1647,7 @@ public ExtendedDecimal Remainder(
     /**
      * Compares the mathematical values of this object and another object.
      * <p> This method is not consistent with the Equals method because two
-     * different decimal fractions with the same mathematical value, but
+     * different decimal numbers with the same mathematical value, but
      * different exponents, will compare as equal.</p>
      * @param other An ExtendedDecimal object.
      * @return Less than 0 if this object&apos;s value is less than the other
@@ -1649,7 +1661,7 @@ public ExtendedDecimal Remainder(
     }
     
     /**
-     * 
+     * Compares a ExtendedDecimal object with this instance.
      * @param other An ExtendedDecimal object.
      * @param ctx A precision context. The precision, rounding, and exponent
      * range are ignored. If HasFlags of the context is true, will also store
@@ -1665,7 +1677,7 @@ public ExtendedDecimal Remainder(
     }
     
     /**
-     * 
+     * Compares a ExtendedDecimal object with this instance.
      * @param other An ExtendedDecimal object.
      * @param ctx A precision context. The precision, rounding, and exponent
      * range are ignored. If HasFlags of the context is true, will also store
@@ -1695,35 +1707,35 @@ public ExtendedDecimal Remainder(
       return math.Add(this, decfrac, ctx);
     }
 
-    /**
-     * Returns a decimal fraction with the same value but a new exponent.
-     * @param desiredExponent The desired exponent of the result.
-     * @param ctx A precision context to control precision and rounding
-     * of the result. If HasFlags of the context is true, will also store the
-     * flags resulting from the operation (the flags are in addition to the
-     * pre-existing flags). Can be null, in which case the default rounding
-     * mode is HalfEven.
-     * @return A decimal fraction with the same value as this object but with
-     * the exponent changed.
-     * @throws ArithmeticException An overflow error occurred, or the
-     * result can't fit the given precision without rounding
-     * @throws java.lang.IllegalArgumentException The exponent is outside of the
-     * valid range of the precision context, if it defines an exponent range.
-     */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public ExtendedDecimal Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
       return Quantize(new ExtendedDecimal(BigInteger.ONE,desiredExponent), ctx);
     }
 
     /**
-     * Returns a decimal fraction with the same value but a new exponent.
+     * Returns a decimal number with the same value but a new exponent.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
      * @param desiredExponentSmall A 32-bit signed integer.
-     * @return A decimal fraction with the same value as this object but with
+     * @return A decimal number with the same value as this object but with
      * the exponent changed.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding
@@ -1736,16 +1748,16 @@ public ExtendedDecimal Remainder(
     }
 
     /**
-     * Returns a decimal fraction with the same value as this object but with
-     * the same exponent as another decimal fraction.
-     * @param otherValue A decimal fraction containing the desired exponent
+     * Returns a decimal number with the same value as this object but with
+     * the same exponent as another decimal number.
+     * @param otherValue A decimal number containing the desired exponent
      * of the result. The mantissa is ignored.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
-     * @return A decimal fraction with the same value as this object but with
+     * @return A decimal number with the same value as this object but with
      * the exponent changed.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding.
@@ -1758,14 +1770,14 @@ public ExtendedDecimal Remainder(
       return math.Quantize(this, otherValue, ctx);
     }
     /**
-     * Returns a decimal fraction with the same value as this object but rounded
+     * Returns a decimal number with the same value as this object but rounded
      * to an integer.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
-     * @return A decimal fraction with the same value as this object but rounded
+     * @return A decimal number with the same value as this object but rounded
      * to an integer.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding.
@@ -1778,7 +1790,7 @@ public ExtendedDecimal Remainder(
       return math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     }
     /**
-     * Returns a decimal fraction with the same value as this object but rounded
+     * Returns a decimal number with the same value as this object but rounded
      * to an integer, without adding the FlagInexact or FlagRounded flags.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
@@ -1787,7 +1799,7 @@ public ExtendedDecimal Remainder(
      * FlagRounded and FlagInexact flags (the only difference between
      * this and RoundToExponentExact). Can be null, in which case the default
      * rounding mode is HalfEven.
-     * @return A decimal fraction with the same value as this object but rounded
+     * @return A decimal number with the same value as this object but rounded
      * to an integer.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding.
@@ -1806,12 +1818,12 @@ public ExtendedDecimal Remainder(
      * @param ctx A PrecisionContext object.
      * @return An ExtendedDecimal object.
      */
-public ExtendedDecimal RoundToExponentExact(
+    public ExtendedDecimal RoundToExponentExact(
       BigInteger exponent, PrecisionContext ctx) {
       return math.RoundToExponentExact(this, exponent, ctx);
     }
     /**
-     * Returns a decimal fraction with the same value as this object but rounded
+     * Returns a decimal number with the same value as this object but rounded
      * to a given exponent, without throwing an exception if the result overflows
      * or doesn't fit the precision range.
      * @param exponent The minimum exponent the result can have. This is
@@ -1825,7 +1837,7 @@ public ExtendedDecimal RoundToExponentExact(
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null, in which case the
      * default rounding mode is HalfEven.
-     * @return A decimal fraction rounded to the closest value representable
+     * @return A decimal number rounded to the closest value representable
      * in the given precision, meaning if the result can&apos;t fit the precision,
      * additional digits are discarded to make it fit.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
@@ -1838,16 +1850,16 @@ public ExtendedDecimal RoundToExponentExact(
     }
 
     /**
-     * Multiplies two decimal fractions. The resulting scale will be the
-     * sum of the scales of the two decimal fractions. The result's sign is
-     * positive if both operands have the same sign, and negative if they
-     * have different signs.
-     * @param op Another decimal fraction.
+     * Multiplies two decimal numbers. The resulting scale will be the sum
+     * of the scales of the two decimal numbers. The result's sign is positive
+     * if both operands have the same sign, and negative if they have different
+     * signs.
+     * @param op Another decimal number.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
-     * @return The product of the two decimal fractions.
+     * @return The product of the two decimal numbers.
      */
     public ExtendedDecimal Multiply(
       ExtendedDecimal op, PrecisionContext ctx) {
