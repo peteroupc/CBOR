@@ -41,7 +41,7 @@ namespace PeterO {
     private T ReturnQuietNaN(T thisValue, PrecisionContext ctx){
       BigInteger mant=BigInteger.Abs(helper.GetMantissa(thisValue));
       bool mantChanged=false;
-      if(!(mant.IsZero) && ctx!=null && !(ctx.Precision.IsZero)){
+      if(!(mant.IsZero) && ctx!=null && !((ctx.Precision).IsZero)){
         BigInteger limit=helper.MultiplyByRadixPower(
           BigInteger.One,FastInteger.FromBig(ctx.Precision));
         if(mant.CompareTo(limit)>=0){
@@ -73,20 +73,21 @@ namespace PeterO {
         }
         if((otherFlags&BigNumberFlags.FlagInfinity)!=0){
           // Divisor is infinity, so result will be epsilon
-          if(ctx!=null && ctx.HasExponentRange && ctx.Precision.Sign>0){
+          if(ctx!=null && ctx.HasExponentRange && (ctx.Precision).Sign>0){
             if(ctx.HasFlags){
               ctx.Flags|=PrecisionContext.FlagClamped;
             }
             BigInteger bigexp=ctx.EMin;
             bigexp-=(BigInteger)(ctx.Precision);
             bigexp+=BigInteger.One;
+            thisFlags=((thisFlags^otherFlags)&BigNumberFlags.FlagNegative);
             return helper.CreateNewWithFlags(
-              BigInteger.Zero,bigexp,
-              ((thisFlags^otherFlags)&BigNumberFlags.FlagNegative));
+              BigInteger.Zero,bigexp,thisFlags);
           }
+          thisFlags=((thisFlags^otherFlags)&BigNumberFlags.FlagNegative);
           return RoundToPrecision(helper.CreateNewWithFlags(
             BigInteger.Zero,BigInteger.Zero,
-            ((thisFlags^otherFlags)&BigNumberFlags.FlagNegative)),ctx);
+            thisFlags),ctx);
         }
       }
       return default(T);
@@ -458,9 +459,10 @@ namespace PeterO {
       if (helper.GetMantissa(ret).IsZero) {
         // Value is 0, so just change the exponent
         // to the preferred one
-        BigInteger divisorExp=helper.GetExponent(divisor);
-        ret = helper.CreateNewWithFlags(BigInteger.Zero, helper.GetExponent(thisValue) -
-                                        (BigInteger)divisorExp,helper.GetFlags(ret));
+          BigInteger dividendExp=helper.GetExponent(thisValue);
+          BigInteger divisorExp=helper.GetExponent(divisor);
+        ret = helper.CreateNewWithFlags(BigInteger.Zero, 
+            (dividendExp - (BigInteger)divisorExp),helper.GetFlags(ret));
       } else {
         if (desiredScale.Sign < 0) {
           // Desired scale is negative, shift left
@@ -524,6 +526,7 @@ namespace PeterO {
         ctx2 = ctx.WithBlankFlags().WithUnlimitedExponents();
         ret = RoundToPrecision(ret, ctx2);
         if ((ctx2.Flags & PrecisionContext.FlagRounded) != 0) {
+          // TODO: Is this really necessary?
           if(ctx.HasFlags){
             ctx.Flags|=PrecisionContext.FlagInvalid;
           }
@@ -585,9 +588,10 @@ namespace PeterO {
             flags&~BigNumberFlags.FlagNegative),ctx);
         }
       }
+      flags=flags^BigNumberFlags.FlagNegative;
       return RoundToPrecision(
         helper.CreateNewWithFlags(mant,helper.GetExponent(value),
-                                  flags^BigNumberFlags.FlagNegative),
+                                  flags),
         ctx);
     }
 
@@ -791,7 +795,7 @@ namespace PeterO {
           BigInteger bigmant=BigInteger.Abs(helper.GetMantissa(val));
           BigInteger maxmant=helper.MultiplyByRadixPower(
             BigInteger.One,FastInteger.FromBig(ctx.Precision).SubtractInt(1));
-          if(bigmant.CompareTo(maxmant)>=0 || ctx.Precision.CompareTo(BigInteger.One)==0){
+          if(bigmant.CompareTo(maxmant)>=0 || (ctx.Precision).CompareTo(BigInteger.One)==0){
             // don't treat max-precision results as having underflowed
             ctx2.Flags=0;
           }
@@ -1000,16 +1004,17 @@ namespace PeterO {
       if (signA == 0) {
         T retval=default(T);
         if (integerMode == IntegerModeFixedScale) {
-          retval=helper.CreateNewWithFlags(BigInteger.Zero, desiredExponent,
-                                           ((helper.GetFlags(thisValue)&BigNumberFlags.FlagNegative))^
-                                           ((helper.GetFlags(divisor)&BigNumberFlags.FlagNegative)));
+          int newflags=((helper.GetFlags(thisValue)&BigNumberFlags.FlagNegative))^
+            ((helper.GetFlags(divisor)&BigNumberFlags.FlagNegative));
+          retval=helper.CreateNewWithFlags(BigInteger.Zero, desiredExponent,newflags);
         } else {
-          BigInteger divExp=helper.GetExponent(divisor);
+          BigInteger dividendExp=helper.GetExponent(thisValue);
+          BigInteger divisorExp=helper.GetExponent(divisor);
+          int newflags=((helper.GetFlags(thisValue)&BigNumberFlags.FlagNegative))^
+            ((helper.GetFlags(divisor)&BigNumberFlags.FlagNegative));
           retval=RoundToPrecision(helper.CreateNewWithFlags(
-            BigInteger.Zero, (helper.GetExponent(thisValue) -
-                              (BigInteger)divExp),
-            ((helper.GetFlags(thisValue)&BigNumberFlags.FlagNegative))^
-            ((helper.GetFlags(divisor)&BigNumberFlags.FlagNegative))), ctx);
+            BigInteger.Zero, (dividendExp - (BigInteger)divisorExp),
+            newflags), ctx);
         }
         if(remainder!=null){
           remainder[0]=retval;
@@ -1371,10 +1376,11 @@ namespace PeterO {
       }
       BigInteger bigintOp2 = helper.GetExponent(other);
       BigInteger newexp = (helper.GetExponent(thisValue) + (BigInteger)bigintOp2);
+      thisFlags=(thisFlags&BigNumberFlags.FlagNegative)^(otherFlags&BigNumberFlags.FlagNegative);
       T ret = helper.CreateNewWithFlags(
         helper.GetMantissa(thisValue) * 
         (BigInteger)(helper.GetMantissa(other)), newexp,
-        (thisFlags&BigNumberFlags.FlagNegative)^(otherFlags&BigNumberFlags.FlagNegative)
+        thisFlags
        );
       if (ctx != null) {
         ret = RoundToPrecision(ret, ctx);
