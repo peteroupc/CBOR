@@ -21,9 +21,9 @@ import org.junit.Test;
    */
   
   public class CBORTest{
-    private static void TestBigFloatDoubleCore(double d, String s) {
+    private static void TestExtendedFloatDoubleCore(double d, String s) {
       double oldd = d;
-      BigFloat bf = BigFloat.FromDouble(d);
+      ExtendedFloat bf = ExtendedFloat.FromDouble(d);
       if (s != null) {
         Assert.assertEquals(s, bf.toString());
       }
@@ -32,9 +32,9 @@ import org.junit.Test;
       TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
-    private static void TestBigFloatSingleCore(float d, String s) {
+    private static void TestExtendedFloatSingleCore(float d, String s) {
       float oldd = d;
-      BigFloat bf = BigFloat.FromSingle(d);
+      ExtendedFloat bf = ExtendedFloat.FromSingle(d);
       if (s != null) {
         Assert.assertEquals(s, bf.toString());
       }
@@ -52,7 +52,7 @@ import org.junit.Test;
         case 2:
           return CBORObject.FromObject(RandomBigInteger(rand));
         case 3:
-          return CBORObject.FromObject(RandomBigFloat(rand));
+          return CBORObject.FromObject(RandomExtendedFloat(rand));
         case 4:
           return CBORObject.FromObject(RandomExtendedDecimal(rand));
         case 5:
@@ -104,8 +104,8 @@ import org.junit.Test;
     public static BigInteger RandomBigInteger(FastRandom r) {
       return BigInteger.fromString(RandomBigIntString(r));
     }
-    public static BigFloat RandomBigFloat(FastRandom r) {
-      return new BigFloat(RandomBigInteger(r),BigInteger.valueOf(r.NextValue(400)-200));
+    public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
+      return new ExtendedFloat(RandomBigInteger(r),BigInteger.valueOf(r.NextValue(400)-200));
     }
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
@@ -418,31 +418,31 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * 
      */
     @Test
-    public void TestBigFloatSingle() {
+    public void TestExtendedFloatSingle() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 255; i++) { // Try a random float with a given exponent
-        TestBigFloatSingleCore(RandomSingle(rand, i), null);
-        TestBigFloatSingleCore(RandomSingle(rand, i), null);
-        TestBigFloatSingleCore(RandomSingle(rand, i), null);
-        TestBigFloatSingleCore(RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
       }
-    }    
-        
+    }
+    
     /**
      * 
      */
     @Test
-    public void TestBigFloatDouble() {
-      TestBigFloatDoubleCore(3.5, "3.5");
-      TestBigFloatDoubleCore(7, "7");
-      TestBigFloatDoubleCore(1.75, "1.75");
-      TestBigFloatDoubleCore(3.5, "3.5");
+    public void TestExtendedFloatDouble() {
+      TestExtendedFloatDoubleCore(3.5, "3.5");
+      TestExtendedFloatDoubleCore(7, "7");
+      TestExtendedFloatDoubleCore(1.75, "1.75");
+      TestExtendedFloatDoubleCore(3.5, "3.5");
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 2047; i++) { // Try a random double with a given exponent
-        TestBigFloatDoubleCore(RandomDouble(rand, i), null);
-        TestBigFloatDoubleCore(RandomDouble(rand, i), null);
-        TestBigFloatDoubleCore(RandomDouble(rand, i), null);
-        TestBigFloatDoubleCore(RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
       }
     }
     @Test(expected=CBORException.class)
@@ -601,18 +601,6 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal());
       Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
       Assert.isTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
-      try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Float.NaN).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Double.NaN).AsExtendedDecimal().ToDecimalFraction(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Float.POSITIVE_INFINITY).AsBigFloat(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsBigFloat(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Float.NaN).AsBigFloat(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Double.POSITIVE_INFINITY).AsBigFloat(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsBigFloat(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
-      try { CBORObject.FromObject(Double.NaN).AsBigFloat(); Assert.fail("Should have failed");} catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); }
     }
     /**
      * 
@@ -2066,23 +2054,23 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * 
      */
     @Test
-    public void TestBigFloatDecFrac() {
-      BigFloat bf;
-      bf = BigFloat.FromInt64(20);
-      Assert.assertEquals("20", ExtendedDecimal.FromBigFloat(bf).toString());
-      bf = new BigFloat(BigInteger.valueOf(3), BigInteger.valueOf(-1));
-      Assert.assertEquals("1.5", ExtendedDecimal.FromBigFloat(bf).toString());
-      bf = new BigFloat(BigInteger.valueOf(-3), BigInteger.valueOf(-1));
-      Assert.assertEquals("-1.5", ExtendedDecimal.FromBigFloat(bf).toString());
+    public void TestExtendedFloatDecFrac() {
+      ExtendedFloat bf;
+      bf = ExtendedFloat.FromInt64(20);
+      Assert.assertEquals("20", ExtendedDecimal.FromExtendedFloat(bf).toString());
+      bf = new ExtendedFloat(BigInteger.valueOf(3), BigInteger.valueOf(-1));
+      Assert.assertEquals("1.5", ExtendedDecimal.FromExtendedFloat(bf).toString());
+      bf = new ExtendedFloat(BigInteger.valueOf(-3), BigInteger.valueOf(-1));
+      Assert.assertEquals("-1.5", ExtendedDecimal.FromExtendedFloat(bf).toString());
       ExtendedDecimal df;
       df = ExtendedDecimal.FromInt64(20);
-      Assert.assertEquals("20", df.ToBigFloat().toString());
+      Assert.assertEquals("20", df.ToExtendedFloat().toString());
       df = ExtendedDecimal.FromInt64(-20);
-      Assert.assertEquals("-20", df.ToBigFloat().toString());
+      Assert.assertEquals("-20", df.ToExtendedFloat().toString());
       df = new ExtendedDecimal(BigInteger.valueOf(15), -1);
-      Assert.assertEquals("1.5", df.ToBigFloat().toString());
+      Assert.assertEquals("1.5", df.ToExtendedFloat().toString());
       df = new ExtendedDecimal(BigInteger.valueOf(-15), -1);
-      Assert.assertEquals("-1.5", df.ToBigFloat().toString());
+      Assert.assertEquals("-1.5", df.ToExtendedFloat().toString());
     }
     @Test
     public void TestDecFracToSingleDoubleHighExponents() {

@@ -378,7 +378,8 @@ bigrem=divrem[1];
      * @return A DecimalFraction object.
      */
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
-      ExtendedDecimal ed=ExtendedDecimal.FromBigFloat(bigfloat);
+      ExtendedDecimal ed=ExtendedDecimal.FromExtendedFloat(
+        new ExtendedFloat(bigfloat.getMantissa(),bigfloat.getExponent()));
       return new DecimalFraction(ed.getMantissa(),ed.getExponent());
     }
     

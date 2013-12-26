@@ -6544,10 +6544,7 @@ var RadixMath = function(helper) {
             ctx2 = ctx.WithBlankFlags().WithUnlimitedExponents();
             ret = this.RoundToPrecision(ret, ctx2);
             if ((ctx2.getFlags() & PrecisionContext.FlagRounded) != 0) {
-                
-                if (ctx.getHasFlags()) {
-                    ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid));
-                }
+                return this.SignalInvalid(ctx);
             }
         }
         return ret;
@@ -7836,6 +7833,19 @@ var RadixMath = function(helper) {
     
     prototype.compareTo = function(thisValue, decfrac) {
         if (decfrac == null) return 1;
+        var flagsThis = this.helper.GetFlags(thisValue);
+        var flagsOther = this.helper.GetFlags(decfrac);
+        if ((flagsThis & BigNumberFlags.FlagNaN) != 0) {
+            if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
+                return 0;
+            }
+            return 1;
+        }
+        
+        if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
+            return -1;
+        }
+        
         var s = this.CompareToHandleSpecialReturnInt(thisValue, decfrac);
         if (s <= 1) return s;
         s = this.helper.GetSign(thisValue);
@@ -7933,25 +7943,25 @@ function(mantissa, exponent) {
 
     this.exponent = exponent;
     var sign = mantissa.signum();
-    this.mantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+    this.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
     this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
 };
 (function(constructor,prototype){
     prototype.exponent = null;
-    prototype.mantissa = null;
+    prototype.unsignedMantissa = null;
     prototype.flags = null;
     prototype.getExponent = function() {
         return this.exponent;
     };
     prototype.getUnsignedMantissa = function() {
-        return this.mantissa;
+        return this.unsignedMantissa;
     };
     prototype.getMantissa = function() {
-        return this.isNegative() ? ((this.mantissa).negate()) : this.mantissa;
+        return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
     };
     prototype.EqualsInternal = function(otherValue) {
         if (otherValue == null) return false;
-        return this.exponent.equals(otherValue.exponent) && this.mantissa.equals(otherValue.mantissa) && this.flags == otherValue.flags;
+        return this.exponent.equals(otherValue.exponent) && this.unsignedMantissa.equals(otherValue.unsignedMantissa) && this.flags == otherValue.flags;
     };
     prototype.equals = function(obj) {
         return this.EqualsInternal((obj.constructor==ExtendedDecimal) ? obj : null);
@@ -7960,7 +7970,7 @@ function(mantissa, exponent) {
         var hashCode_ = 0;
         {
             hashCode_ = hashCode_ + 1000000007 * this.exponent.hashCode();
-            hashCode_ = hashCode_ + 1000000009 * this.mantissa.hashCode();
+            hashCode_ = hashCode_ + 1000000009 * this.unsignedMantissa.hashCode();
             hashCode_ = hashCode_ + 1000000009 * this.flags;
         }
         return hashCode_;
@@ -8134,7 +8144,7 @@ function(mantissa, exponent) {
         };
         
         prototype.GetMantissa = function(value) {
-            return value.mantissa;
+            return value.unsignedMantissa;
         };
         
         prototype.GetExponent = function(value) {
@@ -8240,17 +8250,17 @@ function(mantissa, exponent) {
             return negative ? "-Infinity" : "Infinity";
         }
         if ((this.flags & BigNumberFlags.FlagSignalingNaN) != 0) {
-            if (this.mantissa.signum() == 0) return negative ? "-sNaN" : "sNaN";
-            return negative ? "-sNaN" + (this.mantissa).abs().toString() : "sNaN" + (this.mantissa).abs().toString();
+            if (this.unsignedMantissa.signum() == 0) return negative ? "-sNaN" : "sNaN";
+            return negative ? "-sNaN" + (this.unsignedMantissa).abs().toString() : "sNaN" + (this.unsignedMantissa).abs().toString();
         }
         if ((this.flags & BigNumberFlags.FlagQuietNaN) != 0) {
-            if (this.mantissa.signum() == 0) return negative ? "-NaN" : "NaN";
-            return negative ? "-NaN" + (this.mantissa).abs().toString() : "NaN" + (this.mantissa).abs().toString();
+            if (this.unsignedMantissa.signum() == 0) return negative ? "-NaN" : "NaN";
+            return negative ? "-NaN" + (this.unsignedMantissa).abs().toString() : "NaN" + (this.unsignedMantissa).abs().toString();
         }
-        var mantissaString = (this.mantissa).abs().toString();
+        var mantissaString = (this.unsignedMantissa).abs().toString();
         var scaleSign = -this.exponent.signum();
         if (scaleSign == 0) return negative ? "-" + mantissaString : mantissaString;
-        var iszero = (this.mantissa.signum() == 0);
+        var iszero = (this.unsignedMantissa.signum() == 0);
         if (mode == 2 && iszero && scaleSign < 0) {
             
             return negative ? "-" + mantissaString : mantissaString;
@@ -8440,19 +8450,23 @@ function(mantissa, exponent) {
     };
     constructor.OneShift62 = BigInteger.ONE.shiftLeft(62);
     
-    prototype.ToBigFloat = function() {
-        if (this.IsNaN() || this.IsInfinity()) throw ("This value is infinity or NaN");
+    prototype.ToExtendedFloat = function() {
+        if (this.IsNaN() || this.IsInfinity()) {
+            return ExtendedFloat.CreateWithFlags(this.unsignedMantissa, this.exponent, this.flags);
+        }
         var bigintExp = this.getExponent();
         var bigintMant = this.getMantissa();
-        if (bigintMant.signum() == 0) return BigFloat.Zero;
+        if (bigintMant.signum() == 0) {
+            return this.isNegative() ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
+        }
         if (bigintExp.signum() == 0) {
             
-            return BigFloat.FromBigInteger(bigintMant);
+            return ExtendedFloat.FromBigInteger(bigintMant);
         } else if (bigintExp.signum() > 0) {
             
             var bigmantissa = bigintMant;
             bigmantissa = bigmantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(bigintExp));
-            return BigFloat.FromBigInteger(bigmantissa);
+            return ExtendedFloat.FromBigInteger(bigmantissa);
         } else {
             
             var scale = FastInteger.FromBig(bigintExp);
@@ -8500,57 +8514,26 @@ function(mantissa, exponent) {
                 bigmantissa = bigmantissa.add(BigInteger.ONE);
             }
             if (neg) bigmantissa = (bigmantissa).negate();
-            return new BigFloat(bigmantissa, scale.AsBigInteger());
+            return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
         }
     };
     
     prototype.ToSingle = function() {
         if (this.IsPositiveInfinity()) return Number.POSITIVE_INFINITY;
         if (this.IsNegativeInfinity()) return Number.NEGATIVE_INFINITY;
-        if (this.IsNaN()) {
-            var nan = 2139095041;
-            if (this.isNegative()) nan |= ((1 << 31)|0);
-            if (this.IsQuietNaN()) nan |= 4194304; else {
-                
-                
-                nan |= 2097152;
-            }
-            if (!(this.getUnsignedMantissa().signum() == 0)) {
-                
-                var bigdata = (this.getUnsignedMantissa().remainder(BigInteger.valueOf(2097152)));
-                nan |= bigdata.intValue();
-            }
-            return Float.intBitsToFloat(nan);
-        }
         if (this.isNegative() && this.signum() == 0) {
             return Float.intBitsToFloat(1 << 31);
         }
-        return this.ToBigFloat().ToSingle();
+        return this.ToExtendedFloat().ToSingle();
     };
     
     prototype.ToDouble = function() {
         if (this.IsPositiveInfinity()) return Number.POSITIVE_INFINITY;
         if (this.IsNegativeInfinity()) return Number.NEGATIVE_INFINITY;
-        if (this.IsNaN()) {
-            var nan = [1, 2146435072];
-            if (this.isNegative()) nan[1] = nan[1] | ((1 << 31)|0);
-            if (this.IsQuietNaN()) nan[1] = nan[1] | 524288; else {
-                
-                
-                nan[1] = nan[1] | 262144;
-            }
-            if (!(this.getUnsignedMantissa().signum() == 0)) {
-                
-                var words = FastInteger.GetLastWords(this.getUnsignedMantissa(), 2);
-                nan[0] = words[0];
-                nan[1] = (words[1] & 262143);
-            }
-            return Extras.IntegersToDouble(nan);
-        }
         if (this.isNegative() && this.signum() == 0) {
             return Extras.IntegersToDouble([((1 << 31)|0), 0]);
         }
-        return this.ToBigFloat().ToDouble();
+        return this.ToExtendedFloat().ToDouble();
     };
     
     constructor.FromSingle = function(flt) {
@@ -8655,10 +8638,16 @@ function(mantissa, exponent) {
         }
     };
     
-    constructor.FromBigFloat = function(bigfloat) {
+    constructor.FromExtendedFloat = function(bigfloat) {
         if ((bigfloat) == null) throw ("bigfloat");
+        if (bigfloat.IsNaN() || bigfloat.IsInfinity()) {
+            return ExtendedDecimal.CreateWithFlags(bigfloat.getUnsignedMantissa(), bigfloat.getExponent(), (bigfloat.isNegative() ? BigNumberFlags.FlagNegative : 0) | (bigfloat.IsInfinity() ? BigNumberFlags.FlagInfinity : 0) | (bigfloat.IsQuietNaN() ? BigNumberFlags.FlagQuietNaN : 0) | (bigfloat.IsSignalingNaN() ? BigNumberFlags.FlagSignalingNaN : 0));
+        }
         var bigintExp = bigfloat.getExponent();
         var bigintMant = bigfloat.getMantissa();
+        if (bigintMant.signum() == 0) {
+            return bigfloat.isNegative() ? ExtendedDecimal.NegativeZero : ExtendedDecimal.Zero;
+        }
         if (bigintExp.signum() == 0) {
             
             return ExtendedDecimal.FromBigInteger(bigintMant);
@@ -8743,11 +8732,11 @@ function(mantissa, exponent) {
     };
     
     prototype.signum = function() {
-        return this.mantissa.signum() == 0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
+        return this.unsignedMantissa.signum() == 0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
     };
     
     prototype.isZero = function() {
-        return this.mantissa.signum() == 0;
+        return this.unsignedMantissa.signum() == 0;
     };
     
     prototype.DivideToSameExponent = function(divisor, rounding) {
@@ -8783,7 +8772,7 @@ function(mantissa, exponent) {
         var negated = decfrac;
         if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
             var newflags = decfrac.flags ^ BigNumberFlags.FlagNegative;
-            negated = ExtendedDecimal.CreateWithFlags(decfrac.mantissa, decfrac.exponent, newflags);
+            negated = ExtendedDecimal.CreateWithFlags(decfrac.unsignedMantissa, decfrac.exponent, newflags);
         }
         return this.Add(negated, ctx);
     };
@@ -8883,7 +8872,7 @@ function(mantissa, exponent) {
         var negated = subtrahend;
         if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
             var newflags = subtrahend.flags ^ BigNumberFlags.FlagNegative;
-            negated = ExtendedDecimal.CreateWithFlags(subtrahend.mantissa, subtrahend.exponent, newflags);
+            negated = ExtendedDecimal.CreateWithFlags(subtrahend.unsignedMantissa, subtrahend.exponent, newflags);
         }
         return ExtendedDecimal.math.MultiplyAndAdd(this, op, negated, ctx);
     };
@@ -8904,104 +8893,153 @@ function(mantissa, exponent) {
 
 if(typeof exports!=="undefined")exports.ExtendedDecimal=ExtendedDecimal;
 
-var BigFloat = 
+var ExtendedFloat = 
 
 function(mantissa, exponent) {
 
     this.exponent = exponent;
-    this.mantissa = mantissa;
+    var sign = mantissa.signum();
+    this.mantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+    this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
 };
 (function(constructor,prototype){
     prototype.exponent = null;
     prototype.mantissa = null;
+    prototype.flags = null;
     prototype.getExponent = function() {
         return this.exponent;
     };
-    prototype.getMantissa = function() {
+    prototype.getUnsignedMantissa = function() {
         return this.mantissa;
     };
-    prototype.EqualsInternal = function(other) {
-        var otherValue = ((other.constructor==BigFloat) ? other : null);
+    prototype.getMantissa = function() {
+        return this.isNegative() ? ((this.mantissa).negate()) : this.mantissa;
+    };
+    prototype.EqualsInternal = function(otherValue) {
         if (otherValue == null) return false;
-        return this.exponent.equals(otherValue.exponent) && this.mantissa.equals(otherValue.mantissa);
+        return this.exponent.equals(otherValue.exponent) && this.mantissa.equals(otherValue.mantissa) && this.flags == otherValue.flags;
     };
     prototype.equals = function(obj) {
-        return this.EqualsInternal((obj.constructor==BigFloat) ? obj : null);
+        return this.EqualsInternal((obj.constructor==ExtendedFloat) ? obj : null);
     };
     prototype.hashCode = function() {
         var hashCode_ = 0;
         {
-            hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
-            hashCode_ = hashCode_ + (1000000009 * this.mantissa.hashCode());
+            hashCode_ = hashCode_ + 1000000007 * this.exponent.hashCode();
+            hashCode_ = hashCode_ + 1000000009 * this.mantissa.hashCode();
+            hashCode_ = hashCode_ + 1000000009 * this.flags;
         }
         return hashCode_;
+    };
+    constructor.CreateWithFlags = function(mantissa, exponent, flags) {
+        var ext = new ExtendedFloat(mantissa, exponent);
+        ext.flags = flags;
+        return ext;
+    };
+    constructor.MaxSafeInt = 214748363;
+    
+    constructor.FromString = function(str) {
+        if (str == null) throw ("str");
+        return ExtendedDecimal.FromString(str).ToExtendedFloat();
     };
     constructor.BigShiftIteration = BigInteger.valueOf(1000000);
     constructor.ShiftIteration = 1000000;
     constructor.ShiftLeft = function(val, bigShift) {
-        while (bigShift.compareTo(BigFloat.BigShiftIteration) > 0) {
+        while (bigShift.compareTo(ExtendedFloat.BigShiftIteration) > 0) {
             val = val.shiftLeft(1000000);
-            bigShift = bigShift.subtract(BigFloat.BigShiftIteration);
+            bigShift = bigShift.subtract(ExtendedFloat.BigShiftIteration);
         }
         var lastshift = bigShift.intValue();
         val = val.shiftLeft(lastshift);
         return val;
     };
     constructor.ShiftLeftInt = function(val, shift) {
-        while (shift > BigFloat.ShiftIteration) {
+        while (shift > ExtendedFloat.ShiftIteration) {
             val = val.shiftLeft(1000000);
-            shift -= BigFloat.ShiftIteration;
+            shift -= ExtendedFloat.ShiftIteration;
         }
         var lastshift = (shift|0);
         val = val.shiftLeft(lastshift);
         return val;
     };
-    
-    constructor.FromBigInteger = function(bigint) {
-        return new BigFloat(bigint, BigInteger.ZERO);
-    };
-    
-    constructor.FromInt64 = function(numberValue_obj) {
-        var numberValue = JSInteropFactory.createLong(numberValue_obj);
-        var bigint = BigInteger.valueOf(numberValue);
-        return new BigFloat(bigint, BigInteger.ZERO);
-    };
-    
-    constructor.FromString = function(str) {
-        return ExtendedDecimal.FromString(str).ToBigFloat();
-    };
-    
-    constructor.FromSingle = function(flt) {
-        var value = Float.floatToRawIntBits(flt);
-        var fpExponent = ((value >> 23) & 255);
-        if (fpExponent == 255) throw ("Value is infinity or NaN");
-        var fpMantissa = value & 8388607;
-        if (fpExponent == 0) fpExponent++; else fpMantissa |= (1 << 23);
-        if (fpMantissa != 0) {
-            while ((fpMantissa & 1) == 0) {
-                fpExponent++;
-                fpMantissa >>= 1;
-            }
-            if ((value >> 31) != 0) fpMantissa = -fpMantissa;
-        }
-        return new BigFloat(BigInteger.valueOf(JSInteropFactory.createLong(fpMantissa)), BigInteger.valueOf(fpExponent - 150));
-    };
-    
-    constructor.FromDouble = function(dbl) {
-        var value = Extras.DoubleToIntegers(dbl);
-        var fpExponent = ((value[1] >> 20) & 2047);
-        var neg = (value[1] >> 31) != 0;
-        if (fpExponent == 2047) throw ("Value is infinity or NaN");
-        value[1] = value[1] & 1048575;
+    constructor.BinaryMathHelper = function ExtendedFloat$BinaryMathHelper(){};
+    (function(constructor,prototype){
         
-        if (fpExponent == 0) fpExponent++; else value[1] = value[1] | 1048576;
-        if ((value[1] | value[0]) != 0) {
-            fpExponent = fpExponent + (DecimalUtility.ShiftAwayTrailingZerosTwoElements(value));
-        }
-        var ret = new BigFloat(FastInteger.WordsToBigInteger(value), BigInteger.valueOf(fpExponent - 1075));
-        if (neg) ret = ret.Negate(null);
-        return ret;
-    };
+        prototype.GetRadix = function() {
+            return 2;
+        };
+        
+        prototype.GetSign = function(value) {
+            return value.signum();
+        };
+        
+        prototype.GetMantissa = function(value) {
+            return value.mantissa;
+        };
+        
+        prototype.GetExponent = function(value) {
+            return value.exponent;
+        };
+        
+        prototype.RescaleByExponentDiff = function(mantissa, e1, e2) {
+            var negative = (mantissa.signum() < 0);
+            if (negative) mantissa = mantissa.negate();
+            var diff = (e1.subtract(e2)).abs();
+            mantissa = ExtendedFloat.ShiftLeft(mantissa, diff);
+            if (negative) mantissa = mantissa.negate();
+            return mantissa;
+        };
+        
+        prototype.CreateNew = function(mantissa, exponent) {
+            return new ExtendedFloat(mantissa, exponent);
+        };
+        
+        prototype.CreateShiftAccumulatorWithDigits = function(bigint, lastDigit, olderDigits) {
+            return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
+        };
+        
+        prototype.CreateShiftAccumulator = function(bigint) {
+            return new BitShiftAccumulator(bigint, 0, 0);
+        };
+        
+        prototype.HasTerminatingRadixExpansion = function(num, den) {
+            var gcd = num.gcd(den);
+            if (gcd.signum() == 0) return false;
+            den = den.divide(gcd);
+            while (den.testBit(0) == false) {
+                den = den.shiftRight(1);
+            }
+            return den.equals(BigInteger.ONE);
+        };
+        
+        prototype.MultiplyByRadixPower = function(bigint, power) {
+            if (power.signum() <= 0) return bigint;
+            if (power.CanFitInInt32()) {
+                return ExtendedFloat.ShiftLeftInt(bigint, power.AsInt32());
+            } else {
+                return ExtendedFloat.ShiftLeft(bigint, power.AsBigInteger());
+            }
+        };
+        
+        prototype.GetFlags = function(value) {
+            return value.mantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
+        };
+        
+        prototype.CreateNewWithFlags = function(mantissa, exponent, flags) {
+            var neg = (flags & BigNumberFlags.FlagNegative) != 0;
+            if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0)) mantissa = mantissa.negate();
+            return new ExtendedFloat(mantissa, exponent);
+        };
+        
+        prototype.GetArithmeticSupport = function() {
+            return BigNumberFlags.FiniteOnly;
+        };
+        
+        prototype.ValueOf = function(val) {
+            return ExtendedFloat.FromInt64(val);
+        };
+    })(ExtendedFloat.BinaryMathHelper,ExtendedFloat.BinaryMathHelper.prototype);
+
     
     prototype.ToBigInteger = function() {
         var expsign = this.getExponent().signum();
@@ -9044,10 +9082,95 @@ function(mantissa, exponent) {
             return bigmantissa;
         }
     };
+    constructor.OneShift62 = BigInteger.ONE.shiftLeft(62);
+    
+    prototype.ToExtendedFloat = function() {
+        if (this.IsNaN() || this.IsInfinity()) throw ("This value is infinity or NaN");
+        var bigintExp = this.getExponent();
+        var bigintMant = this.getMantissa();
+        if (bigintMant.signum() == 0) return ExtendedFloat.Zero;
+        if (bigintExp.signum() == 0) {
+            
+            return ExtendedFloat.FromBigInteger(bigintMant);
+        } else if (bigintExp.signum() > 0) {
+            
+            var bigmantissa = bigintMant;
+            bigmantissa = bigmantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(bigintExp));
+            return ExtendedFloat.FromBigInteger(bigmantissa);
+        } else {
+            
+            var scale = FastInteger.FromBig(bigintExp);
+            var bigmantissa = bigintMant;
+            var neg = (bigmantissa.signum() < 0);
+            var remainder;
+            if (neg) bigmantissa = (bigmantissa).negate();
+            var negscale = FastInteger.Copy(scale).Negate();
+            var divisor = DecimalUtility.FindPowerOfFiveFromBig(negscale.AsBigInteger());
+            while (true) {
+                var quotient;
+                var divrem = (bigmantissa).divideAndRemainder(divisor);
+                quotient = divrem[0];
+                remainder = divrem[1];
+                
+                if (remainder.signum() != 0 && quotient.compareTo(ExtendedFloat.OneShift62) < 0) {
+                    
+                    var bits = FastInteger.GetLastWords(quotient, 2);
+                    var shift = 0;
+                    if ((bits[0] | bits[1]) != 0) {
+                        
+                        var bitPrecision = DecimalUtility.BitPrecisionInt(bits[1]);
+                        if (bitPrecision != 0) bitPrecision = bitPrecision + (32); else bitPrecision = DecimalUtility.BitPrecisionInt(bits[0]);
+                        shift = 63 - bitPrecision;
+                        scale.SubtractInt(shift);
+                    } else {
+                        
+                        shift = 1;
+                        scale.SubtractInt(shift);
+                    }
+                    
+                    bigmantissa = bigmantissa.shiftLeft(shift);
+                } else {
+                    bigmantissa = quotient;
+                    break;
+                }
+            }
+            
+            var halfDivisor = divisor;
+            halfDivisor = halfDivisor.shiftRight(1);
+            var cmp = remainder.compareTo(halfDivisor);
+            
+            if (cmp > 0) {
+                
+                bigmantissa = bigmantissa.add(BigInteger.ONE);
+            }
+            if (neg) bigmantissa = (bigmantissa).negate();
+            return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
+        }
+    };
     constructor.OneShift23 = BigInteger.ONE.shiftLeft(23);
     constructor.OneShift52 = BigInteger.ONE.shiftLeft(52);
     
     prototype.ToSingle = function() {
+        if (this.IsPositiveInfinity()) return Number.POSITIVE_INFINITY;
+        if (this.IsNegativeInfinity()) return Number.NEGATIVE_INFINITY;
+        if (this.IsNaN()) {
+            var nan = 2139095041;
+            if (this.isNegative()) nan |= ((1 << 31)|0);
+            if (this.IsQuietNaN()) nan |= 4194304; else {
+                
+                
+                nan |= 2097152;
+            }
+            if (!(this.getUnsignedMantissa().signum() == 0)) {
+                
+                var bigdata = (this.getUnsignedMantissa().remainder(BigInteger.valueOf(2097152)));
+                nan |= bigdata.intValue();
+            }
+            return Float.intBitsToFloat(nan);
+        }
+        if (this.isNegative() && this.signum() == 0) {
+            return Float.intBitsToFloat(1 << 31);
+        }
         var bigmant = (this.mantissa).abs();
         var bigexponent = FastInteger.FromBig(this.exponent);
         var bitLeftmost = 0;
@@ -9057,7 +9180,7 @@ function(mantissa, exponent) {
         }
         var smallmant = 0;
         var fastSmallMant;
-        if (bigmant.compareTo(BigFloat.OneShift23) < 0) {
+        if (bigmant.compareTo(ExtendedFloat.OneShift23) < 0) {
             smallmant = bigmant.intValue();
             var exponentchange = 0;
             while (smallmant < (1 << 23)) {
@@ -9085,7 +9208,7 @@ function(mantissa, exponent) {
         var subnormal = false;
         if (bigexponent.CompareToInt(104) > 0) {
             
-            return (this.mantissa.signum() < 0) ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            return (this.isNegative()) ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
         } else if (bigexponent.CompareToInt(-149) < 0) {
             
             subnormal = true;
@@ -9108,7 +9231,7 @@ function(mantissa, exponent) {
         }
         if (bigexponent.CompareToInt(-149) < 0) {
             
-            return (this.mantissa.signum() < 0) ? Float.intBitsToFloat(1 << 31) : Float.intBitsToFloat(0);
+            return (this.isNegative()) ? Float.intBitsToFloat(1 << 31) : Float.intBitsToFloat(0);
         } else {
             var smallexponent = bigexponent.AsInt32();
             smallexponent = smallexponent + 150;
@@ -9116,12 +9239,33 @@ function(mantissa, exponent) {
             if (!subnormal) {
                 smallmantissa |= (smallexponent << 23);
             }
-            if (this.mantissa.signum() < 0) smallmantissa |= (1 << 31);
+            if (this.isNegative()) smallmantissa |= (1 << 31);
             return Float.intBitsToFloat(smallmantissa);
         }
     };
     
     prototype.ToDouble = function() {
+        if (this.IsPositiveInfinity()) return Number.POSITIVE_INFINITY;
+        if (this.IsNegativeInfinity()) return Number.NEGATIVE_INFINITY;
+        if (this.IsNaN()) {
+            var nan = [1, 2146435072];
+            if (this.isNegative()) nan[1] = nan[1] | ((1 << 31)|0);
+            if (this.IsQuietNaN()) nan[1] = nan[1] | 524288; else {
+                
+                
+                nan[1] = nan[1] | 262144;
+            }
+            if (!(this.getUnsignedMantissa().signum() == 0)) {
+                
+                var words = FastInteger.GetLastWords(this.getUnsignedMantissa(), 2);
+                nan[0] = words[0];
+                nan[1] = (words[1] & 262143);
+            }
+            return Extras.IntegersToDouble(nan);
+        }
+        if (this.isNegative() && this.signum() == 0) {
+            return Extras.IntegersToDouble([((1 << 31)|0), 0]);
+        }
         var bigmant = (this.mantissa).abs();
         var bigexponent = FastInteger.FromBig(this.exponent);
         var bitLeftmost = 0;
@@ -9130,7 +9274,7 @@ function(mantissa, exponent) {
             return 0.0;
         }
         var mantissaBits;
-        if (bigmant.compareTo(BigFloat.OneShift52) < 0) {
+        if (bigmant.compareTo(ExtendedFloat.OneShift52) < 0) {
             mantissaBits = FastInteger.GetLastWords(bigmant, 2);
             
             while (!DecimalUtility.HasBitSet(mantissaBits, 52)) {
@@ -9160,7 +9304,7 @@ function(mantissa, exponent) {
         var subnormal = false;
         if (bigexponent.CompareToInt(971) > 0) {
             
-            return (this.mantissa.signum() < 0) ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+            return (this.isNegative()) ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
         } else if (bigexponent.CompareToInt(-1074) < 0) {
             
             subnormal = true;
@@ -9187,7 +9331,7 @@ function(mantissa, exponent) {
         }
         if (bigexponent.CompareToInt(-1074) < 0) {
             
-            return (this.mantissa.signum() < 0) ? Extras.IntegersToDouble([0, ((-2147483648)|0)]) : 0.0;
+            return (this.isNegative()) ? Extras.IntegersToDouble([0, ((-2147483648)|0)]) : 0.0;
         } else {
             bigexponent.AddInt(1075);
             
@@ -9196,99 +9340,146 @@ function(mantissa, exponent) {
                 var smallexponent = bigexponent.AsInt32() << 20;
                 mantissaBits[1] = mantissaBits[1] | smallexponent;
             }
-            if (this.mantissa.signum() < 0) {
+            if (this.isNegative()) {
                 mantissaBits[1] = mantissaBits[1] | ((1 << 31)|0);
             }
             return Extras.IntegersToDouble(mantissaBits);
         }
     };
-    constructor.One = new BigFloat(BigInteger.ONE, BigInteger.ZERO);
-    constructor.Zero = new BigFloat(BigInteger.ZERO, BigInteger.ZERO);
-    constructor.Ten = BigFloat.FromInt64(JSInteropFactory.createLong(10));
     
-    
-    
-    constructor.BinaryMathHelper = function BigFloat$BinaryMathHelper(){};
-    (function(constructor,prototype){
-        
-        prototype.GetRadix = function() {
-            return 2;
-        };
-        
-        prototype.GetSign = function(value) {
-            return value.signum();
-        };
-        
-        prototype.GetMantissa = function(value) {
-            return value.mantissa;
-        };
-        
-        prototype.GetExponent = function(value) {
-            return value.exponent;
-        };
-        
-        prototype.RescaleByExponentDiff = function(mantissa, e1, e2) {
-            var negative = (mantissa.signum() < 0);
-            if (negative) mantissa = mantissa.negate();
-            var diff = (e1.subtract(e2)).abs();
-            mantissa = BigFloat.ShiftLeft(mantissa, diff);
-            if (negative) mantissa = mantissa.negate();
-            return mantissa;
-        };
-        
-        prototype.CreateNew = function(mantissa, exponent) {
-            return new BigFloat(mantissa, exponent);
-        };
-        
-        prototype.CreateShiftAccumulatorWithDigits = function(bigint, lastDigit, olderDigits) {
-            return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
-        };
-        
-        prototype.CreateShiftAccumulator = function(bigint) {
-            return new BitShiftAccumulator(bigint, 0, 0);
-        };
-        
-        prototype.HasTerminatingRadixExpansion = function(num, den) {
-            var gcd = num.gcd(den);
-            if (gcd.signum() == 0) return false;
-            den = den.divide(gcd);
-            while (den.testBit(0) == false) {
-                den = den.shiftRight(1);
+    constructor.FromSingle = function(flt) {
+        var value = Float.floatToRawIntBits(flt);
+        var neg = ((value >> 31) != 0);
+        var fpExponent = ((value >> 23) & 255);
+        var fpMantissa = value & 8388607;
+        var bigmant;
+        if (fpExponent == 255) {
+            if (fpMantissa == 0) {
+                return neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity;
             }
-            return den.equals(BigInteger.ONE);
-        };
-        
-        prototype.MultiplyByRadixPower = function(bigint, power) {
-            if (power.signum() <= 0) return bigint;
-            if (power.CanFitInInt32()) {
-                return BigFloat.ShiftLeftInt(bigint, power.AsInt32());
+            
+            var quiet = (fpMantissa & 4194304) != 0;
+            fpMantissa &= 2097151;
+            bigmant = BigInteger.valueOf(fpMantissa);
+            bigmant = bigmant.subtract(BigInteger.ONE);
+            if (bigmant.signum() == 0) {
+                return quiet ? ExtendedFloat.NaN : ExtendedFloat.SignalingNaN;
             } else {
-                return BigFloat.ShiftLeft(bigint, power.AsBigInteger());
+                return ExtendedFloat.CreateWithFlags(bigmant, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
             }
-        };
+        }
+        if (fpExponent == 0) fpExponent++; else fpMantissa |= (1 << 23);
+        if (fpMantissa == 0) {
+            return neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
+        }
+        while ((fpMantissa & 1) == 0) {
+            fpExponent++;
+            fpMantissa >>= 1;
+        }
+        if (neg) fpMantissa = -fpMantissa;
+        bigmant = BigInteger.valueOf(fpMantissa);
+        return new ExtendedFloat(bigmant, BigInteger.valueOf(fpExponent - 150));
+    };
+    constructor.FromBigInteger = function(bigint) {
+        return new ExtendedFloat(bigint, BigInteger.ZERO);
+    };
+    constructor.FromInt64 = function(valueSmall_obj) {
+        var valueSmall = JSInteropFactory.createLong(valueSmall_obj);
+        var bigint = BigInteger.valueOf(valueSmall);
+        return new ExtendedFloat(bigint, BigInteger.ZERO);
+    };
+    
+    constructor.FromDouble = function(dbl) {
+        var value = Extras.DoubleToIntegers(dbl);
+        var fpExponent = ((value[1] >> 20) & 2047);
+        var neg = (value[1] >> 31) != 0;
+        if (fpExponent == 2047) {
+            if ((value[1] & 1048575) == 0 && value[0] == 0) {
+                return neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity;
+            }
+            
+            var quiet = (value[1] & 524288) != 0;
+            value[1] = value[1] & 262143;
+            var info = FastInteger.WordsToBigInteger(value);
+            info = info.subtract(BigInteger.ONE);
+            if (info.signum() == 0) {
+                return quiet ? ExtendedFloat.NaN : ExtendedFloat.SignalingNaN;
+            } else {
+                return ExtendedFloat.CreateWithFlags(info, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
+            }
+        }
+        value[1] = value[1] & 1048575;
         
-        prototype.GetFlags = function(value) {
-            return value.mantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
-        };
-        
-        prototype.CreateNewWithFlags = function(mantissa, exponent, flags) {
-            var neg = (flags & BigNumberFlags.FlagNegative) != 0;
-            if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0)) mantissa = mantissa.negate();
-            return new BigFloat(mantissa, exponent);
-        };
-        
-        prototype.GetArithmeticSupport = function() {
-            return BigNumberFlags.FiniteOnly;
-        };
-        
-        prototype.ValueOf = function(val) {
-            return BigFloat.FromInt64(val);
-        };
-    })(BigFloat.BinaryMathHelper,BigFloat.BinaryMathHelper.prototype);
-
+        if (fpExponent == 0) fpExponent++; else value[1] = value[1] | 1048576;
+        if ((value[1] | value[0]) != 0) {
+            fpExponent = fpExponent + (DecimalUtility.ShiftAwayTrailingZerosTwoElements(value));
+        } else {
+            return neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
+        }
+        return ExtendedFloat.CreateWithFlags(FastInteger.WordsToBigInteger(value), BigInteger.valueOf(fpExponent - 1075), (neg ? BigNumberFlags.FlagNegative : 0));
+    };
+    
+    prototype.ToExtendedDecimal = function() {
+        return ExtendedDecimal.FromExtendedFloat(this);
+    };
+    
+    prototype.toString = function() {
+        return ExtendedDecimal.FromExtendedFloat(this).toString();
+    };
+    
+    prototype.ToEngineeringString = function() {
+        return this.ToExtendedDecimal().ToEngineeringString();
+    };
+    
+    prototype.ToPlainString = function() {
+        return this.ToExtendedDecimal().ToPlainString();
+    };
+    constructor.One = new ExtendedFloat(BigInteger.ONE, BigInteger.ZERO);
+    constructor.Zero = new ExtendedFloat(BigInteger.ZERO, BigInteger.ZERO);
+    constructor.NegativeZero = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
+    constructor.Ten = new ExtendedFloat(BigInteger.TEN, BigInteger.ZERO);
+    constructor.NaN = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
+    constructor.SignalingNaN = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagSignalingNaN);
+    constructor.PositiveInfinity = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity);
+    constructor.NegativeInfinity = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
+    
+    
+    
+    
+    
+    
+    
+    
+    prototype.IsPositiveInfinity = function() {
+        return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
+    };
+    
+    prototype.IsNegativeInfinity = function() {
+        return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity);
+    };
+    
+    prototype.IsNaN = function() {
+        return (this.flags & (BigNumberFlags.FlagQuietNaN | BigNumberFlags.FlagSignalingNaN)) != 0;
+    };
+    
+    prototype.IsInfinity = function() {
+        return (this.flags & (BigNumberFlags.FlagInfinity)) != 0;
+    };
+    
+    prototype.isNegative = function() {
+        return (this.flags & (BigNumberFlags.FlagNegative)) != 0;
+    };
+    
+    prototype.IsQuietNaN = function() {
+        return (this.flags & (BigNumberFlags.FlagQuietNaN)) != 0;
+    };
+    
+    prototype.IsSignalingNaN = function() {
+        return (this.flags & (BigNumberFlags.FlagSignalingNaN)) != 0;
+    };
     
     prototype.signum = function() {
-        return this.mantissa.signum();
+        return this.mantissa.signum() == 0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
     };
     
     prototype.isZero = function() {
@@ -9300,138 +9491,152 @@ function(mantissa, exponent) {
     };
     
     prototype.Reduce = function(ctx) {
-        return BigFloat.math.Reduce(this, ctx);
+        return ExtendedFloat.math.Reduce(this, ctx);
     };
     
     prototype.RemainderNaturalScale = function(divisor, ctx) {
         return this.Subtract(this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null), ctx);
     };
     
+    prototype.Divide = function(divisor, ctx) {
+        return ExtendedFloat.math.Divide(this, divisor, ctx);
+    };
+    
     prototype.DivideToExponent = function(divisor, exponent, ctx) {
-        return BigFloat.math.DivideToExponent(this, divisor, exponent, ctx);
+        return ExtendedFloat.math.DivideToExponent(this, divisor, exponent, ctx);
     };
     
     prototype.Abs = function(context) {
-        if (this.signum() < 0) {
-            return this.Negate(context);
-        } else {
-            return this.RoundToPrecision(context);
-        }
+        return ExtendedFloat.math.Abs(this, context);
     };
     
     prototype.Negate = function(context) {
-        var neg = (this.mantissa).negate();
-        return new BigFloat(neg, this.exponent).RoundToPrecision(context);
+        return ExtendedFloat.math.Negate(this, context);
     };
     
     prototype.Subtract = function(decfrac, ctx) {
         if ((decfrac) == null) throw ("decfrac");
-        return this.Add(decfrac.Negate(null), ctx);
+        var negated = decfrac;
+        if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
+            var newflags = decfrac.flags ^ BigNumberFlags.FlagNegative;
+            negated = ExtendedFloat.CreateWithFlags(decfrac.mantissa, decfrac.exponent, newflags);
+        }
+        return this.Add(negated, ctx);
     };
-    constructor.math = new RadixMath(new BigFloat.BinaryMathHelper());
+    constructor.math = new RadixMath(new ExtendedFloat.BinaryMathHelper());
     
     
     prototype.DivideToIntegerNaturalScale = function(divisor, ctx) {
-        return BigFloat.math.DivideToIntegerNaturalScale(this, divisor, ctx);
+        return ExtendedFloat.math.DivideToIntegerNaturalScale(this, divisor, ctx);
     };
     
     prototype.DivideToIntegerZeroScale = function(divisor, ctx) {
-        return BigFloat.math.DivideToIntegerZeroScale(this, divisor, ctx);
+        return ExtendedFloat.math.DivideToIntegerZeroScale(this, divisor, ctx);
     };
     
     prototype.Remainder = function(divisor, ctx) {
-        return BigFloat.math.Remainder(this, divisor, ctx);
+        return ExtendedFloat.math.Remainder(this, divisor, ctx);
     };
     
     prototype.RemainderNear = function(divisor, ctx) {
-        return BigFloat.math.RemainderNear(this, divisor, ctx);
+        return ExtendedFloat.math.RemainderNear(this, divisor, ctx);
     };
     
     prototype.NextMinus = function(ctx) {
-        return BigFloat.math.NextMinus(this, ctx);
+        return ExtendedFloat.math.NextMinus(this, ctx);
     };
     
     prototype.NextPlus = function(ctx) {
-        return BigFloat.math.NextPlus(this, ctx);
+        return ExtendedFloat.math.NextPlus(this, ctx);
     };
     
     prototype.NextToward = function(otherValue, ctx) {
-        return BigFloat.math.NextToward(this, otherValue, ctx);
+        return ExtendedFloat.math.NextToward(this, otherValue, ctx);
     };
     
-    prototype.Divide = function(divisor, ctx) {
-        return BigFloat.math.Divide(this, divisor, ctx);
+    constructor.Max = function(first, second, ctx) {
+        return ExtendedFloat.math.Max(first, second, ctx);
     };
     
-    constructor.Max = function(first, second) {
-        return BigFloat.math.Max(first, second, null);
+    constructor.Min = function(first, second, ctx) {
+        return ExtendedFloat.math.Min(first, second, ctx);
     };
     
-    constructor.Min = function(first, second) {
-        return BigFloat.math.Min(first, second, null);
+    constructor.MaxMagnitude = function(first, second, ctx) {
+        return ExtendedFloat.math.MaxMagnitude(first, second, ctx);
     };
     
-    constructor.MaxMagnitude = function(first, second) {
-        return BigFloat.math.MaxMagnitude(first, second, null);
-    };
-    
-    constructor.MinMagnitude = function(first, second) {
-        return BigFloat.math.MinMagnitude(first, second, null);
+    constructor.MinMagnitude = function(first, second, ctx) {
+        return ExtendedFloat.math.MinMagnitude(first, second, ctx);
     };
     
     prototype.compareTo = function(other) {
-        return BigFloat.math.compareTo(this, other);
+        return ExtendedFloat.math.compareTo(this, other);
     };
     
     prototype.CompareToWithContext = function(other, ctx) {
-        return BigFloat.math.CompareToWithContext(this, other, false, ctx);
+        return ExtendedFloat.math.CompareToWithContext(this, other, false, ctx);
     };
     
     prototype.CompareToSignal = function(other, ctx) {
-        return BigFloat.math.CompareToWithContext(this, other, true, ctx);
+        return ExtendedFloat.math.CompareToWithContext(this, other, true, ctx);
     };
     
     prototype.Add = function(decfrac, ctx) {
-        return BigFloat.math.Add(this, decfrac, ctx);
+        return ExtendedFloat.math.Add(this, decfrac, ctx);
     };
     
     prototype.Quantize = function(otherValue, ctx) {
-        return BigFloat.math.Quantize(this, otherValue, ctx);
+        return ExtendedFloat.math.Quantize(this, otherValue, ctx);
     };
     
     prototype.RoundToIntegralExact = function(ctx) {
-        return BigFloat.math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
+        return ExtendedFloat.math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     };
     
     prototype.RoundToIntegralNoRoundedFlag = function(ctx) {
-        return BigFloat.math.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
+        return ExtendedFloat.math.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
     };
     
     prototype.RoundToExponentExact = function(exponent, ctx) {
-        return BigFloat.math.RoundToExponentExact(this, exponent, ctx);
+        return ExtendedFloat.math.RoundToExponentExact(this, exponent, ctx);
     };
     
     prototype.RoundToExponent = function(exponent, ctx) {
-        return BigFloat.math.RoundToExponentSimple(this, exponent, ctx);
+        return ExtendedFloat.math.RoundToExponentSimple(this, exponent, ctx);
     };
     
     prototype.Multiply = function(op, ctx) {
-        return BigFloat.math.Multiply(this, op, ctx);
+        return ExtendedFloat.math.Multiply(this, op, ctx);
     };
     
     prototype.MultiplyAndAdd = function(op, augend, ctx) {
-        return BigFloat.math.MultiplyAndAdd(this, op, augend, ctx);
+        return ExtendedFloat.math.MultiplyAndAdd(this, op, augend, ctx);
+    };
+    
+    prototype.MultiplyAndSubtract = function(op, subtrahend, ctx) {
+        if ((subtrahend) == null) throw ("decfrac");
+        var negated = subtrahend;
+        if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
+            var newflags = subtrahend.flags ^ BigNumberFlags.FlagNegative;
+            negated = ExtendedFloat.CreateWithFlags(subtrahend.mantissa, subtrahend.exponent, newflags);
+        }
+        return ExtendedFloat.math.MultiplyAndAdd(this, op, negated, ctx);
     };
     
     prototype.RoundToPrecision = function(ctx) {
-        return BigFloat.math.RoundToPrecision(this, ctx);
+        return ExtendedFloat.math.RoundToPrecision(this, ctx);
+    };
+    
+    prototype.Plus = function(ctx) {
+        return ExtendedFloat.math.Plus(this, ctx);
     };
     
     prototype.RoundToBinaryPrecision = function(ctx) {
-        return BigFloat.math.RoundToBinaryPrecision(this, ctx);
+        return ExtendedFloat.math.RoundToBinaryPrecision(this, ctx);
     };
-})(BigFloat,BigFloat.prototype);
+})(ExtendedFloat,ExtendedFloat.prototype);
 
 
-if(typeof exports!=="undefined")exports.BigFloat=BigFloat;
+if(typeof exports!=="undefined")exports.ExtendedFloat=ExtendedFloat;
 })();
