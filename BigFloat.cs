@@ -13,6 +13,7 @@ namespace PeterO {
     /// number. Consists of an integer mantissa and an integer exponent,
     /// both arbitrary-precision. The value of the number is equal to mantissa
     /// * 2^exponent. </summary>
+  [Obsolete("Use ExtendedFloat instead, which supports more kinds of values than BigFloat.")]
   public sealed class BigFloat : IComparable<BigFloat>, IEquatable<BigFloat> {
     BigInteger exponent;
     BigInteger mantissa;
@@ -108,6 +109,11 @@ namespace PeterO {
       return new BigFloat(bigint,BigInteger.Zero);
     }
     
+    public static BigFloat FromExtendedFloat(ExtendedFloat ef){
+      if(ef.IsNaN() || ef.IsInfinity())throw new OverflowException("Is NaN or infinity");
+      return new BigFloat(ef.Mantissa,ef.Exponent);
+    }
+    
     /// <summary> Creates a bigfloat from its string representation. Note
     /// that if the bigfloat contains a negative exponent, the resulting
     /// value might not be exact. However, it will contain enough precision
@@ -116,7 +122,7 @@ namespace PeterO {
     /// <returns>A BigFloat object.</returns>
     /// <param name='str'>A String object.</param>
     public static BigFloat FromString(String str){
-      return ExtendedDecimal.FromString(str).ToBigFloat();
+      return BigFloat.FromExtendedFloat(ExtendedDecimal.FromString(str).ToExtendedFloat());
     }
 
     /// <summary> Creates a bigfloat from a 32-bit floating-point number.
@@ -125,23 +131,7 @@ namespace PeterO {
     /// <returns>A bigfloat with the same value as &quot;flt&quot;.</returns>
     /// <exception cref='OverflowException'> "flt" is infinity or not-a-number.</exception>
     public static BigFloat FromSingle(float flt) {
-      int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
-      int fpExponent = (int)((value >> 23) & 0xFF);
-      if (fpExponent == 255)
-        throw new OverflowException("Value is infinity or NaN");
-      int fpMantissa = value & 0x7FFFFF;
-      if (fpExponent == 0) fpExponent++;
-      else fpMantissa |= (1 << 23);
-      if (fpMantissa != 0) {
-        while ((fpMantissa & 1) == 0) {
-          fpExponent++;
-          fpMantissa >>= 1;
-        }
-        if ((value >> 31) != 0)
-          fpMantissa = -fpMantissa;
-      }
-      return new BigFloat((BigInteger)((long)fpMantissa),
-                          (BigInteger)(fpExponent - 150));
+      return BigFloat.FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
     /// <summary> Creates a bigfloat from a 64-bit floating-point number.
     /// </summary>
@@ -149,73 +139,15 @@ namespace PeterO {
     /// <returns>A bigfloat with the same value as &quot;dbl&quot;</returns>
     /// <exception cref='OverflowException'> "dbl" is infinity or not-a-number.</exception>
     public static BigFloat FromDouble(double dbl) {
-      int[] value = Extras.DoubleToIntegers(dbl);
-      int fpExponent = (int)((value[1] >> 20) & 0x7ff);
-      bool neg=(value[1]>>31)!=0;
-      if (fpExponent == 2047)
-        throw new OverflowException("Value is infinity or NaN");
-      value[1]&=0xFFFFF; // Mask out the exponent and sign
-      if (fpExponent == 0) fpExponent++;
-      else value[1]|=0x100000;
-      if ((value[1]|value[0]) != 0) {
-        fpExponent+=DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
-      }
-      BigFloat ret=new BigFloat(FastInteger.WordsToBigInteger(value),
-                                (BigInteger)(fpExponent - 1075));
-      if(neg)ret=ret.Negate(null);
-      return ret;
+      return BigFloat.FromExtendedFloat(ExtendedFloat.FromDouble(dbl));
     }
     /// <summary> Converts this value to an arbitrary-precision integer.
     /// Any fractional part in this value will be discarded when converting
     /// to a big integer. </summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger ToBigInteger() {
-      int expsign=this.Exponent.Sign;
-      if (expsign==0) {
-        // Integer
-        return this.Mantissa;
-      } else if (expsign > 0) {
-        // Integer with trailing zeros
-        BigInteger curexp = this.Exponent;
-        BigInteger bigmantissa = this.Mantissa;
-        if (bigmantissa.IsZero)
-          return bigmantissa;
-        bool neg = (bigmantissa.Sign < 0);
-        if (neg) bigmantissa = -bigmantissa;
-        while (curexp.Sign > 0 && !bigmantissa.IsZero) {
-          int shift = 4096;
-          if (curexp.CompareTo((BigInteger)shift) < 0) {
-            shift = (int)curexp;
-          }
-          bigmantissa <<= shift;
-          curexp -= (BigInteger)shift;
-        }
-        if (neg) bigmantissa = -bigmantissa;
-        return bigmantissa;
-      } else {
-        // Has fractional parts,
-        // shift right without rounding
-        BigInteger curexp = this.Exponent;
-        BigInteger bigmantissa = this.Mantissa;
-        if (bigmantissa.IsZero)
-          return bigmantissa;
-        bool neg = (bigmantissa.Sign < 0);
-        if (neg) bigmantissa = -bigmantissa;
-        while (curexp.Sign < 0 && !bigmantissa.IsZero) {
-          int shift = 4096;
-          if (curexp.CompareTo((BigInteger)(-4096)) > 0) {
-            shift = -((int)curexp);
-          }
-          bigmantissa >>= shift;
-          curexp += (BigInteger)shift;
-        }
-        if (neg) bigmantissa = -bigmantissa;
-        return bigmantissa;
-      }
+      return new ExtendedFloat(this.Mantissa,this.Exponent).ToBigInteger();
     }
-
-    private static BigInteger OneShift23 = BigInteger.One << 23;
-    private static BigInteger OneShift52 = BigInteger.One << 52;
 
     /// <summary> Converts this value to a 32-bit floating-point number.
     /// The half-even rounding mode is used. </summary>
@@ -223,83 +155,7 @@ namespace PeterO {
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 32-bit floating point number.</returns>
     public float ToSingle() {
-      BigInteger bigmant = BigInteger.Abs(this.mantissa);
-      FastInteger bigexponent = FastInteger.FromBig(this.exponent);
-      int bitLeftmost = 0;
-      int bitsAfterLeftmost = 0;
-      if (this.mantissa.IsZero) {
-        return 0.0f;
-      }
-      int smallmant = 0;
-      FastInteger fastSmallMant;
-      if (bigmant.CompareTo(OneShift23) < 0) {
-        smallmant = (int)bigmant;
-        int exponentchange = 0;
-        while (smallmant < (1 << 23)) {
-          smallmant <<= 1;
-          exponentchange++;
-        }
-        bigexponent.SubtractInt(exponentchange);
-        fastSmallMant=new FastInteger(smallmant);
-      } else {
-        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant,0,0);
-        accum.ShiftToDigitsInt(24);
-        bitsAfterLeftmost = accum.OlderDiscardedDigits;
-        bitLeftmost = accum.LastDiscardedDigit;
-        bigexponent.Add(accum.DiscardedDigitCount);
-        fastSmallMant = accum.ShiftedIntFast;
-      }
-      // Round half-even
-      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                              !fastSmallMant.IsEvenNumber)) {
-        fastSmallMant.AddInt(1);
-        if (fastSmallMant.CompareToInt(1 << 24)==0) {
-          fastSmallMant=new FastInteger(1<<23);
-          bigexponent.AddInt(1);
-        }
-      }
-      bool subnormal = false;
-      if (bigexponent.CompareToInt(104) > 0) {
-        // exponent too big
-        return (this.mantissa.Sign < 0) ?
-          Single.NegativeInfinity :
-          Single.PositiveInfinity;
-      } else if (bigexponent.CompareToInt(-149) < 0) {
-        // subnormal
-        subnormal = true;
-        // Shift while number remains subnormal
-        BitShiftAccumulator accum = BitShiftAccumulator.FromInt32(fastSmallMant.AsInt32());
-        FastInteger fi = FastInteger.Copy(bigexponent).SubtractInt(-149).Abs();
-        accum.ShiftRight(fi);
-        bitsAfterLeftmost = accum.OlderDiscardedDigits;
-        bitLeftmost = accum.LastDiscardedDigit;
-        bigexponent.Add(accum.DiscardedDigitCount);
-        fastSmallMant = accum.ShiftedIntFast;
-        // Round half-even
-        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                                !fastSmallMant.IsEvenNumber)) {
-          fastSmallMant.AddInt(1);
-          if (fastSmallMant.CompareToInt(1 << 24)==0) {
-            fastSmallMant=new FastInteger(1<<23);
-            bigexponent.AddInt(1);
-          }
-        }
-      }
-      if (bigexponent.CompareToInt(-149) < 0) {
-        // exponent too small, so return zero
-        return (this.mantissa.Sign < 0) ?
-          BitConverter.ToSingle(BitConverter.GetBytes((int)1 << 31), 0) :
-          BitConverter.ToSingle(BitConverter.GetBytes((int)0), 0);
-      } else {
-        int smallexponent = bigexponent.AsInt32();
-        smallexponent = smallexponent + 150;
-        int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7FFFFF;
-        if (!subnormal) {
-          smallmantissa |= (smallexponent << 23);
-        }
-        if (this.mantissa.Sign < 0) smallmantissa |= (1 << 31);
-        return BitConverter.ToSingle(BitConverter.GetBytes((int)smallmantissa), 0);
-      }
+      return new ExtendedFloat(this.Mantissa,this.Exponent).ToSingle();
     }
     
     
@@ -310,116 +166,29 @@ namespace PeterO {
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 64-bit floating point number.</returns>
     public double ToDouble() {
-      BigInteger bigmant = BigInteger.Abs(this.mantissa);
-      FastInteger bigexponent = FastInteger.FromBig(this.exponent);
-      int bitLeftmost = 0;
-      int bitsAfterLeftmost = 0;
-      if (this.mantissa.IsZero) {
-        return 0.0d;
-      }
-      int[] mantissaBits;
-      if (bigmant.CompareTo(OneShift52) < 0) {
-        mantissaBits=FastInteger.GetLastWords(bigmant,2);
-        // This will be an infinite loop if both elements
-        // of the bits array are 0, but the check for
-        // 0 was already done above
-        while (!DecimalUtility.HasBitSet(mantissaBits,52)) {
-          DecimalUtility.ShiftLeftOne(mantissaBits);
-          bigexponent.SubtractInt(1);
-        }
-      } else {
-        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant,0,0);
-        accum.ShiftToDigitsInt(53);
-        bitsAfterLeftmost = accum.OlderDiscardedDigits;
-        bitLeftmost = accum.LastDiscardedDigit;
-        bigexponent.Add(accum.DiscardedDigitCount);
-        mantissaBits=FastInteger.GetLastWords(accum.ShiftedInt,2);
-      }
-      // Round half-even
-      if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                              DecimalUtility.HasBitSet(mantissaBits,0))) {
-        // Add 1 to the bits
-        mantissaBits[0]=unchecked((int)(mantissaBits[0]+1));
-        if(mantissaBits[0]==0)
-          mantissaBits[1]=unchecked((int)(mantissaBits[1]+1));
-        if (mantissaBits[0]==0 &&
-            mantissaBits[1]==(1<<21)) { // if mantissa is now 2^53
-          mantissaBits[1]>>=1; // change it to 2^52
-          bigexponent.AddInt(1);
-        }
-      }
-      bool subnormal = false;
-      if (bigexponent.CompareToInt(971) > 0) {
-        // exponent too big
-        return (this.mantissa.Sign < 0) ?
-          Double.NegativeInfinity :
-          Double.PositiveInfinity;
-      } else if (bigexponent.CompareToInt(-1074) < 0) {
-        // subnormal
-        subnormal = true;
-        // Shift while number remains subnormal
-        BitShiftAccumulator accum = new BitShiftAccumulator(
-          FastInteger.WordsToBigInteger(mantissaBits),0,0);
-        FastInteger fi = FastInteger.Copy(bigexponent).SubtractInt(-1074).Abs();
-        accum.ShiftRight(fi);
-        bitsAfterLeftmost = accum.OlderDiscardedDigits;
-        bitLeftmost = accum.LastDiscardedDigit;
-        bigexponent.Add(accum.DiscardedDigitCount);
-        mantissaBits=FastInteger.GetLastWords(accum.ShiftedInt,2);
-        // Round half-even
-        if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                                DecimalUtility.HasBitSet(mantissaBits,0))) {
-          // Add 1 to the bits
-          mantissaBits[0]=unchecked((int)(mantissaBits[0]+1));
-          if(mantissaBits[0]==0)
-            mantissaBits[1]=unchecked((int)(mantissaBits[1]+1));
-          if (mantissaBits[0]==0 &&
-              mantissaBits[1]==(1<<21)) { // if mantissa is now 2^53
-            mantissaBits[1]>>=1; // change it to 2^52
-            bigexponent.AddInt(1);
-          }
-        }
-      }
-      if (bigexponent.CompareToInt(-1074) < 0) {
-        // exponent too small, so return zero
-        return (this.mantissa.Sign < 0) ?
-          Extras.IntegersToDouble(new int[]{0,unchecked((int)0x80000000)}) :
-          0.0d;
-      } else {
-        bigexponent.AddInt(1075);
-        // Clear the high bits where the exponent and sign are
-        mantissaBits[1]&=0xFFFFF;
-        if (!subnormal) {
-          int smallexponent=bigexponent.AsInt32()<<20;
-          mantissaBits[1]|=smallexponent;
-        }
-        if (this.mantissa.Sign < 0){
-          mantissaBits[1]|= unchecked((int)(1 << 31));
-        }
-        return Extras.IntegersToDouble(mantissaBits);
-      }
+      return new ExtendedFloat(this.Mantissa,this.Exponent).ToDouble();
     }
     /// <summary> Converts this value to a string.The format of the return
     /// value is exactly the same as that of the java.math.BigDecimal.toString()
     /// method. </summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
-      return ExtendedDecimal.FromBigFloat(this).ToString();
+      return new ExtendedFloat(this.Mantissa,this.Exponent).ToString();
     }
     /// <summary> Same as toString(), except that when an exponent is used
     /// it will be a multiple of 3. The format of the return value follows the
     /// format of the java.math.BigDecimal.toEngineeringString() method.
     /// </summary>
     /// <returns>A string object.</returns>
-    public string ToEngineeringString() { 
-      return ExtendedDecimal.FromBigFloat(this).ToEngineeringString();
+    public string ToEngineeringString() {
+      return new ExtendedFloat(this.Mantissa,this.Exponent).ToEngineeringString();
     }
     /// <summary> Converts this value to a string, but without an exponent
     /// part. The format of the return value follows the format of the java.math.BigDecimal.toPlainString()
     /// method. </summary>
     /// <returns>A string object.</returns>
     public string ToPlainString() {
-      return ExtendedDecimal.FromBigFloat(this).ToPlainString();
+      return new ExtendedFloat(this.Mantissa,this.Exponent).ToPlainString();
     }
     
     /// <summary> Represents the number 1. </summary>
@@ -569,7 +338,7 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A BigFloat object.</returns>
-public BigFloat ValueOf(int val){
+      public BigFloat ValueOf(int val){
         return FromInt64(val);
       }
     }
@@ -847,7 +616,7 @@ public BigFloat ValueOf(int val){
     /// <param name='augend'>The value to add.</param>
     /// <returns>The result this * multiplicand + augend.</returns>
     public BigFloat MultiplyAndAdd(BigFloat multiplicand,
-                                          BigFloat augend) {
+                                   BigFloat augend) {
       return MultiplyAndAdd(multiplicand,augend,null);
     }
     //----------------------------------------------------------------

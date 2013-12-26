@@ -22,9 +22,9 @@ namespace Test {
   /// A FastRandom object.</param>
   [TestFixture]
   public class CBORTest{
-    private static void TestBigFloatDoubleCore(double d, string s) {
+    private static void TestExtendedFloatDoubleCore(double d, string s) {
       double oldd = d;
-      BigFloat bf = BigFloat.FromDouble(d);
+      ExtendedFloat bf = ExtendedFloat.FromDouble(d);
       if (s != null) {
         Assert.AreEqual(s, bf.ToString());
       }
@@ -33,9 +33,9 @@ namespace Test {
       TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
-    private static void TestBigFloatSingleCore(float d, string s) {
+    private static void TestExtendedFloatSingleCore(float d, string s) {
       float oldd = d;
-      BigFloat bf = BigFloat.FromSingle(d);
+      ExtendedFloat bf = ExtendedFloat.FromSingle(d);
       if (s != null) {
         Assert.AreEqual(s, bf.ToString());
       }
@@ -53,7 +53,7 @@ namespace Test {
         case 2:
           return CBORObject.FromObject(RandomBigInteger(rand));
         case 3:
-          return CBORObject.FromObject(RandomBigFloat(rand));
+          return CBORObject.FromObject(RandomExtendedFloat(rand));
         case 4:
           return CBORObject.FromObject(RandomExtendedDecimal(rand));
         case 5:
@@ -105,8 +105,8 @@ namespace Test {
     public static BigInteger RandomBigInteger(FastRandom r) {
       return BigInteger.fromString(RandomBigIntString(r));
     }
-    public static BigFloat RandomBigFloat(FastRandom r) {
-      return new BigFloat(RandomBigInteger(r),(BigInteger)(r.NextValue(400)-200));
+    public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
+      return new ExtendedFloat(RandomBigInteger(r),(BigInteger)(r.NextValue(400)-200));
     }
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
@@ -429,33 +429,33 @@ namespace Test {
     /// </returns>
     /// 
     [Test]
-    public void TestBigFloatSingle() {
+    public void TestExtendedFloatSingle() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 255; i++) { // Try a random float with a given exponent
-        TestBigFloatSingleCore(RandomSingle(rand, i), null);
-        TestBigFloatSingleCore(RandomSingle(rand, i), null);
-        TestBigFloatSingleCore(RandomSingle(rand, i), null);
-        TestBigFloatSingleCore(RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
       }
-    }    
-        
+    }
+    
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
     /// 
     [Test]
-    public void TestBigFloatDouble() {
-      TestBigFloatDoubleCore(3.5, "3.5");
-      TestBigFloatDoubleCore(7, "7");
-      TestBigFloatDoubleCore(1.75, "1.75");
-      TestBigFloatDoubleCore(3.5, "3.5");
+    public void TestExtendedFloatDouble() {
+      TestExtendedFloatDoubleCore(3.5, "3.5");
+      TestExtendedFloatDoubleCore(7, "7");
+      TestExtendedFloatDoubleCore(1.75, "1.75");
+      TestExtendedFloatDoubleCore(3.5, "3.5");
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 2047; i++) { // Try a random double with a given exponent
-        TestBigFloatDoubleCore(RandomDouble(rand, i), null);
-        TestBigFloatDoubleCore(RandomDouble(rand, i), null);
-        TestBigFloatDoubleCore(RandomDouble(rand, i), null);
-        TestBigFloatDoubleCore(RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
       }
     }
     [Test]
@@ -636,12 +636,6 @@ namespace Test {
       Assert.AreEqual(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Double.PositiveInfinity).AsExtendedDecimal());
       Assert.AreEqual(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NegativeInfinity).AsExtendedDecimal());
       Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
-      try { CBORObject.FromObject(Single.PositiveInfinity).AsBigFloat(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Single.NegativeInfinity).AsBigFloat(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Single.NaN).AsBigFloat(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Double.PositiveInfinity).AsBigFloat(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Double.NegativeInfinity).AsBigFloat(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Double.NaN).AsBigFloat(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
     }
     /// <summary>
     /// </summary>
@@ -2129,23 +2123,23 @@ namespace Test {
     /// </returns>
     /// 
     [Test]
-    public void TestBigFloatDecFrac() {
-      BigFloat bf;
-      bf = BigFloat.FromInt64(20);
-      Assert.AreEqual("20", ExtendedDecimal.FromBigFloat(bf).ToString());
-      bf = new BigFloat((BigInteger)3, (BigInteger)(-1));
-      Assert.AreEqual("1.5", ExtendedDecimal.FromBigFloat(bf).ToString());
-      bf = new BigFloat((BigInteger)(-3), (BigInteger)(-1));
-      Assert.AreEqual("-1.5", ExtendedDecimal.FromBigFloat(bf).ToString());
+    public void TestExtendedFloatDecFrac() {
+      ExtendedFloat bf;
+      bf = ExtendedFloat.FromInt64(20);
+      Assert.AreEqual("20", ExtendedDecimal.FromExtendedFloat(bf).ToString());
+      bf = new ExtendedFloat((BigInteger)3, (BigInteger)(-1));
+      Assert.AreEqual("1.5", ExtendedDecimal.FromExtendedFloat(bf).ToString());
+      bf = new ExtendedFloat((BigInteger)(-3), (BigInteger)(-1));
+      Assert.AreEqual("-1.5", ExtendedDecimal.FromExtendedFloat(bf).ToString());
       ExtendedDecimal df;
       df = ExtendedDecimal.FromInt64(20);
-      Assert.AreEqual("20", df.ToBigFloat().ToString());
+      Assert.AreEqual("20", df.ToExtendedFloat().ToString());
       df = ExtendedDecimal.FromInt64(-20);
-      Assert.AreEqual("-20", df.ToBigFloat().ToString());
+      Assert.AreEqual("-20", df.ToExtendedFloat().ToString());
       df = new ExtendedDecimal((BigInteger)15, -1);
-      Assert.AreEqual("1.5", df.ToBigFloat().ToString());
+      Assert.AreEqual("1.5", df.ToExtendedFloat().ToString());
       df = new ExtendedDecimal((BigInteger)(-15), -1);
-      Assert.AreEqual("-1.5", df.ToBigFloat().ToString());
+      Assert.AreEqual("-1.5", df.ToExtendedFloat().ToString());
     }
     [Test]
     public void TestDecFracToSingleDoubleHighExponents(){

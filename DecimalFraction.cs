@@ -330,7 +330,8 @@ namespace PeterO {
     /// <param name='bigfloat'>A bigfloat.</param>
     /// <returns>A DecimalFraction object.</returns>
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
-      ExtendedDecimal ed=ExtendedDecimal.FromBigFloat(bigfloat);
+      ExtendedDecimal ed=ExtendedDecimal.FromExtendedFloat(
+        new ExtendedFloat(bigfloat.Mantissa,bigfloat.Exponent));
       return new DecimalFraction(ed.Mantissa,ed.Exponent);
     }
     

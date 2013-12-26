@@ -105,6 +105,7 @@
     <Compile Include="DecimalUtility.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
     <Compile Include="ExtendedDecimal.cs" />
+    <Compile Include="ExtendedFloat.cs" />
     <Compile Include="FastInteger.cs" />
     <Compile Include="Extras.cs" />
     <Compile Include="IRadixMathHelper.cs" />

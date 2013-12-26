@@ -145,9 +145,9 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
         return (decimal)(double)this.ThisItem;
       } else if (this.ItemType == CBORObjectType_ExtendedDecimal) {
         return ExtendedDecimalToDecimal((ExtendedDecimal)this.ThisItem);
-      } else if (this.ItemType == CBORObjectType_BigFloat) {
+      } else if (this.ItemType == CBORObjectType_ExtendedFloat) {
         return ExtendedDecimalToDecimal(
-          ExtendedDecimal.FromBigFloat((BigFloat)this.ThisItem));
+          ExtendedDecimal.FromExtendedFloat((ExtendedFloat)this.ThisItem));
       } else
         throw new InvalidOperationException("Not a number type");
     }
@@ -191,8 +191,8 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
             bi.Sign < 0)
           throw new OverflowException("This object's value is out of range");
         return (ulong)BigIntegerToDecimal(bi);
-      } else if (this.ItemType == CBORObjectType_BigFloat) {
-        BigInteger bi = ((BigFloat)this.ThisItem).ToBigInteger();
+      } else if (this.ItemType == CBORObjectType_ExtendedFloat) {
+        BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
         if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
             bi.Sign < 0)
           throw new OverflowException("This object's value is out of range");

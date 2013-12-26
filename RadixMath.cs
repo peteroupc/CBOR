@@ -459,10 +459,10 @@ namespace PeterO {
       if (helper.GetMantissa(ret).IsZero) {
         // Value is 0, so just change the exponent
         // to the preferred one
-          BigInteger dividendExp=helper.GetExponent(thisValue);
-          BigInteger divisorExp=helper.GetExponent(divisor);
-        ret = helper.CreateNewWithFlags(BigInteger.Zero, 
-            (dividendExp - (BigInteger)divisorExp),helper.GetFlags(ret));
+        BigInteger dividendExp=helper.GetExponent(thisValue);
+        BigInteger divisorExp=helper.GetExponent(divisor);
+        ret = helper.CreateNewWithFlags(BigInteger.Zero,
+                                        (dividendExp - (BigInteger)divisorExp),helper.GetFlags(ret));
       } else {
         if (desiredScale.Sign < 0) {
           // Desired scale is negative, shift left
@@ -526,10 +526,7 @@ namespace PeterO {
         ctx2 = ctx.WithBlankFlags().WithUnlimitedExponents();
         ret = RoundToPrecision(ret, ctx2);
         if ((ctx2.Flags & PrecisionContext.FlagRounded) != 0) {
-          // TODO: Is this really necessary?
-          if(ctx.HasFlags){
-            ctx.Flags|=PrecisionContext.FlagInvalid;
-          }
+          return SignalInvalid(ctx);
         }
       }
       return ret;
@@ -2291,10 +2288,21 @@ namespace PeterO {
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='decfrac'>A T object.</param>
-    /// <returns>Zero if the values are equal; a negative number is this instance
+    /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    public int CompareTo(T thisValue, T decfrac) {
+public int CompareTo(T thisValue, T decfrac) {
       if (decfrac == null)return 1;
+      int flagsThis=helper.GetFlags(thisValue);
+      int flagsOther=helper.GetFlags(decfrac);
+      if((flagsThis&BigNumberFlags.FlagNaN)!=0){
+        if((flagsOther&BigNumberFlags.FlagNaN)!=0){
+          return 0;
+        }
+        return 1; // Treat NaN as greater
+      }
+      if((flagsOther&BigNumberFlags.FlagNaN)!=0){
+        return -1; // Treat as less than NaN
+      }
       int s=CompareToHandleSpecialReturnInt(thisValue,decfrac);
       if(s<=1)return s;
       s = helper.GetSign(thisValue);
