@@ -17,11 +17,20 @@ at: http://peteroupc.github.io/CBOR/
      * The value of the number is equal to mantissa * 10^exponent. This class
      * also includes values for negative zero, not-a-number (NaN) values,
      * and infinity, unlike DecimalFraction. <p>Passing a signaling NaN
-     * to any arithmetic operation shown here will signal the flag FlagInvalidOperation
+     * to any arithmetic operation shown here will signal the flag FlagInvalid
      * and return a quiet NaN, unless noted otherwise.</p> <p>Passing a
      * quiet NaN to any arithmetic operation shown here will return a quiet
-     * NaN.</p> <p>When an arithmetic operation signals the flag InvalidOperation,
-     * Overflow, or DivideByZero, it will not throw an exception too.</p>
+     * NaN, unless noted otherwise.</p> <p>Unless noted otherwise, passing
+     * a null ExtendedDecimal argument to any method here will throw an exception.</p>
+     * <p>When an arithmetic operation signals the flag FlagInvalid, FlagOverflow,
+     * or FlagDivideByZero, it will not throw an exception too.</p> <p>An
+     * ExtendedDecimal function can be serialized by one of the following
+     * methods:</p> <ul> <li>Calling the toString() method, which will
+     * always return distinct strings for distinct ExtendedDecimal values.</li>
+     * <li>Calling the UnsignedMantissa, Exponent, and IsNegative properties,
+     * and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods.
+     * The return values combined will uniquely identify a particular ExtendedDecimal
+     * value.</li> </ul>
      */
   public final class ExtendedDecimal implements Comparable<ExtendedDecimal> {
     BigInteger exponent;
@@ -41,7 +50,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Gets this object's unscaled value.
      */
-    public BigInteger getMantissa() { return this.isNegative() ? -mantissa : mantissa; }
+    public BigInteger getMantissa() { return this.isNegative() ? ((mantissa).negate()) : mantissa; }
 
     
     /**
@@ -98,8 +107,15 @@ at: http://peteroupc.github.io/CBOR/
     public ExtendedDecimal (BigInteger mantissa, BigInteger exponent) {
       this.exponent = exponent;
       int sign=mantissa.signum();
-      this.mantissa = sign<0 ? -mantissa : mantissa;
+      this.mantissa = sign<0 ? ((mantissa).negate()) : mantissa;
       this.flags=(sign<0) ? BigNumberFlags.FlagNegative : 0;
+    }
+    
+    private static ExtendedDecimal CreateWithFlags(BigInteger mantissa,
+                                                   BigInteger exponent, int flags) {
+      ExtendedDecimal ext=new ExtendedDecimal(mantissa,exponent);
+      ext.flags=flags;
+      return ext;
     }
     
     private static final int MaxSafeInt = 214748363;
@@ -163,7 +179,7 @@ at: http://peteroupc.github.io/CBOR/
            (str.charAt(i+2)=='N' || str.charAt(i+2)=='n')){
           if(i+3==str.length()){
             if(!negative)return NaN;
-            return ExtendedDecimal.CreateWithFlags(
+            return CreateWithFlags(
               BigInteger.ZERO,BigInteger.ZERO,
               (negative ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagQuietNaN);
           }
@@ -185,7 +201,7 @@ at: http://peteroupc.github.io/CBOR/
             }
           }
           BigInteger bigmant=(mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
-          return ExtendedDecimal.CreateWithFlags(
+          return CreateWithFlags(
             bigmant,BigInteger.ZERO,
             (negative ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagQuietNaN);
         }
@@ -198,7 +214,7 @@ at: http://peteroupc.github.io/CBOR/
            (str.charAt(i+3)=='N' || str.charAt(i+3)=='n')){
           if(i+4==str.length()){
             if(!negative)return SignalingNaN;
-            return ExtendedDecimal.CreateWithFlags(
+            return CreateWithFlags(
               BigInteger.ZERO,
               BigInteger.ZERO,BigNumberFlags.FlagSignalingNaN);
           }
@@ -220,7 +236,7 @@ at: http://peteroupc.github.io/CBOR/
             }
           }
           BigInteger bigmant=(mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
-          return ExtendedDecimal.CreateWithFlags(
+          return CreateWithFlags(
             bigmant,BigInteger.ZERO,
             (negative ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagSignalingNaN);
         }
@@ -310,7 +326,7 @@ at: http://peteroupc.github.io/CBOR/
       } else if (i != str.length()) {
         throw new NumberFormatException();
       }
-      return ExtendedDecimal.CreateWithFlags(
+      return CreateWithFlags(
         (mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
         (newScale==null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
         negative ? BigNumberFlags.FlagNegative : 0);
@@ -847,10 +863,10 @@ remainder=divrem[1];
           // the mantissa from being zero 
           nan|=0x200000;
         }
-        if(!this.getUnsignedMantissa().signum()==0){
+        if(!(this.getUnsignedMantissa().signum()==0)){
           // Transfer diagnostic information
-          int data=(int)(this.getUnsignedMantissa().remainder(BigInteger.valueOf(0x200000)));
-          nan|=data;
+          BigInteger bigdata=(this.getUnsignedMantissa().remainder(BigInteger.valueOf(0x200000)));
+          nan|=bigdata.intValue();
         }
         return Float.intBitsToFloat(nan);
       }
@@ -886,11 +902,11 @@ remainder=divrem[1];
           // the mantissa from being zero 
           nan[1]|=0x40000;
         }
-        if(!this.getUnsignedMantissa().signum()==0){
+        if(!(this.getUnsignedMantissa().signum()==0)){
           // Copy diagnostic information
-          int[] ints=FastInteger.GetLastWords(this.getUnsignedMantissa(),2);
-          nan[0]=ints[0];
-          nan[1]=(ints[1]&0x3FFFF);
+          int[] words=FastInteger.GetLastWords(this.getUnsignedMantissa(),2);
+          nan[0]=words[0];
+          nan[1]=(words[1]&0x3FFFF);
         }
         return Extras.IntegersToDouble(nan);
       }
@@ -906,7 +922,6 @@ remainder=divrem[1];
      * a string.
      * @param flt A 32-bit floating-point number.
      * @return A decimal number with the same value as &quot;flt&quot;.
-     * @throws ArithmeticException "flt" is infinity or not-a-number.
      */
     public static ExtendedDecimal FromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
@@ -975,7 +990,6 @@ remainder=divrem[1];
      * a string.
      * @param dbl A 64-bit floating-point number.
      * @return A decimal number with the same value as &quot;dbl&quot;
-     * @throws ArithmeticException "dbl" is infinity or not-a-number.
      */
     public static ExtendedDecimal FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
@@ -1103,7 +1117,7 @@ remainder=divrem[1];
     
     public static final ExtendedDecimal Zero = new ExtendedDecimal(BigInteger.ZERO,BigInteger.ZERO);
     
-    public static final ExtendedDecimal NegativeZero = ExtendedDecimal.CreateWithFlags(
+    public static final ExtendedDecimal NegativeZero = CreateWithFlags(
       BigInteger.ZERO,BigInteger.ZERO,BigNumberFlags.FlagNegative);
     /**
      * Represents the number 10.
@@ -1113,13 +1127,6 @@ remainder=divrem[1];
 
     //----------------------------------------------------------------
 
-    private static ExtendedDecimal CreateWithFlags(BigInteger mantissa,
-                                                   BigInteger exponent, int flags) {
-      ExtendedDecimal ext=new ExtendedDecimal(mantissa,exponent);
-      ext.flags=flags;
-      return ext;
-    }
-    
     /**
      * A not-a-number value.
      */
@@ -1235,10 +1242,12 @@ remainder=divrem[1];
      * Divides this object by another decimal number and returns the result.
      * When possible, the result will be exact.
      * @param divisor The divisor.
-     * @return The quotient of the two numbers.
-     * @throws ArithmeticException Attempted to divide by zero.
-     * @throws ArithmeticException The result would have a nonterminating
-     * decimal expansion.
+     * @return The quotient of the two numbers. Signals FlagDivideByZero
+     * and returns infinity if the divisor is 0 and the dividend is nonzero.
+     * Signals FlagInvalid and returns NaN if the divisor and the dividend
+     * are 0.
+     * @throws ArithmeticException The result can't be exact because it
+     * would have a nonterminating decimal expansion.
      */
     public ExtendedDecimal Divide(ExtendedDecimal divisor) {
       return Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
@@ -1250,8 +1259,10 @@ remainder=divrem[1];
      * @param divisor The divisor.
      * @param rounding The rounding mode to use if the result must be scaled
      * down to have the same exponent as this value.
-     * @return The quotient of the two numbers.
-     * @throws ArithmeticException Attempted to divide by zero.
+     * @return The quotient of the two numbers. Signals FlagDivideByZero
+     * and returns infinity if the divisor is 0 and the dividend is nonzero.
+     * Signals FlagInvalid and returns NaN if the divisor and the dividend
+     * are 0.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
@@ -1264,8 +1275,10 @@ remainder=divrem[1];
      * of the result, rounded down, with the preferred exponent set to this
      * value's exponent minus the divisor's exponent.
      * @param divisor The divisor.
-     * @return The integer part of the quotient of the two objects.
-     * @throws ArithmeticException Attempted to divide by zero.
+     * @return The integer part of the quotient of the two objects. Signals
+     * FlagDivideByZero and returns infinity if the divisor is 0 and the
+     * dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor
+     * and the dividend are 0.
      */
     public ExtendedDecimal DivideToIntegerNaturalScale(
       ExtendedDecimal divisor
@@ -1326,11 +1339,11 @@ remainder=divrem[1];
      * of the context is true, will also store the flags resulting from the
      * operation (the flags are in addition to the pre-existing flags).
      * Can be null, in which case the default rounding mode is HalfEven.
-     * @return The quotient of the two objects.
-     * @throws ArithmeticException Attempted to divide by zero.
-     * @throws ArithmeticException The desired exponent is outside of
-     * the valid range of the precision context, if it defines an exponent
-     * range.
+     * @return The quotient of the two objects. Signals FlagDivideByZero
+     * and returns infinity if the divisor is 0 and the dividend is nonzero.
+     * Signals FlagInvalid and returns NaN if the divisor and the dividend
+     * are 0. Signals FlagInvalid and returns NaN if the context defines
+     * an exponent range and the desired exponent is outside that range.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
@@ -1343,6 +1356,31 @@ remainder=divrem[1];
     }
 
     /**
+     * Divides this ExtendedDecimal object by another ExtendedDecimal
+     * object. The preferred exponent for the result is this object's exponent
+     * minus the divisor's exponent.
+     * @param divisor The divisor.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
+     * @return The quotient of the two objects. Signals FlagDivideByZero
+     * and returns infinity if the divisor is 0 and the dividend is nonzero.
+     * Signals FlagInvalid and returns NaN if the divisor and the dividend
+     * are 0.
+     * @throws ArithmeticException Either ctx is null or ctx's precision
+     * is 0, and the result would have a nonterminating decimal expansion;
+     * or, the rounding mode is Rounding.Unnecessary and the result is not
+     * exact.
+     */
+    public ExtendedDecimal Divide(
+      ExtendedDecimal divisor,
+      PrecisionContext ctx
+     ) {
+      return math.Divide(this, divisor, ctx);
+    }
+
+    /**
      * Divides two ExtendedDecimal objects, and gives a particular exponent
      * to the result.
      * @param divisor An ExtendedDecimal object.
@@ -1351,8 +1389,10 @@ remainder=divrem[1];
      * number places the cutoff point to the left of the usual decimal point.
      * @param rounding The rounding mode to use if the result must be scaled
      * down to have the same exponent as this value.
-     * @return The quotient of the two objects.
-     * @throws ArithmeticException Attempted to divide by zero.
+     * @return The quotient of the two objects. Signals FlagDivideByZero
+     * and returns infinity if the divisor is 0 and the dividend is nonzero.
+     * Signals FlagInvalid and returns NaN if the divisor and the dividend
+     * are 0.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
@@ -1377,11 +1417,11 @@ remainder=divrem[1];
      * of the context is true, will also store the flags resulting from the
      * operation (the flags are in addition to the pre-existing flags).
      * Can be null, in which case the default rounding mode is HalfEven.
-     * @return The quotient of the two objects.
-     * @throws ArithmeticException Attempted to divide by zero.
-     * @throws ArithmeticException The desired exponent is outside of
-     * the valid range of the precision context, if it defines an exponent
-     * range.
+     * @return The quotient of the two objects. Signals FlagDivideByZero
+     * and returns infinity if the divisor is 0 and the dividend is nonzero.
+     * Signals FlagInvalid and returns NaN if the divisor and the dividend
+     * are 0. Signals FlagInvalid and returns NaN if the context defines
+     * an exponent range and the desired exponent is outside that range.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
@@ -1399,8 +1439,10 @@ remainder=divrem[1];
      * number places the cutoff point to the left of the usual decimal point.
      * @param rounding The rounding mode to use if the result must be scaled
      * down to have the same exponent as this value.
-     * @return The quotient of the two objects.
-     * @throws ArithmeticException Attempted to divide by zero.
+     * @return The quotient of the two objects. Signals FlagDivideByZero
+     * and returns infinity if the divisor is 0 and the dividend is nonzero.
+     * Signals FlagInvalid and returns NaN if the divisor and the dividend
+     * are 0.
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
@@ -1469,10 +1511,11 @@ remainder=divrem[1];
      */
     public ExtendedDecimal Subtract(ExtendedDecimal decfrac, PrecisionContext ctx) {
       if((decfrac)==null)throw new NullPointerException("decfrac");
-      ExtendedDecimal negated=((decfrac.flags&BigNumberFlags.FlagNaN)!=0) ? decfrac :
-        ExtendedDecimal.CreateWithFlags(
-          decfrac.mantissa,decfrac.exponent,
-          decfrac.flags^BigNumberFlags.FlagNegative);
+      ExtendedDecimal negated=decfrac;
+      if((decfrac.flags&BigNumberFlags.FlagNaN)==0){
+        int newflags=decfrac.flags^BigNumberFlags.FlagNegative;
+        negated=CreateWithFlags(decfrac.mantissa,decfrac.exponent,newflags);
+      }
       return Add(negated, ctx);
     }
     /**
@@ -1537,8 +1580,8 @@ remainder=divrem[1];
      * @return The integer part of the quotient of the two objects. The exponent
      * will be set to 0. Signals FlagDivideByZero and returns infinity if
      * the divisor is 0 and the dividend is nonzero. Signals FlagInvalid
-     * and returns NaN if the divisor and the dividend are 0.
-     * @throws ArithmeticException The result doesn't fit the given precision.
+     * and returns NaN if the divisor and the dividend are 0, or if the result
+     * doesn&apos;t fit the given precision.
      */
     public ExtendedDecimal DivideToIntegerZeroScale(
       ExtendedDecimal divisor, PrecisionContext ctx) {
@@ -1641,30 +1684,6 @@ remainder=divrem[1];
       PrecisionContext ctx
      ) {
       return math.NextToward(this,otherValue,ctx);
-    }
-
-    
-    /**
-     * Divides this ExtendedDecimal object by another ExtendedDecimal
-     * object. The preferred exponent for the result is this object's exponent
-     * minus the divisor's exponent.
-     * @param divisor The divisor.
-     * @param ctx A precision context to control precision, rounding, and
-     * exponent range of the result. If HasFlags of the context is true, will
-     * also store the flags resulting from the operation (the flags are in
-     * addition to the pre-existing flags). Can be null.
-     * @return The quotient of the two objects
-     * @throws ArithmeticException Attempted to divide by zero.
-     * @throws ArithmeticException Either ctx is null or ctx's precision
-     * is 0, and the result would have a nonterminating decimal expansion;
-     * or, the rounding mode is Rounding.Unnecessary and the result is not
-     * exact.
-     */
-    public ExtendedDecimal Divide(
-      ExtendedDecimal divisor,
-      PrecisionContext ctx
-     ) {
-      return math.Divide(this, divisor, ctx);
     }
 
     /**
@@ -1836,10 +1855,23 @@ remainder=divrem[1];
     }
 
     /**
-     * 
-     * @param desiredExponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return An ExtendedDecimal object.
+     * Returns a decimal number with the same value but a new exponent.
+     * @param ctx A precision context to control precision and rounding
+     * of the result. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags). Can be null, in which case the default rounding
+     * mode is HalfEven.
+     * @param desiredExponent The desired exponent of the result. This
+     * is the number of fractional digits in the result, expressed as a negative
+     * number. Can also be positive, which eliminates lower-order places
+     * from the number. For example, -3 means round to the thousandth (10^-3,
+     * 0.0001), and 3 means round to the thousand (10^3, 1000). A value of
+     * 0 rounds the number to an integer.
+     * @return A decimal number with the same value as this object but with
+     * the exponent changed. Signals FlagInvalid and returns NaN if an overflow
+     * error occurred, or the rounded result can&apos;t fit the given precision,
+     * or if the context defines an exponent range and the given exponent
+     * is outside that range.
      */
 public ExtendedDecimal Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
@@ -1853,13 +1885,17 @@ public ExtendedDecimal Quantize(
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
-     * @param desiredExponentSmall A 32-bit signed integer.
+     * @param desiredExponentSmall The desired exponent of the result.
+     * This is the number of fractional digits in the result, expressed as
+     * a negative number. Can also be positive, which eliminates lower-order
+     * places from the number. For example, -3 means round to the thousandth
+     * (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+     * value of 0 rounds the number to an integer.
      * @return A decimal number with the same value as this object but with
-     * the exponent changed.
-     * @throws ArithmeticException An overflow error occurred, or the
-     * result can't fit the given precision without rounding
-     * @throws java.lang.IllegalArgumentException The exponent is outside of the
-     * valid range of the precision context, if it defines an exponent range.
+     * the exponent changed. Signals FlagInvalid and returns NaN if an overflow
+     * error occurred, or the rounded result can&apos;t fit the given precision,
+     * or if the context defines an exponent range and the given exponent
+     * is outside that range.
      */
     public ExtendedDecimal Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
@@ -1870,19 +1906,23 @@ public ExtendedDecimal Quantize(
      * Returns a decimal number with the same value as this object but with
      * the same exponent as another decimal number.
      * @param otherValue A decimal number containing the desired exponent
-     * of the result. The mantissa is ignored.
+     * of the result. The mantissa is ignored. The exponent is the number
+     * of fractional digits in the result, expressed as a negative number.
+     * Can also be positive, which eliminates lower-order places from the
+     * number. For example, -3 means round to the thousandth (10^-3, 0.0001),
+     * and 3 means round to the thousand (10^3, 1000). A value of 0 rounds the
+     * number to an integer.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
      * @return A decimal number with the same value as this object but with
-     * the exponent changed.
-     * @throws ArithmeticException An overflow error occurred, or the
-     * result can't fit the given precision without rounding.
-     * @throws java.lang.IllegalArgumentException The new exponent is outside of
-     * the valid range of the precision context, if it defines an exponent
-     * range.
+     * the exponent changed. Signals FlagInvalid and returns NaN if an overflow
+     * error occurred, or the result can&apos;t fit the given precision
+     * without rounding. Signals FlagInvalid and returns NaN if the new
+     * exponent is outside of the valid range of the precision context, if
+     * it defines an exponent range.
      */
     public ExtendedDecimal Quantize(
       ExtendedDecimal otherValue, PrecisionContext ctx) {
@@ -1897,12 +1937,11 @@ public ExtendedDecimal Quantize(
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
      * @return A decimal number with the same value as this object but rounded
-     * to an integer.
-     * @throws ArithmeticException An overflow error occurred, or the
-     * result can't fit the given precision without rounding.
-     * @throws java.lang.IllegalArgumentException The new exponent must be changed
-     * to 0 when rounding and 0 is outside of the valid range of the precision
-     * context, if it defines an exponent range.
+     * to an integer. Signals FlagInvalid and returns NaN if an overflow
+     * error occurred, or the result can&apos;t fit the given precision
+     * without rounding. Signals FlagInvalid and returns NaN if the new
+     * exponent must be changed to 0 when rounding and 0 is outside of the valid
+     * range of the precision context, if it defines an exponent range.
      */
     public ExtendedDecimal RoundToIntegralExact(
       PrecisionContext ctx) {
@@ -1919,12 +1958,11 @@ public ExtendedDecimal Quantize(
      * this and RoundToExponentExact). Can be null, in which case the default
      * rounding mode is HalfEven.
      * @return A decimal number with the same value as this object but rounded
-     * to an integer.
-     * @throws ArithmeticException An overflow error occurred, or the
-     * result can't fit the given precision without rounding.
-     * @throws java.lang.IllegalArgumentException The new exponent must be changed
-     * to 0 when rounding and 0 is outside of the valid range of the precision
-     * context, if it defines an exponent range.
+     * to an integer. Signals FlagInvalid and returns NaN if an overflow
+     * error occurred, or the result can&apos;t fit the given precision
+     * without rounding. Signals FlagInvalid and returns NaN if the new
+     * exponent must be changed to 0 when rounding and 0 is outside of the valid
+     * range of the precision context, if it defines an exponent range.
      */
     public ExtendedDecimal RoundToIntegralNoRoundedFlag(
       PrecisionContext ctx) {
@@ -1932,19 +1970,28 @@ public ExtendedDecimal Quantize(
     }
 
     /**
-     * 
+     * Returns a decimal number with the same value as this object but rounded
+     * to an integer.
+     * @param ctx A precision context to control precision and rounding
+     * of the result. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags). Can be null, in which case the default rounding
+     * mode is HalfEven.
      * @param exponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return An ExtendedDecimal object.
+     * @return A decimal number with the same value as this object but rounded
+     * to an integer. Signals FlagInvalid and returns NaN if an overflow
+     * error occurred, or the result can&apos;t fit the given precision
+     * without rounding. Signals FlagInvalid and returns NaN if the new
+     * exponent is outside of the valid range of the precision context, if
+     * it defines an exponent range.
      */
     public ExtendedDecimal RoundToExponentExact(
       BigInteger exponent, PrecisionContext ctx) {
       return math.RoundToExponentExact(this, exponent, ctx);
     }
     /**
-     * Returns a decimal number with the same value as this object but rounded
-     * to a given exponent, without throwing an exception if the result overflows
-     * or doesn't fit the precision range.
+     * Returns a decimal number with the same value as this object, and rounds
+     * it to a new exponent if necessary.
      * @param exponent The minimum exponent the result can have. This is
      * the maximum number of fractional digits in the result, expressed
      * as a negative number. Can also be positive, which eliminates lower-order
@@ -1958,10 +2005,10 @@ public ExtendedDecimal Quantize(
      * default rounding mode is HalfEven.
      * @return A decimal number rounded to the closest value representable
      * in the given precision, meaning if the result can&apos;t fit the precision,
-     * additional digits are discarded to make it fit.
-     * @throws java.lang.IllegalArgumentException The new exponent must be changed
-     * when rounding and the new exponent is outside of the valid range of
-     * the precision context, if it defines an exponent range.
+     * additional digits are discarded to make it fit. Signals FlagInvalid
+     * and returns NaN if the new exponent must be changed when rounding and
+     * the new exponent is outside of the valid range of the precision context,
+     * if it defines an exponent range.
      */
     public ExtendedDecimal RoundToExponent(
       BigInteger exponent, PrecisionContext ctx) {
@@ -2011,10 +2058,11 @@ public ExtendedDecimal Quantize(
     public ExtendedDecimal MultiplyAndSubtract(
       ExtendedDecimal op, ExtendedDecimal subtrahend, PrecisionContext ctx) {
       if((subtrahend)==null)throw new NullPointerException("decfrac");
-      ExtendedDecimal negated=((subtrahend.flags&BigNumberFlags.FlagNaN)!=0) ? subtrahend :
-        ExtendedDecimal.CreateWithFlags(
-          subtrahend.mantissa,subtrahend.exponent,
-          subtrahend.flags^BigNumberFlags.FlagNegative);
+      ExtendedDecimal negated=subtrahend;
+      if((subtrahend.flags&BigNumberFlags.FlagNaN)==0){
+        int newflags=subtrahend.flags^BigNumberFlags.FlagNegative;
+        negated=CreateWithFlags(subtrahend.mantissa,subtrahend.exponent,newflags);
+      }
       return math.MultiplyAndAdd(this, op, negated, ctx);
     }
 

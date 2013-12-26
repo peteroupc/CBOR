@@ -636,12 +636,6 @@ namespace Test {
       Assert.AreEqual(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Double.PositiveInfinity).AsExtendedDecimal());
       Assert.AreEqual(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NegativeInfinity).AsExtendedDecimal());
       Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
-      try { CBORObject.FromObject(Single.PositiveInfinity).AsExtendedDecimal().ToDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Single.NegativeInfinity).AsExtendedDecimal().ToDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Single.NaN).AsExtendedDecimal().ToDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Double.PositiveInfinity).AsExtendedDecimal().ToDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Double.NegativeInfinity).AsExtendedDecimal().ToDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
-      try { CBORObject.FromObject(Double.NaN).AsExtendedDecimal().ToDecimalFraction(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.FromObject(Single.PositiveInfinity).AsBigFloat(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.FromObject(Single.NegativeInfinity).AsBigFloat(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
       try { CBORObject.FromObject(Single.NaN).AsBigFloat(); Assert.Fail("Should have failed");} catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); }
