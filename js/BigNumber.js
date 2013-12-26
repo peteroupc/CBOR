@@ -254,14 +254,14 @@ function() {
 
 };
 (function(constructor,prototype){
-    constructor['CountWords'] = function(X, N) {
+    constructor['CountWords'] = constructor.CountWords = function(X, N) {
         while (N != 0 && X[N - 1] == 0) N--;
         return (N|0);
     };
-    constructor['SetWords'] = function(r, rstart, a, n) {
+    constructor['SetWords'] = constructor.SetWords = function(r, rstart, a, n) {
         for (var i = 0; i < n; i++) r[rstart + i] = (a & 65535);
     };
-    constructor['ShiftWordsLeftByBits'] = function(r, rstart, n, shiftBits) {
+    constructor['ShiftWordsLeftByBits'] = constructor.ShiftWordsLeftByBits = function(r, rstart, n, shiftBits) {
         {
             var u, carry = 0;
             if (shiftBits != 0) {
@@ -274,7 +274,7 @@ function() {
             return carry;
         }
     };
-    constructor['ShiftWordsRightByBits'] = function(r, rstart, n, shiftBits) {
+    constructor['ShiftWordsRightByBits'] = constructor.ShiftWordsRightByBits = function(r, rstart, n, shiftBits) {
         var u, carry = 0;
         {
             if (shiftBits != 0) for (var i = n; i > 0; i--) {
@@ -285,7 +285,7 @@ function() {
             return carry;
         }
     };
-    constructor['ShiftWordsRightByBitsSignExtend'] = function(r, rstart, n, shiftBits) {
+    constructor['ShiftWordsRightByBitsSignExtend'] = constructor.ShiftWordsRightByBitsSignExtend = function(r, rstart, n, shiftBits) {
         {
             var u, carry = ((65535 << ((16 - shiftBits)|0))|0);
             if (shiftBits != 0) for (var i = n; i > 0; i--) {
@@ -296,28 +296,28 @@ function() {
             return carry;
         }
     };
-    constructor['ShiftWordsLeftByWords'] = function(r, rstart, n, shiftWords) {
+    constructor['ShiftWordsLeftByWords'] = constructor.ShiftWordsLeftByWords = function(r, rstart, n, shiftWords) {
         shiftWords = (shiftWords < n ? shiftWords : n);
         if (shiftWords != 0) {
             for (var i = n - 1; i >= shiftWords; i--) r[rstart + i] = (r[rstart + i - shiftWords] & 65535);
             BigInteger.SetWords(r, rstart, 0, shiftWords);
         }
     };
-    constructor['ShiftWordsRightByWords'] = function(r, rstart, n, shiftWords) {
+    constructor['ShiftWordsRightByWords'] = constructor.ShiftWordsRightByWords = function(r, rstart, n, shiftWords) {
         shiftWords = (shiftWords < n ? shiftWords : n);
         if (shiftWords != 0) {
             for (var i = 0; i + shiftWords < n; i++) r[rstart + i] = (r[rstart + i + shiftWords] & 65535);
             BigInteger.SetWords(r, ((rstart + n - shiftWords)|0), 0, shiftWords);
         }
     };
-    constructor['ShiftWordsRightByWordsSignExtend'] = function(r, rstart, n, shiftWords) {
+    constructor['ShiftWordsRightByWordsSignExtend'] = constructor.ShiftWordsRightByWordsSignExtend = function(r, rstart, n, shiftWords) {
         shiftWords = (shiftWords < n ? shiftWords : n);
         if (shiftWords != 0) {
             for (var i = 0; i + shiftWords < n; i++) r[rstart + i] = (r[rstart + i + shiftWords] & 65535);
             BigInteger.SetWords(r, ((rstart + n - shiftWords)|0), (65535), shiftWords);
         }
     };
-    constructor['Compare'] = function(A, astart, B, bstart, N) {
+    constructor['Compare'] = constructor.Compare = function(A, astart, B, bstart, N) {
         while ((N--) != 0) {
             var an = (A[astart + N] & 65535);
             var bn = (B[bstart + N] & 65535);
@@ -325,7 +325,7 @@ function() {
         }
         return 0;
     };
-    constructor['Increment'] = function(A, Astart, N, B) {
+    constructor['Increment'] = constructor.Increment = function(A, Astart, N, B) {
         {
             var tmp = A[Astart];
             A[Astart] = (((tmp + B) & 65535));
@@ -337,7 +337,7 @@ function() {
             return 1;
         }
     };
-    constructor['Decrement'] = function(A, Astart, N, B) {
+    constructor['Decrement'] = constructor.Decrement = function(A, Astart, N, B) {
         {
             var tmp = A[Astart];
             A[Astart] = (((tmp - B) & 65535));
@@ -350,11 +350,11 @@ function() {
             return 1;
         }
     };
-    constructor['TwosComplement'] = function(A, Astart, N) {
+    constructor['TwosComplement'] = constructor.TwosComplement = function(A, Astart, N) {
         BigInteger.Decrement(A, Astart, N, 1);
         for (var i = 0; i < N; i++) A[Astart + i] = (((~A[Astart + i]) & 65535));
     };
-    constructor['Add'] = function(C, cstart, A, astart, B, bstart, N) {
+    constructor['Add'] = constructor.Add = function(C, cstart, A, astart, B, bstart, N) {
         {
             var u;
             u = 0;
@@ -367,7 +367,7 @@ function() {
             return ((u|0) >>> 16);
         }
     };
-    constructor['Subtract'] = function(C, cstart, A, astart, B, bstart, N) {
+    constructor['Subtract'] = constructor.Subtract = function(C, cstart, A, astart, B, bstart, N) {
         {
             var u;
             u = 0;
@@ -380,7 +380,7 @@ function() {
             return ((u >> 31) & 1);
         }
     };
-    constructor['LinearMultiply'] = function(productArr, cstart, A, astart, B, N) {
+    constructor['LinearMultiply'] = constructor.LinearMultiply = function(productArr, cstart, A, astart, B, N) {
         {
             var carry = 0;
             var Bint = (B & 65535);
@@ -394,7 +394,7 @@ function() {
             return carry;
         }
     };
-    constructor['Baseline_Square2'] = function(R, rstart, A, astart) {
+    constructor['Baseline_Square2'] = constructor.Baseline_Square2 = function(R, rstart, A, astart) {
         {
             var p;
             var c;
@@ -418,7 +418,7 @@ function() {
             R[rstart + 2 * 2 - 1] = (((p >> 16) & 65535));
         }
     };
-    constructor['Baseline_Square4'] = function(R, rstart, A, astart) {
+    constructor['Baseline_Square4'] = constructor.Baseline_Square4 = function(R, rstart, A, astart) {
         {
             var p;
             var c;
@@ -490,7 +490,7 @@ function() {
             R[rstart + 2 * 4 - 1] = (((p >> 16) & 65535));
         }
     };
-    constructor['Baseline_Square8'] = function(R, rstart, A, astart) {
+    constructor['Baseline_Square8'] = constructor.Baseline_Square8 = function(R, rstart, A, astart) {
         {
             var p;
             var c;
@@ -706,7 +706,7 @@ function() {
             R[rstart + 2 * 8 - 1] = (((p >> 16) & 65535));
         }
     };
-    constructor['Baseline_Square16'] = function(R, rstart, A, astart) {
+    constructor['Baseline_Square16'] = constructor.Baseline_Square16 = function(R, rstart, A, astart) {
         {
             var p;
             var c;
@@ -1402,7 +1402,7 @@ function() {
             R[rstart + 2 * 16 - 1] = (((p >> 16) & 65535));
         }
     };
-    constructor['Baseline_Multiply2'] = function(R, rstart, A, astart, B, bstart) {
+    constructor['Baseline_Multiply2'] = constructor.Baseline_Multiply2 = function(R, rstart, A, astart, B, bstart) {
         {
             var p;
             var c;
@@ -1428,7 +1428,7 @@ function() {
             R[rstart + 1 + 2] = (((p >> 16) & 65535));
         }
     };
-    constructor['Baseline_Multiply4'] = function(R, rstart, A, astart, B, bstart) {
+    constructor['Baseline_Multiply4'] = constructor.Baseline_Multiply4 = function(R, rstart, A, astart, B, bstart) {
         {
             var p;
             var c;
@@ -1514,7 +1514,7 @@ function() {
             R[rstart + 5 + 2] = (((p >> 16) & 65535));
         }
     };
-    constructor['Baseline_Multiply8'] = function(R, rstart, A, astart, B, bstart) {
+    constructor['Baseline_Multiply8'] = constructor.Baseline_Multiply8 = function(R, rstart, A, astart, B, bstart) {
         {
             var p;
             var c;
@@ -1816,7 +1816,7 @@ function() {
             R[rstart + 13 + 2] = (((p >> 16) & 65535));
         }
     };
-    constructor['Baseline_Multiply16'] = function(R, rstart, A, astart, B, bstart) {
+    constructor['Baseline_Multiply16'] = constructor.Baseline_Multiply16 = function(R, rstart, A, astart, B, bstart) {
         {
             var p;
             var c;
@@ -2934,8 +2934,8 @@ function() {
             R[rstart + 31] = (((p >> 16) & 65535));
         }
     };
-    constructor['s_recursionLimit'] = 16;
-    constructor['RecursiveMultiply'] = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N) {
+    constructor['s_recursionLimit'] = constructor.s_recursionLimit = 16;
+    constructor['RecursiveMultiply'] = constructor.RecursiveMultiply = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N) {
         if (N <= BigInteger.s_recursionLimit) {
             N >>= 2;
             switch(N) {
@@ -2952,7 +2952,7 @@ function() {
                     BigInteger.Baseline_Multiply16(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
                     break;
                 default:
-                    throw "exception";
+                    throw new Error();
             }
         } else {
             var N2 = ((N / 2)|0);
@@ -2972,7 +2972,7 @@ function() {
             BigInteger.Increment(Rarr, ((Rstart + N + N2)|0), N2, (c3|0));
         }
     };
-    constructor['RecursiveSquare'] = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N) {
+    constructor['RecursiveSquare'] = constructor.RecursiveSquare = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N) {
         if (N <= BigInteger.s_recursionLimit) {
             N >>= 2;
             switch(N) {
@@ -2989,7 +2989,7 @@ function() {
                     BigInteger.Baseline_Square16(Rarr, Rstart, Aarr, Astart);
                     break;
                 default:
-                    throw "exception";
+                    throw new Error();
             }
         } else {
             var N2 = ((N / 2)|0);
@@ -3001,13 +3001,13 @@ function() {
             BigInteger.Increment(Rarr, ((Rstart + N + N2)|0), N2, (carry|0));
         }
     };
-    constructor['Multiply'] = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N) {
+    constructor['Multiply'] = constructor.Multiply = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N) {
         BigInteger.RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N);
     };
-    constructor['Square'] = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N) {
+    constructor['Square'] = constructor.Square = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N) {
         BigInteger.RecursiveSquare(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N);
     };
-    constructor['AsymmetricMultiply'] = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, NA, Barr, Bstart, NB) {
+    constructor['AsymmetricMultiply'] = constructor.AsymmetricMultiply = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, NA, Barr, Bstart, NB) {
         if (NA == NB) {
             if (Astart == Bstart && Aarr == Barr) {
                 BigInteger.Square(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, NA);
@@ -3066,19 +3066,19 @@ function() {
         }
         if (BigInteger.Add(Rarr, ((Rstart + NA)|0), Rarr, ((Rstart + NA)|0), Tarr, ((Tstart + 2 * NA)|0), NB - NA) != 0) BigInteger.Increment(Rarr, ((Rstart + NB)|0), NA, 1);
     };
-    constructor['MakeUint'] = function(first, second) {
+    constructor['MakeUint'] = constructor.MakeUint = function(first, second) {
         return ((((first & 65535) | ((second|0) << 16))|0));
     };
-    constructor['GetLowHalf'] = function(val) {
+    constructor['GetLowHalf'] = constructor.GetLowHalf = function(val) {
         return (val & 65535);
     };
-    constructor['GetHighHalf'] = function(val) {
+    constructor['GetHighHalf'] = constructor.GetHighHalf = function(val) {
         return ((val >>> 16)|0);
     };
-    constructor['GetHighHalfAsBorrow'] = function(val) {
+    constructor['GetHighHalfAsBorrow'] = constructor.GetHighHalfAsBorrow = function(val) {
         return ((0 - (val >>> 16))|0);
     };
-    constructor['BitPrecision'] = function(numberValue) {
+    constructor['BitPrecision'] = constructor.BitPrecision = function(numberValue) {
         if (numberValue == 0) return 0;
         var i = 16;
         {
@@ -3098,7 +3098,7 @@ function() {
         }
         return i;
     };
-    constructor['BitPrecisionInt'] = function(numberValue) {
+    constructor['BitPrecisionInt'] = constructor.BitPrecisionInt = function(numberValue) {
         if (numberValue == 0) return 0;
         var i = 32;
         {
@@ -3122,7 +3122,7 @@ function() {
         }
         return i;
     };
-    constructor['Divide32By16'] = function(dividendLow, divisorShort, returnRemainder) {
+    constructor['Divide32By16'] = constructor.Divide32By16 = function(dividendLow, divisorShort, returnRemainder) {
         var tmpInt;
         var dividendHigh = 0;
         var intDivisor = (divisorShort & 65535);
@@ -3141,7 +3141,7 @@ function() {
         }
         return (returnRemainder ? (dividendHigh & 65535) : (dividendLow & 65535));
     };
-    constructor['DivideUnsigned'] = function(x, y) {
+    constructor['DivideUnsigned'] = constructor.DivideUnsigned = function(x, y) {
         {
             var iy = (y & 65535);
             if ((x >> 31) == 0) {
@@ -3151,7 +3151,7 @@ function() {
             }
         }
     };
-    constructor['RemainderUnsigned'] = function(x, y) {
+    constructor['RemainderUnsigned'] = constructor.RemainderUnsigned = function(x, y) {
         {
             var iy = (y & 65535);
             if ((x >> 31) == 0) {
@@ -3161,7 +3161,7 @@ function() {
             }
         }
     };
-    constructor['DivideThreeWordsByTwo'] = function(A, Astart, B0, B1) {
+    constructor['DivideThreeWordsByTwo'] = constructor.DivideThreeWordsByTwo = function(A, Astart, B0, B1) {
         var Q;
         {
             if (((B1 + 1)|0) == 0) Q = A[Astart + 2]; else if ((B1 & 65535) > 0) Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart + 1], A[Astart + 2]), (((B1|0) + 1) & 65535)); else Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart], A[Astart + 1]), B0);
@@ -3185,7 +3185,7 @@ function() {
         }
         return Q;
     };
-    constructor['DivideFourWordsByTwo'] = function(T, Al, Ah, B) {
+    constructor['DivideFourWordsByTwo'] = constructor.DivideFourWordsByTwo = function(T, Al, Ah, B) {
         if (B == 0) return BigInteger.MakeUint(BigInteger.GetLowHalf(Al), BigInteger.GetHighHalf(Ah)); else {
             var Q = [0, 0];
             T[0] = (((BigInteger.GetLowHalf(Al)) & 65535));
@@ -3197,13 +3197,13 @@ function() {
             return BigInteger.MakeUint(Q[0], Q[1]);
         }
     };
-    constructor['AtomicDivide'] = function(Q, Qstart, A, Astart, B, Bstart) {
+    constructor['AtomicDivide'] = constructor.AtomicDivide = function(Q, Qstart, A, Astart, B, Bstart) {
         var T = [0, 0, 0, 0];
         var q = BigInteger.DivideFourWordsByTwo(T, BigInteger.MakeUint(A[Astart], A[Astart + 1]), BigInteger.MakeUint(A[Astart + 2], A[Astart + 3]), BigInteger.MakeUint(B[Bstart], B[Bstart + 1]));
         Q[Qstart] = (((BigInteger.GetLowHalf(q)) & 65535));
         Q[Qstart + 1] = (((BigInteger.GetHighHalf(q)) & 65535));
     };
-    constructor['CorrectQuotientEstimate'] = function(Rarr, Rstart, Tarr, Tstart, Qarr, Qstart, Barr, Bstart, N) {
+    constructor['CorrectQuotientEstimate'] = constructor.CorrectQuotientEstimate = function(Rarr, Rstart, Tarr, Tstart, Qarr, Qstart, Barr, Bstart, N) {
         {
             if (N == 2) BigInteger.Baseline_Multiply2(Tarr, Tstart, Qarr, Qstart, Barr, Bstart); else BigInteger.AsymmetricMultiply(Tarr, Tstart, Tarr, ((Tstart + (N + 2))|0), Qarr, Qstart, 2, Barr, Bstart, N);
             BigInteger.Subtract(Rarr, Rstart, Rarr, Rstart, Tarr, Tstart, N + 2);
@@ -3214,7 +3214,7 @@ function() {
             }
         }
     };
-    constructor['Divide'] = function(Rarr, Rstart, Qarr, Qstart, TA, Tstart, Aarr, Astart, NAint, Barr, Bstart, NBint) {
+    constructor['Divide'] = constructor.Divide = function(Rarr, Rstart, Qarr, Qstart, TA, Tstart, Aarr, Astart, NAint, Barr, Bstart, NBint) {
         var NA = (NAint|0);
         var NB = (NBint|0);
         var TBarr = TA;
@@ -3256,20 +3256,20 @@ function() {
             }
         }
     };
-    constructor['RoundupSizeTable'] = [2, 2, 2, 4, 4, 8, 8, 8, 8];
-    constructor['RoundupSize'] = function(n) {
+    constructor['RoundupSizeTable'] = constructor.RoundupSizeTable = [2, 2, 2, 4, 4, 8, 8, 8, 8];
+    constructor['RoundupSize'] = constructor.RoundupSize = function(n) {
         if (n <= 8) return BigInteger.RoundupSizeTable[n]; else if (n <= 16) return 16; else if (n <= 32) return 32; else if (n <= 64) return 64; else return 1 << ((BigInteger.BitPrecisionInt(n - 1))|0);
     };
-    prototype['negative'] = null;
-    prototype['wordCount'] = -1;
-    prototype['reg'] = null;
+    prototype['negative'] = prototype.negative = null;
+    prototype['wordCount'] = prototype.wordCount = -1;
+    prototype['reg'] = prototype.reg = null;
     
-    constructor['fromByteArray'] = function(bytes, littleEndian) {
+    constructor['fromByteArray'] = constructor.fromByteArray = function(bytes, littleEndian) {
         var bigint = new BigInteger();
         bigint.fromByteArrayInternal(bytes, littleEndian);
         return bigint;
     };
-    prototype['fromByteArrayInternal'] = function(bytes, littleEndian) {
+    prototype['fromByteArrayInternal'] = prototype.fromByteArrayInternal = function(bytes, littleEndian) {
         if (bytes == null) throw new Error("bytes");
         if (bytes.length == 0) {
             this.reg = [0, 0];
@@ -3302,7 +3302,7 @@ function() {
             this.wordCount = this.CalcWordCount();
         }
     };
-    prototype['Allocate'] = function(length) {
+    prototype['Allocate'] = prototype.Allocate = function(length) {
         this.reg = [];
         for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(length); arrfillI++) this.reg[arrfillI] = 0;
         
@@ -3310,13 +3310,13 @@ function() {
         this.wordCount = 0;
         return this;
     };
-    constructor['GrowForCarry'] = function(a, carry) {
+    constructor['GrowForCarry'] = constructor.GrowForCarry = function(a, carry) {
         var oldLength = a.length;
         var ret = BigInteger.CleanGrow(a, BigInteger.RoundupSize(oldLength + 1));
         ret[oldLength] = (carry & 65535);
         return ret;
     };
-    constructor['CleanGrow'] = function(a, size) {
+    constructor['CleanGrow'] = constructor.CleanGrow = function(a, size) {
         if (size > a.length) {
             var newa = [];
             for (var arrfillI = 0; arrfillI < size; arrfillI++) newa[arrfillI] = 0;
@@ -3325,7 +3325,7 @@ function() {
         }
         return a;
     };
-    prototype['SetBitInternal'] = function(n, value) {
+    prototype['SetBitInternal'] = prototype.SetBitInternal = function(n, value) {
         if (value) {
             this.reg = BigInteger.CleanGrow(this.reg, BigInteger.RoundupSize(BigInteger.BitsToWords(n + 1)));
             this.reg[((n / 16)|0)] = (((((this.reg[((n / 16)|0)] | ((((1) & 65535) << (n & 15))|0)) & 65535))|0));
@@ -3336,7 +3336,7 @@ function() {
         }
     };
     
-    prototype['testBit'] = function(index) {
+    prototype['testBit'] = prototype.testBit = function(index) {
         if (index < 0) throw new Error("index");
         if (this.signum() < 0) {
             var tcindex = 0;
@@ -3357,10 +3357,10 @@ function() {
         }
     };
     
-    prototype['GetUnsignedBit'] = function(n) {
+    prototype['GetUnsignedBit'] = prototype.GetUnsignedBit = function(n) {
         if (((n / 16)|0) >= this.reg.length) return false; else return (((this.reg[((n / 16)|0)] >> (n & 15)) & 1) != 0);
     };
-    prototype['InitializeInt'] = function(numberValue) {
+    prototype['InitializeInt'] = prototype.InitializeInt = function(numberValue) {
         var iut;
         {
             this.negative = (numberValue < 0);
@@ -3380,7 +3380,7 @@ function() {
         return this;
     };
     
-    prototype['toByteArray'] = function(littleEndian) {
+    prototype['toByteArray'] = prototype.toByteArray = function(littleEndian) {
         var sign = this.signum();
         if (sign == 0) {
             return [0];
@@ -3442,7 +3442,7 @@ function() {
         }
     };
     
-    prototype['shiftLeft'] = function(numberBits) {
+    prototype['shiftLeft'] = prototype.shiftLeft = function(numberBits) {
         if (numberBits == 0) return this;
         if (numberBits < 0) {
             if (numberBits == -2147483648) return this.shiftRight(1).shiftRight(2147483647);
@@ -3475,7 +3475,7 @@ function() {
         return ret;
     };
     
-    prototype['shiftRight'] = function(numberBits) {
+    prototype['shiftRight'] = prototype.shiftRight = function(numberBits) {
         if (numberBits == 0) return this;
         if (numberBits < 0) {
             if (numberBits == -2147483648) return this.shiftLeft(1).shiftLeft(2147483647);
@@ -3502,7 +3502,7 @@ function() {
         return ret;
     };
     
-    constructor['valueOf'] = function(longerValue_obj) {
+    constructor['valueOf'] = constructor.valueOf = function(longerValue_obj) {
         var longerValue = JSInteropFactory.createLong(longerValue_obj);
         if (longerValue.signum() == 0) return BigInteger.ZERO;
         if (longerValue.equalsInt(1)) return BigInteger.ONE;
@@ -3534,15 +3534,15 @@ function() {
         return ret;
     };
     
-    prototype['intValue'] = function() {
+    prototype['intValue'] = prototype.intValue = function() {
         var c = ((this.wordCount)|0);
         if (c == 0) return 0;
-        if (c > 2) throw "exception";
+        if (c > 2) throw new Error();
         if (c == 2 && (this.reg[1] & 32768) != 0) {
             if ((((this.reg[1] & 32767)|0) | this.reg[0]) == 0 && this.negative) {
                 return -2147483648;
             } else {
-                throw "exception";
+                throw new Error();
             }
         } else {
             var ivv = ((this.reg[0]) & 65535);
@@ -3551,7 +3551,7 @@ function() {
             return ivv;
         }
     };
-    prototype['HasTinyValue'] = function() {
+    prototype['HasTinyValue'] = prototype.HasTinyValue = function() {
         var c = ((this.wordCount)|0);
         if (c > 2) return false;
         if (c == 2 && (this.reg[1] & 32768) != 0) {
@@ -3559,7 +3559,7 @@ function() {
         }
         return true;
     };
-    prototype['HasSmallValue'] = function() {
+    prototype['HasSmallValue'] = prototype.HasSmallValue = function() {
         var c = ((this.wordCount)|0);
         if (c > 4) return false;
         if (c == 4 && (this.reg[3] & 32768) != 0) {
@@ -3568,15 +3568,15 @@ function() {
         return true;
     };
     
-    prototype['longValue'] = function() {
+    prototype['longValue'] = prototype.longValue = function() {
         var count = this.wordCount;
         if (count == 0) return JSInteropFactory.createLong(0);
-        if (count > 4) throw "exception";
+        if (count > 4) throw new Error();
         if (count == 4 && (this.reg[3] & 32768) != 0) {
             if (this.negative && this.reg[3] == (32768) && this.reg[2] == 0 && this.reg[1] == 0 && this.reg[0] == 0) {
                 return JSInteropFactory.LONG_MIN_VALUE();
             } else {
-                throw "exception";
+                throw new Error();
             }
         } else {
             var tmp = ((this.reg[0])|0) & 65535;
@@ -3597,14 +3597,14 @@ function() {
             return vv;
         }
     };
-    constructor['Power2'] = function(e) {
+    constructor['Power2'] = constructor.Power2 = function(e) {
         var r = new BigInteger().Allocate(BigInteger.BitsToWords((e + 1)|0));
         r.SetBitInternal((e|0), true);
         
         return r;
     };
     
-    prototype['PowBigIntVar'] = function(power) {
+    prototype['PowBigIntVar'] = prototype.PowBigIntVar = function(power) {
         if ((power) == null) throw new Error("power");
         var sign = power.signum();
         if (sign < 0) throw new Error("power is negative");
@@ -3624,7 +3624,7 @@ function() {
         return r;
     };
     
-    prototype['pow'] = function(powerSmall) {
+    prototype['pow'] = prototype.pow = function(powerSmall) {
         if (powerSmall < 0) throw new Error("power is negative");
         var thisVar = this;
         if (powerSmall == 0) return BigInteger.ONE; else if (powerSmall == 1) return this; else if (powerSmall == 2) return thisVar.multiply(thisVar); else if (powerSmall == 3) return (thisVar.multiply(thisVar)).multiply(thisVar);
@@ -3642,7 +3642,7 @@ function() {
         return r;
     };
     
-    prototype['negate'] = function() {
+    prototype['negate'] = prototype.negate = function() {
         var bigintRet = new BigInteger();
         bigintRet.reg = this.reg;
         
@@ -3651,15 +3651,15 @@ function() {
         return bigintRet;
     };
     
-    prototype['abs'] = function() {
+    prototype['abs'] = prototype.abs = function() {
         return this.signum() >= 0 ? this : this.negate();
     };
     
-    prototype['CalcWordCount'] = function() {
+    prototype['CalcWordCount'] = prototype.CalcWordCount = function() {
         return ((BigInteger.CountWords(this.reg, this.reg.length))|0);
     };
     
-    prototype['ByteCount'] = function() {
+    prototype['ByteCount'] = prototype.ByteCount = function() {
         var wc = this.wordCount;
         if (wc == 0) return 0;
         var s = this.reg[wc - 1];
@@ -3668,12 +3668,12 @@ function() {
         return ((s >> 8) == 0) ? wc + 1 : wc + 2;
     };
     
-    prototype['BitLength'] = function() {
+    prototype['BitLength'] = prototype.BitLength = function() {
         var wc = this.wordCount;
         if (wc != 0) return (((wc - 1) * 16 + BigInteger.BitPrecision(this.reg[wc - 1]))|0); else return 0;
     };
-    constructor['vec'] = "0123456789ABCDEF";
-    constructor['ReverseChars'] = function(chars, offset, length) {
+    constructor['vec'] = constructor.vec = "0123456789ABCDEF";
+    constructor['ReverseChars'] = constructor.ReverseChars = function(chars, offset, length) {
         var half = length >> 1;
         var right = offset + length - 1;
         for (var i = 0; i < half; i++, right--) {
@@ -3682,7 +3682,7 @@ function() {
             chars[right] = value;
         }
     };
-    prototype['SmallValueToString'] = function() {
+    prototype['SmallValueToString'] = prototype.SmallValueToString = function() {
         var value = this.longValue();
         if (value.equals(JSInteropFactory.LONG_MIN_VALUE())) return "-9223372036854775808";
         var neg = (value.signum() < 0);
@@ -3704,7 +3704,7 @@ function() {
         return tmpbuilder.toString();
     };
     
-    prototype['toString'] = function() {
+    prototype['toString'] = prototype.toString = function() {
         if (this.signum() == 0) return "0";
         if (this.HasSmallValue()) {
             return this.SmallValueToString();
@@ -3748,7 +3748,7 @@ function() {
         }
     };
     
-    constructor['fromString'] = function(str) {
+    constructor['fromString'] = constructor.fromString = function(str) {
         if (str == null) throw new Error("str");
         if ((str.length) <= 0) throw new Error("str.length" + " not less than " + "0" + " (" + (JSInteropFactory.createLong(str.length)) + ")");
         var offset = 0;
@@ -3776,7 +3776,7 @@ function() {
         return bigint;
     };
     
-    prototype['gcd'] = function(bigintSecond) {
+    prototype['gcd'] = prototype.gcd = function(bigintSecond) {
         if ((bigintSecond) == null) throw new Error("bigintSecond");
         if (this.signum() == 0) return (bigintSecond).abs();
         if (bigintSecond.signum() == 0) return (this).abs();
@@ -3796,7 +3796,7 @@ function() {
         return bigintSecond;
     };
     
-    prototype['ModPow'] = function(pow, mod) {
+    prototype['ModPow'] = prototype.ModPow = function(pow, mod) {
         if ((pow) == null) throw new Error("pow");
         if (pow.signum() < 0) throw new Error("pow is negative");
         var r = BigInteger.ONE;
@@ -3812,7 +3812,7 @@ function() {
         }
         return r;
     };
-    constructor['PositiveAdd'] = function(sum, bigintAddend, bigintAugend) {
+    constructor['PositiveAdd'] = constructor.PositiveAdd = function(sum, bigintAddend, bigintAugend) {
         var carry;
         var desiredLength = (bigintAddend.reg.length > bigintAugend.reg.length ? bigintAddend.reg.length : bigintAugend.reg.length);
         if (bigintAddend.reg.length == bigintAugend.reg.length) carry = BigInteger.Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, ((bigintAddend.reg.length)|0)); else if (bigintAddend.reg.length > bigintAugend.reg.length) {
@@ -3834,7 +3834,7 @@ function() {
         sum.wordCount = sum.CalcWordCount();
         sum.ShortenArray();
     };
-    constructor['PositiveSubtract'] = function(diff, minuend, subtrahend) {
+    constructor['PositiveSubtract'] = constructor.PositiveSubtract = function(diff, minuend, subtrahend) {
         var aSize = minuend.wordCount;
         aSize = aSize + (aSize % 2);
         var bSize = subtrahend.wordCount;
@@ -3871,13 +3871,13 @@ function() {
         if (diff.wordCount == 0) diff.negative = false;
     };
     
-    prototype['equals'] = function(obj) {
+    prototype['equals'] = prototype.equals = function(obj) {
         var other = ((obj.constructor==BigInteger) ? obj : null);
         if (other == null) return false;
         return other.compareTo(this) == 0;
     };
     
-    prototype['hashCode'] = function() {
+    prototype['hashCode'] = prototype.hashCode = function() {
         var hashCodeValue = 0;
         {
             hashCodeValue = hashCodeValue + (1000000007 * this.signum());
@@ -3890,7 +3890,7 @@ function() {
         return hashCodeValue;
     };
     
-    prototype['add'] = function(bigintAugend) {
+    prototype['add'] = prototype.add = function(bigintAugend) {
         if ((bigintAugend) == null) throw new Error("bigintAugend");
         var sum = new BigInteger().Allocate((this.reg.length > bigintAugend.reg.length ? this.reg.length : bigintAugend.reg.length)|0);
         if (this.signum() >= 0) {
@@ -3910,7 +3910,7 @@ function() {
         return sum;
     };
     
-    prototype['subtract'] = function(subtrahend) {
+    prototype['subtract'] = prototype.subtract = function(subtrahend) {
         if ((subtrahend) == null) throw new Error("subtrahend");
         var diff = new BigInteger().Allocate((this.reg.length > subtrahend.reg.length ? this.reg.length : subtrahend.reg.length)|0);
         if (this.signum() >= 0) {
@@ -3925,7 +3925,7 @@ function() {
         }
         return diff;
     };
-    prototype['ShortenArray'] = function() {
+    prototype['ShortenArray'] = prototype.ShortenArray = function() {
         if (this.reg.length > 32) {
             var newLength = BigInteger.RoundupSize(this.wordCount);
             if (newLength < this.reg.length && (this.reg.length - newLength) >= 16) {
@@ -3937,7 +3937,7 @@ function() {
             }
         }
     };
-    constructor['PositiveMultiply'] = function(product, bigintA, bigintB) {
+    constructor['PositiveMultiply'] = constructor.PositiveMultiply = function(product, bigintA, bigintB) {
         if (bigintA.wordCount == 1) {
             var wc = bigintB.wordCount;
             product.reg = [];
@@ -3976,7 +3976,7 @@ function() {
         product.ShortenArray();
     };
     
-    prototype['multiply'] = function(bigintMult) {
+    prototype['multiply'] = prototype.multiply = function(bigintMult) {
         if ((bigintMult) == null) throw new Error("bigintMult");
         var product = new BigInteger();
         if (this.wordCount == 0 || bigintMult.wordCount == 0) return BigInteger.ZERO;
@@ -3986,13 +3986,13 @@ function() {
         if ((this.signum() >= 0) != (bigintMult.signum() >= 0)) product.NegateInternal();
         return product;
     };
-    constructor['OperandLength'] = function(a) {
+    constructor['OperandLength'] = constructor.OperandLength = function(a) {
         for (var i = a.length - 1; i >= 0; i--) {
             if (a[i] != 0) return i + 1;
         }
         return 0;
     };
-    constructor['DivideWithRemainderAnyLength'] = function(a, b, quotResult, modResult) {
+    constructor['DivideWithRemainderAnyLength'] = constructor.DivideWithRemainderAnyLength = function(a, b, quotResult, modResult) {
         var lengthA = BigInteger.OperandLength(a);
         var lengthB = BigInteger.OperandLength(b);
         if (lengthB == 0) throw new Error("The divisor is zero.");
@@ -4047,10 +4047,10 @@ function() {
             for (var arrfillI = quotEnd; arrfillI < (quotEnd) + (quotResult.length - quotEnd); arrfillI++) quotResult[arrfillI] = 0;
         }
     };
-    constructor['BitsToWords'] = function(bitCount) {
+    constructor['BitsToWords'] = constructor.BitsToWords = function(bitCount) {
         return ((((bitCount + 16 - 1) / (16))|0));
     };
-    constructor['FastRemainder'] = function(dividendReg, count, divisorSmall) {
+    constructor['FastRemainder'] = constructor.FastRemainder = function(dividendReg, count, divisorSmall) {
         var i = count;
         var remainder = 0;
         while ((i--) > 0) {
@@ -4058,7 +4058,7 @@ function() {
         }
         return remainder;
     };
-    constructor['FastDivide'] = function(quotientReg, count, divisorSmall) {
+    constructor['FastDivide'] = constructor.FastDivide = function(quotientReg, count, divisorSmall) {
         var i = count;
         var remainder = 0;
         var idivisor = (divisorSmall & 65535);
@@ -4073,7 +4073,7 @@ function() {
             }
         }
     };
-    constructor['FastDivideAndRemainder'] = function(quotientReg, count, divisorSmall) {
+    constructor['FastDivideAndRemainder'] = constructor.FastDivideAndRemainder = function(quotientReg, count, divisorSmall) {
         var i = count;
         var remainder = 0;
         var idivisor = (divisorSmall & 65535);
@@ -4090,11 +4090,11 @@ function() {
         return remainder;
     };
     
-    prototype['divide'] = function(bigintDivisor) {
+    prototype['divide'] = prototype.divide = function(bigintDivisor) {
         if ((bigintDivisor) == null) throw new Error("bigintDivisor");
         var aSize = this.wordCount;
         var bSize = bigintDivisor.wordCount;
-        if (bSize == 0) throw "exception";
+        if (bSize == 0) throw new Error();
         if (aSize < bSize) {
             
             return BigInteger.ZERO;
@@ -4140,12 +4140,12 @@ function() {
         return quotient;
     };
     
-    prototype['divideAndRemainder'] = function(divisor) {
+    prototype['divideAndRemainder'] = prototype.divideAndRemainder = function(divisor) {
         if ((divisor) == null) throw new Error("divisor");
         var quotient;
         var aSize = this.wordCount;
         var bSize = divisor.wordCount;
-        if (bSize == 0) throw "exception";
+        if (bSize == 0) throw new Error();
         if (aSize < bSize) {
             
             return [BigInteger.ZERO, this];
@@ -4194,7 +4194,7 @@ function() {
         return [quotient, remainder];
     };
     
-    prototype['mod'] = function(divisor) {
+    prototype['mod'] = prototype.mod = function(divisor) {
         if ((divisor) == null) throw new Error("divisor");
         if (divisor.signum() < 0) {
             throw new Error("Divisor is negative");
@@ -4204,15 +4204,15 @@ function() {
         return rem;
     };
     
-    prototype['remainder'] = function(divisor) {
+    prototype['remainder'] = prototype.remainder = function(divisor) {
         if (this.PositiveCompare(divisor) < 0) {
-            if (divisor.signum() == 0) throw "exception";
+            if (divisor.signum() == 0) throw new Error();
             return this;
         }
         var remainder = new BigInteger();
         var aSize = this.wordCount;
         var bSize = divisor.wordCount;
-        if (bSize == 0) throw "exception";
+        if (bSize == 0) throw new Error();
         if (aSize < bSize) {
             
             return this;
@@ -4238,15 +4238,15 @@ function() {
         }
         return remainder;
     };
-    prototype['NegateInternal'] = function() {
+    prototype['NegateInternal'] = prototype.NegateInternal = function() {
         if (this.wordCount != 0) this.negative = (this.signum() > 0);
     };
-    prototype['PositiveCompare'] = function(t) {
+    prototype['PositiveCompare'] = prototype.PositiveCompare = function(t) {
         var size = this.wordCount, tSize = t.wordCount;
         if (size == tSize) return BigInteger.Compare(this.reg, 0, t.reg, 0, (size|0)); else return size > tSize ? 1 : -1;
     };
     
-    prototype['compareTo'] = function(other) {
+    prototype['compareTo'] = prototype.compareTo = function(other) {
         if (other == null) return 1;
         if (this == other) return 0;
         var size = this.wordCount, tSize = other.wordCount;
@@ -4267,16 +4267,16 @@ function() {
         return (sa > 0) ? cmp : -cmp;
     };
     
-    prototype['signum'] = function() {
+    prototype['signum'] = prototype.signum = function() {
         if (this.wordCount == 0) return 0;
         return (this.negative) ? -1 : 1;
     };
     
-    prototype['isZero'] = function() {
+    prototype['isZero'] = prototype.isZero = function() {
         return (this.wordCount == 0);
     };
     
-    prototype['Sqrt'] = function(bi) {
+    prototype['Sqrt'] = prototype.Sqrt = function(bi) {
         if (this.signum() < 0) return BigInteger.ZERO;
         var bigintX = null;
         var bigintY = BigInteger.Power2((((this.BitLength() + 1) / 2)|0));
@@ -4289,16 +4289,17 @@ function() {
         return bigintX;
     };
     
-    prototype['isEven'] = function() {
+    prototype['isEven'] = prototype.isEven = function() {
         return !this.GetUnsignedBit(0);
     };
-    constructor['ZERO'] = new BigInteger().InitializeInt(0);
-    constructor['ONE'] = new BigInteger().InitializeInt(1);
-    constructor['TEN'] = new BigInteger().InitializeInt(10);
+    constructor['ZERO'] = constructor.ZERO = new BigInteger().InitializeInt(0);
+    constructor['ONE'] = constructor.ONE = new BigInteger().InitializeInt(1);
+    constructor['TEN'] = constructor.TEN = new BigInteger().InitializeInt(10);
 })(BigInteger,BigInteger.prototype);
 
 
 if(typeof exports!=="undefined")exports['BigInteger']=BigInteger;
+if(typeof window!=="undefined")window['BigInteger']=BigInteger;
 
 var FastInteger = 
 
@@ -4639,7 +4640,7 @@ function(value) {
             case 2:
                 return this.largeValue.intValue();
             default:
-                throw "exception";
+                throw new Error();
         }
     };
     
@@ -4665,7 +4666,7 @@ function(value) {
             case ((2 << 2) | 2):
                 return this.largeValue.compareTo(val.AsBigInteger());
             default:
-                throw "exception";
+                throw new Error();
         }
     };
     
@@ -4731,7 +4732,7 @@ function(value) {
                     this.largeValue = this.largeValue.multiply(BigInteger.valueOf(val));
                     break;
                 default:
-                    throw "exception";
+                    throw new Error();
             }
         }
         return this;
@@ -4757,7 +4758,7 @@ function(value) {
                 this.largeValue = (this.largeValue).negate();
                 break;
             default:
-                throw "exception";
+                throw new Error();
         }
         return this;
     };
@@ -4801,7 +4802,7 @@ function(value) {
                 this.largeValue = this.largeValue.subtract(valValue);
                 break;
             default:
-                throw "exception";
+                throw new Error();
         }
         return this;
     };
@@ -4833,7 +4834,7 @@ function(value) {
                 this.largeValue = this.largeValue.add(bigintVal);
                 break;
             default:
-                throw "exception";
+                throw new Error();
         }
         return this;
     };
@@ -4898,7 +4899,7 @@ function(value) {
                 this.largeValue = this.largeValue.add(valValue);
                 break;
             default:
-                throw "exception";
+                throw new Error();
         }
         return this;
     };
@@ -4922,10 +4923,10 @@ function(value) {
                     this.integerMode = 0;
                     break;
                 default:
-                    throw "exception";
+                    throw new Error();
             }
         } else {
-            throw "exception";
+            throw new Error();
         }
         return this;
     };
@@ -4959,10 +4960,10 @@ function(value) {
                     }
                     break;
                 default:
-                    throw "exception";
+                    throw new Error();
             }
         } else {
-            throw "exception";
+            throw new Error();
         }
         return this;
     };
@@ -4976,7 +4977,7 @@ function(value) {
             case 2:
                 return this.largeValue.testBit(0) == false;
             default:
-                throw "exception";
+                throw new Error();
         }
     };
     
@@ -5014,7 +5015,7 @@ function(value) {
                 this.largeValue = this.largeValue.add(valValue);
                 break;
             default:
-                throw "exception";
+                throw new Error();
         }
         return this;
     };
@@ -5034,7 +5035,7 @@ function(value) {
                     return this.largeValue.compareTo(FastInteger.Int32MaxValue) <= 0;
                 }
             default:
-                throw "exception";
+                throw new Error();
         }
     };
     
@@ -5090,7 +5091,7 @@ function(value) {
             case 2:
                 return this.largeValue;
             default:
-                throw "exception";
+                throw new Error();
         }
     };
 })(FastInteger,FastInteger.prototype);
@@ -5946,7 +5947,10 @@ var DecimalUtility = function() {
 })(DecimalUtility,DecimalUtility.prototype);
 
 
-var Rounding={};Rounding.Up=0;Rounding.Down=1;Rounding.Ceiling=2;Rounding.Floor=3;Rounding.HalfUp=4;Rounding.HalfDown=5;Rounding.HalfEven=6;Rounding.Unnecessary=7;Rounding.ZeroFiveUp=8;
+var Rounding={};Rounding['Up']=0;Rounding['Down']=1;Rounding['Ceiling']=2;Rounding['Floor']=3;Rounding['HalfUp']=4;Rounding['HalfDown']=5;Rounding['HalfEven']=6;Rounding['Unnecessary']=7;Rounding['ZeroFiveUp']=8;
+
+if(typeof exports!=="undefined")exports['Rounding']=Rounding;
+if(typeof window!=="undefined")window['Rounding']=Rounding;
 
 var PrecisionContext = 
 
@@ -5962,51 +5966,51 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
     this.exponentMin = BigInteger.valueOf(exponentMinSmall);
 };
 (function(constructor,prototype){
-    prototype['exponentMax'] = null;
-    prototype['getEMax'] = function() {
+    prototype['exponentMax'] = prototype.exponentMax = null;
+    prototype['getEMax'] = prototype.getEMax = function() {
         return this.hasExponentRange ? this.exponentMax : BigInteger.ZERO;
     };
-    prototype['exponentMin'] = null;
-    prototype['hasExponentRange'] = null;
-    prototype['getHasExponentRange'] = function() {
+    prototype['exponentMin'] = prototype.exponentMin = null;
+    prototype['hasExponentRange'] = prototype.hasExponentRange = null;
+    prototype['getHasExponentRange'] = prototype.getHasExponentRange = function() {
         return this.hasExponentRange;
     };
-    prototype['getEMin'] = function() {
+    prototype['getEMin'] = prototype.getEMin = function() {
         return this.hasExponentRange ? this.exponentMin : BigInteger.ZERO;
     };
-    prototype['bigintPrecision'] = null;
-    prototype['getPrecision'] = function() {
+    prototype['bigintPrecision'] = prototype.bigintPrecision = null;
+    prototype['getPrecision'] = prototype.getPrecision = function() {
         return this.bigintPrecision;
     };
-    prototype['rounding'] = null;
-    prototype['clampNormalExponents'] = null;
-    prototype['getClampNormalExponents'] = function() {
+    prototype['rounding'] = prototype.rounding = null;
+    prototype['clampNormalExponents'] = prototype.clampNormalExponents = null;
+    prototype['getClampNormalExponents'] = prototype.getClampNormalExponents = function() {
         return this.hasExponentRange ? this.clampNormalExponents : false;
     };
-    prototype['getRounding'] = function() {
+    prototype['getRounding'] = prototype.getRounding = function() {
         return this.rounding;
     };
-    prototype['flags'] = null;
-    prototype['hasFlags'] = null;
-    prototype['getHasFlags'] = function() {
+    prototype['flags'] = prototype.flags = null;
+    prototype['hasFlags'] = prototype.hasFlags = null;
+    prototype['getHasFlags'] = prototype.getHasFlags = function() {
         return this.hasFlags;
     };
-    constructor['FlagInexact'] = 1;
-    constructor['FlagRounded'] = 2;
-    constructor['FlagSubnormal'] = 4;
-    constructor['FlagUnderflow'] = 8;
-    constructor['FlagOverflow'] = 16;
-    constructor['FlagClamped'] = 32;
-    constructor['FlagInvalid'] = 64;
-    constructor['FlagDivideByZero'] = 128;
-    prototype['getFlags'] = function() {
+    constructor['FlagInexact'] = constructor.FlagInexact = 1;
+    constructor['FlagRounded'] = constructor.FlagRounded = 2;
+    constructor['FlagSubnormal'] = constructor.FlagSubnormal = 4;
+    constructor['FlagUnderflow'] = constructor.FlagUnderflow = 8;
+    constructor['FlagOverflow'] = constructor.FlagOverflow = 16;
+    constructor['FlagClamped'] = constructor.FlagClamped = 32;
+    constructor['FlagInvalid'] = constructor.FlagInvalid = 64;
+    constructor['FlagDivideByZero'] = constructor.FlagDivideByZero = 128;
+    prototype['getFlags'] = prototype.getFlags = function() {
         return this.flags;
     };
-    prototype['setFlags'] = function(value) {
+    prototype['setFlags'] = prototype.setFlags = function(value) {
         if (!this.getHasFlags()) throw new Error("Can't set flags");
         this.flags = value;
     };
-    prototype['ExponentWithinRange'] = function(exponent) {
+    prototype['ExponentWithinRange'] = prototype.ExponentWithinRange = function(exponent) {
         if ((exponent) == null) throw new Error("exponent");
         if (!this.getHasExponentRange()) return true;
         if (this.bigintPrecision.signum() == 0) {
@@ -6020,23 +6024,23 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
             return true;
         }
     };
-    prototype['WithRounding'] = function(rounding) {
+    prototype['WithRounding'] = prototype.WithRounding = function(rounding) {
         var pc = this.Copy();
         pc.rounding = rounding;
         return pc;
     };
-    prototype['WithBlankFlags'] = function() {
+    prototype['WithBlankFlags'] = prototype.WithBlankFlags = function() {
         var pc = this.Copy();
         pc.hasFlags = true;
         pc.flags = 0;
         return pc;
     };
-    prototype['WithExponentClamp'] = function(clamp) {
+    prototype['WithExponentClamp'] = prototype.WithExponentClamp = function(clamp) {
         var pc = this.Copy();
         pc.clampNormalExponents = clamp;
         return pc;
     };
-    prototype['WithExponentRange'] = function(exponentMin, exponentMax) {
+    prototype['WithExponentRange'] = prototype.WithExponentRange = function(exponentMin, exponentMax) {
         if ((exponentMin) == null) throw new Error("exponentMin");
         if (exponentMin.compareTo(exponentMax) > 0) throw new Error("exponentMin greater than exponentMax");
         var pc = this.Copy();
@@ -6045,31 +6049,31 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
         pc.exponentMax = exponentMax;
         return pc;
     };
-    prototype['WithNoFlags'] = function() {
+    prototype['WithNoFlags'] = prototype.WithNoFlags = function() {
         var pc = this.Copy();
         pc.hasFlags = false;
         pc.flags = 0;
         return pc;
     };
-    prototype['WithUnlimitedExponents'] = function() {
+    prototype['WithUnlimitedExponents'] = prototype.WithUnlimitedExponents = function() {
         var pc = this.Copy();
         pc.hasExponentRange = false;
         return pc;
     };
-    prototype['WithPrecision'] = function(precision) {
+    prototype['WithPrecision'] = prototype.WithPrecision = function(precision) {
         if (precision < 0) throw new Error("precision" + " not greater or equal to " + "0" + " (" + (precision) + ")");
         var pc = this.Copy();
         pc.bigintPrecision = BigInteger.valueOf(precision);
         return pc;
     };
-    prototype['WithBigPrecision'] = function(bigintPrecision) {
+    prototype['WithBigPrecision'] = prototype.WithBigPrecision = function(bigintPrecision) {
         if ((bigintPrecision) == null) throw new Error("bigintPrecision");
         if (bigintPrecision.signum() < 0) throw new Error("precision" + " not greater or equal to " + "0" + " (" + bigintPrecision + ")");
         var pc = this.Copy();
         pc.bigintPrecision = bigintPrecision;
         return pc;
     };
-    prototype['Copy'] = function() {
+    prototype['Copy'] = prototype.Copy = function() {
         var pcnew = new PrecisionContext(0, this.rounding, 0, 0, this.clampNormalExponents);
         pcnew.hasFlags = this.hasFlags;
         pcnew.flags = this.flags;
@@ -6081,24 +6085,25 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
         pcnew.clampNormalExponents = this.clampNormalExponents;
         return pcnew;
     };
-    constructor['ForPrecision'] = function(precision) {
+    constructor['ForPrecision'] = constructor.ForPrecision = function(precision) {
         return new PrecisionContext(precision, Rounding.HalfUp, 0, 0, false).WithUnlimitedExponents();
     };
-    constructor['ForRounding'] = function(rounding) {
+    constructor['ForRounding'] = constructor.ForRounding = function(rounding) {
         return new PrecisionContext(0, rounding, 0, 0, false).WithUnlimitedExponents();
     };
-    constructor['ForPrecisionAndRounding'] = function(precision, rounding) {
+    constructor['ForPrecisionAndRounding'] = constructor.ForPrecisionAndRounding = function(precision, rounding) {
         return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
     };
-    constructor['Unlimited'] = PrecisionContext.ForPrecision(0);
-    constructor['Decimal32'] = new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
-    constructor['Decimal64'] = new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
-    constructor['Decimal128'] = new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
-    constructor['CliDecimal'] = new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
+    constructor['Unlimited'] = constructor.Unlimited = PrecisionContext.ForPrecision(0);
+    constructor['Decimal32'] = constructor.Decimal32 = new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
+    constructor['Decimal64'] = constructor.Decimal64 = new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
+    constructor['Decimal128'] = constructor.Decimal128 = new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
+    constructor['CliDecimal'] = constructor.CliDecimal = new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
 })(PrecisionContext,PrecisionContext.prototype);
 
 
 if(typeof exports!=="undefined")exports['PrecisionContext']=PrecisionContext;
+if(typeof window!=="undefined")window['PrecisionContext']=PrecisionContext;
 
 var BigNumberFlags = function(){};
 (function(constructor,prototype){
@@ -7947,26 +7952,26 @@ function(mantissa, exponent) {
     this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
 };
 (function(constructor,prototype){
-    prototype['exponent'] = null;
-    prototype['unsignedMantissa'] = null;
-    prototype['flags'] = null;
-    prototype['getExponent'] = function() {
+    prototype['exponent'] = prototype.exponent = null;
+    prototype['unsignedMantissa'] = prototype.unsignedMantissa = null;
+    prototype['flags'] = prototype.flags = null;
+    prototype['getExponent'] = prototype.getExponent = function() {
         return this.exponent;
     };
-    prototype['getUnsignedMantissa'] = function() {
+    prototype['getUnsignedMantissa'] = prototype.getUnsignedMantissa = function() {
         return this.unsignedMantissa;
     };
-    prototype['getMantissa'] = function() {
+    prototype['getMantissa'] = prototype.getMantissa = function() {
         return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
     };
-    prototype['EqualsInternal'] = function(otherValue) {
+    prototype['EqualsInternal'] = prototype.EqualsInternal = function(otherValue) {
         if (otherValue == null) return false;
         return this.exponent.equals(otherValue.exponent) && this.unsignedMantissa.equals(otherValue.unsignedMantissa) && this.flags == otherValue.flags;
     };
-    prototype['equals'] = function(obj) {
+    prototype['equals'] = prototype.equals = function(obj) {
         return this.EqualsInternal((obj.constructor==ExtendedDecimal) ? obj : null);
     };
-    prototype['hashCode'] = function() {
+    prototype['hashCode'] = prototype.hashCode = function() {
         var hashCode_ = 0;
         {
             hashCode_ = hashCode_ + 1000000007 * this.exponent.hashCode();
@@ -7975,16 +7980,16 @@ function(mantissa, exponent) {
         }
         return hashCode_;
     };
-    constructor['CreateWithFlags'] = function(mantissa, exponent, flags) {
+    constructor['CreateWithFlags'] = constructor.CreateWithFlags = function(mantissa, exponent, flags) {
         var ext = new ExtendedDecimal(mantissa, exponent);
         ext.flags = flags;
         return ext;
     };
-    constructor['MaxSafeInt'] = 214748363;
+    constructor['MaxSafeInt'] = constructor.MaxSafeInt = 214748363;
     
-    constructor['FromString'] = function(str) {
+    constructor['FromString'] = constructor.FromString = function(str) {
         if (str == null) throw new Error("str");
-        if (str.length == 0) throw "exception";
+        if (str.length == 0) throw new Error();
         var offset = 0;
         var negative = false;
         if (str.charAt(0) == '+' || str.charAt(0) == '-') {
@@ -8025,7 +8030,7 @@ function(mantissa, exponent) {
                             mantInt = mantInt + (thisdigit);
                         }
                     } else {
-                        throw "exception";
+                        throw new Error();
                     }
                 }
                 var bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
@@ -8052,7 +8057,7 @@ function(mantissa, exponent) {
                             mantInt = mantInt + (thisdigit);
                         }
                     } else {
-                        throw "exception";
+                        throw new Error();
                     }
                 }
                 var bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
@@ -8080,23 +8085,23 @@ function(mantissa, exponent) {
                     }
                 }
             } else if (str.charAt(i) == '.') {
-                if (haveDecimalPoint) throw "exception";
+                if (haveDecimalPoint) throw new Error();
                 haveDecimalPoint = true;
             } else if (str.charAt(i) == 'E' || str.charAt(i) == 'e') {
                 haveExponent = true;
                 i++;
                 break;
             } else {
-                throw "exception";
+                throw new Error();
             }
         }
-        if (!haveDigits) throw "exception";
+        if (!haveDigits) throw new Error();
         if (haveExponent) {
             var exp = null;
             var expInt = 0;
             offset = 1;
             haveDigits = false;
-            if (i == str.length) throw "exception";
+            if (i == str.length) throw new Error();
             if (str.charAt(i) == '+' || str.charAt(i) == '-') {
                 if (str.charAt(i) == '-') offset = -1;
                 i++;
@@ -8114,10 +8119,10 @@ function(mantissa, exponent) {
                         expInt = expInt + (thisdigit);
                     }
                 } else {
-                    throw "exception";
+                    throw new Error();
                 }
             }
-            if (!haveDigits) throw "exception";
+            if (!haveDigits) throw new Error();
             if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
                 newScaleInt = expInt;
             } else if (exp == null) {
@@ -8128,30 +8133,30 @@ function(mantissa, exponent) {
                 if (offset < 0) newScale.Subtract(exp); else newScale.Add(exp);
             }
         } else if (i != str.length) {
-            throw "exception";
+            throw new Error();
         }
         return ExtendedDecimal.CreateWithFlags((mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(), (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(), negative ? BigNumberFlags.FlagNegative : 0);
     };
-    constructor['DecimalMathHelper'] = function ExtendedDecimal$DecimalMathHelper(){};
+    constructor['DecimalMathHelper'] = constructor.DecimalMathHelper = function ExtendedDecimal$DecimalMathHelper(){};
     (function(constructor,prototype){
         
-        prototype['GetRadix'] = function() {
+        prototype['GetRadix'] = prototype.GetRadix = function() {
             return 10;
         };
         
-        prototype['GetSign'] = function(value) {
+        prototype['GetSign'] = prototype.GetSign = function(value) {
             return value.signum();
         };
         
-        prototype['GetMantissa'] = function(value) {
+        prototype['GetMantissa'] = prototype.GetMantissa = function(value) {
             return value.unsignedMantissa;
         };
         
-        prototype['GetExponent'] = function(value) {
+        prototype['GetExponent'] = prototype.GetExponent = function(value) {
             return value.exponent;
         };
         
-        prototype['RescaleByExponentDiff'] = function(mantissa, e1, e2) {
+        prototype['RescaleByExponentDiff'] = prototype.RescaleByExponentDiff = function(mantissa, e1, e2) {
             var negative = (mantissa.signum() < 0);
             if (mantissa.signum() == 0) return BigInteger.ZERO;
             var diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
@@ -8163,19 +8168,19 @@ function(mantissa, exponent) {
             return mantissa;
         };
         
-        prototype['CreateNew'] = function(mantissa, exponent) {
+        prototype['CreateNew'] = prototype.CreateNew = function(mantissa, exponent) {
             return new ExtendedDecimal(mantissa, exponent);
         };
         
-        prototype['CreateShiftAccumulatorWithDigits'] = function(bigint, lastDigit, olderDigits) {
+        prototype['CreateShiftAccumulatorWithDigits'] = prototype.CreateShiftAccumulatorWithDigits = function(bigint, lastDigit, olderDigits) {
             return new DigitShiftAccumulator(bigint, lastDigit, olderDigits);
         };
         
-        prototype['CreateShiftAccumulator'] = function(bigint) {
+        prototype['CreateShiftAccumulator'] = prototype.CreateShiftAccumulator = function(bigint) {
             return new DigitShiftAccumulator(bigint, 0, 0);
         };
         
-        prototype['HasTerminatingRadixExpansion'] = function(numerator, denominator) {
+        prototype['HasTerminatingRadixExpansion'] = prototype.HasTerminatingRadixExpansion = function(numerator, denominator) {
             
             var gcd = numerator.gcd(denominator);
             denominator = denominator.divide(gcd);
@@ -8197,7 +8202,7 @@ function(mantissa, exponent) {
             return denominator.compareTo(BigInteger.ONE) == 0;
         };
         
-        prototype['MultiplyByRadixPower'] = function(bigint, power) {
+        prototype['MultiplyByRadixPower'] = prototype.MultiplyByRadixPower = function(bigint, power) {
             if (power.signum() <= 0) return bigint;
             if (bigint.signum() == 0) return bigint;
             if (bigint.compareTo(BigInteger.ONE) != 0) {
@@ -8216,26 +8221,26 @@ function(mantissa, exponent) {
             }
         };
         
-        prototype['GetFlags'] = function(value) {
+        prototype['GetFlags'] = prototype.GetFlags = function(value) {
             return value.flags;
         };
         
-        prototype['CreateNewWithFlags'] = function(mantissa, exponent, flags) {
+        prototype['CreateNewWithFlags'] = prototype.CreateNewWithFlags = function(mantissa, exponent, flags) {
             return ExtendedDecimal.CreateWithFlags(mantissa, exponent, flags);
         };
         
-        prototype['GetArithmeticSupport'] = function() {
+        prototype['GetArithmeticSupport'] = prototype.GetArithmeticSupport = function() {
             return BigNumberFlags.FiniteAndNonFinite;
         };
         
-        prototype['ValueOf'] = function(val) {
+        prototype['ValueOf'] = prototype.ValueOf = function(val) {
             return ExtendedDecimal.FromInt64(val);
         };
     })(ExtendedDecimal.DecimalMathHelper,ExtendedDecimal.DecimalMathHelper.prototype);
 
-    constructor['AppendString'] = function(builder, c, count) {
+    constructor['AppendString'] = constructor.AppendString = function(builder, c, count) {
         if (count.CompareToInt(2147483647) > 0 || count.signum() < 0) {
-            throw "exception";
+            throw new Error();
         }
         var icount = count.AsInt32();
         for (var i = icount - 1; i >= 0; i--) {
@@ -8243,7 +8248,7 @@ function(mantissa, exponent) {
         }
         return true;
     };
-    prototype['ToStringInternal'] = function(mode) {
+    prototype['ToStringInternal'] = prototype.ToStringInternal = function(mode) {
         
         var negative = (this.flags & BigNumberFlags.FlagNegative) != 0;
         if ((this.flags & BigNumberFlags.FlagInfinity) != 0) {
@@ -8329,7 +8334,7 @@ function(mantissa, exponent) {
                     ExtendedDecimal.AppendString(builder, '0', FastInteger.Copy(decimalPoint).Negate());
                     builder.append(mantissaString);
                 } else if (cmp == 0) {
-                    if (!decimalPoint.CanFitInInt32()) throw "exception";
+                    if (!decimalPoint.CanFitInInt32()) throw new Error();
                     var tmpInt = decimalPoint.AsInt32();
                     if (tmpInt < 0) tmpInt = 0;
                     var tmpFast = new FastInteger(mantissaString.length).AddInt(6);
@@ -8340,7 +8345,7 @@ function(mantissa, exponent) {
                     for (var arrfillI = tmpInt; arrfillI < (tmpInt) + (mantissaString.length - tmpInt); arrfillI++) builder.append(mantissaString.charAt(arrfillI));
                 } else if (decimalPoint.CompareToInt(mantissaString.length) > 0) {
                     var insertionPoint = sbLength;
-                    if (!insertionPoint.CanFitInInt32()) throw "exception";
+                    if (!insertionPoint.CanFitInInt32()) throw new Error();
                     var tmpInt = insertionPoint.AsInt32();
                     if (tmpInt < 0) tmpInt = 0;
                     var tmpFast = new FastInteger(mantissaString.length).AddInt(6);
@@ -8351,7 +8356,7 @@ function(mantissa, exponent) {
                     builder.append('.');
                     for (var arrfillI = tmpInt; arrfillI < (tmpInt) + (mantissaString.length - tmpInt); arrfillI++) builder.append(mantissaString.charAt(arrfillI));
                 } else {
-                    if (!decimalPoint.CanFitInInt32()) throw "exception";
+                    if (!decimalPoint.CanFitInInt32()) throw new Error();
                     var tmpInt = decimalPoint.AsInt32();
                     if (tmpInt < 0) tmpInt = 0;
                     var tmpFast = new FastInteger(mantissaString.length).AddInt(6);
@@ -8393,7 +8398,7 @@ function(mantissa, exponent) {
                     ExtendedDecimal.AppendString(builder, '0', tmp);
                 } else if (cmp < 0) {
                     
-                    if (!tmp.CanFitInInt32()) throw "exception";
+                    if (!tmp.CanFitInInt32()) throw new Error();
                     var tmpInt = tmp.AsInt32();
                     if (tmp.signum() < 0) tmpInt = 0;
                     var tmpFast = new FastInteger(mantissaString.length).AddInt(6);
@@ -8431,7 +8436,7 @@ function(mantissa, exponent) {
         }
     };
     
-    prototype['ToBigInteger'] = function() {
+    prototype['ToBigInteger'] = prototype.ToBigInteger = function() {
         var sign = this.getExponent().signum();
         if (sign == 0) {
             var bigmantissa = this.getMantissa();
@@ -8448,9 +8453,9 @@ function(mantissa, exponent) {
             return bigmantissa;
         }
     };
-    constructor['OneShift62'] = BigInteger.ONE.shiftLeft(62);
+    constructor['OneShift62'] = constructor.OneShift62 = BigInteger.ONE.shiftLeft(62);
     
-    prototype['ToExtendedFloat'] = function() {
+    prototype['ToExtendedFloat'] = prototype.ToExtendedFloat = function() {
         if (this.IsNaN() || this.IsInfinity()) {
             return ExtendedFloat.CreateWithFlags(this.unsignedMantissa, this.exponent, this.flags);
         }
@@ -8518,7 +8523,7 @@ function(mantissa, exponent) {
         }
     };
     
-    prototype['ToSingle'] = function() {
+    prototype['ToSingle'] = prototype.ToSingle = function() {
         if (this.IsPositiveInfinity()) return Number.POSITIVE_INFINITY;
         if (this.IsNegativeInfinity()) return Number.NEGATIVE_INFINITY;
         if (this.isNegative() && this.signum() == 0) {
@@ -8527,7 +8532,7 @@ function(mantissa, exponent) {
         return this.ToExtendedFloat().ToSingle();
     };
     
-    prototype['ToDouble'] = function() {
+    prototype['ToDouble'] = prototype.ToDouble = function() {
         if (this.IsPositiveInfinity()) return Number.POSITIVE_INFINITY;
         if (this.IsNegativeInfinity()) return Number.NEGATIVE_INFINITY;
         if (this.isNegative() && this.signum() == 0) {
@@ -8536,7 +8541,7 @@ function(mantissa, exponent) {
         return this.ToExtendedFloat().ToDouble();
     };
     
-    constructor['FromSingle'] = function(flt) {
+    constructor['FromSingle'] = constructor.FromSingle = function(flt) {
         var value = Float.floatToRawIntBits(flt);
         var neg = ((value >> 31) != 0);
         var fpExponent = ((value >> 23) & 255);
@@ -8582,16 +8587,16 @@ function(mantissa, exponent) {
             return new ExtendedDecimal(bigmantissa, BigInteger.valueOf(fpExponent));
         }
     };
-    constructor['FromBigInteger'] = function(bigint) {
+    constructor['FromBigInteger'] = constructor.FromBigInteger = function(bigint) {
         return new ExtendedDecimal(bigint, BigInteger.ZERO);
     };
-    constructor['FromInt64'] = function(valueSmall_obj) {
+    constructor['FromInt64'] = constructor.FromInt64 = function(valueSmall_obj) {
         var valueSmall = JSInteropFactory.createLong(valueSmall_obj);
         var bigint = BigInteger.valueOf(valueSmall);
         return new ExtendedDecimal(bigint, BigInteger.ZERO);
     };
     
-    constructor['FromDouble'] = function(dbl) {
+    constructor['FromDouble'] = constructor.FromDouble = function(dbl) {
         var value = Extras.DoubleToIntegers(dbl);
         var fpExponent = ((value[1] >> 20) & 2047);
         var neg = (value[1] >> 31) != 0;
@@ -8638,7 +8643,7 @@ function(mantissa, exponent) {
         }
     };
     
-    constructor['FromExtendedFloat'] = function(bigfloat) {
+    constructor['FromExtendedFloat'] = constructor.FromExtendedFloat = function(bigfloat) {
         if ((bigfloat) == null) throw new Error("bigfloat");
         if (bigfloat.IsNaN() || bigfloat.IsInfinity()) {
             return ExtendedDecimal.CreateWithFlags(bigfloat.getUnsignedMantissa(), bigfloat.getExponent(), (bigfloat.isNegative() ? BigNumberFlags.FlagNegative : 0) | (bigfloat.IsInfinity() ? BigNumberFlags.FlagInfinity : 0) | (bigfloat.IsQuietNaN() ? BigNumberFlags.FlagQuietNaN : 0) | (bigfloat.IsSignalingNaN() ? BigNumberFlags.FlagSignalingNaN : 0));
@@ -8676,25 +8681,25 @@ function(mantissa, exponent) {
         }
     };
     
-    prototype['toString'] = function() {
+    prototype['toString'] = prototype.toString = function() {
         return this.ToStringInternal(0);
     };
     
-    prototype['ToEngineeringString'] = function() {
+    prototype['ToEngineeringString'] = prototype.ToEngineeringString = function() {
         return this.ToStringInternal(1);
     };
     
-    prototype['ToPlainString'] = function() {
+    prototype['ToPlainString'] = prototype.ToPlainString = function() {
         return this.ToStringInternal(2);
     };
-    constructor['One'] = new ExtendedDecimal(BigInteger.ONE, BigInteger.ZERO);
-    constructor['Zero'] = new ExtendedDecimal(BigInteger.ZERO, BigInteger.ZERO);
-    constructor['NegativeZero'] = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
-    constructor['Ten'] = new ExtendedDecimal(BigInteger.TEN, BigInteger.ZERO);
-    constructor['NaN'] = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
-    constructor['SignalingNaN'] = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagSignalingNaN);
-    constructor['PositiveInfinity'] = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity);
-    constructor['NegativeInfinity'] = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
+    constructor['One'] = constructor.One = new ExtendedDecimal(BigInteger.ONE, BigInteger.ZERO);
+    constructor['Zero'] = constructor.Zero = new ExtendedDecimal(BigInteger.ZERO, BigInteger.ZERO);
+    constructor['NegativeZero'] = constructor.NegativeZero = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
+    constructor['Ten'] = constructor.Ten = new ExtendedDecimal(BigInteger.TEN, BigInteger.ZERO);
+    constructor['NaN'] = constructor.NaN = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
+    constructor['SignalingNaN'] = constructor.SignalingNaN = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagSignalingNaN);
+    constructor['PositiveInfinity'] = constructor.PositiveInfinity = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity);
+    constructor['NegativeInfinity'] = constructor.NegativeInfinity = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     
     
     
@@ -8703,71 +8708,71 @@ function(mantissa, exponent) {
     
     
     
-    prototype['IsPositiveInfinity'] = function() {
+    prototype['IsPositiveInfinity'] = prototype.IsPositiveInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     };
     
-    prototype['IsNegativeInfinity'] = function() {
+    prototype['IsNegativeInfinity'] = prototype.IsNegativeInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity);
     };
     
-    prototype['IsNaN'] = function() {
+    prototype['IsNaN'] = prototype.IsNaN = function() {
         return (this.flags & (BigNumberFlags.FlagQuietNaN | BigNumberFlags.FlagSignalingNaN)) != 0;
     };
     
-    prototype['IsInfinity'] = function() {
+    prototype['IsInfinity'] = prototype.IsInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity)) != 0;
     };
     
-    prototype['isNegative'] = function() {
+    prototype['isNegative'] = prototype.isNegative = function() {
         return (this.flags & (BigNumberFlags.FlagNegative)) != 0;
     };
     
-    prototype['IsQuietNaN'] = function() {
+    prototype['IsQuietNaN'] = prototype.IsQuietNaN = function() {
         return (this.flags & (BigNumberFlags.FlagQuietNaN)) != 0;
     };
     
-    prototype['IsSignalingNaN'] = function() {
+    prototype['IsSignalingNaN'] = prototype.IsSignalingNaN = function() {
         return (this.flags & (BigNumberFlags.FlagSignalingNaN)) != 0;
     };
     
-    prototype['signum'] = function() {
+    prototype['signum'] = prototype.signum = function() {
         return this.unsignedMantissa.signum() == 0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
     };
     
-    prototype['isZero'] = function() {
+    prototype['isZero'] = prototype.isZero = function() {
         return this.unsignedMantissa.signum() == 0;
     };
     
-    prototype['DivideToSameExponent'] = function(divisor, rounding) {
+    prototype['DivideToSameExponent'] = prototype.DivideToSameExponent = function(divisor, rounding) {
         return this.DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
     };
     
-    prototype['Reduce'] = function(ctx) {
+    prototype['Reduce'] = prototype.Reduce = function(ctx) {
         return ExtendedDecimal.math.Reduce(this, ctx);
     };
     
-    prototype['RemainderNaturalScale'] = function(divisor, ctx) {
+    prototype['RemainderNaturalScale'] = prototype.RemainderNaturalScale = function(divisor, ctx) {
         return this.Subtract(this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null), ctx);
     };
     
-    prototype['Divide'] = function(divisor, ctx) {
+    prototype['Divide'] = prototype.Divide = function(divisor, ctx) {
         return ExtendedDecimal.math.Divide(this, divisor, ctx);
     };
     
-    prototype['DivideToExponent'] = function(divisor, exponent, ctx) {
+    prototype['DivideToExponent'] = prototype.DivideToExponent = function(divisor, exponent, ctx) {
         return ExtendedDecimal.math.DivideToExponent(this, divisor, exponent, ctx);
     };
     
-    prototype['Abs'] = function(context) {
+    prototype['Abs'] = prototype.Abs = function(context) {
         return ExtendedDecimal.math.Abs(this, context);
     };
     
-    prototype['Negate'] = function(context) {
+    prototype['Negate'] = prototype.Negate = function(context) {
         return ExtendedDecimal.math.Negate(this, context);
     };
     
-    prototype['Subtract'] = function(decfrac, ctx) {
+    prototype['Subtract'] = prototype.Subtract = function(decfrac, ctx) {
         if ((decfrac) == null) throw new Error("decfrac");
         var negated = decfrac;
         if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
@@ -8776,98 +8781,98 @@ function(mantissa, exponent) {
         }
         return this.Add(negated, ctx);
     };
-    constructor['math'] = new RadixMath(new ExtendedDecimal.DecimalMathHelper());
+    constructor['math'] = constructor.math = new RadixMath(new ExtendedDecimal.DecimalMathHelper());
     
     
-    prototype['DivideToIntegerNaturalScale'] = function(divisor, ctx) {
+    prototype['DivideToIntegerNaturalScale'] = prototype.DivideToIntegerNaturalScale = function(divisor, ctx) {
         return ExtendedDecimal.math.DivideToIntegerNaturalScale(this, divisor, ctx);
     };
     
-    prototype['DivideToIntegerZeroScale'] = function(divisor, ctx) {
+    prototype['DivideToIntegerZeroScale'] = prototype.DivideToIntegerZeroScale = function(divisor, ctx) {
         return ExtendedDecimal.math.DivideToIntegerZeroScale(this, divisor, ctx);
     };
     
-    prototype['Remainder'] = function(divisor, ctx) {
+    prototype['Remainder'] = prototype.Remainder = function(divisor, ctx) {
         return ExtendedDecimal.math.Remainder(this, divisor, ctx);
     };
     
-    prototype['RemainderNear'] = function(divisor, ctx) {
+    prototype['RemainderNear'] = prototype.RemainderNear = function(divisor, ctx) {
         return ExtendedDecimal.math.RemainderNear(this, divisor, ctx);
     };
     
-    prototype['NextMinus'] = function(ctx) {
+    prototype['NextMinus'] = prototype.NextMinus = function(ctx) {
         return ExtendedDecimal.math.NextMinus(this, ctx);
     };
     
-    prototype['NextPlus'] = function(ctx) {
+    prototype['NextPlus'] = prototype.NextPlus = function(ctx) {
         return ExtendedDecimal.math.NextPlus(this, ctx);
     };
     
-    prototype['NextToward'] = function(otherValue, ctx) {
+    prototype['NextToward'] = prototype.NextToward = function(otherValue, ctx) {
         return ExtendedDecimal.math.NextToward(this, otherValue, ctx);
     };
     
-    constructor['Max'] = function(first, second, ctx) {
+    constructor['Max'] = constructor.Max = function(first, second, ctx) {
         return ExtendedDecimal.math.Max(first, second, ctx);
     };
     
-    constructor['Min'] = function(first, second, ctx) {
+    constructor['Min'] = constructor.Min = function(first, second, ctx) {
         return ExtendedDecimal.math.Min(first, second, ctx);
     };
     
-    constructor['MaxMagnitude'] = function(first, second, ctx) {
+    constructor['MaxMagnitude'] = constructor.MaxMagnitude = function(first, second, ctx) {
         return ExtendedDecimal.math.MaxMagnitude(first, second, ctx);
     };
     
-    constructor['MinMagnitude'] = function(first, second, ctx) {
+    constructor['MinMagnitude'] = constructor.MinMagnitude = function(first, second, ctx) {
         return ExtendedDecimal.math.MinMagnitude(first, second, ctx);
     };
     
-    prototype['compareTo'] = function(other) {
+    prototype['compareTo'] = prototype.compareTo = function(other) {
         return ExtendedDecimal.math.compareTo(this, other);
     };
     
-    prototype['CompareToWithContext'] = function(other, ctx) {
+    prototype['CompareToWithContext'] = prototype.CompareToWithContext = function(other, ctx) {
         return ExtendedDecimal.math.CompareToWithContext(this, other, false, ctx);
     };
     
-    prototype['CompareToSignal'] = function(other, ctx) {
+    prototype['CompareToSignal'] = prototype.CompareToSignal = function(other, ctx) {
         return ExtendedDecimal.math.CompareToWithContext(this, other, true, ctx);
     };
     
-    prototype['Add'] = function(decfrac, ctx) {
+    prototype['Add'] = prototype.Add = function(decfrac, ctx) {
         return ExtendedDecimal.math.Add(this, decfrac, ctx);
     };
     
-    prototype['Quantize'] = function(otherValue, ctx) {
+    prototype['Quantize'] = prototype.Quantize = function(otherValue, ctx) {
         return ExtendedDecimal.math.Quantize(this, otherValue, ctx);
     };
     
-    prototype['RoundToIntegralExact'] = function(ctx) {
+    prototype['RoundToIntegralExact'] = prototype.RoundToIntegralExact = function(ctx) {
         return ExtendedDecimal.math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     };
     
-    prototype['RoundToIntegralNoRoundedFlag'] = function(ctx) {
+    prototype['RoundToIntegralNoRoundedFlag'] = prototype.RoundToIntegralNoRoundedFlag = function(ctx) {
         return ExtendedDecimal.math.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
     };
     
-    prototype['RoundToExponentExact'] = function(exponent, ctx) {
+    prototype['RoundToExponentExact'] = prototype.RoundToExponentExact = function(exponent, ctx) {
         return ExtendedDecimal.math.RoundToExponentExact(this, exponent, ctx);
     };
     
-    prototype['RoundToExponent'] = function(exponent, ctx) {
+    prototype['RoundToExponent'] = prototype.RoundToExponent = function(exponent, ctx) {
         return ExtendedDecimal.math.RoundToExponentSimple(this, exponent, ctx);
     };
     
-    prototype['Multiply'] = function(op, ctx) {
+    prototype['Multiply'] = prototype.Multiply = function(op, ctx) {
         return ExtendedDecimal.math.Multiply(this, op, ctx);
     };
     
-    prototype['MultiplyAndAdd'] = function(op, augend, ctx) {
+    prototype['MultiplyAndAdd'] = prototype.MultiplyAndAdd = function(op, augend, ctx) {
         return ExtendedDecimal.math.MultiplyAndAdd(this, op, augend, ctx);
     };
     
-    prototype['MultiplyAndSubtract'] = function(op, subtrahend, ctx) {
+    prototype['MultiplyAndSubtract'] = prototype.MultiplyAndSubtract = function(op, subtrahend, ctx) {
         if ((subtrahend) == null) throw new Error("decfrac");
         var negated = subtrahend;
         if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
@@ -8877,21 +8882,22 @@ function(mantissa, exponent) {
         return ExtendedDecimal.math.MultiplyAndAdd(this, op, negated, ctx);
     };
     
-    prototype['RoundToPrecision'] = function(ctx) {
+    prototype['RoundToPrecision'] = prototype.RoundToPrecision = function(ctx) {
         return ExtendedDecimal.math.RoundToPrecision(this, ctx);
     };
     
-    prototype['Plus'] = function(ctx) {
+    prototype['Plus'] = prototype.Plus = function(ctx) {
         return ExtendedDecimal.math.Plus(this, ctx);
     };
     
-    prototype['RoundToBinaryPrecision'] = function(ctx) {
+    prototype['RoundToBinaryPrecision'] = prototype.RoundToBinaryPrecision = function(ctx) {
         return ExtendedDecimal.math.RoundToBinaryPrecision(this, ctx);
     };
 })(ExtendedDecimal,ExtendedDecimal.prototype);
 
 
 if(typeof exports!=="undefined")exports['ExtendedDecimal']=ExtendedDecimal;
+if(typeof window!=="undefined")window['ExtendedDecimal']=ExtendedDecimal;
 
 var ExtendedFloat = 
 
@@ -8903,26 +8909,26 @@ function(mantissa, exponent) {
     this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
 };
 (function(constructor,prototype){
-    prototype['exponent'] = null;
-    prototype['mantissa'] = null;
-    prototype['flags'] = null;
-    prototype['getExponent'] = function() {
+    prototype['exponent'] = prototype.exponent = null;
+    prototype['mantissa'] = prototype.mantissa = null;
+    prototype['flags'] = prototype.flags = null;
+    prototype['getExponent'] = prototype.getExponent = function() {
         return this.exponent;
     };
-    prototype['getUnsignedMantissa'] = function() {
+    prototype['getUnsignedMantissa'] = prototype.getUnsignedMantissa = function() {
         return this.mantissa;
     };
-    prototype['getMantissa'] = function() {
+    prototype['getMantissa'] = prototype.getMantissa = function() {
         return this.isNegative() ? ((this.mantissa).negate()) : this.mantissa;
     };
-    prototype['EqualsInternal'] = function(otherValue) {
+    prototype['EqualsInternal'] = prototype.EqualsInternal = function(otherValue) {
         if (otherValue == null) return false;
         return this.exponent.equals(otherValue.exponent) && this.mantissa.equals(otherValue.mantissa) && this.flags == otherValue.flags;
     };
-    prototype['equals'] = function(obj) {
+    prototype['equals'] = prototype.equals = function(obj) {
         return this.EqualsInternal((obj.constructor==ExtendedFloat) ? obj : null);
     };
-    prototype['hashCode'] = function() {
+    prototype['hashCode'] = prototype.hashCode = function() {
         var hashCode_ = 0;
         {
             hashCode_ = hashCode_ + 1000000007 * this.exponent.hashCode();
@@ -8931,20 +8937,20 @@ function(mantissa, exponent) {
         }
         return hashCode_;
     };
-    constructor['CreateWithFlags'] = function(mantissa, exponent, flags) {
+    constructor['CreateWithFlags'] = constructor.CreateWithFlags = function(mantissa, exponent, flags) {
         var ext = new ExtendedFloat(mantissa, exponent);
         ext.flags = flags;
         return ext;
     };
-    constructor['MaxSafeInt'] = 214748363;
+    constructor['MaxSafeInt'] = constructor.MaxSafeInt = 214748363;
     
-    constructor['FromString'] = function(str) {
+    constructor['FromString'] = constructor.FromString = function(str) {
         if (str == null) throw new Error("str");
         return ExtendedDecimal.FromString(str).ToExtendedFloat();
     };
-    constructor['BigShiftIteration'] = BigInteger.valueOf(1000000);
-    constructor['ShiftIteration'] = 1000000;
-    constructor['ShiftLeft'] = function(val, bigShift) {
+    constructor['BigShiftIteration'] = constructor.BigShiftIteration = BigInteger.valueOf(1000000);
+    constructor['ShiftIteration'] = constructor.ShiftIteration = 1000000;
+    constructor['ShiftLeft'] = constructor.ShiftLeft = function(val, bigShift) {
         while (bigShift.compareTo(ExtendedFloat.BigShiftIteration) > 0) {
             val = val.shiftLeft(1000000);
             bigShift = bigShift.subtract(ExtendedFloat.BigShiftIteration);
@@ -8953,7 +8959,7 @@ function(mantissa, exponent) {
         val = val.shiftLeft(lastshift);
         return val;
     };
-    constructor['ShiftLeftInt'] = function(val, shift) {
+    constructor['ShiftLeftInt'] = constructor.ShiftLeftInt = function(val, shift) {
         while (shift > ExtendedFloat.ShiftIteration) {
             val = val.shiftLeft(1000000);
             shift -= ExtendedFloat.ShiftIteration;
@@ -8962,26 +8968,26 @@ function(mantissa, exponent) {
         val = val.shiftLeft(lastshift);
         return val;
     };
-    constructor['BinaryMathHelper'] = function ExtendedFloat$BinaryMathHelper(){};
+    constructor['BinaryMathHelper'] = constructor.BinaryMathHelper = function ExtendedFloat$BinaryMathHelper(){};
     (function(constructor,prototype){
         
-        prototype['GetRadix'] = function() {
+        prototype['GetRadix'] = prototype.GetRadix = function() {
             return 2;
         };
         
-        prototype['GetSign'] = function(value) {
+        prototype['GetSign'] = prototype.GetSign = function(value) {
             return value.signum();
         };
         
-        prototype['GetMantissa'] = function(value) {
+        prototype['GetMantissa'] = prototype.GetMantissa = function(value) {
             return value.mantissa;
         };
         
-        prototype['GetExponent'] = function(value) {
+        prototype['GetExponent'] = prototype.GetExponent = function(value) {
             return value.exponent;
         };
         
-        prototype['RescaleByExponentDiff'] = function(mantissa, e1, e2) {
+        prototype['RescaleByExponentDiff'] = prototype.RescaleByExponentDiff = function(mantissa, e1, e2) {
             var negative = (mantissa.signum() < 0);
             if (negative) mantissa = mantissa.negate();
             var diff = (e1.subtract(e2)).abs();
@@ -8990,19 +8996,19 @@ function(mantissa, exponent) {
             return mantissa;
         };
         
-        prototype['CreateNew'] = function(mantissa, exponent) {
+        prototype['CreateNew'] = prototype.CreateNew = function(mantissa, exponent) {
             return new ExtendedFloat(mantissa, exponent);
         };
         
-        prototype['CreateShiftAccumulatorWithDigits'] = function(bigint, lastDigit, olderDigits) {
+        prototype['CreateShiftAccumulatorWithDigits'] = prototype.CreateShiftAccumulatorWithDigits = function(bigint, lastDigit, olderDigits) {
             return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
         };
         
-        prototype['CreateShiftAccumulator'] = function(bigint) {
+        prototype['CreateShiftAccumulator'] = prototype.CreateShiftAccumulator = function(bigint) {
             return new BitShiftAccumulator(bigint, 0, 0);
         };
         
-        prototype['HasTerminatingRadixExpansion'] = function(num, den) {
+        prototype['HasTerminatingRadixExpansion'] = prototype.HasTerminatingRadixExpansion = function(num, den) {
             var gcd = num.gcd(den);
             if (gcd.signum() == 0) return false;
             den = den.divide(gcd);
@@ -9012,7 +9018,7 @@ function(mantissa, exponent) {
             return den.equals(BigInteger.ONE);
         };
         
-        prototype['MultiplyByRadixPower'] = function(bigint, power) {
+        prototype['MultiplyByRadixPower'] = prototype.MultiplyByRadixPower = function(bigint, power) {
             if (power.signum() <= 0) return bigint;
             if (power.CanFitInInt32()) {
                 return ExtendedFloat.ShiftLeftInt(bigint, power.AsInt32());
@@ -9021,27 +9027,27 @@ function(mantissa, exponent) {
             }
         };
         
-        prototype['GetFlags'] = function(value) {
+        prototype['GetFlags'] = prototype.GetFlags = function(value) {
             return value.mantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
         };
         
-        prototype['CreateNewWithFlags'] = function(mantissa, exponent, flags) {
+        prototype['CreateNewWithFlags'] = prototype.CreateNewWithFlags = function(mantissa, exponent, flags) {
             var neg = (flags & BigNumberFlags.FlagNegative) != 0;
             if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0)) mantissa = mantissa.negate();
             return new ExtendedFloat(mantissa, exponent);
         };
         
-        prototype['GetArithmeticSupport'] = function() {
+        prototype['GetArithmeticSupport'] = prototype.GetArithmeticSupport = function() {
             return BigNumberFlags.FiniteOnly;
         };
         
-        prototype['ValueOf'] = function(val) {
+        prototype['ValueOf'] = prototype.ValueOf = function(val) {
             return ExtendedFloat.FromInt64(val);
         };
     })(ExtendedFloat.BinaryMathHelper,ExtendedFloat.BinaryMathHelper.prototype);
 
     
-    prototype['ToBigInteger'] = function() {
+    prototype['ToBigInteger'] = prototype.ToBigInteger = function() {
         var expsign = this.getExponent().signum();
         if (expsign == 0) {
             
@@ -9082,9 +9088,9 @@ function(mantissa, exponent) {
             return bigmantissa;
         }
     };
-    constructor['OneShift62'] = BigInteger.ONE.shiftLeft(62);
+    constructor['OneShift62'] = constructor.OneShift62 = BigInteger.ONE.shiftLeft(62);
     
-    prototype['ToExtendedFloat'] = function() {
+    prototype['ToExtendedFloat'] = prototype.ToExtendedFloat = function() {
         if (this.IsNaN() || this.IsInfinity()) throw new Error("This value is infinity or NaN");
         var bigintExp = this.getExponent();
         var bigintMant = this.getMantissa();
@@ -9147,10 +9153,10 @@ function(mantissa, exponent) {
             return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
         }
     };
-    constructor['OneShift23'] = BigInteger.ONE.shiftLeft(23);
-    constructor['OneShift52'] = BigInteger.ONE.shiftLeft(52);
+    constructor['OneShift23'] = constructor.OneShift23 = BigInteger.ONE.shiftLeft(23);
+    constructor['OneShift52'] = constructor.OneShift52 = BigInteger.ONE.shiftLeft(52);
     
-    prototype['ToSingle'] = function() {
+    prototype['ToSingle'] = prototype.ToSingle = function() {
         if (this.IsPositiveInfinity()) return Number.POSITIVE_INFINITY;
         if (this.IsNegativeInfinity()) return Number.NEGATIVE_INFINITY;
         if (this.IsNaN()) {
@@ -9244,7 +9250,7 @@ function(mantissa, exponent) {
         }
     };
     
-    prototype['ToDouble'] = function() {
+    prototype['ToDouble'] = prototype.ToDouble = function() {
         if (this.IsPositiveInfinity()) return Number.POSITIVE_INFINITY;
         if (this.IsNegativeInfinity()) return Number.NEGATIVE_INFINITY;
         if (this.IsNaN()) {
@@ -9347,7 +9353,7 @@ function(mantissa, exponent) {
         }
     };
     
-    constructor['FromSingle'] = function(flt) {
+    constructor['FromSingle'] = constructor.FromSingle = function(flt) {
         var value = Float.floatToRawIntBits(flt);
         var neg = ((value >> 31) != 0);
         var fpExponent = ((value >> 23) & 255);
@@ -9380,16 +9386,16 @@ function(mantissa, exponent) {
         bigmant = BigInteger.valueOf(fpMantissa);
         return new ExtendedFloat(bigmant, BigInteger.valueOf(fpExponent - 150));
     };
-    constructor['FromBigInteger'] = function(bigint) {
+    constructor['FromBigInteger'] = constructor.FromBigInteger = function(bigint) {
         return new ExtendedFloat(bigint, BigInteger.ZERO);
     };
-    constructor['FromInt64'] = function(valueSmall_obj) {
+    constructor['FromInt64'] = constructor.FromInt64 = function(valueSmall_obj) {
         var valueSmall = JSInteropFactory.createLong(valueSmall_obj);
         var bigint = BigInteger.valueOf(valueSmall);
         return new ExtendedFloat(bigint, BigInteger.ZERO);
     };
     
-    constructor['FromDouble'] = function(dbl) {
+    constructor['FromDouble'] = constructor.FromDouble = function(dbl) {
         var value = Extras.DoubleToIntegers(dbl);
         var fpExponent = ((value[1] >> 20) & 2047);
         var neg = (value[1] >> 31) != 0;
@@ -9419,29 +9425,29 @@ function(mantissa, exponent) {
         return ExtendedFloat.CreateWithFlags(FastInteger.WordsToBigInteger(value), BigInteger.valueOf(fpExponent - 1075), (neg ? BigNumberFlags.FlagNegative : 0));
     };
     
-    prototype['ToExtendedDecimal'] = function() {
+    prototype['ToExtendedDecimal'] = prototype.ToExtendedDecimal = function() {
         return ExtendedDecimal.FromExtendedFloat(this);
     };
     
-    prototype['toString'] = function() {
+    prototype['toString'] = prototype.toString = function() {
         return ExtendedDecimal.FromExtendedFloat(this).toString();
     };
     
-    prototype['ToEngineeringString'] = function() {
+    prototype['ToEngineeringString'] = prototype.ToEngineeringString = function() {
         return this.ToExtendedDecimal().ToEngineeringString();
     };
     
-    prototype['ToPlainString'] = function() {
+    prototype['ToPlainString'] = prototype.ToPlainString = function() {
         return this.ToExtendedDecimal().ToPlainString();
     };
-    constructor['One'] = new ExtendedFloat(BigInteger.ONE, BigInteger.ZERO);
-    constructor['Zero'] = new ExtendedFloat(BigInteger.ZERO, BigInteger.ZERO);
-    constructor['NegativeZero'] = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
-    constructor['Ten'] = new ExtendedFloat(BigInteger.TEN, BigInteger.ZERO);
-    constructor['NaN'] = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
-    constructor['SignalingNaN'] = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagSignalingNaN);
-    constructor['PositiveInfinity'] = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity);
-    constructor['NegativeInfinity'] = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
+    constructor['One'] = constructor.One = new ExtendedFloat(BigInteger.ONE, BigInteger.ZERO);
+    constructor['Zero'] = constructor.Zero = new ExtendedFloat(BigInteger.ZERO, BigInteger.ZERO);
+    constructor['NegativeZero'] = constructor.NegativeZero = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
+    constructor['Ten'] = constructor.Ten = new ExtendedFloat(BigInteger.TEN, BigInteger.ZERO);
+    constructor['NaN'] = constructor.NaN = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
+    constructor['SignalingNaN'] = constructor.SignalingNaN = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagSignalingNaN);
+    constructor['PositiveInfinity'] = constructor.PositiveInfinity = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity);
+    constructor['NegativeInfinity'] = constructor.NegativeInfinity = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     
     
     
@@ -9450,71 +9456,71 @@ function(mantissa, exponent) {
     
     
     
-    prototype['IsPositiveInfinity'] = function() {
+    prototype['IsPositiveInfinity'] = prototype.IsPositiveInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     };
     
-    prototype['IsNegativeInfinity'] = function() {
+    prototype['IsNegativeInfinity'] = prototype.IsNegativeInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity);
     };
     
-    prototype['IsNaN'] = function() {
+    prototype['IsNaN'] = prototype.IsNaN = function() {
         return (this.flags & (BigNumberFlags.FlagQuietNaN | BigNumberFlags.FlagSignalingNaN)) != 0;
     };
     
-    prototype['IsInfinity'] = function() {
+    prototype['IsInfinity'] = prototype.IsInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity)) != 0;
     };
     
-    prototype['isNegative'] = function() {
+    prototype['isNegative'] = prototype.isNegative = function() {
         return (this.flags & (BigNumberFlags.FlagNegative)) != 0;
     };
     
-    prototype['IsQuietNaN'] = function() {
+    prototype['IsQuietNaN'] = prototype.IsQuietNaN = function() {
         return (this.flags & (BigNumberFlags.FlagQuietNaN)) != 0;
     };
     
-    prototype['IsSignalingNaN'] = function() {
+    prototype['IsSignalingNaN'] = prototype.IsSignalingNaN = function() {
         return (this.flags & (BigNumberFlags.FlagSignalingNaN)) != 0;
     };
     
-    prototype['signum'] = function() {
+    prototype['signum'] = prototype.signum = function() {
         return this.mantissa.signum() == 0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
     };
     
-    prototype['isZero'] = function() {
+    prototype['isZero'] = prototype.isZero = function() {
         return this.mantissa.signum() == 0;
     };
     
-    prototype['DivideToSameExponent'] = function(divisor, rounding) {
+    prototype['DivideToSameExponent'] = prototype.DivideToSameExponent = function(divisor, rounding) {
         return this.DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
     };
     
-    prototype['Reduce'] = function(ctx) {
+    prototype['Reduce'] = prototype.Reduce = function(ctx) {
         return ExtendedFloat.math.Reduce(this, ctx);
     };
     
-    prototype['RemainderNaturalScale'] = function(divisor, ctx) {
+    prototype['RemainderNaturalScale'] = prototype.RemainderNaturalScale = function(divisor, ctx) {
         return this.Subtract(this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null), ctx);
     };
     
-    prototype['Divide'] = function(divisor, ctx) {
+    prototype['Divide'] = prototype.Divide = function(divisor, ctx) {
         return ExtendedFloat.math.Divide(this, divisor, ctx);
     };
     
-    prototype['DivideToExponent'] = function(divisor, exponent, ctx) {
+    prototype['DivideToExponent'] = prototype.DivideToExponent = function(divisor, exponent, ctx) {
         return ExtendedFloat.math.DivideToExponent(this, divisor, exponent, ctx);
     };
     
-    prototype['Abs'] = function(context) {
+    prototype['Abs'] = prototype.Abs = function(context) {
         return ExtendedFloat.math.Abs(this, context);
     };
     
-    prototype['Negate'] = function(context) {
+    prototype['Negate'] = prototype.Negate = function(context) {
         return ExtendedFloat.math.Negate(this, context);
     };
     
-    prototype['Subtract'] = function(decfrac, ctx) {
+    prototype['Subtract'] = prototype.Subtract = function(decfrac, ctx) {
         if ((decfrac) == null) throw new Error("decfrac");
         var negated = decfrac;
         if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
@@ -9523,98 +9529,98 @@ function(mantissa, exponent) {
         }
         return this.Add(negated, ctx);
     };
-    constructor['math'] = new RadixMath(new ExtendedFloat.BinaryMathHelper());
+    constructor['math'] = constructor.math = new RadixMath(new ExtendedFloat.BinaryMathHelper());
     
     
-    prototype['DivideToIntegerNaturalScale'] = function(divisor, ctx) {
+    prototype['DivideToIntegerNaturalScale'] = prototype.DivideToIntegerNaturalScale = function(divisor, ctx) {
         return ExtendedFloat.math.DivideToIntegerNaturalScale(this, divisor, ctx);
     };
     
-    prototype['DivideToIntegerZeroScale'] = function(divisor, ctx) {
+    prototype['DivideToIntegerZeroScale'] = prototype.DivideToIntegerZeroScale = function(divisor, ctx) {
         return ExtendedFloat.math.DivideToIntegerZeroScale(this, divisor, ctx);
     };
     
-    prototype['Remainder'] = function(divisor, ctx) {
+    prototype['Remainder'] = prototype.Remainder = function(divisor, ctx) {
         return ExtendedFloat.math.Remainder(this, divisor, ctx);
     };
     
-    prototype['RemainderNear'] = function(divisor, ctx) {
+    prototype['RemainderNear'] = prototype.RemainderNear = function(divisor, ctx) {
         return ExtendedFloat.math.RemainderNear(this, divisor, ctx);
     };
     
-    prototype['NextMinus'] = function(ctx) {
+    prototype['NextMinus'] = prototype.NextMinus = function(ctx) {
         return ExtendedFloat.math.NextMinus(this, ctx);
     };
     
-    prototype['NextPlus'] = function(ctx) {
+    prototype['NextPlus'] = prototype.NextPlus = function(ctx) {
         return ExtendedFloat.math.NextPlus(this, ctx);
     };
     
-    prototype['NextToward'] = function(otherValue, ctx) {
+    prototype['NextToward'] = prototype.NextToward = function(otherValue, ctx) {
         return ExtendedFloat.math.NextToward(this, otherValue, ctx);
     };
     
-    constructor['Max'] = function(first, second, ctx) {
+    constructor['Max'] = constructor.Max = function(first, second, ctx) {
         return ExtendedFloat.math.Max(first, second, ctx);
     };
     
-    constructor['Min'] = function(first, second, ctx) {
+    constructor['Min'] = constructor.Min = function(first, second, ctx) {
         return ExtendedFloat.math.Min(first, second, ctx);
     };
     
-    constructor['MaxMagnitude'] = function(first, second, ctx) {
+    constructor['MaxMagnitude'] = constructor.MaxMagnitude = function(first, second, ctx) {
         return ExtendedFloat.math.MaxMagnitude(first, second, ctx);
     };
     
-    constructor['MinMagnitude'] = function(first, second, ctx) {
+    constructor['MinMagnitude'] = constructor.MinMagnitude = function(first, second, ctx) {
         return ExtendedFloat.math.MinMagnitude(first, second, ctx);
     };
     
-    prototype['compareTo'] = function(other) {
+    prototype['compareTo'] = prototype.compareTo = function(other) {
         return ExtendedFloat.math.compareTo(this, other);
     };
     
-    prototype['CompareToWithContext'] = function(other, ctx) {
+    prototype['CompareToWithContext'] = prototype.CompareToWithContext = function(other, ctx) {
         return ExtendedFloat.math.CompareToWithContext(this, other, false, ctx);
     };
     
-    prototype['CompareToSignal'] = function(other, ctx) {
+    prototype['CompareToSignal'] = prototype.CompareToSignal = function(other, ctx) {
         return ExtendedFloat.math.CompareToWithContext(this, other, true, ctx);
     };
     
-    prototype['Add'] = function(decfrac, ctx) {
+    prototype['Add'] = prototype.Add = function(decfrac, ctx) {
         return ExtendedFloat.math.Add(this, decfrac, ctx);
     };
     
-    prototype['Quantize'] = function(otherValue, ctx) {
+    prototype['Quantize'] = prototype.Quantize = function(otherValue, ctx) {
         return ExtendedFloat.math.Quantize(this, otherValue, ctx);
     };
     
-    prototype['RoundToIntegralExact'] = function(ctx) {
+    prototype['RoundToIntegralExact'] = prototype.RoundToIntegralExact = function(ctx) {
         return ExtendedFloat.math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     };
     
-    prototype['RoundToIntegralNoRoundedFlag'] = function(ctx) {
+    prototype['RoundToIntegralNoRoundedFlag'] = prototype.RoundToIntegralNoRoundedFlag = function(ctx) {
         return ExtendedFloat.math.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
     };
     
-    prototype['RoundToExponentExact'] = function(exponent, ctx) {
+    prototype['RoundToExponentExact'] = prototype.RoundToExponentExact = function(exponent, ctx) {
         return ExtendedFloat.math.RoundToExponentExact(this, exponent, ctx);
     };
     
-    prototype['RoundToExponent'] = function(exponent, ctx) {
+    prototype['RoundToExponent'] = prototype.RoundToExponent = function(exponent, ctx) {
         return ExtendedFloat.math.RoundToExponentSimple(this, exponent, ctx);
     };
     
-    prototype['Multiply'] = function(op, ctx) {
+    prototype['Multiply'] = prototype.Multiply = function(op, ctx) {
         return ExtendedFloat.math.Multiply(this, op, ctx);
     };
     
-    prototype['MultiplyAndAdd'] = function(op, augend, ctx) {
+    prototype['MultiplyAndAdd'] = prototype.MultiplyAndAdd = function(op, augend, ctx) {
         return ExtendedFloat.math.MultiplyAndAdd(this, op, augend, ctx);
     };
     
-    prototype['MultiplyAndSubtract'] = function(op, subtrahend, ctx) {
+    prototype['MultiplyAndSubtract'] = prototype.MultiplyAndSubtract = function(op, subtrahend, ctx) {
         if ((subtrahend) == null) throw new Error("decfrac");
         var negated = subtrahend;
         if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
@@ -9624,19 +9630,20 @@ function(mantissa, exponent) {
         return ExtendedFloat.math.MultiplyAndAdd(this, op, negated, ctx);
     };
     
-    prototype['RoundToPrecision'] = function(ctx) {
+    prototype['RoundToPrecision'] = prototype.RoundToPrecision = function(ctx) {
         return ExtendedFloat.math.RoundToPrecision(this, ctx);
     };
     
-    prototype['Plus'] = function(ctx) {
+    prototype['Plus'] = prototype.Plus = function(ctx) {
         return ExtendedFloat.math.Plus(this, ctx);
     };
     
-    prototype['RoundToBinaryPrecision'] = function(ctx) {
+    prototype['RoundToBinaryPrecision'] = prototype.RoundToBinaryPrecision = function(ctx) {
         return ExtendedFloat.math.RoundToBinaryPrecision(this, ctx);
     };
 })(ExtendedFloat,ExtendedFloat.prototype);
 
 
 if(typeof exports!=="undefined")exports['ExtendedFloat']=ExtendedFloat;
+if(typeof window!=="undefined")window['ExtendedFloat']=ExtendedFloat;
 })();
