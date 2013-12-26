@@ -1951,6 +1951,10 @@ public void set(String key, CBORObject value) {
         stream.write(0xf6);
         return;
       }
+      if((bignum.signum()==0 && bignum.isNegative()) || bignum.IsInfinity() || bignum.IsNaN()){
+        Write(bignum.ToDouble(),stream);
+        return;
+      }
       BigInteger exponent = bignum.getExponent();
       if (exponent.signum()==0) {
         Write(bignum.getMantissa(), stream);
@@ -2742,8 +2746,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public static CBORObject FromObject(ExtendedFloat bigValue) {
       if ((Object)bigValue == (Object)null)
         return CBORObject.Null;
+      if(decfrac.IsNaN() || decfrac.IsInfinity()){
+        return new CBORObject(CBORObjectType_ExtendedFloat,bigValue);        
+      }
       BigInteger bigintExponent = bigValue.getExponent();
-      if (bigintExponent.signum()==0) {
+      if (bigintExponent.signum()==0 && !(bigValue.signum()==0 && bigValue.isNegative())) {
         return FromObject(bigValue.getMantissa());
       } else {
         if (!BigIntFits(bigintExponent))
@@ -2761,14 +2768,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public static CBORObject FromObject(ExtendedDecimal decfrac) {
       if ((Object)decfrac == (Object)null)
         return CBORObject.Null;
-      if(decfrac.signum()==0 && decfrac.isNegative()){
-        return FromObject(Extras.IntegersToDouble(new int[]{((int)(1<<31)),0}));
-      }
       if(decfrac.IsNaN() || decfrac.IsInfinity()){
-        return FromObject(decfrac.ToDouble());
+        return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);        
       }
       BigInteger bigintExponent = decfrac.getExponent();
-      if (bigintExponent.signum()==0) {
+      if (bigintExponent.signum()==0 && !(bigValue.signum()==0 && bigValue.isNegative())) {
         return FromObject(decfrac.getMantissa());
       } else {
         if (!BigIntFits(bigintExponent))
