@@ -84,7 +84,7 @@ namespace Test {
       AssertBigIntegersEqual(result,(bigintA.shiftRight(m2)));
       AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
     }
-    
+
     public static void AssertDecFrac(ExtendedDecimal d3, string output){
       if(output==null && d3!=null)Assert.Fail("d3 must be null");
       if(output!=null && !d3.ToString().Equals(output)){
@@ -94,11 +94,11 @@ namespace Test {
           "but was: ["+(d3.UnsignedMantissa).ToString()+","+(d3.Exponent).ToString()+"]"
          ));   }
     }
-    
+
     public static BigInteger BigIntParse(string str){
       return BigInteger.fromString(str);
     }
-    
+
     public static void AssertFlags(int expected, int actual){
       if(expected==actual)return;
       Assert.AreEqual((expected&PrecisionContext.FlagInexact)!=0,
@@ -118,7 +118,7 @@ namespace Test {
       Assert.AreEqual((expected&PrecisionContext.FlagDivideByZero)!=0,
                       (actual&PrecisionContext.FlagDivideByZero)!=0,"DivideByZero");
     }
-    
+
     private static CBORObject FromBytesA(byte[] b) {
       return CBORObject.DecodeFromBytes(b);
     }
@@ -162,7 +162,7 @@ namespace Test {
                           "{0} does not equal {1}, but not vice versa", o, o2));
       }
     }
-    
+
     public static void TestNumber(CBORObject o){
       if(o.Type!= CBORType.Number){
         return;
@@ -183,7 +183,7 @@ namespace Test {
       try { o.AsSingle(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
       try { o.AsDouble(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
     }
-    
+
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
       if (o2.Type == CBORType.Map && o.Type == CBORType.Map) {

@@ -3,7 +3,7 @@
  * User: Peter
  * Date: 11/11/2013
  * Time: 1:13 PM
- * 
+ *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
@@ -15,19 +15,19 @@ namespace Test
   public class FastRandom
   {
     private const int ReseedCount = 10000;
-    
+
     System.Random rand;
     int count;
-    
+
     int m_w = 521288629;
     int m_z = 362436069;
-    
+
     public FastRandom()
     {
       rand=new System.Random();
       count=ReseedCount;
     }
-    
+
     private int NextValueInternal(){
       int w = m_w, z = m_z;
       // Use George Marsaglia's multiply-with-carry
@@ -36,7 +36,7 @@ namespace Test
       m_w = w = unchecked(18000 * (w & 65535) + ((z >> 16)&0xFFFF));
       return ((z << 16) | (w & 65535))&0x7FFFFFFF;
     }
-    
+
     /// <summary> </summary>
     /// <param name='v'>A 32-bit signed integer.</param>
     /// <returns>A 32-bit signed integer.</returns>

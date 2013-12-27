@@ -28,7 +28,7 @@ namespace PeterO
       (BigInteger)59604644775390625L, (BigInteger)298023223876953125L, (BigInteger)1490116119384765625L,
       (BigInteger)7450580596923828125L
     };
-    
+
     internal static int ShiftLeftOne(int[] arr){
       unchecked {
         int carry=0;
@@ -40,7 +40,7 @@ namespace PeterO
         return carry;
       }
     }
-    
+
     internal static int CountTrailingZeros(int numberValue) {
       if (numberValue == 0)
         return 32;
@@ -103,7 +103,6 @@ namespace PeterO
       return i;
     }
 
-    
     internal static int ShiftAwayTrailingZerosTwoElements(int[] arr){
       int a0=arr[0];
       int a1=arr[1];
@@ -129,11 +128,10 @@ namespace PeterO
         }
       }
     }
-    
+
     internal static bool HasBitSet(int[] arr, int bit){
       return ((bit>>5)<arr.Length && (arr[bit>>5]&(1<<(bit&31)))!=0);
     }
-    
 
     internal static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
       if (diff.Sign <= 0) return BigInteger.One;
@@ -194,7 +192,7 @@ namespace PeterO
       }
       return mantissa;
     }
-    
+
     private static BigInteger FivePower40=((BigInteger)95367431640625L)*(BigInteger)(95367431640625L);
 
     internal static BigInteger FindPowerOfFive(int precision) {

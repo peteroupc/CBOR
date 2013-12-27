@@ -7,10 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
-
-
-
     /**
      * Represents an arbitrary-precision binary floating-point number.
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
@@ -38,7 +34,7 @@ at: http://peteroupc.github.io/CBOR/
     BigInteger exponent;
     BigInteger mantissa;
     int flags;
-    
+
     /**
      * Gets this object's exponent. This object's value will be an integer
      * if the exponent is positive or zero.
@@ -54,7 +50,6 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger getMantissa() { return this.isNegative() ? ((mantissa).negate()) : mantissa; }
 
-    
     /**
      * Determines whether this object's mantissa and exponent are equal
      * to those of another object.
@@ -68,10 +63,9 @@ at: http://peteroupc.github.io/CBOR/
         this.mantissa.equals(otherValue.mantissa) &&
         this.flags==otherValue.flags;
     }
-    
-    
+
     /**
-     * 
+     *
      * @param other An ExtendedFloat object.
      * @return A Boolean object.
      */
@@ -100,7 +94,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       return hashCode_;
     }
-    
+
     /**
      * Creates a binary float with the value exponent*10^mantissa.
      * @param mantissa The unscaled value.
@@ -112,14 +106,14 @@ at: http://peteroupc.github.io/CBOR/
       this.mantissa = sign<0 ? ((mantissa).negate()) : mantissa;
       this.flags=(sign<0) ? BigNumberFlags.FlagNegative : 0;
     }
-    
+
     static ExtendedFloat CreateWithFlags(BigInteger mantissa,
                                                   BigInteger exponent, int flags){
       ExtendedFloat ext=new ExtendedFloat(mantissa,exponent);
       ext.flags=flags;
       return ext;
     }
-    
+
     /**
      * Creates a binary float from a string that represents a number. Note
      * that if the string contains a negative exponent, the resulting value
@@ -145,8 +139,7 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("str");
       return ExtendedDecimal.FromString(str).ToExtendedFloat();
     }
-    
-    
+
     private static BigInteger BigShiftIteration = BigInteger.valueOf(1000000);
     private static int ShiftIteration = 1000000;
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
@@ -167,12 +160,11 @@ at: http://peteroupc.github.io/CBOR/
       val=val.shiftLeft(lastshift);
       return val;
     }
-    
 
     private static final class BinaryMathHelper implements IRadixMathHelper<ExtendedFloat> {
 
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
       public int GetRadix() {
@@ -180,7 +172,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value An ExtendedFloat object.
      * @return A 32-bit signed integer.
      */
@@ -189,7 +181,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value An ExtendedFloat object.
      * @return A BigInteger object.
      */
@@ -198,7 +190,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value An ExtendedFloat object.
      * @return A BigInteger object.
      */
@@ -207,7 +199,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param mantissa A BigInteger object.
      * @param e1 A BigInteger object.
      * @param e2 A BigInteger object.
@@ -223,7 +215,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.
@@ -234,7 +226,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
@@ -243,7 +235,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param num A BigInteger object.
      * @param den A BigInteger object.
      * @return A Boolean object.
@@ -259,7 +251,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param bigint A BigInteger object.
      * @param power A FastInteger object.
      * @return A BigInteger object.
@@ -272,18 +264,18 @@ at: http://peteroupc.github.io/CBOR/
           return ShiftLeft(bigint, power.AsBigInteger());
         }
       }
-      
+
     /**
-     * 
+     *
      * @param value An ExtendedFloat object.
      * @return A 32-bit signed integer.
      */
       public int GetFlags(ExtendedFloat value) {
         return value.mantissa.signum()<0 ? BigNumberFlags.FlagNegative : 0;
       }
-      
+
     /**
-     * 
+     *
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
      * @param flags A 32-bit signed integer.
@@ -296,15 +288,15 @@ at: http://peteroupc.github.io/CBOR/
         return new ExtendedFloat(mantissa,exponent);
       }
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteOnly;
       }
-      
+
     /**
-     * 
+     *
      * @param val A 32-bit signed integer.
      * @return An ExtendedFloat object.
      */
@@ -312,7 +304,7 @@ at: http://peteroupc.github.io/CBOR/
         return FromInt64(val);
       }
     }
-    
+
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
@@ -362,7 +354,7 @@ at: http://peteroupc.github.io/CBOR/
         return bigmantissa;
       }
     }
-    
+
     private static BigInteger OneShift62 = BigInteger.ONE.shiftLeft(62);
 
     /**
@@ -444,11 +436,10 @@ remainder=divrem[1];
         return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
       }
     }
-    
-    
+
     private static BigInteger OneShift23 = BigInteger.ONE.shiftLeft(23);
     private static BigInteger OneShift52 = BigInteger.ONE.shiftLeft(52);
-    
+
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
      * rounding mode is used. <p>If this value is a NaN, sets the high bit of
@@ -737,11 +728,11 @@ remainder=divrem[1];
       return new ExtendedFloat(bigmant,
                                BigInteger.valueOf(fpExponent - 150));
     }
-    
+
     public static ExtendedFloat FromBigInteger(BigInteger bigint) {
       return new ExtendedFloat(bigint,BigInteger.ZERO);
     }
-    
+
     public static ExtendedFloat FromInt64(long valueSmall) {
       BigInteger bigint=BigInteger.valueOf(valueSmall);
       return new ExtendedFloat(bigint,BigInteger.ZERO);
@@ -790,9 +781,9 @@ remainder=divrem[1];
         BigInteger.valueOf(fpExponent - 1075),
         (neg ? BigNumberFlags.FlagNegative : 0));
     }
-    
+
     /**
-     * 
+     *
      * @return An ExtendedDecimal object.
      */
 public ExtendedDecimal ToExtendedDecimal() {
@@ -828,21 +819,21 @@ public ExtendedDecimal ToExtendedDecimal() {
     /**
      * Represents the number 1.
      */
-    
+
     public static final ExtendedFloat One = new ExtendedFloat(BigInteger.ONE,BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
-    
+
     public static final ExtendedFloat Zero = new ExtendedFloat(BigInteger.ZERO,BigInteger.ZERO);
-    
+
     public static final ExtendedFloat NegativeZero = CreateWithFlags(
       BigInteger.ZERO,BigInteger.ZERO,BigNumberFlags.FlagNegative);
     /**
      * Represents the number 10.
      */
-    
+
     public static final ExtendedFloat Ten = new ExtendedFloat(BigInteger.TEN,BigInteger.ZERO);
 
     //----------------------------------------------------------------
@@ -872,27 +863,27 @@ public ExtendedDecimal ToExtendedDecimal() {
     public static final ExtendedFloat NegativeInfinity=CreateWithFlags(
       BigInteger.ZERO,
       BigInteger.ZERO,BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
-    
+
     /**
-     * 
+     *
      * @return A Boolean object.
      */
     public boolean IsPositiveInfinity() {
       return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
         (BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
     }
-    
+
     /**
-     * 
+     *
      * @return A Boolean object.
      */
     public boolean IsNegativeInfinity() {
       return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
         (BigNumberFlags.FlagInfinity);
     }
-    
+
     /**
-     * 
+     *
      * @return A Boolean object.
      */
     public boolean IsNaN() {
@@ -1022,7 +1013,7 @@ public ExtendedDecimal ToExtendedDecimal() {
       return math.Reduce(this, ctx);
     }
     /**
-     * 
+     *
      * @param divisor An ExtendedFloat object.
      * @return An ExtendedFloat object.
      */
@@ -1033,7 +1024,7 @@ public ExtendedDecimal ToExtendedDecimal() {
     }
 
     /**
-     * 
+     *
      * @param divisor An ExtendedFloat object.
      * @param ctx A PrecisionContext object.
      * @return An ExtendedFloat object.
@@ -1307,7 +1298,6 @@ public ExtendedDecimal ToExtendedDecimal() {
       ExtendedFloat divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
-    
 
     /**
      * Finds the remainder that results when dividing two ExtendedFloat
@@ -1385,7 +1375,7 @@ public ExtendedDecimal ToExtendedDecimal() {
      ) {
       return math.NextPlus(this,ctx);
     }
-    
+
     /**
      * Finds the next value that is closer to the other object's value than
      * this object's value.
@@ -1450,7 +1440,7 @@ public ExtendedDecimal ToExtendedDecimal() {
       ExtendedFloat first, ExtendedFloat second, PrecisionContext ctx) {
       return math.MaxMagnitude(first, second, ctx);
     }
-    
+
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
@@ -1466,7 +1456,7 @@ public ExtendedDecimal ToExtendedDecimal() {
       ExtendedFloat first, ExtendedFloat second, PrecisionContext ctx) {
       return math.MinMagnitude(first, second, ctx);
     }
-    
+
     /**
      * Gets the greater value between two binary floats.
      * @param first An ExtendedFloat object.
@@ -1499,7 +1489,7 @@ public ExtendedDecimal ToExtendedDecimal() {
       ExtendedFloat first, ExtendedFloat second) {
       return MaxMagnitude(first,second,null);
     }
-    
+
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
@@ -1531,7 +1521,7 @@ public ExtendedDecimal ToExtendedDecimal() {
       ExtendedFloat other) {
       return math.compareTo(this, other);
     }
-    
+
     /**
      * Compares the mathematical values of this object and another object.
      * <p>In this method, negative zero and positive zero are considered
@@ -1551,7 +1541,7 @@ public ExtendedDecimal ToExtendedDecimal() {
       ExtendedFloat other, PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, false, ctx);
     }
-    
+
     /**
      * Compares the mathematical values of this object and another object,
      * treating quiet NaN as signaling. <p>In this method, negative zero

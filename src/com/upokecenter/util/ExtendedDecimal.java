@@ -7,10 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
-
-
-
     /**
      * Represents an arbitrary-precision decimal floating-point number.
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
@@ -36,7 +32,7 @@ at: http://peteroupc.github.io/CBOR/
     BigInteger exponent;
     BigInteger unsignedMantissa;
     int flags;
-    
+
     /**
      * Gets this object's exponent. This object's value will be an integer
      * if the exponent is positive or zero.
@@ -52,7 +48,6 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger getMantissa() { return this.isNegative() ? ((unsignedMantissa).negate()) : unsignedMantissa; }
 
-    
     /**
      * Determines whether this object's mantissa and exponent are equal
      * to those of another object.
@@ -66,10 +61,9 @@ at: http://peteroupc.github.io/CBOR/
         this.unsignedMantissa.equals(otherValue.unsignedMantissa) &&
         this.flags==otherValue.flags;
     }
-    
-    
+
     /**
-     * 
+     *
      * @param other An ExtendedDecimal object.
      * @return A Boolean object.
      */
@@ -98,7 +92,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       return hashCode_;
     }
-    
+
     /**
      * Creates a decimal number with the value exponent*10^mantissa.
      * @param mantissa The unscaled value.
@@ -110,16 +104,16 @@ at: http://peteroupc.github.io/CBOR/
       this.unsignedMantissa = sign<0 ? ((mantissa).negate()) : mantissa;
       this.flags=(sign<0) ? BigNumberFlags.FlagNegative : 0;
     }
-    
+
     private static ExtendedDecimal CreateWithFlags(BigInteger mantissa,
                                                    BigInteger exponent, int flags) {
       ExtendedDecimal ext=new ExtendedDecimal(mantissa,exponent);
       ext.flags=flags;
       return ext;
     }
-    
+
     private static final int MaxSafeInt = 214748363;
-    
+
     /**
      * Creates a decimal number from a string that represents a number. <p>
      * The format of the string generally consists of:<ul> <li> An optional
@@ -331,11 +325,11 @@ at: http://peteroupc.github.io/CBOR/
         (newScale==null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
         negative ? BigNumberFlags.FlagNegative : 0);
     }
-    
+
     private static final class DecimalMathHelper implements IRadixMathHelper<ExtendedDecimal> {
 
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
       public int GetRadix() {
@@ -343,7 +337,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value An ExtendedDecimal object.
      * @return A 32-bit signed integer.
      */
@@ -352,7 +346,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value An ExtendedDecimal object.
      * @return A BigInteger object.
      */
@@ -361,7 +355,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value An ExtendedDecimal object.
      * @return A BigInteger object.
      */
@@ -370,7 +364,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param mantissa A BigInteger object.
      * @param e1 A BigInteger object.
      * @param e2 A BigInteger object.
@@ -388,7 +382,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.
@@ -399,7 +393,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
@@ -408,7 +402,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param numerator A BigInteger object.
      * @param denominator A BigInteger object.
      * @return A Boolean object.
@@ -438,7 +432,7 @@ bigrem=divrem[1];
       }
 
     /**
-     * 
+     *
      * @param bigint A BigInteger object.
      * @param power A FastInteger object.
      * @return A BigInteger object.
@@ -461,18 +455,18 @@ bigrem=divrem[1];
           }
         }
       }
-      
+
     /**
-     * 
+     *
      * @param value An ExtendedDecimal object.
      * @return A 32-bit signed integer.
      */
       public int GetFlags(ExtendedDecimal value) {
         return value.flags;
       }
-      
+
     /**
-     * 
+     *
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
      * @param flags A 32-bit signed integer.
@@ -482,14 +476,14 @@ bigrem=divrem[1];
         return CreateWithFlags(mantissa,exponent,flags);
       }
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteAndNonFinite;
       }
     /**
-     * 
+     *
      * @param val A 32-bit signed integer.
      * @return An ExtendedDecimal object.
      */
@@ -719,7 +713,7 @@ bigrem=divrem[1];
         return builder.toString();
       }
     }
-    
+
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
@@ -742,9 +736,9 @@ bigrem=divrem[1];
         return bigmantissa;
       }
     }
-    
+
     private static BigInteger OneShift62 = BigInteger.ONE.shiftLeft(62);
-    
+
     /**
      * Creates a bigfloat from this object's value. Note that if the bigfloat
      * contains a negative exponent, the resulting value might not be exact.
@@ -826,7 +820,7 @@ remainder=divrem[1];
         return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
       }
     }
-    
+
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
      * rounding mode is used. <p>If this value is a NaN, sets the high bit of
@@ -929,11 +923,11 @@ remainder=divrem[1];
         return new ExtendedDecimal(bigmantissa, BigInteger.valueOf(fpExponent));
       }
     }
-    
+
     public static ExtendedDecimal FromBigInteger(BigInteger bigint) {
       return new ExtendedDecimal(bigint,BigInteger.ZERO);
     }
-    
+
     public static ExtendedDecimal FromInt64(long valueSmall) {
       BigInteger bigint=BigInteger.valueOf(valueSmall);
       return new ExtendedDecimal(bigint,BigInteger.ZERO);
@@ -1044,7 +1038,7 @@ remainder=divrem[1];
         return new ExtendedDecimal(bigmantissa, bigintExp);
       }
     }
-    
+
     /**
      * Converts this value to a string.
      * @return A string representation of this object.
@@ -1074,21 +1068,21 @@ remainder=divrem[1];
     /**
      * Represents the number 1.
      */
-    
+
     public static final ExtendedDecimal One = new ExtendedDecimal(BigInteger.ONE,BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
-    
+
     public static final ExtendedDecimal Zero = new ExtendedDecimal(BigInteger.ZERO,BigInteger.ZERO);
-    
+
     public static final ExtendedDecimal NegativeZero = CreateWithFlags(
       BigInteger.ZERO,BigInteger.ZERO,BigNumberFlags.FlagNegative);
     /**
      * Represents the number 10.
      */
-    
+
     public static final ExtendedDecimal Ten = new ExtendedDecimal(BigInteger.TEN,BigInteger.ZERO);
 
     //----------------------------------------------------------------
@@ -1118,27 +1112,27 @@ remainder=divrem[1];
     public static final ExtendedDecimal NegativeInfinity=CreateWithFlags(
       BigInteger.ZERO,
       BigInteger.ZERO,BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
-    
+
     /**
-     * 
+     *
      * @return A Boolean object.
      */
     public boolean IsPositiveInfinity() {
       return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
         (BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
     }
-    
+
     /**
-     * 
+     *
      * @return A Boolean object.
      */
     public boolean IsNegativeInfinity() {
       return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
         (BigNumberFlags.FlagInfinity);
     }
-    
+
     /**
-     * 
+     *
      * @return A Boolean object.
      */
     public boolean IsNaN() {
@@ -1268,7 +1262,7 @@ remainder=divrem[1];
       return math.Reduce(this, ctx);
     }
     /**
-     * 
+     *
      * @param divisor An ExtendedDecimal object.
      * @return An ExtendedDecimal object.
      */
@@ -1279,7 +1273,7 @@ remainder=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param divisor An ExtendedDecimal object.
      * @param ctx A PrecisionContext object.
      * @return An ExtendedDecimal object.
@@ -1553,7 +1547,6 @@ remainder=divrem[1];
       ExtendedDecimal divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
-    
 
     /**
      * Finds the remainder that results when dividing two ExtendedDecimal
@@ -1631,7 +1624,7 @@ remainder=divrem[1];
      ) {
       return math.NextPlus(this,ctx);
     }
-    
+
     /**
      * Finds the next value that is closer to the other object's value than
      * this object's value.
@@ -1696,7 +1689,7 @@ remainder=divrem[1];
       ExtendedDecimal first, ExtendedDecimal second, PrecisionContext ctx) {
       return math.MaxMagnitude(first, second, ctx);
     }
-    
+
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
@@ -1712,7 +1705,7 @@ remainder=divrem[1];
       ExtendedDecimal first, ExtendedDecimal second, PrecisionContext ctx) {
       return math.MinMagnitude(first, second, ctx);
     }
-    
+
     /**
      * Gets the greater value between two decimal numbers.
      * @param first An ExtendedDecimal object.
@@ -1745,7 +1738,7 @@ remainder=divrem[1];
       ExtendedDecimal first, ExtendedDecimal second) {
       return MaxMagnitude(first,second,null);
     }
-    
+
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
@@ -1777,7 +1770,7 @@ remainder=divrem[1];
       ExtendedDecimal other) {
       return math.compareTo(this, other);
     }
-    
+
     /**
      * Compares the mathematical values of this object and another object.
      * <p>In this method, negative zero and positive zero are considered
@@ -1797,7 +1790,7 @@ remainder=divrem[1];
       ExtendedDecimal other, PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, false, ctx);
     }
-    
+
     /**
      * Compares the mathematical values of this object and another object,
      * treating quiet NaN as signaling. <p>In this method, negative zero

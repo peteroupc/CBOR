@@ -3,7 +3,7 @@
  * User: PeterRoot
  * Date: 11/7/2013
  * Time: 9:29 PM
- * 
+ *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
@@ -13,7 +13,7 @@ using PeterO;
 namespace Test {
     /// <summary>
     /// </summary>
-    /// 
+    ///
 [TestFixture]
   public class CBORObjectMathTest{
     [Test]

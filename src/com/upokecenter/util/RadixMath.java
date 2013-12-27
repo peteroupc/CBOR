@@ -1,18 +1,16 @@
 package com.upokecenter.util;
 
-
 //import java.math.*;
-
 
     /**
      * Encapsulates radix-independent arithmetic.
      */
   class RadixMath<T> {
-    
+
     IRadixMathHelper<T> helper;
     int thisRadix;
     int support;
-    
+
     public RadixMath (IRadixMathHelper<T> helper) {
       this.helper = helper;
       this.support=helper.GetArithmeticSupport();
@@ -94,7 +92,7 @@ package com.upokecenter.util;
       }
       return null;
     }
-    
+
     private T RemainderHandleSpecial(T thisValue, T other, PrecisionContext ctx) {
       int thisFlags=helper.GetFlags(thisValue);
       int otherFlags=helper.GetFlags(other);
@@ -175,7 +173,7 @@ package com.upokecenter.util;
       }
       return null;
     }
-    
+
     private T HandleNotANumber(T thisValue, T other, PrecisionContext ctx) {
       int thisFlags=helper.GetFlags(thisValue);
       int otherFlags=helper.GetFlags(other);
@@ -195,7 +193,7 @@ package com.upokecenter.util;
       }
       return null;
     }
-    
+
     private T ValueOf(int value, PrecisionContext ctx) {
       if(ctx==null || !ctx.getHasExponentRange() || ctx.ExponentWithinRange(BigInteger.ZERO))
         return helper.ValueOf(value);
@@ -226,7 +224,7 @@ package com.upokecenter.util;
       }
       return 2;
     }
-    
+
     private T CompareToHandleSpecial(T thisValue, T other, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
       int thisFlags=helper.GetFlags(thisValue);
       int otherFlags=helper.GetFlags(other);
@@ -295,14 +293,14 @@ package com.upokecenter.util;
       }
       return helper.CreateNewWithFlags(BigInteger.ZERO,BigInteger.ZERO,BigNumberFlags.FlagQuietNaN);
     }
-    
+
     private T SignalOverflow(boolean neg) {
       return support==BigNumberFlags.FiniteOnly ? null :
         helper.CreateNewWithFlags(
           BigInteger.ZERO,BigInteger.ZERO,
           (neg ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagInfinity);
     }
-    
+
     private T SignalDivideByZero(PrecisionContext ctx, boolean neg) {
       if(support==BigNumberFlags.FiniteOnly)
         throw new ArithmeticException("Division by zero");
@@ -431,7 +429,7 @@ package com.upokecenter.util;
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param divisor A T object.
      * @param ctx A PrecisionContext object.
@@ -507,7 +505,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param divisor A T object.
      * @param ctx A PrecisionContext object.
@@ -539,9 +537,9 @@ bigrem=divrem[1];
       }
       return ret;
     }
-    
+
     /**
-     * 
+     *
      * @param value A T object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -565,7 +563,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param value A T object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -624,7 +622,7 @@ bigrem=divrem[1];
         }
       }
     }
-    
+
     /**
      * Finds the remainder that results when dividing two T objects.
      * @param thisValue A T object.
@@ -651,7 +649,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param divisor A T object.
      * @param ctx A PrecisionContext object.
@@ -680,7 +678,7 @@ bigrem=divrem[1];
       if((ctx2.getFlags()&(PrecisionContext.FlagRounded|PrecisionContext.FlagInvalid))!=0){
         return SignalInvalid(ctx);
       }
-      ctx2=ctx==null ? PrecisionContext.Unlimited.WithBlankFlags() : 
+      ctx2=ctx==null ? PrecisionContext.Unlimited.WithBlankFlags() :
         ctx.WithBlankFlags();
       T ret2=Add(thisValue,NegateRaw(Multiply(ret,divisor,null)),ctx2);
       if((ctx2.getFlags()&(PrecisionContext.FlagInvalid))!=0){
@@ -694,7 +692,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -743,7 +741,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param otherValue A T object.
      * @param ctx A PrecisionContext object.
@@ -826,9 +824,9 @@ bigrem=divrem[1];
         return val;
       }
     }
-    
+
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -1005,7 +1003,7 @@ bigrem=divrem[1];
     private static final int IntegerModeRegular = 0;
 
     private static final int NonTerminatingCheckThreshold = 5;
-    
+
     private T DivideInternal(
       T thisValue,
       T divisor,
@@ -1428,7 +1426,7 @@ rem=divrem[1];
       return ret;
     }
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param multiplicand A T object.
      * @param augend A T object.
@@ -1445,7 +1443,7 @@ rem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param context A PrecisionContext object.
      * @return A T object.
@@ -1523,9 +1521,9 @@ rem=divrem[1];
       }
       return dfrac;
     }
-    
+
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param context A PrecisionContext object.
      * @return A T object.
@@ -1537,7 +1535,7 @@ rem=divrem[1];
       return RoundToPrecisionWithShift(thisValue, context, 0, 0,new FastInteger(0), true);
     }
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param context A PrecisionContext object.
      * @return A T object.
@@ -1652,7 +1650,7 @@ rem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param otherValue A T object.
      * @param ctx A PrecisionContext object.
@@ -1721,11 +1719,9 @@ rem=divrem[1];
       }
       return ret;
     }
-    
-    
-    
+
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param expOther A BigInteger object.
      * @param ctx A PrecisionContext object.
@@ -1751,7 +1747,7 @@ rem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param expOther A BigInteger object.
      * @param ctx A PrecisionContext object.
@@ -1787,7 +1783,7 @@ rem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
      * @param exponent A BigInteger object.
@@ -1808,7 +1804,7 @@ rem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -1851,7 +1847,7 @@ bigrem=divrem[1];
       }
       return ret;
     }
-    
+
     private T RoundToPrecisionInternal(
       T thisValue,
       FastInteger precision,
@@ -1922,7 +1918,7 @@ bigrem=divrem[1];
       } else {
         fastPrecision=precision;
       }
-      
+
       if(shift!=null){
         accum.ShiftRight(shift);
       }
@@ -2139,11 +2135,11 @@ bigrem=divrem[1];
       return helper.CreateNewWithFlags(bigmantissa, exp.AsBigInteger(),
                                        neg ? BigNumberFlags.FlagNegative : 0);
     }
-    
+
     private T AddCore(BigInteger mant1, // assumes mant1 is nonnegative
                       BigInteger mant2, // assumes mant2 is nonnegative
                       BigInteger exponent, int flags1, int flags2, PrecisionContext ctx) {
-      
+
       boolean neg1=(flags1&BigNumberFlags.FlagNegative)!=0;
       boolean neg2=(flags2&BigNumberFlags.FlagNegative)!=0;
       boolean negResult=false;
@@ -2167,7 +2163,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
      * @param other A T object.
@@ -2334,7 +2330,7 @@ bigrem=divrem[1];
       }
       return retval;
     }
-    
+
     /**
      * Compares a T object with this instance.
      * @param thisValue A T object.
@@ -2349,7 +2345,7 @@ bigrem=divrem[1];
       if((Object)result!=(Object)null)return result;
       return ValueOf(compareTo(thisValue,decfrac),null);
     }
-    
+
     /**
      * Compares a T object with this instance.
      * @param thisValue A T object.

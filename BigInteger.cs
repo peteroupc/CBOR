@@ -1504,7 +1504,7 @@ namespace PeterO {
       }
       return i;
     }
-    
+
     private static short Divide32By16(int dividendLow, short divisorShort, bool returnRemainder){
       int tmpInt;
       int dividendHigh=0;
@@ -1788,7 +1788,7 @@ namespace PeterO {
       ret[oldLength]=carry;
       return ret;
     }
-    
+
     private static short[] CleanGrow(short[] a, int size) {
       if (size > a.Length) {
         short[] newa = new short[size];
@@ -2188,7 +2188,7 @@ namespace PeterO {
     public BigInteger abs() {
       return this.Sign >= 0 ? this : this.negate();
     }
-    
+
     /// <summary> </summary>
     /// <returns></returns>
     private int CalcWordCount() {
@@ -2331,7 +2331,6 @@ namespace PeterO {
       return bigint;
     }
 
-    
     /// <summary>Returns the greatest common divisor of two integers. </summary>
     /// <returns>A BigInteger object.</returns>
     /// <remarks>The greatest common divisor (GCD) is also known as the greatest
@@ -2530,7 +2529,7 @@ namespace PeterO {
       }
       return diff;
     }
-    
+
     private void ShortenArray(){
       if(this.reg.Length>32){
         int newLength=RoundupSize(this.wordCount);

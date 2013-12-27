@@ -71,7 +71,7 @@ namespace PeterO {
       this.exponent = exponent;
       this.mantissa = mantissa;
     }
-    
+
     private static BigInteger BigShiftIteration = (BigInteger)1000000;
     private static int ShiftIteration = 1000000;
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
@@ -93,14 +93,13 @@ namespace PeterO {
       return val;
     }
 
-    
     /// <summary> </summary>
     /// <param name='bigint'>A BigInteger object.</param>
     /// <returns>A BigFloat object.</returns>
     public static BigFloat FromBigInteger(BigInteger bigint){
       return new BigFloat(bigint,BigInteger.Zero);
     }
-    
+
     /// <summary> </summary>
     /// <param name='numberValue'>A 64-bit signed integer.</param>
     /// <returns>A BigFloat object.</returns>
@@ -108,12 +107,12 @@ namespace PeterO {
       BigInteger bigint=(BigInteger)numberValue;
       return new BigFloat(bigint,BigInteger.Zero);
     }
-    
+
     public static BigFloat FromExtendedFloat(ExtendedFloat ef){
       if(ef.IsNaN() || ef.IsInfinity())throw new OverflowException("Is NaN or infinity");
       return new BigFloat(ef.Mantissa,ef.Exponent);
     }
-    
+
     /// <summary> Creates a bigfloat from its string representation. Note
     /// that if the bigfloat contains a negative exponent, the resulting
     /// value might not be exact. However, it will contain enough precision
@@ -157,8 +156,6 @@ namespace PeterO {
     public float ToSingle() {
       return new ExtendedFloat(this.Mantissa,this.Exponent).ToSingle();
     }
-    
-    
 
     /// <summary> Converts this value to a 64-bit floating-point number.
     /// The half-even rounding mode is used. </summary>
@@ -190,7 +187,7 @@ namespace PeterO {
     public string ToPlainString() {
       return new ExtendedFloat(this.Mantissa,this.Exponent).ToPlainString();
     }
-    
+
     /// <summary> Represents the number 1. </summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -299,7 +296,7 @@ namespace PeterO {
           return ShiftLeft(bigint, power.AsBigInteger());
         }
       }
-      
+
     /// <summary> </summary>
     /// <param name='value'>A BigFloat object.</param>
     /// <returns>A 32-bit signed integer.</returns>
@@ -307,7 +304,7 @@ namespace PeterO {
       {
         return value.mantissa.Sign<0 ? BigNumberFlags.FlagNegative : 0;
       }
-      
+
     /// <summary> </summary>
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='exponent'>A BigInteger object.</param>
@@ -326,7 +323,7 @@ namespace PeterO {
       {
         return BigNumberFlags.FiniteOnly;
       }
-      
+
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A BigFloat object.</returns>
@@ -334,7 +331,7 @@ namespace PeterO {
         return FromInt64(val);
       }
     }
-    
+
     //----------------------------
     /// <summary> Gets this value's sign: -1 if negative; 1 if positive; 0
     /// if zero. </summary>
@@ -654,7 +651,7 @@ namespace PeterO {
       BigFloat divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
-    
+
     /// <summary>Finds the remainder that results when dividing two BigFloat
     /// objects. The remainder is the value that remains when the absolute
     /// value of this object is divided by the absolute value of the other object;
@@ -737,7 +734,7 @@ namespace PeterO {
      ){
       return math.NextPlus(this,ctx);
     }
-    
+
     /// <summary> Finds the next value that is closer to the other object's
     /// value than this object's value.</summary>
     /// <param name='otherValue'>A BigFloat object.</param>
@@ -757,7 +754,6 @@ namespace PeterO {
       return math.NextToward(this,otherValue,ctx);
     }
 
-    
     /// <summary>Divides this BigFloat object by another BigFloat object.
     /// The preferred exponent for the result is this object's exponent minus
     /// the divisor's exponent.</summary>
@@ -781,7 +777,7 @@ namespace PeterO {
      ) {
       return math.Divide(this, divisor, ctx);
     }
-    
+
     /// <summary> Gets the greater value between two bigfloats. </summary>
     /// <returns>The larger value of the two objects.</returns>
     /// <param name='first'>A BigFloat object.</param>
@@ -809,7 +805,7 @@ namespace PeterO {
       BigFloat first, BigFloat second) {
       return math.MaxMagnitude(first, second, null);
     }
-    
+
     /// <summary> Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
@@ -1073,7 +1069,7 @@ namespace PeterO {
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
     }
-    
+
   }
 
 }

@@ -7,9 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
 //import java.math.*;
-
 
     /**
      * Contains methods useful for reading and writing data, with a focus
@@ -19,7 +17,6 @@ at: http://peteroupc.github.io/CBOR/
 private CBORDataUtilities(){}
     private static BigInteger LowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
     private static BigInteger UInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
-    
 
     /**
      * Parses a number whose format follows the JSON specification. See

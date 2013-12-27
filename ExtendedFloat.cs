@@ -40,7 +40,7 @@ namespace PeterO {
     BigInteger exponent;
     BigInteger mantissa;
     int flags;
-    
+
     /// <summary> Gets this object's exponent. This object's value will
     /// be an integer if the exponent is positive or zero. </summary>
     public BigInteger Exponent {
@@ -69,8 +69,7 @@ namespace PeterO {
         this.mantissa.Equals(otherValue.mantissa) &&
         this.flags==otherValue.flags;
     }
-    
-    
+
     /// <summary> </summary>
     /// <param name='other'>An ExtendedFloat object.</param>
     /// <returns>A Boolean object.</returns>
@@ -107,14 +106,14 @@ namespace PeterO {
       this.mantissa = sign<0 ? (-(BigInteger)mantissa) : mantissa;
       this.flags=(sign<0) ? BigNumberFlags.FlagNegative : 0;
     }
-    
+
     internal static ExtendedFloat CreateWithFlags(BigInteger mantissa,
                                                   BigInteger exponent, int flags){
       ExtendedFloat ext=new ExtendedFloat(mantissa,exponent);
       ext.flags=flags;
       return ext;
     }
-    
+
     /// <summary> Creates a binary float from a string that represents a number.
     /// Note that if the string contains a negative exponent, the resulting
     /// value might not be exact. However, the resulting binary float will
@@ -142,8 +141,7 @@ namespace PeterO {
         throw new ArgumentNullException("str");
       return ExtendedDecimal.FromString(str).ToExtendedFloat();
     }
-    
-    
+
     private static BigInteger BigShiftIteration = (BigInteger)1000000;
     private static int ShiftIteration = 1000000;
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
@@ -164,7 +162,6 @@ namespace PeterO {
       val <<= lastshift;
       return val;
     }
-    
 
     private sealed class BinaryMathHelper : IRadixMathHelper<ExtendedFloat> {
 
@@ -251,7 +248,7 @@ namespace PeterO {
           return ShiftLeft(bigint, power.AsBigInteger());
         }
       }
-      
+
     /// <summary> </summary>
     /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A 32-bit signed integer.</returns>
@@ -259,7 +256,7 @@ namespace PeterO {
       {
         return value.mantissa.Sign<0 ? BigNumberFlags.FlagNegative : 0;
       }
-      
+
     /// <summary> </summary>
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='exponent'>A BigInteger object.</param>
@@ -278,7 +275,7 @@ namespace PeterO {
       {
         return BigNumberFlags.FiniteOnly;
       }
-      
+
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedFloat object.</returns>
@@ -286,7 +283,7 @@ namespace PeterO {
         return FromInt64(val);
       }
     }
-    
+
     /// <summary> Converts this value to an arbitrary-precision integer.
     /// Any fractional part in this value will be discarded when converting
     /// to a big integer. </summary>
@@ -335,7 +332,7 @@ namespace PeterO {
         return bigmantissa;
       }
     }
-    
+
     private static BigInteger OneShift62 = BigInteger.One << 62;
 
     /// <summary> Creates a bigfloat from this object's value. Note that
@@ -414,11 +411,10 @@ namespace PeterO {
         return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
       }
     }
-    
-    
+
     private static BigInteger OneShift23 = BigInteger.One << 23;
     private static BigInteger OneShift52 = BigInteger.One << 52;
-    
+
     /// <summary> Converts this value to a 32-bit floating-point number.
     /// The half-even rounding mode is used. <para>If this value is a NaN,
     /// sets the high bit of the 32-bit floating point number's mantissa for
@@ -703,11 +699,11 @@ namespace PeterO {
       return new ExtendedFloat(bigmant,
                                (BigInteger)(fpExponent - 150));
     }
-    
+
     public static ExtendedFloat FromBigInteger(BigInteger bigint) {
       return new ExtendedFloat(bigint,BigInteger.Zero);
     }
-    
+
     public static ExtendedFloat FromInt64(long valueSmall) {
       BigInteger bigint=(BigInteger)valueSmall;
       return new ExtendedFloat(bigint,BigInteger.Zero);
@@ -754,7 +750,7 @@ namespace PeterO {
         (BigInteger)(fpExponent - 1075),
         (neg ? BigNumberFlags.FlagNegative : 0));
     }
-    
+
     /// <summary> </summary>
     /// <returns>An ExtendedDecimal object.</returns>
 public ExtendedDecimal ToExtendedDecimal(){
@@ -832,21 +828,21 @@ public ExtendedDecimal ToExtendedDecimal(){
     public static readonly ExtendedFloat NegativeInfinity=CreateWithFlags(
       BigInteger.Zero,
       BigInteger.Zero,BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
-    
+
     /// <summary> </summary>
     /// <returns>A Boolean object.</returns>
     public bool IsPositiveInfinity(){
       return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
         (BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
     }
-    
+
     /// <summary> </summary>
     /// <returns>A Boolean object.</returns>
     public bool IsNegativeInfinity(){
       return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
         (BigNumberFlags.FlagInfinity);
     }
-    
+
     /// <summary> </summary>
     /// <returns>A Boolean object.</returns>
     public bool IsNaN(){
@@ -1220,7 +1216,6 @@ public ExtendedDecimal ToExtendedDecimal(){
       ExtendedFloat divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
-    
 
     /// <summary>Finds the remainder that results when dividing two ExtendedFloat
     /// objects.</summary>
@@ -1293,7 +1288,7 @@ public ExtendedDecimal ToExtendedDecimal(){
      ){
       return math.NextPlus(this,ctx);
     }
-    
+
     /// <summary> Finds the next value that is closer to the other object's
     /// value than this object's value.</summary>
     /// <param name='otherValue'>An ExtendedFloat object.</param>
@@ -1351,7 +1346,7 @@ public ExtendedDecimal ToExtendedDecimal(){
       ExtendedFloat first, ExtendedFloat second, PrecisionContext ctx) {
       return math.MaxMagnitude(first, second, ctx);
     }
-    
+
     /// <summary> Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
@@ -1366,7 +1361,7 @@ public ExtendedDecimal ToExtendedDecimal(){
       ExtendedFloat first, ExtendedFloat second, PrecisionContext ctx) {
       return math.MinMagnitude(first, second, ctx);
     }
-    
+
     /// <summary> Gets the greater value between two binary floats. </summary>
     /// <returns>The larger value of the two objects.</returns>
     /// <param name='first'>An ExtendedFloat object.</param>
@@ -1394,7 +1389,7 @@ public ExtendedDecimal ToExtendedDecimal(){
       ExtendedFloat first, ExtendedFloat second) {
       return MaxMagnitude(first,second,null);
     }
-    
+
     /// <summary> Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
@@ -1425,7 +1420,7 @@ public ExtendedDecimal ToExtendedDecimal(){
       ExtendedFloat other) {
       return math.CompareTo(this, other);
     }
-    
+
     /// <summary>Compares the mathematical values of this object and another
     /// object. <para>In this method, negative zero and positive zero are
     /// considered equal.</para>
@@ -1445,7 +1440,7 @@ public ExtendedDecimal ToExtendedDecimal(){
       ExtendedFloat other, PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, false, ctx);
     }
-    
+
     /// <summary>Compares the mathematical values of this object and another
     /// object, treating quiet NaN as signaling. <para>In this method, negative
     /// zero and positive zero are considered equal.</para>

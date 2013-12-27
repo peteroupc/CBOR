@@ -104,7 +104,7 @@ namespace PeterO
         }
       }
     }
-    
+
     // This is a more "portable" version of ConvertToBigNum,
     // but it's much slower on relatively large BigIntegers.
     private static CBORObject ConvertToBigNumPortable(CBORObject o, bool negative){
@@ -147,6 +147,6 @@ namespace PeterO
       }
       return RewrapObject(o,FromObject(bi));
     }
-    
+
   }
 }

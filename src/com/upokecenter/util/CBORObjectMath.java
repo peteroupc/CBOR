@@ -17,7 +17,7 @@ at: http://peteroupc.github.io/CBOR/
      */
   final class CBORObjectMath {
 private CBORObjectMath(){}
-      
+
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) throw new NullPointerException("a");
       if (b == null) throw new NullPointerException("b");

@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
-
   final class Extras {
 private Extras(){}
     public static int[] DoubleToIntegers(double dbl) {
@@ -18,11 +16,11 @@ private Extras(){}
         ((int)((value>>32)&0xFFFFFFFFL))
       };
     }
-    
+
     public static double IntegersToDouble(int[] integers) {
       long value=((long)integers[0])&0xFFFFFFFFL;
       value|=((((long)integers[1])&0xFFFFFFFFL)<<32);
       return Double.longBitsToDouble(value);
     }
-    
+
   }

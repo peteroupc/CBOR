@@ -3,7 +3,7 @@
  * User: Peter
  * Date: 12/1/2013
  * Time: 11:34 PM
- * 
+ *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
@@ -12,14 +12,14 @@ namespace PeterO
     /// <summary> </summary>
   public sealed partial class BigInteger
   {
-    
+
     /// <summary>Converts the value of a Int64 object to BigInteger.</summary>
     /// <returns>A BigInteger object with the same value as the Int64 object.</returns>
     /// <param name='bigValue'>A 64-bit signed integer.</param>
     public static implicit operator BigInteger(long bigValue){
       return valueOf(bigValue);
     }
-    
+
     /// <summary>Adds a BigInteger object and a BigInteger object.</summary>
     /// <param name='bthis'>A BigInteger object.</param>
     /// <returns>The sum of the two objects.</returns>
@@ -30,7 +30,6 @@ namespace PeterO
       return bthis.add(augend);
     }
 
-    
     /// <summary> Subtracts two BigInteger values. </summary>
     /// <param name='bthis'>A BigInteger value.</param>
     /// <returns>The difference of the two objects.</returns>
@@ -40,7 +39,7 @@ namespace PeterO
       if((bthis)==null)throw new ArgumentNullException("bthis");
       return bthis.subtract(subtrahend);
     }
-    
+
     /// <summary>Multiplies a BigInteger object by the value of a BigInteger
     /// object.</summary>
     /// <returns>The product of the two objects.</returns>
@@ -50,7 +49,7 @@ namespace PeterO
       if((operand1)==null)throw new ArgumentNullException("operand1");
       return operand1.multiply(operand2);
     }
-    
+
     /// <summary>Divides a BigInteger object by the value of a BigInteger
     /// object.</summary>
     /// <returns>The quotient of the two objects.</returns>
@@ -70,7 +69,7 @@ namespace PeterO
       if((dividend)==null)throw new ArgumentNullException("dividend");
       return dividend.remainder(divisor);
     }
-    
+
     /// <summary> </summary>
     /// <param name='bthis'>A BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
@@ -81,7 +80,6 @@ namespace PeterO
       return bthis.shiftLeft(numBits);
     }
 
-    
     /// <summary> Calculates the remainder when a BigInteger raised to a
     /// certain power is divided by another BigInteger. </summary>
     /// <param name='bigintValue'>A BigInteger object.</param>
@@ -115,8 +113,7 @@ namespace PeterO
       if((bigValue)==null)throw new ArgumentNullException("bigValue");
       return bigValue.negate();
     }
-    
-    
+
     /// <summary>Converts the value of a BigInteger object to Int64.</summary>
     /// <returns>A Int64 object with the same value as the BigInteger object.</returns>
     /// <param name='bigValue'>A BigInteger object.</param>
@@ -130,7 +127,7 @@ namespace PeterO
     public static explicit operator int(BigInteger bigValue){
       return bigValue.intValue();
     }
-    
+
     /// <summary> Determines whether a BigInteger instance is less than
     /// another BigInteger instance. </summary>
     /// <param name='thisValue'>A BigInteger object.</param>
@@ -161,7 +158,7 @@ namespace PeterO
       if(thisValue==null)return false;
       return (thisValue.CompareTo(otherValue)>0);
     }
-    
+
     /// <summary> Determines whether a BigInteger value is greater than
     /// another BigInteger value. </summary>
     /// <param name='thisValue'>A BigInteger object.</param>
@@ -186,7 +183,7 @@ namespace PeterO
         return (ret==1);
       }
     }
-    
+
     /// <summary> </summary>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
@@ -195,20 +192,19 @@ namespace PeterO
       if((thisValue)==null)throw new ArgumentNullException("thisValue");
       return thisValue.abs();
     }
-    
+
     /// <summary> Gets the BigInteger object for zero. </summary>
     [CLSCompliant(false)]
     public static BigInteger Zero {
       get { return ZERO; }
     }
-    
+
     /// <summary> Gets the BigInteger object for one. </summary>
     [CLSCompliant(false)]
     public static BigInteger One {
       get { return ONE; }
     }
-    
-    
+
     /// <summary> </summary>
     /// <param name='index'>A 32-bit signed integer.</param>
     /// <returns>A 64-bit signed integer.</returns>
@@ -222,7 +218,7 @@ namespace PeterO
         v |= (long)(testBit((int)(index+j)) ? 1 : 0) << j;
       return v;
     }
-    
+
     /// <summary> </summary>
     /// <param name='dividend'>A BigInteger object.</param>
     /// <param name='divisor'>A BigInteger object.</param>
@@ -235,7 +231,7 @@ namespace PeterO
       remainder=result[1];
       return result[0];
     }
-    
+
     /// <summary> </summary>
     /// <param name='bigintFirst'>A BigInteger object.</param>
     /// <param name='bigintSecond'>A BigInteger object.</param>
@@ -244,14 +240,14 @@ namespace PeterO
       if((bigintFirst)==null)throw new ArgumentNullException("bigintFirst");
       return bigintFirst.gcd(bigintSecond);
     }
-    
+
     /// <summary> </summary>
     /// <returns>A byte[] object.</returns>
     [CLSCompliant(false)]
     public byte[] ToByteArray(){
       return toByteArray(true);
     }
-    
+
     /// <summary> </summary>
     /// <param name='bigValue'>A BigInteger object.</param>
     /// <param name='power'>A BigInteger object.</param>
@@ -263,14 +259,14 @@ namespace PeterO
       if((power.Sign)<0)throw new ArgumentException("power.Sign"+" not greater or equal to "+"0"+" ("+Convert.ToString((power.Sign),System.Globalization.CultureInfo.InvariantCulture)+")");
       BigInteger val=BigInteger.One;
       while(power.Sign>0){
-        BigInteger p=(power>(BigInteger)5000000) ? 
+        BigInteger p=(power>(BigInteger)5000000) ?
           (BigInteger)5000000 : power;
         val*=bigValue.pow((int)p);
         power-=p;
       }
       return val;
     }
-    
+
     /// <summary> </summary>
     /// <param name='bigValue'>A BigInteger object.</param>
     /// <param name='power'>A 32-bit signed integer.</param>
@@ -281,7 +277,7 @@ namespace PeterO
       if((power)<0)throw new ArgumentException("power"+" not greater or equal to "+"0"+" ("+Convert.ToString((power),System.Globalization.CultureInfo.InvariantCulture)+")");
       return bigValue.pow(power);
     }
-    
+
     private static void OrWords(short[] r, short[] a, short[] b, int n)
     {
       for (int i=0; i<n; i++)
@@ -396,7 +392,7 @@ namespace PeterO
       if(xa.wordCount==0)xa.negative=false;
       return xa;
     }
-    
+
     /// <summary> </summary>
     /// <param name='a'>A BigInteger instance.</param>
     /// <param name='b'>Another BigInteger instance.</param>

@@ -12,7 +12,6 @@ import java.util.*;
 import java.io.*;
 //import java.math.*;
 
-
     /**
      * Represents an object in Concise Binary Object Representation (CBOR)
      * and contains methods for reading and writing CBOR data. CBOR is defined
@@ -60,22 +59,22 @@ import java.io.*;
     /**
      * Represents the value false.
      */
-    
+
     public static final CBORObject False = new CBORObject(CBORObjectType_SimpleValue, 20);
     /**
      * Represents the value true.
      */
-    
+
     public static final CBORObject True = new CBORObject(CBORObjectType_SimpleValue, 21);
     /**
      * Represents the value null.
      */
-    
+
     public static final CBORObject Null = new CBORObject(CBORObjectType_SimpleValue, 22);
     /**
      * Represents the value undefined.
      */
-    
+
     public static final CBORObject Undefined = new CBORObject(CBORObjectType_SimpleValue, 23);
     private CBORObject() { }
     private CBORObject(CBORObject obj, int tagLow, int tagHigh){
@@ -84,7 +83,7 @@ import java.io.*;
       this.tagHigh = tagHigh;
     }
     private CBORObject(int type, Object item) {
-      
+
       this.itemtype_ = type;
       this.item_ = item;
     }
@@ -728,7 +727,7 @@ public int compareTo(CBORObject other) {
         }
       }
     }
-    
+
     private static int ListCompare(ArrayList<CBORObject> listA, ArrayList<CBORObject> listB) {
       if (listA == null) return (listB == null) ? 0 : -1;
       if (listB == null) return 1;
@@ -873,7 +872,7 @@ public boolean equals(CBORObject other) {
       }
       return hashCode_;
     }
-    
+
     private static void CheckCBORLength(long expectedLength, long actualLength) {
       if (actualLength < expectedLength)
         throw new CBORException("Premature end of data");
@@ -2747,7 +2746,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if ((Object)bigValue == (Object)null)
         return CBORObject.Null;
       if(bigValue.IsNaN() || bigValue.IsInfinity()){
-        return new CBORObject(CBORObjectType_ExtendedFloat,bigValue);        
+        return new CBORObject(CBORObjectType_ExtendedFloat,bigValue);
       }
       BigInteger bigintExponent = bigValue.getExponent();
       if (bigintExponent.signum()==0 && !(bigValue.signum()==0 && bigValue.isNegative())) {
@@ -2769,7 +2768,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if ((Object)decfrac == (Object)null)
         return CBORObject.Null;
       if(decfrac.IsNaN() || decfrac.IsInfinity()){
-        return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);        
+        return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);
       }
       BigInteger bigintExponent = decfrac.getExponent();
       if (bigintExponent.signum()==0 && !(decfrac.signum()==0 && decfrac.isNegative())) {
@@ -2965,12 +2964,7 @@ public static CBORObject FromObject(Object obj) {
       if(obj instanceof Boolean) return FromObject(((Boolean)obj).booleanValue());
       if(obj instanceof Byte) return FromObject(((Byte)obj).byteValue());
       if(obj instanceof Float) return FromObject(((Float)obj).floatValue());
-      
-      
-      
-      
-      
-      
+
       if(obj instanceof Double) return FromObject(((Double)obj).doubleValue());
       if(obj instanceof List<?>) return FromObject((List<CBORObject>)obj);
       byte[] bytearr=(((obj instanceof byte[]) ? (byte[])obj : null));

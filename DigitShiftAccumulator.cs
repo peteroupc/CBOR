@@ -34,8 +34,7 @@ namespace PeterO {
       }
       return FastInteger.Copy(knownBitLength);
     }
-    
-    
+
     int shiftedSmall;
     bool isSmall;
 
@@ -119,8 +118,7 @@ namespace PeterO {
       }
       return ret;
     }
-    
-    
+
     /// <summary> </summary>
     public FastInteger ShiftedIntFast{
       get {
@@ -201,7 +199,7 @@ namespace PeterO {
         bitLeftmost = 0;
       }
     }
-    
+
     /// <summary> Shifts a number until it reaches the given number of digits,
     /// gathering information on whether the last digit discarded is set
     /// and whether the discarded digits to the right of that digit are set.
@@ -261,7 +259,7 @@ namespace PeterO {
         knownBitLength = new FastInteger(1);
         return;
       }
-      
+
       int kb = 0;
       int tmp = shiftedSmall;
       while (tmp > 0) {

@@ -190,7 +190,7 @@ namespace PeterO {
       if ((offset) > str.Length) throw new ArgumentException("offset" + " not less or equal to " + Convert.ToString((str.Length),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((offset),System.Globalization.CultureInfo.InvariantCulture) + ")");
       if ((length) < 0) throw new ArgumentException("length" + " not greater or equal to " + "0" + " (" + Convert.ToString((length),System.Globalization.CultureInfo.InvariantCulture) + ")");
       if ((length) > str.Length) throw new ArgumentException("length" + " not less or equal to " + Convert.ToString((str.Length),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((length),System.Globalization.CultureInfo.InvariantCulture) + ")");
-      if (((str.Length - offset)) < length) throw new ArgumentException("str's length minus " + offset + " not greater or equal to " + Convert.ToString((length),System.Globalization.CultureInfo.InvariantCulture) + " (" + 
+      if (((str.Length - offset)) < length) throw new ArgumentException("str's length minus " + offset + " not greater or equal to " + Convert.ToString((length),System.Globalization.CultureInfo.InvariantCulture) + " (" +
                                                                         Convert.ToString((str.Length - offset),System.Globalization.CultureInfo.InvariantCulture) + ")");
       byte[] bytes;
       int retval = 0;

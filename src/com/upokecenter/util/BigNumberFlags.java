@@ -4,11 +4,9 @@ package com.upokecenter.util;
  * User: Peter
  * Date: 12/22/2013
  * Time: 7:45 PM
- * 
+ *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
-
-
 
     /**
      * Description of BigNumberFlags.
@@ -21,7 +19,7 @@ package com.upokecenter.util;
     static final int FlagInfinity = 2;
     static final int FlagSpecial=(FlagQuietNaN|FlagSignalingNaN|FlagInfinity);
     static final int FlagNaN=(FlagQuietNaN|FlagSignalingNaN);
-    
+
     static final int FiniteOnly = 0;
     static final int FiniteAndNonFinite = 1;
     static final int X3Dot274 = 2;

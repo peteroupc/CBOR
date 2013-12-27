@@ -3,7 +3,7 @@
  * User: Peter
  * Date: 11/2/2013
  * Time: 3:26 PM
- * 
+ *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
@@ -14,11 +14,10 @@ using PeterO;
 namespace Test {
   /// <summary>
   /// </summary>
-  /// 
+  ///
   [TestFixture]
   public class CBORExtraTest{
-    
-    
+
     //[Test]
     public void GenerateDecimalTests(){
       FastRandom r = new FastRandom();
@@ -76,13 +75,12 @@ namespace Test {
       }
       return new Decimal(x);
     }
-    
-    
+
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
-    /// 
+    ///
     [Test]
     public void TestCBORObjectDecimal() {
       FastRandom rand = new FastRandom();
@@ -95,12 +93,12 @@ namespace Test {
         }
       }
     }
-    
+
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
-    /// 
+    ///
     [Test]
     public void TestSByte() {
       for (int i = SByte.MinValue; i <= SByte.MaxValue; i++) {
@@ -153,7 +151,7 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// 
+    ///
     [Test]
     public void TestFloatCloseToEdge(){
       try { CBORObject.FromObject(2.147483647E9d).AsUInt32(); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
@@ -877,12 +875,12 @@ namespace Test {
       try { CBORObject.FromObject(125.99999f).AsUInt16(); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
       try { CBORObject.FromObject(125.99999f).AsSByte(); } catch(Exception ex){ Assert.Fail(ex.ToString()); }
     }
-    
+
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
-    /// 
+    ///
     [Test]
     public void TestULong() {
       ulong[] ranges = new ulong[]{
@@ -902,8 +900,7 @@ namespace Test {
         }
       }
     }
-    
-    
+
     private static short Divide32By16(int dividendLow, short divisor, bool returnRemainder){
       int t;
       int dividendHigh=0;
@@ -993,12 +990,11 @@ namespace Test {
       }
     }
 
-    
     /// <summary>
     /// </summary>
     /// <returns>
     /// </returns>
-    /// 
+    ///
     [Test]
     public void TestUInt() {
       uint[] ranges = new uint[]{
@@ -1024,7 +1020,7 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// 
+    ///
     [Test]
     public void TestDecimal() {
       TestCommon.AssertSer(
@@ -1049,7 +1045,7 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// 
+    ///
     [Test]
     public void TestUShort() {
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; i++) {
@@ -1062,7 +1058,7 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// 
+    ///
     [Test]
     public void TestDoubleToOtherII() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
@@ -1080,7 +1076,7 @@ namespace Test {
     /// </summary>
     /// <returns>
     /// </returns>
-    /// 
+    ///
     [Test]
     public void TestDateTime() {
       DateTime[] ranges = new DateTime[]{

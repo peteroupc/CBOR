@@ -38,8 +38,7 @@ namespace PeterO {
       return this.exponent.Equals(otherValue.exponent) &&
         this.mantissa.Equals(otherValue.mantissa);
     }
-    
-    
+
     /// <summary> </summary>
     /// <param name='other'>A DecimalFraction object.</param>
     /// <returns>A Boolean object.</returns>
@@ -73,7 +72,7 @@ namespace PeterO {
       this.exponent = exponent;
       this.mantissa = mantissa;
     }
-    
+
     /// <summary> Creates a decimal fraction from a string that represents
     /// a number. <para> The format of the string generally consists of:<list
     /// type=''> <item> An optional '-' or '+' character (if '-', the value
@@ -93,10 +92,9 @@ namespace PeterO {
       ExtendedDecimal ed=ExtendedDecimal.FromString(str);
       return new DecimalFraction(ed.Mantissa,ed.Exponent);
     }
-    
 
     private static DecimalFraction MinusOne=new DecimalFraction(BigInteger.Zero-BigInteger.One,BigInteger.Zero);
-    
+
     private sealed class DecimalMathHelper : IRadixMathHelper<DecimalFraction> {
 
     /// <summary> </summary>
@@ -205,7 +203,7 @@ namespace PeterO {
           }
         }
       }
-      
+
     /// <summary> </summary>
     /// <param name='value'>A DecimalFraction object.</param>
     /// <returns>A 32-bit signed integer.</returns>
@@ -213,7 +211,7 @@ namespace PeterO {
       {
         return value.mantissa.Sign<0 ? BigNumberFlags.FlagNegative : 0;
       }
-      
+
     /// <summary> </summary>
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='exponent'>A BigInteger object.</param>
@@ -226,14 +224,14 @@ namespace PeterO {
           mantissa=-mantissa;
         return new DecimalFraction(mantissa,exponent);
       }
-      
+
     /// <summary> </summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport()
       {
         return BigNumberFlags.FiniteOnly;
       }
-      
+
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A DecimalFraction object.</returns>
@@ -246,7 +244,6 @@ namespace PeterO {
       }
     }
 
-    
     private string ToStringInternal(int mode) {
       switch(mode){
         case 0:
@@ -294,11 +291,11 @@ namespace PeterO {
       ExtendedDecimal ed=ExtendedDecimal.FromSingle(flt);
       return new DecimalFraction(ed.Mantissa,ed.Exponent);
     }
-    
+
     public static DecimalFraction FromBigInteger(BigInteger bigint) {
       return new DecimalFraction(bigint,BigInteger.Zero);
     }
-    
+
     public static DecimalFraction FromInt64(long valueSmall) {
       BigInteger bigint=(BigInteger)valueSmall;
       return new DecimalFraction(bigint,BigInteger.Zero);
@@ -325,7 +322,7 @@ namespace PeterO {
         new ExtendedFloat(bigfloat.Mantissa,bigfloat.Exponent));
       return new DecimalFraction(ed.Mantissa,ed.Exponent);
     }
-    
+
     /// <summary> Converts this value to a string.The format of the return
     /// value is exactly the same as that of the java.math.BigDecimal.toString()
     /// method. </summary>
@@ -693,7 +690,7 @@ namespace PeterO {
       DecimalFraction divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
-    
+
     /// <summary>Finds the remainder that results when dividing two DecimalFraction
     /// objects. The remainder is the value that remains when the absolute
     /// value of this object is divided by the absolute value of the other object;
@@ -776,7 +773,7 @@ namespace PeterO {
      ){
       return math.NextPlus(this,ctx);
     }
-    
+
     /// <summary> Finds the next value that is closer to the other object's
     /// value than this object's value.</summary>
     /// <param name='otherValue'>A DecimalFraction object.</param>
@@ -796,7 +793,6 @@ namespace PeterO {
       return math.NextToward(this,otherValue,ctx);
     }
 
-    
     /// <summary>Divides this DecimalFraction object by another DecimalFraction
     /// object. The preferred exponent for the result is this object's exponent
     /// minus the divisor's exponent.</summary>
@@ -820,7 +816,7 @@ namespace PeterO {
      ) {
       return math.Divide(this, divisor, ctx);
     }
-    
+
     /// <summary> Gets the greater value between two decimal fractions.
     /// </summary>
     /// <returns>The larger value of the two objects.</returns>
@@ -849,7 +845,7 @@ namespace PeterO {
       DecimalFraction first, DecimalFraction second) {
       return math.MaxMagnitude(first, second, null);
     }
-    
+
     /// <summary> Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>

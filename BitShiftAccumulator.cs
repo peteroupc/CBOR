@@ -18,18 +18,16 @@ namespace PeterO {
     }
     int bitsAfterLeftmost;
     private const int SmallBitLength = 32;
-    
 
     /// <summary> Gets whether any of the discarded bits to the right of the
     /// last one was set. </summary>
     public int OlderDiscardedDigits {
       get { return bitsAfterLeftmost; }
     }
-    
-    
+
     BigInteger shiftedBigInt;
     FastInteger knownBitLength;
-    
+
     /// <summary> </summary>
     /// <returns>A FastInteger object.</returns>
     public FastInteger GetDigitLength(){
@@ -38,7 +36,7 @@ namespace PeterO {
       }
       return FastInteger.Copy(knownBitLength);
     }
-    
+
     /// <summary> </summary>
     /// <param name='bits'>A FastInteger object.</param>
     /// <returns></returns>
@@ -59,10 +57,10 @@ namespace PeterO {
         }
       }
     }
-    
+
     int shiftedSmall;
     bool isSmall;
-    
+
     /// <summary> </summary>
     public BigInteger ShiftedInt {
       get {
@@ -100,7 +98,7 @@ namespace PeterO {
       bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
       bitLeftmost = (lastDiscarded != 0) ? 1 : 0;
     }
-    
+
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0)
         throw new ArgumentException("longInt is negative");
@@ -186,7 +184,7 @@ namespace PeterO {
         bitLeftmost = 0;
       }
     }
-    
+
     private static FastInteger ByteArrayBitLength(byte[] bytes){
       FastInteger fastKB = new FastInteger(bytes.Length).Multiply(8);
       for (int i = bytes.Length - 1; i >= 0; i--) {

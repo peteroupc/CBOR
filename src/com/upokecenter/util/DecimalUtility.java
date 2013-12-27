@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
-
     /**
      * Description of DecimalUtility.
      */
@@ -30,7 +28,7 @@ private DecimalUtility(){}
       BigInteger.valueOf(59604644775390625L), BigInteger.valueOf(298023223876953125L), BigInteger.valueOf(1490116119384765625L),
       BigInteger.valueOf(7450580596923828125L)
     };
-    
+
     static int ShiftLeftOne(int[] arr){
       {
         int carry=0;
@@ -42,7 +40,7 @@ private DecimalUtility(){}
         return carry;
       }
     }
-    
+
     static int CountTrailingZeros(int numberValue) {
       if (numberValue == 0)
         return 32;
@@ -105,7 +103,6 @@ private DecimalUtility(){}
       return i;
     }
 
-    
     static int ShiftAwayTrailingZerosTwoElements(int[] arr){
       int a0=arr[0];
       int a1=arr[1];
@@ -131,11 +128,10 @@ private DecimalUtility(){}
         }
       }
     }
-    
+
     static boolean HasBitSet(int[] arr, int bit){
       return ((bit>>5)<arr.length && (arr[bit>>5]&(1<<(bit&31)))!=0);
     }
-    
 
     static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
       if (diff.signum() <= 0) return BigInteger.ONE;
@@ -196,7 +192,7 @@ private DecimalUtility(){}
       }
       return mantissa;
     }
-    
+
     private static BigInteger FivePower40=(BigInteger.valueOf(95367431640625L)).multiply(BigInteger.valueOf(95367431640625L));
 
     static BigInteger FindPowerOfFive(int precision) {

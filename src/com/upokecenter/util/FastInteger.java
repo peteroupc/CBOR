@@ -7,7 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
 //import java.math.*;
 
     /**
@@ -20,7 +19,7 @@ at: http://peteroupc.github.io/CBOR/
      * a single line of code. For example:</p> <code> fastInt.Add(5).Multiply(10);</code>
      */
   final class FastInteger implements Comparable<FastInteger> {
-    
+
     private static final class MutableNumber {
       int[] data;
       int wordCount;
@@ -62,9 +61,9 @@ at: http://peteroupc.github.io/CBOR/
         wordCount = (val==0) ? 0 : 1;
         data[0] = ((int)((val) & 0xFFFFFFFFL));
       }
-      
+
     /**
-     * 
+     *
      * @return A BigInteger object.
      */
       public BigInteger ToBigInteger() {
@@ -81,31 +80,31 @@ at: http://peteroupc.github.io/CBOR/
         bytes[bytes.length - 1] = (byte)0;
         return BigInteger.fromByteArray((byte[])bytes,true);
       }
-      
+
       int[] GetLastWordsInternal(int numWords32Bit){
         int[] ret=new int[numWords32Bit];
         System.arraycopy(data,0,ret,0,Math.min(numWords32Bit,this.wordCount));
         return ret;
       }
-      
+
     /**
-     * 
+     *
      * @return A Boolean object.
      */
       public boolean CanFitInInt32() {
         return wordCount==0 || (wordCount==1 && (data[0]>>31)==0);
       }
-      
+
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
       public int ToInt32() {
         return wordCount==0 ? 0 : data[0];
       }
-      
+
     /**
-     * 
+     *
      * @return A MutableNumber object.
      */
       public MutableNumber Copy() {
@@ -117,7 +116,7 @@ at: http://peteroupc.github.io/CBOR/
         mbi.wordCount=this.wordCount;
         return mbi;
       }
-      
+
     /**
      * Multiplies this instance by the value of a Int32 object.
      * @param multiplicand A 32-bit signed integer.
@@ -213,21 +212,21 @@ at: http://peteroupc.github.io/CBOR/
         }
         return this;
       }
-      
+
     /**
-     * 
+     *
      */
       public int signum() {
           return (wordCount==0 ? 0 : 1);
         }
 
     /**
-     * 
+     *
      */
       public boolean isEvenNumber() {
           return (wordCount==0 || (data[0]&1)==0);
         }
-      
+
     /**
      * Compares a Int32 object with this instance.
      * @param val A 32-bit signed integer.
@@ -245,7 +244,7 @@ at: http://peteroupc.github.io/CBOR/
                   : ((data[0]>>31)==0)) ? -1 : 1;
         }
       }
-      
+
     /**
      * Subtracts a Int32 object from this instance.
      * @param other A 32-bit signed integer.
@@ -359,9 +358,9 @@ at: http://peteroupc.github.io/CBOR/
         }
         return 0;
       }
-      
+
     /**
-     * 
+     *
      * @param augend A 32-bit signed integer.
      */
       public MutableNumber Add(int augend) {
@@ -402,7 +401,7 @@ at: http://peteroupc.github.io/CBOR/
         return this;
       }
     }
-    
+
     int smallValue; // if integerMode is 0
     MutableNumber mnum; // if integerMode is 1
     BigInteger largeValue; // if integerMode is 2
@@ -444,7 +443,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
     public int AsInt32() {
@@ -459,7 +458,7 @@ at: http://peteroupc.github.io/CBOR/
           throw new IllegalStateException();
       }
     }
-    
+
     /**
      * Compares a FastInteger object with this instance.
      * @param val A FastInteger object.
@@ -492,13 +491,13 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
     /**
-     * 
+     *
      * @return A FastInteger object.
      */
     public FastInteger Abs() {
       return (this.signum() < 0) ? Negate() : this;
     }
-    
+
     public static BigInteger WordsToBigInteger(int[] words) {
       int wordCount=words.length;
       if(wordCount==1 && (words[0]>>31)==0){
@@ -517,7 +516,7 @@ at: http://peteroupc.github.io/CBOR/
     public static int[] GetLastWords(BigInteger bigint, int numWords32Bit) {
       return MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
     }
-    
+
     /**
      * Sets this object's value to the current value times another integer.
      * @param val The integer to multiply by.
@@ -668,8 +667,6 @@ at: http://peteroupc.github.io/CBOR/
         return AddInt(-val);
       }
     }
-    
-    
 
     /**
      * Sets this object's value to the current value plus the given integer.
@@ -700,7 +697,6 @@ at: http://peteroupc.github.io/CBOR/
       }
       return this;
     }
-    
 
     /**
      * Sets this object's value to the current value minus the given integer.
@@ -727,7 +723,7 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
     /**
-     * 
+     *
      * @param val A FastInteger object.
      * @return A FastInteger object.
      */
@@ -852,9 +848,9 @@ at: http://peteroupc.github.io/CBOR/
       }
       return this;
     }
-    
+
     /**
-     * 
+     *
      */
     public boolean isEvenNumber() {
         switch (integerMode) {
@@ -868,9 +864,9 @@ at: http://peteroupc.github.io/CBOR/
             throw new IllegalStateException();
         }
       }
-    
+
     /**
-     * 
+     *
      * @param val A 32-bit signed integer.
      * @return A FastInteger object.
      */
@@ -915,7 +911,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @return A Boolean object.
      */
     public boolean CanFitInInt32() {
@@ -953,7 +949,7 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
     /**
-     * 
+     *
      */
     public int signum() {
         switch(this.integerMode){
@@ -967,7 +963,7 @@ at: http://peteroupc.github.io/CBOR/
             return 0;
         }
       }
-    
+
     /**
      * Compares a Int32 object with this instance.
      * @param val A 32-bit signed integer.
@@ -988,7 +984,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param val A 32-bit signed integer.
      * @return A 32-bit signed integer.
      */
@@ -997,7 +993,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @return A BigInteger object.
      */
     public BigInteger AsBigInteger() {

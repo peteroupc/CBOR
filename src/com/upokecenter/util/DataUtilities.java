@@ -9,7 +9,6 @@ at: http://peteroupc.github.io/CBOR/
 
 import java.io.*;
 
-
     /**
      * Contains methods useful for reading and writing strings. It is designed
      * to have no dependencies other than the basic runtime class library.

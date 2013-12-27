@@ -7,7 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
 //import java.math.*;
 
   final class BitShiftAccumulator implements IShiftAccumulator {
@@ -19,20 +18,18 @@ at: http://peteroupc.github.io/CBOR/
     public int getLastDiscardedDigit() { return bitLeftmost; }
     int bitsAfterLeftmost;
     private static final int SmallBitLength = 32;
-    
 
     /**
      * Gets whether any of the discarded bits to the right of the last one was
      * set.
      */
     public int getOlderDiscardedDigits() { return bitsAfterLeftmost; }
-    
-    
+
     BigInteger shiftedBigInt;
     FastInteger knownBitLength;
-    
+
     /**
-     * 
+     *
      * @return A FastInteger object.
      */
     public FastInteger GetDigitLength() {
@@ -41,9 +38,9 @@ at: http://peteroupc.github.io/CBOR/
       }
       return FastInteger.Copy(knownBitLength);
     }
-    
+
     /**
-     * 
+     *
      * @param bits A FastInteger object.
      */
     public void ShiftToDigits(FastInteger bits) {
@@ -63,12 +60,12 @@ at: http://peteroupc.github.io/CBOR/
         }
       }
     }
-    
+
     int shiftedSmall;
     boolean isSmall;
-    
+
     /**
-     * 
+     *
      */
     public BigInteger getShiftedInt() {
         if (isSmall)
@@ -77,7 +74,7 @@ at: http://peteroupc.github.io/CBOR/
           return shiftedBigInt;
       }
     /**
-     * 
+     *
      */
     public FastInteger getShiftedIntFast() {
         if (isSmall){
@@ -89,7 +86,7 @@ at: http://peteroupc.github.io/CBOR/
     FastInteger discardedBitCount;
 
     /**
-     * 
+     *
      */
     public FastInteger getDiscardedDigitCount() { return discardedBitCount; }
 
@@ -104,7 +101,7 @@ at: http://peteroupc.github.io/CBOR/
       bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
       bitLeftmost = (lastDiscarded != 0) ? 1 : 0;
     }
-    
+
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0)
         throw new IllegalArgumentException("longInt is negative");
@@ -115,7 +112,7 @@ at: http://peteroupc.github.io/CBOR/
       return bsa;
     }
     /**
-     * 
+     *
      * @param fastint A FastInteger object.
      */
     public void ShiftRight(FastInteger fastint) {
@@ -191,7 +188,7 @@ at: http://peteroupc.github.io/CBOR/
         bitLeftmost = 0;
       }
     }
-    
+
     private static FastInteger ByteArrayBitLength(byte[] bytes) {
       FastInteger fastKB = new FastInteger(bytes.length).Multiply(8);
       for (int i = bytes.length - 1; i >= 0; i--) {

@@ -2,7 +2,6 @@ package com.upokecenter.util;
 
 //import java.math.*;
 
-
     /**
      * Common interface for classes that shift a number of digits and record
      * information on whether a non-zero digit was discarded this way.
