@@ -17,3 +17,4 @@ package com.upokecenter.util;
     boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den);
     BigInteger MultiplyByRadixPower(BigInteger value, FastInteger power);
   }
+

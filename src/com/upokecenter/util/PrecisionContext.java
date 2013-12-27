@@ -331,3 +331,4 @@ at: http://peteroupc.github.io/CBOR/
       new PrecisionContext(96,Rounding.HalfEven,0,28,true);
 
   }
+

@@ -13,7 +13,7 @@ namespace PeterO
   public sealed partial class BigInteger
   {
 
-    /// <summary>Converts the value of a Int64 object to BigInteger.</summary>
+    /// <summary>Converts the value of a 64-bit signed integer to BigInteger.</summary>
     /// <returns>A BigInteger object with the same value as the Int64 object.</returns>
     /// <param name='bigValue'>A 64-bit signed integer.</param>
     public static implicit operator BigInteger(long bigValue){

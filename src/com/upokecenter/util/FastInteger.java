@@ -118,7 +118,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * Multiplies this instance by the value of a Int32 object.
+     * Multiplies this instance by the value of a 32-bit signed integer.
      * @param multiplicand A 32-bit signed integer.
      * @return The product of the two objects.
      */
@@ -228,7 +228,7 @@ at: http://peteroupc.github.io/CBOR/
         }
 
     /**
-     * Compares a Int32 object with this instance.
+     * Compares a 32-bit signed integer with this instance.
      * @param val A 32-bit signed integer.
      * @return A 32-bit signed integer.
      */
@@ -246,7 +246,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * Subtracts a Int32 object from this instance.
+     * Subtracts a 32-bit signed integer from this instance.
      * @param other A 32-bit signed integer.
      * @return The difference of the two objects.
      */
@@ -808,7 +808,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Divides this instance by the value of a Int32 object.
+     * Divides this instance by the value of a 32-bit signed integer.
      * @param divisor A 32-bit signed integer.
      * @return The quotient of the two objects.
      */
@@ -965,7 +965,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * Compares a Int32 object with this instance.
+     * Compares a 32-bit signed integer with this instance.
      * @param val A 32-bit signed integer.
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
@@ -1009,3 +1009,4 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
   }
+

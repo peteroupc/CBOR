@@ -3018,3 +3018,4 @@ at: http://peteroupc.github.io/CBOR/
 
     public static final BigInteger TEN = new BigInteger().InitializeInt(10);
   }
+

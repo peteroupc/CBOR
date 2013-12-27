@@ -17,3 +17,4 @@ package com.upokecenter.util;
     void ShiftRightInt(int bits);
     void ShiftToDigits(FastInteger bits);
   }
+
