@@ -93,3 +93,4 @@ BigIntegerTest.DoTestShiftRight=function(m1,m2,result){
     }
 
 module.exports=BigIntegerTest;
+
