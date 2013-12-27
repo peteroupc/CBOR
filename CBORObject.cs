@@ -2691,7 +2691,7 @@ namespace PeterO {
     public static CBORObject FromObject(ExtendedFloat bigValue) {
       if ((object)bigValue == (object)null)
         return CBORObject.Null;
-      if(decfrac.IsNaN() || decfrac.IsInfinity()){
+      if(bigValue.IsNaN() || bigValue.IsInfinity()){
         return new CBORObject(CBORObjectType_ExtendedFloat,bigValue);        
       }
       BigInteger bigintExponent = bigValue.Exponent;
@@ -2715,7 +2715,7 @@ namespace PeterO {
         return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);        
       }
       BigInteger bigintExponent = decfrac.Exponent;
-      if (bigintExponent.IsZero && !(bigValue.IsZero && bigValue.IsNegative)) {
+      if (bigintExponent.IsZero && !(decfrac.IsZero && decfrac.IsNegative)) {
         return FromObject(decfrac.Mantissa);
       } else {
         if (!BigIntFits(bigintExponent))

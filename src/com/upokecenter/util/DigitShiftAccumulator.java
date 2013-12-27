@@ -220,7 +220,6 @@ at: http://peteroupc.github.io/CBOR/
       // Shift by the difference in digit length
       if (digitLength > digits) {
         int digitShift = digitLength - digits;
-        int digitDivide=digitShift;
         knownBitLength.SubtractInt(digitShift);
         //System.out.println("dlen={0} dshift={1}",digitLength,digitShift);
         int newLength = (int)(digitLength - digitShift);

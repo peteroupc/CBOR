@@ -78,7 +78,8 @@ namespace PeterO {
               ctx.Flags|=PrecisionContext.FlagClamped;
             }
             BigInteger bigexp=ctx.EMin;
-            bigexp-=(BigInteger)(ctx.Precision);
+            BigInteger bigprec=ctx.Precision;
+            bigexp-=(BigInteger)bigprec;
             bigexp+=BigInteger.One;
             thisFlags=((thisFlags^otherFlags)&BigNumberFlags.FlagNegative);
             return helper.CreateNewWithFlags(
@@ -178,17 +179,17 @@ namespace PeterO {
       int thisFlags=helper.GetFlags(thisValue);
       int otherFlags=helper.GetFlags(other);
       // Check this value then the other value for signaling NaN
-      if((helper.GetFlags(thisValue)&BigNumberFlags.FlagSignalingNaN)!=0){
+      if((thisFlags&BigNumberFlags.FlagSignalingNaN)!=0){
         return SignalingNaNInvalid(thisValue,ctx);
       }
-      if((helper.GetFlags(other)&BigNumberFlags.FlagSignalingNaN)!=0){
+      if((otherFlags&BigNumberFlags.FlagSignalingNaN)!=0){
         return SignalingNaNInvalid(other,ctx);
       }
       // Check this value then the other value for quiet NaN
-      if((helper.GetFlags(thisValue)&BigNumberFlags.FlagQuietNaN)!=0){
+      if((thisFlags&BigNumberFlags.FlagQuietNaN)!=0){
         return ReturnQuietNaN(thisValue,ctx);
       }
-      if((helper.GetFlags(other)&BigNumberFlags.FlagQuietNaN)!=0){
+      if((otherFlags&BigNumberFlags.FlagQuietNaN)!=0){
         return ReturnQuietNaN(other,ctx);
       }
       return default(T);
@@ -272,7 +273,6 @@ namespace PeterO {
       return default(T);
     }
     private T SignalingNaNInvalid(T value, PrecisionContext ctx){
-      int flags=helper.GetFlags(value);
       if(ctx!=null && ctx.HasFlags){
         ctx.Flags|=PrecisionContext.FlagInvalid;
       }
@@ -664,7 +664,8 @@ namespace PeterO {
       if((ctx2.Flags&(PrecisionContext.FlagRounded|PrecisionContext.FlagInvalid))!=0){
         return SignalInvalid(ctx);
       }
-      ctx2=ctx==null ? null : ctx.WithBlankFlags();
+      ctx2=ctx==null ? PrecisionContext.Unlimited.WithBlankFlags() : 
+        ctx.WithBlankFlags();
       T ret2=Add(thisValue,NegateRaw(Multiply(ret,divisor,null)),ctx2);
       if((ctx2.Flags&(PrecisionContext.FlagInvalid))!=0){
         return SignalInvalid(ctx);
@@ -699,8 +700,9 @@ namespace PeterO {
           return thisValue;
         } else {
           BigInteger bigexp2 = ctx.EMax;
+          BigInteger bigprec=ctx.Precision;
           bigexp2+=BigInteger.One;
-          bigexp2-=(BigInteger)(ctx.Precision);
+          bigexp2-=(BigInteger)bigprec;
           BigInteger overflowMant=helper.MultiplyByRadixPower(
             BigInteger.One,FastInteger.FromBig(ctx.Precision));
           overflowMant -= BigInteger.One;
@@ -755,8 +757,9 @@ namespace PeterO {
             return thisValue;
           } else {
             BigInteger bigexp2 = ctx.EMax;
+          BigInteger bigprec=ctx.Precision;
             bigexp2+=BigInteger.One;
-            bigexp2-=(BigInteger)(ctx.Precision);
+            bigexp2-=(BigInteger)bigprec;
             BigInteger overflowMant=helper.MultiplyByRadixPower(
               BigInteger.One,FastInteger.FromBig(ctx.Precision));
             overflowMant -= BigInteger.One;
@@ -825,8 +828,9 @@ namespace PeterO {
       if((flags&BigNumberFlags.FlagInfinity)!=0){
         if((flags&BigNumberFlags.FlagNegative)!=0){
           BigInteger bigexp2 = ctx.EMax;
+          BigInteger bigprec=ctx.Precision;
           bigexp2+=BigInteger.One;
-          bigexp2-=(BigInteger)(ctx.Precision);
+          bigexp2-=(BigInteger)bigprec;
           BigInteger overflowMant=helper.MultiplyByRadixPower(
             BigInteger.One,FastInteger.FromBig(ctx.Precision));
           overflowMant -= BigInteger.One;
@@ -1208,7 +1212,7 @@ namespace PeterO {
         BigInteger bigexp=exp.AsBigInteger();
         T retval=helper.CreateNewWithFlags(
           bigResult, bigexp, resultNeg ? BigNumberFlags.FlagNegative : 0);
-        if(atMaxPrecision && !ctx.HasExponentRange){
+        if(atMaxPrecision && (ctx==null || !ctx.HasExponentRange)){
           // At this point, the check for rounding with Rounding.Unnecessary
           // already occurred above
           if(!RoundGivenDigits(lastDiscarded,olderDiscarded,rounding,resultNeg,posBigResult)){
@@ -1225,7 +1229,7 @@ namespace PeterO {
                                              resultNeg ? BigNumberFlags.FlagNegative : 0);
           }
         }
-        if(atMaxPrecision && ctx.HasExponentRange){
+        if(atMaxPrecision && (ctx!=null && ctx.HasExponentRange)){
           BigInteger fastAdjustedExp = FastInteger.Copy(exp)
             .AddBig(ctx.Precision).SubtractInt(1).AsBigInteger();
           if(fastAdjustedExp.CompareTo(ctx.EMin)>=0 && fastAdjustedExp.CompareTo(ctx.EMax)<=0){
@@ -1395,7 +1399,7 @@ namespace PeterO {
                             PrecisionContext ctx) {
       PrecisionContext ctx2=PrecisionContext.Unlimited.WithBlankFlags();
       T ret=Add(Multiply(thisValue,multiplicand,ctx2), augend, ctx);
-      if(ctx.HasFlags)ctx.Flags|=ctx2.Flags;
+      if(ctx!=null && ctx.HasFlags)ctx.Flags|=ctx2.Flags;
       return ret;
     }
 

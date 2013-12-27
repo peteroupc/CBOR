@@ -115,8 +115,6 @@ namespace PeterO {
       return ext;
     }
     
-    private const int MaxSafeInt = 214748363;
-    
     /// <summary> Creates a binary float from a string that represents a number.
     /// Note that if the string contains a negative exponent, the resulting
     /// value might not be exact. However, the resulting binary float will
@@ -209,14 +207,6 @@ namespace PeterO {
         mantissa = ShiftLeft(mantissa, diff);
         if (negative) mantissa = -mantissa;
         return mantissa;
-      }
-
-    /// <summary> </summary>
-    /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='exponent'>A BigInteger object.</param>
-    /// <returns>An ExtendedFloat object.</returns>
-      public ExtendedFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
-        return new ExtendedFloat(mantissa, exponent);
       }
 
     /// <summary> </summary>
@@ -924,7 +914,7 @@ public ExtendedDecimal ToExtendedDecimal(){
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0.</returns>
     /// <exception cref='ArithmeticException'>The result can't be exact
-    /// because it would have a nonterminating decimal expansion.</exception>
+    /// because it would have a nonterminating binary expansion.</exception>
     public ExtendedFloat Divide(ExtendedFloat divisor) {
       return Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
@@ -1033,7 +1023,7 @@ public ExtendedDecimal ToExtendedDecimal(){
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0.</returns>
     /// <exception cref='ArithmeticException'>Either ctx is null or ctx's
-    /// precision is 0, and the result would have a nonterminating decimal
+    /// precision is 0, and the result would have a nonterminating binary
     /// expansion; or, the rounding mode is Rounding.Unnecessary and the
     /// result is not exact.</exception>
     public ExtendedFloat Divide(
@@ -1673,7 +1663,7 @@ public ExtendedDecimal ToExtendedDecimal(){
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns>The result thisValue * multiplicand + augend.</returns>
+    /// <returns>The result thisValue * multiplicand - subtrahend.</returns>
     public ExtendedFloat MultiplyAndSubtract(
       ExtendedFloat op, ExtendedFloat subtrahend, PrecisionContext ctx) {
       if((subtrahend)==null)throw new ArgumentNullException("decfrac");

@@ -365,7 +365,6 @@ namespace PeterO {
     /// <param name='e2'>A BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
-        bool negative = (mantissa.Sign < 0);
         if (mantissa.Sign == 0) return BigInteger.Zero;
         FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
         if (diff.CanFitInInt32()) {
@@ -374,14 +373,6 @@ namespace PeterO {
           mantissa *= (BigInteger)(DecimalUtility.FindPowerOfTenFromBig(diff.AsBigInteger()));
         }
         return mantissa;
-      }
-
-    /// <summary> </summary>
-    /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='exponent'>A BigInteger object.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
-      public ExtendedDecimal CreateNew(BigInteger mantissa, BigInteger exponent) {
-        return new ExtendedDecimal(mantissa, exponent);
       }
 
     /// <summary> </summary>
@@ -1916,7 +1907,7 @@ public ExtendedDecimal Quantize(
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns>The result thisValue * multiplicand + augend.</returns>
+    /// <returns>The result thisValue * multiplicand - subtrahend.</returns>
     public ExtendedDecimal MultiplyAndSubtract(
       ExtendedDecimal op, ExtendedDecimal subtrahend, PrecisionContext ctx) {
       if((subtrahend)==null)throw new ArgumentNullException("decfrac");
