@@ -20,7 +20,7 @@ namespace PeterO {
     /// <code> fastInt.Add(5).Multiply(10);</code>
     /// </summary>
   sealed class FastInteger : IComparable<FastInteger> {
-    
+
     private sealed class MutableNumber {
       int[] data;
       int wordCount;
@@ -62,7 +62,7 @@ namespace PeterO {
         wordCount = (val==0) ? 0 : 1;
         data[0] = unchecked((int)((val) & 0xFFFFFFFFL));
       }
-      
+
     /// <summary> </summary>
     /// <returns>A BigInteger object.</returns>
       public BigInteger ToBigInteger() {
@@ -79,25 +79,25 @@ namespace PeterO {
         bytes[bytes.Length - 1] = (byte)0;
         return new BigInteger((byte[])bytes);
       }
-      
+
       internal int[] GetLastWordsInternal(int numWords32Bit){
         int[] ret=new int[numWords32Bit];
         Array.Copy(data,ret,Math.Min(numWords32Bit,this.wordCount));
         return ret;
       }
-      
+
     /// <summary> </summary>
     /// <returns>A Boolean object.</returns>
       public bool CanFitInInt32(){
         return wordCount==0 || (wordCount==1 && (data[0]>>31)==0);
       }
-      
+
     /// <summary> </summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int ToInt32(){
         return wordCount==0 ? 0 : data[0];
       }
-      
+
     /// <summary> </summary>
     /// <returns>A MutableNumber object.</returns>
       public MutableNumber Copy(){
@@ -109,7 +109,7 @@ namespace PeterO {
         mbi.wordCount=this.wordCount;
         return mbi;
       }
-      
+
     /// <summary> Multiplies this instance by the value of a Int32 object.</summary>
     /// <param name='multiplicand'>A 32-bit signed integer.</param>
     /// <returns>The product of the two objects.</returns>
@@ -203,7 +203,7 @@ namespace PeterO {
         }
         return this;
       }
-      
+
     /// <summary> </summary>
       public int Sign{
         get {
@@ -217,7 +217,7 @@ namespace PeterO {
           return (wordCount==0 || (data[0]&1)==0);
         }
       }
-      
+
     /// <summary>Compares a Int32 object with this instance.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A 32-bit signed integer.</returns>
@@ -233,7 +233,7 @@ namespace PeterO {
                   : ((data[0]>>31)==0)) ? -1 : 1;
         }
       }
-      
+
     /// <summary>Subtracts a Int32 object from this instance.</summary>
     /// <param name='other'>A 32-bit signed integer.</param>
     /// <returns>The difference of the two objects.</returns>
@@ -341,7 +341,7 @@ namespace PeterO {
         }
         return 0;
       }
-      
+
     /// <summary> </summary>
     /// <param name='augend'> A 32-bit signed integer.</param>
     /// <returns></returns>
@@ -383,7 +383,7 @@ namespace PeterO {
         return this;
       }
     }
-    
+
     int smallValue; // if integerMode is 0
     MutableNumber mnum; // if integerMode is 1
     BigInteger largeValue; // if integerMode is 2
@@ -438,7 +438,7 @@ namespace PeterO {
           throw new InvalidOperationException();
       }
     }
-    
+
     /// <summary>Compares a FastInteger object with this instance.</summary>
     /// <param name='val'>A FastInteger object.</param>
     /// <returns>Zero if the values are equal; a negative number is this instance
@@ -473,7 +473,7 @@ namespace PeterO {
     public FastInteger Abs() {
       return (this.Sign < 0) ? Negate() : this;
     }
-    
+
     public static BigInteger WordsToBigInteger(int[] words){
       int wordCount=words.Length;
       if(wordCount==1 && (words[0]>>31)==0){
@@ -492,7 +492,7 @@ namespace PeterO {
     public static int[] GetLastWords(BigInteger bigint, int numWords32Bit){
       return MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
     }
-    
+
     /// <summary> Sets this object's value to the current value times another
     /// integer. </summary>
     /// <param name='val'>The integer to multiply by.</param>
@@ -637,8 +637,6 @@ namespace PeterO {
         return AddInt(-val);
       }
     }
-    
-    
 
     /// <summary> Sets this object's value to the current value plus the given
     /// integer. </summary>
@@ -668,7 +666,6 @@ namespace PeterO {
       }
       return this;
     }
-    
 
     /// <summary> Sets this object's value to the current value minus the
     /// given integer. </summary>
@@ -813,7 +810,7 @@ namespace PeterO {
       }
       return this;
     }
-    
+
     /// <summary> </summary>
     public bool IsEvenNumber{
       get {
@@ -829,7 +826,7 @@ namespace PeterO {
         }
       }
     }
-    
+
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A FastInteger object.</returns>
@@ -922,7 +919,7 @@ namespace PeterO {
         }
       }
     }
-    
+
     /// <summary>Compares a Int32 object with this instance.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance

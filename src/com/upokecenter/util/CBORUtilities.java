@@ -7,7 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
 //import java.math.*;
 
     /**
@@ -19,7 +18,7 @@ private CBORUtilities(){}
     private static final String Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private static final String Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     /**
-     * 
+     *
      * @param str A StringBuilder object.
      * @param data A byte[] object.
      * @param padding A Boolean object.
@@ -126,11 +125,11 @@ private CBORUtilities(){}
         return BigInteger.valueOf(mantissa);
       }
     }
-    
+
     public static String BigIntToString(BigInteger bigint) {
       return bigint.toString();
     }
-    
+
     public static BigInteger BigIntegerFromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
       int fpExponent = (int)((value[1] >> 20) & 0x7ff);

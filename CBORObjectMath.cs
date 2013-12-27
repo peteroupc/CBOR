@@ -14,7 +14,7 @@ namespace PeterO {
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>A CBORObject object.</param>
   static class CBORObjectMath {
-      
+
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) throw new ArgumentNullException("a");
       if (b == null) throw new ArgumentNullException("b");

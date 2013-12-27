@@ -115,7 +115,7 @@ namespace PeterO {
         flags = value;
       }
     }
-    
+
     /// <summary> </summary>
     /// <param name='exponent'>A BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
@@ -139,7 +139,7 @@ namespace PeterO {
         return true;
       }
     }
-    
+
     /// <summary> Copies this PrecisionContext with the specified rounding
     /// mode. </summary>
     /// <returns>A PrecisionContext object.</returns>
@@ -309,6 +309,6 @@ namespace PeterO {
     #endif
     public static readonly PrecisionContext CliDecimal =
       new PrecisionContext(96,Rounding.HalfEven,0,28,true);
-    
+
   }
 }

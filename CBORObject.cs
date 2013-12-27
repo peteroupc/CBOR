@@ -2692,7 +2692,7 @@ namespace PeterO {
       if ((object)bigValue == (object)null)
         return CBORObject.Null;
       if(bigValue.IsNaN() || bigValue.IsInfinity()){
-        return new CBORObject(CBORObjectType_ExtendedFloat,bigValue);        
+        return new CBORObject(CBORObjectType_ExtendedFloat,bigValue);
       }
       BigInteger bigintExponent = bigValue.Exponent;
       if (bigintExponent.IsZero && !(bigValue.IsZero && bigValue.IsNegative)) {
@@ -2712,7 +2712,7 @@ namespace PeterO {
       if ((object)decfrac == (object)null)
         return CBORObject.Null;
       if(decfrac.IsNaN() || decfrac.IsInfinity()){
-        return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);        
+        return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);
       }
       BigInteger bigintExponent = decfrac.Exponent;
       if (bigintExponent.IsZero && !(decfrac.IsZero && decfrac.IsNegative)) {

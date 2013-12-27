@@ -1,8 +1,6 @@
 package com.upokecenter.util;
 
-
 //import java.math.*;
-
 
   interface IRadixMathHelper<T> {
     int GetRadix();

@@ -10,10 +10,8 @@ package com.upokecenter.util;
 // Still in the public domain;
 // public domain dedication: http://creativecommons.org/publicdomain/zero/1.0/
 
-  
-  
   import java.io.*;
-  
+
   import java.util.*;
   class JSONTokener {
     /**
@@ -156,7 +154,7 @@ package com.upokecenter.util;
       }
     }
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
     public int getOptions() {
@@ -230,7 +228,7 @@ package com.upokecenter.util;
       }
     }
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
     public int nextClean() {
@@ -241,7 +239,7 @@ package com.upokecenter.util;
       }
     }
     /**
-     * 
+     *
      * @param lastChar A 32-bit signed integer.
      * @return A 32-bit signed integer.
      */
@@ -383,7 +381,7 @@ package com.upokecenter.util;
       }
       throw this.syntaxError("Expected a String as a key");
     }
-    
+
     // Based on the json.org implementation for JSONTokener,
     // now mostly rewritten
     private CBORObject NextJSONValue(int firstChar, int[] nextChar) {
@@ -456,7 +454,7 @@ package com.upokecenter.util;
       }
     }
     /**
-     * 
+     *
      * @return A CBORObject object.
      */
     public CBORObject ParseJSONObjectOrArray() {

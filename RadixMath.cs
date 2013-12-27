@@ -7,11 +7,11 @@ namespace PeterO {
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
   class RadixMath<T> {
-    
+
     IRadixMathHelper<T> helper;
     int thisRadix;
     int support;
-    
+
     public RadixMath(IRadixMathHelper<T> helper) {
       this.helper = helper;
       this.support=helper.GetArithmeticSupport();
@@ -93,7 +93,7 @@ namespace PeterO {
       }
       return default(T);
     }
-    
+
     private T RemainderHandleSpecial(T thisValue, T other, PrecisionContext ctx){
       int thisFlags=helper.GetFlags(thisValue);
       int otherFlags=helper.GetFlags(other);
@@ -174,7 +174,7 @@ namespace PeterO {
       }
       return default(T);
     }
-    
+
     private T HandleNotANumber(T thisValue, T other, PrecisionContext ctx){
       int thisFlags=helper.GetFlags(thisValue);
       int otherFlags=helper.GetFlags(other);
@@ -194,7 +194,7 @@ namespace PeterO {
       }
       return default(T);
     }
-    
+
     private T ValueOf(int value, PrecisionContext ctx){
       if(ctx==null || !ctx.HasExponentRange || ctx.ExponentWithinRange(BigInteger.Zero))
         return helper.ValueOf(value);
@@ -225,7 +225,7 @@ namespace PeterO {
       }
       return 2;
     }
-    
+
     private T CompareToHandleSpecial(T thisValue, T other, bool treatQuietNansAsSignaling, PrecisionContext ctx){
       int thisFlags=helper.GetFlags(thisValue);
       int otherFlags=helper.GetFlags(other);
@@ -294,14 +294,14 @@ namespace PeterO {
       }
       return helper.CreateNewWithFlags(BigInteger.Zero,BigInteger.Zero,BigNumberFlags.FlagQuietNaN);
     }
-    
+
     private T SignalOverflow(bool neg){
       return support==BigNumberFlags.FiniteOnly ? default(T) :
         helper.CreateNewWithFlags(
           BigInteger.Zero,BigInteger.Zero,
           (neg ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagInfinity);
     }
-    
+
     private T SignalDivideByZero(PrecisionContext ctx, bool neg){
       if(support==BigNumberFlags.FiniteOnly)
         throw new DivideByZeroException("Division by zero");
@@ -531,7 +531,7 @@ namespace PeterO {
       }
       return ret;
     }
-    
+
     /// <summary> </summary>
     /// <param name='value'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -612,7 +612,7 @@ namespace PeterO {
         }
       }
     }
-    
+
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object.</param>
@@ -664,7 +664,7 @@ namespace PeterO {
       if((ctx2.Flags&(PrecisionContext.FlagRounded|PrecisionContext.FlagInvalid))!=0){
         return SignalInvalid(ctx);
       }
-      ctx2=ctx==null ? PrecisionContext.Unlimited.WithBlankFlags() : 
+      ctx2=ctx==null ? PrecisionContext.Unlimited.WithBlankFlags() :
         ctx.WithBlankFlags();
       T ret2=Add(thisValue,NegateRaw(Multiply(ret,divisor,null)),ctx2);
       if((ctx2.Flags&(PrecisionContext.FlagInvalid))!=0){
@@ -806,7 +806,7 @@ namespace PeterO {
         return val;
       }
     }
-    
+
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -979,7 +979,7 @@ namespace PeterO {
     private const int IntegerModeRegular = 0;
 
     private const int NonTerminatingCheckThreshold = 5;
-    
+
     private T DivideInternal(
       T thisValue,
       T divisor,
@@ -1379,7 +1379,7 @@ namespace PeterO {
       BigInteger newexp = (helper.GetExponent(thisValue) + (BigInteger)bigintOp2);
       thisFlags=(thisFlags&BigNumberFlags.FlagNegative)^(otherFlags&BigNumberFlags.FlagNegative);
       T ret = helper.CreateNewWithFlags(
-        helper.GetMantissa(thisValue) * 
+        helper.GetMantissa(thisValue) *
         (BigInteger)(helper.GetMantissa(other)), newexp,
         thisFlags
        );
@@ -1480,7 +1480,7 @@ namespace PeterO {
       }
       return dfrac;
     }
-    
+
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='context'>A PrecisionContext object.</param>
@@ -1672,9 +1672,7 @@ namespace PeterO {
       }
       return ret;
     }
-    
-    
-    
+
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='expOther'>A BigInteger object.</param>
@@ -1791,7 +1789,7 @@ namespace PeterO {
       }
       return ret;
     }
-    
+
     private T RoundToPrecisionInternal(
       T thisValue,
       FastInteger precision,
@@ -1862,7 +1860,7 @@ namespace PeterO {
       } else {
         fastPrecision=precision;
       }
-      
+
       if(shift!=null){
         accum.ShiftRight(shift);
       }
@@ -2079,7 +2077,7 @@ namespace PeterO {
       return helper.CreateNewWithFlags(bigmantissa, exp.AsBigInteger(),
                                        neg ? BigNumberFlags.FlagNegative : 0);
     }
-    
+
     private T AddCore(BigInteger mant1, // assumes mant1 is nonnegative
                       BigInteger mant2, // assumes mant2 is nonnegative
                       BigInteger exponent, int flags1, int flags2, PrecisionContext ctx){
@@ -2275,7 +2273,7 @@ namespace PeterO {
       }
       return retval;
     }
-    
+
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='decfrac'>A T object.</param>
@@ -2288,7 +2286,7 @@ namespace PeterO {
       if((Object)result!=(Object)default(T))return result;
       return ValueOf(CompareTo(thisValue,decfrac),null);
     }
-    
+
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='decfrac'>A T object.</param>

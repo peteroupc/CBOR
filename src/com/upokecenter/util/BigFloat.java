@@ -7,14 +7,13 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
 //import java.math.*;
 
     /**
      * Represents an arbitrary-precision binary floating-point number.
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
      * The value of the number is equal to mantissa * 2^exponent.
-     * @deprecated Use ExtendedFloat instead, which supports more kinds of values than BigFloat. 
+     * @deprecated Use ExtendedFloat instead, which supports more kinds of values than BigFloat.
  */
 @Deprecated
   public final class BigFloat implements Comparable<BigFloat> {
@@ -29,7 +28,7 @@ at: http://peteroupc.github.io/CBOR/
      * Gets this object's unscaled value.
      */
     public BigInteger getMantissa() { return mantissa; }
-    
+
     /**
      * Determines whether this object's mantissa and exponent are equal
      * to those of another object.
@@ -43,7 +42,7 @@ at: http://peteroupc.github.io/CBOR/
         this.mantissa.equals(otherValue.mantissa);
     }
     /**
-     * 
+     *
      * @param other A BigFloat object.
      * @return A Boolean object.
      */
@@ -71,7 +70,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       return hashCode_;
     }
-    
+
     /**
      * Creates a bigfloat with the value exponent*2^mantissa.
      * @param mantissa The unscaled value.
@@ -81,7 +80,7 @@ at: http://peteroupc.github.io/CBOR/
       this.exponent = exponent;
       this.mantissa = mantissa;
     }
-    
+
     private static BigInteger BigShiftIteration = BigInteger.valueOf(1000000);
     private static int ShiftIteration = 1000000;
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
@@ -103,18 +102,17 @@ at: http://peteroupc.github.io/CBOR/
       return val;
     }
 
-    
     /**
-     * 
+     *
      * @param bigint A BigInteger object.
      * @return A BigFloat object.
      */
     public static BigFloat FromBigInteger(BigInteger bigint) {
       return new BigFloat(bigint,BigInteger.ZERO);
     }
-    
+
     /**
-     * 
+     *
      * @param numberValue A 64-bit signed integer.
      * @return A BigFloat object.
      */
@@ -122,12 +120,12 @@ at: http://peteroupc.github.io/CBOR/
       BigInteger bigint=BigInteger.valueOf(numberValue);
       return new BigFloat(bigint,BigInteger.ZERO);
     }
-    
+
     public static BigFloat FromExtendedFloat(ExtendedFloat ef) {
       if(ef.IsNaN() || ef.IsInfinity())throw new ArithmeticException("Is NaN or infinity");
       return new BigFloat(ef.getMantissa(),ef.getExponent());
     }
-    
+
     /**
      * Creates a bigfloat from its string representation. Note that if the
      * bigfloat contains a negative exponent, the resulting value might
@@ -177,8 +175,6 @@ at: http://peteroupc.github.io/CBOR/
     public float ToSingle() {
       return new ExtendedFloat(this.getMantissa(),this.getExponent()).ToSingle();
     }
-    
-    
 
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
@@ -216,28 +212,28 @@ at: http://peteroupc.github.io/CBOR/
     public String ToPlainString() {
       return new ExtendedFloat(this.getMantissa(),this.getExponent()).ToPlainString();
     }
-    
+
     /**
      * Represents the number 1.
      */
-    
+
     public static final BigFloat One = new BigFloat(BigInteger.ONE,BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
-    
+
     public static final BigFloat Zero = new BigFloat(BigInteger.ZERO,BigInteger.ZERO);
     /**
      * Represents the number 10.
      */
-    
+
     public static final BigFloat Ten = FromInt64((long)10);
 
     private static final class BinaryMathHelper implements IRadixMathHelper<BigFloat> {
 
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
       public int GetRadix() {
@@ -245,7 +241,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value A BigFloat object.
      * @return A 32-bit signed integer.
      */
@@ -254,7 +250,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value A BigFloat object.
      * @return A BigInteger object.
      */
@@ -263,7 +259,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value A BigFloat object.
      * @return A BigInteger object.
      */
@@ -272,7 +268,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param mantissa A BigInteger object.
      * @param e1 A BigInteger object.
      * @param e2 A BigInteger object.
@@ -288,7 +284,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.
@@ -299,7 +295,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
@@ -308,7 +304,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param num A BigInteger object.
      * @param den A BigInteger object.
      * @return A Boolean object.
@@ -324,7 +320,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param bigint A BigInteger object.
      * @param power A FastInteger object.
      * @return A BigInteger object.
@@ -337,18 +333,18 @@ at: http://peteroupc.github.io/CBOR/
           return ShiftLeft(bigint, power.AsBigInteger());
         }
       }
-      
+
     /**
-     * 
+     *
      * @param value A BigFloat object.
      * @return A 32-bit signed integer.
      */
       public int GetFlags(BigFloat value) {
         return value.mantissa.signum()<0 ? BigNumberFlags.FlagNegative : 0;
       }
-      
+
     /**
-     * 
+     *
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
      * @param flags A 32-bit signed integer.
@@ -361,15 +357,15 @@ at: http://peteroupc.github.io/CBOR/
         return new BigFloat(mantissa,exponent);
       }
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteOnly;
       }
-      
+
     /**
-     * 
+     *
      * @param val A 32-bit signed integer.
      * @return A BigFloat object.
      */
@@ -377,7 +373,7 @@ at: http://peteroupc.github.io/CBOR/
         return FromInt64(val);
       }
     }
-    
+
     //----------------------------
     /**
      * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
@@ -467,7 +463,7 @@ at: http://peteroupc.github.io/CBOR/
       return math.Reduce(this, ctx);
     }
     /**
-     * 
+     *
      * @param divisor A BigFloat object.
      * @return A BigFloat object.
      */
@@ -478,7 +474,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param divisor A BigFloat object.
      * @param ctx A PrecisionContext object.
      * @return A BigFloat object.
@@ -722,7 +718,7 @@ at: http://peteroupc.github.io/CBOR/
       BigFloat divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
-    
+
     /**
      * Finds the remainder that results when dividing two BigFloat objects.
      * The remainder is the value that remains when the absolute value of
@@ -807,7 +803,7 @@ at: http://peteroupc.github.io/CBOR/
      ) {
       return math.NextPlus(this,ctx);
     }
-    
+
     /**
      * Finds the next value that is closer to the other object's value than
      * this object's value.
@@ -829,7 +825,6 @@ at: http://peteroupc.github.io/CBOR/
       return math.NextToward(this,otherValue,ctx);
     }
 
-    
     /**
      * Divides this BigFloat object by another BigFloat object. The preferred
      * exponent for the result is this object's exponent minus the divisor's
@@ -854,7 +849,7 @@ at: http://peteroupc.github.io/CBOR/
      ) {
       return math.Divide(this, divisor, ctx);
     }
-    
+
     /**
      * Gets the greater value between two bigfloats.
      * @param first A BigFloat object.
@@ -887,7 +882,7 @@ at: http://peteroupc.github.io/CBOR/
       BigFloat first, BigFloat second) {
       return math.MaxMagnitude(first, second, null);
     }
-    
+
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
@@ -1176,6 +1171,6 @@ at: http://peteroupc.github.io/CBOR/
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
     }
-    
+
   }
 

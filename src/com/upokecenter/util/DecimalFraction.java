@@ -7,15 +7,12 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
-
-
     /**
      * Represents an arbitrary-precision decimal floating-point number,
      * supporting only finite decimal numbers. Consists of an integer mantissa
      * and an integer exponent, both arbitrary-precision. The value of
      * the number is equal to mantissa * 10^exponent.
-     * @deprecated Use ExtendedDecimal instead, which supports more kinds of values than DecimalFraction. 
+     * @deprecated Use ExtendedDecimal instead, which supports more kinds of values than DecimalFraction.
  */
 @Deprecated
   public final class DecimalFraction implements Comparable<DecimalFraction> {
@@ -30,7 +27,7 @@ at: http://peteroupc.github.io/CBOR/
      * Gets this object's unscaled value.
      */
     public BigInteger getMantissa() { return mantissa; }
-    
+
     /**
      * Determines whether this object's mantissa and exponent are equal
      * to those of another object.
@@ -44,10 +41,9 @@ at: http://peteroupc.github.io/CBOR/
       return this.exponent.equals(otherValue.exponent) &&
         this.mantissa.equals(otherValue.mantissa);
     }
-    
-    
+
     /**
-     * 
+     *
      * @param other A DecimalFraction object.
      * @return A Boolean object.
      */
@@ -75,7 +71,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       return hashCode_;
     }
-    
+
     /**
      * Creates a decimal fraction with the value exponent*10^mantissa.
      * @param mantissa The unscaled value.
@@ -85,7 +81,7 @@ at: http://peteroupc.github.io/CBOR/
       this.exponent = exponent;
       this.mantissa = mantissa;
     }
-    
+
     /**
      * Creates a decimal fraction from a string that represents a number.
      * <p> The format of the string generally consists of:<ul> <li> An optional
@@ -103,14 +99,13 @@ at: http://peteroupc.github.io/CBOR/
       ExtendedDecimal ed=ExtendedDecimal.FromString(str);
       return new DecimalFraction(ed.getMantissa(),ed.getExponent());
     }
-    
 
     private static DecimalFraction MinusOne=new DecimalFraction(BigInteger.ZERO.subtract(BigInteger.ONE),BigInteger.ZERO);
-    
+
     private static final class DecimalMathHelper implements IRadixMathHelper<DecimalFraction> {
 
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
       public int GetRadix() {
@@ -118,7 +113,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value A DecimalFraction object.
      * @return A 32-bit signed integer.
      */
@@ -127,7 +122,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value A DecimalFraction object.
      * @return A BigInteger object.
      */
@@ -136,7 +131,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param value A DecimalFraction object.
      * @return A BigInteger object.
      */
@@ -145,7 +140,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param mantissa A BigInteger object.
      * @param e1 A BigInteger object.
      * @param e2 A BigInteger object.
@@ -163,7 +158,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.
@@ -174,7 +169,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
@@ -183,7 +178,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      * @param numerator A BigInteger object.
      * @param denominator A BigInteger object.
      * @return A Boolean object.
@@ -213,7 +208,7 @@ bigrem=divrem[1];
       }
 
     /**
-     * 
+     *
      * @param bigint A BigInteger object.
      * @param power A FastInteger object.
      * @return A BigInteger object.
@@ -236,18 +231,18 @@ bigrem=divrem[1];
           }
         }
       }
-      
+
     /**
-     * 
+     *
      * @param value A DecimalFraction object.
      * @return A 32-bit signed integer.
      */
       public int GetFlags(DecimalFraction value) {
         return value.mantissa.signum()<0 ? BigNumberFlags.FlagNegative : 0;
       }
-      
+
     /**
-     * 
+     *
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
      * @param flags A 32-bit signed integer.
@@ -259,17 +254,17 @@ bigrem=divrem[1];
           mantissa=mantissa.negate();
         return new DecimalFraction(mantissa,exponent);
       }
-      
+
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteOnly;
       }
-      
+
     /**
-     * 
+     *
      * @param val A 32-bit signed integer.
      * @return A DecimalFraction object.
      */
@@ -281,7 +276,6 @@ bigrem=divrem[1];
       }
     }
 
-    
     private String ToStringInternal(int mode) {
       switch(mode){
         case 0:
@@ -336,11 +330,11 @@ bigrem=divrem[1];
       ExtendedDecimal ed=ExtendedDecimal.FromSingle(flt);
       return new DecimalFraction(ed.getMantissa(),ed.getExponent());
     }
-    
+
     public static DecimalFraction FromBigInteger(BigInteger bigint) {
       return new DecimalFraction(bigint,BigInteger.ZERO);
     }
-    
+
     public static DecimalFraction FromInt64(long valueSmall) {
       BigInteger bigint=BigInteger.valueOf(valueSmall);
       return new DecimalFraction(bigint,BigInteger.ZERO);
@@ -371,7 +365,7 @@ bigrem=divrem[1];
         new ExtendedFloat(bigfloat.getMantissa(),bigfloat.getExponent()));
       return new DecimalFraction(ed.getMantissa(),ed.getExponent());
     }
-    
+
     /**
      * Converts this value to a string.The format of the return value is exactly
      * the same as that of the java.math.BigDecimal.toString() method.
@@ -402,18 +396,18 @@ bigrem=divrem[1];
     /**
      * Represents the number 1.
      */
-    
+
     public static final DecimalFraction One = new DecimalFraction(BigInteger.ONE,BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
-    
+
     public static final DecimalFraction Zero = new DecimalFraction(BigInteger.ZERO,BigInteger.ZERO);
     /**
      * Represents the number 10.
      */
-    
+
     public static final DecimalFraction Ten = new DecimalFraction(BigInteger.TEN,BigInteger.ZERO);
 
     //----------------------------------------------------------------
@@ -506,7 +500,7 @@ bigrem=divrem[1];
       return math.Reduce(this, ctx);
     }
     /**
-     * 
+     *
      * @param divisor A DecimalFraction object.
      * @return A DecimalFraction object.
      */
@@ -517,7 +511,7 @@ bigrem=divrem[1];
     }
 
     /**
-     * 
+     *
      * @param divisor A DecimalFraction object.
      * @param ctx A PrecisionContext object.
      * @return A DecimalFraction object.
@@ -763,7 +757,7 @@ bigrem=divrem[1];
       DecimalFraction divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
-    
+
     /**
      * Finds the remainder that results when dividing two DecimalFraction
      * objects. The remainder is the value that remains when the absolute
@@ -848,7 +842,7 @@ bigrem=divrem[1];
      ) {
       return math.NextPlus(this,ctx);
     }
-    
+
     /**
      * Finds the next value that is closer to the other object's value than
      * this object's value.
@@ -870,7 +864,6 @@ bigrem=divrem[1];
       return math.NextToward(this,otherValue,ctx);
     }
 
-    
     /**
      * Divides this DecimalFraction object by another DecimalFraction
      * object. The preferred exponent for the result is this object's exponent
@@ -895,7 +888,7 @@ bigrem=divrem[1];
      ) {
       return math.Divide(this, divisor, ctx);
     }
-    
+
     /**
      * Gets the greater value between two decimal fractions.
      * @param first A DecimalFraction object.
@@ -928,7 +921,7 @@ bigrem=divrem[1];
       DecimalFraction first, DecimalFraction second) {
       return math.MaxMagnitude(first, second, null);
     }
-    
+
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.

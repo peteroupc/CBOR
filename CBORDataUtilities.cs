@@ -15,7 +15,6 @@ namespace PeterO {
   public static class CBORDataUtilities {
     private static BigInteger LowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
     private static BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
-    
 
     /// <summary> Parses a number whose format follows the JSON specification.
     /// See #ParseJSONNumber(str, integersOnly, parseOnly) for more information.

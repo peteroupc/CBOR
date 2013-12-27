@@ -64,7 +64,7 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
       if (neg) d |= (1 << 31);
       return new Decimal(new int[] { a, b, c, d });
     }
-    
+
     private static BigInteger DecimalMaxValue = (BigInteger.One<<96)-BigInteger.One;
     private static BigInteger DecimalMinValue = -((BigInteger.One<<96)-BigInteger.One);
 
@@ -79,7 +79,7 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
         throw new OverflowException();
       return EncodeDecimal(bi,0,false);
     }
-    
+
     private static BigInteger DecimalToBigInteger(decimal dec){
       int[] bits=Decimal.GetBits(dec);
       byte[] data=new byte[13];
@@ -106,7 +106,7 @@ if((scale)>28)throw new ArgumentException("scale"+" not less or equal to "+"28"+
       }
       return bigint;
     }
-    
+
     private static decimal ExtendedDecimalToDecimal(ExtendedDecimal decfrac) {
       ExtendedDecimal newDecimal=decfrac.RoundToBinaryPrecision(
         PrecisionContext.CliDecimal);

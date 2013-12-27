@@ -4,7 +4,7 @@ package com.upokecenter.test;
  * User: PeterRoot
  * Date: 11/7/2013
  * Time: 9:29 PM
- * 
+ *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
@@ -12,9 +12,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import com.upokecenter.util.*;
 
-
     /**
-     * 
+     *
      */
 
   public class CBORObjectMathTest{

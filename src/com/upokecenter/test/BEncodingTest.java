@@ -2,12 +2,11 @@ package com.upokecenter.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 import java.io.*;
 import com.upokecenter.util.*;
 
     /**
-     * 
+     *
      */
 
   public class BEncodingTest{
@@ -43,7 +42,7 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
       }
     }
     /**
-     * 
+     *
      * @param value A 64-bit signed integer.
      */
 public void doTestLong(long value) {
@@ -54,7 +53,7 @@ public void doTestLong(long value) {
       Assert.assertEquals(b, newb);
     }
     /**
-     * 
+     *
      * @param value A string object.
      */
 public void doTestString(String value) {
@@ -65,7 +64,7 @@ public void doTestString(String value) {
       Assert.assertEquals(b, newb);
     }
     /**
-     * 
+     *
      */
 @Test
     public void testLong() {
@@ -77,7 +76,7 @@ public void doTestString(String value) {
       doTestLong(Long.MAX_VALUE);
     }
     /**
-     * 
+     *
      */
 @Test
     public void testList() {
@@ -100,7 +99,7 @@ public void doTestString(String value) {
       Assert.assertEquals("four", beo.get(3).AsString());
     }
     /**
-     * 
+     *
      */
 @Test
     public void testDictionary() {
@@ -123,7 +122,7 @@ public void doTestString(String value) {
       Assert.assertEquals("four", beo.get("three").AsString());
     }
     /**
-     * 
+     *
      */
 @Test
     public void testString() {

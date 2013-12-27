@@ -9,7 +9,6 @@ at: http://peteroupc.github.io/CBOR/
 
 import org.junit.Assert;
 
-
 //import java.math.*;
 import com.upokecenter.util.*;
 import java.io.*;
@@ -93,7 +92,7 @@ rembi=divrem[1];
       AssertBigIntegersEqual(result,(bigintA.shiftRight(m2)));
       AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
     }
-    
+
     public static void AssertDecFrac(ExtendedDecimal d3, String output) {
       if(output==null && d3!=null)Assert.fail("d3 must be null");
       if(output!=null && !d3.toString().equals(output)){
@@ -103,11 +102,11 @@ rembi=divrem[1];
           "but was: ["+(d3.getUnsignedMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
          ));   }
     }
-    
+
     public static BigInteger BigIntParse(String str) {
       return BigInteger.fromString(str);
     }
-    
+
     public static void AssertFlags(int expected, int actual) {
       if(expected==actual)return;
       Assert.assertEquals("Inexact",(expected&PrecisionContext.FlagInexact)!=0,(actual&PrecisionContext.FlagInexact)!=0);
@@ -119,7 +118,7 @@ rembi=divrem[1];
       Assert.assertEquals("Invalid",(expected&PrecisionContext.FlagInvalid)!=0,(actual&PrecisionContext.FlagInvalid)!=0);
       Assert.assertEquals("DivideByZero",(expected&PrecisionContext.FlagDivideByZero)!=0,(actual&PrecisionContext.FlagDivideByZero)!=0);
     }
-    
+
     private static CBORObject FromBytesA(byte[] b) {
       return CBORObject.DecodeFromBytes(b);
     }
@@ -167,7 +166,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             String.format(java.util.Locale.US,"%s does not equal %s, but not vice versa", o, o2));
       }
     }
-    
+
     public static void TestNumber(CBORObject o) {
       if(o.getType()!= CBORType.Number){
         return;
@@ -188,7 +187,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { o.AsSingle(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
       try { o.AsDouble(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
     }
-    
+
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
       if (o2.getType() == CBORType.Map && o.getType() == CBORType.Map) {

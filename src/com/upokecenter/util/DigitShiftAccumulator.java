@@ -7,7 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
 //import java.math.*;
 
   final class DigitShiftAccumulator implements IShiftAccumulator {
@@ -28,7 +27,7 @@ at: http://peteroupc.github.io/CBOR/
     FastInteger knownBitLength;
 
     /**
-     * 
+     *
      * @return A FastInteger object.
      */
     public FastInteger GetDigitLength() {
@@ -37,13 +36,12 @@ at: http://peteroupc.github.io/CBOR/
       }
       return FastInteger.Copy(knownBitLength);
     }
-    
-    
+
     int shiftedSmall;
     boolean isSmall;
 
     /**
-     * 
+     *
      */
     public BigInteger getShiftedInt() {
         if (isSmall)
@@ -54,7 +52,7 @@ at: http://peteroupc.github.io/CBOR/
     FastInteger discardedBitCount;
 
     /**
-     * 
+     *
      */
     public FastInteger getDiscardedDigitCount() { return discardedBitCount; }
     private static BigInteger Int32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
@@ -121,10 +119,9 @@ at: http://peteroupc.github.io/CBOR/
       }
       return ret;
     }
-    
-    
+
     /**
-     * 
+     *
      */
     public FastInteger getShiftedIntFast() {
         if (isSmall){
@@ -134,7 +131,7 @@ at: http://peteroupc.github.io/CBOR/
         }
       }
     /**
-     * 
+     *
      * @param fastint A FastInteger object.
      */
     public void ShiftRight(FastInteger fastint) {
@@ -204,7 +201,7 @@ at: http://peteroupc.github.io/CBOR/
         bitLeftmost = 0;
       }
     }
-    
+
     /**
      * Shifts a number until it reaches the given number of digits, gathering
      * information on whether the last digit discarded is set and whether
@@ -267,7 +264,7 @@ at: http://peteroupc.github.io/CBOR/
         knownBitLength = new FastInteger(1);
         return;
       }
-      
+
       int kb = 0;
       int tmp = shiftedSmall;
       while (tmp > 0) {
@@ -297,7 +294,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param bits A FastInteger object.
      */
     public void ShiftToDigits(FastInteger bits) {

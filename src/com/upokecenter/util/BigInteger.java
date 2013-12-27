@@ -11,7 +11,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-
     /**
      * An arbitrary-precision integer.
      */
@@ -30,7 +29,6 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private static short ShiftWordsLeftByBits(short[] r, int rstart, int n, int shiftBits) {
-      
 
       {
         short u, carry = 0;
@@ -205,8 +203,6 @@ at: http://peteroupc.github.io/CBOR/
     //-----------------------------
     //  Baseline Square
     //-----------------------------
-
-    
 
     private static void Baseline_Square2(short[] R, int rstart, short[] A, int astart) {
       {
@@ -548,11 +544,10 @@ at: http://peteroupc.github.io/CBOR/
         p += e; R[rstart + 2 * 16 - 2] = (short)(p); R[rstart + 2 * 16 - 1] = (short)(p >> 16);
       }
     }
-    
+
     //---------------------
     //  Baseline multiply
     //---------------------
-    
 
     private static void Baseline_Multiply2(short[] R, int rstart, short[] A, int astart, short[] B, int bstart) {
       {
@@ -1252,7 +1247,7 @@ at: http://peteroupc.github.io/CBOR/
         p += d; R[rstart + 30] = (short)(p); R[rstart + 31] = (short)(p >> 16);
       }
     }
-    
+
     private static final int s_recursionLimit = 16;
 
     private static void RecursiveMultiply(short[] Rarr,
@@ -1505,7 +1500,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       return i;
     }
-    
+
     private static short Divide32By16(int dividendLow, short divisorShort, boolean returnRemainder) {
       int tmpInt;
       int dividendHigh=0;
@@ -1583,7 +1578,6 @@ at: http://peteroupc.github.io/CBOR/
           A[Astart + 1] = GetLowHalf(u);
           A[Astart + 2] += GetHighHalf(u);
           Q++;
-          
 
         }
       }
@@ -1621,7 +1615,6 @@ at: http://peteroupc.github.io/CBOR/
       short[] Tarr, int Tstart,
       short[] Qarr, int Qstart,
       short[] Barr, int Bstart, int N) {
-      
 
       {
         if (N == 2)
@@ -1648,7 +1641,7 @@ at: http://peteroupc.github.io/CBOR/
       // set up temporary work space
       int NA = (int)NAint;
       int NB = (int)NBint;
-      
+
       short[] TBarr = TA;
       short[] TParr = TA;
       int TBstart = (int)(Tstart + (NA + 2));
@@ -1781,7 +1774,7 @@ at: http://peteroupc.github.io/CBOR/
       ret[oldLength]=carry;
       return ret;
     }
-    
+
     private static short[] CleanGrow(short[] a, int size) {
       if (size > a.length) {
         short[] newa = new short[size];
@@ -1804,7 +1797,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param index A 32-bit unsigned integer.
      * @return A Boolean object.
      */
@@ -1830,11 +1823,11 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param n A 32-bit unsigned integer.
      */
     private boolean GetUnsignedBit(int n) {
-      
+
       if (n / 16 >= reg.length)
         return false;
       else
@@ -1965,7 +1958,7 @@ at: http://peteroupc.github.io/CBOR/
       return ret;
     }
     /**
-     * 
+     *
      * @param numberBits A 32-bit signed integer.
      * @return A BigInteger object.
      */
@@ -1999,7 +1992,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param longerValue A 64-bit signed integer.
      * @return A BigInteger object.
      */
@@ -2038,7 +2031,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @return A 32-bit signed integer.
      */
     public int intValue() {
@@ -2082,7 +2075,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @return A 64-bit signed integer.
      */
     public long longValue() {
@@ -2125,7 +2118,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param power A BigInteger object.
      * @return A BigInteger object.
      */
@@ -2156,7 +2149,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param powerSmall A 32-bit signed integer.
      * @return A BigInteger object.
      */
@@ -2185,7 +2178,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @return A BigInteger object.
      */
     public BigInteger negate() {
@@ -2196,22 +2189,22 @@ at: http://peteroupc.github.io/CBOR/
       return bigintRet;
     }
     /**
-     * 
+     *
      * @return A BigInteger object.
      */
     public BigInteger abs() {
       return this.signum() >= 0 ? this : this.negate();
     }
-    
+
     /**
-     * 
+     *
      */
     private int CalcWordCount() {
       return (int)CountWords(reg, reg.length);
     }
 
     /**
-     * 
+     *
      */
     private int ByteCount() {
       int wc = this.wordCount;
@@ -2223,7 +2216,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      */
     private int BitLength() {
       int wc = this.wordCount;
@@ -2317,7 +2310,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param str A string object.
      * @return A BigInteger object.
      */
@@ -2352,7 +2345,6 @@ at: http://peteroupc.github.io/CBOR/
       return bigint;
     }
 
-    
     /**
      * Returns the greatest common divisor of two integers.
      * @param bigintSecond A BigInteger object.
@@ -2482,7 +2474,6 @@ at: http://peteroupc.github.io/CBOR/
       if (diff.wordCount == 0) diff.negative = false;
     }
 
-    
     /**
      * Determines whether this object and another object are equal.
      * @param obj An arbitrary object.
@@ -2511,7 +2502,6 @@ at: http://peteroupc.github.io/CBOR/
       }
       return hashCodeValue;
     }
-    
 
     /**
      * Adds this object and another object.
@@ -2560,7 +2550,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       return diff;
     }
-    
+
     private void ShortenArray() {
       if(this.reg.length>32){
         int newLength=RoundupSize(this.wordCount);
@@ -2815,7 +2805,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param divisor A BigInteger object.
      * @return A BigInteger[] object.
      */
@@ -2976,7 +2966,7 @@ at: http://peteroupc.github.io/CBOR/
       return (sa > 0) ? cmp : -cmp;
     }
     /**
-     * 
+     *
      */
     public int signum() {
         if (this.wordCount == 0)
@@ -2985,12 +2975,12 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * 
+     *
      */
     public boolean isZero() { return (this.wordCount == 0); }
 
     /**
-     * 
+     *
      * @param bi A BigInteger object.
      * @return A BigInteger object.
      */
@@ -3015,16 +3005,16 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * BigInteger object for the number zero.
      */
-    
+
     public static final BigInteger ZERO = new BigInteger().InitializeInt(0);
     /**
      * BigInteger object for the number one.
      */
-    
+
     public static final BigInteger ONE = new BigInteger().InitializeInt(1);
     /**
      * BigInteger object for the number ten.
      */
-    
+
     public static final BigInteger TEN = new BigInteger().InitializeInt(10);
   }

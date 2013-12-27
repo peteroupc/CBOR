@@ -121,11 +121,11 @@ namespace PeterO {
         return (BigInteger)mantissa;
       }
     }
-    
+
     public static string BigIntToString(BigInteger bigint){
       return bigint.ToString();
     }
-    
+
     public static BigInteger BigIntegerFromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
       int fpExponent = (int)((value[1] >> 20) & 0x7ff);

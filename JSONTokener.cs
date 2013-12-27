@@ -376,7 +376,7 @@ namespace PeterO {
       }
       throw this.syntaxError("Expected a string as a key");
     }
-    
+
     // Based on the json.org implementation for JSONTokener,
     // now mostly rewritten
     private CBORObject NextJSONValue(int firstChar, int[] nextChar) {

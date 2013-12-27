@@ -4,10 +4,9 @@ package com.upokecenter.test;
  * User: Peter
  * Date: 11/11/2013
  * Time: 1:13 PM
- * 
+ *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
-
 
     /**
      * The system's random number generator will be called many times during
@@ -17,18 +16,18 @@ package com.upokecenter.test;
   public class FastRandom
   {
     private static final int ReseedCount = 10000;
-    
+
     java.util.Random rand;
     int count;
-    
+
     int m_w = 521288629;
     int m_z = 362436069;
-    
+
     public FastRandom () {
       rand=new java.util.Random();
       count=ReseedCount;
     }
-    
+
     private int NextValueInternal() {
       int w = m_w, z = m_z;
       // Use George Marsaglia's multiply-with-carry
@@ -37,9 +36,9 @@ package com.upokecenter.test;
       m_w = w = (18000 * (w & 65535) + ((z >> 16)&0xFFFF));
       return ((z << 16) | (w & 65535))&0x7FFFFFFF;
     }
-    
+
     /**
-     * 
+     *
      * @param v A 32-bit signed integer.
      * @return A 32-bit signed integer.
      */

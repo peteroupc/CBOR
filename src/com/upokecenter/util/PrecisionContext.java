@@ -109,11 +109,11 @@ at: http://peteroupc.github.io/CBOR/
      */
     public static final int FlagClamped = 32;
     /**
-     * 
+     *
      */
     public static final int FlagInvalid = 64;
     /**
-     * 
+     *
      */
     public static final int FlagDivideByZero = 128;
     /**
@@ -131,9 +131,9 @@ at: http://peteroupc.github.io/CBOR/
           throw new IllegalStateException("Can't set flags");
         flags = value;
       }
-    
+
     /**
-     * 
+     *
      * @param exponent A BigInteger object.
      * @return A Boolean object.
      */
@@ -157,7 +157,7 @@ at: http://peteroupc.github.io/CBOR/
         return true;
       }
     }
-    
+
     /**
      * Copies this PrecisionContext with the specified rounding mode.
      * @param rounding A Rounding object.
@@ -194,7 +194,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param exponentMin A BigInteger object.
      * @param exponentMax A BigInteger object.
      * @return A PrecisionContext object.
@@ -244,7 +244,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * 
+     *
      * @param bigintPrecision A BigInteger object.
      * @return A PrecisionContext object.
      */
@@ -301,24 +301,24 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Unlimited precision context. Rounding mode HalfUp.
      */
-    
+
     public static final PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
     /**
      * Precision context for the IEEE-754-2008 decimal32 format.
      */
-    
+
     public static final PrecisionContext Decimal32 =
       new PrecisionContext(7, Rounding.HalfEven, -95, 96,true);
     /**
      * Precision context for the IEEE-754-2008 decimal64 format.
      */
-    
+
     public static final PrecisionContext Decimal64 =
       new PrecisionContext(16, Rounding.HalfEven, -383, 384,true);
     /**
      * Precision context for the IEEE-754-2008 decimal128 format.
      */
-    
+
     public static final PrecisionContext Decimal128 =
       new PrecisionContext(34, Rounding.HalfEven, -6143, 6144,true);
     /**
@@ -326,8 +326,8 @@ at: http://peteroupc.github.io/CBOR/
      * Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
      * to round a decimal fraction to this format.
      */
-    
+
     public static final PrecisionContext CliDecimal =
       new PrecisionContext(96,Rounding.HalfEven,0,28,true);
-    
+
   }
