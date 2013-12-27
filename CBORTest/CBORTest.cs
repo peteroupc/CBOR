@@ -2136,9 +2136,9 @@ namespace Test {
       Assert.AreEqual("20", df.ToExtendedFloat().ToString());
       df = ExtendedDecimal.FromInt64(-20);
       Assert.AreEqual("-20", df.ToExtendedFloat().ToString());
-      df = new ExtendedDecimal((BigInteger)15, -1);
+      df = new ExtendedDecimal((BigInteger)15, (BigInteger)(-1));
       Assert.AreEqual("1.5", df.ToExtendedFloat().ToString());
-      df = new ExtendedDecimal((BigInteger)(-15), -1);
+      df = new ExtendedDecimal((BigInteger)(-15), (BigInteger)(-1));
       Assert.AreEqual("-1.5", df.ToExtendedFloat().ToString());
     }
     [Test]
@@ -3422,7 +3422,8 @@ namespace Test {
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o=TestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0x3, 0xc2, 0x41, 1 });
-      Assert.AreEqual(new ExtendedDecimal(1,3),o.AsExtendedDecimal());
+      Assert.AreEqual(new ExtendedDecimal(BigInteger.One,(BigInteger)(3)),
+        o.AsExtendedDecimal());
     }
     /// <summary>
     /// </summary>

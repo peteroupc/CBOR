@@ -5575,7 +5575,6 @@ function(bigint, lastDiscarded, olderDiscarded) {
         
         if (digitLength > digits) {
             var digitShift = digitLength - digits;
-            var digitDivide = digitShift;
             this.knownBitLength.SubtractInt(digitShift);
             
             var newLength = ((digitLength - digitShift)|0);
@@ -6185,7 +6184,8 @@ var RadixMath = function(helper) {
                         ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagClamped));
                     }
                     var bigexp = ctx.getEMin();
-                    bigexp = bigexp.subtract(BigInteger.valueOf(ctx.getPrecision()));
+                    var bigprec = ctx.getPrecision();
+                    bigexp = bigexp.subtract(bigprec);
                     bigexp = bigexp.add(BigInteger.ONE);
                     thisFlags = ((thisFlags ^ otherFlags) & BigNumberFlags.FlagNegative);
                     return this.helper.CreateNewWithFlags(BigInteger.ZERO, bigexp, thisFlags);
@@ -6271,17 +6271,17 @@ var RadixMath = function(helper) {
         var thisFlags = this.helper.GetFlags(thisValue);
         var otherFlags = this.helper.GetFlags(other);
         
-        if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagSignalingNaN) != 0) {
+        if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
             return this.SignalingNaNInvalid(thisValue, ctx);
         }
-        if ((this.helper.GetFlags(other) & BigNumberFlags.FlagSignalingNaN) != 0) {
+        if ((otherFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
             return this.SignalingNaNInvalid(other, ctx);
         }
         
-        if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagQuietNaN) != 0) {
+        if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
             return this.ReturnQuietNaN(thisValue, ctx);
         }
-        if ((this.helper.GetFlags(other) & BigNumberFlags.FlagQuietNaN) != 0) {
+        if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
             return this.ReturnQuietNaN(other, ctx);
         }
         return null;
@@ -6351,7 +6351,6 @@ var RadixMath = function(helper) {
         return null;
     };
     prototype.SignalingNaNInvalid = function(value, ctx) {
-        var flags = this.helper.GetFlags(value);
         if (ctx != null && ctx.getHasFlags()) {
             ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid));
         }
@@ -6640,7 +6639,7 @@ var RadixMath = function(helper) {
         if ((ctx2.getFlags() & (PrecisionContext.FlagRounded | PrecisionContext.FlagInvalid)) != 0) {
             return this.SignalInvalid(ctx);
         }
-        ctx2 = ctx == null ? null : ctx.WithBlankFlags();
+        ctx2 = ctx == null ? PrecisionContext.Unlimited.WithBlankFlags() : ctx.WithBlankFlags();
         var ret2 = this.Add(thisValue, this.NegateRaw(this.Multiply(ret, divisor, null)), ctx2);
         if ((ctx2.getFlags() & (PrecisionContext.FlagInvalid)) != 0) {
             return this.SignalInvalid(ctx);
@@ -6668,8 +6667,9 @@ var RadixMath = function(helper) {
                 return thisValue;
             } else {
                 var bigexp2 = ctx.getEMax();
+                var bigprec = ctx.getPrecision();
                 bigexp2 = bigexp2.add(BigInteger.ONE);
-                bigexp2 = bigexp2.subtract(BigInteger.valueOf(ctx.getPrecision()));
+                bigexp2 = bigexp2.subtract(bigprec);
                 var overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
                 overflowMant = overflowMant.subtract(BigInteger.ONE);
                 return this.helper.CreateNewWithFlags(overflowMant, bigexp2, 0);
@@ -6708,8 +6708,9 @@ var RadixMath = function(helper) {
                     return thisValue;
                 } else {
                     var bigexp2 = ctx.getEMax();
+                    var bigprec = ctx.getPrecision();
                     bigexp2 = bigexp2.add(BigInteger.ONE);
-                    bigexp2 = bigexp2.subtract(BigInteger.valueOf(ctx.getPrecision()));
+                    bigexp2 = bigexp2.subtract(bigprec);
                     var overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
                     overflowMant = overflowMant.subtract(BigInteger.ONE);
                     return this.helper.CreateNewWithFlags(overflowMant, bigexp2, thisFlags & BigNumberFlags.FlagNegative);
@@ -6761,8 +6762,9 @@ var RadixMath = function(helper) {
         if ((flags & BigNumberFlags.FlagInfinity) != 0) {
             if ((flags & BigNumberFlags.FlagNegative) != 0) {
                 var bigexp2 = ctx.getEMax();
+                var bigprec = ctx.getPrecision();
                 bigexp2 = bigexp2.add(BigInteger.ONE);
-                bigexp2 = bigexp2.subtract(BigInteger.valueOf(ctx.getPrecision()));
+                bigexp2 = bigexp2.subtract(bigprec);
                 var overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
                 overflowMant = overflowMant.subtract(BigInteger.ONE);
                 return this.helper.CreateNewWithFlags(overflowMant, bigexp2, BigNumberFlags.FlagNegative);
@@ -7062,7 +7064,7 @@ var RadixMath = function(helper) {
             }
             var bigexp = exp.AsBigInteger();
             var retval = this.helper.CreateNewWithFlags(bigResult, bigexp, resultNeg ? BigNumberFlags.FlagNegative : 0);
-            if (atMaxPrecision && !ctx.getHasExponentRange()) {
+            if (atMaxPrecision && (ctx == null || !ctx.getHasExponentRange())) {
                 
                 if (!this.RoundGivenDigits(lastDiscarded, olderDiscarded, rounding, resultNeg, posBigResult)) {
                     if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
@@ -7077,7 +7079,7 @@ var RadixMath = function(helper) {
                     return this.helper.CreateNewWithFlags(posBigResult, bigexp, resultNeg ? BigNumberFlags.FlagNegative : 0);
                 }
             }
-            if (atMaxPrecision && ctx.getHasExponentRange()) {
+            if (atMaxPrecision && (ctx != null && ctx.getHasExponentRange())) {
                 var fastAdjustedExp = FastInteger.Copy(exp).AddBig(ctx.getPrecision()).SubtractInt(1).AsBigInteger();
                 if (fastAdjustedExp.compareTo(ctx.getEMin()) >= 0 && fastAdjustedExp.compareTo(ctx.getEMax()) <= 0) {
                     
@@ -7189,7 +7191,7 @@ var RadixMath = function(helper) {
     prototype.MultiplyAndAdd = function(thisValue, multiplicand, augend, ctx) {
         var ctx2 = PrecisionContext.Unlimited.WithBlankFlags();
         var ret = this.Add(this.Multiply(thisValue, multiplicand, ctx2), augend, ctx);
-        if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (ctx2.getFlags()));
+        if (ctx != null && ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (ctx2.getFlags()));
         return ret;
     };
     
@@ -8157,7 +8159,6 @@ function(mantissa, exponent) {
         };
         
         prototype['RescaleByExponentDiff'] = prototype.RescaleByExponentDiff = function(mantissa, e1, e2) {
-            var negative = (mantissa.signum() < 0);
             if (mantissa.signum() == 0) return BigInteger.ZERO;
             var diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
             if (diff.CanFitInInt32()) {
@@ -8166,10 +8167,6 @@ function(mantissa, exponent) {
                 mantissa = mantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(diff.AsBigInteger()));
             }
             return mantissa;
-        };
-        
-        prototype['CreateNew'] = prototype.CreateNew = function(mantissa, exponent) {
-            return new ExtendedDecimal(mantissa, exponent);
         };
         
         prototype['CreateShiftAccumulatorWithDigits'] = prototype.CreateShiftAccumulatorWithDigits = function(bigint, lastDigit, olderDigits) {
@@ -8942,7 +8939,6 @@ function(mantissa, exponent) {
         ext.flags = flags;
         return ext;
     };
-    constructor['MaxSafeInt'] = constructor.MaxSafeInt = 214748363;
     
     constructor['FromString'] = constructor.FromString = function(str) {
         if (str == null) throw new Error("str");
@@ -8994,10 +8990,6 @@ function(mantissa, exponent) {
             mantissa = ExtendedFloat.ShiftLeft(mantissa, diff);
             if (negative) mantissa = mantissa.negate();
             return mantissa;
-        };
-        
-        prototype['CreateNew'] = prototype.CreateNew = function(mantissa, exponent) {
-            return new ExtendedFloat(mantissa, exponent);
         };
         
         prototype['CreateShiftAccumulatorWithDigits'] = prototype.CreateShiftAccumulatorWithDigits = function(bigint, lastDigit, olderDigits) {

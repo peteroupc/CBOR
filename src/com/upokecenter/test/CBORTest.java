@@ -597,10 +597,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public void TestDecFracOverflow() {
       Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal());
       Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedDecimal());
-      Assert.isTrue(CBORObject.FromObject(Float.NaN).AsExtendedDecimal().IsNaN());
+      Assert.assertTrue(CBORObject.FromObject(Float.NaN).AsExtendedDecimal().IsNaN());
       Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal());
       Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
-      Assert.isTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
+      Assert.assertTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
     }
     /**
      * 
@@ -2067,9 +2067,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("20", df.ToExtendedFloat().toString());
       df = ExtendedDecimal.FromInt64(-20);
       Assert.assertEquals("-20", df.ToExtendedFloat().toString());
-      df = new ExtendedDecimal(BigInteger.valueOf(15), -1);
+      df = new ExtendedDecimal(BigInteger.valueOf(15), BigInteger.valueOf(-1));
       Assert.assertEquals("1.5", df.ToExtendedFloat().toString());
-      df = new ExtendedDecimal(BigInteger.valueOf(-15), -1);
+      df = new ExtendedDecimal(BigInteger.valueOf(-15), BigInteger.valueOf(-1));
       Assert.assertEquals("-1.5", df.ToExtendedFloat().toString());
     }
     @Test
@@ -3339,7 +3339,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o=TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, 0x3, (byte)0xc2, 0x41, 1 });
-      Assert.assertEquals(new ExtendedDecimal(1,3),o.AsExtendedDecimal());
+      Assert.assertEquals(new ExtendedDecimal(BigInteger.ONE,BigInteger.valueOf(3)),
+        o.AsExtendedDecimal());
     }
     /**
      * 

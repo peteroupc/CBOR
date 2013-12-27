@@ -377,7 +377,6 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
-        boolean negative = (mantissa.signum() < 0);
         if (mantissa.signum() == 0) return BigInteger.ZERO;
         FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
         if (diff.CanFitInInt32()) {
@@ -386,16 +385,6 @@ at: http://peteroupc.github.io/CBOR/
           mantissa=mantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(diff.AsBigInteger()));
         }
         return mantissa;
-      }
-
-    /**
-     * 
-     * @param mantissa A BigInteger object.
-     * @param exponent A BigInteger object.
-     * @return An ExtendedDecimal object.
-     */
-      public ExtendedDecimal CreateNew(BigInteger mantissa, BigInteger exponent) {
-        return new ExtendedDecimal(mantissa, exponent);
       }
 
     /**
@@ -2043,7 +2032,7 @@ public ExtendedDecimal Quantize(
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
-     * @return The result thisValue * multiplicand + augend.
+     * @return The result thisValue * multiplicand - subtrahend.
      */
     public ExtendedDecimal MultiplyAndSubtract(
       ExtendedDecimal op, ExtendedDecimal subtrahend, PrecisionContext ctx) {

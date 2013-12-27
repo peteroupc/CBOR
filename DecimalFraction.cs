@@ -132,7 +132,6 @@ namespace PeterO {
     /// <param name='e2'>A BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
-        bool negative = (mantissa.Sign < 0);
         if (mantissa.Sign == 0) return BigInteger.Zero;
         FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
         if (diff.CanFitInInt32()) {
@@ -141,14 +140,6 @@ namespace PeterO {
           mantissa *= (BigInteger)(DecimalUtility.FindPowerOfTenFromBig(diff.AsBigInteger()));
         }
         return mantissa;
-      }
-
-    /// <summary> </summary>
-    /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='exponent'>A BigInteger object.</param>
-    /// <returns>A DecimalFraction object.</returns>
-      public DecimalFraction CreateNew(BigInteger mantissa, BigInteger exponent) {
-        return new DecimalFraction(mantissa, exponent);
       }
 
     /// <summary> </summary>

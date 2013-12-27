@@ -14,31 +14,14 @@ at: http://peteroupc.github.io/CBOR/
      */
   public enum Rounding {
     /**
-     * The fractional part is discarded (the number is truncated).
-     */
-    Down,
-    /**
      * If there is a fractional part, the number is rounded to the closest
      * representable number away from zero.
      */
     Up,
     /**
-     * Rounded to the nearest number; if the fractional part is exactly half,
-     * it is discarded.
+     * The fractional part is discarded (the number is truncated).
      */
-    HalfDown,
-    /**
-     * Rounded to the nearest number; if the fractional part is exactly half,
-     * the number is rounded to the closest representable number away from
-     * zero. This is the most familiar rounding mode for many people.
-     */
-    HalfUp,
-    /**
-     * Rounded to the nearest number; if the fractional part is exactly half,
-     * the number is rounded to the closest representable number that is
-     * even. This is sometimes also known as "banker's rounding".
-     */
-    HalfEven,
+    Down,
     /**
      * If there is a fractional part, the number is rounded to the highest
      * representable number that's closest to it.
@@ -50,6 +33,28 @@ at: http://peteroupc.github.io/CBOR/
      */
     Floor,
     /**
+     * Rounded to the nearest number; if the fractional part is exactly half,
+     * the number is rounded to the closest representable number away from
+     * zero. This is the most familiar rounding mode for many people.
+     */
+    HalfUp,
+    /**
+     * Rounded to the nearest number; if the fractional part is exactly half,
+     * it is discarded.
+     */
+    HalfDown,
+    /**
+     * Rounded to the nearest number; if the fractional part is exactly half,
+     * the number is rounded to the closest representable number that is
+     * even. This is sometimes also known as "banker's rounding".
+     */
+    HalfEven,
+    /**
+     * Indicates that rounding will not be used. If rounding is required,
+     * the rounding operation will report an error.
+     */
+    Unnecessary,
+    /**
      * If there is a fractional part and if the last digit before rounding
      * is 0 or half the radix, the number is rounded to the closest representable
      * number away from zero; otherwise the fractional part is discarded.
@@ -57,10 +62,5 @@ at: http://peteroupc.github.io/CBOR/
      * mode is useful for rounding intermediate results at a slightly higher
      * precision than the final precision.
      */
-    ZeroFiveUp,
-    /**
-     * Indicates that rounding will not be used. If rounding is required,
-     * the rounding operation will report an error.
-     */
-    Unnecessary
+    ZeroFiveUp
   }

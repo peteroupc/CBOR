@@ -258,14 +258,6 @@ namespace PeterO {
       }
 
     /// <summary> </summary>
-    /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='exponent'>A BigInteger object.</param>
-    /// <returns>A BigFloat object.</returns>
-      public BigFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
-        return new BigFloat(mantissa, exponent);
-      }
-
-    /// <summary> </summary>
     /// <param name='lastDigit'>A 32-bit signed integer.</param>
     /// <param name='olderDigits'>A 32-bit signed integer.</param>
     /// <returns>An IShiftAccumulator object.</returns>

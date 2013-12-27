@@ -289,16 +289,6 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * 
-     * @param mantissa A BigInteger object.
-     * @param exponent A BigInteger object.
-     * @return A BigFloat object.
-     */
-      public BigFloat CreateNew(BigInteger mantissa, BigInteger exponent) {
-        return new BigFloat(mantissa, exponent);
-      }
-
-    /**
-     * 
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.

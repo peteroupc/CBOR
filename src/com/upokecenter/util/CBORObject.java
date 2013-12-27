@@ -2746,7 +2746,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public static CBORObject FromObject(ExtendedFloat bigValue) {
       if ((Object)bigValue == (Object)null)
         return CBORObject.Null;
-      if(decfrac.IsNaN() || decfrac.IsInfinity()){
+      if(bigValue.IsNaN() || bigValue.IsInfinity()){
         return new CBORObject(CBORObjectType_ExtendedFloat,bigValue);        
       }
       BigInteger bigintExponent = bigValue.getExponent();
@@ -2772,7 +2772,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);        
       }
       BigInteger bigintExponent = decfrac.getExponent();
-      if (bigintExponent.signum()==0 && !(bigValue.signum()==0 && bigValue.isNegative())) {
+      if (bigintExponent.signum()==0 && !(decfrac.signum()==0 && decfrac.isNegative())) {
         return FromObject(decfrac.getMantissa());
       } else {
         if (!BigIntFits(bigintExponent))
