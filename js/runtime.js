@@ -22,7 +22,7 @@ return this.str.length
 }
 StringBuilder.prototype.charAt=function(index){
 // Get the character code, since that's what the caller expects
-return this.str.charCodeAt(index) 
+return this.str.charCodeAt(index)
 }
 StringBuilder.prototype.toString=function(){
 return this.str;
@@ -53,7 +53,7 @@ JSInteropFactory.divideThreeWordsByTwo=function(a0,a1,a2,b0,b1){
    q=a2;
   else if(b1>0)
    q=((((a1|(a2<<16))>>>0)/((b1+1)&0xFFFF))&0xFFFF)|0;
-  else 
+  else
    q=((((a1|(a2<<16))>>>0)/b0)&0xFFFF)|0;
   var p=(b0*q)>>>0;
   var u=(a0-(p&0xFFFF))>>>0;
@@ -204,7 +204,7 @@ ILong.prototype.shiftLeft=function(len){
 ILong.prototype.shiftRight=function(len){
  if(len<=0)return this;
  if(len>=64){
-  return ((this.hi>>>31)!=0) ? 
+  return ((this.hi>>>31)!=0) ?
     JSInteropFactory.LONG_MAX_VALUE() :
     JSInteropFactory.LONG_MIN_VALUE();
  } else if(len>=32){
@@ -246,3 +246,4 @@ exports.JSInteropFactory=JSInteropFactory;
 exports.ILong=ILong;
 exports.StringBuilder=StringBuilder;
 }
+
