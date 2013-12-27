@@ -24,3 +24,4 @@ package com.upokecenter.util;
     static final int FiniteAndNonFinite = 1;
     static final int X3Dot274 = 2;
   }
+

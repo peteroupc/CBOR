@@ -110,7 +110,8 @@ namespace PeterO {
         return mbi;
       }
 
-    /// <summary> Multiplies this instance by the value of a Int32 object.</summary>
+    /// <summary> Multiplies this instance by the value of a 32-bit signed
+    /// integer.</summary>
     /// <param name='multiplicand'>A 32-bit signed integer.</param>
     /// <returns>The product of the two objects.</returns>
       public MutableNumber Multiply(int multiplicand) {
@@ -218,7 +219,7 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Compares a Int32 object with this instance.</summary>
+    /// <summary>Compares a 32-bit signed integer with this instance.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int CompareToInt(int val){
@@ -234,7 +235,7 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Subtracts a Int32 object from this instance.</summary>
+    /// <summary>Subtracts a 32-bit signed integer from this instance.</summary>
     /// <param name='other'>A 32-bit signed integer.</param>
     /// <returns>The difference of the two objects.</returns>
       public MutableNumber SubtractInt(
@@ -771,7 +772,7 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Divides this instance by the value of a Int32 object.</summary>
+    /// <summary> Divides this instance by the value of a 32-bit signed integer.</summary>
     /// <param name='divisor'>A 32-bit signed integer.</param>
     /// <returns>The quotient of the two objects.</returns>
     public FastInteger Divide(int divisor) {
@@ -920,7 +921,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Compares a Int32 object with this instance.</summary>
+    /// <summary>Compares a 32-bit signed integer with this instance.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
