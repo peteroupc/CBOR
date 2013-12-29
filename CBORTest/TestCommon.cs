@@ -169,19 +169,19 @@ namespace Test {
       }
       if(o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
          o.IsNaN()){
-        try { o.AsByte(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsInt16(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsInt32(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsInt64(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsSingle(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsDouble(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
-        try { o.AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); }
+        try { o.AsByte(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw; }
+        try { o.AsInt16(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw; }
+        try { o.AsInt32(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw; }
+        try { o.AsInt64(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw; }
+        try { o.AsSingle(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw; }
+        try { o.AsDouble(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw; }
+        try { o.AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw; }
         return;
       }
       BigInteger df=o.AsExtendedDecimal().ToBigInteger();
-      try { o.AsBigInteger(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      try { o.AsSingle(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
-      try { o.AsDouble(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); }
+      try { o.AsBigInteger(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); throw; }
+      try { o.AsSingle(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); throw; }
+      try { o.AsDouble(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); throw; }
     }
 
     public static void AssertRoundTrip(CBORObject o) {

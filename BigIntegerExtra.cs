@@ -16,7 +16,7 @@ namespace PeterO
     /// <summary>Converts the value of a 64-bit signed integer to BigInteger.</summary>
     /// <returns>A BigInteger object with the same value as the Int64 object.</returns>
     /// <param name='bigValue'>A 64-bit signed integer.</param>
-    public static implicit operator BigInteger(long bigValue){
+    public static explicit operator BigInteger(long bigValue){
       return valueOf(bigValue);
     }
 

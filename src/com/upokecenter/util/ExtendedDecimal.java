@@ -59,7 +59,7 @@ at: http://peteroupc.github.io/CBOR/
         return false;
       return this.exponent.equals(otherValue.exponent) &&
         this.unsignedMantissa.equals(otherValue.unsignedMantissa) &&
-        this.flags==otherValue.flags;
+        this.flags == otherValue.flags;
     }
 
     /**
@@ -100,15 +100,15 @@ at: http://peteroupc.github.io/CBOR/
      */
     public ExtendedDecimal (BigInteger mantissa, BigInteger exponent) {
       this.exponent = exponent;
-      int sign=mantissa.signum();
-      this.unsignedMantissa = sign<0 ? ((mantissa).negate()) : mantissa;
-      this.flags=(sign<0) ? BigNumberFlags.FlagNegative : 0;
+      int sign = mantissa.signum();
+      this.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+      this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
     }
 
     private static ExtendedDecimal CreateWithFlags(BigInteger mantissa,
                                                    BigInteger exponent, int flags) {
-      ExtendedDecimal ext=new ExtendedDecimal(mantissa,exponent);
-      ext.flags=flags;
+      ExtendedDecimal ext = new ExtendedDecimal(mantissa, exponent);
+      ext.flags = flags;
       return ext;
     }
 
@@ -141,117 +141,114 @@ at: http://peteroupc.github.io/CBOR/
         negative = (str.charAt(0) == '-');
         offset++;
       }
-      int mantInt=0;
+      int mantInt = 0;
       FastInteger mant = null;
       boolean haveDecimalPoint = false;
       boolean haveDigits = false;
       boolean haveExponent = false;
-      int newScaleInt=0;
+      int newScaleInt = 0;
       FastInteger newScale = null;
       int i = offset;
-      if(i+8==str.length()){
-        if((str.charAt(i)=='I' || str.charAt(i)=='i') &&
-           (str.charAt(i+1)=='N' || str.charAt(i+1)=='n') &&
-           (str.charAt(i+2)=='F' || str.charAt(i+2)=='f') &&
-           (str.charAt(i+3)=='I' || str.charAt(i+3)=='i') &&
-           (str.charAt(i+4)=='N' || str.charAt(i+4)=='n') &&
-           (str.charAt(i+5)=='I' || str.charAt(i+5)=='i') &&
-           (str.charAt(i+6)=='T' || str.charAt(i+6)=='t') &&
-           (str.charAt(i+7)=='Y' || str.charAt(i+7)=='y'))
+      if (i + 8 == str.length()) {
+        if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') &&
+            (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') &&
+            (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f') &&
+            (str.charAt(i + 3) == 'I' || str.charAt(i + 3) == 'i') &&
+            (str.charAt(i + 4) == 'N' || str.charAt(i + 4) == 'n') &&
+            (str.charAt(i + 5) == 'I' || str.charAt(i + 5) == 'i') &&
+            (str.charAt(i + 6) == 'T' || str.charAt(i + 6) == 't') &&
+            (str.charAt(i + 7) == 'Y' || str.charAt(i + 7) == 'y'))
           return (negative) ? NegativeInfinity : PositiveInfinity;
       }
-      if(i+3==str.length()){
-        if((str.charAt(i)=='I' || str.charAt(i)=='i') &&
-           (str.charAt(i+1)=='N' || str.charAt(i+1)=='n') &&
-           (str.charAt(i+2)=='F' || str.charAt(i+2)=='f'))
+      if (i + 3 == str.length()) {
+        if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') &&
+            (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') &&
+            (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f'))
           return (negative) ? NegativeInfinity : PositiveInfinity;
       }
-      if(i+3<=str.length()){
+      if (i + 3 <= str.length()) {
         // Quiet NaN
-        if((str.charAt(i)=='N' || str.charAt(i)=='n') &&
-           (str.charAt(i+1)=='A' || str.charAt(i+1)=='a') &&
-           (str.charAt(i+2)=='N' || str.charAt(i+2)=='n')){
-          if(i+3==str.length()){
-            if(!negative)return NaN;
+        if ((str.charAt(i) == 'N' || str.charAt(i) == 'n') &&
+            (str.charAt(i + 1) == 'A' || str.charAt(i + 1) == 'a') &&
+            (str.charAt(i + 2) == 'N' || str.charAt(i + 2) == 'n')) {
+          if (i + 3 == str.length()) {
+            if (!negative) return NaN;
             return CreateWithFlags(
-              BigInteger.ZERO,BigInteger.ZERO,
-              (negative ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagQuietNaN);
+              BigInteger.ZERO, BigInteger.ZERO,
+              (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN);
           }
-          i+=3;
+          i += 3;
           for (; i < str.length(); i++) {
             if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
               int thisdigit = (int)(str.charAt(i) - '0');
-              if(mantInt>MaxSafeInt){
-                if(mant==null)
-                  mant=new FastInteger(mantInt);
-                mant.Multiply(10);
-                mant.AddInt(thisdigit);
+              if (mantInt > MaxSafeInt) {
+                if (mant == null)
+                  mant = new FastInteger(mantInt);
+                mant.MultiplyByTenAndAdd(thisdigit);
               } else {
-                mantInt*=10;
-                mantInt+=thisdigit;
+                mantInt *= 10;
+                mantInt += thisdigit;
               }
             } else {
               throw new NumberFormatException();
             }
           }
-          BigInteger bigmant=(mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
+          BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
           return CreateWithFlags(
-            bigmant,BigInteger.ZERO,
-            (negative ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagQuietNaN);
+            bigmant, BigInteger.ZERO,
+            (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN);
         }
       }
-      if(i+4<=str.length()){
+      if (i + 4 <= str.length()) {
         // Signaling NaN
-        if((str.charAt(i)=='S' || str.charAt(i)=='s') &&
-           (str.charAt(i+1)=='N' || str.charAt(i+1)=='n') &&
-           (str.charAt(i+2)=='A' || str.charAt(i+2)=='a') &&
-           (str.charAt(i+3)=='N' || str.charAt(i+3)=='n')){
-          if(i+4==str.length()){
-            if(!negative)return SignalingNaN;
+        if ((str.charAt(i) == 'S' || str.charAt(i) == 's') &&
+            (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') &&
+            (str.charAt(i + 2) == 'A' || str.charAt(i + 2) == 'a') &&
+            (str.charAt(i + 3) == 'N' || str.charAt(i + 3) == 'n')) {
+          if (i + 4 == str.length()) {
+            if (!negative) return SignalingNaN;
             return CreateWithFlags(
               BigInteger.ZERO,
-              BigInteger.ZERO,BigNumberFlags.FlagSignalingNaN);
+              BigInteger.ZERO, BigNumberFlags.FlagSignalingNaN);
           }
-          i+=4;
+          i += 4;
           for (; i < str.length(); i++) {
             if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
               int thisdigit = (int)(str.charAt(i) - '0');
-              if(mantInt>MaxSafeInt){
-                if(mant==null)
-                  mant=new FastInteger(mantInt);
-                mant.Multiply(10);
-                mant.AddInt(thisdigit);
+              if (mantInt > MaxSafeInt) {
+                if (mant == null)
+                  mant = new FastInteger(mantInt);
+                mant.MultiplyByTenAndAdd(thisdigit);
               } else {
-                mantInt*=10;
-                mantInt+=thisdigit;
+                mantInt *= 10;
+                mantInt += thisdigit;
               }
             } else {
               throw new NumberFormatException();
             }
           }
-          BigInteger bigmant=(mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
+          BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
           return CreateWithFlags(
-            bigmant,BigInteger.ZERO,
-            (negative ? BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagSignalingNaN);
+            bigmant, BigInteger.ZERO,
+            (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagSignalingNaN);
         }
       }
       for (; i < str.length(); i++) {
         if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
           int thisdigit = (int)(str.charAt(i) - '0');
-          if(mantInt>MaxSafeInt){
-            if(mant==null)
-              mant=new FastInteger(mantInt);
-            mant.Multiply(10);
-            mant.AddInt(thisdigit);
+          if (mantInt > MaxSafeInt) {
+            if (mant == null)
+              mant = new FastInteger(mantInt);
+            mant.MultiplyByTenAndAdd(thisdigit);
           } else {
-            mantInt*=10;
-            mantInt+=thisdigit;
+            mantInt *= 10;
+            mantInt += thisdigit;
           }
           haveDigits = true;
           if (haveDecimalPoint) {
-            if(newScaleInt==Integer.MIN_VALUE){
-              if(newScale==null)
-                newScale=new FastInteger(newScaleInt);
+            if (newScaleInt == Integer.MIN_VALUE) {
+              if (newScale == null)
+                newScale = new FastInteger(newScaleInt);
               newScale.AddInt(-1);
             } else {
               newScaleInt--;
@@ -273,7 +270,7 @@ at: http://peteroupc.github.io/CBOR/
         throw new NumberFormatException();
       if (haveExponent) {
         FastInteger exp = null;
-        int expInt=0;
+        int expInt = 0;
         offset = 1;
         haveDigits = false;
         if (i == str.length()) throw new NumberFormatException();
@@ -285,14 +282,13 @@ at: http://peteroupc.github.io/CBOR/
           if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
             haveDigits = true;
             int thisdigit = (int)(str.charAt(i) - '0');
-            if(expInt>MaxSafeInt){
-              if(exp==null)
-                exp=new FastInteger(expInt);
-              exp.Multiply(10);
-              exp.AddInt(thisdigit);
+            if (expInt > MaxSafeInt) {
+              if (exp == null)
+                exp = new FastInteger(expInt);
+              exp.MultiplyByTenAndAdd(thisdigit);
             } else {
-              expInt*=10;
-              expInt+=thisdigit;
+              expInt *= 10;
+              expInt += thisdigit;
             }
           } else {
             throw new NumberFormatException();
@@ -300,18 +296,18 @@ at: http://peteroupc.github.io/CBOR/
         }
         if (!haveDigits)
           throw new NumberFormatException();
-        if(offset>=0 && newScaleInt==0 && newScale==null && exp==null){
-          newScaleInt=expInt;
-        } else if(exp==null){
-          if(newScale==null)
-            newScale=new FastInteger(newScaleInt);
+        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
+          newScaleInt = expInt;
+        } else if (exp == null) {
+          if (newScale == null)
+            newScale = new FastInteger(newScaleInt);
           if (offset < 0)
             newScale.SubtractInt(expInt);
           else
             newScale.AddInt(expInt);
         } else {
-          if(newScale==null)
-            newScale=new FastInteger(newScaleInt);
+          if (newScale == null)
+            newScale = new FastInteger(newScaleInt);
           if (offset < 0)
             newScale.Subtract(exp);
           else
@@ -321,8 +317,8 @@ at: http://peteroupc.github.io/CBOR/
         throw new NumberFormatException();
       }
       return CreateWithFlags(
-        (mant==null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
-        (newScale==null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
+        (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
+        (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
         negative ? BigNumberFlags.FlagNegative : 0);
     }
 
@@ -398,7 +394,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return An IShiftAccumulator object.
      */
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
-        return new DigitShiftAccumulator(bigint,0,0);
+        return new DigitShiftAccumulator(bigint, 0, 0);
       }
 
     /**
@@ -418,15 +414,16 @@ at: http://peteroupc.github.io/CBOR/
           denominator=denominator.shiftRight(1);
         }
         // Eliminate factors of 5
-        while(true){
+        while (true) {
           BigInteger bigrem;
           BigInteger bigquo;
+{
 BigInteger[] divrem=(denominator).divideAndRemainder(BigInteger.valueOf(5));
 bigquo=divrem[0];
-bigrem=divrem[1];
-          if(bigrem.signum()!=0)
+bigrem=divrem[1]; }
+          if (bigrem.signum()!=0)
             break;
-          denominator=bigquo;
+          denominator = bigquo;
         }
         return denominator.compareTo(BigInteger.ONE) == 0;
       }
@@ -440,7 +437,7 @@ bigrem=divrem[1];
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.signum() <= 0) return bigint;
         if (bigint.signum()==0) return bigint;
-        if(bigint.compareTo(BigInteger.ONE)!=0){
+        if (bigint.compareTo(BigInteger.ONE) != 0) {
           if (power.CanFitInInt32()) {
             bigint=bigint.multiply(DecimalUtility.FindPowerOfTen(power.AsInt32()));
           } else {
@@ -473,7 +470,7 @@ bigrem=divrem[1];
      * @return An ExtendedDecimal object.
      */
       public ExtendedDecimal CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
-        return CreateWithFlags(mantissa,exponent,flags);
+        return CreateWithFlags(mantissa, exponent, flags);
       }
     /**
      *
@@ -505,32 +502,32 @@ bigrem=divrem[1];
     private String ToStringInternal(int mode) {
       // Using Java's rules for converting ExtendedDecimal
       // values to a String
-      boolean negative=(this.flags&BigNumberFlags.FlagNegative)!=0;
-      if((this.flags&BigNumberFlags.FlagInfinity)!=0){
+      boolean negative = (this.flags & BigNumberFlags.FlagNegative) != 0;
+      if ((this.flags & BigNumberFlags.FlagInfinity) != 0) {
         return negative ? "-Infinity" : "Infinity";
       }
-      if((this.flags&BigNumberFlags.FlagSignalingNaN)!=0){
-        if(this.unsignedMantissa.signum()==0)
+      if ((this.flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+        if (this.unsignedMantissa.signum()==0)
           return negative ? "-sNaN" : "sNaN";
         return negative ?
-          "-sNaN"+(this.unsignedMantissa).abs().toString() :
-          "sNaN"+(this.unsignedMantissa).abs().toString();
+          "-sNaN" + (this.unsignedMantissa).abs().toString() :
+          "sNaN" + (this.unsignedMantissa).abs().toString();
       }
-      if((this.flags&BigNumberFlags.FlagQuietNaN)!=0){
-        if(this.unsignedMantissa.signum()==0)
+      if ((this.flags & BigNumberFlags.FlagQuietNaN) != 0) {
+        if (this.unsignedMantissa.signum()==0)
           return negative ? "-NaN" : "NaN";
         return negative ?
-          "-NaN"+(this.unsignedMantissa).abs().toString() :
-          "NaN"+(this.unsignedMantissa).abs().toString();
+          "-NaN" + (this.unsignedMantissa).abs().toString() :
+          "NaN" + (this.unsignedMantissa).abs().toString();
       }
       String mantissaString = (this.unsignedMantissa).abs().toString();
       int scaleSign = -this.exponent.signum();
       if (scaleSign == 0)
-        return negative ? "-"+mantissaString : mantissaString;
+        return negative ? "-" + mantissaString : mantissaString;
       boolean iszero = (this.unsignedMantissa.signum()==0);
       if (mode == 2 && iszero && scaleSign < 0) {
         // special case for zero in plain
-        return negative ? "-"+mantissaString : mantissaString;
+        return negative ? "-" + mantissaString : mantissaString;
       }
       FastInteger sbLength = new FastInteger(mantissaString.length());
       FastInteger adjustedExponent = FastInteger.FromBig(this.exponent);
@@ -546,26 +543,26 @@ bigrem=divrem[1];
                        scaleSign < 0)) {
           if (intphase == 1) {
             if (adjExponentNegative) {
-              decimalPointAdjust.AddInt(1);
-              newExponent.AddInt(1);
+              decimalPointAdjust.Increment();
+              newExponent.Increment();
             } else {
               decimalPointAdjust.AddInt(2);
               newExponent.AddInt(2);
             }
           } else if (intphase == 2) {
             if (!adjExponentNegative) {
-              decimalPointAdjust.AddInt(1);
-              newExponent.AddInt(1);
+              decimalPointAdjust.Increment();
+              newExponent.Increment();
             } else {
               decimalPointAdjust.AddInt(2);
               newExponent.AddInt(2);
             }
           }
-          threshold.AddInt(1);
+          threshold.Increment();
         } else {
           if (intphase == 1) {
             if (!adjExponentNegative) {
-              decimalPointAdjust.AddInt(1);
+              decimalPointAdjust.Increment();
               newExponent.AddInt(-1);
             } else {
               decimalPointAdjust.AddInt(2);
@@ -573,7 +570,7 @@ bigrem=divrem[1];
             }
           } else if (intphase == 2) {
             if (adjExponentNegative) {
-              decimalPointAdjust.AddInt(1);
+              decimalPointAdjust.Increment();
               newExponent.AddInt(-1);
             } else {
               decimalPointAdjust.AddInt(2);
@@ -590,11 +587,11 @@ bigrem=divrem[1];
           int cmp = decimalPoint.CompareToInt(0);
           StringBuilder builder = null;
           if (cmp < 0) {
-            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            FastInteger tmpFast = new FastInteger(mantissaString.length()).AddInt(6);
             builder = new StringBuilder(
-              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              tmpFast.CompareToInt(Integer.MAX_VALUE) > 0 ?
               Integer.MAX_VALUE : tmpFast.AsInt32());
-            if(negative)builder.append('-');
+            if (negative) builder.append('-');
             builder.append("0.");
             AppendString(builder, '0', FastInteger.Copy(decimalPoint).Negate());
             builder.append(mantissaString);
@@ -603,11 +600,11 @@ bigrem=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt = decimalPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            FastInteger tmpFast = new FastInteger(mantissaString.length()).AddInt(6);
             builder = new StringBuilder(
-              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              tmpFast.CompareToInt(Integer.MAX_VALUE) > 0 ?
               Integer.MAX_VALUE : tmpFast.AsInt32());
-            if(negative)builder.append('-');
+            if (negative) builder.append('-');
             builder.append(mantissaString,0,(0)+(tmpInt));
             builder.append("0.");
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
@@ -617,11 +614,11 @@ bigrem=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt = insertionPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            FastInteger tmpFast = new FastInteger(mantissaString.length()).AddInt(6);
             builder = new StringBuilder(
-              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              tmpFast.CompareToInt(Integer.MAX_VALUE) > 0 ?
               Integer.MAX_VALUE : tmpFast.AsInt32());
-            if(negative)builder.append('-');
+            if (negative) builder.append('-');
             builder.append(mantissaString,0,(0)+(tmpInt));
             AppendString(builder, '0',
                          FastInteger.Copy(decimalPoint).SubtractInt(builder.length()));
@@ -632,11 +629,11 @@ bigrem=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt = decimalPoint.AsInt32();
             if (tmpInt < 0) tmpInt = 0;
-            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            FastInteger tmpFast = new FastInteger(mantissaString.length()).AddInt(6);
             builder = new StringBuilder(
-              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              tmpFast.CompareToInt(Integer.MAX_VALUE) > 0 ?
               Integer.MAX_VALUE : tmpFast.AsInt32());
-            if(negative)builder.append('-');
+            if (negative) builder.append('-');
             builder.append(mantissaString,0,(0)+(tmpInt));
             builder.append('.');
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
@@ -645,20 +642,20 @@ bigrem=divrem[1];
         } else if (mode == 2 && scaleSign < 0) {
           FastInteger negscale = FastInteger.Copy(thisExponent);
           StringBuilder builder = new StringBuilder();
-          if(negative)builder.append('-');
+          if (negative) builder.append('-');
           builder.append(mantissaString);
           AppendString(builder, '0', negscale);
           return builder.toString();
-        } else if(!negative){
+        } else if (!negative) {
           return mantissaString;
         } else {
-          return "-"+mantissaString;
+          return "-" + mantissaString;
         }
       } else {
         StringBuilder builder = null;
         if (mode == 1 && iszero && decimalPointAdjust.CompareToInt(1) > 0) {
           builder = new StringBuilder();
-          if(negative)builder.append('-');
+          if (negative) builder.append('-');
           builder.append(mantissaString);
           builder.append('.');
           AppendString(builder, '0', FastInteger.Copy(decimalPointAdjust).AddInt(-1));
@@ -668,7 +665,7 @@ bigrem=divrem[1];
           if (cmp > 0) {
             tmp.SubtractInt(mantissaString.length());
             builder = new StringBuilder();
-            if(negative)builder.append('-');
+            if (negative) builder.append('-');
             builder.append(mantissaString);
             AppendString(builder, '0', tmp);
           } else if (cmp < 0) {
@@ -677,21 +674,21 @@ bigrem=divrem[1];
               throw new UnsupportedOperationException();
             int tmpInt = tmp.AsInt32();
             if (tmp.signum() < 0) tmpInt = 0;
-            FastInteger tmpFast=new FastInteger(mantissaString.length()).AddInt(6);
+            FastInteger tmpFast = new FastInteger(mantissaString.length()).AddInt(6);
             builder = new StringBuilder(
-              tmpFast.CompareToInt(Integer.MAX_VALUE)>0 ?
+              tmpFast.CompareToInt(Integer.MAX_VALUE) > 0 ?
               Integer.MAX_VALUE : tmpFast.AsInt32());
-            if(negative)builder.append('-');
+            if (negative) builder.append('-');
             builder.append(mantissaString,0,(0)+(tmpInt));
             builder.append('.');
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
           } else if (adjustedExponent.signum() == 0 && !negative) {
             return mantissaString;
           } else if (adjustedExponent.signum() == 0 && negative) {
-            return "-"+mantissaString;
+            return "-" + mantissaString;
           } else {
             builder = new StringBuilder();
-            if(negative)builder.append('-');
+            if (negative) builder.append('-');
             builder.append(mantissaString);
           }
         }
@@ -746,12 +743,12 @@ bigrem=divrem[1];
      * @throws ArithmeticException This object is infinity or NaN.
      */
     public ExtendedFloat ToExtendedFloat() {
-      if(IsNaN() || IsInfinity()){
-        return ExtendedFloat.CreateWithFlags(this.unsignedMantissa,this.exponent,this.flags);
+      if (IsNaN() || IsInfinity()) {
+        return ExtendedFloat.CreateWithFlags(this.unsignedMantissa, this.exponent, this.flags);
       }
       BigInteger bigintExp = this.getExponent();
       BigInteger bigintMant = this.getMantissa();
-      if (bigintMant.signum()==0){
+      if (bigintMant.signum()==0) {
         return this.isNegative() ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
       }
       if (bigintExp.signum()==0) {
@@ -774,29 +771,30 @@ bigrem=divrem[1];
           negscale.AsBigInteger());
         while (true) {
           BigInteger quotient;
+{
 BigInteger[] divrem=(bigmantissa).divideAndRemainder(divisor);
 quotient=divrem[0];
-remainder=divrem[1];
+remainder=divrem[1]; }
           // Ensure that the quotient has enough precision
           // to be converted accurately to a single or double
           if (remainder.signum()!=0 &&
               quotient.compareTo(OneShift62) < 0) {
             // At this point, the quotient has 62 or fewer bits
-            int[] bits=FastInteger.GetLastWords(quotient,2);
-            int shift=0;
-            if((bits[0]|bits[1])!=0){
+            int[] bits = FastInteger.GetLastWords(quotient, 2);
+            int shift = 0;
+            if ((bits[0] | bits[1]) != 0) {
               // Quotient's integer part is nonzero.
               // Get the number of bits of the quotient
-              int bitPrecision=DecimalUtility.BitPrecisionInt(bits[1]);
-              if(bitPrecision!=0)
-                bitPrecision+=32;
+              int bitPrecision = DecimalUtility.BitPrecisionInt(bits[1]);
+              if (bitPrecision != 0)
+                bitPrecision += 32;
               else
-                bitPrecision=DecimalUtility.BitPrecisionInt(bits[0]);
-              shift=63-bitPrecision;
+                bitPrecision = DecimalUtility.BitPrecisionInt(bits[0]);
+              shift = 63 - bitPrecision;
               scale.SubtractInt(shift);
             } else {
               // Integer part of quotient is 0
-              shift=1;
+              shift = 1;
               scale.SubtractInt(shift);
             }
             // shift by that many bits, but not less than 1
@@ -834,11 +832,11 @@ remainder=divrem[1];
      * this value exceeds the range of a 32-bit floating point number.
      */
     public float ToSingle() {
-      if(IsPositiveInfinity())
+      if (IsPositiveInfinity())
         return Float.POSITIVE_INFINITY;
-      if(IsNegativeInfinity())
+      if (IsNegativeInfinity())
         return Float.NEGATIVE_INFINITY;
-      if(this.isNegative() && this.signum()==0){
+      if (this.isNegative() && this.signum()==0) {
         return Float.intBitsToFloat(((int)1 << 31));
       }
       return ToExtendedFloat().ToSingle();
@@ -856,12 +854,12 @@ remainder=divrem[1];
      * this value exceeds the range of a 64-bit floating point number.
      */
     public double ToDouble() {
-      if(IsPositiveInfinity())
+      if (IsPositiveInfinity())
         return Double.POSITIVE_INFINITY;
-      if(IsNegativeInfinity())
+      if (IsNegativeInfinity())
         return Double.NEGATIVE_INFINITY;
-      if(this.isNegative() && this.signum()==0){
-        return Extras.IntegersToDouble(new int[]{((int)(1<<31)),0});
+      if (this.isNegative() && this.signum()==0) {
+        return Extras.IntegersToDouble(new int[] { ((int)(1 << 31)), 0 });
       }
       return ToExtendedFloat().ToDouble();
     }
@@ -878,27 +876,27 @@ remainder=divrem[1];
       boolean neg = ((value >> 31) != 0);
       int fpExponent = (int)((value >> 23) & 0xFF);
       int fpMantissa = value & 0x7FFFFF;
-      if (fpExponent == 255){
-        if(fpMantissa==0){
+      if (fpExponent == 255) {
+        if (fpMantissa == 0) {
           return neg ? NegativeInfinity : PositiveInfinity;
         }
         // Treat high bit of mantissa as quiet/signaling bit
-        boolean quiet=(fpMantissa&0x400000)!=0;
-        fpMantissa&=0x1FFFFF;
-        BigInteger info=BigInteger.valueOf(fpMantissa);
+        boolean quiet = (fpMantissa & 0x400000) != 0;
+        fpMantissa &= 0x1FFFFF;
+        BigInteger info = BigInteger.valueOf(fpMantissa);
         info=info.subtract(BigInteger.ONE);
-        if(info.signum()==0){
+        if (info.signum()==0) {
           return quiet ? NaN : SignalingNaN;
         } else {
-          return CreateWithFlags(info,BigInteger.ZERO,
-                                 (neg ? BigNumberFlags.FlagNegative : 0)|
+          return CreateWithFlags(info, BigInteger.ZERO,
+                                 (neg ? BigNumberFlags.FlagNegative : 0) |
                                  (quiet ? BigNumberFlags.FlagQuietNaN :
                                   BigNumberFlags.FlagSignalingNaN));
         }
       }
       if (fpExponent == 0) fpExponent++;
       else fpMantissa |= (1 << 23);
-      if (fpMantissa == 0){
+      if (fpMantissa == 0) {
         return neg ? ExtendedDecimal.NegativeZero : ExtendedDecimal.Zero;
       }
       fpExponent -= 150;
@@ -925,12 +923,12 @@ remainder=divrem[1];
     }
 
     public static ExtendedDecimal FromBigInteger(BigInteger bigint) {
-      return new ExtendedDecimal(bigint,BigInteger.ZERO);
+      return new ExtendedDecimal(bigint, BigInteger.ZERO);
     }
 
     public static ExtendedDecimal FromInt64(long valueSmall) {
-      BigInteger bigint=BigInteger.valueOf(valueSmall);
-      return new ExtendedDecimal(bigint,BigInteger.ZERO);
+      BigInteger bigint = BigInteger.valueOf(valueSmall);
+      return new ExtendedDecimal(bigint, BigInteger.ZERO);
     }
 
     /**
@@ -944,35 +942,35 @@ remainder=divrem[1];
     public static ExtendedDecimal FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
       int fpExponent = (int)((value[1] >> 20) & 0x7ff);
-      boolean neg=(value[1]>>31)!=0;
-      if (fpExponent == 2047){
-        if((value[1]&0xFFFFF)==0 && value[0]==0){
+      boolean neg = (value[1] >> 31) != 0;
+      if (fpExponent == 2047) {
+        if ((value[1] & 0xFFFFF) == 0 && value[0] == 0) {
           return neg ? NegativeInfinity : PositiveInfinity;
         }
         // Treat high bit of mantissa as quiet/signaling bit
-        boolean quiet=(value[1]&0x80000)!=0;
-        value[1]&=0x3FFFF;
-        BigInteger info=FastInteger.WordsToBigInteger(value);
+        boolean quiet = (value[1] & 0x80000) != 0;
+        value[1] &= 0x3FFFF;
+        BigInteger info = FastInteger.WordsToBigInteger(value);
         info=info.subtract(BigInteger.ONE);
-        if(info.signum()==0){
+        if (info.signum()==0) {
           return quiet ? NaN : SignalingNaN;
         } else {
-          return CreateWithFlags(info,BigInteger.ZERO,
-                                 (neg ? BigNumberFlags.FlagNegative : 0)|
+          return CreateWithFlags(info, BigInteger.ZERO,
+                                 (neg ? BigNumberFlags.FlagNegative : 0) |
                                  (quiet ? BigNumberFlags.FlagQuietNaN :
                                   BigNumberFlags.FlagSignalingNaN));
         }
       }
-      value[1]&=0xFFFFF; // Mask out the exponent and sign
+      value[1] &= 0xFFFFF; // Mask out the exponent and sign
       if (fpExponent == 0) fpExponent++;
-      else value[1]|=0x100000;
-      if ((value[1]|value[0]) != 0) {
-        fpExponent+=DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
+      else value[1] |= 0x100000;
+      if ((value[1] | value[0]) != 0) {
+        fpExponent += DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
       } else {
         return neg ? ExtendedDecimal.NegativeZero : ExtendedDecimal.Zero;
       }
       fpExponent -= 1075;
-      BigInteger fpMantissaBig=FastInteger.WordsToBigInteger(value);
+      BigInteger fpMantissaBig = FastInteger.WordsToBigInteger(value);
       if (fpExponent == 0) {
         if (neg) fpMantissaBig=fpMantissaBig.negate();
         return ExtendedDecimal.FromBigInteger(fpMantissaBig);
@@ -998,17 +996,17 @@ remainder=divrem[1];
      * @return An ExtendedDecimal object.
      */
     public static ExtendedDecimal FromExtendedFloat(ExtendedFloat bigfloat) {
-      if((bigfloat)==null)throw new NullPointerException("bigfloat");
-      if(bigfloat.IsNaN() || bigfloat.IsInfinity()){
-        return CreateWithFlags(bigfloat.getUnsignedMantissa(),bigfloat.getExponent(),
-                               (bigfloat.isNegative() ? BigNumberFlags.FlagNegative : 0)|
-                               (bigfloat.IsInfinity() ? BigNumberFlags.FlagInfinity : 0)|
-                               (bigfloat.IsQuietNaN() ? BigNumberFlags.FlagQuietNaN : 0)|
+      if ((bigfloat) == null) throw new NullPointerException("bigfloat");
+      if (bigfloat.IsNaN() || bigfloat.IsInfinity()) {
+        return CreateWithFlags(bigfloat.getUnsignedMantissa(), bigfloat.getExponent(),
+                               (bigfloat.isNegative() ? BigNumberFlags.FlagNegative : 0) |
+                               (bigfloat.IsInfinity() ? BigNumberFlags.FlagInfinity : 0) |
+                               (bigfloat.IsQuietNaN() ? BigNumberFlags.FlagQuietNaN : 0) |
                                (bigfloat.IsSignalingNaN() ? BigNumberFlags.FlagSignalingNaN : 0));
       }
       BigInteger bigintExp = bigfloat.getExponent();
       BigInteger bigintMant = bigfloat.getMantissa();
-      if(bigintMant.signum()==0){
+      if (bigintMant.signum()==0) {
         return bigfloat.isNegative() ? ExtendedDecimal.NegativeZero : ExtendedDecimal.Zero;
       }
       if (bigintExp.signum()==0) {
@@ -1069,57 +1067,57 @@ remainder=divrem[1];
      * Represents the number 1.
      */
 
-    public static final ExtendedDecimal One = new ExtendedDecimal(BigInteger.ONE,BigInteger.ZERO);
+    public static final ExtendedDecimal One = new ExtendedDecimal(BigInteger.ONE, BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
 
-    public static final ExtendedDecimal Zero = new ExtendedDecimal(BigInteger.ZERO,BigInteger.ZERO);
+    public static final ExtendedDecimal Zero = new ExtendedDecimal(BigInteger.ZERO, BigInteger.ZERO);
 
     public static final ExtendedDecimal NegativeZero = CreateWithFlags(
-      BigInteger.ZERO,BigInteger.ZERO,BigNumberFlags.FlagNegative);
+      BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
     /**
      * Represents the number 10.
      */
 
-    public static final ExtendedDecimal Ten = new ExtendedDecimal(BigInteger.TEN,BigInteger.ZERO);
+    public static final ExtendedDecimal Ten = new ExtendedDecimal(BigInteger.TEN, BigInteger.ZERO);
 
     //----------------------------------------------------------------
 
     /**
      * A not-a-number value.
      */
-    public static final ExtendedDecimal NaN=CreateWithFlags(
+    public static final ExtendedDecimal NaN = CreateWithFlags(
       BigInteger.ZERO,
-      BigInteger.ZERO,BigNumberFlags.FlagQuietNaN);
+      BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
     /**
      * A not-a-number value that signals an invalid operation flag when
      * it's passed as an argument to any arithmetic operation in ExtendedDecimal.
      */
-    public static final ExtendedDecimal SignalingNaN=CreateWithFlags(
+    public static final ExtendedDecimal SignalingNaN = CreateWithFlags(
       BigInteger.ZERO,
-      BigInteger.ZERO,BigNumberFlags.FlagSignalingNaN);
+      BigInteger.ZERO, BigNumberFlags.FlagSignalingNaN);
     /**
      * Positive infinity, greater than any other number.
      */
-    public static final ExtendedDecimal PositiveInfinity=CreateWithFlags(
+    public static final ExtendedDecimal PositiveInfinity = CreateWithFlags(
       BigInteger.ZERO,
-      BigInteger.ZERO,BigNumberFlags.FlagInfinity);
+      BigInteger.ZERO, BigNumberFlags.FlagInfinity);
     /**
      * Negative infinity, less than any other number.
      */
-    public static final ExtendedDecimal NegativeInfinity=CreateWithFlags(
+    public static final ExtendedDecimal NegativeInfinity = CreateWithFlags(
       BigInteger.ZERO,
-      BigInteger.ZERO,BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
+      BigInteger.ZERO, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
     /**
      *
      * @return A Boolean object.
      */
     public boolean IsPositiveInfinity() {
-      return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
-        (BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative);
+      return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
+        (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
     /**
@@ -1127,7 +1125,7 @@ remainder=divrem[1];
      * @return A Boolean object.
      */
     public boolean IsNegativeInfinity() {
-      return (this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNegative))==
+      return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity);
     }
 
@@ -1136,7 +1134,7 @@ remainder=divrem[1];
      * @return A Boolean object.
      */
     public boolean IsNaN() {
-      return (this.flags&(BigNumberFlags.FlagQuietNaN|BigNumberFlags.FlagSignalingNaN))!=0;
+      return (this.flags & (BigNumberFlags.FlagQuietNaN | BigNumberFlags.FlagSignalingNaN)) != 0;
     }
 
     /**
@@ -1144,14 +1142,14 @@ remainder=divrem[1];
      * @return A Boolean object.
      */
     public boolean IsInfinity() {
-      return (this.flags&(BigNumberFlags.FlagInfinity))!=0;
+      return (this.flags & (BigNumberFlags.FlagInfinity)) != 0;
     }
 
     /**
      * Gets whether this object is negative, including negative zero.
      */
     public boolean isNegative() {
-        return (this.flags&(BigNumberFlags.FlagNegative))!=0;
+        return (this.flags & (BigNumberFlags.FlagNegative)) != 0;
       }
 
     /**
@@ -1159,7 +1157,7 @@ remainder=divrem[1];
      * @return A Boolean object.
      */
     public boolean IsQuietNaN() {
-      return (this.flags&(BigNumberFlags.FlagQuietNaN))!=0;
+      return (this.flags & (BigNumberFlags.FlagQuietNaN)) != 0;
     }
 
     /**
@@ -1167,14 +1165,14 @@ remainder=divrem[1];
      * @return A Boolean object.
      */
     public boolean IsSignalingNaN() {
-      return (this.flags&(BigNumberFlags.FlagSignalingNaN))!=0;
+      return (this.flags & (BigNumberFlags.FlagSignalingNaN)) != 0;
     }
 
     /**
      * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
-        return unsignedMantissa.signum()==0 ? 0 : (((this.flags&BigNumberFlags.FlagNegative)!=0) ? -1 : 1);
+        return unsignedMantissa.signum()==0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
     /**
      * Gets whether this object's value equals 0.
@@ -1242,7 +1240,7 @@ remainder=divrem[1];
      */
     public ExtendedDecimal DivideToIntegerNaturalScale(
       ExtendedDecimal divisor
-     ) {
+    ) {
       return DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
 
@@ -1268,8 +1266,8 @@ remainder=divrem[1];
      */
     public ExtendedDecimal RemainderNaturalScale(
       ExtendedDecimal divisor
-     ) {
-      return RemainderNaturalScale(divisor,null);
+    ) {
+      return RemainderNaturalScale(divisor, null);
     }
 
     /**
@@ -1281,9 +1279,9 @@ remainder=divrem[1];
     public ExtendedDecimal RemainderNaturalScale(
       ExtendedDecimal divisor,
       PrecisionContext ctx
-     ) {
-      return Subtract(this.DivideToIntegerNaturalScale(divisor,null)
-                      .Multiply(divisor,null),ctx);
+    ) {
+      return Subtract(this.DivideToIntegerNaturalScale(divisor, null)
+                      .Multiply(divisor, null), ctx);
     }
 
     /**
@@ -1311,7 +1309,7 @@ remainder=divrem[1];
       ExtendedDecimal divisor,
       long desiredExponentSmall,
       PrecisionContext ctx
-     ) {
+    ) {
       return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
@@ -1336,7 +1334,7 @@ remainder=divrem[1];
     public ExtendedDecimal Divide(
       ExtendedDecimal divisor,
       PrecisionContext ctx
-     ) {
+    ) {
       return math.Divide(this, divisor, ctx);
     }
 
@@ -1360,7 +1358,7 @@ remainder=divrem[1];
       ExtendedDecimal divisor,
       long desiredExponentSmall,
       Rounding rounding
-     ) {
+    ) {
       return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)), PrecisionContext.ForRounding(rounding));
     }
 
@@ -1410,7 +1408,7 @@ remainder=divrem[1];
       ExtendedDecimal divisor,
       BigInteger desiredExponent,
       Rounding rounding
-     ) {
+    ) {
       return DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
 
@@ -1424,7 +1422,7 @@ remainder=divrem[1];
      * @return The absolute value of this object.
      */
     public ExtendedDecimal Abs(PrecisionContext context) {
-      return math.Abs(this,context);
+      return math.Abs(this, context);
     }
 
     /**
@@ -1437,7 +1435,7 @@ remainder=divrem[1];
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal Negate(PrecisionContext context) {
-      return math.Negate(this,context);
+      return math.Negate(this, context);
     }
 
     /**
@@ -1446,7 +1444,7 @@ remainder=divrem[1];
      * @return The sum of the two objects.
      */
     public ExtendedDecimal Add(ExtendedDecimal decfrac) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
+      if ((decfrac) == null) throw new NullPointerException("decfrac");
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -1457,7 +1455,7 @@ remainder=divrem[1];
      * @return The difference of the two objects.
      */
     public ExtendedDecimal Subtract(ExtendedDecimal decfrac) {
-      return Subtract(decfrac,null);
+      return Subtract(decfrac, null);
     }
 
     /**
@@ -1470,11 +1468,11 @@ remainder=divrem[1];
      * @return The difference of the two objects.
      */
     public ExtendedDecimal Subtract(ExtendedDecimal decfrac, PrecisionContext ctx) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
-      ExtendedDecimal negated=decfrac;
-      if((decfrac.flags&BigNumberFlags.FlagNaN)==0){
-        int newflags=decfrac.flags^BigNumberFlags.FlagNegative;
-        negated=CreateWithFlags(decfrac.unsignedMantissa,decfrac.exponent,newflags);
+      if ((decfrac) == null) throw new NullPointerException("decfrac");
+      ExtendedDecimal negated = decfrac;
+      if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
+        int newflags = decfrac.flags ^ BigNumberFlags.FlagNegative;
+        negated = CreateWithFlags(decfrac.unsignedMantissa, decfrac.exponent, newflags);
       }
       return Add(negated, ctx);
     }
@@ -1485,7 +1483,7 @@ remainder=divrem[1];
      * @return The product of the two decimal numbers.
      */
     public ExtendedDecimal Multiply(ExtendedDecimal decfrac) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
+      if ((decfrac) == null) throw new NullPointerException("decfrac");
       return Multiply(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -1497,7 +1495,7 @@ remainder=divrem[1];
      */
     public ExtendedDecimal MultiplyAndAdd(ExtendedDecimal multiplicand,
                                           ExtendedDecimal augend) {
-      return MultiplyAndAdd(multiplicand,augend,null);
+      return MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
 
@@ -1604,8 +1602,8 @@ remainder=divrem[1];
      */
     public ExtendedDecimal NextMinus(
       PrecisionContext ctx
-     ) {
-      return math.NextMinus(this,ctx);
+    ) {
+      return math.NextMinus(this, ctx);
     }
 
     /**
@@ -1621,8 +1619,8 @@ remainder=divrem[1];
      */
     public ExtendedDecimal NextPlus(
       PrecisionContext ctx
-     ) {
-      return math.NextPlus(this,ctx);
+    ) {
+      return math.NextPlus(this, ctx);
     }
 
     /**
@@ -1641,8 +1639,8 @@ remainder=divrem[1];
     public ExtendedDecimal NextToward(
       ExtendedDecimal otherValue,
       PrecisionContext ctx
-     ) {
-      return math.NextToward(this,otherValue,ctx);
+    ) {
+      return math.NextToward(this, otherValue, ctx);
     }
 
     /**
@@ -1714,7 +1712,7 @@ remainder=divrem[1];
      */
     public static ExtendedDecimal Max(
       ExtendedDecimal first, ExtendedDecimal second) {
-      return Max(first,second,null);
+      return Max(first, second, null);
     }
 
     /**
@@ -1725,7 +1723,7 @@ remainder=divrem[1];
      */
     public static ExtendedDecimal Min(
       ExtendedDecimal first, ExtendedDecimal second) {
-      return Min(first,second,null);
+      return Min(first, second, null);
     }
     /**
      * Gets the greater value between two values, ignoring their signs.
@@ -1736,7 +1734,7 @@ remainder=divrem[1];
      */
     public static ExtendedDecimal MaxMagnitude(
       ExtendedDecimal first, ExtendedDecimal second) {
-      return MaxMagnitude(first,second,null);
+      return MaxMagnitude(first, second, null);
     }
 
     /**
@@ -1748,7 +1746,7 @@ remainder=divrem[1];
      */
     public static ExtendedDecimal MinMagnitude(
       ExtendedDecimal first, ExtendedDecimal second) {
-      return MinMagnitude(first,second,null);
+      return MinMagnitude(first, second, null);
     }
     /**
      * Compares the mathematical values of this object and another object,
@@ -1845,9 +1843,9 @@ remainder=divrem[1];
      * or if the context defines an exponent range and the given exponent
      * is outside that range.
      */
-public ExtendedDecimal Quantize(
+    public ExtendedDecimal Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return Quantize(new ExtendedDecimal(BigInteger.ONE,desiredExponent), ctx);
+      return Quantize(new ExtendedDecimal(BigInteger.ONE, desiredExponent), ctx);
     }
 
     /**
@@ -1871,7 +1869,7 @@ public ExtendedDecimal Quantize(
      */
     public ExtendedDecimal Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize(new ExtendedDecimal(BigInteger.ONE,BigInteger.valueOf(desiredExponentSmall)), ctx);
+      return Quantize(new ExtendedDecimal(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
     /**
@@ -2029,11 +2027,11 @@ public ExtendedDecimal Quantize(
      */
     public ExtendedDecimal MultiplyAndSubtract(
       ExtendedDecimal op, ExtendedDecimal subtrahend, PrecisionContext ctx) {
-      if((subtrahend)==null)throw new NullPointerException("decfrac");
-      ExtendedDecimal negated=subtrahend;
-      if((subtrahend.flags&BigNumberFlags.FlagNaN)==0){
-        int newflags=subtrahend.flags^BigNumberFlags.FlagNegative;
-        negated=CreateWithFlags(subtrahend.unsignedMantissa,subtrahend.exponent,newflags);
+      if ((subtrahend) == null) throw new NullPointerException("decfrac");
+      ExtendedDecimal negated = subtrahend;
+      if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
+        int newflags = subtrahend.flags ^ BigNumberFlags.FlagNegative;
+        negated = CreateWithFlags(subtrahend.unsignedMantissa, subtrahend.exponent, newflags);
       }
       return math.MultiplyAndAdd(this, op, negated, ctx);
     }

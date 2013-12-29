@@ -1696,13 +1696,14 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private static int[] RoundupSizeTable = new int[] { 2, 2, 2, 4, 4, 8, 8, 8, 8 };
+    private static int[] RoundupSizeTable = new int[] {
+      2, 2, 2, 4, 4, 8, 8, 8, 8,
+      16, 16, 16, 16, 16, 16, 16, 16
+    };
 
     private static int RoundupSize(int n) {
-      if (n <= 8)
+      if (n <= 16)
         return RoundupSizeTable[n];
-      else if (n <= 16)
-        return 16;
       else if (n <= 32)
         return 32;
       else if (n <= 64)
@@ -1734,35 +1735,51 @@ at: http://peteroupc.github.io/CBOR/
         this.reg = new short[] { (short)0, (short)0 };
         this.wordCount = 0;
       } else {
-        this.reg = new short[RoundupSize(((int)bytes.length + 1) / 2)];
-        int jIndex = (littleEndian) ? bytes.length - 1 : 0;
+        int len=bytes.length;
+        int wordLength=((int)len + 1) / 2;
+        wordLength=(wordLength<=16) ?
+          RoundupSizeTable[wordLength] :
+          RoundupSize(wordLength);
+        this.reg = new short[wordLength];
+        int jIndex = (littleEndian) ? len - 1 : 0;
         boolean negative = ((bytes[jIndex]) & 0x80) != 0;
+        this.negative=negative;
         int j = 0;
-        for (int i = 0; i < bytes.length; i += 2, j++) {
-          int index = (littleEndian) ? i : bytes.length - 1 - i;
-          int index2 = (littleEndian) ? i + 1 : bytes.length - 2 - i;
-          this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
-          if (index2 >= 0 && index2 < bytes.length) {
-            this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
-          } else if (negative) {
-            // sign extend the last byte
-            this.reg[j] |= ((short)0xFF00);
+        if(!negative){
+          for (int i = 0; i < len; i += 2, j++) {
+            int index = (littleEndian) ? i : len - 1 - i;
+            int index2 = (littleEndian) ? i + 1 : len - 2 - i;
+            this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
+            if (index2 >= 0 && index2 < len) {
+              this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
+            }
           }
-        }
-        this.negative = negative;
-        if (negative) {
+        } else {
+          for (int i = 0; i < len; i += 2, j++) {
+            int index = (littleEndian) ? i : len - 1 - i;
+            int index2 = (littleEndian) ? i + 1 : len - 2 - i;
+            this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
+            if (index2 >= 0 && index2 < len) {
+              this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
+            } else {
+              // sign extend the last byte
+              this.reg[j] |= ((short)0xFF00);
+            }
+          }
           for (; j < reg.length; j++) {
             this.reg[j] = ((short)0xFFFF); // sign extend remaining words
           }
           TwosComplement(this.reg, 0, (int)this.reg.length);
         }
-        this.wordCount = CalcWordCount();
+        this.wordCount=this.reg.length;
+        while (this.wordCount != 0 &&
+               this.reg[this.wordCount - 1] == 0)
+          this.wordCount--;
       }
     }
 
     private BigInteger Allocate(int length) {
       this.reg = new short[RoundupSize(length)]; // will be initialized to 0
-      // IsZero relies on the current state of reg
       this.negative = false;
       this.wordCount = 0;
       return this;
@@ -2220,10 +2237,31 @@ at: http://peteroupc.github.io/CBOR/
      */
     private int BitLength() {
       int wc = this.wordCount;
-      if (wc!=0)
-        return (int)((wc - 1) * 16 + BitPrecision(reg[wc - 1]));
-      else
+      if (wc!=0){
+        short numberValue=reg[wc-1];
+        wc=(wc-1)<<4;
+        if (numberValue == 0)return wc;
+        wc+=16;
+        {
+          if ((numberValue >> 8) == 0) {
+            numberValue <<= 8;
+            wc -= 8;
+          }
+          if ((numberValue >> 12) == 0) {
+            numberValue <<= 4;
+            wc -= 4;
+          }
+          if ((numberValue >> 14) == 0) {
+            numberValue <<= 2;
+            wc -= 2;
+          }
+          if ((numberValue >> 15) == 0)
+            --wc;
+        }
+        return wc;
+      } else {
         return 0;
+      }
     }
 
     private static final String vec = "0123456789ABCDEF";
@@ -2262,6 +2300,98 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
+     * Finds the number of decimal digits this number has.
+     * @return The number of decimal digits. Returns 1 if this object&apos;s
+     * value is 0.
+     */
+    public int getDigitCount() {
+      if (this.signum()==0)
+        return 1;
+      if (HasSmallValue()) {
+        long value = longValue();
+        if(value==Long.MIN_VALUE)return 19;
+        if(value<0)value=-value;
+        if(value>=1000000000L){
+          if(value>=1000000000000000000L)return 19;
+          if(value>=100000000000000000L)return 18;
+          if(value>=10000000000000000L)return 17;
+          if(value>=1000000000000000L)return 16;
+          if(value>=100000000000000L)return 15;
+          if(value>=10000000000000L)return 14;
+          if(value>=1000000000000L)return 13;
+          if(value>=100000000000L)return 12;
+          if(value>=10000000000L)return 11;
+          if(value>=1000000000L)return 10;
+          return 9;
+        } else {
+          int v2=(int)value;
+          if(v2>=100000000)return 9;
+          if(v2>=10000000)return 8;
+          if(v2>=1000000)return 7;
+          if(v2>=100000)return 6;
+          if(v2>=10000)return 5;
+          if(v2>=1000)return 4;
+          if(v2>=100)return 3;
+          if(v2>=10)return 2;
+          return 1;
+        }
+      }
+      int bitlen=BitLength();
+      if(bitlen<=2135){
+        // (x*631305)>>21 is an approximation
+        // to trunc(x*log10(2)) that is correct up
+        // to x=2135; the multiplication would require
+        // up to 31 bits in all cases up to 2135
+        // (cases up to 64 bits already handled above)
+        int minDigits=1+(((bitlen-1)*631305)>>21);
+        int maxDigits=1+(((bitlen)*631305)>>21);
+        if(minDigits==maxDigits){
+          // Number of digits is the same for
+          // all numbers with this bit length
+          return minDigits;
+        }
+      }
+      short[] tempReg = new short[this.wordCount];
+      System.arraycopy(this.reg,0,tempReg,0,tempReg.length);
+      int wordCount = tempReg.length;
+      while (wordCount != 0 && tempReg[wordCount - 1] == 0)
+        wordCount--;
+      int i = 0;
+      while (wordCount != 0) {
+        if (wordCount == 1) {
+          int rest = (((int)tempReg[0])&0xFFFF);
+          if(rest>=10000)i+=5;
+          else if(rest>=1000)i+=4;
+          else if(rest>=100)i+=3;
+          else if(rest>=10)i+=2;
+          else i++;
+          break;
+        } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <=0x7FFF) {
+          int rest = (((int)tempReg[0])&0xFFFF);
+          rest|=((((int)tempReg[1])&0xFFFF)<<16);
+          if(rest>=1000000000)i+=10;
+          else if(rest>=100000000)i+=9;
+          else if(rest>=10000000)i+=8;
+          else if(rest>=1000000)i+=7;
+          else if(rest>=100000)i+=6;
+          else if(rest>=10000)i+=5;
+          else if(rest>=1000)i+=4;
+          else if(rest>=100)i+=3;
+          else if(rest>=10)i+=2;
+          else i++;
+          break;
+        } else {
+          FastDivideAndRemainder(tempReg, wordCount, (short)10000);
+          // Recalculate word count
+          while (wordCount != 0 && tempReg[wordCount - 1] == 0)
+            wordCount--;
+          i+=4;
+        }
+      }
+      return i;
+    }
+
+    /**
      * Converts this object to a text string.
      * @return A string representation of this object.
      */
@@ -2277,10 +2407,18 @@ at: http://peteroupc.github.io/CBOR/
       while (wordCount != 0 && tempReg[wordCount - 1] == 0)
         wordCount--;
       int i = 0;
-      char[] s = new char[(this.BitLength() / 3 + 1)];
+      char[] s = new char[(wordCount<<4)+1];
       while (wordCount != 0) {
-        if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] < 10000) {
+        if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <=0x7FFF) {
           int rest = tempReg[0];
+          while (rest != 0) {
+            s[i++] = vec.charAt(rest % 10);
+            rest = rest / 10;
+          }
+          break;
+        } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <=0x7FFF) {
+          int rest = (((int)tempReg[0])&0xFFFF);
+          rest|=(((int)tempReg[1])&0xFFFF)<<16;
           while (rest != 0) {
             s[i++] = vec.charAt(rest % 10);
             rest = rest / 10;
@@ -2291,14 +2429,17 @@ at: http://peteroupc.github.io/CBOR/
           // Recalculate word count
           while (wordCount != 0 && tempReg[wordCount - 1] == 0)
             wordCount--;
-          for (int j = 0; j < 4; j++) {
-            s[i++] = vec.charAt((int)(remainderSmall % 10));
-            remainderSmall = remainderSmall / 10;
-          }
+          s[i++] = vec.charAt((int)(remainderSmall % 10));
+          remainderSmall = remainderSmall / 10;
+          s[i++] = vec.charAt((int)(remainderSmall % 10));
+          remainderSmall = remainderSmall / 10;
+          s[i++] = vec.charAt((int)(remainderSmall % 10));
+          remainderSmall = remainderSmall / 10;
+          s[i++] = vec.charAt(remainderSmall);
         }
       }
       ReverseChars(s, 0, i);
-      if (this.signum() < 0) {
+      if (this.negative) {
         StringBuilder sb = new StringBuilder(i + 1);
         sb.append('-');
         sb.append(s,0,(0)+(i));
@@ -2404,25 +2545,36 @@ at: http://peteroupc.github.io/CBOR/
                                     BigInteger bigintAddend,
                                     BigInteger bigintAugend) {
       int carry;
-      int desiredLength=Math.max(bigintAddend.reg.length,bigintAugend.reg.length);
-      if (bigintAddend.reg.length == bigintAugend.reg.length)
-        carry = Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (int)(bigintAddend.reg.length));
-      else if (bigintAddend.reg.length > bigintAugend.reg.length) {
-        carry = Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (int)(bigintAugend.reg.length));
+      int addendCount=bigintAddend.wordCount+(bigintAddend.wordCount&1);
+      int augendCount=bigintAugend.wordCount+(bigintAugend.wordCount&1);
+      int desiredLength=Math.max(addendCount,augendCount);
+      if (addendCount == augendCount)
+        carry = Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (int)(addendCount));
+      else if (addendCount > augendCount) {
+        // Addend is bigger
+        carry = Add(sum.reg, 0,
+                    bigintAddend.reg, 0,
+                    bigintAugend.reg, 0,
+                    (int)(augendCount));
         System.arraycopy(
-          bigintAddend.reg, bigintAugend.reg.length,
-          sum.reg, bigintAugend.reg.length,
-          bigintAddend.reg.length - bigintAugend.reg.length);
-        carry = Increment(sum.reg, bigintAugend.reg.length,
-                          (int)(bigintAddend.reg.length - bigintAugend.reg.length), (short)carry);
+          bigintAddend.reg, augendCount,
+          sum.reg, augendCount,
+          addendCount - augendCount);
+        carry = Increment(sum.reg, augendCount,
+                          (int)(addendCount - augendCount),
+                          (short)carry);
       } else {
-        carry = Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (int)(bigintAddend.reg.length));
+        // Augend is bigger
+        carry = Add(sum.reg, 0,
+                    bigintAddend.reg, 0,
+                    bigintAugend.reg, 0,
+                    (int)(addendCount));
         System.arraycopy(
-          bigintAugend.reg, bigintAddend.reg.length,
-          sum.reg, bigintAddend.reg.length,
-          bigintAugend.reg.length - bigintAddend.reg.length);
-        carry = Increment(sum.reg, bigintAddend.reg.length,
-                          (int)(bigintAugend.reg.length - bigintAddend.reg.length),
+          bigintAugend.reg, addendCount,
+          sum.reg, addendCount,
+          augendCount - addendCount);
+        carry = Increment(sum.reg, addendCount,
+                          (int)(augendCount - addendCount),
                           (short)carry);
       }
       if (carry != 0) {
@@ -2510,7 +2662,45 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger add(BigInteger bigintAugend) {
       if ((bigintAugend) == null) throw new NullPointerException("bigintAugend");
-      BigInteger sum = new BigInteger().Allocate((int)Math.max(reg.length, bigintAugend.reg.length));
+      BigInteger sum;
+      if(this.wordCount==0)
+        return bigintAugend;
+      if(bigintAugend.wordCount==0)
+        return this;
+      if(bigintAugend.wordCount==1 && this.wordCount==1){
+        if(this.negative==bigintAugend.negative){
+          int v=(((int)this.reg[0])&0xFFFF)+((bigintAugend.intValue().reg[0])&0xFFFF);
+          sum=new BigInteger();
+          sum.reg=new short[2];
+          sum.reg[0]=((short)v);
+          sum.reg[1]=((short)(v.shiftRight(16)));
+          sum.wordCount=((v.shiftRight(16))==0) ? 1 : 2;
+          sum.negative=this.negative;
+          return sum;
+        } else {
+          int a=(((int)this.reg[0])&0xFFFF);
+          int b=((bigintAugend.intValue().reg[0])&0xFFFF);
+          if(a==b)return BigInteger.ZERO;
+          if(a>b){
+            a-=b;
+            sum=new BigInteger();
+            sum.reg=new short[2];
+            sum.reg[0]=((short)a);
+            sum.wordCount=1;
+            sum.negative=this.negative;
+            return sum;
+          } else {
+            b-=a;
+            sum=new BigInteger();
+            sum.reg=new short[2];
+            sum.reg[0]=((short)b);
+            sum.wordCount=1;
+            sum.negative=!this.negative;
+            return sum;
+          }
+        }
+      }
+      sum = new BigInteger().Allocate((int)Math.max(reg.length, bigintAugend.reg.length));
       if (this.signum() >= 0) {
         if (bigintAugend.signum() >= 0)
           PositiveAdd(sum, this, bigintAugend); // both nonnegative
@@ -2709,13 +2899,12 @@ at: http://peteroupc.github.io/CBOR/
       }
       return remainder;
     }
-
-    private static void FastDivide(short[] quotientReg, int count, short divisorSmall) {
+    private static void FastDivide(short[] quotientReg, short[] dividendReg, int count, short divisorSmall) {
       int i = count;
       short remainder = 0;
       int idivisor = (((int)divisorSmall) & 0xFFFF);
       while ((i--) > 0) {
-        int currentDividend = ((int)((((int)quotientReg[i]) & 0xFFFF) |
+        int currentDividend = ((int)((((int)dividendReg[i]) & 0xFFFF) |
                                               ((int)(remainder) << 16)));
         if ((currentDividend >> 31) == 0) {
           quotientReg[i] = ((short)(currentDividend / idivisor));
@@ -2725,6 +2914,25 @@ at: http://peteroupc.github.io/CBOR/
           if (i > 0) remainder = RemainderUnsigned(currentDividend, divisorSmall);
         }
       }
+    }
+
+    private static short FastDivideAndRemainderEx(short[] quotientReg,
+                                                  short[] dividendReg, int count, short divisorSmall) {
+      int i = count;
+      short remainder = 0;
+      int idivisor = (((int)divisorSmall) & 0xFFFF);
+      while ((i--) > 0) {
+        int currentDividend = ((int)((((int)dividendReg[i]) & 0xFFFF) |
+                                              ((int)(remainder) << 16)));
+        if ((currentDividend >> 31) == 0) {
+          quotientReg[i] = ((short)(currentDividend / idivisor));
+          remainder = ((short)(currentDividend % idivisor));
+        } else {
+          quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
+          remainder = RemainderUnsigned(currentDividend, divisorSmall);
+        }
+      }
+      return remainder;
     }
     private static short FastDivideAndRemainder(short[] quotientReg, int count, short divisorSmall) {
       int i = count;
@@ -2760,11 +2968,11 @@ at: http://peteroupc.github.io/CBOR/
       int bSize = bigintDivisor.wordCount;
       if (bSize == 0)
         throw new ArithmeticException();
-      if (aSize < bSize) {
-        // dividend is less than divisor
+      if (aSize < bSize || aSize==0) {
+        // dividend is less than divisor, or dividend is 0
         return BigInteger.ZERO;
       }
-      if (aSize <= 4 && bSize <= 4 && this.HasTinyValue() && bigintDivisor.HasTinyValue()) {
+      if (aSize <= 2 && bSize <= 2 && this.HasTinyValue() && bigintDivisor.HasTinyValue()) {
         int aSmall = this.intValue();
         int  bSmall = bigintDivisor.intValue();
         if (aSmall != Integer.MIN_VALUE || bSmall != -1) {
@@ -2779,15 +2987,16 @@ at: http://peteroupc.github.io/CBOR/
         quotient.reg=new short[this.reg.length];
         quotient.wordCount=this.wordCount;
         quotient.negative=this.negative;
-        System.arraycopy(this.reg,0,quotient.reg,0,quotient.reg.length);
-        FastDivide(quotient.reg, aSize, bigintDivisor.reg[0]);
-        quotient.wordCount = quotient.CalcWordCount();
+        FastDivide(quotient.reg, this.reg, aSize, bigintDivisor.reg[0]);
+        while (quotient.wordCount != 0 &&
+               quotient.reg[quotient.wordCount - 1] == 0)
+          quotient.wordCount--;
         if (quotient.wordCount != 0) {
-          quotient.negative = (this.signum() < 0) ^ (bigintDivisor.signum() < 0);
+          quotient.negative = this.negative ^ bigintDivisor.negative;
+          return quotient;
         } else {
-          quotient.negative = false;
+          return BigInteger.ZERO;
         }
-        return quotient;
       }
       quotient = new BigInteger();
       aSize += aSize % 2;
@@ -2827,28 +3036,34 @@ at: http://peteroupc.github.io/CBOR/
         quotient.reg=new short[this.reg.length];
         quotient.wordCount=this.wordCount;
         quotient.negative=this.negative;
-        System.arraycopy(this.reg,0,quotient.reg,0,quotient.reg.length);
-        int smallRemainder = (((int)FastDivideAndRemainder(
-          quotient.reg, aSize, divisor.reg[0])) & 0xFFFF);
-        quotient.wordCount = quotient.CalcWordCount();
+        int smallRemainder = (((int)FastDivideAndRemainderEx(
+          quotient.reg, this.reg, aSize, divisor.reg[0])) & 0xFFFF);
+        while (quotient.wordCount != 0 &&
+               quotient.reg[quotient.wordCount - 1] == 0)
+          quotient.wordCount--;
         quotient.ShortenArray();
         if (quotient.wordCount != 0) {
-          quotient.negative = (this.signum() < 0) ^ (divisor.signum() < 0);
+          quotient.negative = this.negative ^ divisor.negative;
         } else {
-          quotient.negative = false;
+          quotient=BigInteger.ZERO;
         }
-        if (this.signum() < 0) smallRemainder = -smallRemainder;
+        if (this.negative) smallRemainder = -smallRemainder;
         return new BigInteger[] { quotient, new BigInteger().InitializeInt(smallRemainder) };
       }
       BigInteger remainder = new BigInteger();
       quotient = new BigInteger();
-      aSize += aSize % 2;
-      bSize += bSize % 2;
+      aSize += aSize & 1;
+      bSize += bSize & 1;
       remainder.reg = new short[RoundupSize((int)bSize)];
       remainder.negative = false;
       quotient.reg = new short[RoundupSize((int)(aSize - bSize + 2))];
       quotient.negative = false;
-      DivideWithRemainderAnyLength(this.reg, divisor.reg, quotient.reg, remainder.reg);
+      short[] tempbuf = new short[aSize + 3 * (bSize + 2)];
+      Divide(remainder.reg, 0,
+             quotient.reg, 0,
+             tempbuf, 0,
+             this.reg, 0, aSize,
+             divisor.reg, 0, bSize);
       remainder.wordCount = remainder.CalcWordCount();
       quotient.wordCount = quotient.CalcWordCount();
       remainder.ShortenArray();

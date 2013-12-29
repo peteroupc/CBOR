@@ -49,16 +49,18 @@ private TestCommon(){}
       if(bigintB.signum()==0){
         try {
           BigInteger quo;
+{
 BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
 quo=divrem[0];
-rembi=divrem[1];
+rembi=divrem[1]; }
           Assert.fail("Expected divide by 0 error");
         } catch(Exception ex){ }
       } else {
         BigInteger quo;
+{
 BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
 quo=divrem[0];
-rembi=divrem[1];
+rembi=divrem[1]; }
         AssertBigIntegersEqual(result,quo);
         AssertBigIntegersEqual(rem,rembi);
       }
@@ -173,19 +175,19 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       }
       if(o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
          o.IsNaN()){
-        try { o.AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsInt64(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsSingle(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsDouble(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
-        try { o.AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); }
+        try { o.AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw ex; }
+        try { o.AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw ex; }
+        try { o.AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw ex; }
+        try { o.AsInt64(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw ex; }
+        try { o.AsSingle(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw ex; }
+        try { o.AsDouble(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw ex; }
+        try { o.AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw ex; }
         return;
       }
       BigInteger df=o.AsExtendedDecimal().ToBigInteger();
-      try { o.AsBigInteger(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      try { o.AsSingle(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
-      try { o.AsDouble(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); }
+      try { o.AsBigInteger(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); throw ex; }
+      try { o.AsSingle(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); throw ex; }
+      try { o.AsDouble(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); throw ex; }
     }
 
     public static void AssertRoundTrip(CBORObject o) {

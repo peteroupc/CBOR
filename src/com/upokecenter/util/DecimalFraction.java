@@ -96,11 +96,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A DecimalFraction object.
      */
     public static DecimalFraction FromString(String str) {
-      ExtendedDecimal ed=ExtendedDecimal.FromString(str);
-      return new DecimalFraction(ed.getMantissa(),ed.getExponent());
+      ExtendedDecimal ed = ExtendedDecimal.FromString(str);
+      return new DecimalFraction(ed.getMantissa(), ed.getExponent());
     }
 
-    private static DecimalFraction MinusOne=new DecimalFraction(BigInteger.ZERO.subtract(BigInteger.ONE),BigInteger.ZERO);
+    private static DecimalFraction MinusOne = new DecimalFraction(BigInteger.ZERO.subtract(BigInteger.ONE), BigInteger.ZERO);
 
     private static final class DecimalMathHelper implements IRadixMathHelper<DecimalFraction> {
 
@@ -174,7 +174,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return An IShiftAccumulator object.
      */
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
-        return new DigitShiftAccumulator(bigint,0,0);
+        return new DigitShiftAccumulator(bigint, 0, 0);
       }
 
     /**
@@ -194,15 +194,16 @@ at: http://peteroupc.github.io/CBOR/
           denominator=denominator.shiftRight(1);
         }
         // Eliminate factors of 5
-        while(true){
+        while (true) {
           BigInteger bigrem;
           BigInteger bigquo;
+{
 BigInteger[] divrem=(denominator).divideAndRemainder(BigInteger.valueOf(5));
 bigquo=divrem[0];
-bigrem=divrem[1];
-          if(bigrem.signum()!=0)
+bigrem=divrem[1]; }
+          if (bigrem.signum()!=0)
             break;
-          denominator=bigquo;
+          denominator = bigquo;
         }
         return denominator.compareTo(BigInteger.ONE) == 0;
       }
@@ -216,7 +217,7 @@ bigrem=divrem[1];
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.signum() <= 0) return bigint;
         if (bigint.signum()==0) return bigint;
-        if(bigint.compareTo(BigInteger.ONE)!=0){
+        if (bigint.compareTo(BigInteger.ONE) != 0) {
           if (power.CanFitInInt32()) {
             bigint=bigint.multiply(DecimalUtility.FindPowerOfTen(power.AsInt32()));
           } else {
@@ -238,7 +239,7 @@ bigrem=divrem[1];
      * @return A 32-bit signed integer.
      */
       public int GetFlags(DecimalFraction value) {
-        return value.mantissa.signum()<0 ? BigNumberFlags.FlagNegative : 0;
+        return value.mantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
       }
 
     /**
@@ -249,10 +250,10 @@ bigrem=divrem[1];
      * @return A DecimalFraction object.
      */
       public DecimalFraction CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
-        boolean neg=(flags&BigNumberFlags.FlagNegative)!=0;
-        if((neg && mantissa.signum()>0) || (!neg && mantissa.signum()<0))
+        boolean neg = (flags & BigNumberFlags.FlagNegative) != 0;
+        if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0))
           mantissa=mantissa.negate();
-        return new DecimalFraction(mantissa,exponent);
+        return new DecimalFraction(mantissa, exponent);
       }
 
     /**
@@ -269,21 +270,21 @@ bigrem=divrem[1];
      * @return A DecimalFraction object.
      */
       public DecimalFraction ValueOf(int val) {
-        if(val==0)return Zero;
-        if(val==1)return One;
-        if(val==-1)return MinusOne;
+        if (val == 0) return Zero;
+        if (val == 1) return One;
+        if (val == -1) return MinusOne;
         return FromInt64(val);
       }
     }
 
     private String ToStringInternal(int mode) {
-      switch(mode){
+      switch (mode) {
         case 0:
-          return new ExtendedDecimal(this.getMantissa(),this.getExponent()).toString();
+          return new ExtendedDecimal(this.getMantissa(), this.getExponent()).toString();
         case 1:
-          return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToEngineeringString();
+          return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToEngineeringString();
         case 2:
-          return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToPlainString();
+          return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToPlainString();
         default:
           throw new IllegalArgumentException();
       }
@@ -295,7 +296,7 @@ bigrem=divrem[1];
      * @return A BigInteger object.
      */
     public BigInteger ToBigInteger() {
-      return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToBigInteger();
+      return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToBigInteger();
     }
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
@@ -305,7 +306,7 @@ bigrem=divrem[1];
      * this value exceeds the range of a 32-bit floating point number.
      */
     public float ToSingle() {
-      return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToSingle();
+      return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToSingle();
     }
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
@@ -315,7 +316,7 @@ bigrem=divrem[1];
      * this value exceeds the range of a 64-bit floating point number.
      */
     public double ToDouble() {
-      return new ExtendedDecimal(this.getMantissa(),this.getExponent()).ToDouble();
+      return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToDouble();
     }
     /**
      * Creates a decimal fraction from a 32-bit floating-point number.
@@ -327,17 +328,17 @@ bigrem=divrem[1];
      * @throws ArithmeticException "flt" is infinity or not-a-number.
      */
     public static DecimalFraction FromSingle(float flt) {
-      ExtendedDecimal ed=ExtendedDecimal.FromSingle(flt);
-      return new DecimalFraction(ed.getMantissa(),ed.getExponent());
+      ExtendedDecimal ed = ExtendedDecimal.FromSingle(flt);
+      return new DecimalFraction(ed.getMantissa(), ed.getExponent());
     }
 
     public static DecimalFraction FromBigInteger(BigInteger bigint) {
-      return new DecimalFraction(bigint,BigInteger.ZERO);
+      return new DecimalFraction(bigint, BigInteger.ZERO);
     }
 
     public static DecimalFraction FromInt64(long valueSmall) {
-      BigInteger bigint=BigInteger.valueOf(valueSmall);
-      return new DecimalFraction(bigint,BigInteger.ZERO);
+      BigInteger bigint = BigInteger.valueOf(valueSmall);
+      return new DecimalFraction(bigint, BigInteger.ZERO);
     }
 
     /**
@@ -350,8 +351,8 @@ bigrem=divrem[1];
      * @throws ArithmeticException "dbl" is infinity or not-a-number.
      */
     public static DecimalFraction FromDouble(double dbl) {
-      ExtendedDecimal ed=ExtendedDecimal.FromDouble(dbl);
-      return new DecimalFraction(ed.getMantissa(),ed.getExponent());
+      ExtendedDecimal ed = ExtendedDecimal.FromDouble(dbl);
+      return new DecimalFraction(ed.getMantissa(), ed.getExponent());
     }
 
     /**
@@ -361,9 +362,9 @@ bigrem=divrem[1];
      * @return A DecimalFraction object.
      */
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
-      ExtendedDecimal ed=ExtendedDecimal.FromExtendedFloat(
-        new ExtendedFloat(bigfloat.getMantissa(),bigfloat.getExponent()));
-      return new DecimalFraction(ed.getMantissa(),ed.getExponent());
+      ExtendedDecimal ed = ExtendedDecimal.FromExtendedFloat(
+        new ExtendedFloat(bigfloat.getMantissa(), bigfloat.getExponent()));
+      return new DecimalFraction(ed.getMantissa(), ed.getExponent());
     }
 
     /**
@@ -397,18 +398,18 @@ bigrem=divrem[1];
      * Represents the number 1.
      */
 
-    public static final DecimalFraction One = new DecimalFraction(BigInteger.ONE,BigInteger.ZERO);
+    public static final DecimalFraction One = new DecimalFraction(BigInteger.ONE, BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
 
-    public static final DecimalFraction Zero = new DecimalFraction(BigInteger.ZERO,BigInteger.ZERO);
+    public static final DecimalFraction Zero = new DecimalFraction(BigInteger.ZERO, BigInteger.ZERO);
     /**
      * Represents the number 10.
      */
 
-    public static final DecimalFraction Ten = new DecimalFraction(BigInteger.TEN,BigInteger.ZERO);
+    public static final DecimalFraction Ten = new DecimalFraction(BigInteger.TEN, BigInteger.ZERO);
 
     //----------------------------------------------------------------
 
@@ -507,7 +508,7 @@ bigrem=divrem[1];
     public DecimalFraction RemainderNaturalScale(
       DecimalFraction divisor
      ) {
-      return RemainderNaturalScale(divisor,null);
+      return RemainderNaturalScale(divisor, null);
     }
 
     /**
@@ -520,8 +521,8 @@ bigrem=divrem[1];
       DecimalFraction divisor,
       PrecisionContext ctx
      ) {
-      return Subtract(this.DivideToIntegerNaturalScale(divisor,null)
-                      .Multiply(divisor,null),ctx);
+      return Subtract(this.DivideToIntegerNaturalScale(divisor, null)
+                      .Multiply(divisor, null), ctx);
     }
 
     /**
@@ -660,7 +661,7 @@ bigrem=divrem[1];
      * @return The sum of the two objects.
      */
     public DecimalFraction Add(DecimalFraction decfrac) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
+      if ((decfrac) == null) throw new NullPointerException("decfrac");
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -671,7 +672,7 @@ bigrem=divrem[1];
      * @return The difference of the two objects.
      */
     public DecimalFraction Subtract(DecimalFraction decfrac) {
-      return Subtract(decfrac,null);
+      return Subtract(decfrac, null);
     }
 
     /**
@@ -686,7 +687,7 @@ bigrem=divrem[1];
      * exponent range.
      */
     public DecimalFraction Subtract(DecimalFraction decfrac, PrecisionContext ctx) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
+      if ((decfrac) == null) throw new NullPointerException("decfrac");
       return Add(decfrac.Negate(null), ctx);
     }
     /**
@@ -698,7 +699,7 @@ bigrem=divrem[1];
      * exponent range.
      */
     public DecimalFraction Multiply(DecimalFraction decfrac) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
+      if ((decfrac) == null) throw new NullPointerException("decfrac");
       return Multiply(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -711,7 +712,7 @@ bigrem=divrem[1];
      */
     public DecimalFraction MultiplyAndAdd(DecimalFraction multiplicand,
                                           DecimalFraction augend) {
-      return MultiplyAndAdd(multiplicand,augend,null);
+      return MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
 
@@ -823,7 +824,7 @@ bigrem=divrem[1];
     public DecimalFraction NextMinus(
       PrecisionContext ctx
      ) {
-      return math.NextMinus(this,ctx);
+      return math.NextMinus(this, ctx);
     }
 
     /**
@@ -840,7 +841,7 @@ bigrem=divrem[1];
     public DecimalFraction NextPlus(
       PrecisionContext ctx
      ) {
-      return math.NextPlus(this,ctx);
+      return math.NextPlus(this, ctx);
     }
 
     /**
@@ -861,7 +862,7 @@ bigrem=divrem[1];
       DecimalFraction otherValue,
       PrecisionContext ctx
      ) {
-      return math.NextToward(this,otherValue,ctx);
+      return math.NextToward(this, otherValue, ctx);
     }
 
     /**
@@ -1005,7 +1006,7 @@ bigrem=divrem[1];
      */
     public DecimalFraction Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return Quantize(new DecimalFraction(BigInteger.ONE,desiredExponent), ctx);
+      return Quantize(new DecimalFraction(BigInteger.ONE, desiredExponent), ctx);
     }
 
     /**
@@ -1025,7 +1026,7 @@ bigrem=divrem[1];
      */
     public DecimalFraction Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize(new DecimalFraction(BigInteger.ONE,BigInteger.valueOf(desiredExponentSmall)), ctx);
+      return Quantize(new DecimalFraction(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
     /**

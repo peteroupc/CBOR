@@ -105,6 +105,38 @@ namespace PeterO
       }
     }
 
+    private static void PortableDigitCount(BigInteger bi){
+        int kb=0;
+        if(!bi.IsZero){
+          while(true){
+            if(bi.CompareTo((BigInteger)Int32.MaxValue)<=0) {
+              int tmp = (int)bi;
+              while (tmp > 0) {
+                kb++;
+                tmp /= 10;
+              }
+              kb=(kb == 0 ? 1 : kb);
+              return kb;
+            }
+            BigInteger q=bi/(BigInteger)bidivisor;
+            if(q.IsZero){
+              int b=(int)bi;
+              while(b>0){
+                kb++;
+                b/=10;
+              }
+              break;
+            } else {
+              kb+=4;
+              bi=q;
+            }
+          }
+        } else {
+          kb=1;
+        }
+        return kb;
+    }
+
     // This is a more "portable" version of ConvertToBigNum,
     // but it's much slower on relatively large BigIntegers.
     private static CBORObject ConvertToBigNumPortable(CBORObject o, bool negative){

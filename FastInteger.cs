@@ -64,6 +64,17 @@ namespace PeterO {
       }
 
     /// <summary> </summary>
+    /// <param name='val'>A 32-bit signed integer.</param>
+    /// <returns>A MutableNumber object.</returns>
+public MutableNumber SetInt(int val){
+        if(val<0)
+          throw new ArgumentException("Only positive integers are supported");
+        wordCount = (val==0) ? 0 : 1;
+        data[0] = unchecked((int)((val) & 0xFFFFFFFFL));
+        return this;
+      }
+
+    /// <summary> </summary>
     /// <returns>A BigInteger object.</returns>
       public BigInteger ToBigInteger() {
         if(wordCount==1 && (data[0]>>31)==0){
@@ -240,7 +251,7 @@ namespace PeterO {
     /// <returns>The difference of the two objects.</returns>
       public MutableNumber SubtractInt(
         int other
-       ) {
+      ) {
         if (other < 0)
           throw new ArgumentException("Only positive values are supported");
         else if (other != 0)
@@ -282,7 +293,7 @@ namespace PeterO {
     /// <returns>The difference of the two objects.</returns>
       public MutableNumber Subtract(
         MutableNumber other
-       ) {
+      ) {
         unchecked {
           {
             // Console.WriteLine("{0} {1}",this.data.Length,other.data.Length);
@@ -492,6 +503,86 @@ namespace PeterO {
     }
     public static int[] GetLastWords(BigInteger bigint, int numWords32Bit){
       return MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
+    }
+
+    /// <summary> </summary>
+    /// <param name='val'>A 32-bit signed integer.</param>
+    /// <returns>A FastInteger object.</returns>
+public FastInteger SetInt(int val){
+      smallValue=val;
+      integerMode=0;
+      return this;
+    }
+
+    /// <summary> </summary>
+    /// <param name='digit'>A 32-bit signed integer.</param>
+    /// <returns>A FastInteger object.</returns>
+public FastInteger MultiplyByTenAndAdd(int digit){
+      if(digit==0){
+        if(integerMode==1){
+          mnum.Multiply(10);
+          return this;
+        } else if(integerMode==0 && smallValue>=214748363){
+          integerMode=1;
+          mnum=new MutableNumber(smallValue);
+          mnum.Multiply(10);
+          return this;
+        }
+      } else if(digit>0){
+        if(integerMode==1){
+          mnum.Multiply(10).Add(digit);
+          return this;
+        } else if(integerMode==0 && smallValue>=214748363){
+          integerMode=1;
+          mnum=new MutableNumber(smallValue);
+          mnum.Multiply(10).Add(digit);
+          return this;
+        }
+      }
+      return this.Multiply(10).AddInt(digit);
+    }
+
+    /// <summary> </summary>
+    /// <param name='divisor'>A FastInteger object.</param>
+    /// <returns>A 32-bit signed integer.</returns>
+public int RepeatedSubtract(FastInteger divisor){
+      if(integerMode==1){
+        int count=0;
+        if(divisor.integerMode==1){
+          while(mnum.CompareTo(divisor.mnum)>=0){
+            mnum.Subtract(divisor.mnum);
+            count++;
+          }
+          return count;
+        } else if(divisor.integerMode==0 && divisor.smallValue>=0){
+          if(mnum.CanFitInInt32()){
+            int small=mnum.ToInt32();
+            count=small/divisor.smallValue;
+            mnum.SetInt(small%divisor.smallValue);
+          } else {
+            MutableNumber dmnum=new MutableNumber(divisor.smallValue);
+            while(mnum.CompareTo(dmnum)>=0){
+              mnum.Subtract(dmnum);
+              count++;
+            }
+          }
+          return count;
+        } else {
+          BigInteger bigrem;
+          BigInteger bigquo=BigInteger.DivRem(this.AsBigInteger(),divisor.AsBigInteger(),out bigrem);
+          int smallquo=(int)bigquo;
+          integerMode=2;
+          largeValue=bigrem;
+          return smallquo;
+        }
+      } else {
+        BigInteger bigrem;
+        BigInteger bigquo=BigInteger.DivRem(this.AsBigInteger(),divisor.AsBigInteger(),out bigrem);
+        int smallquo=(int)bigquo;
+        integerMode=2;
+        largeValue=bigrem;
+        return smallquo;
+      }
     }
 
     /// <summary> Sets this object's value to the current value times another
@@ -770,6 +861,22 @@ namespace PeterO {
         throw new DivideByZeroException();
       }
       return this;
+    }
+
+    /// <summary> </summary>
+    /// <returns>A FastInteger object.</returns>
+public FastInteger Increment(){
+      if(integerMode==0){
+        if(smallValue!=Int32.MaxValue){
+          smallValue++;
+        } else {
+          integerMode=1;
+          mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
+        }
+        return this;
+      } else {
+        return AddInt(1);
+      }
     }
 
     /// <summary> Divides this instance by the value of a 32-bit signed integer.</summary>
