@@ -88,6 +88,7 @@ JSInteropFactory.divide64By32=function(dividendLow,dividendHigh,divisor){
 
 /////////////////////////////////////////////
 var ILong=function(lo,hi){
+// Convert lo and hi to unsigned
 this.lo=lo>>>0
 this.hi=hi>>>0
 }
@@ -109,11 +110,38 @@ return new ILong(this.lo|other.lo,this.hi|other.hi);
 ILong.prototype.andInt=function(otherUnsigned){
 return new ILong(this.lo&(otherUnsigned>>>0),this.hi);
 }
-ILong.prototype.intValue=function(other){
+ILong.prototype.intValue=function(){
 return this.lo|0;
 }
-ILong.prototype.shortValue=function(other){
+ILong.prototype.shortValue=function(){
 return (this.lo|0)&0xFFFF;
+}
+ILong.prototype.compareToLongAsInts=function(otherLo,otherHi){
+ otherHi|=0;
+ // Signed comparison of high words
+ if(otherHi!=(this.hi|0)){
+  return (otherHi>(this.hi|0)) ? -1 : 1;
+ }
+ otherLo=otherLo>>>0;
+ // Unsigned comparison of low words
+ if(otherLo!=this.lo){
+  return (otherLo>this.lo) ? -1 : 1;
+ }
+ return 0;
+}
+ILong.prototype.compareToInt=function(other){
+ other|=0;
+ var otherHi=(other<0) ? -1 : 0;
+ // Signed comparison of high words
+ if(otherHi!=(this.hi|0)){
+  return (otherHi>(this.hi|0)) ? -1 : 1;
+ }
+ other=other>>>0;
+ // Unsigned comparison of low words
+ if(other!=this.lo){
+  return (other>this.lo) ? -1 : 1;
+ }
+ return 0;
 }
 ILong.prototype.equalsInt=function(other){
  if(other<0){
@@ -3256,9 +3284,9 @@ function() {
             }
         }
     };
-    constructor['RoundupSizeTable'] = constructor.RoundupSizeTable = [2, 2, 2, 4, 4, 8, 8, 8, 8];
+    constructor['RoundupSizeTable'] = constructor.RoundupSizeTable = [2, 2, 2, 4, 4, 8, 8, 8, 8, 16, 16, 16, 16, 16, 16, 16, 16];
     constructor['RoundupSize'] = constructor.RoundupSize = function(n) {
-        if (n <= 8) return BigInteger.RoundupSizeTable[n]; else if (n <= 16) return 16; else if (n <= 32) return 32; else if (n <= 64) return 64; else return 1 << ((BigInteger.BitPrecisionInt(n - 1))|0);
+        if (n <= 16) return BigInteger.RoundupSizeTable[n]; else if (n <= 32) return 32; else if (n <= 64) return 64; else return 1 << ((BigInteger.BitPrecisionInt(n - 1))|0);
     };
     prototype['negative'] = prototype.negative = null;
     prototype['wordCount'] = prototype.wordCount = -1;
@@ -3275,31 +3303,44 @@ function() {
             this.reg = [0, 0];
             this.wordCount = 0;
         } else {
+            var len = bytes.length;
+            var wordLength = ((((len|0) + 1) / 2)|0);
+            wordLength = (wordLength <= 16) ? BigInteger.RoundupSizeTable[wordLength] : BigInteger.RoundupSize(wordLength);
             this.reg = [];
-            for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize((((((bytes.length)|0) + 1) / 2)|0)); arrfillI++) this.reg[arrfillI] = 0;
-            var jIndex = (littleEndian) ? bytes.length - 1 : 0;
+            for (var arrfillI = 0; arrfillI < wordLength; arrfillI++) this.reg[arrfillI] = 0;
+            var jIndex = (littleEndian) ? len - 1 : 0;
             var negative = ((bytes[jIndex]) & 128) != 0;
-            var j = 0;
-            for (var i = 0; i < bytes.length; i += 2, j++) {
-                var index = (littleEndian) ? i : bytes.length - 1 - i;
-                var index2 = (littleEndian) ? i + 1 : bytes.length - 2 - i;
-                this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
-                if (index2 >= 0 && index2 < bytes.length) {
-                    this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
-                } else if (negative) {
-
-                    this.reg[j] = (((this.reg[j] | (65280)) & 65535));
-                }
-            }
             this.negative = negative;
-            if (negative) {
+            var j = 0;
+            if (!negative) {
+                for (var i = 0; i < len; i += 2, j++) {
+                    var index = (littleEndian) ? i : len - 1 - i;
+                    var index2 = (littleEndian) ? i + 1 : len - 2 - i;
+                    this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
+                    if (index2 >= 0 && index2 < len) {
+                        this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
+                    }
+                }
+            } else {
+                for (var i = 0; i < len; i += 2, j++) {
+                    var index = (littleEndian) ? i : len - 1 - i;
+                    var index2 = (littleEndian) ? i + 1 : len - 2 - i;
+                    this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
+                    if (index2 >= 0 && index2 < len) {
+                        this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
+                    } else {
+
+                        this.reg[j] = (((this.reg[j] | (65280)) & 65535));
+                    }
+                }
                 for (; j < this.reg.length; j++) {
                     this.reg[j] = (65535 & 65535);
                 }
 
                 BigInteger.TwosComplement(this.reg, 0, ((this.reg.length)|0));
             }
-            this.wordCount = this.CalcWordCount();
+            this.wordCount = this.reg.length;
+            while (this.wordCount != 0 && this.reg[this.wordCount - 1] == 0) this.wordCount--;
         }
     };
     prototype['Allocate'] = prototype.Allocate = function(length) {
@@ -3670,7 +3711,30 @@ function() {
 
     prototype['BitLength'] = prototype.BitLength = function() {
         var wc = this.wordCount;
-        if (wc != 0) return (((wc - 1) * 16 + BigInteger.BitPrecision(this.reg[wc - 1]))|0); else return 0;
+        if (wc != 0) {
+            var numberValue = this.reg[wc - 1];
+            wc = (wc - 1) << 4;
+            if (numberValue == 0) return wc;
+            wc = wc + (16);
+            {
+                if ((numberValue >> 8) == 0) {
+                    numberValue <<= 8;
+                    wc -= 8;
+                }
+                if ((numberValue >> 12) == 0) {
+                    numberValue <<= 4;
+                    wc -= 4;
+                }
+                if ((numberValue >> 14) == 0) {
+                    numberValue <<= 2;
+                    wc -= 2;
+                }
+                if ((numberValue >> 15) == 0) --wc;
+            }
+            return wc;
+        } else {
+            return 0;
+        }
     };
     constructor['vec'] = constructor.vec = "0123456789ABCDEF";
     constructor['ReverseChars'] = constructor.ReverseChars = function(chars, offset, length) {
@@ -3704,6 +3768,73 @@ function() {
         return tmpbuilder.toString();
     };
 
+    prototype['getDigitCount'] = prototype.getDigitCount = function() {
+        if (this.signum() == 0) return 1;
+        if (this.HasSmallValue()) {
+            var value = this.longValue();
+            if (value.equals(JSInteropFactory.LONG_MIN_VALUE())) return 19;
+            if (value.signum() < 0) value = value.negate();
+            if (value.compareToInt(1000000000) >= 0) {
+                if (value.compareToLongAsInts(-1486618624, 232830643) >= 0) return 19;
+                if (value.compareToLongAsInts(1569325056, 23283064) >= 0) return 18;
+                if (value.compareToLongAsInts(1874919424, 2328306) >= 0) return 17;
+                if (value.compareToLongAsInts(-1530494976, 232830) >= 0) return 16;
+                if (value.compareToLongAsInts(276447232, 23283) >= 0) return 15;
+                if (value.compareToLongAsInts(1316134912, 2328) >= 0) return 14;
+                if (value.compareToLongAsInts(-727379968, 232) >= 0) return 13;
+                if (value.compareToLongAsInts(1215752192, 23) >= 0) return 12;
+                if (value.compareToLongAsInts(1410065408, 2) >= 0) return 11;
+                if (value.compareToInt(1000000000) >= 0) return 10;
+                return 9;
+            } else {
+                var v2 = value.intValue();
+                if (v2 >= 100000000) return 9;
+                if (v2 >= 10000000) return 8;
+                if (v2 >= 1000000) return 7;
+                if (v2 >= 100000) return 6;
+                if (v2 >= 10000) return 5;
+                if (v2 >= 1000) return 4;
+                if (v2 >= 100) return 3;
+                if (v2 >= 10) return 2;
+                return 1;
+            }
+        }
+        var bitlen = this.BitLength();
+        if (bitlen <= 2135) {
+
+            var minDigits = 1 + (((bitlen - 1) * 631305) >> 21);
+            var maxDigits = 1 + (((bitlen) * 631305) >> 21);
+            if (minDigits == maxDigits) {
+
+                return minDigits;
+            }
+        }
+        var tempReg = [];
+        for (var arrfillI = 0; arrfillI < this.wordCount; arrfillI++) tempReg[arrfillI] = 0;
+        for (var arrfillI = 0; arrfillI < tempReg.length; arrfillI++) tempReg[0 + arrfillI] = this.reg[0 + arrfillI];
+        var wordCount = tempReg.length;
+        while (wordCount != 0 && tempReg[wordCount - 1] == 0) wordCount--;
+        var i = 0;
+        while (wordCount != 0) {
+            if (wordCount == 1) {
+                var rest = (tempReg[0] & 65535);
+                if (rest >= 10000) i += 5; else if (rest >= 1000) i += 4; else if (rest >= 100) i += 3; else if (rest >= 10) i += 2; else i++;
+                break;
+            } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 32767) {
+                var rest = (tempReg[0] & 65535);
+                rest |= ((tempReg[1] & 65535) << 16);
+                if (rest >= 1000000000) i += 10; else if (rest >= 100000000) i += 9; else if (rest >= 10000000) i += 8; else if (rest >= 1000000) i += 7; else if (rest >= 100000) i += 6; else if (rest >= 10000) i += 5; else if (rest >= 1000) i += 4; else if (rest >= 100) i += 3; else if (rest >= 10) i += 2; else i++;
+                break;
+            } else {
+                BigInteger.FastDivideAndRemainder(tempReg, wordCount, 10000);
+
+                while (wordCount != 0 && tempReg[wordCount - 1] == 0) wordCount--;
+                i = i + (4);
+            }
+        }
+        return i;
+    };
+
     prototype['toString'] = prototype.toString = function() {
         if (this.signum() == 0) return "0";
         if (this.HasSmallValue()) {
@@ -3716,10 +3847,18 @@ function() {
         while (wordCount != 0 && tempReg[wordCount - 1] == 0) wordCount--;
         var i = 0;
         var s = [];
-        for (var arrfillI = 0; arrfillI < (((this.BitLength() / 3)|0) + 1); arrfillI++) s[arrfillI] = 0;
+        for (var arrfillI = 0; arrfillI < (wordCount << 4) + 1; arrfillI++) s[arrfillI] = 0;
         while (wordCount != 0) {
-            if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] < 10000) {
+            if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 32767) {
                 var rest = tempReg[0];
+                while (rest != 0) {
+                    s[i++] = BigInteger.vec.charAt(rest % 10);
+                    rest = ((rest / 10)|0);
+                }
+                break;
+            } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 32767) {
+                var rest = (tempReg[0] & 65535);
+                rest |= (tempReg[1] & 65535) << 16;
                 while (rest != 0) {
                     s[i++] = BigInteger.vec.charAt(rest % 10);
                     rest = ((rest / 10)|0);
@@ -3729,14 +3868,17 @@ function() {
                 var remainderSmall = BigInteger.FastDivideAndRemainder(tempReg, wordCount, 10000);
 
                 while (wordCount != 0 && tempReg[wordCount - 1] == 0) wordCount--;
-                for (var j = 0; j < 4; j++) {
-                    s[i++] = BigInteger.vec.charAt((remainderSmall % 10)|0);
-                    remainderSmall = ((remainderSmall / 10)|0);
-                }
+                s[i++] = BigInteger.vec.charAt((remainderSmall % 10)|0);
+                remainderSmall = ((remainderSmall / 10)|0);
+                s[i++] = BigInteger.vec.charAt((remainderSmall % 10)|0);
+                remainderSmall = ((remainderSmall / 10)|0);
+                s[i++] = BigInteger.vec.charAt((remainderSmall % 10)|0);
+                remainderSmall = ((remainderSmall / 10)|0);
+                s[i++] = BigInteger.vec.charAt(remainderSmall);
             }
         }
         BigInteger.ReverseChars(s, 0, i);
-        if (this.signum() < 0) {
+        if (this.negative) {
             var sb = JSInteropFactory.createStringBuilder(i + 1);
             sb.append('-');
             for (var arrfillI = 0; arrfillI < (0) + (i); arrfillI++) sb.append(s[arrfillI]);
@@ -3763,7 +3905,7 @@ function() {
             var c = str.charAt(i);
             if (c < '0' || c > '9') throw new Error("Illegal character found");
             haveDigits = true;
-            var digit = ((c-48)|0);
+            var digit = ((c.charCodeAt(0))-48);
 
             var carry = BigInteger.LinearMultiply(bigint.reg, 0, bigint.reg, 0, 10, bigint.reg.length);
             if (carry != 0) bigint.reg = BigInteger.GrowForCarry(bigint.reg, carry);
@@ -3814,15 +3956,19 @@ function() {
     };
     constructor['PositiveAdd'] = constructor.PositiveAdd = function(sum, bigintAddend, bigintAugend) {
         var carry;
-        var desiredLength = (bigintAddend.reg.length > bigintAugend.reg.length ? bigintAddend.reg.length : bigintAugend.reg.length);
-        if (bigintAddend.reg.length == bigintAugend.reg.length) carry = BigInteger.Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, ((bigintAddend.reg.length)|0)); else if (bigintAddend.reg.length > bigintAugend.reg.length) {
-            carry = BigInteger.Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, ((bigintAugend.reg.length)|0));
-            for (var arrfillI = 0; arrfillI < bigintAddend.reg.length - bigintAugend.reg.length; arrfillI++) sum.reg[bigintAugend.reg.length + arrfillI] = bigintAddend.reg[bigintAugend.reg.length + arrfillI];
-            carry = BigInteger.Increment(sum.reg, bigintAugend.reg.length, ((bigintAddend.reg.length - bigintAugend.reg.length)|0), (carry|0));
+        var addendCount = bigintAddend.wordCount + (bigintAddend.wordCount & 1);
+        var augendCount = bigintAugend.wordCount + (bigintAugend.wordCount & 1);
+        var desiredLength = (addendCount > augendCount ? addendCount : augendCount);
+        if (addendCount == augendCount) carry = BigInteger.Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (addendCount|0)); else if (addendCount > augendCount) {
+
+            carry = BigInteger.Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (augendCount|0));
+            for (var arrfillI = 0; arrfillI < addendCount - augendCount; arrfillI++) sum.reg[augendCount + arrfillI] = bigintAddend.reg[augendCount + arrfillI];
+            carry = BigInteger.Increment(sum.reg, augendCount, ((addendCount - augendCount)|0), (carry|0));
         } else {
-            carry = BigInteger.Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, ((bigintAddend.reg.length)|0));
-            for (var arrfillI = 0; arrfillI < bigintAugend.reg.length - bigintAddend.reg.length; arrfillI++) sum.reg[bigintAddend.reg.length + arrfillI] = bigintAugend.reg[bigintAddend.reg.length + arrfillI];
-            carry = BigInteger.Increment(sum.reg, bigintAddend.reg.length, ((bigintAugend.reg.length - bigintAddend.reg.length)|0), (carry|0));
+
+            carry = BigInteger.Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (addendCount|0));
+            for (var arrfillI = 0; arrfillI < augendCount - addendCount; arrfillI++) sum.reg[addendCount + arrfillI] = bigintAugend.reg[addendCount + arrfillI];
+            carry = BigInteger.Increment(sum.reg, addendCount, ((augendCount - addendCount)|0), (carry|0));
         }
         if (carry != 0) {
             var nextIndex = desiredLength;
@@ -3890,7 +4036,43 @@ function() {
 
     prototype['add'] = prototype.add = function(bigintAugend) {
         if ((bigintAugend) == null) throw new Error("bigintAugend");
-        var sum = new BigInteger().Allocate((this.reg.length > bigintAugend.reg.length ? this.reg.length : bigintAugend.reg.length)|0);
+        var sum;
+        if (this.wordCount == 0) return bigintAugend;
+        if (bigintAugend.wordCount == 0) return this;
+        if (bigintAugend.wordCount == 1 && this.wordCount == 1) {
+            if (this.negative == bigintAugend.negative) {
+                var intSum = ((this.reg[0]) & 65535) + ((bigintAugend.reg[0]) & 65535);
+                sum = new BigInteger();
+                sum.reg = [0, 0];
+                sum.reg[0] = (intSum & 65535);
+                sum.reg[1] = (((intSum >> 16) & 65535));
+                sum.wordCount = ((intSum >> 16) == 0) ? 1 : 2;
+                sum.negative = this.negative;
+                return sum;
+            } else {
+                var a = ((this.reg[0]) & 65535);
+                var b = ((bigintAugend.reg[0]) & 65535);
+                if (a == b) return BigInteger.ZERO;
+                if (a > b) {
+                    a -= b;
+                    sum = new BigInteger();
+                    sum.reg = [0, 0];
+                    sum.reg[0] = (a & 65535);
+                    sum.wordCount = 1;
+                    sum.negative = this.negative;
+                    return sum;
+                } else {
+                    b -= a;
+                    sum = new BigInteger();
+                    sum.reg = [0, 0];
+                    sum.reg[0] = (b & 65535);
+                    sum.wordCount = 1;
+                    sum.negative = !this.negative;
+                    return sum;
+                }
+            }
+        }
+        sum = new BigInteger().Allocate((this.reg.length > bigintAugend.reg.length ? this.reg.length : bigintAugend.reg.length)|0);
         if (this.signum() >= 0) {
             if (bigintAugend.signum() >= 0) BigInteger.PositiveAdd(sum, this, bigintAugend); else BigInteger.PositiveSubtract(sum, this, bigintAugend);
         } else {
@@ -4055,12 +4237,12 @@ function() {
         }
         return remainder;
     };
-    constructor['FastDivide'] = constructor.FastDivide = function(quotientReg, count, divisorSmall) {
+    constructor['FastDivide'] = constructor.FastDivide = function(quotientReg, dividendReg, count, divisorSmall) {
         var i = count;
         var remainder = 0;
         var idivisor = (divisorSmall & 65535);
         while ((i--) > 0) {
-            var currentDividend = (((((quotientReg[i] & 65535) | ((remainder|0) << 16)))|0));
+            var currentDividend = (((((dividendReg[i] & 65535) | ((remainder|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
                 quotientReg[i] = ((((((currentDividend / idivisor)|0) & 65535))|0));
                 if (i > 0) remainder = ((currentDividend % idivisor)|0);
@@ -4069,6 +4251,22 @@ function() {
                 if (i > 0) remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
             }
         }
+    };
+    constructor['FastDivideAndRemainderEx'] = constructor.FastDivideAndRemainderEx = function(quotientReg, dividendReg, count, divisorSmall) {
+        var i = count;
+        var remainder = 0;
+        var idivisor = (divisorSmall & 65535);
+        while ((i--) > 0) {
+            var currentDividend = (((((dividendReg[i] & 65535) | ((remainder|0) << 16)))|0));
+            if ((currentDividend >> 31) == 0) {
+                quotientReg[i] = ((((((currentDividend / idivisor)|0) & 65535))|0));
+                remainder = ((currentDividend % idivisor)|0);
+            } else {
+                quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
+                remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
+            }
+        }
+        return remainder;
     };
     constructor['FastDivideAndRemainder'] = constructor.FastDivideAndRemainder = function(quotientReg, count, divisorSmall) {
         var i = count;
@@ -4092,11 +4290,11 @@ function() {
         var aSize = this.wordCount;
         var bSize = bigintDivisor.wordCount;
         if (bSize == 0) throw new Error();
-        if (aSize < bSize) {
+        if (aSize < bSize || aSize == 0) {
 
             return BigInteger.ZERO;
         }
-        if (aSize <= 4 && bSize <= 4 && this.HasTinyValue() && bigintDivisor.HasTinyValue()) {
+        if (aSize <= 2 && bSize <= 2 && this.HasTinyValue() && bigintDivisor.HasTinyValue()) {
             var aSmall = this.intValue();
             var bSmall = bigintDivisor.intValue();
             if (aSmall != -2147483648 || bSmall != -1) {
@@ -4112,15 +4310,14 @@ function() {
             for (var arrfillI = 0; arrfillI < this.reg.length; arrfillI++) quotient.reg[arrfillI] = 0;
             quotient.wordCount = this.wordCount;
             quotient.negative = this.negative;
-            for (var arrfillI = 0; arrfillI < quotient.reg.length; arrfillI++) quotient.reg[0 + arrfillI] = this.reg[0 + arrfillI];
-            BigInteger.FastDivide(quotient.reg, aSize, bigintDivisor.reg[0]);
-            quotient.wordCount = quotient.CalcWordCount();
+            BigInteger.FastDivide(quotient.reg, this.reg, aSize, bigintDivisor.reg[0]);
+            while (quotient.wordCount != 0 && quotient.reg[quotient.wordCount - 1] == 0) quotient.wordCount--;
             if (quotient.wordCount != 0) {
-                quotient.negative = (this.signum() < 0) ^ (bigintDivisor.signum() < 0);
+                quotient.negative = this.negative ^ bigintDivisor.negative;
+                return quotient;
             } else {
-                quotient.negative = false;
+                return BigInteger.ZERO;
             }
-            return quotient;
         }
         quotient = new BigInteger();
         aSize = aSize + (aSize % 2);
@@ -4154,29 +4351,30 @@ function() {
             for (var arrfillI = 0; arrfillI < this.reg.length; arrfillI++) quotient.reg[arrfillI] = 0;
             quotient.wordCount = this.wordCount;
             quotient.negative = this.negative;
-            for (var arrfillI = 0; arrfillI < quotient.reg.length; arrfillI++) quotient.reg[0 + arrfillI] = this.reg[0 + arrfillI];
-            var smallRemainder = ((BigInteger.FastDivideAndRemainder(quotient.reg, aSize, divisor.reg[0])) & 65535);
-            quotient.wordCount = quotient.CalcWordCount();
+            var smallRemainder = ((BigInteger.FastDivideAndRemainderEx(quotient.reg, this.reg, aSize, divisor.reg[0])) & 65535);
+            while (quotient.wordCount != 0 && quotient.reg[quotient.wordCount - 1] == 0) quotient.wordCount--;
             quotient.ShortenArray();
             if (quotient.wordCount != 0) {
-                quotient.negative = (this.signum() < 0) ^ (divisor.signum() < 0);
+                quotient.negative = this.negative ^ divisor.negative;
             } else {
-                quotient.negative = false;
+                quotient = BigInteger.ZERO;
             }
-            if (this.signum() < 0) smallRemainder = -smallRemainder;
+            if (this.negative) smallRemainder = -smallRemainder;
             return [quotient, new BigInteger().InitializeInt(smallRemainder)];
         }
         var remainder = new BigInteger();
         quotient = new BigInteger();
-        aSize = aSize + (aSize % 2);
-        bSize = bSize + (bSize % 2);
+        aSize = aSize + (aSize & 1);
+        bSize = bSize + (bSize & 1);
         remainder.reg = [];
         for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(bSize|0); arrfillI++) remainder.reg[arrfillI] = 0;
         remainder.negative = false;
         quotient.reg = [];
         for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize((aSize - bSize + 2)|0); arrfillI++) quotient.reg[arrfillI] = 0;
         quotient.negative = false;
-        BigInteger.DivideWithRemainderAnyLength(this.reg, divisor.reg, quotient.reg, remainder.reg);
+        var tempbuf = [];
+        for (var arrfillI = 0; arrfillI < aSize + 3 * (bSize + 2); arrfillI++) tempbuf[arrfillI] = 0;
+        BigInteger.Divide(remainder.reg, 0, quotient.reg, 0, tempbuf, 0, this.reg, 0, aSize, divisor.reg, 0, bSize);
         remainder.wordCount = remainder.CalcWordCount();
         quotient.wordCount = quotient.CalcWordCount();
         remainder.ShortenArray();
@@ -4342,6 +4540,12 @@ function(value) {
             }
             while (mnum.wordCount != 0 && mnum.data[mnum.wordCount - 1] == 0) mnum.wordCount--;
             return mnum;
+        };
+        prototype.SetInt = function(val) {
+            if (val < 0) throw new Error("Only positive integers are supported");
+            this.wordCount = (val == 0) ? 0 : 1;
+            this.data[0] = (((val) & 0xFFFFFFFF)|0);
+            return this;
         };
         prototype.ToBigInteger = function() {
             if (this.wordCount == 1 && (this.data[0] >> 31) == 0) {
@@ -4689,6 +4893,87 @@ function(value) {
         return FastInteger.MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
     };
 
+    prototype.SetInt = function(val) {
+        this.smallValue = val;
+        this.integerMode = 0;
+        return this;
+    };
+
+    prototype.MultiplyByTenAndAdd = function(digit) {
+        if (digit == 0) {
+            if (this.integerMode == 1) {
+                this.mnum.Multiply(10);
+                return this;
+            } else if (this.integerMode == 0 && this.smallValue >= 214748363) {
+                this.integerMode = 1;
+                this.mnum = new FastInteger.MutableNumber(this.smallValue);
+                this.mnum.Multiply(10);
+                return this;
+            }
+        } else if (digit > 0) {
+            if (this.integerMode == 1) {
+                this.mnum.Multiply(10).Add(digit);
+                return this;
+            } else if (this.integerMode == 0 && this.smallValue >= 214748363) {
+                this.integerMode = 1;
+                this.mnum = new FastInteger.MutableNumber(this.smallValue);
+                this.mnum.Multiply(10).Add(digit);
+                return this;
+            }
+        }
+        return this.Multiply(10).AddInt(digit);
+    };
+
+    prototype.RepeatedSubtract = function(divisor) {
+        if (this.integerMode == 1) {
+            var count = 0;
+            if (divisor.integerMode == 1) {
+                while (this.mnum.compareTo(divisor.mnum) >= 0) {
+                    this.mnum.Subtract(divisor.mnum);
+                    count++;
+                }
+                return count;
+            } else if (divisor.integerMode == 0 && divisor.smallValue >= 0) {
+                if (this.mnum.CanFitInInt32()) {
+                    var small = this.mnum.ToInt32();
+                    count = ((small / divisor.smallValue)|0);
+                    this.mnum.SetInt(small % divisor.smallValue);
+                } else {
+                    var dmnum = new FastInteger.MutableNumber(divisor.smallValue);
+                    while (this.mnum.compareTo(dmnum) >= 0) {
+                        this.mnum.Subtract(dmnum);
+                        count++;
+                    }
+                }
+                return count;
+            } else {
+                var bigrem;
+                var bigquo;
+                {
+                    var divrem = (this.AsBigInteger()).divideAndRemainder(divisor.AsBigInteger());
+                    bigquo = divrem[0];
+                    bigrem = divrem[1];
+                }
+                var smallquo = bigquo.intValue();
+                this.integerMode = 2;
+                this.largeValue = bigrem;
+                return smallquo;
+            }
+        } else {
+            var bigrem;
+            var bigquo;
+            {
+                var divrem = (this.AsBigInteger()).divideAndRemainder(divisor.AsBigInteger());
+                bigquo = divrem[0];
+                bigrem = divrem[1];
+            }
+            var smallquo = bigquo.intValue();
+            this.integerMode = 2;
+            this.largeValue = bigrem;
+            return smallquo;
+        }
+    };
+
     prototype.Multiply = function(val) {
         if (val == 0) {
             this.smallValue = 0;
@@ -4925,6 +5210,20 @@ function(value) {
             throw new Error();
         }
         return this;
+    };
+
+    prototype.Increment = function() {
+        if (this.integerMode == 0) {
+            if (this.smallValue != 2147483647) {
+                this.smallValue++;
+            } else {
+                this.integerMode = 1;
+                this.mnum = FastInteger.MutableNumber.FromBigInteger(FastInteger.NegativeInt32MinValue);
+            }
+            return this;
+        } else {
+            return this.AddInt(1);
+        }
     };
 
     prototype.Divide = function(divisor) {
@@ -5197,7 +5496,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
         if (this.knownBitLength.CompareToInt(bits) <= 0) {
             this.isSmall = true;
             this.shiftedSmall = 0;
-            this.knownBitLength.Multiply(0).AddInt(1);
+            this.knownBitLength.SetInt(1);
         } else {
             var tmpBitShift = FastInteger.Copy(bitShift);
             while (tmpBitShift.signum() > 0 && this.shiftedBigInt.signum() != 0) {
@@ -5269,7 +5568,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             fastKB.SubtractInt(8);
         }
 
-        if (fastKB.signum() == 0) fastKB.AddInt(1);
+        if (fastKB.signum() == 0) fastKB.Increment();
         return fastKB;
     };
     prototype.CalcKnownBitLength = function() {
@@ -5304,7 +5603,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
                 tmpBitShift.SubtractInt(bs);
             }
-            this.knownBitLength.Multiply(0).AddInt(bits);
+            this.knownBitLength.SetInt(bits);
             if (bits < BitShiftAccumulator.SmallBitLength) {
 
                 this.isSmall = true;
@@ -5405,9 +5704,13 @@ var DigitShiftAccumulator =
 
 function(bigint, lastDiscarded, olderDiscarded) {
 
-    if (bigint.signum() < 0) throw new Error("bigint is negative");
+    var sign = bigint.signum();
+    if (sign < 0) throw new Error("bigint is negative");
     this.discardedBitCount = new FastInteger(0);
-    if (bigint.compareTo(DigitShiftAccumulator.Int32MaxValue) <= 0) {
+    if (sign == 0) {
+        this.shiftedSmall = 0;
+        this.isSmall = true;
+    } else if (bigint.compareTo(DigitShiftAccumulator.Int32MaxValue) <= 0) {
         this.shiftedSmall = bigint.intValue();
         this.isSmall = true;
     } else {
@@ -5430,20 +5733,21 @@ function(bigint, lastDiscarded, olderDiscarded) {
     prototype.knownBitLength = null;
     prototype.GetDigitLength = function() {
         if (this.knownBitLength == null) {
-            this.knownBitLength = this.CalcKnownBitLength();
+            this.knownBitLength = this.CalcKnownDigitLength();
         }
         return FastInteger.Copy(this.knownBitLength);
     };
     prototype.shiftedSmall = null;
     prototype.isSmall = null;
-    prototype.getShiftedInt = function() {
-        if (this.isSmall) return BigInteger.valueOf(this.shiftedSmall); else return this.shiftedBigInt;
-    };
     prototype.discardedBitCount = null;
     prototype.getDiscardedDigitCount = function() {
         return this.discardedBitCount;
     };
     constructor.Int32MaxValue = BigInteger.valueOf(2147483647);
+    constructor.Ten = BigInteger.TEN;
+    prototype.getShiftedInt = function() {
+        if (this.isSmall) return BigInteger.valueOf(this.shiftedSmall); else return this.shiftedBigInt;
+    };
     constructor.FastParseBigInt = function(str, offset, length) {
 
         var smallint = 0;
@@ -5467,7 +5771,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
                     adder *= 10;
                     adder = adder + (digit);
                 }
-                mbi.Multiply(multer).AddInt(adder);
+                if (multer == 10) mbi.MultiplyByTenAndAdd(adder); else mbi.Multiply(multer).AddInt(adder);
                 i = i + (mlength);
             }
             return mbi.AsBigInteger();
@@ -5519,6 +5823,49 @@ function(bigint, lastDiscarded, olderDiscarded) {
             this.knownBitLength = new FastInteger(1);
             return;
         }
+
+        if (digits == 1) {
+            var bigrem;
+            var bigquo;
+            {
+                var divrem = (this.shiftedBigInt).divideAndRemainder(BigInteger.TEN);
+                bigquo = divrem[0];
+                bigrem = divrem[1];
+            }
+            this.bitsAfterLeftmost |= this.bitLeftmost;
+            this.bitLeftmost = bigrem.intValue();
+            this.shiftedBigInt = bigquo;
+            this.discardedBitCount.AddInt(digits);
+            if (this.knownBitLength != null) {
+                if (bigquo.signum() == 0) this.knownBitLength.SetInt(0); else this.knownBitLength.SubtractInt(1);
+            }
+            return;
+        }
+        var startCount = (4 < digits - 1 ? 4 : digits - 1);
+        if (startCount > 0) {
+            var bigrem;
+            var radixPower = DecimalUtility.FindPowerOfTen(startCount);
+            var bigquo;
+            {
+                var divrem = (this.shiftedBigInt).divideAndRemainder(radixPower);
+                bigquo = divrem[0];
+                bigrem = divrem[1];
+            }
+            if (bigrem.signum() != 0) this.bitsAfterLeftmost |= 1;
+            this.bitsAfterLeftmost |= this.bitLeftmost;
+            this.shiftedBigInt = bigquo;
+            this.discardedBitCount.AddInt(startCount);
+            digits -= startCount;
+            if (this.shiftedBigInt.signum() == 0) {
+
+                this.isSmall = true;
+                this.shiftedSmall = 0;
+                this.knownBitLength = new FastInteger(1);
+                this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+                this.bitLeftmost = 0;
+                return;
+            }
+        }
         var str = this.shiftedBigInt.toString();
 
         var digitLength = str.length;
@@ -5561,7 +5908,84 @@ function(bigint, lastDiscarded, olderDiscarded) {
     };
 
     prototype.ShiftToBitsBig = function(digits) {
+        if (this.knownBitLength != null) {
+            if (this.knownBitLength.CompareToInt(digits) <= 0) {
+                return;
+            }
+        }
         var str;
+        this.knownBitLength = this.GetDigitLength();
+        if (this.knownBitLength.CompareToInt(digits) <= 0) {
+            return;
+        }
+        var digitDiff = FastInteger.Copy(this.knownBitLength).SubtractInt(digits);
+        if (digitDiff.CompareToInt(1) == 0) {
+            var bigrem;
+            var bigquo;
+            {
+                var divrem = (this.shiftedBigInt).divideAndRemainder(DigitShiftAccumulator.Ten);
+                bigquo = divrem[0];
+                bigrem = divrem[1];
+            }
+            this.bitsAfterLeftmost |= this.bitLeftmost;
+            this.bitLeftmost = bigrem.intValue();
+            this.shiftedBigInt = bigquo;
+            this.discardedBitCount.Add(digitDiff);
+            this.knownBitLength.Subtract(digitDiff);
+            this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+            return;
+        } else if (digitDiff.CompareToInt(4) <= 0) {
+            var bigrem;
+            var diffInt = digitDiff.AsInt32();
+            var radixPower = DecimalUtility.FindPowerOfTen(diffInt);
+            var bigquo;
+            {
+                var divrem = (this.shiftedBigInt).divideAndRemainder(radixPower);
+                bigquo = divrem[0];
+                bigrem = divrem[1];
+            }
+            var rem = bigrem.intValue();
+            this.bitsAfterLeftmost |= this.bitLeftmost;
+            for (var i = 0; i < diffInt; i++) {
+                if (i == diffInt - 1) {
+                    this.bitLeftmost = rem % 10;
+                } else {
+                    this.bitsAfterLeftmost |= (rem % 10);
+                    rem = ((rem / 10)|0);
+                }
+            }
+            this.shiftedBigInt = bigquo;
+            this.discardedBitCount.Add(digitDiff);
+            this.knownBitLength.Subtract(digitDiff);
+            this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+            return;
+        } else if (digitDiff.CompareToInt(5) <= 0) {
+            var bigrem;
+            var radixPower = DecimalUtility.FindPowerOfTen(digitDiff.AsInt32() - 1);
+            var bigquo;
+            {
+                var divrem = (this.shiftedBigInt).divideAndRemainder(radixPower);
+                bigquo = divrem[0];
+                bigrem = divrem[1];
+            }
+            this.bitsAfterLeftmost |= this.bitLeftmost;
+            if (bigrem.signum() != 0) this.bitsAfterLeftmost |= 1;
+            {
+                var bigquo2;
+                {
+                    var divrem = (bigquo).divideAndRemainder(DigitShiftAccumulator.Ten);
+                    bigquo2 = divrem[0];
+                    bigrem = divrem[1];
+                }
+                this.bitLeftmost = bigrem.intValue();
+                this.shiftedBigInt = bigquo2;
+            }
+            this.discardedBitCount.Add(digitDiff);
+            this.knownBitLength.Subtract(digitDiff);
+            this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+            return;
+        }
+
         str = this.shiftedBigInt.toString();
 
         var digitLength = str.length;
@@ -5570,8 +5994,8 @@ function(bigint, lastDiscarded, olderDiscarded) {
         if (digitLength > digits) {
             var digitShift = digitLength - digits;
             this.knownBitLength.SubtractInt(digitShift);
-
             var newLength = ((digitLength - digitShift)|0);
+
             if (digitShift <= 2147483647) this.discardedBitCount.AddInt(digitShift|0); else this.discardedBitCount.AddBig(BigInteger.valueOf(digitShift));
             for (var i = str.length - 1; i >= 0; i--) {
                 this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -5636,7 +6060,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
         if (bits.CanFitInInt32()) {
             this.ShiftToDigitsInt(bits.AsInt32());
         } else {
-            this.knownBitLength = this.CalcKnownBitLength();
+            this.knownBitLength = this.CalcKnownDigitLength();
             var bigintDiff = this.knownBitLength.AsBigInteger();
             var bitsBig = bits.AsBigInteger();
             bigintDiff = bigintDiff.subtract(bitsBig);
@@ -5650,7 +6074,8 @@ function(bigint, lastDiscarded, olderDiscarded) {
     prototype.ShiftToDigitsInt = function(digits) {
         if (this.isSmall) this.ShiftToBitsSmall(digits); else this.ShiftToBitsBig(digits);
     };
-    prototype.CalcKnownBitLength = function() {
+    constructor.bidivisor = BigInteger.valueOf(10000);
+    prototype.CalcKnownDigitLength = function() {
         if (this.isSmall) {
             var kb = 0;
             var tmp = this.shiftedSmall;
@@ -5661,8 +6086,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             kb = (kb == 0 ? 1 : kb);
             return new FastInteger(kb);
         } else {
-            var str = this.shiftedBigInt.toString();
-            return new FastInteger(str.length);
+            return new FastInteger(this.shiftedBigInt.getDigitCount());
         }
     };
     prototype.ShiftToBitsSmall = function(digits) {
@@ -6507,12 +6931,14 @@ var RadixMath = function(helper) {
                     if (desiredScale.compareTo(fastexponent) == 0) break;
                     var bigrem;
                     var bigquo;
-                    var divrem = (bigmantissa).divideAndRemainder(bigradix);
-                    bigquo = divrem[0];
-                    bigrem = divrem[1];
+                    {
+                        var divrem = (bigmantissa).divideAndRemainder(bigradix);
+                        bigquo = divrem[0];
+                        bigrem = divrem[1];
+                    }
                     if (bigrem.signum() != 0) break;
                     bigmantissa = bigquo;
-                    fastexponent.AddInt(1);
+                    fastexponent.Increment();
                 }
                 ret = this.helper.CreateNewWithFlags(bigmantissa, fastexponent.AsBigInteger(), this.helper.GetFlags(ret));
             }
@@ -6664,7 +7090,7 @@ var RadixMath = function(helper) {
                 return this.helper.CreateNewWithFlags(overflowMant, bigexp2, 0);
             }
         }
-        var minexp = FastInteger.FromBig(ctx.getEMin()).SubtractBig(ctx.getPrecision()).AddInt(1);
+        var minexp = FastInteger.FromBig(ctx.getEMin()).SubtractBig(ctx.getPrecision()).Increment();
         var bigexp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
         if (bigexp.compareTo(minexp) <= 0) {
 
@@ -6705,7 +7131,7 @@ var RadixMath = function(helper) {
                     return this.helper.CreateNewWithFlags(overflowMant, bigexp2, thisFlags & BigNumberFlags.FlagNegative);
                 }
             }
-            var minexp = FastInteger.FromBig(ctx.getEMin()).SubtractBig(ctx.getPrecision()).AddInt(1);
+            var minexp = FastInteger.FromBig(ctx.getEMin()).SubtractBig(ctx.getPrecision()).Increment();
             var bigexp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
             if (bigexp.compareTo(minexp) < 0) {
 
@@ -6761,7 +7187,7 @@ var RadixMath = function(helper) {
                 return thisValue;
             }
         }
-        var minexp = FastInteger.FromBig(ctx.getEMin()).SubtractBig(ctx.getPrecision()).AddInt(1);
+        var minexp = FastInteger.FromBig(ctx.getEMin()).SubtractBig(ctx.getPrecision()).Increment();
         var bigexp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
         if (bigexp.compareTo(minexp) <= 0) {
 
@@ -6902,9 +7328,11 @@ var RadixMath = function(helper) {
                 if (expdiff.compareTo(fastDesiredExponent) <= 0) {
                     shift = FastInteger.Copy(fastDesiredExponent).Subtract(expdiff);
                     var quo;
-                    var divrem = (mantissaDividend).divideAndRemainder(mantissaDivisor);
-                    quo = divrem[0];
-                    rem = divrem[1];
+                    {
+                        var divrem = (mantissaDividend).divideAndRemainder(mantissaDivisor);
+                        quo = divrem[0];
+                        rem = divrem[1];
+                    }
                     quo = this.RoundToScale(quo, rem, mantissaDivisor, shift, resultNeg, ctx);
                     return this.helper.CreateNewWithFlags(quo, desiredExponent, resultNeg ? BigNumberFlags.FlagNegative : 0);
                 } else if (ctx != null && (ctx.getPrecision()).signum() != 0 && FastInteger.Copy(expdiff).SubtractInt(8).compareTo(fastPrecision) > 0) {
@@ -6914,9 +7342,11 @@ var RadixMath = function(helper) {
                     shift = FastInteger.Copy(expdiff).Subtract(fastDesiredExponent);
                     mantissaDividend = this.helper.MultiplyByRadixPower(mantissaDividend, shift);
                     var quo;
-                    var divrem = (mantissaDividend).divideAndRemainder(mantissaDivisor);
-                    quo = divrem[0];
-                    rem = divrem[1];
+                    {
+                        var divrem = (mantissaDividend).divideAndRemainder(mantissaDivisor);
+                        quo = divrem[0];
+                        rem = divrem[1];
+                    }
                     quo = this.RoundToScale(quo, rem, mantissaDivisor, new FastInteger(0), resultNeg, ctx);
                     return this.helper.CreateNewWithFlags(quo, desiredExponent, resultNeg ? BigNumberFlags.FlagNegative : 0);
                 }
@@ -6928,7 +7358,7 @@ var RadixMath = function(helper) {
                 var dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
                 var divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
                 divisorPrecision.Subtract(dividendPrecision);
-                if (divisorPrecision.signum() == 0) divisorPrecision.AddInt(1);
+                if (divisorPrecision.signum() == 0) divisorPrecision.Increment();
 
                 mantissaDividend = this.helper.MultiplyByRadixPower(mantissaDividend, divisorPrecision);
                 adjust.Add(divisorPrecision);
@@ -6939,7 +7369,7 @@ var RadixMath = function(helper) {
                     } else {
                         mantissaDividend = mantissaDividend.multiply(BigInteger.valueOf(radix));
                     }
-                    adjust.AddInt(1);
+                    adjust.Increment();
                 }
             } else if (mantcmp > 0) {
 
@@ -6958,7 +7388,7 @@ var RadixMath = function(helper) {
                         var bigpow = BigInteger.valueOf(radix);
                         mantissaDivisor = mantissaDivisor.divide(bigpow);
                     }
-                    adjust.AddInt(1);
+                    adjust.Increment();
                 }
             }
             var atMaxPrecision = false;
@@ -6969,10 +7399,14 @@ var RadixMath = function(helper) {
                 var check = 0;
                 var divs = FastInteger.FromBig(mantissaDivisor);
                 var divd = FastInteger.FromBig(mantissaDividend);
+                var divisorFits = divs.CanFitInInt32();
+                var smallDivisor = (divisorFits ? divs.AsInt32() : 0);
+                var halfRadix = ((radix / 2)|0);
                 var divsHalfRadix = null;
                 if (radix != 2) {
-                    divsHalfRadix = FastInteger.FromBig(mantissaDivisor).Multiply((radix / 2)|0);
+                    divsHalfRadix = FastInteger.FromBig(mantissaDivisor).Multiply(halfRadix);
                 }
+                var hasResultPrecision = false;
                 var hasPrecision = ctx != null && (ctx.getPrecision()).signum() != 0;
                 while (true) {
                     var remainderZero = false;
@@ -6986,13 +7420,19 @@ var RadixMath = function(helper) {
                         check++;
                     }
                     var count = 0;
-                    if (divsHalfRadix != null && divd.compareTo(divsHalfRadix) >= 0) {
-                        divd.Subtract(divsHalfRadix);
-                        count = count + ((radix / 2)|0);
-                    }
-                    while (divd.compareTo(divs) >= 0) {
-                        divd.Subtract(divs);
-                        count++;
+                    if (divd.CanFitInInt32()) {
+                        if (divisorFits) {
+                            var smallDividend = divd.AsInt32();
+                            count = ((smallDividend / smallDivisor)|0);
+                            divd.SetInt(smallDividend % smallDivisor);
+                        } else {
+                            count = 0;
+                        }
+                    } else {
+                        if (divsHalfRadix != null) {
+                            count = count + (halfRadix * divd.RepeatedSubtract(divsHalfRadix));
+                        }
+                        count = count + (divd.RepeatedSubtract(divs));
                     }
                     result.AddInt(count);
                     remainderZero = (divd.signum() == 0);
@@ -7005,9 +7445,10 @@ var RadixMath = function(helper) {
                         mantissaDividend = divd.AsBigInteger();
                         break;
                     }
-                    adjust.AddInt(1);
-                    if (result.signum() != 0) {
-                        resultPrecision.AddInt(1);
+                    adjust.Increment();
+                    if (hasPrecision && (hasResultPrecision || result.signum() != 0)) {
+                        resultPrecision.Increment();
+                        hasResultPrecision = true;
                     }
                     result.Multiply(radix);
                     divd.Multiply(radix);
@@ -7056,7 +7497,7 @@ var RadixMath = function(helper) {
                         ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
                     }
                     return retval;
-                } else if (posBigResult.testBit(0) == false && (this.thisRadix & 1) == 0) {
+                } else if (posBigResult.testBit(0) == false || (this.thisRadix & 1) != 0) {
                     posBigResult = posBigResult.add(BigInteger.ONE);
                     if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
                         ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
@@ -7073,7 +7514,7 @@ var RadixMath = function(helper) {
                             ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
                         }
                         return retval;
-                    } else if (posBigResult.testBit(0) == false && (this.thisRadix & 1) == 0) {
+                    } else if (posBigResult.testBit(0) == false || (this.thisRadix & 1) != 0) {
                         posBigResult = posBigResult.add(BigInteger.ONE);
                         if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
                             ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
@@ -7210,7 +7651,7 @@ var RadixMath = function(helper) {
 
                 digitCount = this.helper.CreateShiftAccumulator(maxMantissa).GetDigitLength();
             }
-            var clamp = FastInteger.Copy(fastEMax).AddInt(1).Subtract(digitCount);
+            var clamp = FastInteger.Copy(fastEMax).Increment().Subtract(digitCount);
             var fastExp = FastInteger.FromBig(this.helper.GetExponent(dfrac));
             if (fastExp.compareTo(clamp) > 0) {
                 var neg = (this.helper.GetFlags(dfrac) & BigNumberFlags.FlagNegative) != 0;
@@ -7286,7 +7727,7 @@ var RadixMath = function(helper) {
         var dfrac = this.RoundToPrecisionInternal(thisValue, fastPrecision, context.getRounding(), fastEMin, fastEMax, lastDiscarded, olderDiscarded, shift, false, adjustNegativeZero, context.getHasFlags() ? signals : null);
         if (context.getClampNormalExponents() && dfrac != null) {
 
-            var clamp = FastInteger.Copy(fastEMax).AddInt(1).Subtract(fastPrecision);
+            var clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
             var fastExp = FastInteger.FromBig(this.helper.GetExponent(dfrac));
             if (fastExp.compareTo(clamp) > 0) {
                 var neg = (this.helper.GetFlags(dfrac) & BigNumberFlags.FlagNegative) != 0;
@@ -7418,12 +7859,14 @@ var RadixMath = function(helper) {
                 while (!(bigmant.signum() == 0)) {
                     var bigrem;
                     var bigquo;
-                    var divrem = (bigmant).divideAndRemainder(bigradix);
-                    bigquo = divrem[0];
-                    bigrem = divrem[1];
+                    {
+                        var divrem = (bigmant).divideAndRemainder(bigradix);
+                        bigquo = divrem[0];
+                        bigrem = divrem[1];
+                    }
                     if (bigrem.signum() != 0) break;
                     bigmant = bigquo;
-                    exp.AddInt(1);
+                    exp.Increment();
                 }
             }
             var flags = this.helper.GetFlags(thisValue);
@@ -7518,24 +7961,29 @@ var RadixMath = function(helper) {
             currMantissa = this.helper.MultiplyByRadixPower(currMantissa, expdiff);
             if ((currMantissa).compareTo(maxMantissa) > 0) {
 
-                adjExponent.AddInt(1);
+                adjExponent.Increment();
             }
         }
 
-        if (signals != null && fastEMin != null && adjExponent.compareTo(fastEMin) < 0) {
+        if (signals != null && fastEMin != null && !unlimitedPrec && adjExponent.compareTo(fastEMin) < 0) {
             earlyRounded = accum.getShiftedInt();
             if (this.RoundGivenBigInt(accum, rounding, neg, earlyRounded)) {
                 earlyRounded = earlyRounded.add(BigInteger.ONE);
 
-                if (earlyRounded.testBit(0) == false && (this.thisRadix & 1) == 0) {
+                if (earlyRounded.testBit(0) == false || (this.thisRadix & 1) != 0) {
                     var accum2 = this.helper.CreateShiftAccumulator(earlyRounded);
-                    accum2.ShiftToDigits(fastPrecision);
+                    var newDigitLength = accum2.GetDigitLength();
+                    if (binaryPrec || newDigitLength.compareTo(fastPrecision) > 0) {
+                        var neededShift = FastInteger.Copy(newDigitLength).Subtract(fastPrecision);
+                        accum2.ShiftRight(neededShift);
 
-                    if ((accum2.getDiscardedDigitCount()).signum() != 0) {
+                        if ((accum2.getDiscardedDigitCount()).signum() != 0) {
 
-                        earlyRounded = accum2.getShiftedInt();
+                            earlyRounded = accum2.getShiftedInt();
+                        }
+                        newDigitLength = accum2.GetDigitLength();
                     }
-                    newAdjExponent = FastInteger.Copy(exp).Add(accum2.GetDigitLength()).SubtractInt(1);
+                    newAdjExponent = FastInteger.Copy(exp).Add(newDigitLength).SubtractInt(1);
                 }
             }
         }
@@ -7559,14 +8007,14 @@ var RadixMath = function(helper) {
                     overflowMant = overflowMant.subtract(BigInteger.ONE);
                 }
                 if (signals != null) signals[0] = flags;
-                clamp = FastInteger.Copy(fastEMax).AddInt(1).Subtract(fastPrecision);
+                clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
                 return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
             }
             if (signals != null) signals[0] = flags;
             return this.SignalOverflow(neg);
         } else if (fastEMin != null && adjExponent.compareTo(fastEMin) < 0) {
 
-            var fastETiny = FastInteger.Copy(fastEMin).Subtract(fastPrecision).AddInt(1);
+            var fastETiny = FastInteger.Copy(fastEMin).Subtract(fastPrecision).Increment();
             if (signals != null) {
                 if (earlyRounded.signum() != 0) {
                     if (newAdjExponent.compareTo(fastEMin) < 0) {
@@ -7595,7 +8043,7 @@ var RadixMath = function(helper) {
                         }
                     }
                     if (this.Round(accum, rounding, neg, newmantissa)) {
-                        newmantissa.AddInt(1);
+                        newmantissa.Increment();
                     }
                 }
                 if (signals != null) {
@@ -7617,19 +8065,24 @@ var RadixMath = function(helper) {
             if (this.RoundGivenBigInt(accum, rounding, neg, bigmantissa)) {
                 bigmantissa = bigmantissa.add(BigInteger.ONE);
                 if (binaryPrec) recheckOverflow = true;
-                if (bigmantissa.testBit(0) == false && (this.thisRadix & 1) == 0) {
+
+                if (!unlimitedPrec && (bigmantissa.testBit(0) == false || (this.thisRadix & 1) != 0)) {
                     accum = this.helper.CreateShiftAccumulator(bigmantissa);
-                    accum.ShiftToDigits(fastPrecision);
-                    if (binaryPrec) {
-                        while ((accum.getShiftedInt()).compareTo(maxMantissa) > 0) {
-                            accum.ShiftRightInt(1);
+                    var newDigitLength = accum.GetDigitLength();
+                    if (binaryPrec || newDigitLength.compareTo(fastPrecision) > 0) {
+                        var neededShift = FastInteger.Copy(newDigitLength).Subtract(fastPrecision);
+                        accum.ShiftRight(neededShift);
+                        if (binaryPrec) {
+                            while ((accum.getShiftedInt()).compareTo(maxMantissa) > 0) {
+                                accum.ShiftRightInt(1);
+                            }
                         }
-                    }
-                    if ((accum.getDiscardedDigitCount()).signum() != 0) {
-                        exp.Add(accum.getDiscardedDigitCount());
-                        discardedBits.Add(accum.getDiscardedDigitCount());
-                        bigmantissa = accum.getShiftedInt();
-                        if (!binaryPrec) recheckOverflow = true;
+                        if ((accum.getDiscardedDigitCount()).signum() != 0) {
+                            exp.Add(accum.getDiscardedDigitCount());
+                            discardedBits.Add(accum.getDiscardedDigitCount());
+                            bigmantissa = accum.getShiftedInt();
+                            if (!binaryPrec) recheckOverflow = true;
+                        }
                     }
                 }
             }
@@ -7645,7 +8098,7 @@ var RadixMath = function(helper) {
                 currMantissa = this.helper.MultiplyByRadixPower(currMantissa, expdiff);
                 if ((currMantissa).compareTo(maxMantissa) > 0) {
 
-                    adjExponent.AddInt(1);
+                    adjExponent.Increment();
                 }
             }
             if (adjExponent.compareTo(fastEMax) > 0) {
@@ -7660,7 +8113,7 @@ var RadixMath = function(helper) {
                         overflowMant = overflowMant.subtract(BigInteger.ONE);
                     }
                     if (signals != null) signals[0] = flags;
-                    clamp = FastInteger.Copy(fastEMax).AddInt(1).Subtract(fastPrecision);
+                    clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
                     return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
                 }
                 if (signals != null) signals[0] = flags;
@@ -7742,23 +8195,36 @@ var RadixMath = function(helper) {
                                 var newDiff = FastInteger.Copy(tmp).Subtract(fastOp2Exp).Abs();
                                 if (newDiff.compareTo(expdiff) < 0) {
 
-                                    if (this.helper.GetSign(thisValue) == this.helper.GetSign(other)) {
-                                        var digitLength2 = this.helper.CreateShiftAccumulator(op2MantAbs).GetDigitLength();
-                                        if (digitLength2.compareTo(fastPrecision) < 0) {
+                                    var sameSign = (this.helper.GetSign(thisValue) == this.helper.GetSign(other));
+                                    var oneOpIsZero = (op1MantAbs.signum() == 0);
+                                    var digitLength2 = this.helper.CreateShiftAccumulator(op2MantAbs).GetDigitLength();
+                                    if (digitLength2.compareTo(fastPrecision) < 0) {
 
-                                            var precisionDiff = FastInteger.Copy(fastPrecision).Subtract(digitLength2);
-                                            op2MantAbs = this.helper.MultiplyByRadixPower(op2MantAbs, precisionDiff);
-                                            var bigintTemp = precisionDiff.AsBigInteger();
-                                            op2Exponent = op2Exponent.subtract(bigintTemp);
-                                            other = this.helper.CreateNewWithFlags(op2MantAbs, op2Exponent, this.helper.GetFlags(other));
-                                            return this.RoundToPrecisionWithShift(other, ctx, 0, 1, null, false);
-                                        } else {
-                                            var shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                                            return this.RoundToPrecisionWithShift(other, ctx, 0, 1, shift, false);
+                                        var precisionDiff = FastInteger.Copy(fastPrecision).Subtract(digitLength2);
+                                        if (!oneOpIsZero && !sameSign) {
+                                            precisionDiff.AddInt(2);
                                         }
+                                        op2MantAbs = this.helper.MultiplyByRadixPower(op2MantAbs, precisionDiff);
+                                        var bigintTemp = precisionDiff.AsBigInteger();
+                                        op2Exponent = op2Exponent.subtract(bigintTemp);
+                                        if (!oneOpIsZero && !sameSign) {
+                                            op2MantAbs = op2MantAbs.subtract(BigInteger.ONE);
+                                        }
+                                        other = this.helper.CreateNewWithFlags(op2MantAbs, op2Exponent, this.helper.GetFlags(other));
+                                        var shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                        return this.RoundToPrecisionWithShift(other, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                                     } else {
-                                        if (!(op1MantAbs.signum() == 0)) op1MantAbs = BigInteger.ONE;
-                                        op1Exponent = (tmp.AsBigInteger());
+                                        if (!oneOpIsZero && !sameSign) {
+                                            op2MantAbs = this.helper.MultiplyByRadixPower(op2MantAbs, new FastInteger(2));
+                                            op2Exponent = op2Exponent.subtract(BigInteger.valueOf(2));
+                                            op2MantAbs = op2MantAbs.subtract(BigInteger.ONE);
+                                            other = this.helper.CreateNewWithFlags(op2MantAbs, op2Exponent, this.helper.GetFlags(other));
+                                            var shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                            return this.RoundToPrecisionWithShift(other, ctx, 0, 0, shift, false);
+                                        } else {
+                                            var shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                            return this.RoundToPrecisionWithShift(other, ctx, 0, sameSign ? 1 : 0, shift2, false);
+                                        }
                                     }
                                 }
                             }
@@ -7773,23 +8239,36 @@ var RadixMath = function(helper) {
                                 var newDiff = FastInteger.Copy(tmp).Subtract(fastOp1Exp).Abs();
                                 if (newDiff.compareTo(expdiff) < 0) {
 
-                                    if (this.helper.GetSign(thisValue) == this.helper.GetSign(other)) {
-                                        var digitLength1 = this.helper.CreateShiftAccumulator(op1MantAbs).GetDigitLength();
-                                        if (digitLength1.compareTo(fastPrecision) < 0) {
+                                    var sameSign = (this.helper.GetSign(thisValue) == this.helper.GetSign(other));
+                                    var oneOpIsZero = (op2MantAbs.signum() == 0);
+                                    digitLength2 = this.helper.CreateShiftAccumulator(op1MantAbs).GetDigitLength();
+                                    if (digitLength2.compareTo(fastPrecision) < 0) {
 
-                                            var precisionDiff = FastInteger.Copy(fastPrecision).Subtract(digitLength1);
-                                            op1MantAbs = this.helper.MultiplyByRadixPower(op1MantAbs, precisionDiff);
-                                            var bigintTemp = precisionDiff.AsBigInteger();
-                                            op1Exponent = op1Exponent.subtract(bigintTemp);
-                                            thisValue = this.helper.CreateNewWithFlags(op1MantAbs, op1Exponent, this.helper.GetFlags(thisValue));
-                                            return this.RoundToPrecisionWithShift(thisValue, ctx, 0, 1, null, false);
-                                        } else {
-                                            var shift = FastInteger.Copy(digitLength1).Subtract(fastPrecision);
-                                            return this.RoundToPrecisionWithShift(thisValue, ctx, 0, 1, shift, false);
+                                        var precisionDiff = FastInteger.Copy(fastPrecision).Subtract(digitLength2);
+                                        if (!oneOpIsZero && !sameSign) {
+                                            precisionDiff.AddInt(2);
                                         }
+                                        op1MantAbs = this.helper.MultiplyByRadixPower(op1MantAbs, precisionDiff);
+                                        var bigintTemp = precisionDiff.AsBigInteger();
+                                        op1Exponent = op1Exponent.subtract(bigintTemp);
+                                        if (!oneOpIsZero && !sameSign) {
+                                            op1MantAbs = op1MantAbs.subtract(BigInteger.ONE);
+                                        }
+                                        thisValue = this.helper.CreateNewWithFlags(op1MantAbs, op1Exponent, this.helper.GetFlags(thisValue));
+                                        var shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                        return this.RoundToPrecisionWithShift(thisValue, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                                     } else {
-                                        if (!(op2MantAbs.signum() == 0)) op2MantAbs = BigInteger.ONE;
-                                        op2Exponent = (tmp.AsBigInteger());
+                                        if (!oneOpIsZero && !sameSign) {
+                                            op1MantAbs = this.helper.MultiplyByRadixPower(op1MantAbs, new FastInteger(2));
+                                            op1Exponent = op1Exponent.subtract(BigInteger.valueOf(2));
+                                            op1MantAbs = op1MantAbs.subtract(BigInteger.ONE);
+                                            thisValue = this.helper.CreateNewWithFlags(op1MantAbs, op1Exponent, this.helper.GetFlags(thisValue));
+                                            var shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                            return this.RoundToPrecisionWithShift(thisValue, ctx, 0, 0, shift, false);
+                                        } else {
+                                            var shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                            return this.RoundToPrecisionWithShift(thisValue, ctx, 0, sameSign ? 1 : 0, shift2, false);
+                                        }
                                     }
                                 }
                             }
@@ -8008,8 +8487,7 @@ function(mantissa, exponent) {
                         var thisdigit = ((str.charCodeAt(i)-48)|0);
                         if (mantInt > ExtendedDecimal.MaxSafeInt) {
                             if (mant == null) mant = new FastInteger(mantInt);
-                            mant.Multiply(10);
-                            mant.AddInt(thisdigit);
+                            mant.MultiplyByTenAndAdd(thisdigit);
                         } else {
                             mantInt *= 10;
                             mantInt = mantInt + (thisdigit);
@@ -8035,8 +8513,7 @@ function(mantissa, exponent) {
                         var thisdigit = ((str.charCodeAt(i)-48)|0);
                         if (mantInt > ExtendedDecimal.MaxSafeInt) {
                             if (mant == null) mant = new FastInteger(mantInt);
-                            mant.Multiply(10);
-                            mant.AddInt(thisdigit);
+                            mant.MultiplyByTenAndAdd(thisdigit);
                         } else {
                             mantInt *= 10;
                             mantInt = mantInt + (thisdigit);
@@ -8054,8 +8531,7 @@ function(mantissa, exponent) {
                 var thisdigit = ((str.charCodeAt(i)-48)|0);
                 if (mantInt > ExtendedDecimal.MaxSafeInt) {
                     if (mant == null) mant = new FastInteger(mantInt);
-                    mant.Multiply(10);
-                    mant.AddInt(thisdigit);
+                    mant.MultiplyByTenAndAdd(thisdigit);
                 } else {
                     mantInt *= 10;
                     mantInt = mantInt + (thisdigit);
@@ -8097,8 +8573,7 @@ function(mantissa, exponent) {
                     var thisdigit = ((str.charCodeAt(i)-48)|0);
                     if (expInt > ExtendedDecimal.MaxSafeInt) {
                         if (exp == null) exp = new FastInteger(expInt);
-                        exp.Multiply(10);
-                        exp.AddInt(thisdigit);
+                        exp.MultiplyByTenAndAdd(thisdigit);
                     } else {
                         expInt *= 10;
                         expInt = expInt + (thisdigit);
@@ -8173,9 +8648,11 @@ function(mantissa, exponent) {
             while (true) {
                 var bigrem;
                 var bigquo;
-                var divrem = (denominator).divideAndRemainder(BigInteger.valueOf(5));
-                bigquo = divrem[0];
-                bigrem = divrem[1];
+                {
+                    var divrem = (denominator).divideAndRemainder(BigInteger.valueOf(5));
+                    bigquo = divrem[0];
+                    bigrem = divrem[1];
+                }
                 if (bigrem.signum() != 0) break;
                 denominator = bigquo;
             }
@@ -8264,26 +8741,26 @@ function(mantissa, exponent) {
             if (iszero && (adjustedExponent.compareTo(threshold) < 0 || scaleSign < 0)) {
                 if (intphase == 1) {
                     if (adjExponentNegative) {
-                        decimalPointAdjust.AddInt(1);
-                        newExponent.AddInt(1);
+                        decimalPointAdjust.Increment();
+                        newExponent.Increment();
                     } else {
                         decimalPointAdjust.AddInt(2);
                         newExponent.AddInt(2);
                     }
                 } else if (intphase == 2) {
                     if (!adjExponentNegative) {
-                        decimalPointAdjust.AddInt(1);
-                        newExponent.AddInt(1);
+                        decimalPointAdjust.Increment();
+                        newExponent.Increment();
                     } else {
                         decimalPointAdjust.AddInt(2);
                         newExponent.AddInt(2);
                     }
                 }
-                threshold.AddInt(1);
+                threshold.Increment();
             } else {
                 if (intphase == 1) {
                     if (!adjExponentNegative) {
-                        decimalPointAdjust.AddInt(1);
+                        decimalPointAdjust.Increment();
                         newExponent.AddInt(-1);
                     } else {
                         decimalPointAdjust.AddInt(2);
@@ -8291,7 +8768,7 @@ function(mantissa, exponent) {
                     }
                 } else if (intphase == 2) {
                     if (adjExponentNegative) {
-                        decimalPointAdjust.AddInt(1);
+                        decimalPointAdjust.Increment();
                         newExponent.AddInt(-1);
                     } else {
                         decimalPointAdjust.AddInt(2);
@@ -8463,9 +8940,11 @@ function(mantissa, exponent) {
             var divisor = DecimalUtility.FindPowerOfFiveFromBig(negscale.AsBigInteger());
             while (true) {
                 var quotient;
-                var divrem = (bigmantissa).divideAndRemainder(divisor);
-                quotient = divrem[0];
-                remainder = divrem[1];
+                {
+                    var divrem = (bigmantissa).divideAndRemainder(divisor);
+                    quotient = divrem[0];
+                    remainder = divrem[1];
+                }
 
                 if (remainder.signum() != 0 && quotient.compareTo(ExtendedDecimal.OneShift62) < 0) {
 
@@ -9079,9 +9558,11 @@ function(mantissa, exponent) {
             var divisor = DecimalUtility.FindPowerOfFiveFromBig(negscale.AsBigInteger());
             while (true) {
                 var quotient;
-                var divrem = (bigmantissa).divideAndRemainder(divisor);
-                quotient = divrem[0];
-                remainder = divrem[1];
+                {
+                    var divrem = (bigmantissa).divideAndRemainder(divisor);
+                    quotient = divrem[0];
+                    remainder = divrem[1];
+                }
 
                 if (remainder.signum() != 0 && quotient.compareTo(ExtendedFloat.OneShift62) < 0) {
 
@@ -9169,10 +9650,10 @@ function(mantissa, exponent) {
         }
 
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || !fastSmallMant.isEvenNumber())) {
-            fastSmallMant.AddInt(1);
+            fastSmallMant.Increment();
             if (fastSmallMant.CompareToInt(1 << 24) == 0) {
                 fastSmallMant = new FastInteger(1 << 23);
-                bigexponent.AddInt(1);
+                bigexponent.Increment();
             }
         }
         var subnormal = false;
@@ -9192,10 +9673,10 @@ function(mantissa, exponent) {
             fastSmallMant = accum.getShiftedIntFast();
 
             if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 || !fastSmallMant.isEvenNumber())) {
-                fastSmallMant.AddInt(1);
+                fastSmallMant.Increment();
                 if (fastSmallMant.CompareToInt(1 << 24) == 0) {
                     fastSmallMant = new FastInteger(1 << 23);
-                    bigexponent.AddInt(1);
+                    bigexponent.Increment();
                 }
             }
         }
@@ -9267,7 +9748,7 @@ function(mantissa, exponent) {
 
                 mantissaBits[1] = mantissaBits[1] >> 1;
 
-                bigexponent.AddInt(1);
+                bigexponent.Increment();
             }
         }
         var subnormal = false;
@@ -9294,7 +9775,7 @@ function(mantissa, exponent) {
 
                     mantissaBits[1] = mantissaBits[1] >> 1;
 
-                    bigexponent.AddInt(1);
+                    bigexponent.Increment();
                 }
             }
         }

@@ -1366,7 +1366,6 @@ namespace PeterO {
     /// <param name='decfrac'>An ExtendedDecimal object.</param>
     /// <returns>The sum of the two objects.</returns>
     public ExtendedDecimal Add(ExtendedDecimal decfrac) {
-      if ((decfrac) == null) throw new ArgumentNullException("decfrac");
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -1399,7 +1398,6 @@ namespace PeterO {
     /// <param name='decfrac'>Another decimal number.</param>
     /// <returns>The product of the two decimal numbers.</returns>
     public ExtendedDecimal Multiply(ExtendedDecimal decfrac) {
-      if ((decfrac) == null) throw new ArgumentNullException("decfrac");
       return Multiply(decfrac, PrecisionContext.Unlimited);
     }
 

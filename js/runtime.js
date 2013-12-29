@@ -87,6 +87,7 @@ JSInteropFactory.divide64By32=function(dividendLow,dividendHigh,divisor){
 
 /////////////////////////////////////////////
 var ILong=function(lo,hi){
+// Convert lo and hi to unsigned
 this.lo=lo>>>0
 this.hi=hi>>>0
 }
@@ -108,11 +109,38 @@ return new ILong(this.lo|other.lo,this.hi|other.hi);
 ILong.prototype.andInt=function(otherUnsigned){
 return new ILong(this.lo&(otherUnsigned>>>0),this.hi);
 }
-ILong.prototype.intValue=function(other){
+ILong.prototype.intValue=function(){
 return this.lo|0;
 }
-ILong.prototype.shortValue=function(other){
+ILong.prototype.shortValue=function(){
 return (this.lo|0)&0xFFFF;
+}
+ILong.prototype.compareToLongAsInts=function(otherLo,otherHi){
+ otherHi|=0;
+ // Signed comparison of high words
+ if(otherHi!=(this.hi|0)){
+  return (otherHi>(this.hi|0)) ? -1 : 1;
+ }
+ otherLo=otherLo>>>0;
+ // Unsigned comparison of low words
+ if(otherLo!=this.lo){
+  return (otherLo>this.lo) ? -1 : 1;
+ }
+ return 0;
+}
+ILong.prototype.compareToInt=function(other){
+ other|=0;
+ var otherHi=(other<0) ? -1 : 0;
+ // Signed comparison of high words
+ if(otherHi!=(this.hi|0)){
+  return (otherHi>(this.hi|0)) ? -1 : 1;
+ }
+ other=other>>>0;
+ // Unsigned comparison of low words
+ if(other!=this.lo){
+  return (other>this.lo) ? -1 : 1;
+ }
+ return 0;
 }
 ILong.prototype.equalsInt=function(other){
  if(other<0){

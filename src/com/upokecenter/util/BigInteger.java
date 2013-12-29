@@ -2342,7 +2342,7 @@ at: http://peteroupc.github.io/CBOR/
         // to trunc(x*log10(2)) that is correct up
         // to x=2135; the multiplication would require
         // up to 31 bits in all cases up to 2135
-        // (cases up to 64 bits already handled above)
+        // (cases up to 64 are already handled above)
         int minDigits=1+(((bitlen-1)*631305)>>21);
         int maxDigits=1+(((bitlen)*631305)>>21);
         if(minDigits==maxDigits){
@@ -2475,7 +2475,7 @@ at: http://peteroupc.github.io/CBOR/
         short carry=LinearMultiply(bigint.reg,0,bigint.reg,0,(short)10,bigint.reg.length);
         if(carry!=0)
           bigint.reg=GrowForCarry(bigint.reg,carry);
-        // Add the parersed digit
+        // Add the parsed digit
         if(digit!=0 && Increment(bigint.reg,0,bigint.reg.length,(short)digit)!=0)
           bigint.reg=GrowForCarry(bigint.reg,(short)1);
       }
@@ -2669,17 +2669,17 @@ at: http://peteroupc.github.io/CBOR/
         return this;
       if(bigintAugend.wordCount==1 && this.wordCount==1){
         if(this.negative==bigintAugend.negative){
-          int v=(((int)this.reg[0])&0xFFFF)+((bigintAugend.intValue().reg[0])&0xFFFF);
+          int intSum=(((int)this.reg[0])&0xFFFF)+(((int)(bigintAugend.reg[0]))&0xFFFF);
           sum=new BigInteger();
           sum.reg=new short[2];
-          sum.reg[0]=((short)v);
-          sum.reg[1]=((short)(v.shiftRight(16)));
-          sum.wordCount=((v.shiftRight(16))==0) ? 1 : 2;
+          sum.reg[0]=((short)intSum);
+          sum.reg[1]=((short)(intSum>>16));
+          sum.wordCount=((intSum>>16)==0) ? 1 : 2;
           sum.negative=this.negative;
           return sum;
         } else {
           int a=(((int)this.reg[0])&0xFFFF);
-          int b=((bigintAugend.intValue().reg[0])&0xFFFF);
+          int b=(((int)(bigintAugend.reg[0]))&0xFFFF);
           if(a==b)return BigInteger.ZERO;
           if(a>b){
             a-=b;
@@ -3157,7 +3157,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Compares a BigInteger object with this instance.
      * @param other A BigInteger object.
-     * @return Zero if the values are equal; a negative number is this instance
+     * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
     public int compareTo(BigInteger other) {

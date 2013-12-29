@@ -475,7 +475,7 @@ public MutableNumber SetInt(int val) {
     /**
      * Compares a FastInteger object with this instance.
      * @param val A FastInteger object.
-     * @return Zero if the values are equal; a negative number is this instance
+     * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
     public int compareTo(FastInteger val) {

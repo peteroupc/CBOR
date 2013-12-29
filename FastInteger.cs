@@ -453,7 +453,7 @@ public MutableNumber SetInt(int val){
 
     /// <summary>Compares a FastInteger object with this instance.</summary>
     /// <param name='val'>A FastInteger object.</param>
-    /// <returns>Zero if the values are equal; a negative number is this instance
+    /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
     public int CompareTo(FastInteger val) {
       switch((this.integerMode<<2)|val.integerMode){
