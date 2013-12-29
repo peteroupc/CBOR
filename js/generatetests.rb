@@ -45,6 +45,9 @@ for i in 0...100
   aneg=(a!=0 && rand(2)==0)
   bneg=(b!=0 && rand(2)==0)
   puts "TestCommon.DoTestRemainder(#{signstr(a,aneg)},#{signstr(b,bneg)},#{b==0 ? 'null' : signstr(a%b,aneg)});"
+  a=randomnum()*randomnum()
+  aneg=(a!=0 && rand(2)==0)
+  puts "TestCommon.DoTestDigitCount(#{signstr(a,aneg)},#{a.to_s.length});"
   a=randomnum()
   b=randomnum()
   aneg=(a!=0 && rand(2)==0)

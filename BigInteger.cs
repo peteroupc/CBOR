@@ -2330,7 +2330,7 @@ namespace PeterO {
         // to trunc(x*log10(2)) that is correct up
         // to x=2135; the multiplication would require
         // up to 31 bits in all cases up to 2135
-        // (cases up to 64 bits already handled above)
+        // (cases up to 64 are already handled above)
         int minDigits=1+(((bitlen-1)*631305)>>21);
         int maxDigits=1+(((bitlen)*631305)>>21);
         if(minDigits==maxDigits){
@@ -2459,7 +2459,7 @@ namespace PeterO {
         short carry=LinearMultiply(bigint.reg,0,bigint.reg,0,(short)10,bigint.reg.Length);
         if(carry!=0)
           bigint.reg=GrowForCarry(bigint.reg,carry);
-        // Add the parersed digit
+        // Add the parsed digit
         if(digit!=0 && Increment(bigint.reg,0,bigint.reg.Length,(short)digit)!=0)
           bigint.reg=GrowForCarry(bigint.reg,(short)1);
       }
@@ -2648,17 +2648,17 @@ namespace PeterO {
         return this;
       if(bigintAugend.wordCount==1 && this.wordCount==1){
         if(this.negative==bigintAugend.negative){
-          int v=(((int)this.reg[0])&0xFFFF)+(((int)bigintAugend.reg[0])&0xFFFF);
+          int intSum=(((int)this.reg[0])&0xFFFF)+(((int)(bigintAugend.reg[0]))&0xFFFF);
           sum=new BigInteger();
           sum.reg=new short[2];
-          sum.reg[0]=unchecked((short)v);
-          sum.reg[1]=unchecked((short)(v>>16));
-          sum.wordCount=((v>>16)==0) ? 1 : 2;
+          sum.reg[0]=unchecked((short)intSum);
+          sum.reg[1]=unchecked((short)(intSum>>16));
+          sum.wordCount=((intSum>>16)==0) ? 1 : 2;
           sum.negative=this.negative;
           return sum;
         } else {
           int a=(((int)this.reg[0])&0xFFFF);
-          int b=(((int)bigintAugend.reg[0])&0xFFFF);
+          int b=(((int)(bigintAugend.reg[0]))&0xFFFF);
           if(a==b)return BigInteger.Zero;
           if(a>b){
             a-=b;
@@ -3123,7 +3123,7 @@ namespace PeterO {
     }
 
     /// <summary>Compares a BigInteger object with this instance.</summary>
-    /// <returns>Zero if the values are equal; a negative number is this instance
+    /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
     /// <param name='other'>A BigInteger object.</param>
     public int CompareTo(BigInteger other) {

@@ -1905,8 +1905,7 @@ namespace PeterO {
         }
       }
       //Console.WriteLine("{0} adj={1} emin={2}",thisValue,adjExponent,fastEMin);
-      if (signals != null && fastEMin != null && !unlimitedPrec ||
-          adjExponent.CompareTo(fastEMin) < 0) {
+      if (signals != null && fastEMin != null && !unlimitedPrec && adjExponent.CompareTo(fastEMin) < 0) {
         earlyRounded = accum.ShiftedInt;
         if (RoundGivenBigInt(accum, rounding, neg, earlyRounded)) {
           earlyRounded += BigInteger.One;

@@ -1123,7 +1123,6 @@ namespace PeterO {
     /// <param name='decfrac'>An ExtendedFloat object.</param>
     /// <returns>The sum of the two objects.</returns>
     public ExtendedFloat Add(ExtendedFloat decfrac) {
-      if ((decfrac) == null) throw new ArgumentNullException("decfrac");
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -1156,7 +1155,6 @@ namespace PeterO {
     /// <param name='decfrac'>Another binary float.</param>
     /// <returns>The product of the two binary floats.</returns>
     public ExtendedFloat Multiply(ExtendedFloat decfrac) {
-      if ((decfrac) == null) throw new ArgumentNullException("decfrac");
       return Multiply(decfrac, PrecisionContext.Unlimited);
     }
 

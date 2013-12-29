@@ -81,6 +81,10 @@ BigIntegerTest.DoTestPow=function(m1,m2,result){
       var bigintA=BigInteger.fromString(m1);
       AssertBigIntegersEqual(result,(bigintA.pow(m2)));
     }
+BigIntegerTest.DoTestDigitCount=function(m1,result){
+      var bigintA=BigInteger.fromString(m1);
+      Assert.AreEqual(result,(bigintA.getDigitCount()));
+    }
 BigIntegerTest.DoTestShiftLeft=function(m1,m2,result){
       var bigintA=BigInteger.fromString(m1);
       AssertBigIntegersEqual(result,(bigintA.shiftLeft(m2)));

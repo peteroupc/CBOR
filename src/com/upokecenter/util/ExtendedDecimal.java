@@ -1444,7 +1444,6 @@ remainder=divrem[1]; }
      * @return The sum of the two objects.
      */
     public ExtendedDecimal Add(ExtendedDecimal decfrac) {
-      if ((decfrac) == null) throw new NullPointerException("decfrac");
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -1483,7 +1482,6 @@ remainder=divrem[1]; }
      * @return The product of the two decimal numbers.
      */
     public ExtendedDecimal Multiply(ExtendedDecimal decfrac) {
-      if ((decfrac) == null) throw new NullPointerException("decfrac");
       return Multiply(decfrac, PrecisionContext.Unlimited);
     }
 

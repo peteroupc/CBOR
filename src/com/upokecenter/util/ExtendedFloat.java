@@ -1198,7 +1198,6 @@ remainder=divrem[1]; }
      * @return The sum of the two objects.
      */
     public ExtendedFloat Add(ExtendedFloat decfrac) {
-      if ((decfrac) == null) throw new NullPointerException("decfrac");
       return Add(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -1237,7 +1236,6 @@ remainder=divrem[1]; }
      * @return The product of the two binary floats.
      */
     public ExtendedFloat Multiply(ExtendedFloat decfrac) {
-      if ((decfrac) == null) throw new NullPointerException("decfrac");
       return Multiply(decfrac, PrecisionContext.Unlimited);
     }
 

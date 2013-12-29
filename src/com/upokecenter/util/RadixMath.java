@@ -1967,8 +1967,7 @@ bigrem=divrem[1]; }
         }
       }
       //System.out.println("{0} adj={1} emin={2}",thisValue,adjExponent,fastEMin);
-      if (signals != null && fastEMin != null && !unlimitedPrec ||
-          adjExponent.compareTo(fastEMin) < 0) {
+      if (signals != null && fastEMin != null && !unlimitedPrec && adjExponent.compareTo(fastEMin) < 0) {
         earlyRounded = accum.getShiftedInt();
         if (RoundGivenBigInt(accum, rounding, neg, earlyRounded)) {
           earlyRounded=earlyRounded.add(BigInteger.ONE);
