@@ -154,7 +154,7 @@ at: http://peteroupc.github.io/CBOR/
       if (knownBitLength.CompareToInt(bits)<=0) {
         isSmall = true;
         shiftedSmall = 0;
-        knownBitLength.Multiply(0).AddInt(1);
+        knownBitLength.SetInt(1);
       } else {
         FastInteger tmpBitShift = FastInteger.Copy(bitShift);
         while (tmpBitShift.signum() > 0 && shiftedBigInt.signum()!=0) {
@@ -206,7 +206,7 @@ at: http://peteroupc.github.io/CBOR/
         fastKB.SubtractInt(8);
       }
       // Make sure bit length is 1 if value is 0
-      if (fastKB.signum() == 0) fastKB.AddInt(1);
+      if (fastKB.signum() == 0) fastKB.Increment();
       return fastKB;
     }
 
@@ -248,7 +248,7 @@ at: http://peteroupc.github.io/CBOR/
           shiftedBigInt=shiftedBigInt.shiftRight(bs);
           tmpBitShift.SubtractInt(bs);
         }
-        knownBitLength.Multiply(0).AddInt(bits);
+        knownBitLength.SetInt(bits);
         if (bits < SmallBitLength) {
           // Shifting to small number of bits,
           // convert to small integer

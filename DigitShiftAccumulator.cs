@@ -30,7 +30,7 @@ namespace PeterO {
     /// <returns>A FastInteger object.</returns>
     public FastInteger GetDigitLength(){
       if (knownBitLength==null) {
-        knownBitLength = CalcKnownBitLength();
+        knownBitLength = CalcKnownDigitLength();
       }
       return FastInteger.Copy(knownBitLength);
     }
@@ -38,15 +38,6 @@ namespace PeterO {
     int shiftedSmall;
     bool isSmall;
 
-    /// <summary> </summary>
-    public BigInteger ShiftedInt {
-      get {
-        if (isSmall)
-          return (BigInteger)shiftedSmall;
-        else
-          return shiftedBigInt;
-      }
-    }
     FastInteger discardedBitCount;
 
     /// <summary> </summary>
@@ -54,15 +45,30 @@ namespace PeterO {
       get { return discardedBitCount; }
     }
     private static BigInteger Int32MaxValue = (BigInteger)Int32.MaxValue;
+    private static BigInteger Ten = (BigInteger)10;
+
+    /// <summary> </summary>
+    public BigInteger ShiftedInt{
+      get {
+        if(isSmall)
+          return (BigInteger)shiftedSmall;
+        else
+          return shiftedBigInt;
+      }
+    }
 
     public DigitShiftAccumulator(BigInteger bigint,
                                  int lastDiscarded,
                                  int olderDiscarded
                                 ){
-      if (bigint.Sign < 0)
+      int sign=bigint.Sign;
+      if (sign < 0)
         throw new ArgumentException("bigint is negative");
       discardedBitCount = new FastInteger(0);
-      if (bigint.CompareTo(Int32MaxValue) <= 0) {
+      if(sign==0){
+        shiftedSmall=0;
+        isSmall=true;
+      } else if (bigint.CompareTo(Int32MaxValue) <= 0) {
         shiftedSmall = (int)bigint;
         isSmall = true;
       } else {
@@ -97,7 +103,10 @@ namespace PeterO {
             adder*=10;
             adder+=digit;
           }
-          mbi.Multiply(multer).AddInt(adder);
+          if(multer==10)
+            mbi.MultiplyByTenAndAdd(adder);
+          else
+            mbi.Multiply(multer).AddInt(adder);
           i+=mlength;
         }
         return mbi.AsBigInteger();
@@ -159,6 +168,46 @@ namespace PeterO {
         knownBitLength = new FastInteger(1);
         return;
       }
+      //Console.WriteLine("digits={0}",digits);
+      if(digits==1){
+        BigInteger bigrem;
+        BigInteger bigquo=BigInteger.DivRem(shiftedBigInt,(BigInteger)10,
+                                            out bigrem);
+        bitsAfterLeftmost|=bitLeftmost;
+        bitLeftmost=(int)bigrem;
+        shiftedBigInt=bigquo;
+        discardedBitCount.AddInt(digits);
+        if(knownBitLength!=null){
+          if(bigquo.IsZero)
+            knownBitLength.SetInt(0);
+          else
+            knownBitLength.SubtractInt(1);
+        }
+        return;
+      }
+      int startCount=Math.Min(4,digits-1);
+      if(startCount>0){
+        BigInteger bigrem;
+        BigInteger radixPower=DecimalUtility.FindPowerOfTen(startCount);
+        BigInteger bigquo=BigInteger.DivRem(shiftedBigInt,radixPower,
+                                            out bigrem);
+        if(!bigrem.IsZero)
+          bitsAfterLeftmost|=1;
+        bitsAfterLeftmost|=bitLeftmost;
+        shiftedBigInt=bigquo;
+        discardedBitCount.AddInt(startCount);
+        digits-=startCount;
+        if(shiftedBigInt.IsZero){
+          // Shifted all the way to 0
+          isSmall=true;
+          shiftedSmall=0;
+          knownBitLength=new FastInteger(1);
+          bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+          bitLeftmost=0;
+          return;
+        }
+      }
+
       String str = shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.Length;
@@ -205,7 +254,67 @@ namespace PeterO {
     /// and whether the discarded digits to the right of that digit are set.
     /// Assumes that the big integer being shifted is positive. </summary>
     private void ShiftToBitsBig(int digits) {
+      if(knownBitLength!=null){
+        if(knownBitLength.CompareToInt(digits)<=0){
+          return;
+        }
+      }
       String str;
+      knownBitLength=GetDigitLength();
+      if(knownBitLength.CompareToInt(digits)<=0){
+        return;
+      }
+      FastInteger digitDiff=FastInteger.Copy(knownBitLength).SubtractInt(digits);
+      if(digitDiff.CompareToInt(1)==0){
+        BigInteger bigrem;
+        BigInteger bigquo=BigInteger.DivRem(shiftedBigInt,Ten,out bigrem);
+        bitsAfterLeftmost|=bitLeftmost;
+        bitLeftmost=(int)bigrem;
+        shiftedBigInt=bigquo;
+        discardedBitCount.Add(digitDiff);
+        knownBitLength.Subtract(digitDiff);
+        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+        return;
+      } else if(digitDiff.CompareToInt(4)<=0){
+        BigInteger bigrem;
+        int diffInt=digitDiff.AsInt32();
+        BigInteger radixPower=DecimalUtility.FindPowerOfTen(diffInt);
+        BigInteger bigquo=BigInteger.DivRem(shiftedBigInt,radixPower,
+                                            out bigrem);
+        int rem=(int)bigrem;
+        bitsAfterLeftmost|=bitLeftmost;
+        for(int i=0;i<diffInt;i++){
+          if(i==diffInt-1){
+            bitLeftmost=rem%10;
+          } else {
+            bitsAfterLeftmost|=(rem%10);
+            rem/=10;
+          }
+        }
+        shiftedBigInt=bigquo;
+        discardedBitCount.Add(digitDiff);
+        knownBitLength.Subtract(digitDiff);
+        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+        return;
+      } else if(digitDiff.CompareToInt(5)<=0){
+        BigInteger bigrem;
+        BigInteger radixPower=DecimalUtility.FindPowerOfTen(digitDiff.AsInt32()-1);
+        BigInteger bigquo=BigInteger.DivRem(shiftedBigInt,radixPower,
+                                            out bigrem);
+        bitsAfterLeftmost|=bitLeftmost;
+        if(!bigrem.IsZero)
+          bitsAfterLeftmost|=1;
+        {
+        BigInteger bigquo2=BigInteger.DivRem(bigquo,Ten,out bigrem);
+        this.bitLeftmost=(int)bigrem;
+        shiftedBigInt=bigquo2;
+        }
+        discardedBitCount.Add(digitDiff);
+        knownBitLength.Subtract(digitDiff);
+        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+        return;
+      }
+      //Console.WriteLine("digits left: {0}",digitDiff);
       str=shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.Length;
@@ -214,8 +323,9 @@ namespace PeterO {
       if (digitLength > digits) {
         int digitShift = digitLength - digits;
         knownBitLength.SubtractInt(digitShift);
-        //Console.WriteLine("dlen={0} dshift={1}",digitLength,digitShift);
         int newLength = (int)(digitLength - digitShift);
+        //Console.WriteLine("dlen={0} dshift={1} newlen={2}",digitLength,
+        //                digitShift,newLength);
         if(digitShift<=Int32.MaxValue)
           discardedBitCount.AddInt((int)digitShift);
         else
@@ -297,7 +407,7 @@ namespace PeterO {
       if(bits.CanFitInInt32()){
         ShiftToDigitsInt(bits.AsInt32());
       } else {
-        knownBitLength=CalcKnownBitLength();
+        knownBitLength=CalcKnownDigitLength();
         BigInteger bigintDiff=knownBitLength.AsBigInteger();
         BigInteger bitsBig=bits.AsBigInteger();
         bigintDiff-=(BigInteger)bitsBig;
@@ -321,7 +431,10 @@ namespace PeterO {
       else
         ShiftToBitsBig(digits);
     }
-    private FastInteger CalcKnownBitLength() {
+
+    private static BigInteger bidivisor=(BigInteger)10000;
+
+    private FastInteger CalcKnownDigitLength() {
       if (isSmall) {
         int kb = 0;
         int tmp = shiftedSmall;
@@ -332,8 +445,7 @@ namespace PeterO {
         kb=(kb == 0 ? 1 : kb);
         return new FastInteger(kb);
       } else {
-        String str = shiftedBigInt.ToString();
-        return new FastInteger(str.Length);
+        return new FastInteger(shiftedBigInt.getDigitCount());
       }
     }
     private void ShiftToBitsSmall(int digits) {

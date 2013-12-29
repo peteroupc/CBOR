@@ -32,7 +32,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public FastInteger GetDigitLength() {
       if (knownBitLength==null) {
-        knownBitLength = CalcKnownBitLength();
+        knownBitLength = CalcKnownDigitLength();
       }
       return FastInteger.Copy(knownBitLength);
     }
@@ -40,15 +40,6 @@ at: http://peteroupc.github.io/CBOR/
     int shiftedSmall;
     boolean isSmall;
 
-    /**
-     *
-     */
-    public BigInteger getShiftedInt() {
-        if (isSmall)
-          return BigInteger.valueOf(shiftedSmall);
-        else
-          return shiftedBigInt;
-      }
     FastInteger discardedBitCount;
 
     /**
@@ -56,15 +47,30 @@ at: http://peteroupc.github.io/CBOR/
      */
     public FastInteger getDiscardedDigitCount() { return discardedBitCount; }
     private static BigInteger Int32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
+    private static BigInteger Ten = BigInteger.TEN;
+
+    /**
+     *
+     */
+    public BigInteger getShiftedInt() {
+        if(isSmall)
+          return BigInteger.valueOf(shiftedSmall);
+        else
+          return shiftedBigInt;
+      }
 
     public DigitShiftAccumulator (BigInteger bigint,
                                  int lastDiscarded,
                                  int olderDiscarded
                                 ) {
-      if (bigint.signum() < 0)
+      int sign=bigint.signum();
+      if (sign < 0)
         throw new IllegalArgumentException("bigint is negative");
       discardedBitCount = new FastInteger(0);
-      if (bigint.compareTo(Int32MaxValue) <= 0) {
+      if(sign==0){
+        shiftedSmall=0;
+        isSmall=true;
+      } else if (bigint.compareTo(Int32MaxValue) <= 0) {
         shiftedSmall = bigint.intValue();
         isSmall = true;
       } else {
@@ -99,7 +105,10 @@ at: http://peteroupc.github.io/CBOR/
             adder*=10;
             adder+=digit;
           }
-          mbi.Multiply(multer).AddInt(adder);
+          if(multer==10)
+            mbi.MultiplyByTenAndAdd(adder);
+          else
+            mbi.Multiply(multer).AddInt(adder);
           i+=mlength;
         }
         return mbi.AsBigInteger();
@@ -161,6 +170,52 @@ at: http://peteroupc.github.io/CBOR/
         knownBitLength = new FastInteger(1);
         return;
       }
+      //System.out.println("digits={0}",digits);
+      if(digits==1){
+        BigInteger bigrem;
+        BigInteger bigquo;
+{
+BigInteger[] divrem=(shiftedBigInt).divideAndRemainder(BigInteger.TEN);
+bigquo=divrem[0];
+bigrem=divrem[1]; }
+        bitsAfterLeftmost|=bitLeftmost;
+        bitLeftmost=bigrem.intValue();
+        shiftedBigInt=bigquo;
+        discardedBitCount.AddInt(digits);
+        if(knownBitLength!=null){
+          if(bigquo.signum()==0)
+            knownBitLength.SetInt(0);
+          else
+            knownBitLength.SubtractInt(1);
+        }
+        return;
+      }
+      int startCount=Math.min(4,digits-1);
+      if(startCount>0){
+        BigInteger bigrem;
+        BigInteger radixPower=DecimalUtility.FindPowerOfTen(startCount);
+        BigInteger bigquo;
+{
+BigInteger[] divrem=(shiftedBigInt).divideAndRemainder(radixPower);
+bigquo=divrem[0];
+bigrem=divrem[1]; }
+        if(bigrem.signum()!=0)
+          bitsAfterLeftmost|=1;
+        bitsAfterLeftmost|=bitLeftmost;
+        shiftedBigInt=bigquo;
+        discardedBitCount.AddInt(startCount);
+        digits-=startCount;
+        if(shiftedBigInt.signum()==0){
+          // Shifted all the way to 0
+          isSmall=true;
+          shiftedSmall=0;
+          knownBitLength=new FastInteger(1);
+          bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+          bitLeftmost=0;
+          return;
+        }
+      }
+
       String str = shiftedBigInt.toString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.length();
@@ -209,7 +264,81 @@ at: http://peteroupc.github.io/CBOR/
      * the big integer being shifted is positive.
      */
     private void ShiftToBitsBig(int digits) {
+      if(knownBitLength!=null){
+        if(knownBitLength.CompareToInt(digits)<=0){
+          return;
+        }
+      }
       String str;
+      knownBitLength=GetDigitLength();
+      if(knownBitLength.CompareToInt(digits)<=0){
+        return;
+      }
+      FastInteger digitDiff=FastInteger.Copy(knownBitLength).SubtractInt(digits);
+      if(digitDiff.CompareToInt(1)==0){
+        BigInteger bigrem;
+        BigInteger bigquo;
+{
+BigInteger[] divrem=(shiftedBigInt).divideAndRemainder(Ten);
+bigquo=divrem[0];
+bigrem=divrem[1]; }
+        bitsAfterLeftmost|=bitLeftmost;
+        bitLeftmost=bigrem.intValue();
+        shiftedBigInt=bigquo;
+        discardedBitCount.Add(digitDiff);
+        knownBitLength.Subtract(digitDiff);
+        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+        return;
+      } else if(digitDiff.CompareToInt(4)<=0){
+        BigInteger bigrem;
+        int diffInt=digitDiff.AsInt32();
+        BigInteger radixPower=DecimalUtility.FindPowerOfTen(diffInt);
+        BigInteger bigquo;
+{
+BigInteger[] divrem=(shiftedBigInt).divideAndRemainder(radixPower);
+bigquo=divrem[0];
+bigrem=divrem[1]; }
+        int rem=bigrem.intValue();
+        bitsAfterLeftmost|=bitLeftmost;
+        for(int i=0;i<diffInt;i++){
+          if(i==diffInt-1){
+            bitLeftmost=rem%10;
+          } else {
+            bitsAfterLeftmost|=(rem%10);
+            rem/=10;
+          }
+        }
+        shiftedBigInt=bigquo;
+        discardedBitCount.Add(digitDiff);
+        knownBitLength.Subtract(digitDiff);
+        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+        return;
+      } else if(digitDiff.CompareToInt(5)<=0){
+        BigInteger bigrem;
+        BigInteger radixPower=DecimalUtility.FindPowerOfTen(digitDiff.AsInt32()-1);
+        BigInteger bigquo;
+{
+BigInteger[] divrem=(shiftedBigInt).divideAndRemainder(radixPower);
+bigquo=divrem[0];
+bigrem=divrem[1]; }
+        bitsAfterLeftmost|=bitLeftmost;
+        if(bigrem.signum()!=0)
+          bitsAfterLeftmost|=1;
+        {
+        BigInteger bigquo2;
+{
+BigInteger[] divrem=(bigquo).divideAndRemainder(Ten);
+bigquo2=divrem[0];
+bigrem=divrem[1]; }
+        this.bitLeftmost=bigrem.intValue();
+        shiftedBigInt=bigquo2;
+        }
+        discardedBitCount.Add(digitDiff);
+        knownBitLength.Subtract(digitDiff);
+        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+        return;
+      }
+      //System.out.println("digits left: {0}",digitDiff);
       str=shiftedBigInt.toString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.length();
@@ -218,8 +347,9 @@ at: http://peteroupc.github.io/CBOR/
       if (digitLength > digits) {
         int digitShift = digitLength - digits;
         knownBitLength.SubtractInt(digitShift);
-        //System.out.println("dlen={0} dshift={1}",digitLength,digitShift);
         int newLength = (int)(digitLength - digitShift);
+        //System.out.println("dlen={0} dshift={1} newlen={2}",digitLength,
+        //                digitShift,newLength);
         if(digitShift<=Integer.MAX_VALUE)
           discardedBitCount.AddInt((int)digitShift);
         else
@@ -303,7 +433,7 @@ at: http://peteroupc.github.io/CBOR/
       if(bits.CanFitInInt32()){
         ShiftToDigitsInt(bits.AsInt32());
       } else {
-        knownBitLength=CalcKnownBitLength();
+        knownBitLength=CalcKnownDigitLength();
         BigInteger bigintDiff=knownBitLength.AsBigInteger();
         BigInteger bitsBig=bits.AsBigInteger();
         bigintDiff=bigintDiff.subtract(bitsBig);
@@ -328,7 +458,10 @@ at: http://peteroupc.github.io/CBOR/
       else
         ShiftToBitsBig(digits);
     }
-    private FastInteger CalcKnownBitLength() {
+
+    private static BigInteger bidivisor=BigInteger.valueOf(10000);
+
+    private FastInteger CalcKnownDigitLength() {
       if (isSmall) {
         int kb = 0;
         int tmp = shiftedSmall;
@@ -339,8 +472,7 @@ at: http://peteroupc.github.io/CBOR/
         kb=(kb == 0 ? 1 : kb);
         return new FastInteger(kb);
       } else {
-        String str = shiftedBigInt.toString();
-        return new FastInteger(str.length());
+        return new FastInteger(shiftedBigInt.getDigitCount());
       }
     }
     private void ShiftToBitsSmall(int digits) {

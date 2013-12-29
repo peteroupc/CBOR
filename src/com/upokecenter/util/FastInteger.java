@@ -64,6 +64,19 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      *
+     * @param val A 32-bit signed integer.
+     * @return A MutableNumber object.
+     */
+public MutableNumber SetInt(int val) {
+        if(val<0)
+          throw new IllegalArgumentException("Only positive integers are supported");
+        wordCount = (val==0) ? 0 : 1;
+        data[0] = ((int)((val) & 0xFFFFFFFFL));
+        return this;
+      }
+
+    /**
+     *
      * @return A BigInteger object.
      */
       public BigInteger ToBigInteger() {
@@ -252,7 +265,7 @@ at: http://peteroupc.github.io/CBOR/
      */
       public MutableNumber SubtractInt(
         int other
-       ) {
+      ) {
         if (other < 0)
           throw new IllegalArgumentException("Only positive values are supported");
         else if (other != 0)
@@ -296,7 +309,7 @@ at: http://peteroupc.github.io/CBOR/
      */
       public MutableNumber Subtract(
         MutableNumber other
-       ) {
+      ) {
         {
           {
             // System.out.println("{0} {1}",this.data.length,other.data.length);
@@ -515,6 +528,100 @@ at: http://peteroupc.github.io/CBOR/
     }
     public static int[] GetLastWords(BigInteger bigint, int numWords32Bit) {
       return MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
+    }
+
+    /**
+     *
+     * @param val A 32-bit signed integer.
+     * @return A FastInteger object.
+     */
+public FastInteger SetInt(int val) {
+      smallValue=val;
+      integerMode=0;
+      return this;
+    }
+
+    /**
+     *
+     * @param digit A 32-bit signed integer.
+     * @return A FastInteger object.
+     */
+public FastInteger MultiplyByTenAndAdd(int digit) {
+      if(digit==0){
+        if(integerMode==1){
+          mnum.Multiply(10);
+          return this;
+        } else if(integerMode==0 && smallValue>=214748363){
+          integerMode=1;
+          mnum=new MutableNumber(smallValue);
+          mnum.Multiply(10);
+          return this;
+        }
+      } else if(digit>0){
+        if(integerMode==1){
+          mnum.Multiply(10).Add(digit);
+          return this;
+        } else if(integerMode==0 && smallValue>=214748363){
+          integerMode=1;
+          mnum=new MutableNumber(smallValue);
+          mnum.Multiply(10).Add(digit);
+          return this;
+        }
+      }
+      return this.Multiply(10).AddInt(digit);
+    }
+
+    /**
+     *
+     * @param divisor A FastInteger object.
+     * @return A 32-bit signed integer.
+     */
+public int RepeatedSubtract(FastInteger divisor) {
+      if(integerMode==1){
+        int count=0;
+        if(divisor.integerMode==1){
+          while(mnum.compareTo(divisor.mnum)>=0){
+            mnum.Subtract(divisor.mnum);
+            count++;
+          }
+          return count;
+        } else if(divisor.integerMode==0 && divisor.smallValue>=0){
+          if(mnum.CanFitInInt32()){
+            int small=mnum.ToInt32();
+            count=small/divisor.smallValue;
+            mnum.SetInt(small%divisor.smallValue);
+          } else {
+            MutableNumber dmnum=new MutableNumber(divisor.smallValue);
+            while(mnum.compareTo(dmnum)>=0){
+              mnum.Subtract(dmnum);
+              count++;
+            }
+          }
+          return count;
+        } else {
+          BigInteger bigrem;
+          BigInteger bigquo;
+{
+BigInteger[] divrem=(this.AsBigInteger()).divideAndRemainder(divisor.AsBigInteger());
+bigquo=divrem[0];
+bigrem=divrem[1]; }
+          int smallquo=bigquo.intValue();
+          integerMode=2;
+          largeValue=bigrem;
+          return smallquo;
+        }
+      } else {
+        BigInteger bigrem;
+        BigInteger bigquo;
+{
+BigInteger[] divrem=(this.AsBigInteger()).divideAndRemainder(divisor.AsBigInteger());
+bigquo=divrem[0];
+bigrem=divrem[1]; }
+        int smallquo=bigquo.intValue();
+        integerMode=2;
+        largeValue=bigrem;
+        return smallquo;
+      }
     }
 
     /**
@@ -805,6 +912,24 @@ at: http://peteroupc.github.io/CBOR/
         throw new ArithmeticException();
       }
       return this;
+    }
+
+    /**
+     *
+     * @return A FastInteger object.
+     */
+public FastInteger Increment() {
+      if(integerMode==0){
+        if(smallValue!=Integer.MAX_VALUE){
+          smallValue++;
+        } else {
+          integerMode=1;
+          mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
+        }
+        return this;
+      } else {
+        return AddInt(1);
+      }
     }
 
     /**

@@ -20,7 +20,6 @@
     <SourceAnalysisOverrideSettingsFile>C:\Users\Peter\AppData\Roaming\ICSharpCode/SharpDevelop4\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
-    <RunCodeAnalysis>False</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Platform)&apos; == &apos;AnyCPU&apos; '>
     <PlatformTarget>x86</PlatformTarget>
@@ -73,61 +72,17 @@
     <None Include='app.config'/>
   </ItemGroup>
   <ItemGroup>
-    <Content Include='ProfilingSessions\Session20131117_073438.sdps'/>
-    <Content Include='ProfilingSessions\Session20131117_075920.sdps'/>
-    <Content Include='ProfilingSessions\Session20131117_080050.sdps'/>
-    <Content Include='ProfilingSessions\Session20131117_191704.sdps'/>
-    <Content Include='ProfilingSessions\Session20131117_215523.sdps'/>
-    <Content Include='ProfilingSessions\Session20131121_204124.sdps'/>
-    <Content Include='ProfilingSessions\Session20131124_160442.sdps'/>
-    <Content Include='ProfilingSessions\Session20131201_012223.sdps'/>
-    <Content Include='ProfilingSessions\Session20131201_042235.sdps'/>
-    <Content Include='ProfilingSessions\Session20131201_044329.sdps'/>
-    <Content Include='ProfilingSessions\Session20131201_052858.sdps'/>
-    <Content Include='ProfilingSessions\Session20131201_125031.sdps'/>
-    <Content Include='ProfilingSessions\Session20131201_142716.sdps'/>
-    <Content Include='ProfilingSessions\Session20131201_144654.sdps'/>
-    <Content Include='ProfilingSessions\Session20131202_013819.sdps'/>
-    <Content Include='ProfilingSessions\Session20131202_015101.sdps'/>
-    <Content Include='ProfilingSessions\Session20131203_150657.sdps'/>
-    <Content Include='ProfilingSessions\Session20131203_150841.sdps'/>
-    <Content Include='ProfilingSessions\Session20131203_160449.sdps'/>
-    <Content Include='ProfilingSessions\Session20131203_161532.sdps'/>
-    <Content Include='ProfilingSessions\Session20131205_204759.sdps'/>
-    <Content Include='ProfilingSessions\Session20131205_204917.sdps'/>
-    <Content Include='ProfilingSessions\Session20131205_205025.sdps'/>
-    <Content Include='ProfilingSessions\Session20131205_205245.sdps'/>
-    <Content Include='ProfilingSessions\Session20131210_011240.sdps'/>
-    <Content Include='ProfilingSessions\Session20131210_015154.sdps'/>
-    <Content Include='ProfilingSessions\Session20131210_135342.sdps'/>
-    <Content Include='ProfilingSessions\Session20131210_142012.sdps'/>
-    <Content Include='ProfilingSessions\Session20131210_194632.sdps'/>
-    <Content Include='ProfilingSessions\Session20131210_200426.sdps'/>
-    <Content Include='ProfilingSessions\Session20131210_200513.sdps'/>
-    <Content Include='ProfilingSessions\Session20131211_080304.sdps'/>
-    <Content Include='ProfilingSessions\Session20131211_083412.sdps'/>
-    <Content Include='ProfilingSessions\Session20131211_083804.sdps'/>
-    <Content Include='ProfilingSessions\Session20131211_083856.sdps'/>
-    <Content Include='ProfilingSessions\Session20131211_083920.sdps'/>
-    <Content Include='ProfilingSessions\Session20131211_090932.sdps'/>
-    <Content Include='ProfilingSessions\Session20131211_180750.sdps'/>
-    <Content Include='ProfilingSessions\Session20131211_183431.sdps'/>
-    <Content Include='ProfilingSessions\Session20131211_185907.sdps'/>
-    <Content Include='ProfilingSessions\Session20131213_063330.sdps'/>
-    <Content Include='ProfilingSessions\Session20131213_071337.sdps'/>
-    <Content Include='ProfilingSessions\Session20131213_071556.sdps'/>
-    <Content Include='ProfilingSessions\Session20131213_090412.sdps'/>
-    <Content Include='ProfilingSessions\Session20131215_045436.sdps'/>
-    <Content Include='ProfilingSessions\Session20131215_053012.sdps'/>
-    <Content Include='ProfilingSessions\Session20131215_053551.sdps'/>
-    <Content Include='ProfilingSessions\Session20131215_064824.sdps'/>
-    <Content Include='ProfilingSessions\Session20131215_085524.sdps'/>
-    <Content Include='ProfilingSessions\Session20131215_134502.sdps'/>
-    <Content Include='ProfilingSessions\Session20131215_152404.sdps'/>
-    <Content Include='ProfilingSessions\Session20131215_213341.sdps'/>
-    <Content Include='ProfilingSessions\Session20131220_044734.sdps'/>
-    <Content Include='ProfilingSessions\Session20131224_063245.sdps'/>
-    <Content Include='ProfilingSessions\Session20131224_065749.sdps'/>
+    <Content Include='ProfilingSessions\Session20131227_060803.sdps'/>
+    <Content Include='ProfilingSessions\Session20131227_120642.sdps'/>
+    <Content Include='ProfilingSessions\Session20131227_120842.sdps'/>
+    <Content Include='ProfilingSessions\Session20131227_120947.sdps'/>
+    <Content Include='ProfilingSessions\Session20131227_121018.sdps'/>
+    <Content Include='ProfilingSessions\Session20131227_121253.sdps'/>
+    <Content Include='ProfilingSessions\Session20131227_131519.sdps'/>
+    <Content Include='ProfilingSessions\Session20131227_202513.sdps'/>
+    <Content Include='ProfilingSessions\Session20131227_225657.sdps'/>
+    <Content Include='ProfilingSessions\Session20131228_041122.sdps'/>
+    <Content Include='ProfilingSessions\Session20131228_051203.sdps'/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include='..\Portable.CBOR.csproj'>
