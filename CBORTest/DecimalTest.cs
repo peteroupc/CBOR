@@ -27,7 +27,7 @@ namespace Test
     public static Regex Quotes=new Regex(
       "[\\'\\\"]",RegexOptions.Compiled);
     public static Regex TestLine=new Regex(
-      "^(\\w+)\\s+([\\w\\-]+)\\s+(\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",RegexOptions.Compiled);
+      "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",RegexOptions.Compiled);
 
     private static TValue GetKeyOrDefault<TKey,TValue>(
       IDictionary<TKey,TValue> dict, TKey key, TValue defaultValue){
@@ -38,8 +38,8 @@ namespace Test
 
     public void ParseDecTest(string ln, IDictionary<string,string> context){
       Match match;
-      match=PropertyLine.Match(ln);
-      if(match.Success){
+      match=(!ln.Contains(":")) ? null : PropertyLine.Match(ln);
+      if(match!=null && match.Success){
         context[match.Groups[1].ToString().ToLowerInvariant()]=
           match.Groups[2].ToString();
         return;

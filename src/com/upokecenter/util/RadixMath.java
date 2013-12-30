@@ -1632,7 +1632,7 @@ rem=divrem[1]; }
       FastInteger fastEMax = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMax()) : null;
       FastInteger fastPrecision = FastInteger.FromBig(context.getPrecision());
       int thisFlags = helper.GetFlags(thisValue);
-      if (fastPrecision.signum() > 0 && fastPrecision.CompareToInt(34) <= 0 &&
+      if (fastPrecision.signum() > 0 && fastPrecision.CompareToInt(18) <= 0 &&
           (shift == null || shift.signum() == 0) &&
           (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
         // Check if rounding is necessary at all
