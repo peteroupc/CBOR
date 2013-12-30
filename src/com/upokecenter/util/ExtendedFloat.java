@@ -19,12 +19,12 @@ at: http://peteroupc.github.io/CBOR/
      * <p>Unless noted otherwise, passing a null ExtendedFloat argument
      * to any method here will throw an exception.</p> <p>When an arithmetic
      * operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
-     * it will not throw an exception too.</p> <p>An ExtendedFloat function
-     * can be serialized by one of the following methods:</p> <ul> <li>Calling
+     * it will not throw an exception too.</p> <p>An ExtendedFloat value
+     * can be serialized in one of the following ways:</p> <ul> <li>By calling
      * the toString() method, which will always return distinct strings
      * for distinct ExtendedFloat values. However, not all strings can
      * be converted back to an ExtendedFloat without loss, especially if
-     * the string has a fractional part.</li> <li>Calling the UnsignedMantissa,
+     * the string has a fractional part.</li> <li>By calling the UnsignedMantissa,
      * Exponent, and IsNegative properties, and calling the IsInfinity,
      * IsQuietNaN, and IsSignalingNaN methods. The return values combined
      * will uniquely identify a particular ExtendedFloat value.</li>
