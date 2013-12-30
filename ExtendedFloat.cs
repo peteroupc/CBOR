@@ -330,8 +330,6 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger OneShift62 = BigInteger.One << 62;
-
     private static BigInteger OneShift23 = BigInteger.One << 23;
     private static BigInteger OneShift52 = BigInteger.One << 52;
 

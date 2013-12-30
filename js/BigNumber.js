@@ -6074,7 +6074,6 @@ function(bigint, lastDiscarded, olderDiscarded) {
     prototype.ShiftToDigitsInt = function(digits) {
         if (this.isSmall) this.ShiftToBitsSmall(digits); else this.ShiftToBitsBig(digits);
     };
-    constructor.bidivisor = BigInteger.valueOf(10000);
     prototype.CalcKnownDigitLength = function() {
         if (this.isSmall) {
             var kb = 0;
@@ -9585,7 +9584,6 @@ function(mantissa, exponent) {
             return bigmantissa;
         }
     };
-    constructor['OneShift62'] = constructor.OneShift62 = BigInteger.ONE.shiftLeft(62);
     constructor['OneShift23'] = constructor.OneShift23 = BigInteger.ONE.shiftLeft(23);
     constructor['OneShift52'] = constructor.OneShift52 = BigInteger.ONE.shiftLeft(52);
 

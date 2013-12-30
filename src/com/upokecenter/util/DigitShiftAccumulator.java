@@ -459,8 +459,6 @@ bigrem=divrem[1]; }
         ShiftToBitsBig(digits);
     }
 
-    private static BigInteger bidivisor=BigInteger.valueOf(10000);
-
     private FastInteger CalcKnownDigitLength() {
       if (isSmall) {
         int kb = 0;
