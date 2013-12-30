@@ -95,30 +95,26 @@ rembi=divrem[1]; }
       AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
     }
 
-    public static void AssertDecFrac(ExtendedDecimal d3, String output) {
-      if(output==null && d3!=null)Assert.fail("d3 must be null");
+    public static void AssertDecFrac(ExtendedDecimal d3, String output, String name) {
+      if(output==null && d3!=null)Assert.fail(name+": d3 must be null");
       if(output!=null && !d3.toString().equals(output)){
         ExtendedDecimal d4=ExtendedDecimal.FromString(output);
         Assert.assertEquals(output,d3.toString(),(
-          "expected: ["+(d4.getUnsignedMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
+          name+": expected: ["+(d4.getUnsignedMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
           "but was: ["+(d3.getUnsignedMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
          ));   }
     }
 
-    public static BigInteger BigIntParse(String str) {
-      return BigInteger.fromString(str);
-    }
-
-    public static void AssertFlags(int expected, int actual) {
+    public static void AssertFlags(int expected, int actual, String name) {
       if(expected==actual)return;
-      Assert.assertEquals("Inexact",(expected&PrecisionContext.FlagInexact)!=0,(actual&PrecisionContext.FlagInexact)!=0);
-      Assert.assertEquals("Rounded",(expected&PrecisionContext.FlagRounded)!=0,(actual&PrecisionContext.FlagRounded)!=0);
-      Assert.assertEquals("Subnormal",(expected&PrecisionContext.FlagSubnormal)!=0,(actual&PrecisionContext.FlagSubnormal)!=0);
-      Assert.assertEquals("Overflow",(expected&PrecisionContext.FlagOverflow)!=0,(actual&PrecisionContext.FlagOverflow)!=0);
-      Assert.assertEquals("Underflow",(expected&PrecisionContext.FlagUnderflow)!=0,(actual&PrecisionContext.FlagUnderflow)!=0);
-      Assert.assertEquals("Clamped",(expected&PrecisionContext.FlagClamped)!=0,(actual&PrecisionContext.FlagClamped)!=0);
-      Assert.assertEquals("Invalid",(expected&PrecisionContext.FlagInvalid)!=0,(actual&PrecisionContext.FlagInvalid)!=0);
-      Assert.assertEquals("DivideByZero",(expected&PrecisionContext.FlagDivideByZero)!=0,(actual&PrecisionContext.FlagDivideByZero)!=0);
+      Assert.assertEquals(name+": Inexact",(expected&PrecisionContext.FlagInexact)!=0,(actual&PrecisionContext.FlagInexact)!=0);
+      Assert.assertEquals(name+": Rounded",(expected&PrecisionContext.FlagRounded)!=0,(actual&PrecisionContext.FlagRounded)!=0);
+      Assert.assertEquals(name+": Subnormal",(expected&PrecisionContext.FlagSubnormal)!=0,(actual&PrecisionContext.FlagSubnormal)!=0);
+      Assert.assertEquals(name+": Overflow",(expected&PrecisionContext.FlagOverflow)!=0,(actual&PrecisionContext.FlagOverflow)!=0);
+      Assert.assertEquals(name+": Underflow",(expected&PrecisionContext.FlagUnderflow)!=0,(actual&PrecisionContext.FlagUnderflow)!=0);
+      Assert.assertEquals(name+": Clamped",(expected&PrecisionContext.FlagClamped)!=0,(actual&PrecisionContext.FlagClamped)!=0);
+      Assert.assertEquals(name+": Invalid",(expected&PrecisionContext.FlagInvalid)!=0,(actual&PrecisionContext.FlagInvalid)!=0);
+      Assert.assertEquals(name+": DivideByZero",(expected&PrecisionContext.FlagDivideByZero)!=0,(actual&PrecisionContext.FlagDivideByZero)!=0);
     }
 
     private static CBORObject FromBytesA(byte[] b) {

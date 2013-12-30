@@ -1200,8 +1200,9 @@ namespace PeterO {
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision.
     /// The rounding and exponent range settings of this context are ignored.
-    /// No flags will be set from this operation even if HasFlags of the context
-    /// is true. Can be null.</param>
+    /// If HasFlags of the context is true, will also store the flags resulting
+    /// from the operation (the flags are in addition to the pre-existing
+    /// flags). Can be null.</param>
     /// <returns>The integer part of the quotient of the two objects. The
     /// exponent will be set to 0. Signals FlagDivideByZero and returns infinity
     /// if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid
@@ -1241,9 +1242,9 @@ namespace PeterO {
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision.
     /// The rounding and exponent range settings of this context are ignored
-    /// (the rounding mode is always treated as HalfEven). No flags will be
-    /// set from this operation even if HasFlags of the context is true. Can
-    /// be null.</param>
+    /// (the rounding mode is always treated as HalfEven). If HasFlags of
+    /// the context is true, will also store the flags resulting from the operation
+    /// (the flags are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The distance of the closest multiple. Signals FlagInvalidOperation
     /// and returns NaN if the divisor is 0, or either the result of integer
     /// division (the quotient) or the remainder wouldn&apos;t fit the given
@@ -1256,8 +1257,9 @@ namespace PeterO {
     /// <summary> Finds the largest value that's smaller than the given value.</summary>
     /// <param name='ctx'>A precision context object to control the precision
     /// and exponent range of the result. The rounding mode from this context
-    /// is ignored. No flags will be set from this operation even if HasFlags
-    /// of the context is true.</param>
+    /// is ignored. If HasFlags of the context is true, will also store the
+    /// flags resulting from the operation (the flags are in addition to the
+    /// pre-existing flags).</param>
     /// <returns>Returns the largest value that&apos;s less than the given
     /// value. Returns negative infinity if the result is negative infinity.</returns>
     /// <exception cref='System.ArgumentException'>"ctx" is null, the
@@ -1272,8 +1274,9 @@ namespace PeterO {
     /// value.</summary>
     /// <param name='ctx'>A precision context object to control the precision
     /// and exponent range of the result. The rounding mode from this context
-    /// is ignored. No flags will be set from this operation even if HasFlags
-    /// of the context is true.</param>
+    /// is ignored. If HasFlags of the context is true, will also store the
+    /// flags resulting from the operation (the flags are in addition to the
+    /// pre-existing flags).</param>
     /// <returns>Returns the smallest value that&apos;s greater than the
     /// given value.</returns>
     /// <exception cref='System.ArgumentException'>"ctx" is null, the
@@ -1289,8 +1292,9 @@ namespace PeterO {
     /// <param name='otherValue'>An ExtendedFloat object.</param>
     /// <param name='ctx'>A precision context object to control the precision
     /// and exponent range of the result. The rounding mode from this context
-    /// is ignored. No flags will be set from this operation even if HasFlags
-    /// of the context is true.</param>
+    /// is ignored. If HasFlags of the context is true, will also store the
+    /// flags resulting from the operation (the flags are in addition to the
+    /// pre-existing flags).</param>
     /// <returns>Returns the next value that is closer to the other object&apos;s
     /// value than this object&apos;s value.</returns>
     /// <exception cref='System.ArgumentException'>"ctx" is null, the

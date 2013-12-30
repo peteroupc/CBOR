@@ -1,4 +1,11 @@
 package com.upokecenter.util;
+/*
+Written in 2013 by Peter O.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://peteroupc.github.io/CBOR/
+ */
 
 //import java.math.*;
 
@@ -190,6 +197,48 @@ package com.upokecenter.util;
       }
       if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
         return ReturnQuietNaN(other, ctx);
+      }
+      return null;
+    }
+
+    private T MultiplyAddHandleSpecial(T op1, T op2, T op3, PrecisionContext ctx) {
+      int op1Flags = helper.GetFlags(op1);
+      // Check operands in order for signaling NaN
+      if ((op1Flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+        return SignalingNaNInvalid(op1, ctx);
+      }
+      int op2Flags = helper.GetFlags(op2);
+      if ((op2Flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+        return SignalingNaNInvalid(op2, ctx);
+      }
+      int op3Flags = helper.GetFlags(op3);
+      if ((op3Flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+        return SignalingNaNInvalid(op3, ctx);
+      }
+      // Check operands in order for quiet NaN
+      if ((op1Flags & BigNumberFlags.FlagQuietNaN) != 0) {
+        return ReturnQuietNaN(op1, ctx);
+      }
+      if ((op2Flags & BigNumberFlags.FlagQuietNaN) != 0) {
+        return ReturnQuietNaN(op2, ctx);
+      }
+      // Check multiplying infinity by 0 (important to check
+      // now before checking third operand for quiet NaN because
+      // this signals invalid operation and the operation starts
+      // with multiplying only the first two operands)
+      if ((op1Flags & BigNumberFlags.FlagInfinity) != 0) {
+        // Attempt to multiply infinity by 0
+        if ((op2Flags & BigNumberFlags.FlagSpecial) == 0 && helper.GetMantissa(op2).signum()==0)
+          return SignalInvalid(ctx);
+      }
+      if ((op1Flags & BigNumberFlags.FlagInfinity) != 0) {
+        // Attempt to multiply infinity by 0
+        if ((op1Flags & BigNumberFlags.FlagSpecial) == 0 && helper.GetMantissa(op1).signum()==0)
+          return SignalInvalid(ctx);
+      }
+      // Now check third operand for quiet NaN
+      if ((op3Flags & BigNumberFlags.FlagQuietNaN) != 0) {
+        return ReturnQuietNaN(op3, ctx);
       }
       return null;
     }
@@ -643,6 +692,9 @@ bigrem=divrem[1]; }
         return ret;
       }
       ret = DivideToIntegerZeroScale(thisValue, divisor, ctx2);
+      if((ctx2.getFlags()&PrecisionContext.FlagInvalid)!=0){
+        return SignalInvalid(ctx);
+      }
       ret = Add(thisValue, NegateRaw(Multiply(ret, divisor, null)), ctx2);
       ret = EnsureSign(ret, (helper.GetFlags(thisValue) & BigNumberFlags.FlagNegative) != 0);
       TransferFlags(ctx, ctx2);
@@ -1451,7 +1503,9 @@ rem=divrem[1]; }
                             T augend,
                             PrecisionContext ctx) {
       PrecisionContext ctx2 = PrecisionContext.Unlimited.WithBlankFlags();
-      T ret = Add(Multiply(thisValue, multiplicand, ctx2), augend, ctx);
+      T ret=MultiplyAddHandleSpecial(thisValue,multiplicand,augend,ctx);
+      if((Object)ret!=(Object)null)return ret;
+      ret = Add(Multiply(thisValue, multiplicand, ctx2), augend, ctx);
       if (ctx != null && ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(ctx2.getFlags()));
       return ret;
     }
@@ -2280,6 +2334,9 @@ bigrem=divrem[1]; }
                       }
                       other = helper.CreateNewWithFlags(op2MantAbs, op2Exponent, helper.GetFlags(other));
                       FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                      if(oneOpIsZero && ctx!=null && ctx.getHasFlags()){
+                        ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
+                      }
                       return RoundToPrecisionWithShift(
                         other, ctx,
                         (oneOpIsZero || sameSign) ? 0 : 1,
@@ -2295,6 +2352,9 @@ bigrem=divrem[1]; }
                         return RoundToPrecisionWithShift(other, ctx, 0, 0, shift, false);
                       } else {
                         FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                        if(!sameSign && ctx!=null && ctx.getHasFlags()){
+                          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
+                        }
                         return RoundToPrecisionWithShift(
                           other, ctx,
                           0,
@@ -2346,6 +2406,9 @@ bigrem=divrem[1]; }
                       }
                       thisValue = helper.CreateNewWithFlags(op1MantAbs, op1Exponent, helper.GetFlags(thisValue));
                       FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                      if(oneOpIsZero && ctx!=null && ctx.getHasFlags()){
+                        ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
+                      }
                       return RoundToPrecisionWithShift(
                         thisValue, ctx,
                         (oneOpIsZero || sameSign) ? 0 : 1,
@@ -2361,6 +2424,9 @@ bigrem=divrem[1]; }
                         return RoundToPrecisionWithShift(thisValue, ctx, 0, 0, shift, false);
                       } else {
                         FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                        if(!sameSign && ctx!=null && ctx.getHasFlags()){
+                          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
+                        }
                         return RoundToPrecisionWithShift(
                           thisValue, ctx,
                           0,

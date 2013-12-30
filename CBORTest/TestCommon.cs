@@ -85,38 +85,34 @@ namespace Test {
       AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
     }
 
-    public static void AssertDecFrac(ExtendedDecimal d3, string output){
-      if(output==null && d3!=null)Assert.Fail("d3 must be null");
+    public static void AssertDecFrac(ExtendedDecimal d3, string output, string name){
+      if(output==null && d3!=null)Assert.Fail(name+": d3 must be null");
       if(output!=null && !d3.ToString().Equals(output)){
         ExtendedDecimal d4=ExtendedDecimal.FromString(output);
         Assert.AreEqual(output,d3.ToString(),(
-          "expected: ["+(d4.UnsignedMantissa).ToString()+","+(d4.Exponent).ToString()+"]\\n"+
+          name+": expected: ["+(d4.UnsignedMantissa).ToString()+","+(d4.Exponent).ToString()+"]\\n"+
           "but was: ["+(d3.UnsignedMantissa).ToString()+","+(d3.Exponent).ToString()+"]"
          ));   }
     }
 
-    public static BigInteger BigIntParse(string str){
-      return BigInteger.fromString(str);
-    }
-
-    public static void AssertFlags(int expected, int actual){
+    public static void AssertFlags(int expected, int actual, string name){
       if(expected==actual)return;
       Assert.AreEqual((expected&PrecisionContext.FlagInexact)!=0,
-                      (actual&PrecisionContext.FlagInexact)!=0,"Inexact");
+                      (actual&PrecisionContext.FlagInexact)!=0,name+": Inexact");
       Assert.AreEqual((expected&PrecisionContext.FlagRounded)!=0,
-                      (actual&PrecisionContext.FlagRounded)!=0,"Rounded");
+                      (actual&PrecisionContext.FlagRounded)!=0,name+": Rounded");
       Assert.AreEqual((expected&PrecisionContext.FlagSubnormal)!=0,
-                      (actual&PrecisionContext.FlagSubnormal)!=0,"Subnormal");
+                      (actual&PrecisionContext.FlagSubnormal)!=0,name+": Subnormal");
       Assert.AreEqual((expected&PrecisionContext.FlagOverflow)!=0,
-                      (actual&PrecisionContext.FlagOverflow)!=0,"Overflow");
+                      (actual&PrecisionContext.FlagOverflow)!=0,name+": Overflow");
       Assert.AreEqual((expected&PrecisionContext.FlagUnderflow)!=0,
-                      (actual&PrecisionContext.FlagUnderflow)!=0,"Underflow");
+                      (actual&PrecisionContext.FlagUnderflow)!=0,name+": Underflow");
       Assert.AreEqual((expected&PrecisionContext.FlagClamped)!=0,
-                      (actual&PrecisionContext.FlagClamped)!=0,"Clamped");
+                      (actual&PrecisionContext.FlagClamped)!=0,name+": Clamped");
       Assert.AreEqual((expected&PrecisionContext.FlagInvalid)!=0,
-                      (actual&PrecisionContext.FlagInvalid)!=0,"Invalid");
+                      (actual&PrecisionContext.FlagInvalid)!=0,name+": Invalid");
       Assert.AreEqual((expected&PrecisionContext.FlagDivideByZero)!=0,
-                      (actual&PrecisionContext.FlagDivideByZero)!=0,"DivideByZero");
+                      (actual&PrecisionContext.FlagDivideByZero)!=0,name+": DivideByZero");
     }
 
     private static CBORObject FromBytesA(byte[] b) {
