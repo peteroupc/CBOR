@@ -232,7 +232,7 @@ namespace PeterO {
         if ((op2Flags & BigNumberFlags.FlagSpecial) == 0 && helper.GetMantissa(op2).IsZero)
           return SignalInvalid(ctx);
       }
-      if ((op1Flags & BigNumberFlags.FlagInfinity) != 0) {
+      if ((op2Flags & BigNumberFlags.FlagInfinity) != 0) {
         // Attempt to multiply infinity by 0
         if ((op1Flags & BigNumberFlags.FlagSpecial) == 0 && helper.GetMantissa(op1).IsZero)
           return SignalInvalid(ctx);

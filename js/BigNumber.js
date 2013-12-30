@@ -6725,7 +6725,7 @@ var RadixMath = function(helper) {
 
             if ((op2Flags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(op2).signum() == 0) return this.SignalInvalid(ctx);
         }
-        if ((op1Flags & BigNumberFlags.FlagInfinity) != 0) {
+        if ((op2Flags & BigNumberFlags.FlagInfinity) != 0) {
 
             if ((op1Flags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(op1).signum() == 0) return this.SignalInvalid(ctx);
         }
