@@ -432,8 +432,6 @@ namespace PeterO {
         ShiftToBitsBig(digits);
     }
 
-    private static BigInteger bidivisor=(BigInteger)10000;
-
     private FastInteger CalcKnownDigitLength() {
       if (isSmall) {
         int kb = 0;

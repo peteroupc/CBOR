@@ -355,8 +355,6 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private static BigInteger OneShift62 = BigInteger.ONE.shiftLeft(62);
-
     private static BigInteger OneShift23 = BigInteger.ONE.shiftLeft(23);
     private static BigInteger OneShift52 = BigInteger.ONE.shiftLeft(52);
 

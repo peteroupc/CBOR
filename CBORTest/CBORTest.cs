@@ -470,13 +470,13 @@ namespace Test {
     ///
     [Test]
     public void TestJSONSurrogates() {
-      try { CBORObject.FromJSONString("[\"\ud800\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromJSONString("[\"\\ud800\\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromJSONString("[\"\ud800\\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromJSONString("[\"\\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
+      try { CBORObject.FromJSONString("[\"\ud800\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromJSONString("[\"\\ud800\\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromJSONString("[\"\ud800\\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromJSONString("[\"\\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
     }
     /// <summary>
     /// </summary>
@@ -516,10 +516,10 @@ namespace Test {
     public void TestJSON() {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,3]");
-      try { CBORObject.FromJSONString("[\"\\d800\"]"); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromJSONString("[1,2,"); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromJSONString("[1,2,3"); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromJSONString("[\""); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
+      try { CBORObject.FromJSONString("[\"\\d800\"]"); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromJSONString("[1,2,"); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromJSONString("[1,2,3"); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromJSONString("[\""); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
       Assert.AreEqual(3, o.Count);
       Assert.AreEqual(1, o[0].AsInt32());
       Assert.AreEqual(2, o[1].AsInt32());
@@ -657,12 +657,12 @@ namespace Test {
       Assert.AreEqual("1", CBORObject.FromObject((double)1.5).AsBigInteger().ToString());
       Assert.AreEqual("2", CBORObject.FromObject((double)2.5).AsBigInteger().ToString());
       Assert.AreEqual("328323", CBORObject.FromObject((double)328323).AsBigInteger().ToString());
-      try { CBORObject.FromObject(Single.PositiveInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(Single.NegativeInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(Single.NaN).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(Double.PositiveInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(Double.NaN).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
+      try { CBORObject.FromObject(Single.PositiveInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(Single.NegativeInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(Single.NaN).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(Double.PositiveInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(Double.NaN).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
     }
     /// <summary>
     /// </summary>
@@ -1226,438 +1226,438 @@ namespace Test {
     // and doubles before bounds checking
     [Test]
     public void FloatingPointCloseToEdge() {
-      try { CBORObject.FromObject(2.147483647E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483647E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483647E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483647E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836470000002E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836469999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483648E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483648E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483648E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483648E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836480000005E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836479999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483646E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483646E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483646E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.147483646E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836460000002E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474836459999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483648E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483648E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483648E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483648E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836479999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836480000005E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483647E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483647E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483647E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483647E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836469999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836470000002E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483649E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483649E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483649E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.147483649E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836489999995E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474836490000005E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372036854776E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372036854776E18d).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372036854776E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372036854776E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372036854778E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372036854778E18d).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372036854778E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372036854778E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.2233720368547748E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372036854776E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.2233720368547748E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372036854778E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.000000000004d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.000000000004d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.000000000004d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.000000000004d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.0d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.00000000001d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.00000000001d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.00000000001d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.00000000001d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.000000000004d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.000000000004d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.000000000004d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.000000000004d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32765.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32765.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32765.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32765.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.00000000001d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.00000000001d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.00000000001d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.00000000001d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32766.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32766.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32766.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32766.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.000000000004d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.000000000004d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.000000000004d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.000000000004d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.0d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.99999999999d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.99999999999d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.99999999999d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.99999999999d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.00000000001d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.00000000001d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.00000000001d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.00000000001d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(4.9E-324d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(4.9E-324d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(4.9E-324d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(4.9E-324d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-4.9E-324d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-4.9E-324d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-4.9E-324d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-4.9E-324d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0000000000000002d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0000000000000002d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0000000000000002d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0000000000000002d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.9999999999999999d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.9999999999999999d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.9999999999999999d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.9999999999999999d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-0.9999999999999999d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-0.9999999999999999d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-0.9999999999999999d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-0.9999999999999999d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0000000000000002d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0000000000000002d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0000000000000002d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0000000000000002d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.00000000000003d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.00000000000003d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.00000000000003d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.00000000000003d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.99999999999997d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.99999999999997d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.99999999999997d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.99999999999997d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.00000000000006d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.00000000000006d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.00000000000006d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.00000000000006d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.99999999999997d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.99999999999997d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.99999999999997d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.99999999999997d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.00000000000003d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.00000000000003d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.00000000000003d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.00000000000003d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(253.99999999999997d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(253.99999999999997d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(253.99999999999997d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(253.99999999999997d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.14748365E9f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.14748365E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.14748365E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.14748365E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474839E9f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474839E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474839E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.1474839E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.14748352E9f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.14748352E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.14748352E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(2.14748352E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.14748365E9f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.14748365E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.14748365E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.14748365E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.14748352E9f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.14748352E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.14748352E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.14748352E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474839E9f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474839E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474839E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-2.1474839E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372E18f).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223372E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223373E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223373E18f).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223373E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.223373E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.2233715E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.2233715E18f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.2233715E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(9.2233715E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372E18f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223372E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.2233715E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.2233715E18f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.2233715E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.2233715E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223373E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223373E18f).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223373E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-9.223373E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.002f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.0f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.004f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.004f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.004f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32768.004f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32767.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32766.002f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32765.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32765.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32765.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(32765.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.004f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.004f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.004f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.004f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32766.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32766.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32766.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32766.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32767.002f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.0f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.996f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.996f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.996f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32768.996f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.004f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.004f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.004f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-32769.004f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.4E-45f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.4E-45f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.4E-45f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.4E-45f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.4E-45f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.4E-45f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.4E-45f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.4E-45f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0000001f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0000001f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0000001f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(1.0000001f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.99999994f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.99999994f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.99999994f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(0.99999994f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-0.99999994f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-0.99999994f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-0.99999994f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-0.99999994f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0000001f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0000001f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0000001f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(-1.0000001f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.00002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.00002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.00002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.00002f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.99998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.99998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.99998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.99998f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.00003f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.00003f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.00003f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(256.00003f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.99998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.99998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.99998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(255.99998f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.00002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.00002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.00002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(254.00002f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(253.99998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(253.99998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(253.99998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { CBORObject.FromObject(253.99998f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
+      try { CBORObject.FromObject(2.147483647E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483647E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483647E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483647E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836470000002E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836469999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483648E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483648E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483648E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483648E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836480000005E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836479999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483646E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483646E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483646E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.147483646E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836460000002E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474836459999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483648E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483648E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483648E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483648E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836479999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836480000005E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483647E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483647E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483647E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483647E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836469999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836470000002E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483649E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483649E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483649E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.147483649E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836489999995E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474836490000005E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372036854776E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372036854776E18d).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372036854776E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372036854776E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372036854778E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372036854778E18d).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372036854778E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372036854778E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.2233720368547748E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372036854776E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.2233720368547748E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372036854778E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.000000000004d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.000000000004d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.000000000004d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.000000000004d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.0d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.00000000001d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.00000000001d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.00000000001d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.00000000001d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.000000000004d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.000000000004d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.000000000004d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.000000000004d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32765.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32765.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32765.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32765.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.00000000001d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.00000000001d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.00000000001d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.00000000001d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32766.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32766.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32766.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32766.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.000000000004d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.000000000004d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.000000000004d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.000000000004d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.0d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.99999999999d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.99999999999d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.99999999999d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.99999999999d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.00000000001d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.00000000001d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.00000000001d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.00000000001d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(4.9E-324d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(4.9E-324d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(4.9E-324d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(4.9E-324d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-4.9E-324d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-4.9E-324d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-4.9E-324d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-4.9E-324d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0000000000000002d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0000000000000002d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0000000000000002d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0000000000000002d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.9999999999999999d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.9999999999999999d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.9999999999999999d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.9999999999999999d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-0.9999999999999999d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-0.9999999999999999d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-0.9999999999999999d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-0.9999999999999999d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0000000000000002d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0000000000000002d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0000000000000002d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0000000000000002d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.00000000000003d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.00000000000003d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.00000000000003d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.00000000000003d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.99999999999997d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.99999999999997d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.99999999999997d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.99999999999997d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.00000000000006d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.00000000000006d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.00000000000006d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.00000000000006d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.99999999999997d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.99999999999997d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.99999999999997d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.99999999999997d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.00000000000003d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.00000000000003d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.00000000000003d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.00000000000003d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(253.99999999999997d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(253.99999999999997d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(253.99999999999997d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(253.99999999999997d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.14748365E9f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.14748365E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.14748365E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.14748365E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474839E9f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474839E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474839E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.1474839E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.14748352E9f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.14748352E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.14748352E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(2.14748352E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.14748365E9f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.14748365E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.14748365E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.14748365E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.14748352E9f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.14748352E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.14748352E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.14748352E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474839E9f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474839E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474839E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-2.1474839E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372E18f).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223372E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223373E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223373E18f).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223373E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.223373E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.2233715E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.2233715E18f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.2233715E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(9.2233715E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372E18f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223372E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.2233715E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.2233715E18f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.2233715E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.2233715E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223373E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223373E18f).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223373E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-9.223373E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.002f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.0f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.004f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.004f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.004f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32768.004f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32767.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32766.002f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32765.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32765.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32765.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(32765.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.004f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.004f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.004f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.004f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32766.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32766.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32766.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32766.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32767.002f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.0f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.996f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.996f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.996f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32768.996f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.004f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.004f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.004f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-32769.004f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.4E-45f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.4E-45f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.4E-45f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.4E-45f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.4E-45f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.4E-45f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.4E-45f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.4E-45f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0000001f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0000001f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0000001f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(1.0000001f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.99999994f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.99999994f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.99999994f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(0.99999994f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-0.99999994f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-0.99999994f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-0.99999994f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-0.99999994f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0000001f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0000001f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0000001f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(-1.0000001f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.00002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.00002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.00002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.00002f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.99998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.99998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.99998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.99998f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.00003f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.00003f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.00003f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(256.00003f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.99998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.99998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.99998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(255.99998f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.00002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.00002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.00002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(254.00002f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(253.99998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(253.99998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(253.99998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { CBORObject.FromObject(253.99998f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
     }
 
     /// <summary>
@@ -2104,10 +2104,10 @@ namespace Test {
         Assert.AreEqual((byte)i, CBORObject.FromObject(i).AsByte());
       }
       for (int i = -200; i < 0; i++) {
-        try { CBORObject.FromObject(i).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
+        try { CBORObject.FromObject(i).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
       }
       for (int i = 256; i < 512; i++) {
-        try { CBORObject.FromObject(i).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
+        try { CBORObject.FromObject(i).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
       }
     }
     [Test]
@@ -3386,16 +3386,16 @@ namespace Test {
     public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
       CBORObject dbl2 = CBORObject.FromObject((double)Int32.MaxValue);
-      try { dbl1.AsInt16(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { dbl1.AsByte(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { dbl1.AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { dbl1.AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { dbl1.AsBigInteger(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { dbl2.AsInt16(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { dbl2.AsByte(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { dbl2.AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { dbl2.AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { dbl2.AsBigInteger(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
+      try { dbl1.AsInt16(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { dbl1.AsByte(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { dbl1.AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { dbl1.AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { dbl1.AsBigInteger(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { dbl2.AsInt16(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { dbl2.AsByte(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { dbl2.AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { dbl2.AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { dbl2.AsBigInteger(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
     }
     /// <summary>
     /// </summary>
@@ -3540,8 +3540,8 @@ namespace Test {
     public void AssertAdd(BigInteger bi, BigInteger bi2, string s) {
       AssertBigIntString(s, bi + (BigInteger)bi2);
       AssertBigIntString(s, bi2 + (BigInteger)bi);
-      BigInteger negbi = -bi;
-      BigInteger negbi2 = -bi2;
+      BigInteger negbi = BigInteger.Zero-(BigInteger)bi;
+      BigInteger negbi2 = BigInteger.Zero-(BigInteger)bi2;
       AssertBigIntString(s, bi - (BigInteger)negbi2);
       AssertBigIntString(s, bi2 - (BigInteger)negbi);
     }
@@ -3690,8 +3690,8 @@ namespace Test {
     ///
     [Test]
     public void TestGetUtf8Length() {
-      try { DataUtilities.GetUtf8Length(null, true); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
-      try { DataUtilities.GetUtf8Length(null, false); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw; }
+      try { DataUtilities.GetUtf8Length(null, true); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try { DataUtilities.GetUtf8Length(null, false); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
       Assert.AreEqual(3, DataUtilities.GetUtf8Length("abc", true));
       Assert.AreEqual(4, DataUtilities.GetUtf8Length("\u0300\u0300", true));
       Assert.AreEqual(6, DataUtilities.GetUtf8Length("\u3000\u3000", true));
