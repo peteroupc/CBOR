@@ -1584,7 +1584,7 @@ namespace PeterO {
       FastInteger fastEMax = (context.HasExponentRange) ? FastInteger.FromBig(context.EMax) : null;
       FastInteger fastPrecision = FastInteger.FromBig(context.Precision);
       int thisFlags = helper.GetFlags(thisValue);
-      if (fastPrecision.Sign > 0 && fastPrecision.CompareToInt(34) <= 0 &&
+      if (fastPrecision.Sign > 0 && fastPrecision.CompareToInt(18) <= 0 &&
           (shift == null || shift.Sign == 0) &&
           (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
         // Check if rounding is necessary at all

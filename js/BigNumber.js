@@ -7726,7 +7726,7 @@ var RadixMath = function(helper) {
         var fastEMax = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMax()) : null;
         var fastPrecision = FastInteger.FromBig(context.getPrecision());
         var thisFlags = this.helper.GetFlags(thisValue);
-        if (fastPrecision.signum() > 0 && fastPrecision.CompareToInt(34) <= 0 && (shift == null || shift.signum() == 0) && (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
+        if (fastPrecision.signum() > 0 && fastPrecision.CompareToInt(18) <= 0 && (shift == null || shift.signum() == 0) && (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
 
             var mantabs = (this.helper.GetMantissa(thisValue)).abs();
             var radixPower = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);

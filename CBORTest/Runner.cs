@@ -35,8 +35,6 @@ namespace PeterO {
           param=args[0];
         Console.WriteLine(param);
       }
-        new CBOR.ExtensiveTest().TestParser();
-        return;
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) continue;
@@ -53,7 +51,6 @@ namespace PeterO {
           setup.Invoke(test, new object[] { });
         }
         foreach (var method in test.GetType().GetMethods()) {
-          Console.WriteLine("testing "+method.Name);
           if (!HasAttribute(method, typeof(TestAttribute))) continue;
           Console.WriteLine(method.Name);
           if(!method.Name.Contains("TestParser"))continue;

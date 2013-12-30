@@ -422,7 +422,7 @@ public MutableNumber SetInt(int val){
       if (sign == 0 ||
           (sign < 0 && bigintVal.CompareTo(Int32MinValue) >= 0) ||
           (sign > 0 && bigintVal.CompareTo(Int32MaxValue) <= 0)) {
-        return new FastInteger((int)bigintVal);
+        return new FastInteger(bigintVal.intValue());
       } else if(sign>0){
         FastInteger fi=new FastInteger(0);
         fi.integerMode=1;
@@ -1057,7 +1057,7 @@ public FastInteger Increment(){
     public BigInteger AsBigInteger() {
       switch(this.integerMode){
         case 0:
-          return (BigInteger)smallValue;
+          return BigInteger.valueOf(smallValue);
         case 1:
           return mnum.ToBigInteger();
         case 2:
