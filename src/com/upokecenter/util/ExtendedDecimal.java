@@ -740,6 +740,9 @@ bigrem=divrem[1]; }
     /**
      * Creates a bigfloat from this object's value. Note that if the bigfloat
      * contains a negative exponent, the resulting value might not be exact.
+     * However, the resulting binary float will contain enough precision
+     * to accurately convert it to a 32-bit or 64-bit floating point number
+     * (float or double).
      * @return A BigFloat object.
      * @throws ArithmeticException This object is infinity or NaN.
      */
@@ -1173,13 +1176,15 @@ remainder=divrem[1]; }
      * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
-        return unsignedMantissa.signum()==0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
+        return  (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
+                 unsignedMantissa.signum()==0) ? 0 :
+          (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
     /**
      * Gets whether this object's value equals 0.
      */
     public boolean isZero() {
-        return unsignedMantissa.signum()==0;
+        return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && unsignedMantissa.signum()==0;
       }
     /**
      * Gets the absolute value of this object.

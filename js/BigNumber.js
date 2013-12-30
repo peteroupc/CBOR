@@ -9242,11 +9242,11 @@ function(mantissa, exponent) {
     };
 
     prototype['signum'] = prototype.signum = function() {
-        return this.unsignedMantissa.signum() == 0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
+        return (((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum() == 0) ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
     };
 
     prototype['isZero'] = prototype.isZero = function() {
-        return this.unsignedMantissa.signum() == 0;
+        return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum() == 0;
     };
 
     prototype['DivideToSameExponent'] = prototype.DivideToSameExponent = function(divisor, rounding) {
@@ -9408,25 +9408,25 @@ function(mantissa, exponent) {
 
     this.exponent = exponent;
     var sign = mantissa.signum();
-    this.mantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+    this.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
     this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
 };
 (function(constructor,prototype){
     prototype['exponent'] = prototype.exponent = null;
-    prototype['mantissa'] = prototype.mantissa = null;
+    prototype['unsignedMantissa'] = prototype.unsignedMantissa = null;
     prototype['flags'] = prototype.flags = null;
     prototype['getExponent'] = prototype.getExponent = function() {
         return this.exponent;
     };
     prototype['getUnsignedMantissa'] = prototype.getUnsignedMantissa = function() {
-        return this.mantissa;
+        return this.unsignedMantissa;
     };
     prototype['getMantissa'] = prototype.getMantissa = function() {
-        return this.isNegative() ? ((this.mantissa).negate()) : this.mantissa;
+        return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
     };
     prototype['EqualsInternal'] = prototype.EqualsInternal = function(otherValue) {
         if (otherValue == null) return false;
-        return this.exponent.equals(otherValue.exponent) && this.mantissa.equals(otherValue.mantissa) && this.flags == otherValue.flags;
+        return this.exponent.equals(otherValue.exponent) && this.unsignedMantissa.equals(otherValue.unsignedMantissa) && this.flags == otherValue.flags;
     };
     prototype['equals'] = prototype.equals = function(obj) {
         return this.EqualsInternal((obj.constructor==ExtendedFloat) ? obj : null);
@@ -9435,7 +9435,7 @@ function(mantissa, exponent) {
         var hashCode_ = 0;
         {
             hashCode_ = hashCode_ + 1000000007 * this.exponent.hashCode();
-            hashCode_ = hashCode_ + 1000000009 * this.mantissa.hashCode();
+            hashCode_ = hashCode_ + 1000000009 * this.unsignedMantissa.hashCode();
             hashCode_ = hashCode_ + 1000000009 * this.flags;
         }
         return hashCode_;
@@ -9482,7 +9482,7 @@ function(mantissa, exponent) {
         };
 
         prototype['GetMantissa'] = prototype.GetMantissa = function(value) {
-            return value.mantissa;
+            return value.unsignedMantissa;
         };
 
         prototype['GetExponent'] = prototype.GetExponent = function(value) {
@@ -9526,7 +9526,7 @@ function(mantissa, exponent) {
         };
 
         prototype['GetFlags'] = prototype.GetFlags = function(value) {
-            return value.mantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
+            return value.unsignedMantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
         };
 
         prototype['CreateNewWithFlags'] = prototype.CreateNewWithFlags = function(mantissa, exponent, flags) {
@@ -9586,72 +9586,6 @@ function(mantissa, exponent) {
         }
     };
     constructor['OneShift62'] = constructor.OneShift62 = BigInteger.ONE.shiftLeft(62);
-
-    prototype['ToExtendedFloat'] = prototype.ToExtendedFloat = function() {
-        if (this.IsNaN() || this.IsInfinity()) throw new Error("This value is infinity or NaN");
-        var bigintExp = this.getExponent();
-        var bigintMant = this.getMantissa();
-        if (bigintMant.signum() == 0) return ExtendedFloat.Zero;
-        if (bigintExp.signum() == 0) {
-
-            return ExtendedFloat.FromBigInteger(bigintMant);
-        } else if (bigintExp.signum() > 0) {
-
-            var bigmantissa = bigintMant;
-            bigmantissa = bigmantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(bigintExp));
-            return ExtendedFloat.FromBigInteger(bigmantissa);
-        } else {
-
-            var scale = FastInteger.FromBig(bigintExp);
-            var bigmantissa = bigintMant;
-            var neg = (bigmantissa.signum() < 0);
-            var remainder;
-            if (neg) bigmantissa = (bigmantissa).negate();
-            var negscale = FastInteger.Copy(scale).Negate();
-            var divisor = DecimalUtility.FindPowerOfFiveFromBig(negscale.AsBigInteger());
-            while (true) {
-                var quotient;
-                {
-                    var divrem = (bigmantissa).divideAndRemainder(divisor);
-                    quotient = divrem[0];
-                    remainder = divrem[1];
-                }
-
-                if (remainder.signum() != 0 && quotient.compareTo(ExtendedFloat.OneShift62) < 0) {
-
-                    var bits = FastInteger.GetLastWords(quotient, 2);
-                    var shift = 0;
-                    if ((bits[0] | bits[1]) != 0) {
-
-                        var bitPrecision = DecimalUtility.BitPrecisionInt(bits[1]);
-                        if (bitPrecision != 0) bitPrecision = bitPrecision + (32); else bitPrecision = DecimalUtility.BitPrecisionInt(bits[0]);
-                        shift = 63 - bitPrecision;
-                        scale.SubtractInt(shift);
-                    } else {
-
-                        shift = 1;
-                        scale.SubtractInt(shift);
-                    }
-
-                    bigmantissa = bigmantissa.shiftLeft(shift);
-                } else {
-                    bigmantissa = quotient;
-                    break;
-                }
-            }
-
-            var halfDivisor = divisor;
-            halfDivisor = halfDivisor.shiftRight(1);
-            var cmp = remainder.compareTo(halfDivisor);
-
-            if (cmp > 0) {
-
-                bigmantissa = bigmantissa.add(BigInteger.ONE);
-            }
-            if (neg) bigmantissa = (bigmantissa).negate();
-            return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
-        }
-    };
     constructor['OneShift23'] = constructor.OneShift23 = BigInteger.ONE.shiftLeft(23);
     constructor['OneShift52'] = constructor.OneShift52 = BigInteger.ONE.shiftLeft(52);
 
@@ -9675,11 +9609,11 @@ function(mantissa, exponent) {
         if (this.isNegative() && this.signum() == 0) {
             return Float.intBitsToFloat(1 << 31);
         }
-        var bigmant = (this.mantissa).abs();
+        var bigmant = (this.unsignedMantissa).abs();
         var bigexponent = FastInteger.FromBig(this.exponent);
         var bitLeftmost = 0;
         var bitsAfterLeftmost = 0;
-        if (this.mantissa.signum() == 0) {
+        if (this.unsignedMantissa.signum() == 0) {
             return 0.0;
         }
         var smallmant = 0;
@@ -9769,11 +9703,11 @@ function(mantissa, exponent) {
         if (this.isNegative() && this.signum() == 0) {
             return Extras.IntegersToDouble([((1 << 31)|0), 0]);
         }
-        var bigmant = (this.mantissa).abs();
+        var bigmant = (this.unsignedMantissa).abs();
         var bigexponent = FastInteger.FromBig(this.exponent);
         var bitLeftmost = 0;
         var bitsAfterLeftmost = 0;
-        if (this.mantissa.signum() == 0) {
+        if (this.unsignedMantissa.signum() == 0) {
             return 0.0;
         }
         var mantissaBits;
@@ -9975,11 +9909,11 @@ function(mantissa, exponent) {
     };
 
     prototype['signum'] = prototype.signum = function() {
-        return this.mantissa.signum() == 0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
+        return (((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum() == 0) ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
     };
 
     prototype['isZero'] = prototype.isZero = function() {
-        return this.mantissa.signum() == 0;
+        return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum() == 0;
     };
 
     prototype['DivideToSameExponent'] = prototype.DivideToSameExponent = function(divisor, rounding) {
@@ -10015,7 +9949,7 @@ function(mantissa, exponent) {
         var negated = decfrac;
         if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
             var newflags = decfrac.flags ^ BigNumberFlags.FlagNegative;
-            negated = ExtendedFloat.CreateWithFlags(decfrac.mantissa, decfrac.exponent, newflags);
+            negated = ExtendedFloat.CreateWithFlags(decfrac.unsignedMantissa, decfrac.exponent, newflags);
         }
         return this.Add(negated, ctx);
     };
@@ -10114,7 +10048,7 @@ function(mantissa, exponent) {
         var negated = subtrahend;
         if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
             var newflags = subtrahend.flags ^ BigNumberFlags.FlagNegative;
-            negated = ExtendedFloat.CreateWithFlags(subtrahend.mantissa, subtrahend.exponent, newflags);
+            negated = ExtendedFloat.CreateWithFlags(subtrahend.unsignedMantissa, subtrahend.exponent, newflags);
         }
         return ExtendedFloat.math.MultiplyAndAdd(this, op, negated, ctx);
     };

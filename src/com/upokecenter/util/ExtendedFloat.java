@@ -32,7 +32,7 @@ at: http://peteroupc.github.io/CBOR/
      */
   public final class ExtendedFloat implements Comparable<ExtendedFloat> {
     BigInteger exponent;
-    BigInteger mantissa;
+    BigInteger unsignedMantissa;
     int flags;
 
     /**
@@ -43,12 +43,12 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Gets the absolute value of this object's unscaled value.
      */
-    public BigInteger getUnsignedMantissa() { return mantissa; }
+    public BigInteger getUnsignedMantissa() { return unsignedMantissa; }
 
     /**
      * Gets this object's unscaled value.
      */
-    public BigInteger getMantissa() { return this.isNegative() ? ((mantissa).negate()) : mantissa; }
+    public BigInteger getMantissa() { return this.isNegative() ? ((unsignedMantissa).negate()) : unsignedMantissa; }
 
     /**
      * Determines whether this object's mantissa and exponent are equal
@@ -60,7 +60,7 @@ at: http://peteroupc.github.io/CBOR/
       if (otherValue == null)
         return false;
       return this.exponent.equals(otherValue.exponent) &&
-        this.mantissa.equals(otherValue.mantissa) &&
+        this.unsignedMantissa.equals(otherValue.unsignedMantissa) &&
         this.flags == otherValue.flags;
     }
 
@@ -89,7 +89,7 @@ at: http://peteroupc.github.io/CBOR/
       int hashCode_ = 0;
       {
         hashCode_ = hashCode_ + 1000000007 * exponent.hashCode();
-        hashCode_ = hashCode_ + 1000000009 * mantissa.hashCode();
+        hashCode_ = hashCode_ + 1000000009 * unsignedMantissa.hashCode();
         hashCode_ = hashCode_ + 1000000009 * flags;
       }
       return hashCode_;
@@ -103,7 +103,7 @@ at: http://peteroupc.github.io/CBOR/
     public ExtendedFloat (BigInteger mantissa, BigInteger exponent) {
       this.exponent = exponent;
       int sign = mantissa.signum();
-      this.mantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+      this.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
       this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
     }
 
@@ -186,7 +186,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
       public BigInteger GetMantissa(ExtendedFloat value) {
-        return value.mantissa;
+        return value.unsignedMantissa;
       }
 
     /**
@@ -271,7 +271,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
       public int GetFlags(ExtendedFloat value) {
-        return value.mantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
+        return value.unsignedMantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
       }
 
     /**
@@ -357,87 +357,6 @@ at: http://peteroupc.github.io/CBOR/
 
     private static BigInteger OneShift62 = BigInteger.ONE.shiftLeft(62);
 
-    /**
-     * Creates a bigfloat from this object's value. Note that if the bigfloat
-     * contains a negative exponent, the resulting value might not be exact.
-     * @return An ExtendedFloat object.
-     * @throws ArithmeticException This object is infinity or NaN.
-     */
-    public ExtendedFloat ToExtendedFloat() {
-      if (IsNaN() || IsInfinity())
-        throw new ArithmeticException("This value is infinity or NaN");
-      BigInteger bigintExp = this.getExponent();
-      BigInteger bigintMant = this.getMantissa();
-      if (bigintMant.signum()==0)
-        return ExtendedFloat.Zero;
-      if (bigintExp.signum()==0) {
-        // Integer
-        return ExtendedFloat.FromBigInteger(bigintMant);
-      } else if (bigintExp.signum() > 0) {
-        // Scaled integer
-        BigInteger bigmantissa = bigintMant;
-        bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfTenFromBig(bigintExp));
-        return ExtendedFloat.FromBigInteger(bigmantissa);
-      } else {
-        // Fractional number
-        FastInteger scale = FastInteger.FromBig(bigintExp);
-        BigInteger bigmantissa = bigintMant;
-        boolean neg = (bigmantissa.signum() < 0);
-        BigInteger remainder;
-        if (neg) bigmantissa=(bigmantissa).negate();
-        FastInteger negscale = FastInteger.Copy(scale).Negate();
-        BigInteger divisor = DecimalUtility.FindPowerOfFiveFromBig(
-          negscale.AsBigInteger());
-        while (true) {
-          BigInteger quotient;
-{
-BigInteger[] divrem=(bigmantissa).divideAndRemainder(divisor);
-quotient=divrem[0];
-remainder=divrem[1]; }
-          // Ensure that the quotient has enough precision
-          // to be converted accurately to a single or double
-          if (remainder.signum()!=0 &&
-              quotient.compareTo(OneShift62) < 0) {
-            // At this point, the quotient has 62 or fewer bits
-            int[] bits = FastInteger.GetLastWords(quotient, 2);
-            int shift = 0;
-            if ((bits[0] | bits[1]) != 0) {
-              // Quotient's integer part is nonzero.
-              // Get the number of bits of the quotient
-              int bitPrecision = DecimalUtility.BitPrecisionInt(bits[1]);
-              if (bitPrecision != 0)
-                bitPrecision += 32;
-              else
-                bitPrecision = DecimalUtility.BitPrecisionInt(bits[0]);
-              shift = 63 - bitPrecision;
-              scale.SubtractInt(shift);
-            } else {
-              // Integer part of quotient is 0
-              shift = 1;
-              scale.SubtractInt(shift);
-            }
-            // shift by that many bits, but not less than 1
-            bigmantissa=bigmantissa.shiftLeft(shift);
-          } else {
-            bigmantissa = quotient;
-            break;
-          }
-        }
-        // Round half-even
-        BigInteger halfDivisor = divisor;
-        halfDivisor=halfDivisor.shiftRight(1);
-        int cmp = remainder.compareTo(halfDivisor);
-        // No need to check for exactly half since all powers
-        // of five are odd
-        if (cmp > 0) {
-          // Greater than half
-          bigmantissa=bigmantissa.add(BigInteger.ONE);
-        }
-        if (neg) bigmantissa=(bigmantissa).negate();
-        return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
-      }
-    }
-
     private static BigInteger OneShift23 = BigInteger.ONE.shiftLeft(23);
     private static BigInteger OneShift52 = BigInteger.ONE.shiftLeft(52);
 
@@ -478,11 +397,11 @@ remainder=divrem[1]; }
       if (this.isNegative() && this.signum()==0) {
         return Float.intBitsToFloat(((int)1 << 31));
       }
-      BigInteger bigmant = (this.mantissa).abs();
+      BigInteger bigmant = (this.unsignedMantissa).abs();
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       int bitLeftmost = 0;
       int bitsAfterLeftmost = 0;
-      if (this.mantissa.signum()==0) {
+      if (this.unsignedMantissa.signum()==0) {
         return 0.0f;
       }
       int smallmant = 0;
@@ -594,11 +513,11 @@ remainder=divrem[1]; }
       if (this.isNegative() && this.signum()==0) {
         return Extras.IntegersToDouble(new int[] { ((int)(1 << 31)), 0 });
       }
-      BigInteger bigmant = (this.mantissa).abs();
+      BigInteger bigmant = (this.unsignedMantissa).abs();
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       int bitLeftmost = 0;
       int bitsAfterLeftmost = 0;
-      if (this.mantissa.signum()==0) {
+      if (this.unsignedMantissa.signum()==0) {
         return 0.0d;
       }
       int[] mantissaBits;
@@ -926,13 +845,15 @@ remainder=divrem[1]; }
      * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
-        return mantissa.signum()==0 ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
+        return (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
+                unsignedMantissa.signum()==0) ? 0 :
+          (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
     /**
      * Gets whether this object's value equals 0.
      */
     public boolean isZero() {
-        return mantissa.signum()==0;
+        return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && unsignedMantissa.signum()==0;
       }
     /**
      * Gets the absolute value of this object.
@@ -1225,7 +1146,7 @@ remainder=divrem[1]; }
       ExtendedFloat negated = decfrac;
       if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
         int newflags = decfrac.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(decfrac.mantissa, decfrac.exponent, newflags);
+        negated = CreateWithFlags(decfrac.unsignedMantissa, decfrac.exponent, newflags);
       }
       return Add(negated, ctx);
     }
@@ -1788,7 +1709,7 @@ remainder=divrem[1]; }
       ExtendedFloat negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
         int newflags = subtrahend.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(subtrahend.mantissa, subtrahend.exponent, newflags);
+        negated = CreateWithFlags(subtrahend.unsignedMantissa, subtrahend.exponent, newflags);
       }
       return math.MultiplyAndAdd(this, op, negated, ctx);
     }
