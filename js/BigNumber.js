@@ -6362,7 +6362,7 @@ var DecimalUtility = function() {
     };
 })(DecimalUtility,DecimalUtility.prototype);
 
-var Rounding={};Rounding['Up']=0;Rounding['Down']=1;Rounding['Ceiling']=2;Rounding['Floor']=3;Rounding['HalfUp']=4;Rounding['HalfDown']=5;Rounding['HalfEven']=6;Rounding['Unnecessary']=7;Rounding['ZeroFiveUp']=8;
+var Rounding={};Rounding.Up=0;Rounding['Up']=0;Rounding.Down=1;Rounding['Down']=1;Rounding.Ceiling=2;Rounding['Ceiling']=2;Rounding.Floor=3;Rounding['Floor']=3;Rounding.HalfUp=4;Rounding['HalfUp']=4;Rounding.HalfDown=5;Rounding['HalfDown']=5;Rounding.HalfEven=6;Rounding['HalfEven']=6;Rounding.Unnecessary=7;Rounding['Unnecessary']=7;Rounding.ZeroFiveUp=8;Rounding['ZeroFiveUp']=8;
 
 if(typeof exports!=="undefined")exports['Rounding']=Rounding;
 if(typeof window!=="undefined")window['Rounding']=Rounding;
@@ -6699,6 +6699,42 @@ var RadixMath = function(helper) {
         }
         return null;
     };
+    prototype.MultiplyAddHandleSpecial = function(op1, op2, op3, ctx) {
+        var op1Flags = this.helper.GetFlags(op1);
+
+        if ((op1Flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+            return this.SignalingNaNInvalid(op1, ctx);
+        }
+        var op2Flags = this.helper.GetFlags(op2);
+        if ((op2Flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+            return this.SignalingNaNInvalid(op2, ctx);
+        }
+        var op3Flags = this.helper.GetFlags(op3);
+        if ((op3Flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+            return this.SignalingNaNInvalid(op3, ctx);
+        }
+
+        if ((op1Flags & BigNumberFlags.FlagQuietNaN) != 0) {
+            return this.ReturnQuietNaN(op1, ctx);
+        }
+        if ((op2Flags & BigNumberFlags.FlagQuietNaN) != 0) {
+            return this.ReturnQuietNaN(op2, ctx);
+        }
+
+        if ((op1Flags & BigNumberFlags.FlagInfinity) != 0) {
+
+            if ((op2Flags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(op2).signum() == 0) return this.SignalInvalid(ctx);
+        }
+        if ((op1Flags & BigNumberFlags.FlagInfinity) != 0) {
+
+            if ((op1Flags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(op1).signum() == 0) return this.SignalInvalid(ctx);
+        }
+
+        if ((op3Flags & BigNumberFlags.FlagQuietNaN) != 0) {
+            return this.ReturnQuietNaN(op3, ctx);
+        }
+        return null;
+    };
     prototype.ValueOf = function(value, ctx) {
         if (ctx == null || !ctx.getHasExponentRange() || ctx.ExponentWithinRange(BigInteger.ZERO)) return this.helper.ValueOf(value);
         return this.RoundToPrecision(this.helper.ValueOf(value), ctx);
@@ -7032,6 +7068,9 @@ var RadixMath = function(helper) {
             return ret;
         }
         ret = this.DivideToIntegerZeroScale(thisValue, divisor, ctx2);
+        if ((ctx2.getFlags() & PrecisionContext.FlagInvalid) != 0) {
+            return this.SignalInvalid(ctx);
+        }
         ret = this.Add(thisValue, this.NegateRaw(this.Multiply(ret, divisor, null)), ctx2);
         ret = this.EnsureSign(ret, (this.helper.GetFlags(thisValue) & BigNumberFlags.FlagNegative) != 0);
         RadixMath.TransferFlags(ctx, ctx2);
@@ -7616,7 +7655,9 @@ var RadixMath = function(helper) {
 
     prototype.MultiplyAndAdd = function(thisValue, multiplicand, augend, ctx) {
         var ctx2 = PrecisionContext.Unlimited.WithBlankFlags();
-        var ret = this.Add(this.Multiply(thisValue, multiplicand, ctx2), augend, ctx);
+        var ret = this.MultiplyAddHandleSpecial(thisValue, multiplicand, augend, ctx);
+        if (ret != null) return ret;
+        ret = this.Add(this.Multiply(thisValue, multiplicand, ctx2), augend, ctx);
         if (ctx != null && ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (ctx2.getFlags()));
         return ret;
     };
@@ -8212,6 +8253,9 @@ var RadixMath = function(helper) {
                                         }
                                         other = this.helper.CreateNewWithFlags(op2MantAbs, op2Exponent, this.helper.GetFlags(other));
                                         var shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                        if (oneOpIsZero && ctx != null && ctx.getHasFlags()) {
+                                            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagRounded));
+                                        }
                                         return this.RoundToPrecisionWithShift(other, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                                     } else {
                                         if (!oneOpIsZero && !sameSign) {
@@ -8223,6 +8267,9 @@ var RadixMath = function(helper) {
                                             return this.RoundToPrecisionWithShift(other, ctx, 0, 0, shift, false);
                                         } else {
                                             var shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                            if (!sameSign && ctx != null && ctx.getHasFlags()) {
+                                                ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagRounded));
+                                            }
                                             return this.RoundToPrecisionWithShift(other, ctx, 0, sameSign ? 1 : 0, shift2, false);
                                         }
                                     }
@@ -8256,6 +8303,9 @@ var RadixMath = function(helper) {
                                         }
                                         thisValue = this.helper.CreateNewWithFlags(op1MantAbs, op1Exponent, this.helper.GetFlags(thisValue));
                                         var shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                        if (oneOpIsZero && ctx != null && ctx.getHasFlags()) {
+                                            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagRounded));
+                                        }
                                         return this.RoundToPrecisionWithShift(thisValue, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                                     } else {
                                         if (!oneOpIsZero && !sameSign) {
@@ -8267,6 +8317,9 @@ var RadixMath = function(helper) {
                                             return this.RoundToPrecisionWithShift(thisValue, ctx, 0, 0, shift, false);
                                         } else {
                                             var shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                                            if (!sameSign && ctx != null && ctx.getHasFlags()) {
+                                                ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagRounded));
+                                            }
                                             return this.RoundToPrecisionWithShift(thisValue, ctx, 0, sameSign ? 1 : 0, shift2, false);
                                         }
                                     }
@@ -8505,7 +8558,7 @@ function(mantissa, exponent) {
             if ((str.charAt(i) == 'S' || str.charAt(i) == 's') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'A' || str.charAt(i + 2) == 'a') && (str.charAt(i + 3) == 'N' || str.charAt(i + 3) == 'n')) {
                 if (i + 4 == str.length) {
                     if (!negative) return ExtendedDecimal.SignalingNaN;
-                    return ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagSignalingNaN);
+                    return ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagSignalingNaN);
                 }
                 i = i + (4);
                 for (; i < str.length; i++) {

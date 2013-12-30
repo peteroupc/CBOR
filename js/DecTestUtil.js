@@ -1,5 +1,5 @@
 var DecTestUtil={}
-var BigNumber=require("./BigNumber.js"),
+var BigNumber=require("./BigNumberMin.js"),
    PrecisionContext=BigNumber.PrecisionContext,
    BigInteger=BigNumber.BigInteger,
    ExtendedDecimal=BigNumber.ExtendedDecimal;
@@ -46,7 +46,7 @@ DecTestUtil.TestOp_add=function(name,precision,
     var d2=ExtendedDecimal.FromString(input2);
     var d3=d1.Add(d2,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_add_Invalid=function(name,precision,
@@ -69,7 +69,7 @@ DecTestUtil.TestOp_subtract=function(name,precision,
 
     var d3=d1.Subtract(d2,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_subtract_Invalid=function(name,precision,
@@ -92,7 +92,7 @@ DecTestUtil.TestOp_compare=function(name,precision,
 
     var d3=d1.CompareToWithContext(d2,ctx);
     d3=d3.RoundToPrecision(ctx);
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_compare_Invalid=function(name,precision,
@@ -113,7 +113,7 @@ DecTestUtil.TestOp_comparesig=function(name,precision,
     var d2=ExtendedDecimal.FromString(input2);
 
     var d3=d1.CompareToSignal(d2,ctx);
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_copy=function(name,precision,
@@ -122,7 +122,7 @@ DecTestUtil.TestOp_copy=function(name,precision,
     var d1=ExtendedDecimal.FromString(input1);
 
     var d3=d1;
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_comparesig_Invalid=function(name,precision,
@@ -144,7 +144,7 @@ DecTestUtil.TestOp_divide=function(name,precision,
 
     var d3=d1.Divide(d2,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_divide_Invalid=function(name,precision,
@@ -179,7 +179,7 @@ DecTestUtil.TestOp_divideint=function(name,precision,
 
     var d3=d1.DivideToIntegerZeroScale(d2,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_divideint_Invalid=function(name,precision,
@@ -214,7 +214,7 @@ DecTestUtil.TestOp_fma=function(name,precision,
     var d2a=ExtendedDecimal.FromString(input3);
     var d3=d1.MultiplyAndAdd(d2,d2a,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_fma_Invalid=function(name,precision,
@@ -236,7 +236,7 @@ DecTestUtil.TestOp_max=function(name,precision,
     var d2=ExtendedDecimal.FromString(input2);
 
     var d3=ExtendedDecimal.Max(d1,d2,ctx);
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_max_Invalid=function(name,precision,
@@ -257,7 +257,7 @@ DecTestUtil.TestOp_maxmag=function(name,precision,
     var d2=ExtendedDecimal.FromString(input2);
 
     var d3=ExtendedDecimal.MaxMagnitude(d1,d2,ctx);
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_maxmag_Invalid=function(name,precision,
@@ -278,7 +278,7 @@ DecTestUtil.TestOp_min=function(name,precision,
     var d2=ExtendedDecimal.FromString(input2);
 
     var d3=ExtendedDecimal.Min(d1,d2,ctx);
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_min_Invalid=function(name,precision,
@@ -299,7 +299,7 @@ DecTestUtil.TestOp_minmag=function(name,precision,
     var d2=ExtendedDecimal.FromString(input2);
 
     var d3=ExtendedDecimal.MinMagnitude(d1,d2,ctx);
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_minmag_Invalid=function(name,precision,
@@ -320,7 +320,7 @@ DecTestUtil.TestOp_minus=function(name,precision,
 
     var d3=d1.Negate(ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_minus_Invalid=function(name,precision,
@@ -342,7 +342,7 @@ DecTestUtil.TestOp_multiply=function(name,precision,
 
     var d3=d1.Multiply(d2,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_multiply_Invalid=function(name,precision,
@@ -364,7 +364,7 @@ DecTestUtil.TestOp_nextminus=function(name,precision,
 
     var d3=d1.NextMinus(ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_nextminus_Invalid=function(name,precision,
@@ -385,7 +385,7 @@ DecTestUtil.TestOp_nextplus=function(name,precision,
 
     var d3=d1.NextPlus(ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_nextplus_Invalid=function(name,precision,
@@ -407,7 +407,7 @@ DecTestUtil.TestOp_nexttoward=function(name,precision,
 
     var d3=d1.NextToward(d2,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_nexttoward_Invalid=function(name,precision,
@@ -429,7 +429,7 @@ DecTestUtil.TestOp_plus=function(name,precision,
 
     var d3=d1.Plus(ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_plus_Invalid=function(name,precision,
@@ -451,7 +451,7 @@ DecTestUtil.TestOp_quantize=function(name,precision,
 
     var d3=d1.Quantize(d2,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_quantize_Invalid=function(name,precision,
@@ -473,7 +473,7 @@ DecTestUtil.TestOp_reduce=function(name,precision,
 
     var d3=d1.Reduce(ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_reduce_Invalid=function(name,precision,
@@ -495,7 +495,7 @@ DecTestUtil.TestOp_remainder=function(name,precision,
 
     var d3=d1.Remainder(d2,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_remainder_Invalid=function(name,precision,
@@ -530,7 +530,7 @@ DecTestUtil.TestOp_remaindernear=function(name,precision,
 
     var d3=d1.RemainderNear(d2,ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_remaindernear_Invalid=function(name,precision,
@@ -564,7 +564,7 @@ DecTestUtil.TestOp_tointegralx=function(name,precision,
 
     var d3=d1.RoundToIntegralExact(ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_tointegralx_Invalid=function(name,precision,
@@ -585,7 +585,7 @@ DecTestUtil.TestOp_tointegral=function(name,precision,
 
     var d3=d1.RoundToIntegralNoRoundedFlag(ctx);
 
-    TestCommon.AssertDecFrac(d3,output);
+    TestCommon.AssertDecFrac(d3,output,name);
     TestCommon.AssertFlags(name,flags,ctx.getFlags());
    }
 DecTestUtil.TestOp_tointegral_Invalid=function(name,precision,

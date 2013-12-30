@@ -1285,8 +1285,9 @@ remainder=divrem[1]; }
      * @param divisor The divisor.
      * @param ctx A precision context object to control the precision. The
      * rounding and exponent range settings of this context are ignored.
-     * No flags will be set from this operation even if HasFlags of the context
-     * is true. Can be null.
+     * If HasFlags of the context is true, will also store the flags resulting
+     * from the operation (the flags are in addition to the pre-existing
+     * flags). Can be null.
      * @return The integer part of the quotient of the two objects. The exponent
      * will be set to 0. Signals FlagDivideByZero and returns infinity if
      * the divisor is 0 and the dividend is nonzero. Signals FlagInvalid
@@ -1329,8 +1330,9 @@ remainder=divrem[1]; }
      * @param ctx A precision context object to control the precision. The
      * rounding and exponent range settings of this context are ignored
      * (the rounding mode is always ((treated instanceof HalfEven) ? (HalfEven)treated
-     * : null)). No flags will be set from this operation even if HasFlags
-     * of the context is true. Can be null.
+     * : null)). If HasFlags of the context is true, will also store the flags
+     * resulting from the operation (the flags are in addition to the pre-existing
+     * flags). Can be null.
      * @return The distance of the closest multiple. Signals FlagInvalidOperation
      * and returns NaN if the divisor is 0, or either the result of integer
      * division (the quotient) or the remainder wouldn&apos;t fit the given
@@ -1345,8 +1347,9 @@ remainder=divrem[1]; }
      * Finds the largest value that's smaller than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
-     * is ignored. No flags will be set from this operation even if HasFlags
-     * of the context is true.
+     * is ignored. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags).
      * @return Returns the largest value that&apos;s less than the given
      * value. Returns negative infinity if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
@@ -1362,8 +1365,9 @@ remainder=divrem[1]; }
      * Finds the smallest value that's greater than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
-     * is ignored. No flags will be set from this operation even if HasFlags
-     * of the context is true.
+     * is ignored. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags).
      * @return Returns the smallest value that&apos;s greater than the
      * given value.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
@@ -1381,8 +1385,9 @@ remainder=divrem[1]; }
      * @param otherValue An ExtendedFloat object.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
-     * is ignored. No flags will be set from this operation even if HasFlags
-     * of the context is true.
+     * is ignored. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags).
      * @return Returns the next value that is closer to the other object&apos;s
      * value than this object&apos;s value.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
