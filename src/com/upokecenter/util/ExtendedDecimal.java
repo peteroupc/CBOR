@@ -19,10 +19,10 @@ at: http://peteroupc.github.io/CBOR/
      * <p>Unless noted otherwise, passing a null ExtendedDecimal argument
      * to any method here will throw an exception.</p> <p>When an arithmetic
      * operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
-     * it will not throw an exception too.</p> <p>An ExtendedDecimal function
-     * can be serialized by one of the following methods:</p> <ul> <li>Calling
+     * it will not throw an exception too.</p> <p>An ExtendedDecimal value
+     * can be serialized in one of the following ways:</p> <ul> <li>By calling
      * the toString() method, which will always return distinct strings
-     * for distinct ExtendedDecimal values.</li> <li>Calling the UnsignedMantissa,
+     * for distinct ExtendedDecimal values.</li> <li>By calling the UnsignedMantissa,
      * Exponent, and IsNegative properties, and calling the IsInfinity,
      * IsQuietNaN, and IsSignalingNaN methods. The return values combined
      * will uniquely identify a particular ExtendedDecimal value.</li>

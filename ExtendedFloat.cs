@@ -24,13 +24,13 @@ namespace PeterO {
     /// <para>When an arithmetic operation signals the flag FlagInvalid,
     /// FlagOverflow, or FlagDivideByZero, it will not throw an exception
     /// too.</para>
-    /// <para>An ExtendedFloat function can be serialized by one of the following
-    /// methods:</para>
-    /// <list> <item>Calling the toString() method, which will always return
-    /// distinct strings for distinct ExtendedFloat values. However, not
-    /// all strings can be converted back to an ExtendedFloat without loss,
-    /// especially if the string has a fractional part.</item>
-    /// <item>Calling the UnsignedMantissa, Exponent, and IsNegative
+    /// <para>An ExtendedFloat value can be serialized in one of the following
+    /// ways:</para>
+    /// <list> <item>By calling the toString() method, which will always
+    /// return distinct strings for distinct ExtendedFloat values. However,
+    /// not all strings can be converted back to an ExtendedFloat without
+    /// loss, especially if the string has a fractional part.</item>
+    /// <item>By calling the UnsignedMantissa, Exponent, and IsNegative
     /// properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
     /// methods. The return values combined will uniquely identify a particular
     /// ExtendedFloat value.</item>
