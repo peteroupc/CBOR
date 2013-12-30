@@ -711,7 +711,9 @@ namespace PeterO {
 
     /// <summary> Creates a bigfloat from this object's value. Note that
     /// if the bigfloat contains a negative exponent, the resulting value
-    /// might not be exact. </summary>
+    /// might not be exact. However, the resulting binary float will contain
+    /// enough precision to accurately convert it to a 32-bit or 64-bit floating
+    /// point number (float or double).</summary>
     /// <returns>A BigFloat object.</returns>
     /// <exception cref='OverflowException'>This object is infinity
     /// or NaN.</exception>
@@ -1121,13 +1123,15 @@ namespace PeterO {
     /// if zero. </summary>
     public int Sign {
       get {
-        return unsignedMantissa.IsZero ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
+        return  (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
+                 unsignedMantissa.IsZero) ? 0 :
+          (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
     }
     /// <summary> Gets whether this object's value equals 0. </summary>
     public bool IsZero {
       get {
-        return unsignedMantissa.IsZero;
+        return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && unsignedMantissa.IsZero;
       }
     }
     /// <summary> Gets the absolute value of this object. </summary>

@@ -38,7 +38,7 @@ namespace PeterO {
     /// </summary>
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>, IEquatable<ExtendedFloat> {
     BigInteger exponent;
-    BigInteger mantissa;
+    BigInteger unsignedMantissa;
     int flags;
 
     /// <summary> Gets this object's exponent. This object's value will
@@ -49,12 +49,12 @@ namespace PeterO {
     /// <summary> Gets the absolute value of this object's unscaled value.
     /// </summary>
     public BigInteger UnsignedMantissa {
-      get { return mantissa; }
+      get { return unsignedMantissa; }
     }
 
     /// <summary> Gets this object's unscaled value. </summary>
     public BigInteger Mantissa {
-      get { return this.IsNegative ? (-(BigInteger)mantissa) : mantissa; }
+      get { return this.IsNegative ? (-(BigInteger)unsignedMantissa) : unsignedMantissa; }
     }
 
     #region Equals and GetHashCode implementation
@@ -66,7 +66,7 @@ namespace PeterO {
       if (otherValue == null)
         return false;
       return this.exponent.Equals(otherValue.exponent) &&
-        this.mantissa.Equals(otherValue.mantissa) &&
+        this.unsignedMantissa.Equals(otherValue.unsignedMantissa) &&
         this.flags == otherValue.flags;
     }
 
@@ -90,7 +90,7 @@ namespace PeterO {
       int hashCode = 0;
       unchecked {
         hashCode = hashCode + 1000000007 * exponent.GetHashCode();
-        hashCode = hashCode + 1000000009 * mantissa.GetHashCode();
+        hashCode = hashCode + 1000000009 * unsignedMantissa.GetHashCode();
         hashCode = hashCode + 1000000009 * flags;
       }
       return hashCode;
@@ -103,7 +103,7 @@ namespace PeterO {
     public ExtendedFloat(BigInteger mantissa, BigInteger exponent) {
       this.exponent = exponent;
       int sign = mantissa.Sign;
-      this.mantissa = sign < 0 ? (-(BigInteger)mantissa) : mantissa;
+      this.unsignedMantissa = sign < 0 ? (-(BigInteger)mantissa) : mantissa;
       this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
     }
 
@@ -182,7 +182,7 @@ namespace PeterO {
     /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger GetMantissa(ExtendedFloat value) {
-        return value.mantissa;
+        return value.unsignedMantissa;
       }
 
     /// <summary> </summary>
@@ -253,7 +253,7 @@ namespace PeterO {
     /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(ExtendedFloat value) {
-        return value.mantissa.Sign < 0 ? BigNumberFlags.FlagNegative : 0;
+        return value.unsignedMantissa.Sign < 0 ? BigNumberFlags.FlagNegative : 0;
       }
 
     /// <summary> </summary>
@@ -332,83 +332,6 @@ namespace PeterO {
 
     private static BigInteger OneShift62 = BigInteger.One << 62;
 
-    /// <summary> Creates a bigfloat from this object's value. Note that
-    /// if the bigfloat contains a negative exponent, the resulting value
-    /// might not be exact. </summary>
-    /// <returns>An ExtendedFloat object.</returns>
-    /// <exception cref='OverflowException'>This object is infinity
-    /// or NaN.</exception>
-    public ExtendedFloat ToExtendedFloat() {
-      if (IsNaN() || IsInfinity())
-        throw new OverflowException("This value is infinity or NaN");
-      BigInteger bigintExp = this.Exponent;
-      BigInteger bigintMant = this.Mantissa;
-      if (bigintMant.IsZero)
-        return ExtendedFloat.Zero;
-      if (bigintExp.IsZero) {
-        // Integer
-        return ExtendedFloat.FromBigInteger(bigintMant);
-      } else if (bigintExp.Sign > 0) {
-        // Scaled integer
-        BigInteger bigmantissa = bigintMant;
-        bigmantissa *= (BigInteger)(DecimalUtility.FindPowerOfTenFromBig(bigintExp));
-        return ExtendedFloat.FromBigInteger(bigmantissa);
-      } else {
-        // Fractional number
-        FastInteger scale = FastInteger.FromBig(bigintExp);
-        BigInteger bigmantissa = bigintMant;
-        bool neg = (bigmantissa.Sign < 0);
-        BigInteger remainder;
-        if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        FastInteger negscale = FastInteger.Copy(scale).Negate();
-        BigInteger divisor = DecimalUtility.FindPowerOfFiveFromBig(
-          negscale.AsBigInteger());
-        while (true) {
-          BigInteger quotient = BigInteger.DivRem(bigmantissa, divisor, out remainder);
-          // Ensure that the quotient has enough precision
-          // to be converted accurately to a single or double
-          if (!remainder.IsZero &&
-              quotient.CompareTo(OneShift62) < 0) {
-            // At this point, the quotient has 62 or fewer bits
-            int[] bits = FastInteger.GetLastWords(quotient, 2);
-            int shift = 0;
-            if ((bits[0] | bits[1]) != 0) {
-              // Quotient's integer part is nonzero.
-              // Get the number of bits of the quotient
-              int bitPrecision = DecimalUtility.BitPrecisionInt(bits[1]);
-              if (bitPrecision != 0)
-                bitPrecision += 32;
-              else
-                bitPrecision = DecimalUtility.BitPrecisionInt(bits[0]);
-              shift = 63 - bitPrecision;
-              scale.SubtractInt(shift);
-            } else {
-              // Integer part of quotient is 0
-              shift = 1;
-              scale.SubtractInt(shift);
-            }
-            // shift by that many bits, but not less than 1
-            bigmantissa <<= shift;
-          } else {
-            bigmantissa = quotient;
-            break;
-          }
-        }
-        // Round half-even
-        BigInteger halfDivisor = divisor;
-        halfDivisor >>= 1;
-        int cmp = remainder.CompareTo(halfDivisor);
-        // No need to check for exactly half since all powers
-        // of five are odd
-        if (cmp > 0) {
-          // Greater than half
-          bigmantissa += BigInteger.One;
-        }
-        if (neg) bigmantissa = -(BigInteger)bigmantissa;
-        return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
-      }
-    }
-
     private static BigInteger OneShift23 = BigInteger.One << 23;
     private static BigInteger OneShift52 = BigInteger.One << 52;
 
@@ -448,11 +371,11 @@ namespace PeterO {
       if (this.IsNegative && this.IsZero) {
         return BitConverter.ToSingle(BitConverter.GetBytes(((int)1 << 31)), 0);
       }
-      BigInteger bigmant = BigInteger.Abs(this.mantissa);
+      BigInteger bigmant = BigInteger.Abs(this.unsignedMantissa);
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       int bitLeftmost = 0;
       int bitsAfterLeftmost = 0;
-      if (this.mantissa.IsZero) {
+      if (this.unsignedMantissa.IsZero) {
         return 0.0f;
       }
       int smallmant = 0;
@@ -563,11 +486,11 @@ namespace PeterO {
       if (this.IsNegative && this.IsZero) {
         return Extras.IntegersToDouble(new int[] { unchecked((int)(1 << 31)), 0 });
       }
-      BigInteger bigmant = BigInteger.Abs(this.mantissa);
+      BigInteger bigmant = BigInteger.Abs(this.unsignedMantissa);
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       int bitLeftmost = 0;
       int bitsAfterLeftmost = 0;
-      if (this.mantissa.IsZero) {
+      if (this.unsignedMantissa.IsZero) {
         return 0.0d;
       }
       int[] mantissaBits;
@@ -877,13 +800,15 @@ namespace PeterO {
     /// if zero. </summary>
     public int Sign {
       get {
-        return mantissa.IsZero ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
+        return (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
+                unsignedMantissa.IsZero) ? 0 :
+          (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
     }
     /// <summary> Gets whether this object's value equals 0. </summary>
     public bool IsZero {
       get {
-        return mantissa.IsZero;
+        return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && unsignedMantissa.IsZero;
       }
     }
     /// <summary> Gets the absolute value of this object. </summary>
@@ -1146,7 +1071,7 @@ namespace PeterO {
       ExtendedFloat negated = decfrac;
       if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
         int newflags = decfrac.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(decfrac.mantissa, decfrac.exponent, newflags);
+        negated = CreateWithFlags(decfrac.unsignedMantissa, decfrac.exponent, newflags);
       }
       return Add(negated, ctx);
     }
@@ -1664,7 +1589,7 @@ namespace PeterO {
       ExtendedFloat negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
         int newflags = subtrahend.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(subtrahend.mantissa, subtrahend.exponent, newflags);
+        negated = CreateWithFlags(subtrahend.unsignedMantissa, subtrahend.exponent, newflags);
       }
       return math.MultiplyAndAdd(this, op, negated, ctx);
     }
