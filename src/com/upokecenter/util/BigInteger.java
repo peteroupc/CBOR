@@ -2233,16 +2233,60 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     *
+     * Finds the minimum number of bits needed to represent this object's
+     * absolute value.
+     * @return The number of bits in this object&apos;s value. Returns 0
+     * if this object&apos;s value is 0, and returns 1 if the value is negative
+     * 1
      */
-    private int BitLength() {
+    public int getUnsignedBitLength() {
       int wc = this.wordCount;
       if (wc!=0){
-        short numberValue=reg[wc-1];
+        int numberValue=(((int)(reg[wc-1]))&0xFFFF);
         wc=(wc-1)<<4;
         if (numberValue == 0)return wc;
         wc+=16;
         {
+          if ((numberValue >> 8) == 0) {
+            numberValue <<= 8;
+            wc -= 8;
+          }
+          if ((numberValue >> 12) == 0) {
+            numberValue <<= 4;
+            wc -= 4;
+          }
+          if ((numberValue >> 14) == 0) {
+            numberValue <<= 2;
+            wc -= 2;
+          }
+          if ((numberValue >> 15) == 0)
+            --wc;
+        }
+        return wc;
+      } else {
+        return 0;
+      }
+    }
+
+    /**
+     * Finds the minimum number of bits needed to represent this object's
+     * value, except for its sign. If the value is negative, finds the number
+     * of bits in (its absolute value minus 1).
+     * @return The number of bits in this object&apos;s value. Returns 0
+     * if this object&apos;s value is 0 or negative 1.
+     */
+    public int bitLength() {
+      int wc = this.wordCount;
+      if (wc!=0){
+        int numberValue=(((int)(reg[wc-1]))&0xFFFF);
+        wc=(wc-1)<<4;
+        if (numberValue == (this.negative ? 1 : 0))return wc;
+        wc+=16;
+        {
+          if(this.negative){
+            numberValue--;
+            numberValue&=0xFFFF;
+          }
           if ((numberValue >> 8) == 0) {
             numberValue <<= 8;
             wc -= 8;
@@ -2336,7 +2380,7 @@ at: http://peteroupc.github.io/CBOR/
           return 1;
         }
       }
-      int bitlen=BitLength();
+      int bitlen=getUnsignedBitLength();
       if(bitlen<=2135){
         // (x*631305)>>21 is an approximation
         // to trunc(x*log10(2)) that is correct up
@@ -3203,7 +3247,7 @@ at: http://peteroupc.github.io/CBOR/
       if (this.signum() < 0)
         return BigInteger.ZERO;
       BigInteger bigintX = null;
-      BigInteger bigintY = Power2((BitLength() + 1) / 2);
+      BigInteger bigintY = Power2((getUnsignedBitLength() + 1) / 2);
       do {
         bigintX = bigintY;
         bigintY = bi.divide(bigintX);

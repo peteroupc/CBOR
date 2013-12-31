@@ -3709,14 +3709,46 @@ function() {
         return ((s >> 8) == 0) ? wc + 1 : wc + 2;
     };
 
-    prototype['BitLength'] = prototype.BitLength = function() {
+    prototype['getUnsignedBitLength'] = prototype.getUnsignedBitLength = function() {
         var wc = this.wordCount;
         if (wc != 0) {
-            var numberValue = this.reg[wc - 1];
+            var numberValue = ((this.reg[wc - 1]) & 65535);
             wc = (wc - 1) << 4;
             if (numberValue == 0) return wc;
             wc = wc + (16);
             {
+                if ((numberValue >> 8) == 0) {
+                    numberValue <<= 8;
+                    wc -= 8;
+                }
+                if ((numberValue >> 12) == 0) {
+                    numberValue <<= 4;
+                    wc -= 4;
+                }
+                if ((numberValue >> 14) == 0) {
+                    numberValue <<= 2;
+                    wc -= 2;
+                }
+                if ((numberValue >> 15) == 0) --wc;
+            }
+            return wc;
+        } else {
+            return 0;
+        }
+    };
+
+    prototype['bitLength'] = prototype.bitLength = function() {
+        var wc = this.wordCount;
+        if (wc != 0) {
+            var numberValue = ((this.reg[wc - 1]) & 65535);
+            wc = (wc - 1) << 4;
+            if (numberValue == (this.negative ? 1 : 0)) return wc;
+            wc = wc + (16);
+            {
+                if (this.negative) {
+                    numberValue--;
+                    numberValue &= 65535;
+                }
                 if ((numberValue >> 8) == 0) {
                     numberValue <<= 8;
                     wc -= 8;
@@ -3799,7 +3831,7 @@ function() {
                 return 1;
             }
         }
-        var bitlen = this.BitLength();
+        var bitlen = this.getUnsignedBitLength();
         if (bitlen <= 2135) {
 
             var minDigits = 1 + (((bitlen - 1) * 631305) >> 21);
@@ -4474,7 +4506,7 @@ function() {
     prototype['Sqrt'] = prototype.Sqrt = function(bi) {
         if (this.signum() < 0) return BigInteger.ZERO;
         var bigintX = null;
-        var bigintY = BigInteger.Power2((((this.BitLength() + 1) / 2)|0));
+        var bigintY = BigInteger.Power2((((this.getUnsignedBitLength() + 1) / 2)|0));
         do {
             bigintX = bigintY;
             bigintY = bi.divide(bigintX);

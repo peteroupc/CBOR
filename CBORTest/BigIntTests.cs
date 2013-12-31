@@ -2215,6 +2215,22 @@ namespace Test
     }
 
     [Test]
+    public void TestBitLength(){
+      Assert.AreEqual(0,BigInteger.valueOf(0).bitLength());
+      Assert.AreEqual(1,BigInteger.valueOf(1).bitLength());
+      Assert.AreEqual(2,BigInteger.valueOf(2).bitLength());
+      Assert.AreEqual(2,BigInteger.valueOf(2).bitLength());
+      Assert.AreEqual(31,BigInteger.valueOf(Int32.MaxValue).bitLength());
+      Assert.AreEqual(31,BigInteger.valueOf(Int32.MinValue).bitLength());
+      Assert.AreEqual(16,BigInteger.valueOf(65535).bitLength());
+      Assert.AreEqual(16,BigInteger.valueOf(-65535).bitLength());
+      Assert.AreEqual(17,BigInteger.valueOf(65536).bitLength());
+      Assert.AreEqual(16,BigInteger.valueOf(-65536).bitLength());
+      Assert.AreEqual(0,BigInteger.valueOf(-1).bitLength());
+      Assert.AreEqual(1,BigInteger.valueOf(-2).bitLength());
+    }
+
+    [Test]
     public void TestAdd(){
       TestCommon.DoTestAdd("335104030856920274353771469482036822016",
                            "11220305413346585490818414845644062848",
