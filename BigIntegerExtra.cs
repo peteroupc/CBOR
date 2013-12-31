@@ -174,7 +174,7 @@ namespace PeterO
     /// <returns>A Boolean object.</returns>
     public bool IsPowerOfTwo{
       get {
-        int bits=BitLength();
+        int bits=bitLength();
         int ret=0;
         for(int i=0;i<bits;i++){
           ret+=(GetUnsignedBit(i)) ? 1 : 0;

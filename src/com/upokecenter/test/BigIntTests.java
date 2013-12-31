@@ -2215,6 +2215,22 @@ import com.upokecenter.util.*;
     }
 
     @Test
+    public void TestBitLength() {
+      Assert.assertEquals(0,BigInteger.valueOf(0).bitLength());
+      Assert.assertEquals(1,BigInteger.valueOf(1).bitLength());
+      Assert.assertEquals(2,BigInteger.valueOf(2).bitLength());
+      Assert.assertEquals(2,BigInteger.valueOf(2).bitLength());
+      Assert.assertEquals(31,BigInteger.valueOf(Integer.MAX_VALUE).bitLength());
+      Assert.assertEquals(31,BigInteger.valueOf(Integer.MIN_VALUE).bitLength());
+      Assert.assertEquals(16,BigInteger.valueOf(65535).bitLength());
+      Assert.assertEquals(16,BigInteger.valueOf(-65535).bitLength());
+      Assert.assertEquals(17,BigInteger.valueOf(65536).bitLength());
+      Assert.assertEquals(16,BigInteger.valueOf(-65536).bitLength());
+      Assert.assertEquals(0,BigInteger.valueOf(-1).bitLength());
+      Assert.assertEquals(1,BigInteger.valueOf(-2).bitLength());
+    }
+
+    @Test
     public void TestAdd() {
       TestCommon.DoTestAdd("335104030856920274353771469482036822016",
                            "11220305413346585490818414845644062848",
