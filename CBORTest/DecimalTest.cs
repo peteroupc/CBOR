@@ -173,6 +173,12 @@ namespace Test
     static string TestPath="..\\..\\..\\.settings";
 
     [Test]
+    public void TestSquareRoot(){
+      ExtendedDecimal dec=ExtendedDecimal.FromString("9");
+      Console.WriteLine(dec.SquareRoot(PrecisionContext.ForPrecision(50)));
+    }
+
+    [Test]
     public void TestParser(){
       long failures=0;
       if(!Directory.Exists(TestPath))
@@ -184,7 +190,7 @@ namespace Test
           IDictionary<string,string> context=new Dictionary<string,string>();
           using(StreamReader w=new StreamReader(f)){
             while(!w.EndOfStream){
-              var ln=w.ReadLine();
+              string ln=w.ReadLine();
               {
                 try {
                   ParseDecTest(ln,context);
