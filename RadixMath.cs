@@ -10,9 +10,9 @@ using System.Text;
 //using System.Numerics;
 
 namespace PeterO {
-  /// <summary> Encapsulates radix-independent arithmetic. </summary>
-  /// <typeparam name='T'>Data type for a numeric value in a particular
-  /// radix.</typeparam>
+    /// <summary> Encapsulates radix-independent arithmetic. </summary>
+    /// <typeparam name='T'>Data type for a numeric value in a particular
+    /// radix.</typeparam>
   class RadixMath<T> {
 
     IRadixMathHelper<T> helper;
@@ -867,7 +867,7 @@ namespace PeterO {
         if(ctx.HasFlags && helper.GetExponent(guess).CompareTo(idealExp)>0){
           // Current exponent is now greater, treat
           // as rounded
-          ctx.Flags|=PrecisionContext.FlagRounded;         
+          ctx.Flags|=PrecisionContext.FlagRounded;
         }
         if(treatAsInexact){
           ctxtmp.Flags|=PrecisionContext.FlagInexact;
@@ -1983,7 +1983,13 @@ namespace PeterO {
       }
       return ret;
     }
-    public T ReduceToPrecisionAndIdealExponent(
+    /// <summary> </summary>
+    /// <param name='thisValue'>A T object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='precision'>A FastInteger object.</param>
+    /// <param name='idealExp'>A FastInteger object.</param>
+    /// <returns>A T object.</returns>
+public T ReduceToPrecisionAndIdealExponent(
       T thisValue,
       PrecisionContext ctx,
       FastInteger precision,
@@ -2030,7 +2036,11 @@ namespace PeterO {
       return ret;
     }
 
-    public T Reduce(
+    /// <summary> </summary>
+    /// <param name='thisValue'>A T object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+public T Reduce(
       T thisValue,
       PrecisionContext ctx
      ) {

@@ -75,6 +75,9 @@ at: http://peteroupc.github.io/CBOR/
         }
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           // Square root of infinity
+          if ((thisFlags & BigNumberFlags.FlagNegative) != 0) {
+            return SignalInvalid(ctx);
+          }
           return thisValue;
         }
       }
@@ -786,7 +789,7 @@ bigrem=divrem[1]; }
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-public T SquareRoot(T thisValue, PrecisionContext ctx) {
+    public T SquareRoot(T thisValue, PrecisionContext ctx) {
       if(ctx==null || (ctx.getPrecision()).signum()==0)
         throw new IllegalArgumentException("ctx is null or has unlimited precision");
       T ret = SquareRootHandleSpecial(thisValue, ctx);
@@ -796,6 +799,10 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
       BigInteger currentExp=helper.GetExponent(thisValue);
       BigInteger idealExp=currentExp;
       idealExp=idealExp.divide(BigInteger.valueOf(2));
+      if(currentExp.signum()<0 && currentExp.testBit(0)){
+        // Round towards negative infinity
+        idealExp=idealExp.subtract(BigInteger.ONE);
+      }
       if(helper.GetSign(thisValue)==0){
         return RoundToPrecision(helper.CreateNewWithFlags(
           BigInteger.ZERO,idealExp,helper.GetFlags(thisValue)),ctx);
@@ -804,43 +811,108 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
       T initialGuess = GetInitialApproximation(thisValue);
       PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN))
         .WithRounding(Rounding.ZeroFiveUp);
-      System.out.println("n="+thisValue);
-      System.out.println("Initial guess " + initialGuess);
+      Rounding rounding=Rounding.HalfEven;
+      PrecisionContext ctxtmp=ctx.WithRounding(rounding).WithBlankFlags();
+      //System.out.println("n="+thisValue+", Initial guess " + initialGuess);
       T lastGuess = helper.CreateNewWithFlags(BigInteger.ZERO,BigInteger.ZERO,0);
       T two = helper.CreateNewWithFlags(BigInteger.valueOf(2),BigInteger.ZERO,0);
       T one = helper.CreateNewWithFlags(BigInteger.ONE,BigInteger.ZERO,0);
       T guess = initialGuess;
-      int maxIterations=50;
+      FastInteger fiMax=new FastInteger(30);
+      BigInteger iterChange=ctx.getPrecision();
+      iterChange=iterChange.shiftRight(7); // Divide by 128
+      fiMax.AddBig(iterChange);
+      int maxIterations=fiMax.MinInt32(Integer.MAX_VALUE-1);
       // Iterate
       int iterations = 0;
       boolean more = true;
+      int lastCompare=0;
+      int vacillations=0;
+      boolean treatAsInexact=false;
       while (more) {
         lastGuess = guess;
         guess = Divide(thisValue,guess,ctxdiv);
         guess = Add(guess,lastGuess,null);
-        guess = Divide(guess,two,ctxdiv);
-        System.out.println("Next guess " + guess);
-        T error = Add(thisValue,NegateRaw(Multiply(guess,guess,null)),null);
+        T newguess = Divide(guess,two,ctxdiv);
+        //System.out.println("Next guess " + newguess+" cmp="+compareTo(lastGuess,newguess));
         if (++iterations >= maxIterations) {
           more = false;
         }
-        else if (lastGuess.equals(guess)) { // TODO: Check if lastGuess and guess vacillate
-          more = compareTo(AbsRaw(error),one) >= 0;
+        else {
+          int guessCmp=compareTo(lastGuess,newguess);
+          if (guessCmp==0) {
+            T error = Add(thisValue,NegateRaw(Multiply(newguess,newguess,null)),null);
+            more = compareTo(AbsRaw(error),one) >= 0;
+          } else if((guessCmp>0 && lastCompare<0) || (lastCompare>0 && guessCmp<0)){
+            // Guesses are vacillating
+            vacillations++;
+            if(vacillations>3 && guessCmp>0){
+              // When guesses are vacillating, choose the lower guess
+              // to reduce rounding errors
+              more=false;
+              treatAsInexact=true;
+            }
+          }
+          lastCompare=guessCmp;
         }
         if(!more){
-          guess=Reduce(guess,ctxdiv);
-          currentExp=helper.GetExponent(thisValue);
-          int cmp=currentExp.compareTo(idealExp);
-          if(cmp>0){
-            // Current exponent is greater than the ideal,
-            // so add 0 with the ideal exponent to change
-            // it to the ideal when possible
-            return Add(guess,helper.CreateNewWithFlags(
-              BigInteger.ZERO,idealExp,0),ctx);
-          }
+          guess=Divide(guess,two,ctxdiv.WithRounding(
+            treatAsInexact ? Rounding.ZeroFiveUp : rounding));
+        } else {
+          guess=newguess;
         }
       }
-      return RoundToPrecision(guess,ctx);
+//      System.out.println("Next guess changed to " + guess);
+      ctxdiv=ctxdiv.WithBlankFlags();
+      guess=ReduceToPrecisionAndIdealExponent(guess,ctxdiv,FastInteger.FromBig(ctx.getPrecision()),FastInteger.FromBig(idealExp));
+      currentExp=helper.GetExponent(guess);
+      int cmp=currentExp.compareTo(idealExp);
+//      System.out.println("Next guess changed to(III) " + guess+", cur="+currentExp+",ideal="+idealExp+",flags="+ctxdiv.getFlags());
+      if(cmp>0){
+        // Current exponent is greater than the ideal,
+        // so add 0 with the ideal exponent to change
+        // it to the ideal when possible
+        guess=Add(guess,helper.CreateNewWithFlags(
+          BigInteger.ZERO,idealExp,0),ctxtmp);
+        if(ctx.getHasFlags()){
+          ctx.setFlags(ctx.getFlags()|(ctxtmp.getFlags()));
+        }
+        return guess;
+      } else if(cmp<0){
+        // Current exponent is less than the ideal
+        guess=RoundToPrecision(guess,ctxtmp);
+        if(ctx.getHasFlags() && helper.GetExponent(guess).compareTo(idealExp)>0){
+          // Current exponent is now greater, treat
+          // as rounded
+          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
+        }
+        if(treatAsInexact){
+          ctxtmp.setFlags(ctxtmp.getFlags()|(PrecisionContext.FlagInexact));
+          ctxtmp.setFlags(ctxtmp.getFlags()|(PrecisionContext.FlagRounded));
+        }
+        if((ctxtmp.getFlags()&PrecisionContext.FlagInexact)==0){
+          ctxtmp.setFlags(0);
+          guess=ReduceToPrecisionAndIdealExponent(guess,ctxtmp,null,FastInteger.FromBig(idealExp));
+          if(ctx.getHasFlags()){
+            ctx.setFlags(ctx.getFlags()|((ctxtmp.getFlags()&(PrecisionContext.FlagSubnormal))));
+          }
+          if(ctx.getHasFlags() && ctx.getClampNormalExponents() &&
+             !helper.GetExponent(guess).equals(idealExp)){
+            ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+          }
+        } else {
+          if(ctx.getHasFlags()){
+            ctx.setFlags(ctx.getFlags()|(ctxtmp.getFlags()));
+          }
+        }
+        return guess;
+      } else {
+        guess=RoundToPrecision(guess,ctxtmp);
+        if(ctx.getHasFlags()){
+          ctx.setFlags(ctx.getFlags()|(ctxtmp.getFlags()));
+        }
+        return guess;
+      }
     }
 
     /**
@@ -1969,16 +2041,19 @@ rem=divrem[1]; }
       }
       return ret;
     }
-
     /**
      *
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
+     * @param precision A FastInteger object.
+     * @param idealExp A FastInteger object.
      * @return A T object.
      */
-    public T Reduce(
+public T ReduceToPrecisionAndIdealExponent(
       T thisValue,
-      PrecisionContext ctx
+      PrecisionContext ctx,
+      FastInteger precision,
+      FastInteger idealExp
      ) {
       T ret = RoundToPrecision(thisValue, ctx);
       if (ret != null && (helper.GetFlags(ret) & BigNumberFlags.FlagSpecial) == 0) {
@@ -1988,8 +2063,16 @@ rem=divrem[1]; }
           exp = new FastInteger(0);
         } else {
           int radix = thisRadix;
+          FastInteger digits=(precision==null) ? null :
+            helper.CreateShiftAccumulator(bigmant).GetDigitLength();
           BigInteger bigradix = BigInteger.valueOf(radix);
           while (!(bigmant.signum()==0)) {
+            if(precision!=null && digits.compareTo(precision)==0){
+              break;
+            }
+            if(idealExp!=null && exp.compareTo(idealExp)==0){
+              break;
+            }
             BigInteger bigrem;
             BigInteger bigquo;
 {
@@ -2000,6 +2083,7 @@ bigrem=divrem[1]; }
               break;
             bigmant = bigquo;
             exp.Increment();
+            if(digits!=null)digits.Decrement();
           }
         }
         int flags = helper.GetFlags(thisValue);
@@ -2014,6 +2098,19 @@ bigrem=divrem[1]; }
         ret = EnsureSign(ret, (flags & BigNumberFlags.FlagNegative) != 0);
       }
       return ret;
+    }
+
+    /**
+     *
+     * @param thisValue A T object.
+     * @param ctx A PrecisionContext object.
+     * @return A T object.
+     */
+public T Reduce(
+      T thisValue,
+      PrecisionContext ctx
+     ) {
+      return ReduceToPrecisionAndIdealExponent(thisValue,ctx,null,null);
     }
 
     private T RoundToPrecisionInternal(
