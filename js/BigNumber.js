@@ -4503,13 +4503,13 @@ function() {
         return (this.wordCount == 0);
     };
 
-    prototype['Sqrt'] = prototype.Sqrt = function(bi) {
-        if (this.signum() < 0) return BigInteger.ZERO;
+    prototype['sqrt'] = prototype.sqrt = function() {
+        if (this.signum() <= 0) return BigInteger.ZERO;
         var bigintX = null;
         var bigintY = BigInteger.Power2((((this.getUnsignedBitLength() + 1) / 2)|0));
         do {
             bigintX = bigintY;
-            bigintY = bi.divide(bigintX);
+            bigintY = this.divide(bigintX);
             bigintY = bigintY.add(bigintX);
             bigintY = bigintY.shiftRight(1);
         } while (bigintY.compareTo(bigintX) < 0);
