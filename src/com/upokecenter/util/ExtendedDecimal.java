@@ -114,6 +114,10 @@ at: http://peteroupc.github.io/CBOR/
 
     private static final int MaxSafeInt = 214748363;
 
+    public static ExtendedDecimal FromString(String str) {
+      return FromString(str,null);
+    }
+
     /**
      * Creates a decimal number from a string that represents a number. <p>
      * The format of the string generally consists of:<ul> <li> An optional
@@ -122,15 +126,16 @@ at: http://peteroupc.github.io/CBOR/
      * digit and before the last digit.</li> <li> Optionally, E+ (positive
      * exponent) or E- (negative exponent) plus one or more digits specifying
      * the exponent.</li> </ul> </p> <p>The string can also be "-INF", "-Infinity",
-     * "Infinity", "Inf", quiet NaN ("qNaN") followed by any number of digits,
-     * or signaling NaN ("sNaN") followed by any number of digits, all in
-     * any combination of upper and lower case.</p> <p> The format generally
-     * follows the definition in java.math.BigDecimal(), except that
-     * the digits must be ASCII digits ('0' through '9').</p>
+     * "Infinity", "Inf", quiet NaN ("qNaN"/"-qNaN") followed by any number
+     * of digits, or signaling NaN ("sNaN"/"-sNaN") followed by any number
+     * of digits, all in any combination of upper and lower case.</p> <p>
+     * The format generally follows the definition in java.math.BigDecimal(),
+     * except that the digits must be ASCII digits ('0' through '9').</p>
      * @param str A string that represents a number.
+     * @param ctx A PrecisionContext object.
      * @return An ExtendedDecimal object.
      */
-    public static ExtendedDecimal FromString(String str) {
+    public static ExtendedDecimal FromString(String str, PrecisionContext ctx) {
       if (str == null)
         throw new NullPointerException("str");
       if (str.length() == 0)
@@ -178,9 +183,17 @@ at: http://peteroupc.github.io/CBOR/
               (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN);
           }
           i += 3;
+          FastInteger digitCount=new FastInteger(0);
+          FastInteger maxDigits=null;
+          haveDigits=false;
+          if(ctx!=null && !((ctx.getPrecision()).signum()==0)){
+            maxDigits=FastInteger.FromBig(ctx.getPrecision());
+            if(ctx.getClampNormalExponents())maxDigits.Decrement();
+          }
           for (; i < str.length(); i++) {
             if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
               int thisdigit = (int)(str.charAt(i) - '0');
+              haveDigits=(haveDigits||thisdigit!=0);
               if (mantInt > MaxSafeInt) {
                 if (mant == null)
                   mant = new FastInteger(mantInt);
@@ -188,6 +201,13 @@ at: http://peteroupc.github.io/CBOR/
               } else {
                 mantInt *= 10;
                 mantInt += thisdigit;
+              }
+              if(haveDigits && maxDigits!=null){
+                digitCount.Increment();
+                if(digitCount.compareTo(maxDigits)>0){
+                  // NaN contains too many digits
+                  throw new NumberFormatException();
+                }
               }
             } else {
               throw new NumberFormatException();
@@ -213,9 +233,17 @@ at: http://peteroupc.github.io/CBOR/
               (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagSignalingNaN);
           }
           i += 4;
+          FastInteger digitCount=new FastInteger(0);
+          FastInteger maxDigits=null;
+          haveDigits=false;
+          if(ctx!=null && !((ctx.getPrecision()).signum()==0)){
+            maxDigits=FastInteger.FromBig(ctx.getPrecision());
+            if(ctx.getClampNormalExponents())maxDigits.Decrement();
+          }
           for (; i < str.length(); i++) {
             if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
               int thisdigit = (int)(str.charAt(i) - '0');
+              haveDigits=(haveDigits||thisdigit!=0);
               if (mantInt > MaxSafeInt) {
                 if (mant == null)
                   mant = new FastInteger(mantInt);
@@ -223,6 +251,13 @@ at: http://peteroupc.github.io/CBOR/
               } else {
                 mantInt *= 10;
                 mantInt += thisdigit;
+              }
+              if(haveDigits && maxDigits!=null){
+                digitCount.Increment();
+                if(digitCount.compareTo(maxDigits)>0){
+                  // NaN contains too many digits
+                  throw new NumberFormatException();
+                }
               }
             } else {
               throw new NumberFormatException();
@@ -314,13 +349,14 @@ at: http://peteroupc.github.io/CBOR/
           else
             newScale.Add(exp);
         }
-      } else if (i != str.length()) {
+      }
+      if (i != str.length()) {
         throw new NumberFormatException();
       }
       return CreateWithFlags(
         (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
         (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
-        negative ? BigNumberFlags.FlagNegative : 0);
+        negative ? BigNumberFlags.FlagNegative : 0).RoundToPrecision(ctx);
     }
 
     private static final class DecimalMathHelper implements IRadixMathHelper<ExtendedDecimal> {
@@ -1246,7 +1282,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal DivideToIntegerNaturalScale(
       ExtendedDecimal divisor
-    ) {
+     ) {
       return DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
 
@@ -1272,7 +1308,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal RemainderNaturalScale(
       ExtendedDecimal divisor
-    ) {
+     ) {
       return RemainderNaturalScale(divisor, null);
     }
 
@@ -1285,7 +1321,7 @@ remainder=divrem[1]; }
     public ExtendedDecimal RemainderNaturalScale(
       ExtendedDecimal divisor,
       PrecisionContext ctx
-    ) {
+     ) {
       return Subtract(this.DivideToIntegerNaturalScale(divisor, null)
                       .Multiply(divisor, null), ctx);
     }
@@ -1315,7 +1351,7 @@ remainder=divrem[1]; }
       ExtendedDecimal divisor,
       long desiredExponentSmall,
       PrecisionContext ctx
-    ) {
+     ) {
       return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
@@ -1340,7 +1376,7 @@ remainder=divrem[1]; }
     public ExtendedDecimal Divide(
       ExtendedDecimal divisor,
       PrecisionContext ctx
-    ) {
+     ) {
       return math.Divide(this, divisor, ctx);
     }
 
@@ -1364,7 +1400,7 @@ remainder=divrem[1]; }
       ExtendedDecimal divisor,
       long desiredExponentSmall,
       Rounding rounding
-    ) {
+     ) {
       return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)), PrecisionContext.ForRounding(rounding));
     }
 
@@ -1414,7 +1450,7 @@ remainder=divrem[1]; }
       ExtendedDecimal divisor,
       BigInteger desiredExponent,
       Rounding rounding
-    ) {
+     ) {
       return DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
 
@@ -1609,7 +1645,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal NextMinus(
       PrecisionContext ctx
-    ) {
+     ) {
       return math.NextMinus(this, ctx);
     }
 
@@ -1627,7 +1663,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal NextPlus(
       PrecisionContext ctx
-    ) {
+     ) {
       return math.NextPlus(this, ctx);
     }
 
@@ -1648,7 +1684,7 @@ remainder=divrem[1]; }
     public ExtendedDecimal NextToward(
       ExtendedDecimal otherValue,
       PrecisionContext ctx
-    ) {
+     ) {
       return math.NextToward(this, otherValue, ctx);
     }
 
@@ -2092,5 +2128,13 @@ remainder=divrem[1]; }
       return math.RoundToBinaryPrecision(this, ctx);
     }
 
+    /**
+     *
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedDecimal object.
+     */
+    public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
+      return math.SquareRoot(this,ctx);
+    }
   }
 

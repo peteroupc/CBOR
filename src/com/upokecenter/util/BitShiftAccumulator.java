@@ -195,7 +195,7 @@ at: http://peteroupc.github.io/CBOR/
         int b = (int)bytes[i];
         if (b != 0) {
           if ((b & 0x80) != 0) { break; }
-          if ((b & 0x40) != 0) { fastKB.SubtractInt(1); break; }
+          if ((b & 0x40) != 0) { fastKB.Decrement(); break; }
           if ((b & 0x20) != 0) { fastKB.SubtractInt(2); break; }
           if ((b & 0x10) != 0) { fastKB.SubtractInt(3); break; }
           if ((b & 0x08) != 0) { fastKB.SubtractInt(4); break; }
