@@ -136,16 +136,13 @@ namespace PeterO {
     /// </summary>
     /// <param name='str'>A string that represents a number.</param>
     /// <returns>An ExtendedFloat object.</returns>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     public static ExtendedFloat FromString(String str, PrecisionContext ctx) {
       if (str == null)
         throw new ArgumentNullException("str");
       return ExtendedDecimal.FromString(str,ctx).ToExtendedFloat();
     }
-    /// <summary> Creates a binary float from a string that represents
-    /// a number. See FromString(str,ctx).</para>
-    /// </summary>
-    /// <param name='str'>A string that represents a number.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+
     public static ExtendedFloat FromString(String str) {
       return FromString(str,null);
     }

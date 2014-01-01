@@ -773,7 +773,7 @@ bigrem=divrem[1]; }
       FastInteger length = helper.CreateShiftAccumulator(integerPart).GetDigitLength();
       length.AddBig(helper.GetExponent(n));
       if (length.isEvenNumber()) {
-        length.SubtractInt(1);
+        length.Decrement();
       }
       length.Divide(2);
       return helper.CreateNewWithFlags(BigInteger.ONE,
@@ -824,11 +824,20 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
         if (++iterations >= maxIterations) {
           more = false;
         }
-        else if (lastGuess.equals(guess)) {
+        else if (lastGuess.equals(guess)) { // TODO: Check if lastGuess and guess vacillate
           more = compareTo(AbsRaw(error),one) >= 0;
         }
         if(!more){
           guess=Reduce(guess,ctxdiv);
+          currentExp=helper.GetExponent(thisValue);
+          int cmp=currentExp.compareTo(idealExp);
+          if(cmp>0){
+            // Current exponent is greater than the ideal,
+            // so add 0 with the ideal exponent to change
+            // it to the ideal when possible
+            return Add(guess,helper.CreateNewWithFlags(
+              BigInteger.ZERO,idealExp,0),ctx);
+          }
         }
       }
       return RoundToPrecision(guess,ctx);
@@ -955,7 +964,7 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
         if ((ctx2.getFlags() & (PrecisionContext.FlagUnderflow)) != 0) {
           BigInteger bigmant = (helper.GetMantissa(val)).abs();
           BigInteger maxmant = helper.MultiplyByRadixPower(
-            BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()).SubtractInt(1));
+            BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()).Decrement());
           if (bigmant.compareTo(maxmant) >= 0 || (ctx.getPrecision()).compareTo(BigInteger.ONE) == 0) {
             // don't treat max-precision results as having underflowed
             ctx2.setFlags(0);
@@ -1417,7 +1426,7 @@ rem=divrem[1]; }
         }
         if (atMaxPrecision && (ctx != null && ctx.getHasExponentRange())) {
           BigInteger fastAdjustedExp = FastInteger.Copy(exp)
-            .AddBig(ctx.getPrecision()).SubtractInt(1).AsBigInteger();
+            .AddBig(ctx.getPrecision()).Decrement().AsBigInteger();
           if (fastAdjustedExp.compareTo(ctx.getEMin()) >= 0 && fastAdjustedExp.compareTo(ctx.getEMax()) <= 0) {
             // At this point, the check for rounding with Rounding.Unnecessary
             // already occurred above
@@ -1747,9 +1756,9 @@ rem=divrem[1]; }
               return thisValue;
             FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
             FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
-              .Add(fastPrecision).SubtractInt(1);
+              .Add(fastPrecision).Decrement();
             FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
-              .Add(fastPrecision).SubtractInt(1);
+              .Add(fastPrecision).Decrement();
             if (fastAdjustedExp.compareTo(fastEMax) <= 0 &&
                 fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
               return thisValue;
@@ -1764,9 +1773,9 @@ rem=divrem[1]; }
                 return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
               FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
               FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
-                .Add(fastPrecision).SubtractInt(1);
+                .Add(fastPrecision).Decrement();
               FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
-                .Add(fastPrecision).SubtractInt(1);
+                .Add(fastPrecision).Decrement();
               if (fastAdjustedExp.compareTo(fastEMax) <= 0 &&
                   fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
                 return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
@@ -2094,7 +2103,7 @@ bigrem=divrem[1]; }
       FastInteger discardedBits = FastInteger.Copy(accum.getDiscardedDigitCount());
       exp.Add(discardedBits);
       FastInteger adjExponent = FastInteger.Copy(exp)
-        .Add(accum.GetDigitLength()).SubtractInt(1);
+        .Add(accum.GetDigitLength()).Decrement();
       //System.out.println("{0}->{1} digits={2} exp={3} [curexp={4}] adj={5},max={6}",bigmantissa,accum.getShiftedInt(),
       //              accum.getDiscardedDigitCount(),exp,helper.GetExponent(thisValue),adjExponent,fastEMax);
       FastInteger newAdjExponent = adjExponent;
@@ -2131,7 +2140,7 @@ bigrem=divrem[1]; }
             }
             newAdjExponent = FastInteger.Copy(exp)
               .Add(newDigitLength)
-              .SubtractInt(1);
+              .Decrement();
           }
         }
       }
@@ -2263,7 +2272,7 @@ bigrem=divrem[1]; }
       if (recheckOverflow && fastEMax != null) {
         // Check for overflow again
         adjExponent = FastInteger.Copy(exp);
-        adjExponent.Add(accum.GetDigitLength()).SubtractInt(1);
+        adjExponent.Add(accum.GetDigitLength()).Decrement();
         if (binaryPrec && fastEMax != null && adjExponent.compareTo(fastEMax) == 0) {
           // May or may not be an overflow depending on the mantissa
           // (uses accumulator from previous steps, including the check
