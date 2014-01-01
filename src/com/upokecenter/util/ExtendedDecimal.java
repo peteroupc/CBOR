@@ -114,6 +114,10 @@ at: http://peteroupc.github.io/CBOR/
 
     private static final int MaxSafeInt = 214748363;
 
+    public static ExtendedDecimal FromString(String str) {
+      return FromString(str,null);
+    }
+
     /**
      * Creates a decimal number from a string that represents a number. <p>
      * The format of the string generally consists of:<ul> <li> An optional
@@ -128,9 +132,10 @@ at: http://peteroupc.github.io/CBOR/
      * The format generally follows the definition in java.math.BigDecimal(),
      * except that the digits must be ASCII digits ('0' through '9').</p>
      * @param str A string that represents a number.
+     * @param ctx A PrecisionContext object.
      * @return An ExtendedDecimal object.
      */
-    public static ExtendedDecimal FromString(String str) {
+    public static ExtendedDecimal FromString(String str, PrecisionContext ctx) {
       if (str == null)
         throw new NullPointerException("str");
       if (str.length() == 0)
@@ -178,9 +183,17 @@ at: http://peteroupc.github.io/CBOR/
               (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN);
           }
           i += 3;
+          FastInteger digitCount=new FastInteger(0);
+          FastInteger maxDigits=null;
+          haveDigits=false;
+          if(ctx!=null && !((ctx.getPrecision()).signum()==0)){
+            maxDigits=FastInteger.FromBig(ctx.getPrecision());
+            if(ctx.getClampNormalExponents())maxDigits.Decrement();
+          }
           for (; i < str.length(); i++) {
             if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
               int thisdigit = (int)(str.charAt(i) - '0');
+              haveDigits=(haveDigits||thisdigit!=0);
               if (mantInt > MaxSafeInt) {
                 if (mant == null)
                   mant = new FastInteger(mantInt);
@@ -188,6 +201,13 @@ at: http://peteroupc.github.io/CBOR/
               } else {
                 mantInt *= 10;
                 mantInt += thisdigit;
+              }
+              if(haveDigits && maxDigits!=null){
+                digitCount.Increment();
+                if(digitCount.compareTo(maxDigits)>0){
+                  // NaN contains too many digits
+                  throw new NumberFormatException();
+                }
               }
             } else {
               throw new NumberFormatException();
@@ -213,9 +233,17 @@ at: http://peteroupc.github.io/CBOR/
               (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagSignalingNaN);
           }
           i += 4;
+          FastInteger digitCount=new FastInteger(0);
+          FastInteger maxDigits=null;
+          haveDigits=false;
+          if(ctx!=null && !((ctx.getPrecision()).signum()==0)){
+            maxDigits=FastInteger.FromBig(ctx.getPrecision());
+            if(ctx.getClampNormalExponents())maxDigits.Decrement();
+          }
           for (; i < str.length(); i++) {
             if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
               int thisdigit = (int)(str.charAt(i) - '0');
+              haveDigits=(haveDigits||thisdigit!=0);
               if (mantInt > MaxSafeInt) {
                 if (mant == null)
                   mant = new FastInteger(mantInt);
@@ -223,6 +251,13 @@ at: http://peteroupc.github.io/CBOR/
               } else {
                 mantInt *= 10;
                 mantInt += thisdigit;
+              }
+              if(haveDigits && maxDigits!=null){
+                digitCount.Increment();
+                if(digitCount.compareTo(maxDigits)>0){
+                  // NaN contains too many digits
+                  throw new NumberFormatException();
+                }
               }
             } else {
               throw new NumberFormatException();
@@ -314,13 +349,14 @@ at: http://peteroupc.github.io/CBOR/
           else
             newScale.Add(exp);
         }
-      } else if (i != str.length()) {
+      }
+      if (i != str.length()) {
         throw new NumberFormatException();
       }
       return CreateWithFlags(
         (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
         (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
-        negative ? BigNumberFlags.FlagNegative : 0);
+        negative ? BigNumberFlags.FlagNegative : 0).RoundToPrecision(ctx);
     }
 
     private static final class DecimalMathHelper implements IRadixMathHelper<ExtendedDecimal> {
@@ -2097,7 +2133,7 @@ remainder=divrem[1]; }
      * @param ctx A PrecisionContext object.
      * @return An ExtendedDecimal object.
      */
-public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
+    public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this,ctx);
     }
   }

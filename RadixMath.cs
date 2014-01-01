@@ -807,7 +807,7 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
         if (++iterations >= maxIterations) {
           more = false;
         }
-        else if (lastGuess.Equals(guess)) { // TODO: Check if lastGuess and guess vacillate 
+        else if (lastGuess.Equals(guess)) { // TODO: Check if lastGuess and guess vacillate
           more = CompareTo(AbsRaw(error),one) >= 0;
         }
         if(!more){
