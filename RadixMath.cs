@@ -758,7 +758,7 @@ namespace PeterO {
       FastInteger length = helper.CreateShiftAccumulator(integerPart).GetDigitLength();
       length.AddBig(helper.GetExponent(n));
       if (length.IsEvenNumber) {
-        length.SubtractInt(1);
+        length.Decrement();
       }
       length.Divide(2);
       return helper.CreateNewWithFlags(BigInteger.One,
@@ -807,7 +807,7 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
         if (++iterations >= maxIterations) {
           more = false;
         }
-        else if (lastGuess.Equals(guess)) {
+        else if (lastGuess.Equals(guess)) { // TODO: Check if lastGuess and guess vacillate 
           more = CompareTo(AbsRaw(error),one) >= 0;
         }
         if(!more){
@@ -943,7 +943,7 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
         if ((ctx2.Flags & (PrecisionContext.FlagUnderflow)) != 0) {
           BigInteger bigmant = BigInteger.Abs(helper.GetMantissa(val));
           BigInteger maxmant = helper.MultiplyByRadixPower(
-            BigInteger.One, FastInteger.FromBig(ctx.Precision).SubtractInt(1));
+            BigInteger.One, FastInteger.FromBig(ctx.Precision).Decrement());
           if (bigmant.CompareTo(maxmant) >= 0 || (ctx.Precision).CompareTo(BigInteger.One) == 0) {
             // don't treat max-precision results as having underflowed
             ctx2.Flags = 0;
@@ -1391,7 +1391,7 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
         }
         if (atMaxPrecision && (ctx != null && ctx.HasExponentRange)) {
           BigInteger fastAdjustedExp = FastInteger.Copy(exp)
-            .AddBig(ctx.Precision).SubtractInt(1).AsBigInteger();
+            .AddBig(ctx.Precision).Decrement().AsBigInteger();
           if (fastAdjustedExp.CompareTo(ctx.EMin) >= 0 && fastAdjustedExp.CompareTo(ctx.EMax) <= 0) {
             // At this point, the check for rounding with Rounding.Unnecessary
             // already occurred above
@@ -1706,9 +1706,9 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
               return thisValue;
             FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
             FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
-              .Add(fastPrecision).SubtractInt(1);
+              .Add(fastPrecision).Decrement();
             FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
-              .Add(fastPrecision).SubtractInt(1);
+              .Add(fastPrecision).Decrement();
             if (fastAdjustedExp.CompareTo(fastEMax) <= 0 &&
                 fastAdjustedExp.CompareTo(fastNormalMin) >= 0) {
               return thisValue;
@@ -1723,9 +1723,9 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
                 return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
               FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
               FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
-                .Add(fastPrecision).SubtractInt(1);
+                .Add(fastPrecision).Decrement();
               FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
-                .Add(fastPrecision).SubtractInt(1);
+                .Add(fastPrecision).Decrement();
               if (fastAdjustedExp.CompareTo(fastEMax) <= 0 &&
                   fastAdjustedExp.CompareTo(fastNormalMin) >= 0) {
                 return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
@@ -2039,7 +2039,7 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
       FastInteger discardedBits = FastInteger.Copy(accum.DiscardedDigitCount);
       exp.Add(discardedBits);
       FastInteger adjExponent = FastInteger.Copy(exp)
-        .Add(accum.GetDigitLength()).SubtractInt(1);
+        .Add(accum.GetDigitLength()).Decrement();
       //Console.WriteLine("{0}->{1} digits={2} exp={3} [curexp={4}] adj={5},max={6}",bigmantissa,accum.ShiftedInt,
       //              accum.DiscardedDigitCount,exp,helper.GetExponent(thisValue),adjExponent,fastEMax);
       FastInteger newAdjExponent = adjExponent;
@@ -2076,7 +2076,7 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
             }
             newAdjExponent = FastInteger.Copy(exp)
               .Add(newDigitLength)
-              .SubtractInt(1);
+              .Decrement();
           }
         }
       }
@@ -2208,7 +2208,7 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
       if (recheckOverflow && fastEMax != null) {
         // Check for overflow again
         adjExponent = FastInteger.Copy(exp);
-        adjExponent.Add(accum.GetDigitLength()).SubtractInt(1);
+        adjExponent.Add(accum.GetDigitLength()).Decrement();
         if (binaryPrec && fastEMax != null && adjExponent.CompareTo(fastEMax) == 0) {
           // May or may not be an overflow depending on the mantissa
           // (uses accumulator from previous steps, including the check

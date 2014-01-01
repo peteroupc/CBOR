@@ -181,7 +181,7 @@ namespace PeterO {
           if(bigquo.IsZero)
             knownBitLength.SetInt(0);
           else
-            knownBitLength.SubtractInt(1);
+            knownBitLength.Decrement();
         }
         return;
       }
@@ -392,7 +392,7 @@ namespace PeterO {
           bitLeftmost = digit;
           digits--;
           shiftedSmall /= 10;
-          knownBitLength.SubtractInt(1);
+          knownBitLength.Decrement();
         }
       }
       bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;

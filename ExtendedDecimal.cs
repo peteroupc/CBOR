@@ -10,30 +10,30 @@ using System.Text;
 
 namespace PeterO {
 
-    /// <summary> Represents an arbitrary-precision decimal floating-point
-    /// number. Consists of an integer mantissa and an integer exponent,
-    /// both arbitrary-precision. The value of the number is equal to mantissa
-    /// * 10^exponent. This class also supports values for negative zero,
-    /// not-a-number (NaN) values, and infinity. <para>Passing a signaling
-    /// NaN to any arithmetic operation shown here will signal the flag FlagInvalid
-    /// and return a quiet NaN, unless noted otherwise.</para>
-    /// <para>Passing a quiet NaN to any arithmetic operation shown here
-    /// will return a quiet NaN, unless noted otherwise.</para>
-    /// <para>Unless noted otherwise, passing a null ExtendedDecimal argument
-    /// to any method here will throw an exception.</para>
-    /// <para>When an arithmetic operation signals the flag FlagInvalid,
-    /// FlagOverflow, or FlagDivideByZero, it will not throw an exception
-    /// too.</para>
-    /// <para>An ExtendedDecimal value can be serialized in one of the following
-    /// ways:</para>
-    /// <list> <item>By calling the toString() method, which will always
-    /// return distinct strings for distinct ExtendedDecimal values.</item>
-    /// <item>By calling the UnsignedMantissa, Exponent, and IsNegative
-    /// properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
-    /// methods. The return values combined will uniquely identify a particular
-    /// ExtendedDecimal value.</item>
-    /// </list>
-    /// </summary>
+  /// <summary> Represents an arbitrary-precision decimal floating-point
+  /// number. Consists of an integer mantissa and an integer exponent,
+  /// both arbitrary-precision. The value of the number is equal to mantissa
+  /// * 10^exponent. This class also supports values for negative zero,
+  /// not-a-number (NaN) values, and infinity. <para>Passing a signaling
+  /// NaN to any arithmetic operation shown here will signal the flag FlagInvalid
+  /// and return a quiet NaN, unless noted otherwise.</para>
+  /// <para>Passing a quiet NaN to any arithmetic operation shown here
+  /// will return a quiet NaN, unless noted otherwise.</para>
+  /// <para>Unless noted otherwise, passing a null ExtendedDecimal argument
+  /// to any method here will throw an exception.</para>
+  /// <para>When an arithmetic operation signals the flag FlagInvalid,
+  /// FlagOverflow, or FlagDivideByZero, it will not throw an exception
+  /// too.</para>
+  /// <para>An ExtendedDecimal value can be serialized in one of the following
+  /// ways:</para>
+  /// <list> <item>By calling the toString() method, which will always
+  /// return distinct strings for distinct ExtendedDecimal values.</item>
+  /// <item>By calling the UnsignedMantissa, Exponent, and IsNegative
+  /// properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
+  /// methods. The return values combined will uniquely identify a particular
+  /// ExtendedDecimal value.</item>
+  /// </list>
+  /// </summary>
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>, IEquatable<ExtendedDecimal> {
     BigInteger exponent;
     BigInteger unsignedMantissa;
@@ -185,16 +185,23 @@ namespace PeterO {
             (str[i + 1] == 'A' || str[i + 1] == 'a') &&
             (str[i + 2] == 'N' || str[i + 2] == 'n')) {
           if (i + 3 == str.Length) {
-            if (!negative) return NaN.RoundToPrecision(ctx);
+            if (!negative) return NaN;
             return CreateWithFlags(
               BigInteger.Zero, BigInteger.Zero,
-              (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN)
-              .RoundToPrecision(ctx);
+              (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN);
           }
           i += 3;
+          FastInteger digitCount=new FastInteger(0);
+          FastInteger maxDigits=null;
+          haveDigits=false;
+          if(ctx!=null && !((ctx.Precision).IsZero)){
+            maxDigits=FastInteger.FromBig(ctx.Precision);
+            if(ctx.ClampNormalExponents)maxDigits.Decrement();
+          }
           for (; i < str.Length; i++) {
             if (str[i] >= '0' && str[i] <= '9') {
               int thisdigit = (int)(str[i] - '0');
+              haveDigits=(haveDigits||thisdigit!=0);
               if (mantInt > MaxSafeInt) {
                 if (mant == null)
                   mant = new FastInteger(mantInt);
@@ -203,6 +210,13 @@ namespace PeterO {
                 mantInt *= 10;
                 mantInt += thisdigit;
               }
+              if(haveDigits && maxDigits!=null){
+                digitCount.Increment();
+                if(digitCount.CompareTo(maxDigits)>0){
+                  // NaN contains too many digits
+                  throw new FormatException();
+                }
+              }
             } else {
               throw new FormatException();
             }
@@ -210,13 +224,11 @@ namespace PeterO {
           BigInteger bigmant = (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger();
           return CreateWithFlags(
             bigmant, BigInteger.Zero,
-            (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN)
-            .RoundToPrecision(ctx);
+            (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN);
         }
       }
       if (i + 4 <= str.Length) {
         // Signaling NaN
-        // TODO: Round signaling NaN if needed
         if ((str[i] == 'S' || str[i] == 's') &&
             (str[i + 1] == 'N' || str[i + 1] == 'n') &&
             (str[i + 2] == 'A' || str[i + 2] == 'a') &&
@@ -229,9 +241,17 @@ namespace PeterO {
               (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagSignalingNaN);
           }
           i += 4;
+          FastInteger digitCount=new FastInteger(0);
+          FastInteger maxDigits=null;
+          haveDigits=false;
+          if(ctx!=null && !((ctx.Precision).IsZero)){
+            maxDigits=FastInteger.FromBig(ctx.Precision);
+            if(ctx.ClampNormalExponents)maxDigits.Decrement();
+          }
           for (; i < str.Length; i++) {
             if (str[i] >= '0' && str[i] <= '9') {
               int thisdigit = (int)(str[i] - '0');
+              haveDigits=(haveDigits||thisdigit!=0);
               if (mantInt > MaxSafeInt) {
                 if (mant == null)
                   mant = new FastInteger(mantInt);
@@ -239,6 +259,13 @@ namespace PeterO {
               } else {
                 mantInt *= 10;
                 mantInt += thisdigit;
+              }
+              if(haveDigits && maxDigits!=null){
+                digitCount.Increment();
+                if(digitCount.CompareTo(maxDigits)>0){
+                  // NaN contains too many digits
+                  throw new FormatException();
+                }
               }
             } else {
               throw new FormatException();
@@ -342,38 +369,38 @@ namespace PeterO {
 
     private sealed class DecimalMathHelper : IRadixMathHelper<ExtendedDecimal> {
 
-    /// <summary> </summary>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary> </summary>
+      /// <returns>A 32-bit signed integer.</returns>
       public int GetRadix() {
         return 10;
       }
 
-    /// <summary> </summary>
-    /// <param name='value'>An ExtendedDecimal object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary> </summary>
+      /// <param name='value'>An ExtendedDecimal object.</param>
+      /// <returns>A 32-bit signed integer.</returns>
       public int GetSign(ExtendedDecimal value) {
         return value.Sign;
       }
 
-    /// <summary> </summary>
-    /// <param name='value'>An ExtendedDecimal object.</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary> </summary>
+      /// <param name='value'>An ExtendedDecimal object.</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger GetMantissa(ExtendedDecimal value) {
         return value.unsignedMantissa;
       }
 
-    /// <summary> </summary>
-    /// <param name='value'>An ExtendedDecimal object.</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary> </summary>
+      /// <param name='value'>An ExtendedDecimal object.</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger GetExponent(ExtendedDecimal value) {
         return value.exponent;
       }
 
-    /// <summary> </summary>
-    /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='e1'>A BigInteger object.</param>
-    /// <param name='e2'>A BigInteger object.</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary> </summary>
+      /// <param name='mantissa'>A BigInteger object.</param>
+      /// <param name='e1'>A BigInteger object.</param>
+      /// <param name='e2'>A BigInteger object.</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
         if (mantissa.Sign == 0) return BigInteger.Zero;
         FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
@@ -385,26 +412,26 @@ namespace PeterO {
         return mantissa;
       }
 
-    /// <summary> </summary>
-    /// <param name='lastDigit'>A 32-bit signed integer.</param>
-    /// <param name='olderDigits'>A 32-bit signed integer.</param>
-    /// <returns>An IShiftAccumulator object.</returns>
-    /// <param name='bigint'>A BigInteger object.</param>
+      /// <summary> </summary>
+      /// <param name='lastDigit'>A 32-bit signed integer.</param>
+      /// <param name='olderDigits'>A 32-bit signed integer.</param>
+      /// <returns>An IShiftAccumulator object.</returns>
+      /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
         return new DigitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
-    /// <summary> </summary>
-    /// <returns>An IShiftAccumulator object.</returns>
-    /// <param name='bigint'>A BigInteger object.</param>
+      /// <summary> </summary>
+      /// <returns>An IShiftAccumulator object.</returns>
+      /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new DigitShiftAccumulator(bigint, 0, 0);
       }
 
-    /// <summary> </summary>
-    /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>A BigInteger object.</param>
-    /// <returns>A Boolean object.</returns>
+      /// <summary> </summary>
+      /// <param name='numerator'>A BigInteger object.</param>
+      /// <param name='denominator'>A BigInteger object.</param>
+      /// <returns>A Boolean object.</returns>
       public bool HasTerminatingRadixExpansion(BigInteger numerator, BigInteger denominator) {
         // Simplify denominator based on numerator
         BigInteger gcd = BigInteger.GreatestCommonDivisor(numerator, denominator);
@@ -426,10 +453,10 @@ namespace PeterO {
         return denominator.CompareTo(BigInteger.One) == 0;
       }
 
-    /// <summary> </summary>
-    /// <param name='bigint'>A BigInteger object.</param>
-    /// <param name='power'>A FastInteger object.</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary> </summary>
+      /// <param name='bigint'>A BigInteger object.</param>
+      /// <param name='power'>A FastInteger object.</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.Sign <= 0) return bigint;
         if (bigint.IsZero) return bigint;
@@ -449,29 +476,29 @@ namespace PeterO {
         }
       }
 
-    /// <summary> </summary>
-    /// <param name='value'>An ExtendedDecimal object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary> </summary>
+      /// <param name='value'>An ExtendedDecimal object.</param>
+      /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(ExtendedDecimal value) {
         return value.flags;
       }
 
-    /// <summary> </summary>
-    /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='exponent'>A BigInteger object.</param>
-    /// <param name='flags'>A 32-bit signed integer.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+      /// <summary> </summary>
+      /// <param name='mantissa'>A BigInteger object.</param>
+      /// <param name='exponent'>A BigInteger object.</param>
+      /// <param name='flags'>A 32-bit signed integer.</param>
+      /// <returns>An ExtendedDecimal object.</returns>
       public ExtendedDecimal CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         return CreateWithFlags(mantissa, exponent, flags);
       }
-    /// <summary> </summary>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary> </summary>
+      /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteAndNonFinite;
       }
-    /// <summary> </summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+      /// <summary> </summary>
+      /// <param name='val'>A 32-bit signed integer.</param>
+      /// <returns>An ExtendedDecimal object.</returns>
       public ExtendedDecimal ValueOf(int val) {
         return FromInt64(val);
       }
@@ -1975,7 +2002,7 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
-public ExtendedDecimal SquareRoot(PrecisionContext ctx){
+    public ExtendedDecimal SquareRoot(PrecisionContext ctx){
       return math.SquareRoot(this,ctx);
     }
   }
