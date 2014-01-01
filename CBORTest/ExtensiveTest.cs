@@ -94,6 +94,8 @@ namespace CBOR
         ctx=PrecisionContext.Decimal32;
       if(Contains(type,"!"))
         return 0;
+      if(!Contains(type,"d"))
+        return 0;
       bool squroot=Contains(type,"V");
       bool mod=Contains(type,"%");
       bool div=Contains(type,"/");
@@ -116,7 +118,14 @@ namespace CBOR
       string sresult=String.Empty;
       string flags=String.Empty;
       op3str=chunks[4];
-      if(op3str.Equals("->")){
+      if(op2str.Equals("->")){
+        if(chunks.Length<=5)
+          return 0;
+        op2str=String.Empty;
+        op3str=String.Empty;
+        sresult=chunks[4];
+        flags=chunks[5];
+      } else if(op3str.Equals("->")){
         if(chunks.Length<=6)
           return 0;
         op3str=String.Empty;
@@ -131,7 +140,7 @@ namespace CBOR
       }
       sresult=ConvertOp(sresult);
       ExtendedDecimal op1=ExtendedDecimal.FromString(op1str);
-      ExtendedDecimal op2=ExtendedDecimal.FromString(op2str);
+      ExtendedDecimal op2=(String.IsNullOrEmpty(op2str)) ? null : ExtendedDecimal.FromString(op2str);
       ExtendedDecimal op3=(String.IsNullOrEmpty(op3str)) ? null : ExtendedDecimal.FromString(op3str);
       ExtendedDecimal result=ExtendedDecimal.FromString(sresult.ToString());
       int expectedFlags=0;
@@ -160,6 +169,15 @@ namespace CBOR
         ExtendedDecimal d3=op1.Divide(op2,ctx);
         Assert.AreEqual(result,d3,ln);
         AssertFlags(expectedFlags,ctx.Flags,ln);
+      }
+      else if(squroot){
+        if(ctx.Rounding== Rounding.HalfEven){
+          // Square root only defined for the HalfEven
+          // rounding mode
+          ExtendedDecimal d3=op1.SquareRoot(ctx);
+          Assert.AreEqual(result,d3,ln);
+          AssertFlags(expectedFlags,ctx.Flags,ln);
+        }
       }
       else if(fma){
         ExtendedDecimal d3=op1.MultiplyAndAdd(op2,op3,ctx);
