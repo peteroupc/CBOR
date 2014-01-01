@@ -195,7 +195,7 @@ namespace Test
                     ParseDecTest(ln,context);
                   } catch(Exception){
                     Console.SetOut(oldOut);
-                    ParseDecTest(ln,context);                    
+                    ParseDecTest(ln,context);
                   } finally {
                     Console.SetOut(oldOut);
                   }
