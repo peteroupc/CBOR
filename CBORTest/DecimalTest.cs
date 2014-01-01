@@ -25,9 +25,9 @@ namespace Test
     public static Regex PropertyLine=new Regex(
       "^(\\w+)\\:\\s*(\\S+)",RegexOptions.Compiled);
     public static Regex Quotes=new Regex(
-      "[\\'\\\"]",RegexOptions.Compiled);
+      "^[\\'\\\"]|[\\'\\\"]$",RegexOptions.Compiled);
     public static Regex TestLine=new Regex(
-      "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",RegexOptions.Compiled);
+      "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",RegexOptions.Compiled);
 
     private static TValue GetKeyOrDefault<TKey,TValue>(
       IDictionary<TKey,TValue> dict, TKey key, TValue defaultValue){
@@ -73,6 +73,8 @@ namespace Test
            !op.Equals("nextminus") &&
            !op.Equals("copy") &&
            !op.Equals("abs") &&
+           !op.Equals("toSci") &&
+           !op.Equals("toEng") &&
            !op.Equals("reduce") &&
            !op.Equals("quantize") &&
            !op.Equals("add") &&
@@ -119,14 +121,19 @@ namespace Test
         if(rounding.Equals("05up"))
           ctx=ctx.WithRounding(Rounding.ZeroFiveUp);
         ctx=ctx.WithBlankFlags();
-        ExtendedDecimal d1=(String.IsNullOrEmpty(input1)) ? null :
-          ExtendedDecimal.FromString(input1);
-        ExtendedDecimal d2=(String.IsNullOrEmpty(input2)) ? null :
-          ExtendedDecimal.FromString(input2);
-        ExtendedDecimal d2a=(String.IsNullOrEmpty(input3)) ? null :
-          ExtendedDecimal.FromString(input3);
+        ExtendedDecimal d1=null,d2=null,d2a=null;
+        if(!op.Equals("toSci") && !op.Equals("toEng")){
+          d1=(String.IsNullOrEmpty(input1)) ? null :
+            ExtendedDecimal.FromString(input1);
+          d2=(String.IsNullOrEmpty(input2)) ? null :
+            ExtendedDecimal.FromString(input2);
+          d2a=(String.IsNullOrEmpty(input3)) ? null :
+            ExtendedDecimal.FromString(input3);
+        }
         ExtendedDecimal d3=null;
         if(op.Equals("multiply"))d3=d1.Multiply(d2,ctx);
+        else if(op.Equals("toSci")){ /* handled below */ }
+        else if(op.Equals("toEng")){ /* handled below */ }
         else if(op.Equals("fma"))d3=d1.MultiplyAndAdd(d2,d2a,ctx);
         else if(op.Equals("min"))d3=ExtendedDecimal.Min(d1,d2,ctx);
         else if(op.Equals("max"))d3=ExtendedDecimal.Max(d1,d2,ctx);
@@ -163,9 +170,28 @@ namespace Test
         if(flags.Contains("Underflow"))expectedFlags|=PrecisionContext.FlagUnderflow;
         if(flags.Contains("Overflow"))expectedFlags|=PrecisionContext.FlagOverflow;
         if(flags.Contains("Clamped"))expectedFlags|=PrecisionContext.FlagClamped;
+        bool conversionError=flags.Contains("Conversion_syntax");
         if(invalid)expectedFlags|=PrecisionContext.FlagInvalid;
         if(divzero)expectedFlags|=PrecisionContext.FlagDivideByZero;
-        TestCommon.AssertDecFrac(d3,output,name);
+        if(op.Equals("toSci")){
+          try {
+            d1=ExtendedDecimal.FromString(input1,ctx);
+            Assert.IsTrue(!conversionError,"Expected no conversion error");
+            Assert.AreEqual(output,d1.ToString(),input1);
+          } catch(FormatException){
+            Assert.IsTrue(conversionError,"Expected conversion error");
+          }
+        } else if(op.Equals("toEng")){
+          try {
+            d1=ExtendedDecimal.FromString(input1,ctx);
+            Assert.IsTrue(!conversionError,"Expected no conversion error");
+            Assert.AreEqual(output,d1.ToEngineeringString(),input1);
+          } catch(FormatException){
+            Assert.IsTrue(conversionError,"Expected conversion error");
+          }
+        } else {
+          TestCommon.AssertDecFrac(d3,output,name);
+        }
         TestCommon.AssertFlags(expectedFlags,ctx.Flags,name);
       }
     }
