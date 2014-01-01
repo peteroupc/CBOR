@@ -3239,18 +3239,18 @@ at: http://peteroupc.github.io/CBOR/
     public boolean isZero() { return (this.wordCount == 0); }
 
     /**
-     *
-     * @param bi A BigInteger object.
-     * @return A BigInteger object.
+     * Finds the square root of this instance's value.
+     * @return The square root of this object&apos;s value. Returns 0 if
+     * this value is 0 or less.
      */
-    public BigInteger Sqrt(BigInteger bi) {
-      if (this.signum() < 0)
+    public BigInteger sqrt() {
+      if (this.signum() <= 0)
         return BigInteger.ZERO;
       BigInteger bigintX = null;
       BigInteger bigintY = Power2((getUnsignedBitLength() + 1) / 2);
       do {
         bigintX = bigintY;
-        bigintY = bi.divide(bigintX);
+        bigintY = this.divide(bigintX);
         bigintY=bigintY.add(bigintX);
         bigintY=bigintY.shiftRight(1);
       } while (bigintY.compareTo(bigintX) < 0);

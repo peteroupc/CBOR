@@ -3201,17 +3201,17 @@ namespace PeterO {
       get { return (this.wordCount == 0); }
     }
 
-    /// <summary> </summary>
-    /// <param name='bi'>A BigInteger object.</param>
-    /// <returns>A BigInteger object.</returns>
-    public BigInteger Sqrt(BigInteger bi) {
-      if (this.Sign < 0)
+    /// <summary> Finds the square root of this instance's value.</summary>
+    /// <returns>The square root of this object&apos;s value. Returns 0
+    /// if this value is 0 or less.</returns>
+    public BigInteger sqrt() {
+      if (this.Sign <= 0)
         return BigInteger.Zero;
       BigInteger bigintX = null;
       BigInteger bigintY = Power2((getUnsignedBitLength() + 1) / 2);
       do {
         bigintX = bigintY;
-        bigintY = bi / (BigInteger)bigintX;
+        bigintY = this / (BigInteger)bigintX;
         bigintY += bigintX;
         bigintY >>= 1;
       } while (bigintY.CompareTo(bigintX) < 0);
