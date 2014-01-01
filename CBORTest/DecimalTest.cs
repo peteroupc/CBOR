@@ -53,33 +53,6 @@ namespace Test
         string input3=match.Groups[5].ToString();
         string output=match.Groups[6].ToString();
         string flags=match.Groups[7].ToString();
-        if(!op.Equals("multiply") &&
-           !op.Equals("fma") &&
-           !op.Equals("min") &&
-           !op.Equals("max") &&
-           !op.Equals("minmag") &&
-           !op.Equals("maxmag") &&
-           !op.Equals("compare") &&
-           !op.Equals("comparesig") &&
-           !op.Equals("subtract") &&
-           !op.Equals("tointegral") &&
-           !op.Equals("tointegralx") &&
-           !op.Equals("divideint") &&
-           !op.Equals("divide") &&
-           !op.Equals("remainder") &&
-           !op.Equals("remaindernear") &&
-           !op.Equals("nexttoward") &&
-           !op.Equals("nextplus") &&
-           !op.Equals("nextminus") &&
-           !op.Equals("copy") &&
-           !op.Equals("abs") &&
-           !op.Equals("toSci") &&
-           !op.Equals("toEng") &&
-           !op.Equals("reduce") &&
-           !op.Equals("quantize") &&
-           !op.Equals("add") &&
-           !op.Equals("minus") &&
-           !op.Equals("plus"))return;
         input1=Quotes.Replace(input1,"");
         input2=Quotes.Replace(input2,"");
         input3=Quotes.Replace(input3,"");
@@ -99,7 +72,6 @@ namespace Test
            output.Contains("#")){
           return;
         }
-
         PrecisionContext ctx=PrecisionContext.ForPrecision(precision)
           .WithExponentClamp(clamp).WithExponentRange(
             (BigInteger)minexponent,(BigInteger)maxexponent);
@@ -147,6 +119,7 @@ namespace Test
         else if(op.Equals("divideint"))d3=d1.DivideToIntegerZeroScale(d2,ctx);
         else if(op.Equals("divide"))d3=d1.Divide(d2,ctx);
         else if(op.Equals("remainder"))d3=d1.Remainder(d2,ctx);
+        else if(op.Equals("squareroot"))d3=d1.SquareRoot(ctx);
         else if(op.Equals("remaindernear"))d3=d1.RemainderNear(d2,ctx);
         else if(op.Equals("nexttoward"))d3=d1.NextToward(d2,ctx);
         else if(op.Equals("nextplus"))d3=d1.NextPlus(ctx);
@@ -157,6 +130,7 @@ namespace Test
         else if(op.Equals("quantize"))d3=d1.Quantize(d2,ctx);
         else if(op.Equals("add"))d3=d1.Add(d2,ctx);
         else if(op.Equals("minus"))d3=d1.Negate(ctx);
+        else if(op.Equals("apply"))d3=d1.RoundToPrecision(ctx);
         else if(op.Equals("plus"))d3=d1.Plus(ctx);
         else return;
         bool invalid=(flags.Contains("Division_impossible") ||
@@ -197,12 +171,6 @@ namespace Test
     }
 
     static string TestPath="..\\..\\..\\.settings";
-
-    [Test]
-    public void TestSquareRoot(){
-      ExtendedDecimal dec=ExtendedDecimal.FromString("9");
-      Console.WriteLine(dec.SquareRoot(PrecisionContext.ForPrecision(50)));
-    }
 
     [Test]
     public void TestParser(){

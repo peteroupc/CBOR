@@ -1,4 +1,14 @@
 * text=auto
+*.cs text=set
+*.java text=set
+*.js text=set
+*.rb text=set
+*.py text=set
+*.php text=set
+*.c text=set
+*.h text=set
+*.cc text=set
+*.cpp text=set
 *.cs     diff=csharp
 *.sln    merge=union
 *.csproj merge=union

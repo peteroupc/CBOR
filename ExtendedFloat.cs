@@ -507,7 +507,7 @@ namespace PeterO {
         // 0 was already done above
         while (!DecimalUtility.HasBitSet(mantissaBits, 52)) {
           DecimalUtility.ShiftLeftOne(mantissaBits);
-          bigexponent.SubtractInt(1);
+          bigexponent.Decrement();
         }
       } else {
         BitShiftAccumulator accum = new BitShiftAccumulator(bigmant, 0, 0);

@@ -9,16 +9,16 @@ using System;
 using System.Text;
 //using System.Numerics;
 namespace PeterO {
-    /// <summary> A mutable integer class initially backed by a small integer,
-    /// that only uses a big integer when arithmetic operations would overflow
-    /// the small integer. <para> This class is ideal for cases where operations
-    /// should be arbitrary precision, but the need to use a high precision
-    /// is rare.</para>
-    /// <para> Many methods in this class return a reference to the same object
-    /// as used in the call. This allows chaining operations in a single line
-    /// of code. For example:</para>
-    /// <code> fastInt.Add(5).Multiply(10);</code>
-    /// </summary>
+  /// <summary> A mutable integer class initially backed by a small integer,
+  /// that only uses a big integer when arithmetic operations would overflow
+  /// the small integer. <para> This class is ideal for cases where operations
+  /// should be arbitrary precision, but the need to use a high precision
+  /// is rare.</para>
+  /// <para> Many methods in this class return a reference to the same object
+  /// as used in the call. This allows chaining operations in a single line
+  /// of code. For example:</para>
+  /// <code> fastInt.Add(5).Multiply(10);</code>
+  /// </summary>
   sealed class FastInteger : IComparable<FastInteger> {
 
     private sealed class MutableNumber {
@@ -63,10 +63,10 @@ namespace PeterO {
         data[0] = unchecked((int)((val) & 0xFFFFFFFFL));
       }
 
-    /// <summary> </summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns>A MutableNumber object.</returns>
-public MutableNumber SetInt(int val){
+      /// <summary> </summary>
+      /// <param name='val'>A 32-bit signed integer.</param>
+      /// <returns>A MutableNumber object.</returns>
+      public MutableNumber SetInt(int val){
         if(val<0)
           throw new ArgumentException("Only positive integers are supported");
         wordCount = (val==0) ? 0 : 1;
@@ -74,8 +74,8 @@ public MutableNumber SetInt(int val){
         return this;
       }
 
-    /// <summary> </summary>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary> </summary>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger ToBigInteger() {
         if(wordCount==1 && (data[0]>>31)==0){
           return (BigInteger)((int)data[0]);
@@ -97,20 +97,20 @@ public MutableNumber SetInt(int val){
         return ret;
       }
 
-    /// <summary> </summary>
-    /// <returns>A Boolean object.</returns>
+      /// <summary> </summary>
+      /// <returns>A Boolean object.</returns>
       public bool CanFitInInt32(){
         return wordCount==0 || (wordCount==1 && (data[0]>>31)==0);
       }
 
-    /// <summary> </summary>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary> </summary>
+      /// <returns>A 32-bit signed integer.</returns>
       public int ToInt32(){
         return wordCount==0 ? 0 : data[0];
       }
 
-    /// <summary> </summary>
-    /// <returns>A MutableNumber object.</returns>
+      /// <summary> </summary>
+      /// <returns>A MutableNumber object.</returns>
       public MutableNumber Copy(){
         MutableNumber mbi=new MutableNumber(0);
         if(this.wordCount>mbi.data.Length){
@@ -121,10 +121,10 @@ public MutableNumber SetInt(int val){
         return mbi;
       }
 
-    /// <summary> Multiplies this instance by the value of a 32-bit signed
-    /// integer.</summary>
-    /// <param name='multiplicand'>A 32-bit signed integer.</param>
-    /// <returns>The product of the two objects.</returns>
+      /// <summary> Multiplies this instance by the value of a 32-bit signed
+      /// integer.</summary>
+      /// <param name='multiplicand'>A 32-bit signed integer.</param>
+      /// <returns>The product of the two objects.</returns>
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0)
           throw new ArgumentException("Only positive multiplicands are supported");
@@ -216,23 +216,23 @@ public MutableNumber SetInt(int val){
         return this;
       }
 
-    /// <summary> </summary>
+      /// <summary> </summary>
       public int Sign{
         get {
           return (wordCount==0 ? 0 : 1);
         }
       }
 
-    /// <summary> </summary>
+      /// <summary> </summary>
       public bool IsEvenNumber{
         get {
           return (wordCount==0 || (data[0]&1)==0);
         }
       }
 
-    /// <summary>Compares a 32-bit signed integer with this instance.</summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary>Compares a 32-bit signed integer with this instance.</summary>
+      /// <param name='val'>A 32-bit signed integer.</param>
+      /// <returns>A 32-bit signed integer.</returns>
       public int CompareToInt(int val){
         if(val<0 || wordCount>1)return 1;
         if(wordCount==0){
@@ -246,12 +246,12 @@ public MutableNumber SetInt(int val){
         }
       }
 
-    /// <summary>Subtracts a 32-bit signed integer from this instance.</summary>
-    /// <param name='other'>A 32-bit signed integer.</param>
-    /// <returns>The difference of the two objects.</returns>
+      /// <summary>Subtracts a 32-bit signed integer from this instance.</summary>
+      /// <param name='other'>A 32-bit signed integer.</param>
+      /// <returns>The difference of the two objects.</returns>
       public MutableNumber SubtractInt(
         int other
-      ) {
+       ) {
         if (other < 0)
           throw new ArgumentException("Only positive values are supported");
         else if (other != 0)
@@ -288,12 +288,12 @@ public MutableNumber SetInt(int val){
         return this;
       }
 
-    /// <summary>Subtracts a MutableNumber object from this instance.</summary>
-    /// <param name='other'>A MutableNumber object.</param>
-    /// <returns>The difference of the two objects.</returns>
+      /// <summary>Subtracts a MutableNumber object from this instance.</summary>
+      /// <param name='other'>A MutableNumber object.</param>
+      /// <returns>The difference of the two objects.</returns>
       public MutableNumber Subtract(
         MutableNumber other
-      ) {
+       ) {
         unchecked {
           {
             // Console.WriteLine("{0} {1}",this.data.Length,other.data.Length);
@@ -330,10 +330,10 @@ public MutableNumber SetInt(int val){
         }
       }
 
-    /// <summary>Compares a MutableNumber object with this instance.</summary>
-    /// <param name='other'>A MutableNumber object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance
-    /// is less, or a positive number if this instance is greater.</returns>
+      /// <summary>Compares a MutableNumber object with this instance.</summary>
+      /// <param name='other'>A MutableNumber object.</param>
+      /// <returns>Zero if the values are equal; a negative number if this instance
+      /// is less, or a positive number if this instance is greater.</returns>
       public int CompareTo(MutableNumber other){
         if(this.wordCount!=other.wordCount){
           return (this.wordCount<other.wordCount) ? -1 : 1;
@@ -354,9 +354,9 @@ public MutableNumber SetInt(int val){
         return 0;
       }
 
-    /// <summary> </summary>
-    /// <param name='augend'> A 32-bit signed integer.</param>
-    /// <returns></returns>
+      /// <summary> </summary>
+      /// <param name='augend'> A 32-bit signed integer.</param>
+      /// <returns></returns>
       public MutableNumber Add(int augend) {
         if (augend < 0)
           throw new ArgumentException("Only positive augends are supported");
@@ -508,7 +508,7 @@ public MutableNumber SetInt(int val){
     /// <summary> </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A FastInteger object.</returns>
-public FastInteger SetInt(int val){
+    public FastInteger SetInt(int val){
       smallValue=val;
       integerMode=0;
       return this;
@@ -517,7 +517,7 @@ public FastInteger SetInt(int val){
     /// <summary> </summary>
     /// <param name='digit'>A 32-bit signed integer.</param>
     /// <returns>A FastInteger object.</returns>
-public FastInteger MultiplyByTenAndAdd(int digit){
+    public FastInteger MultiplyByTenAndAdd(int digit){
       if(digit==0){
         if(integerMode==1){
           mnum.Multiply(10);
@@ -545,7 +545,7 @@ public FastInteger MultiplyByTenAndAdd(int digit){
     /// <summary> </summary>
     /// <param name='divisor'>A FastInteger object.</param>
     /// <returns>A 32-bit signed integer.</returns>
-public int RepeatedSubtract(FastInteger divisor){
+    public int RepeatedSubtract(FastInteger divisor){
       if(integerMode==1){
         int count=0;
         if(divisor.integerMode==1){
@@ -865,7 +865,7 @@ public int RepeatedSubtract(FastInteger divisor){
 
     /// <summary> </summary>
     /// <returns>A FastInteger object.</returns>
-public FastInteger Increment(){
+    public FastInteger Increment(){
       if(integerMode==0){
         if(smallValue!=Int32.MaxValue){
           smallValue++;
@@ -876,6 +876,21 @@ public FastInteger Increment(){
         return this;
       } else {
         return AddInt(1);
+      }
+    }
+
+    public FastInteger Decrement(){
+      if(integerMode==0){
+        if(smallValue!=Int32.MinValue){
+          smallValue--;
+        } else {
+          integerMode=1;
+          mnum = MutableNumber.FromBigInteger(Int32MinValue);
+          mnum.SubtractInt(1);
+        }
+        return this;
+      } else {
+        return SubtractInt(1);
       }
     }
 
