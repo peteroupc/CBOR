@@ -812,6 +812,15 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
         }
         if(!more){
           guess=Reduce(guess,ctxdiv);
+          currentExp=helper.GetExponent(thisValue);
+          int cmp=currentExp.CompareTo(idealExp);
+          if(cmp>0){
+            // Current exponent is greater than the ideal,
+            // so add 0 with the ideal exponent to change
+            // it to the ideal when possible
+            return Add(guess,helper.CreateNewWithFlags(
+              BigInteger.Zero,idealExp,0),ctx);
+          }
         }
       }
       return RoundToPrecision(guess,ctx);

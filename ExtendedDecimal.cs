@@ -115,6 +115,16 @@ namespace PeterO {
     private const int MaxSafeInt = 214748363;
 
     /// <summary> Creates a decimal number from a string that represents
+    /// a number. See FromString(str,ctx).</para>
+    /// </summary>
+    /// <param name='str'>A string that represents a number.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public static ExtendedDecimal FromString(String str) {
+      return FromString(str,null);
+    }
+    
+    
+    /// <summary> Creates a decimal number from a string that represents
     /// a number. <para> The format of the string generally consists of:<list
     /// type=''> <item> An optional '-' or '+' character (if '-', the value
     /// is negative.)</item>
@@ -133,7 +143,7 @@ namespace PeterO {
     /// </summary>
     /// <param name='str'>A string that represents a number.</param>
     /// <returns>An ExtendedDecimal object.</returns>
-    public static ExtendedDecimal FromString(String str) {
+    public static ExtendedDecimal FromString(String str, PrecisionContext ctx) {
       if (str == null)
         throw new ArgumentNullException("str");
       if (str.Length == 0)
@@ -175,10 +185,11 @@ namespace PeterO {
             (str[i + 1] == 'A' || str[i + 1] == 'a') &&
             (str[i + 2] == 'N' || str[i + 2] == 'n')) {
           if (i + 3 == str.Length) {
-            if (!negative) return NaN;
+            if (!negative) return NaN.RoundToPrecision(ctx);
             return CreateWithFlags(
               BigInteger.Zero, BigInteger.Zero,
-              (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN);
+              (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN)
+              .RoundToPrecision(ctx);
           }
           i += 3;
           for (; i < str.Length; i++) {
@@ -199,11 +210,13 @@ namespace PeterO {
           BigInteger bigmant = (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger();
           return CreateWithFlags(
             bigmant, BigInteger.Zero,
-            (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN);
+            (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN)
+            .RoundToPrecision(ctx);
         }
       }
       if (i + 4 <= str.Length) {
         // Signaling NaN
+        // TODO: Round signaling NaN if needed
         if ((str[i] == 'S' || str[i] == 's') &&
             (str[i + 1] == 'N' || str[i + 1] == 'n') &&
             (str[i + 2] == 'A' || str[i + 2] == 'a') &&
@@ -317,13 +330,14 @@ namespace PeterO {
           else
             newScale.Add(exp);
         }
-      } else if (i != str.Length) {
+      }
+      if (i != str.Length) {
         throw new FormatException();
       }
       return CreateWithFlags(
         (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger(),
         (newScale == null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger(),
-        negative ? BigNumberFlags.FlagNegative : 0);
+        negative ? BigNumberFlags.FlagNegative : 0).RoundToPrecision(ctx);
     }
 
     private sealed class DecimalMathHelper : IRadixMathHelper<ExtendedDecimal> {
