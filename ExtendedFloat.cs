@@ -136,10 +136,15 @@ namespace PeterO {
     /// </summary>
     /// <param name='str'>A string that represents a number.</param>
     /// <returns>An ExtendedFloat object.</returns>
-    public static ExtendedFloat FromString(String str) {
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    public static ExtendedFloat FromString(String str, PrecisionContext ctx) {
       if (str == null)
         throw new ArgumentNullException("str");
-      return ExtendedDecimal.FromString(str).ToExtendedFloat();
+      return ExtendedDecimal.FromString(str,ctx).ToExtendedFloat();
+    }
+
+    public static ExtendedFloat FromString(String str) {
+      return FromString(str,null);
     }
 
     private static BigInteger BigShiftIteration = (BigInteger)1000000;
@@ -499,7 +504,7 @@ namespace PeterO {
         // 0 was already done above
         while (!DecimalUtility.HasBitSet(mantissaBits, 52)) {
           DecimalUtility.ShiftLeftOne(mantissaBits);
-          bigexponent.SubtractInt(1);
+          bigexponent.Decrement();
         }
       } else {
         BitShiftAccumulator accum = new BitShiftAccumulator(bigmant, 0, 0);

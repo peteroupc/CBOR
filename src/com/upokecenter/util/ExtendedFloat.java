@@ -132,12 +132,17 @@ at: http://peteroupc.github.io/CBOR/
      * definition in java.math.BigDecimal(), except that the digits must
      * be ASCII digits ('0' through '9').</p>
      * @param str A string that represents a number.
+     * @param ctx A PrecisionContext object.
      * @return An ExtendedFloat object.
      */
-    public static ExtendedFloat FromString(String str) {
+    public static ExtendedFloat FromString(String str, PrecisionContext ctx) {
       if (str == null)
         throw new NullPointerException("str");
-      return ExtendedDecimal.FromString(str).ToExtendedFloat();
+      return ExtendedDecimal.FromString(str,ctx).ToExtendedFloat();
+    }
+
+    public static ExtendedFloat FromString(String str) {
+      return FromString(str,null);
     }
 
     private static BigInteger BigShiftIteration = BigInteger.valueOf(1000000);
@@ -526,7 +531,7 @@ at: http://peteroupc.github.io/CBOR/
         // 0 was already done above
         while (!DecimalUtility.HasBitSet(mantissaBits, 52)) {
           DecimalUtility.ShiftLeftOne(mantissaBits);
-          bigexponent.SubtractInt(1);
+          bigexponent.Decrement();
         }
       } else {
         BitShiftAccumulator accum = new BitShiftAccumulator(bigmant, 0, 0);

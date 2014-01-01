@@ -25,9 +25,9 @@ namespace Test
     public static Regex PropertyLine=new Regex(
       "^(\\w+)\\:\\s*(\\S+)",RegexOptions.Compiled);
     public static Regex Quotes=new Regex(
-      "[\\'\\\"]",RegexOptions.Compiled);
+      "^[\\'\\\"]|[\\'\\\"]$",RegexOptions.Compiled);
     public static Regex TestLine=new Regex(
-      "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",RegexOptions.Compiled);
+      "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",RegexOptions.Compiled);
 
     private static TValue GetKeyOrDefault<TKey,TValue>(
       IDictionary<TKey,TValue> dict, TKey key, TValue defaultValue){
@@ -53,31 +53,6 @@ namespace Test
         string input3=match.Groups[5].ToString();
         string output=match.Groups[6].ToString();
         string flags=match.Groups[7].ToString();
-        if(!op.Equals("multiply") &&
-           !op.Equals("fma") &&
-           !op.Equals("min") &&
-           !op.Equals("max") &&
-           !op.Equals("minmag") &&
-           !op.Equals("maxmag") &&
-           !op.Equals("compare") &&
-           !op.Equals("comparesig") &&
-           !op.Equals("subtract") &&
-           !op.Equals("tointegral") &&
-           !op.Equals("tointegralx") &&
-           !op.Equals("divideint") &&
-           !op.Equals("divide") &&
-           !op.Equals("remainder") &&
-           !op.Equals("remaindernear") &&
-           !op.Equals("nexttoward") &&
-           !op.Equals("nextplus") &&
-           !op.Equals("nextminus") &&
-           !op.Equals("copy") &&
-           !op.Equals("abs") &&
-           !op.Equals("reduce") &&
-           !op.Equals("quantize") &&
-           !op.Equals("add") &&
-           !op.Equals("minus") &&
-           !op.Equals("plus"))return;
         input1=Quotes.Replace(input1,"");
         input2=Quotes.Replace(input2,"");
         input3=Quotes.Replace(input3,"");
@@ -97,7 +72,6 @@ namespace Test
            output.Contains("#")){
           return;
         }
-
         PrecisionContext ctx=PrecisionContext.ForPrecision(precision)
           .WithExponentClamp(clamp).WithExponentRange(
             (BigInteger)minexponent,(BigInteger)maxexponent);
@@ -119,14 +93,19 @@ namespace Test
         if(rounding.Equals("05up"))
           ctx=ctx.WithRounding(Rounding.ZeroFiveUp);
         ctx=ctx.WithBlankFlags();
-        ExtendedDecimal d1=(String.IsNullOrEmpty(input1)) ? null :
-          ExtendedDecimal.FromString(input1);
-        ExtendedDecimal d2=(String.IsNullOrEmpty(input2)) ? null :
-          ExtendedDecimal.FromString(input2);
-        ExtendedDecimal d2a=(String.IsNullOrEmpty(input3)) ? null :
-          ExtendedDecimal.FromString(input3);
+        ExtendedDecimal d1=null,d2=null,d2a=null;
+        if(!op.Equals("toSci") && !op.Equals("toEng")){
+          d1=(String.IsNullOrEmpty(input1)) ? null :
+            ExtendedDecimal.FromString(input1);
+          d2=(String.IsNullOrEmpty(input2)) ? null :
+            ExtendedDecimal.FromString(input2);
+          d2a=(String.IsNullOrEmpty(input3)) ? null :
+            ExtendedDecimal.FromString(input3);
+        }
         ExtendedDecimal d3=null;
         if(op.Equals("multiply"))d3=d1.Multiply(d2,ctx);
+        else if(op.Equals("toSci")){ /* handled below */ }
+        else if(op.Equals("toEng")){ /* handled below */ }
         else if(op.Equals("fma"))d3=d1.MultiplyAndAdd(d2,d2a,ctx);
         else if(op.Equals("min"))d3=ExtendedDecimal.Min(d1,d2,ctx);
         else if(op.Equals("max"))d3=ExtendedDecimal.Max(d1,d2,ctx);
@@ -140,6 +119,7 @@ namespace Test
         else if(op.Equals("divideint"))d3=d1.DivideToIntegerZeroScale(d2,ctx);
         else if(op.Equals("divide"))d3=d1.Divide(d2,ctx);
         else if(op.Equals("remainder"))d3=d1.Remainder(d2,ctx);
+        else if(op.Equals("squareroot"))d3=d1.SquareRoot(ctx);
         else if(op.Equals("remaindernear"))d3=d1.RemainderNear(d2,ctx);
         else if(op.Equals("nexttoward"))d3=d1.NextToward(d2,ctx);
         else if(op.Equals("nextplus"))d3=d1.NextPlus(ctx);
@@ -150,6 +130,7 @@ namespace Test
         else if(op.Equals("quantize"))d3=d1.Quantize(d2,ctx);
         else if(op.Equals("add"))d3=d1.Add(d2,ctx);
         else if(op.Equals("minus"))d3=d1.Negate(ctx);
+        else if(op.Equals("apply"))d3=d1.RoundToPrecision(ctx);
         else if(op.Equals("plus"))d3=d1.Plus(ctx);
         else return;
         bool invalid=(flags.Contains("Division_impossible") ||
@@ -157,15 +138,36 @@ namespace Test
                       flags.Contains("Invalid_operation"));
         bool divzero=(flags.Contains("Division_by_zero"));
         int expectedFlags=0;
-        if(flags.Contains("Inexact"))expectedFlags|=PrecisionContext.FlagInexact;
+        if(flags.Contains("Inexact") || flags.Contains("inexact"))
+          expectedFlags|=PrecisionContext.FlagInexact;
         if(flags.Contains("Subnormal"))expectedFlags|=PrecisionContext.FlagSubnormal;
-        if(flags.Contains("Rounded"))expectedFlags|=PrecisionContext.FlagRounded;
+        if(flags.Contains("Rounded") || flags.Contains("rounded"))
+          expectedFlags|=PrecisionContext.FlagRounded;
         if(flags.Contains("Underflow"))expectedFlags|=PrecisionContext.FlagUnderflow;
         if(flags.Contains("Overflow"))expectedFlags|=PrecisionContext.FlagOverflow;
         if(flags.Contains("Clamped"))expectedFlags|=PrecisionContext.FlagClamped;
+        bool conversionError=flags.Contains("Conversion_syntax");
         if(invalid)expectedFlags|=PrecisionContext.FlagInvalid;
         if(divzero)expectedFlags|=PrecisionContext.FlagDivideByZero;
-        TestCommon.AssertDecFrac(d3,output,name);
+        if(op.Equals("toSci")){
+          try {
+            d1=ExtendedDecimal.FromString(input1,ctx);
+            Assert.IsTrue(!conversionError,"Expected no conversion error");
+            Assert.AreEqual(output,d1.ToString(),input1);
+          } catch(FormatException){
+            Assert.IsTrue(conversionError,"Expected conversion error");
+          }
+        } else if(op.Equals("toEng")){
+          try {
+            d1=ExtendedDecimal.FromString(input1,ctx);
+            Assert.IsTrue(!conversionError,"Expected no conversion error");
+            Assert.AreEqual(output,d1.ToEngineeringString(),input1);
+          } catch(FormatException){
+            Assert.IsTrue(conversionError,"Expected conversion error");
+          }
+        } else {
+          TestCommon.AssertDecFrac(d3,output,name);
+        }
         TestCommon.AssertFlags(expectedFlags,ctx.Flags,name);
       }
     }
@@ -184,10 +186,19 @@ namespace Test
           IDictionary<string,string> context=new Dictionary<string,string>();
           using(StreamReader w=new StreamReader(f)){
             while(!w.EndOfStream){
-              var ln=w.ReadLine();
+              string ln=w.ReadLine();
               {
                 try {
-                  ParseDecTest(ln,context);
+                  TextWriter oldOut=Console.Out;
+                  try {
+                    Console.SetOut(TextWriter.Null);
+                    ParseDecTest(ln,context);
+                  } catch(Exception){
+                    Console.SetOut(oldOut);
+                    ParseDecTest(ln,context);
+                  } finally {
+                    Console.SetOut(oldOut);
+                  }
                 } catch(Exception ex){
                   Console.WriteLine(ln);
                   Console.WriteLine(ex.Message);
