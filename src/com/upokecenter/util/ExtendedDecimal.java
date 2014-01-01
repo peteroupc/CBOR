@@ -122,11 +122,11 @@ at: http://peteroupc.github.io/CBOR/
      * digit and before the last digit.</li> <li> Optionally, E+ (positive
      * exponent) or E- (negative exponent) plus one or more digits specifying
      * the exponent.</li> </ul> </p> <p>The string can also be "-INF", "-Infinity",
-     * "Infinity", "Inf", quiet NaN ("qNaN") followed by any number of digits,
-     * or signaling NaN ("sNaN") followed by any number of digits, all in
-     * any combination of upper and lower case.</p> <p> The format generally
-     * follows the definition in java.math.BigDecimal(), except that
-     * the digits must be ASCII digits ('0' through '9').</p>
+     * "Infinity", "Inf", quiet NaN ("qNaN"/"-qNaN") followed by any number
+     * of digits, or signaling NaN ("sNaN"/"-sNaN") followed by any number
+     * of digits, all in any combination of upper and lower case.</p> <p>
+     * The format generally follows the definition in java.math.BigDecimal(),
+     * except that the digits must be ASCII digits ('0' through '9').</p>
      * @param str A string that represents a number.
      * @return An ExtendedDecimal object.
      */
@@ -1246,7 +1246,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal DivideToIntegerNaturalScale(
       ExtendedDecimal divisor
-    ) {
+     ) {
       return DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
 
@@ -1272,7 +1272,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal RemainderNaturalScale(
       ExtendedDecimal divisor
-    ) {
+     ) {
       return RemainderNaturalScale(divisor, null);
     }
 
@@ -1285,7 +1285,7 @@ remainder=divrem[1]; }
     public ExtendedDecimal RemainderNaturalScale(
       ExtendedDecimal divisor,
       PrecisionContext ctx
-    ) {
+     ) {
       return Subtract(this.DivideToIntegerNaturalScale(divisor, null)
                       .Multiply(divisor, null), ctx);
     }
@@ -1315,7 +1315,7 @@ remainder=divrem[1]; }
       ExtendedDecimal divisor,
       long desiredExponentSmall,
       PrecisionContext ctx
-    ) {
+     ) {
       return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
@@ -1340,7 +1340,7 @@ remainder=divrem[1]; }
     public ExtendedDecimal Divide(
       ExtendedDecimal divisor,
       PrecisionContext ctx
-    ) {
+     ) {
       return math.Divide(this, divisor, ctx);
     }
 
@@ -1364,7 +1364,7 @@ remainder=divrem[1]; }
       ExtendedDecimal divisor,
       long desiredExponentSmall,
       Rounding rounding
-    ) {
+     ) {
       return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)), PrecisionContext.ForRounding(rounding));
     }
 
@@ -1414,7 +1414,7 @@ remainder=divrem[1]; }
       ExtendedDecimal divisor,
       BigInteger desiredExponent,
       Rounding rounding
-    ) {
+     ) {
       return DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
 
@@ -1609,7 +1609,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal NextMinus(
       PrecisionContext ctx
-    ) {
+     ) {
       return math.NextMinus(this, ctx);
     }
 
@@ -1627,7 +1627,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal NextPlus(
       PrecisionContext ctx
-    ) {
+     ) {
       return math.NextPlus(this, ctx);
     }
 
@@ -1648,7 +1648,7 @@ remainder=divrem[1]; }
     public ExtendedDecimal NextToward(
       ExtendedDecimal otherValue,
       PrecisionContext ctx
-    ) {
+     ) {
       return math.NextToward(this, otherValue, ctx);
     }
 
@@ -2092,5 +2092,13 @@ remainder=divrem[1]; }
       return math.RoundToBinaryPrecision(this, ctx);
     }
 
+    /**
+     *
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedDecimal object.
+     */
+public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
+      return math.SquareRoot(this,ctx);
+    }
   }
 

@@ -65,6 +65,27 @@ namespace PeterO {
       return helper.CreateNewWithFlags(mant, BigInteger.Zero, flags);
     }
 
+    private T SquareRootHandleSpecial(T thisValue, PrecisionContext ctx) {
+      int thisFlags = helper.GetFlags(thisValue);
+      if (((thisFlags) & BigNumberFlags.FlagSpecial) != 0) {
+        if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
+          return SignalingNaNInvalid(thisValue, ctx);
+        }
+        if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
+          return ReturnQuietNaN(thisValue, ctx);
+        }
+        if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
+          // Square root of infinity
+          return thisValue;
+        }
+      }
+      int sign=helper.GetSign(thisValue);
+      if(sign<0){
+        return SignalInvalid(ctx);
+      }
+      return default(T);
+    }
+
     private T DivisionHandleSpecial(T thisValue, T other, PrecisionContext ctx) {
       int thisFlags = helper.GetFlags(thisValue);
       int otherFlags = helper.GetFlags(other);
@@ -727,6 +748,73 @@ namespace PeterO {
       }
       TransferFlags(ctx, ctx2);
       return ret2;
+    }
+
+    // GetInitialApproximation and SquareRoot based on big
+    // square root implementation found at:
+    // <http://web.archive.org/web/20120320190003/http://www.merriampark.com/bigsqrt.htm>
+    private T GetInitialApproximation(T n) {
+      BigInteger integerPart = helper.GetMantissa(n);
+      FastInteger length = helper.CreateShiftAccumulator(integerPart).GetDigitLength();
+      length.AddBig(helper.GetExponent(n));
+      if (length.IsEvenNumber) {
+        length.SubtractInt(1);
+      }
+      length.Divide(2);
+      return helper.CreateNewWithFlags(BigInteger.One,
+                                       length.AsBigInteger(),0);
+    }
+
+    /// <summary> </summary>
+    /// <param name='thisValue'>A T object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+public T SquareRoot(T thisValue, PrecisionContext ctx) {
+      if(ctx==null || (ctx.Precision).IsZero)
+        throw new ArgumentException("ctx is null or has unlimited precision");
+      T ret = SquareRootHandleSpecial(thisValue, ctx);
+      if ((Object)ret != (Object)default(T)) {
+        return ret;
+      }
+      BigInteger currentExp=helper.GetExponent(thisValue);
+      BigInteger idealExp=currentExp;
+      idealExp/=(BigInteger)2;
+      if(helper.GetSign(thisValue)==0){
+        return RoundToPrecision(helper.CreateNewWithFlags(
+          BigInteger.Zero,idealExp,helper.GetFlags(thisValue)),ctx);
+      }
+      BigInteger mantissa=BigInteger.Abs(helper.GetMantissa(thisValue));
+      T initialGuess = GetInitialApproximation(thisValue);
+      PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
+        .WithRounding(Rounding.ZeroFiveUp);
+      Console.WriteLine("n="+thisValue);
+      Console.WriteLine("Initial guess " + initialGuess);
+      T lastGuess = helper.CreateNewWithFlags(BigInteger.Zero,BigInteger.Zero,0);
+      T two = helper.CreateNewWithFlags((BigInteger)2,BigInteger.Zero,0);
+      T one = helper.CreateNewWithFlags((BigInteger)1,BigInteger.Zero,0);
+      T guess = initialGuess;
+      int maxIterations=50;
+      // Iterate
+      int iterations = 0;
+      bool more = true;
+      while (more) {
+        lastGuess = guess;
+        guess = Divide(thisValue,guess,ctxdiv);
+        guess = Add(guess,lastGuess,null);
+        guess = Divide(guess,two,ctxdiv);
+        Console.WriteLine("Next guess " + guess);
+        T error = Add(thisValue,NegateRaw(Multiply(guess,guess,null)),null);
+        if (++iterations >= maxIterations) {
+          more = false;
+        }
+        else if (lastGuess.Equals(guess)) {
+          more = CompareTo(AbsRaw(error),one) >= 0;
+        }
+        if(!more){
+          guess=Reduce(guess,ctxdiv);
+        }
+      }
+      return RoundToPrecision(guess,ctx);
     }
 
     /// <summary> </summary>
