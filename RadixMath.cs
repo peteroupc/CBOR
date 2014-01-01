@@ -10,9 +10,9 @@ using System.Text;
 //using System.Numerics;
 
 namespace PeterO {
-    /// <summary> Encapsulates radix-independent arithmetic. </summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+  /// <summary> Encapsulates radix-independent arithmetic. </summary>
+  /// <typeparam name='T'>Data type for a numeric value in a particular
+  /// radix.</typeparam>
   class RadixMath<T> {
 
     IRadixMathHelper<T> helper;
@@ -76,6 +76,9 @@ namespace PeterO {
         }
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           // Square root of infinity
+          if ((thisFlags & BigNumberFlags.FlagNegative) != 0) {
+            return SignalInvalid(ctx);
+          }
           return thisValue;
         }
       }
@@ -769,7 +772,7 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T SquareRoot(T thisValue, PrecisionContext ctx) {
+    public T SquareRoot(T thisValue, PrecisionContext ctx) {
       if(ctx==null || (ctx.Precision).IsZero)
         throw new ArgumentException("ctx is null or has unlimited precision");
       T ret = SquareRootHandleSpecial(thisValue, ctx);
@@ -779,6 +782,10 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
       BigInteger currentExp=helper.GetExponent(thisValue);
       BigInteger idealExp=currentExp;
       idealExp/=(BigInteger)2;
+      if(currentExp.Sign<0 && !currentExp.IsEven){
+        // Round towards negative infinity
+        idealExp-=BigInteger.One;
+      }
       if(helper.GetSign(thisValue)==0){
         return RoundToPrecision(helper.CreateNewWithFlags(
           BigInteger.Zero,idealExp,helper.GetFlags(thisValue)),ctx);
@@ -787,43 +794,108 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
       T initialGuess = GetInitialApproximation(thisValue);
       PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
         .WithRounding(Rounding.ZeroFiveUp);
-      Console.WriteLine("n="+thisValue);
-      Console.WriteLine("Initial guess " + initialGuess);
+      Rounding rounding=Rounding.HalfEven;
+      PrecisionContext ctxtmp=ctx.WithRounding(rounding).WithBlankFlags();
+      //Console.WriteLine("n="+thisValue+", Initial guess " + initialGuess);
       T lastGuess = helper.CreateNewWithFlags(BigInteger.Zero,BigInteger.Zero,0);
       T two = helper.CreateNewWithFlags((BigInteger)2,BigInteger.Zero,0);
       T one = helper.CreateNewWithFlags((BigInteger)1,BigInteger.Zero,0);
       T guess = initialGuess;
-      int maxIterations=50;
+      FastInteger fiMax=new FastInteger(30);
+      BigInteger iterChange=ctx.Precision;
+      iterChange>>=7; // Divide by 128
+      fiMax.AddBig(iterChange);
+      int maxIterations=fiMax.MinInt32(Int32.MaxValue-1);
       // Iterate
       int iterations = 0;
       bool more = true;
+      int lastCompare=0;
+      int vacillations=0;
+      bool treatAsInexact=false;
       while (more) {
         lastGuess = guess;
         guess = Divide(thisValue,guess,ctxdiv);
         guess = Add(guess,lastGuess,null);
-        guess = Divide(guess,two,ctxdiv);
-        Console.WriteLine("Next guess " + guess);
-        T error = Add(thisValue,NegateRaw(Multiply(guess,guess,null)),null);
+        T newguess = Divide(guess,two,ctxdiv);
+        //Console.WriteLine("Next guess " + newguess+" cmp="+CompareTo(lastGuess,newguess));
         if (++iterations >= maxIterations) {
           more = false;
         }
-        else if (lastGuess.Equals(guess)) { // TODO: Check if lastGuess and guess vacillate
-          more = CompareTo(AbsRaw(error),one) >= 0;
+        else {
+          int guessCmp=CompareTo(lastGuess,newguess);
+          if (guessCmp==0) {
+            T error = Add(thisValue,NegateRaw(Multiply(newguess,newguess,null)),null);
+            more = CompareTo(AbsRaw(error),one) >= 0;
+          } else if((guessCmp>0 && lastCompare<0) || (lastCompare>0 && guessCmp<0)){
+            // Guesses are vacillating
+            vacillations++;
+            if(vacillations>3 && guessCmp>0){
+              // When guesses are vacillating, choose the lower guess
+              // to reduce rounding errors
+              more=false;
+              treatAsInexact=true;
+            }
+          }
+          lastCompare=guessCmp;
         }
         if(!more){
-          guess=Reduce(guess,ctxdiv);
-          currentExp=helper.GetExponent(thisValue);
-          int cmp=currentExp.CompareTo(idealExp);
-          if(cmp>0){
-            // Current exponent is greater than the ideal,
-            // so add 0 with the ideal exponent to change
-            // it to the ideal when possible
-            return Add(guess,helper.CreateNewWithFlags(
-              BigInteger.Zero,idealExp,0),ctx);
-          }
+          guess=Divide(guess,two,ctxdiv.WithRounding(
+            treatAsInexact ? Rounding.ZeroFiveUp : rounding));
+        } else {
+          guess=newguess;
         }
       }
-      return RoundToPrecision(guess,ctx);
+//      Console.WriteLine("Next guess changed to " + guess);
+      ctxdiv=ctxdiv.WithBlankFlags();
+      guess=ReduceToPrecisionAndIdealExponent(guess,ctxdiv,FastInteger.FromBig(ctx.Precision),FastInteger.FromBig(idealExp));
+      currentExp=helper.GetExponent(guess);
+      int cmp=currentExp.CompareTo(idealExp);
+//      Console.WriteLine("Next guess changed to(III) " + guess+", cur="+currentExp+",ideal="+idealExp+",flags="+ctxdiv.Flags);
+      if(cmp>0){
+        // Current exponent is greater than the ideal,
+        // so add 0 with the ideal exponent to change
+        // it to the ideal when possible
+        guess=Add(guess,helper.CreateNewWithFlags(
+          BigInteger.Zero,idealExp,0),ctxtmp);
+        if(ctx.HasFlags){
+          ctx.Flags|=ctxtmp.Flags;
+        }
+        return guess;
+      } else if(cmp<0){
+        // Current exponent is less than the ideal
+        guess=RoundToPrecision(guess,ctxtmp);
+        if(ctx.HasFlags && helper.GetExponent(guess).CompareTo(idealExp)>0){
+          // Current exponent is now greater, treat
+          // as rounded
+          ctx.Flags|=PrecisionContext.FlagRounded;         
+        }
+        if(treatAsInexact){
+          ctxtmp.Flags|=PrecisionContext.FlagInexact;
+          ctxtmp.Flags|=PrecisionContext.FlagRounded;
+        }
+        if((ctxtmp.Flags&PrecisionContext.FlagInexact)==0){
+          ctxtmp.Flags=0;
+          guess=ReduceToPrecisionAndIdealExponent(guess,ctxtmp,null,FastInteger.FromBig(idealExp));
+          if(ctx.HasFlags){
+            ctx.Flags|=(ctxtmp.Flags&(PrecisionContext.FlagSubnormal));
+          }
+          if(ctx.HasFlags && ctx.ClampNormalExponents &&
+             !helper.GetExponent(guess).Equals(idealExp)){
+            ctx.Flags|=PrecisionContext.FlagClamped;
+          }
+        } else {
+          if(ctx.HasFlags){
+            ctx.Flags|=ctxtmp.Flags;
+          }
+        }
+        return guess;
+      } else {
+        guess=RoundToPrecision(guess,ctxtmp);
+        if(ctx.HasFlags){
+          ctx.Flags|=ctxtmp.Flags;
+        }
+        return guess;
+      }
     }
 
     /// <summary> </summary>
@@ -1911,14 +1983,11 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
       }
       return ret;
     }
-
-    /// <summary> </summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
-    public T Reduce(
+    public T ReduceToPrecisionAndIdealExponent(
       T thisValue,
-      PrecisionContext ctx
+      PrecisionContext ctx,
+      FastInteger precision,
+      FastInteger idealExp
      ) {
       T ret = RoundToPrecision(thisValue, ctx);
       if (ret != null && (helper.GetFlags(ret) & BigNumberFlags.FlagSpecial) == 0) {
@@ -1928,14 +1997,23 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
           exp = new FastInteger(0);
         } else {
           int radix = thisRadix;
+          FastInteger digits=(precision==null) ? null :
+            helper.CreateShiftAccumulator(bigmant).GetDigitLength();
           BigInteger bigradix = (BigInteger)radix;
           while (!(bigmant.IsZero)) {
+            if(precision!=null && digits.CompareTo(precision)==0){
+              break;
+            }
+            if(idealExp!=null && exp.CompareTo(idealExp)==0){
+              break;
+            }
             BigInteger bigrem;
             BigInteger bigquo = BigInteger.DivRem(bigmant, bigradix, out bigrem);
             if (!bigrem.IsZero)
               break;
             bigmant = bigquo;
             exp.Increment();
+            if(digits!=null)digits.Decrement();
           }
         }
         int flags = helper.GetFlags(thisValue);
@@ -1950,6 +2028,13 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
         ret = EnsureSign(ret, (flags & BigNumberFlags.FlagNegative) != 0);
       }
       return ret;
+    }
+
+    public T Reduce(
+      T thisValue,
+      PrecisionContext ctx
+     ) {
+      return ReduceToPrecisionAndIdealExponent(thisValue,ctx,null,null);
     }
 
     private T RoundToPrecisionInternal(

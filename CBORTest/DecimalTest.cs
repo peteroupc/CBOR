@@ -138,9 +138,11 @@ namespace Test
                       flags.Contains("Invalid_operation"));
         bool divzero=(flags.Contains("Division_by_zero"));
         int expectedFlags=0;
-        if(flags.Contains("Inexact"))expectedFlags|=PrecisionContext.FlagInexact;
+        if(flags.Contains("Inexact") || flags.Contains("inexact"))
+          expectedFlags|=PrecisionContext.FlagInexact;
         if(flags.Contains("Subnormal"))expectedFlags|=PrecisionContext.FlagSubnormal;
-        if(flags.Contains("Rounded"))expectedFlags|=PrecisionContext.FlagRounded;
+        if(flags.Contains("Rounded") || flags.Contains("rounded"))
+          expectedFlags|=PrecisionContext.FlagRounded;
         if(flags.Contains("Underflow"))expectedFlags|=PrecisionContext.FlagUnderflow;
         if(flags.Contains("Overflow"))expectedFlags|=PrecisionContext.FlagOverflow;
         if(flags.Contains("Clamped"))expectedFlags|=PrecisionContext.FlagClamped;
@@ -187,7 +189,16 @@ namespace Test
               string ln=w.ReadLine();
               {
                 try {
-                  ParseDecTest(ln,context);
+                  TextWriter oldOut=Console.Out;
+                  try {
+                    Console.SetOut(TextWriter.Null);
+                    ParseDecTest(ln,context);
+                  } catch(Exception){
+                    Console.SetOut(oldOut);
+                    ParseDecTest(ln,context);                    
+                  } finally {
+                    Console.SetOut(oldOut);
+                  }
                 } catch(Exception ex){
                   Console.WriteLine(ln);
                   Console.WriteLine(ex.Message);
