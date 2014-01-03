@@ -11,7 +11,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 namespace PeterO {
-    /// <summary> An arbitrary-precision integer. </summary>
+  /// <summary> An arbitrary-precision integer. </summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
 
@@ -2231,6 +2231,35 @@ namespace PeterO {
     public int getUnsignedBitLength(){
       int wc = this.wordCount;
       if (wc!=0){
+        int numberValue=(((int)(this.reg[wc-1]))&0xFFFF);
+        wc=(wc-1)<<4;
+        if (numberValue == 0)return wc;
+        wc+=16;
+        unchecked {
+          if ((numberValue >> 8) == 0) {
+            numberValue <<= 8;
+            wc -= 8;
+          }
+          if ((numberValue >> 12) == 0) {
+            numberValue <<= 4;
+            wc -= 4;
+          }
+          if ((numberValue >> 14) == 0) {
+            numberValue <<= 2;
+            wc -= 2;
+          }
+          if ((numberValue >> 15) == 0)
+            --wc;
+        }
+        return wc;
+      } else {
+        return 0;
+      }
+    }
+
+    public int getUnsignedBitLengthEx(short[] reg, int wordCount){
+      int wc = wordCount;
+      if (wc!=0){
         int numberValue=(((int)(reg[wc-1]))&0xFFFF);
         wc=(wc-1)<<4;
         if (numberValue == 0)return wc;
@@ -2329,7 +2358,7 @@ namespace PeterO {
         ReverseChars(chars, 0, count);
       return new String(chars, 0, count);
     }
-
+    
     /// <summary> Finds the number of decimal digits this number has.</summary>
     /// <returns>The number of decimal digits. Returns 1 if this object&apos;s
     /// value is 0.</returns>
@@ -2379,6 +2408,20 @@ namespace PeterO {
           // all numbers with this bit length
           return minDigits;
         }
+      } else if(bitlen<=6432162){
+        // Much more accurate approximation
+        BigInteger biMult=(BigInteger)661971961083L;
+        BigInteger minDigits=(BigInteger)(bitlen-1);
+        minDigits*=(BigInteger)biMult;
+        minDigits>>=41;
+        BigInteger maxDigits=(BigInteger)(bitlen);
+        maxDigits*=(BigInteger)biMult;
+        maxDigits>>=41;
+        if(minDigits.Equals(maxDigits)){
+          // Number of digits is the same for
+          // all numbers with this bit length
+          return 1+(int)minDigits;
+        }
       }
       short[] tempReg = new short[this.wordCount];
       Array.Copy(this.reg, tempReg, tempReg.Length);
@@ -2415,6 +2458,35 @@ namespace PeterO {
           while (wordCount != 0 && tempReg[wordCount - 1] == 0)
             wordCount--;
           i+=4;
+          bitlen=getUnsignedBitLengthEx(tempReg,wordCount);
+          if(bitlen<=2135){
+            // (x*631305)>>21 is an approximation
+            // to trunc(x*log10(2)) that is correct up
+            // to x=2135; the multiplication would require
+            // up to 31 bits in all cases up to 2135
+            // (cases up to 64 are already handled above)
+            int minDigits=1+(((bitlen-1)*631305)>>21);
+            int maxDigits=1+(((bitlen)*631305)>>21);
+            if(minDigits==maxDigits){
+              // Number of digits is the same for
+              // all numbers with this bit length
+              return i+minDigits;
+            }
+          } else if(bitlen<=6432162){
+            // Much more accurate approximation
+            BigInteger biMult=(BigInteger)661971961083L;
+            BigInteger minDigits=(BigInteger)(bitlen-1);
+            minDigits*=(BigInteger)biMult;
+            minDigits>>=41;
+            BigInteger maxDigits=(BigInteger)(bitlen);
+            maxDigits*=(BigInteger)biMult;
+            maxDigits>>=41;
+            if(minDigits.Equals(maxDigits)){
+              // Number of digits is the same for
+              // all numbers with this bit length
+              return i+1+(int)minDigits;
+            }
+          }
         }
       }
       return i;
