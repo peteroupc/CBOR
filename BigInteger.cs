@@ -556,12 +556,16 @@ namespace PeterO {
     private static void Baseline_Multiply2(short[] R, int rstart, short[] A, int astart, short[] B, int bstart) {
       unchecked {
         int p; short c; int d;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)B[bstart]) & 0xFFFF); c = (short)(p); d = (((int)p >> 16) & 0xFFFF); R[rstart] = c; c = (short)(d); d = (((int)d >> 16) & 0xFFFF);
-        p = (((int)A[astart]) & 0xFFFF) * (((int)B[bstart + 1]) & 0xFFFF);
+        int a0=(((int)A[astart]) & 0xFFFF);
+        int a1=(((int)A[astart+1]) & 0xFFFF);
+        int b0=(((int)B[bstart]) & 0xFFFF);
+        int b1=(((int)B[bstart+1]) & 0xFFFF);
+        p = a0 * b0; c = (short)(p); d = (((int)p >> 16) & 0xFFFF); R[rstart] = c; c = (short)(d); d = (((int)d >> 16) & 0xFFFF);
+        p = a0 * b1;
         p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF);
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)B[bstart]) & 0xFFFF);
+        p = a1 * b0;
         p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF); R[rstart + 1] = c;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)B[bstart + 1]) & 0xFFFF);
+        p = a1 * b1;
         p += d; R[rstart + 1 + 1] = (short)(p); R[rstart + 1 + 2] = (short)(p >> 16);
       }
     }
@@ -1356,6 +1360,21 @@ namespace PeterO {
       RecursiveSquare(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N);
     }
 
+    private static void Baseline_Multiply2Opt(short[] R, int rstart, int a0, int a1, short[] B, int bstart) {
+      unchecked {
+        int p; short c; int d;
+        int b0=(((int)B[bstart]) & 0xFFFF);
+        int b1=(((int)B[bstart+1]) & 0xFFFF);
+        p = a0 * b0; c = (short)(p); d = (((int)p >> 16) & 0xFFFF); R[rstart] = c; c = (short)(d); d = (((int)d >> 16) & 0xFFFF);
+        p = a0 * b1;
+        p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF);
+        p = a1 * b0;
+        p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF); R[rstart + 1] = c;
+        p = a1 * b1;
+        p += d; R[rstart + 2] = (short)(p); R[rstart + 3] = (short)(p >> 16);
+      }
+    }
+
     private static void AsymmetricMultiply(
       short[] Rarr,
       int Rstart,
@@ -1393,22 +1412,17 @@ namespace PeterO {
             Rarr[Rstart + NB + 1] = (short)0;
             return;
         }
-      }
-
-      if (NA == 2) {
-        int i;
-        if ((NB / 2) % 2 == 0) {
-          Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-          Array.Copy(Rarr, (int)(Rstart + 2), Tarr, (int)(Tstart + 2 * 2), (int)2);
-          for (i = 2 * 2; i < NB; i += 2 * 2)
-            Baseline_Multiply2(Tarr, (int)(Tstart + 2 + i), Aarr, Astart, Barr, (int)(Bstart + i));
-          for (i = 2; i < NB; i += 2 * 2)
-            Baseline_Multiply2(Rarr, (int)(Rstart + i), Aarr, Astart, Barr, (int)(Bstart + i));
+      } else if (NA == 2) {
+        int a0=(((int)Aarr[Astart]) & 0xFFFF);
+        int a1=(((int)Aarr[Astart+1]) & 0xFFFF);
+        if (((NB>>1)&1) == 0) {
+          Baseline_Multiply2Opt(Rarr, Rstart, a0,a1, Barr, Bstart);
+          Array.Copy(Rarr, (int)(Rstart + 2), Tarr, (int)(Tstart + 4), 2);
+          Baseline_Multiply2Opt2(Tarr,Tstart+2,a0,a1,Barr,Bstart,4,NB);
+          Baseline_Multiply2Opt2(Rarr,Rstart,a0,a1,Barr,Bstart,2,NB);
         } else {
-          for (i = 0; i < NB; i += 2 * 2)
-            Baseline_Multiply2(Rarr, (int)(Rstart + i), Aarr, Astart, Barr, (int)(Bstart + i));
-          for (i = 2; i < NB; i += 2 * 2)
-            Baseline_Multiply2(Tarr, (int)(Tstart + 2 + i), Aarr, Astart, Barr, (int)(Bstart + i));
+          Baseline_Multiply2Opt2(Rarr,Rstart,a0,a1,Barr,Bstart,0,NB);
+          Baseline_Multiply2Opt2(Tarr,Tstart+2,a0,a1,Barr,Bstart,2,NB);
         }
       } else {
 
@@ -1427,7 +1441,6 @@ namespace PeterO {
             Multiply(Tarr, (int)(Tstart + NA + i), Tarr, Tstart, Aarr, Astart, Barr, (int)(Bstart + i), NA);
         }
       }
-
       if (Add(Rarr, (int)(Rstart + NA), Rarr, (int)(Rstart + NA), Tarr, (int)(Tstart + 2 * NA), NB - NA) != 0)
         Increment(Rarr, (int)(Rstart + NB), NA, (short)1);
     }
@@ -1615,6 +1628,23 @@ namespace PeterO {
       Q[Qstart + 1] = GetHighHalf(q);
     }
 
+    private static void Baseline_Multiply2Opt2(short[] R, int rstart, int a0, int a1, short[] B, int bstart, int istart, int iend) {
+      unchecked {
+        int p; short c; int d;
+        for(int i=istart;i<iend;i+=4){
+          int b0=(((int)B[bstart+i]) & 0xFFFF);
+          int b1=(((int)B[bstart+i+1]) & 0xFFFF);
+          p = a0 * b0; c = (short)(p); d = (((int)p >> 16) & 0xFFFF); R[rstart+i] = c; c = (short)(d); d = (((int)d >> 16) & 0xFFFF);
+          p = a0 * b1;
+          p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF);
+          p = a1 * b0;
+          p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF); R[rstart + 1+i] = c;
+          p = a1 * b1;
+          p += d; R[rstart + 2+i] = (short)(p); R[rstart + 3+i] = (short)(p >> 16);
+        }
+      }
+    }
+
     // for use by Divide(), corrects the underestimated quotient {Q1,Q0}
     private static void CorrectQuotientEstimate(
       short[] Rarr,
@@ -1625,14 +1655,12 @@ namespace PeterO {
       #if DEBUG
       if (!(N != 0 && N % 2 == 0)) throw new ArgumentException("doesn't satisfy N!=0 && N%2==0");
       #endif
-
       unchecked {
         if (N == 2)
           Baseline_Multiply2(Tarr, Tstart, Qarr, Qstart, Barr, Bstart);
         else
           AsymmetricMultiply(Tarr, Tstart, Tarr, (int)(Tstart + (N + 2)), Qarr, Qstart, 2, Barr, Bstart, N);
         Subtract(Rarr, Rstart, Rarr, Rstart, Tarr, Tstart, N + 2);
-
         while (Rarr[Rstart + N] != 0 || Compare(Rarr, Rstart, Barr, Bstart, N) >= 0) {
           Rarr[Rstart + N] -= (short)Subtract(Rarr, Rstart, Rarr, Rstart, Barr, Bstart, N);
           Qarr[Qstart]++;
@@ -2257,7 +2285,11 @@ namespace PeterO {
       }
     }
 
-    public int getUnsignedBitLengthEx(short[] reg, int wordCount){
+    /// <summary> </summary>
+    /// <param name='reg'>A short[] object.</param>
+    /// <param name='wordCount'>A 32-bit signed integer.</param>
+    /// <returns>A 32-bit signed integer.</returns>
+    private int getUnsignedBitLengthEx(short[] reg, int wordCount){
       int wc = wordCount;
       if (wc!=0){
         int numberValue=(((int)(reg[wc-1]))&0xFFFF);
@@ -2358,7 +2390,7 @@ namespace PeterO {
         ReverseChars(chars, 0, count);
       return new String(chars, 0, count);
     }
-    
+
     /// <summary> Finds the number of decimal digits this number has.</summary>
     /// <returns>The number of decimal digits. Returns 1 if this object&apos;s
     /// value is 0.</returns>
@@ -2511,29 +2543,50 @@ namespace PeterO {
         if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <=0x7FFF) {
           int rest = tempReg[0];
           while (rest != 0) {
-            s[i++] = vec[rest % 10];
-            rest = rest / 10;
+            // accurate approximation to rest/10 up to 43698,
+            // and rest can go up to 32767
+            int newrest=(rest*26215)>>18;
+            s[i++] = vec[rest-(newrest*10)];
+            rest = newrest;
           }
           break;
         } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <=0x7FFF) {
           int rest = (((int)tempReg[0])&0xFFFF);
           rest|=(((int)tempReg[1])&0xFFFF)<<16;
           while (rest != 0) {
-            s[i++] = vec[rest % 10];
-            rest = rest / 10;
+            int newrest=rest/10;
+            s[i++] = vec[rest-(newrest*10)];
+            rest = newrest;
           }
           break;
         } else {
-          int remainderSmall = FastDivideAndRemainder(tempReg, wordCount, (short)10000);
+          int wci = wordCount;
+          short remainder = 0;
+          int quo,rem;
+          // Divide by 10000
+          while ((wci--) > 0) {
+            int currentDividend = unchecked((int)((((int)tempReg[wci]) & 0xFFFF) |
+                                                  ((int)(remainder) << 16)));
+            quo=currentDividend/10000;
+            tempReg[wci] = unchecked((short)quo);
+            rem=currentDividend-(10000*quo);
+            remainder = unchecked((short)rem);
+          }
+          int remainderSmall=remainder;
           // Recalculate word count
           while (wordCount != 0 && tempReg[wordCount - 1] == 0)
             wordCount--;
-          s[i++] = vec[(int)(remainderSmall % 10)];
-          remainderSmall = remainderSmall / 10;
-          s[i++] = vec[(int)(remainderSmall % 10)];
-          remainderSmall = remainderSmall / 10;
-          s[i++] = vec[(int)(remainderSmall % 10)];
-          remainderSmall = remainderSmall / 10;
+          // accurate approximation to rest/10 up to 16388,
+          // and rest can go up to 9999
+          int newrest=(remainderSmall*3277)>>15;
+          s[i++] = vec[(int)(remainderSmall-(newrest*10))];
+          remainderSmall = newrest;
+          newrest=(remainderSmall*3277)>>15;
+          s[i++] = vec[(int)(remainderSmall-(newrest*10))];
+          remainderSmall = newrest;
+          newrest=(remainderSmall*3277)>>15;
+          s[i++] = vec[(int)(remainderSmall-(newrest*10))];
+          remainderSmall = newrest;
           s[i++] = vec[remainderSmall];
         }
       }
@@ -2553,31 +2606,60 @@ namespace PeterO {
     /// <param name='str'>A string object.</param>
     /// <returns>A BigInteger object.</returns>
     public static BigInteger fromString(string str){
-      if(str==null)throw new ArgumentNullException("str");
-      if((str.Length)<=0)throw new ArgumentException("str.Length"+" not less than "+"0"+" ("+Convert.ToString((long)(str.Length),System.Globalization.CultureInfo.InvariantCulture)+")");
-      int offset=0;
+      if((str)==null)throw new ArgumentNullException("str");
+      return fromSubstring(str,0,str.Length);
+    }
+    
+    private const int MaxSafeInt = 214748363;
+
+
+    public static BigInteger fromSubstring(string str, int index, int endIndex){
+      if((str)==null)throw new ArgumentNullException("str");
+      if((index)<0)throw new ArgumentException("\"str\""+" not greater or equal to "+"0"+" ("+Convert.ToString((long)(index),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((index)>str.Length)throw new ArgumentException("\"str\""+" not less or equal to "+Convert.ToString((long)(str.Length),System.Globalization.CultureInfo.InvariantCulture)+" ("+Convert.ToString((long)(index),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((endIndex)<0)throw new ArgumentException("\"index\""+" not greater or equal to "+"0"+" ("+Convert.ToString((long)(endIndex),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((endIndex)>str.Length)throw new ArgumentException("\"index\""+" not less or equal to "+Convert.ToString((long)(str.Length),System.Globalization.CultureInfo.InvariantCulture)+" ("+Convert.ToString((long)(endIndex),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if((endIndex)<index)throw new ArgumentException("\"endIndex\""+" not greater or equal to "+Convert.ToString((long)(index),System.Globalization.CultureInfo.InvariantCulture)+" ("+Convert.ToString((long)(endIndex),System.Globalization.CultureInfo.InvariantCulture)+")");
+      if(index==endIndex)
+        throw new FormatException("No digits");
       bool negative=false;
       if(str[0]=='-'){
-        offset++;
+        index++;
         negative=true;
       }
       BigInteger bigint=new BigInteger().Allocate(4);
       bool haveDigits=false;
-      for (int i = offset; i < str.Length; i++) {
+      bool haveSmallInt=true;
+      int smallInt=0;
+      for (int i = index; i < endIndex; i++) {
         char c=str[i];
         if(c<'0' || c>'9')throw new FormatException("Illegal character found");
         haveDigits=true;
         int digit = (int)(c - '0');
-        // Multiply by 10
-        short carry=LinearMultiply(bigint.reg,0,bigint.reg,0,(short)10,bigint.reg.Length);
-        if(carry!=0)
-          bigint.reg=GrowForCarry(bigint.reg,carry);
-        // Add the parsed digit
-        if(digit!=0 && Increment(bigint.reg,0,bigint.reg.Length,(short)digit)!=0)
-          bigint.reg=GrowForCarry(bigint.reg,(short)1);
+        if(haveSmallInt && smallInt<MaxSafeInt){
+          smallInt*=10;
+          smallInt+=digit;
+        } else {
+          if(haveSmallInt){
+            bigint.reg[0]=unchecked((short)((smallInt)&0xFFFF));
+            bigint.reg[1]=unchecked((short)((smallInt>>16)&0xFFFF));
+            haveSmallInt=false;
+          }
+          // Multiply by 10
+          short carry=LinearMultiply(bigint.reg,0,bigint.reg,0,(short)10,bigint.reg.Length);
+          if(carry!=0)
+            bigint.reg=GrowForCarry(bigint.reg,carry);
+          // Add the parsed digit
+          if(digit!=0 && Increment(bigint.reg,0,bigint.reg.Length,(short)digit)!=0)
+            bigint.reg=GrowForCarry(bigint.reg,(short)1);
+        }
       }
       if(!haveDigits)
         throw new FormatException("No digits");
+      if(haveSmallInt){
+        bigint.reg[0]=unchecked((short)((smallInt)&0xFFFF));
+        bigint.reg[1]=unchecked((short)((smallInt>>16)&0xFFFF));
+      }
       bigint.wordCount=bigint.CalcWordCount();
       bigint.negative=(bigint.wordCount!=0 && negative);
       return bigint;
@@ -2991,12 +3073,17 @@ namespace PeterO {
       int i = count;
       short remainder = 0;
       int idivisor = (((int)divisorSmall) & 0xFFFF);
+      int quo,rem;
       while ((i--) > 0) {
         int currentDividend = unchecked((int)((((int)dividendReg[i]) & 0xFFFF) |
                                               ((int)(remainder) << 16)));
         if ((currentDividend >> 31) == 0) {
-          quotientReg[i] = unchecked((short)(currentDividend / idivisor));
-          if (i > 0) remainder = unchecked((short)(currentDividend % idivisor));
+          quo=currentDividend / idivisor;
+          quotientReg[i] = unchecked((short)quo);
+          if(i>0){
+            rem=currentDividend-(idivisor*quo);
+            remainder = unchecked((short)rem);
+          }
         } else {
           quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
           if (i > 0) remainder = RemainderUnsigned(currentDividend, divisorSmall);
@@ -3009,12 +3096,15 @@ namespace PeterO {
       int i = count;
       short remainder = 0;
       int idivisor = (((int)divisorSmall) & 0xFFFF);
+      int quo,rem;
       while ((i--) > 0) {
         int currentDividend = unchecked((int)((((int)dividendReg[i]) & 0xFFFF) |
                                               ((int)(remainder) << 16)));
         if ((currentDividend >> 31) == 0) {
-          quotientReg[i] = unchecked((short)(currentDividend / idivisor));
-          remainder = unchecked((short)(currentDividend % idivisor));
+          quo=currentDividend / idivisor;
+          quotientReg[i] = unchecked((short)quo);
+          rem=currentDividend-(idivisor*quo);
+          remainder = unchecked((short)rem);
         } else {
           quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
           remainder = RemainderUnsigned(currentDividend, divisorSmall);
@@ -3025,13 +3115,16 @@ namespace PeterO {
     private static short FastDivideAndRemainder(short[] quotientReg, int count, short divisorSmall) {
       int i = count;
       short remainder = 0;
+      int quo,rem;
       int idivisor = (((int)divisorSmall) & 0xFFFF);
       while ((i--) > 0) {
         int currentDividend = unchecked((int)((((int)quotientReg[i]) & 0xFFFF) |
                                               ((int)(remainder) << 16)));
         if ((currentDividend >> 31) == 0) {
-          quotientReg[i] = unchecked((short)(currentDividend / idivisor));
-          remainder = unchecked((short)(currentDividend % idivisor));
+          quo=currentDividend / idivisor;
+          quotientReg[i] = unchecked((short)quo);
+          rem=currentDividend-(idivisor*quo);
+          remainder = unchecked((short)rem);
         } else {
           quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
           remainder = RemainderUnsigned(currentDividend, divisorSmall);

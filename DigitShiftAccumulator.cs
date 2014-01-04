@@ -79,40 +79,6 @@ namespace PeterO {
       bitLeftmost = lastDiscarded;
     }
 
-    private static BigInteger FastParseBigInt(string str, int offset, int length) {
-      // Assumes the string contains
-      // only the digits '0' through '9'
-      int smallint=0;
-      int mlength=Math.Min(9,length);
-      for (int i = 0; i < mlength; i++) {
-        int digit = (int)(str[offset + i] - '0');
-        smallint*=10;
-        smallint+=digit;
-      }
-      if(mlength==length){
-        return (BigInteger)smallint;
-      } else {
-        FastInteger mbi = new FastInteger(smallint);
-        for (int i = 9; i < length;) {
-          mlength=Math.Min(9,length-i);
-          int multer=1;
-          int adder=0;
-          for(int j=i;j<i+mlength;j++){
-            int digit = (int)(str[offset + j] - '0');
-            multer*=10;
-            adder*=10;
-            adder+=digit;
-          }
-          if(multer==10)
-            mbi.MultiplyByTenAndAdd(adder);
-          else
-            mbi.Multiply(multer).AddInt(adder);
-          i+=mlength;
-        }
-        return mbi.AsBigInteger();
-      }
-    }
-
     private static int FastParseLong(string str, int offset, int length) {
       // Assumes the string is length 9 or less and contains
       // only the digits '0' through '9'
@@ -230,7 +196,7 @@ namespace PeterO {
           isSmall = true;
           shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
-          shiftedBigInt = FastParseBigInt(str, 0, newLength);
+          shiftedBigInt = BigInteger.fromSubstring(str, 0, newLength);
         }
       }
       for (int i = str.Length - 1; i >= 0; i--) {
@@ -342,7 +308,7 @@ namespace PeterO {
           isSmall = true;
           shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
-          shiftedBigInt = FastParseBigInt(str, 0, newLength);
+          shiftedBigInt = BigInteger.fromSubstring(str, 0, newLength);
         }
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
       }

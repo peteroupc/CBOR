@@ -522,6 +522,8 @@ bigrem=divrem[1]; }
      * @return An ExtendedDecimal object.
      */
       public ExtendedDecimal ValueOf(int val) {
+        if (val == 0) return Zero;
+        if (val == 1) return One;
         return FromInt64(val);
       }
     }
@@ -2129,12 +2131,68 @@ remainder=divrem[1]; }
     }
 
     /**
-     *
-     * @param ctx A PrecisionContext object.
-     * @return An ExtendedDecimal object.
+     * Finds the square root of this object's value.
+     * @param ctx A precision context to control precision and exponent
+     * range of the result. The rounding mode is ignored and is always HalfEven.
+     * If HasFlags of the context is true, will also store the flags resulting
+     * from the operation (the flags are in addition to the pre-existing
+     * flags). --This parameter cannot be null, as the square root function&apos;s
+     * results are generally not exact for many inputs.--
+     * @return The square root. Signals the flag FlagInvalid and returns
+     * NaN if &quot;ctx&quot; is null or the precision range is unlimited,
+     * or this object is less than 0 (the square root of a negative number is
+     * a complex number not representable in ExtendedDecimal).
      */
     public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this,ctx);
     }
+    /**
+     * Finds e (the base of natural logarithms) raised to the power of this
+     * object's value.
+     * @param ctx A precision context to control precision and exponent
+     * range of the result. The rounding mode is ignored and is always HalfEven.
+     * If HasFlags of the context is true, will also store the flags resulting
+     * from the operation (the flags are in addition to the pre-existing
+     * flags). --This parameter cannot be null, as the exp function&apos;s
+     * results are generally not exact.--
+     * @return exp(this object). Signals the flag FlagInvalid and returns
+     * NaN if &quot;ctx&quot; is null or the precision range is unlimited.
+     */
+    public ExtendedDecimal Exp(PrecisionContext ctx) {
+      return math.Exp(this,ctx);
+    }
+
+    /**
+     * Finds the natural logarithm of this object, that is, the exponent
+     * that e (the base of natural logarithms) must be raised to in order to
+     * equal this object's value.
+     * @param ctx A precision context to control precision and exponent
+     * range of the result. The rounding mode is ignored and is always HalfEven.
+     * If HasFlags of the context is true, will also store the flags resulting
+     * from the operation (the flags are in addition to the pre-existing
+     * flags). --This parameter cannot be null, as the ln function&apos;s
+     * results are generally not exact.--
+     * @return ln(this object). Signals the flag FlagInvalid and returns
+     * NaN if &quot;ctx&quot; is null or the precision range is unlimited.
+     */
+    public ExtendedDecimal Ln(PrecisionContext ctx) {
+      return math.Ln(this,ctx);
+    }
+
+    /**
+     * Finds the constant pi.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). --This parameter cannot be
+     * null, as pi can never be represented exactly.--
+     * @return Pi rounded to the given precision. Signals the flag FlagInvalid
+     * and returns NaN if &quot;ctx&quot; is null or the precision range
+     * is unlimited.
+     */
+    public static ExtendedDecimal PI(PrecisionContext ctx) {
+      return math.Pi(ctx);
+    }
+
   }
 

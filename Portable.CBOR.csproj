@@ -115,6 +115,20 @@
     <Content Include="ProfilingSessions\Session20131228_192001.sdps" />
     <Content Include="ProfilingSessions\Session20131228_195239.sdps" />
     <Content Include="ProfilingSessions\Session20131229_025740.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_085548.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_141812.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_143610.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_151735.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_192047.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_192913.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_194029.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_201403.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_215018.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_220836.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_225753.sdps" />
+    <Content Include="ProfilingSessions\Session20140104_070311.sdps" />
+    <Content Include="ProfilingSessions\Session20140104_070613.sdps" />
+    <Content Include="ProfilingSessions\Session20140104_072742.sdps" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigFloat.cs" />

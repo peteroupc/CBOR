@@ -1764,5 +1764,36 @@ at: http://peteroupc.github.io/CBOR/
       return math.RoundToBinaryPrecision(this, ctx);
     }
 
+    /**
+     *
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedDecimal object.
+     */
+    public ExtendedFloat SquareRoot(PrecisionContext ctx) {
+      return math.SquareRoot(this,ctx);
+    }
+    /**
+     *
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedDecimal object.
+     */
+    public ExtendedFloat Exp(PrecisionContext ctx) {
+      return math.Exp(this,ctx);
+    }
+
+    /**
+     * Finds the constant pi.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). --This parameter cannot be
+     * null, as pi can never be represented exactly.--
+     * @return Pi rounded to the given precision. Signals the flag FlagInvalid
+     * and returns NaN if &quot;ctx&quot; is null or the precision range
+     * is unlimited.
+     */
+    public static ExtendedFloat PI(PrecisionContext ctx) {
+      return math.Pi(ctx);
+    }
   }
 

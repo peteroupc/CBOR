@@ -725,6 +725,17 @@ namespace PeterO {
     public FastInteger SubtractInt(int val) {
       if(val==Int32.MinValue){
         return AddBig(NegativeInt32MinValue);
+      } else if(integerMode==0){
+        if ((val < 0 && Int32.MaxValue + val < smallValue) ||
+            (val > 0 && Int32.MinValue + val > smallValue)) {
+          // would overflow, convert to large
+          integerMode=2;
+          largeValue = (BigInteger)smallValue;
+          largeValue -= (BigInteger)val;
+        } else {
+          smallValue-=val;
+        }
+        return this;
       } else {
         return AddInt(-val);
       }
@@ -881,7 +892,7 @@ namespace PeterO {
 
     /// <summary> </summary>
     /// <returns>A FastInteger object.</returns>
-public FastInteger Decrement(){
+    public FastInteger Decrement(){
       if(integerMode==0){
         if(smallValue!=Int32.MinValue){
           smallValue--;

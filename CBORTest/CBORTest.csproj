@@ -88,6 +88,10 @@
     <Content Include="ProfilingSessions\Session20131230_084023.sdps" />
     <Content Include="ProfilingSessions\Session20131230_085753.sdps" />
     <Content Include="ProfilingSessions\Session20131230_085925.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_075130.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_081417.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_081552.sdps" />
+    <Content Include="ProfilingSessions\Session20140103_225917.sdps" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Portable.CBOR.csproj">
