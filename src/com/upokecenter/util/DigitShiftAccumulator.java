@@ -81,40 +81,6 @@ at: http://peteroupc.github.io/CBOR/
       bitLeftmost = lastDiscarded;
     }
 
-    private static BigInteger FastParseBigInt(String str, int offset, int length) {
-      // Assumes the String contains
-      // only the digits '0' through '9'
-      int smallint=0;
-      int mlength=Math.min(9,length);
-      for (int i = 0; i < mlength; i++) {
-        int digit = (int)(str.charAt(offset + i) - '0');
-        smallint*=10;
-        smallint+=digit;
-      }
-      if(mlength==length){
-        return BigInteger.valueOf(smallint);
-      } else {
-        FastInteger mbi = new FastInteger(smallint);
-        for (int i = 9; i < length;) {
-          mlength=Math.min(9,length-i);
-          int multer=1;
-          int adder=0;
-          for(int j=i;j<i+mlength;j++){
-            int digit = (int)(str.charAt(offset + j) - '0');
-            multer*=10;
-            adder*=10;
-            adder+=digit;
-          }
-          if(multer==10)
-            mbi.MultiplyByTenAndAdd(adder);
-          else
-            mbi.Multiply(multer).AddInt(adder);
-          i+=mlength;
-        }
-        return mbi.AsBigInteger();
-      }
-    }
-
     private static int FastParseLong(String str, int offset, int length) {
       // Assumes the String is length 9 or less and contains
       // only the digits '0' through '9'
@@ -238,7 +204,7 @@ bigrem=divrem[1]; }
           isSmall = true;
           shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
-          shiftedBigInt = FastParseBigInt(str, 0, newLength);
+          shiftedBigInt = BigInteger.fromSubstring(str, 0, newLength);
         }
       }
       for (int i = str.length() - 1; i >= 0; i--) {
@@ -366,7 +332,7 @@ bigrem=divrem[1]; }
           isSmall = true;
           shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
-          shiftedBigInt = FastParseBigInt(str, 0, newLength);
+          shiftedBigInt = BigInteger.fromSubstring(str, 0, newLength);
         }
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
       }

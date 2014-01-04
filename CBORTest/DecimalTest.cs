@@ -21,7 +21,6 @@ namespace Test
   [TestFixture]
   public class DecimalTest
   {
-
     public static Regex PropertyLine=new Regex(
       "^(\\w+)\\:\\s*(\\S+)",RegexOptions.Compiled);
     public static Regex Quotes=new Regex(
@@ -119,6 +118,13 @@ namespace Test
         else if(op.Equals("divideint"))d3=d1.DivideToIntegerZeroScale(d2,ctx);
         else if(op.Equals("divide"))d3=d1.Divide(d2,ctx);
         else if(op.Equals("remainder"))d3=d1.Remainder(d2,ctx);
+        else if(op.Equals("exp")){
+          d3=d1.Exp(ctx);
+        }
+        //else if(op.Equals("ln")){
+          //Console.WriteLine(ln);
+         // d3=d1.Ln(ctx);
+        //}
         else if(op.Equals("squareroot"))d3=d1.SquareRoot(ctx);
         else if(op.Equals("remaindernear"))d3=d1.RemainderNear(d2,ctx);
         else if(op.Equals("nexttoward"))d3=d1.NextToward(d2,ctx);
@@ -133,6 +139,7 @@ namespace Test
         else if(op.Equals("apply"))d3=d1.RoundToPrecision(ctx);
         else if(op.Equals("plus"))d3=d1.Plus(ctx);
         else return;
+        if(flags.Contains("Invalid_context"))return;
         bool invalid=(flags.Contains("Division_impossible") ||
                       flags.Contains("Division_undefined") ||
                       flags.Contains("Invalid_operation"));
@@ -175,6 +182,11 @@ namespace Test
     static string TestPath="..\\..\\..\\.settings";
 
     [Test]
+    public void TestPi(){
+      Console.WriteLine(ExtendedDecimal.PI(PrecisionContext.ForPrecision(1000)));
+    }
+
+    [Test]
     public void TestParser(){
       long failures=0;
       if(!Directory.Exists(TestPath))
@@ -182,6 +194,7 @@ namespace Test
       for(int i=0;i<1;i++){
         foreach(var f in Directory.GetFiles(TestPath)){
           if(!Path.GetFileName(f).Contains(".decTest"))continue;
+          if(Path.GetFileName(f).Contains("ln"))continue;
           Console.WriteLine("//"+f);
           IDictionary<string,string> context=new Dictionary<string,string>();
           using(StreamReader w=new StreamReader(f)){
@@ -191,7 +204,7 @@ namespace Test
                 try {
                   TextWriter oldOut=Console.Out;
                   try {
-                    Console.SetOut(TextWriter.Null);
+                  //  Console.SetOut(TextWriter.Null);
                     ParseDecTest(ln,context);
                   } catch(Exception){
                     Console.SetOut(oldOut);

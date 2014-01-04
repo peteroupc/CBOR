@@ -1638,5 +1638,30 @@ namespace PeterO {
       return math.RoundToBinaryPrecision(this, ctx);
     }
 
+    /// <summary> </summary>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedFloat SquareRoot(PrecisionContext ctx){
+      return math.SquareRoot(this,ctx);
+    }
+    /// <summary> </summary>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedFloat Exp(PrecisionContext ctx){
+      return math.Exp(this,ctx);
+    }
+
+    /// <summary> Finds the constant pi. </summary>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). --This parameter cannot
+    /// be null, as pi can never be represented exactly.--</param>
+    /// <returns>Pi rounded to the given precision. Signals the flag FlagInvalid
+    /// and returns NaN if &quot;ctx&quot; is null or the precision range
+    /// is unlimited.</returns>
+    public static ExtendedFloat PI(PrecisionContext ctx){
+      return math.Pi(ctx);
+    }
   }
 }

@@ -552,12 +552,16 @@ at: http://peteroupc.github.io/CBOR/
     private static void Baseline_Multiply2(short[] R, int rstart, short[] A, int astart, short[] B, int bstart) {
       {
         int p; short c; int d;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)B[bstart]) & 0xFFFF); c = (short)(p); d = (((int)p >> 16) & 0xFFFF); R[rstart] = c; c = (short)(d); d = (((int)d >> 16) & 0xFFFF);
-        p = (((int)A[astart]) & 0xFFFF) * (((int)B[bstart + 1]) & 0xFFFF);
+        int a0=(((int)A[astart]) & 0xFFFF);
+        int a1=(((int)A[astart+1]) & 0xFFFF);
+        int b0=(((int)B[bstart]) & 0xFFFF);
+        int b1=(((int)B[bstart+1]) & 0xFFFF);
+        p = a0 * b0; c = (short)(p); d = (((int)p >> 16) & 0xFFFF); R[rstart] = c; c = (short)(d); d = (((int)d >> 16) & 0xFFFF);
+        p = a0 * b1;
         p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF);
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)B[bstart]) & 0xFFFF);
+        p = a1 * b0;
         p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF); R[rstart + 1] = c;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)B[bstart + 1]) & 0xFFFF);
+        p = a1 * b1;
         p += d; R[rstart + 1 + 1] = (short)(p); R[rstart + 1 + 2] = (short)(p >> 16);
       }
     }
@@ -1352,6 +1356,21 @@ at: http://peteroupc.github.io/CBOR/
       RecursiveSquare(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N);
     }
 
+    private static void Baseline_Multiply2Opt(short[] R, int rstart, int a0, int a1, short[] B, int bstart) {
+      {
+        int p; short c; int d;
+        int b0=(((int)B[bstart]) & 0xFFFF);
+        int b1=(((int)B[bstart+1]) & 0xFFFF);
+        p = a0 * b0; c = (short)(p); d = (((int)p >> 16) & 0xFFFF); R[rstart] = c; c = (short)(d); d = (((int)d >> 16) & 0xFFFF);
+        p = a0 * b1;
+        p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF);
+        p = a1 * b0;
+        p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF); R[rstart + 1] = c;
+        p = a1 * b1;
+        p += d; R[rstart + 2] = (short)(p); R[rstart + 3] = (short)(p >> 16);
+      }
+    }
+
     private static void AsymmetricMultiply(
       short[] Rarr,
       int Rstart,
@@ -1389,22 +1408,17 @@ at: http://peteroupc.github.io/CBOR/
             Rarr[Rstart + NB + 1] = (short)0;
             return;
         }
-      }
-
-      if (NA == 2) {
-        int i;
-        if ((NB / 2) % 2 == 0) {
-          Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-          System.arraycopy(Rarr, (int)(Rstart + 2), Tarr, (int)(Tstart + 2 * 2), (int)2);
-          for (i = 2 * 2; i < NB; i += 2 * 2)
-            Baseline_Multiply2(Tarr, (int)(Tstart + 2 + i), Aarr, Astart, Barr, (int)(Bstart + i));
-          for (i = 2; i < NB; i += 2 * 2)
-            Baseline_Multiply2(Rarr, (int)(Rstart + i), Aarr, Astart, Barr, (int)(Bstart + i));
+      } else if (NA == 2) {
+        int a0=(((int)Aarr[Astart]) & 0xFFFF);
+        int a1=(((int)Aarr[Astart+1]) & 0xFFFF);
+        if (((NB>>1)&1) == 0) {
+          Baseline_Multiply2Opt(Rarr, Rstart, a0,a1, Barr, Bstart);
+          System.arraycopy(Rarr, (int)(Rstart + 2), Tarr, (int)(Tstart + 4), 2);
+          Baseline_Multiply2Opt2(Tarr,Tstart+2,a0,a1,Barr,Bstart,4,NB);
+          Baseline_Multiply2Opt2(Rarr,Rstart,a0,a1,Barr,Bstart,2,NB);
         } else {
-          for (i = 0; i < NB; i += 2 * 2)
-            Baseline_Multiply2(Rarr, (int)(Rstart + i), Aarr, Astart, Barr, (int)(Bstart + i));
-          for (i = 2; i < NB; i += 2 * 2)
-            Baseline_Multiply2(Tarr, (int)(Tstart + 2 + i), Aarr, Astart, Barr, (int)(Bstart + i));
+          Baseline_Multiply2Opt2(Rarr,Rstart,a0,a1,Barr,Bstart,0,NB);
+          Baseline_Multiply2Opt2(Tarr,Tstart+2,a0,a1,Barr,Bstart,2,NB);
         }
       } else {
 
@@ -1423,7 +1437,6 @@ at: http://peteroupc.github.io/CBOR/
             Multiply(Tarr, (int)(Tstart + NA + i), Tarr, Tstart, Aarr, Astart, Barr, (int)(Bstart + i), NA);
         }
       }
-
       if (Add(Rarr, (int)(Rstart + NA), Rarr, (int)(Rstart + NA), Tarr, (int)(Tstart + 2 * NA), NB - NA) != 0)
         Increment(Rarr, (int)(Rstart + NB), NA, (short)1);
     }
@@ -1608,6 +1621,23 @@ at: http://peteroupc.github.io/CBOR/
       Q[Qstart + 1] = GetHighHalf(q);
     }
 
+    private static void Baseline_Multiply2Opt2(short[] R, int rstart, int a0, int a1, short[] B, int bstart, int istart, int iend) {
+      {
+        int p; short c; int d;
+        for(int i=istart;i<iend;i+=4){
+          int b0=(((int)B[bstart+i]) & 0xFFFF);
+          int b1=(((int)B[bstart+i+1]) & 0xFFFF);
+          p = a0 * b0; c = (short)(p); d = (((int)p >> 16) & 0xFFFF); R[rstart+i] = c; c = (short)(d); d = (((int)d >> 16) & 0xFFFF);
+          p = a0 * b1;
+          p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF);
+          p = a1 * b0;
+          p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF); R[rstart + 1+i] = c;
+          p = a1 * b1;
+          p += d; R[rstart + 2+i] = (short)(p); R[rstart + 3+i] = (short)(p >> 16);
+        }
+      }
+    }
+
     // for use by Divide(), corrects the underestimated quotient {Q1,Q0}
     private static void CorrectQuotientEstimate(
       short[] Rarr,
@@ -1622,7 +1652,6 @@ at: http://peteroupc.github.io/CBOR/
         else
           AsymmetricMultiply(Tarr, Tstart, Tarr, (int)(Tstart + (N + 2)), Qarr, Qstart, 2, Barr, Bstart, N);
         Subtract(Rarr, Rstart, Rarr, Rstart, Tarr, Tstart, N + 2);
-
         while (Rarr[Rstart + N] != 0 || Compare(Rarr, Rstart, Barr, Bstart, N) >= 0) {
           Rarr[Rstart + N] -= (short)Subtract(Rarr, Rstart, Rarr, Rstart, Barr, Bstart, N);
           Qarr[Qstart]++;
@@ -2242,6 +2271,41 @@ at: http://peteroupc.github.io/CBOR/
     public int getUnsignedBitLength() {
       int wc = this.wordCount;
       if (wc!=0){
+        int numberValue=(((int)(this.reg[wc-1]))&0xFFFF);
+        wc=(wc-1)<<4;
+        if (numberValue == 0)return wc;
+        wc+=16;
+        {
+          if ((numberValue >> 8) == 0) {
+            numberValue <<= 8;
+            wc -= 8;
+          }
+          if ((numberValue >> 12) == 0) {
+            numberValue <<= 4;
+            wc -= 4;
+          }
+          if ((numberValue >> 14) == 0) {
+            numberValue <<= 2;
+            wc -= 2;
+          }
+          if ((numberValue >> 15) == 0)
+            --wc;
+        }
+        return wc;
+      } else {
+        return 0;
+      }
+    }
+
+    /**
+     *
+     * @param reg A short[] object.
+     * @param wordCount A 32-bit signed integer.
+     * @return A 32-bit signed integer.
+     */
+    private int getUnsignedBitLengthEx(short[] reg, int wordCount) {
+      int wc = wordCount;
+      if (wc!=0){
         int numberValue=(((int)(reg[wc-1]))&0xFFFF);
         wc=(wc-1)<<4;
         if (numberValue == 0)return wc;
@@ -2394,6 +2458,20 @@ at: http://peteroupc.github.io/CBOR/
           // all numbers with this bit length
           return minDigits;
         }
+      } else if(bitlen<=6432162){
+        // Much more accurate approximation
+        BigInteger biMult=BigInteger.valueOf(661971961083L);
+        BigInteger minDigits=BigInteger.valueOf(bitlen-1);
+        minDigits=minDigits.multiply(biMult);
+        minDigits=minDigits.shiftRight(41);
+        BigInteger maxDigits=BigInteger.valueOf(bitlen);
+        maxDigits=maxDigits.multiply(biMult);
+        maxDigits=maxDigits.shiftRight(41);
+        if(minDigits.equals(maxDigits)){
+          // Number of digits is the same for
+          // all numbers with this bit length
+          return 1+minDigits.intValue();
+        }
       }
       short[] tempReg = new short[this.wordCount];
       System.arraycopy(this.reg,0,tempReg,0,tempReg.length);
@@ -2430,6 +2508,35 @@ at: http://peteroupc.github.io/CBOR/
           while (wordCount != 0 && tempReg[wordCount - 1] == 0)
             wordCount--;
           i+=4;
+          bitlen=getUnsignedBitLengthEx(tempReg,wordCount);
+          if(bitlen<=2135){
+            // (x*631305)>>21 is an approximation
+            // to trunc(x*log10(2)) that is correct up
+            // to x=2135; the multiplication would require
+            // up to 31 bits in all cases up to 2135
+            // (cases up to 64 are already handled above)
+            int minDigits=1+(((bitlen-1)*631305)>>21);
+            int maxDigits=1+(((bitlen)*631305)>>21);
+            if(minDigits==maxDigits){
+              // Number of digits is the same for
+              // all numbers with this bit length
+              return i.add(minDigits);
+            }
+          } else if(bitlen<=6432162){
+            // Much more accurate approximation
+            BigInteger biMult=BigInteger.valueOf(661971961083L);
+            BigInteger minDigits=BigInteger.valueOf(bitlen-1);
+            minDigits=minDigits.multiply(biMult);
+            minDigits=minDigits.shiftRight(41);
+            BigInteger maxDigits=BigInteger.valueOf(bitlen);
+            maxDigits=maxDigits.multiply(biMult);
+            maxDigits=maxDigits.shiftRight(41);
+            if(minDigits.equals(maxDigits)){
+              // Number of digits is the same for
+              // all numbers with this bit length
+              return i+1+minDigits.intValue();
+            }
+          }
         }
       }
       return i;
@@ -2456,29 +2563,50 @@ at: http://peteroupc.github.io/CBOR/
         if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <=0x7FFF) {
           int rest = tempReg[0];
           while (rest != 0) {
-            s[i++] = vec.charAt(rest % 10);
-            rest = rest / 10;
+            // accurate approximation to rest/10 up to 43698,
+            // and rest can go up to 32767
+            int newrest=(rest*26215)>>18;
+            s[i++] = vec.charAt(rest-(newrest*10));
+            rest = newrest;
           }
           break;
         } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <=0x7FFF) {
           int rest = (((int)tempReg[0])&0xFFFF);
           rest|=(((int)tempReg[1])&0xFFFF)<<16;
           while (rest != 0) {
-            s[i++] = vec.charAt(rest % 10);
-            rest = rest / 10;
+            int newrest=rest/10;
+            s[i++] = vec.charAt(rest-(newrest*10));
+            rest = newrest;
           }
           break;
         } else {
-          int remainderSmall = FastDivideAndRemainder(tempReg, wordCount, (short)10000);
+          int wci = wordCount;
+          short remainder = 0;
+          int quo,rem;
+          // Divide by 10000
+          while ((wci--) > 0) {
+            int currentDividend = ((int)((((int)tempReg[wci]) & 0xFFFF) |
+                                                  ((int)(remainder) << 16)));
+            quo=currentDividend/10000;
+            tempReg[wci] = ((short)quo);
+            rem=currentDividend-(10000*quo);
+            remainder = ((short)rem);
+          }
+          int remainderSmall=remainder;
           // Recalculate word count
           while (wordCount != 0 && tempReg[wordCount - 1] == 0)
             wordCount--;
-          s[i++] = vec.charAt((int)(remainderSmall % 10));
-          remainderSmall = remainderSmall / 10;
-          s[i++] = vec.charAt((int)(remainderSmall % 10));
-          remainderSmall = remainderSmall / 10;
-          s[i++] = vec.charAt((int)(remainderSmall % 10));
-          remainderSmall = remainderSmall / 10;
+          // accurate approximation to rest/10 up to 16388,
+          // and rest can go up to 9999
+          int newrest=(remainderSmall*3277)>>15;
+          s[i++] = vec.charAt((int)(remainderSmall-(newrest*10)));
+          remainderSmall = newrest;
+          newrest=(remainderSmall*3277)>>15;
+          s[i++] = vec.charAt((int)(remainderSmall-(newrest*10)));
+          remainderSmall = newrest;
+          newrest=(remainderSmall*3277)>>15;
+          s[i++] = vec.charAt((int)(remainderSmall-(newrest*10)));
+          remainderSmall = newrest;
           s[i++] = vec.charAt(remainderSmall);
         }
       }
@@ -2500,17 +2628,28 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public static BigInteger fromString(String str) {
-      if(str==null)throw new NullPointerException("str");
-      if((str.length())<=0)throw new IllegalArgumentException("str.length()"+" not less than "+"0"+" ("+Long.toString((long)(str.length()))+")");
-      int offset=0;
+      if((str)==null)throw new NullPointerException("str");
+      return fromSubstring(str,0,str.length());
+    }
+
+    public static BigInteger fromSubstring(String str, int index, int endIndex) {
+      if((str)==null)throw new NullPointerException("str");
+if((index)<0)throw new IllegalArgumentException("\"str\""+" not greater or equal to "+"0"+" ("+Long.toString((long)(index))+")");
+if((index)>str.length())throw new IllegalArgumentException("\"str\""+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(index))+")");
+if((endIndex)<0)throw new IllegalArgumentException("\"index\""+" not greater or equal to "+"0"+" ("+Long.toString((long)(endIndex))+")");
+if((endIndex)>str.length())throw new IllegalArgumentException("\"index\""+" not less or equal to "+Long.toString((long)(str.length()))+" ("+Long.toString((long)(endIndex))+")");
+if((endIndex)<index)throw new IllegalArgumentException("\"endIndex\""+" not greater or equal to "+Long.toString((long)(index))+" ("+Long.toString((long)(endIndex))+")");
+;
+      if(index==endIndex)
+        throw new NumberFormatException("No digits");
       boolean negative=false;
       if(str.charAt(0)=='-'){
-        offset++;
+        index++;
         negative=true;
       }
       BigInteger bigint=new BigInteger().Allocate(4);
       boolean haveDigits=false;
-      for (int i = offset; i < str.length(); i++) {
+      for (int i = index; i < endIndex; i++) {
         char c=str.charAt(i);
         if(c<'0' || c>'9')throw new NumberFormatException("Illegal character found");
         haveDigits=true;
@@ -2947,12 +3086,17 @@ at: http://peteroupc.github.io/CBOR/
       int i = count;
       short remainder = 0;
       int idivisor = (((int)divisorSmall) & 0xFFFF);
+      int quo,rem;
       while ((i--) > 0) {
         int currentDividend = ((int)((((int)dividendReg[i]) & 0xFFFF) |
                                               ((int)(remainder) << 16)));
         if ((currentDividend >> 31) == 0) {
-          quotientReg[i] = ((short)(currentDividend / idivisor));
-          if (i > 0) remainder = ((short)(currentDividend % idivisor));
+          quo=currentDividend / idivisor;
+          quotientReg[i] = ((short)quo);
+          if(i>0){
+            rem=currentDividend-(idivisor*quo);
+            remainder = ((short)rem);
+          }
         } else {
           quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
           if (i > 0) remainder = RemainderUnsigned(currentDividend, divisorSmall);
@@ -2965,12 +3109,15 @@ at: http://peteroupc.github.io/CBOR/
       int i = count;
       short remainder = 0;
       int idivisor = (((int)divisorSmall) & 0xFFFF);
+      int quo,rem;
       while ((i--) > 0) {
         int currentDividend = ((int)((((int)dividendReg[i]) & 0xFFFF) |
                                               ((int)(remainder) << 16)));
         if ((currentDividend >> 31) == 0) {
-          quotientReg[i] = ((short)(currentDividend / idivisor));
-          remainder = ((short)(currentDividend % idivisor));
+          quo=currentDividend / idivisor;
+          quotientReg[i] = ((short)quo);
+          rem=currentDividend-(idivisor*quo);
+          remainder = ((short)rem);
         } else {
           quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
           remainder = RemainderUnsigned(currentDividend, divisorSmall);
@@ -2981,13 +3128,16 @@ at: http://peteroupc.github.io/CBOR/
     private static short FastDivideAndRemainder(short[] quotientReg, int count, short divisorSmall) {
       int i = count;
       short remainder = 0;
+      int quo,rem;
       int idivisor = (((int)divisorSmall) & 0xFFFF);
       while ((i--) > 0) {
         int currentDividend = ((int)((((int)quotientReg[i]) & 0xFFFF) |
                                               ((int)(remainder) << 16)));
         if ((currentDividend >> 31) == 0) {
-          quotientReg[i] = ((short)(currentDividend / idivisor));
-          remainder = ((short)(currentDividend % idivisor));
+          quo=currentDividend / idivisor;
+          quotientReg[i] = ((short)quo);
+          rem=currentDividend-(idivisor*quo);
+          remainder = ((short)rem);
         } else {
           quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
           remainder = RemainderUnsigned(currentDividend, divisorSmall);

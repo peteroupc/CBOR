@@ -770,6 +770,17 @@ bigrem=divrem[1]; }
     public FastInteger SubtractInt(int val) {
       if(val==Integer.MIN_VALUE){
         return AddBig(NegativeInt32MinValue);
+      } else if(integerMode==0){
+        if ((val < 0 && Integer.MAX_VALUE + val < smallValue) ||
+            (val > 0 && Integer.MIN_VALUE + val > smallValue)) {
+          // would overflow, convert to large
+          integerMode=2;
+          largeValue = BigInteger.valueOf(smallValue);
+          largeValue=largeValue.subtract(BigInteger.valueOf(val));
+        } else {
+          smallValue-=val;
+        }
+        return this;
       } else {
         return AddInt(-val);
       }
@@ -936,7 +947,7 @@ bigrem=divrem[1]; }
      *
      * @return A FastInteger object.
      */
-public FastInteger Decrement() {
+    public FastInteger Decrement() {
       if(integerMode==0){
         if(smallValue!=Integer.MIN_VALUE){
           smallValue--;
