@@ -12,16 +12,16 @@ using System.IO;
 //using System.Numerics;
 using System.Text;
 namespace PeterO {
-    /// <summary> Represents an object in Concise Binary Object Representation
-    /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-    /// is defined in RFC 7049. <para> Thread Safety: CBOR objects that are
-    /// numbers, "simple values", and text strings are immutable (their
-    /// values can't be changed), so they are inherently safe for use by multiple
-    /// threads. CBOR objects that are arrays, maps, and byte strings are
-    /// mutable, but this class doesn't attempt to synchronize reads and
-    /// writes to those objects by multiple threads, so those objects are
-    /// not thread safe without such synchronization. </para>
-    /// </summary>
+  /// <summary> Represents an object in Concise Binary Object Representation
+  /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
+  /// is defined in RFC 7049. <para> Thread Safety: CBOR objects that are
+  /// numbers, "simple values", and text strings are immutable (their
+  /// values can't be changed), so they are inherently safe for use by multiple
+  /// threads. CBOR objects that are arrays, maps, and byte strings are
+  /// mutable, but this class doesn't attempt to synchronize reads and
+  /// writes to those objects by multiple threads, so those objects are
+  /// not thread safe without such synchronization. </para>
+  /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject> {
     internal int ItemType {
       get {
@@ -267,10 +267,19 @@ namespace PeterO {
             double value = (double)this.ThisItem;
             return Double.IsInfinity(value) && value > 0;
           }
+        case CBORObject.CBORObjectType_ExtendedDecimal:
+          return ((ExtendedDecimal)this.ThisItem).IsPositiveInfinity();
+        case CBORObject.CBORObjectType_ExtendedFloat:
+          return ((ExtendedFloat)this.ThisItem).IsPositiveInfinity();
         default:
           return false;
       }
     }
+    
+    public bool IsInfinity() {
+      return IsPositiveInfinity() || IsNegativeInfinity();
+    }
+    
     /// <summary> Gets whether this CBOR object represents negative infinity.
     /// </summary>
     /// <returns>A Boolean object.</returns>
@@ -284,6 +293,10 @@ namespace PeterO {
             double value = (double)this.ThisItem;
             return Double.IsInfinity(value) && value < 0;
           }
+        case CBORObject.CBORObjectType_ExtendedDecimal:
+          return ((ExtendedDecimal)this.ThisItem).IsNegativeInfinity();
+        case CBORObject.CBORObjectType_ExtendedFloat:
+          return ((ExtendedFloat)this.ThisItem).IsNegativeInfinity();
         default:
           return false;
       }
@@ -298,6 +311,10 @@ namespace PeterO {
           return Single.IsNaN((float)this.ThisItem);
         case CBORObject.CBORObjectType_Double:
           return Double.IsNaN((double)this.ThisItem);
+        case CBORObject.CBORObjectType_ExtendedDecimal:
+          return ((ExtendedDecimal)this.ThisItem).IsNaN();
+        case CBORObject.CBORObjectType_ExtendedFloat:
+          return ((ExtendedFloat)this.ThisItem).IsNaN();
         default:
           return false;
       }
@@ -1218,12 +1235,12 @@ namespace PeterO {
           throw new InvalidOperationException("Not an array");
         }
       }
-    /// <summary> Sets the value of a CBOR object by integer index in this array.
-    /// </summary>
-    /// <exception cref='System.InvalidOperationException'> This object
-    /// is not an array.</exception>
-    /// <exception cref='System.ArgumentNullException'> value is null
-    /// (as opposed to CBORObject.Null).</exception>
+      /// <summary> Sets the value of a CBOR object by integer index in this array.
+      /// </summary>
+      /// <exception cref='System.InvalidOperationException'> This object
+      /// is not an array.</exception>
+      /// <exception cref='System.ArgumentNullException'> value is null
+      /// (as opposed to CBORObject.Null).</exception>
       set {
         if (this.ItemType == CBORObjectType_Array) {
           if ((value) == null) throw new ArgumentNullException("value");
@@ -1265,12 +1282,12 @@ namespace PeterO {
           throw new InvalidOperationException("Not a map");
         }
       }
-    /// <summary> Sets the value of a CBOR object in this map, using a CBOR object
-    /// as the key. </summary>
-    /// <exception cref='System.ArgumentNullException'> The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'> This object
-    /// is not a map.</exception>
+      /// <summary> Sets the value of a CBOR object in this map, using a CBOR object
+      /// as the key. </summary>
+      /// <exception cref='System.ArgumentNullException'> The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'> This object
+      /// is not a map.</exception>
       set {
         if ((key) == null) throw new ArgumentNullException("key");
         if ((value) == null) throw new ArgumentNullException("value");
@@ -1294,12 +1311,12 @@ namespace PeterO {
         CBORObject objkey = CBORObject.FromObject(key);
         return this[objkey];
       }
-    /// <summary> Sets the value of a CBOR object in this map, using a string
-    /// as the key. </summary>
-    /// <exception cref='System.ArgumentNullException'> The key or value
-    /// is null (as opposed to CBORObject.Null). </exception>
-    /// <exception cref='System.InvalidOperationException'> This object
-    /// is not a map.</exception>
+      /// <summary> Sets the value of a CBOR object in this map, using a string
+      /// as the key. </summary>
+      /// <exception cref='System.ArgumentNullException'> The key or value
+      /// is null (as opposed to CBORObject.Null). </exception>
+      /// <exception cref='System.InvalidOperationException'> This object
+      /// is not a map.</exception>
       set {
         if ((key) == null) throw new ArgumentNullException("key");
         if ((value) == null) throw new ArgumentNullException("value");
