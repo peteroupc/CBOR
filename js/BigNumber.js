@@ -286,9 +286,6 @@ function() {
         while (N != 0 && X[N - 1] == 0) N--;
         return (N|0);
     };
-    constructor['SetWords'] = constructor.SetWords = function(r, rstart, a, n) {
-        for (var i = 0; i < n; i++) r[rstart + i] = (a & 65535);
-    };
     constructor['ShiftWordsLeftByBits'] = constructor.ShiftWordsLeftByBits = function(r, rstart, n, shiftBits) {
         {
             var u, carry = 0;
@@ -328,21 +325,23 @@ function() {
         shiftWords = (shiftWords < n ? shiftWords : n);
         if (shiftWords != 0) {
             for (var i = n - 1; i >= shiftWords; i--) r[rstart + i] = (r[rstart + i - shiftWords] & 65535);
-            BigInteger.SetWords(r, rstart, 0, shiftWords);
+            for (var arrfillI = rstart; arrfillI < (rstart) + (shiftWords); arrfillI++) r[arrfillI] = 0;
         }
     };
     constructor['ShiftWordsRightByWords'] = constructor.ShiftWordsRightByWords = function(r, rstart, n, shiftWords) {
         shiftWords = (shiftWords < n ? shiftWords : n);
         if (shiftWords != 0) {
             for (var i = 0; i + shiftWords < n; i++) r[rstart + i] = (r[rstart + i + shiftWords] & 65535);
-            BigInteger.SetWords(r, ((rstart + n - shiftWords)|0), 0, shiftWords);
+            rstart = rstart + n - shiftWords;
+            for (var arrfillI = rstart; arrfillI < (rstart) + (shiftWords); arrfillI++) r[arrfillI] = 0;
         }
     };
     constructor['ShiftWordsRightByWordsSignExtend'] = constructor.ShiftWordsRightByWordsSignExtend = function(r, rstart, n, shiftWords) {
         shiftWords = (shiftWords < n ? shiftWords : n);
         if (shiftWords != 0) {
             for (var i = 0; i + shiftWords < n; i++) r[rstart + i] = (r[rstart + i + shiftWords] & 65535);
-            BigInteger.SetWords(r, ((rstart + n - shiftWords)|0), (65535), shiftWords);
+            rstart = rstart + n - shiftWords;
+            for (var i = 0; i < shiftWords; i++) r[rstart + i] = (65535 & 65535);
         }
     };
     constructor['Compare'] = constructor.Compare = function(A, astart, B, bstart, N) {
@@ -400,10 +399,14 @@ function() {
             var u;
             u = 0;
             for (var i = 0; i < N; i += 2) {
-                u = (A[astart + i] & 65535) - (B[bstart + i] & 65535) - ((u >> 31) & 1);
-                C[cstart + i] = (((((u & 65535) & 65535))|0));
-                u = (A[astart + i + 1] & 65535) - (B[bstart + i + 1] & 65535) - ((u >> 31) & 1);
-                C[cstart + i + 1] = (((((u & 65535) & 65535))|0));
+                u = (A[astart] & 65535) - (B[bstart] & 65535) - ((u >> 31) & 1);
+                C[cstart++] = (((((u & 65535) & 65535))|0));
+                astart++;
+                bstart++;
+                u = (A[astart] & 65535) - (B[bstart] & 65535) - ((u >> 31) & 1);
+                C[cstart++] = (((((u & 65535) & 65535))|0));
+                astart++;
+                bstart++;
             }
             return ((u >> 31) & 1);
         }
@@ -439,11 +442,11 @@ function() {
             e = e + (c & 65535);
             c = (e & 65535);
             e = d + ((e|0) >>> 16);
-            R[rstart + 2 * 2 - 3] = (c & 65535);
+            R[rstart + 4 - 3] = (c & 65535);
             p = (A[astart + 2 - 1] & 65535) * (A[astart + 2 - 1] & 65535);
             p = p + (e);
-            R[rstart + 2 * 2 - 2] = (((((p & 65535) & 65535))|0));
-            R[rstart + 2 * 2 - 1] = (((p >> 16) & 65535));
+            R[rstart + 4 - 2] = (((((p & 65535) & 65535))|0));
+            R[rstart + 4 - 1] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Square4'] = constructor.Baseline_Square4 = function(R, rstart, A, astart) {
@@ -734,2270 +737,1596 @@ function() {
             R[rstart + 2 * 8 - 1] = (((p >> 16) & 65535));
         }
     };
-    constructor['Baseline_Square16'] = constructor.Baseline_Square16 = function(R, rstart, A, astart) {
-        {
-            var p;
-            var c;
-            var d;
-            var e;
-            p = (A[astart] & 65535) * (A[astart] & 65535);
-            R[rstart] = (((((p & 65535) & 65535))|0));
-            e = ((p|0) >>> 16);
-            p = (A[astart] & 65535) * (A[astart + 1] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 1] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 2] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 1] & 65535) * (A[astart + 1] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 2] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 3] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 2] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 3] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 4] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 3] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 2] & 65535) * (A[astart + 2] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 4] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 5] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 4] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 3] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 5] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 6] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 5] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 4] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 3] & 65535) * (A[astart + 3] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 6] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 7] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 6] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 5] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 4] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 7] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 8] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 7] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 6] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 5] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 4] & 65535) * (A[astart + 4] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 8] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 9] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 8] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 7] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 6] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 5] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 9] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 10] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 9] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 8] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 7] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 6] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 5] & 65535) * (A[astart + 5] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 10] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 11] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 9] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 8] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 7] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (A[astart + 6] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 11] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 12] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 9] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 8] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (A[astart + 7] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 6] & 65535) * (A[astart + 6] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 12] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 13] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 9] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (A[astart + 8] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (A[astart + 7] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 13] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 14] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (A[astart + 9] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (A[astart + 8] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 7] & 65535) * (A[astart + 7] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 14] = (c & 65535);
-            p = (A[astart] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (A[astart + 9] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (A[astart + 8] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 15] = (c & 65535);
-            p = (A[astart + 1] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (A[astart + 9] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 8] & 65535) * (A[astart + 8] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 16] = (c & 65535);
-            p = (A[astart + 2] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (A[astart + 9] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 17] = (c & 65535);
-            p = (A[astart + 3] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 9] & 65535) * (A[astart + 9] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 18] = (c & 65535);
-            p = (A[astart + 4] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 19] = (c & 65535);
-            p = (A[astart + 5] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 10] & 65535) * (A[astart + 10] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 20] = (c & 65535);
-            p = (A[astart + 6] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 21] = (c & 65535);
-            p = (A[astart + 7] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 11] & 65535) * (A[astart + 11] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 22] = (c & 65535);
-            p = (A[astart + 8] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 23] = (c & 65535);
-            p = (A[astart + 9] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 12] & 65535) * (A[astart + 12] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 24] = (c & 65535);
-            p = (A[astart + 10] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 25] = (c & 65535);
-            p = (A[astart + 11] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 13] & 65535) * (A[astart + 13] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 26] = (c & 65535);
-            p = (A[astart + 12] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 27] = (c & 65535);
-            p = (A[astart + 13] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            p = (A[astart + 14] & 65535) * (A[astart + 14] & 65535);
-            p = p + (c & 65535);
-            c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 28] = (c & 65535);
-            p = (A[astart + 14] & 65535) * (A[astart + 15] & 65535);
-            c = (p & 65535);
-            d = ((p|0) >>> 16);
-            d = ((((d << 1) + (((c|0) >> 15) & 1)))|0);
-            c <<= 1;
-            e = e + (c & 65535);
-            c = (e & 65535);
-            e = d + ((e|0) >>> 16);
-            R[rstart + 2 * 16 - 3] = (c & 65535);
-            p = (A[astart + 16 - 1] & 65535) * (A[astart + 16 - 1] & 65535);
-            p = p + (e);
-            R[rstart + 2 * 16 - 2] = (((((p & 65535) & 65535))|0));
-            R[rstart + 2 * 16 - 1] = (((p >> 16) & 65535));
-        }
-    };
     constructor['Baseline_Multiply2'] = constructor.Baseline_Multiply2 = function(R, rstart, A, astart, B, bstart) {
         {
             var p;
             var c;
             var d;
-            p = (A[astart] & 65535) * (B[bstart] & 65535);
+            var a0 = (A[astart] & 65535);
+            var a1 = (A[astart + 1] & 65535);
+            var b0 = (B[bstart] & 65535);
+            var b1 = (B[bstart + 1] & 65535);
+            p = a0 * b0;
             c = (p & 65535);
             d = ((p|0) >>> 16);
             R[rstart] = (c & 65535);
             c = (d & 65535);
             d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 1] & 65535);
+            p = a0 * b1;
             p = p + (c & 65535);
             c = (p & 65535);
             d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart] & 65535);
+            p = a1 * b0;
             p = p + (c & 65535);
             c = (p & 65535);
             d = d + ((p|0) >>> 16);
             R[rstart + 1] = (c & 65535);
-            p = (A[astart + 1] & 65535) * (B[bstart + 1] & 65535);
+            p = a1 * b1;
             p = p + (d);
             R[rstart + 1 + 1] = (((((p & 65535) & 65535))|0));
             R[rstart + 1 + 2] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Multiply4'] = constructor.Baseline_Multiply4 = function(R, rstart, A, astart, B, bstart) {
+        var mask = 65535;
         {
             var p;
             var c;
             var d;
-            p = (A[astart] & 65535) * (B[bstart] & 65535);
+            var a0 = (((A[astart])|0) & mask);
+            var b0 = (((B[bstart])|0) & mask);
+            p = a0 * b0;
             c = (p & 65535);
-            d = ((p|0) >>> 16);
+            d = (((p|0) >> 16) & mask);
             R[rstart] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = a0 * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * b0;
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 1] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = a0 * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * b0;
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 2] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = a0 * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * b0;
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 3] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 4] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 5] = (c & 65535);
-            p = (A[astart + 3] & 65535) * (B[bstart + 3] & 65535);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 3])|0) & mask);
             p = p + (d);
             R[rstart + 5 + 1] = (((((p & 65535) & 65535))|0));
             R[rstart + 5 + 2] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Multiply8'] = constructor.Baseline_Multiply8 = function(R, rstart, A, astart, B, bstart) {
+        var mask = 65535;
         {
             var p;
             var c;
             var d;
-            p = (A[astart] & 65535) * (B[bstart] & 65535);
+            p = (((A[astart])|0) & mask) * (((B[bstart])|0) & mask);
             c = (p & 65535);
-            d = ((p|0) >>> 16);
+            d = (((p|0) >> 16) & mask);
             R[rstart] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 1] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 2] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 3] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 4] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 5] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 6] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 7] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 8] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 9] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 10] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 11] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 12] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 13] = (c & 65535);
-            p = (A[astart + 7] & 65535) * (B[bstart + 7] & 65535);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 7])|0) & mask);
             p = p + (d);
             R[rstart + 13 + 1] = (((((p & 65535) & 65535))|0));
             R[rstart + 13 + 2] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Multiply16'] = constructor.Baseline_Multiply16 = function(R, rstart, A, astart, B, bstart) {
+        var mask = 65535;
         {
             var p;
             var c;
             var d;
-            p = (A[astart] & 65535) * (B[bstart] & 65535);
+            p = (((A[astart])|0) & mask) * (((B[bstart])|0) & mask);
             c = (p & 65535);
-            d = ((p|0) >>> 16);
+            d = (((p|0) >> 16) & mask);
             R[rstart] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 1] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 2] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 3] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 4] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 5] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 6] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 7] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 8] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 9] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 10] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 11] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 12] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 13] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 14] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 15] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 1] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 1])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 1] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 1])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 16] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 2] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 2])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 2] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 2])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 17] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 3] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 3])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 3] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 3])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 18] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 4] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 4])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 4] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 4])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 19] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 5] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 5])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 5] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 5])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 20] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 6] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 6])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 6] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 6])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 21] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 7] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 7])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 7] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 7])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 22] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 8] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 8])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 8] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 8])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 23] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 9] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 9])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 9] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 9])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 24] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 10] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 10])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 10] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 10])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 25] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 11] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 11])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 11] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 11])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 26] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 12] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 12])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 12] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 12])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 27] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 13] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 13])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 13] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 13])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 28] = (c & 65535);
             c = (d & 65535);
-            d = ((d|0) >>> 16);
-            p = (A[astart + 14] & 65535) * (B[bstart + 15] & 65535);
-            p = p + (c & 65535);
+            d = (((d|0) >> 16) & mask);
+            p = (((A[astart + 14])|0) & mask) * (((B[bstart + 15])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
-            p = (A[astart + 15] & 65535) * (B[bstart + 14] & 65535);
-            p = p + (c & 65535);
+            d = d + (((p|0) >> 16) & mask);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 14])|0) & mask);
+            p = p + ((c|0) & mask);
             c = (p & 65535);
-            d = d + ((p|0) >>> 16);
+            d = d + (((p|0) >> 16) & mask);
             R[rstart + 29] = (c & 65535);
-            p = (A[astart + 15] & 65535) * (B[bstart + 15] & 65535);
+            p = (((A[astart + 15])|0) & mask) * (((B[bstart + 15])|0) & mask);
             p = p + (d);
             R[rstart + 30] = (((((p & 65535) & 65535))|0));
             R[rstart + 31] = (((p >> 16) & 65535));
         }
     };
-    constructor['s_recursionLimit'] = constructor.s_recursionLimit = 16;
+    constructor['s_recursionLimit'] = constructor.s_recursionLimit = 8;
     constructor['RecursiveMultiply'] = constructor.RecursiveMultiply = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N) {
+        var sn = N;
         if (N <= BigInteger.s_recursionLimit) {
             N >>= 2;
-            switch(N) {
-                case 0:
-                    BigInteger.Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-                    break;
-                case 1:
-                    BigInteger.Baseline_Multiply4(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-                    break;
-                case 2:
-                    BigInteger.Baseline_Multiply8(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-                    break;
-                case 4:
-                    BigInteger.Baseline_Multiply16(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-                    break;
-                default:
-                    throw new Error();
+            if (N == 0) {
+                BigInteger.Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
+            } else if (N == 1) {
+                BigInteger.Baseline_Multiply4(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
+            } else if (N == 2) {
+                BigInteger.Baseline_Multiply8(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
+            } else {
+                throw new Error();
             }
         } else {
-            var N2 = ((N / 2)|0);
-            var AN2 = BigInteger.Compare(Aarr, Astart, Aarr, ((Astart + N2)|0), N2) > 0 ? 0 : N2;
+            var N2 = N >> 1;
+            var rMediumHigh = Rstart + N;
+            var rHigh = rMediumHigh + N2;
+            var rMediumLow = Rstart + N2;
+            var tsn = Tstart + N;
+            var AN = N;
+            while (AN != 0 && Aarr[Astart + AN - 1] == 0) AN--;
+            var BN = N;
+            while (BN != 0 && Barr[Bstart + BN - 1] == 0) BN--;
+            var AN2 = 0;
+            var BN2 = 0;
+            if (AN == 0 || BN == 0) {
+                for (var arrfillI = Rstart; arrfillI < (Rstart) + (N << 1); arrfillI++) Rarr[arrfillI] = 0;
+                return;
+            }
+            if (AN <= N2 && BN <= N2) {
+                for (var arrfillI = Rstart + N; arrfillI < (Rstart + N) + (N); arrfillI++) Rarr[arrfillI] = 0;
+                if (N2 == 8) BigInteger.Baseline_Multiply8(Rarr, Rstart, Aarr, Astart, Barr, Bstart); else BigInteger.RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N2);
+                return;
+            }
+            AN2 = BigInteger.Compare(Aarr, Astart, Aarr, ((Astart + N2)|0), N2) > 0 ? 0 : N2;
             BigInteger.Subtract(Rarr, Rstart, Aarr, ((Astart + AN2)|0), Aarr, ((Astart + (N2 ^ AN2))|0), N2);
-            var BN2 = BigInteger.Compare(Barr, Bstart, Barr, ((Bstart + N2)|0), N2) > 0 ? 0 : N2;
-            BigInteger.Subtract(Rarr, ((Rstart + N2)|0), Barr, ((Bstart + BN2)|0), Barr, ((Bstart + (N2 ^ BN2))|0), N2);
-            BigInteger.RecursiveMultiply(Rarr, ((Rstart + N)|0), Tarr, ((Tstart + N)|0), Aarr, ((Astart + N2)|0), Barr, ((Bstart + N2)|0), N2);
-            BigInteger.RecursiveMultiply(Tarr, Tstart, Tarr, ((Tstart + N)|0), Rarr, Rstart, Rarr, ((Rstart + N2)|0), N2);
-            BigInteger.RecursiveMultiply(Rarr, Rstart, Tarr, ((Tstart + N)|0), Aarr, Astart, Barr, Bstart, N2);
-            var c2 = BigInteger.Add(Rarr, ((Rstart + N)|0), Rarr, ((Rstart + N)|0), Rarr, ((Rstart + N2)|0), N2);
+            BN2 = BigInteger.Compare(Barr, Bstart, Barr, ((Bstart + N2)|0), N2) > 0 ? 0 : N2;
+            BigInteger.Subtract(Rarr, rMediumLow, Barr, ((Bstart + BN2)|0), Barr, ((Bstart + (N2 ^ BN2))|0), N2);
+            BigInteger.RecursiveMultiply(Rarr, rMediumHigh, Tarr, tsn, Aarr, ((Astart + N2)|0), Barr, ((Bstart + N2)|0), N2);
+            BigInteger.RecursiveMultiply(Tarr, Tstart, Tarr, tsn, Rarr, Rstart, Rarr, (rMediumLow|0), N2);
+            BigInteger.RecursiveMultiply(Rarr, Rstart, Tarr, tsn, Aarr, Astart, Barr, Bstart, N2);
+            var c2 = BigInteger.Add(Rarr, rMediumHigh, Rarr, rMediumHigh, Rarr, rMediumLow, N2);
             var c3 = c2;
-            c2 = c2 + (BigInteger.Add(Rarr, ((Rstart + N2)|0), Rarr, ((Rstart + N)|0), Rarr, (Rstart), N2));
-            c3 = c3 + (BigInteger.Add(Rarr, ((Rstart + N)|0), Rarr, ((Rstart + N)|0), Rarr, ((Rstart + N + N2)|0), N2));
-            if (AN2 == BN2) c3 -= BigInteger.Subtract(Rarr, ((Rstart + N2)|0), Rarr, ((Rstart + N2)|0), Tarr, Tstart, N); else c3 = c3 + (BigInteger.Add(Rarr, ((Rstart + N2)|0), Rarr, ((Rstart + N2)|0), Tarr, Tstart, N));
-            c3 = c3 + (BigInteger.Increment(Rarr, ((Rstart + N)|0), N2, (c2|0)));
-            BigInteger.Increment(Rarr, ((Rstart + N + N2)|0), N2, (c3|0));
+            c2 = c2 + (BigInteger.Add(Rarr, rMediumLow, Rarr, rMediumHigh, Rarr, (Rstart), N2));
+            c3 = c3 + (BigInteger.Add(Rarr, rMediumHigh, Rarr, rMediumHigh, Rarr, rHigh, N2));
+            if (AN2 == BN2) c3 -= BigInteger.Subtract(Rarr, rMediumLow, Rarr, rMediumLow, Tarr, Tstart, N); else c3 = c3 + (BigInteger.Add(Rarr, rMediumLow, Rarr, rMediumLow, Tarr, Tstart, N));
+            c3 = c3 + (BigInteger.Increment(Rarr, rMediumHigh, N2, (c2|0)));
+            if (c3 != 0) BigInteger.Increment(Rarr, rHigh, N2, (c3|0));
         }
     };
     constructor['RecursiveSquare'] = constructor.RecursiveSquare = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N) {
@@ -3013,14 +2342,11 @@ function() {
                 case 2:
                     BigInteger.Baseline_Square8(Rarr, Rstart, Aarr, Astart);
                     break;
-                case 4:
-                    BigInteger.Baseline_Square16(Rarr, Rstart, Aarr, Astart);
-                    break;
                 default:
                     throw new Error();
             }
         } else {
-            var N2 = ((N / 2)|0);
+            var N2 = N >> 1;
             BigInteger.RecursiveSquare(Rarr, Rstart, Tarr, ((Tstart + N)|0), Aarr, Astart, N2);
             BigInteger.RecursiveSquare(Rarr, ((Rstart + N)|0), Tarr, ((Tstart + N)|0), Aarr, ((Astart + N2)|0), N2);
             BigInteger.RecursiveMultiply(Tarr, Tstart, Tarr, ((Tstart + N)|0), Aarr, Astart, Aarr, ((Astart + N2)|0), N2);
@@ -3029,17 +2355,11 @@ function() {
             BigInteger.Increment(Rarr, ((Rstart + N + N2)|0), N2, (carry|0));
         }
     };
-    constructor['Multiply'] = constructor.Multiply = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N) {
-        BigInteger.RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N);
-    };
-    constructor['Square'] = constructor.Square = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N) {
-        BigInteger.RecursiveSquare(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, N);
-    };
     constructor['AsymmetricMultiply'] = constructor.AsymmetricMultiply = function(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, NA, Barr, Bstart, NB) {
         if (NA == NB) {
             if (Astart == Bstart && Aarr == Barr) {
-                BigInteger.Square(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, NA);
-            } else if (NA == 2) BigInteger.Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart); else BigInteger.Multiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, NA);
+                BigInteger.RecursiveSquare(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, NA);
+            } else if (NA == 2) BigInteger.Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart); else BigInteger.RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, NA);
             return;
         }
         if (NA > NB) {
@@ -3056,7 +2376,7 @@ function() {
         if (NA == 2 && Aarr[Astart + 1] == 0) {
             switch(Aarr[Astart]) {
                 case 0:
-                    BigInteger.SetWords(Rarr, Rstart, 0, NB + 2);
+                    for (var arrfillI = Rstart; arrfillI < (Rstart) + (NB + 2); arrfillI++) Rarr[arrfillI] = 0;
                     return;
                 case 1:
                     for (var arrfillI = 0; arrfillI < (NB|0); arrfillI++) Rarr[Rstart + arrfillI] = Barr[Bstart + arrfillI];
@@ -3068,31 +2388,27 @@ function() {
                     Rarr[Rstart + NB + 1] = 0;
                     return;
             }
-        }
-        if (NA == 2) {
-            var i;
-            if (((NB / 2)|0) % 2 == 0) {
-                BigInteger.Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-                for (var arrfillI = 0; arrfillI < 2; arrfillI++) Tarr[((Tstart + 2 * 2)|0) + arrfillI] = Rarr[((Rstart + 2)|0) + arrfillI];
-                for (i = 2 * 2; i < NB; i += 2 * 2) BigInteger.Baseline_Multiply2(Tarr, ((Tstart + 2 + i)|0), Aarr, Astart, Barr, ((Bstart + i)|0));
-                for (i = 2; i < NB; i += 2 * 2) BigInteger.Baseline_Multiply2(Rarr, ((Rstart + i)|0), Aarr, Astart, Barr, ((Bstart + i)|0));
-            } else {
-                for (i = 0; i < NB; i += 2 * 2) BigInteger.Baseline_Multiply2(Rarr, ((Rstart + i)|0), Aarr, Astart, Barr, ((Bstart + i)|0));
-                for (i = 2; i < NB; i += 2 * 2) BigInteger.Baseline_Multiply2(Tarr, ((Tstart + 2 + i)|0), Aarr, Astart, Barr, ((Bstart + i)|0));
-            }
+        } else if (NA == 2) {
+            var a0 = (Aarr[Astart] & 65535);
+            var a1 = (Aarr[Astart + 1] & 65535);
+            Rarr[Rstart + NB] = 0;
+            Rarr[Rstart + NB + 1] = 0;
+            BigInteger.AtomicMultiplyOpt(Rarr, Rstart, a0, a1, Barr, Bstart, 0, NB);
+            BigInteger.AtomicMultiplyAddOpt(Rarr, Rstart, a0, a1, Barr, Bstart, 2, NB);
+            return;
         } else {
             var i;
-            if (((NB / NA)|0) % 2 == 0) {
-                BigInteger.Multiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, NA);
-                for (var arrfillI = 0; arrfillI < (NA|0); arrfillI++) Tarr[((Tstart + 2 * NA)|0) + arrfillI] = Rarr[((Rstart + NA)|0) + arrfillI];
-                for (i = 2 * NA; i < NB; i += 2 * NA) BigInteger.Multiply(Tarr, ((Tstart + NA + i)|0), Tarr, Tstart, Aarr, Astart, Barr, ((Bstart + i)|0), NA);
-                for (i = NA; i < NB; i += 2 * NA) BigInteger.Multiply(Rarr, ((Rstart + i)|0), Tarr, Tstart, Aarr, Astart, Barr, ((Bstart + i)|0), NA);
+            if (((NB / NA) & 1) == 0) {
+                BigInteger.RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, NA);
+                for (var arrfillI = 0; arrfillI < (NA|0); arrfillI++) Tarr[((Tstart + (NA << 1))|0) + arrfillI] = Rarr[((Rstart + NA)|0) + arrfillI];
+                for (i = (NA << 1); i < NB; i += (NA << 1)) BigInteger.RecursiveMultiply(Tarr, ((Tstart + NA + i)|0), Tarr, Tstart, Aarr, Astart, Barr, ((Bstart + i)|0), NA);
+                for (i = NA; i < NB; i += (NA << 1)) BigInteger.RecursiveMultiply(Rarr, ((Rstart + i)|0), Tarr, Tstart, Aarr, Astart, Barr, ((Bstart + i)|0), NA);
             } else {
-                for (i = 0; i < NB; i += 2 * NA) BigInteger.Multiply(Rarr, ((Rstart + i)|0), Tarr, Tstart, Aarr, Astart, Barr, ((Bstart + i)|0), NA);
-                for (i = NA; i < NB; i += 2 * NA) BigInteger.Multiply(Tarr, ((Tstart + NA + i)|0), Tarr, Tstart, Aarr, Astart, Barr, ((Bstart + i)|0), NA);
+                for (i = 0; i < NB; i += (NA << 1)) BigInteger.RecursiveMultiply(Rarr, ((Rstart + i)|0), Tarr, Tstart, Aarr, Astart, Barr, ((Bstart + i)|0), NA);
+                for (i = NA; i < NB; i += (NA << 1)) BigInteger.RecursiveMultiply(Tarr, ((Tstart + NA + i)|0), Tarr, Tstart, Aarr, Astart, Barr, ((Bstart + i)|0), NA);
             }
+            if (BigInteger.Add(Rarr, ((Rstart + NA)|0), Rarr, ((Rstart + NA)|0), Tarr, ((Tstart + (NA << 1))|0), NB - NA) != 0) BigInteger.Increment(Rarr, ((Rstart + NB)|0), NA, 1);
         }
-        if (BigInteger.Add(Rarr, ((Rstart + NA)|0), Rarr, ((Rstart + NA)|0), Tarr, ((Tstart + 2 * NA)|0), NB - NA) != 0) BigInteger.Increment(Rarr, ((Rstart + NB)|0), NA, 1);
     };
     constructor['MakeUint'] = constructor.MakeUint = function(first, second) {
         return ((((first & 65535) | ((second|0) << 16))|0));
@@ -3192,14 +2508,14 @@ function() {
     constructor['DivideThreeWordsByTwo'] = constructor.DivideThreeWordsByTwo = function(A, Astart, B0, B1) {
         var Q;
         {
-            if (((B1 + 1)|0) == 0) Q = A[Astart + 2]; else if ((B1 & 65535) > 0) Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart + 1], A[Astart + 2]), (((B1|0) + 1) & 65535)); else Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart], A[Astart + 1]), B0);
+            if (((B1 + 1)|0) == 0) Q = A[Astart + 2]; else if (B1 != 0) Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart + 1], A[Astart + 2]), (((B1|0) + 1) & 65535)); else Q = BigInteger.DivideUnsigned(BigInteger.MakeUint(A[Astart], A[Astart + 1]), B0);
             var Qint = (Q & 65535);
             var B0int = (B0 & 65535);
             var B1int = (B1 & 65535);
             var p = B0int * Qint;
-            var u = (A[Astart] & 65535) - ((BigInteger.GetLowHalf(p)) & 65535);
+            var u = (A[Astart] & 65535) - (p & 65535);
             A[Astart] = (((BigInteger.GetLowHalf(u)) & 65535));
-            u = (A[Astart + 1] & 65535) - ((BigInteger.GetHighHalf(p)) & 65535) - ((BigInteger.GetHighHalfAsBorrow(u)) & 65535) - (B1int * Qint);
+            u = (A[Astart + 1] & 65535) - (p >>> 16) - ((BigInteger.GetHighHalfAsBorrow(u)) & 65535) - (B1int * Qint);
             A[Astart + 1] = (((BigInteger.GetLowHalf(u)) & 65535));
             A[Astart + 2] = (((A[Astart + 2] + BigInteger.GetHighHalf(u)) & 65535));
             while (A[Astart + 2] != 0 || (A[Astart + 1] & 65535) > (B1 & 65535) || (A[Astart + 1] == B1 && (A[Astart] & 65535) >= (B0 & 65535))) {
@@ -3213,32 +2529,177 @@ function() {
         }
         return Q;
     };
-    constructor['DivideFourWordsByTwo'] = constructor.DivideFourWordsByTwo = function(T, Al, Ah, B) {
-        if (B == 0) return BigInteger.MakeUint(BigInteger.GetLowHalf(Al), BigInteger.GetHighHalf(Ah)); else {
-            var Q = [0, 0];
-            T[0] = (((BigInteger.GetLowHalf(Al)) & 65535));
-            T[1] = (((BigInteger.GetHighHalf(Al)) & 65535));
-            T[2] = (((BigInteger.GetLowHalf(Ah)) & 65535));
-            T[3] = (((BigInteger.GetHighHalf(Ah)) & 65535));
-            Q[1] = (((((BigInteger.DivideThreeWordsByTwo(T, 1, BigInteger.GetLowHalf(B), BigInteger.GetHighHalf(B))) & 65535))|0));
-            Q[0] = (((((BigInteger.DivideThreeWordsByTwo(T, 0, BigInteger.GetLowHalf(B), BigInteger.GetHighHalf(B))) & 65535))|0));
-            return BigInteger.MakeUint(Q[0], Q[1]);
+    constructor['AtomicDivide'] = constructor.AtomicDivide = function(Q, Qstart, A, Astart, B0, B1, T) {
+        if (B0 == 0 && B1 == 0) {
+            Q[Qstart] = (A[Astart] & 65535);
+            Q[Qstart + 1] = (A[Astart + 3] & 65535);
+        } else {
+            T[0] = (A[Astart] & 65535);
+            T[1] = (A[Astart + 1] & 65535);
+            T[2] = (A[Astart + 2] & 65535);
+            T[3] = (A[Astart + 3] & 65535);
+            var Q1 = BigInteger.DivideThreeWordsByTwo(T, 1, B0, B1);
+            var Q0 = BigInteger.DivideThreeWordsByTwo(T, 0, B0, B1);
+            Q[Qstart] = (Q0 & 65535);
+            Q[Qstart + 1] = (Q1 & 65535);
         }
     };
-    constructor['AtomicDivide'] = constructor.AtomicDivide = function(Q, Qstart, A, Astart, B, Bstart) {
-        var T = [0, 0, 0, 0];
-        var q = BigInteger.DivideFourWordsByTwo(T, BigInteger.MakeUint(A[Astart], A[Astart + 1]), BigInteger.MakeUint(A[Astart + 2], A[Astart + 3]), BigInteger.MakeUint(B[Bstart], B[Bstart + 1]));
-        Q[Qstart] = (((BigInteger.GetLowHalf(q)) & 65535));
-        Q[Qstart + 1] = (((BigInteger.GetHighHalf(q)) & 65535));
-    };
-    constructor['CorrectQuotientEstimate'] = constructor.CorrectQuotientEstimate = function(Rarr, Rstart, Tarr, Tstart, Qarr, Qstart, Barr, Bstart, N) {
+    constructor['Baseline_Multiply2Opt2'] = constructor.Baseline_Multiply2Opt2 = function(R, rstart, a0, a1, B, bstart, istart, iend) {
         {
-            if (N == 2) BigInteger.Baseline_Multiply2(Tarr, Tstart, Qarr, Qstart, Barr, Bstart); else BigInteger.AsymmetricMultiply(Tarr, Tstart, Tarr, ((Tstart + (N + 2))|0), Qarr, Qstart, 2, Barr, Bstart, N);
-            BigInteger.Subtract(Rarr, Rstart, Rarr, Rstart, Tarr, Tstart, N + 2);
-            while (Rarr[Rstart + N] != 0 || BigInteger.Compare(Rarr, Rstart, Barr, Bstart, N) >= 0) {
-                Rarr[Rstart + N] = (((((Rarr[Rstart + N] - ((BigInteger.Subtract(Rarr, Rstart, Rarr, Rstart, Barr, Bstart, N))|0)) & 65535))|0));
-                Qarr[Qstart] = ((Qarr[Qstart] + 1) & 65535);
-                Qarr[Qstart + 1] = (((((Qarr[Qstart + 1] + (((Qarr[Qstart] == 0) ? 1 : 0)|0)) & 65535))|0));
+            var p;
+            var c;
+            var d;
+            for (var i = istart; i < iend; i += 4) {
+                var rsi = rstart + i;
+                var b0 = (B[bstart + i] & 65535);
+                var b1 = (B[bstart + i + 1] & 65535);
+                p = a0 * b0;
+                c = (p & 65535);
+                d = ((p|0) >>> 16);
+                R[rsi] = (c & 65535);
+                c = (d & 65535);
+                d = ((d|0) >>> 16);
+                p = a0 * b1;
+                p = p + (c & 65535);
+                c = (p & 65535);
+                d = d + ((p|0) >>> 16);
+                p = a1 * b0;
+                p = p + (c & 65535);
+                c = (p & 65535);
+                d = d + ((p|0) >>> 16);
+                R[rsi + 1] = (c & 65535);
+                p = a1 * b1;
+                p = p + (d);
+                R[rsi + 2] = (((((p & 65535) & 65535))|0));
+                R[rsi + 3] = (((p >> 16) & 65535));
+            }
+        }
+    };
+    constructor['AtomicMultiplyOpt'] = constructor.AtomicMultiplyOpt = function(C, Cstart, A0, A1, B, Bstart, istart, iend) {
+        var s;
+        var d;
+        var a1MinusA0 = (((A1|0) - A0) & 65535);
+        A1 &= 65535;
+        A0 &= 65535;
+        {
+            if (A1 >= A0) {
+                for (var i = istart; i < iend; i += 4) {
+                    var B0 = (B[Bstart + i] & 65535);
+                    var B1 = (B[Bstart + i + 1] & 65535);
+                    var csi = Cstart + i;
+                    if (B0 >= B1) {
+                        s = 0;
+                        d = a1MinusA0 * (((B0|0) - B1) & 65535);
+                    } else {
+                        s = (a1MinusA0|0);
+                        d = (s & 65535) * (((B0|0) - B1) & 65535);
+                    }
+                    var A0B0 = A0 * B0;
+                    C[csi] = (((((A0B0 & 65535) & 65535))|0));
+                    var a0b0high = (A0B0 >>> 16);
+                    var A1B1 = A1 * B1;
+                    var tempInt;
+                    tempInt = a0b0high + (A0B0 & 65535) + (d & 65535) + (A1B1 & 65535);
+                    C[csi + 1] = (((((tempInt & 65535) & 65535))|0));
+                    tempInt = A1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((A1B1 >> 16) & 65535) - (s & 65535);
+                    C[csi + 2] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 3] = (((((((tempInt >> 16) & 65535)) & 65535))|0));
+                }
+            } else {
+                for (var i = istart; i < iend; i += 4) {
+                    var B0 = (B[Bstart + i] & 65535);
+                    var B1 = (B[Bstart + i + 1] & 65535);
+                    var csi = Cstart + i;
+                    if (B0 > B1) {
+                        s = (((B0|0) - B1) & 65535);
+                        d = a1MinusA0 * (s & 65535);
+                    } else {
+                        s = 0;
+                        d = (((A0|0) - A1) & 65535) * (((B1|0) - B0) & 65535);
+                    }
+                    var A0B0 = A0 * B0;
+                    var a0b0high = (A0B0 >>> 16);
+                    C[csi] = (((((A0B0 & 65535) & 65535))|0));
+                    var A1B1 = A1 * B1;
+                    var tempInt;
+                    tempInt = a0b0high + (A0B0 & 65535) + (d & 65535) + (A1B1 & 65535);
+                    C[csi + 1] = (((((tempInt & 65535) & 65535))|0));
+                    tempInt = A1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((A1B1 >> 16) & 65535) - (s & 65535);
+                    C[csi + 2] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 3] = (((((((tempInt >> 16) & 65535)) & 65535))|0));
+                }
+            }
+        }
+    };
+    constructor['AtomicMultiplyAddOpt'] = constructor.AtomicMultiplyAddOpt = function(C, Cstart, A0, A1, B, Bstart, istart, iend) {
+        var s;
+        var d;
+        var a1MinusA0 = (((A1|0) - A0) & 65535);
+        A1 &= 65535;
+        A0 &= 65535;
+        {
+            if (A1 >= A0) {
+                for (var i = istart; i < iend; i += 4) {
+                    var B0 = (B[Bstart + i] & 65535);
+                    var B1 = (B[Bstart + i + 1] & 65535);
+                    var csi = Cstart + i;
+                    if (B0 >= B1) {
+                        s = 0;
+                        d = a1MinusA0 * (((B0|0) - B1) & 65535);
+                    } else {
+                        s = (a1MinusA0|0);
+                        d = (s & 65535) * (((B0|0) - B1) & 65535);
+                    }
+                    var A0B0 = A0 * B0;
+                    var a0b0high = (A0B0 >>> 16);
+                    var tempInt;
+                    tempInt = A0B0 + (C[csi] & 65535);
+                    C[csi] = (((((tempInt & 65535) & 65535))|0));
+                    var A1B1 = A1 * B1;
+                    var a1b1low = (A1B1 & 65535);
+                    var a1b1high = ((A1B1 >> 16) & 65535);
+                    tempInt = ((tempInt >> 16) & 65535) + (A0B0 & 65535) + (d & 65535) + a1b1low + (C[csi + 1] & 65535);
+                    C[csi + 1] = (((((tempInt & 65535) & 65535))|0));
+                    tempInt = ((tempInt >> 16) & 65535) + a1b1low + a0b0high + ((d >> 16) & 65535) + a1b1high - (s & 65535) + (C[csi + 2] & 65535);
+                    C[csi + 2] = (((((tempInt & 65535) & 65535))|0));
+                    tempInt = ((tempInt >> 16) & 65535) + a1b1high + (C[csi + 3] & 65535);
+                    C[csi + 3] = (((((tempInt & 65535) & 65535))|0));
+                    if ((tempInt >> 16) != 0) {
+                        C[csi + 4] = ((C[csi + 4] + 1) & 65535);
+                        C[csi + 5] = (((((C[csi + 5] + (((C[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
+                    }
+                }
+            } else {
+                for (var i = istart; i < iend; i += 4) {
+                    var B0 = (B[Bstart + i] & 65535);
+                    var B1 = (B[Bstart + i + 1] & 65535);
+                    var csi = Cstart + i;
+                    if (B0 > B1) {
+                        s = (((B0|0) - B1) & 65535);
+                        d = a1MinusA0 * (s & 65535);
+                    } else {
+                        s = 0;
+                        d = (((A0|0) - A1) & 65535) * (((B1|0) - B0) & 65535);
+                    }
+                    var A0B0 = A0 * B0;
+                    var a0b0high = (A0B0 >>> 16);
+                    var tempInt;
+                    tempInt = A0B0 + (C[csi] & 65535);
+                    C[csi] = (((((tempInt & 65535) & 65535))|0));
+                    var A1B1 = A1 * B1;
+                    var a1b1low = (A1B1 & 65535);
+                    var a1b1high = (A1B1 >>> 16);
+                    tempInt = ((tempInt >> 16) & 65535) + (A0B0 & 65535) + (d & 65535) + a1b1low + (C[csi + 1] & 65535);
+                    C[csi + 1] = (((((tempInt & 65535) & 65535))|0));
+                    tempInt = ((tempInt >> 16) & 65535) + a1b1low + a0b0high + ((d >> 16) & 65535) + a1b1high - (s & 65535) + (C[csi + 2] & 65535);
+                    C[csi + 2] = (((((tempInt & 65535) & 65535))|0));
+                    tempInt = ((tempInt >> 16) & 65535) + a1b1high + (C[csi + 3] & 65535);
+                    C[csi + 3] = (((((tempInt & 65535) & 65535))|0));
+                    if ((tempInt >> 16) != 0) {
+                        C[csi + 4] = ((C[csi + 4] + 1) & 65535);
+                        C[csi + 5] = (((((C[csi + 5] + (((C[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
+                    }
+                }
             }
         }
     };
@@ -3247,6 +2708,11 @@ function() {
         var NB = (NBint|0);
         var TBarr = TA;
         var TParr = TA;
+        var quot = Qarr;
+        if (Qarr == null) {
+            quot = [0, 0];
+        }
+        var quotStart = (Qarr == null) ? 0 : Qstart;
         var TBstart = ((Tstart + (NA + 2))|0);
         var TPstart = ((Tstart + (NA + 2 + NB))|0);
         {
@@ -3262,21 +2728,51 @@ function() {
             for (var arrfillI = 0; arrfillI < NAint; arrfillI++) TA[((Tstart + shiftWords)|0) + arrfillI] = Aarr[Astart + arrfillI];
             BigInteger.ShiftWordsLeftByBits(TA, Tstart, NA + 2, shiftBits);
             if (TA[Tstart + NA + 1] == 0 && (TA[Tstart + NA] & 65535) <= 1) {
-                Qarr[Qstart + NA - NB + 1] = 0;
-                Qarr[Qstart + NA - NB] = 0;
+                if (Qarr != null) {
+                    Qarr[Qstart + NA - NB + 1] = 0;
+                    Qarr[Qstart + NA - NB] = 0;
+                }
                 while (TA[NA] != 0 || BigInteger.Compare(TA, ((Tstart + NA - NB)|0), TBarr, TBstart, NB) >= 0) {
                     TA[NA] = (((((TA[NA] - ((BigInteger.Subtract(TA, ((Tstart + NA - NB)|0), TA, ((Tstart + NA - NB)|0), TBarr, TBstart, NB))|0)) & 65535))|0));
-                    Qarr[Qstart + NA - NB] = ((Qarr[Qstart + NA - NB] + 1) & 65535);
+                    if (Qarr != null) Qarr[Qstart + NA - NB] = ((Qarr[Qstart + NA - NB] + 1) & 65535);
                 }
             } else {
                 NA = NA + (2);
             }
-            var BT = [0, 0];
-            BT[0] = (((TBarr[TBstart + NB - 2] + 1) & 65535));
-            BT[1] = (((((TBarr[TBstart + NB - 1] + ((BT[0] == 0 ? 1 : 0)|0)) & 65535))|0));
+            var BT0 = ((TBarr[TBstart + NB - 2] + 1)|0);
+            var BT1 = ((TBarr[TBstart + NB - 1] + ((BT0 == 0 ? 1 : 0)|0))|0);
+            var TAtomic = [0, 0, 0, 0];
             for (var i = NA - 2; i >= NB; i -= 2) {
-                BigInteger.AtomicDivide(Qarr, ((Qstart + i - NB)|0), TA, ((Tstart + i - 2)|0), BT, 0);
-                BigInteger.CorrectQuotientEstimate(TA, ((Tstart + i - NB)|0), TParr, TPstart, Qarr, ((Qstart + (i - NB))|0), TBarr, TBstart, NB);
+                var qs = (Qarr == null) ? 0 : Qstart + i - NB;
+                BigInteger.AtomicDivide(quot, qs, TA, ((Tstart + i - 2)|0), BT0, BT1, TAtomic);
+                var Rstart2 = Tstart + i - NB;
+                var N = NB;
+                {
+                    var Q0 = quot[qs];
+                    var Q1 = quot[qs + 1];
+                    if (Q1 == 0) {
+                        var carry = BigInteger.LinearMultiply(TParr, TPstart, TBarr, TBstart, (Q0|0), N);
+                        TParr[TPstart + N] = (carry & 65535);
+                        TParr[TPstart + N + 1] = 0;
+                    } else if (N == 2) {
+                        BigInteger.Baseline_Multiply2(TParr, TPstart, quot, qs, TBarr, TBstart);
+                    } else {
+                        TParr[TPstart + N] = 0;
+                        TParr[TPstart + N + 1] = 0;
+                        Q0 &= 65535;
+                        Q1 &= 65535;
+                        BigInteger.AtomicMultiplyOpt(TParr, TPstart, Q0, Q1, TBarr, TBstart, 0, N);
+                        BigInteger.AtomicMultiplyAddOpt(TParr, TPstart, Q0, Q1, TBarr, TBstart, 2, N);
+                    }
+                    BigInteger.Subtract(TA, Rstart2, TA, Rstart2, TParr, TPstart, N + 2);
+                    while (TA[Rstart2 + N] != 0 || BigInteger.Compare(TA, Rstart2, TBarr, TBstart, N) >= 0) {
+                        TA[Rstart2 + N] = (((((TA[Rstart2 + N] - ((BigInteger.Subtract(TA, Rstart2, TA, Rstart2, TBarr, TBstart, N))|0)) & 65535))|0));
+                        if (Qarr != null) {
+                            Qarr[qs] = ((Qarr[qs] + 1) & 65535);
+                            Qarr[qs + 1] = (((((Qarr[qs + 1] + (((Qarr[qs] == 0) ? 1 : 0)|0)) & 65535))|0));
+                        }
+                    }
+                }
             }
             if (Rarr != null) {
                 for (var arrfillI = 0; arrfillI < NB; arrfillI++) Rarr[Rstart + arrfillI] = TA[((Tstart + shiftWords)|0) + arrfillI];
@@ -3304,7 +2800,7 @@ function() {
             this.wordCount = 0;
         } else {
             var len = bytes.length;
-            var wordLength = ((((len|0) + 1) / 2)|0);
+            var wordLength = ((len|0) + 1) >> 1;
             wordLength = (wordLength <= 16) ? BigInteger.RoundupSizeTable[wordLength] : BigInteger.RoundupSize(wordLength);
             this.reg = [];
             for (var arrfillI = 0; arrfillI < wordLength; arrfillI++) this.reg[arrfillI] = 0;
@@ -3369,10 +2865,10 @@ function() {
     prototype['SetBitInternal'] = prototype.SetBitInternal = function(n, value) {
         if (value) {
             this.reg = BigInteger.CleanGrow(this.reg, BigInteger.RoundupSize(BigInteger.BitsToWords(n + 1)));
-            this.reg[((n / 16)|0)] = (((((this.reg[((n / 16)|0)] | ((((1) & 65535) << (n & 15))|0)) & 65535))|0));
+            this.reg[(n >> 4)] = (((((this.reg[n >> 4] | ((((1) & 65535) << (n & 15))|0)) & 65535))|0));
             this.wordCount = this.CalcWordCount();
         } else {
-            if (((n / 16)|0) < this.reg.length) this.reg[((n / 16)|0)] = (((((this.reg[((n / 16)|0)] & ((((~(1 << ((n % 16)|0))))|0))) & 65535))|0));
+            if ((n >> 4) < this.reg.length) this.reg[(n >> 4)] = (((((this.reg[n >> 4] & ((((~(1 << ((n % 16)|0))))|0))) & 65535))|0));
             this.wordCount = this.CalcWordCount();
         }
     };
@@ -3399,7 +2895,7 @@ function() {
     };
 
     prototype['GetUnsignedBit'] = prototype.GetUnsignedBit = function(n) {
-        if (((n / 16)|0) >= this.reg.length) return false; else return (((this.reg[((n / 16)|0)] >> (n & 15)) & 1) != 0);
+        if ((n >> 4) >= this.reg.length) return false; else return (((this.reg[n >> 4] >> (n & 15)) & 1) != 0);
     };
     prototype['InitializeInt'] = prototype.InitializeInt = function(numberValue) {
         var iut;
@@ -3737,6 +3233,34 @@ function() {
         }
     };
 
+    prototype['getUnsignedBitLengthEx'] = prototype.getUnsignedBitLengthEx = function(reg, wordCount) {
+        var wc = wordCount;
+        if (wc != 0) {
+            var numberValue = (reg[wc - 1] & 65535);
+            wc = (wc - 1) << 4;
+            if (numberValue == 0) return wc;
+            wc = wc + (16);
+            {
+                if ((numberValue >> 8) == 0) {
+                    numberValue <<= 8;
+                    wc -= 8;
+                }
+                if ((numberValue >> 12) == 0) {
+                    numberValue <<= 4;
+                    wc -= 4;
+                }
+                if ((numberValue >> 14) == 0) {
+                    numberValue <<= 2;
+                    wc -= 2;
+                }
+                if ((numberValue >> 15) == 0) --wc;
+            }
+            return wc;
+        } else {
+            return 0;
+        }
+    };
+
     prototype['bitLength'] = prototype.bitLength = function() {
         var wc = this.wordCount;
         if (wc != 0) {
@@ -3799,6 +3323,49 @@ function() {
         for (var arrfillI = 0; arrfillI < count; arrfillI++) tmpbuilder.append(chars[arrfillI]);
         return tmpbuilder.toString();
     };
+    prototype['ApproxLogTenOfTwo'] = prototype.ApproxLogTenOfTwo = function(bitlen) {
+        var bitlenLow = (bitlen & 65535);
+        var bitlenHigh = (bitlen >>> 16);
+        var resultLow = 0;
+        var resultHigh = 0;
+        {
+            var p;
+            var c;
+            var d;
+            p = bitlenLow * 34043;
+            d = ((p|0) >>> 16);
+            c = (d & 65535);
+            d = ((d|0) >>> 16);
+            p = bitlenLow * 8346;
+            p = p + (c & 65535);
+            c = (p & 65535);
+            d = d + ((p|0) >>> 16);
+            p = bitlenHigh * 34043;
+            p = p + (c & 65535);
+            d = d + ((p|0) >>> 16);
+            c = (d & 65535);
+            d = ((d|0) >>> 16);
+            p = bitlenLow * 154;
+            p = p + (c & 65535);
+            c = (p & 65535);
+            d = d + ((p|0) >>> 16);
+            p = bitlenHigh * 8346;
+            p = p + (c & 65535);
+            c = (p & 65535);
+            d = d + ((p|0) >>> 16);
+            p = (c & 65535);
+            c = (p & 65535);
+            resultLow = c;
+            c = (d & 65535);
+            d = ((d|0) >>> 16);
+            p = bitlenHigh * 154;
+            p = p + (c & 65535);
+            resultHigh = (p & 65535);
+            var result = (resultLow & 65535);
+            result |= (resultHigh & 65535) << 16;
+            return (result & 2147483647) >> 9;
+        }
+    };
 
     prototype['getDigitCount'] = prototype.getDigitCount = function() {
         if (this.signum() == 0) return 1;
@@ -3840,6 +3407,14 @@ function() {
 
                 return minDigits;
             }
+        } else if (bitlen <= 6432162) {
+
+            var minDigits = this.ApproxLogTenOfTwo(bitlen - 1);
+            var maxDigits = this.ApproxLogTenOfTwo(bitlen);
+            if (minDigits == maxDigits) {
+
+                return 1 + minDigits;
+            }
         }
         var tempReg = [];
         for (var arrfillI = 0; arrfillI < this.wordCount; arrfillI++) tempReg[arrfillI] = 0;
@@ -3858,7 +3433,40 @@ function() {
                 if (rest >= 1000000000) i += 10; else if (rest >= 100000000) i += 9; else if (rest >= 10000000) i += 8; else if (rest >= 1000000) i += 7; else if (rest >= 100000) i += 6; else if (rest >= 10000) i += 5; else if (rest >= 1000) i += 4; else if (rest >= 100) i += 3; else if (rest >= 10) i += 2; else i++;
                 break;
             } else {
-                BigInteger.FastDivideAndRemainder(tempReg, wordCount, 10000);
+                var wci = wordCount;
+                var remainder = 0;
+                var quo, rem;
+                var firstdigit = false;
+
+                while ((wci--) > 0) {
+                    var currentDividend = (((((tempReg[wci] & 65535) | ((remainder|0) << 16)))|0));
+                    quo = ((currentDividend / 10000)|0);
+                    tempReg[wci] = (quo & 65535);
+                    if (!firstdigit && quo != 0) {
+                        firstdigit = true;
+
+                        bitlen = this.getUnsignedBitLengthEx(tempReg, wci + 1);
+                        if (bitlen <= 2135) {
+
+                            var minDigits = 1 + (((bitlen - 1) * 631305) >> 21);
+                            var maxDigits = 1 + (((bitlen) * 631305) >> 21);
+                            if (minDigits == maxDigits) {
+
+                                return i + minDigits + 4;
+                            }
+                        } else if (bitlen <= 6432162) {
+
+                            var minDigits = this.ApproxLogTenOfTwo(bitlen - 1);
+                            var maxDigits = this.ApproxLogTenOfTwo(bitlen);
+                            if (minDigits == maxDigits) {
+
+                                return i + 1 + minDigits + 4;
+                            }
+                        }
+                    }
+                    rem = currentDividend - (10000 * quo);
+                    remainder = (rem|0);
+                }
 
                 while (wordCount != 0 && tempReg[wordCount - 1] == 0) wordCount--;
                 i = i + (4);
@@ -3884,28 +3492,46 @@ function() {
             if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 32767) {
                 var rest = tempReg[0];
                 while (rest != 0) {
-                    s[i++] = BigInteger.vec.charAt(rest % 10);
-                    rest = ((rest / 10)|0);
+
+                    var newrest = (rest * 26215) >> 18;
+                    s[i++] = BigInteger.vec.charAt(rest - (newrest * 10));
+                    rest = newrest;
                 }
                 break;
             } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 32767) {
                 var rest = (tempReg[0] & 65535);
                 rest |= (tempReg[1] & 65535) << 16;
                 while (rest != 0) {
-                    s[i++] = BigInteger.vec.charAt(rest % 10);
-                    rest = ((rest / 10)|0);
+                    var newrest = ((rest / 10)|0);
+                    s[i++] = BigInteger.vec.charAt(rest - (newrest * 10));
+                    rest = newrest;
                 }
                 break;
             } else {
-                var remainderSmall = BigInteger.FastDivideAndRemainder(tempReg, wordCount, 10000);
+                var wci = wordCount;
+                var remainder = 0;
+                var quo, rem;
+
+                while ((wci--) > 0) {
+                    var currentDividend = (((((tempReg[wci] & 65535) | ((remainder|0) << 16)))|0));
+                    quo = ((currentDividend / 10000)|0);
+                    tempReg[wci] = (quo & 65535);
+                    rem = currentDividend - (10000 * quo);
+                    remainder = (rem|0);
+                }
+                var remainderSmall = remainder;
 
                 while (wordCount != 0 && tempReg[wordCount - 1] == 0) wordCount--;
-                s[i++] = BigInteger.vec.charAt((remainderSmall % 10)|0);
-                remainderSmall = ((remainderSmall / 10)|0);
-                s[i++] = BigInteger.vec.charAt((remainderSmall % 10)|0);
-                remainderSmall = ((remainderSmall / 10)|0);
-                s[i++] = BigInteger.vec.charAt((remainderSmall % 10)|0);
-                remainderSmall = ((remainderSmall / 10)|0);
+
+                var newrest = (remainderSmall * 3277) >> 15;
+                s[i++] = BigInteger.vec.charAt((remainderSmall - (newrest * 10))|0);
+                remainderSmall = newrest;
+                newrest = (remainderSmall * 3277) >> 15;
+                s[i++] = BigInteger.vec.charAt((remainderSmall - (newrest * 10))|0);
+                remainderSmall = newrest;
+                newrest = (remainderSmall * 3277) >> 15;
+                s[i++] = BigInteger.vec.charAt((remainderSmall - (newrest * 10))|0);
+                remainderSmall = newrest;
                 s[i++] = BigInteger.vec.charAt(remainderSmall);
             }
         }
@@ -3923,28 +3549,70 @@ function() {
     };
 
     constructor['fromString'] = constructor.fromString = function(str) {
-        if (str == null) throw new Error("str");
-        if ((str.length) <= 0) throw new Error("str.length" + " not less than " + "0" + " (" + (JSInteropFactory.createLong(str.length)) + ")");
-        var offset = 0;
+        if ((str) == null) throw new Error("str");
+        return BigInteger.fromSubstring(str, 0, str.length);
+    };
+    constructor['MaxSafeInt'] = constructor.MaxSafeInt = 214748363;
+    constructor['fromSubstring'] = constructor.fromSubstring = function(str, index, endIndex) {
+        if ((str) == null) throw new Error("str");
+        if ((index) < 0) throw new Error("\"str\"" + " not greater or equal to " + "0" + " (" + (JSInteropFactory.createLong(index)) + ")");
+        if ((index) > str.length) throw new Error("\"str\"" + " not less or equal to " + (JSInteropFactory.createLong(str.length)) + " (" + (JSInteropFactory.createLong(index)) + ")");
+        if ((endIndex) < 0) throw new Error("\"index\"" + " not greater or equal to " + "0" + " (" + (JSInteropFactory.createLong(endIndex)) + ")");
+        if ((endIndex) > str.length) throw new Error("\"index\"" + " not less or equal to " + (JSInteropFactory.createLong(str.length)) + " (" + (JSInteropFactory.createLong(endIndex)) + ")");
+        if ((endIndex) < index) throw new Error("\"endIndex\"" + " not greater or equal to " + (JSInteropFactory.createLong(index)) + " (" + (JSInteropFactory.createLong(endIndex)) + ")");
+        if (index == endIndex) throw new Error("No digits");
         var negative = false;
         if (str.charAt(0) == '-') {
-            offset++;
+            index++;
             negative = true;
         }
         var bigint = new BigInteger().Allocate(4);
         var haveDigits = false;
-        for (var i = offset; i < str.length; i++) {
+        var haveSmallInt = true;
+        var smallInt = 0;
+        for (var i = index; i < endIndex; i++) {
             var c = str.charAt(i);
             if (c < '0' || c > '9') throw new Error("Illegal character found");
             haveDigits = true;
             var digit = ((c.charCodeAt(0))-48);
+            if (haveSmallInt && smallInt < BigInteger.MaxSafeInt) {
+                smallInt *= 10;
+                smallInt = smallInt + (digit);
+            } else {
+                if (haveSmallInt) {
+                    bigint.reg[0] = ((((((smallInt) & 65535) & 65535))|0));
+                    bigint.reg[1] = (((smallInt >>> 16) & 65535));
+                    haveSmallInt = false;
+                }
 
-            var carry = BigInteger.LinearMultiply(bigint.reg, 0, bigint.reg, 0, 10, bigint.reg.length);
-            if (carry != 0) bigint.reg = BigInteger.GrowForCarry(bigint.reg, carry);
+                var carry = 0;
+                var N = bigint.reg.length;
+                for (var j = 0; j < N; j++) {
+                    var p;
+                    {
+                        p = ((bigint.reg[j]) & 65535) * 10;
+                        p = p + (carry & 65535);
+                        bigint.reg[j] = (((((p & 65535) & 65535))|0));
+                        carry = ((p >> 16)|0);
+                    }
+                }
+                if (carry != 0) bigint.reg = BigInteger.GrowForCarry(bigint.reg, carry);
 
-            if (digit != 0 && BigInteger.Increment(bigint.reg, 0, bigint.reg.length, (digit|0)) != 0) bigint.reg = BigInteger.GrowForCarry(bigint.reg, 1);
+                if (digit != 0) {
+                    var d = (bigint.reg[0]) & 65535;
+                    if (d <= 65526) {
+                        bigint.reg[0] = (((d + digit) & 65535));
+                    } else if (BigInteger.Increment(bigint.reg, 0, bigint.reg.length, (digit|0)) != 0) {
+                        bigint.reg = BigInteger.GrowForCarry(bigint.reg, 1);
+                    }
+                }
+            }
         }
         if (!haveDigits) throw new Error("No digits");
+        if (haveSmallInt) {
+            bigint.reg[0] = ((((((smallInt) & 65535) & 65535))|0));
+            bigint.reg[1] = (((smallInt >>> 16) & 65535));
+        }
         bigint.wordCount = bigint.CalcWordCount();
         bigint.negative = (bigint.wordCount != 0 && negative);
         return bigint;
@@ -4172,7 +3840,7 @@ function() {
             product.negative = false;
             var workspace = [];
             for (var arrfillI = 0; arrfillI < aSize + aSize; arrfillI++) workspace[arrfillI] = 0;
-            BigInteger.Square(product.reg, 0, workspace, 0, bigintA.reg, 0, aSize);
+            BigInteger.RecursiveSquare(product.reg, 0, workspace, 0, bigintA.reg, 0, aSize);
         } else {
             var aSize = BigInteger.RoundupSize(bigintA.wordCount);
             var bSize = BigInteger.RoundupSize(bigintB.wordCount);
@@ -4197,69 +3865,8 @@ function() {
         if ((this.signum() >= 0) != (bigintMult.signum() >= 0)) product.NegateInternal();
         return product;
     };
-    constructor['OperandLength'] = constructor.OperandLength = function(a) {
-        for (var i = a.length - 1; i >= 0; i--) {
-            if (a[i] != 0) return i + 1;
-        }
-        return 0;
-    };
-    constructor['DivideWithRemainderAnyLength'] = constructor.DivideWithRemainderAnyLength = function(a, b, quotResult, modResult) {
-        var lengthA = BigInteger.OperandLength(a);
-        var lengthB = BigInteger.OperandLength(b);
-        if (lengthB == 0) throw new Error("The divisor is zero.");
-
-        if (lengthA == 0) {
-
-            if (modResult != null) for (var arrfillI = 0; arrfillI < (0) + (modResult.length); arrfillI++) modResult[arrfillI] = 0;
-            if (quotResult != null) for (var arrfillI = 0; arrfillI < (0) + (quotResult.length); arrfillI++) quotResult[arrfillI] = 0;
-
-            return;
-        }
-        if (lengthA < lengthB) {
-
-            if (modResult != null) {
-                var tmpa = [];
-                for (var arrfillI = 0; arrfillI < a.length; arrfillI++) tmpa[arrfillI] = 0;
-                for (var arrfillI = 0; arrfillI < a.length; arrfillI++) tmpa[0 + arrfillI] = a[0 + arrfillI];
-                for (var arrfillI = 0; arrfillI < (0) + (modResult.length); arrfillI++) modResult[arrfillI] = 0;
-                for (var arrfillI = 0; arrfillI < (tmpa.length < modResult.length ? tmpa.length : modResult.length); arrfillI++) modResult[0 + arrfillI] = tmpa[0 + arrfillI];
-            }
-            if (quotResult != null) {
-
-                for (var arrfillI = 0; arrfillI < (0) + (quotResult.length); arrfillI++) quotResult[arrfillI] = 0;
-            }
-            return;
-        }
-        if (lengthA == 1 && lengthB == 1) {
-            var a0 = ((a[0])|0) & 65535;
-            var b0 = ((b[0])|0) & 65535;
-            var result = (((a0 / b0)|0)|0);
-            var mod = (modResult != null) ? ((a0 % b0)|0) : 0;
-            if (quotResult != null) {
-                for (var arrfillI = 0; arrfillI < (0) + (quotResult.length); arrfillI++) quotResult[arrfillI] = 0;
-                quotResult[0] = (result & 65535);
-            }
-            if (modResult != null) {
-                for (var arrfillI = 0; arrfillI < (0) + (modResult.length); arrfillI++) modResult[arrfillI] = 0;
-                modResult[0] = (mod & 65535);
-            }
-            return;
-        }
-        lengthA = lengthA + (lengthA % 2);
-        if (lengthA > a.length) throw new Error("no room");
-        lengthB = lengthB + (lengthB % 2);
-        if (lengthB > b.length) throw new Error("no room");
-        var tempbuf = [];
-        for (var arrfillI = 0; arrfillI < lengthA + 3 * (lengthB + 2); arrfillI++) tempbuf[arrfillI] = 0;
-        BigInteger.Divide(modResult, 0, quotResult, 0, tempbuf, 0, a, 0, lengthA, b, 0, lengthB);
-
-        if (quotResult != null) {
-            var quotEnd = lengthA - lengthB + 2;
-            for (var arrfillI = quotEnd; arrfillI < (quotEnd) + (quotResult.length - quotEnd); arrfillI++) quotResult[arrfillI] = 0;
-        }
-    };
     constructor['BitsToWords'] = constructor.BitsToWords = function(bitCount) {
-        return ((((bitCount + 16 - 1) / (16))|0));
+        return ((bitCount + 15) >> 4);
     };
     constructor['FastRemainder'] = constructor.FastRemainder = function(dividendReg, count, divisorSmall) {
         var i = count;
@@ -4273,11 +3880,16 @@ function() {
         var i = count;
         var remainder = 0;
         var idivisor = (divisorSmall & 65535);
+        var quo, rem;
         while ((i--) > 0) {
             var currentDividend = (((((dividendReg[i] & 65535) | ((remainder|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
-                quotientReg[i] = ((((((currentDividend / idivisor)|0) & 65535))|0));
-                if (i > 0) remainder = ((currentDividend % idivisor)|0);
+                quo = ((currentDividend / idivisor)|0);
+                quotientReg[i] = (quo & 65535);
+                if (i > 0) {
+                    rem = currentDividend - (idivisor * quo);
+                    remainder = (rem|0);
+                }
             } else {
                 quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
                 if (i > 0) remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
@@ -4288,11 +3900,14 @@ function() {
         var i = count;
         var remainder = 0;
         var idivisor = (divisorSmall & 65535);
+        var quo, rem;
         while ((i--) > 0) {
             var currentDividend = (((((dividendReg[i] & 65535) | ((remainder|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
-                quotientReg[i] = ((((((currentDividend / idivisor)|0) & 65535))|0));
-                remainder = ((currentDividend % idivisor)|0);
+                quo = ((currentDividend / idivisor)|0);
+                quotientReg[i] = (quo & 65535);
+                rem = currentDividend - (idivisor * quo);
+                remainder = (rem|0);
             } else {
                 quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
                 remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
@@ -4303,12 +3918,15 @@ function() {
     constructor['FastDivideAndRemainder'] = constructor.FastDivideAndRemainder = function(quotientReg, count, divisorSmall) {
         var i = count;
         var remainder = 0;
+        var quo, rem;
         var idivisor = (divisorSmall & 65535);
         while ((i--) > 0) {
             var currentDividend = (((((quotientReg[i] & 65535) | ((remainder|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
-                quotientReg[i] = ((((((currentDividend / idivisor)|0) & 65535))|0));
-                remainder = ((currentDividend % idivisor)|0);
+                quo = ((currentDividend / idivisor)|0);
+                quotientReg[i] = (quo & 65535);
+                rem = currentDividend - (idivisor * quo);
+                remainder = (rem|0);
             } else {
                 quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
                 remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
@@ -4322,7 +3940,7 @@ function() {
         var aSize = this.wordCount;
         var bSize = bigintDivisor.wordCount;
         if (bSize == 0) throw new Error();
-        if (aSize < bSize || aSize == 0) {
+        if (aSize < bSize) {
 
             return BigInteger.ZERO;
         }
@@ -4357,7 +3975,9 @@ function() {
         quotient.reg = [];
         for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize((aSize - bSize + 2)|0); arrfillI++) quotient.reg[arrfillI] = 0;
         quotient.negative = false;
-        BigInteger.DivideWithRemainderAnyLength(this.reg, bigintDivisor.reg, quotient.reg, null);
+        var tempbuf = [];
+        for (var arrfillI = 0; arrfillI < aSize + 3 * (bSize + 2); arrfillI++) tempbuf[arrfillI] = 0;
+        BigInteger.Divide(null, 0, quotient.reg, 0, tempbuf, 0, this.reg, 0, aSize, bigintDivisor.reg, 0, bSize);
         quotient.wordCount = quotient.CalcWordCount();
         quotient.ShortenArray();
         if ((this.signum() < 0) ^ (bigintDivisor.signum() < 0)) {
@@ -4409,6 +4029,7 @@ function() {
         BigInteger.Divide(remainder.reg, 0, quotient.reg, 0, tempbuf, 0, this.reg, 0, aSize, divisor.reg, 0, bSize);
         remainder.wordCount = remainder.CalcWordCount();
         quotient.wordCount = quotient.CalcWordCount();
+
         remainder.ShortenArray();
         quotient.ShortenArray();
         if (this.signum() < 0) {
@@ -4455,9 +4076,9 @@ function() {
         remainder.reg = [];
         for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(bSize|0); arrfillI++) remainder.reg[arrfillI] = 0;
         remainder.negative = false;
-        var quotientReg = [];
-        for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize((aSize - bSize + 2)|0); arrfillI++) quotientReg[arrfillI] = 0;
-        BigInteger.DivideWithRemainderAnyLength(this.reg, divisor.reg, quotientReg, remainder.reg);
+        var tempbuf = [];
+        for (var arrfillI = 0; arrfillI < aSize + 3 * (bSize + 2); arrfillI++) tempbuf[arrfillI] = 0;
+        BigInteger.Divide(remainder.reg, 0, null, 0, tempbuf, 0, this.reg, 0, aSize, divisor.reg, 0, bSize);
         remainder.wordCount = remainder.CalcWordCount();
         remainder.ShortenArray();
         if (this.signum() < 0 && remainder.signum() != 0) {
@@ -5123,6 +4744,16 @@ function(value) {
     prototype.SubtractInt = function(val) {
         if (val == -2147483648) {
             return this.AddBig(FastInteger.NegativeInt32MinValue);
+        } else if (this.integerMode == 0) {
+            if ((val < 0 && 2147483647 + val < this.smallValue) || (val > 0 && -2147483648 + val > this.smallValue)) {
+
+                this.integerMode = 2;
+                this.largeValue = BigInteger.valueOf(this.smallValue);
+                this.largeValue = this.largeValue.subtract(BigInteger.valueOf(val));
+            } else {
+                this.smallValue -= val;
+            }
+            return this;
         } else {
             return this.AddInt(-val);
         }
@@ -5518,6 +5149,9 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 }
                 this.ShiftRightInt(count);
                 bi = bi.subtract(BigInteger.valueOf(count));
+                if (this.isSmall ? this.shiftedSmall == 0 : this.shiftedBigInt.signum() == 0) {
+                    break;
+                }
             }
         }
     };
@@ -5795,35 +5429,6 @@ function(bigint, lastDiscarded, olderDiscarded) {
     prototype.getShiftedInt = function() {
         if (this.isSmall) return BigInteger.valueOf(this.shiftedSmall); else return this.shiftedBigInt;
     };
-    constructor.FastParseBigInt = function(str, offset, length) {
-
-        var smallint = 0;
-        var mlength = (9 < length ? 9 : length);
-        for (var i = 0; i < mlength; i++) {
-            var digit = ((str.charCodeAt(offset + i)-48)|0);
-            smallint *= 10;
-            smallint = smallint + (digit);
-        }
-        if (mlength == length) {
-            return BigInteger.valueOf(smallint);
-        } else {
-            var mbi = new FastInteger(smallint);
-            for (var i = 9; i < length; ) {
-                mlength = (9 < length - i ? 9 : length - i);
-                var multer = 1;
-                var adder = 0;
-                for (var j = i; j < i + mlength; j++) {
-                    var digit = ((str.charCodeAt(offset + j)-48)|0);
-                    multer *= 10;
-                    adder *= 10;
-                    adder = adder + (digit);
-                }
-                if (multer == 10) mbi.MultiplyByTenAndAdd(adder); else mbi.Multiply(multer).AddInt(adder);
-                i = i + (mlength);
-            }
-            return mbi.AsBigInteger();
-        }
-    };
     constructor.FastParseLong = function(str, offset, length) {
 
         if ((length) > 9) throw new Error("length" + " not less or equal to " + "9" + " (" + (length) + ")");
@@ -5858,6 +5463,9 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 }
                 this.ShiftRightInt(count);
                 bi = bi.subtract(BigInteger.valueOf(count));
+                if (this.isSmall ? this.shiftedSmall == 0 : this.shiftedBigInt.signum() == 0) {
+                    break;
+                }
             }
         }
     };
@@ -5935,7 +5543,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 this.isSmall = true;
                 this.shiftedSmall = DigitShiftAccumulator.FastParseLong(str, 0, newLength);
             } else {
-                this.shiftedBigInt = DigitShiftAccumulator.FastParseBigInt(str, 0, newLength);
+                this.shiftedBigInt = BigInteger.fromSubstring(str, 0, newLength);
             }
         }
         for (var i = str.length - 1; i >= 0; i--) {
@@ -5981,7 +5589,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             this.knownBitLength.Subtract(digitDiff);
             this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
             return;
-        } else if (digitDiff.CompareToInt(4) <= 0) {
+        } else if (digitDiff.CompareToInt(9) <= 0) {
             var bigrem;
             var diffInt = digitDiff.AsInt32();
             var radixPower = DecimalUtility.FindPowerOfTen(diffInt);
@@ -6006,7 +5614,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             this.knownBitLength.Subtract(digitDiff);
             this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
             return;
-        } else if (digitDiff.CompareToInt(5) <= 0) {
+        } else if (digitDiff.CompareToInt(2147483647) <= 0) {
             var bigrem;
             var radixPower = DecimalUtility.FindPowerOfTen(digitDiff.AsInt32() - 1);
             var bigquo;
@@ -6032,7 +5640,6 @@ function(bigint, lastDiscarded, olderDiscarded) {
             this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
             return;
         }
-
         str = this.shiftedBigInt.toString();
 
         var digitLength = str.length;
@@ -6056,7 +5663,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 this.isSmall = true;
                 this.shiftedSmall = DigitShiftAccumulator.FastParseLong(str, 0, newLength);
             } else {
-                this.shiftedBigInt = DigitShiftAccumulator.FastParseBigInt(str, 0, newLength);
+                this.shiftedBigInt = BigInteger.fromSubstring(str, 0, newLength);
             }
             this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
         }
@@ -6254,14 +5861,109 @@ var DecimalUtility = function() {
     constructor.HasBitSet = function(arr, bit) {
         return ((bit >> 5) < arr.length && (arr[bit >> 5] & (1 << (bit & 31))) != 0);
     };
+    constructor.PowerCache = function DecimalUtility$PowerCache() {
+
+        this.outputs = [];
+        this.outputs.length = DecimalUtility.PowerCache.MaxSize;
+        this.inputs = [];
+        this.inputs.length = DecimalUtility.PowerCache.MaxSize;
+    };
+    (function(constructor,prototype){
+        constructor.MaxSize = 64;
+        prototype.outputs = null;
+        prototype.inputs = null;
+        prototype.size = null;
+        prototype.FindCachedPowerOrSmaller = function(bi) {
+            var ret = null;
+            var minValue = BigInteger.ZERO;
+            {
+                for (var i = 0; i < this.size; i++) {
+                    if (this.inputs[i].compareTo(bi) <= 0 && this.inputs[i].compareTo(minValue) >= 0) {
+
+                        ret = [this.inputs[i], this.outputs[i]];
+                        minValue = this.inputs[i];
+                    }
+                }
+            }
+            return ret;
+        };
+
+        prototype.GetCachedPower = function(bi) {
+            {
+                for (var i = 0; i < this.size; i++) {
+                    if (bi.equals(this.inputs[i])) {
+                        if (i != 0) {
+                            var tmp;
+
+                            tmp = this.inputs[i];
+                            this.inputs[i] = this.inputs[0];
+                            this.inputs[0] = tmp;
+                            tmp = this.outputs[i];
+                            this.outputs[i] = this.outputs[0];
+                            this.outputs[0] = tmp;
+
+                            if (i != 1) {
+                                tmp = this.inputs[i];
+                                this.inputs[i] = this.inputs[1];
+                                this.inputs[1] = tmp;
+                                tmp = this.outputs[i];
+                                this.outputs[i] = this.outputs[1];
+                                this.outputs[1] = tmp;
+                            }
+                        }
+                        return this.outputs[0];
+                    }
+                }
+            }
+            return null;
+        };
+
+        prototype.AddPower = function(input, output) {
+            {
+                if (this.size < DecimalUtility.PowerCache.MaxSize) {
+
+                    for (var i = this.size; i > 0; i--) {
+                        this.inputs[i] = this.inputs[i - 1];
+                        this.outputs[i] = this.outputs[i - 1];
+                    }
+                    this.inputs[0] = input;
+                    this.outputs[0] = output;
+                    this.size++;
+                } else {
+
+                    for (var i = DecimalUtility.PowerCache.MaxSize - 1; i > 0; i--) {
+                        this.inputs[i] = this.inputs[i - 1];
+                        this.outputs[i] = this.outputs[i - 1];
+                    }
+                    this.inputs[0] = input;
+                    this.outputs[0] = output;
+                }
+            }
+        };
+    })(DecimalUtility.PowerCache,DecimalUtility.PowerCache.prototype);
+
+    constructor.powerOfFiveCache = new DecimalUtility.PowerCache();
     constructor.FindPowerOfFiveFromBig = function(diff) {
-        if (diff.signum() <= 0) return BigInteger.ONE;
-        var bigpow = BigInteger.ZERO;
+        var sign = diff.signum();
+        if (sign < 0) return BigInteger.ZERO;
+        if (sign == 0) return BigInteger.ONE;
         var intcurexp = FastInteger.FromBig(diff);
         if (intcurexp.CompareToInt(54) <= 0) {
             return DecimalUtility.FindPowerOfFive(intcurexp.AsInt32());
         }
         var mantissa = BigInteger.ONE;
+        var bigpow;
+        var origdiff = diff;
+        bigpow = DecimalUtility.powerOfFiveCache.GetCachedPower(origdiff);
+        if (bigpow != null) return bigpow;
+        var otherPower = DecimalUtility.powerOfFiveCache.FindCachedPowerOrSmaller(origdiff);
+        if (otherPower != null) {
+            intcurexp.SubtractBig(otherPower[0]);
+            bigpow = otherPower[1];
+            mantissa = bigpow;
+        } else {
+            bigpow = BigInteger.ZERO;
+        }
         while (intcurexp.signum() > 0) {
             if (intcurexp.CompareToInt(27) <= 0) {
                 bigpow = DecimalUtility.FindPowerOfFive(intcurexp.AsInt32());
@@ -6277,11 +5979,14 @@ var DecimalUtility = function() {
                 intcurexp.AddInt(-9999999);
             }
         }
+        DecimalUtility.powerOfFiveCache.AddPower(origdiff, mantissa);
         return mantissa;
     };
     constructor.BigInt36 = BigInteger.valueOf(36);
     constructor.FindPowerOfTenFromBig = function(bigintExponent) {
-        if (bigintExponent.signum() <= 0) return BigInteger.ONE;
+        var sign = bigintExponent.signum();
+        if (sign < 0) return BigInteger.ZERO;
+        if (sign == 0) return BigInteger.ONE;
         if (bigintExponent.compareTo(DecimalUtility.BigInt36) <= 0) {
             return DecimalUtility.FindPowerOfTen(bigintExponent.intValue());
         }
@@ -6312,7 +6017,8 @@ var DecimalUtility = function() {
     };
     constructor.FivePower40 = (BigInteger.valueOf(JSInteropFactory.createLongFromInts(1977800241, 22204))).multiply(BigInteger.valueOf(JSInteropFactory.createLongFromInts(1977800241, 22204)));
     constructor.FindPowerOfFive = function(precision) {
-        if (precision <= 0) return BigInteger.ONE;
+        if (precision < 0) return BigInteger.ZERO;
+        if (precision == 0) return BigInteger.ONE;
         var bigpow;
         var ret;
         if (precision <= 27) return DecimalUtility.BigIntPowersOfFive[(precision|0)];
@@ -6335,9 +6041,29 @@ var DecimalUtility = function() {
             ret = ret.multiply(bigpow);
             return ret;
         }
-        ret = BigInteger.ONE;
+        var startPrecision = precision;
+        var origPrecision = BigInteger.valueOf(precision);
+        bigpow = DecimalUtility.powerOfFiveCache.GetCachedPower(origPrecision);
+        if (bigpow != null) return bigpow;
+        var otherPower;
         var first = true;
         bigpow = BigInteger.ZERO;
+        while (true) {
+
+            otherPower = DecimalUtility.powerOfFiveCache.FindCachedPowerOrSmaller(BigInteger.valueOf(precision));
+            if (otherPower != null) {
+                var otherPower0 = otherPower[0];
+                var otherPower1 = otherPower[1];
+                precision -= otherPower0.intValue();
+                if (first) bigpow = otherPower[1]; else {
+                    bigpow = bigpow.multiply(otherPower1);
+                }
+                first = false;
+            } else {
+                break;
+            }
+        }
+        ret = (!first ? bigpow : BigInteger.ONE);
         while (precision > 0) {
             if (precision <= 27) {
                 bigpow = DecimalUtility.BigIntPowersOfFive[(precision|0)];
@@ -6345,7 +6071,12 @@ var DecimalUtility = function() {
                 first = false;
                 break;
             } else if (precision <= 9999999) {
-                bigpow = (DecimalUtility.BigIntPowersOfFive[1]).pow(precision|0);
+
+                bigpow = (DecimalUtility.BigIntPowersOfFive[1]).pow(precision);
+                if (precision != startPrecision) {
+                    var bigprec = BigInteger.valueOf(precision);
+                    DecimalUtility.powerOfFiveCache.AddPower(bigprec, bigpow);
+                }
                 if (first) ret = bigpow; else ret = ret.multiply(bigpow);
                 first = false;
                 break;
@@ -6356,10 +6087,12 @@ var DecimalUtility = function() {
                 precision -= 9999999;
             }
         }
+        DecimalUtility.powerOfFiveCache.AddPower(origPrecision, ret);
         return ret;
     };
     constructor.FindPowerOfTen = function(precision) {
-        if (precision <= 0) return BigInteger.ONE;
+        if (precision < 0) return BigInteger.ZERO;
+        if (precision == 0) return BigInteger.ONE;
         var ret;
         var bigpow;
         if (precision <= 18) return DecimalUtility.BigIntPowersOfTen[(precision|0)];
@@ -6891,6 +6624,21 @@ var RadixMath = function(helper) {
     prototype.SignalOverflow = function(neg) {
         return this.support == BigNumberFlags.FiniteOnly ? null : this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     };
+    prototype.SignalOverflow2 = function(pc, neg) {
+        if (pc != null && pc.getHasFlags()) {
+            pc.setFlags(pc.getFlags() | (PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+        }
+        if (pc != null && !((pc.getPrecision()).signum() == 0) && pc.getHasExponentRange() && (pc.getRounding() == Rounding.Down || pc.getRounding() == Rounding.ZeroFiveUp || (pc.getRounding() == Rounding.Ceiling && neg) || (pc.getRounding() == Rounding.Floor && !neg))) {
+
+            var overflowMant = BigInteger.ZERO;
+            var fastPrecision = FastInteger.FromBig(pc.getPrecision());
+            overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
+            overflowMant = overflowMant.subtract(BigInteger.ONE);
+            var clamp = FastInteger.FromBig(pc.getEMax()).Increment().Subtract(fastPrecision);
+            return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
+        }
+        return this.SignalOverflow(neg);
+    };
     prototype.SignalDivideByZero = function(ctx, neg) {
         if (this.support == BigNumberFlags.FiniteOnly) throw new Error("Division by zero");
         if (ctx != null && ctx.getHasFlags()) {
@@ -7006,7 +6754,7 @@ var RadixMath = function(helper) {
     prototype.DivideToIntegerNaturalScale = function(thisValue, divisor, ctx) {
         var desiredScale = FastInteger.FromBig(this.helper.GetExponent(thisValue)).SubtractBig(this.helper.GetExponent(divisor));
         var ctx2 = PrecisionContext.ForRounding(Rounding.Down).WithBigPrecision(ctx == null ? BigInteger.ZERO : ctx.getPrecision()).WithBlankFlags();
-        var ret = this.DivideInternal(thisValue, divisor, ctx2, RadixMath.IntegerModeFixedScale, BigInteger.ZERO, null);
+        var ret = this.DivideInternal(thisValue, divisor, ctx2, RadixMath.IntegerModeFixedScale, BigInteger.ZERO);
         if ((ctx2.getFlags() & (PrecisionContext.FlagInvalid | PrecisionContext.FlagDivideByZero)) != 0) {
             if (ctx.getHasFlags()) {
                 ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid | PrecisionContext.FlagDivideByZero));
@@ -7057,7 +6805,7 @@ var RadixMath = function(helper) {
 
     prototype.DivideToIntegerZeroScale = function(thisValue, divisor, ctx) {
         var ctx2 = PrecisionContext.ForRounding(Rounding.Down).WithBigPrecision(ctx == null ? BigInteger.ZERO : ctx.getPrecision()).WithBlankFlags();
-        var ret = this.DivideInternal(thisValue, divisor, ctx2, RadixMath.IntegerModeFixedScale, BigInteger.ZERO, null);
+        var ret = this.DivideInternal(thisValue, divisor, ctx2, RadixMath.IntegerModeFixedScale, BigInteger.ZERO);
         if ((ctx2.getFlags() & (PrecisionContext.FlagInvalid | PrecisionContext.FlagDivideByZero)) != 0) {
             if (ctx.getHasFlags()) {
                 ctx.setFlags(ctx.getFlags() | (ctx2.getFlags() & (PrecisionContext.FlagInvalid | PrecisionContext.FlagDivideByZero)));
@@ -7114,6 +6862,9 @@ var RadixMath = function(helper) {
     prototype.AbsRaw = function(value) {
         return this.EnsureSign(value, false);
     };
+    prototype.IsNegative = function(val) {
+        return (this.helper.GetFlags(val) & BigNumberFlags.FlagNegative) != 0;
+    };
     prototype.NegateRaw = function(val) {
         if (val == null) return val;
         var sign = this.helper.GetFlags(val) & BigNumberFlags.FlagNegative;
@@ -7153,7 +6904,7 @@ var RadixMath = function(helper) {
             RadixMath.TransferFlags(ctx, ctx2);
             return ret;
         }
-        ret = this.DivideInternal(thisValue, divisor, ctx2, RadixMath.IntegerModeFixedScale, BigInteger.ZERO, null);
+        ret = this.DivideInternal(thisValue, divisor, ctx2, RadixMath.IntegerModeFixedScale, BigInteger.ZERO);
         if ((ctx2.getFlags() & (PrecisionContext.FlagInvalid)) != 0) {
             return this.SignalInvalid(ctx);
         }
@@ -7174,7 +6925,317 @@ var RadixMath = function(helper) {
         return ret2;
     };
 
-    prototype.GetInitialApproximation = function(n) {
+    prototype.Pi = function(ctx) {
+        if (ctx == null || (ctx.getPrecision()).signum() == 0) throw new Error("ctx is null or has unlimited precision");
+
+        var a = this.helper.ValueOf(1);
+        var ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp);
+        var two = this.helper.ValueOf(2);
+        var b = this.Divide(a, this.SquareRoot(two, ctxdiv), ctxdiv);
+        var four = this.helper.ValueOf(4);
+        var half = ((this.thisRadix & 1) == 0) ? this.helper.CreateNewWithFlags(BigInteger.valueOf((this.thisRadix / 2)|0), BigInteger.ZERO.subtract(BigInteger.ONE), 0) : null;
+        var t = this.Divide(a, four, ctxdiv);
+        var more = true;
+        var lastCompare = 0;
+        var vacillations = 0;
+        var lastGuess = null;
+        var guess = null;
+        var powerTwo = BigInteger.ONE;
+        while (more) {
+            lastGuess = guess;
+            var aplusB = this.Add(a, b, null);
+            var newA = (half == null) ? this.Divide(aplusB, two, ctxdiv) : this.Multiply(aplusB, half, null);
+            var aMinusNewA = this.Add(a, this.NegateRaw(newA), null);
+            if (!a.equals(b)) {
+                var atimesB = this.Multiply(a, b, ctxdiv);
+                b = this.SquareRoot(atimesB, ctxdiv);
+            }
+            a = newA;
+            guess = this.Multiply(aplusB, aplusB, null);
+            guess = this.Divide(guess, this.Multiply(t, four, null), ctxdiv);
+            var newGuess = guess;
+            if (lastGuess != null) {
+                var guessCmp = this.compareTo(lastGuess, newGuess);
+                if (guessCmp == 0) {
+                    more = false;
+                } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
+
+                    vacillations++;
+                    if (vacillations > 3 && guessCmp > 0) {
+
+                        more = false;
+                    }
+                }
+                lastCompare = guessCmp;
+            }
+            if (more) {
+                var tmpT = this.Multiply(aMinusNewA, aMinusNewA, null);
+                tmpT = this.Multiply(tmpT, this.helper.CreateNewWithFlags(powerTwo, BigInteger.ZERO, 0), null);
+                t = this.Add(t, this.NegateRaw(tmpT), ctxdiv);
+                powerTwo = powerTwo.shiftLeft(1);
+            }
+            guess = newGuess;
+        }
+        return this.RoundToPrecision(guess, ctx);
+    };
+    prototype.ExpInternal = function(thisValue, ctx) {
+        var one = this.helper.ValueOf(1);
+        var ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp);
+        var bigintN = BigInteger.valueOf(2);
+        var facto = BigInteger.ONE;
+        var fac = one;
+
+        var guess = this.Add(one, thisValue, null);
+        var lastGuess = guess;
+        var pow = thisValue;
+        var more = true;
+        var lastCompare = 0;
+        var vacillations = 0;
+        while (more) {
+            lastGuess = guess;
+
+            pow = this.Multiply(pow, thisValue, ctxdiv);
+            facto = facto.multiply(bigintN);
+            var tmp = this.Divide(pow, this.helper.CreateNewWithFlags(facto, BigInteger.ZERO, 0), ctxdiv);
+            var newGuess = this.Add(guess, tmp, ctxdiv);
+            {
+                var guessCmp = this.compareTo(lastGuess, newGuess);
+                if (guessCmp == 0) {
+                    more = false;
+                } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
+
+                    vacillations++;
+                    if (vacillations > 3 && guessCmp > 0) {
+
+                        more = false;
+                    }
+                }
+                lastCompare = guessCmp;
+            }
+            guess = newGuess;
+            if (more) {
+                bigintN = bigintN.add(BigInteger.ONE);
+            }
+        }
+        return this.RoundToPrecision(guess, ctx);
+    };
+    prototype.PowerIntegral = function(thisValue, powIntBig, ctx) {
+        var sign = powIntBig.signum();
+        var one = this.helper.ValueOf(1);
+        var ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
+        if (sign < 0) {
+
+            thisValue = this.Divide(one, thisValue, ctxdiv);
+            powIntBig = powIntBig.negate();
+        }
+        if (sign == 0) return this.RoundToPrecision(one, ctx); else if (powIntBig.equals(BigInteger.ONE)) return this.RoundToPrecision(thisValue, ctx); else if (powIntBig.equals(BigInteger.valueOf(2))) return this.Multiply(thisValue, thisValue, ctx); else if (powIntBig.equals(BigInteger.valueOf(3))) return this.Multiply(thisValue, this.Multiply(thisValue, thisValue, null), ctx);
+
+        var r = one;
+        while (powIntBig.signum() != 0) {
+            if (powIntBig.testBit(0)) {
+                r = this.Multiply(r, thisValue, ctxdiv);
+            }
+            powIntBig = powIntBig.shiftRight(1);
+            if (powIntBig.signum() != 0) {
+                ctxdiv.setFlags(0);
+                var tmp = this.Multiply(thisValue, thisValue, ctxdiv);
+                if ((ctxdiv.getFlags() & PrecisionContext.FlagOverflow) != 0) {
+
+                    return this.SignalOverflow2(ctx, this.IsNegative(tmp));
+                }
+                thisValue = tmp;
+            }
+        }
+        return this.RoundToPrecision(r, ctx);
+    };
+    prototype.Power = function(thisValue, pow, ctx) {
+        var ret = this.HandleNotANumber(thisValue, pow, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var thisSign = this.helper.GetSign(thisValue);
+        var powSign = this.helper.GetSign(pow);
+        var thisFlags = this.helper.GetFlags(pow);
+        var powFlags = this.helper.GetFlags(pow);
+        if (thisSign == 0) {
+            if (powSign > 0) return this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0), ctx); else if (powSign == 0) return this.SignalInvalid(ctx);
+        }
+        if (thisSign < 0 && (powFlags & BigNumberFlags.FlagInfinity) != 0) {
+            return this.SignalInvalid(ctx);
+        }
+        var powExponent = this.helper.GetExponent(pow);
+        var powInt = this.Quantize(pow, this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0), PrecisionContext.ForRounding(Rounding.Down));
+        var isPowIntegral = this.compareTo(powInt, pow) == 0;
+        if (thisSign == 0 && powSign < 0) {
+            var infinityFlags = BigNumberFlags.FlagInfinity;
+            if ((thisFlags & BigNumberFlags.FlagNegative) != 0 && (powFlags & BigNumberFlags.FlagInfinity) != 0 && isPowIntegral) {
+                var powIntMant = (this.helper.GetMantissa(powInt)).abs();
+                if (!(powIntMant.testBit(0) == false)) {
+                    infinityFlags |= BigNumberFlags.FlagNegative;
+                }
+            }
+            return this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, infinityFlags);
+        }
+        if ((!isPowIntegral || powSign < 0) && (ctx == null || (ctx.getPrecision()).signum() == 0)) throw new Error("ctx is null or has unlimited precision, and pow's exponent is not an integer or is negative");
+        if (thisSign < 0 && !isPowIntegral) {
+            return this.SignalInvalid(ctx);
+        }
+        if ((thisSign & BigNumberFlags.FlagInfinity) != 0) {
+            if (powSign > 0) return thisValue; else if (powSign < 0) return this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0), ctx); else return this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ONE, BigInteger.ZERO, 0), ctx);
+        }
+        if (powSign == 0) {
+            return this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ONE, BigInteger.ZERO, 0), ctx);
+        }
+        if (isPowIntegral) {
+            var signedMant = (this.helper.GetMantissa(powInt)).abs();
+            if (powSign < 0) signedMant = signedMant.negate();
+            return this.PowerIntegral(thisValue, signedMant, ctx);
+        }
+        var ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
+        var lnresult = this.Ln(thisValue, ctxdiv);
+        lnresult = this.Multiply(lnresult, pow, null);
+        return this.Exp(lnresult, ctx);
+    };
+
+    prototype.Log10 = function(thisValue, ctx) {
+        if (ctx == null || (ctx.getPrecision()).signum() == 0) throw new Error("ctx is null or has unlimited precision");
+        var flags = this.helper.GetFlags(thisValue);
+        if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+
+            return this.SignalingNaNInvalid(thisValue, ctx);
+        }
+        if ((flags & BigNumberFlags.FlagQuietNaN) != 0) {
+
+            return this.ReturnQuietNaN(thisValue, ctx);
+        }
+        var sign = this.helper.GetSign(thisValue);
+        if (sign < 0) return this.SignalInvalid(ctx);
+        if ((flags & BigNumberFlags.FlagInfinity) != 0) {
+            return thisValue;
+        }
+        var ctxCopy = ctx.WithRounding(Rounding.HalfEven).WithBlankFlags();
+        var one = this.helper.ValueOf(1);
+        if (sign == 0) {
+            thisValue = this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative | BigNumberFlags.FlagInfinity), ctxCopy);
+        } else if (this.compareTo(thisValue, one) == 0) {
+            thisValue = this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0), ctxCopy);
+        } else {
+            var mant = (this.helper.GetMantissa(thisValue)).abs();
+            if (mant.equals(BigInteger.ONE)) {
+                thisValue = this.RoundToPrecision(this.helper.CreateNewWithFlags(this.helper.GetExponent(thisValue), BigInteger.ZERO, BigNumberFlags.FlagNegative | BigNumberFlags.FlagInfinity), ctxCopy);
+            } else {
+                var ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
+                var ten = this.helper.CreateNewWithFlags(BigInteger.TEN, BigInteger.ZERO, 0);
+                var lnNatural = this.Ln(thisValue, ctxdiv);
+                var lnTen = this.Ln(ten, ctxdiv);
+                thisValue = this.Divide(lnNatural, lnTen, ctx);
+            }
+        }
+        if (ctx.getHasFlags()) {
+            ctx.setFlags(ctx.getFlags() | (ctxCopy.getFlags()));
+        }
+        return thisValue;
+    };
+
+    prototype.Ln = function(thisValue, ctx) {
+        if (ctx == null || (ctx.getPrecision()).signum() == 0) throw new Error("ctx is null or has unlimited precision");
+        var flags = this.helper.GetFlags(thisValue);
+        if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+
+            return this.SignalingNaNInvalid(thisValue, ctx);
+        }
+        if ((flags & BigNumberFlags.FlagQuietNaN) != 0) {
+
+            return this.ReturnQuietNaN(thisValue, ctx);
+        }
+        var sign = this.helper.GetSign(thisValue);
+        if (sign < 0) return this.SignalInvalid(ctx);
+        if ((flags & BigNumberFlags.FlagInfinity) != 0) {
+            return thisValue;
+        }
+        var ctxCopy = ctx.WithRounding(Rounding.HalfEven).WithBlankFlags();
+        var one = this.helper.ValueOf(1);
+        if (sign == 0) return this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative | BigNumberFlags.FlagInfinity); else if (this.compareTo(thisValue, one) == 0) {
+            thisValue = this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0), ctxCopy);
+        } else {
+            throw new Error();
+        }
+        if (ctx.getHasFlags()) {
+            ctx.setFlags(ctx.getFlags() | (ctxCopy.getFlags()));
+        }
+        return thisValue;
+    };
+
+    prototype.Exp = function(thisValue, ctx) {
+        if (ctx == null || (ctx.getPrecision()).signum() == 0) throw new Error("ctx is null or has unlimited precision");
+        var flags = this.helper.GetFlags(thisValue);
+        if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+
+            return this.SignalingNaNInvalid(thisValue, ctx);
+        }
+        if ((flags & BigNumberFlags.FlagQuietNaN) != 0) {
+
+            return this.ReturnQuietNaN(thisValue, ctx);
+        }
+        var ctxCopy = ctx.WithRounding(Rounding.HalfEven).WithBlankFlags();
+        if ((flags & BigNumberFlags.FlagInfinity) != 0) {
+            if ((flags & BigNumberFlags.FlagNegative) != 0) {
+                var retval = this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0), ctxCopy);
+                if (ctx.getHasFlags()) {
+                    ctx.setFlags(ctx.getFlags() | (ctxCopy.getFlags()));
+                }
+                return retval;
+            }
+            return thisValue;
+        }
+        var sign = this.helper.GetSign(thisValue);
+        var one = this.helper.ValueOf(1);
+        var ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
+        if (sign == 0) {
+            thisValue = this.RoundToPrecision(one, ctxCopy);
+        } else if (sign < 0) {
+            var val = this.Exp(this.NegateRaw(thisValue), ctxdiv);
+            if ((ctxdiv.getFlags() & PrecisionContext.FlagOverflow) != 0) {
+
+                ctxdiv.setFlags(0);
+                ctxdiv = ctx.WithUnlimitedExponents();
+                thisValue = this.Exp(this.NegateRaw(thisValue), ctxdiv);
+            } else {
+                thisValue = val;
+            }
+            thisValue = this.Divide(one, thisValue, ctxCopy);
+            if (ctx.getHasFlags()) {
+                ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+            }
+        } else if (this.compareTo(thisValue, one) < 0) {
+            thisValue = this.ExpInternal(thisValue, ctxCopy);
+            if (ctx.getHasFlags()) {
+                ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+            }
+        } else {
+            var intpart = this.Quantize(thisValue, one, PrecisionContext.ForRounding(Rounding.Down));
+            var fracpart = this.Add(thisValue, this.NegateRaw(intpart), null);
+            fracpart = this.Add(one, this.Divide(fracpart, intpart, ctxdiv), null);
+            ctxdiv.setFlags(0);
+            thisValue = this.ExpInternal(fracpart, ctxdiv);
+            if ((ctxdiv.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
+                if (ctx.getHasFlags()) {
+                    ctx.setFlags(ctx.getFlags() | (ctxdiv.getFlags()));
+                }
+            }
+            if (ctx.getHasFlags()) {
+                ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+            }
+            thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxdiv);
+            thisValue = this.RoundToPrecision(thisValue, ctxCopy);
+        }
+        if (ctx.getHasFlags()) {
+            ctx.setFlags(ctx.getFlags() | (ctxCopy.getFlags()));
+        }
+        return thisValue;
+    };
+
+    prototype.SquareRootGetInitialApprox = function(n) {
         var integerPart = this.helper.GetMantissa(n);
         var length = this.helper.CreateShiftAccumulator(integerPart).GetDigitLength();
         length.AddBig(this.helper.GetExponent(n));
@@ -7183,6 +7244,65 @@ var RadixMath = function(helper) {
         }
         length.Divide(2);
         return this.helper.CreateNewWithFlags(BigInteger.ONE, length.AsBigInteger(), 0);
+    };
+    prototype.SquareRootSimple = function(thisValue, ctx) {
+
+        if (ctx == null || (ctx.getPrecision()).signum() == 0) throw new Error("ctx is null or has unlimited precision");
+        var guess = this.SquareRootGetInitialApprox(thisValue);
+        var lastGuess = this.helper.ValueOf(0);
+        var half = this.helper.CreateNewWithFlags(BigInteger.valueOf((this.thisRadix / 2)|0), BigInteger.ZERO.subtract(BigInteger.ONE), 0);
+        var ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp);
+        var one = this.helper.ValueOf(1);
+        var two = this.helper.ValueOf(2);
+        var three = this.helper.ValueOf(3);
+        var fiMax = new FastInteger(30);
+        var iterChange = ctx.getPrecision();
+        iterChange = iterChange.shiftRight(7);
+
+        fiMax.AddBig(iterChange);
+        var maxIterations = fiMax.MinInt32(2147483647 - 1);
+
+        var iterations = 0;
+        var more = true;
+        var lastCompare = 0;
+        var vacillations = 0;
+        lastGuess = thisValue;
+
+        while (more) {
+            var guess2 = null;
+            var newGuess = null;
+            guess2 = this.Multiply(guess, guess, null);
+            guess2 = this.Multiply(thisValue, guess2, null);
+            guess2 = this.Add(three, this.NegateRaw(guess2), null);
+            guess2 = this.Multiply(guess, guess2, null);
+            guess2 = ((this.thisRadix & 1) != 0) ? this.Divide(guess2, two, ctxdiv) : this.Multiply(guess2, half, ctxdiv);
+            guess2 = this.AbsRaw(guess2);
+            newGuess = this.Multiply(thisValue, guess2, ctxdiv);
+
+            if (++iterations >= maxIterations) {
+                more = false;
+            } else {
+                var guessCmp = this.compareTo(lastGuess, newGuess);
+                if (guessCmp == 0) {
+                    more = false;
+                } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
+
+                    vacillations++;
+                    if (vacillations > 3 && guessCmp > 0) {
+
+                        more = false;
+                    }
+                }
+                lastCompare = guessCmp;
+            }
+            if (!more) {
+                guess = newGuess;
+            } else {
+                guess = guess2;
+                lastGuess = newGuess;
+            }
+        }
+        return this.RoundToPrecision(guess, ctx);
     };
 
     prototype.SquareRoot = function(thisValue, ctx) {
@@ -7202,14 +7322,16 @@ var RadixMath = function(helper) {
             return this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, idealExp, this.helper.GetFlags(thisValue)), ctx);
         }
         var mantissa = (this.helper.GetMantissa(thisValue)).abs();
-        var initialGuess = this.GetInitialApproximation(thisValue);
+        var initialGuess = this.SquareRootGetInitialApprox(thisValue);
         var ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp);
         var rounding = Rounding.HalfEven;
         var ctxtmp = ctx.WithRounding(rounding).WithBlankFlags();
 
-        var lastGuess = this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0);
-        var two = this.helper.CreateNewWithFlags(BigInteger.valueOf(2), BigInteger.ZERO, 0);
-        var one = this.helper.CreateNewWithFlags(BigInteger.ONE, BigInteger.ZERO, 0);
+        var lastGuess = this.helper.ValueOf(0);
+        var half = this.helper.CreateNewWithFlags(BigInteger.valueOf((this.thisRadix / 2)|0), BigInteger.ZERO.subtract(BigInteger.ONE), 0);
+        var one = this.helper.ValueOf(1);
+        var two = this.helper.ValueOf(2);
+        var three = this.helper.ValueOf(3);
         var guess = initialGuess;
         var fiMax = new FastInteger(30);
         var iterChange = ctx.getPrecision();
@@ -7223,19 +7345,32 @@ var RadixMath = function(helper) {
         var lastCompare = 0;
         var vacillations = 0;
         var treatAsInexact = false;
+        var recipsqrt = false;
+        lastGuess = guess;
         while (more) {
-            lastGuess = guess;
-            guess = this.Divide(thisValue, guess, ctxdiv);
-            guess = this.Add(guess, lastGuess, null);
-            var newguess = this.Divide(guess, two, ctxdiv);
+            var guess2 = null;
+            var newGuess = null;
+            if (!recipsqrt) {
+
+                guess = this.Divide(thisValue, guess, ctxdiv);
+                guess = this.Add(guess, lastGuess, null);
+                newGuess = ((this.thisRadix & 1) != 0) ? this.Divide(guess, two, ctxdiv) : this.Multiply(guess, half, ctxdiv);
+            } else {
+                guess2 = this.Multiply(guess, guess, ctxdiv);
+                guess2 = this.Multiply(thisValue, guess2, ctxdiv);
+                guess2 = this.Add(three, this.NegateRaw(guess2), null);
+                guess2 = this.Multiply(guess, guess2, ctxdiv);
+                guess2 = ((this.thisRadix & 1) != 0) ? this.Divide(guess2, two, ctxdiv) : this.Multiply(guess2, half, ctxdiv);
+                guess2 = this.AbsRaw(guess2);
+                newGuess = this.Multiply(thisValue, guess2, ctxdiv);
+            }
 
             if (++iterations >= maxIterations) {
                 more = false;
             } else {
-                var guessCmp = this.compareTo(lastGuess, newguess);
+                var guessCmp = this.compareTo(lastGuess, newGuess);
                 if (guessCmp == 0) {
-                    var error = this.Add(thisValue, this.NegateRaw(this.Multiply(newguess, newguess, null)), null);
-                    more = this.compareTo(this.AbsRaw(error), one) >= 0;
+                    more = false;
                 } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
 
                     vacillations++;
@@ -7248,9 +7383,19 @@ var RadixMath = function(helper) {
                 lastCompare = guessCmp;
             }
             if (!more) {
-                guess = this.Divide(guess, two, ctxdiv.WithRounding(treatAsInexact ? Rounding.ZeroFiveUp : rounding));
+                if (recipsqrt) {
+                    guess = this.Multiply(thisValue, guess2, ctxdiv.WithRounding(treatAsInexact ? Rounding.ZeroFiveUp : rounding));
+                } else {
+                    guess = ((this.thisRadix & 1) != 0) ? this.Divide(guess, two, ctxdiv.WithRounding(treatAsInexact ? Rounding.ZeroFiveUp : rounding)) : this.Multiply(guess, half, ctxdiv.WithRounding(treatAsInexact ? Rounding.ZeroFiveUp : rounding));
+                }
             } else {
-                guess = newguess;
+                if (recipsqrt) {
+                    guess = guess2;
+                    lastGuess = newGuess;
+                } else {
+                    guess = newGuess;
+                    lastGuess = newGuess;
+                }
             }
         }
 
@@ -7438,7 +7583,7 @@ var RadixMath = function(helper) {
     prototype.DivideToExponent = function(thisValue, divisor, desiredExponent, ctx) {
         if (ctx != null && !ctx.ExponentWithinRange(desiredExponent)) return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + desiredExponent.toString());
         var ctx2 = (ctx == null) ? PrecisionContext.ForRounding(Rounding.HalfDown) : ctx.WithUnlimitedExponents().WithPrecision(0);
-        var ret = this.DivideInternal(thisValue, divisor, ctx2, RadixMath.IntegerModeFixedScale, desiredExponent, null);
+        var ret = this.DivideInternal(thisValue, divisor, ctx2, RadixMath.IntegerModeFixedScale, desiredExponent);
         if (ctx != null && ctx.getHasFlags()) {
             ctx.setFlags(ctx.getFlags() | (ctx2.getFlags()));
         }
@@ -7446,7 +7591,38 @@ var RadixMath = function(helper) {
     };
 
     prototype.Divide = function(thisValue, divisor, ctx) {
-        return this.DivideInternal(thisValue, divisor, ctx, RadixMath.IntegerModeRegular, BigInteger.ZERO, null);
+        return this.DivideInternal(thisValue, divisor, ctx, RadixMath.IntegerModeRegular, BigInteger.ZERO);
+    };
+    prototype.RoundToScaleStatus = function(remainder, divisor, neg, ctx) {
+
+        var rounding = (ctx == null) ? Rounding.HalfEven : ctx.getRounding();
+        var lastDiscarded = 0;
+        var olderDiscarded = 0;
+        if (!(remainder.signum() == 0)) {
+            if (rounding == Rounding.HalfDown || rounding == Rounding.HalfUp || rounding == Rounding.HalfEven) {
+                var halfDivisor = (divisor.shiftRight(1));
+                var cmpHalf = remainder.compareTo(halfDivisor);
+                if ((cmpHalf == 0) && divisor.testBit(0) == false) {
+
+                    lastDiscarded = ((this.thisRadix / 2)|0);
+                    olderDiscarded = 0;
+                } else if (cmpHalf > 0) {
+
+                    lastDiscarded = ((this.thisRadix / 2)|0);
+                    olderDiscarded = 1;
+                } else {
+
+                    lastDiscarded = 0;
+                    olderDiscarded = 1;
+                }
+            } else {
+
+                if (rounding == Rounding.Unnecessary) throw new Error("Rounding was required");
+                lastDiscarded = 1;
+                olderDiscarded = 1;
+            }
+        }
+        return [lastDiscarded, olderDiscarded];
     };
     prototype.RoundToScale = function(mantissa, remainder, divisor, shift, neg, ctx) {
 
@@ -7514,7 +7690,7 @@ var RadixMath = function(helper) {
     constructor.IntegerModeFixedScale = 1;
     constructor.IntegerModeRegular = 0;
     constructor.NonTerminatingCheckThreshold = 5;
-    prototype.DivideInternal = function(thisValue, divisor, ctx, integerMode, desiredExponent, remainder) {
+    prototype.DivideInternal = function(thisValue, divisor, ctx, integerMode, desiredExponent) {
         var ret = this.DivisionHandleSpecial(thisValue, divisor, ctx);
         if (ret != null) return ret;
         var signA = this.helper.GetSign(thisValue);
@@ -7537,9 +7713,6 @@ var RadixMath = function(helper) {
                 var newflags = (this.helper.GetFlags(thisValue) & BigNumberFlags.FlagNegative) ^ (this.helper.GetFlags(divisor) & BigNumberFlags.FlagNegative);
                 retval = this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, (dividendExp.subtract(divisorExp)), newflags), ctx);
             }
-            if (remainder != null) {
-                remainder[0] = retval;
-            }
             return retval;
         } else {
             var mantissaDividend = (this.helper.GetMantissa(thisValue)).abs();
@@ -7550,8 +7723,11 @@ var RadixMath = function(helper) {
             var adjust = new FastInteger(0);
             var result = new FastInteger(0);
             var naturalExponent = FastInteger.Copy(expdiff);
+            var hasPrecision = ctx != null && (ctx.getPrecision()).signum() != 0;
             var resultNeg = (this.helper.GetFlags(thisValue) & BigNumberFlags.FlagNegative) != (this.helper.GetFlags(divisor) & BigNumberFlags.FlagNegative);
-            var fastPrecision = (ctx == null) ? new FastInteger(0) : FastInteger.FromBig(ctx.getPrecision());
+            var fastPrecision = (!hasPrecision) ? new FastInteger(0) : FastInteger.FromBig(ctx.getPrecision());
+            var dividendPrecision = null;
+            var divisorPrecision = null;
             if (integerMode == RadixMath.IntegerModeFixedScale) {
                 var shift;
                 var rem;
@@ -7586,12 +7762,71 @@ var RadixMath = function(helper) {
                     return this.helper.CreateNewWithFlags(quo, desiredExponent, resultNeg ? BigNumberFlags.FlagNegative : 0);
                 }
             }
+            if (integerMode == RadixMath.IntegerModeRegular) {
+                var rem;
+                var quo;
+                {
+                    var divrem = (mantissaDividend).divideAndRemainder(mantissaDivisor);
+                    quo = divrem[0];
+                    rem = divrem[1];
+                }
+                if (rem.signum() == 0) {
+                    quo = this.RoundToScale(quo, rem, mantissaDivisor, new FastInteger(0), resultNeg, ctx);
+                    return this.RoundToPrecision(this.helper.CreateNewWithFlags(quo, naturalExponent.AsBigInteger(), resultNeg ? BigNumberFlags.FlagNegative : 0), ctx);
+                }
+                if (hasPrecision) {
+                    var divid = mantissaDividend;
+                    var shift = FastInteger.FromBig(ctx.getPrecision());
+                    dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
+                    divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
+                    if (dividendPrecision.compareTo(divisorPrecision) <= 0) {
+                        divisorPrecision.Subtract(dividendPrecision);
+                        divisorPrecision.Increment();
+                        shift.Add(divisorPrecision);
+                        divid = this.helper.MultiplyByRadixPower(divid, shift);
+                    } else {
+
+                        dividendPrecision.Subtract(divisorPrecision);
+                        if (dividendPrecision.compareTo(shift) <= 0) {
+                            shift.Subtract(dividendPrecision);
+                            shift.Increment();
+                            divid = this.helper.MultiplyByRadixPower(divid, shift);
+                        } else {
+
+                            shift.SetInt(0);
+                        }
+                    }
+                    dividendPrecision = this.helper.CreateShiftAccumulator(divid).GetDigitLength();
+                    divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
+                    if (shift.signum() != 0) {
+
+                        {
+                            var divrem = (divid).divideAndRemainder(mantissaDivisor);
+                            quo = divrem[0];
+                            rem = divrem[1];
+                        }
+                    }
+                    var digitStatus = this.RoundToScaleStatus(rem, mantissaDivisor, resultNeg, ctx);
+                    var natexp = FastInteger.Copy(naturalExponent).Subtract(shift);
+                    var ctxcopy = (ctx == null) ? PrecisionContext.Unlimited.WithBlankFlags() : ctx.WithBlankFlags();
+                    var retval2 = this.RoundToPrecisionWithShift(this.helper.CreateNewWithFlags(quo, natexp.AsBigInteger(), (resultNeg ? BigNumberFlags.FlagNegative : 0)), ctxcopy, digitStatus[0], digitStatus[1], new FastInteger(0), false);
+                    if ((ctxcopy.getFlags() & PrecisionContext.FlagInexact) != 0) {
+                        if (ctx != null && ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (ctxcopy.getFlags()));
+                        return retval2;
+                    } else {
+                        if (ctx != null && ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (ctxcopy.getFlags()));
+                        if (ctx != null && ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() & ~(PrecisionContext.FlagRounded));
+                        return this.ReduceToPrecisionAndIdealExponent(retval2, ctx, rem.signum() == 0 ? null : fastPrecision, expdiff);
+                    }
+                }
+            }
+
             var resultPrecision = new FastInteger(1);
             var mantcmp = mantissaDividend.compareTo(mantissaDivisor);
             if (mantcmp < 0) {
 
-                var dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
-                var divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
+                dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
+                divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
                 divisorPrecision.Subtract(dividendPrecision);
                 if (divisorPrecision.signum() == 0) divisorPrecision.Increment();
 
@@ -7608,8 +7843,8 @@ var RadixMath = function(helper) {
                 }
             } else if (mantcmp > 0) {
 
-                var dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
-                var divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
+                dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
+                divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
                 dividendPrecision.Subtract(divisorPrecision);
                 var oldMantissaB = mantissaDivisor;
                 mantissaDivisor = this.helper.MultiplyByRadixPower(mantissaDivisor, dividendPrecision);
@@ -7626,67 +7861,50 @@ var RadixMath = function(helper) {
                     adjust.Increment();
                 }
             }
-            var atMaxPrecision = false;
             if (mantcmp == 0) {
                 result = new FastInteger(1);
                 mantissaDividend = BigInteger.ZERO;
             } else {
-                var check = 0;
-                var divs = FastInteger.FromBig(mantissaDivisor);
-                var divd = FastInteger.FromBig(mantissaDividend);
-                var divisorFits = divs.CanFitInInt32();
-                var smallDivisor = (divisorFits ? divs.AsInt32() : 0);
-                var halfRadix = ((radix / 2)|0);
-                var divsHalfRadix = null;
-                if (radix != 2) {
-                    divsHalfRadix = FastInteger.FromBig(mantissaDivisor).Multiply(halfRadix);
-                }
-                var hasResultPrecision = false;
-                var hasPrecision = ctx != null && (ctx.getPrecision()).signum() != 0;
-                while (true) {
-                    var remainderZero = false;
-                    if (check == RadixMath.NonTerminatingCheckThreshold && !hasPrecision && integerMode == RadixMath.IntegerModeRegular) {
-
-                        if (!this.helper.HasTerminatingRadixExpansion(divd.AsBigInteger(), mantissaDivisor)) {
-                            throw new Error("Result would have a nonterminating expansion");
-                        }
-                        check++;
-                    } else if (check < RadixMath.NonTerminatingCheckThreshold) {
-                        check++;
+                {
+                    if (!this.helper.HasTerminatingRadixExpansion(mantissaDividend, mantissaDivisor)) {
+                        throw new Error("Result would have a nonterminating expansion");
                     }
-                    var count = 0;
-                    if (divd.CanFitInInt32()) {
-                        if (divisorFits) {
-                            var smallDividend = divd.AsInt32();
-                            count = ((smallDividend / smallDivisor)|0);
-                            divd.SetInt(smallDividend % smallDivisor);
+                    var divs = FastInteger.FromBig(mantissaDivisor);
+                    var divd = FastInteger.FromBig(mantissaDividend);
+                    var divisorFits = divs.CanFitInInt32();
+                    var smallDivisor = (divisorFits ? divs.AsInt32() : 0);
+                    var halfRadix = ((radix / 2)|0);
+                    var divsHalfRadix = null;
+                    if (radix != 2) {
+                        divsHalfRadix = FastInteger.FromBig(mantissaDivisor).Multiply(halfRadix);
+                    }
+                    while (true) {
+                        var remainderZero = false;
+                        var count = 0;
+                        if (divd.CanFitInInt32()) {
+                            if (divisorFits) {
+                                var smallDividend = divd.AsInt32();
+                                count = ((smallDividend / smallDivisor)|0);
+                                divd.SetInt(smallDividend % smallDivisor);
+                            } else {
+                                count = 0;
+                            }
                         } else {
-                            count = 0;
+                            if (divsHalfRadix != null) {
+                                count = count + (halfRadix * divd.RepeatedSubtract(divsHalfRadix));
+                            }
+                            count = count + (divd.RepeatedSubtract(divs));
                         }
-                    } else {
-                        if (divsHalfRadix != null) {
-                            count = count + (halfRadix * divd.RepeatedSubtract(divsHalfRadix));
+                        result.AddInt(count);
+                        remainderZero = (divd.signum() == 0);
+                        if (remainderZero && adjust.signum() >= 0) {
+                            mantissaDividend = divd.AsBigInteger();
+                            break;
                         }
-                        count = count + (divd.RepeatedSubtract(divs));
+                        adjust.Increment();
+                        result.Multiply(radix);
+                        divd.Multiply(radix);
                     }
-                    result.AddInt(count);
-                    remainderZero = (divd.signum() == 0);
-                    if (hasPrecision && resultPrecision.compareTo(fastPrecision) == 0) {
-                        mantissaDividend = divd.AsBigInteger();
-                        atMaxPrecision = true;
-                        break;
-                    }
-                    if (remainderZero && adjust.signum() >= 0) {
-                        mantissaDividend = divd.AsBigInteger();
-                        break;
-                    }
-                    adjust.Increment();
-                    if (hasPrecision && (hasResultPrecision || result.signum() != 0)) {
-                        resultPrecision.Increment();
-                        hasResultPrecision = true;
-                    }
-                    result.Multiply(radix);
-                    divd.Multiply(radix);
                 }
             }
 
@@ -7719,45 +7937,12 @@ var RadixMath = function(helper) {
             }
             var bigResult = result.AsBigInteger();
             var posBigResult = bigResult;
-            if (ctx != null && ctx.getHasFlags() && exp.compareTo(naturalExponent) > 0) {
+            if (ctx != null && ctx.getHasFlags() && exp.compareTo(expdiff) > 0) {
 
                 ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagRounded));
             }
             var bigexp = exp.AsBigInteger();
             var retval = this.helper.CreateNewWithFlags(bigResult, bigexp, resultNeg ? BigNumberFlags.FlagNegative : 0);
-            if (atMaxPrecision && (ctx == null || !ctx.getHasExponentRange())) {
-
-                if (!this.RoundGivenDigits(lastDiscarded, olderDiscarded, rounding, resultNeg, posBigResult)) {
-                    if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                        ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
-                    }
-                    return retval;
-                } else if (posBigResult.testBit(0) == false || (this.thisRadix & 1) != 0) {
-                    posBigResult = posBigResult.add(BigInteger.ONE);
-                    if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                        ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
-                    }
-                    return this.helper.CreateNewWithFlags(posBigResult, bigexp, resultNeg ? BigNumberFlags.FlagNegative : 0);
-                }
-            }
-            if (atMaxPrecision && (ctx != null && ctx.getHasExponentRange())) {
-                var fastAdjustedExp = FastInteger.Copy(exp).AddBig(ctx.getPrecision()).Decrement().AsBigInteger();
-                if (fastAdjustedExp.compareTo(ctx.getEMin()) >= 0 && fastAdjustedExp.compareTo(ctx.getEMax()) <= 0) {
-
-                    if (!this.RoundGivenDigits(lastDiscarded, olderDiscarded, rounding, resultNeg, posBigResult)) {
-                        if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
-                        }
-                        return retval;
-                    } else if (posBigResult.testBit(0) == false || (this.thisRadix & 1) != 0) {
-                        posBigResult = posBigResult.add(BigInteger.ONE);
-                        if (ctx != null && ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
-                        }
-                        return this.helper.CreateNewWithFlags(posBigResult, bigexp, resultNeg ? BigNumberFlags.FlagNegative : 0);
-                    }
-                }
-            }
             return this.RoundToPrecisionWithShift(retval, ctx, lastDiscarded, olderDiscarded, new FastInteger(0), false);
         }
     };
@@ -7922,16 +8107,16 @@ var RadixMath = function(helper) {
         var fastEMax = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMax()) : null;
         var fastPrecision = FastInteger.FromBig(context.getPrecision());
         var thisFlags = this.helper.GetFlags(thisValue);
-        if (fastPrecision.signum() > 0 && fastPrecision.CompareToInt(18) <= 0 && (shift == null || shift.signum() == 0) && (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
+        if (fastPrecision.signum() > 0 && (shift == null || shift.signum() == 0) && (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
 
             var mantabs = (this.helper.GetMantissa(thisValue)).abs();
-            var radixPower = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
             if (adjustNegativeZero && (thisFlags & BigNumberFlags.FlagNegative) != 0 && mantabs.signum() == 0 && (context.getRounding() != Rounding.Floor)) {
 
                 thisValue = this.EnsureSign(thisValue, false);
                 thisFlags = 0;
             }
-            if (mantabs.compareTo(radixPower) < 0) {
+            var digitCount = this.helper.CreateShiftAccumulator(mantabs).GetDigitLength();
+            if (digitCount.compareTo(fastPrecision) <= 0) {
                 if (!this.RoundGivenDigits(lastDiscarded, olderDiscarded, context.getRounding(), (thisFlags & BigNumberFlags.FlagNegative) != 0, mantabs)) {
                     if (context.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
                         context.setFlags(context.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
@@ -7947,8 +8132,15 @@ var RadixMath = function(helper) {
                     if (context.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
                         context.setFlags(context.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
                     }
+                    var stillWithinPrecision = false;
                     mantabs = mantabs.add(BigInteger.ONE);
-                    if (mantabs.compareTo(radixPower) < 0) {
+                    if (digitCount.compareTo(fastPrecision) < 0) {
+                        stillWithinPrecision = true;
+                    } else {
+                        var radixPower = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
+                        stillWithinPrecision = (mantabs.compareTo(radixPower) < 0);
+                    }
+                    if (stillWithinPrecision) {
                         if (!context.getHasExponentRange()) return this.helper.CreateNewWithFlags(mantabs, this.helper.GetExponent(thisValue), thisFlags);
                         var fastExp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
                         var fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
@@ -8983,6 +9175,8 @@ function(mantissa, exponent) {
         };
 
         prototype['ValueOf'] = prototype.ValueOf = function(val) {
+            if (val == 0) return ExtendedDecimal.Zero;
+            if (val == 1) return ExtendedDecimal.One;
             return ExtendedDecimal.FromInt64(val);
         };
     })(ExtendedDecimal.DecimalMathHelper,ExtendedDecimal.DecimalMathHelper.prototype);
@@ -9639,6 +9833,18 @@ function(mantissa, exponent) {
 
     prototype['SquareRoot'] = prototype.SquareRoot = function(ctx) {
         return ExtendedDecimal.math.SquareRoot(this, ctx);
+    };
+
+    prototype['Exp'] = prototype.Exp = function(ctx) {
+        return ExtendedDecimal.math.Exp(this, ctx);
+    };
+
+    prototype['Ln'] = prototype.Ln = function(ctx) {
+        return ExtendedDecimal.math.Ln(this, ctx);
+    };
+
+    constructor['PI'] = constructor.PI = function(ctx) {
+        return ExtendedDecimal.math.Pi(ctx);
     };
 })(ExtendedDecimal,ExtendedDecimal.prototype);
 
@@ -10305,6 +10511,18 @@ function(mantissa, exponent) {
 
     prototype['RoundToBinaryPrecision'] = prototype.RoundToBinaryPrecision = function(ctx) {
         return ExtendedFloat.math.RoundToBinaryPrecision(this, ctx);
+    };
+
+    prototype['SquareRoot'] = prototype.SquareRoot = function(ctx) {
+        return ExtendedFloat.math.SquareRoot(this, ctx);
+    };
+
+    prototype['Exp'] = prototype.Exp = function(ctx) {
+        return ExtendedFloat.math.Exp(this, ctx);
+    };
+
+    constructor['PI'] = constructor.PI = function(ctx) {
+        return ExtendedFloat.math.Pi(ctx);
     };
 })(ExtendedFloat,ExtendedFloat.prototype);
 

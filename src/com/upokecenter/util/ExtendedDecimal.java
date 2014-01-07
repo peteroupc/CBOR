@@ -15,18 +15,19 @@ at: http://peteroupc.github.io/CBOR/
      * and infinity. <p>Passing a signaling NaN to any arithmetic operation
      * shown here will signal the flag FlagInvalid and return a quiet NaN,
      * unless noted otherwise.</p> <p>Passing a quiet NaN to any arithmetic
-     * operation shown here will return a quiet NaN, unless noted otherwise.</p>
-     * <p>Unless noted otherwise, passing a null ExtendedDecimal argument
-     * to any method here will throw an exception.</p> <p>When an arithmetic
-     * operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
-     * it will not throw an exception too.</p> <p>An ExtendedDecimal value
-     * can be serialized in one of the following ways:</p> <ul> <li>By calling
-     * the toString() method, which will always return distinct strings
-     * for distinct ExtendedDecimal values.</li> <li>By calling the UnsignedMantissa,
-     * Exponent, and IsNegative properties, and calling the IsInfinity,
-     * IsQuietNaN, and IsSignalingNaN methods. The return values combined
-     * will uniquely identify a particular ExtendedDecimal value.</li>
-     * </ul>
+     * operation shown here will return a quiet NaN, unless noted otherwise.
+     * Invalid operations will also return a quiet NaN, as stated in the individual
+     * methods.</p> <p>Unless noted otherwise, passing a null ExtendedDecimal
+     * argument to any method here will throw an exception.</p> <p>When
+     * an arithmetic operation signals the flag FlagInvalid, FlagOverflow,
+     * or FlagDivideByZero, it will not throw an exception too.</p> <p>An
+     * ExtendedDecimal value can be serialized in one of the following ways:</p>
+     * <ul> <li>By calling the toString() method, which will always return
+     * distinct strings for distinct ExtendedDecimal values.</li> <li>By
+     * calling the UnsignedMantissa, Exponent, and IsNegative properties,
+     * and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods.
+     * The return values combined will uniquely identify a particular ExtendedDecimal
+     * value.</li> </ul>
      */
   public final class ExtendedDecimal implements Comparable<ExtendedDecimal> {
     BigInteger exponent;
@@ -2165,7 +2166,7 @@ remainder=divrem[1]; }
     /**
      * Finds the natural logarithm of this object, that is, the exponent
      * that e (the base of natural logarithms) must be raised to in order to
-     * equal this object's value.
+     * equal this object's value. Not currently implemented.
      * @param ctx A precision context to control precision and exponent
      * range of the result. The rounding mode is ignored and is always HalfEven.
      * If HasFlags of the context is true, will also store the flags resulting

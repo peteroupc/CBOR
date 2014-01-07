@@ -1773,9 +1773,16 @@ at: http://peteroupc.github.io/CBOR/
       return math.SquareRoot(this,ctx);
     }
     /**
-     *
-     * @param ctx A PrecisionContext object.
-     * @return An ExtendedDecimal object.
+     * Finds e (the base of natural logarithms) raised to the power of this
+     * object's value.
+     * @param ctx A precision context to control precision and exponent
+     * range of the result. The rounding mode is ignored and is always HalfEven.
+     * If HasFlags of the context is true, will also store the flags resulting
+     * from the operation (the flags are in addition to the pre-existing
+     * flags). --This parameter cannot be null, as the exp function&apos;s
+     * results are generally not exact.--
+     * @return exp(this object). Signals the flag FlagInvalid and returns
+     * NaN if &quot;ctx&quot; is null or the precision range is unlimited.
      */
     public ExtendedFloat Exp(PrecisionContext ctx) {
       return math.Exp(this,ctx);

@@ -121,6 +121,9 @@ namespace PeterO {
           }
           ShiftRightInt(count);
           bi -= (BigInteger)count;
+          if(isSmall ? shiftedSmall==0 : shiftedBigInt.IsZero){
+            break;
+          }
         }
       }
     }
@@ -241,7 +244,7 @@ namespace PeterO {
         knownBitLength.Subtract(digitDiff);
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
         return;
-      } else if(digitDiff.CompareToInt(4)<=0){
+      } else if(digitDiff.CompareToInt(9)<=0){
         BigInteger bigrem;
         int diffInt=digitDiff.AsInt32();
         BigInteger radixPower=DecimalUtility.FindPowerOfTen(diffInt);
@@ -262,7 +265,7 @@ namespace PeterO {
         knownBitLength.Subtract(digitDiff);
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
         return;
-      } else if(digitDiff.CompareToInt(5)<=0){
+      } else if(digitDiff.CompareToInt(Int32.MaxValue)<=0){
         BigInteger bigrem;
         BigInteger radixPower=DecimalUtility.FindPowerOfTen(digitDiff.AsInt32()-1);
         BigInteger bigquo=BigInteger.DivRem(shiftedBigInt,radixPower,
@@ -280,7 +283,6 @@ namespace PeterO {
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
         return;
       }
-      //Console.WriteLine("digits left: {0}",digitDiff);
       str=shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.Length;

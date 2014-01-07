@@ -122,8 +122,8 @@ namespace Test
           d3=d1.Exp(ctx);
         }
         //else if(op.Equals("ln")){
-          //Console.WriteLine(ln);
-         // d3=d1.Ln(ctx);
+        //Console.WriteLine(ln);
+        // d3=d1.Ln(ctx);
         //}
         else if(op.Equals("squareroot"))d3=d1.SquareRoot(ctx);
         else if(op.Equals("remaindernear"))d3=d1.RemainderNear(d2,ctx);
@@ -181,9 +181,17 @@ namespace Test
 
     static string TestPath="..\\..\\..\\.settings";
 
+    private static void PrintTime(System.Diagnostics.Stopwatch sw){
+      Console.WriteLine("Elapsed time: {0} s",sw.ElapsedMilliseconds/1000.0);
+    }
+
     [Test]
     public void TestPi(){
-      Console.WriteLine(ExtendedDecimal.PI(PrecisionContext.ForPrecision(1000)));
+      System.Diagnostics.Stopwatch sw=new System.Diagnostics.Stopwatch();
+      sw.Start();
+      ExtendedDecimal.PI(PrecisionContext.ForPrecision(1000)).ToString();
+      sw.Stop();
+      PrintTime(sw);
     }
 
     [Test]
@@ -195,6 +203,7 @@ namespace Test
         foreach(var f in Directory.GetFiles(TestPath)){
           if(!Path.GetFileName(f).Contains(".decTest"))continue;
           if(Path.GetFileName(f).Contains("ln"))continue;
+          //if(!Path.GetFileName(f).Contains("squareroot"))continue;
           Console.WriteLine("//"+f);
           IDictionary<string,string> context=new Dictionary<string,string>();
           using(StreamReader w=new StreamReader(f)){
@@ -204,7 +213,7 @@ namespace Test
                 try {
                   TextWriter oldOut=Console.Out;
                   try {
-                  //  Console.SetOut(TextWriter.Null);
+                    //  Console.SetOut(TextWriter.Null);
                     ParseDecTest(ln,context);
                   } catch(Exception){
                     Console.SetOut(oldOut);
