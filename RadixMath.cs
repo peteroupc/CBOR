@@ -379,7 +379,7 @@ namespace PeterO {
       if(pc!=null && pc.HasFlags){
         pc.Flags |= PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
       }
-      if (pc!=null && !(pc.Precision).IsZero &&
+      if (pc!=null && !((pc.Precision).IsZero) &&
           pc.HasExponentRange &&
           (pc.Rounding == Rounding.Down ||
            pc.Rounding == Rounding.ZeroFiveUp ||
@@ -792,6 +792,9 @@ namespace PeterO {
       T two=helper.ValueOf(2);
       T b=Divide(a,SquareRoot(two,ctxdiv),ctxdiv);
       T four=helper.ValueOf(4);
+      T half=((thisRadix&1)==0) ?
+        helper.CreateNewWithFlags((BigInteger)(thisRadix/2),
+                                  BigInteger.Zero-BigInteger.One,0) : default(T);
       T t=Divide(a,four,ctxdiv);
       bool more = true;
       int lastCompare=0;
@@ -802,17 +805,15 @@ namespace PeterO {
       while (more) {
         lastGuess = guess;
         T aplusB=Add(a,b,null);
-        T atimesB=Multiply(a,b,null);
-        T newA=Divide(aplusB,two,ctxdiv);
+        T newA=(half==null) ? Divide(aplusB,two,ctxdiv) : Multiply(aplusB,half,null);
         T aMinusNewA=Add(a,NegateRaw(newA),null);
+        if(!a.Equals(b)){
+          T atimesB=Multiply(a,b,ctxdiv);
+          b=SquareRoot(atimesB,ctxdiv);
+        }
         a=newA;
-        b=SquareRoot(atimesB,ctxdiv);
         guess=Multiply(aplusB,aplusB,null);
         guess=Divide(guess,Multiply(t,four,null),ctxdiv);
-        T tmpT=Multiply(aMinusNewA,aMinusNewA,null);
-        tmpT=Multiply(tmpT,helper.CreateNewWithFlags(powerTwo,BigInteger.Zero,0),null);
-        t=Add(t,NegateRaw(tmpT),ctxdiv);
-        powerTwo<<=1;
         T newGuess = guess;
         if((Object)lastGuess!=(Object)default(T)){
           int guessCmp=CompareTo(lastGuess,newGuess);
@@ -828,6 +829,12 @@ namespace PeterO {
             }
           }
           lastCompare=guessCmp;
+        }
+        if(more){
+          T tmpT=Multiply(aMinusNewA,aMinusNewA,null);
+          tmpT=Multiply(tmpT,helper.CreateNewWithFlags(powerTwo,BigInteger.Zero,0),null);
+          t=Add(t,NegateRaw(tmpT),ctxdiv);
+          powerTwo<<=1;
         }
         guess=newGuess;
       }
@@ -1171,6 +1178,73 @@ namespace PeterO {
       return helper.CreateNewWithFlags(BigInteger.One,
                                        length.AsBigInteger(),0);
     }
+
+    private T SquareRootSimple(T thisValue, PrecisionContext ctx) {
+      // NOTE: Assumes thisValue is in the range 1 to 3
+      if(ctx==null || (ctx.Precision).IsZero)
+        throw new ArgumentException("ctx is null or has unlimited precision");
+      T guess=SquareRootGetInitialApprox(thisValue);
+      T lastGuess = helper.ValueOf(0);
+      T half = helper.CreateNewWithFlags((BigInteger)(thisRadix/2),
+                                         BigInteger.Zero-BigInteger.One,0);
+      PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
+        .WithRounding(Rounding.ZeroFiveUp);
+      T one = helper.ValueOf(1);
+      T two = helper.ValueOf(2);
+      T three=helper.ValueOf(3);
+      FastInteger fiMax=new FastInteger(30);
+      BigInteger iterChange=ctx.Precision;
+      iterChange>>=7; // Divide by 128
+      fiMax.AddBig(iterChange);
+      int maxIterations=fiMax.MinInt32(Int32.MaxValue-1);
+      // Iterate
+      int iterations = 0;
+      bool more = true;
+      int lastCompare=0;
+      int vacillations=0;
+      lastGuess=thisValue;
+      //Console.WriteLine("Start guess " + lastGuess);
+      while (more) {
+        T guess2=default(T);
+        T newGuess=default(T);
+        guess2=Multiply(guess,guess,null);
+        guess2=Multiply(thisValue,guess2,null);
+        guess2=Add(three,NegateRaw(guess2),null);
+        guess2=Multiply(guess,guess2,null);
+        guess2=((thisRadix&1)!=0) ?
+          Divide(guess2,two,ctxdiv) :
+          Multiply(guess2,half,ctxdiv);
+        guess2=AbsRaw(guess2);
+        newGuess = Multiply(thisValue,guess2,ctxdiv);
+      //  Console.WriteLine("Next guess " + newGuess+" cmp="+CompareTo(lastGuess,newGuess));
+        if (++iterations >= maxIterations) {
+          more = false;
+        }
+        else {
+          int guessCmp=CompareTo(lastGuess,newGuess);
+          if (guessCmp==0) {
+            more=false;
+          } else if((guessCmp>0 && lastCompare<0) || (lastCompare>0 && guessCmp<0)){
+            // Guesses are vacillating
+            vacillations++;
+            if(vacillations>3 && guessCmp>0){
+              // When guesses are vacillating, choose the lower guess
+              // to reduce rounding errors
+              more=false;
+            }
+          }
+          lastCompare=guessCmp;
+        }
+        if(!more){
+          guess=newGuess;
+        } else {
+          guess=guess2;
+          lastGuess=newGuess;
+        }
+      }
+      return RoundToPrecision(guess,ctx);
+    }
+
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -1219,15 +1293,31 @@ namespace PeterO {
       int lastCompare=0;
       int vacillations=0;
       bool treatAsInexact=false;
+      bool recipsqrt=false;
+      lastGuess=guess;
       while (more) {
-        lastGuess = guess;
-        // Approximate square root by:
-        // newGuess = ((thisValue/guess)+lastGuess)*0.5
-        guess = Divide(thisValue,guess,ctxdiv);
-        guess = Add(guess,lastGuess,null);
-        T newGuess = ((thisRadix&1)!=0) ?
-          Divide(guess,two,ctxdiv) :
-          Multiply(guess,half,ctxdiv);
+        T guess2=default(T);
+        T newGuess=default(T);
+        if(!recipsqrt){
+          // Approximate square root by:
+          // newGuess = ((thisValue/guess)+lastGuess)*0.5
+          guess = Divide(thisValue,guess,ctxdiv);
+          guess = Add(guess,lastGuess,null);
+          newGuess = ((thisRadix&1)!=0) ?
+            Divide(guess,two,ctxdiv) :
+            Multiply(guess,half,ctxdiv);
+        } else {
+          guess2=Multiply(guess,guess,ctxdiv);
+          guess2=Multiply(thisValue,guess2,ctxdiv);
+          guess2=Add(three,NegateRaw(guess2),null);
+          guess2=Multiply(guess,guess2,ctxdiv);
+          guess2=((thisRadix&1)!=0) ?
+            Divide(guess2,two,ctxdiv) :
+            Multiply(guess2,half,ctxdiv);
+          guess2=AbsRaw(guess2);
+          newGuess = Multiply(thisValue,guess2,ctxdiv);
+        }
+        //if(recipsqrt)
         //Console.WriteLine("Next guess " + newGuess+" cmp="+CompareTo(lastGuess,newGuess));
         if (++iterations >= maxIterations) {
           more = false;
@@ -1235,8 +1325,7 @@ namespace PeterO {
         else {
           int guessCmp=CompareTo(lastGuess,newGuess);
           if (guessCmp==0) {
-            T error = Add(thisValue,NegateRaw(Multiply(newGuess,newGuess,null)),null);
-            more = CompareTo(AbsRaw(error),one) >= 0;
+            more=false;
           } else if((guessCmp>0 && lastCompare<0) || (lastCompare>0 && guessCmp<0)){
             // Guesses are vacillating
             vacillations++;
@@ -1250,16 +1339,28 @@ namespace PeterO {
           lastCompare=guessCmp;
         }
         if(!more){
-          guess=((thisRadix&1)!=0) ?
-            Divide(guess,two,ctxdiv.WithRounding(
-              treatAsInexact ? Rounding.ZeroFiveUp : rounding)):
-            Multiply(guess,half,ctxdiv.WithRounding(
-              treatAsInexact ? Rounding.ZeroFiveUp : rounding));
+          if(recipsqrt){
+            guess=Multiply(thisValue,guess2,
+                           ctxdiv.WithRounding(
+                             treatAsInexact ? Rounding.ZeroFiveUp : rounding));
+          } else {
+            guess=((thisRadix&1)!=0) ?
+              Divide(guess,two,ctxdiv.WithRounding(
+                treatAsInexact ? Rounding.ZeroFiveUp : rounding)):
+              Multiply(guess,half,ctxdiv.WithRounding(
+                treatAsInexact ? Rounding.ZeroFiveUp : rounding));
+          }
         } else {
-          guess=newGuess;
+          if(recipsqrt){
+            guess=guess2;
+            lastGuess=newGuess;
+          } else {
+            guess=newGuess;
+            lastGuess=newGuess;
+          }
         }
       }
-      //      Console.WriteLine("Next guess changed to " + guess);
+      //Console.WriteLine("Next guess changed to " + guess);
       ctxdiv=ctxdiv.WithBlankFlags();
       guess=ReduceToPrecisionAndIdealExponent(guess,ctxdiv,FastInteger.FromBig(ctx.Precision),FastInteger.FromBig(idealExp));
       currentExp=helper.GetExponent(guess);
@@ -1750,22 +1851,38 @@ namespace PeterO {
           if(hasPrecision){
             BigInteger divid=mantissaDividend;
             FastInteger shift=FastInteger.FromBig(ctx.Precision);
-            if(mantissaDividend.CompareTo(mantissaDivisor)<0){
-              dividendPrecision =
-                helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
-              divisorPrecision =
-                helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
+            dividendPrecision =
+              helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
+            divisorPrecision =
+              helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
+            if(dividendPrecision.CompareTo(divisorPrecision)<=0){
               divisorPrecision.Subtract(dividendPrecision);
-              if (divisorPrecision.Sign == 0)
-                divisorPrecision.Increment();
               divisorPrecision.Increment();
-              divid = helper.MultiplyByRadixPower(
-                mantissaDividend, divisorPrecision);
               shift.Add(divisorPrecision);
+              divid=helper.MultiplyByRadixPower(
+                divid, shift);
+            } else {
+              // Already greater than divisor precision
+              dividendPrecision.Subtract(divisorPrecision);
+              if(dividendPrecision.CompareTo(shift)<=0){
+                shift.Subtract(dividendPrecision);
+                shift.Increment();
+                divid=helper.MultiplyByRadixPower(
+                  divid, shift);
+              } else {
+                // no need to shift
+                shift.SetInt(0);
+              }
             }
-            divid=helper.MultiplyByRadixPower(
-              divid, fastPrecision);
-            quo = BigInteger.DivRem(divid, mantissaDivisor, out rem);
+            dividendPrecision =
+              helper.CreateShiftAccumulator(divid).GetDigitLength();
+            divisorPrecision =
+              helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
+            if(shift.Sign!=0){
+              // if shift isn't zero, recalculate the quotient
+              // and remainder
+              quo = BigInteger.DivRem(divid, mantissaDivisor, out rem);
+            }
             int[] digitStatus=RoundToScaleStatus(rem,mantissaDivisor,resultNeg,ctx);
             FastInteger natexp=FastInteger.Copy(naturalExponent).Subtract(shift);
             PrecisionContext ctxcopy=(ctx==null) ?
@@ -1847,15 +1964,11 @@ namespace PeterO {
             adjust.Increment();
           }
         }
-        bool atMaxPrecision = false;
         if (mantcmp == 0) {
           result = new FastInteger(1);
           mantissaDividend = BigInteger.Zero;
         } else {
-
-          if(false){
-
-          } else {
+          {
             if (!helper.HasTerminatingRadixExpansion(
               mantissaDividend, mantissaDivisor)) {
               throw new ArithmeticException("Result would have a nonterminating expansion");
@@ -1869,7 +1982,6 @@ namespace PeterO {
             if (radix != 2) {
               divsHalfRadix = FastInteger.FromBig(mantissaDivisor).Multiply(halfRadix);
             }
-            bool hasResultPrecision=false;
             while (true) {
               bool remainderZero = false;
               int count = 0;
@@ -1889,20 +2001,11 @@ namespace PeterO {
               }
               result.AddInt(count);
               remainderZero = (divd.Sign == 0);
-              if (hasPrecision && resultPrecision.CompareTo(fastPrecision) == 0) {
-                mantissaDividend = divd.AsBigInteger();
-                atMaxPrecision = true;
-                break;
-              }
               if (remainderZero && adjust.Sign >= 0) {
                 mantissaDividend = divd.AsBigInteger();
                 break;
               }
               adjust.Increment();
-              if (hasPrecision && (hasResultPrecision || result.Sign != 0)) {
-                resultPrecision.Increment();
-                hasResultPrecision=true;
-              }
               result.Multiply(radix);
               divd.Multiply(radix);
             }
@@ -1950,44 +2053,6 @@ namespace PeterO {
         BigInteger bigexp = exp.AsBigInteger();
         T retval = helper.CreateNewWithFlags(
           bigResult, bigexp, resultNeg ? BigNumberFlags.FlagNegative : 0);
-        if (atMaxPrecision && (ctx == null || !ctx.HasExponentRange)) {
-          // At this point, the check for rounding with Rounding.Unnecessary
-          // already occurred above
-          if (!RoundGivenDigits(lastDiscarded, olderDiscarded, rounding, resultNeg, posBigResult)) {
-            if (ctx != null && ctx.HasFlags && (lastDiscarded | olderDiscarded) != 0) {
-              ctx.Flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
-            }
-            return retval;
-          } else if (posBigResult.IsEven || (thisRadix & 1) != 0) {
-            posBigResult += BigInteger.One;
-            if (ctx != null && ctx.HasFlags && (lastDiscarded | olderDiscarded) != 0) {
-              ctx.Flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
-            }
-            return helper.CreateNewWithFlags(posBigResult, bigexp,
-                                             resultNeg ? BigNumberFlags.FlagNegative : 0);
-          }
-        }
-        if (atMaxPrecision && (ctx != null && ctx.HasExponentRange)) {
-          BigInteger fastAdjustedExp = FastInteger.Copy(exp)
-            .AddBig(ctx.Precision).Decrement().AsBigInteger();
-          if (fastAdjustedExp.CompareTo(ctx.EMin) >= 0 && fastAdjustedExp.CompareTo(ctx.EMax) <= 0) {
-            // At this point, the check for rounding with Rounding.Unnecessary
-            // already occurred above
-            if (!RoundGivenDigits(lastDiscarded, olderDiscarded, rounding, resultNeg, posBigResult)) {
-              if (ctx != null && ctx.HasFlags && (lastDiscarded | olderDiscarded) != 0) {
-                ctx.Flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
-              }
-              return retval;
-            } else if (posBigResult.IsEven || (thisRadix & 1) != 0) {
-              posBigResult += BigInteger.One;
-              if (ctx != null && ctx.HasFlags && (lastDiscarded | olderDiscarded) != 0) {
-                ctx.Flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
-              }
-              return helper.CreateNewWithFlags(posBigResult, bigexp,
-                                               resultNeg ? BigNumberFlags.FlagNegative : 0);
-            }
-          }
-        }
         return RoundToPrecisionWithShift(
           retval,
           ctx,

@@ -124,6 +124,9 @@ namespace PeterO {
           }
           ShiftRightInt(count);
           bi -= (BigInteger)count;
+          if(isSmall ? shiftedSmall==0 : shiftedBigInt.IsZero){
+            break;
+          }
         }
       }
     }

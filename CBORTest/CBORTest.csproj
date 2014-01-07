@@ -92,6 +92,14 @@
     <Content Include="ProfilingSessions\Session20140103_081417.sdps" />
     <Content Include="ProfilingSessions\Session20140103_081552.sdps" />
     <Content Include="ProfilingSessions\Session20140103_225917.sdps" />
+    <Content Include="ProfilingSessions\Session20140104_083157.sdps" />
+    <Content Include="ProfilingSessions\Session20140104_152257.sdps" />
+    <Content Include="ProfilingSessions\Session20140105_053159.sdps" />
+    <Content Include="ProfilingSessions\Session20140105_132736.sdps" />
+    <Content Include="ProfilingSessions\Session20140105_204538.sdps" />
+    <Content Include="ProfilingSessions\Session20140106_065647.sdps" />
+    <Content Include="ProfilingSessions\Session20140106_071404.sdps" />
+    <Content Include="ProfilingSessions\Session20140106_094630.sdps" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Portable.CBOR.csproj">

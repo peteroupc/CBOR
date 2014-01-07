@@ -18,7 +18,8 @@ namespace PeterO {
     /// NaN to any arithmetic operation shown here will signal the flag FlagInvalid
     /// and return a quiet NaN, unless noted otherwise.</para>
     /// <para>Passing a quiet NaN to any arithmetic operation shown here
-    /// will return a quiet NaN, unless noted otherwise.</para>
+    /// will return a quiet NaN, unless noted otherwise. Invalid operations
+    /// will also return a quiet NaN, as stated in the individual methods.</para>
     /// <para>Unless noted otherwise, passing a null ExtendedDecimal argument
     /// to any method here will throw an exception.</para>
     /// <para>When an arithmetic operation signals the flag FlagInvalid,
@@ -2026,7 +2027,8 @@ namespace PeterO {
 
     /// <summary> Finds the natural logarithm of this object, that is, the
     /// exponent that e (the base of natural logarithms) must be raised to
-    /// in order to equal this object's value. </summary>
+    /// in order to equal this object's value. Not currently implemented.
+    /// </summary>
     /// <param name='ctx'>A precision context to control precision and
     /// exponent range of the result. The rounding mode is ignored and is always
     /// HalfEven. If HasFlags of the context is true, will also store the flags

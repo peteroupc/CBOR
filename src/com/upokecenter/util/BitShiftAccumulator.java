@@ -128,6 +128,9 @@ at: http://peteroupc.github.io/CBOR/
           }
           ShiftRightInt(count);
           bi=bi.subtract(BigInteger.valueOf(count));
+          if(isSmall ? shiftedSmall==0 : shiftedBigInt.signum()==0){
+            break;
+          }
         }
       }
     }

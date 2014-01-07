@@ -54,81 +54,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>True</Optimize>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <DebugType>PdbOnly</DebugType>
+    <DebugType>None</DebugType>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <Content Include="ProfilingSessions\Session20131205_192710.sdps" />
-    <Content Include="ProfilingSessions\Session20131210_123621.sdps" />
-    <Content Include="ProfilingSessions\Session20131210_143746.sdps" />
-    <Content Include="ProfilingSessions\Session20131210_150048.sdps" />
-    <Content Include="ProfilingSessions\Session20131210_162441.sdps" />
-    <Content Include="ProfilingSessions\Session20131210_191730.sdps" />
-    <Content Include="ProfilingSessions\Session20131210_205905.sdps" />
-    <Content Include="ProfilingSessions\Session20131211_010228.sdps" />
-    <Content Include="ProfilingSessions\Session20131213_034249.sdps" />
-    <Content Include="ProfilingSessions\Session20131213_050523.sdps" />
-    <Content Include="ProfilingSessions\Session20131213_083704.sdps" />
-    <Content Include="ProfilingSessions\Session20131215_065853.sdps" />
-    <Content Include="ProfilingSessions\Session20131215_220130.sdps" />
-    <Content Include="ProfilingSessions\Session20131216_023019.sdps" />
-    <Content Include="ProfilingSessions\Session20131220_084641.sdps" />
-    <Content Include="ProfilingSessions\Session20131220_085413.sdps" />
-    <Content Include="ProfilingSessions\Session20131220_092437.sdps" />
-    <Content Include="ProfilingSessions\Session20131220_100626.sdps" />
-    <Content Include="ProfilingSessions\Session20131220_182053.sdps" />
-    <Content Include="ProfilingSessions\Session20131220_213256.sdps" />
-    <Content Include="ProfilingSessions\Session20131220_220040.sdps" />
-    <Content Include="ProfilingSessions\Session20131221_011721.sdps" />
-    <Content Include="ProfilingSessions\Session20131221_015939.sdps" />
-    <Content Include="ProfilingSessions\Session20131224_073639.sdps" />
-    <Content Include="ProfilingSessions\Session20131224_073756.sdps" />
-    <Content Include="ProfilingSessions\Session20131224_073952.sdps" />
-    <Content Include="ProfilingSessions\Session20131227_195710.sdps" />
-    <Content Include="ProfilingSessions\Session20131227_195912.sdps" />
-    <Content Include="ProfilingSessions\Session20131227_221211.sdps" />
-    <Content Include="ProfilingSessions\Session20131227_223907.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_001940.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_053524.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_062243.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_063914.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_064614.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_064923.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_070215.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_072417.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_081244.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_083747.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_084424.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_085953.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_100309.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_115812.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_120512.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_173727.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_174138.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_175912.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_180909.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_181432.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_182741.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_183406.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_192001.sdps" />
-    <Content Include="ProfilingSessions\Session20131228_195239.sdps" />
-    <Content Include="ProfilingSessions\Session20131229_025740.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_085548.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_141812.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_143610.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_151735.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_192047.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_192913.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_194029.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_201403.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_215018.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_220836.sdps" />
-    <Content Include="ProfilingSessions\Session20140103_225753.sdps" />
-    <Content Include="ProfilingSessions\Session20140104_070311.sdps" />
-    <Content Include="ProfilingSessions\Session20140104_070613.sdps" />
-    <Content Include="ProfilingSessions\Session20140104_072742.sdps" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigFloat.cs" />

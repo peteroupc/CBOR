@@ -123,6 +123,9 @@ at: http://peteroupc.github.io/CBOR/
           }
           ShiftRightInt(count);
           bi=bi.subtract(BigInteger.valueOf(count));
+          if(isSmall ? shiftedSmall==0 : shiftedBigInt.signum()==0){
+            break;
+          }
         }
       }
     }
@@ -255,7 +258,7 @@ bigrem=divrem[1]; }
         knownBitLength.Subtract(digitDiff);
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
         return;
-      } else if(digitDiff.CompareToInt(4)<=0){
+      } else if(digitDiff.CompareToInt(9)<=0){
         BigInteger bigrem;
         int diffInt=digitDiff.AsInt32();
         BigInteger radixPower=DecimalUtility.FindPowerOfTen(diffInt);
@@ -279,7 +282,7 @@ bigrem=divrem[1]; }
         knownBitLength.Subtract(digitDiff);
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
         return;
-      } else if(digitDiff.CompareToInt(5)<=0){
+      } else if(digitDiff.CompareToInt(Integer.MAX_VALUE)<=0){
         BigInteger bigrem;
         BigInteger radixPower=DecimalUtility.FindPowerOfTen(digitDiff.AsInt32()-1);
         BigInteger bigquo;
@@ -304,7 +307,6 @@ bigrem=divrem[1]; }
         bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
         return;
       }
-      //System.out.println("digits left: {0}",digitDiff);
       str=shiftedBigInt.toString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.length();
