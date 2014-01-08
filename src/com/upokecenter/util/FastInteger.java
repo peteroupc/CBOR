@@ -1162,6 +1162,22 @@ bigrem=divrem[1]; }
       }
 
     /**
+     *
+     */
+public boolean isValueZero() {
+        switch(this.integerMode){
+          case 0:
+            return this.smallValue==0;
+          case 1:
+            return mnum.signum()==0;
+          case 2:
+            return largeValue.signum()==0;
+          default:
+            return false;
+        }
+      }
+
+    /**
      * Compares a 32-bit signed integer with this instance.
      * @param val A 32-bit signed integer.
      * @return Zero if the values are equal; a negative number if this instance

@@ -1748,7 +1748,7 @@ bigrem=divrem[1]; }
       }
       int flags = 0;
       BigInteger newmantissa = mantissa;
-      if (shift.signum() == 0) {
+      if (shift.isValueZero()) {
         if ((lastDiscarded | olderDiscarded) != 0) {
           flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
           if (rounding == Rounding.Unnecessary)
@@ -1972,7 +1972,7 @@ rem=divrem[1]; }
           divisorPrecision =
             helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
           divisorPrecision.Subtract(dividendPrecision);
-          if (divisorPrecision.signum() == 0)
+          if (divisorPrecision.isValueZero())
             divisorPrecision.Increment();
           // multiply dividend mantissa so precisions are the same
           // (except if they're already the same, in which case multiply
@@ -2049,7 +2049,7 @@ rem=divrem[1]; }
                 count+=divd.RepeatedSubtract(divs);
               }
               result.AddInt(count);
-              remainderZero = (divd.signum() == 0);
+              remainderZero = (divd.isValueZero());
               if (remainderZero && adjust.signum() >= 0) {
                 mantissaDividend = divd.AsBigInteger();
                 break;
@@ -2288,10 +2288,11 @@ rem=divrem[1]; }
      ) {
       if ((context) == null) return thisValue;
       if ((context.getPrecision()).signum()==0 && !context.getHasExponentRange() &&
-          (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.signum() == 0))
+          (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.isValueZero()))
         return thisValue;
       if ((context.getPrecision()).signum()==0 || thisRadix == 2)
         return RoundToPrecisionWithShift(thisValue, context, lastDiscarded, olderDiscarded, shift, false);
+      /*
       FastInteger fastEMin=null;
       FastInteger fastEMax=null;
       if(context.getHasExponentRange()){
@@ -2342,7 +2343,7 @@ rem=divrem[1]; }
             FastInteger expdiff = FastInteger.Copy(fastExp).Subtract(clamp);
             bigmantissa = helper.MultiplyByRadixPower(bigmantissa, expdiff);
           }
-          if (signals != null)
+          if (ctx.getHasFlags())
             signals[0] |= PrecisionContext.FlagClamped;
           dfrac = helper.CreateNewWithFlags(bigmantissa, clamp.AsBigInteger(),
                                             neg ? BigNumberFlags.FlagNegative : 0);
@@ -2352,6 +2353,8 @@ rem=divrem[1]; }
         context.setFlags(context.getFlags()|(signals[0]));
       }
       return dfrac;
+       */
+      throw new UnsupportedOperationException();
     }
 
     /**
@@ -2364,7 +2367,7 @@ rem=divrem[1]; }
       T thisValue,
       PrecisionContext context
      ) {
-      return RoundToPrecisionWithShift(thisValue, context, 0, 0, null, true);
+      return RoundToPrecisionInternal(thisValue, 0,0,null, false,true,context);
     }
     /**
      *
@@ -2376,7 +2379,7 @@ rem=divrem[1]; }
       T thisValue,
       PrecisionContext context
      ) {
-      return RoundToPrecisionWithShift(thisValue, context, 0, 0, null, false);
+      return RoundToPrecisionInternal(thisValue, 0,0,null, false,false,context);
     }
     private T RoundToPrecisionWithShift(
       T thisValue,
@@ -2386,121 +2389,12 @@ rem=divrem[1]; }
       FastInteger shift,
       boolean adjustNegativeZero
      ) {
-      if ((context) == null) return thisValue;
-      // If context has unlimited precision and exponent range,
-      // and no discarded digits or shifting
-      if ((context.getPrecision()).signum()==0 && !context.getHasExponentRange() &&
-          (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.signum() == 0))
-        return thisValue;
-      FastInteger fastEMin=null;
-      FastInteger fastEMax=null;
-      // get the exponent range
-      if(context.getHasExponentRange()){
-        fastEMax=((context.getEMax()).canFitInInt()) ? new FastInteger((context.getEMax()).intValue()) :
-          FastInteger.FromBig(context.getEMax());
-        fastEMin=((context.getEMin()).canFitInInt()) ? new FastInteger((context.getEMin()).intValue()) :
-          FastInteger.FromBig(context.getEMin());
-      }
-      // get the precision
-      FastInteger fastPrecision=((context.getPrecision()).canFitInInt()) ?
-        new FastInteger((context.getPrecision()).intValue()) :
-        FastInteger.FromBig(context.getPrecision());
-      int thisFlags = helper.GetFlags(thisValue);
-        // Fast path to check if rounding is necessary at all
-      if (fastPrecision.signum() > 0 &&
-          (shift == null || shift.signum() == 0) &&
-          (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
-        BigInteger mantabs = (helper.GetMantissa(thisValue)).abs();
-        if (adjustNegativeZero &&
-            (thisFlags & BigNumberFlags.FlagNegative) != 0 && mantabs.signum()==0 &&
-            (context.getRounding() != Rounding.Floor)) {
-          // Change negative zero to positive zero
-          // except if the rounding mode is Floor
-          thisValue = EnsureSign(thisValue, false);
-          thisFlags = 0;
-        }
-        FastInteger digitCount=helper.CreateShiftAccumulator(mantabs).GetDigitLength();
-        if (digitCount.compareTo(fastPrecision) <= 0) {
-          if (!RoundGivenDigits(lastDiscarded, olderDiscarded, context.getRounding(),
-                                (thisFlags & BigNumberFlags.FlagNegative) != 0, mantabs)) {
-            if (context.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-              context.setFlags(context.getFlags()|(PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
-            }
-            if (!context.getHasExponentRange())
-              return thisValue;
-            BigInteger bigexp=helper.GetExponent(thisValue);
-            FastInteger fastExp=(bigexp.canFitInInt()) ?
-              new FastInteger(bigexp.intValue()) :
-              FastInteger.FromBig(bigexp);
-            FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
-              .Add(fastPrecision).Decrement();
-            FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
-              .Add(fastPrecision).Decrement();
-            if (fastAdjustedExp.compareTo(fastEMax) <= 0 &&
-                fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
-              return thisValue;
-            }
-          } else {
-            if (context.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-              context.setFlags(context.getFlags()|(PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
-            }
-            boolean stillWithinPrecision=false;
-            mantabs=mantabs.add(BigInteger.ONE);
-            if(digitCount.compareTo(fastPrecision)<0){
-              stillWithinPrecision=true;
-            } else {
-              BigInteger radixPower = helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
-              stillWithinPrecision=(mantabs.compareTo(radixPower) < 0);
-            }
-            if (stillWithinPrecision) {
-              if (!context.getHasExponentRange())
-                return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
-              BigInteger bigexp=helper.GetExponent(thisValue);
-              FastInteger fastExp=(bigexp.canFitInInt()) ?
-                new FastInteger(bigexp.intValue()) :
-                FastInteger.FromBig(bigexp);
-              FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
-                .Add(fastPrecision).Decrement();
-              FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
-                .Add(fastPrecision).Decrement();
-              if (fastAdjustedExp.compareTo(fastEMax) <= 0 &&
-                  fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
-                return helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
-              }
-            }
-          }
-        }
-      }
-      int[] signals = new int[1];
-      T dfrac = RoundToPrecisionInternal(
-        thisValue, fastPrecision,
-        context.getRounding(), fastEMin, fastEMax,
+      return RoundToPrecisionInternal(
+        thisValue,
         lastDiscarded,
         olderDiscarded,
         shift, false, adjustNegativeZero,
-        context.getHasFlags() ? signals : null);
-      if (context.getClampNormalExponents() && dfrac != null) {
-        // Clamp exponents to eMax + 1 - precision
-        // if directed
-        FastInteger clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
-        FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(dfrac));
-        if (fastExp.compareTo(clamp) > 0) {
-          boolean neg = (helper.GetFlags(dfrac) & BigNumberFlags.FlagNegative) != 0;
-          BigInteger bigmantissa = (helper.GetMantissa(dfrac)).abs();
-          if (!(bigmantissa.signum()==0)) {
-            FastInteger expdiff = FastInteger.Copy(fastExp).Subtract(clamp);
-            bigmantissa = helper.MultiplyByRadixPower(bigmantissa, expdiff);
-          }
-          if (signals != null)
-            signals[0] |= PrecisionContext.FlagClamped;
-          dfrac = helper.CreateNewWithFlags(bigmantissa, clamp.AsBigInteger(),
-                                            neg ? BigNumberFlags.FlagNegative : 0);
-        }
-      }
-      if (context.getHasFlags()) {
-        context.setFlags(context.getFlags()|(signals[0]));
-      }
-      return dfrac;
+        context);
     }
 
     /**
@@ -2730,32 +2624,119 @@ bigrem=divrem[1]; }
 
     private T RoundToPrecisionInternal(
       T thisValue,
-      FastInteger precision,
-      Rounding rounding,
-      FastInteger fastEMin,
-      FastInteger fastEMax,
       int lastDiscarded,
       int olderDiscarded,
       FastInteger shift,
       boolean binaryPrec, // whether "precision" is the number of bits, not digits
       boolean adjustNegativeZero,
-      int[] signals
+      PrecisionContext ctx
      ) {
-      if (precision.signum() < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + precision + ")");
-      if (thisRadix == 2 || precision.signum() == 0) {
+      if ((ctx) == null) return thisValue;
+      // If context has unlimited precision and exponent range,
+      // and no discarded digits or shifting
+      if ((ctx.getPrecision()).signum()==0 && !ctx.getHasExponentRange() &&
+          (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.isValueZero()))
+        return thisValue;
+      // get the precision
+      FastInteger fastPrecision=((ctx.getPrecision()).canFitInInt()) ?
+        new FastInteger((ctx.getPrecision()).intValue()) :
+        FastInteger.FromBig(ctx.getPrecision());
+      if (fastPrecision.signum() < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + fastPrecision + ")");
+      if (thisRadix == 2 || fastPrecision.isValueZero()) {
         // "binaryPrec" will have no special effect here
         binaryPrec = false;
       }
+      IShiftAccumulator accum=null;
+      FastInteger fastEMin=null;
+      FastInteger fastEMax=null;
+      // get the exponent range
+      if(ctx.getHasExponentRange()){
+        fastEMax=((ctx.getEMax()).canFitInInt()) ? new FastInteger((ctx.getEMax()).intValue()) :
+          FastInteger.FromBig(ctx.getEMax());
+        fastEMin=((ctx.getEMin()).canFitInInt()) ? new FastInteger((ctx.getEMin()).intValue()) :
+          FastInteger.FromBig(ctx.getEMin());
+      }
+      Rounding rounding=ctx.getRounding();
       int thisFlags = helper.GetFlags(thisValue);
+      boolean unlimitedPrec = (fastPrecision.isValueZero());
+      if(!binaryPrec){
+        // Fast path to check if rounding is necessary at all
+        if (fastPrecision.signum() > 0 &&
+            (shift == null || shift.isValueZero()) &&
+            (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
+          BigInteger mantabs = (helper.GetMantissa(thisValue)).abs();
+          if (adjustNegativeZero &&
+              (thisFlags & BigNumberFlags.FlagNegative) != 0 && mantabs.signum()==0 &&
+              (ctx.getRounding() != Rounding.Floor)) {
+            // Change negative zero to positive zero
+            // except if the rounding mode is Floor
+            thisValue = EnsureSign(thisValue, false);
+            thisFlags = 0;
+          }
+          accum = helper.CreateShiftAccumulatorWithDigits(
+            mantabs, lastDiscarded, olderDiscarded);
+          FastInteger digitCount=accum.GetDigitLength();
+          if (digitCount.compareTo(fastPrecision) <= 0) {
+            if (!RoundGivenDigits(lastDiscarded, olderDiscarded, ctx.getRounding(),
+                                  (thisFlags & BigNumberFlags.FlagNegative) != 0, mantabs)) {
+              if (ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
+                ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+              }
+              if (!ctx.getHasExponentRange())
+                return thisValue;
+              BigInteger bigexp=helper.GetExponent(thisValue);
+              FastInteger fastExp=(bigexp.canFitInInt()) ?
+                new FastInteger(bigexp.intValue()) :
+                FastInteger.FromBig(bigexp);
+              FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
+                .Add(fastPrecision).Decrement();
+              FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
+                .Add(fastPrecision).Decrement();
+              if (fastAdjustedExp.compareTo(fastEMax) <= 0 &&
+                  fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
+                return thisValue;
+              }
+            } else {
+              if (ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
+                ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+              }
+              boolean stillWithinPrecision=false;
+              mantabs=mantabs.add(BigInteger.ONE);
+              if(digitCount.compareTo(fastPrecision)<0){
+                stillWithinPrecision=true;
+              } else {
+                BigInteger radixPower = helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
+                stillWithinPrecision=(mantabs.compareTo(radixPower) < 0);
+              }
+              if (stillWithinPrecision) {
+                if (!ctx.getHasExponentRange())
+                  return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
+                BigInteger bigexp=helper.GetExponent(thisValue);
+                FastInteger fastExp=(bigexp.canFitInInt()) ?
+                  new FastInteger(bigexp.intValue()) :
+                  FastInteger.FromBig(bigexp);
+                FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
+                  .Add(fastPrecision).Decrement();
+                FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
+                  .Add(fastPrecision).Decrement();
+                if (fastAdjustedExp.compareTo(fastEMax) <= 0 &&
+                    fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
+                  return helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
+                }
+              }
+            }
+          }
+        }
+      }
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
-          if (signals != null) {
-            signals[0] |= PrecisionContext.FlagInvalid;
+          if (ctx.getHasFlags()) {
+            ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInvalid));
           }
-          return ReturnQuietNaNFastIntPrecision(thisValue, precision);
+          return ReturnQuietNaN(thisValue,ctx);
         }
         if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-          return ReturnQuietNaNFastIntPrecision(thisValue, precision);
+          return ReturnQuietNaN(thisValue,ctx);
         }
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           return thisValue;
@@ -2778,12 +2759,11 @@ bigrem=divrem[1]; }
       BigInteger maxMantissa = BigInteger.ONE;
       FastInteger exp = FastInteger.FromBig(helper.GetExponent(thisValue));
       int flags = 0;
-      IShiftAccumulator accum = helper.CreateShiftAccumulatorWithDigits(
-        bigmantissa, lastDiscarded, olderDiscarded);
-      boolean unlimitedPrec = (precision.signum() == 0);
-      FastInteger fastPrecision = precision;
+      if(accum==null)
+        accum = helper.CreateShiftAccumulatorWithDigits(
+          bigmantissa, lastDiscarded, olderDiscarded);
       if (binaryPrec) {
-        FastInteger prec = FastInteger.Copy(precision);
+        FastInteger prec = FastInteger.Copy(fastPrecision);
         while (prec.signum() > 0) {
           int bitShift = (prec.CompareToInt(1000000) >= 0) ? 1000000 : prec.AsInt32();
           maxMantissa=maxMantissa.shiftLeft(bitShift);
@@ -2793,12 +2773,10 @@ bigrem=divrem[1]; }
         IShiftAccumulator accumMaxMant = helper.CreateShiftAccumulator(
           maxMantissa);
         // Get the digit length of the maximum possible mantissa
-        // for the given binary precision
+        // for the given binary precision, and use that for
+        // fastPrecision
         fastPrecision = accumMaxMant.GetDigitLength();
-      } else {
-        fastPrecision = precision;
       }
-
       if (shift != null && shift.signum()!=0) {
         accum.ShiftRight(shift);
       }
@@ -2832,23 +2810,17 @@ bigrem=divrem[1]; }
         }
       }
       //System.out.println("{0} adj={1} emin={2}",thisValue,adjExponent,fastEMin);
-      if (signals != null && fastEMin != null && !unlimitedPrec && adjExponent.compareTo(fastEMin) < 0) {
+      if (ctx.getHasFlags() && fastEMin != null && !unlimitedPrec &&
+          adjExponent.compareTo(fastEMin) < 0) {
         earlyRounded = accum.getShiftedInt();
         if (RoundGivenBigInt(accum, rounding, neg, earlyRounded)) {
           earlyRounded=earlyRounded.add(BigInteger.ONE);
-          //System.out.println(earlyRounded);
-          if (earlyRounded.testBit(0)==false || (thisRadix & 1) != 0) {
+          if ((earlyRounded.testBit(0)==false || (thisRadix & 1) != 0)) {
             IShiftAccumulator accum2 = helper.CreateShiftAccumulator(earlyRounded);
             FastInteger newDigitLength=accum2.GetDigitLength();
+            // Ensure newDigitLength doesn't exceed precision
             if(binaryPrec || newDigitLength.compareTo(fastPrecision)>0){
-              FastInteger neededShift=FastInteger.Copy(newDigitLength).Subtract(fastPrecision);
-              accum2.ShiftRight(neededShift);
-              //System.out.println("{0} {1}",accum2.getShiftedInt(),accum2.getDiscardedDigitCount());
-              if ((accum2.getDiscardedDigitCount()).signum() != 0) {
-                //overPrecision=true;
-                earlyRounded = accum2.getShiftedInt();
-              }
-              newDigitLength=accum2.GetDigitLength();
+              newDigitLength=FastInteger.Copy(fastPrecision);
             }
             newAdjExponent = FastInteger.Copy(exp)
               .Add(newDigitLength)
@@ -2858,46 +2830,57 @@ bigrem=divrem[1]; }
       }
       if (fastEMax != null && adjExponent.compareTo(fastEMax) > 0) {
         if (mantissaWasZero) {
-          if (signals != null) {
-            signals[0] = flags | PrecisionContext.FlagClamped;
+          if (ctx.getHasFlags()) {
+            ctx.setFlags(ctx.getFlags()|(flags | PrecisionContext.FlagClamped));
+          }
+          if (!binaryPrec && ctx.getClampNormalExponents()) {
+            // Clamp exponents to eMax + 1 - precision
+            // if directed
+            FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            if (fastEMax.compareTo(clampExp) > 0) {
+              if (ctx.getHasFlags())
+                ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+              fastEMax=clampExp;
+            }
           }
           return helper.CreateNewWithFlags(oldmantissa, fastEMax.AsBigInteger(), thisFlags);
-        }
-        // Overflow
-        flags |= PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact |
-          PrecisionContext.FlagRounded;
-        if (rounding == Rounding.Unnecessary)
-          throw new ArithmeticException("Rounding was required");
-        if (!unlimitedPrec &&
-            (rounding == Rounding.Down ||
-             rounding == Rounding.ZeroFiveUp ||
-             (rounding == Rounding.Ceiling && neg) ||
-             (rounding == Rounding.Floor && !neg))) {
-          // Set to the highest possible value for
-          // the given precision
-          BigInteger overflowMant = BigInteger.ZERO;
-          if (binaryPrec) {
-            overflowMant = maxMantissa;
-          } else {
-            overflowMant = helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
-            overflowMant=overflowMant.subtract(BigInteger.ONE);
+        } else {
+          // Overflow
+          flags |= PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact |
+            PrecisionContext.FlagRounded;
+          if (rounding == Rounding.Unnecessary)
+            throw new ArithmeticException("Rounding was required");
+          if (!unlimitedPrec &&
+              (rounding == Rounding.Down ||
+               rounding == Rounding.ZeroFiveUp ||
+               (rounding == Rounding.Ceiling && neg) ||
+               (rounding == Rounding.Floor && !neg))) {
+            // Set to the highest possible value for
+            // the given precision
+            BigInteger overflowMant = BigInteger.ZERO;
+            if (binaryPrec) {
+              overflowMant = maxMantissa;
+            } else {
+              overflowMant = helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
+              overflowMant=overflowMant.subtract(BigInteger.ONE);
+            }
+            if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
+            clamp = FastInteger.Copy(fastEMax).Increment()
+              .Subtract(fastPrecision);
+            return helper.CreateNewWithFlags(overflowMant,
+                                             clamp.AsBigInteger(),
+                                             neg ? BigNumberFlags.FlagNegative : 0
+                                            );
           }
-          if (signals != null) signals[0] = flags;
-          clamp = FastInteger.Copy(fastEMax).Increment()
-            .Subtract(fastPrecision);
-          return helper.CreateNewWithFlags(overflowMant,
-                                           clamp.AsBigInteger(),
-                                           neg ? BigNumberFlags.FlagNegative : 0
-                                          );
+          if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
+          return SignalOverflow(neg);
         }
-        if (signals != null) signals[0] = flags;
-        return SignalOverflow(neg);
       } else if (fastEMin != null && adjExponent.compareTo(fastEMin) < 0) {
         // Subnormal
         FastInteger fastETiny = FastInteger.Copy(fastEMin)
           .Subtract(fastPrecision)
           .Increment();
-        if (signals != null) {
+        if (ctx.getHasFlags()) {
           if (earlyRounded.signum()!=0) {
             if (newAdjExponent.compareTo(fastEMin) < 0) {
               flags |= PrecisionContext.FlagSubnormal;
@@ -2921,7 +2904,7 @@ bigrem=divrem[1]; }
           }
           if ((accum.getDiscardedDigitCount()).signum() != 0 ||
               (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-            if (signals != null) {
+            if (ctx.getHasFlags()) {
               if (!mantissaWasZero)
                 flags |= PrecisionContext.FlagRounded;
               if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
@@ -2932,13 +2915,28 @@ bigrem=divrem[1]; }
               newmantissa.Increment();
             }
           }
-          if (signals != null) {
-            if (newmantissa.signum() == 0)
+          if (ctx.getHasFlags()) {
+            if (newmantissa.isValueZero())
               flags |= PrecisionContext.FlagClamped;
             if ((flags & (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact)) ==
                 (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact))
               flags |= PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
-            signals[0] = flags;
+            ctx.setFlags(ctx.getFlags()|(flags));
+          }
+          bigmantissa=newmantissa.AsBigInteger();
+          if (!binaryPrec && ctx.getClampNormalExponents()) {
+            // Clamp exponents to eMax + 1 - precision
+            // if directed
+            FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            if (fastETiny.compareTo(clampExp) > 0) {
+              if (!(bigmantissa.signum()==0)) {
+                expdiff = FastInteger.Copy(fastETiny).Subtract(clampExp);
+                bigmantissa = helper.MultiplyByRadixPower(bigmantissa, expdiff);
+              }
+              if (ctx.getHasFlags())
+                ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+              fastETiny=clampExp;
+            }
           }
           return helper.CreateNewWithFlags(newmantissa.AsBigInteger(), fastETiny.AsBigInteger(),
                                            neg ? BigNumberFlags.FlagNegative : 0);
@@ -2956,11 +2954,15 @@ bigrem=divrem[1]; }
             throw new ArithmeticException("Rounding was required");
         }
         if (RoundGivenBigInt(accum, rounding, neg, bigmantissa)) {
+          FastInteger oldDigitLength=accum.GetDigitLength();
           bigmantissa=bigmantissa.add(BigInteger.ONE);
           if (binaryPrec) recheckOverflow = true;
           // Check if mantissa's precision is now greater
           // than the one set by the context
-          if (!unlimitedPrec && (bigmantissa.testBit(0)==false || (thisRadix & 1) != 0)) {
+          if (!unlimitedPrec &&
+              (bigmantissa.testBit(0)==false || (thisRadix & 1) != 0) &&
+              (binaryPrec || oldDigitLength.compareTo(fastPrecision)>=0)
+             ) {
             accum = helper.CreateShiftAccumulator(bigmantissa);
             FastInteger newDigitLength=accum.GetDigitLength();
             if(binaryPrec || newDigitLength.compareTo(fastPrecision)>0){
@@ -3013,18 +3015,32 @@ bigrem=divrem[1]; }
               overflowMant = helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
               overflowMant=overflowMant.subtract(BigInteger.ONE);
             }
-            if (signals != null) signals[0] = flags;
+            if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
             clamp = FastInteger.Copy(fastEMax).Increment()
               .Subtract(fastPrecision);
             return helper.CreateNewWithFlags(overflowMant,
                                              clamp.AsBigInteger(),
                                              neg ? BigNumberFlags.FlagNegative : 0);
           }
-          if (signals != null) signals[0] = flags;
+          if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
           return SignalOverflow(neg);
         }
       }
-      if (signals != null) signals[0] = flags;
+      if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
+      if (!binaryPrec && ctx.getClampNormalExponents()) {
+        // Clamp exponents to eMax + 1 - precision
+        // if directed
+        FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+        if (exp.compareTo(clampExp) > 0) {
+          if (!(bigmantissa.signum()==0)) {
+            FastInteger expdiff = FastInteger.Copy(exp).Subtract(clampExp);
+            bigmantissa = helper.MultiplyByRadixPower(bigmantissa, expdiff);
+          }
+          if (ctx.getHasFlags())
+            ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+          exp=clampExp;
+        }
+      }
       return helper.CreateNewWithFlags(bigmantissa, exp.AsBigInteger(),
                                        neg ? BigNumberFlags.FlagNegative : 0);
     }
