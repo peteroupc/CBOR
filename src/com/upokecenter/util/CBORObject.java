@@ -249,10 +249,23 @@ import java.io.*;
             double value = ((Double)this.getThisItem()).doubleValue();
             return ((Double)(value)).isInfinite() && value > 0;
           }
+        case CBORObject.CBORObjectType_ExtendedDecimal:
+          return ((ExtendedDecimal)this.getThisItem()).IsPositiveInfinity();
+        case CBORObject.CBORObjectType_ExtendedFloat:
+          return ((ExtendedFloat)this.getThisItem()).IsPositiveInfinity();
         default:
           return false;
       }
     }
+
+    /**
+     *
+     * @return A Boolean object.
+     */
+public boolean IsInfinity() {
+      return IsPositiveInfinity() || IsNegativeInfinity();
+    }
+
     /**
      * Gets whether this CBOR object represents negative infinity.
      * @return A Boolean object.
@@ -267,6 +280,10 @@ import java.io.*;
             double value = ((Double)this.getThisItem()).doubleValue();
             return ((Double)(value)).isInfinite() && value < 0;
           }
+        case CBORObject.CBORObjectType_ExtendedDecimal:
+          return ((ExtendedDecimal)this.getThisItem()).IsNegativeInfinity();
+        case CBORObject.CBORObjectType_ExtendedFloat:
+          return ((ExtendedFloat)this.getThisItem()).IsNegativeInfinity();
         default:
           return false;
       }
@@ -282,6 +299,10 @@ import java.io.*;
           return Float.isNaN(((Float)this.getThisItem()).floatValue());
         case CBORObject.CBORObjectType_Double:
           return Double.isNaN(((Double)this.getThisItem()).doubleValue());
+        case CBORObject.CBORObjectType_ExtendedDecimal:
+          return ((ExtendedDecimal)this.getThisItem()).IsNaN();
+        case CBORObject.CBORObjectType_ExtendedFloat:
+          return ((ExtendedFloat)this.getThisItem()).IsNaN();
         default:
           return false;
       }

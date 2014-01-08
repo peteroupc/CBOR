@@ -236,7 +236,8 @@ namespace PeterO {
         }
       }
       String str;
-      knownBitLength=GetDigitLength();
+      if(knownBitLength==null)
+        knownBitLength=GetDigitLength();
       if(knownBitLength.CompareToInt(digits)<=0){
         return;
       }

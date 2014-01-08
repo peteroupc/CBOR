@@ -1239,7 +1239,7 @@ bigrem=divrem[1]; }
           Multiply(guess2,half,ctxdiv);
         guess2=AbsRaw(guess2);
         newGuess = Multiply(thisValue,guess2,ctxdiv);
-      //  System.out.println("Next guess " + newGuess+" cmp="+compareTo(lastGuess,newGuess));
+        //  System.out.println("Next guess " + newGuess+" cmp="+compareTo(lastGuess,newGuess));
         if (++iterations >= maxIterations) {
           more = false;
         }
@@ -2276,7 +2276,7 @@ rem=divrem[1]; }
       T thisValue,
       PrecisionContext context
      ) {
-      return RoundToBinaryPrecisionWithShift(thisValue, context, 0, 0, new FastInteger(0), false);
+      return RoundToBinaryPrecisionWithShift(thisValue, context, 0, 0, null, false);
     }
     private T RoundToBinaryPrecisionWithShift(
       T thisValue,
@@ -2288,13 +2288,21 @@ rem=divrem[1]; }
      ) {
       if ((context) == null) return thisValue;
       if ((context.getPrecision()).signum()==0 && !context.getHasExponentRange() &&
-          (lastDiscarded | olderDiscarded) == 0 && shift.signum() == 0)
+          (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.signum() == 0))
         return thisValue;
       if ((context.getPrecision()).signum()==0 || thisRadix == 2)
         return RoundToPrecisionWithShift(thisValue, context, lastDiscarded, olderDiscarded, shift, false);
-      FastInteger fastEMin = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMin()) : null;
-      FastInteger fastEMax = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMax()) : null;
-      FastInteger fastPrecision = FastInteger.FromBig(context.getPrecision());
+      FastInteger fastEMin=null;
+      FastInteger fastEMax=null;
+      if(context.getHasExponentRange()){
+        fastEMax=((context.getEMax()).canFitInInt()) ? new FastInteger((context.getEMax()).intValue()) :
+          FastInteger.FromBig(context.getEMax());
+        fastEMin=((context.getEMin()).canFitInInt()) ? new FastInteger((context.getEMin()).intValue()) :
+          FastInteger.FromBig(context.getEMin());
+      }
+      FastInteger fastPrecision=((context.getPrecision()).canFitInInt()) ?
+        new FastInteger((context.getPrecision()).intValue()) :
+        FastInteger.FromBig(context.getPrecision());
       int[] signals = new int[1];
       T dfrac = RoundToPrecisionInternal(
         thisValue, fastPrecision,
@@ -2356,7 +2364,7 @@ rem=divrem[1]; }
       T thisValue,
       PrecisionContext context
      ) {
-      return RoundToPrecisionWithShift(thisValue, context, 0, 0, new FastInteger(0), true);
+      return RoundToPrecisionWithShift(thisValue, context, 0, 0, null, true);
     }
     /**
      *
@@ -2368,7 +2376,7 @@ rem=divrem[1]; }
       T thisValue,
       PrecisionContext context
      ) {
-      return RoundToPrecisionWithShift(thisValue, context, 0, 0, new FastInteger(0), false);
+      return RoundToPrecisionWithShift(thisValue, context, 0, 0, null, false);
     }
     private T RoundToPrecisionWithShift(
       T thisValue,
@@ -2382,17 +2390,26 @@ rem=divrem[1]; }
       // If context has unlimited precision and exponent range,
       // and no discarded digits or shifting
       if ((context.getPrecision()).signum()==0 && !context.getHasExponentRange() &&
-          (lastDiscarded | olderDiscarded) == 0 && shift.signum() == 0)
+          (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.signum() == 0))
         return thisValue;
-      FastInteger fastEMin = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMin()) : null;
-      FastInteger fastEMax = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMax()) : null;
-      FastInteger fastPrecision = FastInteger.FromBig(context.getPrecision());
+      FastInteger fastEMin=null;
+      FastInteger fastEMax=null;
+      // get the exponent range
+      if(context.getHasExponentRange()){
+        fastEMax=((context.getEMax()).canFitInInt()) ? new FastInteger((context.getEMax()).intValue()) :
+          FastInteger.FromBig(context.getEMax());
+        fastEMin=((context.getEMin()).canFitInInt()) ? new FastInteger((context.getEMin()).intValue()) :
+          FastInteger.FromBig(context.getEMin());
+      }
+      // get the precision
+      FastInteger fastPrecision=((context.getPrecision()).canFitInInt()) ?
+        new FastInteger((context.getPrecision()).intValue()) :
+        FastInteger.FromBig(context.getPrecision());
       int thisFlags = helper.GetFlags(thisValue);
+        // Fast path to check if rounding is necessary at all
       if (fastPrecision.signum() > 0 &&
           (shift == null || shift.signum() == 0) &&
           (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
-        // Check if rounding is necessary at all
-        // for small precisions
         BigInteger mantabs = (helper.GetMantissa(thisValue)).abs();
         if (adjustNegativeZero &&
             (thisFlags & BigNumberFlags.FlagNegative) != 0 && mantabs.signum()==0 &&
@@ -2411,7 +2428,10 @@ rem=divrem[1]; }
             }
             if (!context.getHasExponentRange())
               return thisValue;
-            FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
+            BigInteger bigexp=helper.GetExponent(thisValue);
+            FastInteger fastExp=(bigexp.canFitInInt()) ?
+              new FastInteger(bigexp.intValue()) :
+              FastInteger.FromBig(bigexp);
             FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
               .Add(fastPrecision).Decrement();
             FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
@@ -2435,14 +2455,17 @@ rem=divrem[1]; }
             if (stillWithinPrecision) {
               if (!context.getHasExponentRange())
                 return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
-              FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
+              BigInteger bigexp=helper.GetExponent(thisValue);
+              FastInteger fastExp=(bigexp.canFitInInt()) ?
+                new FastInteger(bigexp.intValue()) :
+                FastInteger.FromBig(bigexp);
               FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
                 .Add(fastPrecision).Decrement();
               FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
                 .Add(fastPrecision).Decrement();
               if (fastAdjustedExp.compareTo(fastEMax) <= 0 &&
                   fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
-                return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
+                return helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
               }
             }
           }
@@ -2776,7 +2799,7 @@ bigrem=divrem[1]; }
         fastPrecision = precision;
       }
 
-      if (shift != null) {
+      if (shift != null && shift.signum()!=0) {
         accum.ShiftRight(shift);
       }
       if (!unlimitedPrec) {

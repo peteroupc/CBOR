@@ -2017,7 +2017,11 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private boolean HasTinyValue() {
+    /**
+     *
+     * @return A Boolean object.
+     */
+public boolean canFitInInt() {
       int c = (int)this.wordCount;
       if (c > 2) return false;
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
@@ -2158,7 +2162,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public BigInteger abs() {
-      return this.signum() >= 0 ? this : this.negate();
+      return (this.wordCount==0 || !this.negative) ? this : this.negate();
     }
 
     /**
@@ -2222,10 +2226,9 @@ at: http://peteroupc.github.io/CBOR/
      * @param wordCount A 32-bit signed integer.
      * @return A 32-bit signed integer.
      */
-    private int getUnsignedBitLengthEx(short[] reg, int wordCount) {
+    private int getUnsignedBitLengthEx(int numberValue, int wordCount) {
       int wc = wordCount;
       if (wc!=0){
-        int numberValue=(((int)(reg[wc-1]))&0xFFFF);
         wc=(wc-1)<<4;
         if (numberValue == 0)return wc;
         wc+=16;
@@ -2282,10 +2285,8 @@ at: http://peteroupc.github.io/CBOR/
             numberValue <<= 2;
             wc -= 2;
           }
-          if ((numberValue >> 15) == 0)
-            --wc;
+          return ((numberValue >> 15) == 0) ? wc-1 : wc;
         }
-        return wc;
       } else {
         return 0;
       }
@@ -2413,11 +2414,8 @@ at: http://peteroupc.github.io/CBOR/
           return 1+minDigits;
         }
       }
-      short[] tempReg = new short[this.wordCount];
-      System.arraycopy(this.reg,0,tempReg,0,tempReg.length);
-      int wordCount = tempReg.length;
-      while (wordCount != 0 && tempReg[wordCount - 1] == 0)
-        wordCount--;
+      short[] tempReg = null;
+      int wordCount = this.wordCount;
       int i = 0;
       while (wordCount != 0) {
         if (wordCount == 1) {
@@ -2447,19 +2445,19 @@ at: http://peteroupc.github.io/CBOR/
           short remainder = 0;
           int quo,rem;
           boolean firstdigit=false;
+          short[] dividend=(tempReg==null) ? this.reg : tempReg;
           // Divide by 10000
           while ((wci--) > 0) {
-            int currentDividend = ((int)((((int)tempReg[wci]) & 0xFFFF) |
+            int curValue=(((int)dividend[wci]) & 0xFFFF);
+            int currentDividend = ((int)(curValue |
                                                   ((int)(remainder) << 16)));
             quo=currentDividend/10000;
-            tempReg[wci] = ((short)quo);
             if(!firstdigit && quo!=0){
               firstdigit=true;
               // Since we are dividing from left to right, the first
               // nonzero result is the first part of the
               // new quotient
-
-              bitlen=getUnsignedBitLengthEx(tempReg,wci+1);
+              bitlen=getUnsignedBitLengthEx(quo,wci+1);
               if(bitlen<=2135){
                 // (x*631305)>>21 is an approximation
                 // to trunc(x*log10(2)) that is correct up
@@ -2483,7 +2481,19 @@ at: http://peteroupc.github.io/CBOR/
                   return i+1+minDigits+4;
                 }
               }
-
+            }
+            if(tempReg==null){
+              if(quo!=0){
+                tempReg=new short[this.wordCount];
+                System.arraycopy(this.reg,0,tempReg,0,tempReg.length);
+                // Use the calculated word count during division;
+                // zeros that may have occurred in division
+                // are not incorporated in the tempReg
+                wordCount=wci+1;
+                tempReg[wci] = ((short)quo);
+              }
+            } else {
+              tempReg[wci] = ((short)quo);
             }
             rem=currentDividend-(10000*quo);
             remainder = ((short)rem);
@@ -2979,7 +2989,7 @@ at: http://peteroupc.github.io/CBOR/
       if(bigintMult.wordCount==1 && bigintMult.reg[0]==1)
         return bigintMult.negative ? this.negate() : this;
       PositiveMultiply(product, this, bigintMult);
-      if ((this.signum() >= 0) != (bigintMult.signum() >= 0))
+      if ((this.negative) != (this.negative))
         product.NegateInternal();
       return product;
     }
@@ -3082,7 +3092,7 @@ at: http://peteroupc.github.io/CBOR/
         // where dividend is 0)
         return BigInteger.ZERO;
       }
-      if (aSize <= 2 && bSize <= 2 && this.HasTinyValue() && bigintDivisor.HasTinyValue()) {
+      if (aSize <= 2 && bSize <= 2 && this.canFitInInt() && bigintDivisor.canFitInInt()) {
         int aSmall = this.intValue();
         int  bSmall = bigintDivisor.intValue();
         if (aSmall != Integer.MIN_VALUE || bSmall != -1) {

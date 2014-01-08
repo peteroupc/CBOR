@@ -3088,7 +3088,7 @@ function() {
             return ivv;
         }
     };
-    prototype['HasTinyValue'] = prototype.HasTinyValue = function() {
+    prototype['canFitInInt'] = prototype.canFitInInt = function() {
         var c = ((this.wordCount)|0);
         if (c > 2) return false;
         if (c == 2 && (this.reg[1] & 32768) != 0) {
@@ -3189,7 +3189,7 @@ function() {
     };
 
     prototype['abs'] = prototype.abs = function() {
-        return this.signum() >= 0 ? this : this.negate();
+        return (this.wordCount == 0 || !this.negative) ? this : this.negate();
     };
 
     prototype['CalcWordCount'] = prototype.CalcWordCount = function() {
@@ -3233,10 +3233,9 @@ function() {
         }
     };
 
-    prototype['getUnsignedBitLengthEx'] = prototype.getUnsignedBitLengthEx = function(reg, wordCount) {
+    prototype['getUnsignedBitLengthEx'] = prototype.getUnsignedBitLengthEx = function(numberValue, wordCount) {
         var wc = wordCount;
         if (wc != 0) {
-            var numberValue = (reg[wc - 1] & 65535);
             wc = (wc - 1) << 4;
             if (numberValue == 0) return wc;
             wc = wc + (16);
@@ -3285,9 +3284,8 @@ function() {
                     numberValue <<= 2;
                     wc -= 2;
                 }
-                if ((numberValue >> 15) == 0) --wc;
+                return ((numberValue >> 15) == 0) ? wc - 1 : wc;
             }
-            return wc;
         } else {
             return 0;
         }
@@ -3416,11 +3414,8 @@ function() {
                 return 1 + minDigits;
             }
         }
-        var tempReg = [];
-        for (var arrfillI = 0; arrfillI < this.wordCount; arrfillI++) tempReg[arrfillI] = 0;
-        for (var arrfillI = 0; arrfillI < tempReg.length; arrfillI++) tempReg[0 + arrfillI] = this.reg[0 + arrfillI];
-        var wordCount = tempReg.length;
-        while (wordCount != 0 && tempReg[wordCount - 1] == 0) wordCount--;
+        var tempReg = null;
+        var wordCount = this.wordCount;
         var i = 0;
         while (wordCount != 0) {
             if (wordCount == 1) {
@@ -3437,15 +3432,16 @@ function() {
                 var remainder = 0;
                 var quo, rem;
                 var firstdigit = false;
+                var dividend = (tempReg == null) ? this.reg : tempReg;
 
                 while ((wci--) > 0) {
-                    var currentDividend = (((((tempReg[wci] & 65535) | ((remainder|0) << 16)))|0));
+                    var curValue = (dividend[wci] & 65535);
+                    var currentDividend = (((curValue | ((remainder|0) << 16))|0));
                     quo = ((currentDividend / 10000)|0);
-                    tempReg[wci] = (quo & 65535);
                     if (!firstdigit && quo != 0) {
                         firstdigit = true;
 
-                        bitlen = this.getUnsignedBitLengthEx(tempReg, wci + 1);
+                        bitlen = this.getUnsignedBitLengthEx(quo, wci + 1);
                         if (bitlen <= 2135) {
 
                             var minDigits = 1 + (((bitlen - 1) * 631305) >> 21);
@@ -3463,6 +3459,18 @@ function() {
                                 return i + 1 + minDigits + 4;
                             }
                         }
+                    }
+                    if (tempReg == null) {
+                        if (quo != 0) {
+                            tempReg = [];
+                            for (var arrfillI = 0; arrfillI < this.wordCount; arrfillI++) tempReg[arrfillI] = 0;
+                            for (var arrfillI = 0; arrfillI < tempReg.length; arrfillI++) tempReg[0 + arrfillI] = this.reg[0 + arrfillI];
+
+                            wordCount = wci + 1;
+                            tempReg[wci] = (quo & 65535);
+                        }
+                    } else {
+                        tempReg[wci] = (quo & 65535);
                     }
                     rem = currentDividend - (10000 * quo);
                     remainder = (rem|0);
@@ -3862,7 +3870,7 @@ function() {
         if (this.wordCount == 1 && this.reg[0] == 1) return this.negative ? bigintMult.negate() : bigintMult;
         if (bigintMult.wordCount == 1 && bigintMult.reg[0] == 1) return bigintMult.negative ? this.negate() : this;
         BigInteger.PositiveMultiply(product, this, bigintMult);
-        if ((this.signum() >= 0) != (bigintMult.signum() >= 0)) product.NegateInternal();
+        if ((this.negative) != (this.negative)) product.NegateInternal();
         return product;
     };
     constructor['BitsToWords'] = constructor.BitsToWords = function(bitCount) {
@@ -3944,7 +3952,7 @@ function() {
 
             return BigInteger.ZERO;
         }
-        if (aSize <= 2 && bSize <= 2 && this.HasTinyValue() && bigintDivisor.HasTinyValue()) {
+        if (aSize <= 2 && bSize <= 2 && this.canFitInInt() && bigintDivisor.canFitInInt()) {
             var aSmall = this.intValue();
             var bSmall = bigintDivisor.intValue();
             if (aSmall != -2147483648 || bSmall != -1) {
@@ -4237,6 +4245,56 @@ function(value) {
             mbi.wordCount = this.wordCount;
             return mbi;
         };
+        prototype.MultiplyByTenAndAdd = function(digit) {
+            if (digit < 0 || digit >= 10) throw new Error("Only digits 0 to 9 are supported");
+            var s;
+            var d;
+            digit &= 65535;
+            var carry = 0;
+            if (this.wordCount == 0) {
+                if (this.data.length == 0) this.data = [0, 0, 0, 0];
+                this.data[0] = 0;
+                this.wordCount = 1;
+            }
+            {
+                for (var i = 0; i < this.wordCount; i++) {
+                    var B0 = this.data[i];
+                    var B1 = B0;
+                    B0 &= (65535);
+                    B1 = (B1 >>> 16);
+                    if (B0 > B1) {
+                        s = (((B0|0) - B1) & 65535);
+                        d = 65526 * s;
+                    } else {
+                        s = 0;
+                        d = 10 * (((B1|0) - B0) & 65535);
+                    }
+                    var A0B0 = 10 * B0;
+                    var a0b0high = (A0B0 >>> 16);
+                    var tempInt;
+                    tempInt = A0B0 + carry;
+                    if (i == 0) tempInt += digit;
+                    var result0 = (tempInt & 65535);
+                    tempInt = ((tempInt >> 16) & 65535) + (A0B0 & 65535) + (d & 65535);
+                    var result1 = (tempInt & 65535);
+                    tempInt = ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) - s;
+                    this.data[i] = ((result0 | (result1 << 16))|0);
+                    carry = (tempInt & 65535);
+                }
+            }
+            if (carry != 0) {
+                if (this.wordCount >= this.data.length) {
+                    var newdata = [];
+                    for (var arrfillI = 0; arrfillI < this.wordCount + 20; arrfillI++) newdata[arrfillI] = 0;
+                    for (var arrfillI = 0; arrfillI < this.data.length; arrfillI++) newdata[0 + arrfillI] = this.data[0 + arrfillI];
+                    this.data = newdata;
+                }
+                this.data[this.wordCount] = carry;
+                this.wordCount++;
+            }
+            while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) this.wordCount--;
+            return this;
+        };
         prototype.Multiply = function(multiplicand) {
             if (multiplicand < 0) throw new Error("Only positive multiplicands are supported"); else if (multiplicand != 0) {
                 var carry = 0;
@@ -4468,10 +4526,9 @@ function(value) {
         return fi;
     };
     constructor.FromBig = function(bigintVal) {
-        var sign = bigintVal.signum();
-        if (sign == 0 || (sign < 0 && bigintVal.compareTo(FastInteger.Int32MinValue) >= 0) || (sign > 0 && bigintVal.compareTo(FastInteger.Int32MaxValue) <= 0)) {
+        if (bigintVal.canFitInInt()) {
             return new FastInteger(bigintVal.intValue());
-        } else if (sign > 0) {
+        } else if (bigintVal.signum() > 0) {
             var fi = new FastInteger(0);
             fi.integerMode = 1;
             fi.mnum = FastInteger.MutableNumber.FromBigInteger(bigintVal);
@@ -4553,24 +4610,15 @@ function(value) {
     };
 
     prototype.MultiplyByTenAndAdd = function(digit) {
-        if (digit == 0) {
-            if (this.integerMode == 1) {
-                this.mnum.Multiply(10);
-                return this;
-            } else if (this.integerMode == 0 && this.smallValue >= 214748363) {
+        if (this.integerMode == 1) {
+            this.mnum.MultiplyByTenAndAdd(digit);
+            return this;
+        }
+        if (digit > 0) {
+            if (this.integerMode == 0 && this.smallValue >= 214748363) {
                 this.integerMode = 1;
                 this.mnum = new FastInteger.MutableNumber(this.smallValue);
-                this.mnum.Multiply(10);
-                return this;
-            }
-        } else if (digit > 0) {
-            if (this.integerMode == 1) {
-                this.mnum.Multiply(10).Add(digit);
-                return this;
-            } else if (this.integerMode == 0 && this.smallValue >= 214748363) {
-                this.integerMode = 1;
-                this.mnum = new FastInteger.MutableNumber(this.smallValue);
-                this.mnum.Multiply(10).Add(digit);
+                this.mnum.MultiplyByTenAndAdd(digit);
                 return this;
             }
         }
@@ -4764,7 +4812,7 @@ function(value) {
             case 0:
                 {
                     var sign = bigintVal.signum();
-                    if (sign == 0 || (sign < 0 && bigintVal.compareTo(FastInteger.Int32MinValue) >= 0) || (sign > 0 && bigintVal.compareTo(FastInteger.Int32MaxValue) <= 0)) {
+                    if (bigintVal.canFitInInt()) {
                         return this.AddInt(bigintVal.intValue());
                     }
                     return this.Add(FastInteger.FromBig(bigintVal));
@@ -4994,7 +5042,6 @@ function(value) {
     };
 
     prototype.CanFitInInt32 = function() {
-        var sign;
         switch(this.integerMode) {
             case 0:
                 return true;
@@ -5002,10 +5049,7 @@ function(value) {
                 return this.mnum.CanFitInInt32();
             case 2:
                 {
-                    sign = this.largeValue.signum();
-                    if (sign == 0) return true;
-                    if (sign < 0) return this.largeValue.compareTo(FastInteger.Int32MinValue) >= 0;
-                    return this.largeValue.compareTo(FastInteger.Int32MaxValue) <= 0;
+                    return this.largeValue.canFitInInt();
                 }
             default:
                 throw new Error();
@@ -5385,14 +5429,9 @@ var DigitShiftAccumulator =
 
 function(bigint, lastDiscarded, olderDiscarded) {
 
-    var sign = bigint.signum();
-    if (sign < 0) throw new Error("bigint is negative");
-    this.discardedBitCount = new FastInteger(0);
-    if (sign == 0) {
-        this.shiftedSmall = 0;
-        this.isSmall = true;
-    } else if (bigint.compareTo(DigitShiftAccumulator.Int32MaxValue) <= 0) {
+    if (bigint.canFitInInt()) {
         this.shiftedSmall = bigint.intValue();
+        if (this.shiftedSmall < 0) throw new Error("bigint is negative");
         this.isSmall = true;
     } else {
         this.shiftedBigInt = bigint;
@@ -5422,6 +5461,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     prototype.isSmall = null;
     prototype.discardedBitCount = null;
     prototype.getDiscardedDigitCount = function() {
+        if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
         return this.discardedBitCount;
     };
     constructor.Int32MaxValue = BigInteger.valueOf(2147483647);
@@ -5472,6 +5512,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     prototype.ShiftRightBig = function(digits) {
         if (digits <= 0) return;
         if (this.shiftedBigInt.signum() == 0) {
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
             this.discardedBitCount.AddInt(digits);
             this.bitsAfterLeftmost |= this.bitLeftmost;
             this.bitLeftmost = 0;
@@ -5490,6 +5531,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             this.bitsAfterLeftmost |= this.bitLeftmost;
             this.bitLeftmost = bigrem.intValue();
             this.shiftedBigInt = bigquo;
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
             this.discardedBitCount.AddInt(digits);
             if (this.knownBitLength != null) {
                 if (bigquo.signum() == 0) this.knownBitLength.SetInt(0); else this.knownBitLength.Decrement();
@@ -5509,6 +5551,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             if (bigrem.signum() != 0) this.bitsAfterLeftmost |= 1;
             this.bitsAfterLeftmost |= this.bitLeftmost;
             this.shiftedBigInt = bigquo;
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
             this.discardedBitCount.AddInt(startCount);
             digits -= startCount;
             if (this.shiftedBigInt.signum() == 0) {
@@ -5528,6 +5571,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
         if (digits > digitLength) {
             bitDiff = digits - digitLength;
         }
+        if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
         this.discardedBitCount.AddInt(digits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         var digitShift = (digitLength < digits ? digitLength : digits);
@@ -5585,6 +5629,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             this.bitsAfterLeftmost |= this.bitLeftmost;
             this.bitLeftmost = bigrem.intValue();
             this.shiftedBigInt = bigquo;
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
             this.discardedBitCount.Add(digitDiff);
             this.knownBitLength.Subtract(digitDiff);
             this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
@@ -5610,6 +5655,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 }
             }
             this.shiftedBigInt = bigquo;
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
             this.discardedBitCount.Add(digitDiff);
             this.knownBitLength.Subtract(digitDiff);
             this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
@@ -5635,6 +5681,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 this.bitLeftmost = bigrem.intValue();
                 this.shiftedBigInt = bigquo2;
             }
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
             this.discardedBitCount.Add(digitDiff);
             this.knownBitLength.Subtract(digitDiff);
             this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
@@ -5650,6 +5697,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             this.knownBitLength.SubtractInt(digitShift);
             var newLength = ((digitLength - digitShift)|0);
 
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
             if (digitShift <= 2147483647) this.discardedBitCount.AddInt(digitShift|0); else this.discardedBitCount.AddBig(BigInteger.valueOf(digitShift));
             for (var i = str.length - 1; i >= 0; i--) {
                 this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -5675,6 +5723,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     prototype.ShiftRightSmall = function(digits) {
         if (digits <= 0) return;
         if (this.shiftedSmall == 0) {
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
             this.discardedBitCount.AddInt(digits);
             this.bitsAfterLeftmost |= this.bitLeftmost;
             this.bitLeftmost = 0;
@@ -5690,6 +5739,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
 
         if (kb == 0) kb++;
         this.knownBitLength = new FastInteger(kb);
+        if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
         this.discardedBitCount.AddInt(digits);
         while (digits > 0) {
             if (this.shiftedSmall == 0) {
@@ -5710,10 +5760,12 @@ function(bigint, lastDiscarded, olderDiscarded) {
     };
 
     prototype.ShiftToDigits = function(bits) {
-        if (bits.signum() < 0) throw new Error("bits is negative");
         if (bits.CanFitInInt32()) {
-            this.ShiftToDigitsInt(bits.AsInt32());
+            var intval = bits.AsInt32();
+            if (intval < 0) throw new Error("bits is negative");
+            this.ShiftToDigitsInt(intval);
         } else {
+            if (bits.signum() < 0) throw new Error("bits is negative");
             this.knownBitLength = this.CalcKnownDigitLength();
             var bigintDiff = this.knownBitLength.AsBigInteger();
             var bitsBig = bits.AsBigInteger();
@@ -5731,12 +5783,8 @@ function(bigint, lastDiscarded, olderDiscarded) {
     prototype.CalcKnownDigitLength = function() {
         if (this.isSmall) {
             var kb = 0;
-            var tmp = this.shiftedSmall;
-            while (tmp > 0) {
-                kb++;
-                tmp = ((tmp / 10)|0);
-            }
-            kb = (kb == 0 ? 1 : kb);
+            var v2 = this.shiftedSmall;
+            if (v2 >= 1000000000) kb = 10; else if (v2 >= 100000000) kb = 9; else if (v2 >= 10000000) kb = 8; else if (v2 >= 1000000) kb = 7; else if (v2 >= 100000) kb = 6; else if (v2 >= 10000) kb = 5; else if (v2 >= 1000) kb = 4; else if (v2 >= 100) kb = 3; else if (v2 >= 10) kb = 2; else kb = 1;
             return new FastInteger(kb);
         } else {
             return new FastInteger(this.shiftedBigInt.getDigitCount());
@@ -5744,19 +5792,14 @@ function(bigint, lastDiscarded, olderDiscarded) {
     };
     prototype.ShiftToBitsSmall = function(digits) {
         var kb = 0;
-        var tmp = this.shiftedSmall;
-        while (tmp > 0) {
-            kb++;
-            tmp = ((tmp / 10)|0);
-        }
-
-        if (kb == 0) kb++;
+        var v2 = this.shiftedSmall;
+        if (v2 >= 1000000000) kb = 10; else if (v2 >= 100000000) kb = 9; else if (v2 >= 10000000) kb = 8; else if (v2 >= 1000000) kb = 7; else if (v2 >= 100000) kb = 6; else if (v2 >= 10000) kb = 5; else if (v2 >= 1000) kb = 4; else if (v2 >= 100) kb = 3; else if (v2 >= 10) kb = 2; else kb = 1;
         this.knownBitLength = new FastInteger(kb);
         if (kb > digits) {
             var digitShift = ((kb - digits)|0);
             var newLength = ((kb - digitShift)|0);
             this.knownBitLength = new FastInteger(1 > newLength ? 1 : newLength);
-            this.discardedBitCount.AddInt(digitShift);
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(digitShift); else this.discardedBitCount.AddInt(digitShift);
             for (var i = 0; i < digitShift; i++) {
                 var digit = ((this.shiftedSmall % 10)|0);
                 this.shiftedSmall = ((this.shiftedSmall / 10)|0);
@@ -6152,12 +6195,12 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
 
     if ((precision) < 0) throw new Error("precision" + " not greater or equal to " + "0" + " (" + (precision) + ")");
     if ((exponentMinSmall) > exponentMaxSmall) throw new Error("exponentMinSmall" + " not less or equal to " + (exponentMaxSmall) + " (" + (exponentMinSmall) + ")");
-    this.bigintPrecision = BigInteger.valueOf(precision);
+    this.bigintPrecision = precision == 0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
     this.rounding = rounding;
     this.clampNormalExponents = clampNormalExponents;
     this.hasExponentRange = true;
-    this.exponentMax = BigInteger.valueOf(exponentMaxSmall);
-    this.exponentMin = BigInteger.valueOf(exponentMinSmall);
+    this.exponentMax = exponentMaxSmall == 0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMaxSmall);
+    this.exponentMin = exponentMinSmall == 0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMinSmall);
 };
 (function(constructor,prototype){
     prototype['exponentMax'] = prototype.exponentMax = null;
@@ -8883,7 +8926,7 @@ function(mantissa, exponent) {
     };
     prototype['EqualsInternal'] = prototype.EqualsInternal = function(otherValue) {
         if (otherValue == null) return false;
-        return this.exponent.equals(otherValue.exponent) && this.unsignedMantissa.equals(otherValue.unsignedMantissa) && this.flags == otherValue.flags;
+        return this.flags == otherValue.flags && this.unsignedMantissa.equals(otherValue.unsignedMantissa) && this.exponent.equals(otherValue.exponent);
     };
     prototype['equals'] = prototype.equals = function(obj) {
         return this.EqualsInternal((obj.constructor==ExtendedDecimal) ? obj : null);
@@ -8948,7 +8991,7 @@ function(mantissa, exponent) {
                         haveDigits = (haveDigits || thisdigit != 0);
                         if (mantInt > ExtendedDecimal.MaxSafeInt) {
                             if (mant == null) mant = new FastInteger(mantInt);
-                            mant.MultiplyByTenAndAdd(thisdigit);
+                            if (thisdigit == 0) mant.Multiply(10); else mant.MultiplyByTenAndAdd(thisdigit);
                         } else {
                             mantInt *= 10;
                             mantInt = mantInt + (thisdigit);
@@ -9079,7 +9122,9 @@ function(mantissa, exponent) {
         if (i != str.length) {
             throw new Error();
         }
-        return ExtendedDecimal.CreateWithFlags((mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(), (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(), negative ? BigNumberFlags.FlagNegative : 0).RoundToPrecision(ctx);
+        var ret = ExtendedDecimal.CreateWithFlags((mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(), (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(), negative ? BigNumberFlags.FlagNegative : 0);
+        if (ctx != null) ret = ret.RoundToPrecision(ctx);
+        return ret;
     };
     constructor['DecimalMathHelper'] = constructor.DecimalMathHelper = function ExtendedDecimal$DecimalMathHelper(){};
     (function(constructor,prototype){
