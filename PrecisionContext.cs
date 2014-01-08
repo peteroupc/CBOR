@@ -231,7 +231,8 @@ namespace PeterO {
     /// PrecisionContext. </summary>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext Copy() {
-      PrecisionContext pcnew=new PrecisionContext(0,this.rounding,0,0,this.clampNormalExponents);
+      PrecisionContext pcnew=new PrecisionContext(0,this.rounding,
+                                                  0,0,this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
@@ -258,12 +259,12 @@ namespace PeterO {
                             bool clampNormalExponents) {
       if ((precision) < 0) throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString((precision),System.Globalization.CultureInfo.InvariantCulture) + ")");
       if ((exponentMinSmall) > exponentMaxSmall) throw new ArgumentException("exponentMinSmall" + " not less or equal to " + Convert.ToString((exponentMaxSmall),System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((exponentMinSmall),System.Globalization.CultureInfo.InvariantCulture) + ")");
-      this.bigintPrecision = (BigInteger)precision;
+      this.bigintPrecision = precision==0 ? BigInteger.Zero : (BigInteger)precision;
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
       this.hasExponentRange=true;
-      exponentMax = (BigInteger)exponentMaxSmall;
-      exponentMin = (BigInteger)exponentMinSmall;
+      exponentMax = exponentMaxSmall==0 ? BigInteger.Zero : (BigInteger)exponentMaxSmall;
+      exponentMin = exponentMinSmall==0 ? BigInteger.Zero : (BigInteger)exponentMinSmall;
     }
     /// <summary> Unlimited precision context. Rounding mode HalfUp.</summary>
     #if CODE_ANALYSIS

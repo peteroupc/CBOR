@@ -59,9 +59,6 @@
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="BigFloat.cs" />
     <Compile Include="BigInteger.cs" />
     <Compile Include="BigIntegerExtra.cs" />
@@ -94,6 +91,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ProfilingSessions\Session20140107_195510.sdps" />
+    <Content Include="ProfilingSessions\Session20140107_202658.sdps" />
+    <Content Include="ProfilingSessions\Session20140107_211434.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

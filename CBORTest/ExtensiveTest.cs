@@ -152,22 +152,22 @@ namespace CBOR
       ctx=ctx.WithBlankFlags();
       if(addop){
         ExtendedDecimal d3=op1.Add(op2,ctx);
-        Assert.AreEqual(result,d3,ln);
+        if(!result.Equals(d3))Assert.AreEqual(result,d3,ln);
         AssertFlags(expectedFlags,ctx.Flags,ln);
       }
       else if(subop){
         ExtendedDecimal d3=op1.Subtract(op2,ctx);
-        Assert.AreEqual(result,d3,ln);
+        if(!result.Equals(d3))Assert.AreEqual(result,d3,ln);
         AssertFlags(expectedFlags,ctx.Flags,ln);
       }
       else if(mul){
         ExtendedDecimal d3=op1.Multiply(op2,ctx);
-        Assert.AreEqual(result,d3,ln);
+        if(!result.Equals(d3))Assert.AreEqual(result,d3,ln);
         AssertFlags(expectedFlags,ctx.Flags,ln);
       }
       else if(div){
         ExtendedDecimal d3=op1.Divide(op2,ctx);
-        Assert.AreEqual(result,d3,ln);
+        if(!result.Equals(d3))Assert.AreEqual(result,d3,ln);
         AssertFlags(expectedFlags,ctx.Flags,ln);
       }
       else if(squroot){
@@ -175,18 +175,18 @@ namespace CBOR
           // Square root only defined for the HalfEven
           // rounding mode
           ExtendedDecimal d3=op1.SquareRoot(ctx);
-          Assert.AreEqual(result,d3,ln);
+          if(!result.Equals(d3))Assert.AreEqual(result,d3,ln);
           AssertFlags(expectedFlags,ctx.Flags,ln);
         }
       }
       else if(fma){
         ExtendedDecimal d3=op1.MultiplyAndAdd(op2,op3,ctx);
-        Assert.AreEqual(result,d3,ln);
+        if(!result.Equals(d3))Assert.AreEqual(result,d3,ln);
         AssertFlags(expectedFlags,ctx.Flags,ln);
       }
       else if(fms){
         ExtendedDecimal d3=op1.MultiplyAndSubtract(op2,op3,ctx);
-        Assert.AreEqual(result,d3,ln);
+        if(!result.Equals(d3))Assert.AreEqual(result,d3,ln);
         AssertFlags(expectedFlags,ctx.Flags,ln);
       }
       return 0;
