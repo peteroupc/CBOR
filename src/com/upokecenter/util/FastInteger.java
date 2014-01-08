@@ -21,8 +21,8 @@ at: http://peteroupc.github.io/CBOR/
   final class FastInteger implements Comparable<FastInteger> {
 
     private static final class MutableNumber {
-      int[] data;
-      int wordCount;
+      public int[] data;
+      public int wordCount;
       public static MutableNumber FromBigInteger(BigInteger bigintVal) {
         MutableNumber mnum=new MutableNumber(0);
         if ( bigintVal.signum() < 0)
@@ -128,6 +128,66 @@ at: http://peteroupc.github.io/CBOR/
         System.arraycopy(this.data,0,mbi.data,0,this.wordCount);
         mbi.wordCount=this.wordCount;
         return mbi;
+      }
+
+    /**
+     *
+     * @param digit A 32-bit signed integer.
+     * @return A MutableNumber object.
+     */
+public MutableNumber MultiplyByTenAndAdd(int digit) {
+        if(digit<0||digit>=10)
+          throw new IllegalArgumentException("Only digits 0 to 9 are supported");
+        int s;
+        int d;
+        digit&=0xFFFF;
+        int carry = 0;
+        if(this.wordCount==0){
+          if(this.data.length==0)this.data=new int[4];
+          this.data[0]=0;
+          this.wordCount=1;
+        }
+        {
+          for (int i = 0; i < this.wordCount; i++) {
+            int B0=this.data[i];
+            int B1=B0;
+            B0&=(65535);
+            B1=((B1>>16)&65535);
+            if (B0 > B1){
+              s = (((int)B0-B1)&0xFFFF);
+              d = 0xFFF6*s;
+            } else {
+              s = 0;
+              d = 10*(((int)B1-B0)&0xFFFF);
+            }
+            int A0B0=10*B0;
+            int a0b0high=((A0B0>>16)&0xFFFF);
+            int tempInt;
+            tempInt = A0B0 + carry;
+            if(i==0)tempInt+=digit;
+            int result0 = (tempInt&0xFFFF);
+            tempInt =  (((int)(tempInt>>16))&0xFFFF) +
+              (((int)A0B0)&0xFFFF) + (((int)d)&0xFFFF);
+            int result1 = (tempInt&0xFFFF);
+            tempInt = (((int)(tempInt>>16))&0xFFFF)+
+              a0b0high + (((int)(d>>16))&0xFFFF) - s;
+            this.data[i]=((int)(result0|(result1<<16)));
+            carry=((tempInt&0xffff));
+          }
+        }
+        if (carry != 0) {
+          if (wordCount >= data.length) {
+            int[] newdata = new int[wordCount + 20];
+            System.arraycopy(data, 0, newdata, 0, data.length);
+            data = newdata;
+          }
+          data[wordCount] = carry;
+          wordCount++;
+        }
+        // Calculate the correct data length
+        while(this.wordCount!=0 && this.data[this.wordCount-1]==0)
+          this.wordCount--;
+        return this;
       }
 
     /**
@@ -437,12 +497,9 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     public static FastInteger FromBig(BigInteger bigintVal) {
-      int sign = bigintVal.signum();
-      if (sign == 0 ||
-          (sign < 0 && bigintVal.compareTo(Int32MinValue) >= 0) ||
-          (sign > 0 && bigintVal.compareTo(Int32MaxValue) <= 0)) {
+      if (bigintVal.canFitInInt()) {
         return new FastInteger(bigintVal.intValue());
-      } else if(sign>0){
+      } else if(bigintVal.signum()>0){
         FastInteger fi=new FastInteger(0);
         fi.integerMode=1;
         fi.mnum=MutableNumber.FromBigInteger(bigintVal);
@@ -543,28 +600,19 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      *
-     * @param digit A 32-bit signed integer.
+     * @param digit A 32-bit signed integer from 0 through 9.
      * @return A FastInteger object.
      */
     public FastInteger MultiplyByTenAndAdd(int digit) {
-      if(digit==0){
-        if(integerMode==1){
-          mnum.Multiply(10);
-          return this;
-        } else if(integerMode==0 && smallValue>=214748363){
+      if(integerMode==1){
+        mnum.MultiplyByTenAndAdd(digit);
+        return this;
+      }
+      if(digit>0){
+        if(integerMode==0 && smallValue>=214748363){
           integerMode=1;
           mnum=new MutableNumber(smallValue);
-          mnum.Multiply(10);
-          return this;
-        }
-      } else if(digit>0){
-        if(integerMode==1){
-          mnum.Multiply(10).Add(digit);
-          return this;
-        } else if(integerMode==0 && smallValue>=214748363){
-          integerMode=1;
-          mnum=new MutableNumber(smallValue);
-          mnum.Multiply(10).Add(digit);
+          mnum.MultiplyByTenAndAdd(digit);
           return this;
         }
       }
@@ -795,9 +843,7 @@ bigrem=divrem[1]; }
       switch (integerMode) {
           case 0:{
             int sign = bigintVal.signum();
-            if (sign == 0 ||
-                (sign < 0 && bigintVal.compareTo(Int32MinValue) >= 0) ||
-                (sign > 0 && bigintVal.compareTo(Int32MaxValue) <= 0)) {
+            if (bigintVal.canFitInInt()) {
               return AddInt(bigintVal.intValue());
             }
             return Add(FastInteger.FromBig(bigintVal));
@@ -1070,17 +1116,13 @@ bigrem=divrem[1]; }
      * @return A Boolean object.
      */
     public boolean CanFitInInt32() {
-      int sign;
       switch(this.integerMode){
         case 0:
           return true;
         case 1:
           return mnum.CanFitInInt32();
           case 2:{
-            sign = largeValue.signum();
-            if (sign == 0) return true;
-            if (sign < 0) return largeValue.compareTo(Int32MinValue) >= 0;
-            return largeValue.compareTo(Int32MaxValue) <= 0;
+            return largeValue.canFitInInt();
           }
         default:
           throw new IllegalStateException();

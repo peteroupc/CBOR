@@ -263,7 +263,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A PrecisionContext object.
      */
     public PrecisionContext Copy() {
-      PrecisionContext pcnew=new PrecisionContext(0,this.rounding,0,0,this.clampNormalExponents);
+      PrecisionContext pcnew=new PrecisionContext(0,this.rounding,
+                                                  0,0,this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
@@ -291,12 +292,12 @@ at: http://peteroupc.github.io/CBOR/
                             boolean clampNormalExponents) {
       if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+(precision)+")");
       if ((exponentMinSmall) > exponentMaxSmall) throw new IllegalArgumentException("exponentMinSmall" + " not less or equal to "+(exponentMaxSmall)+" ("+(exponentMinSmall)+")");
-      this.bigintPrecision = BigInteger.valueOf(precision);
+      this.bigintPrecision = precision==0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
       this.hasExponentRange=true;
-      exponentMax = BigInteger.valueOf(exponentMaxSmall);
-      exponentMin = BigInteger.valueOf(exponentMinSmall);
+      exponentMax = exponentMaxSmall==0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMaxSmall);
+      exponentMin = exponentMinSmall==0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMinSmall);
     }
     /**
      * Unlimited precision context. Rounding mode HalfUp.

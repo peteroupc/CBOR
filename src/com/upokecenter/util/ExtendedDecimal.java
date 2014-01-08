@@ -58,9 +58,9 @@ at: http://peteroupc.github.io/CBOR/
     public boolean EqualsInternal(ExtendedDecimal otherValue) {
       if (otherValue == null)
         return false;
-      return this.exponent.equals(otherValue.exponent) &&
+      return this.flags == otherValue.flags &&
         this.unsignedMantissa.equals(otherValue.unsignedMantissa) &&
-        this.flags == otherValue.flags;
+        this.exponent.equals(otherValue.exponent);
     }
 
     /**
@@ -198,7 +198,10 @@ at: http://peteroupc.github.io/CBOR/
               if (mantInt > MaxSafeInt) {
                 if (mant == null)
                   mant = new FastInteger(mantInt);
-                mant.MultiplyByTenAndAdd(thisdigit);
+                if(thisdigit==0)
+                  mant.Multiply(10);
+                else
+                  mant.MultiplyByTenAndAdd(thisdigit);
               } else {
                 mantInt *= 10;
                 mantInt += thisdigit;
@@ -354,10 +357,12 @@ at: http://peteroupc.github.io/CBOR/
       if (i != str.length()) {
         throw new NumberFormatException();
       }
-      return CreateWithFlags(
+      ExtendedDecimal ret=CreateWithFlags(
         (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
         (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
-        negative ? BigNumberFlags.FlagNegative : 0).RoundToPrecision(ctx);
+        negative ? BigNumberFlags.FlagNegative : 0);
+      if(ctx!=null)ret=ret.RoundToPrecision(ctx);
+      return ret;
     }
 
     private static final class DecimalMathHelper implements IRadixMathHelper<ExtendedDecimal> {

@@ -12,7 +12,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 namespace PeterO {
-  /// <summary> An arbitrary-precision integer. </summary>
+    /// <summary> An arbitrary-precision integer. </summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
 
@@ -2017,7 +2017,9 @@ namespace PeterO {
       }
     }
 
-    public bool canFitInInt() {
+    /// <summary> </summary>
+    /// <returns>A Boolean object.</returns>
+public bool canFitInInt() {
       int c = (int)this.wordCount;
       if (c > 2) return false;
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
@@ -2952,7 +2954,7 @@ namespace PeterO {
       if(bigintMult.wordCount==1 && bigintMult.reg[0]==1)
         return bigintMult.negative ? this.negate() : this;
       PositiveMultiply(product, this, bigintMult);
-      if ((this.negative) != (this.negative))
+      if ((this.negative) != (bigintMult.negative))
         product.NegateInternal();
       return product;
     }

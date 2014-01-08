@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-    /// <summary> Description of DecimalUtility. </summary>
+  /// <summary> Description of DecimalUtility. </summary>
   internal static class DecimalUtility
   {
     private static BigInteger[] BigIntPowersOfTen = new BigInteger[]{
@@ -156,9 +156,9 @@ namespace PeterO
         }
         return ret;
       }
-    /// <summary> </summary>
-    /// <param name='bi'>A BigInteger object.</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary> </summary>
+      /// <param name='bi'>A BigInteger object.</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger GetCachedPower(BigInteger bi){
         lock(outputs){
           for(int i=0;i<size;i++){
@@ -180,10 +180,10 @@ namespace PeterO
         }
         return null;
       }
-    /// <summary> </summary>
-    /// <param name='input'>A BigInteger object.</param>
-    /// <param name='output'>A BigInteger object.</param>
-    /// <returns></returns>
+      /// <summary> </summary>
+      /// <param name='input'>A BigInteger object.</param>
+      /// <param name='output'>A BigInteger object.</param>
+      /// <returns></returns>
       public void AddPower(BigInteger input, BigInteger output){
         lock(outputs){
           if(size<MaxSize){
@@ -209,6 +209,7 @@ namespace PeterO
     }
 
     private static PowerCache powerOfFiveCache=new DecimalUtility.PowerCache();
+    private static PowerCache powerOfTenCache=new DecimalUtility.PowerCache();
 
     internal static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
       int sign=diff.Sign;
@@ -297,15 +298,21 @@ namespace PeterO
         return BigIntPowersOfFive[(int)precision];
       if(precision==40)
         return FivePower40;
+      int startPrecision=precision;
+      BigInteger origPrecision=(BigInteger)precision;
+      bigpow=powerOfFiveCache.GetCachedPower(origPrecision);
+      if(bigpow!=null)return bigpow;
       if (precision <= 54) {
         if((precision&1)==0){
           ret = BigIntPowersOfFive[(int)(precision>>1)];
           ret *= (BigInteger)ret;
+          powerOfFiveCache.AddPower(origPrecision,ret);
           return ret;
         } else {
           ret = BigIntPowersOfFive[27];
           bigpow = BigIntPowersOfFive[((int)precision) - 27];
           ret *= (BigInteger)bigpow;
+          powerOfFiveCache.AddPower(origPrecision,ret);
           return ret;
         }
       }
@@ -313,17 +320,13 @@ namespace PeterO
         ret = FivePower40;
         bigpow = FindPowerOfFive(precision-40);
         ret *= (BigInteger)bigpow;
+        powerOfFiveCache.AddPower(origPrecision,ret);
         return ret;
       }
-      int startPrecision=precision;
-      BigInteger origPrecision=(BigInteger)precision;
-      bigpow=powerOfFiveCache.GetCachedPower(origPrecision);
-      if(bigpow!=null)return bigpow;
       BigInteger[] otherPower;
       bool first = true;
       bigpow=BigInteger.Zero;
       while(true){
-        //        Console.WriteLine("Finding pow for "+precision);
         otherPower=powerOfFiveCache.FindCachedPowerOrSmaller((BigInteger)precision);
         if(otherPower!=null){
           BigInteger otherPower0=otherPower[0];
@@ -364,7 +367,7 @@ namespace PeterO
           break;
         } else {
           if (bigpow.IsZero)
-            bigpow = BigInteger.Pow(BigIntPowersOfFive[1], 9999999);
+            bigpow = FindPowerOfFive(9999999);
           if (first)
             ret = bigpow;
           else
@@ -380,33 +383,57 @@ namespace PeterO
     internal static BigInteger FindPowerOfTen(int precision) {
       if(precision<0)return BigInteger.Zero;
       if (precision == 0) return BigInteger.One;
-      BigInteger ret;
       BigInteger bigpow;
+      BigInteger ret;
       if (precision <= 18)
         return BigIntPowersOfTen[(int)precision];
+      int startPrecision=precision;
+      BigInteger origPrecision=(BigInteger)precision;
+      bigpow=powerOfTenCache.GetCachedPower(origPrecision);
+      if(bigpow!=null)return bigpow;
       if (precision <= 27) {
         int prec = (int)precision;
         ret = BigIntPowersOfFive[prec];
         ret <<= prec;
+          powerOfTenCache.AddPower(origPrecision,ret);
         return ret;
       }
       if (precision <= 36) {
         if((precision&1)==0){
           ret = BigIntPowersOfTen[(int)(precision>>1)];
           ret *= (BigInteger)ret;
+          powerOfTenCache.AddPower(origPrecision,ret);
           return ret;
         } else {
           ret = BigIntPowersOfTen[18];
           bigpow = BigIntPowersOfTen[((int)precision) - 18];
           ret *= (BigInteger)bigpow;
+          powerOfTenCache.AddPower(origPrecision,ret);
           return ret;
         }
       }
-      ret = BigInteger.One;
+      BigInteger[] otherPower;
       bool first = true;
-      bigpow = BigInteger.Zero;
+      bigpow=BigInteger.Zero;
+      while(true){
+        otherPower=powerOfTenCache.FindCachedPowerOrSmaller((BigInteger)precision);
+        if(otherPower!=null){
+          BigInteger otherPower0=otherPower[0];
+          BigInteger otherPower1=otherPower[1];
+          precision-=(int)otherPower0;
+          if (first)
+            bigpow=otherPower[1];
+          else {
+            bigpow *= (BigInteger)otherPower1;
+          }
+          first=false;
+        } else {
+          break;
+        }
+      }
+      ret = (!first ? bigpow : BigInteger.One );
       while (precision > 0) {
-        if (precision <= 18) {
+        if (precision <= 27) {
           bigpow = BigIntPowersOfTen[(int)precision];
           if (first)
             ret = bigpow;
@@ -415,9 +442,13 @@ namespace PeterO
           first = false;
           break;
         } else if (precision <= 9999999) {
-          int prec = (int)precision;
-          bigpow = FindPowerOfFive(prec);
-          bigpow <<= prec;
+          //          Console.WriteLine("calcing pow for "+precision);
+          bigpow = FindPowerOfFive(precision);
+          bigpow <<= precision;
+          if(precision!=startPrecision){
+            BigInteger bigprec=(BigInteger)precision;
+            powerOfTenCache.AddPower(bigprec,bigpow);
+          }
           if (first)
             ret = bigpow;
           else
@@ -426,7 +457,7 @@ namespace PeterO
           break;
         } else {
           if (bigpow.IsZero)
-            bigpow = BigInteger.Pow(BigIntPowersOfTen[1], 9999999);
+            bigpow = FindPowerOfTen(9999999);
           if (first)
             ret = bigpow;
           else
@@ -435,6 +466,7 @@ namespace PeterO
           precision -= 9999999;
         }
       }
+      powerOfTenCache.AddPower(origPrecision,ret);
       return ret;
     }
   }
