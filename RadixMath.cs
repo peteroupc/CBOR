@@ -10,9 +10,9 @@ using System.Text;
 //using System.Numerics;
 
 namespace PeterO {
-    /// <summary> Encapsulates radix-independent arithmetic. </summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+  /// <summary> Encapsulates radix-independent arithmetic. </summary>
+  /// <typeparam name='T'>Data type for a numeric value in a particular
+  /// radix.</typeparam>
   class RadixMath<T> {
 
     IRadixMathHelper<T> helper;
@@ -1216,7 +1216,7 @@ namespace PeterO {
           Multiply(guess2,half,ctxdiv);
         guess2=AbsRaw(guess2);
         newGuess = Multiply(thisValue,guess2,ctxdiv);
-      //  Console.WriteLine("Next guess " + newGuess+" cmp="+CompareTo(lastGuess,newGuess));
+        //  Console.WriteLine("Next guess " + newGuess+" cmp="+CompareTo(lastGuess,newGuess));
         if (++iterations >= maxIterations) {
           more = false;
         }
@@ -2216,7 +2216,7 @@ namespace PeterO {
       T thisValue,
       PrecisionContext context
      ) {
-      return RoundToBinaryPrecisionWithShift(thisValue, context, 0, 0, new FastInteger(0), false);
+      return RoundToBinaryPrecisionWithShift(thisValue, context, 0, 0, null, false);
     }
     private T RoundToBinaryPrecisionWithShift(
       T thisValue,
@@ -2228,13 +2228,21 @@ namespace PeterO {
      ) {
       if ((context) == null) return thisValue;
       if ((context.Precision).IsZero && !context.HasExponentRange &&
-          (lastDiscarded | olderDiscarded) == 0 && shift.Sign == 0)
+          (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.Sign == 0))
         return thisValue;
       if ((context.Precision).IsZero || thisRadix == 2)
         return RoundToPrecisionWithShift(thisValue, context, lastDiscarded, olderDiscarded, shift, false);
-      FastInteger fastEMin = (context.HasExponentRange) ? FastInteger.FromBig(context.EMin) : null;
-      FastInteger fastEMax = (context.HasExponentRange) ? FastInteger.FromBig(context.EMax) : null;
-      FastInteger fastPrecision = FastInteger.FromBig(context.Precision);
+      FastInteger fastEMin=null;
+      FastInteger fastEMax=null;
+      if(context.HasExponentRange){
+        fastEMax=(context.EMax.canFitInInt()) ? new FastInteger(context.EMax.intValue()) :
+          FastInteger.FromBig(context.EMax);
+        fastEMin=(context.EMin.canFitInInt()) ? new FastInteger(context.EMin.intValue()) :
+          FastInteger.FromBig(context.EMin);
+      }
+      FastInteger fastPrecision=(context.Precision.canFitInInt()) ?
+        new FastInteger(context.Precision.intValue()) :
+        FastInteger.FromBig(context.Precision);
       int[] signals = new int[1];
       T dfrac = RoundToPrecisionInternal(
         thisValue, fastPrecision,
@@ -2294,7 +2302,7 @@ namespace PeterO {
       T thisValue,
       PrecisionContext context
      ) {
-      return RoundToPrecisionWithShift(thisValue, context, 0, 0, new FastInteger(0), true);
+      return RoundToPrecisionWithShift(thisValue, context, 0, 0, null, true);
     }
     /// <summary> </summary>
     /// <param name='thisValue'>A T object.</param>
@@ -2304,7 +2312,7 @@ namespace PeterO {
       T thisValue,
       PrecisionContext context
      ) {
-      return RoundToPrecisionWithShift(thisValue, context, 0, 0, new FastInteger(0), false);
+      return RoundToPrecisionWithShift(thisValue, context, 0, 0, null, false);
     }
     private T RoundToPrecisionWithShift(
       T thisValue,
@@ -2318,17 +2326,26 @@ namespace PeterO {
       // If context has unlimited precision and exponent range,
       // and no discarded digits or shifting
       if ((context.Precision).IsZero && !context.HasExponentRange &&
-          (lastDiscarded | olderDiscarded) == 0 && shift.Sign == 0)
+          (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.Sign == 0))
         return thisValue;
-      FastInteger fastEMin = (context.HasExponentRange) ? FastInteger.FromBig(context.EMin) : null;
-      FastInteger fastEMax = (context.HasExponentRange) ? FastInteger.FromBig(context.EMax) : null;
-      FastInteger fastPrecision = FastInteger.FromBig(context.Precision);
+      FastInteger fastEMin=null;
+      FastInteger fastEMax=null;
+      // get the exponent range
+      if(context.HasExponentRange){
+        fastEMax=(context.EMax.canFitInInt()) ? new FastInteger(context.EMax.intValue()) :
+          FastInteger.FromBig(context.EMax);
+        fastEMin=(context.EMin.canFitInInt()) ? new FastInteger(context.EMin.intValue()) :
+          FastInteger.FromBig(context.EMin);
+      }
+      // get the precision
+      FastInteger fastPrecision=(context.Precision.canFitInInt()) ?
+        new FastInteger(context.Precision.intValue()) :
+        FastInteger.FromBig(context.Precision);
       int thisFlags = helper.GetFlags(thisValue);
+        // Fast path to check if rounding is necessary at all
       if (fastPrecision.Sign > 0 &&
           (shift == null || shift.Sign == 0) &&
           (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
-        // Check if rounding is necessary at all
-        // for small precisions
         BigInteger mantabs = BigInteger.Abs(helper.GetMantissa(thisValue));
         if (adjustNegativeZero &&
             (thisFlags & BigNumberFlags.FlagNegative) != 0 && mantabs.IsZero &&
@@ -2347,7 +2364,10 @@ namespace PeterO {
             }
             if (!context.HasExponentRange)
               return thisValue;
-            FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
+            BigInteger bigexp=helper.GetExponent(thisValue);
+            FastInteger fastExp=(bigexp.canFitInInt()) ?
+              new FastInteger(bigexp.intValue()) :
+              FastInteger.FromBig(bigexp);
             FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
               .Add(fastPrecision).Decrement();
             FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
@@ -2371,14 +2391,17 @@ namespace PeterO {
             if (stillWithinPrecision) {
               if (!context.HasExponentRange)
                 return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
-              FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(thisValue));
+              BigInteger bigexp=helper.GetExponent(thisValue);
+              FastInteger fastExp=(bigexp.canFitInInt()) ?
+                new FastInteger(bigexp.intValue()) :
+                FastInteger.FromBig(bigexp);
               FastInteger fastAdjustedExp = FastInteger.Copy(fastExp)
                 .Add(fastPrecision).Decrement();
               FastInteger fastNormalMin = FastInteger.Copy(fastEMin)
                 .Add(fastPrecision).Decrement();
               if (fastAdjustedExp.CompareTo(fastEMax) <= 0 &&
                   fastAdjustedExp.CompareTo(fastNormalMin) >= 0) {
-                return helper.CreateNewWithFlags(mantabs, helper.GetExponent(thisValue), thisFlags);
+                return helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
               }
             }
           }
@@ -2696,7 +2719,7 @@ namespace PeterO {
         fastPrecision = precision;
       }
 
-      if (shift != null) {
+      if (shift != null && shift.Sign!=0) {
         accum.ShiftRight(shift);
       }
       if (!unlimitedPrec) {

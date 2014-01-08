@@ -12,7 +12,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 namespace PeterO {
-    /// <summary> An arbitrary-precision integer. </summary>
+  /// <summary> An arbitrary-precision integer. </summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
 
@@ -2017,7 +2017,7 @@ namespace PeterO {
       }
     }
 
-    private bool HasTinyValue() {
+    public bool canFitInInt() {
       int c = (int)this.wordCount;
       if (c > 2) return false;
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
@@ -2148,7 +2148,7 @@ namespace PeterO {
     /// <summary> </summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger abs() {
-      return this.Sign >= 0 ? this : this.negate();
+      return (this.wordCount==0 || !this.negative) ? this : this.negate();
     }
 
     /// <summary> </summary>
@@ -2206,10 +2206,9 @@ namespace PeterO {
     /// <param name='reg'>A short[] object.</param>
     /// <param name='wordCount'>A 32-bit signed integer.</param>
     /// <returns>A 32-bit signed integer.</returns>
-    private int getUnsignedBitLengthEx(short[] reg, int wordCount){
+    private int getUnsignedBitLengthEx(int numberValue, int wordCount){
       int wc = wordCount;
       if (wc!=0){
-        int numberValue=(((int)(reg[wc-1]))&0xFFFF);
         wc=(wc-1)<<4;
         if (numberValue == 0)return wc;
         wc+=16;
@@ -2264,10 +2263,8 @@ namespace PeterO {
             numberValue <<= 2;
             wc -= 2;
           }
-          if ((numberValue >> 15) == 0)
-            --wc;
+          return ((numberValue >> 15) == 0) ? wc-1 : wc;
         }
-        return wc;
       } else {
         return 0;
       }
@@ -2393,11 +2390,8 @@ namespace PeterO {
           return 1+minDigits;
         }
       }
-      short[] tempReg = new short[this.wordCount];
-      Array.Copy(this.reg, tempReg, tempReg.Length);
-      int wordCount = tempReg.Length;
-      while (wordCount != 0 && tempReg[wordCount - 1] == 0)
-        wordCount--;
+      short[] tempReg = null;
+      int wordCount = this.wordCount;
       int i = 0;
       while (wordCount != 0) {
         if (wordCount == 1) {
@@ -2427,19 +2421,19 @@ namespace PeterO {
           short remainder = 0;
           int quo,rem;
           bool firstdigit=false;
+          short[] dividend=(tempReg==null) ? this.reg : tempReg;
           // Divide by 10000
           while ((wci--) > 0) {
-            int currentDividend = unchecked((int)((((int)tempReg[wci]) & 0xFFFF) |
+            int curValue=(((int)dividend[wci]) & 0xFFFF);
+            int currentDividend = unchecked((int)(curValue |
                                                   ((int)(remainder) << 16)));
             quo=currentDividend/10000;
-            tempReg[wci] = unchecked((short)quo);
             if(!firstdigit && quo!=0){
               firstdigit=true;
               // Since we are dividing from left to right, the first
               // nonzero result is the first part of the
               // new quotient
-
-              bitlen=getUnsignedBitLengthEx(tempReg,wci+1);
+              bitlen=getUnsignedBitLengthEx(quo,wci+1);
               if(bitlen<=2135){
                 // (x*631305)>>21 is an approximation
                 // to trunc(x*log10(2)) that is correct up
@@ -2463,7 +2457,19 @@ namespace PeterO {
                   return i+1+minDigits+4;
                 }
               }
-
+            }
+            if(tempReg==null){
+              if(quo!=0){
+                tempReg=new short[this.wordCount];
+                Array.Copy(this.reg, tempReg, tempReg.Length);
+                // Use the calculated word count during division;
+                // zeros that may have occurred in division
+                // are not incorporated in the tempReg
+                wordCount=wci+1;
+                tempReg[wci] = unchecked((short)quo);
+              }
+            } else {
+              tempReg[wci] = unchecked((short)quo);
             }
             rem=currentDividend-(10000*quo);
             remainder = unchecked((short)rem);
@@ -2946,7 +2952,7 @@ namespace PeterO {
       if(bigintMult.wordCount==1 && bigintMult.reg[0]==1)
         return bigintMult.negative ? this.negate() : this;
       PositiveMultiply(product, this, bigintMult);
-      if ((this.Sign >= 0) != (bigintMult.Sign >= 0))
+      if ((this.negative) != (this.negative))
         product.NegateInternal();
       return product;
     }
@@ -3047,7 +3053,7 @@ namespace PeterO {
         // where dividend is 0)
         return BigInteger.Zero;
       }
-      if (aSize <= 2 && bSize <= 2 && this.HasTinyValue() && bigintDivisor.HasTinyValue()) {
+      if (aSize <= 2 && bSize <= 2 && this.canFitInInt() && bigintDivisor.canFitInInt()) {
         int aSmall = this.intValue();
         int  bSmall = bigintDivisor.intValue();
         if (aSmall != Int32.MinValue || bSmall != -1) {
