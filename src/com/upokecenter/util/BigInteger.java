@@ -1165,21 +1165,6 @@ at: http://peteroupc.github.io/CBOR/
         AtomicMultiplyOpt(Rarr,Rstart,a0,a1,Barr,Bstart,0,NB);
         AtomicMultiplyAddOpt(Rarr,Rstart,a0,a1,Barr,Bstart,2,NB);
         return;
-        /*
-        if (((NB>>1)&1) == 0) {
-          Baseline_Multiply2Opt2(Rarr, Rstart, a0,a1, Barr, Bstart,0,4);
-          System.arraycopy(Rarr, (int)(Rstart + 2), Tarr, (int)(Tstart + 4), 2);
-          Baseline_Multiply2Opt2(Tarr,Tstart+2,a0,a1,Barr,Bstart,4,NB);
-          Baseline_Multiply2Opt2(Rarr,Rstart,a0,a1,Barr,Bstart,2,NB);
-          if (Add(Rarr, (int)(Rstart + NA), Rarr, (int)(Rstart + NA), Tarr, (int)(Tstart + (NA<<1)), NB - NA) != 0)
-            Increment(Rarr, (int)(Rstart + NB), NA, (short)1);
-        } else {
-          Baseline_Multiply2Opt2(Rarr,Rstart,a0,a1,Barr,Bstart,0,NB);
-          Baseline_Multiply2Opt2(Tarr,Tstart+2,a0,a1,Barr,Bstart,2,NB);
-          if (Add(Rarr, (int)(Rstart + NA), Rarr, (int)(Rstart + NA), Tarr, (int)(Tstart + (NA<<1)), NB - NA) != 0)
-            Increment(Rarr, (int)(Rstart + NB), NA, (short)1);
-        }
-         */
       } else {
         int i;
         if (((NB / NA)&1) == 0) {
@@ -2021,7 +2006,7 @@ at: http://peteroupc.github.io/CBOR/
      *
      * @return A Boolean object.
      */
-public boolean canFitInInt() {
+    public boolean canFitInInt() {
       int c = (int)this.wordCount;
       if (c > 2) return false;
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
@@ -2989,7 +2974,7 @@ public boolean canFitInInt() {
       if(bigintMult.wordCount==1 && bigintMult.reg[0]==1)
         return bigintMult.negative ? this.negate() : this;
       PositiveMultiply(product, this, bigintMult);
-      if ((this.negative) != (this.negative))
+      if ((this.negative) != (bigintMult.negative))
         product.NegateInternal();
       return product;
     }
@@ -3191,8 +3176,8 @@ public boolean canFitInInt() {
              divisor.reg, 0, bSize);
       remainder.wordCount = remainder.CalcWordCount();
       quotient.wordCount = quotient.CalcWordCount();
-      //      System.out.println("Divd={0} divs={1} quo={2} rem={3}",this.wordCount,
-      //                     divisor.wordCount,quotient.wordCount,remainder.wordCount);
+      //System.out.println("Divd={0} divs={1} quo={2} rem={3}",this.wordCount,
+        //                divisor.wordCount,quotient.wordCount,remainder.wordCount);
       remainder.ShortenArray();
       quotient.ShortenArray();
       if (this.signum() < 0) {

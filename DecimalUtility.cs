@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-  /// <summary> Description of DecimalUtility. </summary>
+    /// <summary> Description of DecimalUtility. </summary>
   internal static class DecimalUtility
   {
     private static BigInteger[] BigIntPowersOfTen = new BigInteger[]{
@@ -144,10 +144,10 @@ namespace PeterO
       int size;
       public BigInteger[] FindCachedPowerOrSmaller(BigInteger bi){
         BigInteger[] ret=null;
-        BigInteger minValue=BigInteger.Zero;
+        BigInteger minValue=null;
         lock(outputs){
           for(int i=0;i<size;i++){
-            if(inputs[i].CompareTo(bi)<=0 && inputs[i].CompareTo(minValue)>=0){
+            if(inputs[i].CompareTo(bi)<=0 && (minValue==null || inputs[i].CompareTo(minValue)>=0)){
               //Console.WriteLine("Have cached power ({0}, {1})",inputs[i],bi);
               ret=new BigInteger[]{inputs[i],outputs[i]};
               minValue=inputs[i];
@@ -156,9 +156,9 @@ namespace PeterO
         }
         return ret;
       }
-      /// <summary> </summary>
-      /// <param name='bi'>A BigInteger object.</param>
-      /// <returns>A BigInteger object.</returns>
+    /// <summary> </summary>
+    /// <param name='bi'>A BigInteger object.</param>
+    /// <returns>A BigInteger object.</returns>
       public BigInteger GetCachedPower(BigInteger bi){
         lock(outputs){
           for(int i=0;i<size;i++){
@@ -180,10 +180,10 @@ namespace PeterO
         }
         return null;
       }
-      /// <summary> </summary>
-      /// <param name='input'>A BigInteger object.</param>
-      /// <param name='output'>A BigInteger object.</param>
-      /// <returns></returns>
+    /// <summary> </summary>
+    /// <param name='input'>A BigInteger object.</param>
+    /// <param name='output'>A BigInteger object.</param>
+    /// <returns></returns>
       public void AddPower(BigInteger input, BigInteger output){
         lock(outputs){
           if(size<MaxSize){

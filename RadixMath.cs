@@ -10,9 +10,9 @@ using System.Text;
 //using System.Numerics;
 
 namespace PeterO {
-  /// <summary> Encapsulates radix-independent arithmetic. </summary>
-  /// <typeparam name='T'>Data type for a numeric value in a particular
-  /// radix.</typeparam>
+    /// <summary> Encapsulates radix-independent arithmetic. </summary>
+    /// <typeparam name='T'>Data type for a numeric value in a particular
+    /// radix.</typeparam>
   class RadixMath<T> {
 
     IRadixMathHelper<T> helper;
@@ -2730,7 +2730,7 @@ namespace PeterO {
         }
       }
       //Console.WriteLine("{0} adj={1} emin={2}",thisValue,adjExponent,fastEMin);
-      if (ctx.HasFlags && fastEMin != null && !unlimitedPrec && 
+      if (ctx.HasFlags && fastEMin != null && !unlimitedPrec &&
           adjExponent.CompareTo(fastEMin) < 0) {
         earlyRounded = accum.ShiftedInt;
         if (RoundGivenBigInt(accum, rounding, neg, earlyRounded)) {

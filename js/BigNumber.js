@@ -3088,6 +3088,7 @@ function() {
             return ivv;
         }
     };
+
     prototype['canFitInInt'] = prototype.canFitInInt = function() {
         var c = ((this.wordCount)|0);
         if (c > 2) return false;
@@ -3870,7 +3871,7 @@ function() {
         if (this.wordCount == 1 && this.reg[0] == 1) return this.negative ? bigintMult.negate() : bigintMult;
         if (bigintMult.wordCount == 1 && bigintMult.reg[0] == 1) return bigintMult.negative ? this.negate() : this;
         BigInteger.PositiveMultiply(product, this, bigintMult);
-        if ((this.negative) != (this.negative)) product.NegateInternal();
+        if ((this.negative) != (bigintMult.negative)) product.NegateInternal();
         return product;
     };
     constructor['BitsToWords'] = constructor.BitsToWords = function(bitCount) {
@@ -5082,6 +5083,19 @@ function(value) {
         }
     };
 
+    prototype.isValueZero = function() {
+        switch(this.integerMode) {
+            case 0:
+                return this.smallValue == 0;
+            case 1:
+                return this.mnum.signum() == 0;
+            case 2:
+                return this.largeValue.signum() == 0;
+            default:
+                return false;
+        }
+    };
+
     prototype.CompareToInt = function(val) {
         switch(this.integerMode) {
             case 0:
@@ -5564,6 +5578,19 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 return;
             }
         }
+        if (this.knownBitLength == null) this.knownBitLength = this.GetDigitLength();
+        if (new FastInteger(digits).Decrement().compareTo(this.knownBitLength) >= 0) {
+
+            this.bitsAfterLeftmost |= (this.shiftedBigInt.signum() == 0 ? 0 : 1);
+            this.isSmall = true;
+            this.shiftedSmall = 0;
+            this.knownBitLength = new FastInteger(1);
+            if (this.discardedBitCount == null) this.discardedBitCount = new FastInteger(0);
+            this.discardedBitCount.AddInt(digits);
+            this.bitsAfterLeftmost |= this.bitLeftmost;
+            this.bitLeftmost = 0;
+            return;
+        }
         var str = this.shiftedBigInt.toString();
 
         var digitLength = str.length;
@@ -5613,7 +5640,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             }
         }
         var str;
-        this.knownBitLength = this.GetDigitLength();
+        if (this.knownBitLength == null) this.knownBitLength = this.GetDigitLength();
         if (this.knownBitLength.CompareToInt(digits) <= 0) {
             return;
         }
@@ -5918,10 +5945,10 @@ var DecimalUtility = function() {
         prototype.size = null;
         prototype.FindCachedPowerOrSmaller = function(bi) {
             var ret = null;
-            var minValue = BigInteger.ZERO;
+            var minValue = null;
             {
                 for (var i = 0; i < this.size; i++) {
-                    if (this.inputs[i].compareTo(bi) <= 0 && this.inputs[i].compareTo(minValue) >= 0) {
+                    if (this.inputs[i].compareTo(bi) <= 0 && (minValue == null || this.inputs[i].compareTo(minValue) >= 0)) {
 
                         ret = [this.inputs[i], this.outputs[i]];
                         minValue = this.inputs[i];
@@ -5986,6 +6013,7 @@ var DecimalUtility = function() {
     })(DecimalUtility.PowerCache,DecimalUtility.PowerCache.prototype);
 
     constructor.powerOfFiveCache = new DecimalUtility.PowerCache();
+    constructor.powerOfTenCache = new DecimalUtility.PowerCache();
     constructor.FindPowerOfFiveFromBig = function(diff) {
         var sign = diff.signum();
         if (sign < 0) return BigInteger.ZERO;
@@ -6066,15 +6094,21 @@ var DecimalUtility = function() {
         var ret;
         if (precision <= 27) return DecimalUtility.BigIntPowersOfFive[(precision|0)];
         if (precision == 40) return DecimalUtility.FivePower40;
+        var startPrecision = precision;
+        var origPrecision = BigInteger.valueOf(precision);
+        bigpow = DecimalUtility.powerOfFiveCache.GetCachedPower(origPrecision);
+        if (bigpow != null) return bigpow;
         if (precision <= 54) {
             if ((precision & 1) == 0) {
                 ret = DecimalUtility.BigIntPowersOfFive[((precision >> 1)|0)];
                 ret = ret.multiply(ret);
+                DecimalUtility.powerOfFiveCache.AddPower(origPrecision, ret);
                 return ret;
             } else {
                 ret = DecimalUtility.BigIntPowersOfFive[27];
                 bigpow = DecimalUtility.BigIntPowersOfFive[(precision|0) - 27];
                 ret = ret.multiply(bigpow);
+                DecimalUtility.powerOfFiveCache.AddPower(origPrecision, ret);
                 return ret;
             }
         }
@@ -6082,17 +6116,13 @@ var DecimalUtility = function() {
             ret = DecimalUtility.FivePower40;
             bigpow = DecimalUtility.FindPowerOfFive(precision - 40);
             ret = ret.multiply(bigpow);
+            DecimalUtility.powerOfFiveCache.AddPower(origPrecision, ret);
             return ret;
         }
-        var startPrecision = precision;
-        var origPrecision = BigInteger.valueOf(precision);
-        bigpow = DecimalUtility.powerOfFiveCache.GetCachedPower(origPrecision);
-        if (bigpow != null) return bigpow;
         var otherPower;
         var first = true;
         bigpow = BigInteger.ZERO;
         while (true) {
-
             otherPower = DecimalUtility.powerOfFiveCache.FindCachedPowerOrSmaller(BigInteger.valueOf(precision));
             if (otherPower != null) {
                 var otherPower0 = otherPower[0];
@@ -6124,7 +6154,7 @@ var DecimalUtility = function() {
                 first = false;
                 break;
             } else {
-                if (bigpow.signum() == 0) bigpow = (DecimalUtility.BigIntPowersOfFive[1]).pow(9999999);
+                if (bigpow.signum() == 0) bigpow = DecimalUtility.FindPowerOfFive(9999999);
                 if (first) ret = bigpow; else ret = ret.multiply(bigpow);
                 first = false;
                 precision -= 9999999;
@@ -6136,50 +6166,77 @@ var DecimalUtility = function() {
     constructor.FindPowerOfTen = function(precision) {
         if (precision < 0) return BigInteger.ZERO;
         if (precision == 0) return BigInteger.ONE;
-        var ret;
         var bigpow;
+        var ret;
         if (precision <= 18) return DecimalUtility.BigIntPowersOfTen[(precision|0)];
+        var startPrecision = precision;
+        var origPrecision = BigInteger.valueOf(precision);
+        bigpow = DecimalUtility.powerOfTenCache.GetCachedPower(origPrecision);
+        if (bigpow != null) return bigpow;
         if (precision <= 27) {
             var prec = (precision|0);
             ret = DecimalUtility.BigIntPowersOfFive[prec];
             ret = ret.shiftLeft(prec);
+            DecimalUtility.powerOfTenCache.AddPower(origPrecision, ret);
             return ret;
         }
         if (precision <= 36) {
             if ((precision & 1) == 0) {
                 ret = DecimalUtility.BigIntPowersOfTen[((precision >> 1)|0)];
                 ret = ret.multiply(ret);
+                DecimalUtility.powerOfTenCache.AddPower(origPrecision, ret);
                 return ret;
             } else {
                 ret = DecimalUtility.BigIntPowersOfTen[18];
                 bigpow = DecimalUtility.BigIntPowersOfTen[(precision|0) - 18];
                 ret = ret.multiply(bigpow);
+                DecimalUtility.powerOfTenCache.AddPower(origPrecision, ret);
                 return ret;
             }
         }
-        ret = BigInteger.ONE;
+        var otherPower;
         var first = true;
         bigpow = BigInteger.ZERO;
+        while (true) {
+            otherPower = DecimalUtility.powerOfTenCache.FindCachedPowerOrSmaller(BigInteger.valueOf(precision));
+            if (otherPower != null) {
+                var otherPower0 = otherPower[0];
+                var otherPower1 = otherPower[1];
+                precision -= otherPower0.intValue();
+                if (first) bigpow = otherPower[1]; else {
+                    bigpow = bigpow.multiply(otherPower1);
+                }
+                first = false;
+            } else {
+                break;
+            }
+        }
+        ret = (!first ? bigpow : BigInteger.ONE);
         while (precision > 0) {
-            if (precision <= 18) {
+            if (precision <= 27) {
                 bigpow = DecimalUtility.BigIntPowersOfTen[(precision|0)];
                 if (first) ret = bigpow; else ret = ret.multiply(bigpow);
                 first = false;
                 break;
             } else if (precision <= 9999999) {
-                var prec = (precision|0);
-                bigpow = DecimalUtility.FindPowerOfFive(prec);
-                bigpow = bigpow.shiftLeft(prec);
+
+                bigpow = DecimalUtility.FindPowerOfFive(precision);
+                bigpow = bigpow.shiftLeft(precision);
+                if (precision != startPrecision) {
+                    var bigprec = BigInteger.valueOf(precision);
+                    DecimalUtility.powerOfTenCache.AddPower(bigprec, bigpow);
+                }
                 if (first) ret = bigpow; else ret = ret.multiply(bigpow);
                 first = false;
                 break;
             } else {
-                if (bigpow.signum() == 0) bigpow = (DecimalUtility.BigIntPowersOfTen[1]).pow(9999999);
+                if (bigpow.signum() == 0) bigpow = DecimalUtility.FindPowerOfTen(9999999);
                 if (first) ret = bigpow; else ret = ret.multiply(bigpow);
                 first = false;
                 precision -= 9999999;
             }
         }
+        DecimalUtility.powerOfTenCache.AddPower(origPrecision, ret);
         return ret;
     };
 })(DecimalUtility,DecimalUtility.prototype);
@@ -7699,7 +7756,7 @@ var RadixMath = function(helper) {
         }
         var flags = 0;
         var newmantissa = mantissa;
-        if (shift.signum() == 0) {
+        if (shift.isValueZero()) {
             if ((lastDiscarded | olderDiscarded) != 0) {
                 flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
                 if (rounding == Rounding.Unnecessary) throw new Error("Rounding was required");
@@ -7871,7 +7928,7 @@ var RadixMath = function(helper) {
                 dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend).GetDigitLength();
                 divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
                 divisorPrecision.Subtract(dividendPrecision);
-                if (divisorPrecision.signum() == 0) divisorPrecision.Increment();
+                if (divisorPrecision.isValueZero()) divisorPrecision.Increment();
 
                 mantissaDividend = this.helper.MultiplyByRadixPower(mantissaDividend, divisorPrecision);
                 adjust.Add(divisorPrecision);
@@ -7939,7 +7996,7 @@ var RadixMath = function(helper) {
                             count = count + (divd.RepeatedSubtract(divs));
                         }
                         result.AddInt(count);
-                        remainderZero = (divd.signum() == 0);
+                        remainderZero = (divd.isValueZero());
                         if (remainderZero && adjust.signum() >= 0) {
                             mantissaDividend = divd.AsBigInteger();
                             break;
@@ -8087,135 +8144,25 @@ var RadixMath = function(helper) {
     };
 
     prototype.RoundToBinaryPrecision = function(thisValue, context) {
-        return this.RoundToBinaryPrecisionWithShift(thisValue, context, 0, 0, new FastInteger(0), false);
+        return this.RoundToBinaryPrecisionWithShift(thisValue, context, 0, 0, null, false);
     };
     prototype.RoundToBinaryPrecisionWithShift = function(thisValue, context, lastDiscarded, olderDiscarded, shift, adjustNegativeZero) {
         if ((context) == null) return thisValue;
-        if ((context.getPrecision()).signum() == 0 && !context.getHasExponentRange() && (lastDiscarded | olderDiscarded) == 0 && shift.signum() == 0) return thisValue;
+        if ((context.getPrecision()).signum() == 0 && !context.getHasExponentRange() && (lastDiscarded | olderDiscarded) == 0 && (shift == null || shift.isValueZero())) return thisValue;
         if ((context.getPrecision()).signum() == 0 || this.thisRadix == 2) return this.RoundToPrecisionWithShift(thisValue, context, lastDiscarded, olderDiscarded, shift, false);
-        var fastEMin = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMin()) : null;
-        var fastEMax = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMax()) : null;
-        var fastPrecision = FastInteger.FromBig(context.getPrecision());
-        var signals = [0];
-        var dfrac = this.RoundToPrecisionInternal(thisValue, fastPrecision, context.getRounding(), fastEMin, fastEMax, lastDiscarded, olderDiscarded, shift, true, false, signals);
 
-        if (context.getClampNormalExponents() && dfrac != null) {
-            var digitCount = null;
-            if (this.thisRadix == 2) {
-                digitCount = FastInteger.Copy(fastPrecision);
-            } else {
-
-                var maxMantissa = BigInteger.ONE;
-                var prec = FastInteger.Copy(fastPrecision);
-                while (prec.signum() > 0) {
-                    var bitShift = prec.CompareToInt(1000000) >= 0 ? 1000000 : prec.AsInt32();
-                    maxMantissa = maxMantissa.shiftLeft(bitShift);
-                    prec.SubtractInt(bitShift);
-                }
-                maxMantissa = maxMantissa.subtract(BigInteger.ONE);
-
-                digitCount = this.helper.CreateShiftAccumulator(maxMantissa).GetDigitLength();
-            }
-            var clamp = FastInteger.Copy(fastEMax).Increment().Subtract(digitCount);
-            var fastExp = FastInteger.FromBig(this.helper.GetExponent(dfrac));
-            if (fastExp.compareTo(clamp) > 0) {
-                var neg = (this.helper.GetFlags(dfrac) & BigNumberFlags.FlagNegative) != 0;
-                var bigmantissa = (this.helper.GetMantissa(dfrac)).abs();
-                if (!(bigmantissa.signum() == 0)) {
-                    var expdiff = FastInteger.Copy(fastExp).Subtract(clamp);
-                    bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, expdiff);
-                }
-                if (signals != null) signals[0] = signals[0] | PrecisionContext.FlagClamped;
-                dfrac = this.helper.CreateNewWithFlags(bigmantissa, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
-            }
-        }
-        if (context.getHasFlags()) {
-            context.setFlags(context.getFlags() | (signals[0]));
-        }
-        return dfrac;
+        throw new Error();
     };
 
     prototype.Plus = function(thisValue, context) {
-        return this.RoundToPrecisionWithShift(thisValue, context, 0, 0, new FastInteger(0), true);
+        return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, true, context);
     };
 
     prototype.RoundToPrecision = function(thisValue, context) {
-        return this.RoundToPrecisionWithShift(thisValue, context, 0, 0, new FastInteger(0), false);
+        return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, false, context);
     };
     prototype.RoundToPrecisionWithShift = function(thisValue, context, lastDiscarded, olderDiscarded, shift, adjustNegativeZero) {
-        if ((context) == null) return thisValue;
-
-        if ((context.getPrecision()).signum() == 0 && !context.getHasExponentRange() && (lastDiscarded | olderDiscarded) == 0 && shift.signum() == 0) return thisValue;
-        var fastEMin = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMin()) : null;
-        var fastEMax = (context.getHasExponentRange()) ? FastInteger.FromBig(context.getEMax()) : null;
-        var fastPrecision = FastInteger.FromBig(context.getPrecision());
-        var thisFlags = this.helper.GetFlags(thisValue);
-        if (fastPrecision.signum() > 0 && (shift == null || shift.signum() == 0) && (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
-
-            var mantabs = (this.helper.GetMantissa(thisValue)).abs();
-            if (adjustNegativeZero && (thisFlags & BigNumberFlags.FlagNegative) != 0 && mantabs.signum() == 0 && (context.getRounding() != Rounding.Floor)) {
-
-                thisValue = this.EnsureSign(thisValue, false);
-                thisFlags = 0;
-            }
-            var digitCount = this.helper.CreateShiftAccumulator(mantabs).GetDigitLength();
-            if (digitCount.compareTo(fastPrecision) <= 0) {
-                if (!this.RoundGivenDigits(lastDiscarded, olderDiscarded, context.getRounding(), (thisFlags & BigNumberFlags.FlagNegative) != 0, mantabs)) {
-                    if (context.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                        context.setFlags(context.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
-                    }
-                    if (!context.getHasExponentRange()) return thisValue;
-                    var fastExp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
-                    var fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
-                    var fastNormalMin = FastInteger.Copy(fastEMin).Add(fastPrecision).Decrement();
-                    if (fastAdjustedExp.compareTo(fastEMax) <= 0 && fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
-                        return thisValue;
-                    }
-                } else {
-                    if (context.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
-                        context.setFlags(context.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
-                    }
-                    var stillWithinPrecision = false;
-                    mantabs = mantabs.add(BigInteger.ONE);
-                    if (digitCount.compareTo(fastPrecision) < 0) {
-                        stillWithinPrecision = true;
-                    } else {
-                        var radixPower = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
-                        stillWithinPrecision = (mantabs.compareTo(radixPower) < 0);
-                    }
-                    if (stillWithinPrecision) {
-                        if (!context.getHasExponentRange()) return this.helper.CreateNewWithFlags(mantabs, this.helper.GetExponent(thisValue), thisFlags);
-                        var fastExp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
-                        var fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
-                        var fastNormalMin = FastInteger.Copy(fastEMin).Add(fastPrecision).Decrement();
-                        if (fastAdjustedExp.compareTo(fastEMax) <= 0 && fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
-                            return this.helper.CreateNewWithFlags(mantabs, this.helper.GetExponent(thisValue), thisFlags);
-                        }
-                    }
-                }
-            }
-        }
-        var signals = [0];
-        var dfrac = this.RoundToPrecisionInternal(thisValue, fastPrecision, context.getRounding(), fastEMin, fastEMax, lastDiscarded, olderDiscarded, shift, false, adjustNegativeZero, context.getHasFlags() ? signals : null);
-        if (context.getClampNormalExponents() && dfrac != null) {
-
-            var clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
-            var fastExp = FastInteger.FromBig(this.helper.GetExponent(dfrac));
-            if (fastExp.compareTo(clamp) > 0) {
-                var neg = (this.helper.GetFlags(dfrac) & BigNumberFlags.FlagNegative) != 0;
-                var bigmantissa = (this.helper.GetMantissa(dfrac)).abs();
-                if (!(bigmantissa.signum() == 0)) {
-                    var expdiff = FastInteger.Copy(fastExp).Subtract(clamp);
-                    bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, expdiff);
-                }
-                if (signals != null) signals[0] = signals[0] | PrecisionContext.FlagClamped;
-                dfrac = this.helper.CreateNewWithFlags(bigmantissa, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
-            }
-        }
-        if (context.getHasFlags()) {
-            context.setFlags(context.getFlags() | (signals[0]));
-        }
-        return dfrac;
+        return this.RoundToPrecisionInternal(thisValue, lastDiscarded, olderDiscarded, shift, false, adjustNegativeZero, context);
     };
 
     prototype.Quantize = function(thisValue, otherValue, ctx) {
@@ -8366,23 +8313,88 @@ var RadixMath = function(helper) {
     prototype.Reduce = function(thisValue, ctx) {
         return this.ReduceToPrecisionAndIdealExponent(thisValue, ctx, null, null);
     };
-    prototype.RoundToPrecisionInternal = function(thisValue, precision, rounding, fastEMin, fastEMax, lastDiscarded, olderDiscarded, shift, binaryPrec, adjustNegativeZero, signals) {
+    prototype.RoundToPrecisionInternal = function(thisValue, lastDiscarded, olderDiscarded, shift, binaryPrec, adjustNegativeZero, ctx) {
 
-        if (precision.signum() < 0) throw new Error("precision" + " not greater or equal to " + "0" + " (" + precision + ")");
-        if (this.thisRadix == 2 || precision.signum() == 0) {
+        if ((ctx) == null) return thisValue;
+
+        if ((ctx.getPrecision()).signum() == 0 && !ctx.getHasExponentRange() && (lastDiscarded | olderDiscarded) == 0 && (shift == null || shift.isValueZero())) return thisValue;
+
+        var fastPrecision = ((ctx.getPrecision()).canFitInInt()) ? new FastInteger((ctx.getPrecision()).intValue()) : FastInteger.FromBig(ctx.getPrecision());
+        if (fastPrecision.signum() < 0) throw new Error("precision" + " not greater or equal to " + "0" + " (" + fastPrecision + ")");
+        if (this.thisRadix == 2 || fastPrecision.isValueZero()) {
 
             binaryPrec = false;
         }
+        var accum = null;
+        var fastEMin = null;
+        var fastEMax = null;
+
+        if (ctx.getHasExponentRange()) {
+            fastEMax = ((ctx.getEMax()).canFitInInt()) ? new FastInteger((ctx.getEMax()).intValue()) : FastInteger.FromBig(ctx.getEMax());
+            fastEMin = ((ctx.getEMin()).canFitInInt()) ? new FastInteger((ctx.getEMin()).intValue()) : FastInteger.FromBig(ctx.getEMin());
+        }
+        var rounding = ctx.getRounding();
         var thisFlags = this.helper.GetFlags(thisValue);
+        var unlimitedPrec = (fastPrecision.isValueZero());
+        if (!binaryPrec) {
+
+            if (fastPrecision.signum() > 0 && (shift == null || shift.isValueZero()) && (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
+                var mantabs = (this.helper.GetMantissa(thisValue)).abs();
+                if (adjustNegativeZero && (thisFlags & BigNumberFlags.FlagNegative) != 0 && mantabs.signum() == 0 && (ctx.getRounding() != Rounding.Floor)) {
+
+                    thisValue = this.EnsureSign(thisValue, false);
+                    thisFlags = 0;
+                }
+                accum = this.helper.CreateShiftAccumulatorWithDigits(mantabs, lastDiscarded, olderDiscarded);
+                var digitCount = accum.GetDigitLength();
+                if (digitCount.compareTo(fastPrecision) <= 0) {
+                    if (!this.RoundGivenDigits(lastDiscarded, olderDiscarded, ctx.getRounding(), (thisFlags & BigNumberFlags.FlagNegative) != 0, mantabs)) {
+                        if (ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
+                            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+                        }
+                        if (!ctx.getHasExponentRange()) return thisValue;
+                        var bigexp = this.helper.GetExponent(thisValue);
+                        var fastExp = (bigexp.canFitInInt()) ? new FastInteger(bigexp.intValue()) : FastInteger.FromBig(bigexp);
+                        var fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
+                        var fastNormalMin = FastInteger.Copy(fastEMin).Add(fastPrecision).Decrement();
+                        if (fastAdjustedExp.compareTo(fastEMax) <= 0 && fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
+                            return thisValue;
+                        }
+                    } else {
+                        if (ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
+                            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+                        }
+                        var stillWithinPrecision = false;
+                        mantabs = mantabs.add(BigInteger.ONE);
+                        if (digitCount.compareTo(fastPrecision) < 0) {
+                            stillWithinPrecision = true;
+                        } else {
+                            var radixPower = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
+                            stillWithinPrecision = (mantabs.compareTo(radixPower) < 0);
+                        }
+                        if (stillWithinPrecision) {
+                            if (!ctx.getHasExponentRange()) return this.helper.CreateNewWithFlags(mantabs, this.helper.GetExponent(thisValue), thisFlags);
+                            var bigexp = this.helper.GetExponent(thisValue);
+                            var fastExp = (bigexp.canFitInInt()) ? new FastInteger(bigexp.intValue()) : FastInteger.FromBig(bigexp);
+                            var fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
+                            var fastNormalMin = FastInteger.Copy(fastEMin).Add(fastPrecision).Decrement();
+                            if (fastAdjustedExp.compareTo(fastEMax) <= 0 && fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
+                                return this.helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
             if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
-                if (signals != null) {
-                    signals[0] = signals[0] | PrecisionContext.FlagInvalid;
+                if (ctx.getHasFlags()) {
+                    ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid));
                 }
-                return this.ReturnQuietNaNFastIntPrecision(thisValue, precision);
+                return this.ReturnQuietNaN(thisValue, ctx);
             }
             if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-                return this.ReturnQuietNaNFastIntPrecision(thisValue, precision);
+                return this.ReturnQuietNaN(thisValue, ctx);
             }
             if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
                 return thisValue;
@@ -8401,11 +8413,9 @@ var RadixMath = function(helper) {
         var maxMantissa = BigInteger.ONE;
         var exp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
         var flags = 0;
-        var accum = this.helper.CreateShiftAccumulatorWithDigits(bigmantissa, lastDiscarded, olderDiscarded);
-        var unlimitedPrec = (precision.signum() == 0);
-        var fastPrecision = precision;
+        if (accum == null) accum = this.helper.CreateShiftAccumulatorWithDigits(bigmantissa, lastDiscarded, olderDiscarded);
         if (binaryPrec) {
-            var prec = FastInteger.Copy(precision);
+            var prec = FastInteger.Copy(fastPrecision);
             while (prec.signum() > 0) {
                 var bitShift = (prec.CompareToInt(1000000) >= 0) ? 1000000 : prec.AsInt32();
                 maxMantissa = maxMantissa.shiftLeft(bitShift);
@@ -8415,10 +8425,8 @@ var RadixMath = function(helper) {
             var accumMaxMant = this.helper.CreateShiftAccumulator(maxMantissa);
 
             fastPrecision = accumMaxMant.GetDigitLength();
-        } else {
-            fastPrecision = precision;
         }
-        if (shift != null) {
+        if (shift != null && shift.signum() != 0) {
             accum.ShiftRight(shift);
         }
         if (!unlimitedPrec) {
@@ -8449,23 +8457,16 @@ var RadixMath = function(helper) {
             }
         }
 
-        if (signals != null && fastEMin != null && !unlimitedPrec && adjExponent.compareTo(fastEMin) < 0) {
+        if (ctx.getHasFlags() && fastEMin != null && !unlimitedPrec && adjExponent.compareTo(fastEMin) < 0) {
             earlyRounded = accum.getShiftedInt();
             if (this.RoundGivenBigInt(accum, rounding, neg, earlyRounded)) {
                 earlyRounded = earlyRounded.add(BigInteger.ONE);
-
                 if (earlyRounded.testBit(0) == false || (this.thisRadix & 1) != 0) {
                     var accum2 = this.helper.CreateShiftAccumulator(earlyRounded);
                     var newDigitLength = accum2.GetDigitLength();
+
                     if (binaryPrec || newDigitLength.compareTo(fastPrecision) > 0) {
-                        var neededShift = FastInteger.Copy(newDigitLength).Subtract(fastPrecision);
-                        accum2.ShiftRight(neededShift);
-
-                        if ((accum2.getDiscardedDigitCount()).signum() != 0) {
-
-                            earlyRounded = accum2.getShiftedInt();
-                        }
-                        newDigitLength = accum2.GetDigitLength();
+                        newDigitLength = FastInteger.Copy(fastPrecision);
                     }
                     newAdjExponent = FastInteger.Copy(exp).Add(newDigitLength).Decrement();
                 }
@@ -8473,33 +8474,42 @@ var RadixMath = function(helper) {
         }
         if (fastEMax != null && adjExponent.compareTo(fastEMax) > 0) {
             if (mantissaWasZero) {
-                if (signals != null) {
-                    signals[0] = flags | PrecisionContext.FlagClamped;
+                if (ctx.getHasFlags()) {
+                    ctx.setFlags(ctx.getFlags() | (flags | PrecisionContext.FlagClamped));
+                }
+                if (!binaryPrec && ctx.getClampNormalExponents()) {
+
+                    var clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+                    if (fastEMax.compareTo(clampExp) > 0) {
+                        if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagClamped));
+                        fastEMax = clampExp;
+                    }
                 }
                 return this.helper.CreateNewWithFlags(oldmantissa, fastEMax.AsBigInteger(), thisFlags);
-            }
+            } else {
 
-            flags |= PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
-            if (rounding == Rounding.Unnecessary) throw new Error("Rounding was required");
-            if (!unlimitedPrec && (rounding == Rounding.Down || rounding == Rounding.ZeroFiveUp || (rounding == Rounding.Ceiling && neg) || (rounding == Rounding.Floor && !neg))) {
+                flags |= PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
+                if (rounding == Rounding.Unnecessary) throw new Error("Rounding was required");
+                if (!unlimitedPrec && (rounding == Rounding.Down || rounding == Rounding.ZeroFiveUp || (rounding == Rounding.Ceiling && neg) || (rounding == Rounding.Floor && !neg))) {
 
-                var overflowMant = BigInteger.ZERO;
-                if (binaryPrec) {
-                    overflowMant = maxMantissa;
-                } else {
-                    overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
-                    overflowMant = overflowMant.subtract(BigInteger.ONE);
+                    var overflowMant = BigInteger.ZERO;
+                    if (binaryPrec) {
+                        overflowMant = maxMantissa;
+                    } else {
+                        overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
+                        overflowMant = overflowMant.subtract(BigInteger.ONE);
+                    }
+                    if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (flags));
+                    clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+                    return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
                 }
-                if (signals != null) signals[0] = flags;
-                clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
-                return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
+                if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (flags));
+                return this.SignalOverflow(neg);
             }
-            if (signals != null) signals[0] = flags;
-            return this.SignalOverflow(neg);
         } else if (fastEMin != null && adjExponent.compareTo(fastEMin) < 0) {
 
             var fastETiny = FastInteger.Copy(fastEMin).Subtract(fastPrecision).Increment();
-            if (signals != null) {
+            if (ctx.getHasFlags()) {
                 if (earlyRounded.signum() != 0) {
                     if (newAdjExponent.compareTo(fastEMin) < 0) {
                         flags |= PrecisionContext.FlagSubnormal;
@@ -8520,7 +8530,7 @@ var RadixMath = function(helper) {
                     if (rounding == Rounding.Unnecessary) throw new Error("Rounding was required");
                 }
                 if ((accum.getDiscardedDigitCount()).signum() != 0 || (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                    if (signals != null) {
+                    if (ctx.getHasFlags()) {
                         if (!mantissaWasZero) flags |= PrecisionContext.FlagRounded;
                         if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
                             flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
@@ -8530,10 +8540,23 @@ var RadixMath = function(helper) {
                         newmantissa.Increment();
                     }
                 }
-                if (signals != null) {
-                    if (newmantissa.signum() == 0) flags |= PrecisionContext.FlagClamped;
+                if (ctx.getHasFlags()) {
+                    if (newmantissa.isValueZero()) flags |= PrecisionContext.FlagClamped;
                     if ((flags & (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact)) == (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact)) flags |= PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
-                    signals[0] = flags;
+                    ctx.setFlags(ctx.getFlags() | (flags));
+                }
+                bigmantissa = newmantissa.AsBigInteger();
+                if (!binaryPrec && ctx.getClampNormalExponents()) {
+
+                    var clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+                    if (fastETiny.compareTo(clampExp) > 0) {
+                        if (!(bigmantissa.signum() == 0)) {
+                            expdiff = FastInteger.Copy(fastETiny).Subtract(clampExp);
+                            bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, expdiff);
+                        }
+                        if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagClamped));
+                        fastETiny = clampExp;
+                    }
                 }
                 return this.helper.CreateNewWithFlags(newmantissa.AsBigInteger(), fastETiny.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
             }
@@ -8547,10 +8570,11 @@ var RadixMath = function(helper) {
                 if (rounding == Rounding.Unnecessary) throw new Error("Rounding was required");
             }
             if (this.RoundGivenBigInt(accum, rounding, neg, bigmantissa)) {
+                var oldDigitLength = accum.GetDigitLength();
                 bigmantissa = bigmantissa.add(BigInteger.ONE);
                 if (binaryPrec) recheckOverflow = true;
 
-                if (!unlimitedPrec && (bigmantissa.testBit(0) == false || (this.thisRadix & 1) != 0)) {
+                if (!unlimitedPrec && (bigmantissa.testBit(0) == false || (this.thisRadix & 1) != 0) && (binaryPrec || oldDigitLength.compareTo(fastPrecision) >= 0)) {
                     accum = this.helper.CreateShiftAccumulator(bigmantissa);
                     var newDigitLength = accum.GetDigitLength();
                     if (binaryPrec || newDigitLength.compareTo(fastPrecision) > 0) {
@@ -8596,15 +8620,27 @@ var RadixMath = function(helper) {
                         overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
                         overflowMant = overflowMant.subtract(BigInteger.ONE);
                     }
-                    if (signals != null) signals[0] = flags;
+                    if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (flags));
                     clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
                     return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
                 }
-                if (signals != null) signals[0] = flags;
+                if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (flags));
                 return this.SignalOverflow(neg);
             }
         }
-        if (signals != null) signals[0] = flags;
+        if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (flags));
+        if (!binaryPrec && ctx.getClampNormalExponents()) {
+
+            var clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            if (exp.compareTo(clampExp) > 0) {
+                if (!(bigmantissa.signum() == 0)) {
+                    var expdiff = FastInteger.Copy(exp).Subtract(clampExp);
+                    bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, expdiff);
+                }
+                if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagClamped));
+                exp = clampExp;
+            }
+        }
         return this.helper.CreateNewWithFlags(bigmantissa, exp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
     };
     prototype.AddCore = function(mant1, mant2, exponent, flags1, flags2, ctx) {

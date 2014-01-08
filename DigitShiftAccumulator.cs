@@ -181,7 +181,21 @@ namespace PeterO {
           return;
         }
       }
-
+      if(knownBitLength==null)
+        knownBitLength=GetDigitLength();
+      if(new FastInteger(digits).Decrement().CompareTo(knownBitLength)>=0){
+        // Shifting more bits than available
+        bitsAfterLeftmost |= (shiftedBigInt.IsZero ? 0 : 1);
+        isSmall=true;
+        shiftedSmall=0;
+        knownBitLength=new FastInteger(1);
+        if(discardedBitCount==null)
+          discardedBitCount=new FastInteger(0);
+        discardedBitCount.AddInt(digits);
+        bitsAfterLeftmost |= bitLeftmost;
+        bitLeftmost = 0;
+        return;
+      }
       String str = shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.Length;

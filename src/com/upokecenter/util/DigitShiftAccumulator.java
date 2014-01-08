@@ -189,7 +189,21 @@ bigrem=divrem[1]; }
           return;
         }
       }
-
+      if(knownBitLength==null)
+        knownBitLength=GetDigitLength();
+      if(new FastInteger(digits).Decrement().compareTo(knownBitLength)>=0){
+        // Shifting more bits than available
+        bitsAfterLeftmost |= (shiftedBigInt.signum()==0 ? 0 : 1);
+        isSmall=true;
+        shiftedSmall=0;
+        knownBitLength=new FastInteger(1);
+        if(discardedBitCount==null)
+          discardedBitCount=new FastInteger(0);
+        discardedBitCount.AddInt(digits);
+        bitsAfterLeftmost |= bitLeftmost;
+        bitLeftmost = 0;
+        return;
+      }
       String str = shiftedBigInt.toString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.length();
@@ -246,7 +260,8 @@ bigrem=divrem[1]; }
         }
       }
       String str;
-      knownBitLength=GetDigitLength();
+      if(knownBitLength==null)
+        knownBitLength=GetDigitLength();
       if(knownBitLength.CompareToInt(digits)<=0){
         return;
       }

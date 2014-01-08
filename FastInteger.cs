@@ -1096,7 +1096,8 @@ public MutableNumber MultiplyByTenAndAdd(int digit) {
       }
     }
 
-    public bool IsValueZero {
+    /// <summary> </summary>
+public bool IsValueZero{
       get {
         switch(this.integerMode){
           case 0:
