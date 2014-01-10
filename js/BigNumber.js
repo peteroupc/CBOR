@@ -355,7 +355,7 @@ function() {
     constructor['Increment'] = constructor.Increment = function(A, Astart, N, B) {
         {
             var tmp = A[Astart];
-            A[Astart] = (((tmp + B) & 65535));
+            A[Astart] = ((tmp + B) & 65535);
             if ((A[Astart] & 65535) >= (tmp & 65535)) return 0;
             for (var i = 1; i < N; i++) {
                 A[Astart + i] = ((A[Astart + i] + 1) & 65535);
@@ -367,7 +367,7 @@ function() {
     constructor['Decrement'] = constructor.Decrement = function(A, Astart, N, B) {
         {
             var tmp = A[Astart];
-            A[Astart] = (((tmp - B) & 65535));
+            A[Astart] = ((tmp - B) & 65535);
             if ((A[Astart] & 65535) <= (tmp & 65535)) return 0;
             for (var i = 1; i < N; i++) {
                 tmp = A[Astart + i];
@@ -379,7 +379,7 @@ function() {
     };
     constructor['TwosComplement'] = constructor.TwosComplement = function(A, Astart, N) {
         BigInteger.Decrement(A, Astart, N, 1);
-        for (var i = 0; i < N; i++) A[Astart + i] = (((~A[Astart + i]) & 65535));
+        for (var i = 0; i < N; i++) A[Astart + i] = ((~A[Astart + i]) & 65535);
     };
     constructor['Add'] = constructor.Add = function(C, cstart, A, astart, B, bstart, N) {
         {
@@ -387,9 +387,9 @@ function() {
             u = 0;
             for (var i = 0; i < N; i += 2) {
                 u = (A[astart + i] & 65535) + (B[bstart + i] & 65535) + ((u >> 16)|0);
-                C[cstart + i] = (((((u & 65535) & 65535))|0));
+                C[cstart + i] = ((u & 65535) & 65535);
                 u = (A[astart + i + 1] & 65535) + (B[bstart + i + 1] & 65535) + ((u >> 16)|0);
-                C[cstart + i + 1] = (((((u & 65535) & 65535))|0));
+                C[cstart + i + 1] = ((u & 65535) & 65535);
             }
             return ((u|0) >>> 16);
         }
@@ -400,11 +400,11 @@ function() {
             u = 0;
             for (var i = 0; i < N; i += 2) {
                 u = (A[astart] & 65535) - (B[bstart] & 65535) - ((u >> 31) & 1);
-                C[cstart++] = (((((u & 65535) & 65535))|0));
+                C[cstart++] = ((u & 65535) & 65535);
                 astart++;
                 bstart++;
                 u = (A[astart] & 65535) - (B[bstart] & 65535) - ((u >> 31) & 1);
-                C[cstart++] = (((((u & 65535) & 65535))|0));
+                C[cstart++] = ((u & 65535) & 65535);
                 astart++;
                 bstart++;
             }
@@ -419,7 +419,7 @@ function() {
                 var p;
                 p = (A[astart + i] & 65535) * Bint;
                 p = p + (carry & 65535);
-                productArr[cstart + i] = (((((p & 65535) & 65535))|0));
+                productArr[cstart + i] = ((p & 65535) & 65535);
                 carry = ((p >> 16)|0);
             }
             return carry;
@@ -432,7 +432,7 @@ function() {
             var d;
             var e;
             p = (A[astart] & 65535) * (A[astart] & 65535);
-            R[rstart] = (((((p & 65535) & 65535))|0));
+            R[rstart] = ((p & 65535) & 65535);
             e = ((p|0) >>> 16);
             p = (A[astart] & 65535) * (A[astart + 1] & 65535);
             c = (p & 65535);
@@ -445,8 +445,8 @@ function() {
             R[rstart + 4 - 3] = (c & 65535);
             p = (A[astart + 2 - 1] & 65535) * (A[astart + 2 - 1] & 65535);
             p = p + (e);
-            R[rstart + 4 - 2] = (((((p & 65535) & 65535))|0));
-            R[rstart + 4 - 1] = (((p >> 16) & 65535));
+            R[rstart + 4 - 2] = ((p & 65535) & 65535);
+            R[rstart + 4 - 1] = ((p >> 16) & 65535);
         }
     };
     constructor['Baseline_Square4'] = constructor.Baseline_Square4 = function(R, rstart, A, astart) {
@@ -456,7 +456,7 @@ function() {
             var d;
             var e;
             p = (A[astart] & 65535) * (A[astart] & 65535);
-            R[rstart] = (((((p & 65535) & 65535))|0));
+            R[rstart] = ((p & 65535) & 65535);
             e = ((p|0) >>> 16);
             p = (A[astart] & 65535) * (A[astart + 1] & 65535);
             c = (p & 65535);
@@ -517,8 +517,8 @@ function() {
             R[rstart + 2 * 4 - 3] = (c & 65535);
             p = (A[astart + 4 - 1] & 65535) * (A[astart + 4 - 1] & 65535);
             p = p + (e);
-            R[rstart + 2 * 4 - 2] = (((((p & 65535) & 65535))|0));
-            R[rstart + 2 * 4 - 1] = (((p >> 16) & 65535));
+            R[rstart + 2 * 4 - 2] = ((p & 65535) & 65535);
+            R[rstart + 2 * 4 - 1] = ((p >> 16) & 65535);
         }
     };
     constructor['Baseline_Square8'] = constructor.Baseline_Square8 = function(R, rstart, A, astart) {
@@ -528,7 +528,7 @@ function() {
             var d;
             var e;
             p = (A[astart] & 65535) * (A[astart] & 65535);
-            R[rstart] = (((((p & 65535) & 65535))|0));
+            R[rstart] = ((p & 65535) & 65535);
             e = ((p|0) >>> 16);
             p = (A[astart] & 65535) * (A[astart + 1] & 65535);
             c = (p & 65535);
@@ -733,8 +733,8 @@ function() {
             R[rstart + 2 * 8 - 3] = (c & 65535);
             p = (A[astart + 8 - 1] & 65535) * (A[astart + 8 - 1] & 65535);
             p = p + (e);
-            R[rstart + 2 * 8 - 2] = (((((p & 65535) & 65535))|0));
-            R[rstart + 2 * 8 - 1] = (((p >> 16) & 65535));
+            R[rstart + 2 * 8 - 2] = ((p & 65535) & 65535);
+            R[rstart + 2 * 8 - 1] = ((p >> 16) & 65535);
         }
     };
     constructor['Baseline_Multiply2'] = constructor.Baseline_Multiply2 = function(R, rstart, A, astart, B, bstart) {
@@ -763,8 +763,8 @@ function() {
             R[rstart + 1] = (c & 65535);
             p = a1 * b1;
             p = p + (d);
-            R[rstart + 1 + 1] = (((((p & 65535) & 65535))|0));
-            R[rstart + 1 + 2] = (((p >> 16) & 65535));
+            R[rstart + 1 + 1] = ((p & 65535) & 65535);
+            R[rstart + 1 + 2] = ((p >> 16) & 65535);
         }
     };
     constructor['Baseline_Multiply4'] = constructor.Baseline_Multiply4 = function(R, rstart, A, astart, B, bstart) {
@@ -852,8 +852,8 @@ function() {
             R[rstart + 5] = (c & 65535);
             p = (((A[astart + 3])|0) & mask) * (((B[bstart + 3])|0) & mask);
             p = p + (d);
-            R[rstart + 5 + 1] = (((((p & 65535) & 65535))|0));
-            R[rstart + 5 + 2] = (((p >> 16) & 65535));
+            R[rstart + 5 + 1] = ((p & 65535) & 65535);
+            R[rstart + 5 + 2] = ((p >> 16) & 65535);
         }
     };
     constructor['Baseline_Multiply8'] = constructor.Baseline_Multiply8 = function(R, rstart, A, astart, B, bstart) {
@@ -1155,8 +1155,8 @@ function() {
             R[rstart + 13] = (c & 65535);
             p = (((A[astart + 7])|0) & mask) * (((B[bstart + 7])|0) & mask);
             p = p + (d);
-            R[rstart + 13 + 1] = (((((p & 65535) & 65535))|0));
-            R[rstart + 13 + 2] = (((p >> 16) & 65535));
+            R[rstart + 13 + 1] = ((p & 65535) & 65535);
+            R[rstart + 13 + 2] = ((p >> 16) & 65535);
         }
     };
     constructor['Baseline_Multiply16'] = constructor.Baseline_Multiply16 = function(R, rstart, A, astart, B, bstart) {
@@ -2274,8 +2274,8 @@ function() {
             R[rstart + 29] = (c & 65535);
             p = (((A[astart + 15])|0) & mask) * (((B[bstart + 15])|0) & mask);
             p = p + (d);
-            R[rstart + 30] = (((((p & 65535) & 65535))|0));
-            R[rstart + 31] = (((p >> 16) & 65535));
+            R[rstart + 30] = ((p & 65535) & 65535);
+            R[rstart + 31] = ((p >> 16) & 65535);
         }
     };
     constructor['s_recursionLimit'] = constructor.s_recursionLimit = 8;
@@ -2384,7 +2384,7 @@ function() {
                     Rarr[Rstart + NB + 1] = 0;
                     return;
                 default:
-                    Rarr[Rstart + NB] = (((BigInteger.LinearMultiply(Rarr, Rstart, Barr, Bstart, Aarr[Astart], NB)) & 65535));
+                    Rarr[Rstart + NB] = ((BigInteger.LinearMultiply(Rarr, Rstart, Barr, Bstart, Aarr[Astart], NB)) & 65535);
                     Rarr[Rstart + NB + 1] = 0;
                     return;
             }
@@ -2473,7 +2473,7 @@ function() {
         for (var i = 0; i < 32; i++) {
             tmpInt = dividendHigh >> 31;
             dividendHigh <<= 1;
-            dividendHigh = ((((dividendHigh | ((dividendLow >> 31) & 1)))|0));
+            dividendHigh = (((dividendHigh | ((dividendLow >> 31) & 1))|0));
             dividendLow <<= 1;
             tmpInt |= dividendHigh;
             if (((tmpInt >> 31) != 0) || (tmpInt >= intDivisor)) {
@@ -2489,7 +2489,7 @@ function() {
         {
             var iy = (y & 65535);
             if ((x >> 31) == 0) {
-                return (((((x|0) / iy) & 65535))|0);
+                return (((x|0) / iy) & 65535);
             } else {
                 return BigInteger.Divide32By16(x, y, false);
             }
@@ -2514,16 +2514,16 @@ function() {
             var B1int = (B1 & 65535);
             var p = B0int * Qint;
             var u = (A[Astart] & 65535) - (p & 65535);
-            A[Astart] = (((BigInteger.GetLowHalf(u)) & 65535));
+            A[Astart] = ((BigInteger.GetLowHalf(u)) & 65535);
             u = (A[Astart + 1] & 65535) - (p >>> 16) - ((BigInteger.GetHighHalfAsBorrow(u)) & 65535) - (B1int * Qint);
-            A[Astart + 1] = (((BigInteger.GetLowHalf(u)) & 65535));
-            A[Astart + 2] = (((A[Astart + 2] + BigInteger.GetHighHalf(u)) & 65535));
+            A[Astart + 1] = ((BigInteger.GetLowHalf(u)) & 65535);
+            A[Astart + 2] = ((A[Astart + 2] + BigInteger.GetHighHalf(u)) & 65535);
             while (A[Astart + 2] != 0 || (A[Astart + 1] & 65535) > (B1 & 65535) || (A[Astart + 1] == B1 && (A[Astart] & 65535) >= (B0 & 65535))) {
                 u = (A[Astart] & 65535) - B0int;
-                A[Astart] = (((BigInteger.GetLowHalf(u)) & 65535));
+                A[Astart] = ((BigInteger.GetLowHalf(u)) & 65535);
                 u = (A[Astart + 1] & 65535) - B1int - ((BigInteger.GetHighHalfAsBorrow(u)) & 65535);
-                A[Astart + 1] = (((BigInteger.GetLowHalf(u)) & 65535));
-                A[Astart + 2] = (((A[Astart + 2] + BigInteger.GetHighHalf(u)) & 65535));
+                A[Astart + 1] = ((BigInteger.GetLowHalf(u)) & 65535);
+                A[Astart + 2] = ((A[Astart + 2] + BigInteger.GetHighHalf(u)) & 65535);
                 Q++;
             }
         }
@@ -2570,8 +2570,8 @@ function() {
                 R[rsi + 1] = (c & 65535);
                 p = a1 * b1;
                 p = p + (d);
-                R[rsi + 2] = (((((p & 65535) & 65535))|0));
-                R[rsi + 3] = (((p >> 16) & 65535));
+                R[rsi + 2] = ((p & 65535) & 65535);
+                R[rsi + 3] = ((p >> 16) & 65535);
             }
         }
     };
@@ -2595,15 +2595,15 @@ function() {
                         d = (s & 65535) * (((B0|0) - B1) & 65535);
                     }
                     var A0B0 = A0 * B0;
-                    C[csi] = (((((A0B0 & 65535) & 65535))|0));
+                    C[csi] = ((A0B0 & 65535) & 65535);
                     var a0b0high = (A0B0 >>> 16);
                     var A1B1 = A1 * B1;
                     var tempInt;
                     tempInt = a0b0high + (A0B0 & 65535) + (d & 65535) + (A1B1 & 65535);
-                    C[csi + 1] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 1] = ((tempInt & 65535) & 65535);
                     tempInt = A1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((A1B1 >> 16) & 65535) - (s & 65535);
-                    C[csi + 2] = (((((tempInt & 65535) & 65535))|0));
-                    C[csi + 3] = (((((((tempInt >> 16) & 65535)) & 65535))|0));
+                    C[csi + 2] = ((tempInt & 65535) & 65535);
+                    C[csi + 3] = (((tempInt >> 16) & 65535) & 65535);
                 }
             } else {
                 for (var i = istart; i < iend; i += 4) {
@@ -2619,14 +2619,14 @@ function() {
                     }
                     var A0B0 = A0 * B0;
                     var a0b0high = (A0B0 >>> 16);
-                    C[csi] = (((((A0B0 & 65535) & 65535))|0));
+                    C[csi] = ((A0B0 & 65535) & 65535);
                     var A1B1 = A1 * B1;
                     var tempInt;
                     tempInt = a0b0high + (A0B0 & 65535) + (d & 65535) + (A1B1 & 65535);
-                    C[csi + 1] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 1] = ((tempInt & 65535) & 65535);
                     tempInt = A1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((A1B1 >> 16) & 65535) - (s & 65535);
-                    C[csi + 2] = (((((tempInt & 65535) & 65535))|0));
-                    C[csi + 3] = (((((((tempInt >> 16) & 65535)) & 65535))|0));
+                    C[csi + 2] = ((tempInt & 65535) & 65535);
+                    C[csi + 3] = (((tempInt >> 16) & 65535) & 65535);
                 }
             }
         }
@@ -2654,16 +2654,16 @@ function() {
                     var a0b0high = (A0B0 >>> 16);
                     var tempInt;
                     tempInt = A0B0 + (C[csi] & 65535);
-                    C[csi] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi] = ((tempInt & 65535) & 65535);
                     var A1B1 = A1 * B1;
                     var a1b1low = (A1B1 & 65535);
                     var a1b1high = ((A1B1 >> 16) & 65535);
                     tempInt = ((tempInt >> 16) & 65535) + (A0B0 & 65535) + (d & 65535) + a1b1low + (C[csi + 1] & 65535);
-                    C[csi + 1] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 1] = ((tempInt & 65535) & 65535);
                     tempInt = ((tempInt >> 16) & 65535) + a1b1low + a0b0high + ((d >> 16) & 65535) + a1b1high - (s & 65535) + (C[csi + 2] & 65535);
-                    C[csi + 2] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 2] = ((tempInt & 65535) & 65535);
                     tempInt = ((tempInt >> 16) & 65535) + a1b1high + (C[csi + 3] & 65535);
-                    C[csi + 3] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 3] = ((tempInt & 65535) & 65535);
                     if ((tempInt >> 16) != 0) {
                         C[csi + 4] = ((C[csi + 4] + 1) & 65535);
                         C[csi + 5] = (((((C[csi + 5] + (((C[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
@@ -2685,16 +2685,16 @@ function() {
                     var a0b0high = (A0B0 >>> 16);
                     var tempInt;
                     tempInt = A0B0 + (C[csi] & 65535);
-                    C[csi] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi] = ((tempInt & 65535) & 65535);
                     var A1B1 = A1 * B1;
                     var a1b1low = (A1B1 & 65535);
                     var a1b1high = (A1B1 >>> 16);
                     tempInt = ((tempInt >> 16) & 65535) + (A0B0 & 65535) + (d & 65535) + a1b1low + (C[csi + 1] & 65535);
-                    C[csi + 1] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 1] = ((tempInt & 65535) & 65535);
                     tempInt = ((tempInt >> 16) & 65535) + a1b1low + a0b0high + ((d >> 16) & 65535) + a1b1high - (s & 65535) + (C[csi + 2] & 65535);
-                    C[csi + 2] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 2] = ((tempInt & 65535) & 65535);
                     tempInt = ((tempInt >> 16) & 65535) + a1b1high + (C[csi + 3] & 65535);
-                    C[csi + 3] = (((((tempInt & 65535) & 65535))|0));
+                    C[csi + 3] = ((tempInt & 65535) & 65535);
                     if ((tempInt >> 16) != 0) {
                         C[csi + 4] = ((C[csi + 4] + 1) & 65535);
                         C[csi + 5] = (((((C[csi + 5] + (((C[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
@@ -2812,7 +2812,7 @@ function() {
                 for (var i = 0; i < len; i += 2, j++) {
                     var index = (littleEndian) ? i : len - 1 - i;
                     var index2 = (littleEndian) ? i + 1 : len - 2 - i;
-                    this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
+                    this.reg[j] = ((bytes[index] & 255) & 65535);
                     if (index2 >= 0 && index2 < len) {
                         this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
                     }
@@ -2821,12 +2821,12 @@ function() {
                 for (var i = 0; i < len; i += 2, j++) {
                     var index = (littleEndian) ? i : len - 1 - i;
                     var index2 = (littleEndian) ? i + 1 : len - 2 - i;
-                    this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
+                    this.reg[j] = ((bytes[index] & 255) & 65535);
                     if (index2 >= 0 && index2 < len) {
                         this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
                     } else {
 
-                        this.reg[j] = (((this.reg[j] | (65280)) & 65535));
+                        this.reg[j] = ((this.reg[j] | (65280)) & 65535);
                     }
                 }
                 for (; j < this.reg.length; j++) {
@@ -2910,7 +2910,7 @@ function() {
                 iut = ((numberValue < 0) ? ((-numberValue)|0) : (numberValue|0));
                 this.reg = [0, 0];
                 this.reg[0] = (iut & 65535);
-                this.reg[1] = (((iut >> 16) & 65535));
+                this.reg[1] = ((iut >> 16) & 65535);
                 this.wordCount = (this.reg[1] != 0 ? 2 : (this.reg[0] == 0 ? 0 : 1));
             }
         }
@@ -3522,7 +3522,7 @@ function() {
                 var quo, rem;
 
                 while ((wci--) > 0) {
-                    var currentDividend = (((((tempReg[wci] & 65535) | ((remainder|0) << 16)))|0));
+                    var currentDividend = ((((tempReg[wci] & 65535) | ((remainder|0) << 16))|0));
                     quo = ((currentDividend / 10000)|0);
                     tempReg[wci] = (quo & 65535);
                     rem = currentDividend - (10000 * quo);
@@ -3589,8 +3589,8 @@ function() {
                 smallInt = smallInt + (digit);
             } else {
                 if (haveSmallInt) {
-                    bigint.reg[0] = ((((((smallInt) & 65535) & 65535))|0));
-                    bigint.reg[1] = (((smallInt >>> 16) & 65535));
+                    bigint.reg[0] = (((smallInt) & 65535) & 65535);
+                    bigint.reg[1] = ((smallInt >>> 16) & 65535);
                     haveSmallInt = false;
                 }
 
@@ -3601,7 +3601,7 @@ function() {
                     {
                         p = ((bigint.reg[j]) & 65535) * 10;
                         p = p + (carry & 65535);
-                        bigint.reg[j] = (((((p & 65535) & 65535))|0));
+                        bigint.reg[j] = ((p & 65535) & 65535);
                         carry = ((p >> 16)|0);
                     }
                 }
@@ -3610,7 +3610,7 @@ function() {
                 if (digit != 0) {
                     var d = (bigint.reg[0]) & 65535;
                     if (d <= 65526) {
-                        bigint.reg[0] = (((d + digit) & 65535));
+                        bigint.reg[0] = ((d + digit) & 65535);
                     } else if (BigInteger.Increment(bigint.reg, 0, bigint.reg.length, (digit|0)) != 0) {
                         bigint.reg = BigInteger.GrowForCarry(bigint.reg, 1);
                     }
@@ -3619,8 +3619,8 @@ function() {
         }
         if (!haveDigits) throw new Error("No digits");
         if (haveSmallInt) {
-            bigint.reg[0] = ((((((smallInt) & 65535) & 65535))|0));
-            bigint.reg[1] = (((smallInt >>> 16) & 65535));
+            bigint.reg[0] = (((smallInt) & 65535) & 65535);
+            bigint.reg[1] = ((smallInt >>> 16) & 65535);
         }
         bigint.wordCount = bigint.CalcWordCount();
         bigint.negative = (bigint.wordCount != 0 && negative);
@@ -3754,7 +3754,7 @@ function() {
                 sum = new BigInteger();
                 sum.reg = [0, 0];
                 sum.reg[0] = (intSum & 65535);
-                sum.reg[1] = (((intSum >> 16) & 65535));
+                sum.reg[1] = ((intSum >> 16) & 65535);
                 sum.wordCount = ((intSum >> 16) == 0) ? 1 : 2;
                 sum.negative = this.negative;
                 return sum;
@@ -3830,7 +3830,7 @@ function() {
             var wc = bigintB.wordCount;
             product.reg = [];
             for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(wc + 1); arrfillI++) product.reg[arrfillI] = 0;
-            product.reg[wc] = (((BigInteger.LinearMultiply(product.reg, 0, bigintB.reg, 0, bigintA.reg[0], wc)) & 65535));
+            product.reg[wc] = ((BigInteger.LinearMultiply(product.reg, 0, bigintB.reg, 0, bigintA.reg[0], wc)) & 65535);
             product.negative = false;
             product.wordCount = product.CalcWordCount();
             return;
@@ -3838,7 +3838,7 @@ function() {
             var wc = bigintA.wordCount;
             product.reg = [];
             for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(wc + 1); arrfillI++) product.reg[arrfillI] = 0;
-            product.reg[wc] = (((BigInteger.LinearMultiply(product.reg, 0, bigintA.reg, 0, bigintB.reg[0], wc)) & 65535));
+            product.reg[wc] = ((BigInteger.LinearMultiply(product.reg, 0, bigintA.reg, 0, bigintB.reg[0], wc)) & 65535);
             product.negative = false;
             product.wordCount = product.CalcWordCount();
             return;
@@ -3891,7 +3891,7 @@ function() {
         var idivisor = (divisorSmall & 65535);
         var quo, rem;
         while ((i--) > 0) {
-            var currentDividend = (((((dividendReg[i] & 65535) | ((remainder|0) << 16)))|0));
+            var currentDividend = ((((dividendReg[i] & 65535) | ((remainder|0) << 16))|0));
             if ((currentDividend >> 31) == 0) {
                 quo = ((currentDividend / idivisor)|0);
                 quotientReg[i] = (quo & 65535);
@@ -3900,7 +3900,7 @@ function() {
                     remainder = (rem|0);
                 }
             } else {
-                quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
+                quotientReg[i] = ((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535);
                 if (i > 0) remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
             }
         }
@@ -3911,14 +3911,14 @@ function() {
         var idivisor = (divisorSmall & 65535);
         var quo, rem;
         while ((i--) > 0) {
-            var currentDividend = (((((dividendReg[i] & 65535) | ((remainder|0) << 16)))|0));
+            var currentDividend = ((((dividendReg[i] & 65535) | ((remainder|0) << 16))|0));
             if ((currentDividend >> 31) == 0) {
                 quo = ((currentDividend / idivisor)|0);
                 quotientReg[i] = (quo & 65535);
                 rem = currentDividend - (idivisor * quo);
                 remainder = (rem|0);
             } else {
-                quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
+                quotientReg[i] = ((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535);
                 remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
             }
         }
@@ -3930,14 +3930,14 @@ function() {
         var quo, rem;
         var idivisor = (divisorSmall & 65535);
         while ((i--) > 0) {
-            var currentDividend = (((((quotientReg[i] & 65535) | ((remainder|0) << 16)))|0));
+            var currentDividend = ((((quotientReg[i] & 65535) | ((remainder|0) << 16))|0));
             if ((currentDividend >> 31) == 0) {
                 quo = ((currentDividend / idivisor)|0);
                 quotientReg[i] = (quo & 65535);
                 rem = currentDividend - (idivisor * quo);
                 remainder = (rem|0);
             } else {
-                quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
+                quotientReg[i] = ((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535);
                 remainder = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
             }
         }
@@ -10609,5 +10609,6 @@ function(mantissa, exponent) {
 
 if(typeof exports!=="undefined")exports['ExtendedFloat']=ExtendedFloat;
 if(typeof window!=="undefined")window['ExtendedFloat']=ExtendedFloat;
+
 })();
 

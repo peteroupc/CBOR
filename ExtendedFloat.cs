@@ -96,20 +96,29 @@ namespace PeterO {
       return hashCode;
     }
     #endregion
-    /// <summary> Creates a binary float with the value exponent*10^mantissa.
+
+    /// <summary> Creates a number with the value exponent*2^mantissa.
     /// </summary>
     /// <param name='mantissa'>The unscaled value.</param>
-    /// <param name='exponent'>The decimal exponent.</param>
-    public ExtendedFloat(BigInteger mantissa, BigInteger exponent) {
-      this.exponent = exponent;
-      int sign = mantissa.Sign;
-      this.unsignedMantissa = sign < 0 ? (-(BigInteger)mantissa) : mantissa;
-      this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
+    /// <param name='exponent'>The binary exponent.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public static ExtendedFloat Create(BigInteger mantissa, BigInteger exponent) {
+      if((mantissa)==null)throw new ArgumentNullException("mantissa");
+      if((exponent)==null)throw new ArgumentNullException("exponent");
+      ExtendedFloat ex=new ExtendedFloat();
+      ex.exponent = exponent;
+      int sign = mantissa==null ? 0 : mantissa.Sign;
+      ex.unsignedMantissa = sign < 0 ? (-(BigInteger)mantissa) : mantissa;
+      ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
+      return ex;
+    }
+
+    private ExtendedFloat() {
     }
 
     internal static ExtendedFloat CreateWithFlags(BigInteger mantissa,
                                                   BigInteger exponent, int flags) {
-      ExtendedFloat ext = new ExtendedFloat(mantissa, exponent);
+      ExtendedFloat ext = ExtendedFloat.Create(mantissa, exponent);
       ext.flags = flags;
       return ext;
     }
@@ -270,7 +279,7 @@ namespace PeterO {
         bool neg = (flags & BigNumberFlags.FlagNegative) != 0;
         if ((neg && mantissa.Sign > 0) || (!neg && mantissa.Sign < 0))
           mantissa = -mantissa;
-        return new ExtendedFloat(mantissa, exponent);
+        return ExtendedFloat.Create(mantissa, exponent);
       }
     /// <summary> </summary>
     /// <returns>A 32-bit signed integer.</returns>
@@ -619,17 +628,17 @@ namespace PeterO {
       }
       if (neg) fpMantissa = -fpMantissa;
       bigmant = (BigInteger)fpMantissa;
-      return new ExtendedFloat(bigmant,
+      return ExtendedFloat.Create(bigmant,
                                (BigInteger)(fpExponent - 150));
     }
 
     public static ExtendedFloat FromBigInteger(BigInteger bigint) {
-      return new ExtendedFloat(bigint, BigInteger.Zero);
+      return ExtendedFloat.Create(bigint, BigInteger.Zero);
     }
 
     public static ExtendedFloat FromInt64(long valueSmall) {
       BigInteger bigint = (BigInteger)valueSmall;
-      return new ExtendedFloat(bigint, BigInteger.Zero);
+      return ExtendedFloat.Create(bigint, BigInteger.Zero);
     }
 
     /// <summary> Creates a binary float from a 64-bit floating-point number.
@@ -707,7 +716,7 @@ namespace PeterO {
       "Microsoft.Security","CA2104",
       Justification="ExtendedFloat is immutable")]
 #endif
-    public static readonly ExtendedFloat One = new ExtendedFloat(BigInteger.One, BigInteger.Zero);
+    public static readonly ExtendedFloat One = ExtendedFloat.Create(BigInteger.One, BigInteger.Zero);
 
     /// <summary> Represents the number 0. </summary>
 #if CODE_ANALYSIS
@@ -715,7 +724,7 @@ namespace PeterO {
       "Microsoft.Security","CA2104",
       Justification="ExtendedFloat is immutable")]
 #endif
-    public static readonly ExtendedFloat Zero = new ExtendedFloat(BigInteger.Zero, BigInteger.Zero);
+    public static readonly ExtendedFloat Zero = ExtendedFloat.Create(BigInteger.Zero, BigInteger.Zero);
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",
@@ -729,7 +738,7 @@ namespace PeterO {
       "Microsoft.Security","CA2104",
       Justification="ExtendedFloat is immutable")]
 #endif
-    public static readonly ExtendedFloat Ten = new ExtendedFloat((BigInteger)10, BigInteger.Zero);
+    public static readonly ExtendedFloat Ten = ExtendedFloat.Create((BigInteger)10, BigInteger.Zero);
 
     //----------------------------------------------------------------
 
@@ -1421,7 +1430,7 @@ namespace PeterO {
     /// value of 0 rounds the number to an integer.</param>
     public ExtendedFloat Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return Quantize(new ExtendedFloat(BigInteger.One, desiredExponent), ctx);
+      return Quantize(ExtendedFloat.Create(BigInteger.One, desiredExponent), ctx);
     }
 
     /// <summary> Returns a binary float with the same value but a new exponent.
@@ -1444,7 +1453,7 @@ namespace PeterO {
     /// value of 0 rounds the number to an integer.</param>
     public ExtendedFloat Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize(new ExtendedFloat(BigInteger.One, (BigInteger)desiredExponentSmall), ctx);
+      return Quantize(ExtendedFloat.Create(BigInteger.One, (BigInteger)desiredExponentSmall), ctx);
     }
 
     /// <summary> Returns a binary float with the same value as this object

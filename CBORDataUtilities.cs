@@ -169,7 +169,7 @@ namespace PeterO {
           return CBORObject.FromObject(0);
         }
         if(fastNumber.CanFitInInt32() && fastExponent.CanFitInInt32()){
-          return CBORObject.FromObject(new ExtendedDecimal(
+          return CBORObject.FromObject(ExtendedDecimal.Create(
             fastNumber.AsBigInteger(),fastExponent.AsBigInteger()));
         } else {
           BigInteger bigintExponent=fastExponent.AsBigInteger();
@@ -193,7 +193,7 @@ namespace PeterO {
                 return CBORObject.FromObject(0);
             }
           }
-          return CBORObject.FromObject(new ExtendedDecimal(
+          return CBORObject.FromObject(ExtendedDecimal.Create(
             fastNumber.AsBigInteger(),bigintExponent));
         }
       }

@@ -98,17 +98,25 @@ at: http://peteroupc.github.io/CBOR/
      * Creates a decimal number with the value exponent*10^mantissa.
      * @param mantissa The unscaled value.
      * @param exponent The decimal exponent.
+     * @return An ExtendedDecimal object.
      */
-    public ExtendedDecimal (BigInteger mantissa, BigInteger exponent) {
-      this.exponent = exponent;
-      int sign = mantissa.signum();
-      this.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
-      this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
+    public static ExtendedDecimal Create(BigInteger mantissa, BigInteger exponent) {
+      if((mantissa)==null)throw new NullPointerException("mantissa");
+      if((exponent)==null)throw new NullPointerException("exponent");
+      ExtendedDecimal ex=new ExtendedDecimal();
+      ex.exponent = exponent;
+      int sign = mantissa==null ? 0 : mantissa.signum();
+      ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+      ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
+      return ex;
+    }
+
+    private ExtendedDecimal() {
     }
 
     private static ExtendedDecimal CreateWithFlags(BigInteger mantissa,
                                                    BigInteger exponent, int flags) {
-      ExtendedDecimal ext = new ExtendedDecimal(mantissa, exponent);
+      ExtendedDecimal ext = ExtendedDecimal.Create(mantissa, exponent);
       ext.flags = flags;
       return ext;
     }
@@ -149,6 +157,10 @@ at: http://peteroupc.github.io/CBOR/
       }
       int mantInt = 0;
       FastInteger mant = null;
+      int mantBuffer=0;
+      int mantBufferMult=1;
+      int expBuffer=0;
+      int expBufferMult=1;
       boolean haveDecimalPoint = false;
       boolean haveDigits = false;
       boolean haveExponent = false;
@@ -196,12 +208,21 @@ at: http://peteroupc.github.io/CBOR/
               int thisdigit = (int)(str.charAt(i) - '0');
               haveDigits=(haveDigits||thisdigit!=0);
               if (mantInt > MaxSafeInt) {
-                if (mant == null)
+                if (mant == null){
                   mant = new FastInteger(mantInt);
-                if(thisdigit==0)
-                  mant.Multiply(10);
-                else
-                  mant.MultiplyByTenAndAdd(thisdigit);
+                  mantBuffer=thisdigit;
+                  mantBufferMult=10;
+                } else {
+                  if(mantBufferMult>=1000000000){
+                    mant.Multiply(mantBufferMult).AddInt(mantBuffer);
+                    mantBuffer=thisdigit;
+                    mantBufferMult=10;
+                  } else {
+                    mantBufferMult*=10;
+                    mantBuffer=(mantBuffer<<3)+(mantBuffer<<1);
+                    mantBuffer+=thisdigit;
+                  }
+                }
               } else {
                 mantInt *= 10;
                 mantInt += thisdigit;
@@ -216,6 +237,9 @@ at: http://peteroupc.github.io/CBOR/
             } else {
               throw new NumberFormatException();
             }
+          }
+          if(mant!=null && (mantBufferMult!=1 || mantBuffer!=0)){
+            mant.Multiply(mantBufferMult).AddInt(mantBuffer);
           }
           BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
           return CreateWithFlags(
@@ -249,9 +273,22 @@ at: http://peteroupc.github.io/CBOR/
               int thisdigit = (int)(str.charAt(i) - '0');
               haveDigits=(haveDigits||thisdigit!=0);
               if (mantInt > MaxSafeInt) {
-                if (mant == null)
+
+                if (mant == null){
                   mant = new FastInteger(mantInt);
-                mant.MultiplyByTenAndAdd(thisdigit);
+                  mantBuffer=thisdigit;
+                  mantBufferMult=10;
+                } else {
+                  if(mantBufferMult>=1000000000){
+                    mant.Multiply(mantBufferMult).AddInt(mantBuffer);
+                    mantBuffer=thisdigit;
+                    mantBufferMult=10;
+                  } else {
+                    mantBufferMult*=10;
+                    mantBuffer=(mantBuffer<<3)+(mantBuffer<<1);
+                    mantBuffer+=thisdigit;
+                  }
+                }
               } else {
                 mantInt *= 10;
                 mantInt += thisdigit;
@@ -267,19 +304,35 @@ at: http://peteroupc.github.io/CBOR/
               throw new NumberFormatException();
             }
           }
+          if(mant!=null && (mantBufferMult!=1 || mantBuffer!=0)){
+            mant.Multiply(mantBufferMult).AddInt(mantBuffer);
+          }
           BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
           return CreateWithFlags(
             bigmant, BigInteger.ZERO,
             (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagSignalingNaN);
         }
       }
+      // Ordinary number
       for (; i < str.length(); i++) {
         if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
           int thisdigit = (int)(str.charAt(i) - '0');
           if (mantInt > MaxSafeInt) {
-            if (mant == null)
+            if (mant == null){
               mant = new FastInteger(mantInt);
-            mant.MultiplyByTenAndAdd(thisdigit);
+              mantBuffer=thisdigit;
+              mantBufferMult=10;
+            } else {
+              if(mantBufferMult>=1000000000){
+                mant.Multiply(mantBufferMult).AddInt(mantBuffer);
+                mantBuffer=thisdigit;
+                mantBufferMult=10;
+              } else {
+                mantBufferMult*=10;
+                mantBuffer=(mantBuffer<<3)+(mantBuffer<<1);
+                mantBuffer+=thisdigit;
+              }
+            }
           } else {
             mantInt *= 10;
             mantInt += thisdigit;
@@ -308,6 +361,9 @@ at: http://peteroupc.github.io/CBOR/
       }
       if (!haveDigits)
         throw new NumberFormatException();
+      if(mant!=null && (mantBufferMult!=1 || mantBuffer!=0)){
+        mant.Multiply(mantBufferMult).AddInt(mantBuffer);
+      }
       if (haveExponent) {
         FastInteger exp = null;
         int expInt = 0;
@@ -323,9 +379,21 @@ at: http://peteroupc.github.io/CBOR/
             haveDigits = true;
             int thisdigit = (int)(str.charAt(i) - '0');
             if (expInt > MaxSafeInt) {
-              if (exp == null)
+              if (exp == null){
                 exp = new FastInteger(expInt);
-              exp.MultiplyByTenAndAdd(thisdigit);
+                expBuffer=thisdigit;
+                expBufferMult=10;
+              } else {
+                if(expBufferMult>=1000000000){
+                  exp.Multiply(expBufferMult).AddInt(expBuffer);
+                  expBuffer=thisdigit;
+                  expBufferMult=10;
+                } else {
+                  expBufferMult*=10;
+                  expBuffer=(expBuffer<<3)+(expBuffer<<1);
+                  expBuffer+=thisdigit;
+                }
+              }
             } else {
               expInt *= 10;
               expInt += thisdigit;
@@ -336,6 +404,9 @@ at: http://peteroupc.github.io/CBOR/
         }
         if (!haveDigits)
           throw new NumberFormatException();
+        if(exp!=null && (expBufferMult!=1 || expBuffer!=0)){
+          exp.Multiply(expBufferMult).AddInt(expBuffer);
+        }
         if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
           newScaleInt = expInt;
         } else if (exp == null) {
@@ -343,7 +414,7 @@ at: http://peteroupc.github.io/CBOR/
             newScale = new FastInteger(newScaleInt);
           if (offset < 0)
             newScale.SubtractInt(expInt);
-          else
+          else if(expInt!=0)
             newScale.AddInt(expInt);
         } else {
           if (newScale == null)
@@ -357,10 +428,10 @@ at: http://peteroupc.github.io/CBOR/
       if (i != str.length()) {
         throw new NumberFormatException();
       }
-      ExtendedDecimal ret=CreateWithFlags(
-        (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
-        (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
-        negative ? BigNumberFlags.FlagNegative : 0);
+      ExtendedDecimal ret=new ExtendedDecimal();
+      ret.unsignedMantissa=(mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
+      ret.exponent=(newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
+      ret.flags=(negative ? BigNumberFlags.FlagNegative : 0);
       if(ctx!=null)ret=ret.RoundToPrecision(ctx);
       return ret;
     }
@@ -863,7 +934,7 @@ remainder=divrem[1]; }
           bigmantissa=bigmantissa.add(BigInteger.ONE);
         }
         if (neg) bigmantissa=(bigmantissa).negate();
-        return new ExtendedFloat(bigmantissa, scale.AsBigInteger());
+        return ExtendedFloat.Create(bigmantissa, scale.AsBigInteger());
       }
     }
 
@@ -966,17 +1037,17 @@ remainder=divrem[1]; }
         BigInteger bigmantissa = BigInteger.valueOf(fpMantissa);
         bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa=(bigmantissa).negate();
-        return new ExtendedDecimal(bigmantissa, BigInteger.valueOf(fpExponent));
+        return ExtendedDecimal.Create(bigmantissa, BigInteger.valueOf(fpExponent));
       }
     }
 
     public static ExtendedDecimal FromBigInteger(BigInteger bigint) {
-      return new ExtendedDecimal(bigint, BigInteger.ZERO);
+      return ExtendedDecimal.Create(bigint, BigInteger.ZERO);
     }
 
     public static ExtendedDecimal FromInt64(long valueSmall) {
       BigInteger bigint = BigInteger.valueOf(valueSmall);
-      return new ExtendedDecimal(bigint, BigInteger.ZERO);
+      return ExtendedDecimal.Create(bigint, BigInteger.ZERO);
     }
 
     /**
@@ -1033,7 +1104,7 @@ remainder=divrem[1]; }
         BigInteger bigmantissa = fpMantissaBig;
         bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfFive(-fpExponent));
         if (neg) bigmantissa=(bigmantissa).negate();
-        return new ExtendedDecimal(bigmantissa, BigInteger.valueOf(fpExponent));
+        return ExtendedDecimal.Create(bigmantissa, BigInteger.valueOf(fpExponent));
       }
     }
 
@@ -1081,7 +1152,7 @@ remainder=divrem[1]; }
         BigInteger bigmantissa = bigintMant;
         BigInteger negbigintExp=(bigintExp).negate();
         bigmantissa=bigmantissa.multiply(DecimalUtility.FindPowerOfFiveFromBig(negbigintExp));
-        return new ExtendedDecimal(bigmantissa, bigintExp);
+        return ExtendedDecimal.Create(bigmantissa, bigintExp);
       }
     }
 
@@ -1115,13 +1186,13 @@ remainder=divrem[1]; }
      * Represents the number 1.
      */
 
-    public static final ExtendedDecimal One = new ExtendedDecimal(BigInteger.ONE, BigInteger.ZERO);
+    public static final ExtendedDecimal One = ExtendedDecimal.Create(BigInteger.ONE, BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
 
-    public static final ExtendedDecimal Zero = new ExtendedDecimal(BigInteger.ZERO, BigInteger.ZERO);
+    public static final ExtendedDecimal Zero = ExtendedDecimal.Create(BigInteger.ZERO, BigInteger.ZERO);
 
     public static final ExtendedDecimal NegativeZero = CreateWithFlags(
       BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
@@ -1129,7 +1200,7 @@ remainder=divrem[1]; }
      * Represents the number 10.
      */
 
-    public static final ExtendedDecimal Ten = new ExtendedDecimal(BigInteger.TEN, BigInteger.ZERO);
+    public static final ExtendedDecimal Ten = ExtendedDecimal.Create(BigInteger.TEN, BigInteger.ZERO);
 
     //----------------------------------------------------------------
 
@@ -1898,7 +1969,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return Quantize(new ExtendedDecimal(BigInteger.ONE, desiredExponent), ctx);
+      return Quantize(ExtendedDecimal.Create(BigInteger.ONE, desiredExponent), ctx);
     }
 
     /**
@@ -1922,7 +1993,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize(new ExtendedDecimal(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)), ctx);
+      return Quantize(ExtendedDecimal.Create(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
     /**

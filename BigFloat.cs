@@ -145,7 +145,7 @@ namespace PeterO {
     /// to a big integer. </summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger ToBigInteger() {
-      return new ExtendedFloat(this.Mantissa,this.Exponent).ToBigInteger();
+      return ExtendedFloat.Create(this.Mantissa,this.Exponent).ToBigInteger();
     }
 
     /// <summary> Converts this value to a 32-bit floating-point number.
@@ -154,7 +154,7 @@ namespace PeterO {
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 32-bit floating point number.</returns>
     public float ToSingle() {
-      return new ExtendedFloat(this.Mantissa,this.Exponent).ToSingle();
+      return ExtendedFloat.Create(this.Mantissa,this.Exponent).ToSingle();
     }
 
     /// <summary> Converts this value to a 64-bit floating-point number.
@@ -163,14 +163,14 @@ namespace PeterO {
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 64-bit floating point number.</returns>
     public double ToDouble() {
-      return new ExtendedFloat(this.Mantissa,this.Exponent).ToDouble();
+      return ExtendedFloat.Create(this.Mantissa,this.Exponent).ToDouble();
     }
     /// <summary> Converts this value to a string.The format of the return
     /// value is exactly the same as that of the java.math.BigDecimal.toString()
     /// method. </summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
-      return new ExtendedFloat(this.Mantissa,this.Exponent).ToString();
+      return ExtendedFloat.Create(this.Mantissa,this.Exponent).ToString();
     }
     /// <summary> Same as toString(), except that when an exponent is used
     /// it will be a multiple of 3. The format of the return value follows the
@@ -178,14 +178,14 @@ namespace PeterO {
     /// </summary>
     /// <returns>A string object.</returns>
     public string ToEngineeringString() {
-      return new ExtendedFloat(this.Mantissa,this.Exponent).ToEngineeringString();
+      return ExtendedFloat.Create(this.Mantissa,this.Exponent).ToEngineeringString();
     }
     /// <summary> Converts this value to a string, but without an exponent
     /// part. The format of the return value follows the format of the java.math.BigDecimal.toPlainString()
     /// method. </summary>
     /// <returns>A string object.</returns>
     public string ToPlainString() {
-      return new ExtendedFloat(this.Mantissa,this.Exponent).ToPlainString();
+      return ExtendedFloat.Create(this.Mantissa,this.Exponent).ToPlainString();
     }
 
     /// <summary> Represents the number 1. </summary>

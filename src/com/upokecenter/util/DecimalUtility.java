@@ -137,9 +137,11 @@ private DecimalUtility(){}
       private static final int MaxSize=64;
       private BigInteger[] outputs;
       private BigInteger[] inputs;
+      private int[] inputsInts;
       public PowerCache () {
         outputs=new BigInteger[MaxSize];
         inputs=new BigInteger[MaxSize];
+        inputsInts=new int[MaxSize];
       }
       int size;
       public BigInteger[] FindCachedPowerOrSmaller(BigInteger bi) {
@@ -169,10 +171,40 @@ private DecimalUtility(){}
                 BigInteger tmp;
                 // Move to head of cache if it isn't already
                 tmp=inputs[i];inputs[i]=inputs[0];inputs[0]=tmp;
+                int tmpi=inputsInts[i];inputsInts[i]=inputsInts[0];inputsInts[0]=tmpi;
                 tmp=outputs[i];outputs[i]=outputs[0];outputs[0]=tmp;
                 // Move formerly newest to next newest
                 if(i!=1){
                   tmp=inputs[i];inputs[i]=inputs[1];inputs[1]=tmp;
+                  tmpi=inputsInts[i];inputsInts[i]=inputsInts[1];inputsInts[1]=tmpi;
+                  tmp=outputs[i];outputs[i]=outputs[1];outputs[1]=tmp;
+                }
+              }
+              return outputs[0];
+            }
+          }
+        }
+        return null;
+      }
+    /**
+     *
+     * @param bi A 32-bit signed integer.
+     * @return A BigInteger object.
+     */
+public BigInteger GetCachedPowerInt(int bi) {
+        synchronized(outputs){
+          for(int i=0;i<size;i++){
+            if(inputsInts[i]>=0 && inputsInts[i]==bi){
+              if(i!=0){
+                BigInteger tmp;
+                // Move to head of cache if it isn't already
+                tmp=inputs[i];inputs[i]=inputs[0];inputs[0]=tmp;
+                int tmpi=inputsInts[i];inputsInts[i]=inputsInts[0];inputsInts[0]=tmpi;
+                tmp=outputs[i];outputs[i]=outputs[0];outputs[0]=tmp;
+                // Move formerly newest to next newest
+                if(i!=1){
+                  tmp=inputs[i];inputs[i]=inputs[1];inputs[1]=tmp;
+                  tmpi=inputsInts[i];inputsInts[i]=inputsInts[1];inputsInts[1]=tmpi;
                   tmp=outputs[i];outputs[i]=outputs[1];outputs[1]=tmp;
                 }
               }
@@ -193,18 +225,22 @@ private DecimalUtility(){}
             // Shift newer entries down
             for(int i=size;i>0;i--){
               inputs[i]=inputs[i-1];
+              inputsInts[i]=inputsInts[i-1];
               outputs[i]=outputs[i-1];
             }
             inputs[0]=input;
+            inputsInts[0]=(input.canFitInInt()) ? input.intValue() : -1;
             outputs[0]=output;
             size++;
           } else {
             // Shift newer entries down
             for(int i=MaxSize-1;i>0;i--){
               inputs[i]=inputs[i-1];
+              inputsInts[i]=inputsInts[i-1];
               outputs[i]=outputs[i-1];
             }
             inputs[0]=input;
+            inputsInts[0]=(input.canFitInInt()) ? input.intValue() : -1;
             outputs[0]=output;
           }
         }
@@ -302,9 +338,9 @@ private DecimalUtility(){}
       if(precision==40)
         return FivePower40;
       int startPrecision=precision;
-      BigInteger origPrecision=BigInteger.valueOf(precision);
-      bigpow=powerOfFiveCache.GetCachedPower(origPrecision);
+      bigpow=powerOfFiveCache.GetCachedPowerInt(precision);
       if(bigpow!=null)return bigpow;
+      BigInteger origPrecision=BigInteger.valueOf(precision);
       if (precision <= 54) {
         if((precision&1)==0){
           ret = BigIntPowersOfFive[(int)(precision>>1)];
@@ -391,14 +427,14 @@ private DecimalUtility(){}
       if (precision <= 18)
         return BigIntPowersOfTen[(int)precision];
       int startPrecision=precision;
-      BigInteger origPrecision=BigInteger.valueOf(precision);
-      bigpow=powerOfTenCache.GetCachedPower(origPrecision);
+      bigpow=powerOfTenCache.GetCachedPowerInt(precision);
       if(bigpow!=null)return bigpow;
+      BigInteger origPrecision=BigInteger.valueOf(precision);
       if (precision <= 27) {
         int prec = (int)precision;
         ret = BigIntPowersOfFive[prec];
         ret=ret.shiftLeft(prec);
-          powerOfTenCache.AddPower(origPrecision,ret);
+        powerOfTenCache.AddPower(origPrecision,ret);
         return ret;
       }
       if (precision <= 36) {
@@ -436,7 +472,7 @@ private DecimalUtility(){}
       }
       ret = (!first ? bigpow : BigInteger.ONE );
       while (precision > 0) {
-        if (precision <= 27) {
+        if (precision <= 18) {
           bigpow = BigIntPowersOfTen[(int)precision];
           if (first)
             ret = bigpow;

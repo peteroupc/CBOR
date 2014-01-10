@@ -104,7 +104,7 @@ import org.junit.Test;
       return BigInteger.fromString(RandomBigIntString(r));
     }
     public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
-      return new ExtendedFloat(RandomBigInteger(r), BigInteger.valueOf(r.NextValue(400) - 200));
+      return ExtendedFloat.Create(RandomBigInteger(r), BigInteger.valueOf(r.NextValue(400) - 200));
     }
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
@@ -2056,18 +2056,18 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       ExtendedFloat bf;
       bf = ExtendedFloat.FromInt64(20);
       Assert.assertEquals("20", ExtendedDecimal.FromExtendedFloat(bf).toString());
-      bf = new ExtendedFloat(BigInteger.valueOf(3), BigInteger.valueOf(-1));
+      bf = ExtendedFloat.Create(BigInteger.valueOf(3), BigInteger.valueOf(-1));
       Assert.assertEquals("1.5", ExtendedDecimal.FromExtendedFloat(bf).toString());
-      bf = new ExtendedFloat(BigInteger.valueOf(-3), BigInteger.valueOf(-1));
+      bf = ExtendedFloat.Create(BigInteger.valueOf(-3), BigInteger.valueOf(-1));
       Assert.assertEquals("-1.5", ExtendedDecimal.FromExtendedFloat(bf).toString());
       ExtendedDecimal df;
       df = ExtendedDecimal.FromInt64(20);
       Assert.assertEquals("20", df.ToExtendedFloat().toString());
       df = ExtendedDecimal.FromInt64(-20);
       Assert.assertEquals("-20", df.ToExtendedFloat().toString());
-      df = new ExtendedDecimal(BigInteger.valueOf(15), BigInteger.valueOf(-1));
+      df = ExtendedDecimal.Create(BigInteger.valueOf(15), BigInteger.valueOf(-1));
       Assert.assertEquals("1.5", df.ToExtendedFloat().toString());
-      df = new ExtendedDecimal(BigInteger.valueOf(-15), BigInteger.valueOf(-1));
+      df = ExtendedDecimal.Create(BigInteger.valueOf(-15), BigInteger.valueOf(-1));
       Assert.assertEquals("-1.5", df.ToExtendedFloat().toString());
     }
     @Test
@@ -3337,7 +3337,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, 0x3, (byte)0xc2, 0x41, 1 });
-      Assert.assertEquals(new ExtendedDecimal(BigInteger.ONE, BigInteger.valueOf(3)),
+      Assert.assertEquals(ExtendedDecimal.Create(BigInteger.ONE, BigInteger.valueOf(3)),
         o.AsExtendedDecimal());
     }
     /**

@@ -203,7 +203,6 @@ namespace Test
         foreach(var f in Directory.GetFiles(TestPath)){
           if(!Path.GetFileName(f).Contains(".decTest"))continue;
           if(Path.GetFileName(f).Contains("ln"))continue;
-          //if(!Path.GetFileName(f).Contains("squareroot"))continue;
           Console.WriteLine("//"+f);
           IDictionary<string,string> context=new Dictionary<string,string>();
           using(StreamReader w=new StreamReader(f)){

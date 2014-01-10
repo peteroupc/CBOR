@@ -181,6 +181,22 @@ namespace PeterO {
           return;
         }
       }
+      if(digits==1){
+        BigInteger bigrem;
+        BigInteger bigquo=BigInteger.DivRem(shiftedBigInt,Ten,out bigrem);
+        bitsAfterLeftmost|=bitLeftmost;
+        bitLeftmost=(int)bigrem;
+        shiftedBigInt=bigquo;
+        if(discardedBitCount==null)
+          discardedBitCount=new FastInteger(0);
+        discardedBitCount.Increment();
+        if(knownBitLength==null)
+          knownBitLength=GetDigitLength();
+        else
+          knownBitLength.Decrement();
+        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+        return;
+      }
       if(knownBitLength==null)
         knownBitLength=GetDigitLength();
       if(new FastInteger(digits).Decrement().CompareTo(knownBitLength)>=0){
@@ -194,6 +210,12 @@ namespace PeterO {
         discardedBitCount.AddInt(digits);
         bitsAfterLeftmost |= bitLeftmost;
         bitLeftmost = 0;
+        return;
+      }
+      if(shiftedBigInt.canFitInInt()){
+        isSmall=true;
+        shiftedSmall=(int)shiftedBigInt;
+        this.ShiftRightSmall(digits);
         return;
       }
       String str = shiftedBigInt.ToString();

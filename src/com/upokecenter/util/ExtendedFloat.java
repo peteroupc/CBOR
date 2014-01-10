@@ -96,20 +96,28 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Creates a binary float with the value exponent*10^mantissa.
+     * Creates a number with the value exponent*2^mantissa.
      * @param mantissa The unscaled value.
-     * @param exponent The decimal exponent.
+     * @param exponent The binary exponent.
+     * @return An ExtendedFloat object.
      */
-    public ExtendedFloat (BigInteger mantissa, BigInteger exponent) {
-      this.exponent = exponent;
-      int sign = mantissa.signum();
-      this.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
-      this.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
+    public static ExtendedFloat Create(BigInteger mantissa, BigInteger exponent) {
+      if((mantissa)==null)throw new NullPointerException("mantissa");
+      if((exponent)==null)throw new NullPointerException("exponent");
+      ExtendedFloat ex=new ExtendedFloat();
+      ex.exponent = exponent;
+      int sign = mantissa==null ? 0 : mantissa.signum();
+      ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+      ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
+      return ex;
+    }
+
+    private ExtendedFloat() {
     }
 
     static ExtendedFloat CreateWithFlags(BigInteger mantissa,
                                                   BigInteger exponent, int flags) {
-      ExtendedFloat ext = new ExtendedFloat(mantissa, exponent);
+      ExtendedFloat ext = ExtendedFloat.Create(mantissa, exponent);
       ext.flags = flags;
       return ext;
     }
@@ -290,7 +298,7 @@ at: http://peteroupc.github.io/CBOR/
         boolean neg = (flags & BigNumberFlags.FlagNegative) != 0;
         if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0))
           mantissa=mantissa.negate();
-        return new ExtendedFloat(mantissa, exponent);
+        return ExtendedFloat.Create(mantissa, exponent);
       }
     /**
      *
@@ -648,17 +656,17 @@ at: http://peteroupc.github.io/CBOR/
       }
       if (neg) fpMantissa = -fpMantissa;
       bigmant = BigInteger.valueOf(fpMantissa);
-      return new ExtendedFloat(bigmant,
+      return ExtendedFloat.Create(bigmant,
                                BigInteger.valueOf(fpExponent - 150));
     }
 
     public static ExtendedFloat FromBigInteger(BigInteger bigint) {
-      return new ExtendedFloat(bigint, BigInteger.ZERO);
+      return ExtendedFloat.Create(bigint, BigInteger.ZERO);
     }
 
     public static ExtendedFloat FromInt64(long valueSmall) {
       BigInteger bigint = BigInteger.valueOf(valueSmall);
-      return new ExtendedFloat(bigint, BigInteger.ZERO);
+      return ExtendedFloat.Create(bigint, BigInteger.ZERO);
     }
 
     /**
@@ -743,13 +751,13 @@ at: http://peteroupc.github.io/CBOR/
      * Represents the number 1.
      */
 
-    public static final ExtendedFloat One = new ExtendedFloat(BigInteger.ONE, BigInteger.ZERO);
+    public static final ExtendedFloat One = ExtendedFloat.Create(BigInteger.ONE, BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
 
-    public static final ExtendedFloat Zero = new ExtendedFloat(BigInteger.ZERO, BigInteger.ZERO);
+    public static final ExtendedFloat Zero = ExtendedFloat.Create(BigInteger.ZERO, BigInteger.ZERO);
 
     public static final ExtendedFloat NegativeZero = CreateWithFlags(
       BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
@@ -757,7 +765,7 @@ at: http://peteroupc.github.io/CBOR/
      * Represents the number 10.
      */
 
-    public static final ExtendedFloat Ten = new ExtendedFloat(BigInteger.TEN, BigInteger.ZERO);
+    public static final ExtendedFloat Ten = ExtendedFloat.Create(BigInteger.TEN, BigInteger.ZERO);
 
     //----------------------------------------------------------------
 
@@ -1526,7 +1534,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public ExtendedFloat Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return Quantize(new ExtendedFloat(BigInteger.ONE, desiredExponent), ctx);
+      return Quantize(ExtendedFloat.Create(BigInteger.ONE, desiredExponent), ctx);
     }
 
     /**
@@ -1550,7 +1558,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public ExtendedFloat Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize(new ExtendedFloat(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)), ctx);
+      return Quantize(ExtendedFloat.Create(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
     /**

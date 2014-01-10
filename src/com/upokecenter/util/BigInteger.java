@@ -12,9 +12,9 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-    /**
-     * An arbitrary-precision integer.
-     */
+  /**
+   * An arbitrary-precision integer.
+   */
   public final class BigInteger implements Comparable<BigInteger>
   {
 
@@ -161,6 +161,23 @@ at: http://peteroupc.github.io/CBOR/
           C[cstart + i] = (short)(u);
           u = (((int)A[astart + i + 1]) & 0xFFFF) + (((int)B[bstart + i + 1]) & 0xFFFF) + (short)(u >> 16);
           C[cstart + i + 1] = (short)(u);
+        }
+        return (((int)u >> 16) & 0xFFFF);
+      }
+    }
+
+    private static int AddOneByOne(
+      short[] C, int cstart,
+      short[] A, int astart,
+      short[] B, int bstart, int N) {
+      //Debugif(!(N%2 == 0))Assert.fail("{0} line {1}: N%2 == 0","integer.cpp",799);
+      {
+
+        int u;
+        u = 0;
+        for (int i = 0; i < N; i += 1) {
+          u = (((int)A[astart + i]) & 0xFFFF) + (((int)B[bstart + i]) & 0xFFFF) + (short)(u >> 16);
+          C[cstart + i] = (short)(u);
         }
         return (((int)u >> 16) & 0xFFFF);
       }
@@ -1018,11 +1035,14 @@ at: http://peteroupc.github.io/CBOR/
 
     private static final int s_recursionLimit = 8;
 
-    private static void RecursiveMultiply(short[] Rarr,
-                                          int Rstart,
-                                          short[] Tarr,
-                                          int Tstart, short[] Aarr, int Astart,
-                                          short[] Barr, int Bstart, int N) {
+    private static void RecursiveMultiply(
+      short[] Rarr, // size 2*N
+      int Rstart,
+      short[] Tarr, // size 2*N
+      int Tstart,
+      short[] Aarr, int Astart, // size N
+      short[] Barr, int Bstart, // size N
+      int N) {
       int sn=N;
       if (N <= s_recursionLimit) {
         N >>= 2;
@@ -1120,6 +1140,51 @@ at: http://peteroupc.github.io/CBOR/
         Increment(Rarr, (int)(Rstart + N + N2), N2, (short)carry);
       }
     }
+
+    private static void SchoolbookMultiply(
+      short[] Rarr, int Rstart,
+      short[] Aarr, int Astart, int NA, short[] Barr, int Bstart, int NB) {
+      // Method assumes that Rarr was already zeroed
+      int cstart;
+      if(NA<NB){
+        // A is shorter than B, so put B on top
+        for(int i=0;i<NA;i++){
+          cstart=Rstart+i;
+          {
+            short carry = 0;
+            int Bint = (((int)Aarr[Astart+i]) & 0xFFFF);
+            for (int j = 0; j < NB; j++) {
+              int p;
+              p = (((int)Barr[Bstart + j]) & 0xFFFF) * Bint;
+              p = p + (((int)carry) & 0xFFFF);
+              if(i!=0)p+=(((int)Rarr[cstart + j])&0xFFFF);
+              Rarr[cstart + j] = (short)(p);
+              carry = (short)(p >> 16);
+            }
+            Rarr[cstart+NB]=carry;
+          }
+        }
+      } else {
+        // B is shorter than A
+        for(int i=0;i<NB;i++){
+          cstart=Rstart+i;
+          {
+            short carry = 0;
+            int Bint = (((int)Barr[Bstart+i]) & 0xFFFF);
+            for (int j = 0; j < NA; j++) {
+              int p;
+              p = (((int)Aarr[Astart + j]) & 0xFFFF) * Bint;
+              p = p + (((int)carry) & 0xFFFF);
+              if(i!=0)p+=(((int)Rarr[cstart + j])&0xFFFF);
+              Rarr[cstart + j] = (short)(p);
+              carry = (short)(p >> 16);
+            }
+            Rarr[cstart+NA]=carry;
+          }
+        }
+      }
+    }
+
     private static void AsymmetricMultiply(
       short[] Rarr,
       int Rstart,
@@ -2653,6 +2718,38 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
+     *
+     * @return A 32-bit signed integer.
+     */
+    public int getLowestSetBit() {
+      int retSetBit=0;
+      for(int i=0;i<wordCount;i++){
+        short c=this.reg[i];
+        if(c==(short)0){
+          retSetBit+=16;
+        } else {
+          if(((c<<15)&0xFFFF)!=0)return retSetBit+0;
+          if(((c<<14)&0xFFFF)!=0)return retSetBit+1;
+          if(((c<<13)&0xFFFF)!=0)return retSetBit+2;
+          if(((c<<12)&0xFFFF)!=0)return retSetBit+3;
+          if(((c<<11)&0xFFFF)!=0)return retSetBit+4;
+          if(((c<<10)&0xFFFF)!=0)return retSetBit+5;
+          if(((c<<9)&0xFFFF)!=0)return retSetBit+6;
+          if(((c<<8)&0xFFFF)!=0)return retSetBit+7;
+          if(((c<<7)&0xFFFF)!=0)return retSetBit+8;
+          if(((c<<6)&0xFFFF)!=0)return retSetBit+9;
+          if(((c<<5)&0xFFFF)!=0)return retSetBit+10;
+          if(((c<<4)&0xFFFF)!=0)return retSetBit+11;
+          if(((c<<3)&0xFFFF)!=0)return retSetBit+12;
+          if(((c<<2)&0xFFFF)!=0)return retSetBit+13;
+          if(((c<<1)&0xFFFF)!=0)return retSetBit+14;
+          return retSetBit+15;
+        }
+      }
+      return 0;
+    }
+
+    /**
      * Returns the greatest common divisor of two integers.
      * @param bigintSecond A BigInteger object.
      * @return A BigInteger object.
@@ -2670,16 +2767,21 @@ at: http://peteroupc.github.io/CBOR/
         return bigintSecond;
       if (thisValue.equals(BigInteger.ONE))
         return thisValue;
-      BigInteger temp;
-      while (thisValue.signum()!=0) {
-        if (thisValue.compareTo(bigintSecond) < 0) {
-          temp = thisValue;
-          thisValue = bigintSecond;
-          bigintSecond = temp;
+      int expOfTwo=Math.min(this.getLowestSetBit(),
+                            bigintSecond.getLowestSetBit());
+      while (true) {
+        BigInteger bigintA=(thisValue.subtract(bigintSecond)).abs();
+        if(bigintA.signum()==0){
+          if(expOfTwo!=0){
+            thisValue=thisValue.shiftLeft(expOfTwo);
+          }
+          return thisValue;
         }
-        thisValue = thisValue.remainder(bigintSecond);
+        int setbit=bigintA.getLowestSetBit();
+        bigintA=bigintA.shiftRight(setbit);
+        bigintSecond=(thisValue.compareTo(bigintSecond)<0) ? thisValue : bigintSecond;
+        thisValue=bigintA;
       }
-      return bigintSecond;
     }
 
     /**
@@ -2707,61 +2809,13 @@ at: http://peteroupc.github.io/CBOR/
       return r;
     }
 
-    private static void PositiveAdd(BigInteger sum,
-                                    BigInteger bigintAddend,
-                                    BigInteger bigintAugend) {
-      int carry;
-      int addendCount=bigintAddend.wordCount+(bigintAddend.wordCount&1);
-      int augendCount=bigintAugend.wordCount+(bigintAugend.wordCount&1);
-      int desiredLength=Math.max(addendCount,augendCount);
-      if (addendCount == augendCount)
-        carry = Add(sum.reg, 0, bigintAddend.reg, 0, bigintAugend.reg, 0, (int)(addendCount));
-      else if (addendCount > augendCount) {
-        // Addend is bigger
-        carry = Add(sum.reg, 0,
-                    bigintAddend.reg, 0,
-                    bigintAugend.reg, 0,
-                    (int)(augendCount));
-        System.arraycopy(
-          bigintAddend.reg, augendCount,
-          sum.reg, augendCount,
-          addendCount - augendCount);
-        carry = Increment(sum.reg, augendCount,
-                          (int)(addendCount - augendCount),
-                          (short)carry);
-      } else {
-        // Augend is bigger
-        carry = Add(sum.reg, 0,
-                    bigintAddend.reg, 0,
-                    bigintAugend.reg, 0,
-                    (int)(addendCount));
-        System.arraycopy(
-          bigintAugend.reg, addendCount,
-          sum.reg, addendCount,
-          augendCount - addendCount);
-        carry = Increment(sum.reg, addendCount,
-                          (int)(augendCount - addendCount),
-                          (short)carry);
-      }
-      if (carry != 0) {
-        int nextIndex=desiredLength;
-        int len = RoundupSize(nextIndex + 1);
-        sum.reg = CleanGrow(sum.reg, len);
-        sum.reg[nextIndex] = (short)carry;
-      }
-      sum.negative = false;
-      sum.wordCount = sum.CalcWordCount();
-      sum.ShortenArray();
-    }
-
     static void PositiveSubtract(BigInteger diff,
                                  BigInteger minuend,
                                  BigInteger subtrahend) {
       int aSize = minuend.wordCount;
-      aSize += aSize % 2;
+      aSize += (aSize&1);
       int bSize = subtrahend.wordCount;
-      bSize += bSize % 2;
-
+      bSize += (bSize&1);
       if (aSize == bSize) {
         if (Compare(minuend.reg, 0, subtrahend.reg, 0, (int)aSize) >= 0) {
           // A is at least as high as B
@@ -2801,7 +2855,14 @@ at: http://peteroupc.github.io/CBOR/
       BigInteger other = ((obj instanceof BigInteger) ? (BigInteger)obj : null);
       if (other == null)
         return false;
-      return other.compareTo(this) == 0;
+      if (this.wordCount == other.wordCount){
+        if(this.negative!=other.negative)return false;
+        for(int i=0;i<this.wordCount;i++){
+          if(this.reg[i]!=other.reg[i])return false;
+        }
+        return true;
+      }
+      return false;
     }
 
     /**
@@ -2867,18 +2928,60 @@ at: http://peteroupc.github.io/CBOR/
         }
       }
       sum = new BigInteger().Allocate((int)Math.max(reg.length, bigintAugend.reg.length));
-      if (this.signum() >= 0) {
-        if (bigintAugend.signum() >= 0)
-          PositiveAdd(sum, this, bigintAugend); // both nonnegative
-        else
-          PositiveSubtract(sum, this, bigintAugend); // this is nonnegative, b is negative
-      } else {
-        if (bigintAugend.signum() >= 0) {
-          PositiveSubtract(sum, bigintAugend, this); // this is negative, b is nonnegative
+      if((!this.negative)==(!bigintAugend.negative)){
+        // both nonnegative or both negative
+        int carry;
+        int addendCount=this.wordCount+(this.wordCount&1);
+        int augendCount=bigintAugend.wordCount+(bigintAugend.wordCount&1);
+        int desiredLength=Math.max(addendCount,augendCount);
+        if (addendCount == augendCount)
+          carry = Add(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)(addendCount));
+        else if (addendCount > augendCount) {
+          // Addend is bigger
+          carry = Add(sum.reg, 0,
+                      this.reg, 0,
+                      bigintAugend.reg, 0,
+                      (int)(augendCount));
+          System.arraycopy(
+            this.reg, augendCount,
+            sum.reg, augendCount,
+            addendCount - augendCount);
+          if(carry!=0)
+            carry = Increment(sum.reg, augendCount,
+                              (int)(addendCount - augendCount),
+                              (short)carry);
         } else {
-          PositiveAdd(sum, this, bigintAugend); // both are negative
-          sum.negative = sum.signum()!=0;
+          // Augend is bigger
+          carry = Add(sum.reg, 0,
+                      this.reg, 0,
+                      bigintAugend.reg, 0,
+                      (int)(addendCount));
+          System.arraycopy(
+            bigintAugend.reg, addendCount,
+            sum.reg, addendCount,
+            augendCount - addendCount);
+          if(carry!=0)
+            carry = Increment(sum.reg, addendCount,
+                              (int)(augendCount - addendCount),
+                              (short)carry);
         }
+        boolean needShorten=true;
+        if (carry != 0) {
+          int nextIndex=desiredLength;
+          int len = RoundupSize(nextIndex + 1);
+          sum.reg = CleanGrow(sum.reg, len);
+          sum.reg[nextIndex] = (short)carry;
+          needShorten=false;
+        }
+        sum.negative = false;
+        sum.wordCount = sum.CalcWordCount();
+        if(needShorten)
+          sum.ShortenArray();
+        sum.negative=(this.negative && sum.signum()!=0);
+      } else if(this.negative){
+        PositiveSubtract(sum, bigintAugend, this); // this is negative, b is nonnegative
+      } else {
+        PositiveSubtract(sum, this, bigintAugend); // this is nonnegative, b is negative
       }
       return sum;
     }
@@ -2890,21 +2993,11 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger subtract(BigInteger subtrahend) {
       if ((subtrahend) == null) throw new NullPointerException("subtrahend");
-      BigInteger diff = new BigInteger().Allocate((int)Math.max(reg.length, subtrahend.reg.length));
-      if (this.signum() >= 0) {
-        if (subtrahend.signum() >= 0)
-          PositiveSubtract(diff, this, subtrahend);
-        else
-          PositiveAdd(diff, this, subtrahend);
-      } else {
-        if (subtrahend.signum() >= 0) {
-          PositiveAdd(diff, this, subtrahend);
-          diff.negative = diff.signum()!=0;
-        } else {
-          PositiveSubtract(diff, subtrahend, this);
-        }
-      }
-      return diff;
+      if(this.wordCount==0)
+        return subtrahend.negate();
+      if(subtrahend.wordCount==0)
+        return this;
+      return this.add(subtrahend.negate());
     }
 
     private void ShortenArray() {
@@ -2921,44 +3014,6 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private static void PositiveMultiply(BigInteger product, BigInteger bigintA, BigInteger bigintB) {
-      if(bigintA.wordCount==1){
-        int wc=bigintB.wordCount;
-        product.reg = new short[RoundupSize(wc+1)];
-        product.reg[wc]=LinearMultiply(product.reg,0,bigintB.reg,0,bigintA.reg[0],wc);
-        product.negative = false;
-        product.wordCount = product.CalcWordCount();
-        return;
-      } else if(bigintB.wordCount==1){
-        int wc=bigintA.wordCount;
-        product.reg = new short[RoundupSize(wc+1)];
-        product.reg[wc]=LinearMultiply(product.reg,0,bigintA.reg,0,bigintB.reg[0],wc);
-        product.negative = false;
-        product.wordCount = product.CalcWordCount();
-        return;
-      } else if (bigintA.equals(bigintB)) {
-        int aSize = RoundupSize(bigintA.wordCount);
-        product.reg = new short[RoundupSize(aSize + aSize)];
-        product.negative = false;
-        short[] workspace = new short[aSize + aSize];
-        RecursiveSquare(product.reg, 0,
-                        workspace, 0,
-                        bigintA.reg, 0, aSize);
-      } else {
-        int aSize = RoundupSize(bigintA.wordCount);
-        int bSize = RoundupSize(bigintB.wordCount);
-        product.reg = new short[RoundupSize(aSize + bSize)];
-        product.negative = false;
-        short[] workspace = new short[aSize + bSize];
-        AsymmetricMultiply(product.reg, 0,
-                           workspace, 0,
-                           bigintA.reg, 0, aSize,
-                           bigintB.reg, 0, bSize);
-      }
-      product.wordCount = product.CalcWordCount();
-      product.ShortenArray();
-    }
-
     /**
      * Multiplies this instance by the value of a BigInteger object.
      * @param bigintMult A BigInteger object.
@@ -2966,14 +3021,68 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger multiply(BigInteger bigintMult) {
       if((bigintMult)==null)throw new NullPointerException("bigintMult");
-      BigInteger product = new BigInteger();
       if(this.wordCount==0 || bigintMult.wordCount==0)
         return BigInteger.ZERO;
       if(this.wordCount==1 && this.reg[0]==1)
         return this.negative ? bigintMult.negate() : bigintMult;
       if(bigintMult.wordCount==1 && bigintMult.reg[0]==1)
         return bigintMult.negative ? this.negate() : this;
-      PositiveMultiply(product, this, bigintMult);
+      BigInteger product = new BigInteger();
+      boolean needShorten=true;
+      if(this.wordCount==1){
+        int wc=bigintMult.wordCount;
+        int regLength=(wc==bigintMult.reg.length ? RoundupSize(wc+1) : bigintMult.reg.length);
+        product.reg = new short[regLength];
+        product.reg[wc]=LinearMultiply(product.reg,0,bigintMult.reg,0,this.reg[0],wc);
+        product.negative = false;
+        product.wordCount=product.reg.length;
+        needShorten=false;
+      } else if(bigintMult.wordCount==1){
+        int wc=this.wordCount;
+        int regLength=(wc==this.reg.length ? RoundupSize(wc+1) : this.reg.length);
+        product.reg = new short[regLength];
+        product.reg[wc]=LinearMultiply(product.reg,0,this.reg,0,bigintMult.reg[0],wc);
+        product.negative = false;
+        product.wordCount=product.reg.length;
+        needShorten=false;
+      } else if(this.wordCount<=10 && bigintMult.wordCount<=10){
+        int wc=this.wordCount+bigintMult.wordCount;
+        wc=(wc<=16) ? RoundupSizeTable[wc] : RoundupSize(wc);
+        product.reg = new short[wc];
+        product.negative = false;
+        product.wordCount=product.reg.length;
+        SchoolbookMultiply(product.reg, 0,
+                           this.reg, 0, this.wordCount,
+                           bigintMult.reg, 0, bigintMult.wordCount);
+        needShorten=false;
+      } else if (this.equals(bigintMult)) {
+        int aSize = RoundupSize(this.wordCount);
+        product.reg = new short[RoundupSize(aSize + aSize)];
+        product.wordCount=product.reg.length;
+        product.negative = false;
+        short[] workspace = new short[aSize + aSize];
+        RecursiveSquare(product.reg, 0,
+                        workspace, 0,
+                        this.reg, 0, aSize);
+      } else {
+        int aSize = this.wordCount;
+        int bSize = bigintMult.wordCount;
+        aSize=(aSize<=16) ? RoundupSizeTable[aSize] : RoundupSize(aSize);
+        bSize=(bSize<=16) ? RoundupSizeTable[bSize] : RoundupSize(bSize);
+        product.reg = new short[RoundupSize(aSize + bSize)];
+        product.negative = false;
+        short[] workspace = new short[aSize + bSize];
+        product.wordCount=product.reg.length;
+        AsymmetricMultiply(product.reg, 0,
+                           workspace, 0,
+                           this.reg, 0, aSize,
+                           bigintMult.reg, 0, bSize);
+      }
+      // Recalculate word count
+      while (product.wordCount != 0 && product.reg[product.wordCount - 1] == 0)
+        product.wordCount--;
+      if(needShorten)
+        product.ShortenArray();
       if ((this.negative) != (bigintMult.negative))
         product.NegateInternal();
       return product;
@@ -3160,6 +3269,23 @@ at: http://peteroupc.github.io/CBOR/
         if (this.negative) smallRemainder = -smallRemainder;
         return new BigInteger[] { quotient, new BigInteger().InitializeInt(smallRemainder) };
       }
+      if(this.wordCount==2 && divisor.wordCount==2 &&
+         (this.reg[1]>>15)!=0 &&
+         (divisor.reg[1]>>15)!=0){
+        int a=(((int)(this.reg[0]))&0xFFFF);
+        int b=(((int)(divisor.reg[0]))&0xFFFF);
+        {
+          a|=(((int)(this.reg[1]))&0xFFFF)<<16;
+          b|=(((int)(divisor.reg[1]))&0xFFFF)<<16;
+          int quo=a/b;
+          if(this.negative)quo=-quo;
+          int rem=a-(b*quo);
+          return new BigInteger[] {
+            new BigInteger().InitializeInt(quo),
+            new BigInteger().InitializeInt(rem)
+          };
+        }
+      }
       BigInteger remainder = new BigInteger();
       quotient = new BigInteger();
       aSize += aSize & 1;
@@ -3284,17 +3410,25 @@ at: http://peteroupc.github.io/CBOR/
       int sb = (tSize == 0 ? 0 : (other.negative ? -1 : 1));
       if (sa != sb) return (sa < sb) ? -1 : 1;
       if (sa == 0) return 0;
-      int cmp = 0;
       if (size == tSize){
         if(size==1 && this.reg[0]==other.reg[0]){
           return 0;
         } else {
-          cmp = Compare(this.reg, 0, other.reg, 0, (int)size);
+          short[] A=this.reg;
+          short[] B=other.reg;
+          while ((size--) != 0) {
+            int an = (((int)A[size]) & 0xFFFF);
+            int bn = (((int)B[size]) & 0xFFFF);
+            if (an > bn)
+              return (sa > 0) ? 1 : -1;
+            else if (an < bn)
+              return (sa > 0) ? -1 : 1;
+          }
+          return 0;
         }
       } else {
-        cmp = size > tSize ? 1 : -1;
+        return ((size > tSize)^(sa<=0)) ? 1 : -1;
       }
-      return (sa > 0) ? cmp : -cmp;
     }
     /**
      *
@@ -3311,7 +3445,7 @@ at: http://peteroupc.github.io/CBOR/
     public boolean isZero() { return (this.wordCount == 0); }
 
     /**
-     * Finds the square root of this instance's value.
+     * Finds the square root of this instance's value, rounded down.
      * @return The square root of this object&apos;s value. Returns 0 if
      * this value is 0 or less.
      */
