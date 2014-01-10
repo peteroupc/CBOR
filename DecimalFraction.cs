@@ -243,11 +243,11 @@ namespace PeterO {
     private string ToStringInternal(int mode) {
       switch (mode) {
         case 0:
-          return new ExtendedDecimal(this.Mantissa, this.Exponent).ToString();
+          return ExtendedDecimal.Create(this.Mantissa, this.Exponent).ToString();
         case 1:
-          return new ExtendedDecimal(this.Mantissa, this.Exponent).ToEngineeringString();
+          return ExtendedDecimal.Create(this.Mantissa, this.Exponent).ToEngineeringString();
         case 2:
-          return new ExtendedDecimal(this.Mantissa, this.Exponent).ToPlainString();
+          return ExtendedDecimal.Create(this.Mantissa, this.Exponent).ToPlainString();
         default:
           throw new ArgumentException();
       }
@@ -258,7 +258,7 @@ namespace PeterO {
     /// to a big integer. </summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger ToBigInteger() {
-      return new ExtendedDecimal(this.Mantissa, this.Exponent).ToBigInteger();
+      return ExtendedDecimal.Create(this.Mantissa, this.Exponent).ToBigInteger();
     }
     /// <summary> Converts this value to a 32-bit floating-point number.
     /// The half-even rounding mode is used. </summary>
@@ -266,7 +266,7 @@ namespace PeterO {
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 32-bit floating point number.</returns>
     public float ToSingle() {
-      return new ExtendedDecimal(this.Mantissa, this.Exponent).ToSingle();
+      return ExtendedDecimal.Create(this.Mantissa, this.Exponent).ToSingle();
     }
     /// <summary> Converts this value to a 64-bit floating-point number.
     /// The half-even rounding mode is used. </summary>
@@ -274,7 +274,7 @@ namespace PeterO {
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 64-bit floating point number.</returns>
     public double ToDouble() {
-      return new ExtendedDecimal(this.Mantissa, this.Exponent).ToDouble();
+      return ExtendedDecimal.Create(this.Mantissa, this.Exponent).ToDouble();
     }
     /// <summary> Creates a decimal fraction from a 32-bit floating-point
     /// number. This method computes the exact value of the floating point
@@ -315,7 +315,7 @@ namespace PeterO {
     /// <returns>A DecimalFraction object.</returns>
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
       ExtendedDecimal ed = ExtendedDecimal.FromExtendedFloat(
-        new ExtendedFloat(bigfloat.Mantissa, bigfloat.Exponent));
+        ExtendedFloat.Create(bigfloat.Mantissa, bigfloat.Exponent));
       return new DecimalFraction(ed.Mantissa, ed.Exponent);
     }
 

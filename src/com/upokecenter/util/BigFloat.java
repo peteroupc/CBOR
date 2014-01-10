@@ -162,7 +162,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public BigInteger ToBigInteger() {
-      return new ExtendedFloat(this.getMantissa(),this.getExponent()).ToBigInteger();
+      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToBigInteger();
     }
 
     /**
@@ -173,7 +173,7 @@ at: http://peteroupc.github.io/CBOR/
      * this value exceeds the range of a 32-bit floating point number.
      */
     public float ToSingle() {
-      return new ExtendedFloat(this.getMantissa(),this.getExponent()).ToSingle();
+      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToSingle();
     }
 
     /**
@@ -184,7 +184,7 @@ at: http://peteroupc.github.io/CBOR/
      * this value exceeds the range of a 64-bit floating point number.
      */
     public double ToDouble() {
-      return new ExtendedFloat(this.getMantissa(),this.getExponent()).ToDouble();
+      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToDouble();
     }
     /**
      * Converts this value to a string.The format of the return value is exactly
@@ -192,7 +192,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A string representation of this object.
      */
     @Override public String toString() {
-      return new ExtendedFloat(this.getMantissa(),this.getExponent()).toString();
+      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).toString();
     }
     /**
      * Same as toString(), except that when an exponent is used it will be
@@ -201,7 +201,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A string object.
      */
     public String ToEngineeringString() {
-      return new ExtendedFloat(this.getMantissa(),this.getExponent()).ToEngineeringString();
+      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToEngineeringString();
     }
     /**
      * Converts this value to a string, but without an exponent part. The
@@ -210,7 +210,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A string object.
      */
     public String ToPlainString() {
-      return new ExtendedFloat(this.getMantissa(),this.getExponent()).ToPlainString();
+      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToPlainString();
     }
 
     /**

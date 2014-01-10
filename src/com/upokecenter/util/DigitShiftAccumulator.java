@@ -189,6 +189,26 @@ bigrem=divrem[1]; }
           return;
         }
       }
+      if(digits==1){
+        BigInteger bigrem;
+        BigInteger bigquo;
+{
+BigInteger[] divrem=(shiftedBigInt).divideAndRemainder(Ten);
+bigquo=divrem[0];
+bigrem=divrem[1]; }
+        bitsAfterLeftmost|=bitLeftmost;
+        bitLeftmost=bigrem.intValue();
+        shiftedBigInt=bigquo;
+        if(discardedBitCount==null)
+          discardedBitCount=new FastInteger(0);
+        discardedBitCount.Increment();
+        if(knownBitLength==null)
+          knownBitLength=GetDigitLength();
+        else
+          knownBitLength.Decrement();
+        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+        return;
+      }
       if(knownBitLength==null)
         knownBitLength=GetDigitLength();
       if(new FastInteger(digits).Decrement().compareTo(knownBitLength)>=0){
@@ -202,6 +222,12 @@ bigrem=divrem[1]; }
         discardedBitCount.AddInt(digits);
         bitsAfterLeftmost |= bitLeftmost;
         bitLeftmost = 0;
+        return;
+      }
+      if(shiftedBigInt.canFitInInt()){
+        isSmall=true;
+        shiftedSmall=shiftedBigInt.intValue();
+        this.ShiftRightSmall(digits);
         return;
       }
       String str = shiftedBigInt.toString();

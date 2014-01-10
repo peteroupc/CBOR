@@ -106,7 +106,7 @@ namespace Test {
       return BigInteger.fromString(RandomBigIntString(r));
     }
     public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
-      return new ExtendedFloat(RandomBigInteger(r), (BigInteger)(r.NextValue(400) - 200));
+      return ExtendedFloat.Create(RandomBigInteger(r), (BigInteger)(r.NextValue(400) - 200));
     }
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
@@ -2126,18 +2126,18 @@ namespace Test {
       ExtendedFloat bf;
       bf = ExtendedFloat.FromInt64(20);
       Assert.AreEqual("20", ExtendedDecimal.FromExtendedFloat(bf).ToString());
-      bf = new ExtendedFloat((BigInteger)3, (BigInteger)(-1));
+      bf = ExtendedFloat.Create((BigInteger)3, (BigInteger)(-1));
       Assert.AreEqual("1.5", ExtendedDecimal.FromExtendedFloat(bf).ToString());
-      bf = new ExtendedFloat((BigInteger)(-3), (BigInteger)(-1));
+      bf = ExtendedFloat.Create((BigInteger)(-3), (BigInteger)(-1));
       Assert.AreEqual("-1.5", ExtendedDecimal.FromExtendedFloat(bf).ToString());
       ExtendedDecimal df;
       df = ExtendedDecimal.FromInt64(20);
       Assert.AreEqual("20", df.ToExtendedFloat().ToString());
       df = ExtendedDecimal.FromInt64(-20);
       Assert.AreEqual("-20", df.ToExtendedFloat().ToString());
-      df = new ExtendedDecimal((BigInteger)15, (BigInteger)(-1));
+      df = ExtendedDecimal.Create((BigInteger)15, (BigInteger)(-1));
       Assert.AreEqual("1.5", df.ToExtendedFloat().ToString());
-      df = new ExtendedDecimal((BigInteger)(-15), (BigInteger)(-1));
+      df = ExtendedDecimal.Create((BigInteger)(-15), (BigInteger)(-1));
       Assert.AreEqual("-1.5", df.ToExtendedFloat().ToString());
     }
     [Test]
@@ -3421,7 +3421,7 @@ namespace Test {
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = TestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0x3, 0xc2, 0x41, 1 });
-      Assert.AreEqual(new ExtendedDecimal(BigInteger.One, (BigInteger)(3)),
+      Assert.AreEqual(ExtendedDecimal.Create(BigInteger.One, (BigInteger)(3)),
         o.AsExtendedDecimal());
     }
     /// <summary>

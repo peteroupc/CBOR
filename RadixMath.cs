@@ -2226,75 +2226,12 @@ namespace PeterO {
       FastInteger shift,
       bool adjustNegativeZero
      ) {
-      if ((context) == null) return thisValue;
-      if ((context.Precision).IsZero && !context.HasExponentRange &&
-          (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.IsValueZero))
-        return thisValue;
-      if ((context.Precision).IsZero || thisRadix == 2)
-        return RoundToPrecisionWithShift(thisValue, context, lastDiscarded, olderDiscarded, shift, false);
-      /*
-      FastInteger fastEMin=null;
-      FastInteger fastEMax=null;
-      if(context.HasExponentRange){
-        fastEMax=((context.EMax).canFitInInt()) ? new FastInteger((context.EMax).intValue()) :
-          FastInteger.FromBig(context.EMax);
-        fastEMin=((context.EMin).canFitInInt()) ? new FastInteger((context.EMin).intValue()) :
-          FastInteger.FromBig(context.EMin);
-      }
-      FastInteger fastPrecision=((context.Precision).canFitInInt()) ?
-        new FastInteger((context.Precision).intValue()) :
-        FastInteger.FromBig(context.Precision);
-      int[] signals = new int[1];
-      T dfrac = RoundToPrecisionInternal(
-        thisValue, fastPrecision,
-        context.Rounding, fastEMin, fastEMax,
+      return RoundToPrecisionInternal(
+        thisValue,
         lastDiscarded,
         olderDiscarded,
-        shift, true, false,
-        signals);
-      // Clamp exponents to eMax + 1 - precision
-      // if directed
-      if (context.ClampNormalExponents && dfrac != null) {
-        FastInteger digitCount = null;
-        if (thisRadix == 2) {
-          digitCount = FastInteger.Copy(fastPrecision);
-        } else {
-          // TODO: Use a faster way to get the digit
-          // count for radix 10
-          BigInteger maxMantissa = BigInteger.One;
-          FastInteger prec = FastInteger.Copy(fastPrecision);
-          while (prec.Sign > 0) {
-            int bitShift = prec.CompareToInt(1000000) >= 0 ? 1000000 : prec.AsInt32();
-            maxMantissa <<= bitShift;
-            prec.SubtractInt(bitShift);
-          }
-          maxMantissa -= BigInteger.One;
-          // Get the digit length of the maximum possible mantissa
-          // for the given binary precision
-          digitCount = helper.CreateShiftAccumulator(maxMantissa)
-            .GetDigitLength();
-        }
-        FastInteger clamp = FastInteger.Copy(fastEMax).Increment().Subtract(digitCount);
-        FastInteger fastExp = FastInteger.FromBig(helper.GetExponent(dfrac));
-        if (fastExp.CompareTo(clamp) > 0) {
-          bool neg = (helper.GetFlags(dfrac) & BigNumberFlags.FlagNegative) != 0;
-          BigInteger bigmantissa = BigInteger.Abs(helper.GetMantissa(dfrac));
-          if (!(bigmantissa.IsZero)) {
-            FastInteger expdiff = FastInteger.Copy(fastExp).Subtract(clamp);
-            bigmantissa = helper.MultiplyByRadixPower(bigmantissa, expdiff);
-          }
-          if (ctx.HasFlags)
-            signals[0] |= PrecisionContext.FlagClamped;
-          dfrac = helper.CreateNewWithFlags(bigmantissa, clamp.AsBigInteger(),
-                                            neg ? BigNumberFlags.FlagNegative : 0);
-        }
-      }
-      if (context.HasFlags) {
-        context.Flags |= signals[0];
-      }
-      return dfrac;
-       */
-      throw new NotImplementedException();
+        shift, true, adjustNegativeZero,
+        context);
     }
 
     /// <summary> </summary>
@@ -2753,9 +2690,13 @@ namespace PeterO {
           if (ctx.HasFlags) {
             ctx.Flags |= flags | PrecisionContext.FlagClamped;
           }
-          if (!binaryPrec && ctx.ClampNormalExponents) {
+          if (ctx.ClampNormalExponents) {
             // Clamp exponents to eMax + 1 - precision
             // if directed
+            if (binaryPrec && thisRadix != 2) {
+              fastPrecision = helper.CreateShiftAccumulator(maxMantissa)
+                .GetDigitLength();
+            }
             FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
             if (fastEMax.CompareTo(clampExp) > 0) {
               if (ctx.HasFlags)
@@ -2844,9 +2785,13 @@ namespace PeterO {
             ctx.Flags |= flags;
           }
           bigmantissa=newmantissa.AsBigInteger();
-          if (!binaryPrec && ctx.ClampNormalExponents) {
+          if (ctx.ClampNormalExponents) {
             // Clamp exponents to eMax + 1 - precision
             // if directed
+            if (binaryPrec && thisRadix != 2) {
+              fastPrecision = helper.CreateShiftAccumulator(maxMantissa)
+                .GetDigitLength();
+            }
             FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
             if (fastETiny.CompareTo(clampExp) > 0) {
               if (!(bigmantissa.IsZero)) {
@@ -2947,9 +2892,13 @@ namespace PeterO {
         }
       }
       if (ctx.HasFlags) ctx.Flags |= flags;
-      if (!binaryPrec && ctx.ClampNormalExponents) {
+      if (ctx.ClampNormalExponents) {
         // Clamp exponents to eMax + 1 - precision
         // if directed
+        if (binaryPrec && thisRadix != 2) {
+          fastPrecision = helper.CreateShiftAccumulator(maxMantissa)
+            .GetDigitLength();
+        }
         FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
         if (exp.CompareTo(clampExp) > 0) {
           if (!(bigmantissa.IsZero)) {

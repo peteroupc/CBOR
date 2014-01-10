@@ -3283,11 +3283,11 @@ public bool IsInfinity() {
       if (isDecimal) {
         return RewrapObject(o, new CBORObject(
           CBORObjectType_ExtendedDecimal,
-          new ExtendedDecimal(list[1].AsBigInteger(), list[0].AsBigInteger())));
+          ExtendedDecimal.Create(list[1].AsBigInteger(), list[0].AsBigInteger())));
       } else {
         return RewrapObject(o, new CBORObject(
           CBORObjectType_ExtendedFloat,
-          new ExtendedFloat(list[1].AsBigInteger(), list[0].AsBigInteger())));
+          ExtendedFloat.Create(list[1].AsBigInteger(), list[0].AsBigInteger())));
       }
     }
     private static bool CheckMajorTypeIndex(int type, int index, int[] validTypeFlags) {

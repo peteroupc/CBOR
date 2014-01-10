@@ -97,6 +97,20 @@
     <Content Include="ProfilingSessions\Session20140107_202658.sdps" />
     <Content Include="ProfilingSessions\Session20140107_211434.sdps" />
     <Content Include="ProfilingSessions\Session20140108_032153.sdps" />
+    <Content Include="ProfilingSessions\Session20140109_072608.sdps" />
+    <Content Include="ProfilingSessions\Session20140109_073608.sdps" />
+    <Content Include="ProfilingSessions\Session20140109_120039.sdps" />
+    <Content Include="ProfilingSessions\Session20140109_160852.sdps" />
+    <Content Include="ProfilingSessions\Session20140109_161924.sdps" />
+    <Content Include="ProfilingSessions\Session20140109_183418.sdps" />
+    <Content Include="ProfilingSessions\Session20140109_194157.sdps" />
+    <Content Include="ProfilingSessions\Session20140109_194523.sdps" />
+    <Content Include="ProfilingSessions\Session20140109_200226.sdps" />
+    <Content Include="ProfilingSessions\Session20140110_003021.sdps" />
+    <Content Include="ProfilingSessions\Session20140110_022725.sdps" />
+    <Content Include="ProfilingSessions\Session20140110_023616.sdps" />
+    <Content Include="ProfilingSessions\Session20140110_093339.sdps" />
+    <Content Include="ProfilingSessions\Session20140110_103357.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

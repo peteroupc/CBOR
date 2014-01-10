@@ -195,8 +195,10 @@ namespace CBOR
     [Test]
     public void TestParser(){
       long failures=0;
+      System.Diagnostics.Stopwatch sw=new System.Diagnostics.Stopwatch();
       if(!Directory.Exists(Path))
         return;
+      sw.Start();
       for(int i=0;i<1;i++){
         foreach(var p in Directory.GetDirectories(Path)){
           foreach(var f in Directory.GetFiles(p)){
@@ -223,6 +225,9 @@ namespace CBOR
       if(failures>0){
         Assert.Fail(failures+" failure(s)");
       }
+      sw.Stop();
+      Console.WriteLine("Time: {0} s",sw.ElapsedMilliseconds/1000.0);
+      Console.ReadLine();
     }
   }
 }

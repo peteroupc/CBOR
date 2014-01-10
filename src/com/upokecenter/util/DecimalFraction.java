@@ -280,11 +280,11 @@ bigrem=divrem[1]; }
     private String ToStringInternal(int mode) {
       switch (mode) {
         case 0:
-          return new ExtendedDecimal(this.getMantissa(), this.getExponent()).toString();
+          return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).toString();
         case 1:
-          return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToEngineeringString();
+          return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).ToEngineeringString();
         case 2:
-          return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToPlainString();
+          return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).ToPlainString();
         default:
           throw new IllegalArgumentException();
       }
@@ -296,7 +296,7 @@ bigrem=divrem[1]; }
      * @return A BigInteger object.
      */
     public BigInteger ToBigInteger() {
-      return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToBigInteger();
+      return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).ToBigInteger();
     }
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
@@ -306,7 +306,7 @@ bigrem=divrem[1]; }
      * this value exceeds the range of a 32-bit floating point number.
      */
     public float ToSingle() {
-      return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToSingle();
+      return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).ToSingle();
     }
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
@@ -316,7 +316,7 @@ bigrem=divrem[1]; }
      * this value exceeds the range of a 64-bit floating point number.
      */
     public double ToDouble() {
-      return new ExtendedDecimal(this.getMantissa(), this.getExponent()).ToDouble();
+      return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).ToDouble();
     }
     /**
      * Creates a decimal fraction from a 32-bit floating-point number.
@@ -363,7 +363,7 @@ bigrem=divrem[1]; }
      */
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
       ExtendedDecimal ed = ExtendedDecimal.FromExtendedFloat(
-        new ExtendedFloat(bigfloat.getMantissa(), bigfloat.getExponent()));
+        ExtendedFloat.Create(bigfloat.getMantissa(), bigfloat.getExponent()));
       return new DecimalFraction(ed.getMantissa(), ed.getExponent());
     }
 

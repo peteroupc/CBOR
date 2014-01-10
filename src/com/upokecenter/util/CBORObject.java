@@ -3366,11 +3366,11 @@ public static CBORObject FromObject(Object obj) {
       if (isDecimal) {
         return RewrapObject(o, new CBORObject(
           CBORObjectType_ExtendedDecimal,
-          new ExtendedDecimal(list.get(1).AsBigInteger(), list.get(0).AsBigInteger())));
+          ExtendedDecimal.Create(list.get(1).AsBigInteger(), list.get(0).AsBigInteger())));
       } else {
         return RewrapObject(o, new CBORObject(
           CBORObjectType_ExtendedFloat,
-          new ExtendedFloat(list.get(1).AsBigInteger(), list.get(0).AsBigInteger())));
+          ExtendedFloat.Create(list.get(1).AsBigInteger(), list.get(0).AsBigInteger())));
       }
     }
     private static boolean CheckMajorTypeIndex(int type, int index, int[] validTypeFlags) {
