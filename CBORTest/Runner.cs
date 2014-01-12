@@ -30,9 +30,9 @@ namespace PeterO {
       return false;
     }
     public static void Main(string[] args) {
-        String param=null;
+      String param=null;
       if(args.Length>0){
-          param=args[0];
+        param=args[0];
         Console.WriteLine(param);
       }
       // Run all the tests in this assembly

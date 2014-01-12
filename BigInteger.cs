@@ -12,7 +12,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 namespace PeterO {
-  /// <summary> An arbitrary-precision integer. </summary>
+    /// <summary> An arbitrary-precision integer. </summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
 
@@ -3239,9 +3239,9 @@ namespace PeterO {
           int quo=a/b;
           if(this.negative)quo=-quo;
           int rem=a-(b*quo);
-          return new BigInteger[] { 
+          return new BigInteger[] {
             new BigInteger().InitializeInt(quo),
-            new BigInteger().InitializeInt(rem) 
+            new BigInteger().InitializeInt(rem)
           };
         }
       }
@@ -3398,7 +3398,8 @@ namespace PeterO {
       get { return (this.wordCount == 0); }
     }
 
-    /// <summary> Finds the square root of this instance's value, rounded down.</summary>
+    /// <summary> Finds the square root of this instance's value, rounded
+    /// down.</summary>
     /// <returns>The square root of this object&apos;s value. Returns 0
     /// if this value is 0 or less.</returns>
     public BigInteger sqrt() {
@@ -3414,6 +3415,25 @@ namespace PeterO {
       } while (bigintY.CompareTo(bigintX) < 0);
       return bigintX;
     }
+
+    public BigInteger[] sqrtWithRemainder() {
+      if (this.Sign <= 0)
+        return new BigInteger[]{ BigInteger.Zero, BigInteger.Zero };
+      BigInteger bigintX = null;
+      BigInteger bigintY = Power2((getUnsignedBitLength() + 1) / 2);
+      do {
+        bigintX = bigintY;
+        bigintY = this / (BigInteger)bigintX;
+        bigintY += bigintX;
+        bigintY >>= 1;
+      } while (bigintY.CompareTo(bigintX) < 0);
+      bigintY=bigintX*(BigInteger)bigintX;
+      return new BigInteger[]{
+        bigintX,
+        this-bigintY
+      };
+    }
+
     /// <summary> Gets whether this value is even. </summary>
     public bool IsEven { get { return !GetUnsignedBit(0); } }
 

@@ -12,9 +12,9 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-  /**
-   * An arbitrary-precision integer.
-   */
+    /**
+     * An arbitrary-precision integer.
+     */
   public final class BigInteger implements Comparable<BigInteger>
   {
 
@@ -3462,6 +3462,25 @@ at: http://peteroupc.github.io/CBOR/
       } while (bigintY.compareTo(bigintX) < 0);
       return bigintX;
     }
+
+    public BigInteger[] sqrtWithRemainder() {
+      if (this.signum() <= 0)
+        return new BigInteger[]{ BigInteger.ZERO, BigInteger.ZERO };
+      BigInteger bigintX = null;
+      BigInteger bigintY = Power2((getUnsignedBitLength() + 1) / 2);
+      do {
+        bigintX = bigintY;
+        bigintY = this.divide(bigintX);
+        bigintY=bigintY.add(bigintX);
+        bigintY=bigintY.shiftRight(1);
+      } while (bigintY.compareTo(bigintX) < 0);
+      bigintY=bigintX.multiply(bigintX);
+      return new BigInteger[]{
+        bigintX,
+        this-bigintY
+      };
+    }
+
     /**
      * Gets whether this value is even.
      */

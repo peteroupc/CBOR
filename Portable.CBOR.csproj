@@ -111,6 +111,7 @@
     <Content Include="ProfilingSessions\Session20140110_023616.sdps" />
     <Content Include="ProfilingSessions\Session20140110_093339.sdps" />
     <Content Include="ProfilingSessions\Session20140110_103357.sdps" />
+    <Content Include="ProfilingSessions\Session20140110_220041.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
