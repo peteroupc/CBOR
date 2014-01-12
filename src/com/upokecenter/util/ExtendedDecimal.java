@@ -2209,12 +2209,12 @@ remainder=divrem[1]; }
 
     /**
      * Finds the square root of this object's value.
-     * @param ctx A precision context to control precision and exponent
-     * range of the result. The rounding mode is ignored and is always HalfEven.
-     * If HasFlags of the context is true, will also store the flags resulting
-     * from the operation (the flags are in addition to the pre-existing
-     * flags). --This parameter cannot be null, as the square root function&apos;s
-     * results are generally not exact for many inputs.--
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). --This parameter cannot be
+     * null, as the square root function&apos;s results are generally not
+     * exact for many inputs.--
      * @return The square root. Signals the flag FlagInvalid and returns
      * NaN if &quot;ctx&quot; is null or the precision range is unlimited,
      * or this object is less than 0 (the square root of a negative number is

@@ -171,13 +171,9 @@ namespace CBOR
         AssertFlags(expectedFlags,ctx.Flags,ln);
       }
       else if(squroot){
-        if(ctx.Rounding== Rounding.HalfEven){
-          // Square root only defined for the HalfEven
-          // rounding mode
-          ExtendedDecimal d3=op1.SquareRoot(ctx);
-          if(!result.Equals(d3))Assert.AreEqual(result,d3,ln);
-          AssertFlags(expectedFlags,ctx.Flags,ln);
-        }
+        ExtendedDecimal d3=op1.SquareRoot(ctx);
+        if(!result.Equals(d3))Assert.AreEqual(result,d3,ln);
+        AssertFlags(expectedFlags,ctx.Flags,ln);
       }
       else if(fma){
         ExtendedDecimal d3=op1.MultiplyAndAdd(op2,op3,ctx);
@@ -203,6 +199,7 @@ namespace CBOR
         foreach(var p in Directory.GetDirectories(Path)){
           foreach(var f in Directory.GetFiles(p)){
             Console.WriteLine("//"+f);
+            if(!f.Contains("sqrt"))continue;
             using(StreamReader w=new StreamReader(f)){
               while(!w.EndOfStream){
                 var ln=w.ReadLine();
@@ -227,7 +224,6 @@ namespace CBOR
       }
       sw.Stop();
       Console.WriteLine("Time: {0} s",sw.ElapsedMilliseconds/1000.0);
-      Console.ReadLine();
     }
   }
 }

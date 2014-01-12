@@ -212,7 +212,7 @@ namespace Test
                 try {
                   TextWriter oldOut=Console.Out;
                   try {
-                    //  Console.SetOut(TextWriter.Null);
+                    //Console.SetOut(TextWriter.Null);
                     ParseDecTest(ln,context);
                   } catch(Exception){
                     Console.SetOut(oldOut);
