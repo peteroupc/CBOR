@@ -121,10 +121,10 @@ namespace Test
         else if(op.Equals("exp")){
           d3=d1.Exp(ctx);
         }
-        //else if(op.Equals("ln")){
-        //Console.WriteLine(ln);
-        // d3=d1.Ln(ctx);
-        //}
+        else if(op.Equals("ln")){
+         d3=d1.Log(ctx);
+        }
+//        else if(op.Equals("power"))d3=d1.Pow(d2,ctx);
         else if(op.Equals("squareroot"))d3=d1.SquareRoot(ctx);
         else if(op.Equals("remaindernear"))d3=d1.RemainderNear(d2,ctx);
         else if(op.Equals("nexttoward"))d3=d1.NextToward(d2,ctx);
@@ -202,7 +202,6 @@ namespace Test
       for(int i=0;i<1;i++){
         foreach(var f in Directory.GetFiles(TestPath)){
           if(!Path.GetFileName(f).Contains(".decTest"))continue;
-          if(Path.GetFileName(f).Contains("ln"))continue;
           Console.WriteLine("//"+f);
           IDictionary<string,string> context=new Dictionary<string,string>();
           using(StreamReader w=new StreamReader(f)){
@@ -212,7 +211,7 @@ namespace Test
                 try {
                   TextWriter oldOut=Console.Out;
                   try {
-                    //Console.SetOut(TextWriter.Null);
+                    Console.SetOut(TextWriter.Null);
                     ParseDecTest(ln,context);
                   } catch(Exception){
                     Console.SetOut(oldOut);

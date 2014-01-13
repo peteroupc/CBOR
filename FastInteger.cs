@@ -124,7 +124,7 @@ namespace PeterO {
     /// <summary> </summary>
     /// <param name='digit'>A 32-bit signed integer.</param>
     /// <returns>A MutableNumber object.</returns>
-public MutableNumber MultiplyByTenAndAdd(int digit) {
+      public MutableNumber MultiplyByTenAndAdd(int digit) {
         if(digit<0||digit>=10)
           throw new ArgumentException("Only digits 0 to 9 are supported");
         int s;
@@ -1097,7 +1097,7 @@ public MutableNumber MultiplyByTenAndAdd(int digit) {
     }
 
     /// <summary> </summary>
-public bool IsValueZero{
+    public bool IsValueZero{
       get {
         switch(this.integerMode){
           case 0:

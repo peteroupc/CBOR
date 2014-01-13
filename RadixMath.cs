@@ -845,6 +845,87 @@ namespace PeterO {
       return RoundToPrecision(guess,ctx);
     }
 
+    private T LnSeries1(T thisValue, PrecisionContext ctx){
+      bool more = true;
+      int lastCompare=0;
+      int vacillations=0;
+      PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
+        .WithRounding(Rounding.ZeroFiveUp);
+      T z=Add(NegateRaw(thisValue),helper.ValueOf(1),null);
+      T zpow=Multiply(z,z,ctxdiv);
+      T guess=NegateRaw(z);
+      T lastGuess=default(T);
+      BigInteger denom=(BigInteger)2;
+      while (more) {
+        lastGuess = guess;
+        T tmp=Divide(zpow,helper.CreateNewWithFlags(denom,BigInteger.Zero,0),ctxdiv);
+        T newGuess=Add(guess,NegateRaw(tmp),ctxdiv);
+        {
+          int guessCmp=CompareTo(lastGuess,newGuess);
+          if (guessCmp==0) {
+            more = false;
+          } else if((guessCmp>0 && lastCompare<0) || (lastCompare>0 && guessCmp<0)){
+            // Guesses are vacillating
+            vacillations++;
+            if(vacillations>3 && guessCmp>0){
+              // When guesses are vacillating, choose the lower guess
+              // to reduce rounding errors
+              more=false;
+            }
+          }
+          lastCompare=guessCmp;
+        }
+        guess=newGuess;
+        if(more){
+          zpow=Multiply(zpow,z,ctxdiv);
+          denom+=BigInteger.One;
+        }
+      }
+      return RoundToPrecision(guess,ctx);
+    }
+
+    private T LnSeries2(T thisValue, PrecisionContext ctx){
+      bool more = true;
+      int lastCompare=0;
+      int vacillations=0;
+      PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
+        .WithRounding(Rounding.ZeroFiveUp);
+      T z=Add(thisValue,helper.ValueOf(-1),null);
+      T zpow=Multiply(z,z,ctxdiv);
+      T guess=NegateRaw(z);
+      T lastGuess=default(T);
+      bool negative=false;
+      BigInteger denom=(BigInteger)2;
+      while (more) {
+        lastGuess = guess;
+        T tmp=Divide(zpow,helper.CreateNewWithFlags(denom,BigInteger.Zero,0),ctxdiv);
+        if(negative)tmp=NegateRaw(tmp);
+        T newGuess=Add(guess,NegateRaw(tmp),ctxdiv);
+        {
+          int guessCmp=CompareTo(lastGuess,newGuess);
+          if (guessCmp==0) {
+            more = false;
+          } else if((guessCmp>0 && lastCompare<0) || (lastCompare>0 && guessCmp<0)){
+            // Guesses are vacillating
+            vacillations++;
+            if(vacillations>3 && guessCmp>0){
+              // When guesses are vacillating, choose the lower guess
+              // to reduce rounding errors
+              more=false;
+            }
+          }
+          lastCompare=guessCmp;
+        }
+        guess=newGuess;
+        if(more){
+          zpow=Multiply(zpow,z,ctxdiv);
+          negative=!negative;
+          denom+=BigInteger.One;
+        }
+      }
+      return RoundToPrecision(guess,ctx);
+    }
+
     private T ExpInternal(T thisValue, PrecisionContext ctx){
       T one=helper.ValueOf(1);
       PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
@@ -894,6 +975,7 @@ namespace PeterO {
     private T PowerIntegral(T thisValue, BigInteger powIntBig, PrecisionContext ctx){
       int sign=powIntBig.Sign;
       T one=helper.ValueOf(1);
+      bool retvalNeg=IsNegative(thisValue) && !(powIntBig.IsEven);
       PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
         .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
       if (sign < 0){
@@ -913,6 +995,9 @@ namespace PeterO {
       while (!powIntBig.IsZero) {
         if (!powIntBig.IsEven) {
           r=Multiply(r,thisValue,ctxdiv);
+          if((ctxdiv.Flags&PrecisionContext.FlagOverflow)!=0){
+            return SignalOverflow2(ctx,retvalNeg);
+          }
         }
         powIntBig >>= 1;
         if (!powIntBig.IsZero) {
@@ -921,71 +1006,170 @@ namespace PeterO {
           if((ctxdiv.Flags&PrecisionContext.FlagOverflow)!=0){
             // Avoid multiplying too huge numbers with
             // limited exponent range
-            return SignalOverflow2(ctx,IsNegative(tmp));
+            return SignalOverflow2(ctx,retvalNeg);
           }
           thisValue=tmp;
         }
       }
       return RoundToPrecision(r,ctx);
     }
-    private T Power(T thisValue, T pow, PrecisionContext ctx){
+    /// <summary> </summary>
+    /// <param name='thisValue'>A T object.</param>
+    /// <param name='pow'>A T object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+public T Power(T thisValue, T pow, PrecisionContext ctx){
       T ret = HandleNotANumber(thisValue, pow, ctx);
       if ((Object)ret != (Object)default(T)) {
         return ret;
       }
       int thisSign=helper.GetSign(thisValue);
       int powSign=helper.GetSign(pow);
-      int thisFlags=helper.GetFlags(pow);
+      int thisFlags=helper.GetFlags(thisValue);
       int powFlags=helper.GetFlags(pow);
-      if(thisSign==0){
-        if(powSign>0)
-          return RoundToPrecision(helper.CreateNewWithFlags(BigInteger.Zero,
-                                                            BigInteger.Zero,0),ctx);
-        else if(powSign==0)
-          return SignalInvalid(ctx);
-      }
-      if(thisSign<0 && (powFlags&BigNumberFlags.FlagInfinity)!=0){
+      if(thisSign==0 && powSign==0){
+        // Both operands are zero: invalid
         return SignalInvalid(ctx);
       }
-      BigInteger powExponent=helper.GetExponent(pow);
-      T powInt=Quantize(pow,helper.CreateNewWithFlags(BigInteger.Zero,
-                                                      BigInteger.Zero,0),
-                        PrecisionContext.ForRounding(Rounding.Down));
-      bool isPowIntegral=CompareTo(powInt,pow)==0;
-      if(thisSign==0 && powSign<0){
-        int infinityFlags=BigNumberFlags.FlagInfinity;
-        if((thisFlags&BigNumberFlags.FlagNegative)!=0 &&
-           (powFlags&BigNumberFlags.FlagInfinity)!=0 && isPowIntegral){
-          BigInteger powIntMant=BigInteger.Abs(helper.GetMantissa(powInt));
-          if(!(powIntMant.IsEven)){
-            infinityFlags|=BigNumberFlags.FlagNegative;
+      if(thisSign<0 && (powFlags&BigNumberFlags.FlagInfinity)!=0){
+        // This value is negative and power is infinity: invalid
+        return SignalInvalid(ctx);
+      }
+      if(thisSign>0 &&
+         (thisFlags&BigNumberFlags.FlagInfinity)==0 &&
+         (powFlags&BigNumberFlags.FlagInfinity)!=0){
+        // Power is infinity and this value is greater than
+        // zero and not infinity
+        int cmp=CompareTo(thisValue,helper.ValueOf(1));
+        if(cmp<0){
+          // Value is less than 1
+          if(powSign<0){
+            // Power is negative infinity, return positive infinity
+            return helper.CreateNewWithFlags(
+              BigInteger.Zero,
+              BigInteger.Zero,BigNumberFlags.FlagInfinity);
+          } else {
+            // Power is positive infinity, return 0
+            return RoundToPrecision(helper.CreateNewWithFlags(BigInteger.Zero,
+                                                              BigInteger.Zero,0),ctx);
+          }
+        } else if(cmp==0){
+          // Extend the precision of the mantissa as much as possible,
+          // in the special case that this value is 1
+          if(ctx==null || (ctx.Precision).IsZero){
+            return RoundToPrecision(helper.ValueOf(1),ctx);
+          }
+          BigInteger mant=BigInteger.One;
+          FastInteger digits=helper.CreateShiftAccumulator(mant).GetDigitLength();
+          FastInteger fastPrecision=FastInteger.FromBig(ctx.Precision);
+          BigInteger exponent=helper.GetExponent(thisValue);
+          if(digits.CompareTo(fastPrecision)<0){
+            fastPrecision.Subtract(digits);
+            mant=helper.MultiplyByRadixPower(mant,fastPrecision);
+            BigInteger bigPrec=fastPrecision.AsBigInteger();
+            exponent-=bigPrec;
+          }
+          if(ctx!=null && ctx.HasFlags){
+            ctx.Flags|=PrecisionContext.FlagRounded;
+            ctx.Flags|=PrecisionContext.FlagInexact;
+          }
+          return RoundToPrecision(helper.CreateNewWithFlags(
+            mant,exponent,0),ctx);
+        } else {
+          // Value is greater than 1
+          if(powSign>0){
+            // Power is positive infinity, return positive infinity
+            return pow;
+          } else {
+            // Power is negative infinity, return 0
+            return RoundToPrecision(helper.CreateNewWithFlags(BigInteger.Zero,
+                                                              BigInteger.Zero,0),ctx);
           }
         }
-        return helper.CreateNewWithFlags(
+      }
+      BigInteger powExponent=helper.GetExponent(pow);
+      bool isPowIntegral=powExponent.Sign>0;
+      bool isPowOdd=false;
+      T powInt=default(T);
+      if(!isPowIntegral){
+        powInt=Quantize(pow,helper.CreateNewWithFlags(BigInteger.Zero,
+                                                      BigInteger.Zero,0),
+                        PrecisionContext.ForRounding(Rounding.Down));
+        isPowIntegral=CompareTo(powInt,pow)==0;
+        isPowOdd=!(helper.GetMantissa(powInt).IsEven);
+      } else {
+        if(powExponent.Equals(BigInteger.Zero)){
+          isPowOdd=!(helper.GetMantissa(powInt).IsEven);
+        } else if(thisRadix%2==0){
+          // Never odd for even radixes
+          isPowOdd=false;
+        } else {
+          powInt=Quantize(pow,helper.CreateNewWithFlags(BigInteger.Zero,
+                                                        BigInteger.Zero,0),
+                          PrecisionContext.ForRounding(Rounding.Down));
+          isPowOdd=!(helper.GetMantissa(powInt).IsEven);
+        }
+      }
+      Console.WriteLine("pow={0} powint={1}",pow,powInt);
+      bool isResultNegative=false;
+      if((thisFlags&BigNumberFlags.FlagNegative)!=0 &&
+         (powFlags&BigNumberFlags.FlagInfinity)==0 && isPowIntegral && isPowOdd){
+        isResultNegative=true;
+      }
+      if(thisSign==0 && powSign!=0){
+        int infinityFlags=(powSign<0) ? BigNumberFlags.FlagInfinity : 0;
+        if(isResultNegative){
+          infinityFlags|=BigNumberFlags.FlagNegative;
+        }
+        thisValue=helper.CreateNewWithFlags(
           BigInteger.Zero,
           BigInteger.Zero,infinityFlags);
+        if((infinityFlags&BigNumberFlags.FlagInfinity)==0){
+          thisValue=RoundToPrecision(thisValue,ctx);
+        }
+        return thisValue;
       }
       if((!isPowIntegral || powSign<0)&& (ctx==null || (ctx.Precision).IsZero))
         throw new ArgumentException("ctx is null or has unlimited precision, and pow's exponent is not an integer or is negative");
       if(thisSign<0 && !isPowIntegral){
         return SignalInvalid(ctx);
       }
-      if((thisSign&BigNumberFlags.FlagInfinity)!=0){
-        if(powSign>0)return thisValue;
-        else if(powSign<0)
-          return RoundToPrecision(helper.CreateNewWithFlags(BigInteger.Zero,
-                                                            BigInteger.Zero,0),ctx);
-        else
+      if((thisFlags&BigNumberFlags.FlagInfinity)!=0){
+        // This value is infinity
+        if(powSign>0){
+          return RoundToPrecision(helper.CreateNewWithFlags(
+            BigInteger.Zero,
+            BigInteger.Zero,
+            (isResultNegative ?
+             BigNumberFlags.FlagNegative : 0)|BigNumberFlags.FlagInfinity),ctx);
+        } else if(powSign<0){
+          return RoundToPrecision(helper.CreateNewWithFlags(
+            BigInteger.Zero,
+            BigInteger.Zero,
+            (isResultNegative ?
+             BigNumberFlags.FlagNegative : 0)),ctx);
+        } else {
           return RoundToPrecision(helper.CreateNewWithFlags(BigInteger.One,
                                                             BigInteger.Zero,0),ctx);
+        }
       }
       if(powSign==0){
         return RoundToPrecision(helper.CreateNewWithFlags(BigInteger.One,
                                                           BigInteger.Zero,0),ctx);
       }
       if(isPowIntegral){
+        // Special case for 1
+        if(CompareTo(thisValue,helper.ValueOf(1))==0){
+          return helper.ValueOf(1);
+        }
+        if((Object)powInt==(Object)default(T)){
+          powInt=Quantize(pow,helper.CreateNewWithFlags(BigInteger.Zero,
+                                                        BigInteger.Zero,0),
+                          PrecisionContext.ForRounding(Rounding.Down));
+        }
         BigInteger signedMant=BigInteger.Abs(helper.GetMantissa(powInt));
         if(powSign<0)signedMant=-signedMant;
+        //Console.WriteLine("tv={0} mant={1}",thisValue,signedMant);
         return PowerIntegral(thisValue,signedMant,ctx);
       }
       PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
@@ -1018,21 +1202,32 @@ namespace PeterO {
       if((flags&BigNumberFlags.FlagInfinity)!=0){
         return thisValue;
       }
-      PrecisionContext ctxCopy=ctx.WithRounding(Rounding.HalfEven).WithBlankFlags();
+      PrecisionContext ctxCopy=ctx.WithBlankFlags();
       T one=helper.ValueOf(1);
       if(sign==0){
+        // Result is negative infinity if input is 0
         thisValue=RoundToPrecision(helper.CreateNewWithFlags(
           BigInteger.Zero,BigInteger.Zero,
           BigNumberFlags.FlagNegative|BigNumberFlags.FlagInfinity),ctxCopy);
       } else if(CompareTo(thisValue,one)==0){
+        // Result is 0 if input is 1
         thisValue=RoundToPrecision(helper.CreateNewWithFlags(BigInteger.Zero,
                                                              BigInteger.Zero,0),ctxCopy);
       } else {
+        BigInteger exp=helper.GetExponent(thisValue);
         BigInteger mant=BigInteger.Abs(helper.GetMantissa(thisValue));
-        if(mant.Equals(BigInteger.One)){
+        if(mant.Equals(BigInteger.One) && thisRadix==10){
+          // Value is 1 and radix is 10, so the result is the exponent
           thisValue=RoundToPrecision(helper.CreateNewWithFlags(
             helper.GetExponent(thisValue),BigInteger.Zero,
             BigNumberFlags.FlagNegative|BigNumberFlags.FlagInfinity),ctxCopy);
+        } else if(exp.IsZero){
+          // Value is an integer, so just count the number of decimal digits
+          int digits=mant.getDigitCount();
+          BigInteger bigDigits=(BigInteger)digits;
+          thisValue=RoundToPrecision(helper.CreateNewWithFlags(
+            bigDigits,
+            BigInteger.Zero,0),ctxCopy);
         } else {
           PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
             .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
@@ -1047,6 +1242,30 @@ namespace PeterO {
         ctx.Flags|=ctxCopy.Flags;
       }
       return thisValue;
+    }
+
+    private static BigInteger PowerOfTwo(FastInteger fi){
+      if(fi.Sign<=0)return BigInteger.One;
+      if(fi.CanFitInInt32()){
+        int val=fi.AsInt32();
+        if(val<=30){
+          val=1<<val;
+          return (BigInteger)val;
+        }
+        return BigInteger.One<<val;
+      } else {
+        BigInteger bi=BigInteger.One;
+        FastInteger fi2=FastInteger.Copy(fi);
+        while (fi2.Sign > 0) {
+          int count = 1000000;
+          if (fi2.CompareToInt(1000000) < 0) {
+            count = (int)bi;
+          }
+          bi<<=count;
+          fi2.SubtractInt(count);
+        }
+        return bi;
+      }
     }
 
     /// <summary> </summary>
@@ -1073,16 +1292,79 @@ namespace PeterO {
       if((flags&BigNumberFlags.FlagInfinity)!=0){
         return thisValue;
       }
-      PrecisionContext ctxCopy=ctx.WithRounding(Rounding.HalfEven).WithBlankFlags();
+      PrecisionContext ctxCopy=ctx.WithBlankFlags();
       T one=helper.ValueOf(1);
-      if(sign==0)
+      if(sign==0){
         return helper.CreateNewWithFlags(BigInteger.Zero,BigInteger.Zero,
                                          BigNumberFlags.FlagNegative|BigNumberFlags.FlagInfinity);
-      else if(CompareTo(thisValue,one)==0){
-        thisValue=RoundToPrecision(helper.CreateNewWithFlags(BigInteger.Zero,
-                                                             BigInteger.Zero,0),ctxCopy);
       } else {
-        throw new NotImplementedException();
+        int cmpOne=CompareTo(thisValue,one);
+        PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
+          .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
+        if(cmpOne==0){
+          // Equal to 1
+          thisValue=RoundToPrecision(helper.CreateNewWithFlags(BigInteger.Zero,
+                                                               BigInteger.Zero,0),ctxCopy);
+        } else if(cmpOne<0){
+          // Less than 1
+          T quarter=Divide(one,helper.ValueOf(4),ctxCopy);
+          if(CompareTo(thisValue,quarter)<=0){
+            // One quarter or less
+            T half=Multiply(quarter,helper.ValueOf(2),null);
+            FastInteger roots=new FastInteger(0);
+            // Take square root until this value
+            // is one half or more
+            while(CompareTo(thisValue,half)<0){
+              thisValue=SquareRoot(thisValue,ctxdiv.WithUnlimitedExponents());
+              roots.Increment();
+            }
+            thisValue=LnSeries1(thisValue,ctxdiv);
+            BigInteger biRoots=PowerOfTwo(roots);
+            // Multiply back 2^X, where X is the number
+            // of square root calls
+            thisValue=Multiply(
+              thisValue,helper.CreateNewWithFlags(
+                biRoots,BigInteger.Zero,0),ctxCopy);
+          } else {
+            thisValue=LnSeries1(thisValue,ctxCopy);
+          }
+          if(ctx.HasFlags){
+            ctxCopy.Flags|=PrecisionContext.FlagInexact;
+            ctxCopy.Flags|=PrecisionContext.FlagRounded;
+          }
+        } else {
+          // Greater than 1
+          T two=helper.ValueOf(2);
+          if(CompareTo(thisValue,two)>=0){
+            FastInteger roots=new FastInteger(0);
+            // Take square root until this value
+            // is less than 2
+            while(CompareTo(thisValue,two)>=0){
+              thisValue=SquareRoot(thisValue,ctxdiv.WithUnlimitedExponents());
+              roots.Increment();
+            }
+            // Find -Ln(1/thisValue)
+            thisValue=Divide(one,thisValue,ctxdiv);
+            thisValue=LnSeries1(thisValue,ctxdiv);
+            thisValue=NegateRaw(thisValue);
+            BigInteger biRoots=PowerOfTwo(roots);
+            // Multiply back 2^X, where X is the number
+            // of square root calls
+            thisValue=Multiply(thisValue,
+                               helper.CreateNewWithFlags(biRoots,
+                                                         BigInteger.Zero,0),ctxCopy);
+          } else {
+            // Find -Ln(1/thisValue)
+            thisValue=Divide(one,thisValue,ctxdiv);
+            thisValue=LnSeries1(thisValue,ctxdiv);
+            thisValue=NegateRaw(thisValue);
+            thisValue=RoundToPrecision(thisValue,ctxCopy);
+          }
+          if(ctx.HasFlags){
+            ctxCopy.Flags|=PrecisionContext.FlagInexact;
+            ctxCopy.Flags|=PrecisionContext.FlagRounded;
+          }
+        }
       }
       if(ctx.HasFlags){
         ctx.Flags|=ctxCopy.Flags;
@@ -1108,7 +1390,7 @@ namespace PeterO {
         // rounding mode
         return ReturnQuietNaN(thisValue,ctx);
       }
-      PrecisionContext ctxCopy=ctx.WithRounding(Rounding.HalfEven).WithBlankFlags();
+      PrecisionContext ctxCopy=ctx.WithBlankFlags();
       if((flags&BigNumberFlags.FlagInfinity)!=0){
         if((flags&BigNumberFlags.FlagNegative)!=0){
           T retval=RoundToPrecision(helper.CreateNewWithFlags(
@@ -1123,15 +1405,16 @@ namespace PeterO {
       int sign=helper.GetSign(thisValue);
       T one=helper.ValueOf(1);
       PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
-        .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
+        .WithRounding(Rounding.ZeroFiveUp)
+        .WithBlankFlags();
       if(sign==0){
         thisValue=RoundToPrecision(one,ctxCopy);
       } else if(sign<0){
         T val=Exp(NegateRaw(thisValue),ctxdiv);
-        if((ctxdiv.Flags&PrecisionContext.FlagOverflow)!=0){
+        if((ctxdiv.Flags&PrecisionContext.FlagOverflow)!=0 || !IsFinite(val)){
           // Overflow, try again with unlimited exponents
           ctxdiv.Flags=0;
-          ctxdiv=ctx.WithUnlimitedExponents();
+          ctxdiv=ctxdiv.WithUnlimitedExponents();
           thisValue=Exp(NegateRaw(thisValue),ctxdiv);
         } else {
           thisValue=val;
@@ -1160,6 +1443,11 @@ namespace PeterO {
           ctx.Flags|=PrecisionContext.FlagInexact|PrecisionContext.FlagRounded;
         }
         thisValue=PowerIntegral(thisValue,helper.GetMantissa(intpart),ctxdiv);
+        if((ctxdiv.Flags&PrecisionContext.FlagOverflow)!=0){
+          if(ctx.HasFlags){
+            ctx.Flags|=ctxdiv.Flags;
+          }
+        }
         thisValue=RoundToPrecision(thisValue,ctxCopy);
       }
       if(ctx.HasFlags){
@@ -1172,7 +1460,7 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T SquareRoot(T thisValue, PrecisionContext ctx) {
+    public T SquareRoot(T thisValue, PrecisionContext ctx) {
       if(ctx==null || (ctx.Precision).IsZero)
         throw new ArgumentException("ctx is null or has unlimited precision");
       T ret = SquareRootHandleSpecial(thisValue, ctx);
@@ -2362,12 +2650,28 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
       bool adjustNegativeZero,
       PrecisionContext ctx
      ) {
-      if ((ctx) == null) return thisValue;
+      if ((ctx) == null)
+        ctx=PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven);
       // If context has unlimited precision and exponent range,
       // and no discarded digits or shifting
       if ((ctx.Precision).IsZero && !ctx.HasExponentRange &&
           (lastDiscarded | olderDiscarded) == 0 && (shift==null || shift.IsValueZero))
         return thisValue;
+      int thisFlags = helper.GetFlags(thisValue);
+      if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
+        if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
+          if (ctx.HasFlags) {
+            ctx.Flags|=PrecisionContext.FlagInvalid;
+          }
+          return ReturnQuietNaN(thisValue,ctx);
+        }
+        if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
+          return ReturnQuietNaN(thisValue,ctx);
+        }
+        if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
+          return thisValue;
+        }
+      }
       // get the precision
       FastInteger fastPrecision=((ctx.Precision).canFitInInt()) ?
         new FastInteger((ctx.Precision).intValue()) :
@@ -2381,14 +2685,13 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
       FastInteger fastEMin=null;
       FastInteger fastEMax=null;
       // get the exponent range
-      if(ctx.HasExponentRange){
+      if(ctx!=null && ctx.HasExponentRange){
         fastEMax=((ctx.EMax).canFitInInt()) ? new FastInteger((ctx.EMax).intValue()) :
           FastInteger.FromBig(ctx.EMax);
         fastEMin=((ctx.EMin).canFitInInt()) ? new FastInteger((ctx.EMin).intValue()) :
           FastInteger.FromBig(ctx.EMin);
       }
-      Rounding rounding=ctx.Rounding;
-      int thisFlags = helper.GetFlags(thisValue);
+      Rounding rounding=(ctx==null) ? Rounding.HalfEven : ctx.Rounding;
       bool unlimitedPrec = (fastPrecision.IsValueZero);
       if(!binaryPrec){
         // Fast path to check if rounding is necessary at all
@@ -2457,20 +2760,6 @@ public T SquareRoot(T thisValue, PrecisionContext ctx) {
               }
             }
           }
-        }
-      }
-      if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
-        if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
-          if (ctx.HasFlags) {
-            ctx.Flags|=PrecisionContext.FlagInvalid;
-          }
-          return ReturnQuietNaN(thisValue,ctx);
-        }
-        if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-          return ReturnQuietNaN(thisValue,ctx);
-        }
-        if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
-          return thisValue;
         }
       }
       if (adjustNegativeZero &&

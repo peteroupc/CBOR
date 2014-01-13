@@ -2652,7 +2652,7 @@ function() {
                     C[csi + 1] = ((tempInt & 65535) & 65535);
                     tempInt = A1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((A1B1 >> 16) & 65535) - (s & 65535);
                     C[csi + 2] = ((tempInt & 65535) & 65535);
-                    C[csi + 3] = ((((tempInt >> 16) & 65535) & 65535));
+                    C[csi + 3] = (((tempInt >> 16) & 65535) & 65535);
                 }
             } else {
                 for (var i = istart; i < iend; i += 4) {
@@ -2675,7 +2675,7 @@ function() {
                     C[csi + 1] = ((tempInt & 65535) & 65535);
                     tempInt = A1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((A1B1 >> 16) & 65535) - (s & 65535);
                     C[csi + 2] = ((tempInt & 65535) & 65535);
-                    C[csi + 3] = ((((tempInt >> 16) & 65535) & 65535));
+                    C[csi + 3] = (((tempInt >> 16) & 65535) & 65535);
                 }
             }
         }
@@ -3638,7 +3638,7 @@ function() {
                 smallInt = smallInt + (digit);
             } else {
                 if (haveSmallInt) {
-                    bigint.reg[0] = ((((smallInt) & 65535) & 65535));
+                    bigint.reg[0] = (((smallInt) & 65535) & 65535);
                     bigint.reg[1] = ((smallInt >>> 16) & 65535);
                     haveSmallInt = false;
                 }
@@ -3668,7 +3668,7 @@ function() {
         }
         if (!haveDigits) throw new Error("No digits");
         if (haveSmallInt) {
-            bigint.reg[0] = ((((smallInt) & 65535) & 65535));
+            bigint.reg[0] = (((smallInt) & 65535) & 65535);
             bigint.reg[1] = ((smallInt >>> 16) & 65535);
         }
         bigint.wordCount = bigint.CalcWordCount();
@@ -10877,5 +10877,6 @@ function() {
 
 if(typeof exports!=="undefined")exports['ExtendedFloat']=ExtendedFloat;
 if(typeof window!=="undefined")window['ExtendedFloat']=ExtendedFloat;
+
 })();
 

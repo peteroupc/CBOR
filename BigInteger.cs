@@ -2741,18 +2741,32 @@ namespace PeterO {
         return thisValue;
       int expOfTwo=Math.Min(this.getLowestSetBit(),
                             bigintSecond.getLowestSetBit());
-      while (true) {
-        BigInteger bigintA=(thisValue-(BigInteger)bigintSecond).abs();
-        if(bigintA.IsZero){
-          if(expOfTwo!=0){
-            thisValue<<=expOfTwo;
+      if(thisValue.wordCount<=10 && bigintSecond.wordCount<=10){
+
+        while (true) {
+          BigInteger bigintA=(thisValue-(BigInteger)bigintSecond).abs();
+          if(bigintA.IsZero){
+            if(expOfTwo!=0){
+              thisValue<<=expOfTwo;
+            }
+            return thisValue;
           }
-          return thisValue;
+          int setbit=bigintA.getLowestSetBit();
+          bigintA>>=setbit;
+          bigintSecond=(thisValue.CompareTo(bigintSecond)<0) ? thisValue : bigintSecond;
+          thisValue=bigintA;
         }
-        int setbit=bigintA.getLowestSetBit();
-        bigintA>>=setbit;
-        bigintSecond=(thisValue.CompareTo(bigintSecond)<0) ? thisValue : bigintSecond;
-        thisValue=bigintA;
+      } else {
+        BigInteger temp;
+        while (!thisValue.IsZero) {
+          if (thisValue.CompareTo(bigintSecond) < 0) {
+            temp = thisValue;
+            thisValue = bigintSecond;
+            bigintSecond = temp;
+          }
+          thisValue = thisValue % (BigInteger)bigintSecond;
+        }
+        return bigintSecond;
       }
     }
 
@@ -3262,7 +3276,7 @@ namespace PeterO {
       remainder.wordCount = remainder.CalcWordCount();
       quotient.wordCount = quotient.CalcWordCount();
       //Console.WriteLine("Divd={0} divs={1} quo={2} rem={3}",this.wordCount,
-        //                divisor.wordCount,quotient.wordCount,remainder.wordCount);
+      //                divisor.wordCount,quotient.wordCount,remainder.wordCount);
       remainder.ShortenArray();
       quotient.ShortenArray();
       if (this.Sign < 0) {

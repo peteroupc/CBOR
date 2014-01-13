@@ -1647,9 +1647,18 @@ namespace PeterO {
       return math.RoundToBinaryPrecision(this, ctx);
     }
 
-    /// <summary> </summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+    /// <summary> Finds the square root of this object's value. </summary>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). --This parameter cannot
+    /// be null, as the square root function&apos;s results are generally
+    /// not exact for many inputs.--</param>
+    /// <returns>The square root. Signals the flag FlagInvalid and returns
+    /// NaN if &quot;ctx&quot; is null or the precision range is unlimited,
+    /// or this object is less than 0 (the square root of a negative number is
+    /// a complex number with a real part of 0 and an imaginary part of this object&apos;s
+    /// absolute value).</returns>
     public ExtendedFloat SquareRoot(PrecisionContext ctx){
       return math.SquareRoot(this,ctx);
     }

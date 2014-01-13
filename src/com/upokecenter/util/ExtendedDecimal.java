@@ -2217,8 +2217,9 @@ remainder=divrem[1]; }
      * exact for many inputs.--
      * @return The square root. Signals the flag FlagInvalid and returns
      * NaN if &quot;ctx&quot; is null or the precision range is unlimited,
-     * or this object is less than 0 (the square root of a negative number is
-     * a complex number not representable in ExtendedDecimal).
+     * or this object is less than 0 (the result would be a complex number with
+     * a real part of 0 and an imaginary part of this object&apos;s absolute
+     * value, but the return value is still NaN).
      */
     public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this,ctx);
@@ -2226,14 +2227,15 @@ remainder=divrem[1]; }
     /**
      * Finds e (the base of natural logarithms) raised to the power of this
      * object's value.
-     * @param ctx A precision context to control precision and exponent
-     * range of the result. The rounding mode is ignored and is always HalfEven.
-     * If HasFlags of the context is true, will also store the flags resulting
-     * from the operation (the flags are in addition to the pre-existing
-     * flags). --This parameter cannot be null, as the exp function&apos;s
-     * results are generally not exact.--
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). --This parameter cannot be
+     * null, as the exp function&apos;s results are generally not exact.--
      * @return exp(this object). Signals the flag FlagInvalid and returns
      * NaN if &quot;ctx&quot; is null or the precision range is unlimited.
+     * If this object&apos;s value is 1, returns an approximation to &quot;e&quot;
+     * within the given precision.
      */
     public ExtendedDecimal Exp(PrecisionContext ctx) {
       return math.Exp(this,ctx);
@@ -2242,18 +2244,33 @@ remainder=divrem[1]; }
     /**
      * Finds the natural logarithm of this object, that is, the exponent
      * that e (the base of natural logarithms) must be raised to in order to
-     * equal this object's value. Not currently implemented.
-     * @param ctx A precision context to control precision and exponent
-     * range of the result. The rounding mode is ignored and is always HalfEven.
-     * If HasFlags of the context is true, will also store the flags resulting
-     * from the operation (the flags are in addition to the pre-existing
-     * flags). --This parameter cannot be null, as the ln function&apos;s
-     * results are generally not exact.--
+     * equal this object's value.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). --This parameter cannot be
+     * null, as the ln function&apos;s results are generally not exact.--
      * @return ln(this object). Signals the flag FlagInvalid and returns
-     * NaN if &quot;ctx&quot; is null or the precision range is unlimited.
+     * NaN if &quot;ctx&quot; is null or the precision range is unlimited,
+     * or if this object is less than 0 (the result would be a complex number
+     * with a real part equal to Ln of this object&apos;s absolute value and
+     * an imaginary part equal to pi, but the return value is still NaN.)
      */
-    public ExtendedDecimal Ln(PrecisionContext ctx) {
+    public ExtendedDecimal Log(PrecisionContext ctx) {
       return math.Ln(this,ctx);
+    }
+
+    /**
+     * Raises this object's value to the given exponent.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags).
+     * @param exponent An ExtendedDecimal object.
+     * @return An ExtendedDecimal object.
+     */
+    public ExtendedDecimal Pow(ExtendedDecimal exponent, PrecisionContext ctx) {
+      return math.Power(this,exponent,ctx);
     }
 
     /**
