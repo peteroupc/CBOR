@@ -135,7 +135,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param digit A 32-bit signed integer.
      * @return A MutableNumber object.
      */
-public MutableNumber MultiplyByTenAndAdd(int digit) {
+      public MutableNumber MultiplyByTenAndAdd(int digit) {
         if(digit<0||digit>=10)
           throw new IllegalArgumentException("Only digits 0 to 9 are supported");
         int s;
@@ -1164,7 +1164,7 @@ bigrem=divrem[1]; }
     /**
      *
      */
-public boolean isValueZero() {
+    public boolean isValueZero() {
         switch(this.integerMode){
           case 0:
             return this.smallValue==0;

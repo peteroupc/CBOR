@@ -2769,18 +2769,32 @@ at: http://peteroupc.github.io/CBOR/
         return thisValue;
       int expOfTwo=Math.min(this.getLowestSetBit(),
                             bigintSecond.getLowestSetBit());
-      while (true) {
-        BigInteger bigintA=(thisValue.subtract(bigintSecond)).abs();
-        if(bigintA.signum()==0){
-          if(expOfTwo!=0){
-            thisValue=thisValue.shiftLeft(expOfTwo);
+      if(thisValue.wordCount<=10 && bigintSecond.wordCount<=10){
+
+        while (true) {
+          BigInteger bigintA=(thisValue.subtract(bigintSecond)).abs();
+          if(bigintA.signum()==0){
+            if(expOfTwo!=0){
+              thisValue=thisValue.shiftLeft(expOfTwo);
+            }
+            return thisValue;
           }
-          return thisValue;
+          int setbit=bigintA.getLowestSetBit();
+          bigintA=bigintA.shiftRight(setbit);
+          bigintSecond=(thisValue.compareTo(bigintSecond)<0) ? thisValue : bigintSecond;
+          thisValue=bigintA;
         }
-        int setbit=bigintA.getLowestSetBit();
-        bigintA=bigintA.shiftRight(setbit);
-        bigintSecond=(thisValue.compareTo(bigintSecond)<0) ? thisValue : bigintSecond;
-        thisValue=bigintA;
+      } else {
+        BigInteger temp;
+        while (thisValue.signum()!=0) {
+          if (thisValue.compareTo(bigintSecond) < 0) {
+            temp = thisValue;
+            thisValue = bigintSecond;
+            bigintSecond = temp;
+          }
+          thisValue = thisValue.remainder(bigintSecond);
+        }
+        return bigintSecond;
       }
     }
 
@@ -3303,7 +3317,7 @@ at: http://peteroupc.github.io/CBOR/
       remainder.wordCount = remainder.CalcWordCount();
       quotient.wordCount = quotient.CalcWordCount();
       //System.out.println("Divd={0} divs={1} quo={2} rem={3}",this.wordCount,
-        //                divisor.wordCount,quotient.wordCount,remainder.wordCount);
+      //                divisor.wordCount,quotient.wordCount,remainder.wordCount);
       remainder.ShortenArray();
       quotient.ShortenArray();
       if (this.signum() < 0) {
