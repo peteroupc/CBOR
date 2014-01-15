@@ -199,7 +199,6 @@ namespace CBOR
         foreach(var p in Directory.GetDirectories(Path)){
           foreach(var f in Directory.GetFiles(p)){
             Console.WriteLine("//"+f);
-            if(!f.Contains("sqrt"))continue;
             using(StreamReader w=new StreamReader(f)){
               while(!w.EndOfStream){
                 var ln=w.ReadLine();

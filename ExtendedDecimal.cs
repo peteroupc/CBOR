@@ -2082,10 +2082,11 @@ namespace PeterO {
     /// be null, as the square root function&apos;s results are generally
     /// not exact for many inputs.--</param>
     /// <returns>The square root. Signals the flag FlagInvalid and returns
-    /// NaN if &quot;ctx&quot; is null or the precision range is unlimited,
-    /// or this object is less than 0 (the result would be a complex number with
-    /// a real part of 0 and an imaginary part of this object&apos;s absolute
+    /// NaN if this object is less than 0 (the result would be a complex number
+    /// with a real part of 0 and an imaginary part of this object&apos;s absolute
     /// value, but the return value is still NaN).</returns>
+    /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
+    /// is null or the precision range is unlimited.</exception>
     public ExtendedDecimal SquareRoot(PrecisionContext ctx){
       return math.SquareRoot(this,ctx);
     }
@@ -2096,10 +2097,10 @@ namespace PeterO {
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). --This parameter cannot
     /// be null, as the exp function&apos;s results are generally not exact.--</param>
-    /// <returns>exp(this object). Signals the flag FlagInvalid and returns
-    /// NaN if &quot;ctx&quot; is null or the precision range is unlimited.
-    /// If this object&apos;s value is 1, returns an approximation to &quot;e&quot;
-    /// within the given precision.</returns>
+    /// <returns>exp(this object). If this object&apos;s value is 1, returns
+    /// an approximation to &quot;e&quot; within the given precision.</returns>
+    /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
+    /// is null or the precision range is unlimited.</exception>
     public ExtendedDecimal Exp(PrecisionContext ctx){
       return math.Exp(this,ctx);
     }
@@ -2113,12 +2114,22 @@ namespace PeterO {
     /// are in addition to the pre-existing flags). --This parameter cannot
     /// be null, as the ln function&apos;s results are generally not exact.--</param>
     /// <returns>ln(this object). Signals the flag FlagInvalid and returns
-    /// NaN if &quot;ctx&quot; is null or the precision range is unlimited,
-    /// or if this object is less than 0 (the result would be a complex number
+    /// NaN if this object is less than 0 (the result would be a complex number
     /// with a real part equal to Ln of this object&apos;s absolute value and
     /// an imaginary part equal to pi, but the return value is still NaN.)</returns>
+    /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
+    /// is null or the precision range is unlimited.</exception>
     public ExtendedDecimal Log(PrecisionContext ctx){
       return math.Ln(this,ctx);
+    }
+
+    /// <summary> Finds the base-10 logarithm of this object, that is, the
+    /// exponent that the number 10 must be raised to in order to equal this
+    /// object's value. </summary>
+    /// <returns>An ExtendedDecimal object.</returns>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    public ExtendedDecimal Log10(PrecisionContext ctx){
+      return math.Log10(this,ctx);
     }
 
     /// <summary> Raises this object's value to the given exponent. </summary>
@@ -2126,8 +2137,13 @@ namespace PeterO {
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags).</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+    /// <returns>this^exponent. Signals the flag FlagInvalid and returns
+    /// NaN if this object and exponent are both 0; or if this value is less than
+    /// 0 and the exponent either has a fractional part or is infinity.</returns>
     /// <param name='exponent'>An ExtendedDecimal object.</param>
+    /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
+    /// is null or the precision range is unlimited, and the exponent has a
+    /// fractional part</exception>
     public ExtendedDecimal Pow(ExtendedDecimal exponent, PrecisionContext ctx){
       return math.Power(this,exponent,ctx);
     }
@@ -2138,9 +2154,9 @@ namespace PeterO {
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). --This parameter cannot
     /// be null, as pi can never be represented exactly.--</param>
-    /// <returns>Pi rounded to the given precision. Signals the flag FlagInvalid
-    /// and returns NaN if &quot;ctx&quot; is null or the precision range
-    /// is unlimited.</returns>
+    /// <returns>Pi rounded to the given precision.</returns>
+    /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
+    /// is null or the precision range is unlimited.</exception>
     public static ExtendedDecimal PI(PrecisionContext ctx){
       return math.Pi(ctx);
     }
