@@ -39,14 +39,14 @@ package com.upokecenter.test;
 
     /**
      * Not documented yet.
-     * @param v A 32-bit signed integer.
+     * @param v A 32-bit signed integer. (2)
      * @return A 32-bit signed integer.
      */
 public int NextValue(int v) {
       if ((v)<0)throw new IllegalArgumentException(
         "v"+" not greater or equal to "+"0"+" ("+
         Integer.toString((int)v)+")");
-      if (v <= 1)return 0;
+      if (v <= 1) { return 0; }
       if (count >= ReseedCount) {
         // Call the default random number generator
         // every once in a while, to reseed

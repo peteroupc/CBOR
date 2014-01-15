@@ -11,8 +11,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Implements arithmetic operations with CBOR objects.
-     * @param a A CBORObject object.
-     * @param b A CBORObject object.
+     * @param a A CBORObject object. (2)
+     * @param b A CBORObject object. (3)
      * @return A CBORObject object.
      */
   final class CBORObjectMath {
@@ -25,7 +25,7 @@ private CBORObjectMath(){}
       BigInteger bvalueA;
       BigInteger bvalueB;
       switch (combo) {
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             long valueA = (((Long)a.getThisItem()).longValue());
             long valueB = (((Long)b.getThisItem()).longValue());
             if ((valueA < 0 && valueB < Long.MIN_VALUE - valueA) ||
@@ -35,17 +35,17 @@ private CBORObjectMath(){}
             }
             return CBORObject.FromObject(valueA + valueB);
           }
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = BigInteger.valueOf(((Long)a.getThisItem()).longValue());
             bvalueB = (BigInteger)b.getThisItem();
             return CBORObject.FromObject(bvalueA.add(bvalueB));
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             bvalueA = (BigInteger)a.getThisItem();
             bvalueB = BigInteger.valueOf(((Long)b.getThisItem()).longValue());
             return CBORObject.FromObject(bvalueA.add(bvalueB));
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = (BigInteger)a.getThisItem();
             bvalueB = (BigInteger)b.getThisItem();
             return CBORObject.FromObject(bvalueA.add(bvalueB));
@@ -62,7 +62,7 @@ private CBORObjectMath(){}
       BigInteger bvalueA;
       BigInteger bvalueB;
       switch (combo) {
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             long valueA = (((Long)a.getThisItem()).longValue());
             long valueB = (((Long)b.getThisItem()).longValue());
             if ((valueB < 0 && Long.MAX_VALUE + valueB < valueA) ||
@@ -72,17 +72,17 @@ private CBORObjectMath(){}
             }
             return CBORObject.FromObject(valueA - valueB);
           }
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = BigInteger.valueOf(((Long)a.getThisItem()).longValue());
             bvalueB = (BigInteger)b.getThisItem();
             return CBORObject.FromObject(bvalueA.subtract(bvalueB));
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             bvalueA = (BigInteger)a.getThisItem();
             bvalueB = BigInteger.valueOf(((Long)b.getThisItem()).longValue());
             return CBORObject.FromObject(bvalueA.subtract(bvalueB));
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = (BigInteger)a.getThisItem();
             bvalueB = (BigInteger)b.getThisItem();
             return CBORObject.FromObject(bvalueA.subtract(bvalueB));
@@ -99,7 +99,7 @@ private CBORObjectMath(){}
       BigInteger bvalueA;
       BigInteger bvalueB;
       switch (combo) {
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             long valueA = (((Long)a.getThisItem()).longValue());
             long valueB = (((Long)b.getThisItem()).longValue());
             boolean apos = valueA > 0L;
@@ -115,17 +115,17 @@ private CBORObjectMath(){}
             }
             return CBORObject.FromObject(valueA * valueB);
           }
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = BigInteger.valueOf(((Long)a.getThisItem()).longValue());
             bvalueB = (BigInteger)b.getThisItem();
             return CBORObject.FromObject(bvalueA.multiply(bvalueB));
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             bvalueA = (BigInteger)a.getThisItem();
             bvalueB = BigInteger.valueOf(((Long)b.getThisItem()).longValue());
             return CBORObject.FromObject(bvalueA.multiply(bvalueB));
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = (BigInteger)a.getThisItem();
             bvalueB = (BigInteger)b.getThisItem();
             return CBORObject.FromObject(bvalueA.multiply(bvalueB));

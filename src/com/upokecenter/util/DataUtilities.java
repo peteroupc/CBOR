@@ -23,12 +23,12 @@ private DataUtilities(){}
      * character (U + FFFD). If false, stops processing when invalid UTF-8
      * is seen.
      * @return A string represented by the UTF-8 byte array.
-     * @throws java.lang.NullPointerException "bytes" is null.
+     * @throws java.lang.NullPointerException &quot;bytes&quot; is null.
      * @throws java.lang.IllegalArgumentException The string is not valid UTF-8
-     * and "replace" is false
+     * and &quot;replace&quot; is false.
      */
     public static String GetUtf8String(byte[] bytes, boolean replace) {
-      if (bytes == null)throw new NullPointerException("bytes");
+      if (bytes == null) { throw new NullPointerException("bytes"); }
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, 0, bytes.length, b, replace) != 0) {
  throw new IllegalArgumentException("Invalid UTF-8");
@@ -38,15 +38,15 @@ private DataUtilities(){}
     /**
      * Generates a text string from a portion of a UTF-8 byte array.
      * @param bytes A byte array containing text encoded in UTF-8.
-     * @param offset Offset into the byte array to start reading
-     * @param bytesCount Length, in bytes, of the UTF-8 string
+     * @param offset Offset into the byte array to start reading.
+     * @param bytesCount Length, in bytes, of the UTF-8 string.
      * @param replace If true, replaces invalid encoding with the replacement
      * character (U + FFFD). If false, stops processing when invalid UTF-8
      * is seen.
      * @return A string represented by the UTF-8 byte array.
-     * @throws java.lang.NullPointerException "bytes" is null.
+     * @throws java.lang.NullPointerException &quot;bytes&quot; is null.
      * @throws java.lang.IllegalArgumentException The portion of the byte array
-     * is not valid UTF-8 and "replace" is false
+     * is not valid UTF-8 and &quot;replace&quot; is false.
      */
     public static String GetUtf8String(byte[] bytes, int offset, int bytesCount, boolean replace) {
       StringBuilder b = new StringBuilder();
@@ -62,10 +62,10 @@ private DataUtilities(){}
      * with the replacement character (U + FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
      * @return The string encoded in UTF-8.
-     * @throws java.lang.NullPointerException "str" is null.
+     * @throws java.lang.NullPointerException &quot;str&quot; is null.
      * @throws java.lang.IllegalArgumentException The string contains an unpaired
-     * surrogate code point and "replace" is false, or an internal error
-     * occurred.
+     * surrogate code point and &quot;replace&quot; is false, or an internal
+     * error occurred.
      */
     public static byte[] GetUtf8Bytes(String str, boolean replace) {
       try {
@@ -95,7 +95,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @return The number of bytes needed to encode the given string in UTF-8,
      * or -1 if the string contains an unpaired surrogate code point and &quot;
      * replace&quot; is false.
-     * @throws java.lang.NullPointerException "s" is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      */
     public static long GetUtf8Length(String str, boolean replace) {
       if (str == null) { throw new NullPointerException("str"); }
@@ -114,13 +114,17 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             if (replace) {
               size += 3;
               i--;
-            } else return -1;
+            } else {
+ return -1;
+}
           } else {
             size += 4;
           }
         } else {
           if (replace) size += 3;
-          else return -1;
+          else {
+ return -1;
+}
         }
       }
       return size;
@@ -194,11 +198,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @return 0 if the entire string portion was written; or -1 if the string
      * portion contains an unpaired surrogate code point and &quot; replace&quot;
      * is false.
-     * @throws java.lang.NullPointerException "str" is null or "stream"
-     * is null.
-     * @throws java.lang.IllegalArgumentException "offset" is less than 0, "length"
-     * is less than 0, or "offset" plus "length" is greater than the string's
-     * length.
+     * @throws java.lang.NullPointerException &quot;str&quot; is null
+     * or &quot;stream&quot; is null.
+     * @throws java.lang.IllegalArgumentException &quot;offset&quot; is less
+     * than 0, &quot;length&quot; is less than 0, or &quot;offset&quot;
+     * plus &quot;length&quot; is greater than the string&apos;s length.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
@@ -279,8 +283,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * when an unpaired surrogate code point is seen.
      * @return 0 if the entire string was written; or -1 if the string contains
      * an unpaired surrogate code point and &quot; replace&quot; is false.
-     * @throws java.lang.NullPointerException "str" is null or "stream"
-     * is null.
+     * @throws java.lang.NullPointerException &quot;str&quot; is null
+     * or &quot;stream&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(String str, OutputStream stream, boolean replace) throws IOException {
@@ -289,9 +293,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     }
     /**
      * Reads a string in UTF-8 encoding from a byte array.
-     * @param data A byte array containing a UTF-8 string
-     * @param offset Offset into the byte array to start reading
-     * @param bytesCount Length, in bytes, of the UTF-8 string
+     * @param data A byte array containing a UTF-8 string.
+     * @param offset Offset into the byte array to start reading.
+     * @param bytesCount Length, in bytes, of the UTF-8 string.
      * @param builder A string builder object where the resulting string
      * will be stored.
      * @param replace If true, replaces invalid encoding with the replacement
@@ -299,11 +303,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * is seen.
      * @return 0 if the entire string was read without errors, or -1 if the
      * string is not valid UTF-8 and &quot; replace&quot; is false.
-     * @throws java.lang.NullPointerException "data" is null or "builder"
-     * is null.
-     * @throws java.lang.IllegalArgumentException "offset" is less than 0, "bytesCount"
-     * is less than 0, or offset plus bytesCount is greater than the length
-     * of "data".
+     * @throws java.lang.NullPointerException &quot;data&quot; is null
+     * or &quot;builder&quot; is null.
+     * @throws java.lang.IllegalArgumentException &quot;offset&quot; is less
+     * than 0, &quot;bytesCount&quot; is less than 0, or offset plus bytesCount
+     * is greater than the length of &quot;data&quot;.
      */
     public static int ReadUtf8FromBytes(
 byte[] data, int offset, int bytesCount,
@@ -406,8 +410,8 @@ byte[] data, int offset, int bytesCount,
      * of the stream is reached), or -2 if the end of the stream was reached
      * before the entire string was read.
      * @throws java.io.IOException An I/O error occurred.
-     * @throws java.lang.NullPointerException "stream" is null or "builder"
-     * is null.
+     * @throws java.lang.NullPointerException &quot;stream&quot; is
+     * null or &quot;builder&quot; is null.
      */
     public static int ReadUtf8(
 InputStream stream, int bytesCount, StringBuilder builder,

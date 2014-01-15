@@ -102,8 +102,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedFloat object.
      */
     public static ExtendedFloat Create(BigInteger mantissa, BigInteger exponent) {
-      if (mantissa == null)throw new NullPointerException("mantissa");
-      if (exponent == null)throw new NullPointerException("exponent");
+      if (mantissa == null) { throw new NullPointerException("mantissa"); }
+      if (exponent == null) { throw new NullPointerException("exponent"); }
       ExtendedFloat ex = new ExtendedFloat();
       ex.exponent = exponent;
       int sign = mantissa == null ? 0 : mantissa.signum();
@@ -217,9 +217,9 @@ BigInteger mantissa,
 
     /**
      * Not documented yet.
-     * @param mantissa A BigInteger object.
-     * @param e1 A BigInteger object.
-     * @param e2 A BigInteger object.
+     * @param mantissa A BigInteger object. (2)
+     * @param e1 A BigInteger object. (3)
+     * @param e2 A BigInteger object. (4)
      * @return A BigInteger object.
      */
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
@@ -234,7 +234,7 @@ BigInteger mantissa,
     /**
      * Not documented yet.
      * @param lastDigit A 32-bit signed integer.
-     * @param olderDigits A 32-bit signed integer.
+     * @param olderDigits A 32-bit signed integer. (2)
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
@@ -254,7 +254,7 @@ BigInteger mantissa,
     /**
      * Not documented yet.
      * @param num A BigInteger object.
-     * @param den A BigInteger object.
+     * @param den A BigInteger object. (2)
      * @return A Boolean object.
      */
       public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
@@ -269,7 +269,7 @@ BigInteger mantissa,
 
     /**
      * Not documented yet.
-     * @param bigint A BigInteger object.
+     * @param bigint A BigInteger object. (2)
      * @param power A FastInteger object.
      * @return A BigInteger object.
      */
@@ -294,7 +294,7 @@ BigInteger mantissa,
     /**
      * Not documented yet.
      * @param mantissa A BigInteger object.
-     * @param exponent A BigInteger object.
+     * @param exponent A BigInteger object. (2)
      * @param flags A 32-bit signed integer.
      * @return An ExtendedFloat object.
      */
@@ -681,7 +681,7 @@ bigmant,
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param dbl A 64-bit floating-point number.
-     * @return A binary float with the same value as &quot; dbl&quot;
+     * @return A binary float with the same value as &quot; dbl&quot;.
      */
     public static ExtendedFloat FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
@@ -897,8 +897,8 @@ info, BigInteger.ZERO,
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException The result can't be exact because it
-     * would have a nonterminating binary expansion.
+     * @throws ArithmeticException The result can&apos;t be exact because
+     * it would have a nonterminating binary expansion.
      */
     public ExtendedFloat Divide(ExtendedFloat divisor) {
       return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
@@ -953,7 +953,7 @@ info, BigInteger.ZERO,
     }
     /**
      * Not documented yet.
-     * @param divisor An ExtendedFloat object.
+     * @param divisor An ExtendedFloat object. (2)
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat RemainderNaturalScale(
@@ -963,7 +963,7 @@ info, BigInteger.ZERO,
 
     /**
      * Not documented yet.
-     * @param divisor An ExtendedFloat object.
+     * @param divisor An ExtendedFloat object. (2)
      * @param ctx A PrecisionContext object.
      * @return An ExtendedFloat object.
      */
@@ -1016,7 +1016,7 @@ this.DivideToIntegerNaturalScale(divisor, null)
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException Either ctx is null or ctx's precision
+     * @throws ArithmeticException Either ctx is null or ctx&apos;s precision
      * is 0, and the result would have a nonterminating binary expansion;
      * or, the rounding mode is Rounding.Unnecessary and the result is not
      * exact.
@@ -1286,8 +1286,8 @@ ExtendedFloat multiplicand,
      * pre-existing flags).
      * @return Returns the largest value that&apos; s less than the given
      * value. Returns negative infinity if the result is negative infinity.
-     * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
-     * is 0, or "ctx" has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
+     * precision is 0, or &quot;ctx&quot; has an unlimited exponent range.
      */
     public ExtendedFloat NextMinus(
       PrecisionContext ctx) {
@@ -1303,8 +1303,8 @@ ExtendedFloat multiplicand,
      * pre-existing flags).
      * @return Returns the smallest value that&apos; s greater than the
      * given value.
-     * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
-     * is 0, or "ctx" has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
+     * precision is 0, or &quot;ctx&quot; has an unlimited exponent range.
      */
     public ExtendedFloat NextPlus(
       PrecisionContext ctx) {
@@ -1322,8 +1322,8 @@ ExtendedFloat multiplicand,
      * pre-existing flags).
      * @return Returns the next value that is closer to the other object&apos;
      * s value than this object&apos; s value.
-     * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
-     * is 0, or "ctx" has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
+     * precision is 0, or &quot;ctx&quot; has an unlimited exponent range.
      */
     public ExtendedFloat NextToward(
       ExtendedFloat otherValue,
@@ -1334,7 +1334,7 @@ ExtendedFloat multiplicand,
     /**
      * Gets the greater value between two binary floats.
      * @param first An ExtendedFloat object.
-     * @param second An ExtendedFloat object.
+     * @param second An ExtendedFloat object. (2)
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -1349,7 +1349,7 @@ ExtendedFloat multiplicand,
     /**
      * Gets the lesser value between two binary floats.
      * @param first An ExtendedFloat object.
-     * @param second An ExtendedFloat object.
+     * @param second An ExtendedFloat object. (2)
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -1363,8 +1363,8 @@ ExtendedFloat multiplicand,
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param first An ExtendedFloat object.
-     * @param second An ExtendedFloat object.
+     * @param first An ExtendedFloat object. (2)
+     * @param second An ExtendedFloat object. (3)
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -1379,8 +1379,8 @@ ExtendedFloat multiplicand,
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param first An ExtendedFloat object.
-     * @param second An ExtendedFloat object.
+     * @param first An ExtendedFloat object. (2)
+     * @param second An ExtendedFloat object. (3)
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -1395,7 +1395,7 @@ ExtendedFloat multiplicand,
     /**
      * Gets the greater value between two binary floats.
      * @param first An ExtendedFloat object.
-     * @param second An ExtendedFloat object.
+     * @param second An ExtendedFloat object. (2)
      * @return The larger value of the two objects.
      */
     public static ExtendedFloat Max(
@@ -1406,7 +1406,7 @@ ExtendedFloat multiplicand,
     /**
      * Gets the lesser value between two binary floats.
      * @param first An ExtendedFloat object.
-     * @param second An ExtendedFloat object.
+     * @param second An ExtendedFloat object. (2)
      * @return The smaller value of the two objects.
      */
     public static ExtendedFloat Min(
@@ -1416,8 +1416,8 @@ ExtendedFloat multiplicand,
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param first An ExtendedFloat object.
-     * @param second An ExtendedFloat object.
+     * @param first An ExtendedFloat object. (2)
+     * @param second An ExtendedFloat object. (3)
      * @return An ExtendedFloat object.
      */
     public static ExtendedFloat MaxMagnitude(
@@ -1428,8 +1428,8 @@ ExtendedFloat multiplicand,
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param first An ExtendedFloat object.
-     * @param second An ExtendedFloat object.
+     * @param first An ExtendedFloat object. (2)
+     * @param second An ExtendedFloat object. (3)
      * @return An ExtendedFloat object.
      */
     public static ExtendedFloat MinMagnitude(
@@ -1778,7 +1778,7 @@ ExtendedFloat multiplicand,
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). --This parameter cannot be
      * null, as the square root function&apos; s results are generally not
-     * exact for many inputs.--
+     * exact for many inputs.--.
      * @return The square root. Signals the flag FlagInvalid and returns
      * NaN if this object is less than 0 (the result would be a complex number
      * with a real part of 0 and an imaginary part of this object&apos; s absolute
@@ -1796,8 +1796,8 @@ ExtendedFloat multiplicand,
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). --This parameter cannot be
-     * null, as the exp function&apos; s results are generally not exact.--
-     * @return exp(this object). If this object&apos; s value is 1, returns
+     * null, as the exp function&apos; s results are generally not exact.--.
+     * @return Exp(this object). If this object&apos; s value is 1, returns
      * an approximation to &quot; e&quot; within the given precision.
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null or the
      * precision range is unlimited.
@@ -1814,11 +1814,11 @@ ExtendedFloat multiplicand,
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). --This parameter cannot be
-     * null, as the ln function&apos; s results are generally not exact.--
-     * @return ln(this object). Signals the flag FlagInvalid and returns
+     * null, as the ln function&apos; s results are generally not exact.--.
+     * @return Ln(this object). Signals the flag FlagInvalid and returns
      * NaN if this object is less than 0 (the result would be a complex number
      * with a real part equal to Ln of this object&apos; s absolute value and
-     * an imaginary part equal to pi, but the return value is still NaN.)
+     * an imaginary part equal to pi, but the return value is still NaN.).
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null or the
      * precision range is unlimited.
      */
@@ -1844,11 +1844,11 @@ ExtendedFloat multiplicand,
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags).
      * @param exponent An ExtendedFloat object.
-     * @return this^exponent. Signals the flag FlagInvalid and returns
+     * @return This^exponent. Signals the flag FlagInvalid and returns
      * NaN if this object and exponent are both 0; or if this value is less than
      * 0 and the exponent either has a fractional part or is infinity.
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null or the
-     * precision range is unlimited, and the exponent has a fractional part
+     * precision range is unlimited, and the exponent has a fractional part.
      */
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
       return math.Power(this, exponent, ctx);
@@ -1860,7 +1860,7 @@ ExtendedFloat multiplicand,
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). --This parameter cannot be
-     * null, as pi can never be represented exactly.--
+     * null, as pi can never be represented exactly.--.
      * @return Pi rounded to the given precision.
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null or the
      * precision range is unlimited.

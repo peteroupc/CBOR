@@ -15,7 +15,6 @@ using NUnit.Framework;
 namespace Test {
   /// <summary>
   /// </summary>
-  ///
   /// <returns>
   /// </returns>
   /// <param name='r'>
@@ -175,6 +174,7 @@ namespace Test {
         TestCommon.AssertRoundTrip(o2);
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -376,6 +376,7 @@ namespace Test {
       CompareTestLess(dn, dp);
       CompareTestLess(dp, dnan);
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -389,6 +390,7 @@ namespace Test {
         TestDecimalString(r);
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -422,6 +424,7 @@ namespace Test {
         }
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -478,6 +481,7 @@ namespace Test {
       try { CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
       try { CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -493,6 +497,7 @@ namespace Test {
                       o.ToJSONString());
       TestCommon.AssertRoundTrip(o);
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -507,6 +512,7 @@ namespace Test {
       Assert.AreEqual(3, o[2].AsInt32());
       TestCommon.AssertRoundTrip(o);
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -531,6 +537,7 @@ namespace Test {
       Assert.AreEqual("false", CBORObject.False.ToJSONString());
       Assert.AreEqual("null", CBORObject.Null.ToJSONString());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -544,6 +551,7 @@ namespace Test {
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
     }
+
     /// <summary>
     /// </summary>
     /// <param name='bytes'>
@@ -566,6 +574,7 @@ namespace Test {
       DoTestReadUtf8(bytes, bytes.Length, expectedRet, expectedString,
                      noReplaceRet, noReplaceString);
     }
+
     /// <summary>
     /// </summary>
     /// <param name='bytes'>
@@ -622,6 +631,7 @@ namespace Test {
         throw new CBORException("", ex);
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -636,6 +646,7 @@ namespace Test {
       Assert.AreEqual(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NegativeInfinity).AsExtendedDecimal());
       Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -664,6 +675,7 @@ namespace Test {
       try { CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
       try { CBORObject.FromObject(Double.NaN).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -682,6 +694,7 @@ namespace Test {
       Assert.AreEqual("0.875", ExtendedDecimal.FromSingle(0.875f).ToString());
       Assert.AreEqual("0.125", ExtendedDecimal.FromSingle(0.125f).ToString());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -740,6 +753,7 @@ namespace Test {
       Assert.AreEqual(-(BigInteger)11, ExtendedDecimal.FromString("0.574848e-5").Exponent);
       Assert.AreEqual(-(BigInteger)3, ExtendedDecimal.FromString("0.565055e+3").Exponent);
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -799,6 +813,7 @@ namespace Test {
       }
       return true;
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -813,6 +828,7 @@ namespace Test {
       bool isequal = ByteArrayEquals(new byte[] { (byte)(0x80 | 2), 3, 4 }, bytes);
       Assert.IsTrue(isequal, "array not equal");
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -891,6 +907,7 @@ namespace Test {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x7F, 0x61, 0x20, 0x7F, 0x61, 0x20, 0xFF, 0xFF });
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -914,6 +931,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(ca);
       TestCommon.AssertRoundTrip(cb);
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -1768,6 +1786,7 @@ namespace Test {
       Assert.AreEqual("0.000761999999999999982035203682784185730270110070705413818359375", ExtendedDecimal.FromDouble(7.62E-4).ToString());
       Assert.AreEqual("313300000000", ExtendedDecimal.FromDouble(3.133E11).ToString());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -1876,6 +1895,7 @@ namespace Test {
       Assert.AreEqual("2242600000000", ExtendedDecimal.FromString("224.26E10").ToPlainString());
       Assert.AreEqual("0.00000026818", ExtendedDecimal.FromString("268.18E-9").ToPlainString());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -1984,6 +2004,7 @@ namespace Test {
       Assert.AreEqual("1.8533", ExtendedDecimal.FromString("185.33E-2").ToEngineeringString());
       Assert.AreEqual("70.7E+6", ExtendedDecimal.FromString("70.7E6").ToEngineeringString());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -2116,6 +2137,7 @@ namespace Test {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F, 0x41, 0x20, 0x5F, 0x41, 0x20, 0xFF, 0xFF });
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3361,6 +3383,7 @@ namespace Test {
       if (-1.0d != ExtendedDecimal.FromString("-1").ToDouble())
         Assert.Fail("decfrac double -1\nExpected: -1.0d\nWas: " + ExtendedDecimal.FromString("-1").ToDouble());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3377,6 +3400,7 @@ namespace Test {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1, 0x1a, 1, 2, 3, 4 });
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3397,6 +3421,7 @@ namespace Test {
       try { dbl2.AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
       try { dbl2.AsBigInteger(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3412,6 +3437,7 @@ namespace Test {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1 });
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3424,6 +3450,7 @@ namespace Test {
       Assert.AreEqual(ExtendedDecimal.Create(BigInteger.One, (BigInteger)(3)),
         o.AsExtendedDecimal());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3437,6 +3464,7 @@ namespace Test {
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3606,6 +3634,7 @@ namespace Test {
         }
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3637,6 +3666,7 @@ namespace Test {
         }
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3656,6 +3686,7 @@ namespace Test {
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3669,6 +3700,7 @@ namespace Test {
       Assert.AreEqual(-1, Math.Sign(DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")));
       Assert.AreEqual(1, Math.Sign(DataUtilities.CodePointCompare("\uf000", "\ud800")));
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3683,6 +3715,7 @@ namespace Test {
       TestCommon.AssertSer(CBORObject.FromObject((object)null),
                            "null");
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3698,6 +3731,7 @@ namespace Test {
       Assert.AreEqual(6, DataUtilities.GetUtf8Length("\ud800\ud800", true));
       Assert.AreEqual(-1, DataUtilities.GetUtf8Length("\ud800\ud800", false));
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -3724,6 +3758,7 @@ namespace Test {
         oldobj = o;
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>

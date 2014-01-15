@@ -205,8 +205,8 @@ at: http://peteroupc.github.io/CBOR/
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
  throw new IllegalArgumentException("Only positive multiplicands are supported");
-}
-        else if (multiplicand != 0) {
+
+  } else if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
             if (this.data.length == 0)this.data = new int[4];
@@ -310,11 +310,11 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Compares a 32-bit signed integer with this instance.
-     * @param val A 32-bit signed integer.
+     * @param val A 32-bit signed integer. (2)
      * @return A 32-bit signed integer.
      */
       public int CompareToInt(int val) {
-        if (val < 0 || this.wordCount > 1)return 1;
+        if (val < 0 || this.wordCount > 1) { return 1; }
         if (this.wordCount == 0) {
           // this value is 0
           return (val == 0) ? 0 : -1;
@@ -335,8 +335,8 @@ at: http://peteroupc.github.io/CBOR/
         int other) {
         if (other < 0) {
  throw new IllegalArgumentException("Only positive values are supported");
-}
-        else if (other != 0)
+
+  } else if (other != 0)
         {
           {
             // Ensure a length of at least 1
@@ -446,8 +446,8 @@ at: http://peteroupc.github.io/CBOR/
       public MutableNumber Add(int augend) {
         if (augend < 0) {
  throw new IllegalArgumentException("Only positive augends are supported");
-}
-        else if (augend != 0)
+
+  } else if (augend != 0)
         {
           int carry = 0;
           // Ensure a length of at least 1
@@ -525,7 +525,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int AsInt32() {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return this.smallValue;
         case 1:
@@ -544,7 +544,7 @@ at: http://peteroupc.github.io/CBOR/
      * is less, or a positive number if this instance is greater.
      */
     public int compareTo(FastInteger val) {
-      switch((this.integerMode << 2) | val.integerMode) {
+       switch ((this.integerMode << 2) | val.integerMode) {
           case (0 << 2) | 0:{
             int vsv = val.smallValue;
             return (this.smallValue == vsv) ? 0 :
@@ -881,7 +881,7 @@ bigrem=divrem[1]; }
         return this;
       } else {
         int sign = bigintVal.signum();
-        if (sign == 0)return this;
+        if (sign == 0) { return this; }
         // Check if this value fits an int, except if
         // it's MinValue
         if (sign < 0 && bigintVal.compareTo(Int32MinValue) > 0) {
@@ -896,7 +896,7 @@ bigrem=divrem[1]; }
     }
     /**
      * Not documented yet.
-     * @param val A FastInteger object.
+     * @param val A FastInteger object. (2)
      * @return A FastInteger object.
      */
     public FastInteger Add(FastInteger val) {
@@ -1124,7 +1124,7 @@ bigrem=divrem[1]; }
      * @return A Boolean object.
      */
     public boolean CanFitInInt32() {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return true;
         case 1:
@@ -1142,7 +1142,7 @@ bigrem=divrem[1]; }
      * @return A string representation of this object.
      */
     @Override public String toString() {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return Integer.toString((int)this.smallValue);
         case 1:
@@ -1157,7 +1157,7 @@ bigrem=divrem[1]; }
      * Not documented yet.
      */
     public int signum() {
-        switch(this.integerMode) {
+         switch (this.integerMode) {
           case 0:
             return ((this.smallValue==0) ? 0 : ((this.smallValue<0) ? -1 : 1));
           case 1:
@@ -1173,7 +1173,7 @@ bigrem=divrem[1]; }
      * Not documented yet.
      */
     public boolean isValueZero() {
-        switch(this.integerMode) {
+         switch (this.integerMode) {
           case 0:
             return this.smallValue == 0;
           case 1:
@@ -1192,7 +1192,7 @@ bigrem=divrem[1]; }
      * is less, or a positive number if this instance is greater.
      */
     public int CompareToInt(int val) {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return (val == this.smallValue) ? 0 : (this.smallValue < val ? -1 : 1);
         case 1:
@@ -1206,7 +1206,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param val A 32-bit signed integer.
+     * @param val A 32-bit signed integer. (2)
      * @return A 32-bit signed integer.
      */
     public int MinInt32(int val) {
@@ -1218,7 +1218,7 @@ bigrem=divrem[1]; }
      * @return A BigInteger object.
      */
     public BigInteger AsBigInteger() {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return BigInteger.valueOf(this.smallValue);
         case 1:

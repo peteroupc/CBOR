@@ -17,7 +17,7 @@ namespace PeterO
  sealed class CBORObjectPortable
   {
     private static void WritePortable(BigInteger bigint, Stream s) {
-      if ((s)==null)throw new ArgumentNullException("s");
+      if ((s)==null) { throw new ArgumentNullException("s"); }
       if ((object)bigint==(object)null) {
         s.WriteByte(0xf6);
         return;

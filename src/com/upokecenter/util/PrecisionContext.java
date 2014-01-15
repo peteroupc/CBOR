@@ -142,7 +142,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean ExponentWithinRange(BigInteger exponent) {
-      if (exponent == null)throw new NullPointerException("exponent");
+      if (exponent == null) { throw new NullPointerException("exponent"); }
       if (!this.getHasExponentRange())
         return true;
       if (this.bigintPrecision.signum()==0) {
@@ -200,11 +200,11 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      * @param exponentMin A BigInteger object.
-     * @param exponentMax A BigInteger object.
+     * @param exponentMax A BigInteger object. (2)
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
-      if (exponentMin == null)throw new NullPointerException("exponentMin");
+      if (exponentMin == null) { throw new NullPointerException("exponentMin"); }
       if (exponentMin.compareTo(exponentMax) > 0) {
  throw new IllegalArgumentException("exponentMin greater than exponentMax");
 }
@@ -254,7 +254,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
-      if (bigintPrecision == null)throw new NullPointerException("bigintPrecision");
+      if (bigintPrecision == null) { throw new NullPointerException("bigintPrecision"); }
       if (bigintPrecision.signum() < 0) throw new IllegalArgumentException(
         "precision" + " not greater or equal to " + "0" + " (" +
         bigintPrecision + ")");

@@ -11,8 +11,8 @@ namespace PeterO {
     /// <summary> Implements arithmetic operations with CBOR objects.
     /// </summary>
     /// <returns>A CBORObject object.</returns>
-    /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>A CBORObject object.</param>
+    /// <param name='a'>A CBORObject object. (2)</param>
+    /// <param name='b'>A CBORObject object. (3)</param>
   static class CBORObjectMath {
 
     public static CBORObject Addition(CBORObject a, CBORObject b) {
@@ -22,7 +22,7 @@ namespace PeterO {
       BigInteger bvalueA;
       BigInteger bvalueB;
       switch (combo) {
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             long valueA = (long)a.ThisItem;
             long valueB = (long)b.ThisItem;
             if ((valueA < 0 && valueB < Int64.MinValue - valueA) ||
@@ -32,17 +32,17 @@ namespace PeterO {
             }
             return CBORObject.FromObject(valueA + valueB);
           }
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = (BigInteger)(long)a.ThisItem;
             bvalueB = (BigInteger)b.ThisItem;
             return CBORObject.FromObject(bvalueA + (BigInteger)bvalueB);
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             bvalueA = (BigInteger)a.ThisItem;
             bvalueB = (BigInteger)(long)b.ThisItem;
             return CBORObject.FromObject(bvalueA + (BigInteger)bvalueB);
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = (BigInteger)a.ThisItem;
             bvalueB = (BigInteger)b.ThisItem;
             return CBORObject.FromObject(bvalueA + (BigInteger)bvalueB);
@@ -59,7 +59,7 @@ namespace PeterO {
       BigInteger bvalueA;
       BigInteger bvalueB;
       switch (combo) {
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             long valueA = (long)a.ThisItem;
             long valueB = (long)b.ThisItem;
             if ((valueB < 0 && Int64.MaxValue + valueB < valueA) ||
@@ -69,17 +69,17 @@ namespace PeterO {
             }
             return CBORObject.FromObject(valueA - valueB);
           }
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = (BigInteger)(long)a.ThisItem;
             bvalueB = (BigInteger)b.ThisItem;
             return CBORObject.FromObject(bvalueA - (BigInteger)bvalueB);
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             bvalueA = (BigInteger)a.ThisItem;
             bvalueB = (BigInteger)(long)b.ThisItem;
             return CBORObject.FromObject(bvalueA - (BigInteger)bvalueB);
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = (BigInteger)a.ThisItem;
             bvalueB = (BigInteger)b.ThisItem;
             return CBORObject.FromObject(bvalueA - (BigInteger)bvalueB);
@@ -96,7 +96,7 @@ namespace PeterO {
       BigInteger bvalueA;
       BigInteger bvalueB;
       switch (combo) {
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             long valueA = (long)a.ThisItem;
             long valueB = (long)b.ThisItem;
             bool apos = valueA > 0L;
@@ -112,17 +112,17 @@ namespace PeterO {
             }
             return CBORObject.FromObject(valueA * valueB);
           }
-        case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = (BigInteger)(long)a.ThisItem;
             bvalueB = (BigInteger)b.ThisItem;
             return CBORObject.FromObject(bvalueA * (BigInteger)bvalueB);
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_Integer: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeInteger: {
             bvalueA = (BigInteger)a.ThisItem;
             bvalueB = (BigInteger)(long)b.ThisItem;
             return CBORObject.FromObject(bvalueA * (BigInteger)bvalueB);
           }
-        case (CBORObject.CBORObjectType_BigInteger << 4) | CBORObject.CBORObjectType_BigInteger: {
+        case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
             bvalueA = (BigInteger)a.ThisItem;
             bvalueB = (BigInteger)b.ThisItem;
             return CBORObject.FromObject(bvalueA * (BigInteger)bvalueB);

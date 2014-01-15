@@ -72,6 +72,7 @@ namespace PeterO {
           return this.shiftedBigInt;
       }
     }
+
     /// <summary> Not documented yet. </summary>
     public FastInteger ShiftedIntFast{
       get {
@@ -114,6 +115,7 @@ BigInteger bigint,
       bsa.isSmall = true;
       return bsa;
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='fastint'>A FastInteger object.</param>
     /// <returns></returns>
@@ -283,8 +285,8 @@ BigInteger bigint,
     /// whether the last bit discarded is set and whether the discarded bits
     /// to the right of that bit are set. Assumes that the big integer being
     /// shifted is positive. </summary>
-    /// <returns></returns>
     /// <param name='bits'>A 32-bit signed integer.</param>
+    /// <returns></returns>
     public void ShiftRightInt(int bits) {
       if (this.isSmall)
         this.ShiftRightSmall(bits);
@@ -318,7 +320,7 @@ BigInteger bigint,
       // Get the bottommost shift minus 1 bits
       this.bitsAfterLeftmost |= ((this.shiftedSmall << (SmallBitLength + 1 - shift)) != 0) ? 1 : 0;
       // Get the bit just above that bit
-      this.bitLeftmost = (int)((this.shiftedSmall >> ((shift) - 1)) & 0x01);
+      this.bitLeftmost = (int)((this.shiftedSmall >> ((shift)   - 1)) & 0x01);
       this.shiftedSmall >>= shift;
       if (shiftingMoreBits) {
         // Shifted more bits than the bit length
@@ -332,8 +334,8 @@ BigInteger bigint,
     /// gathering information on whether the last bit discarded is set and
     /// whether the discarded bits to the right of that bit are set. Assumes
     /// that the big integer being shifted is positive. </summary>
-    /// <returns></returns>
     /// <param name='bits'>A 32-bit signed integer.</param>
+    /// <returns></returns>
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
  throw new ArgumentException("bits is negative");

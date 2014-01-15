@@ -45,6 +45,7 @@ namespace PeterO {
     public BigInteger Exponent {
       get { return this.exponent; }
     }
+
     /// <summary> Gets the absolute value of this object's unscaled value.
     /// </summary>
     public BigInteger UnsignedMantissa {
@@ -75,6 +76,7 @@ namespace PeterO {
     public bool Equals(ExtendedDecimal other) {
       return this.EqualsInternal(other);
     }
+
     /// <summary> Determines whether this object's mantissa and exponent
     /// are equal to those of another object and that other object is a decimal
     /// fraction. </summary>
@@ -83,8 +85,9 @@ namespace PeterO {
     public override bool Equals(object obj) {
       return this.EqualsInternal(obj as ExtendedDecimal);
     }
+
     /// <summary> Calculates this object's hash code. </summary>
-    /// <returns>This object&apos; s hash code.</returns>
+    /// <returns>This object&apos;s hash code.</returns>
     public override int GetHashCode() {
       int hashCode = 0;
       unchecked {
@@ -102,8 +105,8 @@ namespace PeterO {
     /// <param name='exponent'>The decimal exponent.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public static ExtendedDecimal Create(BigInteger mantissa, BigInteger exponent) {
-      if (mantissa == null)throw new ArgumentNullException("mantissa");
-      if (exponent == null)throw new ArgumentNullException("exponent");
+      if (mantissa == null) { throw new ArgumentNullException("mantissa"); }
+      if (exponent == null) { throw new ArgumentNullException("exponent"); }
       ExtendedDecimal ex = new ExtendedDecimal();
       ex.exponent = exponent;
       int sign = mantissa == null ? 0 : mantissa.Sign;
@@ -208,7 +211,7 @@ BigInteger mantissa,
           haveDigits = false;
           if (ctx != null && !ctx.Precision.IsZero) {
             maxDigits = FastInteger.FromBig(ctx.Precision);
-            if (ctx.ClampNormalExponents)maxDigits.Decrement();
+            if (ctx.ClampNormalExponents) maxDigits.Decrement();
           }
           for (; i < str.Length; ++i) {
             if (str[i] >= '0' && str[i] <= '9') {
@@ -273,7 +276,7 @@ BigInteger mantissa,
           haveDigits = false;
           if (ctx != null && !ctx.Precision.IsZero) {
             maxDigits = FastInteger.FromBig(ctx.Precision);
-            if (ctx.ClampNormalExponents)maxDigits.Decrement();
+            if (ctx.ClampNormalExponents) maxDigits.Decrement();
           }
           for (; i < str.Length; ++i) {
             if (str[i] >= '0' && str[i] <= '9') {
@@ -442,7 +445,7 @@ BigInteger mantissa,
       ret.unsignedMantissa = (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger();
       ret.exponent = (newScale == null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger();
       ret.flags = negative ? BigNumberFlags.FlagNegative : 0;
-      if (ctx != null)ret = ret.RoundToPrecision(ctx);
+      if (ctx != null) ret = ret.RoundToPrecision(ctx);
       return ret;
     }
 
@@ -476,9 +479,9 @@ BigInteger mantissa,
       }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='e1'>A BigInteger object.</param>
-    /// <param name='e2'>A BigInteger object.</param>
+    /// <param name='mantissa'>A BigInteger object. (2)</param>
+    /// <param name='e1'>A BigInteger object. (3)</param>
+    /// <param name='e2'>A BigInteger object. (4)</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
         if (mantissa.Sign == 0) { return BigInteger.Zero; }
@@ -493,7 +496,7 @@ BigInteger mantissa,
 
     /// <summary> Not documented yet. </summary>
     /// <param name='lastDigit'>A 32-bit signed integer.</param>
-    /// <param name='olderDigits'>A 32-bit signed integer.</param>
+    /// <param name='olderDigits'>A 32-bit signed integer. (2)</param>
     /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
@@ -509,7 +512,7 @@ BigInteger mantissa,
 
     /// <summary> Not documented yet. </summary>
     /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>A BigInteger object.</param>
+    /// <param name='denominator'>A BigInteger object. (2)</param>
     /// <returns>A Boolean object.</returns>
       public bool HasTerminatingRadixExpansion(BigInteger numerator, BigInteger denominator) {
         // Simplify denominator based on numerator
@@ -533,7 +536,7 @@ BigInteger mantissa,
       }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='bigint'>A BigInteger object.</param>
+    /// <param name='bigint'>A BigInteger object. (2)</param>
     /// <param name='power'>A FastInteger object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
@@ -564,17 +567,19 @@ BigInteger mantissa,
 
     /// <summary> Not documented yet. </summary>
     /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='exponent'>A BigInteger object.</param>
+    /// <param name='exponent'>A BigInteger object. (2)</param>
     /// <param name='flags'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedDecimal object.</returns>
       public ExtendedDecimal CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         return CreateWithFlags(mantissa, exponent, flags);
       }
+
     /// <summary> Not documented yet. </summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteAndNonFinite;
       }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedDecimal object.</returns>
@@ -939,6 +944,7 @@ builder, '0',
       }
       return this.ToExtendedFloat().ToSingle();
     }
+
     /// <summary> Converts this value to a 64-bit floating-point number.
     /// The half-even rounding mode is used. <para>If this value is a NaN,
     /// sets the high bit of the 64-bit floating point number's mantissa for
@@ -960,6 +966,7 @@ builder, '0',
       }
       return this.ToExtendedFloat().ToDouble();
     }
+
     /// <summary> Creates a decimal number from a 32-bit floating-point
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
@@ -1033,7 +1040,7 @@ info, BigInteger.Zero,
     /// number, not an approximation, as is often the case by converting the
     /// number to a string. </summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
-    /// <returns>A decimal number with the same value as &quot; dbl&quot;</returns>
+    /// <returns>A decimal number with the same value as &quot; dbl&quot; .</returns>
     public static ExtendedDecimal FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
       int fpExponent = (int)((value[1] >> 20) & 0x7ff);
@@ -1137,6 +1144,7 @@ bigfloat.UnsignedMantissa, bigfloat.Exponent,
     public override string ToString() {
       return this.ToStringInternal(0);
     }
+
     /// <summary> Same as toString(), except that when an exponent is used
     /// it will be a multiple of 3. The format of the return value follows the
     /// format of the java.math.BigDecimal.toEngineeringString() method.
@@ -1145,6 +1153,7 @@ bigfloat.UnsignedMantissa, bigfloat.Exponent,
     public string ToEngineeringString() {
       return this.ToStringInternal(1);
     }
+
     /// <summary> Converts this value to a string, but without an exponent
     /// part. The format of the return value follows the format of the java.math.BigDecimal.toPlainString()
     /// method. </summary>
@@ -1261,12 +1270,14 @@ bigfloat.UnsignedMantissa, bigfloat.Exponent,
           (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
     }
+
     /// <summary> Gets whether this object's value equals 0. </summary>
     public bool IsZero {
       get {
         return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.IsZero;
       }
     }
+
     /// <summary> Gets the absolute value of this object. </summary>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal Abs() {
@@ -1287,8 +1298,8 @@ bigfloat.UnsignedMantissa, bigfloat.Exponent,
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0.</returns>
-    /// <exception cref='ArithmeticException'>The result can't be exact
-    /// because it would have a nonterminating decimal expansion.</exception>
+    /// <exception cref='ArithmeticException'>The result can&apos;t
+    /// be exact because it would have a nonterminating decimal expansion.</exception>
     public ExtendedDecimal Divide(ExtendedDecimal divisor) {
       return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
@@ -1335,8 +1346,9 @@ bigfloat.UnsignedMantissa, bigfloat.Exponent,
       PrecisionContext ctx) {
       return math.Reduce(this, ctx);
     }
+
     /// <summary> Not documented yet. </summary>
-    /// <param name='divisor'>An ExtendedDecimal object.</param>
+    /// <param name='divisor'>An ExtendedDecimal object. (2)</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal RemainderNaturalScale(
       ExtendedDecimal divisor)
@@ -1345,7 +1357,7 @@ bigfloat.UnsignedMantissa, bigfloat.Exponent,
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='divisor'>An ExtendedDecimal object.</param>
+    /// <param name='divisor'>An ExtendedDecimal object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal RemainderNaturalScale(
@@ -1397,7 +1409,7 @@ this.DivideToIntegerNaturalScale(divisor, null)
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0.</returns>
-    /// <exception cref='ArithmeticException'>Either ctx is null or ctx's
+    /// <exception cref='ArithmeticException'>Either ctx is null or ctx&apos;s
     /// precision is 0, and the result would have a nonterminating decimal
     /// expansion; or, the rounding mode is Rounding.Unnecessary and the
     /// result is not exact.</exception>
@@ -1532,6 +1544,7 @@ this.DivideToIntegerNaturalScale(divisor, null)
       }
       return this.Add(negated, ctx);
     }
+
     /// <summary> Multiplies two decimal numbers. The resulting exponent
     /// will be the sum of the exponents of the two decimal numbers. </summary>
     /// <param name='decfrac'>Another decimal number.</param>
@@ -1561,8 +1574,8 @@ ExtendedDecimal multiplicand,
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision,
     /// rounding, and exponent range of the integer part of the result. Flags
-    /// will be set on the given context only if the context&apos; s HasFlags
-    /// is true and the integer part of the result doesn&apos; t fit the precision
+    /// will be set on the given context only if the context&apos;s HasFlags
+    /// is true and the integer part of the result doesn&apos;t fit the precision
     /// and exponent range without rounding.</param>
     /// <returns>The integer part of the quotient of the two objects. Returns
     /// null if the return value would overflow the exponent range. A caller
@@ -1590,7 +1603,7 @@ ExtendedDecimal multiplicand,
     /// exponent will be set to 0. Signals FlagDivideByZero and returns infinity
     /// if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid
     /// and returns NaN if the divisor and the dividend are 0, or if the result
-    /// doesn&apos; t fit the given precision.</returns>
+    /// doesn&apos;t fit the given precision.</returns>
     public ExtendedDecimal DivideToIntegerZeroScale(
       ExtendedDecimal divisor, PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
@@ -1605,6 +1618,7 @@ ExtendedDecimal multiplicand,
       ExtendedDecimal divisor, PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
     }
+
     /// <summary>Finds the distance to the closest multiple of the given
     /// divisor, based on the result of dividing this object's value by another
     /// object's value. <list type=''> <item> If this and the other object
@@ -1630,7 +1644,7 @@ ExtendedDecimal multiplicand,
     /// (the flags are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The distance of the closest multiple. Signals FlagInvalidOperation
     /// and returns NaN if the divisor is 0, or either the result of integer
-    /// division (the quotient) or the remainder wouldn&apos; t fit the given
+    /// division (the quotient) or the remainder wouldn&apos;t fit the given
     /// precision.</returns>
     public ExtendedDecimal RemainderNear(
       ExtendedDecimal divisor, PrecisionContext ctx) {
@@ -1643,10 +1657,11 @@ ExtendedDecimal multiplicand,
     /// is ignored. If HasFlags of the context is true, will also store the
     /// flags resulting from the operation (the flags are in addition to the
     /// pre-existing flags).</param>
-    /// <returns>Returns the largest value that&apos; s less than the given
+    /// <returns>Returns the largest value that&apos;s less than the given
     /// value. Returns negative infinity if the result is negative infinity.</returns>
-    /// <exception cref='System.ArgumentException'>"ctx" is null, the
-    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
+    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
+    /// range.</exception>
     public ExtendedDecimal NextMinus(
       PrecisionContext ctx)
       {
@@ -1660,10 +1675,11 @@ ExtendedDecimal multiplicand,
     /// is ignored. If HasFlags of the context is true, will also store the
     /// flags resulting from the operation (the flags are in addition to the
     /// pre-existing flags).</param>
-    /// <returns>Returns the smallest value that&apos; s greater than the
+    /// <returns>Returns the smallest value that&apos;s greater than the
     /// given value.</returns>
-    /// <exception cref='System.ArgumentException'>"ctx" is null, the
-    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
+    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
+    /// range.</exception>
     public ExtendedDecimal NextPlus(
       PrecisionContext ctx)
       {
@@ -1679,9 +1695,10 @@ ExtendedDecimal multiplicand,
     /// flags resulting from the operation (the flags are in addition to the
     /// pre-existing flags).</param>
     /// <returns>Returns the next value that is closer to the other object&apos;
-    /// s value than this object&apos; s value.</returns>
-    /// <exception cref='System.ArgumentException'>"ctx" is null, the
-    /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
+    /// s value than this object&apos;s value.</returns>
+    /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
+    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
+    /// range.</exception>
     public ExtendedDecimal NextToward(
       ExtendedDecimal otherValue,
       PrecisionContext ctx)
@@ -1692,7 +1709,7 @@ ExtendedDecimal multiplicand,
     /// <summary> Gets the greater value between two decimal numbers. </summary>
     /// <returns>The larger value of the two objects.</returns>
     /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object.</param>
+    /// <param name='second'>An ExtendedDecimal object. (2)</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -1705,7 +1722,7 @@ ExtendedDecimal multiplicand,
     /// <summary> Gets the lesser value between two decimal numbers. </summary>
     /// <returns>The smaller value of the two objects.</returns>
     /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object.</param>
+    /// <param name='second'>An ExtendedDecimal object. (2)</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -1714,12 +1731,13 @@ ExtendedDecimal multiplicand,
       ExtendedDecimal first, ExtendedDecimal second, PrecisionContext ctx) {
       return math.Min(first, second, ctx);
     }
+
     /// <summary> Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.
     /// </summary>
     /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object.</param>
+    /// <param name='first'>An ExtendedDecimal object. (2)</param>
+    /// <param name='second'>An ExtendedDecimal object. (3)</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -1733,8 +1751,8 @@ ExtendedDecimal multiplicand,
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
     /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object.</param>
+    /// <param name='first'>An ExtendedDecimal object. (2)</param>
+    /// <param name='second'>An ExtendedDecimal object. (3)</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -1747,7 +1765,7 @@ ExtendedDecimal multiplicand,
     /// <summary> Gets the greater value between two decimal numbers. </summary>
     /// <returns>The larger value of the two objects.</returns>
     /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object.</param>
+    /// <param name='second'>An ExtendedDecimal object. (2)</param>
     public static ExtendedDecimal Max(
       ExtendedDecimal first, ExtendedDecimal second) {
       return Max(first, second, null);
@@ -1756,17 +1774,18 @@ ExtendedDecimal multiplicand,
     /// <summary> Gets the lesser value between two decimal numbers. </summary>
     /// <returns>The smaller value of the two objects.</returns>
     /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object.</param>
+    /// <param name='second'>An ExtendedDecimal object. (2)</param>
     public static ExtendedDecimal Min(
       ExtendedDecimal first, ExtendedDecimal second) {
       return Min(first, second, null);
     }
+
     /// <summary> Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.
     /// </summary>
     /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object.</param>
+    /// <param name='first'>An ExtendedDecimal object. (2)</param>
+    /// <param name='second'>An ExtendedDecimal object. (3)</param>
     public static ExtendedDecimal MaxMagnitude(
       ExtendedDecimal first, ExtendedDecimal second) {
       return MaxMagnitude(first, second, null);
@@ -1776,12 +1795,13 @@ ExtendedDecimal multiplicand,
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
     /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object.</param>
+    /// <param name='first'>An ExtendedDecimal object. (2)</param>
+    /// <param name='second'>An ExtendedDecimal object. (3)</param>
     public static ExtendedDecimal MinMagnitude(
       ExtendedDecimal first, ExtendedDecimal second) {
       return MinMagnitude(first, second, null);
     }
+
     /// <summary> Compares the mathematical values of this object and another
     /// object, accepting NaN values. <para> This method is not consistent
     /// with the Equals method because two different numbers with the same
@@ -1793,8 +1813,8 @@ ExtendedDecimal multiplicand,
     /// greater than any other number, including infinity. Two different
     /// NaN values will be considered equal.</para>
     /// </summary>
-    /// <returns>Less than 0 if this object&apos; s value is less than the
-    /// other value, or greater than 0 if this object&apos; s value is greater
+    /// <returns>Less than 0 if this object&apos;s value is less than the
+    /// other value, or greater than 0 if this object&apos;s value is greater
     /// than the other value or if &quot; other&quot; is null, or 0 if both values
     /// are equal.</returns>
     /// <param name='other'>An ExtendedDecimal object.</param>
@@ -1865,7 +1885,7 @@ ExtendedDecimal multiplicand,
     /// rounding mode is HalfEven.</param>
     /// <returns>A decimal number with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the rounded result can&apos; t fit the given precision,
+    /// error occurred, or the rounded result can&apos;t fit the given precision,
     /// or if the context defines an exponent range and the given exponent
     /// is outside that range.</returns>
     /// <param name='desiredExponent'>The desired exponent of the result.
@@ -1888,7 +1908,7 @@ ExtendedDecimal multiplicand,
     /// rounding mode is HalfEven.</param>
     /// <returns>A decimal number with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the rounded result can&apos; t fit the given precision,
+    /// error occurred, or the rounded result can&apos;t fit the given precision,
     /// or if the context defines an exponent range and the given exponent
     /// is outside that range.</returns>
     /// <param name='desiredExponentSmall'>The desired exponent of the
@@ -1918,7 +1938,7 @@ ExtendedDecimal multiplicand,
     /// rounding mode is HalfEven.</param>
     /// <returns>A decimal number with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the result can&apos; t fit the given precision
+    /// error occurred, or the result can&apos;t fit the given precision
     /// without rounding. Signals FlagInvalid and returns NaN if the new
     /// exponent is outside of the valid range of the precision context, if
     /// it defines an exponent range.</returns>
@@ -1926,6 +1946,7 @@ ExtendedDecimal multiplicand,
       ExtendedDecimal otherValue, PrecisionContext ctx) {
       return math.Quantize(this, otherValue, ctx);
     }
+
     /// <summary> Returns a decimal number with the same value as this object
     /// but rounded to an integer. </summary>
     /// <param name='ctx'>A precision context to control precision and
@@ -1935,7 +1956,7 @@ ExtendedDecimal multiplicand,
     /// rounding mode is HalfEven.</param>
     /// <returns>A decimal number with the same value as this object but rounded
     /// to an integer. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the result can&apos; t fit the given precision
+    /// error occurred, or the result can&apos;t fit the given precision
     /// without rounding. Signals FlagInvalid and returns NaN if the new
     /// exponent must be changed to 0 when rounding and 0 is outside of the valid
     /// range of the precision context, if it defines an exponent range.</returns>
@@ -1943,6 +1964,7 @@ ExtendedDecimal multiplicand,
       PrecisionContext ctx) {
       return math.RoundToExponentExact(this, BigInteger.Zero, ctx);
     }
+
     /// <summary> Returns a decimal number with the same value as this object
     /// but rounded to an integer, without adding the FlagInexact or FlagRounded
     /// flags. </summary>
@@ -1955,7 +1977,7 @@ ExtendedDecimal multiplicand,
     /// rounding mode is HalfEven.</param>
     /// <returns>A decimal number with the same value as this object but rounded
     /// to an integer. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the result can&apos; t fit the given precision
+    /// error occurred, or the result can&apos;t fit the given precision
     /// without rounding. Signals FlagInvalid and returns NaN if the new
     /// exponent must be changed to 0 when rounding and 0 is outside of the valid
     /// range of the precision context, if it defines an exponent range.</returns>
@@ -1973,7 +1995,7 @@ ExtendedDecimal multiplicand,
     /// rounding mode is HalfEven.</param>
     /// <returns>A decimal number with the same value as this object but rounded
     /// to an integer. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the result can&apos; t fit the given precision
+    /// error occurred, or the result can&apos;t fit the given precision
     /// without rounding. Signals FlagInvalid and returns NaN if the new
     /// exponent is outside of the valid range of the precision context, if
     /// it defines an exponent range.</returns>
@@ -1982,6 +2004,7 @@ ExtendedDecimal multiplicand,
       BigInteger exponent, PrecisionContext ctx) {
       return math.RoundToExponentExact(this, exponent, ctx);
     }
+
     /// <summary> Returns a decimal number with the same value as this object,
     /// and rounds it to a new exponent if necessary.</summary>
     /// <param name='exponent'>The minimum exponent the result can have.
@@ -1996,7 +2019,7 @@ ExtendedDecimal multiplicand,
     /// are in addition to the pre-existing flags). Can be null, in which case
     /// the default rounding mode is HalfEven.</param>
     /// <returns>A decimal number rounded to the closest value representable
-    /// in the given precision, meaning if the result can&apos; t fit the precision,
+    /// in the given precision, meaning if the result can&apos;t fit the precision,
     /// additional digits are discarded to make it fit. Signals FlagInvalid
     /// and returns NaN if the new exponent must be changed when rounding and
     /// the new exponent is outside of the valid range of the precision context,
@@ -2020,6 +2043,7 @@ ExtendedDecimal multiplicand,
       ExtendedDecimal op, PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);
     }
+
     /// <summary> Multiplies by one value, and then adds another value. </summary>
     /// <param name='op'>The value to multiply.</param>
     /// <param name='augend'>The value to add.</param>
@@ -2032,6 +2056,7 @@ ExtendedDecimal multiplicand,
       ExtendedDecimal op, ExtendedDecimal augend, PrecisionContext ctx) {
       return math.MultiplyAndAdd(this, op, augend, ctx);
     }
+
     /// <summary> Multiplies by one value, and then subtracts another value.
     /// </summary>
     /// <param name='op'>The value to multiply.</param>
@@ -2056,7 +2081,7 @@ ExtendedDecimal multiplicand,
     /// the given rounding mode and range of exponent. </summary>
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. Can be null.</param>
-    /// <returns>The closest value to this object&apos; s value, rounded
+    /// <returns>The closest value to this object&apos;s value, rounded
     /// to the specified precision. Returns the same value as this object
     /// if &quot; context&quot; is null or the precision and exponent range
     /// are unlimited.</returns>
@@ -2070,7 +2095,7 @@ ExtendedDecimal multiplicand,
     /// zero to positive zero.</summary>
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. Can be null.</param>
-    /// <returns>The closest value to this object&apos; s value, rounded
+    /// <returns>The closest value to this object&apos;s value, rounded
     /// to the specified precision. Returns the same value as this object
     /// if &quot; context&quot; is null or the precision and exponent range
     /// are unlimited.</returns>
@@ -2084,7 +2109,7 @@ ExtendedDecimal multiplicand,
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. The precision is interpreted as the maximum
     /// bit length of the mantissa. Can be null.</param>
-    /// <returns>The closest value to this object&apos; s value, rounded
+    /// <returns>The closest value to this object&apos;s value, rounded
     /// to the specified precision. Returns the same value as this object
     /// if &quot; context&quot; is null or the precision and exponent range
     /// are unlimited.</returns>
@@ -2098,25 +2123,26 @@ ExtendedDecimal multiplicand,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). --This parameter cannot
-    /// be null, as the square root function&apos; s results are generally
-    /// not exact for many inputs.--</param>
+    /// be null, as the square root function&apos;s results are generally
+    /// not exact for many inputs.--.</param>
     /// <returns>The square root. Signals the flag FlagInvalid and returns
     /// NaN if this object is less than 0 (the result would be a complex number
-    /// with a real part of 0 and an imaginary part of this object&apos; s absolute
+    /// with a real part of 0 and an imaginary part of this object&apos;s absolute
     /// value, but the return value is still NaN).</returns>
     /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
     /// is null or the precision range is unlimited.</exception>
     public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this, ctx);
     }
+
     /// <summary> Finds e (the base of natural logarithms) raised to the power
     /// of this object's value.</summary>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). --This parameter cannot
-    /// be null, as the exp function&apos; s results are generally not exact.--</param>
-    /// <returns>exp(this object). If this object&apos; s value is 1, returns
+    /// be null, as the exp function&apos;s results are generally not exact.--.</param>
+    /// <returns>Exp(this object). If this object&apos;s value is 1, returns
     /// an approximation to &quot; e&quot; within the given precision.</returns>
     /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
     /// is null or the precision range is unlimited.</exception>
@@ -2131,11 +2157,11 @@ ExtendedDecimal multiplicand,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). --This parameter cannot
-    /// be null, as the ln function&apos; s results are generally not exact.--</param>
-    /// <returns>ln(this object). Signals the flag FlagInvalid and returns
+    /// be null, as the ln function&apos;s results are generally not exact.--.</param>
+    /// <returns>Ln(this object). Signals the flag FlagInvalid and returns
     /// NaN if this object is less than 0 (the result would be a complex number
-    /// with a real part equal to Ln of this object&apos; s absolute value and
-    /// an imaginary part equal to pi, but the return value is still NaN.)</returns>
+    /// with a real part equal to Ln of this object&apos;s absolute value and
+    /// an imaginary part equal to pi, but the return value is still NaN.).</returns>
     /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
     /// is null or the precision range is unlimited.</exception>
     public ExtendedDecimal Log(PrecisionContext ctx) {
@@ -2156,13 +2182,13 @@ ExtendedDecimal multiplicand,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags).</param>
-    /// <returns>this^exponent. Signals the flag FlagInvalid and returns
+    /// <returns>This^exponent. Signals the flag FlagInvalid and returns
     /// NaN if this object and exponent are both 0; or if this value is less than
     /// 0 and the exponent either has a fractional part or is infinity.</returns>
     /// <param name='exponent'>An ExtendedDecimal object.</param>
     /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
     /// is null or the precision range is unlimited, and the exponent has a
-    /// fractional part</exception>
+    /// fractional part.</exception>
     public ExtendedDecimal Pow(ExtendedDecimal exponent, PrecisionContext ctx) {
       return math.Power(this, exponent, ctx);
     }
@@ -2172,7 +2198,7 @@ ExtendedDecimal multiplicand,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). --This parameter cannot
-    /// be null, as pi can never be represented exactly.--</param>
+    /// be null, as pi can never be represented exactly.--.</param>
     /// <returns>Pi rounded to the given precision.</returns>
     /// <exception cref='System.ArgumentException'>&quot;ctx&quot;
     /// is null or the precision range is unlimited.</exception>

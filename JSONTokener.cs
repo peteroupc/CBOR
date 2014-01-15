@@ -75,13 +75,13 @@ namespace PeterO {
      * @param s     A source _string.
      */
     public JSONTokener(string str, int options) {
-      if (str == null)throw new ArgumentNullException("str");
+      if (str == null) { throw new ArgumentNullException("str"); }
       this.mySource = str;
       this.options = options;
     }
 
     public JSONTokener(Stream stream, int options) {
-      if (stream == null)throw new ArgumentNullException("stream");
+      if (stream == null) { throw new ArgumentNullException("stream"); }
       this.stream = stream;
       this.options = options;
     }
@@ -148,7 +148,7 @@ namespace PeterO {
             this.myIndex += 1;
             return ret;
           }
-        } catch(IOException ex) {
+        }  catch (IOException ex) {
           throw this.syntaxError("I/O error occurred", ex);
         }
       } else {
@@ -157,6 +157,7 @@ namespace PeterO {
         return c;
       }
     }
+
     /// <summary> Not documented yet. </summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int GetOptions() {
@@ -232,6 +233,7 @@ namespace PeterO {
         }
       }
     }
+
     /// <summary> Not documented yet. </summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int NextClean() {
@@ -241,10 +243,11 @@ namespace PeterO {
           return c;
       }
     }
+
     /// <summary> Not documented yet. </summary>
-    /// <param name='lastChar'>A 32-bit signed integer.</param>
+    /// <param name='lastChar'>A 32-bit signed integer. (2)</param>
     /// <returns>A 32-bit signed integer.</returns>
-    public int NextClean2(int lastChar) {
+    public int NextClean(int lastChar) {
       while (true) {
         int c = this.NextParseComment(lastChar);
         if (c == -1 || c > ' ')
@@ -416,38 +419,38 @@ namespace PeterO {
         obj = this.ParseJSONArray();
         nextChar[0] = this.NextClean();
         return obj;
-      } else if (c == 't'){
+      } else if (c == 't') {
         // Parse true
         if (this.NextChar() != 'r' ||
            this.NextChar() != 'u' ||
-           this.NextChar() != 'e'){
+           this.NextChar() != 'e') {
           throw this.syntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
         return CBORObject.True;
-      } else if (c == 'f'){
+      } else if (c == 'f') {
         // Parse false
         if (this.NextChar() != 'a' ||
            this.NextChar() != 'l' ||
            this.NextChar() != 's' ||
-           this.NextChar() != 'e'){
+           this.NextChar() != 'e') {
           throw this.syntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
         return CBORObject.False;
-      } else if (c == 'n'){
+      } else if (c == 'n') {
         // Parse null
         if (this.NextChar() != 'u' ||
            this.NextChar() != 'l' ||
-           this.NextChar() != 'l'){
+           this.NextChar() != 'l') {
           throw this.syntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
         return CBORObject.False;
-      } else if (c == '-' || (c >=  '0' && c <=  '9')){
+      } else if (c == '-' || (c >= '0' && c <= '9')) {
         // Parse a number
         StringBuilder sb = new StringBuilder();
-        while (c == '-' || c == '+' || c == '.' || c == 'e' || c == 'E' || (c >=  '0' && c<= '9')) {
+        while (c == '-' || c == '+' || c == '.' || c == 'e' || c == 'E' || (c >= '0' && c <= '9')) {
           sb.Append((char)c);
           c = this.NextChar();
         }
@@ -456,12 +459,13 @@ namespace PeterO {
         if (obj == null) {
  throw this.syntaxError("JSON number can't be parsed.");
 }
-        nextChar[0] = this.NextClean2(c);
+        nextChar[0] = this.NextClean(c);
         return obj;
       } else {
         throw this.syntaxError("Value can't be parsed.");
       }
     }
+
     /// <summary> Not documented yet. </summary>
     /// <returns>A CBORObject object.</returns>
     public CBORObject ParseJSONObjectOrArray() {
@@ -470,7 +474,7 @@ namespace PeterO {
       if (c == '[') {
         return this.ParseJSONArray();
       }
-      if (c == '{'){
+      if (c == '{') {
         return this.ParseJSONObject();
       }
       throw this.syntaxError("A JSON object must begin with '{' or '['");
@@ -535,7 +539,7 @@ namespace PeterO {
           }
           myArrayList.Add(CBORObject.Null);
           c = ',';  // Reuse the comma in the code that follows
-        } else if (c == ']'){
+        } else if (c == ']') {
           if (seenComma && (this.GetOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
             // 2013-05-24 -- Peter O. Disallow trailing comma.
             throw this.syntaxError("Trailing comma");

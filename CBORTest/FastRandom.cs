@@ -38,13 +38,13 @@ namespace Test
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='v'>A 32-bit signed integer.</param>
+    /// <param name='v'>A 32-bit signed integer. (2)</param>
     /// <returns>A 32-bit signed integer.</returns>
 public int NextValue(int v) {
       if ((v)<0)throw new ArgumentException(
         "v"+" not greater or equal to "+"0"+" ("+
         Convert.ToString((int)v,System.Globalization.CultureInfo.InvariantCulture)+")");
-      if (v <= 1)return 0;
+      if (v <= 1) { return 0; }
       if (count >= ReseedCount) {
         // Call the default random number generator
         // every once in a while, to reseed

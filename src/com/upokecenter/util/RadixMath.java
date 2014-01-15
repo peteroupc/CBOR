@@ -522,8 +522,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
-     * @param divisor A T object.
+     * @param thisValue A T object. (2)
+     * @param divisor A T object. (3)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -600,8 +600,8 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
-     * @param divisor A T object.
+     * @param thisValue A T object. (2)
+     * @param divisor A T object. (3)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -633,7 +633,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param value A T object.
+     * @param value A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -657,7 +657,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param value A T object.
+     * @param value A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -732,7 +732,7 @@ bigrem=divrem[1]; }
     /**
      * Finds the remainder that results when dividing two T objects.
      * @param thisValue A T object.
-     * @param divisor A T object.
+     * @param divisor A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return The remainder of the two objects.
      */
@@ -758,8 +758,8 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
-     * @param divisor A T object.
+     * @param thisValue A T object. (2)
+     * @param divisor A T object. (3)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1087,8 +1087,8 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
-     * @param pow A T object.
+     * @param thisValue A T object. (2)
+     * @param pow A T object. (3)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1275,7 +1275,7 @@ bigrem=divrem[1]; }
     }
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1363,7 +1363,7 @@ bigrem=divrem[1]; }
     }
 
     private static BigInteger PowerOfTwo(FastInteger fi) {
-      if (fi.signum() <= 0)return BigInteger.ONE;
+      if (fi.signum() <= 0) { return BigInteger.ONE; }
       if (fi.CanFitInInt32()) {
         int val = fi.AsInt32();
         if (val <= 30) {
@@ -1388,7 +1388,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1513,7 +1513,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1603,7 +1603,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1726,7 +1726,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1774,8 +1774,8 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
-     * @param otherValue A T object.
+     * @param thisValue A T object. (2)
+     * @param otherValue A T object. (3)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1859,7 +1859,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1909,9 +1909,9 @@ bigrem=divrem[1]; }
     /**
      * Divides two T objects.
      * @param thisValue A T object.
-     * @param divisor A T object.
+     * @param divisor A T object. (2)
      * @param desiredExponent A BigInteger object.
-     * @param ctx A PrecisionContext object. Precision is ignored.
+     * @param ctx A PrecisionContext object.
      * @return The quotient of the two objects.
      */
     public T DivideToExponent(
@@ -1937,7 +1937,7 @@ bigrem=divrem[1]; }
     /**
      * Divides two T objects.
      * @param thisValue A T object.
-     * @param divisor A T object.
+     * @param divisor A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return The quotient of the two objects.
      */
@@ -2023,7 +2023,7 @@ bigrem=divrem[1]; }
         } else {
           // Rounding mode doesn't care about
           // whether remainder is exactly half
-          if (rounding == Rounding.Unnecessary){
+          if (rounding == Rounding.Unnecessary) {
             throw new ArithmeticException("Rounding was required");
           }
           lastDiscarded = 1;
@@ -2035,7 +2035,7 @@ bigrem=divrem[1]; }
       if (shift.isValueZero()) {
         if ((lastDiscarded | olderDiscarded) != 0) {
           flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
-          if (rounding == Rounding.Unnecessary){
+          if (rounding == Rounding.Unnecessary) {
             throw new ArithmeticException("Rounding was required");
           }
           if (this.RoundGivenDigits(
@@ -2398,8 +2398,8 @@ rem=divrem[1]; }
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param a A T object.
-     * @param b A T object.
+     * @param a A T object. (2)
+     * @param b A T object. (3)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -2417,8 +2417,8 @@ rem=divrem[1]; }
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param a A T object.
-     * @param b A T object.
+     * @param a A T object. (2)
+     * @param b A T object. (3)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -2436,7 +2436,7 @@ rem=divrem[1]; }
     /**
      * Gets the greater value between two T values.
      * @param a A T object.
-     * @param b A T object.
+     * @param b A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return The larger value of the two objects.
      */
@@ -2467,7 +2467,7 @@ rem=divrem[1]; }
     /**
      * Gets the lesser value between two T values.
      * @param a A T object.
-     * @param b A T object.
+     * @param b A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return The smaller value of the two objects.
      */
@@ -2499,7 +2499,7 @@ rem=divrem[1]; }
      * Multiplies two T objects.
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
-     * @param other A T object.
+     * @param other A T object. (2)
      * @return The product of the two objects.
      */
     public T Multiply(T thisValue, T other, PrecisionContext ctx) {
@@ -2535,9 +2535,9 @@ rem=divrem[1]; }
     }
     /**
      * Not documented yet.
-     * @param thisValue A T object.
-     * @param multiplicand A T object.
-     * @param augend A T object.
+     * @param thisValue A T object. (2)
+     * @param multiplicand A T object. (3)
+     * @param augend A T object. (4)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -2555,7 +2555,7 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param context A PrecisionContext object.
      * @return A T object.
      */
@@ -2582,7 +2582,7 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param context A PrecisionContext object.
      * @return A T object.
      */
@@ -2593,7 +2593,7 @@ rem=divrem[1]; }
     }
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param context A PrecisionContext object.
      * @return A T object.
      */
@@ -2620,8 +2620,8 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
-     * @param otherValue A T object.
+     * @param thisValue A T object. (2)
+     * @param otherValue A T object. (3)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -2690,7 +2690,7 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param expOther A BigInteger object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -2717,7 +2717,7 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param expOther A BigInteger object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -2753,7 +2753,7 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
      * @param exponent A BigInteger object.
      * @return A T object.
@@ -2772,10 +2772,10 @@ rem=divrem[1]; }
     }
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
      * @param precision A FastInteger object.
-     * @param idealExp A FastInteger object.
+     * @param idealExp A FastInteger object. (2)
      * @return A T object.
      */
     public T ReduceToPrecisionAndIdealExponent(
@@ -2830,7 +2830,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -3312,9 +3312,9 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object.
+     * @param thisValue A T object. (2)
      * @param ctx A PrecisionContext object.
-     * @param other A T object.
+     * @param other A T object. (3)
      * @return A T object.
      */
     public T Add(T thisValue, T other, PrecisionContext ctx) {
@@ -3532,8 +3532,8 @@ bigrem=divrem[1]; }
 
     /**
      * Compares a T object with this instance.
-     * @param thisValue A T object.
-     * @param decfrac A T object.
+     * @param thisValue A T object. (2)
+     * @param decfrac A T object. (3)
      * @param treatQuietNansAsSignaling A Boolean object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -3548,7 +3548,7 @@ bigrem=divrem[1]; }
     /**
      * Compares a T object with this instance.
      * @param thisValue A T object.
-     * @param decfrac A T object.
+     * @param decfrac A T object. (2)
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */

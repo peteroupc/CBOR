@@ -149,6 +149,7 @@ namespace Test {
       }
       return new String(charbuf);
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -1018,6 +1019,7 @@ namespace Test {
         }
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -1043,6 +1045,7 @@ namespace Test {
           String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i + 0.1111m));
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -1056,6 +1059,7 @@ namespace Test {
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -1074,6 +1078,7 @@ namespace Test {
       try { dbl2.AsUInt32(); } catch(Exception ex) { Assert.Fail(ex.ToString()); throw; }
       try { dbl2.AsUInt64(); } catch(Exception ex) { Assert.Fail(ex.ToString()); throw; }
     }
+
     /// <summary>
     /// </summary>
     /// <returns>

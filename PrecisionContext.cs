@@ -80,6 +80,7 @@ namespace PeterO {
     public bool HasFlags {
       get { return this.hasFlags; }
     }
+
     /// <summary> Signals that the result was rounded to a different mathematical
     /// value, but as close as possible to the original. </summary>
     public const int FlagInexact = 1;
@@ -110,9 +111,10 @@ namespace PeterO {
     /// 0. </summary>
     public int Flags {
       get { return this.flags; }
+
     /// <summary> Sets the flags that occur from converting numbers according
     /// to this precision context. </summary>
-    /// <exception cref='InvalidOperationException'> HasFlags is false.</exception>
+    /// <exception cref='InvalidOperationException'>HasFlags is false.</exception>
       set {
         if (!this.HasFlags) {
  throw new InvalidOperationException("Can't set flags");
@@ -125,7 +127,7 @@ namespace PeterO {
     /// <param name='exponent'>A BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
     public bool ExponentWithinRange(BigInteger exponent) {
-      if (exponent == null)throw new ArgumentNullException("exponent");
+      if (exponent == null) { throw new ArgumentNullException("exponent"); }
       if (!this.HasExponentRange)
         return true;
       if (this.bigintPrecision.IsZero) {
@@ -177,10 +179,10 @@ namespace PeterO {
 
     /// <summary> Not documented yet. </summary>
     /// <param name='exponentMin'>A BigInteger object.</param>
-    /// <param name='exponentMax'>A BigInteger object.</param>
+    /// <param name='exponentMax'>A BigInteger object. (2)</param>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
-      if (exponentMin == null)throw new ArgumentNullException("exponentMin");
+      if (exponentMin == null) { throw new ArgumentNullException("exponentMin"); }
       if (exponentMin.CompareTo(exponentMax) > 0) {
  throw new ArgumentException("exponentMin greater than exponentMax");
 }
@@ -200,6 +202,7 @@ namespace PeterO {
       pc.flags = 0;
       return pc;
     }
+
     /// <summary> Copies this PrecisionContext with an unlimited exponent
     /// range. </summary>
     /// <returns>A PrecisionContext object.</returns>
@@ -208,6 +211,7 @@ namespace PeterO {
       pc.hasExponentRange = false;
       return pc;
     }
+
     /// <summary> Copies this PrecisionContext and gives it a particular
     /// precision value.</summary>
     /// <returns>A PrecisionContext object.</returns>
@@ -224,7 +228,7 @@ namespace PeterO {
     /// <param name='bigintPrecision'>A BigInteger object.</param>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
-      if (bigintPrecision == null)throw new ArgumentNullException("bigintPrecision");
+      if (bigintPrecision == null) { throw new ArgumentNullException("bigintPrecision"); }
       if (bigintPrecision.Sign < 0) throw new ArgumentException(
         "precision" + " not greater or equal to " + "0" + " (" +
         bigintPrecision + ")");
@@ -262,6 +266,7 @@ namespace PeterO {
     public static PrecisionContext ForPrecisionAndRounding(int precision, Rounding rounding) {
       return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
     }
+
     /// <summary> Initializes a new PrecisionContext. HasFlags will be
     /// set to false. </summary>
     public PrecisionContext(
@@ -276,6 +281,7 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
       this.exponentMax = exponentMaxSmall == 0 ? BigInteger.Zero : (BigInteger)exponentMaxSmall;
       this.exponentMin = exponentMinSmall == 0 ? BigInteger.Zero : (BigInteger)exponentMinSmall;
     }
+
     /// <summary> No specific limit on precision. Rounding mode HalfUp.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(

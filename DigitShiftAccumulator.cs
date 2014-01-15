@@ -85,7 +85,7 @@ BigInteger bigint,
     private static int FastParseLong(string str, int offset, int length) {
       // Assumes the string is length 9 or less and contains
       // only the digits '0' through '9'
-      if (length > 9)throw new ArgumentException(
+      if (length > 9) throw new ArgumentException(
         "length" + " not less or equal to " + "9" + " (" +
         Convert.ToString(length,System.Globalization.CultureInfo.InvariantCulture) + ")");
       int ret = 0;
@@ -107,6 +107,7 @@ BigInteger bigint,
         }
       }
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='fastint'>A FastInteger object.</param>
     /// <returns></returns>
@@ -380,8 +381,8 @@ this.shiftedBigInt, radixPower,
     /// whether the last digit discarded is set and whether the discarded
     /// digits to the right of that digit are set. Assumes that the big integer
     /// being shifted is positive. </summary>
-    /// <returns></returns>
     /// <param name='digits'>A 32-bit signed integer.</param>
+    /// <returns></returns>
     public void ShiftRightInt(int digits) {
       if (this.isSmall)
         this.ShiftRightSmall(digits);
@@ -461,8 +462,8 @@ this.shiftedBigInt, radixPower,
     /// gathering information on whether the last digit discarded is set
     /// and whether the discarded digits to the right of that digit are set.
     /// Assumes that the big integer being shifted is positive. </summary>
-    /// <returns></returns>
     /// <param name='digits'>A 64-bit signed integer.</param>
+    /// <returns></returns>
     public void ShiftToDigitsInt(int digits) {
       if (this.isSmall)
         this.ShiftToBitsSmall(digits);
@@ -474,15 +475,15 @@ this.shiftedBigInt, radixPower,
       if (this.isSmall) {
         int kb = 0;
         int v2 = this.shiftedSmall;
-        if (v2 >= 1000000000)kb = 10;
-        else if (v2 >= 100000000)kb = 9;
-        else if (v2 >= 10000000)kb = 8;
-        else if (v2 >= 1000000)kb = 7;
-        else if (v2 >= 100000)kb = 6;
-        else if (v2 >= 10000)kb = 5;
-        else if (v2 >= 1000)kb = 4;
-        else if (v2 >= 100)kb = 3;
-        else if (v2 >= 10)kb = 2;
+        if (v2 >= 1000000000) kb = 10;
+        else if (v2 >= 100000000) kb = 9;
+        else if (v2 >= 10000000) kb = 8;
+        else if (v2 >= 1000000) kb = 7;
+        else if (v2 >= 100000) kb = 6;
+        else if (v2 >= 10000) kb = 5;
+        else if (v2 >= 1000) kb = 4;
+        else if (v2 >= 100) kb = 3;
+        else if (v2 >= 10) kb = 2;
         else kb = 1;
         return new FastInteger(kb);
       } else {
@@ -493,15 +494,15 @@ this.shiftedBigInt, radixPower,
     private void ShiftToBitsSmall(int digits) {
       int kb = 0;
       int v2 = this.shiftedSmall;
-      if (v2 >= 1000000000)kb = 10;
-      else if (v2 >= 100000000)kb = 9;
-      else if (v2 >= 10000000)kb = 8;
-      else if (v2 >= 1000000)kb = 7;
-      else if (v2 >= 100000)kb = 6;
-      else if (v2 >= 10000)kb = 5;
-      else if (v2 >= 1000)kb = 4;
-      else if (v2 >= 100)kb = 3;
-      else if (v2 >= 10)kb = 2;
+      if (v2 >= 1000000000) kb = 10;
+      else if (v2 >= 100000000) kb = 9;
+      else if (v2 >= 10000000) kb = 8;
+      else if (v2 >= 1000000) kb = 7;
+      else if (v2 >= 100000) kb = 6;
+      else if (v2 >= 10000) kb = 5;
+      else if (v2 >= 1000) kb = 4;
+      else if (v2 >= 100) kb = 3;
+      else if (v2 >= 10) kb = 2;
       else kb = 1;
       this.knownBitLength = new FastInteger(kb);
       if (kb > digits) {

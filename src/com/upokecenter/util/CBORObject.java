@@ -26,96 +26,96 @@ import java.io.*;
   public final class CBORObject implements Comparable<CBORObject> {
     int getItemType(){
         CBORObject curobject = this;
-        while (curobject.itemtype_ == CBORObjectType_Tagged) {
-          curobject = (CBORObject)curobject.item_;
+        while (curobject.itemtypeValue == CBORObjectTypeTagged) {
+          curobject = (CBORObject)curobject.itemValue;
         }
-        return curobject.itemtype_;
+        return curobject.itemtypeValue;
       }
 
     Object getThisItem(){
         CBORObject curobject = this;
-        while (curobject.itemtype_ == CBORObjectType_Tagged) {
-          curobject = (CBORObject)curobject.item_;
+        while (curobject.itemtypeValue == CBORObjectTypeTagged) {
+          curobject = (CBORObject)curobject.itemValue;
         }
-        return curobject.item_;
+        return curobject.itemValue;
       }
 
-    int itemtype_;
-    Object item_;
+    int itemtypeValue;
+    Object itemValue;
     int tagLow;
     int tagHigh;
-    static final int CBORObjectType_Integer = 0;  // -(2^63) .. (2^63-1)
-    static final int CBORObjectType_BigInteger = 1;  // all other integers
-    static final int CBORObjectType_ByteString = 2;
-    static final int CBORObjectType_TextString = 3;
-    static final int CBORObjectType_Array = 4;
-    static final int CBORObjectType_Map = 5;
-    static final int CBORObjectType_SimpleValue = 6;
-    static final int CBORObjectType_Single = 7;
-    static final int CBORObjectType_Double = 8;
-    static final int CBORObjectType_ExtendedDecimal = 9;
-    static final int CBORObjectType_Tagged = 10;
-    static final int CBORObjectType_ExtendedFloat = 11;
+    static final int CBORObjectTypeInteger = 0;  // -(2^63) .. (2^63-1)
+    static final int CBORObjectTypeBigInteger = 1;  // all other integers
+    static final int CBORObjectTypeByteString = 2;
+    static final int CBORObjectTypeTextString = 3;
+    static final int CBORObjectTypeArray = 4;
+    static final int CBORObjectTypeMap = 5;
+    static final int CBORObjectTypeSimpleValue = 6;
+    static final int CBORObjectTypeSingle = 7;
+    static final int CBORObjectTypeDouble = 8;
+    static final int CBORObjectTypeExtendedDecimal = 9;
+    static final int CBORObjectTypeTagged = 10;
+    static final int CBORObjectTypeExtendedFloat = 11;
     private static final BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
     private static final BigInteger Int64MinValue = BigInteger.valueOf(Long.MIN_VALUE);
     /**
      * Represents the value false.
      */
 
-    public static final CBORObject False = new CBORObject(CBORObjectType_SimpleValue, 20);
+    public static final CBORObject False = new CBORObject(CBORObjectTypeSimpleValue, 20);
     /**
      * Represents the value true.
      */
 
-    public static final CBORObject True = new CBORObject(CBORObjectType_SimpleValue, 21);
+    public static final CBORObject True = new CBORObject(CBORObjectTypeSimpleValue, 21);
     /**
      * Represents the value null.
      */
 
-    public static final CBORObject Null = new CBORObject(CBORObjectType_SimpleValue, 22);
+    public static final CBORObject Null = new CBORObject(CBORObjectTypeSimpleValue, 22);
     /**
      * Represents the value undefined.
      */
 
-    public static final CBORObject Undefined = new CBORObject(CBORObjectType_SimpleValue, 23);
+    public static final CBORObject Undefined = new CBORObject(CBORObjectTypeSimpleValue, 23);
 
     private CBORObject() { }
 
     private CBORObject(CBORObject obj, int tagLow, int tagHigh){
- this(CBORObjectType_Tagged, obj);
+ this(CBORObjectTypeTagged, obj);
       this.tagLow = tagLow;
       this.tagHigh = tagHigh;
     }
 
     private CBORObject(int type, Object item) {
 
-      this.itemtype_ = type;
-      this.item_ = item;
+      this.itemtypeValue = type;
+      this.itemValue = item;
     }
     /**
      * Gets the general data type of this CBOR object.
      */
     public CBORType getType() {
         switch (this.getItemType()) {
-          case CBORObjectType_Integer:
-          case CBORObjectType_BigInteger:
-          case CBORObjectType_Single:
-          case CBORObjectType_Double:
-          case CBORObjectType_ExtendedDecimal:
-          case CBORObjectType_ExtendedFloat:
+          case CBORObjectTypeInteger:
+          case CBORObjectTypeBigInteger:
+          case CBORObjectTypeSingle:
+          case CBORObjectTypeDouble:
+          case CBORObjectTypeExtendedDecimal:
+          case CBORObjectTypeExtendedFloat:
             return CBORType.Number;
-          case CBORObjectType_SimpleValue:
+          case CBORObjectTypeSimpleValue:
             if (((Integer)this.getThisItem()).intValue() == 21 || ((Integer)this.getThisItem()).intValue() == 20) {
               return CBORType.Boolean;
             }
             return CBORType.SimpleValue;
-          case CBORObjectType_Array:
+          case CBORObjectTypeArray:
             return CBORType.Array;
-          case CBORObjectType_Map:
+          case CBORObjectTypeMap:
             return CBORType.Map;
-          case CBORObjectType_ByteString:
+          case CBORObjectTypeByteString:
             return CBORType.ByteString;
-          case CBORObjectType_TextString:
+          case CBORObjectTypeTextString:
             return CBORType.TextString;
           default:
             throw new IllegalStateException("Unexpected data type");
@@ -125,42 +125,42 @@ import java.io.*;
      * Gets whether this value is a CBOR true value.
      */
     public boolean isTrue() {
-        return this.getItemType() == CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue() == 21;
+        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 21;
       }
     /**
      * Gets whether this value is a CBOR false value.
      */
     public boolean isFalse() {
-        return this.getItemType() == CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue() == 20;
+        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 20;
       }
     /**
      * Gets whether this value is a CBOR null value.
      */
     public boolean isNull() {
-        return this.getItemType() == CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue() == 22;
+        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 22;
       }
     /**
      * Gets whether this value is a CBOR undefined value.
      */
     public boolean isUndefined() {
-        return this.getItemType() == CBORObjectType_SimpleValue && ((Integer)this.getThisItem()).intValue() == 23;
+        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 23;
       }
     /**
      * Gets whether this object's value equals 0.
      */
     public boolean isZero() {
         switch (this.getItemType()) {
-          case CBORObject.CBORObjectType_Integer:
+          case CBORObject.CBORObjectTypeInteger:
             return ((((Long)this.getThisItem()).longValue())) == 0;
-          case CBORObject.CBORObjectType_BigInteger:
+          case CBORObject.CBORObjectTypeBigInteger:
             return ((BigInteger)this.getThisItem()).signum()==0;
-          case CBORObject.CBORObjectType_Single:
+          case CBORObject.CBORObjectTypeSingle:
             return (((Float)this.getThisItem()).floatValue()) == 0;
-          case CBORObject.CBORObjectType_Double:
+          case CBORObject.CBORObjectTypeDouble:
             return (((Double)this.getThisItem()).doubleValue()) == 0;
-          case CBORObject.CBORObjectType_ExtendedDecimal:
+          case CBORObject.CBORObjectTypeExtendedDecimal:
             return ((ExtendedDecimal)this.getThisItem()).signum()==0;
-          case CBORObject.CBORObjectType_ExtendedFloat:
+          case CBORObject.CBORObjectTypeExtendedFloat:
             return ((ExtendedFloat)this.getThisItem()).signum()==0;
           default:
             return false;
@@ -169,27 +169,27 @@ import java.io.*;
     /**
      * Gets this object's value with the sign reversed.
      * @return A CBORObject object.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
      */
     public CBORObject Negate() {
       switch (this.getItemType()) {
-        case CBORObject.CBORObjectType_Integer:
+        case CBORObject.CBORObjectTypeInteger:
           if (((((Long)this.getThisItem()).longValue())) == Long.MIN_VALUE)
             return CBORObject.FromObject(OneShift63);
           return CBORObject.FromObject(-((((Long)this.getThisItem()).longValue())));
-          case CBORObject.CBORObjectType_BigInteger: {
+          case CBORObject.CBORObjectTypeBigInteger: {
             BigInteger bigint = (BigInteger)this.getThisItem();
             bigint=bigint.negate();
             return CBORObject.FromObject(bigint);
           }
-        case CBORObject.CBORObjectType_Single:
+        case CBORObject.CBORObjectTypeSingle:
           return CBORObject.FromObject(-(((Float)this.getThisItem()).floatValue()));
-        case CBORObject.CBORObjectType_Double:
+        case CBORObject.CBORObjectTypeDouble:
           return CBORObject.FromObject(-(((Double)this.getThisItem()).doubleValue()));
-        case CBORObject.CBORObjectType_ExtendedDecimal:
+        case CBORObject.CBORObjectTypeExtendedDecimal:
           return CBORObject.FromObject(((ExtendedDecimal)this.getThisItem()).Negate());
-        case CBORObject.CBORObjectType_ExtendedFloat:
+        case CBORObject.CBORObjectTypeExtendedFloat:
           return CBORObject.FromObject(((ExtendedFloat)this.getThisItem()).Negate());
         default:
           throw new IllegalStateException("This Object is not a number.");
@@ -198,13 +198,13 @@ import java.io.*;
 
     private static int GetSignInternal(int type, Object obj, boolean returnOnNaN) {
       switch (type) {
-          case CBORObject.CBORObjectType_Integer: {
+          case CBORObject.CBORObjectTypeInteger: {
             long value = (((Long)obj).longValue());
             return (value == 0) ? 0 : ((value < 0) ? -1 : 1);
           }
-        case CBORObject.CBORObjectType_BigInteger:
+        case CBORObject.CBORObjectTypeBigInteger:
           return ((BigInteger)obj).signum();
-          case CBORObject.CBORObjectType_Single: {
+          case CBORObject.CBORObjectTypeSingle: {
             float value = ((Float)obj).floatValue();
             if (Float.isNaN(value))
               if (returnOnNaN)
@@ -213,7 +213,7 @@ import java.io.*;
                 throw new IllegalStateException("This Object is not a number.");
             return (int)((value==0) ? 0 : ((value<0) ? -1 : 1));
           }
-          case CBORObject.CBORObjectType_Double: {
+          case CBORObject.CBORObjectTypeDouble: {
             double value = ((Double)obj).doubleValue();
             if (Double.isNaN(value))
               if (returnOnNaN)
@@ -222,9 +222,9 @@ import java.io.*;
                 throw new IllegalStateException("This Object is not a number.");
             return (int)((value==0) ? 0 : ((value<0) ? -1 : 1));
           }
-        case CBORObject.CBORObjectType_ExtendedDecimal:
+        case CBORObject.CBORObjectTypeExtendedDecimal:
           return ((ExtendedDecimal)obj).signum();
-        case CBORObject.CBORObjectType_ExtendedFloat:
+        case CBORObject.CBORObjectTypeExtendedFloat:
           return ((ExtendedFloat)obj).signum();
         default:
           if (returnOnNaN)
@@ -235,8 +235,9 @@ import java.io.*;
     }
     /**
      * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type, including the special not-a-number value (NaN).
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type, including the special not-a-number value
+     * (NaN).
      */
     public int signum() {
         return GetSignInternal(this.getItemType(), this.getThisItem(), false);
@@ -247,17 +248,17 @@ import java.io.*;
      */
     public boolean IsPositiveInfinity() {
       switch (this.getItemType()) {
-          case CBORObject.CBORObjectType_Single: {
+          case CBORObject.CBORObjectTypeSingle: {
             float value = ((Float)this.getThisItem()).floatValue();
             return ((Float)(value)).isInfinite() && value > 0;
           }
-          case CBORObject.CBORObjectType_Double: {
+          case CBORObject.CBORObjectTypeDouble: {
             double value = ((Double)this.getThisItem()).doubleValue();
             return ((Double)(value)).isInfinite() && value > 0;
           }
-        case CBORObject.CBORObjectType_ExtendedDecimal:
+        case CBORObject.CBORObjectTypeExtendedDecimal:
           return ((ExtendedDecimal)this.getThisItem()).IsPositiveInfinity();
-        case CBORObject.CBORObjectType_ExtendedFloat:
+        case CBORObject.CBORObjectTypeExtendedFloat:
           return ((ExtendedFloat)this.getThisItem()).IsPositiveInfinity();
         default:
           return false;
@@ -268,7 +269,7 @@ import java.io.*;
      * Not documented yet.
      * @return A Boolean object.
      */
-public boolean IsInfinity() {
+    public boolean IsInfinity() {
       return this.IsPositiveInfinity() || this.IsNegativeInfinity();
     }
 
@@ -278,17 +279,17 @@ public boolean IsInfinity() {
      */
     public boolean IsNegativeInfinity() {
       switch (this.getItemType()) {
-          case CBORObject.CBORObjectType_Single: {
+          case CBORObject.CBORObjectTypeSingle: {
             float value = ((Float)this.getThisItem()).floatValue();
             return ((Float)(value)).isInfinite() && value < 0;
           }
-          case CBORObject.CBORObjectType_Double: {
+          case CBORObject.CBORObjectTypeDouble: {
             double value = ((Double)this.getThisItem()).doubleValue();
             return ((Double)(value)).isInfinite() && value < 0;
           }
-        case CBORObject.CBORObjectType_ExtendedDecimal:
+        case CBORObject.CBORObjectTypeExtendedDecimal:
           return ((ExtendedDecimal)this.getThisItem()).IsNegativeInfinity();
-        case CBORObject.CBORObjectType_ExtendedFloat:
+        case CBORObject.CBORObjectTypeExtendedFloat:
           return ((ExtendedFloat)this.getThisItem()).IsNegativeInfinity();
         default:
           return false;
@@ -301,13 +302,13 @@ public boolean IsInfinity() {
      */
     public boolean IsNaN() {
       switch (this.getItemType()) {
-        case CBORObject.CBORObjectType_Single:
+        case CBORObject.CBORObjectTypeSingle:
           return Float.isNaN(((Float)this.getThisItem()).floatValue());
-        case CBORObject.CBORObjectType_Double:
+        case CBORObject.CBORObjectTypeDouble:
           return Double.isNaN(((Double)this.getThisItem()).doubleValue());
-        case CBORObject.CBORObjectType_ExtendedDecimal:
+        case CBORObject.CBORObjectTypeExtendedDecimal:
           return ((ExtendedDecimal)this.getThisItem()).IsNaN();
-        case CBORObject.CBORObjectType_ExtendedFloat:
+        case CBORObject.CBORObjectTypeExtendedFloat:
           return ((ExtendedFloat)this.getThisItem()).IsNaN();
         default:
           return false;
@@ -340,39 +341,39 @@ public int compareTo(CBORObject other) {
       int typeB = other.getItemType();
       Object objA = this.getThisItem();
       Object objB = other.getThisItem();
-      if (typeA == CBORObjectType_SimpleValue) {
+      if (typeA == CBORObjectTypeSimpleValue) {
         if (((Integer)objA).intValue() == 20 || ((Integer)objA).intValue() == 22 || ((Integer)objA).intValue() == 23) {
           // Treat false, null, and undefined
           // as the number 0
           objA = (long)0;
-          typeA = CBORObjectType_Integer;
+          typeA = CBORObjectTypeInteger;
         } else if (((Integer)objA).intValue() == 21) {
           // Treat true as the number 1
           objA = (long)1;
-          typeA = CBORObjectType_Integer;
+          typeA = CBORObjectTypeInteger;
         }
       }
-      if (typeB == CBORObjectType_SimpleValue) {
+      if (typeB == CBORObjectTypeSimpleValue) {
         if (((Integer)objB).intValue() == 20 || ((Integer)objB).intValue() == 22 || ((Integer)objB).intValue() == 23) {
           // Treat false, null, and undefined
           // as the number 0
           objB = (long)0;
-          typeB = CBORObjectType_Integer;
+          typeB = CBORObjectTypeInteger;
         } else if (((Integer)objB).intValue() == 21) {
           // Treat true as the number 1
           objB = (long)1;
-          typeB = CBORObjectType_Integer;
+          typeB = CBORObjectTypeInteger;
         }
       }
       if (typeA == typeB) {
         switch (typeA) {
-            case CBORObjectType_Integer: {
+            case CBORObjectTypeInteger: {
               long a = (((Long)objA).longValue());
               long b = (((Long)objB).longValue());
               if (a == b) { return 0; }
               return (a < b) ? -1 : 1;
             }
-            case CBORObjectType_Single: {
+            case CBORObjectTypeSingle: {
               float a = ((Float)objA).floatValue();
               float b = ((Float)objB).floatValue();
               // Treat NaN as greater than all other numbers
@@ -385,12 +386,12 @@ public int compareTo(CBORObject other) {
               if (a == b) { return 0; }
               return (a < b) ? -1 : 1;
             }
-            case CBORObjectType_BigInteger: {
+            case CBORObjectTypeBigInteger: {
               BigInteger bigintA = (BigInteger)objA;
               BigInteger bigintB = (BigInteger)objB;
               return bigintA.compareTo(bigintB);
             }
-            case CBORObjectType_Double: {
+            case CBORObjectTypeDouble: {
               double a = ((Double)objA).doubleValue();
               double b = ((Double)objB).doubleValue();
               // Treat NaN as greater than all other numbers
@@ -403,30 +404,30 @@ public int compareTo(CBORObject other) {
               if (a == b) { return 0; }
               return (a < b) ? -1 : 1;
             }
-            case CBORObjectType_ExtendedDecimal: {
+            case CBORObjectTypeExtendedDecimal: {
               return ((ExtendedDecimal)objA).compareTo(
                 (ExtendedDecimal)objB);
             }
-            case CBORObjectType_ExtendedFloat: {
+            case CBORObjectTypeExtendedFloat: {
               return ((ExtendedFloat)objA).compareTo(
                 (ExtendedFloat)objB);
             }
-            case CBORObjectType_ByteString: {
+            case CBORObjectTypeByteString: {
               return CBORUtilities.ByteArrayCompare((byte[])objA, (byte[])objB);
             }
-            case CBORObjectType_TextString: {
+            case CBORObjectTypeTextString: {
               return DataUtilities.CodePointCompare(
                 (String)objA, (String)objB);
             }
-            case CBORObjectType_Array: {
+            case CBORObjectTypeArray: {
               return ListCompare((
-ArrayList<CBORObject>)objA,
+                ArrayList<CBORObject>)objA,
                                  (ArrayList<CBORObject>)objB);
             }
-            case CBORObjectType_Map: {
+            case CBORObjectTypeMap: {
               return 0;
             }
-            case CBORObjectType_SimpleValue: {
+            case CBORObjectTypeSimpleValue: {
               int valueA = ((Integer)objA).intValue();
               int valueB = ((Integer)objB).intValue();
               if (valueA == valueB) { return 0; }
@@ -451,12 +452,12 @@ ArrayList<CBORObject>)objA,
         ExtendedDecimal decfracXa;
         ExtendedDecimal decfracXb;
         switch (combo) {
-            case (CBORObjectType_Integer << 4) | CBORObjectType_BigInteger: {
+            case (CBORObjectTypeInteger << 4) | CBORObjectTypeBigInteger: {
               bigintXa = BigInteger.valueOf((((Long)objA).longValue()));
               bigintXb = (BigInteger)objB;
               return bigintXa.compareTo(bigintXb);
             }
-            case (CBORObjectType_Integer << 4) | CBORObjectType_Single: {
+            case (CBORObjectTypeInteger << 4) | CBORObjectTypeSingle: {
               float sf = ((Float)objB).floatValue();
               if (((Float)(sf)).isInfinite()) { return sf < 0 ? 1 : -1; }
               if (Float.isNaN(sf)) { return -1; }
@@ -464,7 +465,7 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromSingle(sf);
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_Integer << 4) | CBORObjectType_Double: {
+            case (CBORObjectTypeInteger << 4) | CBORObjectTypeDouble: {
               double sf = ((Double)objB).doubleValue();
               if (((Double)(sf)).isInfinite()) { return sf < 0 ? 1 : -1; }
               if (Double.isNaN(sf)) { return -1; }
@@ -472,22 +473,22 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromDouble(sf);
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_Integer << 4) | CBORObjectType_ExtendedDecimal: {
+            case (CBORObjectTypeInteger << 4) | CBORObjectTypeExtendedDecimal: {
               decfracXa = ExtendedDecimal.FromInt64((((Long)objA).longValue()));
               decfracXb = (ExtendedDecimal)objB;
               return decfracXa.compareTo(decfracXb);
             }
-            case (CBORObjectType_Integer << 4) | CBORObjectType_ExtendedFloat: {
+            case (CBORObjectTypeInteger << 4) | CBORObjectTypeExtendedFloat: {
               bigfloatXa = ExtendedFloat.FromInt64((((Long)objA).longValue()));
               bigfloatXb = (ExtendedFloat)objB;
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_BigInteger << 4) | CBORObjectType_Integer: {
+            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeInteger: {
               bigintXa = (BigInteger)objA;
               bigintXb = BigInteger.valueOf((((Long)objB).longValue()));
               return bigintXa.compareTo(bigintXb);
             }
-            case (CBORObjectType_BigInteger << 4) | CBORObjectType_Single: {
+            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeSingle: {
               float sf = ((Float)objB).floatValue();
               if (((Float)(sf)).isInfinite()) { return sf < 0 ? 1 : -1; }
               if (Float.isNaN(sf)) { return -1; }
@@ -495,7 +496,7 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromSingle(sf);
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_BigInteger << 4) | CBORObjectType_Double: {
+            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeDouble: {
               double sf = ((Double)objB).doubleValue();
               if (((Double)(sf)).isInfinite()) { return sf < 0 ? 1 : -1; }
               if (Double.isNaN(sf)) { return -1; }
@@ -503,17 +504,17 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromDouble(sf);
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_BigInteger << 4) | CBORObjectType_ExtendedDecimal: {
+            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeExtendedDecimal: {
               decfracXa = ExtendedDecimal.FromBigInteger((BigInteger)objA);
               decfracXb = (ExtendedDecimal)objB;
               return decfracXa.compareTo(decfracXb);
             }
-            case (CBORObjectType_BigInteger << 4) | CBORObjectType_ExtendedFloat: {
+            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeExtendedFloat: {
               bigfloatXa = ExtendedFloat.FromBigInteger((BigInteger)objA);
               bigfloatXb = (ExtendedFloat)objB;
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_Single << 4) | CBORObjectType_Integer: {
+            case (CBORObjectTypeSingle << 4) | CBORObjectTypeInteger: {
               float sf = ((Float)objA).floatValue();
               if (((Float)(sf)).isInfinite()) { return sf < 0 ? -1 : 1; }
 
@@ -522,7 +523,7 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromInt64((((Long)objB).longValue()));
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_Single << 4) | CBORObjectType_BigInteger: {
+            case (CBORObjectTypeSingle << 4) | CBORObjectTypeBigInteger: {
               float sf = ((Float)objA).floatValue();
               if (((Float)(sf)).isInfinite()) { return sf < 0 ? -1 : 1; }
               if (Float.isNaN(sf)) { return 1; }
@@ -530,7 +531,7 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromBigInteger((BigInteger)objB);
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_Single << 4) | CBORObjectType_Double: {
+            case (CBORObjectTypeSingle << 4) | CBORObjectTypeDouble: {
               double a = ((Float)objA).doubleValue();
               double b = ((Double)objB).doubleValue();
               // Treat NaN as greater than all other numbers
@@ -543,7 +544,7 @@ ArrayList<CBORObject>)objA,
               if (a == b) { return 0; }
               return (a < b) ? -1 : 1;
             }
-            case (CBORObjectType_Single << 4) | CBORObjectType_ExtendedDecimal: {
+            case (CBORObjectTypeSingle << 4) | CBORObjectTypeExtendedDecimal: {
               float sf = ((Float)objA).floatValue();
               if (((Float)(sf)).isInfinite()) { return sf < 0 ? -1 : 1; }
               if (Float.isNaN(sf)) { return 1; }
@@ -551,7 +552,7 @@ ArrayList<CBORObject>)objA,
               decfracXb = (ExtendedDecimal)objB;
               return decfracXa.compareTo(decfracXb);
             }
-            case (CBORObjectType_Single << 4) | CBORObjectType_ExtendedFloat: {
+            case (CBORObjectTypeSingle << 4) | CBORObjectTypeExtendedFloat: {
               float sf = ((Float)objA).floatValue();
               if (((Float)(sf)).isInfinite()) { return sf < 0 ? -1 : 1; }
               if (Float.isNaN(sf)) { return 1; }
@@ -559,7 +560,7 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = (ExtendedFloat)objB;
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_Double << 4) | CBORObjectType_Integer: {
+            case (CBORObjectTypeDouble << 4) | CBORObjectTypeInteger: {
               double sf = ((Double)objA).doubleValue();
               if (((Double)(sf)).isInfinite()) { return sf < 0 ? -1 : 1; }
               if (Double.isNaN(sf)) { return 1; }
@@ -567,7 +568,7 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromInt64((((Long)objB).longValue()));
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_Double << 4) | CBORObjectType_BigInteger: {
+            case (CBORObjectTypeDouble << 4) | CBORObjectTypeBigInteger: {
               double sf = ((Double)objA).doubleValue();
               if (((Double)(sf)).isInfinite()) { return sf < 0 ? -1 : 1; }
               if (Double.isNaN(sf)) { return 1; }
@@ -575,7 +576,7 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromBigInteger((BigInteger)objB);
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_Double << 4) | CBORObjectType_Single: {
+            case (CBORObjectTypeDouble << 4) | CBORObjectTypeSingle: {
               double a = ((Double)objA).doubleValue();
               double b = ((Float)objB).doubleValue();
               // Treat NaN as greater than all other numbers
@@ -588,7 +589,7 @@ ArrayList<CBORObject>)objA,
               if (a == b) { return 0; }
               return (a < b) ? -1 : 1;
             }
-            case (CBORObjectType_Double << 4) | CBORObjectType_ExtendedDecimal: {
+            case (CBORObjectTypeDouble << 4) | CBORObjectTypeExtendedDecimal: {
               double sf = ((Double)objA).doubleValue();
               if (((Double)(sf)).isInfinite()) { return sf < 0 ? -1 : 1; }
               if (Double.isNaN(sf)) { return 1; }
@@ -596,7 +597,7 @@ ArrayList<CBORObject>)objA,
               decfracXb = (ExtendedDecimal)objB;
               return decfracXa.compareTo(decfracXb);
             }
-            case (CBORObjectType_Double << 4) | CBORObjectType_ExtendedFloat: {
+            case (CBORObjectTypeDouble << 4) | CBORObjectTypeExtendedFloat: {
               double sf = ((Double)objA).doubleValue();
               if (((Double)(sf)).isInfinite()) { return sf < 0 ? -1 : 1; }
               if (Double.isNaN(sf)) { return 1; }
@@ -604,17 +605,17 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = (ExtendedFloat)objB;
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Integer: {
+            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeInteger: {
               decfracXa = (ExtendedDecimal)objA;
               decfracXb = ExtendedDecimal.FromInt64((((Long)objB).longValue()));
               return decfracXa.compareTo(decfracXb);
             }
-            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_BigInteger: {
+            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeBigInteger: {
               decfracXa = (ExtendedDecimal)objA;
               decfracXb = ExtendedDecimal.FromBigInteger((BigInteger)objB);
               return decfracXa.compareTo(decfracXb);
             }
-            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Single: {
+            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeSingle: {
               float sf = ((Float)objB).floatValue();
               if (((Float)(sf)).isInfinite()) { return sf < 0 ? 1 : -1; }
               if (Float.isNaN(sf)) { return -1; }
@@ -622,7 +623,7 @@ ArrayList<CBORObject>)objA,
               decfracXb = ExtendedDecimal.FromSingle(sf);
               return decfracXa.compareTo(decfracXb);
             }
-            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Double: {
+            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeDouble: {
               double sf = ((Double)objB).doubleValue();
               if (((Double)(sf)).isInfinite()) { return sf < 0 ? 1 : -1; }
               if (Double.isNaN(sf)) { return -1; }
@@ -630,22 +631,22 @@ ArrayList<CBORObject>)objA,
               decfracXb = ExtendedDecimal.FromDouble(sf);
               return decfracXa.compareTo(decfracXb);
             }
-            case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_ExtendedFloat: {
+            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeExtendedFloat: {
               decfracXa = (ExtendedDecimal)objA;
               decfracXb = ExtendedDecimal.FromExtendedFloat((ExtendedFloat)objB);
               return decfracXa.compareTo(decfracXb);
             }
-            case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_Integer: {
+            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeInteger: {
               bigfloatXa = (ExtendedFloat)objA;
               bigfloatXb = ExtendedFloat.FromInt64((((Long)objB).longValue()));
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_BigInteger: {
+            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeBigInteger: {
               bigfloatXa = (ExtendedFloat)objA;
               bigfloatXb = ExtendedFloat.FromBigInteger((BigInteger)objB);
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_Single: {
+            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeSingle: {
               float sf = ((Float)objB).floatValue();
               if (((Float)(sf)).isInfinite()) { return sf < 0 ? 1 : -1; }
               if (Float.isNaN(sf)) { return -1; }
@@ -653,7 +654,7 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromSingle(sf);
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_Double: {
+            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeDouble: {
               double sf = ((Double)objB).doubleValue();
               if (((Double)(sf)).isInfinite()) { return sf < 0 ? 1 : -1; }
               if (Double.isNaN(sf)) { return -1; }
@@ -661,94 +662,94 @@ ArrayList<CBORObject>)objA,
               bigfloatXb = ExtendedFloat.FromDouble(sf);
               return bigfloatXa.compareTo(bigfloatXb);
             }
-            case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_ExtendedDecimal: {
+            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeExtendedDecimal: {
               decfracXa = ExtendedDecimal.FromExtendedFloat((ExtendedFloat)objA);
               decfracXb = (ExtendedDecimal)objB;
               return decfracXa.compareTo(decfracXb);
             }
-          case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_Array:
-          case (CBORObjectType_ExtendedFloat << 4) | CBORObjectType_Map:
+          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeArray:
+          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeMap:
             return -1;
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_ExtendedFloat:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_ExtendedFloat:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_ExtendedFloat:
-          case (CBORObjectType_Array << 4) | CBORObjectType_ExtendedFloat:
-          case (CBORObjectType_Map << 4) | CBORObjectType_ExtendedFloat:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeExtendedFloat:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeExtendedFloat:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeExtendedFloat:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeExtendedFloat:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeExtendedFloat:
             return 1;
-          case (CBORObjectType_Integer << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_Integer << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_Integer << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_Integer << 4) | CBORObjectType_Array:
-          case (CBORObjectType_Integer << 4) | CBORObjectType_Map:
-          case (CBORObjectType_BigInteger << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_BigInteger << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_BigInteger << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_BigInteger << 4) | CBORObjectType_Array:
-          case (CBORObjectType_BigInteger << 4) | CBORObjectType_Map:
-          case (CBORObjectType_Single << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_Single << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_Single << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_Single << 4) | CBORObjectType_Array:
-          case (CBORObjectType_Single << 4) | CBORObjectType_Map:
-          case (CBORObjectType_Double << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_Double << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_Double << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_Double << 4) | CBORObjectType_Array:
-          case (CBORObjectType_Double << 4) | CBORObjectType_Map:
-          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Array:
-          case (CBORObjectType_ExtendedDecimal << 4) | CBORObjectType_Map:
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_Array:
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_Map:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_Array:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_Map:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_Array:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_Map:
-          case (CBORObjectType_Array << 4) | CBORObjectType_Map:
+          case (CBORObjectTypeInteger << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeInteger << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeInteger << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeInteger << 4) | CBORObjectTypeArray:
+          case (CBORObjectTypeInteger << 4) | CBORObjectTypeMap:
+          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeArray:
+          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeMap:
+          case (CBORObjectTypeSingle << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeSingle << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeSingle << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeSingle << 4) | CBORObjectTypeArray:
+          case (CBORObjectTypeSingle << 4) | CBORObjectTypeMap:
+          case (CBORObjectTypeDouble << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeDouble << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeDouble << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeDouble << 4) | CBORObjectTypeArray:
+          case (CBORObjectTypeDouble << 4) | CBORObjectTypeMap:
+          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeArray:
+          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeMap:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeArray:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeMap:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeArray:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeMap:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeArray:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeMap:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeMap:
             return -1;
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_Integer:
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_BigInteger:
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_Single:
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_Double:
-          case (CBORObjectType_SimpleValue << 4) | CBORObjectType_ExtendedDecimal:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_Integer:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_BigInteger:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_Single:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_Double:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_ExtendedDecimal:
-          case (CBORObjectType_ByteString << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_Integer:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_BigInteger:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_Single:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_Double:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_ExtendedDecimal:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_TextString << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_Array << 4) | CBORObjectType_Integer:
-          case (CBORObjectType_Array << 4) | CBORObjectType_BigInteger:
-          case (CBORObjectType_Array << 4) | CBORObjectType_Single:
-          case (CBORObjectType_Array << 4) | CBORObjectType_Double:
-          case (CBORObjectType_Array << 4) | CBORObjectType_ExtendedDecimal:
-          case (CBORObjectType_Array << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_Array << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_Array << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_Map << 4) | CBORObjectType_Integer:
-          case (CBORObjectType_Map << 4) | CBORObjectType_BigInteger:
-          case (CBORObjectType_Map << 4) | CBORObjectType_Single:
-          case (CBORObjectType_Map << 4) | CBORObjectType_Double:
-          case (CBORObjectType_Map << 4) | CBORObjectType_ExtendedDecimal:
-          case (CBORObjectType_Map << 4) | CBORObjectType_SimpleValue:
-          case (CBORObjectType_Map << 4) | CBORObjectType_ByteString:
-          case (CBORObjectType_Map << 4) | CBORObjectType_TextString:
-          case (CBORObjectType_Map << 4) | CBORObjectType_Array:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeInteger:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeBigInteger:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeSingle:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeDouble:
+          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeExtendedDecimal:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeInteger:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeBigInteger:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeSingle:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeDouble:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeExtendedDecimal:
+          case (CBORObjectTypeByteString << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeInteger:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeBigInteger:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeSingle:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeDouble:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeExtendedDecimal:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeTextString << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeInteger:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeBigInteger:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeSingle:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeDouble:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeExtendedDecimal:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeArray << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeInteger:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeBigInteger:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeSingle:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeDouble:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeExtendedDecimal:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeSimpleValue:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeByteString:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeTextString:
+          case (CBORObjectTypeMap << 4) | CBORObjectTypeArray:
             return 1;
           default:
             throw new IllegalArgumentException("Unexpected data type");
@@ -842,35 +843,35 @@ hasKey=(valueB==null) ? mapB.containsKey(kvp.getKey()) : true;
     }
     /**
      * Compares the equality of two CBOR objects.
-     * @param other The object to compare
-     * @return true if the objects are equal; otherwise, false.
+     * @param other The object to compare.
+     * @return True if the objects are equal; otherwise, false.
      */
     @SuppressWarnings("unchecked")
 public boolean equals(CBORObject other) {
       CBORObject otherValue = ((other instanceof CBORObject) ? (CBORObject)other : null);
       if (otherValue == null)
         return false;
-      switch (this.itemtype_) {
-        case CBORObjectType_ByteString:
-          if (!CBORUtilities.ByteArrayEquals((byte[])this.getThisItem(), ((otherValue.item_ instanceof byte[]) ? (byte[])otherValue.item_ : null)))
+      switch (this.itemtypeValue) {
+        case CBORObjectTypeByteString:
+          if (!CBORUtilities.ByteArrayEquals((byte[])this.getThisItem(), ((otherValue.itemValue instanceof byte[]) ? (byte[])otherValue.itemValue : null)))
             return false;
           break;
-        case CBORObjectType_Map:
+        case CBORObjectTypeMap:
           if (!CBORMapEquals(
-this.AsMap(),
-                             ((otherValue.item_ instanceof Map<?,?>) ? (Map<CBORObject, CBORObject>)otherValue.item_ : null)))
+            this.AsMap(),
+            ((otherValue.itemValue instanceof Map<?,?>) ? (Map<CBORObject, CBORObject>)otherValue.itemValue : null)))
             return false;
           break;
-        case CBORObjectType_Array:
-          if (!CBORArrayEquals(this.AsList(), ((otherValue.item_ instanceof List<?>) ? (List<CBORObject>)otherValue.item_ : null)))
+        case CBORObjectTypeArray:
+          if (!CBORArrayEquals(this.AsList(), ((otherValue.itemValue instanceof List<?>) ? (List<CBORObject>)otherValue.itemValue : null)))
             return false;
           break;
         default:
-          if (!(((this.item_)==null) ? ((otherValue.item_)==null) : (this.item_).equals(otherValue.item_)))
+          if (!(((this.itemValue)==null) ? ((otherValue.itemValue)==null) : (this.itemValue).equals(otherValue.itemValue)))
             return false;
           break;
       }
-      return this.itemtype_ == otherValue.itemtype_ &&
+      return this.itemtypeValue == otherValue.itemtypeValue &&
         this.tagLow == otherValue.tagLow &&
         this.tagHigh == otherValue.tagHigh;
     }
@@ -881,45 +882,45 @@ this.AsMap(),
     @Override public int hashCode() {
       int hashCode_ = 13;
       {
-        if (this.item_ != null) {
+        if (this.itemValue != null) {
           int itemHashCode = 0;
-          switch (this.itemtype_) {
-            case CBORObjectType_ByteString:
+          switch (this.itemtypeValue) {
+            case CBORObjectTypeByteString:
               itemHashCode = CBORUtilities.ByteArrayHashCode((byte[])this.getThisItem());
               break;
-            case CBORObjectType_Map:
+            case CBORObjectTypeMap:
               itemHashCode = CBORMapHashCode(this.AsMap());
               break;
-            case CBORObjectType_Array:
+            case CBORObjectTypeArray:
               itemHashCode = CBORArrayHashCode(this.AsList());
               break;
             default:
-              itemHashCode = this.item_.hashCode();
+              itemHashCode = this.itemValue.hashCode();
               break;
           }
           hashCode_ += 17 * itemHashCode;
         }
-        hashCode_ += 19 * (this.itemtype_ + this.tagLow + this.tagHigh);
+        hashCode_ += 19 * (this.itemtypeValue + this.tagLow + this.tagHigh);
       }
       return hashCode_;
     }
 
     private static void CheckCBORLength(long expectedLength, long actualLength) {
       if (actualLength < expectedLength) {
- throw new CBORException("Premature end of data");
-}
-      else if (actualLength > expectedLength) {
- throw new CBORException("Too many bytes");
-}
+        throw new CBORException("Premature end of data");
+
+      } else if (actualLength > expectedLength) {
+        throw new CBORException("Too many bytes");
+      }
     }
 
     private static void CheckCBORLength(int expectedLength, int actualLength) {
       if (actualLength < expectedLength) {
- throw new CBORException("Premature end of data");
-}
-      else if (actualLength > expectedLength) {
- throw new CBORException("Too many bytes");
-}
+        throw new CBORException("Premature end of data");
+
+      } else if (actualLength > expectedLength) {
+        throw new CBORException("Too many bytes");
+      }
     }
 
     private static String GetOptimizedStringIfShortAscii(
@@ -957,16 +958,16 @@ this.AsMap(),
     private static CBORObject[] InitializeFixedObjects() {
       FixedObjects = new CBORObject[256];
       for (int i = 0; i < 0x18; ++i) {
-        FixedObjects[i] = new CBORObject(CBORObjectType_Integer, (long)i);
+        FixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
       }
       for (int i = 0x20; i < 0x38; ++i) {
         FixedObjects[i] = new CBORObject(
-CBORObjectType_Integer,
-                                         (long)(-1 - (i - 0x20)));
+          CBORObjectTypeInteger,
+          (long)(-1 - (i - 0x20)));
       }
-      FixedObjects[0x60] = new CBORObject(CBORObjectType_TextString, "");
+      FixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, "");
       for (int i = 0xE0; i < 0xf8; ++i) {
-        FixedObjects[i] = new CBORObject(CBORObjectType_SimpleValue, (int)(i - 0xe0));
+        FixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
       }
       return FixedObjects;
     }
@@ -1001,7 +1002,7 @@ CBORObjectType_Integer,
       if (firstbyte >= 0x61 && firstbyte < 0x78) {
         // text String length 1 to 23
         String s = GetOptimizedStringIfShortAscii(data, 0);
-        if (s != null) { return new CBORObject(CBORObjectType_TextString, s); }
+        if (s != null) { return new CBORObject(CBORObjectTypeTextString, s); }
       }
       if ((firstbyte & 0x1C) == 0x18) {
         // contains 1 to 8 extra bytes of additional information
@@ -1038,7 +1039,7 @@ CBORObjectType_Integer,
             if ((uadditional >> 63) == 0) {
               // use only if additional's top bit isn't set
               // (additional is a signed long)
-              return new CBORObject(CBORObjectType_Integer, uadditional);
+              return new CBORObject(CBORObjectTypeInteger, uadditional);
             } else {
               int low = ((int)((uadditional) & 0xFFFFFFFFL));
               int high = ((int)((uadditional >> 32) & 0xFFFFFFFFL));
@@ -1048,7 +1049,7 @@ CBORObjectType_Integer,
             if ((uadditional >> 63) == 0) {
               // use only if additional's top bit isn't set
               // (additional is a signed long)
-              return new CBORObject(CBORObjectType_Integer, -1 - uadditional);
+              return new CBORObject(CBORObjectTypeInteger, -1 - uadditional);
             } else {
               int low = ((int)((uadditional) & 0xFFFFFFFFL));
               int high = ((int)((uadditional >> 32) & 0xFFFFFFFFL));
@@ -1060,19 +1061,19 @@ CBORObjectType_Integer,
           case 7:
             if (firstbyte == 0xf9)
               return new CBORObject(
-                CBORObjectType_Single, CBORUtilities.HalfPrecisionToSingle(
+                CBORObjectTypeSingle, CBORUtilities.HalfPrecisionToSingle(
                   ((int)uadditional)));
             else if (firstbyte == 0xfa)
               return new CBORObject(
-                CBORObjectType_Single,
+                CBORObjectTypeSingle,
                 Float.intBitsToFloat(((int)uadditional)));
             else if (firstbyte == 0xfb)
               return new CBORObject(
-                CBORObjectType_Double,
+                CBORObjectTypeDouble,
                 Double.longBitsToDouble(uadditional));
             else if (firstbyte == 0xf8)
               return new CBORObject(
-                CBORObjectType_SimpleValue, (int)uadditional);
+                CBORObjectTypeSimpleValue, (int)uadditional);
             else
               throw new CBORException("Unexpected data encountered");
           default:
@@ -1081,11 +1082,11 @@ CBORObjectType_Integer,
       } else if (majortype == 2) {  // short byte String
         byte[] ret = new byte[firstbyte - 0x40];
         System.arraycopy(data, 1, ret, 0, firstbyte - 0x40);
-        return new CBORObject(CBORObjectType_ByteString, ret);
+        return new CBORObject(CBORObjectTypeByteString, ret);
       } else if (majortype == 3) {  // short text String
         StringBuilder ret = new StringBuilder(firstbyte - 0x60);
         DataUtilities.ReadUtf8FromBytes(data, 1, firstbyte - 0x60, ret, false);
-        return new CBORObject(CBORObjectType_TextString, ret.toString());
+        return new CBORObject(CBORObjectTypeTextString, ret.toString());
       } else if (firstbyte == 0x80)  // empty array
         return FromObject(new ArrayList<CBORObject>());
       else if (firstbyte == 0xA0)  // empty map
@@ -1097,7 +1098,7 @@ CBORObjectType_Integer,
      * Generates a CBOR object from an array of CBOR-encoded bytes.
      * @param data A byte[] object.
      * @return A CBOR object corresponding to the data.
-     * @throws java.lang.IllegalArgumentException data is null or empty.
+     * @throws java.lang.IllegalArgumentException Data is null or empty.
      * @throws CBORException There was an error in reading or parsing the
      * data.
      */
@@ -1139,9 +1140,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * or 0 if this item is neither an array nor a map.
      */
     public int size() {
-        if (this.getItemType() == CBORObjectType_Array) {
+        if (this.getItemType() == CBORObjectTypeArray) {
           return this.AsList().size();
-        } else if (this.getItemType() == CBORObjectType_Map) {
+        } else if (this.getItemType() == CBORObjectTypeMap) {
           return this.AsMap().size();
         } else {
           return 0;
@@ -1151,7 +1152,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * Gets whether this data item has at least one tag.
      */
     public boolean isTagged() {
-        return this.itemtype_ == CBORObjectType_Tagged;
+        return this.itemtypeValue == CBORObjectTypeTagged;
       }
     /**
      * Gets the byte array used in this object, if this object is a byte string.
@@ -1159,7 +1160,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @throws IllegalStateException This object is not a byte string.
      */
     public byte[] GetByteString() {
-      if (this.itemtype_ == CBORObjectType_ByteString)
+      if (this.itemtypeValue == CBORObjectTypeByteString)
         return (byte[])this.getThisItem();
       else
         throw new IllegalStateException("Not a byte String");
@@ -1168,7 +1169,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     private boolean HasTag(int tagValue) {
       if (!this.isTagged()) { return false; }
       if (this.tagHigh == 0 && tagValue == this.tagLow) { return true; }
-      return ((CBORObject)this.item_).HasTag(tagValue);
+      return ((CBORObject)this.itemValue).HasTag(tagValue);
     }
 
     private static BigInteger LowHighToBigInteger(int tagLow, int tagHigh) {
@@ -1211,7 +1212,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         while (curitem.isTagged()) {
           list.add(LowHighToBigInteger(
             curitem.tagLow, curitem.tagHigh));
-          curitem = (CBORObject)curitem.item_;
+          curitem = (CBORObject)curitem.itemValue;
         }
         return list.toArray(new BigInteger[]{});
       } else {
@@ -1225,10 +1226,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public BigInteger getInnermostTag() {
         if (!this.isTagged()) { return BigInteger.ZERO; }
         CBORObject previtem = this;
-        CBORObject curitem = (CBORObject)this.item_;
+        CBORObject curitem = (CBORObject)this.itemValue;
         while (curitem.isTagged()) {
           previtem = curitem;
-          curitem = (CBORObject)curitem.item_;
+          curitem = (CBORObject)curitem.itemValue;
         }
         if (previtem.tagHigh == 0 &&
             previtem.tagLow >= 0 &&
@@ -1255,7 +1256,7 @@ private List<CBORObject> AsList() {
      * array.
      */
     public CBORObject get(int index) {
-        if (this.getItemType() == CBORObjectType_Array) {
+        if (this.getItemType() == CBORObjectTypeArray) {
           List<CBORObject> list = this.AsList();
           return list.get(index);
         } else {
@@ -1266,11 +1267,11 @@ private List<CBORObject> AsList() {
      * Sets the value of a CBOR object by integer index in this array.
      * @throws java.lang.IllegalStateException This object is not an
      * array.
-     * @throws java.lang.NullPointerException value is null (as opposed
+     * @throws java.lang.NullPointerException Value is null (as opposed
      * to CBORObject.Null).
      */
 public void set(int index, CBORObject value) {
-        if (this.getItemType() == CBORObjectType_Array) {
+        if (this.getItemType() == CBORObjectTypeArray) {
           if (value == null) { throw new NullPointerException("value"); }
           List<CBORObject> list = this.AsList();
           list.set(index,value);
@@ -1283,7 +1284,7 @@ public void set(int index, CBORObject value) {
      * @throws java.lang.IllegalStateException This object is not a map.
      */
     public Collection<CBORObject> getKeys() {
-        if (this.getItemType() == CBORObjectType_Map) {
+        if (this.getItemType() == CBORObjectTypeMap) {
           Map<CBORObject, CBORObject> dict = this.AsMap();
           return dict.keySet();
         } else {
@@ -1299,7 +1300,7 @@ public void set(int index, CBORObject value) {
      */
     public CBORObject get(CBORObject key) {
         if (key == null) { throw new NullPointerException("key"); }
-        if (this.getItemType() == CBORObjectType_Map) {
+        if (this.getItemType() == CBORObjectTypeMap) {
           Map<CBORObject, CBORObject> map = this.AsMap();
           if (!map.containsKey(key))
             return null;
@@ -1318,7 +1319,7 @@ public void set(int index, CBORObject value) {
 public void set(CBORObject key, CBORObject value) {
         if (key == null) { throw new NullPointerException("key"); }
         if (value == null) { throw new NullPointerException("value"); }
-        if (this.getItemType() == CBORObjectType_Map) {
+        if (this.getItemType() == CBORObjectTypeMap) {
           Map<CBORObject, CBORObject> map = this.AsMap();
           map.put(key,value);
         } else {
@@ -1345,7 +1346,7 @@ public void set(String key, CBORObject value) {
         if (key == null) { throw new NullPointerException("key"); }
         if (value == null) { throw new NullPointerException("value"); }
         CBORObject objkey = CBORObject.FromObject(key);
-        if (this.getItemType() == CBORObjectType_Map) {
+        if (this.getItemType() == CBORObjectTypeMap) {
           Map<CBORObject, CBORObject> map = this.AsMap();
           map.put(objkey,value);
         } else {
@@ -1357,7 +1358,7 @@ public void set(String key, CBORObject value) {
      * a simple value (including if the value is a floating-point number).
      */
     public int getSimpleValue() {
-        if (this.getItemType() == CBORObjectType_SimpleValue) {
+        if (this.getItemType() == CBORObjectTypeSimpleValue) {
           return ((Integer)this.getThisItem()).intValue();
         } else {
           return -1;
@@ -1368,19 +1369,19 @@ public void set(String key, CBORObject value) {
      * @param key A CBOR object representing the key.
      * @param value A CBOR object representing the value.
      * @return The sum of the two objects.
-     * @throws java.lang.NullPointerException key or value is null (as opposed
+     * @throws java.lang.NullPointerException Key or value is null (as opposed
      * to CBORObject.Null).
-     * @throws java.lang.IllegalArgumentException key already exists in this map.
+     * @throws java.lang.IllegalArgumentException Key already exists in this map.
      * @throws IllegalStateException This object is not a map.
      */
     public void Add(CBORObject key, CBORObject value) {
       if (key == null) { throw new NullPointerException("key"); }
       if (value == null) { throw new NullPointerException("value"); }
-      if (this.getItemType() == CBORObjectType_Map) {
+      if (this.getItemType() == CBORObjectTypeMap) {
         Map<CBORObject, CBORObject> map = this.AsMap();
         if (map.containsKey(key)) {
- throw new IllegalArgumentException("Key already exists.");
-}
+          throw new IllegalArgumentException("Key already exists.");
+        }
         map.put(key, value);
       } else {
         throw new IllegalStateException("Not a map");
@@ -1391,9 +1392,9 @@ public void set(String key, CBORObject value) {
      * @param key A string representing the key.
      * @param value A CBOR object representing the value.
      * @return The sum of the two objects.
-     * @throws java.lang.NullPointerException key or value is null (as opposed
+     * @throws java.lang.NullPointerException Key or value is null (as opposed
      * to CBORObject.Null).
-     * @throws java.lang.IllegalArgumentException key already exists in this map.
+     * @throws java.lang.IllegalArgumentException Key already exists in this map.
      * @throws IllegalStateException This object is not a map.
      */
     public void Add(String key, CBORObject value) {
@@ -1406,12 +1407,12 @@ public void set(String key, CBORObject value) {
      * @param key An object that serves as the key.
      * @return True if the given key is found, or false if the given key is not
      * found or this object is not a map.
-     * @throws java.lang.NullPointerException key is null (as opposed to
+     * @throws java.lang.NullPointerException Key is null (as opposed to
      * CBORObject.Null).
      */
     public boolean ContainsKey(CBORObject key) {
       if (key == null) { throw new NullPointerException("key"); }
-      if (this.getItemType() == CBORObjectType_Map) {
+      if (this.getItemType() == CBORObjectTypeMap) {
         Map<CBORObject, CBORObject> map = this.AsMap();
         return map.containsKey(key);
       } else {
@@ -1423,12 +1424,12 @@ public void set(String key, CBORObject value) {
      * @param obj A CBOR object.
      * @throws java.lang.IllegalStateException This object is not an
      * array.
-     * @throws java.lang.NullPointerException obj is null (as opposed to
+     * @throws java.lang.NullPointerException Obj is null (as opposed to
      * CBORObject.Null).
      */
     public void Add(CBORObject obj) {
       if (obj == null) { throw new NullPointerException("obj"); }
-      if (this.getItemType() == CBORObjectType_Array) {
+      if (this.getItemType() == CBORObjectTypeArray) {
         List<CBORObject> list = this.AsList();
         list.add(obj);
       } else {
@@ -1441,14 +1442,14 @@ public void set(String key, CBORObject value) {
      * given key from the map.
      * @param obj The item or key to remove.
      * @return True if the item was removed; otherwise, false.
-     * @throws java.lang.NullPointerException obj is null (as opposed to
+     * @throws java.lang.NullPointerException Obj is null (as opposed to
      * CBORObject.Null).
      * @throws java.lang.IllegalStateException The object is not an array
      * or map.
      */
     public boolean Remove(CBORObject obj) {
       if (obj == null) { throw new NullPointerException("obj"); }
-      if (this.getItemType() == CBORObjectType_Map) {
+      if (this.getItemType() == CBORObjectTypeMap) {
         Map<CBORObject, CBORObject> dict = this.AsMap();
         boolean hasKey = dict.containsKey(obj);
         if (hasKey) {
@@ -1456,7 +1457,7 @@ public void set(String key, CBORObject value) {
           return true;
         }
         return false;
-      } else if (this.getItemType() == CBORObjectType_Array) {
+      } else if (this.getItemType() == CBORObjectTypeArray) {
         List<CBORObject> list = this.AsList();
         return list.remove(obj);
       } else {
@@ -1468,24 +1469,24 @@ public void set(String key, CBORObject value) {
      * @return The closest 64-bit floating point number to this object.
      * The return value can be positive infinity or negative infinity if
      * this value exceeds the range of a 64-bit floating point number.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
      */
     public double AsDouble() {
       int type = this.getItemType();
       switch (type) {
-        case CBORObjectType_Integer:
+        case CBORObjectTypeInteger:
           return ((Long)this.getThisItem()).doubleValue();
-        case CBORObjectType_BigInteger:
+        case CBORObjectTypeBigInteger:
           return ExtendedFloat.FromBigInteger((BigInteger)this.getThisItem()).ToDouble();
-        case CBORObjectType_Single:
+        case CBORObjectTypeSingle:
           return ((Float)this.getThisItem()).doubleValue();
-        case CBORObjectType_Double:
+        case CBORObjectTypeDouble:
           return ((Double)this.getThisItem()).doubleValue();
-          case CBORObjectType_ExtendedDecimal: {
+          case CBORObjectTypeExtendedDecimal: {
             return ((ExtendedDecimal)this.getThisItem()).ToDouble();
           }
-          case CBORObjectType_ExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.getThisItem()).ToDouble();
           }
         default:
@@ -1495,23 +1496,23 @@ public void set(String key, CBORObject value) {
     /**
      * Converts this object to a decimal fraction.
      * @return A decimal fraction for this object&apos; s value.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
      */
     public ExtendedDecimal AsExtendedDecimal() {
       int type = this.getItemType();
       switch (type) {
-        case CBORObjectType_Integer:
+        case CBORObjectTypeInteger:
           return ExtendedDecimal.FromInt64((((Long)this.getThisItem()).longValue()));
-        case CBORObjectType_BigInteger:
+        case CBORObjectTypeBigInteger:
           return ExtendedDecimal.FromBigInteger((BigInteger)this.getThisItem());
-        case CBORObjectType_Single:
+        case CBORObjectTypeSingle:
           return ExtendedDecimal.FromSingle(((Float)this.getThisItem()).floatValue());
-        case CBORObjectType_Double:
+        case CBORObjectTypeDouble:
           return ExtendedDecimal.FromDouble(((Double)this.getThisItem()).doubleValue());
-        case CBORObjectType_ExtendedDecimal:
+        case CBORObjectTypeExtendedDecimal:
           return (ExtendedDecimal)this.getThisItem();
-          case CBORObjectType_ExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
             return ExtendedDecimal.FromExtendedFloat((ExtendedFloat)this.getThisItem());
           }
         default:
@@ -1525,23 +1526,23 @@ public void set(String key, CBORObject value) {
      * this object&apos; s value. Note that if this object is a decimal fraction
      * with a fractional part, the conversion may lose information depending
      * on the number.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
      */
     public ExtendedFloat AsExtendedFloat() {
       int type = this.getItemType();
       switch (type) {
-        case CBORObjectType_Integer:
+        case CBORObjectTypeInteger:
           return ExtendedFloat.FromInt64((((Long)this.getThisItem()).longValue()));
-        case CBORObjectType_BigInteger:
+        case CBORObjectTypeBigInteger:
           return ExtendedFloat.FromBigInteger((BigInteger)this.getThisItem());
-        case CBORObjectType_Single:
+        case CBORObjectTypeSingle:
           return ExtendedFloat.FromSingle(((Float)this.getThisItem()).floatValue());
-        case CBORObjectType_Double:
+        case CBORObjectTypeDouble:
           return ExtendedFloat.FromDouble(((Double)this.getThisItem()).doubleValue());
-        case CBORObjectType_ExtendedDecimal:
+        case CBORObjectTypeExtendedDecimal:
           return ((ExtendedDecimal)this.getThisItem()).ToExtendedFloat();
-          case CBORObjectType_ExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
             return (ExtendedFloat)this.getThisItem();
           }
         default:
@@ -1554,24 +1555,24 @@ public void set(String key, CBORObject value) {
      * The return value can be positive infinity or negative infinity if
      * this object&apos; s value exceeds the range of a 32-bit floating point
      * number.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
      */
     public float AsSingle() {
       int type = this.getItemType();
       switch (type) {
-        case CBORObjectType_Integer:
+        case CBORObjectTypeInteger:
           return ((Long)this.getThisItem()).floatValue();
-        case CBORObjectType_BigInteger:
+        case CBORObjectTypeBigInteger:
           return ExtendedFloat.FromBigInteger((BigInteger)this.getThisItem()).ToSingle();
-        case CBORObjectType_Single:
+        case CBORObjectTypeSingle:
           return ((Float)this.getThisItem()).floatValue();
-        case CBORObjectType_Double:
+        case CBORObjectTypeDouble:
           return ((Double)this.getThisItem()).floatValue();
-          case CBORObjectType_ExtendedDecimal: {
+          case CBORObjectTypeExtendedDecimal: {
             return ((ExtendedDecimal)this.getThisItem()).ToSingle();
           }
-          case CBORObjectType_ExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.getThisItem()).ToSingle();
           }
         default:
@@ -1582,24 +1583,24 @@ public void set(String key, CBORObject value) {
      * Converts this object to an arbitrary-precision integer. Fractional
      * values are truncated to an integer.
      * @return The closest big integer to this object.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
      */
     public BigInteger AsBigInteger() {
       int type = this.getItemType();
       switch (type) {
-        case CBORObjectType_Integer:
+        case CBORObjectTypeInteger:
           return BigInteger.valueOf((((Long)this.getThisItem()).longValue()));
-        case CBORObjectType_BigInteger:
+        case CBORObjectTypeBigInteger:
           return (BigInteger)this.getThisItem();
-        case CBORObjectType_Single:
+        case CBORObjectTypeSingle:
           return CBORUtilities.BigIntegerFromSingle(((Float)this.getThisItem()).floatValue());
-        case CBORObjectType_Double:
+        case CBORObjectTypeDouble:
           return CBORUtilities.BigIntegerFromDouble(((Double)this.getThisItem()).doubleValue());
-          case CBORObjectType_ExtendedDecimal: {
+          case CBORObjectTypeExtendedDecimal: {
             return ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
           }
-          case CBORObjectType_ExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.getThisItem()).ToBigInteger();
           }
         default:
@@ -1620,9 +1621,9 @@ public void set(String key, CBORObject value) {
      * Converts this object to a 16-bit signed integer. Floating point values
      * are truncated to an integer.
      * @return The closest 16-bit signed integer to this object.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
-     * @throws java.lang.ArithmeticException This object's value exceeds
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
+     * @throws java.lang.ArithmeticException This object&apos;s value exceeds
      * the range of a 16-bit signed integer.
      */
     public short AsInt16() {
@@ -1632,9 +1633,9 @@ public void set(String key, CBORObject value) {
      * Converts this object to a byte (0 to 255). Floating point values are
      * truncated to an integer.
      * @return The closest byte-sized integer to this object.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
-     * @throws java.lang.ArithmeticException This object's value exceeds
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
+     * @throws java.lang.ArithmeticException This object&apos;s value exceeds
      * the range of a byte (is less than 0 or would be greater than 255 when truncated
      * to an integer).
      */
@@ -1645,51 +1646,51 @@ public void set(String key, CBORObject value) {
      * Converts this object to a 64-bit signed integer. Floating point values
      * are truncated to an integer.
      * @return The closest 64-bit signed integer to this object.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
-     * @throws java.lang.ArithmeticException This object's value exceeds
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
+     * @throws java.lang.ArithmeticException This object&apos;s value exceeds
      * the range of a 64-bit signed integer.
      */
     public long AsInt64() {
       int type = this.getItemType();
       switch (type) {
-          case CBORObjectType_Integer: {
+          case CBORObjectTypeInteger: {
             return (((Long)this.getThisItem()).longValue());
           }
-          case CBORObjectType_BigInteger: {
+          case CBORObjectTypeBigInteger: {
             if (((BigInteger)this.getThisItem()).compareTo(Int64MaxValue) > 0 ||
                 ((BigInteger)this.getThisItem()).compareTo(Int64MinValue) < 0)
               throw new ArithmeticException("This Object's value is out of range");
             return ((BigInteger)this.getThisItem()).longValue();
           }
-          case CBORObjectType_Single: {
+          case CBORObjectTypeSingle: {
             float fltItem = ((Float)this.getThisItem()).floatValue();
             if (Float.isNaN(fltItem)) {
- throw new ArithmeticException("This Object's value is out of range");
-}
+              throw new ArithmeticException("This Object's value is out of range");
+            }
             fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
             if (fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE)
               return (long)fltItem;
             throw new ArithmeticException("This Object's value is out of range");
           }
-          case CBORObjectType_Double: {
+          case CBORObjectTypeDouble: {
             double fltItem = ((Double)this.getThisItem()).doubleValue();
             if (Double.isNaN(fltItem)) {
- throw new ArithmeticException("This Object's value is out of range");
-}
+              throw new ArithmeticException("This Object's value is out of range");
+            }
             fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
             if (fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE)
               return (long)fltItem;
             throw new ArithmeticException("This Object's value is out of range");
           }
-          case CBORObjectType_ExtendedDecimal: {
+          case CBORObjectTypeExtendedDecimal: {
             BigInteger bi = ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
             if (bi.compareTo(Int64MaxValue) > 0 ||
                 bi.compareTo(Int64MinValue) < 0)
               throw new ArithmeticException("This Object's value is out of range");
             return bi.longValue();
           }
-          case CBORObjectType_ExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
             BigInteger bi = ((ExtendedFloat)this.getThisItem()).ToBigInteger();
             if (bi.compareTo(Int64MaxValue) > 0 ||
                 bi.compareTo(Int64MinValue) < 0)
@@ -1705,48 +1706,48 @@ public void set(String key, CBORObject value) {
       Object thisItem = this.getThisItem();
       int type = this.getItemType();
       switch (type) {
-          case CBORObjectType_Integer: {
+          case CBORObjectTypeInteger: {
             long longItem = (((Long)thisItem).longValue());
             if (longItem > maxValue || longItem < minValue) {
- throw new ArithmeticException("This Object's value is out of range");
-}
+              throw new ArithmeticException("This Object's value is out of range");
+            }
             return (int)longItem;
           }
-          case CBORObjectType_BigInteger: {
+          case CBORObjectTypeBigInteger: {
             BigInteger bigintItem = (BigInteger)thisItem;
             if (bigintItem.compareTo(BigInteger.valueOf(maxValue)) > 0 ||
                 bigintItem.compareTo(BigInteger.valueOf(minValue)) < 0)
               throw new ArithmeticException("This Object's value is out of range");
             return bigintItem.intValue();
           }
-          case CBORObjectType_Single: {
+          case CBORObjectTypeSingle: {
             float fltItem = ((Float)thisItem).floatValue();
             if (Float.isNaN(fltItem)) {
- throw new ArithmeticException("This Object's value is out of range");
-}
+              throw new ArithmeticException("This Object's value is out of range");
+            }
             fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
             if (fltItem >= minValue && fltItem <= maxValue)
               return (int)fltItem;
             throw new ArithmeticException("This Object's value is out of range");
           }
-          case CBORObjectType_Double: {
+          case CBORObjectTypeDouble: {
             double fltItem = ((Double)thisItem).doubleValue();
             if (Double.isNaN(fltItem)) {
- throw new ArithmeticException("This Object's value is out of range");
-}
+              throw new ArithmeticException("This Object's value is out of range");
+            }
             fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
             if (fltItem >= minValue && fltItem <= maxValue)
               return (int)fltItem;
             throw new ArithmeticException("This Object's value is out of range");
           }
-          case CBORObjectType_ExtendedDecimal: {
+          case CBORObjectTypeExtendedDecimal: {
             BigInteger bi = ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
             if (bi.compareTo(BigInteger.valueOf(maxValue)) > 0 ||
                 bi.compareTo(BigInteger.valueOf(minValue)) < 0)
               throw new ArithmeticException("This Object's value is out of range");
             return bi.intValue();
           }
-          case CBORObjectType_ExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
             BigInteger bi = ((ExtendedFloat)this.getThisItem()).ToBigInteger();
             if (bi.compareTo(BigInteger.valueOf(maxValue)) > 0 ||
                 bi.compareTo(BigInteger.valueOf(minValue)) < 0)
@@ -1762,9 +1763,9 @@ public void set(String key, CBORObject value) {
      * Converts this object to a 32-bit signed integer. Floating point values
      * are truncated to an integer.
      * @return The closest big integer to this object.
-     * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
-     * @throws java.lang.ArithmeticException This object's value exceeds
+     * @throws java.lang.IllegalStateException This object&apos;s
+     * type is not a number type.
+     * @throws java.lang.ArithmeticException This object&apos;s value exceeds
      * the range of a 32-bit signed integer.
      */
     public int AsInt32() {
@@ -1773,12 +1774,13 @@ public void set(String key, CBORObject value) {
     /**
      * Gets the value of this object as a string object.
      * @return Gets this object&apos; s string.
-     * @throws IllegalStateException This object's type is not a string.
+     * @throws IllegalStateException This object&apos;s type is not a
+     * string.
      */
     public String AsString() {
       int type = this.getItemType();
       switch (type) {
-          case CBORObjectType_TextString: {
+          case CBORObjectTypeTextString: {
             return (String)this.getThisItem();
           }
         default:
@@ -1788,8 +1790,9 @@ public void set(String key, CBORObject value) {
     /**
      * Reads an object in CBOR format from a data stream.
      * @param stream A readable data stream.
-     * @return a CBOR object that was read.
-     * @throws java.lang.NullPointerException "stream" is null.
+     * @return A CBOR object that was read.
+     * @throws java.lang.NullPointerException &quot;stream&quot; is
+     * null.
      * @throws CBORException There was an error in reading or parsing the
      * data.
      */
@@ -1831,8 +1834,8 @@ public void set(String key, CBORObject value) {
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) throw new IllegalArgumentException("value" +
-                                                   " not greater or equal to " + "0" + " (" +
-                                                   Integer.toString((int)value) + ")");
+                                                 " not greater or equal to " + "0" + " (" +
+                                                 Integer.toString((int)value) + ")");
       if (value < 24) {
         return new byte[]{ (byte)((byte)value | (byte)(type << 5)) };
       } else if (value <= 0xFF) {
@@ -1978,7 +1981,7 @@ public void set(String key, CBORObject value) {
      * Writes a string in CBOR format to a data stream.
      * @param str The string to write. Can be null.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException stream is null.
+     * @throws java.lang.NullPointerException InputStream is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(String str, OutputStream stream) throws IOException {
@@ -1997,9 +2000,9 @@ public void set(String key, CBORObject value) {
      * Writes a bigfloat in CBOR format to a data stream.
      * @param stream InputStream to write to.
      * @param bignum An ExtendedFloat object.
-     * @throws java.lang.NullPointerException stream is null.
-     * @throws java.lang.IllegalArgumentException The value's exponent is less
-     * than -(2^64) or greater than (2^64-1).
+     * @throws java.lang.NullPointerException InputStream is null.
+     * @throws java.lang.IllegalArgumentException The value&apos;s exponent is
+     * less than -(2^64) or greater than (2^64-1).
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(ExtendedFloat bignum, OutputStream stream) throws IOException {
@@ -2017,8 +2020,8 @@ public void set(String key, CBORObject value) {
         Write(bignum.getMantissa(), stream);
       } else {
         if (!BigIntFits(exponent)) {
- throw new IllegalArgumentException("Exponent is too low or too high");
-}
+          throw new IllegalArgumentException("Exponent is too low or too high");
+        }
         stream.write(0xC5);  // tag 5
         stream.write(0x82);  // array, length 2
         Write(bignum.getExponent(), stream);
@@ -2029,10 +2032,10 @@ public void set(String key, CBORObject value) {
      * Writes a bigfloat in CBOR format to a data stream.
      * @param bignum Decimal fraction to write.
      * @param stream InputStream to write to.
-     * @throws java.lang.NullPointerException stream is null.
+     * @throws java.lang.NullPointerException InputStream is null.
      * @throws java.io.IOException An I/O error occurred.
-     * @throws java.lang.IllegalArgumentException The value's exponent is less
-     * than -(2^64) or greater than (2^64-1).
+     * @throws java.lang.IllegalArgumentException The value&apos;s exponent is
+     * less than -(2^64) or greater than (2^64-1).
      */
     public static void Write(ExtendedDecimal bignum, OutputStream stream) throws IOException {
       if (stream == null) { throw new NullPointerException("stream"); }
@@ -2049,8 +2052,8 @@ public void set(String key, CBORObject value) {
         Write(bignum.getMantissa(), stream);
       } else {
         if (!BigIntFits(exponent)) {
- throw new IllegalArgumentException("Exponent is too low or too high");
-}
+          throw new IllegalArgumentException("Exponent is too low or too high");
+        }
         stream.write(0xC4);  // tag 4
         stream.write(0x82);  // array, length 2
         Write(bignum.getExponent(), stream);
@@ -2061,7 +2064,7 @@ public void set(String key, CBORObject value) {
      * Writes a big integer in CBOR format to a data stream.
      * @param bigint Big integer to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(BigInteger bigint, OutputStream stream) throws IOException {
@@ -2132,36 +2135,36 @@ public void set(String key, CBORObject value) {
     /**
      * Writes this CBOR object to a data stream.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public void WriteTo(OutputStream stream) throws IOException {
       if (stream == null) { throw new NullPointerException("stream"); }
       this.WriteTags(stream);
       int type = this.getItemType();
-      if (type == CBORObjectType_Integer) {
+      if (type == CBORObjectTypeInteger) {
         Write((((Long)this.getThisItem()).longValue()), stream);
-      } else if (type == CBORObjectType_BigInteger) {
+      } else if (type == CBORObjectTypeBigInteger) {
         Write((BigInteger)this.getThisItem(), stream);
-      } else if (type == CBORObjectType_ByteString) {
+      } else if (type == CBORObjectTypeByteString) {
         byte[] arr = (byte[])this.getThisItem();
         WritePositiveInt((
-this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
+          this.getItemType() == CBORObjectTypeByteString) ? 2 : 3,
                          arr.length, stream);
         stream.write(arr,0,arr.length);
-      } else if (type == CBORObjectType_TextString) {
+      } else if (type == CBORObjectTypeTextString) {
         Write((String)this.getThisItem(), stream);
-      } else if (type == CBORObjectType_Array) {
+      } else if (type == CBORObjectTypeArray) {
         WriteObjectArray(this.AsList(), stream);
-      } else if (type == CBORObjectType_ExtendedDecimal) {
+      } else if (type == CBORObjectTypeExtendedDecimal) {
         ExtendedDecimal dec = (ExtendedDecimal)this.getThisItem();
         Write(dec, stream);
-      } else if (type == CBORObjectType_ExtendedFloat) {
+      } else if (type == CBORObjectTypeExtendedFloat) {
         ExtendedFloat dec = (ExtendedFloat)this.getThisItem();
         Write(dec, stream);
-      } else if (type == CBORObjectType_Map) {
+      } else if (type == CBORObjectTypeMap) {
         WriteObjectMap(this.AsMap(), stream);
-      } else if (type == CBORObjectType_SimpleValue) {
+      } else if (type == CBORObjectTypeSimpleValue) {
         int value = ((Integer)this.getThisItem()).intValue();
         if (value < 24) {
           stream.write((byte)(0xE0 + value));
@@ -2169,9 +2172,9 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
           stream.write(0xF8);
           stream.write((byte)value);
         }
-      } else if (type == CBORObjectType_Single) {
+      } else if (type == CBORObjectTypeSingle) {
         Write(((Float)this.getThisItem()).floatValue(), stream);
-      } else if (type == CBORObjectType_Double) {
+      } else if (type == CBORObjectTypeDouble) {
         Write(((Double)this.getThisItem()).doubleValue(), stream);
       } else {
         throw new IllegalArgumentException("Unexpected data type");
@@ -2179,9 +2182,9 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
     }
     /**
      * Writes a 64-bit unsigned integer in CBOR format to a data stream.
-     * @param value The value to write
+     * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(long value, OutputStream stream) throws IOException {
@@ -2196,9 +2199,9 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
     }
     /**
      * Writes a 32-bit signed integer in CBOR format to a data stream.
-     * @param value The value to write
+     * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(int value, OutputStream stream) throws IOException {
@@ -2206,9 +2209,9 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
     }
     /**
      * Writes a 16-bit signed integer in CBOR format to a data stream.
-     * @param value The value to write
+     * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(short value, OutputStream stream) throws IOException {
@@ -2216,10 +2219,11 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
     }
     /**
      * Writes a Unicode character as a string in CBOR format to a data stream.
-     * @param value The value to write
+     * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
-     * @throws java.lang.IllegalArgumentException "s" is a surrogate code point.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
+     * @throws java.lang.IllegalArgumentException &quot;s&quot; is a surrogate
+     * code point.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(char value, OutputStream stream) throws IOException {
@@ -2230,9 +2234,9 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
     }
     /**
      * Writes a Boolean value in CBOR format to a data stream.
-     * @param value The value to write
+     * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(boolean value, OutputStream stream) throws IOException {
@@ -2241,9 +2245,9 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
     }
     /**
      * Writes a byte (0 to 255) in CBOR format to a data stream.
-     * @param value The value to write
+     * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(byte value, OutputStream stream) throws IOException {
@@ -2257,9 +2261,9 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
     }
     /**
      * Writes a 32-bit floating-point number in CBOR format to a data stream.
-     * @param value The value to write
+     * @param value The value to write.
      * @param s A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(float value, OutputStream s) throws IOException {
@@ -2274,13 +2278,13 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
     }
     /**
      * Writes a 64-bit floating-point number in CBOR format to a data stream.
-     * @param value The value to write
+     * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException s is null.
+     * @throws java.lang.NullPointerException &quot;s&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(double value, OutputStream stream) throws IOException {
-      if (stream == null)throw new NullPointerException("stream");
+      if (stream == null) { throw new NullPointerException("stream"); }
       long bits = Double.doubleToRawLongBits((double)value);
       byte[] data = new byte[]{(byte)0xFB,
         (byte)((bits >> 56) & 0xFF),
@@ -2343,7 +2347,7 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
       byte tagbyte = 0;
       boolean tagged = this.isTagged();
       if (this.isTagged()) {
-        CBORObject taggedItem = (CBORObject)this.item_;
+        CBORObject taggedItem = (CBORObject)this.itemValue;
         if (taggedItem.isTagged() ||
             this.tagHigh != 0 ||
             (this.tagLow >> 16) != 0 ||
@@ -2354,12 +2358,12 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
         }
       }
       if (!hasComplexTag) {
-        if (this.getItemType() == CBORObjectType_TextString) {
+        if (this.getItemType() == CBORObjectTypeTextString) {
           byte[] ret = GetOptimizedBytesIfShortAscii(
             this.AsString(),
             tagged ? (((int)tagbyte) & 0xFF) : -1);
           if (ret != null) { return ret; }
-        } else if (this.getItemType() == CBORObjectType_SimpleValue) {
+        } else if (this.getItemType() == CBORObjectTypeSimpleValue) {
           if (tagged) {
             if (this.isFalse()) { return new byte[]{ tagbyte, (byte)0xf4 }; }
             if (this.isTrue()) { return new byte[]{ tagbyte, (byte)0xf5 }; }
@@ -2371,7 +2375,7 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
             if (this.isNull()) { return new byte[]{ (byte)0xf6 }; }
             if (this.isUndefined()) { return new byte[]{ (byte)0xf7 }; }
           }
-        } else if (this.getItemType() == CBORObjectType_Integer) {
+        } else if (this.getItemType() == CBORObjectTypeInteger) {
           long value = (((Long)this.getThisItem()).longValue());
           byte[] intBytes = null;
           if (value >= 0) {
@@ -2386,7 +2390,7 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
           System.arraycopy(intBytes, 0, ret2, 1, intBytes.length);
           ret2[0] = tagbyte;
           return ret2;
-        } else if (this.getItemType() == CBORObjectType_Single) {
+        } else if (this.getItemType() == CBORObjectTypeSingle) {
           float value = ((Float)this.getThisItem()).floatValue();
           int bits = Float.floatToRawIntBits(value);
           return tagged ?
@@ -2400,7 +2404,7 @@ this.getItemType() == CBORObjectType_ByteString) ? 2 : 3,
             (byte)((bits >> 16) & 0xFF),
             (byte)((bits >> 8) & 0xFF),
             (byte)(bits & 0xFF)};
-        } else if (this.getItemType() == CBORObjectType_Double) {
+        } else if (this.getItemType() == CBORObjectTypeDouble) {
           double value = ((Double)this.getThisItem()).doubleValue();
           long bits = Double.doubleToRawLongBits(value);
           return tagged ?
@@ -2441,7 +2445,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     }
     /**
      * Writes a CBOR object to a CBOR data stream.
-     * @param value The value to write
+     * @param value The value to write.
      * @param stream A writable data stream.
      */
     public static void Write(CBORObject value, OutputStream stream) throws IOException {
@@ -2454,7 +2458,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     }
     /**
      * Writes an arbitrary object to a CBOR data stream.
-     * @param objValue The value to write
+     * @param objValue The value to write.
      * @param stream A writable data stream.
      */
     @SuppressWarnings("unchecked")
@@ -2482,15 +2486,15 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * (JSON) format. This function only accepts maps and arrays.
      * @param str A string in JSON format.
      * @return A CBORObject object.
-     * @throws java.lang.NullPointerException "str" is null.
+     * @throws java.lang.NullPointerException &quot;str&quot; is null.
      * @throws CBORException The string is not in JSON format.
      */
     public static CBORObject FromJSONString(String str) {
       JSONTokener tokener = new JSONTokener(str, 0);
       CBORObject obj = tokener.ParseJSONObjectOrArray();
-      if (tokener.nextClean() != -1) {
- throw tokener.syntaxError("End of String not reached");
-}
+      if (tokener.NextClean() != -1) {
+        throw tokener.syntaxError("End of String not reached");
+      }
       return obj;
     }
     /**
@@ -2499,7 +2503,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * and arrays.
      * @param stream A readable data stream.
      * @return A CBORObject object.
-     * @throws java.lang.NullPointerException "stream" is null.
+     * @throws java.lang.NullPointerException &quot;stream&quot; is
+     * null.
      * @throws java.io.IOException An I/O error occurred.
      * @throws CBORException The data stream contains invalid UTF-8 or
      * is not in JSON format.
@@ -2508,14 +2513,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       JSONTokener tokener = new JSONTokener(stream, 0);
       try {
         CBORObject obj = tokener.ParseJSONObjectOrArray();
-        if (tokener.nextClean() != -1) {
- throw tokener.syntaxError("End of data stream not reached");
-}
+        if (tokener.NextClean() != -1) {
+          throw tokener.syntaxError("End of data stream not reached");
+        }
         return obj;
       } catch (CBORException ex) {
         if (ex.getCause() != null && ex.getCause() instanceof IOException) {
- throw (IOException)ex.getCause();
-}
+          throw (IOException)ex.getCause();
+        }
         throw ex;
       }
     }
@@ -2571,42 +2576,42 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public String ToJSONString() {
       int type = this.getItemType();
       switch (type) {
-          case CBORObjectType_SimpleValue: {
-            if (this.isTrue()) { return "true"; }
-            else if (this.isFalse()) { return "false"; }
-            else if (this.isNull()) { return "null"; }
-            else return "null";
+          case CBORObjectTypeSimpleValue: {
+            if (this.isTrue()) { return "true";
+            } else if (this.isFalse()) { return "false";
+            } else if (this.isNull()) { return "null"; }
+            else {
+ return "null";
+}
           }
-          case CBORObjectType_Single: {
+          case CBORObjectTypeSingle: {
             float f = ((Float)this.getThisItem()).floatValue();
             if (((f)==Float.NEGATIVE_INFINITY) ||
                 ((f)==Float.POSITIVE_INFINITY) ||
                 Float.isNaN(f)) return "null";
             else
               return TrimDotZero(
-(
-float)f.toString());
+                Float.toString((float)f));
           }
-          case CBORObjectType_Double: {
+          case CBORObjectTypeDouble: {
             double f = ((Double)this.getThisItem()).doubleValue();
             if (((f)==Double.NEGATIVE_INFINITY) ||
                 ((f)==Double.POSITIVE_INFINITY) ||
                 Double.isNaN(f)) return "null";
             else
               return TrimDotZero(
-(
-double)f.toString());
+                Double.toString((double)f));
           }
-          case CBORObjectType_Integer: {
+          case CBORObjectTypeInteger: {
             return Long.toString((((Long)this.getThisItem()).longValue()));
           }
-          case CBORObjectType_BigInteger: {
+          case CBORObjectTypeBigInteger: {
             return CBORUtilities.BigIntToString((BigInteger)this.getThisItem());
           }
-          case CBORObjectType_ExtendedDecimal: {
+          case CBORObjectTypeExtendedDecimal: {
             return ((ExtendedDecimal)this.getThisItem()).toString();
           }
-          case CBORObjectType_ExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.getThisItem()).toString();
           }
           default: {
@@ -2620,16 +2625,16 @@ double)f.toString());
     private void ToJSONString(StringBuilder sb) {
       int type = this.getItemType();
       switch (type) {
-        case CBORObjectType_SimpleValue:
-        case CBORObjectType_Single:
-        case CBORObjectType_Double:
-        case CBORObjectType_Integer:
-        case CBORObjectType_BigInteger:
-        case CBORObjectType_ExtendedDecimal:
-        case CBORObjectType_ExtendedFloat:
+        case CBORObjectTypeSimpleValue:
+        case CBORObjectTypeSingle:
+        case CBORObjectTypeDouble:
+        case CBORObjectTypeInteger:
+        case CBORObjectTypeBigInteger:
+        case CBORObjectTypeExtendedDecimal:
+        case CBORObjectTypeExtendedFloat:
           sb.append(this.ToJSONString());
           break;
-          case CBORObjectType_ByteString: {
+          case CBORObjectTypeByteString: {
             sb.append('\"');
             if (this.HasTag(22)) {
               CBORUtilities.ToBase64(sb, (byte[])this.getThisItem(), false);
@@ -2641,13 +2646,13 @@ double)f.toString());
             sb.append('\"');
             break;
           }
-          case CBORObjectType_TextString: {
+          case CBORObjectTypeTextString: {
             sb.append('\"');
             StringToJSONStringUnquoted((String)this.getThisItem(), sb);
             sb.append('\"');
             break;
           }
-          case CBORObjectType_Array: {
+          case CBORObjectTypeArray: {
             boolean first = true;
             sb.append('[');
             for(CBORObject i : this.AsList()) {
@@ -2658,7 +2663,7 @@ double)f.toString());
             sb.append(']');
             break;
           }
-          case CBORObjectType_Map: {
+          case CBORObjectTypeMap: {
             boolean first = true;
             boolean hasNonStringKeys = false;
             Map<CBORObject, CBORObject> objMap = this.AsMap();
@@ -2667,7 +2672,7 @@ double)f.toString());
             for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
               CBORObject key = entry.getKey();
               CBORObject value = entry.getValue();
-              if (key.getItemType() != CBORObjectType_TextString) {
+              if (key.getItemType() != CBORObjectTypeTextString) {
                 hasNonStringKeys = true;
                 break;
               }
@@ -2688,7 +2693,7 @@ double)f.toString());
               for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
                 CBORObject key = entry.getKey();
                 CBORObject value = entry.getValue();
-                String str = (key.getItemType() == CBORObjectType_TextString) ?
+                String str = (key.getItemType() == CBORObjectTypeTextString) ?
                   ((String)key.getThisItem()) : key.ToJSONString();
                 sMap.put(str,value);
               }
@@ -2714,20 +2719,20 @@ double)f.toString());
     }
 
     static CBORObject FromRaw(String str) {
-      return new CBORObject(CBORObjectType_TextString, str);
+      return new CBORObject(CBORObjectTypeTextString, str);
     }
 
     static CBORObject FromRaw(List<CBORObject> list) {
-      return new CBORObject(CBORObjectType_Array, list);
+      return new CBORObject(CBORObjectTypeArray, list);
     }
 
     static CBORObject FromRaw(Map<CBORObject, CBORObject> map) {
-      return new CBORObject(CBORObjectType_Map, map);
+      return new CBORObject(CBORObjectTypeMap, map);
     }
     /**
      * Finds the sum of two CBOR number objects.
-     * @param first A CBORObject object.
-     * @param second A CBORObject object.
+     * @param first A CBORObject object. (2)
+     * @param second A CBORObject object. (3)
      * @return A CBORObject object.
      * @throws java.lang.IllegalArgumentException Either or both operands are not
      * numbers (as opposed to Not-a-Number, NaN).
@@ -2738,7 +2743,7 @@ double)f.toString());
     /**
      * Finds the difference between two CBOR number objects.
      * @param first A CBORObject object.
-     * @param second A CBORObject object.
+     * @param second A CBORObject object. (2)
      * @return The difference of the two objects.
      * @throws java.lang.IllegalArgumentException Either or both operands are not
      * numbers (as opposed to Not-a-Number, NaN).
@@ -2749,7 +2754,7 @@ double)f.toString());
     /**
      * Multiplies two CBOR number objects.
      * @param first A CBORObject object.
-     * @param second A CBORObject object.
+     * @param second A CBORObject object. (2)
      * @return The product of the two objects.
      * @throws java.lang.IllegalArgumentException Either or both operands are not
      * numbers (as opposed to Not-a-Number, NaN).
@@ -2778,7 +2783,7 @@ double)f.toString());
      * @return A CBORObject object.
      */
     public static CBORObject FromObject(long value) {
-      return new CBORObject(CBORObjectType_Integer, value);
+      return new CBORObject(CBORObjectTypeInteger, value);
     }
     /**
      * Generates a CBOR object from a CBOR object.
@@ -2800,9 +2805,9 @@ double)f.toString());
         return CBORObject.Null;
       if (bigintValue.compareTo(Int64MinValue) >= 0 &&
           bigintValue.compareTo(Int64MaxValue) <= 0) {
-        return new CBORObject(CBORObjectType_Integer, bigintValue.longValue());
+        return new CBORObject(CBORObjectTypeInteger, bigintValue.longValue());
       } else {
-        return new CBORObject(CBORObjectType_BigInteger, bigintValue);
+        return new CBORObject(CBORObjectTypeBigInteger, bigintValue);
       }
     }
     /**
@@ -2811,46 +2816,46 @@ double)f.toString());
      * @param bigValue An arbitrary-precision binary floating-point
      * number.
      * @return A CBOR number object.
-     * @throws java.lang.IllegalArgumentException The value's exponent is less
-     * than -(2^64) or greater than (2^64-1).
+     * @throws java.lang.IllegalArgumentException The value&apos;s exponent is
+     * less than -(2^64) or greater than (2^64-1).
      */
     public static CBORObject FromObject(ExtendedFloat bigValue) {
       if ((Object)bigValue == (Object)null)
         return CBORObject.Null;
       if (bigValue.IsNaN() || bigValue.IsInfinity()) {
-        return new CBORObject(CBORObjectType_ExtendedFloat, bigValue);
+        return new CBORObject(CBORObjectTypeExtendedFloat, bigValue);
       }
       BigInteger bigintExponent = bigValue.getExponent();
       if (bigintExponent.signum()==0 && !(bigValue.signum()==0 && bigValue.isNegative())) {
         return FromObject(bigValue.getMantissa());
       } else {
         if (!BigIntFits(bigintExponent)) {
- throw new IllegalArgumentException("Exponent is too low or too high");
-}
-        return new CBORObject(CBORObjectType_ExtendedFloat, bigValue);
+          throw new IllegalArgumentException("Exponent is too low or too high");
+        }
+        return new CBORObject(CBORObjectTypeExtendedFloat, bigValue);
       }
     }
     /**
      * Generates a CBOR object from a decimal fraction.
      * @param decfrac An arbitrary-precision decimal number.
      * @return A CBOR number object.
-     * @throws java.lang.IllegalArgumentException The value's exponent is less
-     * than -(2^64) or greater than (2^64-1).
+     * @throws java.lang.IllegalArgumentException The value&apos;s exponent is
+     * less than -(2^64) or greater than (2^64-1).
      */
     public static CBORObject FromObject(ExtendedDecimal decfrac) {
       if ((Object)decfrac == (Object)null)
         return CBORObject.Null;
       if (decfrac.IsNaN() || decfrac.IsInfinity()) {
-        return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);
+        return new CBORObject(CBORObjectTypeExtendedDecimal, decfrac);
       }
       BigInteger bigintExponent = decfrac.getExponent();
       if (bigintExponent.signum()==0 && !(decfrac.signum()==0 && decfrac.isNegative())) {
         return FromObject(decfrac.getMantissa());
       } else {
         if (!BigIntFits(bigintExponent)) {
- throw new IllegalArgumentException("Exponent is too low or too high");
-}
-        return new CBORObject(CBORObjectType_ExtendedDecimal, decfrac);
+          throw new IllegalArgumentException("Exponent is too low or too high");
+        }
+        return new CBORObject(CBORObjectTypeExtendedDecimal, decfrac);
       }
     }
     /**
@@ -2864,9 +2869,9 @@ double)f.toString());
     public static CBORObject FromObject(String strValue) {
       if (strValue == null) { return CBORObject.Null; }
       if (DataUtilities.GetUtf8Length(strValue, false) < 0) {
- throw new IllegalArgumentException("String contains an unpaired surrogate code point.");
-}
-      return new CBORObject(CBORObjectType_TextString, strValue);
+        throw new IllegalArgumentException("String contains an unpaired surrogate code point.");
+      }
+      return new CBORObject(CBORObjectTypeTextString, strValue);
     }
     /**
      * Generates a CBOR object from a 32-bit signed integer.
@@ -2914,7 +2919,7 @@ double)f.toString());
      * @return A CBORObject object.
      */
     public static CBORObject FromObject(float value) {
-      return new CBORObject(CBORObjectType_Single, value);
+      return new CBORObject(CBORObjectTypeSingle, value);
     }
     /**
      * Generates a CBOR object from a 64-bit floating-point number.
@@ -2922,7 +2927,7 @@ double)f.toString());
      * @return A CBORObject object.
      */
     public static CBORObject FromObject(double value) {
-      return new CBORObject(CBORObjectType_Double, value);
+      return new CBORObject(CBORObjectTypeDouble, value);
     }
     /**
      * Generates a CBOR object from a byte array. The byte array is copied
@@ -2936,7 +2941,7 @@ double)f.toString());
       if (bytes == null) { return CBORObject.Null; }
       byte[] newvalue = new byte[bytes.length];
       System.arraycopy(bytes, 0, newvalue, 0, bytes.length);
-      return new CBORObject(CBORObjectType_ByteString, bytes);
+      return new CBORObject(CBORObjectTypeByteString, bytes);
     }
     /**
      * Generates a CBOR object from an array of CBOR objects.
@@ -2950,7 +2955,7 @@ double)f.toString());
       for(CBORObject i : array) {
         list.add(FromObject(i));
       }
-      return new CBORObject(CBORObjectType_Array, list);
+      return new CBORObject(CBORObjectTypeArray, list);
     }
     /**
      * Generates a CBOR object from an array of 32-bit integers.
@@ -2965,7 +2970,7 @@ double)f.toString());
       for(int i : array) {
         list.add(FromObject(i));
       }
-      return new CBORObject(CBORObjectType_Array, list);
+      return new CBORObject(CBORObjectTypeArray, list);
     }
     /**
      * Generates a CBOR object from an array of 64-bit integers.
@@ -2980,7 +2985,7 @@ double)f.toString());
       for(long i : array) {
         list.add(FromObject(i));
       }
-      return new CBORObject(CBORObjectType_Array, list);
+      return new CBORObject(CBORObjectTypeArray, list);
     }
     /**
      * Generates a CBOR object from an list of objects.
@@ -2996,7 +3001,7 @@ double)f.toString());
         CBORObject obj = FromObject(i);
         list.add(obj);
       }
-      return new CBORObject(CBORObjectType_Array, list);
+      return new CBORObject(CBORObjectTypeArray, list);
     }
     /**
      * Generates a CBOR object from a map of objects.
@@ -3013,14 +3018,15 @@ double)f.toString());
         CBORObject value = FromObject(entry.getValue());
         map.put(key,value);
       }
-      return new CBORObject(CBORObjectType_Map, map);
+      return new CBORObject(CBORObjectTypeMap, map);
     }
     /**
      * Generates a CBORObject from an arbitrary object.
      * @param obj An arbitrary object.
      * @return A CBOR object corresponding to the given object. Returns
      * CBORObject.Null if the object is null.
-     * @throws java.lang.IllegalArgumentException The object's type is not supported.
+     * @throws java.lang.IllegalArgumentException The object&apos;s type is not
+     * supported.
      */
     public static CBORObject FromObject(Object obj) {
       if (obj == null) { return CBORObject.Null; }
@@ -3066,13 +3072,13 @@ double)f.toString());
      * object a tag.
      * @param o An arbitrary object.
      * @param bigintTag A big integer that specifies a tag number.
-     * @return a CBOR object where the object &quot; o&quot; is converted
+     * @return A CBOR object where the object &quot; o&quot; is converted
      * to a CBOR object and given the tag &quot; bigintTag&quot; .
-     * @throws java.lang.IllegalArgumentException "bigintTag" is less than 0 or
-     * greater than 2^64-1, or "o"'s type is unsupported.
+     * @throws java.lang.IllegalArgumentException &quot;bigintTag&quot; is less
+     * than 0 or greater than 2^64-1, or &quot;o&quot;&apos;s type is unsupported.
      */
     public static CBORObject FromObjectAndTag(Object o, BigInteger bigintTag) {
-      if (bigintTag == null)throw new NullPointerException("bigintTag");
+      if (bigintTag == null) { throw new NullPointerException("bigintTag"); }
       if (bigintTag.signum() < 0) throw new IllegalArgumentException(
         "tag not greater or equal to 0 ("+bigintTag+")");
       if (bigintTag.compareTo(UInt64MaxValue) > 0) throw new IllegalArgumentException(
@@ -3109,10 +3115,10 @@ double)f.toString());
      * object a tag.
      * @param obValue An arbitrary object.
      * @param smallTag A 32-bit integer that specifies a tag number.
-     * @return a CBOR object where the object &quot; value&quot; is converted
+     * @return A CBOR object where the object &quot; value&quot; is converted
      * to a CBOR object and given the tag &quot; smallTag&quot; .
-     * @throws java.lang.IllegalArgumentException "smallTag" is less than 0 or "obValue"'s
-     * type is unsupported.
+     * @throws java.lang.IllegalArgumentException &quot;smallTag&quot; is less
+     * than 0 or &quot;obValue&quot;&apos;s type is unsupported.
      */
     public static CBORObject FromObjectAndTag(Object obValue, int smallTag) {
       if (smallTag < 0) throw new IllegalArgumentException(
@@ -3132,7 +3138,7 @@ double)f.toString());
       CBORObject curobject = this;
       while (curobject.isTagged()) {
         sb.append(')');
-        curobject = (CBORObject)curobject.item_;
+        curobject = (CBORObject)curobject.itemValue;
       }
     }
 
@@ -3163,7 +3169,7 @@ double)f.toString());
             (byte)(low & 0xFF)};
           s.write(arrayToWrite,0,9);
         }
-        curobject = (CBORObject)curobject.item_;
+        curobject = (CBORObject)curobject.itemValue;
       }
     }
 
@@ -3179,7 +3185,7 @@ double)f.toString());
           sb.append(CBORUtilities.BigIntToString(bi));
         }
         sb.append('(');
-        curobject = (CBORObject)curobject.item_;
+        curobject = (CBORObject)curobject.itemValue;
       }
     }
 
@@ -3201,7 +3207,7 @@ double)f.toString());
       int type = this.getItemType();
       if (this.isTagged()) {
         if (sb == null) {
-          if (type == CBORObjectType_TextString) {
+          if (type == CBORObjectTypeTextString) {
             // The default capacity of StringBuilder may be too small
             // for many strings, so set a suggested capacity
             // explicitly
@@ -3213,7 +3219,7 @@ double)f.toString());
         }
         this.appendOpeningTags(sb);
       }
-      if (type == CBORObjectType_SimpleValue) {
+      if (type == CBORObjectTypeSimpleValue) {
         if (this.isTrue()) {
           simvalue = "true";
         } else if (this.isFalse()) {
@@ -3232,7 +3238,7 @@ double)f.toString());
           if (sb == null) { return simvalue; }
           sb.append(simvalue);
         }
-      } else if (type == CBORObjectType_Single) {
+      } else if (type == CBORObjectTypeSingle) {
         float f = ((Float)this.getThisItem()).floatValue();
         if (((f)==Float.NEGATIVE_INFINITY))
           simvalue = "-Infinity";
@@ -3245,7 +3251,7 @@ double)f.toString());
             Float.toString((float)f)));
         if (sb == null) { return simvalue; }
         sb.append(simvalue);
-      } else if (type == CBORObjectType_Double) {
+      } else if (type == CBORObjectTypeDouble) {
         double f = ((Double)this.getThisItem()).doubleValue();
         if (((f)==Double.NEGATIVE_INFINITY))
           simvalue = "-Infinity";
@@ -3258,22 +3264,22 @@ double)f.toString());
             Double.toString((double)f)));
         if (sb == null) { return simvalue; }
         sb.append(simvalue);
-      } else if (type == CBORObjectType_Integer) {
+      } else if (type == CBORObjectTypeInteger) {
         long v = (((Long)this.getThisItem()).longValue());
         simvalue = Long.toString((long)v);
         if (sb == null) { return simvalue; }
         sb.append(simvalue);
-      } else if (type == CBORObjectType_BigInteger) {
+      } else if (type == CBORObjectTypeBigInteger) {
         simvalue = CBORUtilities.BigIntToString((BigInteger)this.getThisItem());
         if (sb == null) { return simvalue; }
         sb.append(simvalue);
-      } else if (type == CBORObjectType_ByteString) {
+      } else if (type == CBORObjectTypeByteString) {
         if (sb == null) sb = new StringBuilder();
         sb.append("h'");
         byte[] data = (byte[])this.getThisItem();
         CBORUtilities.ToBase16(sb, data);
         sb.append("'");
-      } else if (type == CBORObjectType_TextString) {
+      } else if (type == CBORObjectTypeTextString) {
         if (sb == null) {
           return "\"" + this.AsString() + "\"";
         } else {
@@ -3281,11 +3287,11 @@ double)f.toString());
           sb.append(this.AsString());
           sb.append('\"');
         }
-      } else if (type == CBORObjectType_ExtendedDecimal) {
+      } else if (type == CBORObjectTypeExtendedDecimal) {
         return this.ToJSONString();
-      } else if (type == CBORObjectType_ExtendedFloat) {
+      } else if (type == CBORObjectTypeExtendedFloat) {
         return this.ToJSONString();
-      } else if (type == CBORObjectType_Array) {
+      } else if (type == CBORObjectTypeArray) {
         if (sb == null) sb = new StringBuilder();
         boolean first = true;
         sb.append("[");
@@ -3295,7 +3301,7 @@ double)f.toString());
           first = false;
         }
         sb.append("]");
-      } else if (type == CBORObjectType_Map) {
+      } else if (type == CBORObjectTypeMap) {
         if (sb == null) sb = new StringBuilder();
         boolean first = true;
         sb.append("{");
@@ -3318,9 +3324,9 @@ double)f.toString());
     }
 
     private static CBORObject ConvertToBigNum(CBORObject o, boolean negative) {
-      if (o.getItemType() != CBORObjectType_ByteString) {
- throw new CBORException("Byte array expected");
-}
+      if (o.getItemType() != CBORObjectTypeByteString) {
+        throw new CBORException("Byte array expected");
+      }
       byte[] data = (byte[])o.getThisItem();
       if (data.length <= 7) {
         long x = 0;
@@ -3371,29 +3377,29 @@ double)f.toString());
 
     private boolean CanFitInTypeZeroOrOne() {
       switch (this.getItemType()) {
-        case CBORObjectType_Integer:
+        case CBORObjectTypeInteger:
           return true;
-          case CBORObjectType_BigInteger: {
+          case CBORObjectTypeBigInteger: {
             BigInteger bigint = (BigInteger)this.getThisItem();
             return bigint.compareTo(LowestMajorType1) >= 0 &&
               bigint.compareTo(UInt64MaxValue) <= 0;
           }
-          case CBORObjectType_Single: {
+          case CBORObjectTypeSingle: {
             float value = ((Float)this.getThisItem()).floatValue();
             return value >= -18446744073709551616.0f &&
               value <= 18446742974197923840.0f;  // Highest float less or eq. to ULong.MAX_VALUE
           }
-          case CBORObjectType_Double: {
+          case CBORObjectTypeDouble: {
             double value = ((Double)this.getThisItem()).doubleValue();
             return value >= -18446744073709551616.0 &&
               value <= 18446744073709549568.0;  // Highest double less or eq. to ULong.MAX_VALUE
           }
-          case CBORObjectType_ExtendedDecimal: {
+          case CBORObjectTypeExtendedDecimal: {
             ExtendedDecimal value = (ExtendedDecimal)this.getThisItem();
             return value.compareTo(ExtendedDecimal.FromBigInteger(LowestMajorType1)) >= 0 &&
               value.compareTo(ExtendedDecimal.FromBigInteger(UInt64MaxValue)) <= 0;
           }
-          case CBORObjectType_ExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
             ExtendedFloat value = (ExtendedFloat)this.getThisItem();
             return value.compareTo(ExtendedFloat.FromBigInteger(LowestMajorType1)) >= 0 &&
               value.compareTo(ExtendedFloat.FromBigInteger(UInt64MaxValue)) <= 0;
@@ -3414,34 +3420,34 @@ double)f.toString());
     }
 
     private static CBORObject ConvertToDecimalFrac(CBORObject o, Boolean isDecimal) {
-      if (o.getItemType() != CBORObjectType_Array) {
- throw new CBORException("Big fraction must be an array");
-}
+      if (o.getItemType() != CBORObjectTypeArray) {
+        throw new CBORException("Big fraction must be an array");
+      }
       if (o.size() != 2)  // Requires 2 items
         throw new CBORException("Big fraction requires exactly 2 items");
       List<CBORObject> list = o.AsList();
       if (!list.get(0).CanFitInTypeZeroOrOne()) {
- throw new CBORException("Exponent is too big");
-}
+        throw new CBORException("Exponent is too big");
+      }
       // check type of mantissa
-      if (list.get(1).getItemType() != CBORObjectType_Integer &&
-          list.get(1).getItemType() != CBORObjectType_BigInteger) {
- throw new CBORException("Big fraction requires mantissa to be an integer or big integer");
-}
+      if (list.get(1).getItemType() != CBORObjectTypeInteger &&
+          list.get(1).getItemType() != CBORObjectTypeBigInteger) {
+        throw new CBORException("Big fraction requires mantissa to be an integer or big integer");
+      }
       if (list.get(0).isZero()) {
         // Exponent is 0, so return mantissa instead
         return RewrapObject(o, list.get(1));
       }
       if (isDecimal) {
         return RewrapObject(
-o, new CBORObject(
-          CBORObjectType_ExtendedDecimal,
-          ExtendedDecimal.Create(list.get(1).AsBigInteger(), list.get(0).AsBigInteger())));
+          o, new CBORObject(
+            CBORObjectTypeExtendedDecimal,
+            ExtendedDecimal.Create(list.get(1).AsBigInteger(), list.get(0).AsBigInteger())));
       } else {
         return RewrapObject(
-o, new CBORObject(
-          CBORObjectType_ExtendedFloat,
-          ExtendedFloat.Create(list.get(1).AsBigInteger(), list.get(0).AsBigInteger())));
+          o, new CBORObject(
+            CBORObjectTypeExtendedFloat,
+            ExtendedFloat.Create(list.get(1).AsBigInteger(), list.get(0).AsBigInteger())));
       }
     }
 
@@ -3461,12 +3467,12 @@ o, new CBORObject(
       int[] validTypeFlags,
       int validTypeIndex) throws IOException {
       if (depth > 1000) {
- throw new CBORException("Too deeply nested");
-}
+        throw new CBORException("Too deeply nested");
+      }
       int firstbyte = s.read();
       if (firstbyte < 0) {
- throw new CBORException("Premature end of data");
-}
+        throw new CBORException("Premature end of data");
+      }
       if (firstbyte == 0xFF) {
         if (allowBreak) { return null; }
         throw new CBORException("Unexpected break code encountered");
@@ -3510,8 +3516,8 @@ o, new CBORObject(
         data[0] = ((byte)firstbyte);
         if (expectedLength > 1 &&
             s.read(data, 1, expectedLength - 1) != expectedLength - 1) {
- throw new CBORException("Premature end of data");
-}
+          throw new CBORException("Premature end of data");
+        }
         return GetFixedLengthObject(firstbyte, data);
       }
       long uadditional = (long)additional;
@@ -3523,16 +3529,16 @@ o, new CBORObject(
           case 24: {
             int tmp = s.read();
             if (tmp < 0) {
- throw new CBORException("Premature end of data");
-}
+              throw new CBORException("Premature end of data");
+            }
             lowAdditional = tmp;
             uadditional = lowAdditional;
             break;
           }
           case 25: {
             if (s.read(data, 0, 2) != 2) {
- throw new CBORException("Premature end of data");
-}
+              throw new CBORException("Premature end of data");
+            }
             lowAdditional = ((int)(data[0] & (int)0xFF)) << 8;
             lowAdditional |= (int)(data[1] & (int)0xFF);
             uadditional = lowAdditional;
@@ -3540,8 +3546,8 @@ o, new CBORObject(
           }
           case 26: {
             if (s.read(data, 0, 4) != 4) {
- throw new CBORException("Premature end of data");
-}
+              throw new CBORException("Premature end of data");
+            }
             uadditional = ((long)(data[0] & (long)0xFF)) << 24;
             uadditional |= ((long)(data[1] & (long)0xFF)) << 16;
             uadditional |= ((long)(data[2] & (long)0xFF)) << 8;
@@ -3550,8 +3556,8 @@ o, new CBORObject(
           }
           case 27: {
             if (s.read(data, 0, 8) != 8) {
- throw new CBORException("Premature end of data");
-}
+              throw new CBORException("Premature end of data");
+            }
             if ((((int)data[0]) & 0x80) != 0) {
               // Won't fit in a signed 64-bit number
               byte[] uabytes = new byte[9];
@@ -3600,11 +3606,11 @@ ms=new ByteArrayOutputStream();
               ms.write(data,0,data.length);
             }
             if (ms.size() > Integer.MAX_VALUE) {
- throw new CBORException("Length of bytes to be streamed is bigger than supported");
-}
+              throw new CBORException("Length of bytes to be streamed is bigger than supported");
+            }
             data = ms.toByteArray();
             return new CBORObject(
-              CBORObjectType_ByteString,
+              CBORObjectTypeByteString,
               data);
 }
 finally {
@@ -3625,8 +3631,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             // Simple case: small size
             data = new byte[(int)uadditional];
             if (s.read(data, 0, data.length) != data.length) {
- throw new CBORException("Premature end of stream");
-}
+              throw new CBORException("Premature end of stream");
+            }
           } else {
             byte[] tmpdata = new byte[0x10000];
             int total = (int)uadditional;
@@ -3637,8 +3643,8 @@ ms=new ByteArrayOutputStream();
               while (total > 0) {
                 int bufsize = Math.min(tmpdata.length, total);
                 if (s.read(tmpdata, 0, bufsize) != bufsize) {
- throw new CBORException("Premature end of stream");
-}
+                  throw new CBORException("Premature end of stream");
+                }
                 ms.write(tmpdata,0,bufsize);
                 total -= bufsize;
               }
@@ -3649,7 +3655,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
           }
           return new CBORObject(
-            CBORObjectType_ByteString,
+            CBORObjectTypeByteString,
             data);
         }
       } else if (type == 3) {  // Text String
@@ -3664,7 +3670,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             builder.append((String)o.getThisItem());
           }
           return new CBORObject(
-            CBORObjectType_TextString,
+            CBORObjectTypeTextString,
             builder.toString());
         } else {
           if (hasBigAdditional) {
@@ -3685,7 +3691,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             default://No error
               break;
           }
-          return new CBORObject(CBORObjectType_TextString, builder.toString());
+          return new CBORObject(CBORObjectTypeTextString, builder.toString());
         }
       } else if (type == 4) {  // Array
         List<CBORObject> list = new ArrayList<CBORObject>();
@@ -3697,7 +3703,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             list.add(o);
             vtindex++;
           }
-          return new CBORObject(CBORObjectType_Array, list);
+          return new CBORObject(CBORObjectTypeArray, list);
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
@@ -3712,7 +3718,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             list.add(Read(s, depth + 1, false, -1, validTypeFlags, vtindex));
             vtindex++;
           }
-          return new CBORObject(CBORObjectType_Array, list);
+          return new CBORObject(CBORObjectTypeArray, list);
         }
       } else if (type == 5) {  // Map, type 5
         HashMap<CBORObject, CBORObject> dict=new HashMap<CBORObject, CBORObject>();
@@ -3723,7 +3729,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             CBORObject value = Read(s, depth + 1, false, -1, null, 0);
             dict.put(key,value);
           }
-          return new CBORObject(CBORObjectType_Map, dict);
+          return new CBORObject(CBORObjectTypeMap, dict);
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
@@ -3739,7 +3745,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             CBORObject value = Read(s, depth + 1, false, -1, null, 0);
             dict.put(key,value);
           }
-          return new CBORObject(CBORObjectType_Map, dict);
+          return new CBORObject(CBORObjectTypeMap, dict);
         }
       } else if (type == 6) {  // Tagged item
         CBORObject o;
