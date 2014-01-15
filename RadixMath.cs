@@ -25,26 +25,6 @@ namespace PeterO {
       this.thisRadix = helper.GetRadix();
     }
 
-    private T ReturnQuietNaNFastIntPrecision(T thisValue, FastInteger precision) {
-      BigInteger mant = BigInteger.Abs(helper.GetMantissa(thisValue));
-      bool mantChanged = false;
-      if (!(mant.IsZero) && precision != null && precision.Sign > 0) {
-        BigInteger limit = helper.MultiplyByRadixPower(
-          BigInteger.One, precision);
-        if (mant.CompareTo(limit) >= 0) {
-          mant = mant % (BigInteger)limit;
-          mantChanged = true;
-        }
-      }
-      int flags = helper.GetFlags(thisValue);
-      if (!mantChanged && (flags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return thisValue;
-      }
-      flags &= BigNumberFlags.FlagNegative;
-      flags |= BigNumberFlags.FlagQuietNaN;
-      return helper.CreateNewWithFlags(mant, BigInteger.Zero, flags);
-    }
-
     private T ReturnQuietNaN(T thisValue, PrecisionContext ctx) {
       BigInteger mant = BigInteger.Abs(helper.GetMantissa(thisValue));
       bool mantChanged = false;
@@ -884,6 +864,7 @@ namespace PeterO {
       return RoundToPrecision(guess,ctx);
     }
 
+    /*
     private T LnSeries2(T thisValue, PrecisionContext ctx){
       bool more = true;
       int lastCompare=0;
@@ -924,7 +905,7 @@ namespace PeterO {
         }
       }
       return RoundToPrecision(guess,ctx);
-    }
+    }*/
 
     private T ExpInternal(T thisValue, PrecisionContext ctx){
       T one=helper.ValueOf(1);
@@ -932,7 +913,6 @@ namespace PeterO {
         .WithRounding(Rounding.ZeroFiveUp);
       BigInteger bigintN=(BigInteger)2;
       BigInteger facto=BigInteger.One;
-      T fac=one;
       // Guess starts with 1 + thisValue
       T guess=Add(one,thisValue,null);
       T lastGuess=guess;
@@ -1032,7 +1012,7 @@ namespace PeterO {
         fastPrecision.Subtract(digits);
         mant=helper.MultiplyByRadixPower(mant,fastPrecision);
         BigInteger bigPrec=fastPrecision.AsBigInteger();
-        exponent-=bigPrec;
+        exponent-=(BigInteger)bigPrec;
       }
       if(ctx!=null && ctx.HasFlags){
         ctx.Flags|=PrecisionContext.FlagRounded;
@@ -1214,13 +1194,14 @@ namespace PeterO {
         }
         return ExtendPrecision(helper.ValueOf(1),ctx);
       }
-      PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
-        .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
+      #if DEBUG
+if((ctx)==null)throw new ArgumentNullException("ctx");
+#endif
+
+      PrecisionContext ctxdiv=ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult=Ln(thisValue,ctxdiv);
       lnresult=Multiply(lnresult,pow,null);
-      ctxdiv=ctx==null ?
-        PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven).WithBlankFlags() :
-        ctx.WithBlankFlags();
+      ctxdiv=ctx.WithBlankFlags();
       lnresult=Exp(lnresult,ctxdiv);
       if((ctxdiv.Flags&(PrecisionContext.FlagClamped|PrecisionContext.FlagOverflow))!=0){
         if(!IsWithinExponentRangeForPow(thisValue,ctx)){
@@ -1583,12 +1564,14 @@ namespace PeterO {
         if((!diff.IsEvenNumber)^(!(origExp.IsEven))){
           diff.Increment();
         }
-        currentExp-=diff.AsBigInteger();
+        BigInteger bigdiff=diff.AsBigInteger();
+        currentExp-=(BigInteger)bigdiff;
         mantissa=helper.MultiplyByRadixPower(mantissa,diff);
       } else if(digitCount.CompareTo(precision)<0){
         FastInteger diff=FastInteger.Copy(digitCount).Subtract(precision);
         accum.ShiftRight(diff);
-        currentExp+=diff.AsBigInteger();
+        BigInteger bigdiff=diff.AsBigInteger();
+        currentExp+=(BigInteger)bigdiff;
         mantissa=accum.ShiftedInt;
         rounded=true;
         inexact=(accum.LastDiscardedDigit|accum.OlderDiscardedDigits)!=0;
@@ -1997,8 +1980,6 @@ namespace PeterO {
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;
 
-    private const int NonTerminatingCheckThreshold = 5;
-
     private T DivideInternal(
       T thisValue,
       T divisor,
@@ -2094,6 +2075,10 @@ namespace PeterO {
                                                               BigNumberFlags.FlagNegative : 0),ctx);
           }
           if(hasPrecision){
+            #if DEBUG
+if((ctx)==null)throw new ArgumentNullException("ctx");
+#endif
+
             BigInteger divid=mantissaDividend;
             FastInteger shift=FastInteger.FromBig(ctx.Precision);
             dividendPrecision =
@@ -2130,9 +2115,7 @@ namespace PeterO {
             }
             int[] digitStatus=RoundToScaleStatus(rem,mantissaDivisor,resultNeg,ctx);
             FastInteger natexp=FastInteger.Copy(naturalExponent).Subtract(shift);
-            PrecisionContext ctxcopy=(ctx==null) ?
-              PrecisionContext.Unlimited.WithBlankFlags() :
-              ctx.WithBlankFlags();
+            PrecisionContext ctxcopy=ctx.WithBlankFlags();
             T retval2=RoundToPrecisionWithShift(
               helper.CreateNewWithFlags(
                 quo, natexp.AsBigInteger(),
@@ -2143,10 +2126,10 @@ namespace PeterO {
                 ctx.Flags|=ctxcopy.Flags;
               return retval2;
             } else {
-              if(ctx!=null && ctx.HasFlags)
+              if(ctx!=null && ctx.HasFlags){
                 ctx.Flags|=ctxcopy.Flags;
-              if(ctx!=null && ctx.HasFlags)
                 ctx.Flags&=~PrecisionContext.FlagRounded;
+              }
               return ReduceToPrecisionAndIdealExponent(
                 retval2,
                 ctx,
@@ -2159,7 +2142,6 @@ namespace PeterO {
         // Rest of method assumes unlimited precision
         // and IntegerModeRegular
         //
-        FastInteger resultPrecision = new FastInteger(1);
         int mantcmp = mantissaDividend.CompareTo(mantissaDivisor);
         if (mantcmp < 0) {
           // dividend mantissa is less than divisor mantissa
@@ -2289,7 +2271,6 @@ namespace PeterO {
           }
         }
         BigInteger bigResult = result.AsBigInteger();
-        BigInteger posBigResult = bigResult;
         if (ctx != null && ctx.HasFlags && exp.CompareTo(expdiff) > 0) {
           // Treat as rounded if the true exponent is greater
           // than the "ideal" exponent

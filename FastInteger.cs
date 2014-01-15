@@ -794,7 +794,6 @@ namespace PeterO {
     public FastInteger AddBig(BigInteger bigintVal) {
       switch (integerMode) {
           case 0:{
-            int sign = bigintVal.Sign;
             if (bigintVal.canFitInInt()) {
               return AddInt((int)bigintVal);
             }

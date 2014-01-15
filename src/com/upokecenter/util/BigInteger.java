@@ -166,23 +166,6 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private static int AddOneByOne(
-      short[] C, int cstart,
-      short[] A, int astart,
-      short[] B, int bstart, int N) {
-      //Debugif(!(N%2 == 0))Assert.fail("{0} line {1}: N%2 == 0","integer.cpp",799);
-      {
-
-        int u;
-        u = 0;
-        for (int i = 0; i < N; i += 1) {
-          u = (((int)A[astart + i]) & 0xFFFF) + (((int)B[bstart + i]) & 0xFFFF) + (short)(u >> 16);
-          C[cstart + i] = (short)(u);
-        }
-        return (((int)u >> 16) & 0xFFFF);
-      }
-    }
-
     private static int Subtract(
       short[] C, int cstart,
       short[] A, int astart,
@@ -515,524 +498,6 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private static void Baseline_Multiply16(short[] R, int rstart, short[] A, int astart, short[] B, int bstart) {
-      int mask=0xFFFF;
-      {
-        int p; short c; int d;
-        p = (((int)A[astart]) & mask) * (((int)B[bstart]) & mask); c = (short)(p); d = (((int)p >> 16) & mask); R[rstart] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 1] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 2] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 3] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 4] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 5] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 6] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 7] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 8] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 9] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 10] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 11] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 12] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 13] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 14] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 15] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 1]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 16] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 2]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 17] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 3]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 18] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 4]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 19] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 5]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 20] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 6]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 21] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 7]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 22] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 8]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 8]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 23] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 9]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 9]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 24] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 10]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 10]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 25] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 11]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 11]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 26] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 12]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 12]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 27] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 13]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 13]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 28] = c; c = (short)(d); d = (((int)d >> 16) & mask);
-        p = (((int)A[astart + 14]) & mask) * (((int)B[bstart + 15]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 14]) & mask);
-        p = p + (((int)c) & mask); c = (short)(p); d = d + (((int)p >> 16) & mask); R[rstart + 29] = c;
-        p = (((int)A[astart + 15]) & mask) * (((int)B[bstart + 15]) & mask);
-        p += d; R[rstart + 30] = (short)(p); R[rstart + 31] = (short)(p >> 16);
-      }
-    }
-
     private static final int s_recursionLimit = 8;
 
     private static void RecursiveMultiply(
@@ -1043,7 +508,6 @@ at: http://peteroupc.github.io/CBOR/
       short[] Aarr, int Astart, // size N
       short[] Barr, int Bstart, // size N
       int N) {
-      int sn=N;
       if (N <= s_recursionLimit) {
         N >>= 2;
         if(N==0){
@@ -1423,24 +887,6 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private static void Baseline_Multiply2Opt2(short[] R, int rstart, int a0, int a1, short[] B, int bstart, int istart, int iend) {
-      {
-        int p; short c; int d;
-        for(int i=istart;i<iend;i+=4){
-          int rsi=rstart+i;
-          int b0=(((int)B[bstart+i]) & 0xFFFF);
-          int b1=(((int)B[bstart+i+1]) & 0xFFFF);
-          p = a0 * b0; c = (short)(p); d = (((int)p >> 16) & 0xFFFF); R[rsi] = c; c = (short)(d); d = (((int)d >> 16) & 0xFFFF);
-          p = a0 * b1;
-          p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF);
-          p = a1 * b0;
-          p = p + (((int)c) & 0xFFFF); c = (short)(p); d = d + (((int)p >> 16) & 0xFFFF); R[rsi+1] = c;
-          p = a1 * b1;
-          p += d; R[rsi+2] = (short)(p); R[rsi+3] = (short)(p >> 16);
-        }
-      }
-    }
-
     private static void AtomicMultiplyOpt(short[] C, int Cstart, int A0, int A1, short[] B, int Bstart, int istart, int iend) {
       short s;
       int d;
@@ -1609,7 +1055,6 @@ at: http://peteroupc.github.io/CBOR/
       if(Qarr==null){
         quot=new short[2];
       }
-      int quotStart=(Qarr==null) ? 0 : Qstart;
       int TBstart = (int)(Tstart + (NA + 2));
       int TPstart = (int)(Tstart + (NA + 2 + NB));
       {
@@ -2276,7 +1721,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param wordCount A 32-bit signed integer.
      * @return A 32-bit signed integer.
      */
-    private int getUnsignedBitLengthEx(int numberValue, int wordCount) {
+    private static int getUnsignedBitLengthEx(int numberValue, int wordCount) {
       int wc = wordCount;
       if (wc!=0){
         wc=(wc-1)<<4;
@@ -2377,7 +1822,7 @@ at: http://peteroupc.github.io/CBOR/
       return new String(chars, 0, count);
     }
 
-    private int ApproxLogTenOfTwo(int bitlen) {
+    private static int ApproxLogTenOfTwo(int bitlen) {
       int bitlenLow=(bitlen&0xFFFF);
       int bitlenHigh=((bitlen>>16)&0xFFFF);
       short resultLow=0;
@@ -3158,26 +2603,6 @@ at: http://peteroupc.github.io/CBOR/
       }
       return remainder;
     }
-    private static short FastDivideAndRemainder(short[] quotientReg, int count, short divisorSmall) {
-      int i = count;
-      short remainder = 0;
-      int quo,rem;
-      int idivisor = (((int)divisorSmall) & 0xFFFF);
-      while ((i--) > 0) {
-        int currentDividend = ((int)((((int)quotientReg[i]) & 0xFFFF) |
-                                              ((int)(remainder) << 16)));
-        if ((currentDividend >> 31) == 0) {
-          quo=currentDividend / idivisor;
-          quotientReg[i] = ((short)quo);
-          rem=currentDividend-(idivisor*quo);
-          remainder = ((short)rem);
-        } else {
-          quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
-          remainder = RemainderUnsigned(currentDividend, divisorSmall);
-        }
-      }
-      return remainder;
-    }
 
     /**
      * Divides this instance by the value of a BigInteger object. The result
@@ -3489,9 +2914,9 @@ at: http://peteroupc.github.io/CBOR/
         bigintY=bigintY.shiftRight(1);
       } while (bigintY.compareTo(bigintX) < 0);
       bigintY=bigintX.multiply(bigintX);
+      bigintY=this.subtract(bigintY);
       return new BigInteger[]{
-        bigintX,
-        this-bigintY
+        bigintX, bigintY
       };
     }
 
