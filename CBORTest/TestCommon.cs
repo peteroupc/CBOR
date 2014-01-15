@@ -96,7 +96,7 @@ namespace Test {
     }
 
     public static void AssertFlags(int expected, int actual, string name) {
-      if (expected == actual)return;
+      if (expected == actual) { return; }
       Assert.AreEqual((expected&PrecisionContext.FlagInexact) != 0,
                       (actual&PrecisionContext.FlagInexact)!=0,name+": Inexact");
       Assert.AreEqual((expected&PrecisionContext.FlagRounded) != 0,

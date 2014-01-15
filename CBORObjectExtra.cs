@@ -27,6 +27,7 @@ namespace PeterO {
 }
       return (ushort)v;
     }
+
     /// <summary> Not documented yet. </summary>
     /// <returns>A 32-bit unsigned integer.</returns>
     [CLSCompliant(false)]
@@ -37,6 +38,7 @@ namespace PeterO {
 }
       return (uint)v;
     }
+
     /// <summary> Not documented yet. </summary>
     /// <returns>A SByte object.</returns>
     [CLSCompliant(false)]
@@ -51,8 +53,8 @@ namespace PeterO {
     private static decimal EncodeDecimal(
 BigInteger bigmant,
                                          int scale, bool neg) {
-      if (scale < 0)throw new ArgumentException("scale"+" not greater or equal to "+"0"+" ("+Convert.ToString(scale,System.Globalization.CultureInfo.InvariantCulture)+")");
-if (scale > 28)throw new ArgumentException("scale"+" not less or equal to "+"28"+" ("+Convert.ToString(scale,System.Globalization.CultureInfo.InvariantCulture)+")");
+      if (scale < 0) { throw new ArgumentException("scale" + " not greater or equal to " + "0" + " (" + Convert.ToString(scale,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
+if (scale > 28) { throw new ArgumentException("scale" + " not less or equal to " + "28" + " (" + Convert.ToString(scale,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
       byte[] data = bigmant.ToByteArray();
       int a = 0;
       int b = 0;
@@ -126,61 +128,63 @@ BigInteger.Abs(newDecimal.Mantissa),
                            -((int)newDecimal.Exponent),
                            newDecimal.Mantissa.Sign < 0);
     }
+
     /// <summary> Converts this object to a .NET decimal. </summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'> This object's
-    /// type is not a number type. </exception>
-    /// <exception cref='System.OverflowException'> This object's value
-    /// exceeds the range of a .NET decimal.</exception>
+    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// type is not a number type.</exception>
+    /// <exception cref='System.OverflowException'>This object&apos;s
+    /// value exceeds the range of a .NET decimal.</exception>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
-      if (this.ItemType == CBORObjectType_Integer) {
+      if (this.ItemType == CBORObjectTypeInteger) {
         return (decimal)(long)this.ThisItem;
-      } else if (this.ItemType == CBORObjectType_BigInteger) {
+      } else if (this.ItemType == CBORObjectTypeBigInteger) {
         if ((BigInteger)this.ThisItem > DecimalMaxValue ||
             (BigInteger)this.ThisItem < DecimalMinValue)
           throw new OverflowException("This object's value is out of range");
         return BigIntegerToDecimal((BigInteger)this.ThisItem);
-      } else if (this.ItemType == CBORObjectType_Single) {
+      } else if (this.ItemType == CBORObjectTypeSingle) {
         if (Single.IsNaN((float)this.ThisItem) ||
             (float)this.ThisItem > (float)Decimal.MaxValue ||
             (float)this.ThisItem < (float)Decimal.MinValue)
           throw new OverflowException("This object's value is out of range");
         return (decimal)(float)this.ThisItem;
-      } else if (this.ItemType == CBORObjectType_Double) {
+      } else if (this.ItemType == CBORObjectTypeDouble) {
         if (Double.IsNaN((double)this.ThisItem) ||
             (double)this.ThisItem > (double)Decimal.MaxValue ||
             (double)this.ThisItem < (double)Decimal.MinValue)
           throw new OverflowException("This object's value is out of range");
         return (decimal)(double)this.ThisItem;
-      } else if (this.ItemType == CBORObjectType_ExtendedDecimal) {
+      } else if (this.ItemType == CBORObjectTypeExtendedDecimal) {
         return ExtendedDecimalToDecimal((ExtendedDecimal)this.ThisItem);
-      } else if (this.ItemType == CBORObjectType_ExtendedFloat) {
+      } else if (this.ItemType == CBORObjectTypeExtendedFloat) {
         return ExtendedDecimalToDecimal(
           ExtendedDecimal.FromExtendedFloat((ExtendedFloat)this.ThisItem));
       } else
         throw new InvalidOperationException("Not a number type");
     }
+
     /// <summary> Converts this object to a 64-bit unsigned integer. Floating
     /// point values are truncated to an integer. </summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'> This object's
-    /// type is not a number type. </exception>
-    /// <exception cref='System.OverflowException'> This object's value
-    /// exceeds the range of a 64-bit unsigned integer.</exception>
+    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// type is not a number type.</exception>
+    /// <exception cref='System.OverflowException'>This object&apos;s
+    /// value exceeds the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
-      if (this.ItemType == CBORObjectType_Integer) {
+      if (this.ItemType == CBORObjectTypeInteger) {
         if ((long)this.ThisItem < 0) {
  throw new OverflowException("This object's value is out of range");
 }
         return (ulong)(long)this.ThisItem;
-      } else if (this.ItemType == CBORObjectType_BigInteger) {
+      } else if (this.ItemType == CBORObjectTypeBigInteger) {
         if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
             ((BigInteger)this.ThisItem).Sign < 0)
           throw new OverflowException("This object's value is out of range");
         return (ulong)BigIntegerToDecimal((BigInteger)this.ThisItem);
-      } else if (this.ItemType == CBORObjectType_Single) {
+      } else if (this.ItemType == CBORObjectTypeSingle) {
         float fltItem = (float)this.ThisItem;
         if (Single.IsNaN(fltItem)) {
  throw new OverflowException("This object's value is out of range");
@@ -189,7 +193,7 @@ BigInteger.Abs(newDecimal.Mantissa),
         if (fltItem >= 0 && fltItem <= UInt64.MaxValue)
           return (ulong)fltItem;
         throw new OverflowException("This object's value is out of range");
-      } else if (this.ItemType == CBORObjectType_Double) {
+      } else if (this.ItemType == CBORObjectTypeDouble) {
         double fltItem = (double)this.ThisItem;
         if (Double.IsNaN(fltItem)) {
  throw new OverflowException("This object's value is out of range");
@@ -198,13 +202,13 @@ BigInteger.Abs(newDecimal.Mantissa),
         if (fltItem >= 0 && fltItem <= UInt64.MaxValue)
           return (ulong)fltItem;
         throw new OverflowException("This object's value is out of range");
-      } else if (this.ItemType == CBORObjectType_ExtendedDecimal) {
+      } else if (this.ItemType == CBORObjectTypeExtendedDecimal) {
         BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
         if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
             bi.Sign < 0)
           throw new OverflowException("This object's value is out of range");
         return (ulong)BigIntegerToDecimal(bi);
-      } else if (this.ItemType == CBORObjectType_ExtendedFloat) {
+      } else if (this.ItemType == CBORObjectTypeExtendedFloat) {
         BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
         if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
             bi.Sign < 0)
@@ -213,21 +217,23 @@ BigInteger.Abs(newDecimal.Mantissa),
       } else
         throw new InvalidOperationException("Not a number type");
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>A SByte object.</param>
-    /// <returns></returns>
     /// <param name='stream'>A writable data stream.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static void Write(sbyte value, Stream stream) {
       Write((long)value, stream);
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
-    /// <returns></returns>
     /// <param name='stream'>A writable data stream.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
-      if (stream == null)throw new ArgumentNullException("stream");
+      if (stream == null) { throw new ArgumentNullException("stream"); }
       if (value <= Int64.MaxValue) {
         Write((long)value, stream);
       } else {
@@ -242,6 +248,7 @@ BigInteger.Abs(newDecimal.Mantissa),
         stream.WriteByte((byte)(value & 0xFF));
       }
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>A Decimal object.</param>
     /// <returns>A CBORObject object.</returns>
@@ -282,22 +289,25 @@ BigInteger.Abs(newDecimal.Mantissa),
           }, 4);
       }
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
-    /// <returns></returns>
     /// <param name='stream'>A writable data stream.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static void Write(uint value, Stream stream) {
       Write((ulong)value, stream);
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>An UInt16 object.</param>
-    /// <returns></returns>
     /// <param name='stream'>A writable data stream.</param>
+    /// <returns></returns>
     [CLSCompliant(false)]
     public static void Write(ushort value, Stream stream) {
       Write((ulong)value, stream);
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>A SByte object.</param>
     /// <returns>A CBORObject object.</returns>
@@ -305,6 +315,7 @@ BigInteger.Abs(newDecimal.Mantissa),
     public static CBORObject FromObject(sbyte value) {
       return FromObject((long)value);
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
@@ -312,6 +323,7 @@ BigInteger.Abs(newDecimal.Mantissa),
     public static CBORObject FromObject(ulong value) {
       return FromObject(DecimalToBigInteger((decimal)value));
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
@@ -319,6 +331,7 @@ BigInteger.Abs(newDecimal.Mantissa),
     public static CBORObject FromObject(uint value) {
       return FromObject((long)value);
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>An UInt16 object.</param>
     /// <returns>A CBORObject object.</returns>
@@ -326,6 +339,7 @@ BigInteger.Abs(newDecimal.Mantissa),
     public static CBORObject FromObject(ushort value) {
       return FromObject((long)value);
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='tag'>A 64-bit unsigned integer.</param>
@@ -375,6 +389,7 @@ BigInteger.Abs(newDecimal.Mantissa),
       }
       return new String(charbuf);
     }
+
     /// <summary> Not documented yet. </summary>
     /// <param name='value'>A DateTime object.</param>
     /// <returns>A CBORObject object.</returns>
@@ -382,10 +397,11 @@ BigInteger.Abs(newDecimal.Mantissa),
       return new CBORObject(
         FromObject(DateTimeToString(value)), 0, 0);
     }
+
     /// <summary> Writes a date and time in CBOR format to a data stream. </summary>
     /// <param name='bi'>A DateTime object.</param>
-    /// <returns></returns>
     /// <param name='stream'>A writable data stream.</param>
+    /// <returns></returns>
     public static void Write(DateTime bi, Stream stream) {
       if (stream == null) { throw new ArgumentNullException("stream"); }
       stream.WriteByte(0xC0);

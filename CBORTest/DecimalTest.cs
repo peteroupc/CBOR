@@ -74,7 +74,7 @@ namespace Test
            output.Contains("#")){
           return;
         }
-        if (flags.Contains("Invalid_context"))return;
+        if (flags.Contains("Invalid_context")) { return; }
         PrecisionContext ctx = PrecisionContext.ForPrecision(precision)
           .WithExponentClamp(clamp).WithExponentRange(
             (BigInteger)minexponent, (BigInteger)maxexponent);
@@ -147,7 +147,9 @@ namespace Test
         else if (op.Equals("minus"))d3=d1.Negate(ctx);
         else if (op.Equals("apply"))d3=d1.RoundToPrecision(ctx);
         else if (op.Equals("plus"))d3=d1.Plus(ctx);
-        else return;
+        else {
+ return;
+}
         bool invalid=(flags.Contains("Division_impossible") ||
                       flags.Contains("Division_undefined") ||
                       flags.Contains("Invalid_operation"));

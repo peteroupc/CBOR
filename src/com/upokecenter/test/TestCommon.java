@@ -106,7 +106,7 @@ rembi=divrem[1]; }
     }
 
     public static void AssertFlags(int expected, int actual, String name) {
-      if (expected == actual)return;
+      if (expected == actual) { return; }
       Assert.assertEquals(name+": Inexact",(expected&PrecisionContext.FlagInexact) != 0,(actual&PrecisionContext.FlagInexact)!=0);
       Assert.assertEquals(name+": Rounded",(expected&PrecisionContext.FlagRounded) != 0,(actual&PrecisionContext.FlagRounded)!=0);
       Assert.assertEquals(name+": Subnormal",(expected&PrecisionContext.FlagSubnormal) != 0,(actual&PrecisionContext.FlagSubnormal)!=0);

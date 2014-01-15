@@ -74,13 +74,13 @@ package com.upokecenter.util;
      * @param s     A source _string.
      */
     public JSONTokener (String str, int options) {
-      if (str == null)throw new NullPointerException("str");
+      if (str == null) { throw new NullPointerException("str"); }
       this.mySource = str;
       this.options = options;
     }
 
     public JSONTokener (InputStream stream, int options) {
-      if (stream == null)throw new NullPointerException("stream");
+      if (stream == null) { throw new NullPointerException("stream"); }
       this.stream = stream;
       this.options = options;
     }
@@ -147,7 +147,7 @@ package com.upokecenter.util;
             this.myIndex += 1;
             return ret;
           }
-        } catch(IOException ex) {
+        }  catch (IOException ex) {
           throw this.syntaxError("I/O error occurred", ex);
         }
       } else {
@@ -246,10 +246,10 @@ package com.upokecenter.util;
     }
     /**
      * Not documented yet.
-     * @param lastChar A 32-bit signed integer.
+     * @param lastChar A 32-bit signed integer. (2)
      * @return A 32-bit signed integer.
      */
-    public int NextClean2(int lastChar) {
+    public int NextClean(int lastChar) {
       while (true) {
         int c = this.NextParseComment(lastChar);
         if (c == -1 || c > ' ')
@@ -452,7 +452,7 @@ package com.upokecenter.util;
       } else if (c == '-' || (c >=  '0' && c <=  '9')){
         // Parse a number
         StringBuilder sb = new StringBuilder();
-        while (c == '-' || c == '+' || c == '.' || c == 'e' || c == 'E' || (c >=  '0' && c<= '9')) {
+        while (c == '-' || c == '+' || c == '.' || c == 'e' || c == 'E' || (c >=  '0' && c <=  '9')) {
           sb.append((char)c);
           c = this.NextChar();
         }
@@ -461,7 +461,7 @@ package com.upokecenter.util;
         if (obj == null) {
  throw this.syntaxError("JSON number can't be parsed.");
 }
-        nextChar[0] = this.NextClean2(c);
+        nextChar[0] = this.NextClean(c);
         return obj;
       } else {
         throw this.syntaxError("Value can't be parsed.");

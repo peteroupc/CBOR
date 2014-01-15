@@ -28,6 +28,7 @@ namespace PeterO {
     public static CBORObject ParseJSONNumber(string str) {
       return ParseJSONNumber(str, false, false, false);
     }
+
     /// <summary> Parses a number whose format follows the JSON specification
     /// (RFC 4627). Roughly speaking, a valid number consists of an optional
     /// minus sign, one or more digits (starting with 1 to 9 unless the only

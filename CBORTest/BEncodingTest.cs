@@ -28,6 +28,7 @@ namespace Test {
         throw new CBORException("", ex);
       }
     }
+
     /// <summary>
     /// </summary>
     /// <param name='value'>
@@ -42,6 +43,7 @@ public void doTestLong(long value) {
       String newb = Encoding.UTF8.GetString(EncodingToBytes(beo));
       Assert.AreEqual(b, newb);
     }
+
     /// <summary>
     /// </summary>
     /// <param name='value'>
@@ -56,6 +58,7 @@ public void doTestString(String value) {
       String newb = Encoding.UTF8.GetString(EncodingToBytes(beo));
       Assert.AreEqual(b, newb);
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -70,6 +73,7 @@ public void doTestString(String value) {
       doTestLong(Int64.MinValue);
       doTestLong(Int64.MaxValue);
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -95,6 +99,7 @@ public void doTestString(String value) {
       Assert.AreEqual(3, beo[2].AsInt64());
       Assert.AreEqual("four", beo[3].AsString());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>
@@ -120,6 +125,7 @@ public void doTestString(String value) {
       Assert.AreEqual(3, beo["two"].AsInt64());
       Assert.AreEqual("four", beo["three"].AsString());
     }
+
     /// <summary>
     /// </summary>
     /// <returns>

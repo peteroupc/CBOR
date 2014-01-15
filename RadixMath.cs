@@ -522,8 +522,8 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
+    /// <param name='divisor'>A T object. (3)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T DivideToIntegerNaturalScale(
@@ -595,8 +595,8 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
+    /// <param name='divisor'>A T object. (3)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T DivideToIntegerZeroScale(
@@ -627,7 +627,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='value'>A T object.</param>
+    /// <param name='value'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Abs(T value, PrecisionContext ctx) {
@@ -649,7 +649,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='value'>A T object.</param>
+    /// <param name='value'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Negate(T value, PrecisionContext ctx) {
@@ -722,7 +722,7 @@ namespace PeterO {
 
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object.</param>
+    /// <param name='divisor'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The remainder of the two objects.</returns>
     public T Remainder(
@@ -747,8 +747,8 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
+    /// <param name='divisor'>A T object. (3)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T RemainderNear(
@@ -1073,8 +1073,8 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='pow'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
+    /// <param name='pow'>A T object. (3)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Power(T thisValue, T pow, PrecisionContext ctx) {
@@ -1228,7 +1228,7 @@ namespace PeterO {
             PrecisionContext.ForRounding(Rounding.Down));
         }
         BigInteger signedMant = BigInteger.Abs(this.helper.GetMantissa(powInt));
-        if (powSign < 0)signedMant = -signedMant;
+        if (powSign < 0) signedMant = -signedMant;
         // Console.WriteLine("tv={0} mant={1}",thisValue,signedMant);
         return this.PowerIntegral(thisValue, signedMant, ctx);
       }
@@ -1240,7 +1240,7 @@ namespace PeterO {
         return this.ExtendPrecision(this.helper.ValueOf(1), ctx);
       }
       #if DEBUG
-      if (ctx == null)throw new ArgumentNullException("ctx");
+      if (ctx == null) { throw new ArgumentNullException("ctx"); }
       #endif
 
       PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
@@ -1261,8 +1261,9 @@ namespace PeterO {
       }
       return lnresult;
     }
+
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Log10(T thisValue, PrecisionContext ctx) {
@@ -1345,7 +1346,7 @@ namespace PeterO {
     }
 
     private static BigInteger PowerOfTwo(FastInteger fi) {
-      if (fi.Sign <= 0)return BigInteger.One;
+      if (fi.Sign <= 0) { return BigInteger.One; }
       if (fi.CanFitInInt32()) {
         int val = fi.AsInt32();
         if (val <= 30) {
@@ -1369,7 +1370,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Ln(T thisValue, PrecisionContext ctx) {
@@ -1492,7 +1493,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Exp(T thisValue, PrecisionContext ctx) {
@@ -1580,7 +1581,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T SquareRoot(T thisValue, PrecisionContext ctx) {
@@ -1701,7 +1702,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T NextMinus(
@@ -1748,8 +1749,8 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='otherValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
+    /// <param name='otherValue'>A T object. (3)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T NextToward(
@@ -1832,7 +1833,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T NextPlus(
@@ -1881,9 +1882,9 @@ namespace PeterO {
 
     /// <summary>Divides two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object.</param>
+    /// <param name='divisor'>A T object. (2)</param>
     /// <param name='desiredExponent'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object. Precision is ignored.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The quotient of the two objects.</returns>
     public T DivideToExponent(
       T thisValue,
@@ -1908,7 +1909,7 @@ namespace PeterO {
 
     /// <summary>Divides two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object.</param>
+    /// <param name='divisor'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The quotient of the two objects.</returns>
     public T Divide(
@@ -1996,7 +1997,7 @@ namespace PeterO {
         } else {
           // Rounding mode doesn't care about
           // whether remainder is exactly half
-          if (rounding == Rounding.Unnecessary){
+          if (rounding == Rounding.Unnecessary) {
             throw new ArithmeticException("Rounding was required");
           }
           lastDiscarded = 1;
@@ -2008,7 +2009,7 @@ namespace PeterO {
       if (shift.IsValueZero) {
         if ((lastDiscarded | olderDiscarded) != 0) {
           flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
-          if (rounding == Rounding.Unnecessary){
+          if (rounding == Rounding.Unnecessary) {
             throw new ArithmeticException("Rounding was required");
           }
           if (this.RoundGivenDigits(
@@ -2150,7 +2151,7 @@ namespace PeterO {
           }
           if (hasPrecision) {
             #if DEBUG
-            if (ctx == null)throw new ArgumentNullException("ctx");
+            if (ctx == null) { throw new ArgumentNullException("ctx"); }
             #endif
 
             BigInteger divid = mantissaDividend;
@@ -2365,8 +2366,8 @@ namespace PeterO {
     /// signs. If the absolute values are equal, has the same effect as Min.
     /// </summary>
     /// <returns>A T object.</returns>
-    /// <param name='a'>A T object.</param>
-    /// <param name='b'>A T object.</param>
+    /// <param name='a'>A T object. (2)</param>
+    /// <param name='b'>A T object. (3)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) { throw new ArgumentNullException("a"); }
@@ -2379,12 +2380,13 @@ namespace PeterO {
       return (cmp < 0) ? this.RoundToPrecision(a, ctx) :
         this.RoundToPrecision(b, ctx);
     }
+
     /// <summary> Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.
     /// </summary>
     /// <returns>A T object.</returns>
-    /// <param name='a'>A T object.</param>
-    /// <param name='b'>A T object.</param>
+    /// <param name='a'>A T object. (2)</param>
+    /// <param name='b'>A T object. (3)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) { throw new ArgumentNullException("a"); }
@@ -2397,10 +2399,11 @@ namespace PeterO {
       return (cmp > 0) ? this.RoundToPrecision(a, ctx) :
         this.RoundToPrecision(b, ctx);
     }
+
     /// <summary> Gets the greater value between two T values. </summary>
     /// <returns>The larger value of the two objects.</returns>
     /// <param name='a'>A T object.</param>
-    /// <param name='b'>A T object.</param>
+    /// <param name='b'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public T Max(T a, T b, PrecisionContext ctx) {
       if (a == null) { throw new ArgumentNullException("a"); }
@@ -2429,7 +2432,7 @@ namespace PeterO {
     /// <summary> Gets the lesser value between two T values.</summary>
     /// <returns>The smaller value of the two objects.</returns>
     /// <param name='a'>A T object.</param>
-    /// <param name='b'>A T object.</param>
+    /// <param name='b'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public T Min(T a, T b, PrecisionContext ctx) {
       if (a == null) { throw new ArgumentNullException("a"); }
@@ -2459,7 +2462,7 @@ namespace PeterO {
     /// <param name='thisValue'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The product of the two objects.</returns>
-    /// <param name='other'>A T object.</param>
+    /// <param name='other'>A T object. (2)</param>
     public T Multiply(T thisValue, T other, PrecisionContext ctx) {
       int thisFlags = this.helper.GetFlags(thisValue);
       int otherFlags = this.helper.GetFlags(other);
@@ -2492,10 +2495,11 @@ namespace PeterO {
       }
       return ret;
     }
+
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='multiplicand'>A T object.</param>
-    /// <param name='augend'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
+    /// <param name='multiplicand'>A T object. (3)</param>
+    /// <param name='augend'>A T object. (4)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T MultiplyAndAdd(
@@ -2504,14 +2508,14 @@ namespace PeterO {
       PrecisionContext ctx) {
       PrecisionContext ctx2 = PrecisionContext.Unlimited.WithBlankFlags();
       T ret = this.MultiplyAddHandleSpecial(thisValue, multiplicand, augend, ctx);
-      if ((object)ret != (object)default(T))return ret;
+      if ((object)ret != (object)default(T)) return ret;
       ret = this.Add(this.Multiply(thisValue, multiplicand, ctx2), augend, ctx);
       if (ctx != null && ctx.HasFlags) ctx.Flags |= ctx2.Flags;
       return ret;
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='context'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T RoundToBinaryPrecision(
@@ -2538,7 +2542,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='context'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Plus(
@@ -2547,8 +2551,9 @@ namespace PeterO {
     {
       return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, true, context);
     }
+
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='context'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T RoundToPrecision(
@@ -2575,8 +2580,8 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='otherValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
+    /// <param name='otherValue'>A T object. (3)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Quantize(
@@ -2644,7 +2649,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='expOther'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
@@ -2669,7 +2674,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='expOther'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
@@ -2703,7 +2708,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     /// <param name='exponent'>A BigInteger object.</param>
@@ -2720,11 +2725,12 @@ namespace PeterO {
       }
       return ret;
     }
+
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <param name='precision'>A FastInteger object.</param>
-    /// <param name='idealExp'>A FastInteger object.</param>
+    /// <param name='idealExp'>A FastInteger object. (2)</param>
     /// <returns>A T object.</returns>
     public T ReduceToPrecisionAndIdealExponent(
       T thisValue,
@@ -2756,7 +2762,7 @@ namespace PeterO {
               break;
             bigmant = bigquo;
             exp.Increment();
-            if (digits != null)digits.Decrement();
+            if (digits != null) digits.Decrement();
           }
         }
         int flags = this.helper.GetFlags(thisValue);
@@ -2774,7 +2780,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Reduce(
@@ -3259,10 +3265,10 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='thisValue'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-    /// <param name='other'>A T object.</param>
+    /// <param name='other'>A T object. (3)</param>
     public T Add(T thisValue, T other, PrecisionContext ctx) {
       int thisFlags = this.helper.GetFlags(thisValue);
       int otherFlags = this.helper.GetFlags(other);
@@ -3477,8 +3483,8 @@ namespace PeterO {
     }
 
     /// <summary>Compares a T object with this instance.</summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='decfrac'>A T object.</param>
+    /// <param name='thisValue'>A T object. (2)</param>
+    /// <param name='decfrac'>A T object. (3)</param>
     /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
@@ -3491,7 +3497,7 @@ namespace PeterO {
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
-    /// <param name='decfrac'>A T object.</param>
+    /// <param name='decfrac'>A T object. (2)</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
     public int CompareTo(T thisValue, T decfrac) {

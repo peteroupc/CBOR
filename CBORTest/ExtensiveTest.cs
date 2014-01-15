@@ -29,7 +29,7 @@ namespace CBOR
                PrecisionContext.FlagOverflow|
                PrecisionContext.FlagInvalid|
                PrecisionContext.FlagDivideByZero);
-      if (expected == actual)return;
+      if (expected == actual) { return; }
       Assert.AreEqual((expected&PrecisionContext.FlagInexact) != 0,
                       (actual&PrecisionContext.FlagInexact)!=0,"Inexact: "+str);
       Assert.AreEqual((expected&PrecisionContext.FlagOverflow) != 0,
@@ -43,7 +43,7 @@ namespace CBOR
     }
 
     private bool Contains(string str, string sub) {
-      if (sub.Length == 1)return str.IndexOf(sub[0]) >= 0;
+      if (sub.Length == 1) { return str.IndexOf(sub[0]) >= 0; }
       return str.IndexOf(sub, StringComparison.Ordinal) >= 0;
     }
     private bool StartsWith(string str, string sub) {
@@ -65,20 +65,20 @@ namespace CBOR
     }
 
     private string RoundingString(PrecisionContext ctx, string round) {
-      if (round.Equals(">"))return ".WithRounding(Rounding.Ceiling)";
-      if (round.Equals("<"))return ".WithRounding(Rounding.Floor)";
-      if (round.Equals("0"))return ".WithRounding(Rounding.Down)";
-      if (round.Equals("=0"))return ".WithRounding(Rounding.HalfEven)";
-      if (round.Equals("h>"))return ".WithRounding(Rounding.HalfUp)";
-      if (round.Equals("h<"))return ".WithRounding(Rounding.HalfDown)";
-      if (round.Equals("+"))return ".WithRounding(Rounding.Up)";
-      if (round.Equals("u"))return ".WithRounding(Rounding.Unnecessary)";
+      if (round.Equals(">")) { return ".WithRounding(Rounding.Ceiling)"; }
+      if (round.Equals("<")) { return ".WithRounding(Rounding.Floor)"; }
+      if (round.Equals("0")) { return ".WithRounding(Rounding.Down)"; }
+      if (round.Equals("=0")) { return ".WithRounding(Rounding.HalfEven)"; }
+      if (round.Equals("h>")) { return ".WithRounding(Rounding.HalfUp)"; }
+      if (round.Equals("h<")) { return ".WithRounding(Rounding.HalfDown)"; }
+      if (round.Equals("+")) { return ".WithRounding(Rounding.Up)"; }
+      if (round.Equals("u")) { return ".WithRounding(Rounding.Unnecessary)"; }
       return "";
     }
 
     private static string ConvertOp(string s) {
-      if (s.Equals("S"))return "sNaN";
-      if (s.Equals("Q"))return "NaN";
+      if (s.Equals("S")) { return "sNaN"; }
+      if (s.Equals("Q")) { return "NaN"; }
       return s;
     }
 

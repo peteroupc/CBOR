@@ -10,8 +10,8 @@ using System.Reflection;
 using NUnit.Framework;
 namespace PeterO {
     /// <summary> Description of Runner. </summary>
-    /// <returns></returns>
     /// <param name='args'>A string[] object.</param>
+    /// <returns></returns>
   public class Runner {
     private static bool HasAttribute(Type mi, Type t) {
       foreach (object a in mi.GetCustomAttributes(t, false)) {
@@ -36,7 +36,7 @@ namespace PeterO {
         Console.WriteLine(param);
       }
       new Test.DecimalTest().TestParser();
-      if (args.Length == 0)return;
+      if (args.Length == 0) { return; }
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) continue;

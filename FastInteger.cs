@@ -138,7 +138,7 @@ namespace PeterO {
         digit &= 0xFFFF;
         int carry = 0;
         if (this.wordCount == 0) {
-          if (this.data.Length == 0)this.data = new int[4];
+          if (this.data.Length == 0) this.data = new int[4];
           this.data[0] = 0;
           this.wordCount = 1;
         }
@@ -159,7 +159,7 @@ namespace PeterO {
             int a0b0high = (A0B0 >> 16) & 0xFFFF;
             int tempInt;
             tempInt = A0B0 + carry;
-            if (i == 0)tempInt += digit;
+            if (i == 0) tempInt += digit;
             int result0 = tempInt & 0xFFFF;
             tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) +
               (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
@@ -192,11 +192,11 @@ namespace PeterO {
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
  throw new ArgumentException("Only positive multiplicands are supported");
-}
-        else if (multiplicand != 0) {
+
+  } else if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
-            if (this.data.Length == 0)this.data = new int[4];
+            if (this.data.Length == 0) this.data = new int[4];
             this.data[0] = 0;
             this.wordCount = 1;
           }
@@ -275,7 +275,7 @@ namespace PeterO {
           while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0)
             this.wordCount--;
         } else {
-          if (this.data.Length > 0)this.data[0] = 0;
+          if (this.data.Length > 0) this.data[0] = 0;
           this.wordCount = 0;
         }
         return this;
@@ -296,10 +296,10 @@ namespace PeterO {
       }
 
     /// <summary>Compares a 32-bit signed integer with this instance.</summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
+    /// <param name='val'>A 32-bit signed integer. (2)</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int CompareToInt(int val) {
-        if (val < 0 || this.wordCount > 1)return 1;
+        if (val < 0 || this.wordCount > 1) { return 1; }
         if (this.wordCount == 0) {
           // this value is 0
           return (val == 0) ? 0 : -1;
@@ -319,13 +319,13 @@ namespace PeterO {
         {
         if (other < 0) {
  throw new ArgumentException("Only positive values are supported");
-}
-        else if (other != 0)
+
+  } else if (other != 0)
         {
           unchecked {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
-              if (this.data.Length == 0)this.data = new int[4];
+              if (this.data.Length == 0) this.data = new int[4];
               this.data[0] = 0;
               this.wordCount = 1;
             }
@@ -422,17 +422,16 @@ namespace PeterO {
 
     /// <summary> Not documented yet. </summary>
     /// <param name='augend'> A 32-bit signed integer.</param>
-    /// <returns></returns>
       public MutableNumber Add(int augend) {
         if (augend < 0) {
  throw new ArgumentException("Only positive augends are supported");
-}
-        else if (augend != 0)
+
+  } else if (augend != 0)
         {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {
-            if (this.data.Length == 0)this.data = new int[4];
+            if (this.data.Length == 0) this.data = new int[4];
             this.data[0] = 0;
             this.wordCount = 1;
           }
@@ -503,7 +502,7 @@ namespace PeterO {
     /// <summary> Not documented yet. </summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32() {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return this.smallValue;
         case 1:
@@ -520,7 +519,7 @@ namespace PeterO {
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
     public int CompareTo(FastInteger val) {
-      switch((this.integerMode << 2) | val.integerMode) {
+       switch ((this.integerMode << 2) | val.integerMode) {
           case (0 << 2) | 0:{
             int vsv = val.smallValue;
             return (this.smallValue == vsv) ? 0 :
@@ -544,6 +543,7 @@ namespace PeterO {
           throw new InvalidOperationException();
       }
     }
+
     /// <summary> Not documented yet. </summary>
     /// <returns>A FastInteger object.</returns>
     public FastInteger Abs() {
@@ -774,6 +774,7 @@ namespace PeterO {
       }
       return this;
     }
+
     /// <summary> Sets this object's value to the current value minus the
     /// given integer. </summary>
     /// <param name='val'>The subtrahend.</param>
@@ -833,7 +834,7 @@ namespace PeterO {
         return this;
       } else {
         int sign = bigintVal.Sign;
-        if (sign == 0)return this;
+        if (sign == 0) { return this; }
         // Check if this value fits an int, except if
         // it's MinValue
         if (sign < 0 && bigintVal.CompareTo(Int32MinValue) > 0) {
@@ -846,8 +847,9 @@ namespace PeterO {
         return this.AddBig(bigintVal);
       }
     }
+
     /// <summary> Not documented yet. </summary>
-    /// <param name='val'>A FastInteger object.</param>
+    /// <param name='val'>A FastInteger object. (2)</param>
     /// <returns>A FastInteger object.</returns>
     public FastInteger Add(FastInteger val) {
       BigInteger valValue;
@@ -895,6 +897,7 @@ namespace PeterO {
       }
       return this;
     }
+
     /// <summary> Sets this object's value to the remainder of the current
     /// value divided by the given integer. </summary>
     /// <param name='divisor'>The divisor.</param>
@@ -1062,7 +1065,7 @@ namespace PeterO {
     /// <summary> Not documented yet. </summary>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInInt32() {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return true;
         case 1:
@@ -1078,7 +1081,7 @@ namespace PeterO {
     /// <summary> Converts this object to a text string.</summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return Convert.ToString((int)this.smallValue, System.Globalization.CultureInfo.InvariantCulture);
         case 1:
@@ -1089,10 +1092,11 @@ namespace PeterO {
           return String.Empty;
       }
     }
+
     /// <summary> Not documented yet. </summary>
     public int Sign {
       get {
-        switch(this.integerMode) {
+         switch (this.integerMode) {
           case 0:
             return Math.Sign(this.smallValue);
           case 1:
@@ -1108,7 +1112,7 @@ namespace PeterO {
     /// <summary> Not documented yet. </summary>
     public bool IsValueZero{
       get {
-        switch(this.integerMode) {
+         switch (this.integerMode) {
           case 0:
             return this.smallValue == 0;
           case 1:
@@ -1126,7 +1130,7 @@ namespace PeterO {
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
     public int CompareToInt(int val) {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return (val == this.smallValue) ? 0 : (this.smallValue < val ? -1 : 1);
         case 1:
@@ -1139,7 +1143,7 @@ namespace PeterO {
     }
 
     /// <summary> Not documented yet. </summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
+    /// <param name='val'>A 32-bit signed integer. (2)</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int MinInt32(int val) {
       return this.CompareToInt(val) < 0 ? this.AsInt32() : val;
@@ -1148,7 +1152,7 @@ namespace PeterO {
     /// <summary> Not documented yet. </summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger AsBigInteger() {
-      switch(this.integerMode) {
+       switch (this.integerMode) {
         case 0:
           return BigInteger.valueOf(this.smallValue);
         case 1:
