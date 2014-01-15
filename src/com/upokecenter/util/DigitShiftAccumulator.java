@@ -50,7 +50,6 @@ at: http://peteroupc.github.io/CBOR/
           discardedBitCount=new FastInteger(0);
         return discardedBitCount;
       }
-    private static BigInteger Int32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
     private static BigInteger Ten = BigInteger.TEN;
 
     /**

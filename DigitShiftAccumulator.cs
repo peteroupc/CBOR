@@ -48,7 +48,6 @@ namespace PeterO {
         return discardedBitCount;
       }
     }
-    private static BigInteger Int32MaxValue = (BigInteger)Int32.MaxValue;
     private static BigInteger Ten = (BigInteger)10;
 
     /// <summary> </summary>

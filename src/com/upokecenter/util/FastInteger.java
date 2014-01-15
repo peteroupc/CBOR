@@ -842,7 +842,6 @@ bigrem=divrem[1]; }
     public FastInteger AddBig(BigInteger bigintVal) {
       switch (integerMode) {
           case 0:{
-            int sign = bigintVal.signum();
             if (bigintVal.canFitInInt()) {
               return AddInt(bigintVal.intValue());
             }
