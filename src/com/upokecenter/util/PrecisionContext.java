@@ -89,13 +89,13 @@ at: http://peteroupc.github.io/CBOR/
      */
     public static final int FlagRounded = 2;
     /**
-     * Signals that the result is non-zero and the exponent is lower than
+     * Signals that the result's exponent, before rounding, is lower than
      * the lowest exponent allowed.
      */
     public static final int FlagSubnormal = 4;
     /**
-     * Signals that the result is non-zero, the exponent is lower than the
-     * lowest exponent allowed, and the result was rounded to a different
+     * Signals that the result's exponent, before rounding, is lower than
+     * the lowest exponent allowed, and the result was rounded to a different
      * mathematical value, but as close as possible to the original.
      */
     public static final int FlagUnderflow = 8;
@@ -109,11 +109,11 @@ at: http://peteroupc.github.io/CBOR/
      */
     public static final int FlagClamped = 32;
     /**
-     *
+     * Signals an invalid operation.
      */
     public static final int FlagInvalid = 64;
     /**
-     *
+     * Signals a division of a nonzero number by zero.
      */
     public static final int FlagDivideByZero = 128;
     /**
@@ -300,7 +300,7 @@ at: http://peteroupc.github.io/CBOR/
       exponentMin = exponentMinSmall==0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMinSmall);
     }
     /**
-     * Unlimited precision context. Rounding mode HalfUp.
+     * No specific limit on precision. Rounding mode HalfUp.
      */
 
     public static final PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);

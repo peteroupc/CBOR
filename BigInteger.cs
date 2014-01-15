@@ -3316,11 +3316,6 @@ namespace PeterO {
     /// <param name='divisor'>A BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
     public BigInteger remainder(BigInteger divisor) {
-      if (this.PositiveCompare(divisor) < 0) {
-        if (divisor.IsZero) throw new DivideByZeroException();
-        return this;
-      }
-      BigInteger remainder = new BigInteger();
       int aSize = this.wordCount;
       int bSize = divisor.wordCount;
       if (bSize == 0)
@@ -3332,9 +3327,14 @@ namespace PeterO {
       if (bSize == 1) {
         short shortRemainder = FastRemainder(this.reg, this.wordCount, divisor.reg[0]);
         int smallRemainder = (((int)shortRemainder) & 0xFFFF);
-        if (this.Sign < 0) smallRemainder = -smallRemainder;
+        if (this.negative) smallRemainder = -smallRemainder;
         return new BigInteger().InitializeInt(smallRemainder);
       }
+      if (this.PositiveCompare(divisor) < 0) {
+        if (divisor.IsZero) throw new DivideByZeroException();
+        return this;
+      }
+      BigInteger remainder = new BigInteger();
       aSize += aSize % 2;
       bSize += bSize % 2;
       remainder.reg = new short[RoundupSize((int)bSize)];

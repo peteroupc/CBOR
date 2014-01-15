@@ -83,6 +83,7 @@
     <Content Include="ProfilingSessions\Session20140108_050705.sdps" />
     <Content Include="ProfilingSessions\Session20140108_051758.sdps" />
     <Content Include="ProfilingSessions\Session20140110_220325.sdps" />
+    <Content Include="ProfilingSessions\Session20140114_150647.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

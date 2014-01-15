@@ -43,6 +43,9 @@ namespace Test
           match.Groups[2].ToString();
         return;
       }
+      if(ln.Contains("-- ")){
+        ln=ln.Substring(0,ln.IndexOf("-- ",StringComparison.Ordinal));
+      }
       match=TestLine.Match(ln);
       if(match.Success){
         string name=match.Groups[1].ToString();
@@ -71,6 +74,7 @@ namespace Test
            output.Contains("#")){
           return;
         }
+        if(flags.Contains("Invalid_context"))return;
         PrecisionContext ctx=PrecisionContext.ForPrecision(precision)
           .WithExponentClamp(clamp).WithExponentRange(
             (BigInteger)minexponent,(BigInteger)maxexponent);
@@ -124,7 +128,12 @@ namespace Test
         else if(op.Equals("ln")){
          d3=d1.Log(ctx);
         }
-//        else if(op.Equals("power"))d3=d1.Pow(d2,ctx);
+        else if(op.Equals("log10")){
+         d3=d1.Log10(ctx);
+        }
+        else if(op.Equals("power")){
+          d3=d1.Pow(d2,ctx);
+        }
         else if(op.Equals("squareroot"))d3=d1.SquareRoot(ctx);
         else if(op.Equals("remaindernear"))d3=d1.RemainderNear(d2,ctx);
         else if(op.Equals("nexttoward"))d3=d1.NextToward(d2,ctx);
@@ -139,7 +148,6 @@ namespace Test
         else if(op.Equals("apply"))d3=d1.RoundToPrecision(ctx);
         else if(op.Equals("plus"))d3=d1.Plus(ctx);
         else return;
-        if(flags.Contains("Invalid_context"))return;
         bool invalid=(flags.Contains("Division_impossible") ||
                       flags.Contains("Division_undefined") ||
                       flags.Contains("Invalid_operation"));

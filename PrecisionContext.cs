@@ -84,12 +84,13 @@ namespace PeterO {
     /// either the value or the exponent may have changed from the original.
     /// </summary>
     public const int FlagRounded = 2;
-    /// <summary> Signals that the result is non-zero and the exponent is
-    /// lower than the lowest exponent allowed. </summary>
+    /// <summary> Signals that the result's exponent, before rounding,
+    /// is lower than the lowest exponent allowed. </summary>
     public const int FlagSubnormal = 4;
-    /// <summary> Signals that the result is non-zero, the exponent is lower
-    /// than the lowest exponent allowed, and the result was rounded to a different
-    /// mathematical value, but as close as possible to the original. </summary>
+    /// <summary> Signals that the result's exponent, before rounding,
+    /// is lower than the lowest exponent allowed, and the result was rounded
+    /// to a different mathematical value, but as close as possible to the
+    /// original. </summary>
     public const int FlagUnderflow = 8;
     /// <summary> Signals that the result is non-zero and the exponent is
     /// higher than the highest exponent allowed. </summary>
@@ -97,9 +98,9 @@ namespace PeterO {
     /// <summary> Signals that the exponent was adjusted to fit the exponent
     /// range. </summary>
     public const int FlagClamped = 32;
-    /// <summary> </summary>
+    /// <summary> Signals an invalid operation. </summary>
     public const int FlagInvalid = 64;
-    /// <summary> </summary>
+    /// <summary> Signals a division of a nonzero number by zero. </summary>
     public const int FlagDivideByZero = 128;
     /// <summary> Gets the flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be
@@ -266,7 +267,7 @@ namespace PeterO {
       exponentMax = exponentMaxSmall==0 ? BigInteger.Zero : (BigInteger)exponentMaxSmall;
       exponentMin = exponentMinSmall==0 ? BigInteger.Zero : (BigInteger)exponentMinSmall;
     }
-    /// <summary> Unlimited precision context. Rounding mode HalfUp.</summary>
+    /// <summary> No specific limit on precision. Rounding mode HalfUp.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",

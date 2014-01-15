@@ -35,6 +35,8 @@ namespace PeterO {
         param=args[0];
         Console.WriteLine(param);
       }
+      new Test.DecimalTest().TestParser();
+      if(args.Length==0)return;
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) continue;
