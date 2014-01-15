@@ -23,8 +23,9 @@ import java.io.*;
   public final class BEncoding {
 private BEncoding(){}
     private static void writeUtf8(String s, OutputStream stream) throws IOException {
-      if (DataUtilities.WriteUtf8(s, stream, false) != 0)
-        throw new CBORException("invalid surrogate");
+      if (DataUtilities.WriteUtf8(s, stream, false) != 0) {
+ throw new CBORException("invalid surrogate");
+}
     }
     private static CBORObject readDictionary(InputStream stream) throws IOException {
       CBORObject obj = CBORObject.NewMap();
@@ -44,8 +45,9 @@ private BEncoding(){}
       boolean start = true;
       while (true) {
         int c = stream.read();
-        if (c < 0)
-          throw new CBORException("Premature end of data");
+        if (c < 0) {
+ throw new CBORException("Premature end of data");
+}
         if (c >= (int)'0' && c <= (int)'9') {
           builder.append((char)c);
           start = false;
@@ -98,8 +100,9 @@ private BEncoding(){}
       }
       while (true) {
         int c = stream.read();
-        if (c < 0)
-          throw new CBORException("Premature end of data");
+        if (c < 0) {
+ throw new CBORException("Premature end of data");
+}
         if (c >= (int)'0' && c <= (int)'9') {
           builder.append((char)c);
         } else if (c == (int)':') {
@@ -135,8 +138,9 @@ private BEncoding(){}
       } else if (obj.getType() == CBORType.TextString) {
         String s = obj.AsString();
         long length = DataUtilities.GetUtf8Length(s, false);
-        if (length < 0)
-          throw new CBORException("invalid String");
+        if (length < 0) {
+ throw new CBORException("invalid String");
+}
         writeUtf8(Long.toString((long)length), stream);
         stream.write(((byte)((byte)':')));
         writeUtf8(s, stream);
@@ -164,8 +168,9 @@ private BEncoding(){}
             String key = entry.getKey();
             CBORObject value = entry.getValue();
             long length = DataUtilities.GetUtf8Length(key, false);
-            if (length < 0)
-              throw new CBORException("invalid String");
+            if (length < 0) {
+ throw new CBORException("invalid String");
+}
             writeUtf8(Long.toString((long)length), stream);
             stream.write(((byte)((byte)':')));
             writeUtf8(key, stream);
@@ -177,8 +182,9 @@ private BEncoding(){}
           for(CBORObject key : obj.getKeys()) {
             String str = key.AsString();
             long length = DataUtilities.GetUtf8Length(str, false);
-            if (length < 0)
-              throw new CBORException("invalid String");
+            if (length < 0) {
+ throw new CBORException("invalid String");
+}
             writeUtf8(Long.toString((long)length), stream);
             stream.write(((byte)((byte)':')));
             writeUtf8(str, stream);
@@ -188,15 +194,16 @@ private BEncoding(){}
         }
       } else if (obj.getType() == CBORType.Array) {
         stream.write(((byte)((byte)'l')));
-        for (int i = 0; i < obj.size(); i++) {
+        for (int i = 0; i < obj.size(); ++i) {
           Write(obj.get(i), stream);
         }
         stream.write(((byte)((byte)'e')));
       } else {
         String str = obj.ToJSONString();
         long length = DataUtilities.GetUtf8Length(str, false);
-        if (length < 0)
-          throw new CBORException("invalid String");
+        if (length < 0) {
+ throw new CBORException("invalid String");
+}
         writeUtf8(Long.toString((long)length), stream);
         stream.write(((byte)((byte)':')));
         writeUtf8(str, stream);

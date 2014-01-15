@@ -20,11 +20,11 @@ namespace PeterO {
     /// <summary> Gets this object's exponent. This object's value will
     /// be an integer if the exponent is positive or zero. </summary>
     public BigInteger Exponent {
-      get { return exponent; }
+      get { return this.exponent; }
     }
     /// <summary> Gets this object's unscaled value. </summary>
     public BigInteger Mantissa {
-      get { return mantissa; }
+      get { return this.mantissa; }
     }
     #region Equals and GetHashCode implementation
     /// <summary> Determines whether this object's mantissa and exponent
@@ -39,11 +39,11 @@ namespace PeterO {
         this.mantissa.Equals(otherValue.mantissa);
     }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='other'>A DecimalFraction object.</param>
     /// <returns>A Boolean object.</returns>
     public bool Equals(DecimalFraction other) {
-      return EqualsInternal(other);
+      return this.EqualsInternal(other);
     }
     /// <summary> Determines whether this object's mantissa and exponent
     /// are equal to those of another object and that other object is a decimal
@@ -51,15 +51,15 @@ namespace PeterO {
     /// <returns>True if the objects are equal; false otherwise.</returns>
     /// <param name='obj'>An arbitrary object.</param>
     public override bool Equals(object obj) {
-      return EqualsInternal(obj as DecimalFraction);
+      return this.EqualsInternal(obj as DecimalFraction);
     }
     /// <summary> Calculates this object's hash code. </summary>
-    /// <returns>This object&apos;s hash code.</returns>
+    /// <returns>This object&apos; s hash code.</returns>
     public override int GetHashCode() {
       int hashCode = 0;
       unchecked {
-        hashCode += 1000000007 * exponent.GetHashCode();
-        hashCode += 1000000009 * mantissa.GetHashCode();
+        hashCode += 1000000007 * this.exponent.GetHashCode();
+        hashCode += 1000000009 * this.mantissa.GetHashCode();
       }
       return hashCode;
     }
@@ -97,50 +97,50 @@ namespace PeterO {
 
     private sealed class DecimalMathHelper : IRadixMathHelper<DecimalFraction> {
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetRadix() {
         return 10;
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='value'>A DecimalFraction object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetSign(DecimalFraction value) {
         return value.Sign;
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='value'>A DecimalFraction object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger GetMantissa(DecimalFraction value) {
         return value.mantissa;
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='value'>A DecimalFraction object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger GetExponent(DecimalFraction value) {
         return value.exponent;
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='e1'>A BigInteger object.</param>
     /// <param name='e2'>A BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
-        if (mantissa.Sign == 0) return BigInteger.Zero;
+        if (mantissa.Sign == 0) { return BigInteger.Zero; }
         FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
         if (diff.CanFitInInt32()) {
-          mantissa *= (BigInteger)(DecimalUtility.FindPowerOfTen(diff.AsInt32()));
+          mantissa *= (BigInteger)DecimalUtility.FindPowerOfTen(diff.AsInt32());
         } else {
-          mantissa *= (BigInteger)(DecimalUtility.FindPowerOfTenFromBig(diff.AsBigInteger()));
+          mantissa *= (BigInteger)DecimalUtility.FindPowerOfTenFromBig(diff.AsBigInteger());
         }
         return mantissa;
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='lastDigit'>A 32-bit signed integer.</param>
     /// <param name='olderDigits'>A 32-bit signed integer.</param>
     /// <returns>An IShiftAccumulator object.</returns>
@@ -149,14 +149,14 @@ namespace PeterO {
         return new DigitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new DigitShiftAccumulator(bigint, 0, 0);
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='numerator'>A BigInteger object.</param>
     /// <param name='denominator'>A BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
@@ -181,37 +181,37 @@ namespace PeterO {
         return denominator.CompareTo(BigInteger.One) == 0;
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='bigint'>A BigInteger object.</param>
     /// <param name='power'>A FastInteger object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
-        if (power.Sign <= 0) return bigint;
-        if (bigint.IsZero) return bigint;
+        if (power.Sign <= 0) { return bigint; }
+        if (bigint.IsZero) { return bigint; }
         if (bigint.CompareTo(BigInteger.One) != 0) {
           if (power.CanFitInInt32()) {
-            bigint *= (BigInteger)(DecimalUtility.FindPowerOfTen(power.AsInt32()));
+            bigint *= (BigInteger)DecimalUtility.FindPowerOfTen(power.AsInt32());
           } else {
-            bigint *= (BigInteger)(DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger()));
+            bigint *= (BigInteger)DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger());
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return (DecimalUtility.FindPowerOfTen(power.AsInt32()));
+            return DecimalUtility.FindPowerOfTen(power.AsInt32());
           } else {
-            return (DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger()));
+            return DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger());
           }
         }
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='value'>A DecimalFraction object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(DecimalFraction value) {
         return value.mantissa.Sign < 0 ? BigNumberFlags.FlagNegative : 0;
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='exponent'>A BigInteger object.</param>
     /// <param name='flags'>A 32-bit signed integer.</param>
@@ -223,19 +223,19 @@ namespace PeterO {
         return new DecimalFraction(mantissa, exponent);
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteOnly;
       }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A DecimalFraction object.</returns>
       public DecimalFraction ValueOf(int val) {
-        if (val == 0) return Zero;
-        if (val == 1) return One;
-        if (val == -1) return MinusOne;
+        if (val == 0) { return Zero; }
+        if (val == 1) { return One; }
+        if (val == -1) { return MinusOne; }
         return FromInt64(val);
       }
     }
@@ -280,7 +280,8 @@ namespace PeterO {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
     /// number to a string. </summary>
-    /// <returns>A decimal fraction with the same value as &quot;flt&quot;.</returns>
+    /// <returns>A decimal fraction with the same value as &quot; flt&quot;
+    /// .</returns>
     /// <exception cref='OverflowException'> "flt" is infinity or not-a-number.</exception>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     public static DecimalFraction FromSingle(float flt) {
@@ -302,7 +303,7 @@ namespace PeterO {
     /// number, not an approximation, as is often the case by converting the
     /// number to a string. </summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
-    /// <returns>A decimal fraction with the same value as &quot;dbl&quot;</returns>
+    /// <returns>A decimal fraction with the same value as &quot; dbl&quot;</returns>
     /// <exception cref='OverflowException'> "dbl" is infinity or not-a-number.</exception>
     public static DecimalFraction FromDouble(double dbl) {
       ExtendedDecimal ed = ExtendedDecimal.FromDouble(dbl);
@@ -324,7 +325,7 @@ namespace PeterO {
     /// method. </summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
-      return ToStringInternal(0);
+      return this.ToStringInternal(0);
     }
     /// <summary> Same as toString(), except that when an exponent is used
     /// it will be a multiple of 3. The format of the return value follows the
@@ -332,14 +333,14 @@ namespace PeterO {
     /// </summary>
     /// <returns>A string object.</returns>
     public string ToEngineeringString() {
-      return ToStringInternal(1);
+      return this.ToStringInternal(1);
     }
     /// <summary> Converts this value to a string, but without an exponent
     /// part. The format of the return value follows the format of the java.math.BigDecimal.toPlainString()
     /// method. </summary>
     /// <returns>A string object.</returns>
     public string ToPlainString() {
-      return ToStringInternal(2);
+      return this.ToStringInternal(2);
     }
 
     /// <summary> Represents the number 1. </summary>
@@ -363,6 +364,7 @@ namespace PeterO {
       "Microsoft.Security","CA2104",
       Justification="DecimalFraction is immutable")]
 #endif
+
     public static readonly DecimalFraction Ten = new DecimalFraction((BigInteger)10, BigInteger.Zero);
 
     //----------------------------------------------------------------
@@ -371,26 +373,26 @@ namespace PeterO {
     /// if zero. </summary>
     public int Sign {
       get {
-        return mantissa.Sign;
+        return this.mantissa.Sign;
       }
     }
     /// <summary> Gets whether this object's value equals 0. </summary>
     public bool IsZero {
       get {
-        return mantissa.IsZero;
+        return this.mantissa.IsZero;
       }
     }
     /// <summary> Gets the absolute value of this object. </summary>
     /// <returns>A DecimalFraction object.</returns>
     public DecimalFraction Abs() {
-      return Abs(null);
+      return this.Abs(null);
     }
 
     /// <summary> Gets an object with the same value as this one, but with the
     /// sign reversed. </summary>
     /// <returns>A DecimalFraction object.</returns>
     public DecimalFraction Negate() {
-      return Negate(null);
+      return this.Negate(null);
     }
 
     /// <summary> Divides this object by another decimal fraction and returns
@@ -402,7 +404,7 @@ namespace PeterO {
     /// <exception cref='ArithmeticException'>The result would have
     /// a nonterminating decimal expansion.</exception>
     public DecimalFraction Divide(DecimalFraction divisor) {
-      return Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
+      return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
 
     /// <summary> Divides this object by another decimal fraction and returns
@@ -416,7 +418,7 @@ namespace PeterO {
     /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
     /// and the result is not exact.</exception>
     public DecimalFraction DivideToSameExponent(DecimalFraction divisor, Rounding rounding) {
-      return DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
+      return this.DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two DecimalFraction objects, and returns the
@@ -427,9 +429,9 @@ namespace PeterO {
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
     public DecimalFraction DivideToIntegerNaturalScale(
-      DecimalFraction divisor
-     ) {
-      return DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
+      DecimalFraction divisor)
+      {
+      return this.DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
 
     /// <summary> Removes trailing zeros from this object's mantissa. For
@@ -447,24 +449,25 @@ namespace PeterO {
       PrecisionContext ctx) {
       return math.Reduce(this, ctx);
     }
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='divisor'>A DecimalFraction object.</param>
     /// <returns>A DecimalFraction object.</returns>
     public DecimalFraction RemainderNaturalScale(
-      DecimalFraction divisor
-     ) {
-      return RemainderNaturalScale(divisor, null);
+      DecimalFraction divisor)
+      {
+      return this.RemainderNaturalScale(divisor, null);
     }
 
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='divisor'>A DecimalFraction object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A DecimalFraction object.</returns>
     public DecimalFraction RemainderNaturalScale(
       DecimalFraction divisor,
-      PrecisionContext ctx
-     ) {
-      return Subtract(this.DivideToIntegerNaturalScale(divisor, null)
+      PrecisionContext ctx)
+      {
+      return this.Subtract(
+this.DivideToIntegerNaturalScale(divisor, null)
                       .Multiply(divisor, null), ctx);
     }
 
@@ -492,9 +495,9 @@ namespace PeterO {
     public DecimalFraction DivideToExponent(
       DecimalFraction divisor,
       long desiredExponentSmall,
-      PrecisionContext ctx
-     ) {
-      return DivideToExponent(divisor, ((BigInteger)desiredExponentSmall), ctx);
+      PrecisionContext ctx)
+      {
+      return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, ctx);
     }
 
     /// <summary>Divides two DecimalFraction objects, and gives a particular
@@ -514,9 +517,9 @@ namespace PeterO {
     public DecimalFraction DivideToExponent(
       DecimalFraction divisor,
       long desiredExponentSmall,
-      Rounding rounding
-     ) {
-      return DivideToExponent(divisor, ((BigInteger)desiredExponentSmall), PrecisionContext.ForRounding(rounding));
+      Rounding rounding)
+      {
+      return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two DecimalFraction objects, and gives a particular
@@ -561,9 +564,9 @@ namespace PeterO {
     public DecimalFraction DivideToExponent(
       DecimalFraction divisor,
       BigInteger desiredExponent,
-      Rounding rounding
-     ) {
-      return DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
+      Rounding rounding)
+      {
+      return this.DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary> Finds the absolute value of this object (if it's negative,
@@ -575,9 +578,9 @@ namespace PeterO {
     /// <returns>The absolute value of this object.</returns>
     public DecimalFraction Abs(PrecisionContext context) {
       if (this.Sign < 0) {
-        return Negate(context);
+        return this.Negate(context);
       } else {
-        return RoundToPrecision(context);
+        return this.RoundToPrecision(context);
       }
     }
 
@@ -598,8 +601,8 @@ namespace PeterO {
     /// <param name='decfrac'>A DecimalFraction object.</param>
     /// <returns>The sum of the two objects.</returns>
     public DecimalFraction Add(DecimalFraction decfrac) {
-      if ((decfrac) == null) throw new ArgumentNullException("decfrac");
-      return Add(decfrac, PrecisionContext.Unlimited);
+      if (decfrac == null) { throw new ArgumentNullException("decfrac"); }
+      return this.Add(decfrac, PrecisionContext.Unlimited);
     }
 
     /// <summary>Subtracts a DecimalFraction object from this instance
@@ -607,7 +610,7 @@ namespace PeterO {
     /// <param name='decfrac'>A DecimalFraction object.</param>
     /// <returns>The difference of the two objects.</returns>
     public DecimalFraction Subtract(DecimalFraction decfrac) {
-      return Subtract(decfrac, null);
+      return this.Subtract(decfrac, null);
     }
 
     /// <summary>Subtracts a DecimalFraction object from this instance.</summary>
@@ -620,8 +623,8 @@ namespace PeterO {
     /// is given, returns null if the result of the rounding overflowed the
     /// exponent range.</returns>
     public DecimalFraction Subtract(DecimalFraction decfrac, PrecisionContext ctx) {
-      if ((decfrac) == null) throw new ArgumentNullException("decfrac");
-      return Add(decfrac.Negate(null), ctx);
+      if (decfrac == null) { throw new ArgumentNullException("decfrac"); }
+      return this.Add(decfrac.Negate(null), ctx);
     }
     /// <summary> Multiplies two decimal fractions. The resulting scale
     /// will be the sum of the scales of the two decimal fractions. </summary>
@@ -630,8 +633,8 @@ namespace PeterO {
     /// context is given, returns null if the result of the rounding overflowed
     /// the exponent range.</returns>
     public DecimalFraction Multiply(DecimalFraction decfrac) {
-      if ((decfrac) == null) throw new ArgumentNullException("decfrac");
-      return Multiply(decfrac, PrecisionContext.Unlimited);
+      if (decfrac == null) { throw new ArgumentNullException("decfrac"); }
+      return this.Multiply(decfrac, PrecisionContext.Unlimited);
     }
 
     /// <summary> Multiplies by one decimal fraction, and then adds another
@@ -639,9 +642,10 @@ namespace PeterO {
     /// <param name='multiplicand'>The value to multiply.</param>
     /// <param name='augend'>The value to add.</param>
     /// <returns>The result this * multiplicand + augend.</returns>
-    public DecimalFraction MultiplyAndAdd(DecimalFraction multiplicand,
+    public DecimalFraction MultiplyAndAdd(
+DecimalFraction multiplicand,
                                           DecimalFraction augend) {
-      return MultiplyAndAdd(multiplicand, augend, null);
+      return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
 
@@ -654,8 +658,8 @@ namespace PeterO {
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision,
     /// rounding, and exponent range of the integer part of the result. Flags
-    /// will be set on the given context only if the context&apos;s HasFlags
-    /// is true and the integer part of the result doesn&apos;t fit the precision
+    /// will be set on the given context only if the context&apos; s HasFlags
+    /// is true and the integer part of the result doesn&apos; t fit the precision
     /// and exponent range without rounding.</param>
     /// <returns>The integer part of the quotient of the two objects. If a
     /// precision context is given, returns null if the result of the rounding
@@ -744,13 +748,13 @@ namespace PeterO {
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the largest value that&apos;s less than the given
+    /// <returns>Returns the largest value that&apos; s less than the given
     /// value. Returns null if the result is negative infinity.</returns>
     /// <exception cref='System.ArgumentException'>"ctx" is null, the
     /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
     public DecimalFraction NextMinus(
-      PrecisionContext ctx
-     ) {
+      PrecisionContext ctx)
+      {
       return math.NextMinus(this, ctx);
     }
 
@@ -760,13 +764,13 @@ namespace PeterO {
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the smallest value that&apos;s greater than the
+    /// <returns>Returns the smallest value that&apos; s greater than the
     /// given value. Returns null if the result is positive infinity.</returns>
     /// <exception cref='System.ArgumentException'>"ctx" is null, the
     /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
     public DecimalFraction NextPlus(
-      PrecisionContext ctx
-     ) {
+      PrecisionContext ctx)
+      {
       return math.NextPlus(this, ctx);
     }
 
@@ -777,15 +781,15 @@ namespace PeterO {
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the next value that is closer to the other object&apos;s
-    /// value than this object&apos;s value. Returns null if the result is
-    /// infinity.</returns>
+    /// <returns>Returns the next value that is closer to the other object&apos;
+    /// s value than this object&apos; s value. Returns null if the result
+    /// is infinity.</returns>
     /// <exception cref='System.ArgumentException'>"ctx" is null, the
     /// precision is 0, or "ctx" has an unlimited exponent range.</exception>
     public DecimalFraction NextToward(
       DecimalFraction otherValue,
-      PrecisionContext ctx
-     ) {
+      PrecisionContext ctx)
+      {
       return math.NextToward(this, otherValue, ctx);
     }
 
@@ -808,8 +812,8 @@ namespace PeterO {
     /// result is not exact.</exception>
     public DecimalFraction Divide(
       DecimalFraction divisor,
-      PrecisionContext ctx
-     ) {
+      PrecisionContext ctx)
+      {
       return math.Divide(this, divisor, ctx);
     }
 
@@ -857,9 +861,9 @@ namespace PeterO {
     /// because two different decimal fractions with the same mathematical
     /// value, but different exponents, will compare as equal.</para>
     /// </summary>
-    /// <returns>Less than 0 if this object&apos;s value is less than the
-    /// other value, or greater than 0 if this object&apos;s value is greater
-    /// than the other value or if &quot;other&quot; is null, or 0 if both values
+    /// <returns>Less than 0 if this object&apos; s value is less than the
+    /// other value, or greater than 0 if this object&apos; s value is greater
+    /// than the other value or if &quot; other&quot; is null, or 0 if both values
     /// are equal.</returns>
     /// <param name='other'>A DecimalFraction object.</param>
     public int CompareTo(
@@ -917,7 +921,7 @@ namespace PeterO {
     /// an exponent range.</exception>
     public DecimalFraction Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return Quantize(new DecimalFraction(BigInteger.One, desiredExponent), ctx);
+      return this.Quantize(new DecimalFraction(BigInteger.One, desiredExponent), ctx);
     }
 
     /// <summary> Returns a decimal fraction with the same value but a new
@@ -937,7 +941,7 @@ namespace PeterO {
     /// <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
     public DecimalFraction Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize(new DecimalFraction(BigInteger.One, (BigInteger)desiredExponentSmall), ctx);
+      return this.Quantize(new DecimalFraction(BigInteger.One, (BigInteger)desiredExponentSmall), ctx);
     }
 
     /// <summary> Returns a decimal fraction with the same value as this object
@@ -1037,7 +1041,7 @@ namespace PeterO {
     /// are in addition to the pre-existing flags). Can be null, in which case
     /// the default rounding mode is HalfEven.</param>
     /// <returns>A decimal fraction rounded to the closest value representable
-    /// in the given precision, meaning if the result can&apos;t fit the precision,
+    /// in the given precision, meaning if the result can&apos; t fit the precision,
     /// additional digits are discarded to make it fit. If a precision context
     /// is given, returns null if the result of the rounding overflowed the
     /// exponent range.</returns>
@@ -1081,9 +1085,9 @@ namespace PeterO {
     /// the given rounding mode and range of exponent. </summary>
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. Can be null.</param>
-    /// <returns>The closest value to this object&apos;s value, rounded
+    /// <returns>The closest value to this object&apos; s value, rounded
     /// to the specified precision. Returns the same value as this object
-    /// if &quot;context&quot; is null or the precision and exponent range
+    /// if &quot; context&quot; is null or the precision and exponent range
     /// are unlimited. If a precision context is given, returns null if the
     /// result of the rounding overflowed the exponent range.</returns>
     public DecimalFraction RoundToPrecision(
@@ -1096,9 +1100,9 @@ namespace PeterO {
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. The precision is interpreted as the maximum
     /// bit length of the mantissa. Can be null.</param>
-    /// <returns>The closest value to this object&apos;s value, rounded
+    /// <returns>The closest value to this object&apos; s value, rounded
     /// to the specified precision. Returns the same value as this object
-    /// if &quot;context&quot; is null or the precision and exponent range
+    /// if &quot; context&quot; is null or the precision and exponent range
     /// are unlimited. Returns null if the result of the rounding overflowed
     /// the exponent range.</returns>
     public DecimalFraction RoundToBinaryPrecision(

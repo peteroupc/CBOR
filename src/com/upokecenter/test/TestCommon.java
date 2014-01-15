@@ -17,36 +17,36 @@ import java.io.*;
 private TestCommon(){}
 
     public static void AssertBigIntegersEqual(String a, BigInteger b) {
-      Assert.assertEquals(a,b.toString());
-      BigInteger a2=BigInteger.fromString(a);
-      Assert.assertEquals(a2,b);
-      AssertEqualsHashCode(a2,b);
+      Assert.assertEquals(a, b.toString());
+      BigInteger a2 = BigInteger.fromString(a);
+      Assert.assertEquals(a2, b);
+      AssertEqualsHashCode(a2, b);
     }
     public static void DoTestDivide(String dividend, String divisor, String result) {
-      BigInteger bigintA=BigInteger.fromString(dividend);
-      BigInteger bigintB=BigInteger.fromString(divisor);
-      if(bigintB.signum()==0){
+      BigInteger bigintA = BigInteger.fromString(dividend);
+      BigInteger bigintB = BigInteger.fromString(divisor);
+      if (bigintB.signum()==0) {
         try { bigintA.divide(bigintB); Assert.fail("Expected divide by 0 error");
-        } catch(Exception ex){ }
+        } catch(Exception ex) { }
       } else {
-        AssertBigIntegersEqual(result,bigintA.divide(bigintB));
+        AssertBigIntegersEqual(result, bigintA.divide(bigintB));
       }
     }
     public static void DoTestRemainder(String dividend, String divisor, String result) {
-      BigInteger bigintA=BigInteger.fromString(dividend);
-      BigInteger bigintB=BigInteger.fromString(divisor);
-      if(bigintB.signum()==0){
+      BigInteger bigintA = BigInteger.fromString(dividend);
+      BigInteger bigintB = BigInteger.fromString(divisor);
+      if (bigintB.signum()==0) {
         try { bigintA.remainder(bigintB); Assert.fail("Expected divide by 0 error");
-        } catch(Exception ex){ }
+        } catch(Exception ex) { }
       } else {
-        AssertBigIntegersEqual(result,(bigintA.remainder(bigintB)));
+        AssertBigIntegersEqual(result, (bigintA.remainder(bigintB)));
       }
     }
     public static void DoTestDivideAndRemainder(String dividend, String divisor, String result, String rem) {
-      BigInteger bigintA=BigInteger.fromString(dividend);
-      BigInteger bigintB=BigInteger.fromString(divisor);
+      BigInteger bigintA = BigInteger.fromString(dividend);
+      BigInteger bigintB = BigInteger.fromString(divisor);
       BigInteger rembi;
-      if(bigintB.signum()==0){
+      if (bigintB.signum()==0) {
         try {
           BigInteger quo;
 {
@@ -54,67 +54,67 @@ BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
 quo=divrem[0];
 rembi=divrem[1]; }
           Assert.fail("Expected divide by 0 error");
-        } catch(Exception ex){ }
+        } catch(Exception ex) { }
       } else {
         BigInteger quo;
 {
 BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
 quo=divrem[0];
 rembi=divrem[1]; }
-        AssertBigIntegersEqual(result,quo);
-        AssertBigIntegersEqual(rem,rembi);
+        AssertBigIntegersEqual(result, quo);
+        AssertBigIntegersEqual(rem, rembi);
       }
     }
     public static void DoTestMultiply(String m1, String m2, String result) {
-      BigInteger bigintA=BigInteger.fromString(m1);
-      BigInteger bigintB=BigInteger.fromString(m2);
-      AssertBigIntegersEqual(result,(bigintA.multiply(bigintB)));
+      BigInteger bigintA = BigInteger.fromString(m1);
+      BigInteger bigintB = BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result, (bigintA.multiply(bigintB)));
     }
     public static void DoTestAdd(String m1, String m2, String result) {
-      BigInteger bigintA=BigInteger.fromString(m1);
-      BigInteger bigintB=BigInteger.fromString(m2);
-      AssertBigIntegersEqual(result,(bigintA.add(bigintB)));
+      BigInteger bigintA = BigInteger.fromString(m1);
+      BigInteger bigintB = BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result, (bigintA.add(bigintB)));
     }
     public static void DoTestSubtract(String m1, String m2, String result) {
-      BigInteger bigintA=BigInteger.fromString(m1);
-      BigInteger bigintB=BigInteger.fromString(m2);
-      AssertBigIntegersEqual(result,(bigintA.subtract(bigintB)));
+      BigInteger bigintA = BigInteger.fromString(m1);
+      BigInteger bigintB = BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result, (bigintA.subtract(bigintB)));
     }
     public static void DoTestPow(String m1, int m2, String result) {
-      BigInteger bigintA=BigInteger.fromString(m1);
-      AssertBigIntegersEqual(result,(bigintA.pow(m2)));
+      BigInteger bigintA = BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result, (bigintA.pow(m2)));
     }
     public static void DoTestShiftLeft(String m1, int m2, String result) {
-      BigInteger bigintA=BigInteger.fromString(m1);
-      AssertBigIntegersEqual(result,(bigintA.shiftLeft(m2)));
-      AssertBigIntegersEqual(result,(bigintA.shiftRight(-m2)));
+      BigInteger bigintA = BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result, (bigintA.shiftLeft(m2)));
+      AssertBigIntegersEqual(result, (bigintA.shiftRight(-m2)));
     }
     public static void DoTestShiftRight(String m1, int m2, String result) {
-      BigInteger bigintA=BigInteger.fromString(m1);
-      AssertBigIntegersEqual(result,(bigintA.shiftRight(m2)));
-      AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
+      BigInteger bigintA = BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result, (bigintA.shiftRight(m2)));
+      AssertBigIntegersEqual(result, (bigintA.shiftLeft(-m2)));
     }
 
     public static void AssertDecFrac(ExtendedDecimal d3, String output, String name) {
-      if(output==null && d3!=null)Assert.fail(name+": d3 must be null");
-      if(output!=null && !d3.toString().equals(output)){
-        ExtendedDecimal d4=ExtendedDecimal.FromString(output);
-        Assert.assertEquals(output,d3.toString(),(
+      if (output==null && d3!=null)Assert.fail(name+": d3 must be null");
+      if (output != null && !d3.toString().equals(output)) {
+        ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
+        Assert.assertEquals(output, d3.toString(), (
           name+": expected: ["+(d4.getUnsignedMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
           "but was: ["+(d3.getUnsignedMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
-         ));   }
+         )); }
     }
 
     public static void AssertFlags(int expected, int actual, String name) {
-      if(expected==actual)return;
-      Assert.assertEquals(name+": Inexact",(expected&PrecisionContext.FlagInexact)!=0,(actual&PrecisionContext.FlagInexact)!=0);
-      Assert.assertEquals(name+": Rounded",(expected&PrecisionContext.FlagRounded)!=0,(actual&PrecisionContext.FlagRounded)!=0);
-      Assert.assertEquals(name+": Subnormal",(expected&PrecisionContext.FlagSubnormal)!=0,(actual&PrecisionContext.FlagSubnormal)!=0);
-      Assert.assertEquals(name+": Overflow",(expected&PrecisionContext.FlagOverflow)!=0,(actual&PrecisionContext.FlagOverflow)!=0);
-      Assert.assertEquals(name+": Underflow",(expected&PrecisionContext.FlagUnderflow)!=0,(actual&PrecisionContext.FlagUnderflow)!=0);
-      Assert.assertEquals(name+": Clamped",(expected&PrecisionContext.FlagClamped)!=0,(actual&PrecisionContext.FlagClamped)!=0);
-      Assert.assertEquals(name+": Invalid",(expected&PrecisionContext.FlagInvalid)!=0,(actual&PrecisionContext.FlagInvalid)!=0);
-      Assert.assertEquals(name+": DivideByZero",(expected&PrecisionContext.FlagDivideByZero)!=0,(actual&PrecisionContext.FlagDivideByZero)!=0);
+      if (expected == actual)return;
+      Assert.assertEquals(name+": Inexact",(expected&PrecisionContext.FlagInexact) != 0,(actual&PrecisionContext.FlagInexact)!=0);
+      Assert.assertEquals(name+": Rounded",(expected&PrecisionContext.FlagRounded) != 0,(actual&PrecisionContext.FlagRounded)!=0);
+      Assert.assertEquals(name+": Subnormal",(expected&PrecisionContext.FlagSubnormal) != 0,(actual&PrecisionContext.FlagSubnormal)!=0);
+      Assert.assertEquals(name+": Overflow",(expected&PrecisionContext.FlagOverflow) != 0,(actual&PrecisionContext.FlagOverflow)!=0);
+      Assert.assertEquals(name+": Underflow",(expected&PrecisionContext.FlagUnderflow) != 0,(actual&PrecisionContext.FlagUnderflow)!=0);
+      Assert.assertEquals(name+": Clamped",(expected&PrecisionContext.FlagClamped) != 0,(actual&PrecisionContext.FlagClamped)!=0);
+      Assert.assertEquals(name+": Invalid",(expected&PrecisionContext.FlagInvalid) != 0,(actual&PrecisionContext.FlagInvalid)!=0);
+      Assert.assertEquals(name+": DivideByZero",(expected&PrecisionContext.FlagDivideByZero) != 0,(actual&PrecisionContext.FlagDivideByZero)!=0);
     }
 
     private static CBORObject FromBytesA(byte[] b) {
@@ -127,8 +127,9 @@ ms=new ByteArrayInputStream(b);
 int startingAvailable=ms.available();
 
         CBORObject o = CBORObject.Read(ms);
-        if ((startingAvailable-ms.available()) != startingAvailable)
-          throw new CBORException("not at EOF");
+        if ((startingAvailable-ms.available()) != startingAvailable) {
+ throw new CBORException("not at EOF");
+}
         return o;
 }
 finally {
@@ -166,11 +167,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     }
 
     public static void TestNumber(CBORObject o) {
-      if(o.getType()!= CBORType.Number){
+      if (o.getType() != CBORType.Number) {
         return;
       }
-      if(o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
-         o.IsNaN()){
+      if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
+         o.IsNaN()) {
         try { o.AsByte(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw new IllegalStateException("",ex); }
         try { o.AsInt16(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw new IllegalStateException("",ex); }
         try { o.AsInt32(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw new IllegalStateException("",ex); }
@@ -180,7 +181,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         try { o.AsBigInteger(); } catch(ArithmeticException ex){ } catch(Exception ex){ Assert.fail("Object: "+o+", "+ex.toString()); throw new IllegalStateException("",ex); }
         return;
       }
-      BigInteger df=o.AsExtendedDecimal().ToBigInteger();
+      BigInteger df = o.AsExtendedDecimal().ToBigInteger();
       try { o.AsBigInteger(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); throw new IllegalStateException("",ex); }
       try { o.AsSingle(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); throw new IllegalStateException("",ex); }
       try { o.AsDouble(); } catch(Exception ex){ Assert.fail("Object: "+o+", int: "+df+", "+ex.toString()); throw new IllegalStateException("",ex); }

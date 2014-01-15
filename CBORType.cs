@@ -6,6 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 using System;
+
 namespace PeterO {
     /// <summary> Represents a type that a CBOR object can have. </summary>
   public enum CBORType {

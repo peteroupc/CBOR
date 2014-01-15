@@ -29,13 +29,13 @@ namespace PeterO
       (BigInteger)7450580596923828125L
     };
 
-    internal static int ShiftLeftOne(int[] arr){
+    internal static int ShiftLeftOne(int[] arr) {
       unchecked {
-        int carry=0;
-        for(int i=0;i<arr.Length;i++){
-          int item=arr[i];
-          arr[i]=(int)(arr[i]<<1)|(int)carry;
-          carry=((item>>31)!=0) ? 1 : 0;
+        int carry = 0;
+        for (int i = 0; i < arr.Length; ++i) {
+          int item = arr[i];
+          arr[i] = (int)(arr[i] << 1) | (int)carry;
+          carry = ((item >> 31) != 0) ? 1 : 0;
         }
         return carry;
       }
@@ -44,7 +44,7 @@ namespace PeterO
     internal static int CountTrailingZeros(int numberValue) {
       if (numberValue == 0)
         return 32;
-      int i=0;
+      int i = 0;
       unchecked {
         if ((numberValue << 16) == 0) {
           numberValue >>= 16;
@@ -75,7 +75,7 @@ namespace PeterO
     internal static int BitPrecisionInt(int numberValue) {
       if (numberValue == 0)
         return 0;
-      int i=32;
+      int i = 32;
       unchecked {
         if ((numberValue >> 16) == 0) {
           numberValue <<= 16;
@@ -103,166 +103,169 @@ namespace PeterO
       return i;
     }
 
-    internal static int ShiftAwayTrailingZerosTwoElements(int[] arr){
-      int a0=arr[0];
-      int a1=arr[1];
-      int tz=CountTrailingZeros(a0);
-      if(tz==0)return 0;
+    internal static int ShiftAwayTrailingZerosTwoElements(int[] arr) {
+      int a0 = arr[0];
+      int a1 = arr[1];
+      int tz = CountTrailingZeros(a0);
+      if (tz == 0)return 0;
       unchecked {
-        if(tz<32){
-          int carry=a1<<(32-tz);
-          arr[0]=(int)((a0>>tz)&(0x7FFFFFFF>>(tz-1)))|(int)(carry);
-          arr[1]=((a1>>tz)&(0x7FFFFFFF>>(tz-1)));
+        if (tz < 32) {
+          int carry = a1 << (32 - tz);
+          arr[0] = (int)((a0 >> tz) & (0x7FFFFFFF >> (tz-1)))|(int)carry;
+          arr[1] = (a1 >> tz) & (0x7FFFFFFF >> (tz-1));
           return tz;
         } else {
-          tz=CountTrailingZeros(a1);
-          if(tz==32){
-            arr[0]=0;
-          } else if(tz>0){
-            arr[0]=((a1>>tz)&(0x7FFFFFFF>>(tz-1)));
+          tz = CountTrailingZeros(a1);
+          if (tz == 32) {
+            arr[0] = 0;
+          } else if (tz > 0) {
+            arr[0] = (a1 >> tz) & (0x7FFFFFFF >> (tz-1));
           } else {
-            arr[0]=a1;
+            arr[0] = a1;
           }
-          arr[1]=0;
-          return 32+tz;
+          arr[1] = 0;
+          return 32 + tz;
         }
       }
     }
 
-    internal static bool HasBitSet(int[] arr, int bit){
-      return ((bit>>5)<arr.Length && (arr[bit>>5]&(1<<(bit&31)))!=0);
+    internal static bool HasBitSet(int[] arr, int bit) {
+      return (bit >> 5) < arr.Length && (arr[bit >> 5] & (1<<(bit & 31))) != 0;
     }
 
     private sealed class PowerCache {
-      private const int MaxSize=64;
+      private const int MaxSize = 64;
       private BigInteger[] outputs;
       private BigInteger[] inputs;
       private int[] inputsInts;
-      public PowerCache(){
-        outputs=new BigInteger[MaxSize];
-        inputs=new BigInteger[MaxSize];
-        inputsInts=new int[MaxSize];
+
+      public PowerCache() {
+        this.outputs = new BigInteger[MaxSize];
+        this.inputs = new BigInteger[MaxSize];
+        this.inputsInts = new int[MaxSize];
       }
+
       int size;
-      public BigInteger[] FindCachedPowerOrSmaller(BigInteger bi){
-        BigInteger[] ret=null;
-        BigInteger minValue=null;
-        lock(outputs){
-          for(int i=0;i<size;i++){
-            if(inputs[i].CompareTo(bi)<=0 && (minValue==null || inputs[i].CompareTo(minValue)>=0)){
-              //Console.WriteLine("Have cached power ({0}, {1})",inputs[i],bi);
-              ret=new BigInteger[]{inputs[i],outputs[i]};
-              minValue=inputs[i];
+
+      public BigInteger[] FindCachedPowerOrSmaller(BigInteger bi) {
+        BigInteger[] ret = null;
+        BigInteger minValue = null;
+        lock(this.outputs) {
+          for (int i = 0; i < this.size; ++i) {
+            if (this.inputs[i].CompareTo(bi) <= 0 && (minValue == null || this.inputs[i].CompareTo(minValue) >= 0)) {
+              // Console.WriteLine("Have cached power ({0}, {1})",inputs[i],bi);
+              ret = new BigInteger[]{this.inputs[i], this.outputs[i]};
+              minValue = this.inputs[i];
             }
           }
         }
         return ret;
       }
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='bi'>A BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
-      public BigInteger GetCachedPower(BigInteger bi){
-        lock(outputs){
-          for(int i=0;i<size;i++){
-            if(bi.Equals(inputs[i])){
-              if(i!=0){
+      public BigInteger GetCachedPower(BigInteger bi) {
+        lock(this.outputs) {
+          for (int i = 0; i < this.size; ++i) {
+            if (bi.Equals(this.inputs[i])) {
+              if (i != 0) {
                 BigInteger tmp;
                 // Move to head of cache if it isn't already
-                tmp=inputs[i];inputs[i]=inputs[0];inputs[0]=tmp;
-                int tmpi=inputsInts[i];inputsInts[i]=inputsInts[0];inputsInts[0]=tmpi;
-                tmp=outputs[i];outputs[i]=outputs[0];outputs[0]=tmp;
+                tmp = this.inputs[i]; this.inputs[i] = this.inputs[0]; this.inputs[0] = tmp;
+                int tmpi = this.inputsInts[i]; this.inputsInts[i] = this.inputsInts[0]; this.inputsInts[0] = tmpi;
+                tmp = this.outputs[i]; this.outputs[i] = this.outputs[0]; this.outputs[0] = tmp;
                 // Move formerly newest to next newest
-                if(i!=1){
-                  tmp=inputs[i];inputs[i]=inputs[1];inputs[1]=tmp;
-                  tmpi=inputsInts[i];inputsInts[i]=inputsInts[1];inputsInts[1]=tmpi;
-                  tmp=outputs[i];outputs[i]=outputs[1];outputs[1]=tmp;
+                if (i != 1) {
+                  tmp = this.inputs[i]; this.inputs[i] = this.inputs[1]; this.inputs[1] = tmp;
+                  tmpi = this.inputsInts[i]; this.inputsInts[i] = this.inputsInts[1]; this.inputsInts[1] = tmpi;
+                  tmp = this.outputs[i]; this.outputs[i] = this.outputs[1]; this.outputs[1] = tmp;
                 }
               }
-              return outputs[0];
+              return this.outputs[0];
             }
           }
         }
         return null;
       }
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='bi'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
-public BigInteger GetCachedPowerInt(int bi){
-        lock(outputs){
-          for(int i=0;i<size;i++){
-            if(inputsInts[i]>=0 && inputsInts[i]==bi){
-              if(i!=0){
+public BigInteger GetCachedPowerInt(int bi) {
+        lock(this.outputs) {
+          for (int i = 0; i < this.size; ++i) {
+            if (this.inputsInts[i] >=  0 && this.inputsInts[i] == bi) {
+              if (i != 0) {
                 BigInteger tmp;
                 // Move to head of cache if it isn't already
-                tmp=inputs[i];inputs[i]=inputs[0];inputs[0]=tmp;
-                int tmpi=inputsInts[i];inputsInts[i]=inputsInts[0];inputsInts[0]=tmpi;
-                tmp=outputs[i];outputs[i]=outputs[0];outputs[0]=tmp;
+                tmp = this.inputs[i]; this.inputs[i] = this.inputs[0]; this.inputs[0] = tmp;
+                int tmpi = this.inputsInts[i]; this.inputsInts[i] = this.inputsInts[0]; this.inputsInts[0] = tmpi;
+                tmp = this.outputs[i]; this.outputs[i] = this.outputs[0]; this.outputs[0] = tmp;
                 // Move formerly newest to next newest
-                if(i!=1){
-                  tmp=inputs[i];inputs[i]=inputs[1];inputs[1]=tmp;
-                  tmpi=inputsInts[i];inputsInts[i]=inputsInts[1];inputsInts[1]=tmpi;
-                  tmp=outputs[i];outputs[i]=outputs[1];outputs[1]=tmp;
+                if (i != 1) {
+                  tmp = this.inputs[i]; this.inputs[i] = this.inputs[1]; this.inputs[1] = tmp;
+                  tmpi = this.inputsInts[i]; this.inputsInts[i] = this.inputsInts[1]; this.inputsInts[1] = tmpi;
+                  tmp = this.outputs[i]; this.outputs[i] = this.outputs[1]; this.outputs[1] = tmp;
                 }
               }
-              return outputs[0];
+              return this.outputs[0];
             }
           }
         }
         return null;
       }
-    /// <summary> </summary>
+    /// <summary> Not documented yet. </summary>
     /// <param name='input'>A BigInteger object.</param>
     /// <param name='output'>A BigInteger object.</param>
     /// <returns></returns>
-      public void AddPower(BigInteger input, BigInteger output){
-        lock(outputs){
-          if(size<MaxSize){
+      public void AddPower(BigInteger input, BigInteger output) {
+        lock(this.outputs) {
+          if (this.size < MaxSize) {
             // Shift newer entries down
-            for(int i=size;i>0;i--){
-              inputs[i]=inputs[i-1];
-              inputsInts[i]=inputsInts[i-1];
-              outputs[i]=outputs[i-1];
+            for (int i = this.size; i > 0; --i) {
+              this.inputs[i] = this.inputs[i - 1];
+              this.inputsInts[i] = this.inputsInts[i - 1];
+              this.outputs[i] = this.outputs[i - 1];
             }
-            inputs[0]=input;
-            inputsInts[0]=(input.canFitInInt()) ? input.intValue() : -1;
-            outputs[0]=output;
-            size++;
+            this.inputs[0] = input;
+            this.inputsInts[0] = input.canFitInInt() ? input.intValue() : -1;
+            this.outputs[0] = output;
+            this.size++;
           } else {
             // Shift newer entries down
-            for(int i=MaxSize-1;i>0;i--){
-              inputs[i]=inputs[i-1];
-              inputsInts[i]=inputsInts[i-1];
-              outputs[i]=outputs[i-1];
+            for (int i = MaxSize - 1; i > 0; --i) {
+              this.inputs[i] = this.inputs[i - 1];
+              this.inputsInts[i] = this.inputsInts[i - 1];
+              this.outputs[i] = this.outputs[i - 1];
             }
-            inputs[0]=input;
-            inputsInts[0]=(input.canFitInInt()) ? input.intValue() : -1;
-            outputs[0]=output;
+            this.inputs[0] = input;
+            this.inputsInts[0] = input.canFitInInt() ? input.intValue() : -1;
+            this.outputs[0] = output;
           }
         }
       }
     }
 
-    private static PowerCache powerOfFiveCache=new DecimalUtility.PowerCache();
-    private static PowerCache powerOfTenCache=new DecimalUtility.PowerCache();
+    private static PowerCache powerOfFiveCache = new DecimalUtility.PowerCache();
+    private static PowerCache powerOfTenCache = new DecimalUtility.PowerCache();
 
     internal static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
-      int sign=diff.Sign;
-      if(sign<0)return BigInteger.Zero;
-      if (sign == 0) return BigInteger.One;
+      int sign = diff.Sign;
+      if (sign < 0)return BigInteger.Zero;
+      if (sign == 0) { return BigInteger.One; }
       FastInteger intcurexp = FastInteger.FromBig(diff);
       if (intcurexp.CompareToInt(54) <= 0) {
         return FindPowerOfFive(intcurexp.AsInt32());
       }
       BigInteger mantissa = BigInteger.One;
       BigInteger bigpow;
-      BigInteger origdiff=diff;
-      bigpow=powerOfFiveCache.GetCachedPower(origdiff);
-      if(bigpow!=null)return bigpow;
-      BigInteger[] otherPower=powerOfFiveCache.FindCachedPowerOrSmaller(origdiff);
-      if(otherPower!=null){
+      BigInteger origdiff = diff;
+      bigpow = powerOfFiveCache.GetCachedPower(origdiff);
+      if (bigpow != null)return bigpow;
+      BigInteger[] otherPower = powerOfFiveCache.FindCachedPowerOrSmaller(origdiff);
+      if (otherPower != null) {
         intcurexp.SubtractBig(otherPower[0]);
-        bigpow=otherPower[1];
-        mantissa=bigpow;
+        bigpow = otherPower[1];
+        mantissa = bigpow;
       } else {
         bigpow = BigInteger.Zero;
       }
@@ -282,16 +285,16 @@ public BigInteger GetCachedPowerInt(int bi){
           intcurexp.AddInt(-9999999);
         }
       }
-      powerOfFiveCache.AddPower(origdiff,mantissa);
+      powerOfFiveCache.AddPower(origdiff, mantissa);
       return mantissa;
     }
 
     private static BigInteger BigInt36 = (BigInteger)36;
 
     internal static BigInteger FindPowerOfTenFromBig(BigInteger bigintExponent) {
-      int sign=bigintExponent.Sign;
-      if(sign<0)return BigInteger.Zero;
-      if (sign == 0) return BigInteger.One;
+      int sign = bigintExponent.Sign;
+      if (sign < 0)return BigInteger.Zero;
+      if (sign == 0) { return BigInteger.One; }
       if (bigintExponent.CompareTo(BigInt36) <= 0) {
         return FindPowerOfTen((int)bigintExponent);
       }
@@ -321,62 +324,62 @@ public BigInteger GetCachedPowerInt(int bi){
       return mantissa;
     }
 
-    private static BigInteger FivePower40=((BigInteger)95367431640625L)*(BigInteger)(95367431640625L);
+    private static BigInteger FivePower40 = ((BigInteger)95367431640625L) * (BigInteger)95367431640625L;
 
     internal static BigInteger FindPowerOfFive(int precision) {
-      if(precision<0)return BigInteger.Zero;
-      if (precision == 0) return BigInteger.One;
+      if (precision < 0)return BigInteger.Zero;
+      if (precision == 0) { return BigInteger.One; }
       BigInteger bigpow;
       BigInteger ret;
       if (precision <= 27)
         return BigIntPowersOfFive[(int)precision];
-      if(precision==40)
+      if (precision == 40)
         return FivePower40;
-      int startPrecision=precision;
-      bigpow=powerOfFiveCache.GetCachedPowerInt(precision);
-      if(bigpow!=null)return bigpow;
-      BigInteger origPrecision=(BigInteger)precision;
+      int startPrecision = precision;
+      bigpow = powerOfFiveCache.GetCachedPowerInt(precision);
+      if (bigpow != null)return bigpow;
+      BigInteger origPrecision = (BigInteger)precision;
       if (precision <= 54) {
-        if((precision&1)==0){
-          ret = BigIntPowersOfFive[(int)(precision>>1)];
+        if ((precision & 1) == 0) {
+          ret = BigIntPowersOfFive[(int)(precision >> 1)];
           ret *= (BigInteger)ret;
-          powerOfFiveCache.AddPower(origPrecision,ret);
+          powerOfFiveCache.AddPower(origPrecision, ret);
           return ret;
         } else {
           ret = BigIntPowersOfFive[27];
           bigpow = BigIntPowersOfFive[((int)precision) - 27];
           ret *= (BigInteger)bigpow;
-          powerOfFiveCache.AddPower(origPrecision,ret);
+          powerOfFiveCache.AddPower(origPrecision, ret);
           return ret;
         }
       }
-      if(precision>40 && precision<=94){
+      if (precision > 40 && precision <= 94) {
         ret = FivePower40;
-        bigpow = FindPowerOfFive(precision-40);
+        bigpow = FindPowerOfFive(precision - 40);
         ret *= (BigInteger)bigpow;
-        powerOfFiveCache.AddPower(origPrecision,ret);
+        powerOfFiveCache.AddPower(origPrecision, ret);
         return ret;
       }
       BigInteger[] otherPower;
       bool first = true;
-      bigpow=BigInteger.Zero;
-      while(true){
-        otherPower=powerOfFiveCache.FindCachedPowerOrSmaller((BigInteger)precision);
-        if(otherPower!=null){
-          BigInteger otherPower0=otherPower[0];
-          BigInteger otherPower1=otherPower[1];
-          precision-=(int)otherPower0;
+      bigpow = BigInteger.Zero;
+      while (true) {
+        otherPower = powerOfFiveCache.FindCachedPowerOrSmaller((BigInteger)precision);
+        if (otherPower != null) {
+          BigInteger otherPower0 = otherPower[0];
+          BigInteger otherPower1 = otherPower[1];
+          precision -= (int)otherPower0;
           if (first)
-            bigpow=otherPower[1];
+            bigpow = otherPower[1];
           else {
             bigpow *= (BigInteger)otherPower1;
           }
-          first=false;
+          first = false;
         } else {
           break;
         }
       }
-      ret = (!first ? bigpow : BigInteger.One );
+      ret = !first ? bigpow : BigInteger.One ;
       while (precision > 0) {
         if (precision <= 27) {
           bigpow = BigIntPowersOfFive[(int)precision];
@@ -387,11 +390,11 @@ public BigInteger GetCachedPowerInt(int bi){
           first = false;
           break;
         } else if (precision <= 9999999) {
-          //          Console.WriteLine("calcing pow for "+precision);
+          // Console.WriteLine("calcing pow for "+precision);
           bigpow = BigInteger.Pow(BigIntPowersOfFive[1], precision);
-          if(precision!=startPrecision){
-            BigInteger bigprec=(BigInteger)precision;
-            powerOfFiveCache.AddPower(bigprec,bigpow);
+          if (precision != startPrecision) {
+            BigInteger bigprec = (BigInteger)precision;
+            powerOfFiveCache.AddPower(bigprec, bigpow);
           }
           if (first)
             ret = bigpow;
@@ -410,62 +413,62 @@ public BigInteger GetCachedPowerInt(int bi){
           precision -= 9999999;
         }
       }
-      powerOfFiveCache.AddPower(origPrecision,ret);
+      powerOfFiveCache.AddPower(origPrecision, ret);
       return ret;
     }
 
     internal static BigInteger FindPowerOfTen(int precision) {
-      if(precision<0)return BigInteger.Zero;
-      if (precision == 0) return BigInteger.One;
+      if (precision < 0)return BigInteger.Zero;
+      if (precision == 0) { return BigInteger.One; }
       BigInteger bigpow;
       BigInteger ret;
       if (precision <= 18)
         return BigIntPowersOfTen[(int)precision];
-      int startPrecision=precision;
-      bigpow=powerOfTenCache.GetCachedPowerInt(precision);
-      if(bigpow!=null)return bigpow;
-      BigInteger origPrecision=(BigInteger)precision;
+      int startPrecision = precision;
+      bigpow = powerOfTenCache.GetCachedPowerInt(precision);
+      if (bigpow != null)return bigpow;
+      BigInteger origPrecision = (BigInteger)precision;
       if (precision <= 27) {
         int prec = (int)precision;
         ret = BigIntPowersOfFive[prec];
         ret <<= prec;
-        powerOfTenCache.AddPower(origPrecision,ret);
+        powerOfTenCache.AddPower(origPrecision, ret);
         return ret;
       }
       if (precision <= 36) {
-        if((precision&1)==0){
-          ret = BigIntPowersOfTen[(int)(precision>>1)];
+        if ((precision & 1) == 0) {
+          ret = BigIntPowersOfTen[(int)(precision >> 1)];
           ret *= (BigInteger)ret;
-          powerOfTenCache.AddPower(origPrecision,ret);
+          powerOfTenCache.AddPower(origPrecision, ret);
           return ret;
         } else {
           ret = BigIntPowersOfTen[18];
           bigpow = BigIntPowersOfTen[((int)precision) - 18];
           ret *= (BigInteger)bigpow;
-          powerOfTenCache.AddPower(origPrecision,ret);
+          powerOfTenCache.AddPower(origPrecision, ret);
           return ret;
         }
       }
       BigInteger[] otherPower;
       bool first = true;
-      bigpow=BigInteger.Zero;
-      while(true){
-        otherPower=powerOfTenCache.FindCachedPowerOrSmaller((BigInteger)precision);
-        if(otherPower!=null){
-          BigInteger otherPower0=otherPower[0];
-          BigInteger otherPower1=otherPower[1];
-          precision-=(int)otherPower0;
+      bigpow = BigInteger.Zero;
+      while (true) {
+        otherPower = powerOfTenCache.FindCachedPowerOrSmaller((BigInteger)precision);
+        if (otherPower != null) {
+          BigInteger otherPower0 = otherPower[0];
+          BigInteger otherPower1 = otherPower[1];
+          precision -= (int)otherPower0;
           if (first)
-            bigpow=otherPower[1];
+            bigpow = otherPower[1];
           else {
             bigpow *= (BigInteger)otherPower1;
           }
-          first=false;
+          first = false;
         } else {
           break;
         }
       }
-      ret = (!first ? bigpow : BigInteger.One );
+      ret = !first ? bigpow : BigInteger.One ;
       while (precision > 0) {
         if (precision <= 18) {
           bigpow = BigIntPowersOfTen[(int)precision];
@@ -476,12 +479,12 @@ public BigInteger GetCachedPowerInt(int bi){
           first = false;
           break;
         } else if (precision <= 9999999) {
-          //          Console.WriteLine("calcing pow for "+precision);
+          // Console.WriteLine("calcing pow for "+precision);
           bigpow = FindPowerOfFive(precision);
           bigpow <<= precision;
-          if(precision!=startPrecision){
-            BigInteger bigprec=(BigInteger)precision;
-            powerOfTenCache.AddPower(bigprec,bigpow);
+          if (precision != startPrecision) {
+            BigInteger bigprec = (BigInteger)precision;
+            powerOfTenCache.AddPower(bigprec, bigpow);
           }
           if (first)
             ret = bigpow;
@@ -500,7 +503,7 @@ public BigInteger GetCachedPowerInt(int bi){
           precision -= 9999999;
         }
       }
-      powerOfTenCache.AddPower(origPrecision,ret);
+      powerOfTenCache.AddPower(origPrecision, ret);
       return ret;
     }
   }

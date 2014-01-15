@@ -84,8 +84,8 @@ namespace Test {
           r |= ((long)rand.NextValue(0x10000)) << 48;
         }
       }
-      r &= ~0x7FF0000000000000L; // clear exponent
-      r |= ((long)exponent) << 52; // set exponent
+      r &= ~0x7FF0000000000000L;  // clear exponent
+      r |= ((long)exponent) << 52;  // set exponent
       return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
     }
     private static float RandomSingle(FastRandom rand, int exponent) {
@@ -95,8 +95,8 @@ namespace Test {
       if (rand.NextValue(2) == 0) {
         r |= ((int)rand.NextValue(0x10000)) << 16;
       }
-      r &= ~0x7F800000; // clear exponent
-      r |= ((int)exponent) << 23; // set exponent
+      r &= ~0x7F800000;  // clear exponent
+      r |= ((int)exponent) << 23;  // set exponent
       return BitConverter.ToSingle(BitConverter.GetBytes((int)r), 0);
     }
     public static ExtendedDecimal RandomExtendedDecimal(FastRandom r) {
@@ -112,7 +112,7 @@ namespace Test {
       int count = r.NextValue(50) + 1;
       StringBuilder sb = new StringBuilder();
       if (r.NextValue(2) == 0) sb.Append('-');
-      for (int i = 0; i < count; i++) {
+      for (int i = 0; i < count; ++i) {
         if (i == 0)
           sb.Append((char)('1' + r.NextValue(9)));
         else
@@ -124,7 +124,7 @@ namespace Test {
       int count = r.NextValue(20) + 1;
       StringBuilder sb = new StringBuilder();
       if (r.NextValue(2) == 0) sb.Append('-');
-      for (int i = 0; i < count; i++) {
+      for (int i = 0; i < count; ++i) {
         if (i == 0)
           sb.Append((char)('1' + r.NextValue(9)));
         else
@@ -133,7 +133,7 @@ namespace Test {
       if (r.NextValue(2) == 0) {
         sb.Append('.');
         count = r.NextValue(20) + 1;
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; ++i) {
           sb.Append((char)('0' + r.NextValue(10)));
         }
       }
@@ -162,7 +162,7 @@ namespace Test {
     [Test]
     public void TestAdd() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 3000; i++) {
+      for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
         ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
@@ -183,7 +183,7 @@ namespace Test {
     [Test]
     public void TestSubtract() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 3000; i++) {
+      for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
         ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Subtract(o2.AsExtendedDecimal());
@@ -217,8 +217,8 @@ namespace Test {
     }
 
     private static int CompareTestReciprocal(CBORObject o1, CBORObject o2) {
-      if ((o1) == null) throw new ArgumentNullException("o1");
-      if ((o2) == null) throw new ArgumentNullException("o2");
+      if ((o1) == null) { throw new ArgumentNullException("o1"); }
+      if ((o2) == null) { throw new ArgumentNullException("o2"); }
       int cmp = o1.CompareTo(o2);
       int cmp2 = o2.CompareTo(o1);
       if (-cmp2 != cmp) {
@@ -232,7 +232,7 @@ namespace Test {
       StringBuilder sb = new StringBuilder();
       string hex = "0123456789ABCDEF";
       sb.Append("CBORObject.DecodeFromBytes(new byte[]{");
-      for (int i = 0; i < bytes.Length; i++) {
+      for (int i = 0; i < bytes.Length; ++i) {
         if (i > 0)
           sb.Append(",");
         if ((bytes[i] & 0x80) != 0)
@@ -255,9 +255,9 @@ namespace Test {
       CBORObject o1 = null;
       CBORObject o2 = null;
       o1 = CBORObject.DecodeFromBytes(new byte[] { (byte)0xFB, (byte)0x8B, 0x44, (byte)0xF2, (byte)0xA9, 0x0C, 0x27, 0x42, 0x28 });
-      o2 = CBORObject.DecodeFromBytes(new byte[]{(byte)0xC5,(byte)0x82,0x38,(byte)0xA4,(byte)0xC3,0x50,0x02,(byte)0x98,
-                                      (byte)0xC5,(byte)0xA8,0x02,(byte)0xC1,(byte)0xF6,(byte)0xC0,0x1A,(byte)0xBE,0x08,
-                                      0x04,(byte)0x86,(byte)0x99,0x3E,(byte)0xF1});
+      o2 = CBORObject.DecodeFromBytes(new byte[]{(byte)0xC5, (byte)0x82, 0x38, (byte)0xA4, (byte)0xC3, 0x50, 0x02, (byte)0x98,
+                                      (byte)0xC5, (byte)0xA8, 0x02, (byte)0xC1, (byte)0xF6, (byte)0xC0, 0x1A, (byte)0xBE, 0x08,
+                                      0x04, (byte)0x86, (byte)0x99, 0x3E, (byte)0xF1});
       AddSubCompare(o1, o2);
     }
 
@@ -332,12 +332,12 @@ namespace Test {
     [Test]
     public void TestCompare() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 5000; i++) {
+      for (int i = 0; i < 5000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
         CompareDecimals(o1, o2);
       }
-      for (int i = 0; i < 50; i++) {
+      for (int i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
         CBORObject o2 = RandomNumber(r);
         CompareTestLess(o1, o2);
@@ -384,7 +384,7 @@ namespace Test {
     [Test]
     public void TestParseDecimalStrings() {
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 3000; i++) {
+      for (int i = 0; i < 3000; ++i) {
         string r = RandomDecimalString(rand);
         TestDecimalString(r);
       }
@@ -397,9 +397,9 @@ namespace Test {
     [Test]
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 200; i++) {
+      for (int i = 0; i < 200; ++i) {
         byte[] array = new byte[rand.NextValue(1000000) + 1];
-        for (int j = 0; j < array.Length; j++) {
+        for (int j = 0; j < array.Length; ++j) {
           if (j + 3 <= array.Length) {
             int r = rand.NextValue(0x1000000);
             array[j] = (byte)((r) & 0xFF);
@@ -430,7 +430,7 @@ namespace Test {
     [Test]
     public void TestExtendedFloatSingle() {
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 255; i++) { // Try a random float with a given exponent
+      for (int i = 0; i < 255; ++i) {  // Try a random float with a given exponent
         TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
         TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
         TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
@@ -450,7 +450,7 @@ namespace Test {
       TestExtendedFloatDoubleCore(1.75, "1.75");
       TestExtendedFloatDoubleCore(3.5, "3.5");
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 2047; i++) { // Try a random double with a given exponent
+      for (int i = 0; i < 2047; ++i) {  // Try a random double with a given exponent
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
@@ -538,7 +538,7 @@ namespace Test {
     ///
     [Test]
     public void TestByte() {
-      for (int i = 0; i <= 255; i++) {
+      for (int i = 0; i <= 255; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((byte)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
@@ -791,11 +791,11 @@ namespace Test {
                      0, " \ufffd\ufffd", -1, null);
     }
     private static bool ByteArrayEquals(byte[] arrayA, byte[] arrayB) {
-      if (arrayA == null) return (arrayB == null);
-      if (arrayB == null) return false;
-      if (arrayA.Length != arrayB.Length) return false;
-      for (int i = 0; i < arrayA.Length; i++) {
-        if (arrayA[i] != arrayB[i]) return false;
+      if (arrayA == null) { return (arrayB == null); }
+      if (arrayB == null) { return false; }
+      if (arrayA.Length != arrayB.Length) { return false; }
+      for (int i = 0; i < arrayA.Length; ++i) {
+        if (arrayA[i] != arrayB[i]) { return false; }
       }
       return true;
     }
@@ -833,14 +833,14 @@ namespace Test {
     }
     private static String Repeat(char c, int num) {
       System.Text.StringBuilder sb = new System.Text.StringBuilder();
-      for (int i = 0; i < num; i++) {
+      for (int i = 0; i < num; ++i) {
         sb.Append(c);
       }
       return sb.ToString();
     }
     private static String Repeat(String c, int num) {
       System.Text.StringBuilder sb = new System.Text.StringBuilder();
-      for (int i = 0; i < num; i++) {
+      for (int i = 0; i < num; ++i) {
         sb.Append(c);
       }
       return sb.ToString();
@@ -2100,13 +2100,13 @@ namespace Test {
     ///
     [Test]
     public void TestAsByte() {
-      for (int i = 0; i < 255; i++) {
+      for (int i = 0; i < 255; ++i) {
         Assert.AreEqual((byte)i, CBORObject.FromObject(i).AsByte());
       }
-      for (int i = -200; i < 0; i++) {
+      for (int i = -200; i < 0; ++i) {
         try { CBORObject.FromObject(i).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
       }
-      for (int i = 256; i < 512; i++) {
+      for (int i = 256; i < 512; ++i) {
         try { CBORObject.FromObject(i).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
       }
     }
@@ -3431,7 +3431,7 @@ namespace Test {
     ///
     [Test]
     public void TestShort() {
-      for (int i = Int16.MinValue; i <= Int16.MaxValue; i++) {
+      for (int i = Int16.MinValue; i <= Int16.MaxValue; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((short)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
@@ -3473,7 +3473,7 @@ namespace Test {
     ///
     [Test]
     public void TestTaggedUntagged() {
-      for (int i = 200; i < 1000; i++) {
+      for (int i = 200; i < 1000; ++i) {
         CBORObject o, o2;
         o = CBORObject.FromObject(0);
         o2 = CBORObject.FromObjectAndTag(o, i);
@@ -3579,7 +3579,7 @@ namespace Test {
       AssertBigIntString("-898989", other);
       other = (BigInteger)898989;
       AssertBigIntString("898989", other);
-      for (int i = 0; i < 500; i++) {
+      for (int i = 0; i < 500; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),
           String.Format(CultureInfo.InvariantCulture, "{0}", bi));
@@ -3592,8 +3592,8 @@ namespace Test {
         BigInteger.Zero+(BigInteger)512,
         (BigInteger)Int64.MaxValue-(BigInteger)512,
         (BigInteger)Int64.MaxValue+(BigInteger)512,
-        ((BigInteger.One<<64)-BigInteger.One)-(BigInteger)512,
-        ((BigInteger.One<<64)-BigInteger.One)+(BigInteger)512,
+        ((BigInteger.One << 64)-BigInteger.One)-(BigInteger)512,
+        ((BigInteger.One << 64)-BigInteger.One)+(BigInteger)512,
       };
       for (int i = 0; i < ranges.Length; i += 2) {
         BigInteger bigintTemp = ranges[i];
@@ -3614,10 +3614,10 @@ namespace Test {
     [Test]
     public void TestLong() {
       long[] ranges = new long[]{
-        -65539,65539,
-        0xFFFFF000L,0x100000400L,
-        Int64.MaxValue-1000,Int64.MaxValue,
-        Int64.MinValue,Int64.MinValue+1000
+        -65539, 65539,
+        0xFFFFF000L, 0x100000400L,
+        Int64.MaxValue-1000, Int64.MaxValue,
+        Int64.MinValue, Int64.MinValue + 1000
       };
       for (int i = 0; i < ranges.Length; i += 2) {
         long j = ranges[i];
@@ -3650,7 +3650,7 @@ namespace Test {
                            "-Infinity");
       TestCommon.AssertSer(CBORObject.FromObject(Single.NaN),
                            "NaN");
-      for (int i = -65539; i <= 65539; i++) {
+      for (int i = -65539; i <= 65539; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((float)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
@@ -3680,7 +3680,7 @@ namespace Test {
                            "true");
       TestCommon.AssertSer(CBORObject.FromObject(false),
                            "false");
-      TestCommon.AssertSer(CBORObject.FromObject((Object)null),
+      TestCommon.AssertSer(CBORObject.FromObject((object)null),
                            "null");
     }
     /// <summary>
@@ -3714,7 +3714,7 @@ namespace Test {
       TestCommon.AssertSer(CBORObject.FromObject(Double.NaN),
                            "NaN");
       CBORObject oldobj = null;
-      for (int i = -65539; i <= 65539; i++) {
+      for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = CBORObject.FromObject((double)i);
         TestCommon.AssertSer(o,
                              String.Format(CultureInfo.InvariantCulture, "{0}", i));
@@ -3739,7 +3739,7 @@ namespace Test {
         (BigInteger)Int32.MaxValue+(BigInteger)500,
         (BigInteger)Int64.MaxValue-(BigInteger)500,
         (BigInteger)Int64.MaxValue+(BigInteger)500,
-        ((BigInteger.One<<64)-BigInteger.One)-(BigInteger)500,
+        ((BigInteger.One << 64)-BigInteger.One)-(BigInteger)500,
         maxuint,
       };
       for (int i = 0; i < ranges.Length; i += 2) {

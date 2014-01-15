@@ -7,7 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-//import java.math.*;
+// import java.math.*;
 
     /**
      * Contains methods useful for reading and writing data, with a focus
@@ -49,11 +49,11 @@ private CBORDataUtilities(){}
      * than -(2^64).
      * @return A CBOR object that represents the parsed number.
      */
-    public static CBORObject ParseJSONNumber(String str,
+    public static CBORObject ParseJSONNumber(
+String str,
                                              boolean integersOnly,
                                              boolean positiveOnly,
-                                             boolean failOnExponentOverflow
-                                            ) {
+                                             boolean failOnExponentOverflow) {
       if (((str)==null || (str).length()==0))
         return null;
       char c = str.charAt(0);
@@ -164,21 +164,21 @@ private CBORDataUtilities(){}
         return null;
       }
       // No fractional part
-      if(fastExponent.signum()==0){
-        if(fastNumber.CanFitInInt32())
+      if (fastExponent.signum() == 0) {
+        if (fastNumber.CanFitInInt32())
           return CBORObject.FromObject(fastNumber.AsInt32());
         else
           return CBORObject.FromObject(fastNumber.AsBigInteger());
       } else {
-        if(fastNumber.signum()==0){
+        if (fastNumber.signum() == 0) {
           return CBORObject.FromObject(0);
         }
-        if(fastNumber.CanFitInInt32() && fastExponent.CanFitInInt32()){
+        if (fastNumber.CanFitInInt32() && fastExponent.CanFitInInt32()) {
           return CBORObject.FromObject(ExtendedDecimal.Create(
-            fastNumber.AsBigInteger(),fastExponent.AsBigInteger()));
+            fastNumber.AsBigInteger(), fastExponent.AsBigInteger()));
         } else {
-          BigInteger bigintExponent=fastExponent.AsBigInteger();
-          if(!fastExponent.CanFitInInt32()){
+          BigInteger bigintExponent = fastExponent.AsBigInteger();
+          if (!fastExponent.CanFitInInt32()) {
             if (bigintExponent.compareTo(UInt64MaxValue) > 0) {
               // Exponent is higher than the highest representable
               // integer of major type 0
@@ -199,7 +199,7 @@ private CBORDataUtilities(){}
             }
           }
           return CBORObject.FromObject(ExtendedDecimal.Create(
-            fastNumber.AsBigInteger(),bigintExponent));
+            fastNumber.AsBigInteger(), bigintExponent));
         }
       }
     }

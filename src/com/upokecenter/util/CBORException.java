@@ -12,19 +12,19 @@ at: http://peteroupc.github.io/CBOR/
     public class CBORException extends RuntimeException {
 private static final long serialVersionUID=1L;
     /**
-     *
+     * Not documented yet.
      */
     public CBORException () {
     }
     /**
-     *
+     * Not documented yet.
      * @param message A string object.
      */
     public CBORException (String message) {
  super(message);
     }
     /**
-     *
+     * Not documented yet.
      * @param message A string object.
      * @param innerException An Exception object.
      */

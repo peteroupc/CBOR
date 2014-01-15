@@ -7,7 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-//import java.math.*;
+// import java.math.*;
 
     /**
      * Contains parameters for controlling the precision, rounding, and
@@ -19,11 +19,12 @@ at: http://peteroupc.github.io/CBOR/
      * Gets the highest exponent possible when a converted number is expressed
      * in scientific notation with one digit before the decimal point. For
      * example, with a precision of 3 and an EMax of 100, the maximum value
-     * possible is 9.99E+100. (This is not the same as the highest possible
+     * possible is 9.99E + 100. (This is not the same as the highest possible
      * Exponent property.) If HasExponentRange is false, this value will
      * be 0.
      */
-    public BigInteger getEMax() { return hasExponentRange ? exponentMax : BigInteger.ZERO; }
+    public BigInteger getEMax() { return this.hasExponentRange ? this.exponentMax : BigInteger.ZERO; }
+
     BigInteger exponentMin;
 
     boolean hasExponentRange;
@@ -31,7 +32,7 @@ at: http://peteroupc.github.io/CBOR/
      * Gets whether this context defines a minimum and maximum exponent.
      * If false, converted exponents can have any exponent.
      */
-    public boolean getHasExponentRange() { return hasExponentRange; }
+    public boolean getHasExponentRange() { return this.hasExponentRange; }
 
     /**
      * Gets the lowest exponent possible when a converted number is expressed
@@ -41,7 +42,8 @@ at: http://peteroupc.github.io/CBOR/
      * Exponent property.) If HasExponentRange is false, this value will
      * be 0.
      */
-    public BigInteger getEMin() { return hasExponentRange ? exponentMin : BigInteger.ZERO; }
+    public BigInteger getEMin() { return this.hasExponentRange ? this.exponentMin : BigInteger.ZERO; }
+
     BigInteger bigintPrecision;
 
     /**
@@ -50,7 +52,8 @@ at: http://peteroupc.github.io/CBOR/
      * number's mantissa can range from 0 to 999 (up to three digits long).
      * If 0, converted numbers can have any precision.
      */
-    public BigInteger getPrecision() { return bigintPrecision; }
+    public BigInteger getPrecision() { return this.bigintPrecision; }
+
     Rounding rounding;
 
     boolean clampNormalExponents;
@@ -63,13 +66,13 @@ at: http://peteroupc.github.io/CBOR/
      * account for the adjustment. If HasExponentRange is false, this value
      * is always false.
      */
-    public boolean getClampNormalExponents() { return hasExponentRange ? clampNormalExponents : false; }
+    public boolean getClampNormalExponents() { return this.hasExponentRange ? this.clampNormalExponents : false; }
 
     /**
      * Gets the desired rounding mode when converting numbers that can't
      * be represented in the given precision and exponent range.
      */
-    public Rounding getRounding() { return rounding; }
+    public Rounding getRounding() { return this.rounding; }
 
     int flags;
     boolean hasFlags;
@@ -77,7 +80,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Returns whether this context has a mutable Flags field.
      */
-    public boolean getHasFlags() { return hasFlags; }
+    public boolean getHasFlags() { return this.hasFlags; }
     /**
      * Signals that the result was rounded to a different mathematical value,
      * but as close as possible to the original.
@@ -120,39 +123,40 @@ at: http://peteroupc.github.io/CBOR/
      * Gets the flags that are set from converting numbers according to this
      * precision context. If HasFlags is false, this value will be 0.
      */
-    public int getFlags() { return flags; }
+    public int getFlags() { return this.flags; }
     /**
      * Sets the flags that occur from converting numbers according to this
      * precision context.
      * @throws IllegalStateException HasFlags is false.
      */
       public void setFlags(int value) {
-        if (!this.getHasFlags())
-          throw new IllegalStateException("Can't set flags");
-        flags = value;
+        if (!this.getHasFlags()) {
+ throw new IllegalStateException("Can't set flags");
+}
+        this.flags = value;
       }
 
     /**
-     *
+     * Not documented yet.
      * @param exponent A BigInteger object.
      * @return A Boolean object.
      */
     public boolean ExponentWithinRange(BigInteger exponent) {
-      if((exponent)==null)throw new NullPointerException("exponent");
-      if(!this.getHasExponentRange())
+      if (exponent == null)throw new NullPointerException("exponent");
+      if (!this.getHasExponentRange())
         return true;
-      if(bigintPrecision.signum()==0){
+      if (this.bigintPrecision.signum()==0) {
         // Only check EMax, since with an unlimited
         // precision, any exponent less than EMin will exceed EMin if
         // the mantissa is the right size
-        return exponent.compareTo(this.getEMax())<=0;
+        return exponent.compareTo(this.getEMax()) <= 0;
       } else {
-        BigInteger bigint=exponent;
-        bigint=bigint.add(bigintPrecision);
+        BigInteger bigint = exponent;
+        bigint=bigint.add(this.bigintPrecision);
         bigint=bigint.subtract(BigInteger.ONE);
-        if(bigint.compareTo(this.getEMin())<0)
+        if (bigint.compareTo(this.getEMin()) < 0)
           return false;
-        if(exponent.compareTo(this.getEMax())>0)
+        if (exponent.compareTo(this.getEMax()) > 0)
           return false;
         return true;
       }
@@ -189,24 +193,25 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext WithExponentClamp(boolean clamp) {
       PrecisionContext pc = this.Copy();
-      pc.clampNormalExponents=clamp;
+      pc.clampNormalExponents = clamp;
       return pc;
     }
 
     /**
-     *
+     * Not documented yet.
      * @param exponentMin A BigInteger object.
      * @param exponentMax A BigInteger object.
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
-      if((exponentMin)==null)throw new NullPointerException("exponentMin");
-      if(exponentMin.compareTo(exponentMax)>0)
-        throw new IllegalArgumentException("exponentMin greater than exponentMax");
+      if (exponentMin == null)throw new NullPointerException("exponentMin");
+      if (exponentMin.compareTo(exponentMax) > 0) {
+ throw new IllegalArgumentException("exponentMin greater than exponentMax");
+}
       PrecisionContext pc = this.Copy();
-      pc.hasExponentRange=true;
-      pc.exponentMin=exponentMin;
-      pc.exponentMax=exponentMax;
+      pc.hasExponentRange = true;
+      pc.exponentMin = exponentMin;
+      pc.exponentMax = exponentMax;
       return pc;
     }
 
@@ -237,19 +242,19 @@ at: http://peteroupc.github.io/CBOR/
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithPrecision(int precision) {
-      if (precision < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+(precision)+")");
+      if (precision < 0) { throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+precision+")"); }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = BigInteger.valueOf(precision);
       return pc;
     }
 
     /**
-     *
+     * Not documented yet.
      * @param bigintPrecision A BigInteger object.
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
-      if((bigintPrecision)==null)throw new NullPointerException("bigintPrecision");
+      if (bigintPrecision == null)throw new NullPointerException("bigintPrecision");
       if (bigintPrecision.signum() < 0) throw new IllegalArgumentException(
         "precision" + " not greater or equal to " + "0" + " (" +
         bigintPrecision + ")");
@@ -263,8 +268,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return A PrecisionContext object.
      */
     public PrecisionContext Copy() {
-      PrecisionContext pcnew=new PrecisionContext(0,this.rounding,
-                                                  0,0,this.clampNormalExponents);
+      PrecisionContext pcnew = new PrecisionContext(
+0, this.rounding,
+                                                  0, 0, this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
@@ -277,27 +283,30 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     public static PrecisionContext ForPrecision(int precision) {
-      return new PrecisionContext(precision,Rounding.HalfUp,0,0,false).WithUnlimitedExponents();
+      return new PrecisionContext(precision, Rounding.HalfUp, 0, 0, false).WithUnlimitedExponents();
     }
+
     public static PrecisionContext ForRounding(Rounding rounding) {
-      return new PrecisionContext(0,rounding,0,0,false).WithUnlimitedExponents();
+      return new PrecisionContext(0, rounding, 0, 0, false).WithUnlimitedExponents();
     }
+
     public static PrecisionContext ForPrecisionAndRounding(int precision, Rounding rounding) {
-      return new PrecisionContext(precision,rounding,0,0,false).WithUnlimitedExponents();
+      return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
     }
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
-    public PrecisionContext (int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
+    public PrecisionContext (
+int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
                             boolean clampNormalExponents) {
-      if ((precision) < 0) throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+(precision)+")");
-      if ((exponentMinSmall) > exponentMaxSmall) throw new IllegalArgumentException("exponentMinSmall" + " not less or equal to "+(exponentMaxSmall)+" ("+(exponentMinSmall)+")");
-      this.bigintPrecision = precision==0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
+      if (precision < 0) { throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+precision+")"); }
+      if (exponentMinSmall > exponentMaxSmall) { throw new IllegalArgumentException("exponentMinSmall" + " not less or equal to "+exponentMaxSmall+" ("+exponentMinSmall+")"); }
+      this.bigintPrecision = precision == 0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
-      this.hasExponentRange=true;
-      exponentMax = exponentMaxSmall==0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMaxSmall);
-      exponentMin = exponentMinSmall==0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMinSmall);
+      this.hasExponentRange = true;
+      this.exponentMax = exponentMaxSmall == 0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMaxSmall);
+      this.exponentMin = exponentMinSmall == 0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMinSmall);
     }
     /**
      * No specific limit on precision. Rounding mode HalfUp.
@@ -309,19 +318,19 @@ at: http://peteroupc.github.io/CBOR/
      */
 
     public static final PrecisionContext Decimal32 =
-      new PrecisionContext(7, Rounding.HalfEven, -95, 96,true);
+      new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
     /**
      * Precision context for the IEEE-754-2008 decimal64 format.
      */
 
     public static final PrecisionContext Decimal64 =
-      new PrecisionContext(16, Rounding.HalfEven, -383, 384,true);
+      new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
     /**
      * Precision context for the IEEE-754-2008 decimal128 format.
      */
 
     public static final PrecisionContext Decimal128 =
-      new PrecisionContext(34, Rounding.HalfEven, -6143, 6144,true);
+      new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
     /**
      * Precision context for the Common Language Infrastructure (.NET
      * Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
@@ -329,7 +338,7 @@ at: http://peteroupc.github.io/CBOR/
      */
 
     public static final PrecisionContext CliDecimal =
-      new PrecisionContext(96,Rounding.HalfEven,0,28,true);
+      new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
 
   }
 

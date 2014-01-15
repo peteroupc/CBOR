@@ -12,14 +12,14 @@ private Extras(){}
     public static int[] DoubleToIntegers(double dbl) {
       long value = Double.doubleToRawLongBits(dbl);
       return new int[]{
-        ((int)(value&0xFFFFFFFFL)),
-        ((int)((value>>32)&0xFFFFFFFFL))
+        ((int)(value & 0xFFFFFFFFL)),
+        ((int)((value >> 32) & 0xFFFFFFFFL))
       };
     }
 
     public static double IntegersToDouble(int[] integers) {
-      long value=((long)integers[0])&0xFFFFFFFFL;
-      value|=((((long)integers[1])&0xFFFFFFFFL)<<32);
+      long value = ((long)integers[0]) & 0xFFFFFFFFL;
+      value |= (((long)integers[1]) & 0xFFFFFFFFL) << 32;
       return Double.longBitsToDouble(value);
     }
 

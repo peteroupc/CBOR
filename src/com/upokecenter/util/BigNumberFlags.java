@@ -17,8 +17,8 @@ package com.upokecenter.util;
     static final int FlagQuietNaN = 4;
     static final int FlagSignalingNaN = 8;
     static final int FlagInfinity = 2;
-    static final int FlagSpecial=(FlagQuietNaN|FlagSignalingNaN|FlagInfinity);
-    static final int FlagNaN=(FlagQuietNaN|FlagSignalingNaN);
+    static final int FlagSpecial = FlagQuietNaN | FlagSignalingNaN | FlagInfinity;
+    static final int FlagNaN = FlagQuietNaN | FlagSignalingNaN;
 
     static final int FiniteOnly = 0;
     static final int FiniteAndNonFinite = 1;
