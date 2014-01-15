@@ -24,45 +24,45 @@ package com.upokecenter.test;
     int m_z = 362436069;
 
     public FastRandom () {
-      rand=new java.util.Random();
-      count=ReseedCount;
+      rand = new java.util.Random();
+      count = ReseedCount;
     }
 
     private int NextValueInternal() {
       int w = m_w, z = m_z;
       // Use George Marsaglia's multiply-with-carry
       // algorithm.
-      m_z = z = (36969 * (z & 65535) + ((z >> 16)&0xFFFF));
-      m_w = w = (18000 * (w & 65535) + ((z >> 16)&0xFFFF));
-      return ((z << 16) | (w & 65535))&0x7FFFFFFF;
+      m_z = z = (36969 * (z & 65535) + ((z >> 16) & 0xFFFF));
+      m_w = w = (18000 * (w & 65535) + ((z >> 16) & 0xFFFF));
+      return ((z << 16) | (w & 65535)) & 0x7FFFFFFF;
     }
 
     /**
-     *
+     * Not documented yet.
      * @param v A 32-bit signed integer.
      * @return A 32-bit signed integer.
      */
 public int NextValue(int v) {
-      if((v)<0)throw new IllegalArgumentException(
+      if ((v)<0)throw new IllegalArgumentException(
         "v"+" not greater or equal to "+"0"+" ("+
         Integer.toString((int)v)+")");
-      if(v<=1)return 0;
-      if(count>=ReseedCount){
+      if (v <= 1)return 0;
+      if (count >= ReseedCount) {
         // Call the default random number generator
         // every once in a while, to reseed
-        count=0;
-        if(rand!=null){
-          int seed=rand.nextInt(0x10000);
-          seed|=(rand.nextInt(0x10000))<<16;
+        count = 0;
+        if (rand != null) {
+          int seed = rand.nextInt(0x10000);
+          seed|=(rand.nextInt(0x10000)) << 16;
           m_z^=seed;
           return rand.nextInt(v);
         }
       }
       count+=1;
       int maxExclusive=(Integer.MAX_VALUE/v)*v;
-      while(true){
-        int vi=NextValueInternal();
-        if(vi<maxExclusive)
+      while (true) {
+        int vi = NextValueInternal();
+        if (vi<maxExclusive)
           return vi%v;
       }
     }

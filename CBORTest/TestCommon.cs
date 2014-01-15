@@ -14,104 +14,104 @@ using System.IO;
 namespace Test {
   static class TestCommon {
 
-    public static void AssertBigIntegersEqual(string a, BigInteger b){
-      Assert.AreEqual(a,b.ToString());
-      BigInteger a2=BigInteger.fromString(a);
-      Assert.AreEqual(a2,b);
-      AssertEqualsHashCode(a2,b);
+    public static void AssertBigIntegersEqual(string a, BigInteger b) {
+      Assert.AreEqual(a, b.ToString());
+      BigInteger a2 = BigInteger.fromString(a);
+      Assert.AreEqual(a2, b);
+      AssertEqualsHashCode(a2, b);
     }
-    public static void DoTestDivide(string dividend, string divisor, string result){
-      BigInteger bigintA=BigInteger.fromString(dividend);
-      BigInteger bigintB=BigInteger.fromString(divisor);
-      if(bigintB.IsZero){
+    public static void DoTestDivide(string dividend, string divisor, string result) {
+      BigInteger bigintA = BigInteger.fromString(dividend);
+      BigInteger bigintB = BigInteger.fromString(divisor);
+      if (bigintB.IsZero) {
         try { bigintA.divide(bigintB); Assert.Fail("Expected divide by 0 error");
-        } catch(Exception){ }
+        } catch(Exception) { }
       } else {
-        AssertBigIntegersEqual(result,bigintA.divide(bigintB));
+        AssertBigIntegersEqual(result, bigintA.divide(bigintB));
       }
     }
-    public static void DoTestRemainder(string dividend, string divisor, string result){
-      BigInteger bigintA=BigInteger.fromString(dividend);
-      BigInteger bigintB=BigInteger.fromString(divisor);
-      if(bigintB.IsZero){
+    public static void DoTestRemainder(string dividend, string divisor, string result) {
+      BigInteger bigintA = BigInteger.fromString(dividend);
+      BigInteger bigintB = BigInteger.fromString(divisor);
+      if (bigintB.IsZero) {
         try { bigintA.remainder(bigintB); Assert.Fail("Expected divide by 0 error");
-        } catch(Exception){ }
+        } catch(Exception) { }
       } else {
-        AssertBigIntegersEqual(result,(bigintA.remainder(bigintB)));
+        AssertBigIntegersEqual(result, (bigintA.remainder(bigintB)));
       }
     }
-    public static void DoTestDivideAndRemainder(string dividend, string divisor, string result, string rem){
-      BigInteger bigintA=BigInteger.fromString(dividend);
-      BigInteger bigintB=BigInteger.fromString(divisor);
+    public static void DoTestDivideAndRemainder(string dividend, string divisor, string result, string rem) {
+      BigInteger bigintA = BigInteger.fromString(dividend);
+      BigInteger bigintB = BigInteger.fromString(divisor);
       BigInteger rembi;
-      if(bigintB.IsZero){
+      if (bigintB.IsZero) {
         try {
-          BigInteger quo=BigInteger.DivRem(bigintA,bigintB,out rembi);
+          BigInteger quo = BigInteger.DivRem(bigintA, bigintB, out rembi);
           Assert.Fail("Expected divide by 0 error");
-        } catch(Exception){ }
+        } catch(Exception) { }
       } else {
-        BigInteger quo=BigInteger.DivRem(bigintA,bigintB,out rembi);
-        AssertBigIntegersEqual(result,quo);
-        AssertBigIntegersEqual(rem,rembi);
+        BigInteger quo = BigInteger.DivRem(bigintA, bigintB, out rembi);
+        AssertBigIntegersEqual(result, quo);
+        AssertBigIntegersEqual(rem, rembi);
       }
     }
-    public static void DoTestMultiply(string m1, string m2, string result){
-      BigInteger bigintA=BigInteger.fromString(m1);
-      BigInteger bigintB=BigInteger.fromString(m2);
-      AssertBigIntegersEqual(result,(bigintA.multiply(bigintB)));
+    public static void DoTestMultiply(string m1, string m2, string result) {
+      BigInteger bigintA = BigInteger.fromString(m1);
+      BigInteger bigintB = BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result, (bigintA.multiply(bigintB)));
     }
-    public static void DoTestAdd(string m1, string m2, string result){
-      BigInteger bigintA=BigInteger.fromString(m1);
-      BigInteger bigintB=BigInteger.fromString(m2);
-      AssertBigIntegersEqual(result,(bigintA.add(bigintB)));
+    public static void DoTestAdd(string m1, string m2, string result) {
+      BigInteger bigintA = BigInteger.fromString(m1);
+      BigInteger bigintB = BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result, (bigintA.add(bigintB)));
     }
-    public static void DoTestSubtract(string m1, string m2, string result){
-      BigInteger bigintA=BigInteger.fromString(m1);
-      BigInteger bigintB=BigInteger.fromString(m2);
-      AssertBigIntegersEqual(result,(bigintA.subtract(bigintB)));
+    public static void DoTestSubtract(string m1, string m2, string result) {
+      BigInteger bigintA = BigInteger.fromString(m1);
+      BigInteger bigintB = BigInteger.fromString(m2);
+      AssertBigIntegersEqual(result, (bigintA.subtract(bigintB)));
     }
-    public static void DoTestPow(string m1, int m2, string result){
-      BigInteger bigintA=BigInteger.fromString(m1);
-      AssertBigIntegersEqual(result,(bigintA.pow(m2)));
+    public static void DoTestPow(string m1, int m2, string result) {
+      BigInteger bigintA = BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result, (bigintA.pow(m2)));
     }
-    public static void DoTestShiftLeft(string m1, int m2, string result){
-      BigInteger bigintA=BigInteger.fromString(m1);
-      AssertBigIntegersEqual(result,(bigintA.shiftLeft(m2)));
-      AssertBigIntegersEqual(result,(bigintA.shiftRight(-m2)));
+    public static void DoTestShiftLeft(string m1, int m2, string result) {
+      BigInteger bigintA = BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result, (bigintA.shiftLeft(m2)));
+      AssertBigIntegersEqual(result, (bigintA.shiftRight(-m2)));
     }
-    public static void DoTestShiftRight(string m1, int m2, string result){
-      BigInteger bigintA=BigInteger.fromString(m1);
-      AssertBigIntegersEqual(result,(bigintA.shiftRight(m2)));
-      AssertBigIntegersEqual(result,(bigintA.shiftLeft(-m2)));
+    public static void DoTestShiftRight(string m1, int m2, string result) {
+      BigInteger bigintA = BigInteger.fromString(m1);
+      AssertBigIntegersEqual(result, (bigintA.shiftRight(m2)));
+      AssertBigIntegersEqual(result, (bigintA.shiftLeft(-m2)));
     }
 
-    public static void AssertDecFrac(ExtendedDecimal d3, string output, string name){
-      if(output==null && d3!=null)Assert.Fail(name+": d3 must be null");
-      if(output!=null && !d3.ToString().Equals(output)){
-        ExtendedDecimal d4=ExtendedDecimal.FromString(output);
-        Assert.AreEqual(output,d3.ToString(),(
+    public static void AssertDecFrac(ExtendedDecimal d3, string output, string name) {
+      if (output==null && d3!=null)Assert.Fail(name+": d3 must be null");
+      if (output != null && !d3.ToString().Equals(output)) {
+        ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
+        Assert.AreEqual(output, d3.ToString(), (
           name+": expected: ["+(d4.UnsignedMantissa).ToString()+","+(d4.Exponent).ToString()+"]\\n"+
           "but was: ["+(d3.UnsignedMantissa).ToString()+","+(d3.Exponent).ToString()+"]"
-         ));   }
+         )); }
     }
 
-    public static void AssertFlags(int expected, int actual, string name){
-      if(expected==actual)return;
-      Assert.AreEqual((expected&PrecisionContext.FlagInexact)!=0,
+    public static void AssertFlags(int expected, int actual, string name) {
+      if (expected == actual)return;
+      Assert.AreEqual((expected&PrecisionContext.FlagInexact) != 0,
                       (actual&PrecisionContext.FlagInexact)!=0,name+": Inexact");
-      Assert.AreEqual((expected&PrecisionContext.FlagRounded)!=0,
+      Assert.AreEqual((expected&PrecisionContext.FlagRounded) != 0,
                       (actual&PrecisionContext.FlagRounded)!=0,name+": Rounded");
-      Assert.AreEqual((expected&PrecisionContext.FlagSubnormal)!=0,
+      Assert.AreEqual((expected&PrecisionContext.FlagSubnormal) != 0,
                       (actual&PrecisionContext.FlagSubnormal)!=0,name+": Subnormal");
-      Assert.AreEqual((expected&PrecisionContext.FlagOverflow)!=0,
+      Assert.AreEqual((expected&PrecisionContext.FlagOverflow) != 0,
                       (actual&PrecisionContext.FlagOverflow)!=0,name+": Overflow");
-      Assert.AreEqual((expected&PrecisionContext.FlagUnderflow)!=0,
+      Assert.AreEqual((expected&PrecisionContext.FlagUnderflow) != 0,
                       (actual&PrecisionContext.FlagUnderflow)!=0,name+": Underflow");
-      Assert.AreEqual((expected&PrecisionContext.FlagClamped)!=0,
+      Assert.AreEqual((expected&PrecisionContext.FlagClamped) != 0,
                       (actual&PrecisionContext.FlagClamped)!=0,name+": Clamped");
-      Assert.AreEqual((expected&PrecisionContext.FlagInvalid)!=0,
+      Assert.AreEqual((expected&PrecisionContext.FlagInvalid) != 0,
                       (actual&PrecisionContext.FlagInvalid)!=0,name+": Invalid");
-      Assert.AreEqual((expected&PrecisionContext.FlagDivideByZero)!=0,
+      Assert.AreEqual((expected&PrecisionContext.FlagDivideByZero) != 0,
                       (actual&PrecisionContext.FlagDivideByZero)!=0,name+": DivideByZero");
     }
 
@@ -121,8 +121,9 @@ namespace Test {
     private static CBORObject FromBytesB(byte[] b) {
       using (MemoryStream ms = new MemoryStream(b)) {
         CBORObject o = CBORObject.Read(ms);
-        if (ms.Position != ms.Length)
-          throw new CBORException("not at EOF");
+        if (ms.Position != ms.Length) {
+ throw new CBORException("not at EOF");
+}
         return o;
       }
     }
@@ -159,12 +160,12 @@ namespace Test {
       }
     }
 
-    public static void TestNumber(CBORObject o){
-      if(o.Type!= CBORType.Number){
+    public static void TestNumber(CBORObject o) {
+      if (o.Type != CBORType.Number) {
         return;
       }
-      if(o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
-         o.IsNaN()){
+      if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
+         o.IsNaN()) {
         try { o.AsByte(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw new InvalidOperationException("",ex); }
         try { o.AsInt16(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw new InvalidOperationException("",ex); }
         try { o.AsInt32(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw new InvalidOperationException("",ex); }
@@ -174,7 +175,7 @@ namespace Test {
         try { o.AsBigInteger(); } catch(OverflowException){ } catch(Exception ex){ Assert.Fail("Object: "+o+", "+ex.ToString()); throw new InvalidOperationException("",ex); }
         return;
       }
-      BigInteger df=o.AsExtendedDecimal().ToBigInteger();
+      BigInteger df = o.AsExtendedDecimal().ToBigInteger();
       try { o.AsBigInteger(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); throw new InvalidOperationException("",ex); }
       try { o.AsSingle(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); throw new InvalidOperationException("",ex); }
       try { o.AsDouble(); } catch(Exception ex){ Assert.Fail("Object: "+o+", int: "+df+", "+ex.ToString()); throw new InvalidOperationException("",ex); }

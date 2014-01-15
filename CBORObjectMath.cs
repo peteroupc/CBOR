@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 using System;
-//using System.Numerics;
+// using System.Numerics;
 namespace PeterO {
     /// <summary> Implements arithmetic operations with CBOR objects.
     /// </summary>
@@ -16,8 +16,8 @@ namespace PeterO {
   static class CBORObjectMath {
 
     public static CBORObject Addition(CBORObject a, CBORObject b) {
-      if (a == null) throw new ArgumentNullException("a");
-      if (b == null) throw new ArgumentNullException("b");
+      if (a == null) { throw new ArgumentNullException("a"); }
+      if (b == null) { throw new ArgumentNullException("b"); }
       int combo = (a.ItemType << 4) | b.ItemType;
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -51,9 +51,10 @@ namespace PeterO {
           return CBORObject.FromObject(a.AsExtendedDecimal().Add(b.AsExtendedDecimal()));
       }
     }
+
     public static CBORObject Subtract(CBORObject a, CBORObject b) {
-      if (a == null) throw new ArgumentNullException("a");
-      if (b == null) throw new ArgumentNullException("b");
+      if (a == null) { throw new ArgumentNullException("a"); }
+      if (b == null) { throw new ArgumentNullException("b"); }
       int combo = (a.ItemType << 4) | b.ItemType;
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -87,9 +88,10 @@ namespace PeterO {
           return CBORObject.FromObject(a.AsExtendedDecimal().Subtract(b.AsExtendedDecimal()));
       }
     }
+
     public static CBORObject Multiply(CBORObject a, CBORObject b) {
-      if (a == null) throw new ArgumentNullException("a");
-      if (b == null) throw new ArgumentNullException("b");
+      if (a == null) { throw new ArgumentNullException("a"); }
+      if (b == null) { throw new ArgumentNullException("b"); }
       int combo = (a.ItemType << 4) | b.ItemType;
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -97,8 +99,8 @@ namespace PeterO {
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_Integer: {
             long valueA = (long)a.ThisItem;
             long valueB = (long)b.ThisItem;
-            bool apos = (valueA > 0L);
-            bool bpos = (valueB > 0L);
+            bool apos = valueA > 0L;
+            bool bpos = valueB > 0L;
             if (
               (apos && ((!bpos && (Int64.MinValue / valueA) > valueB) ||
                         (bpos && valueA > (Int64.MaxValue / valueB)))) ||

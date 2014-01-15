@@ -7,7 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-//import java.math.*;
+// import java.math.*;
 
     /**
      * Implements arithmetic operations with CBOR objects.
@@ -19,8 +19,8 @@ at: http://peteroupc.github.io/CBOR/
 private CBORObjectMath(){}
 
     public static CBORObject Addition(CBORObject a, CBORObject b) {
-      if (a == null) throw new NullPointerException("a");
-      if (b == null) throw new NullPointerException("b");
+      if (a == null) { throw new NullPointerException("a"); }
+      if (b == null) { throw new NullPointerException("b"); }
       int combo = (a.getItemType() << 4) | b.getItemType();
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -54,9 +54,10 @@ private CBORObjectMath(){}
           return CBORObject.FromObject(a.AsExtendedDecimal().Add(b.AsExtendedDecimal()));
       }
     }
+
     public static CBORObject Subtract(CBORObject a, CBORObject b) {
-      if (a == null) throw new NullPointerException("a");
-      if (b == null) throw new NullPointerException("b");
+      if (a == null) { throw new NullPointerException("a"); }
+      if (b == null) { throw new NullPointerException("b"); }
       int combo = (a.getItemType() << 4) | b.getItemType();
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -90,9 +91,10 @@ private CBORObjectMath(){}
           return CBORObject.FromObject(a.AsExtendedDecimal().Subtract(b.AsExtendedDecimal()));
       }
     }
+
     public static CBORObject Multiply(CBORObject a, CBORObject b) {
-      if (a == null) throw new NullPointerException("a");
-      if (b == null) throw new NullPointerException("b");
+      if (a == null) { throw new NullPointerException("a"); }
+      if (b == null) { throw new NullPointerException("b"); }
       int combo = (a.getItemType() << 4) | b.getItemType();
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -100,8 +102,8 @@ private CBORObjectMath(){}
         case (CBORObject.CBORObjectType_Integer << 4) | CBORObject.CBORObjectType_Integer: {
             long valueA = (((Long)a.getThisItem()).longValue());
             long valueB = (((Long)b.getThisItem()).longValue());
-            boolean apos = (valueA > 0L);
-            boolean bpos = (valueB > 0L);
+            boolean apos = valueA > 0L;
+            boolean bpos = valueB > 0L;
             if (
               (apos && ((!bpos && (Long.MIN_VALUE / valueA) > valueB) ||
                         (bpos && valueA > (Long.MAX_VALUE / valueB)))) ||

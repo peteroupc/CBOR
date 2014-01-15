@@ -14,7 +14,7 @@ namespace PeterO {
     /// <param name='args'>A string[] object.</param>
   public class Runner {
     private static bool HasAttribute(Type mi, Type t) {
-      foreach (object a in mi.GetCustomAttributes(t,false)) {
+      foreach (object a in mi.GetCustomAttributes(t, false)) {
         if (t.IsAssignableFrom(a.GetType())) {
           return true;
         }
@@ -22,7 +22,7 @@ namespace PeterO {
       return false;
     }
     private static bool HasAttribute(MethodInfo mi, Type t) {
-      foreach (object a in mi.GetCustomAttributes(t,false)) {
+      foreach (object a in mi.GetCustomAttributes(t, false)) {
         if (t.IsAssignableFrom(a.GetType())) {
           return true;
         }
@@ -30,21 +30,21 @@ namespace PeterO {
       return false;
     }
     public static void Main(string[] args) {
-      String param=null;
-      if(args.Length>0){
-        param=args[0];
+      String param = null;
+      if (args.Length>0) {
+        param = args[0];
         Console.WriteLine(param);
       }
       new Test.DecimalTest().TestParser();
-      if(args.Length==0)return;
+      if (args.Length == 0)return;
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) continue;
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
-        if(param!=null && param.Length>0){
-          if(!type.FullName.Contains(param))
+        if (param != null && param.Length>0) {
+          if (!type.FullName.Contains(param))
             continue;
         }
         object test = Activator.CreateInstance(type);
@@ -55,7 +55,7 @@ namespace PeterO {
         foreach (var method in test.GetType().GetMethods()) {
           if (!HasAttribute(method, typeof(TestAttribute))) continue;
           Console.WriteLine(method.Name);
-          if(!method.Name.Contains("TestParser"))continue;
+          if (!method.Name.Contains("TestParser"))continue;
           Type exctype = null;
           foreach (var a in method.GetCustomAttributes(false)) {
             if (a is ExpectedExceptionAttribute) {

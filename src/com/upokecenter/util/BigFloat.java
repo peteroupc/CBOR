@@ -7,7 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-//import java.math.*;
+// import java.math.*;
 
     /**
      * Represents an arbitrary-precision binary floating-point number.
@@ -23,11 +23,11 @@ at: http://peteroupc.github.io/CBOR/
      * Gets this object's exponent. This object's value will be an integer
      * if the exponent is positive or zero.
      */
-    public BigInteger getExponent() { return exponent; }
+    public BigInteger getExponent() { return this.exponent; }
     /**
      * Gets this object's unscaled value.
      */
-    public BigInteger getMantissa() { return mantissa; }
+    public BigInteger getMantissa() { return this.mantissa; }
 
     /**
      * Determines whether this object's mantissa and exponent are equal
@@ -42,12 +42,12 @@ at: http://peteroupc.github.io/CBOR/
         this.mantissa.equals(otherValue.mantissa);
     }
     /**
-     *
+     * Not documented yet.
      * @param other A BigFloat object.
      * @return A Boolean object.
      */
     public boolean equals(BigFloat other) {
-      return EqualsInternal(other);
+      return this.EqualsInternal(other);
     }
     /**
      * Determines whether this object's mantissa and exponent are equal
@@ -56,17 +56,17 @@ at: http://peteroupc.github.io/CBOR/
      * @return True if the objects are equal; false otherwise.
      */
     @Override public boolean equals(Object obj) {
-      return EqualsInternal(((obj instanceof BigFloat) ? (BigFloat)obj : null));
+      return this.EqualsInternal(((obj instanceof BigFloat) ? (BigFloat)obj : null));
     }
     /**
      * Calculates this object's hash code.
-     * @return This object&apos;s hash code.
+     * @return This object&apos; s hash code.
      */
     @Override public int hashCode() {
       int hashCode_ = 0;
       {
-        hashCode_ += 1000000007 * exponent.hashCode();
-        hashCode_ += 1000000009 * mantissa.hashCode();
+        hashCode_ += 1000000007 * this.exponent.hashCode();
+        hashCode_ += 1000000009 * this.mantissa.hashCode();
       }
       return hashCode_;
     }
@@ -83,6 +83,7 @@ at: http://peteroupc.github.io/CBOR/
 
     private static BigInteger BigShiftIteration = BigInteger.valueOf(1000000);
     private static int ShiftIteration = 1000000;
+
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
       while (bigShift.compareTo(BigShiftIteration) > 0) {
         val=val.shiftLeft(1000000);
@@ -92,6 +93,7 @@ at: http://peteroupc.github.io/CBOR/
       val=val.shiftLeft(lastshift);
       return val;
     }
+
     private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
       while (shift > ShiftIteration) {
         val=val.shiftLeft(1000000);
@@ -103,27 +105,27 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     *
+     * Not documented yet.
      * @param bigint A BigInteger object.
      * @return A BigFloat object.
      */
     public static BigFloat FromBigInteger(BigInteger bigint) {
-      return new BigFloat(bigint,BigInteger.ZERO);
+      return new BigFloat(bigint, BigInteger.ZERO);
     }
 
     /**
-     *
+     * Not documented yet.
      * @param numberValue A 64-bit signed integer.
      * @return A BigFloat object.
      */
     public static BigFloat FromInt64(long numberValue) {
-      BigInteger bigint=BigInteger.valueOf(numberValue);
-      return new BigFloat(bigint,BigInteger.ZERO);
+      BigInteger bigint = BigInteger.valueOf(numberValue);
+      return new BigFloat(bigint, BigInteger.ZERO);
     }
 
     public static BigFloat FromExtendedFloat(ExtendedFloat ef) {
-      if(ef.IsNaN() || ef.IsInfinity())throw new ArithmeticException("Is NaN or infinity");
-      return new BigFloat(ef.getMantissa(),ef.getExponent());
+      if (ef.IsNaN() || ef.IsInfinity())throw new ArithmeticException("Is NaN or infinity");
+      return new BigFloat(ef.getMantissa(), ef.getExponent());
     }
 
     /**
@@ -141,7 +143,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Creates a bigfloat from a 32-bit floating-point number.
      * @param flt A 32-bit floating-point number.
-     * @return A bigfloat with the same value as &quot;flt&quot;.
+     * @return A bigfloat with the same value as &quot; flt&quot; .
      * @throws ArithmeticException "flt" is infinity or not-a-number.
      */
     public static BigFloat FromSingle(float flt) {
@@ -150,7 +152,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Creates a bigfloat from a 64-bit floating-point number.
      * @param dbl A 64-bit floating-point number.
-     * @return A bigfloat with the same value as &quot;dbl&quot;
+     * @return A bigfloat with the same value as &quot; dbl&quot;
      * @throws ArithmeticException "dbl" is infinity or not-a-number.
      */
     public static BigFloat FromDouble(double dbl) {
@@ -162,7 +164,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public BigInteger ToBigInteger() {
-      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToBigInteger();
+      return ExtendedFloat.Create(this.getMantissa(), this.getExponent()).ToBigInteger();
     }
 
     /**
@@ -173,7 +175,7 @@ at: http://peteroupc.github.io/CBOR/
      * this value exceeds the range of a 32-bit floating point number.
      */
     public float ToSingle() {
-      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToSingle();
+      return ExtendedFloat.Create(this.getMantissa(), this.getExponent()).ToSingle();
     }
 
     /**
@@ -184,7 +186,7 @@ at: http://peteroupc.github.io/CBOR/
      * this value exceeds the range of a 64-bit floating point number.
      */
     public double ToDouble() {
-      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToDouble();
+      return ExtendedFloat.Create(this.getMantissa(), this.getExponent()).ToDouble();
     }
     /**
      * Converts this value to a string.The format of the return value is exactly
@@ -192,7 +194,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A string representation of this object.
      */
     @Override public String toString() {
-      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).toString();
+      return ExtendedFloat.Create(this.getMantissa(), this.getExponent()).toString();
     }
     /**
      * Same as toString(), except that when an exponent is used it will be
@@ -201,7 +203,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A string object.
      */
     public String ToEngineeringString() {
-      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToEngineeringString();
+      return ExtendedFloat.Create(this.getMantissa(), this.getExponent()).ToEngineeringString();
     }
     /**
      * Converts this value to a string, but without an exponent part. The
@@ -210,20 +212,20 @@ at: http://peteroupc.github.io/CBOR/
      * @return A string object.
      */
     public String ToPlainString() {
-      return ExtendedFloat.Create(this.getMantissa(),this.getExponent()).ToPlainString();
+      return ExtendedFloat.Create(this.getMantissa(), this.getExponent()).ToPlainString();
     }
 
     /**
      * Represents the number 1.
      */
 
-    public static final BigFloat One = new BigFloat(BigInteger.ONE,BigInteger.ZERO);
+    public static final BigFloat One = new BigFloat(BigInteger.ONE, BigInteger.ZERO);
 
     /**
      * Represents the number 0.
      */
 
-    public static final BigFloat Zero = new BigFloat(BigInteger.ZERO,BigInteger.ZERO);
+    public static final BigFloat Zero = new BigFloat(BigInteger.ZERO, BigInteger.ZERO);
     /**
      * Represents the number 10.
      */
@@ -233,7 +235,7 @@ at: http://peteroupc.github.io/CBOR/
     private static final class BinaryMathHelper implements IRadixMathHelper<BigFloat> {
 
     /**
-     *
+     * Not documented yet.
      * @return A 32-bit signed integer.
      */
       public int GetRadix() {
@@ -241,7 +243,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     *
+     * Not documented yet.
      * @param value A BigFloat object.
      * @return A 32-bit signed integer.
      */
@@ -250,7 +252,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     *
+     * Not documented yet.
      * @param value A BigFloat object.
      * @return A BigInteger object.
      */
@@ -259,7 +261,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     *
+     * Not documented yet.
      * @param value A BigFloat object.
      * @return A BigInteger object.
      */
@@ -268,14 +270,14 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     *
+     * Not documented yet.
      * @param mantissa A BigInteger object.
      * @param e1 A BigInteger object.
      * @param e2 A BigInteger object.
      * @return A BigInteger object.
      */
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
-        boolean negative = (mantissa.signum() < 0);
+        boolean negative = mantissa.signum() < 0;
         if (negative) mantissa=mantissa.negate();
         BigInteger diff = (e1.subtract(e2)).abs();
         mantissa = ShiftLeft(mantissa, diff);
@@ -284,7 +286,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     *
+     * Not documented yet.
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer.
      * @param bigint A BigInteger object.
@@ -295,23 +297,23 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     *
+     * Not documented yet.
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
-        return new BitShiftAccumulator(bigint,0,0);
+        return new BitShiftAccumulator(bigint, 0, 0);
       }
 
     /**
-     *
+     * Not documented yet.
      * @param num A BigInteger object.
      * @param den A BigInteger object.
      * @return A Boolean object.
      */
       public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
         BigInteger gcd = num.gcd(den);
-        if (gcd.signum()==0) return false;
+        if (gcd.signum()==0) { return false; }
         den=den.divide(gcd);
         while (den.testBit(0)==false) {
           den=den.shiftRight(1);
@@ -320,13 +322,13 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     *
+     * Not documented yet.
      * @param bigint A BigInteger object.
      * @param power A FastInteger object.
      * @return A BigInteger object.
      */
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
-        if (power.signum() <= 0) return bigint;
+        if (power.signum() <= 0) { return bigint; }
         if (power.CanFitInInt32()) {
           return ShiftLeftInt(bigint, power.AsInt32());
         } else {
@@ -335,29 +337,29 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     *
+     * Not documented yet.
      * @param value A BigFloat object.
      * @return A 32-bit signed integer.
      */
       public int GetFlags(BigFloat value) {
-        return value.mantissa.signum()<0 ? BigNumberFlags.FlagNegative : 0;
+        return value.mantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
       }
 
     /**
-     *
+     * Not documented yet.
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object.
      * @param flags A 32-bit signed integer.
      * @return A BigFloat object.
      */
       public BigFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
-        boolean neg=(flags&BigNumberFlags.FlagNegative)!=0;
-        if((neg && mantissa.signum()>0) || (!neg && mantissa.signum()<0))
+        boolean neg = (flags & BigNumberFlags.FlagNegative) != 0;
+        if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0))
           mantissa=mantissa.negate();
-        return new BigFloat(mantissa,exponent);
+        return new BigFloat(mantissa, exponent);
       }
     /**
-     *
+     * Not documented yet.
      * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
@@ -365,7 +367,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     *
+     * Not documented yet.
      * @param val A 32-bit signed integer.
      * @return A BigFloat object.
      */
@@ -379,20 +381,20 @@ at: http://peteroupc.github.io/CBOR/
      * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
-        return mantissa.signum();
+        return this.mantissa.signum();
       }
     /**
      * Gets whether this object's value equals 0.
      */
     public boolean isZero() {
-        return mantissa.signum()==0;
+        return this.mantissa.signum()==0;
       }
     /**
      * Gets the absolute value of this object.
      * @return A BigFloat object.
      */
     public BigFloat Abs() {
-      return Abs(null);
+      return this.Abs(null);
     }
 
     /**
@@ -400,7 +402,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigFloat object.
      */
     public BigFloat Negate() {
-      return Negate(null);
+      return this.Negate(null);
     }
 
     /**
@@ -413,7 +415,7 @@ at: http://peteroupc.github.io/CBOR/
      * decimal expansion.
      */
     public BigFloat Divide(BigFloat divisor) {
-      return Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
+      return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
 
     /**
@@ -428,7 +430,7 @@ at: http://peteroupc.github.io/CBOR/
      * and the result is not exact.
      */
     public BigFloat DivideToSameExponent(BigFloat divisor, Rounding rounding) {
-      return DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
+      return this.DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
     }
 
     /**
@@ -440,9 +442,8 @@ at: http://peteroupc.github.io/CBOR/
      * @throws ArithmeticException Attempted to divide by zero.
      */
     public BigFloat DivideToIntegerNaturalScale(
-      BigFloat divisor
-     ) {
-      return DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
+      BigFloat divisor) {
+      return this.DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
 
     /**
@@ -463,28 +464,27 @@ at: http://peteroupc.github.io/CBOR/
       return math.Reduce(this, ctx);
     }
     /**
-     *
+     * Not documented yet.
      * @param divisor A BigFloat object.
      * @return A BigFloat object.
      */
     public BigFloat RemainderNaturalScale(
-      BigFloat divisor
-     ) {
-      return RemainderNaturalScale(divisor,null);
+      BigFloat divisor) {
+      return this.RemainderNaturalScale(divisor, null);
     }
 
     /**
-     *
+     * Not documented yet.
      * @param divisor A BigFloat object.
      * @param ctx A PrecisionContext object.
      * @return A BigFloat object.
      */
     public BigFloat RemainderNaturalScale(
       BigFloat divisor,
-      PrecisionContext ctx
-     ) {
-      return Subtract(this.DivideToIntegerNaturalScale(divisor,null)
-                      .Multiply(divisor,null),ctx);
+      PrecisionContext ctx) {
+      return this.Subtract(
+this.DivideToIntegerNaturalScale(divisor, null)
+                      .Multiply(divisor, null), ctx);
     }
 
     /**
@@ -511,9 +511,8 @@ at: http://peteroupc.github.io/CBOR/
     public BigFloat DivideToExponent(
       BigFloat divisor,
       long desiredExponentSmall,
-      PrecisionContext ctx
-     ) {
-      return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)), ctx);
+      PrecisionContext ctx) {
+      return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, ctx);
     }
 
     /**
@@ -533,9 +532,8 @@ at: http://peteroupc.github.io/CBOR/
     public BigFloat DivideToExponent(
       BigFloat divisor,
       long desiredExponentSmall,
-      Rounding rounding
-     ) {
-      return DivideToExponent(divisor, (BigInteger.valueOf(desiredExponentSmall)), PrecisionContext.ForRounding(rounding));
+      Rounding rounding) {
+      return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, PrecisionContext.ForRounding(rounding));
     }
 
     /**
@@ -581,9 +579,8 @@ at: http://peteroupc.github.io/CBOR/
     public BigFloat DivideToExponent(
       BigFloat divisor,
       BigInteger desiredExponent,
-      Rounding rounding
-     ) {
-      return DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
+      Rounding rounding) {
+      return this.DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
 
     /**
@@ -597,9 +594,9 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigFloat Abs(PrecisionContext context) {
       if (this.signum() < 0) {
-        return Negate(context);
+        return this.Negate(context);
       } else {
-        return RoundToPrecision(context);
+        return this.RoundToPrecision(context);
       }
     }
 
@@ -623,8 +620,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return The sum of the two objects.
      */
     public BigFloat Add(BigFloat decfrac) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
-      return Add(decfrac, PrecisionContext.Unlimited);
+      if (decfrac == null)throw new NullPointerException("decfrac");
+      return this.Add(decfrac, PrecisionContext.Unlimited);
     }
 
     /**
@@ -633,7 +630,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return The difference of the two objects.
      */
     public BigFloat Subtract(BigFloat decfrac) {
-      return Subtract(decfrac,null);
+      return this.Subtract(decfrac, null);
     }
 
     /**
@@ -648,8 +645,8 @@ at: http://peteroupc.github.io/CBOR/
      * exponent range.
      */
     public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
-      return Add(decfrac.Negate(null), ctx);
+      if (decfrac == null)throw new NullPointerException("decfrac");
+      return this.Add(decfrac.Negate(null), ctx);
     }
     /**
      * Multiplies two bigfloats. The resulting scale will be the sum of the
@@ -660,8 +657,8 @@ at: http://peteroupc.github.io/CBOR/
      * range.
      */
     public BigFloat Multiply(BigFloat decfrac) {
-      if((decfrac)==null)throw new NullPointerException("decfrac");
-      return Multiply(decfrac, PrecisionContext.Unlimited);
+      if (decfrac == null)throw new NullPointerException("decfrac");
+      return this.Multiply(decfrac, PrecisionContext.Unlimited);
     }
 
     /**
@@ -670,9 +667,10 @@ at: http://peteroupc.github.io/CBOR/
      * @param augend The value to add.
      * @return The result this * multiplicand + augend.
      */
-    public BigFloat MultiplyAndAdd(BigFloat multiplicand,
+    public BigFloat MultiplyAndAdd(
+BigFloat multiplicand,
                                    BigFloat augend) {
-      return MultiplyAndAdd(multiplicand,augend,null);
+      return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
 
@@ -686,8 +684,8 @@ at: http://peteroupc.github.io/CBOR/
      * @param divisor The divisor.
      * @param ctx A precision context object to control the precision, rounding,
      * and exponent range of the integer part of the result. Flags will be
-     * set on the given context only if the context&apos;s HasFlags is true
-     * and the integer part of the result doesn&apos;t fit the precision
+     * set on the given context only if the context&apos; s HasFlags is true
+     * and the integer part of the result doesn&apos; t fit the precision
      * and exponent range without rounding.
      * @return The integer part of the quotient of the two objects. If a precision
      * context is given, returns null if the result of the rounding overflowed
@@ -776,15 +774,14 @@ at: http://peteroupc.github.io/CBOR/
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the largest value that&apos;s less than the given
+     * @return Returns the largest value that&apos; s less than the given
      * value. Returns null if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
     public BigFloat NextMinus(
-      PrecisionContext ctx
-     ) {
-      return math.NextMinus(this,ctx);
+      PrecisionContext ctx) {
+      return math.NextMinus(this, ctx);
     }
 
     /**
@@ -793,15 +790,14 @@ at: http://peteroupc.github.io/CBOR/
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the smallest value that&apos;s greater than the
+     * @return Returns the smallest value that&apos; s greater than the
      * given value. Returns null if the result is positive infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
     public BigFloat NextPlus(
-      PrecisionContext ctx
-     ) {
-      return math.NextPlus(this,ctx);
+      PrecisionContext ctx) {
+      return math.NextPlus(this, ctx);
     }
 
     /**
@@ -812,17 +808,16 @@ at: http://peteroupc.github.io/CBOR/
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the next value that is closer to the other object&apos;s
-     * value than this object&apos;s value. Returns null if the result is
-     * infinity.
+     * @return Returns the next value that is closer to the other object&apos;
+     * s value than this object&apos; s value. Returns null if the result
+     * is infinity.
      * @throws java.lang.IllegalArgumentException "ctx" is null, the precision
      * is 0, or "ctx" has an unlimited exponent range.
      */
     public BigFloat NextToward(
       BigFloat otherValue,
-      PrecisionContext ctx
-     ) {
-      return math.NextToward(this,otherValue,ctx);
+      PrecisionContext ctx) {
+      return math.NextToward(this, otherValue, ctx);
     }
 
     /**
@@ -845,8 +840,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigFloat Divide(
       BigFloat divisor,
-      PrecisionContext ctx
-     ) {
+      PrecisionContext ctx) {
       return math.Divide(this, divisor, ctx);
     }
 
@@ -900,9 +894,9 @@ at: http://peteroupc.github.io/CBOR/
      * different bigfloats with the same mathematical value, but different
      * exponents, will compare as equal.</p>
      * @param other A BigFloat object.
-     * @return Less than 0 if this object&apos;s value is less than the other
-     * value, or greater than 0 if this object&apos;s value is greater than
-     * the other value or if &quot;other&quot; is null, or 0 if both values
+     * @return Less than 0 if this object&apos; s value is less than the other
+     * value, or greater than 0 if this object&apos; s value is greater than
+     * the other value or if &quot; other&quot; is null, or 0 if both values
      * are equal.
      */
     public int compareTo(
@@ -966,7 +960,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigFloat Quantize(
       BigInteger desiredExponent, PrecisionContext ctx) {
-      return Quantize(new BigFloat(BigInteger.ONE,desiredExponent), ctx);
+      return this.Quantize(new BigFloat(BigInteger.ONE, desiredExponent), ctx);
     }
 
     /**
@@ -986,7 +980,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigFloat Quantize(
       int desiredExponentSmall, PrecisionContext ctx) {
-      return Quantize(new BigFloat(BigInteger.ONE,BigInteger.valueOf(desiredExponentSmall)), ctx);
+      return this.Quantize(new BigFloat(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
     /**
@@ -1094,7 +1088,7 @@ at: http://peteroupc.github.io/CBOR/
      * addition to the pre-existing flags). Can be null, in which case the
      * default rounding mode is HalfEven.
      * @return A bigfloat rounded to the closest value representable in
-     * the given precision, meaning if the result can&apos;t fit the precision,
+     * the given precision, meaning if the result can&apos; t fit the precision,
      * additional digits are discarded to make it fit. If a precision context
      * is given, returns null if the result of the rounding overflowed the
      * exponent range.
@@ -1144,9 +1138,9 @@ at: http://peteroupc.github.io/CBOR/
      * mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
-     * @return The closest value to this object&apos;s value, rounded to
+     * @return The closest value to this object&apos; s value, rounded to
      * the specified precision. Returns the same value as this object if
-     * &quot;context&quot; is null or the precision and exponent range
+     * &quot; context&quot; is null or the precision and exponent range
      * are unlimited. If a precision context is given, returns null if the
      * result of the rounding overflowed the exponent range.
      */
@@ -1161,9 +1155,9 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. The precision is interpreted as the maximum bit
      * length of the mantissa. Can be null.
-     * @return The closest value to this object&apos;s value, rounded to
+     * @return The closest value to this object&apos; s value, rounded to
      * the specified precision. Returns the same value as this object if
-     * &quot;context&quot; is null or the precision and exponent range
+     * &quot; context&quot; is null or the precision and exponent range
      * are unlimited. Returns null if the result of the rounding overflowed
      * the exponent range.
      */

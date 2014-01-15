@@ -21,8 +21,9 @@ namespace PeterO {
     /// <param name='stream'>A readable data stream.</param>
   public static class BEncoding {
     private static void writeUtf8(string s, Stream stream) {
-      if (DataUtilities.WriteUtf8(s, stream, false) != 0)
-        throw new CBORException("invalid surrogate");
+      if (DataUtilities.WriteUtf8(s, stream, false) != 0) {
+ throw new CBORException("invalid surrogate");
+}
     }
     private static CBORObject readDictionary(Stream stream) {
       CBORObject obj = CBORObject.NewMap();
@@ -42,8 +43,9 @@ namespace PeterO {
       bool start = true;
       while (true) {
         int c = stream.ReadByte();
-        if (c < 0)
-          throw new CBORException("Premature end of data");
+        if (c < 0) {
+ throw new CBORException("Premature end of data");
+}
         if (c >= (int)'0' && c <= (int)'9') {
           builder.Append((char)c);
           start = false;
@@ -96,8 +98,9 @@ namespace PeterO {
       }
       while (true) {
         int c = stream.ReadByte();
-        if (c < 0)
-          throw new CBORException("Premature end of data");
+        if (c < 0) {
+ throw new CBORException("Premature end of data");
+}
         if (c >= (int)'0' && c <= (int)'9') {
           builder.Append((char)c);
         } else if (c == (int)':') {
@@ -133,8 +136,9 @@ namespace PeterO {
       } else if (obj.Type == CBORType.TextString) {
         string s = obj.AsString();
         long length = DataUtilities.GetUtf8Length(s, false);
-        if (length < 0)
-          throw new CBORException("invalid string");
+        if (length < 0) {
+ throw new CBORException("invalid string");
+}
         writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(s, stream);
@@ -162,8 +166,9 @@ namespace PeterO {
             string key = entry.Key;
             CBORObject value = entry.Value;
             long length = DataUtilities.GetUtf8Length(key, false);
-            if (length < 0)
-              throw new CBORException("invalid string");
+            if (length < 0) {
+ throw new CBORException("invalid string");
+}
             writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(key, stream);
@@ -175,8 +180,9 @@ namespace PeterO {
           foreach (CBORObject key in obj.Keys) {
             string str = key.AsString();
             long length = DataUtilities.GetUtf8Length(str, false);
-            if (length < 0)
-              throw new CBORException("invalid string");
+            if (length < 0) {
+ throw new CBORException("invalid string");
+}
             writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(str, stream);
@@ -186,15 +192,16 @@ namespace PeterO {
         }
       } else if (obj.Type == CBORType.Array) {
         stream.WriteByte(unchecked((byte)((byte)'l')));
-        for (int i = 0; i < obj.Count; i++) {
+        for (int i = 0; i < obj.Count; ++i) {
           Write(obj[i], stream);
         }
         stream.WriteByte(unchecked((byte)((byte)'e')));
       } else {
         string str = obj.ToJSONString();
         long length = DataUtilities.GetUtf8Length(str, false);
-        if (length < 0)
-          throw new CBORException("invalid string");
+        if (length < 0) {
+ throw new CBORException("invalid string");
+}
         writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(str, stream);

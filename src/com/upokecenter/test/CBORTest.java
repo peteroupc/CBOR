@@ -82,8 +82,8 @@ import org.junit.Test;
           r |= ((long)rand.NextValue(0x10000)) << 48;
         }
       }
-      r &= ~0x7FF0000000000000L; // clear exponent
-      r |= ((long)exponent) << 52; // set exponent
+      r &= ~0x7FF0000000000000L;  // clear exponent
+      r |= ((long)exponent) << 52;  // set exponent
       return Double.longBitsToDouble(r);
     }
     private static float RandomSingle(FastRandom rand, int exponent) {
@@ -93,8 +93,8 @@ import org.junit.Test;
       if (rand.NextValue(2) == 0) {
         r |= ((int)rand.NextValue(0x10000)) << 16;
       }
-      r &= ~0x7F800000; // clear exponent
-      r |= ((int)exponent) << 23; // set exponent
+      r &= ~0x7F800000;  // clear exponent
+      r |= ((int)exponent) << 23;  // set exponent
       return Float.intBitsToFloat(r);
     }
     public static ExtendedDecimal RandomExtendedDecimal(FastRandom r) {
@@ -110,7 +110,7 @@ import org.junit.Test;
       int count = r.NextValue(50) + 1;
       StringBuilder sb = new StringBuilder();
       if (r.NextValue(2) == 0) sb.append('-');
-      for (int i = 0; i < count; i++) {
+      for (int i = 0; i < count; ++i) {
         if (i == 0)
           sb.append((char)('1' + r.NextValue(9)));
         else
@@ -122,7 +122,7 @@ import org.junit.Test;
       int count = r.NextValue(20) + 1;
       StringBuilder sb = new StringBuilder();
       if (r.NextValue(2) == 0) sb.append('-');
-      for (int i = 0; i < count; i++) {
+      for (int i = 0; i < count; ++i) {
         if (i == 0)
           sb.append((char)('1' + r.NextValue(9)));
         else
@@ -131,7 +131,7 @@ import org.junit.Test;
       if (r.NextValue(2) == 0) {
         sb.append('.');
         count = r.NextValue(20) + 1;
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; ++i) {
           sb.append((char)('0' + r.NextValue(10)));
         }
       }
@@ -157,7 +157,7 @@ import org.junit.Test;
     @Test
     public void TestAdd() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 3000; i++) {
+      for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
         ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
@@ -175,7 +175,7 @@ import org.junit.Test;
     @Test
     public void TestSubtract() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 3000; i++) {
+      for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
         ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Subtract(o2.AsExtendedDecimal());
@@ -208,8 +208,8 @@ import org.junit.Test;
     }
 
     private static int CompareTestReciprocal(CBORObject o1, CBORObject o2) {
-      if ((o1) == null) throw new NullPointerException("o1");
-      if ((o2) == null) throw new NullPointerException("o2");
+      if ((o1) == null) { throw new NullPointerException("o1"); }
+      if ((o2) == null) { throw new NullPointerException("o2"); }
       int cmp = o1.compareTo(o2);
       int cmp2 = o2.compareTo(o1);
       if (-cmp2 != cmp) {
@@ -223,7 +223,7 @@ import org.junit.Test;
       StringBuilder sb = new StringBuilder();
       String hex = "0123456789ABCDEF";
       sb.append("CBORObject.DecodeFromBytes(new byte[]{");
-      for (int i = 0; i < bytes.length; i++) {
+      for (int i = 0; i < bytes.length; ++i) {
         if (i > 0)
           sb.append(",");
         if ((bytes[i] & 0x80) != 0)
@@ -246,9 +246,9 @@ import org.junit.Test;
       CBORObject o1 = null;
       CBORObject o2 = null;
       o1 = CBORObject.DecodeFromBytes(new byte[]{ (byte)0xFB, (byte)0x8B, 0x44, (byte)0xF2, (byte)0xA9, 0x0C, 0x27, 0x42, 0x28 });
-      o2 = CBORObject.DecodeFromBytes(new byte[]{(byte)0xC5,(byte)0x82,0x38,(byte)0xA4,(byte)0xC3,0x50,0x02,(byte)0x98,
-                                      (byte)0xC5,(byte)0xA8,0x02,(byte)0xC1,(byte)0xF6,(byte)0xC0,0x1A,(byte)0xBE,0x08,
-                                      0x04,(byte)0x86,(byte)0x99,0x3E,(byte)0xF1});
+      o2 = CBORObject.DecodeFromBytes(new byte[]{(byte)0xC5, (byte)0x82, 0x38, (byte)0xA4, (byte)0xC3, 0x50, 0x02, (byte)0x98,
+                                      (byte)0xC5, (byte)0xA8, 0x02, (byte)0xC1, (byte)0xF6, (byte)0xC0, 0x1A, (byte)0xBE, 0x08,
+                                      0x04, (byte)0x86, (byte)0x99, 0x3E, (byte)0xF1});
       AddSubCompare(o1, o2);
     }
 
@@ -319,12 +319,12 @@ import org.junit.Test;
     @Test
     public void TestCompare() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 5000; i++) {
+      for (int i = 0; i < 5000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
         CompareDecimals(o1, o2);
       }
-      for (int i = 0; i < 50; i++) {
+      for (int i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Float.NEGATIVE_INFINITY);
         CBORObject o2 = RandomNumber(r);
         CompareTestLess(o1, o2);
@@ -369,7 +369,7 @@ import org.junit.Test;
     @Test
     public void TestParseDecimalStrings() {
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 3000; i++) {
+      for (int i = 0; i < 3000; ++i) {
         String r = RandomDecimalString(rand);
         TestDecimalString(r);
       }
@@ -380,9 +380,9 @@ import org.junit.Test;
     @Test
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 200; i++) {
+      for (int i = 0; i < 200; ++i) {
         byte[] array = new byte[rand.NextValue(1000000) + 1];
-        for (int j = 0; j < array.length; j++) {
+        for (int j = 0; j < array.length; ++j) {
           if (j + 3 <= array.length) {
             int r = rand.NextValue(0x1000000);
             array[j] = (byte)((r) & 0xFF);
@@ -418,7 +418,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test
     public void TestExtendedFloatSingle() {
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 255; i++) { // Try a random float with a given exponent
+      for (int i = 0; i < 255; ++i) {  // Try a random float with a given exponent
         TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
         TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
         TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
@@ -436,7 +436,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestExtendedFloatDoubleCore(1.75, "1.75");
       TestExtendedFloatDoubleCore(3.5, "3.5");
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 2047; i++) { // Try a random double with a given exponent
+      for (int i = 0; i < 2047; ++i) {  // Try a random double with a given exponent
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
@@ -513,7 +513,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void TestByte() {
-      for (int i = 0; i <= 255; i++) {
+      for (int i = 0; i <= 255; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((byte)i),
           String.format(java.util.Locale.US,"%s", i));
@@ -747,11 +747,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
                      0, " \ufffd\ufffd", -1, null);
     }
     private static boolean ByteArrayEquals(byte[] arrayA, byte[] arrayB) {
-      if (arrayA == null) return (arrayB == null);
-      if (arrayB == null) return false;
-      if (arrayA.length != arrayB.length) return false;
-      for (int i = 0; i < arrayA.length; i++) {
-        if (arrayA[i] != arrayB[i]) return false;
+      if (arrayA == null) { return (arrayB == null); }
+      if (arrayB == null) { return false; }
+      if (arrayA.length != arrayB.length) { return false; }
+      for (int i = 0; i < arrayA.length; ++i) {
+        if (arrayA[i] != arrayB[i]) { return false; }
       }
       return true;
     }
@@ -785,14 +785,14 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     }
     private static String Repeat(char c, int num) {
       StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < num; i++) {
+      for (int i = 0; i < num; ++i) {
         sb.append(c);
       }
       return sb.toString();
     }
     private static String Repeat(String c, int num) {
       StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < num; i++) {
+      for (int i = 0; i < num; ++i) {
         sb.append(c);
       }
       return sb.toString();
@@ -2033,13 +2033,13 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void TestAsByte() {
-      for (int i = 0; i < 255; i++) {
+      for (int i = 0; i < 255; ++i) {
         Assert.assertEquals((byte)i, CBORObject.FromObject(i).AsByte());
       }
-      for (int i = -200; i < 0; i++) {
+      for (int i = -200; i < 0; ++i) {
         try { CBORObject.FromObject(i).AsByte(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); throw new IllegalStateException("",ex); }
       }
-      for (int i = 256; i < 512; i++) {
+      for (int i = 256; i < 512; ++i) {
         try { CBORObject.FromObject(i).AsByte(); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); throw new IllegalStateException("",ex); }
       }
     }
@@ -3345,7 +3345,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void TestShort() {
-      for (int i = Short.MIN_VALUE; i <= Short.MAX_VALUE; i++) {
+      for (int i = Short.MIN_VALUE; i <= Short.MAX_VALUE; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((short)i),
           String.format(java.util.Locale.US,"%s", i));
@@ -3381,7 +3381,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      */
     @Test
     public void TestTaggedUntagged() {
-      for (int i = 200; i < 1000; i++) {
+      for (int i = 200; i < 1000; ++i) {
         CBORObject o, o2;
         o = CBORObject.FromObject(0);
         o2 = CBORObject.FromObjectAndTag(o, i);
@@ -3485,7 +3485,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       AssertBigIntString("-898989", other);
       other = BigInteger.valueOf(898989);
       AssertBigIntString("898989", other);
-      for (int i = 0; i < 500; i++) {
+      for (int i = 0; i < 500; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),
           String.format(java.util.Locale.US,"%s", bi));
@@ -3518,10 +3518,10 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test
     public void TestLong() {
       long[] ranges = new long[]{
-        -65539,65539,
-        0xFFFFF000L,0x100000400L,
-        Long.MAX_VALUE-1000,Long.MAX_VALUE,
-        Long.MIN_VALUE,Long.MIN_VALUE+1000
+        -65539, 65539,
+        0xFFFFF000L, 0x100000400L,
+        Long.MAX_VALUE-1000, Long.MAX_VALUE,
+        Long.MIN_VALUE, Long.MIN_VALUE + 1000
       };
       for (int i = 0; i < ranges.length; i += 2) {
         long j = ranges[i];
@@ -3552,7 +3552,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
                            "-Infinity");
       TestCommon.AssertSer(CBORObject.FromObject(Float.NaN),
                            "NaN");
-      for (int i = -65539; i <= 65539; i++) {
+      for (int i = -65539; i <= 65539; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((float)i),
           String.format(java.util.Locale.US,"%s", i));
@@ -3608,7 +3608,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.AssertSer(CBORObject.FromObject(Double.NaN),
                            "NaN");
       CBORObject oldobj = null;
-      for (int i = -65539; i <= 65539; i++) {
+      for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = CBORObject.FromObject((double)i);
         TestCommon.AssertSer(o,
                              String.format(java.util.Locale.US,"%s", i));

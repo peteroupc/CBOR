@@ -13,6 +13,7 @@ package com.upokecenter.util;
   import java.io.*;
 
   import java.util.*;
+
   class JSONTokener {
     /**
      * Trailing commas are allowed in the JSON _string.
@@ -73,41 +74,43 @@ package com.upokecenter.util;
      * @param s     A source _string.
      */
     public JSONTokener (String str, int options) {
-      if((str)==null)throw new NullPointerException("str");
-      mySource = str;
+      if (str == null)throw new NullPointerException("str");
+      this.mySource = str;
       this.options = options;
     }
+
     public JSONTokener (InputStream stream, int options) {
-      if((stream)==null)throw new NullPointerException("stream");
+      if (stream == null)throw new NullPointerException("stream");
       this.stream = stream;
       this.options = options;
     }
-    private int next() {
-      if(this.stream!=null){
+
+    private int NextChar() {
+      if (this.stream != null) {
         int cp = 0;
         int bytesSeen = 0;
         int bytesNeeded = 0;
-        int lower=0;
-        int upper=0;
+        int lower = 0;
+        int upper = 0;
         try {
           while (true) {
-            int b = stream.read();
+            int b = this.stream.read();
             if (b < 0) {
               if (bytesNeeded != 0) {
                 bytesNeeded = 0;
-                throw syntaxError("Invalid UTF-8");
+                throw this.syntaxError("Invalid UTF-8");
               } else {
                 return -1;
               }
             }
             if (bytesNeeded == 0) {
-              if ((b&0x7F)==b) {
-                myIndex+=1;
+              if ((b & 0x7F) == b) {
+                this.myIndex += 1;
                 return b;
               } else if (b >= 0xc2 && b <= 0xdf) {
                 bytesNeeded = 1;
-                lower=0x80;
-                upper=0xbf;
+                lower = 0x80;
+                upper = 0xbf;
                 cp = (b - 0xc0) << 6;
               } else if (b >= 0xe0 && b <= 0xef) {
                 lower = (b == 0xe0) ? 0xa0 : 0x80;
@@ -120,7 +123,7 @@ package com.upokecenter.util;
                 bytesNeeded = 3;
                 cp = (b - 0xf0) << 18;
               } else {
-                throw syntaxError("Invalid UTF-8");
+                throw this.syntaxError("Invalid UTF-8");
               }
               continue;
             }
@@ -128,7 +131,7 @@ package com.upokecenter.util;
               cp = bytesNeeded = bytesSeen = 0;
               lower = 0x80;
               upper = 0xbf;
-              throw syntaxError("Invalid UTF-8");
+              throw this.syntaxError("Invalid UTF-8");
             }
             lower = 0x80;
             upper = 0xbf;
@@ -141,78 +144,81 @@ package com.upokecenter.util;
             cp = 0;
             bytesSeen = 0;
             bytesNeeded = 0;
-            myIndex+=1;
+            this.myIndex += 1;
             return ret;
           }
-        } catch(IOException ex){
-          throw syntaxError("I/O error occurred", ex);
+        } catch(IOException ex) {
+          throw this.syntaxError("I/O error occurred", ex);
         }
       } else {
-        int c = (myIndex < mySource.length()) ? mySource.charAt(myIndex) : -1;
-        myIndex += 1;
+        int c = (this.myIndex < this.mySource.length()) ? this.mySource.charAt(this.myIndex) : -1;
+        this.myIndex += 1;
         return c;
       }
     }
     /**
-     *
+     * Not documented yet.
      * @return A 32-bit signed integer.
      */
-    public int getOptions() {
-      return options;
+    public int GetOptions() {
+      return this.options;
     }
-    private int nextParseComment(int firstChar) {
-      if ((options & JSONTokener.OPTION_ALLOW_COMMENTS) == 0){
-        if(firstChar==-1)
-          return next();
-        if(firstChar=='/' || firstChar=='#')
-          throw syntaxError("Comments not allowed");
+
+    private int NextParseComment(int firstChar) {
+      if ((this.options & JSONTokener.OPTION_ALLOW_COMMENTS) == 0) {
+        if (firstChar == -1)
+          return this.NextChar();
+        if (firstChar == '/' || firstChar == '#') {
+ throw this.syntaxError("Comments not allowed");
+}
         return firstChar;
       }
-      boolean first=true;
+      boolean first = true;
       while (true) {
         int c;
-        if(first && firstChar>=0){
-          c=firstChar;
+        if (first && firstChar >= 0) {
+          c = firstChar;
         } else {
-          c=next();
+          c = this.NextChar();
         }
-        first=false;
-        if (c == '#' && (options & JSONTokener.OPTION_SHELL_COMMENTS) != 0) {
+        first = false;
+        if (c == '#' && (this.options & JSONTokener.OPTION_SHELL_COMMENTS) != 0) {
           // Shell-style single-line comment
           while (true) {
-            c = next();
+            c = this.NextChar();
             if (c != '\n' && c != -1) {
             } else
-              break; // end of line
+              break;  // end of line
           }
         } else if (c == '/') {
-          c=next();
+          c = this.NextChar();
           switch (c) {
               case '/': { // single-line comment
                 while (true) {
-                  c = next();
+                  c = this.NextChar();
                   if (c != '\n' && c != -1) {
                   } else
-                    break; // end of line
+                    break;  // end of line
                 }
                 break;
               }
               case '*': { // multi-line comment
                 while (true) {
-                  c = next();
-                  if (c == -1)
-                    throw syntaxError("Unclosed comment.");
+                  c = this.NextChar();
+                  if (c == -1) {
+ throw this.syntaxError("Unclosed comment.");
+}
                   // use a while loop to deal with
                   // the case of multiple "*" followed by "/"
-                  boolean endOfComment=false;
+                  boolean endOfComment = false;
                   while (c == '*') {
-                    c=next();
+                    c = this.NextChar();
                     if (c == '/') {
-                      endOfComment=true;
+                      endOfComment = true;
                       break;
                     }
                   }
-                  if(endOfComment)
+                  if (endOfComment)
                     break;
                 }
                 break;
@@ -221,34 +227,34 @@ package com.upokecenter.util;
               return c;
           }
         } else if (c == -1) {
-          return c; // reached end of String
+          return c;  // reached end of String
         } else if (c > ' ') {
-          return c; // reached an ordinary character
+          return c;  // reached an ordinary character
         }
       }
     }
     /**
-     *
+     * Not documented yet.
      * @return A 32-bit signed integer.
      */
-    public int nextClean() {
+    public int NextClean() {
       while (true) {
-        int c = nextParseComment(-1);
+        int c = this.NextParseComment(-1);
         if (c == -1 || c > ' ')
           return c;
       }
     }
     /**
-     *
+     * Not documented yet.
      * @param lastChar A 32-bit signed integer.
      * @return A 32-bit signed integer.
      */
-    public int nextClean(int lastChar) {
+    public int NextClean2(int lastChar) {
       while (true) {
-        int c = nextParseComment(lastChar);
+        int c = this.NextParseComment(lastChar);
         if (c == -1 || c > ' ')
           return c;
-        lastChar=-1;
+        lastChar = -1;
       }
     }
     /**
@@ -261,60 +267,62 @@ package com.upokecenter.util;
      * @return      A String.
      * @exception NumberFormatException Unterminated _string.
      */
-    private String nextString(int quote) {
+    private String NextString(int quote) {
       int c;
       StringBuilder sb = new StringBuilder();
       boolean surrogate = false;
       boolean surrogateEscaped = false;
       boolean escaped = false;
       while (true) {
-        c = next();
-        if (c == -1 || c < 0x20)
-          throw syntaxError("Unterminated String");
+        c = this.NextChar();
+        if (c == -1 || c < 0x20) {
+ throw this.syntaxError("Unterminated String");
+}
         switch (c) {
           case '\\':
-            c = next();
+            c = this.NextChar();
             escaped = true;
             switch (c) {
               case '\\':
-                c = ('\\');
+                c = '\\';
                 break;
               case '/':
-                if ((options & JSONTokener.OPTION_ESCAPED_SLASHES) != 0) {
+                if ((this.options & JSONTokener.OPTION_ESCAPED_SLASHES) != 0) {
                   // For compatibility (some JSON texts
                   // encode dates with an escaped slash),
                   // even though this is not allowed by RFC 4627
-                  c = ('/');
+                  c = '/';
                 } else {
                   throw this.syntaxError("Invalid escaped character");
                 }
                 break;
               case '\"':
-                c = ('\"');
+                c = '\"';
                 break;
               case 'b':
-                c = ('\b');
+                c = '\b';
                 break;
               case 't':
-                c = ('\t');
+                c = '\t';
                 break;
               case 'n':
-                c = ('\n');
+                c = '\n';
                 break;
               case 'f':
-                c = ('\f');
+                c = '\f';
                 break;
               case 'r':
-                c = ('\r');
+                c = '\r';
                 break;
                 case 'u': { // Unicode escape
-                  int c1 = dehexchar(next());
-                  int c2 = dehexchar(next());
-                  int c3 = dehexchar(next());
-                  int c4 = dehexchar(next());
-                  if (c1 < 0 || c2 < 0 || c3 < 0 || c4 < 0)
-                    throw this.syntaxError("Invalid Unicode escaped character");
-                  c = (c4 | (c3 << 4) | (c2 << 8) | (c1 << 12));
+                  int c1 = dehexchar(this.NextChar());
+                  int c2 = dehexchar(this.NextChar());
+                  int c3 = dehexchar(this.NextChar());
+                  int c4 = dehexchar(this.NextChar());
+                  if (c1 < 0 || c2 < 0 || c3 < 0 || c4 < 0) {
+ throw this.syntaxError("Invalid Unicode escaped character");
+}
+                  c = c4 | (c3 << 4) | (c2 << 8) | (c1 << 12);
                   break;
                 }
               default:
@@ -331,7 +339,7 @@ package com.upokecenter.util;
             // and supplementary characters
             throw this.syntaxError("Unpaired surrogate code point");
           }
-          if(escaped!=surrogateEscaped){
+          if (escaped != surrogateEscaped) {
             throw this.syntaxError("Pairing escaped surrogate with unescaped surrogate");
           }
           surrogate = false;
@@ -341,20 +349,22 @@ package com.upokecenter.util;
         } else if ((c & 0x1FFC00) == 0xDC00) {
           throw this.syntaxError("Unpaired surrogate code point");
         }
-        if (c == quote && !escaped) // End quote reached
+        if (c == quote && !escaped)  // End quote reached
           return sb.toString();
-        if(c<=0xFFFF){ sb.append((char)(c)); }
-        else if(c<=0x10FFFF){
-          sb.append((char)((((c-0x10000)>>10)&0x3FF)+0xD800));
-          sb.append((char)((((c-0x10000))&0x3FF)+0xDC00));
+        if (c <= 0xFFFF) { sb.append((char)c);
+  } else if (c <= 0x10FFFF) {
+          sb.append((char)((((c - 0x10000) >> 10) & 0x3FF) + 0xD800));
+          sb.append((char)(((c - 0x10000) & 0x3FF) + 0xDC00));
         }
       }
     }
+
     CBORException syntaxError(String message) {
-      return new CBORException(message + toString());
+      return new CBORException(message + this.toString());
     }
+
     CBORException syntaxError(String message, Throwable innerException) {
-      return new CBORException(message + toString(), innerException);
+      return new CBORException(message + this.toString(), innerException);
     }
     /**
      * Make a printable String of this JSONTokener.
@@ -362,22 +372,24 @@ package com.upokecenter.util;
      * @return " at character [myIndex] of [mySource]"
      */
     @Override public String toString() {
-      if(mySource==null){
-        return " at character " + myIndex;
+      if (this.mySource == null) {
+        return " at character " + this.myIndex;
       } else {
-        return " at character " + myIndex + " of " + mySource;
+        return " at character " + this.myIndex + " of " + this.mySource;
       }
     }
+
     private CBORObject NextJSONString(int firstChar) {
       int c = firstChar;
-      if(c<0)
-        throw this.syntaxError("Unexpected end of data");
+      if (c < 0) {
+ throw this.syntaxError("Unexpected end of data");
+}
       // Parse a String
-      if (c == '"' || (c == '\'' && ((this.getOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
+      if (c == '"' || (c == '\'' && ((this.GetOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
         // The tokenizer already checked the String for invalid
         // surrogate pairs, so just call the CBORObject
         // constructor directly
-        return CBORObject.FromRaw(this.nextString(c));
+        return CBORObject.FromRaw(this.NextString(c));
       }
       throw this.syntaxError("Expected a String as a key");
     }
@@ -387,84 +399,86 @@ package com.upokecenter.util;
     private CBORObject NextJSONValue(int firstChar, int[] nextChar) {
       String str;
       int c = firstChar;
-      CBORObject obj=null;
-      if(c<0)
-        throw this.syntaxError("Unexpected end of data");
-      if (c == '"' || (c == '\'' && ((this.getOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
+      CBORObject obj = null;
+      if (c < 0) {
+ throw this.syntaxError("Unexpected end of data");
+}
+      if (c == '"' || (c == '\'' && ((this.GetOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
         // Parse a String
         // The tokenizer already checked the String for invalid
         // surrogate pairs, so just call the CBORObject
         // constructor directly
-        obj=CBORObject.FromRaw(this.nextString(c));
-        nextChar[0]=this.nextClean();
+        obj = CBORObject.FromRaw(this.NextString(c));
+        nextChar[0] = this.NextClean();
         return obj;
       } else if (c == '{') {
         // Parse an object
-        obj=ParseJSONObject();
-        nextChar[0]=this.nextClean();
+        obj = this.ParseJSONObject();
+        nextChar[0] = this.NextClean();
         return obj;
       } else if (c == '[') {
         // Parse an array
-        obj=ParseJSONArray();
-        nextChar[0]=this.nextClean();
+        obj = this.ParseJSONArray();
+        nextChar[0] = this.NextClean();
         return obj;
-      } else if(c=='t'){
+      } else if (c == 't'){
         // Parse true
-        if(this.next()!='r' ||
-           this.next()!='u' ||
-           this.next()!='e'){
+        if (this.NextChar() != 'r' ||
+           this.NextChar() != 'u' ||
+           this.NextChar() != 'e'){
           throw this.syntaxError("Value can't be parsed.");
         }
-        nextChar[0]=this.nextClean();
+        nextChar[0] = this.NextClean();
         return CBORObject.True;
-      } else if(c=='f'){
+      } else if (c == 'f'){
         // Parse false
-        if(this.next()!='a' ||
-           this.next()!='l' ||
-           this.next()!='s' ||
-           this.next()!='e'){
+        if (this.NextChar() != 'a' ||
+           this.NextChar() != 'l' ||
+           this.NextChar() != 's' ||
+           this.NextChar() != 'e'){
           throw this.syntaxError("Value can't be parsed.");
         }
-        nextChar[0]=this.nextClean();
+        nextChar[0] = this.NextClean();
         return CBORObject.False;
-      } else if(c=='n'){
+      } else if (c == 'n'){
         // Parse null
-        if(this.next()!='u' ||
-           this.next()!='l' ||
-           this.next()!='l'){
+        if (this.NextChar() != 'u' ||
+           this.NextChar() != 'l' ||
+           this.NextChar() != 'l'){
           throw this.syntaxError("Value can't be parsed.");
         }
-        nextChar[0]=this.nextClean();
+        nextChar[0] = this.NextClean();
         return CBORObject.False;
-      } else if(c=='-' || (c>='0' && c<='9')){
+      } else if (c == '-' || (c >=  '0' && c <=  '9')){
         // Parse a number
         StringBuilder sb = new StringBuilder();
-        while (c=='-' || c == '+' || c == '.' || c=='e' || c=='E' || (c>='0' && c<='9')) {
+        while (c == '-' || c == '+' || c == '.' || c == 'e' || c == 'E' || (c >=  '0' && c<= '9')) {
           sb.append((char)c);
-          c = this.next();
+          c = this.NextChar();
         }
         str = sb.toString();
         obj = CBORDataUtilities.ParseJSONNumber(str);
-        if (obj == null)
-          throw this.syntaxError("JSON number can't be parsed.");
-        nextChar[0]=this.nextClean(c);
+        if (obj == null) {
+ throw this.syntaxError("JSON number can't be parsed.");
+}
+        nextChar[0] = this.NextClean2(c);
         return obj;
       } else {
         throw this.syntaxError("Value can't be parsed.");
       }
     }
     /**
-     *
+     * Not documented yet.
      * @return A CBORObject object.
      */
     public CBORObject ParseJSONObjectOrArray() {
       int c;
-      c = this.nextClean();
-      if(c=='[') {
-        return ParseJSONArray();
+      c = this.NextClean();
+      if (c == '[') {
+        return this.ParseJSONArray();
       }
-      if(c=='{'){
-        return ParseJSONObject();
+      if (c == '{'){
+        return this.ParseJSONObject();
       }
       throw this.syntaxError("A JSON Object must begin with '{' or '['");
     }
@@ -474,37 +488,38 @@ package com.upokecenter.util;
       int c;
       CBORObject key;
       CBORObject obj;
-      int[] nextchar=new int[1];
-      boolean seenComma=false;
+      int[] nextchar = new int[1];
+      boolean seenComma = false;
       HashMap<CBORObject, CBORObject> myHashMap=new HashMap<CBORObject, CBORObject>();
       while (true) {
-        c = this.nextClean();
+        c = this.NextClean();
         switch (c) {
           case -1:
             throw this.syntaxError("A JSONObject must end with '}'");
           case '}':
             if (seenComma &&
-                (this.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
+                (this.GetOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
               // 2013-05-24 -- Peter O. Disallow trailing comma.
               throw this.syntaxError("Trailing comma");
             }
             return CBORObject.FromRaw(myHashMap);
           default:
-            obj = NextJSONString(c);
+            obj = this.NextJSONString(c);
             key = obj;
-            if ((this.getOptions() & JSONTokener.OPTION_NO_DUPLICATES) != 0 &&
+            if ((this.GetOptions() & JSONTokener.OPTION_NO_DUPLICATES) != 0 &&
                 myHashMap.containsKey(obj)) {
               throw this.syntaxError("Key already exists: " + key);
             }
             break;
         }
-        if (this.nextClean() != ':')
-          throw this.syntaxError("Expected a ':' after a key");
+        if (this.NextClean() != ':') {
+ throw this.syntaxError("Expected a ':' after a key");
+}
         // NOTE: Will overwrite existing value. --Peter O.
-        myHashMap.put(key,NextJSONValue(this.nextClean(),nextchar));
+        myHashMap.put(key,this.NextJSONValue(this.NextClean(), nextchar));
         switch (nextchar[0]) {
           case ',':
-            seenComma=true;
+            seenComma = true;
             break;
           case '}':
             return CBORObject.FromRaw(myHashMap);
@@ -516,30 +531,30 @@ package com.upokecenter.util;
     // Based on the json.org implementation for JSONArray
     private CBORObject ParseJSONArray() {
       ArrayList<CBORObject> myArrayList=new ArrayList<CBORObject>();
-      boolean seenComma=false;
-      int[] nextchar=new int[1];
+      boolean seenComma = false;
+      int[] nextchar = new int[1];
       // This method assumes that the last character read was '['
       while (true) {
-        int c=this.nextClean();
+        int c = this.NextClean();
         if (c == ',') {
-          if ((this.getOptions() & JSONTokener.OPTION_EMPTY_ARRAY_ELEMENTS) == 0) {
+          if ((this.GetOptions() & JSONTokener.OPTION_EMPTY_ARRAY_ELEMENTS) == 0) {
             throw this.syntaxError("Two commas one after the other");
           }
           myArrayList.add(CBORObject.Null);
-          c=','; // Reuse the comma in the code that follows
-        } else if(c==']'){
-          if (seenComma && (this.getOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
+          c = ',';  // Reuse the comma in the code that follows
+        } else if (c == ']'){
+          if (seenComma && (this.GetOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
             // 2013-05-24 -- Peter O. Disallow trailing comma.
             throw this.syntaxError("Trailing comma");
           }
           return CBORObject.FromRaw(myArrayList);
         } else {
-          myArrayList.add(NextJSONValue(c,nextchar));
-          c=nextchar[0];
+          myArrayList.add(this.NextJSONValue(c, nextchar));
+          c = nextchar[0];
         }
         switch (c) {
           case ',':
-            seenComma=true;
+            seenComma = true;
             break;
           case ']':
             return CBORObject.FromRaw(myArrayList);

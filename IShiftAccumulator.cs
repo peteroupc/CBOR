@@ -1,5 +1,5 @@
 using System;
-//using System.Numerics;
+// using System.Numerics;
 
 namespace PeterO {
     /// <summary> Common interface for classes that shift a number of digits
@@ -7,13 +7,21 @@ namespace PeterO {
     /// this way. </summary>
   interface IShiftAccumulator {
     BigInteger ShiftedInt { get; }
+
     FastInteger GetDigitLength();
+
     int OlderDiscardedDigits { get; }
+
     int LastDiscardedDigit { get; }
+
     FastInteger ShiftedIntFast { get; }
+
     FastInteger DiscardedDigitCount { get; }
+
     void ShiftRight(FastInteger bits);
+
     void ShiftRightInt(int bits);
+
     void ShiftToDigits(FastInteger bits);
   }
 }
