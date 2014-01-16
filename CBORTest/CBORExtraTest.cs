@@ -16,7 +16,7 @@ namespace Test {
   /// </summary>
   ///
   [TestFixture]
-  public class CBORExtraTest{
+  public class CBORExtraTest {
     //[Test]
     public void GenerateDecimalTests() {
       FastRandom r = new FastRandom();
@@ -38,7 +38,7 @@ namespace Test {
               "Assert.AreEqual(\""+s.ToString(CultureInfo.InvariantCulture)+
               "\",ExtendedDecimal.FromString(\""+df.ToString()+"\")"+
               ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)).ToPlainString());"
-             );
+);
             throw;
           }
         } catch(OverflowException) {
@@ -49,7 +49,7 @@ namespace Test {
             Console.WriteLine(
               "Assert.AreEqual(null,ExtendedDecimal.FromString(\""+df.ToString()+"\")"+
               ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)));"
-             );
+);
             throw;
           }
         }
@@ -926,7 +926,7 @@ namespace Test {
       return (returnRemainder ?
               unchecked((short)(((int)dividendHigh) & 0xFFFF)) :
               unchecked((short)(((int)dividendLow) & 0xFFFF))
-             );
+);
     }
 
     private static short DivideUnsigned(int x, short y) {
@@ -1121,4 +1121,3 @@ namespace Test {
     }
   }
 }
-

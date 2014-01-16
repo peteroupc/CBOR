@@ -18,6 +18,7 @@ at: http://peteroupc.github.io/CBOR/
   public final class DecimalFraction implements Comparable<DecimalFraction> {
     private BigInteger exponent;
     private BigInteger mantissa;
+
     /**
      * Gets this object&apos;s exponent. This object&apos;s value will
      * be an integer if the exponent is positive or zero.
@@ -109,7 +110,7 @@ at: http://peteroupc.github.io/CBOR/
       return new DecimalFraction(ed.getMantissa(), ed.getExponent());
     }
 
-    private static DecimalFraction MinusOne = new DecimalFraction(BigInteger.ZERO.subtract(BigInteger.ONE), BigInteger.ZERO);
+    private static DecimalFraction valueMinusOne = new DecimalFraction(BigInteger.ZERO.subtract(BigInteger.ONE), BigInteger.ZERO);
 
     private static final class DecimalMathHelper implements IRadixMathHelper<DecimalFraction> {
     /**
@@ -250,8 +251,9 @@ bigrem=divrem[1]; }
      */
       public DecimalFraction CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         boolean neg = (flags & BigNumberFlags.FlagNegative) != 0;
-        if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0))
-          mantissa=mantissa.negate();
+        if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0)) {
+ mantissa=mantissa.negate();
+}
         return new DecimalFraction(mantissa, exponent);
       }
 
@@ -276,7 +278,7 @@ bigrem=divrem[1]; }
           return One;
         }
         if (val == -1) {
-          return MinusOne;
+          return valueMinusOne;
         }
         return FromInt64(val);
       }
@@ -291,7 +293,7 @@ bigrem=divrem[1]; }
         case 2:
           return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).ToPlainString();
         default:
-          throw new IllegalArgumentException();
+          throw new IllegalStateException();
       }
     }
 
@@ -334,7 +336,7 @@ bigrem=divrem[1]; }
      * @param flt A 32-bit floating-point number.
      * @return A decimal fraction with the same value as &quot; flt&quot;
      * .
-     * @throws ArithmeticException &quot;Flt&quot; is infinity or not-a-number.
+     * @throws ArithmeticException The parameter "flt" is infinity or not-a-number.
      */
     public static DecimalFraction FromSingle(float flt) {
       ExtendedDecimal ed = ExtendedDecimal.FromSingle(flt);
@@ -358,7 +360,7 @@ bigrem=divrem[1]; }
      * @param dbl A 64-bit floating-point number.
      * @return A decimal fraction with the same value as &quot; dbl&quot;
      * .
-     * @throws ArithmeticException &quot;Dbl&quot; is infinity or not-a-number.
+     * @throws ArithmeticException The parameter "dbl" is infinity or not-a-number.
      */
     public static DecimalFraction FromDouble(double dbl) {
       ExtendedDecimal ed = ExtendedDecimal.FromDouble(dbl);
@@ -417,6 +419,7 @@ bigrem=divrem[1]; }
      */
 
     public static final DecimalFraction Zero = new DecimalFraction(BigInteger.ZERO, BigInteger.ZERO);
+
     /**
      * Represents the number 10.
      */
@@ -535,8 +538,8 @@ bigrem=divrem[1]; }
       DecimalFraction divisor,
       PrecisionContext ctx) {
       return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null)
-        .Multiply(divisor, null), ctx);
+        this.DivideToIntegerNaturalScale(divisor, null) .Multiply(divisor, null),
+        ctx);
     }
 
     /**
@@ -773,8 +776,7 @@ bigrem=divrem[1]; }
      * @return The integer part of the quotient of the two objects. The exponent
      * will be set to 0.
      * @throws ArithmeticException Attempted to divide by zero.
-     * @throws ArithmeticException The result doesn&apos;t fit the given
-     * precision.
+     * @throws ArithmeticException The result doesn't fit the given precision.
      */
     public DecimalFraction DivideToIntegerZeroScale(
       DecimalFraction divisor,
@@ -795,7 +797,7 @@ bigrem=divrem[1]; }
      * @return The remainder of the two objects.
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException The result of integer division (the
-     * quotient, not the remainder) wouldn&apos;t fit the given precision.
+     * quotient, not the remainder) wouldn't fit the given precision.
      */
     public DecimalFraction Remainder(
       DecimalFraction divisor,
@@ -828,7 +830,7 @@ bigrem=divrem[1]; }
      * @return The distance of the closest multiple.
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException Either the result of integer division
-     * (the quotient) or the remainder wouldn&apos;t fit the given precision.
+     * (the quotient) or the remainder wouldn't fit the given precision.
      */
     public DecimalFraction RemainderNear(
       DecimalFraction divisor,
@@ -844,8 +846,8 @@ bigrem=divrem[1]; }
      * of the context is true.
      * @return Returns the largest value that&apos;s less than the given
      * value. Returns null if the result is negative infinity.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
-     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
+     * the precision is 0, or "ctx" has an unlimited exponent range.
      */
     public DecimalFraction NextMinus(
       PrecisionContext ctx) {
@@ -860,8 +862,8 @@ bigrem=divrem[1]; }
      * of the context is true.
      * @return Returns the smallest value that&apos;s greater than the
      * given value. Returns null if the result is positive infinity.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
-     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
+     * the precision is 0, or "ctx" has an unlimited exponent range.
      */
     public DecimalFraction NextPlus(
       PrecisionContext ctx) {
@@ -879,8 +881,8 @@ bigrem=divrem[1]; }
      * @return Returns the next value that is closer to the other object&apos;
      * s value than this object&apos;s value. Returns null if the result
      * is infinity.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
-     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
+     * the precision is 0, or "ctx" has an unlimited exponent range.
      */
     public DecimalFraction NextToward(
       DecimalFraction otherValue,
@@ -901,7 +903,7 @@ bigrem=divrem[1]; }
      * given, returns null if the result of the rounding overflowed the exponent
      * range.
      * @throws ArithmeticException Attempted to divide by zero.
-     * @throws ArithmeticException Either ctx is null or ctx&apos;s precision
+     * @throws ArithmeticException Either ctx is null or ctx's precision
      * is 0, and the result would have a nonterminating decimal expansion;
      * or, the rounding mode is Rounding.Unnecessary and the result is not
      * exact.
@@ -1031,7 +1033,7 @@ bigrem=divrem[1]; }
      * @return A decimal fraction with the same value as this object but with
      * the exponent changed.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The exponent is outside of the
      * valid range of the precision context, if it defines an exponent range.
      */
@@ -1048,7 +1050,7 @@ bigrem=divrem[1]; }
      * @return A decimal fraction with the same value as this object but with
      * the exponent changed.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The exponent is outside of the
      * valid range of the precision context, if it defines an exponent range.
      */
@@ -1071,7 +1073,7 @@ bigrem=divrem[1]; }
      * @return A decimal fraction with the same value as this object but with
      * the exponent changed.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent is outside of
      * the valid range of the precision context, if it defines an exponent
      * range.
@@ -1093,7 +1095,7 @@ bigrem=divrem[1]; }
      * @return A decimal fraction with the same value as this object but rounded
      * to an integer.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
      * to 0 when rounding and 0 is outside of the valid range of the precision
      * context, if it defines an exponent range.
@@ -1116,7 +1118,7 @@ bigrem=divrem[1]; }
      * @return A decimal fraction with the same value as this object but rounded
      * to an integer.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
      * to 0 when rounding and 0 is outside of the valid range of the precision
      * context, if it defines an exponent range.
@@ -1142,7 +1144,7 @@ bigrem=divrem[1]; }
      * mode is HalfEven.
      * @return A decimal fraction rounded to the given exponent.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
      * when rounding and the new exponent is outside of the valid range of
      * the precision context, if it defines an exponent range.

@@ -71,7 +71,7 @@ at: http://peteroupc.github.io/CBOR/
     private boolean isSmall;
 
     /**
-     * Not documented yet.
+     * Gets a value not documented yet.
      */
     public BigInteger getShiftedInt() {
         if (this.isSmall) {
@@ -82,7 +82,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * Not documented yet.
+     * Gets a value not documented yet.
      */
     public FastInteger getShiftedIntFast() {
         if (this.isSmall) {

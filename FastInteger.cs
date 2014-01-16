@@ -54,8 +54,8 @@ namespace PeterO {
         }
         // Calculate the correct data length
         while (mnum.wordCount != 0 && mnum.data[mnum.wordCount - 1] == 0) {
- mnum.wordCount--;
-}
+          mnum.wordCount--;
+        }
         return mnum;
       }
 
@@ -88,7 +88,7 @@ namespace PeterO {
         }
         byte[] bytes = new byte[this.wordCount * 4 + 1];
         for (int i = 0; i < this.wordCount; ++i) {
-          bytes[i * 4 + 0] = (byte)(this.data[i] & 0xFF);
+          bytes[i * 4] = (byte)(this.data[i] & 0xFF);
           bytes[i * 4 + 1] = (byte)((this.data[i] >> 8) & 0xFF);
           bytes[i * 4 + 2] = (byte)((this.data[i] >> 16) & 0xFF);
           bytes[i * 4 + 3] = (byte)((this.data[i] >> 24) & 0xFF);
@@ -147,27 +147,27 @@ namespace PeterO {
         }
         unchecked {
           for (int i = 0; i < this.wordCount; ++i) {
-            int B0 = this.data[i];
-            int B1 = B0;
-            B0 &= 65535;
-            B1 = (B1 >> 16) & 65535;
-            if (B0 > B1) {
-              s = ((int)B0 - B1) & 0xFFFF;
+            int valueB0 = this.data[i];
+            int valueB1 = valueB0;
+            valueB0 &= 65535;
+            valueB1 = (valueB1 >> 16) & 65535;
+            if (valueB0 > valueB1) {
+              s = ((int)valueB0 - valueB1) & 0xFFFF;
               d = 0xFFF6 * s;
             } else {
               s = 0;
-              d = 10 * (((int)B1 - B0) & 0xFFFF);
+              d = 10 * (((int)valueB1 - valueB0) & 0xFFFF);
             }
-            int A0B0 = 10 * B0;
-            int a0b0high = (A0B0 >> 16) & 0xFFFF;
+            int valueA0B0 = 10 * valueB0;
+            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
             int tempInt;
-            tempInt = A0B0 + carry;
+            tempInt = valueA0B0 + carry;
             if (i == 0) {
               tempInt += digit;
             }
             int result0 = tempInt & 0xFFFF;
-            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) +
-              (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
+            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) +
+              (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
             int result1 = tempInt & 0xFFFF;
             tempInt = (((int)(tempInt >> 16)) & 0xFFFF) +
               a0b0high + (((int)(d >> 16)) & 0xFFFF) - s;
@@ -186,8 +186,8 @@ namespace PeterO {
         }
         // Calculate the correct data length
         while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+          this.wordCount--;
+        }
         return this;
       }
 
@@ -280,8 +280,8 @@ namespace PeterO {
           }
           // Calculate the correct data length
           while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+            this.wordCount--;
+          }
         } else {
           if (this.data.Length > 0) {
             this.data[0] = 0;
@@ -291,17 +291,17 @@ namespace PeterO {
         return this;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <value>Value not documented yet.</value>
-      public int Sign{
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+      public int Sign {
         get {
           return this.wordCount == 0 ? 0 : 1;
         }
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <value>Value not documented yet.</value>
-      public bool IsEvenNumber{
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+      public bool IsEvenNumber {
         get {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
         }
@@ -363,8 +363,8 @@ namespace PeterO {
             }
             // Calculate the correct data length
             while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+              this.wordCount--;
+            }
           }
         }
         return this;
@@ -406,8 +406,8 @@ namespace PeterO {
             }
             // Calculate the correct data length
             while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+              this.wordCount--;
+            }
             return this;
           }
         }
@@ -421,10 +421,10 @@ namespace PeterO {
         if (this.wordCount != other.wordCount) {
           return (this.wordCount < other.wordCount) ? -1 : 1;
         }
-        int N = this.wordCount;
-        while (unchecked(N--) != 0) {
-          int an = this.data[N];
-          int bn = other.data[N];
+        int valueN = this.wordCount;
+        while (unchecked(valueN--) != 0) {
+          int an = this.data[valueN];
+          int bn = other.data[valueN];
           // Unsigned less-than check
           if (((an >> 31) == (bn >> 31)) ?
               ((an & Int32.MaxValue) < (bn & Int32.MaxValue)) :
@@ -439,6 +439,7 @@ namespace PeterO {
 
     /// <summary>Not documented yet.</summary>
     /// <param name='augend'> A 32-bit signed integer.</param>
+    /// <returns></returns>
       public MutableNumber Add(int augend) {
         if (augend < 0) {
           throw new ArgumentException("Only positive augends are supported");
@@ -477,8 +478,8 @@ namespace PeterO {
         }
         // Calculate the correct data length
         while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+          this.wordCount--;
+        }
         return this;
       }
     }
@@ -488,9 +489,9 @@ namespace PeterO {
     private BigInteger largeValue;  // if integerMode is 2
     private int integerMode = 0;
 
-    private static BigInteger Int32MinValue = (BigInteger)Int32.MinValue;
-    private static BigInteger Int32MaxValue = (BigInteger)Int32.MaxValue;
-    private static BigInteger NegativeInt32MinValue = -(BigInteger)Int32MinValue;
+    private static BigInteger valueInt32MinValue = (BigInteger)Int32.MinValue;
+    private static BigInteger valueInt32MaxValue = (BigInteger)Int32.MaxValue;
+    private static BigInteger valueNegativeInt32MinValue = -(BigInteger)valueInt32MinValue;
 
     public FastInteger(int value) {
       this.smallValue = value;
@@ -541,7 +542,7 @@ namespace PeterO {
     /// is less, or a positive number if this instance is greater.</returns>
     public int CompareTo(FastInteger val) {
       switch ((this.integerMode << 2) | val.integerMode) {
-          case (0 << 2) | 0:{
+          case (0 << 2) | 0: {
             int vsv = val.smallValue;
             return (this.smallValue == vsv) ? 0 :
               (this.smallValue < vsv ? -1 : 1);
@@ -708,7 +709,7 @@ namespace PeterO {
           if (this.smallValue == Int32.MinValue) {
             // would overflow, convert to large
             this.integerMode = 1;
-            this.mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
+            this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
           } else {
             smallValue = -smallValue;
           }
@@ -783,7 +784,7 @@ namespace PeterO {
     /// <returns>This object.</returns>
     public FastInteger SubtractInt(int val) {
       if (val == Int32.MinValue) {
-        return this.AddBig(NegativeInt32MinValue);
+        return this.AddBig(valueNegativeInt32MinValue);
       } else if (this.integerMode == 0) {
         if ((val < 0 && Int32.MaxValue + val < this.smallValue) ||
             (val > 0 && Int32.MinValue + val > this.smallValue)) {
@@ -806,7 +807,7 @@ namespace PeterO {
     /// <returns>This object.</returns>
     public FastInteger AddBig(BigInteger bigintVal) {
       switch (this.integerMode) {
-          case 0:{
+          case 0: {
             if (bigintVal.canFitInInt()) {
               return this.AddInt((int)bigintVal);
             }
@@ -841,10 +842,10 @@ namespace PeterO {
         }
         // Check if this value fits an int, except if
         // it's MinValue
-        if (sign < 0 && bigintVal.CompareTo(Int32MinValue) > 0) {
+        if (sign < 0 && bigintVal.CompareTo(valueInt32MinValue) > 0) {
           return this.AddInt(-((int)bigintVal));
         }
-        if (sign > 0 && bigintVal.CompareTo(Int32MaxValue) <= 0) {
+        if (sign > 0 && bigintVal.CompareTo(valueInt32MaxValue) <= 0) {
           return this.SubtractInt((int)bigintVal);
         }
         bigintVal = -bigintVal;
@@ -942,7 +943,7 @@ namespace PeterO {
           this.smallValue++;
         } else {
           this.integerMode = 1;
-          this.mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
+          this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
         }
         return this;
       } else {
@@ -958,7 +959,7 @@ namespace PeterO {
           this.smallValue--;
         } else {
           this.integerMode = 1;
-          this.mnum = MutableNumber.FromBigInteger(Int32MinValue);
+          this.mnum = MutableNumber.FromBigInteger(valueInt32MinValue);
           this.mnum.SubtractInt(1);
         }
         return this;
@@ -977,7 +978,7 @@ namespace PeterO {
             if (divisor == -1 && this.smallValue == Int32.MinValue) {
               // would overflow, convert to large
               this.integerMode = 1;
-              this.mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
+              this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
             } else {
               smallValue /= divisor;
             }
@@ -1010,7 +1011,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether this object&apos;s value
     /// is even.</summary>
     /// <value>Whether this object&apos;s value is even.</value>
-    public bool IsEvenNumber{
+    public bool IsEvenNumber {
       get {
         switch (this.integerMode) {
           case 0:
@@ -1076,7 +1077,7 @@ namespace PeterO {
           return true;
         case 1:
           return this.mnum.CanFitInInt32();
-          case 2:{
+          case 2: {
             return this.largeValue.canFitInInt();
           }
         default:
@@ -1116,9 +1117,9 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <value>Value not documented yet.</value>
-    public bool IsValueZero{
+    /// <summary>Gets a value indicating whether this value is zero.</summary>
+    /// <value>Whether this value is zero.</value>
+    public bool IsValueZero {
       get {
         switch (this.integerMode) {
           case 0:

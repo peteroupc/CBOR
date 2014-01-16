@@ -15,7 +15,7 @@ namespace Test {
     /// </summary>
     ///
 [TestFixture]
-  public class CBORObjectMathTest{
+  public class CBORObjectMathTest {
     [Test]
     public void CBORMultiplyTest() {
       {
@@ -721,4 +721,3 @@ namespace Test {
     }
   }
 }
-

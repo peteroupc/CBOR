@@ -14,6 +14,7 @@ namespace PeterO {
   internal static class CBORUtilities {
     private const string Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private const string Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
     /// <summary>Not documented yet.</summary>
     /// <param name='str'>A StringBuilder object.</param>
     /// <param name='data'>A byte[] object.</param>

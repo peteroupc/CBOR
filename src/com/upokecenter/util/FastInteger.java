@@ -54,8 +54,8 @@ at: http://peteroupc.github.io/CBOR/
         }
         // Calculate the correct data length
         while (mnum.wordCount != 0 && mnum.data[mnum.wordCount - 1] == 0) {
- mnum.wordCount--;
-}
+          mnum.wordCount--;
+        }
         return mnum;
       }
 
@@ -92,7 +92,7 @@ at: http://peteroupc.github.io/CBOR/
         }
         byte[] bytes = new byte[this.wordCount * 4 + 1];
         for (int i = 0; i < this.wordCount; ++i) {
-          bytes[i * 4 + 0] = (byte)(this.data[i] & 0xFF);
+          bytes[i * 4] = (byte)(this.data[i] & 0xFF);
           bytes[i * 4 + 1] = (byte)((this.data[i] >> 8) & 0xFF);
           bytes[i * 4 + 2] = (byte)((this.data[i] >> 16) & 0xFF);
           bytes[i * 4 + 3] = (byte)((this.data[i] >> 24) & 0xFF);
@@ -103,7 +103,7 @@ at: http://peteroupc.github.io/CBOR/
 
       int[] GetLastWordsInternal(int numWords32Bit) {
         int[] ret = new int[numWords32Bit];
-        System.arraycopy(this.data,0,ret,0,Math.min(numWords32Bit, this.wordCount));
+        System.arraycopy(this.data, ret, Math.min(numWords32Bit, this.wordCount));
         return ret;
       }
 
@@ -132,7 +132,7 @@ at: http://peteroupc.github.io/CBOR/
         if (this.wordCount > mbi.data.length) {
           mbi.data = new int[this.wordCount];
         }
-        System.arraycopy(this.data,0,mbi.data,0,this.wordCount);
+        System.arraycopy(this.data, mbi.data, this.wordCount);
         mbi.wordCount = this.wordCount;
         return mbi;
       }
@@ -159,27 +159,27 @@ at: http://peteroupc.github.io/CBOR/
         }
         {
           for (int i = 0; i < this.wordCount; ++i) {
-            int B0 = this.data[i];
-            int B1 = B0;
-            B0 &= 65535;
-            B1 = (B1 >> 16) & 65535;
-            if (B0 > B1) {
-              s = ((int)B0 - B1) & 0xFFFF;
+            int valueB0 = this.data[i];
+            int valueB1 = valueB0;
+            valueB0 &= 65535;
+            valueB1 = (valueB1 >> 16) & 65535;
+            if (valueB0 > valueB1) {
+              s = ((int)valueB0 - valueB1) & 0xFFFF;
               d = 0xFFF6 * s;
             } else {
               s = 0;
-              d = 10 * (((int)B1 - B0) & 0xFFFF);
+              d = 10 * (((int)valueB1 - valueB0) & 0xFFFF);
             }
-            int A0B0 = 10 * B0;
-            int a0b0high = (A0B0 >> 16) & 0xFFFF;
+            int valueA0B0 = 10 * valueB0;
+            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
             int tempInt;
-            tempInt = A0B0 + carry;
+            tempInt = valueA0B0 + carry;
             if (i == 0) {
               tempInt += digit;
             }
             int result0 = tempInt & 0xFFFF;
-            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) +
-              (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
+            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) +
+              (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
             int result1 = tempInt & 0xFFFF;
             tempInt = (((int)(tempInt >> 16)) & 0xFFFF) +
               a0b0high + (((int)(d >> 16)) & 0xFFFF) - s;
@@ -198,8 +198,8 @@ at: http://peteroupc.github.io/CBOR/
         }
         // Calculate the correct data length
         while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+          this.wordCount--;
+        }
         return this;
       }
 
@@ -293,8 +293,8 @@ at: http://peteroupc.github.io/CBOR/
           }
           // Calculate the correct data length
           while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+            this.wordCount--;
+          }
         } else {
           if (this.data.length > 0) {
             this.data[0] = 0;
@@ -305,14 +305,14 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * Not documented yet.
+     * Gets a value not documented yet.
      */
       public int signum() {
           return this.wordCount == 0 ? 0 : 1;
         }
 
     /**
-     * Not documented yet.
+     * Gets a value not documented yet.
      */
       public boolean isEvenNumber() {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
@@ -377,8 +377,8 @@ at: http://peteroupc.github.io/CBOR/
             }
             // Calculate the correct data length
             while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+              this.wordCount--;
+            }
           }
         }
         return this;
@@ -421,8 +421,8 @@ at: http://peteroupc.github.io/CBOR/
             }
             // Calculate the correct data length
             while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+              this.wordCount--;
+            }
             return this;
           }
         }
@@ -438,10 +438,10 @@ at: http://peteroupc.github.io/CBOR/
         if (this.wordCount != other.wordCount) {
           return (this.wordCount < other.wordCount) ? -1 : 1;
         }
-        int N = this.wordCount;
-        while ((N--) != 0) {
-          int an = this.data[N];
-          int bn = other.data[N];
+        int valueN = this.wordCount;
+        while ((valueN--) != 0) {
+          int an = this.data[valueN];
+          int bn = other.data[valueN];
           // Unsigned less-than check
           if (((an >> 31) == (bn >> 31)) ?
               ((an & Integer.MAX_VALUE) < (bn & Integer.MAX_VALUE)) :
@@ -496,8 +496,8 @@ at: http://peteroupc.github.io/CBOR/
         }
         // Calculate the correct data length
         while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
- this.wordCount--;
-}
+          this.wordCount--;
+        }
         return this;
       }
     }
@@ -507,9 +507,9 @@ at: http://peteroupc.github.io/CBOR/
     private BigInteger largeValue;  // if integerMode is 2
     private int integerMode = 0;
 
-    private static BigInteger Int32MinValue = BigInteger.valueOf(Integer.MIN_VALUE);
-    private static BigInteger Int32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
-    private static BigInteger NegativeInt32MinValue=(Int32MinValue).negate();
+    private static BigInteger valueInt32MinValue = BigInteger.valueOf(Integer.MIN_VALUE);
+    private static BigInteger valueInt32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
+    private static BigInteger valueNegativeInt32MinValue=(valueInt32MinValue).negate();
 
     public FastInteger (int value) {
       this.smallValue = value;
@@ -749,7 +749,7 @@ bigrem=divrem[1]; }
           if (this.smallValue == Integer.MIN_VALUE) {
             // would overflow, convert to large
             this.integerMode = 1;
-            this.mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
+            this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
           } else {
             smallValue = -smallValue;
           }
@@ -828,7 +828,7 @@ bigrem=divrem[1]; }
      */
     public FastInteger SubtractInt(int val) {
       if (val == Integer.MIN_VALUE) {
-        return this.AddBig(NegativeInt32MinValue);
+        return this.AddBig(valueNegativeInt32MinValue);
       } else if (this.integerMode == 0) {
         if ((val < 0 && Integer.MAX_VALUE + val < this.smallValue) ||
             (val > 0 && Integer.MIN_VALUE + val > this.smallValue)) {
@@ -890,10 +890,10 @@ bigrem=divrem[1]; }
         }
         // Check if this value fits an int, except if
         // it's MinValue
-        if (sign < 0 && bigintVal.compareTo(Int32MinValue) > 0) {
+        if (sign < 0 && bigintVal.compareTo(valueInt32MinValue) > 0) {
           return this.AddInt(-(bigintVal.intValue()));
         }
-        if (sign > 0 && bigintVal.compareTo(Int32MaxValue) <= 0) {
+        if (sign > 0 && bigintVal.compareTo(valueInt32MaxValue) <= 0) {
           return this.SubtractInt(bigintVal.intValue());
         }
         bigintVal=bigintVal.negate();
@@ -997,7 +997,7 @@ bigrem=divrem[1]; }
           this.smallValue++;
         } else {
           this.integerMode = 1;
-          this.mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
+          this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
         }
         return this;
       } else {
@@ -1015,7 +1015,7 @@ bigrem=divrem[1]; }
           this.smallValue--;
         } else {
           this.integerMode = 1;
-          this.mnum = MutableNumber.FromBigInteger(Int32MinValue);
+          this.mnum = MutableNumber.FromBigInteger(valueInt32MinValue);
           this.mnum.SubtractInt(1);
         }
         return this;
@@ -1036,7 +1036,7 @@ bigrem=divrem[1]; }
             if (divisor == -1 && this.smallValue == Integer.MIN_VALUE) {
               // would overflow, convert to large
               this.integerMode = 1;
-              this.mnum = MutableNumber.FromBigInteger(NegativeInt32MinValue);
+              this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
             } else {
               smallValue /= divisor;
             }
@@ -1179,7 +1179,7 @@ bigrem=divrem[1]; }
       }
 
     /**
-     * Not documented yet.
+     * Gets a value indicating whether this value is zero.
      */
     public boolean isValueZero() {
         switch (this.integerMode) {

@@ -10,10 +10,10 @@
 // public domain dedication: http://creativecommons.org/publicdomain/zero/1.0/
 namespace PeterO {
   using System;
+  using System.Collections.Generic;
   using System.Globalization;
   using System.IO;
   using System.Text;
-  using System.Collections.Generic;
 
   internal class JSONTokener {
     /**
@@ -48,18 +48,18 @@ namespace PeterO {
      * Get the hex value of a character (base16).
      * @param c A character between '0' and '9' or between 'A' and 'F' or
      * between 'a' and 'f'.
-     * @return  An int between 0 and 15, or -1 if c was not a hex digit.
+     * @return An int between 0 and 15, or -1 if c was not a hex digit.
      */
     private static int dehexchar(int c) {
       if (c >= '0' && c <= '9') {
- return c - '0';
-}
+        return c - '0';
+      }
       if (c >= 'A' && c <= 'F') {
- return c + 10 - 'A';
-}
+        return c + 10 - 'A';
+      }
       if (c >= 'a' && c <= 'f') {
- return c + 10 - 'a';
-}
+        return c + 10 - 'a';
+      }
       return -1;
     }
     /**
@@ -75,20 +75,20 @@ namespace PeterO {
     /**
      * Construct a JSONTokener from a string.
      *
-     * @param s     A source _string.
+     * @param s A source _string.
      */
     public JSONTokener(string str, int options) {
       if (str == null) {
- throw new ArgumentNullException("str");
-}
+        throw new ArgumentNullException("str");
+      }
       this.mySource = str;
       this.options = options;
     }
 
     public JSONTokener(Stream stream, int options) {
       if (stream == null) {
- throw new ArgumentNullException("stream");
-}
+        throw new ArgumentNullException("stream");
+      }
       this.stream = stream;
       this.options = options;
     }
@@ -155,7 +155,7 @@ namespace PeterO {
             this.myIndex += 1;
             return ret;
           }
-        }  catch (IOException ex) {
+        } catch (IOException ex) {
           throw this.syntaxError("I/O error occurred", ex);
         }
       } else {
@@ -174,11 +174,11 @@ namespace PeterO {
     private int NextParseComment(int firstChar) {
       if ((this.options & JSONTokener.OPTION_ALLOW_COMMENTS) == 0) {
         if (firstChar == -1) {
- return this.NextChar();
-}
+          return this.NextChar();
+        }
         if (firstChar == '/' || firstChar == '#') {
- throw this.syntaxError("Comments not allowed");
-}
+          throw this.syntaxError("Comments not allowed");
+        }
         return firstChar;
       }
       bool first = true;
@@ -196,8 +196,8 @@ namespace PeterO {
             c = this.NextChar();
             if (c != '\n' && c != -1) {
             } else {
- break;
-}  // end of line
+              break;
+            }
           }
         } else if (c == '/') {
           c = this.NextChar();
@@ -207,8 +207,8 @@ namespace PeterO {
                   c = this.NextChar();
                   if (c != '\n' && c != -1) {
                   } else {
- break;
-}  // end of line
+                    break;
+                  }
                 }
                 break;
               }
@@ -216,8 +216,8 @@ namespace PeterO {
                 while (true) {
                   c = this.NextChar();
                   if (c == -1) {
- throw this.syntaxError("Unclosed comment.");
-}
+                    throw this.syntaxError("Unclosed comment.");
+                  }
                   // use a while loop to deal with
                   // the case of multiple "*" followed by "/"
                   bool endOfComment = false;
@@ -229,8 +229,8 @@ namespace PeterO {
                     }
                   }
                   if (endOfComment) {
- break;
-}
+                    break;
+                  }
                 }
                 break;
               }
@@ -251,8 +251,8 @@ namespace PeterO {
       while (true) {
         int c = this.NextParseComment(-1);
         if (c == -1 || c > ' ') {
- return c;
-}
+          return c;
+        }
       }
     }
 
@@ -263,8 +263,8 @@ namespace PeterO {
       while (true) {
         int c = this.NextParseComment(lastChar);
         if (c == -1 || c > ' ') {
- return c;
-}
+          return c;
+        }
         lastChar = -1;
       }
     }
@@ -275,7 +275,7 @@ namespace PeterO {
      * accept them.
      * @param quote The quoting character, either <code>"</code>&#xa0;
      * <small>(double quote)</small> or <code>'</code>&#xa0;<small>(single quote)</small>.
-     * @return      A string.
+     * @return A string.
      * @exception FormatException Unterminated _string.
      */
     private string NextString(int quote) {
@@ -287,8 +287,8 @@ namespace PeterO {
       while (true) {
         c = this.NextChar();
         if (c == -1 || c < 0x20) {
- throw this.syntaxError("Unterminated string");
-}
+          throw this.syntaxError("Unterminated string");
+        }
         switch (c) {
           case '\\':
             c = this.NextChar();
@@ -331,8 +331,8 @@ namespace PeterO {
                   int c3 = dehexchar(this.NextChar());
                   int c4 = dehexchar(this.NextChar());
                   if (c1 < 0 || c2 < 0 || c3 < 0 || c4 < 0) {
- throw this.syntaxError("Invalid Unicode escaped character");
-}
+                    throw this.syntaxError("Invalid Unicode escaped character");
+                  }
                   c = c4 | (c3 << 4) | (c2 << 8) | (c1 << 12);
                   break;
                 }
@@ -363,9 +363,9 @@ namespace PeterO {
         if (c == quote && !escaped)  // End quote reached
           return sb.ToString();
         if (c <= 0xFFFF) {
-  { sb.Append((char)c);
-}
-  } else if (c <= 0x10FFFF) {
+          { sb.Append((char)c);
+          }
+        } else if (c <= 0x10FFFF) {
           sb.Append((char)((((c - 0x10000) >> 10) & 0x3FF) + 0xD800));
           sb.Append((char)(((c - 0x10000) & 0x3FF) + 0xDC00));
         }
@@ -395,8 +395,8 @@ namespace PeterO {
     private CBORObject NextJSONString(int firstChar) {
       int c = firstChar;
       if (c < 0) {
- throw this.syntaxError("Unexpected end of data");
-}
+        throw this.syntaxError("Unexpected end of data");
+      }
       // Parse a string
       if (c == '"' || (c == '\'' && ((this.GetOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
         // The tokenizer already checked the string for invalid
@@ -414,8 +414,8 @@ namespace PeterO {
       int c = firstChar;
       CBORObject obj = null;
       if (c < 0) {
- throw this.syntaxError("Unexpected end of data");
-}
+        throw this.syntaxError("Unexpected end of data");
+      }
       if (c == '"' || (c == '\'' && ((this.GetOptions() & JSONTokener.OPTION_SINGLE_QUOTES) != 0))) {
         // Parse a string
         // The tokenizer already checked the string for invalid
@@ -437,8 +437,8 @@ namespace PeterO {
       } else if (c == 't') {
         // Parse true
         if (this.NextChar() != 'r' ||
-           this.NextChar() != 'u' ||
-           this.NextChar() != 'e') {
+            this.NextChar() != 'u' ||
+            this.NextChar() != 'e') {
           throw this.syntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
@@ -446,9 +446,9 @@ namespace PeterO {
       } else if (c == 'f') {
         // Parse false
         if (this.NextChar() != 'a' ||
-           this.NextChar() != 'l' ||
-           this.NextChar() != 's' ||
-           this.NextChar() != 'e') {
+            this.NextChar() != 'l' ||
+            this.NextChar() != 's' ||
+            this.NextChar() != 'e') {
           throw this.syntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
@@ -456,8 +456,8 @@ namespace PeterO {
       } else if (c == 'n') {
         // Parse null
         if (this.NextChar() != 'u' ||
-           this.NextChar() != 'l' ||
-           this.NextChar() != 'l') {
+            this.NextChar() != 'l' ||
+            this.NextChar() != 'l') {
           throw this.syntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
@@ -472,8 +472,8 @@ namespace PeterO {
         str = sb.ToString();
         obj = CBORDataUtilities.ParseJSONNumber(str);
         if (obj == null) {
- throw this.syntaxError("JSON number can't be parsed.");
-}
+          throw this.syntaxError("JSON number can't be parsed.");
+        }
         nextChar[0] = this.NextClean(c);
         return obj;
       } else {
@@ -525,8 +525,8 @@ namespace PeterO {
             break;
         }
         if (this.NextClean() != ':') {
- throw this.syntaxError("Expected a ':' after a key");
-}
+          throw this.syntaxError("Expected a ':' after a key");
+        }
         // NOTE: Will overwrite existing value. --Peter O.
         myHashMap[key] = this.NextJSONValue(this.NextClean(), nextchar);
         switch (nextchar[0]) {

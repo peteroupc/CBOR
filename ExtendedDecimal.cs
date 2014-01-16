@@ -199,14 +199,16 @@ namespace PeterO {
             (str[i + 4] == 'N' || str[i + 4] == 'n') &&
             (str[i + 5] == 'I' || str[i + 5] == 'i') &&
             (str[i + 6] == 'T' || str[i + 6] == 't') &&
-            (str[i + 7] == 'Y' || str[i + 7] == 'y'))
-          return negative ? NegativeInfinity : PositiveInfinity;
+            (str[i + 7] == 'Y' || str[i + 7] == 'y')) {
+ return negative ? NegativeInfinity : PositiveInfinity;
+}
       }
       if (i + 3 == str.Length) {
         if ((str[i] == 'I' || str[i] == 'i') &&
             (str[i + 1] == 'N' || str[i + 1] == 'n') &&
-            (str[i + 2] == 'F' || str[i + 2] == 'f'))
-          return negative ? NegativeInfinity : PositiveInfinity;
+            (str[i + 2] == 'F' || str[i + 2] == 'f')) {
+ return negative ? NegativeInfinity : PositiveInfinity;
+}
       }
       if (i + 3 <= str.Length) {
         // Quiet NaN
@@ -769,7 +771,8 @@ namespace PeterO {
             }
             builder.Append(mantissaString, 0, tmpInt);
             AppendString(
-              builder, '0',
+              builder,
+              '0',
               FastInteger.Copy(decimalPoint).SubtractInt(builder.Length));
             builder.Append('.');
             builder.Append(mantissaString, tmpInt, mantissaString.Length - tmpInt);
@@ -902,7 +905,7 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger OneShift62 = BigInteger.One << 62;
+    private static BigInteger valueOneShift62 = BigInteger.One << 62;
 
     /// <summary>Creates a binary floating-point number from this object&apos;s
     /// value. Note that if the binary floating-point number contains a negative
@@ -946,7 +949,7 @@ namespace PeterO {
           // Ensure that the quotient has enough precision
           // to be converted accurately to a single or double
           if (!remainder.IsZero &&
-              quotient.CompareTo(OneShift62) < 0) {
+              quotient.CompareTo(valueOneShift62) < 0) {
             // At this point, the quotient has 62 or fewer bits
             int[] bits = FastInteger.GetLastWords(quotient, 2);
             int shift = 0;
@@ -1063,10 +1066,9 @@ namespace PeterO {
           return quiet ? NaN : SignalingNaN;
         } else {
           return CreateWithFlags(
-            info, BigInteger.Zero,
-            (neg ? BigNumberFlags.FlagNegative : 0) |
-            (quiet ? BigNumberFlags.FlagQuietNaN :
-             BigNumberFlags.FlagSignalingNaN));
+            info,
+            BigInteger.Zero,
+            (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
       }
       if (floatExponent == 0) {
@@ -1121,7 +1123,7 @@ namespace PeterO {
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
-    /// <returns>A decimal number with the same value as &quot; dbl&quot;
+    /// <returns>A decimal number with the same value as <paramref name='dbl'/>
     /// .</returns>
     public static ExtendedDecimal FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
@@ -1140,10 +1142,9 @@ namespace PeterO {
           return quiet ? NaN : SignalingNaN;
         } else {
           return CreateWithFlags(
-            info, BigInteger.Zero,
-            (neg ? BigNumberFlags.FlagNegative : 0) |
-            (quiet ? BigNumberFlags.FlagQuietNaN :
-             BigNumberFlags.FlagSignalingNaN));
+            info,
+            BigInteger.Zero,
+            (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
       }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
@@ -1286,6 +1287,7 @@ namespace PeterO {
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagNegative);
+
     /// <summary>Represents the number 10.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -1303,6 +1305,7 @@ namespace PeterO {
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagQuietNaN);
+
     /// <summary>A not-a-number value that signals an invalid operation
     /// flag when it&apos;s passed as an argument to any arithmetic operation
     /// in ExtendedDecimal.</summary>
@@ -1310,11 +1313,13 @@ namespace PeterO {
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagSignalingNaN);
+
     /// <summary>Positive infinity, greater than any other number.</summary>
     public static readonly ExtendedDecimal PositiveInfinity = CreateWithFlags(
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagInfinity);
+
     /// <summary>Negative infinity, less than any other number.</summary>
     public static readonly ExtendedDecimal NegativeInfinity = CreateWithFlags(
       BigInteger.Zero,
@@ -1377,7 +1382,7 @@ namespace PeterO {
     /// zero.</value>
     public int Sign {
       get {
-        return  (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
+        return (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
                  this.unsignedMantissa.IsZero) ? 0 :
           (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
@@ -1412,8 +1417,8 @@ namespace PeterO {
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0.</returns>
-    /// <exception cref='ArithmeticException'>The result can&apos;t
-    /// be exact because it would have a nonterminating decimal expansion.</exception>
+    /// <exception cref='ArithmeticException'>The result can't be exact
+    /// because it would have a nonterminating decimal expansion.</exception>
     public ExtendedDecimal Divide(ExtendedDecimal divisor) {
       return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
@@ -1479,8 +1484,8 @@ namespace PeterO {
       PrecisionContext ctx)
     {
       return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null)
-        .Multiply(divisor, null), ctx);
+        this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null),
+        ctx);
     }
 
     /// <summary>Divides two ExtendedDecimal objects, and gives a particular
@@ -1523,10 +1528,10 @@ namespace PeterO {
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0.</returns>
-    /// <exception cref='ArithmeticException'>Either ctx is null or ctx&apos;s
-    /// precision is 0, and the result would have a nonterminating decimal
-    /// expansion; or, the rounding mode is Rounding.Unnecessary and the
-    /// result is not exact.</exception>
+    /// <exception cref='ArithmeticException'>Either <paramref name='ctx'/>
+    /// is null or <paramref name='ctx'/>'s precision is 0, and the result
+    /// would have a nonterminating decimal expansion; or, the rounding
+    /// mode is Rounding.Unnecessary and the result is not exact.</exception>
     public ExtendedDecimal Divide(
       ExtendedDecimal divisor,
       PrecisionContext ctx)
@@ -1682,7 +1687,6 @@ namespace PeterO {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-
     private static RadixMath<ExtendedDecimal> math = new RadixMath<ExtendedDecimal>(
       new DecimalMathHelper());
 
@@ -1782,9 +1786,9 @@ namespace PeterO {
     /// pre-existing flags).</param>
     /// <returns>Returns the largest value that&apos;s less than the given
     /// value. Returns negative infinity if the result is negative infinity.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
-    /// range.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
+    /// has an unlimited exponent range.</exception>
     public ExtendedDecimal NextMinus(
       PrecisionContext ctx)
     {
@@ -1800,9 +1804,9 @@ namespace PeterO {
     /// pre-existing flags).</param>
     /// <returns>Returns the smallest value that&apos;s greater than the
     /// given value.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
-    /// range.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
+    /// has an unlimited exponent range.</exception>
     public ExtendedDecimal NextPlus(
       PrecisionContext ctx)
     {
@@ -1819,9 +1823,9 @@ namespace PeterO {
     /// pre-existing flags).</param>
     /// <returns>Returns the next value that is closer to the other object&apos;
     /// s value than this object&apos;s value.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
-    /// range.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
+    /// has an unlimited exponent range.</exception>
     public ExtendedDecimal NextToward(
       ExtendedDecimal otherValue,
       PrecisionContext ctx)
@@ -2250,8 +2254,8 @@ namespace PeterO {
     /// NaN if this object is less than 0 (the result would be a complex number
     /// with a real part of 0 and an imaginary part of this object&apos;s absolute
     /// value, but the return value is still NaN).</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this, ctx);
     }
@@ -2265,8 +2269,8 @@ namespace PeterO {
     /// be null, as the exp function&apos;s results are generally not exact.--.</param>
     /// <returns>Exp(this object). If this object&apos;s value is 1, returns
     /// an approximation to &quot; e&quot; within the given precision.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public ExtendedDecimal Exp(PrecisionContext ctx) {
       return math.Exp(this, ctx);
     }
@@ -2283,8 +2287,8 @@ namespace PeterO {
     /// NaN if this object is less than 0 (the result would be a complex number
     /// with a real part equal to Ln of this object&apos;s absolute value and
     /// an imaginary part equal to pi, but the return value is still NaN.).</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public ExtendedDecimal Log(PrecisionContext ctx) {
       return math.Ln(this, ctx);
     }
@@ -2302,9 +2306,9 @@ namespace PeterO {
     /// <returns>This^exponent. Signals the flag FlagInvalid and returns
     /// NaN if this object and exponent are both 0; or if this value is less than
     /// 0 and the exponent either has a fractional part or is infinity.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited, and the exponent has a
-    /// fractional part.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited, and the
+    /// exponent has a fractional part.</exception>
     /// <param name='exponent'>An ExtendedDecimal object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedDecimal Pow(ExtendedDecimal exponent, PrecisionContext ctx) {
@@ -2318,8 +2322,8 @@ namespace PeterO {
     /// are in addition to the pre-existing flags). --This parameter cannot
     /// be null, as pi can never be represented exactly.--.</param>
     /// <returns>Pi rounded to the given precision.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public static ExtendedDecimal PI(PrecisionContext ctx) {
       return math.Pi(ctx);
     }

@@ -12,6 +12,7 @@ namespace PeterO {
     /// and exponent range of arbitrary-precision numbers.</summary>
   public class PrecisionContext {
     private BigInteger exponentMax;
+
     /// <summary>Gets the highest exponent possible when a converted number
     /// is expressed in scientific notation with one digit before the decimal
     /// point. For example, with a precision of 3 and an EMax of 100, the maximum
@@ -33,6 +34,7 @@ namespace PeterO {
     private BigInteger exponentMin;
 
     private bool hasExponentRange;
+
     /// <summary>Gets a value indicating whether this context defines a
     /// minimum and maximum exponent. If false, converted exponents can
     /// have any exponent.</summary>
@@ -126,27 +128,35 @@ namespace PeterO {
     /// <summary>Signals that the result was rounded to a different mathematical
     /// value, but as close as possible to the original.</summary>
     public const int FlagInexact = 1;
+
     /// <summary>Signals that the result was rounded to fit the precision;
     /// either the value or the exponent may have changed from the original.</summary>
     public const int FlagRounded = 2;
+
     /// <summary>Signals that the result&apos;s exponent, before rounding,
     /// is lower than the lowest exponent allowed.</summary>
     public const int FlagSubnormal = 4;
+
     /// <summary>Signals that the result&apos;s exponent, before rounding,
     /// is lower than the lowest exponent allowed, and the result was rounded
     /// to a different mathematical value, but as close as possible to the
     /// original.</summary>
     public const int FlagUnderflow = 8;
+
     /// <summary>Signals that the result is non-zero and the exponent is
     /// higher than the highest exponent allowed.</summary>
     public const int FlagOverflow = 16;
+
     /// <summary>Signals that the exponent was adjusted to fit the exponent
     /// range.</summary>
     public const int FlagClamped = 32;
+
     /// <summary>Signals an invalid operation.</summary>
     public const int FlagInvalid = 64;
+
     /// <summary>Signals a division of a nonzero number by zero.</summary>
     public const int FlagDivideByZero = 128;
+
     /// <summary>Gets the flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be
     /// 0.</summary>
@@ -359,6 +369,7 @@ bool clampNormalExponents) {
     #endif
 
     public static readonly PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
+
     /// <summary>Precision context for the IEEE-754-2008 decimal32 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -369,6 +380,7 @@ bool clampNormalExponents) {
 
     public static readonly PrecisionContext Decimal32 =
       new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
+
     /// <summary>Precision context for the IEEE-754-2008 decimal64 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -379,6 +391,7 @@ bool clampNormalExponents) {
 
     public static readonly PrecisionContext Decimal64 =
       new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
+
     /// <summary>Precision context for the IEEE-754-2008 decimal128 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -389,6 +402,7 @@ bool clampNormalExponents) {
 
     public static readonly PrecisionContext Decimal128 =
       new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
+
     /// <summary>Precision context for the Common Language Infrastructure
     /// (.NET Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
     /// to round a decimal fraction to this format.</summary>

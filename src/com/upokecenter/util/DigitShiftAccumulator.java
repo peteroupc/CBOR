@@ -49,7 +49,7 @@ at: http://peteroupc.github.io/CBOR/
     private FastInteger discardedBitCount;
 
     /**
-     * Not documented yet.
+     * Gets a value not documented yet.
      */
     public FastInteger getDiscardedDigitCount() {
         if (this.discardedBitCount == null) {
@@ -58,7 +58,7 @@ at: http://peteroupc.github.io/CBOR/
         return this.discardedBitCount;
       }
 
-    private static BigInteger Ten = BigInteger.TEN;
+    private static BigInteger valueTen = BigInteger.TEN;
 
     /**
      * Not documented yet.
@@ -104,7 +104,7 @@ int olderDiscarded) {
     }
 
     /**
-     * Not documented yet.
+     * Gets a value not documented yet.
      */
     public FastInteger getShiftedIntFast() {
         if (this.isSmall) {
@@ -214,7 +214,7 @@ bigrem=divrem[1]; }
         BigInteger bigrem;
         BigInteger bigquo;
 {
-BigInteger[] divrem=(this.shiftedBigInt).divideAndRemainder(Ten);
+BigInteger[] divrem=(this.shiftedBigInt).divideAndRemainder(valueTen);
 bigquo=divrem[0];
 bigrem=divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -323,7 +323,7 @@ bigrem=divrem[1]; }
         BigInteger bigrem;
         BigInteger bigquo;
 {
-BigInteger[] divrem=(this.shiftedBigInt).divideAndRemainder(Ten);
+BigInteger[] divrem=(this.shiftedBigInt).divideAndRemainder(valueTen);
 bigquo=divrem[0];
 bigrem=divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -378,7 +378,7 @@ bigrem=divrem[1]; }
         {
           BigInteger bigquo2;
 {
-BigInteger[] divrem=(bigquo).divideAndRemainder(Ten);
+BigInteger[] divrem=(bigquo).divideAndRemainder(valueTen);
 bigquo2=divrem[0];
 bigrem=divrem[1]; }
           this.bitLeftmost = bigrem.intValue();
@@ -402,7 +402,7 @@ bigrem=divrem[1]; }
         this.knownBitLength.SubtractInt(digitShift);
         int newLength = (int)(digitLength - digitShift);
         // System.out.println("dlen={0} dshift={1} newlen={2}",digitLength,
-        //                digitShift, newLength);
+        // digitShift, newLength);
         if (this.discardedBitCount == null) {
  this.discardedBitCount = new FastInteger(0);
 }

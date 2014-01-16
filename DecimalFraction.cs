@@ -17,6 +17,7 @@ namespace PeterO {
   public sealed class DecimalFraction : IComparable<DecimalFraction>, IEquatable<DecimalFraction> {
     private BigInteger exponent;
     private BigInteger mantissa;
+
     /// <summary>Gets this object&apos;s exponent. This object&apos;s
     /// value will be an integer if the exponent is positive or zero.</summary>
     /// <value>This object&apos;s exponent. This object&apos;s value
@@ -103,7 +104,7 @@ namespace PeterO {
       return new DecimalFraction(ed.Mantissa, ed.Exponent);
     }
 
-    private static DecimalFraction MinusOne = new DecimalFraction(BigInteger.Zero - BigInteger.One, BigInteger.Zero);
+    private static DecimalFraction valueMinusOne = new DecimalFraction(BigInteger.Zero - BigInteger.One, BigInteger.Zero);
 
     private sealed class DecimalMathHelper : IRadixMathHelper<DecimalFraction> {
     /// <summary>Not documented yet.</summary>
@@ -220,8 +221,9 @@ namespace PeterO {
     /// <returns>A DecimalFraction object.</returns>
       public DecimalFraction CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         bool neg = (flags & BigNumberFlags.FlagNegative) != 0;
-        if ((neg && mantissa.Sign > 0) || (!neg && mantissa.Sign < 0))
-          mantissa = -mantissa;
+        if ((neg && mantissa.Sign > 0) || (!neg && mantissa.Sign < 0)) {
+ mantissa = -mantissa;
+}
         return new DecimalFraction(mantissa, exponent);
       }
 
@@ -242,7 +244,7 @@ namespace PeterO {
           return One;
         }
         if (val == -1) {
-          return MinusOne;
+          return valueMinusOne;
         }
         return FromInt64(val);
       }
@@ -257,7 +259,7 @@ namespace PeterO {
         case 2:
           return ExtendedDecimal.Create(this.Mantissa, this.Exponent).ToPlainString();
         default:
-          throw new ArgumentException();
+          throw new InvalidOperationException();
       }
     }
 
@@ -293,8 +295,8 @@ namespace PeterO {
     /// number to a string.</summary>
     /// <returns>A decimal fraction with the same value as &quot; flt&quot;
     /// .</returns>
-    /// <exception cref='OverflowException'>&quot;Flt&quot; is infinity
-    /// or not-a-number.</exception>
+    /// <exception cref='OverflowException'>The parameter <paramref
+    /// name='flt'/> is infinity or not-a-number.</exception>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     public static DecimalFraction FromSingle(float flt) {
       ExtendedDecimal ed = ExtendedDecimal.FromSingle(flt);
@@ -315,10 +317,10 @@ namespace PeterO {
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
-    /// <returns>A decimal fraction with the same value as &quot; dbl&quot;
+    /// <returns>A decimal fraction with the same value as <paramref name='dbl'/>
     /// .</returns>
-    /// <exception cref='OverflowException'>&quot;Dbl&quot; is infinity
-    /// or not-a-number.</exception>
+    /// <exception cref='OverflowException'>The parameter <paramref
+    /// name='dbl'/> is infinity or not-a-number.</exception>
     public static DecimalFraction FromDouble(double dbl) {
       ExtendedDecimal ed = ExtendedDecimal.FromDouble(dbl);
       return new DecimalFraction(ed.Mantissa, ed.Exponent);
@@ -375,6 +377,7 @@ namespace PeterO {
       Justification="DecimalFraction is immutable")]
     #endif
     public static readonly DecimalFraction Zero = new DecimalFraction(BigInteger.Zero, BigInteger.Zero);
+
     /// <summary>Represents the number 10.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -492,8 +495,8 @@ namespace PeterO {
       PrecisionContext ctx)
     {
       return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null)
-        .Multiply(divisor, null), ctx);
+        this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null),
+        ctx);
     }
 
     /// <summary>Divides two DecimalFraction objects, and gives a particular
@@ -718,8 +721,8 @@ namespace PeterO {
     /// exponent will be set to 0.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
-    /// <exception cref='ArithmeticException'>The result doesn&apos;t
-    /// fit the given precision.</exception>
+    /// <exception cref='ArithmeticException'>The result doesn't fit
+    /// the given precision.</exception>
     public DecimalFraction DivideToIntegerZeroScale(
       DecimalFraction divisor,
       PrecisionContext ctx) {
@@ -739,8 +742,8 @@ namespace PeterO {
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
     /// <exception cref='ArithmeticException'>The result of integer
-    /// division (the quotient, not the remainder) wouldn&apos;t fit the
-    /// given precision.</exception>
+    /// division (the quotient, not the remainder) wouldn't fit the given
+    /// precision.</exception>
     public DecimalFraction Remainder(
       DecimalFraction divisor,
       PrecisionContext ctx) {
@@ -774,8 +777,7 @@ namespace PeterO {
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
     /// <exception cref='ArithmeticException'>Either the result of integer
-    /// division (the quotient) or the remainder wouldn&apos;t fit the given
-    /// precision.</exception>
+    /// division (the quotient) or the remainder wouldn't fit the given precision.</exception>
     public DecimalFraction RemainderNear(
       DecimalFraction divisor,
       PrecisionContext ctx) {
@@ -790,9 +792,9 @@ namespace PeterO {
     /// of the context is true.</param>
     /// <returns>Returns the largest value that&apos;s less than the given
     /// value. Returns null if the result is negative infinity.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
-    /// range.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
+    /// has an unlimited exponent range.</exception>
     public DecimalFraction NextMinus(
       PrecisionContext ctx)
     {
@@ -807,9 +809,9 @@ namespace PeterO {
     /// of the context is true.</param>
     /// <returns>Returns the smallest value that&apos;s greater than the
     /// given value. Returns null if the result is positive infinity.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
-    /// range.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
+    /// has an unlimited exponent range.</exception>
     public DecimalFraction NextPlus(
       PrecisionContext ctx)
     {
@@ -826,9 +828,9 @@ namespace PeterO {
     /// <returns>Returns the next value that is closer to the other object&apos;
     /// s value than this object&apos;s value. Returns null if the result
     /// is infinity.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
-    /// range.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
+    /// has an unlimited exponent range.</exception>
     public DecimalFraction NextToward(
       DecimalFraction otherValue,
       PrecisionContext ctx)
@@ -849,7 +851,7 @@ namespace PeterO {
     /// exponent range.</returns>
     /// <exception cref='DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
-    /// <exception cref='ArithmeticException'>Either ctx is null or ctx&apos;s
+    /// <exception cref='ArithmeticException'>Either ctx is null or ctx's
     /// precision is 0, and the result would have a nonterminating decimal
     /// expansion; or, the rounding mode is Rounding.Unnecessary and the
     /// result is not exact.</exception>
@@ -964,7 +966,7 @@ namespace PeterO {
     /// <returns>A decimal fraction with the same value as this object but
     /// with the exponent changed.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
-    /// or the result can&apos;t fit the given precision without rounding.</exception>
+    /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The exponent is
     /// outside of the valid range of the precision context, if it defines
     /// an exponent range.</exception>
@@ -979,7 +981,7 @@ namespace PeterO {
     /// <returns>A decimal fraction with the same value as this object but
     /// with the exponent changed.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
-    /// or the result can&apos;t fit the given precision without rounding.</exception>
+    /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The exponent is
     /// outside of the valid range of the precision context, if it defines
     /// an exponent range.</exception>
@@ -1003,7 +1005,7 @@ namespace PeterO {
     /// <returns>A decimal fraction with the same value as this object but
     /// with the exponent changed.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
-    /// or the result can&apos;t fit the given precision without rounding.</exception>
+    /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The new exponent
     /// is outside of the valid range of the precision context, if it defines
     /// an exponent range.</exception>
@@ -1023,7 +1025,7 @@ namespace PeterO {
     /// <returns>A decimal fraction with the same value as this object but
     /// rounded to an integer.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
-    /// or the result can&apos;t fit the given precision without rounding.</exception>
+    /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The new exponent
     /// must be changed to 0 when rounding and 0 is outside of the valid range
     /// of the precision context, if it defines an exponent range.</exception>
@@ -1045,7 +1047,7 @@ namespace PeterO {
     /// <returns>A decimal fraction with the same value as this object but
     /// rounded to an integer.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
-    /// or the result can&apos;t fit the given precision without rounding.</exception>
+    /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The new exponent
     /// must be changed to 0 when rounding and 0 is outside of the valid range
     /// of the precision context, if it defines an exponent range.</exception>
@@ -1069,7 +1071,7 @@ namespace PeterO {
     /// rounding mode is HalfEven.</param>
     /// <returns>A decimal fraction rounded to the given exponent.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
-    /// or the result can&apos;t fit the given precision without rounding.</exception>
+    /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The new exponent
     /// must be changed when rounding and the new exponent is outside of the
     /// valid range of the precision context, if it defines an exponent range.</exception>

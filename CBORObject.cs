@@ -13,16 +13,16 @@ using System.IO;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Represents an object in Concise Binary Object Representation
-    /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-    /// is defined in RFC 7049.<para> Thread Safety: CBOR objects that are
-    /// numbers, "simple values", and text strings are immutable (their
-    /// values can't be changed), so they are inherently safe for use by multiple
-    /// threads. CBOR objects that are arrays, maps, and byte strings are
-    /// mutable, but this class doesn't attempt to synchronize reads and
-    /// writes to those objects by multiple threads, so those objects are
-    /// not thread safe without such synchronization. </para>
-    /// </summary>
+  /// <summary>Represents an object in Concise Binary Object Representation
+  /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
+  /// is defined in RFC 7049.<para> Thread Safety: CBOR objects that are
+  /// numbers, "simple values", and text strings are immutable (their
+  /// values can't be changed), so they are inherently safe for use by multiple
+  /// threads. CBOR objects that are arrays, maps, and byte strings are
+  /// mutable, but this class doesn't attempt to synchronize reads and
+  /// writes to those objects by multiple threads, so those objects are
+  /// not thread safe without such synchronization. </para>
+  /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject> {
     internal int ItemType {
       get {
@@ -48,7 +48,7 @@ namespace PeterO {
     private object itemValue;
     private int tagLow;
     private int tagHigh;
-    internal const int CBORObjectTypeInteger = 0;  // -(2^63) .. (2^63-1)
+    internal const int CBORObjectTypeInteger = 0;  // -(2^63).. (2^63-1)
     internal const int CBORObjectTypeBigInteger = 1;  // all other integers
     internal const int CBORObjectTypeByteString = 2;
     internal const int CBORObjectTypeTextString = 3;
@@ -62,6 +62,7 @@ namespace PeterO {
     internal const int CBORObjectTypeExtendedFloat = 11;
     private static readonly BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
     private static readonly BigInteger Int64MinValue = (BigInteger)Int64.MinValue;
+
     /// <summary>Represents the value false.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -71,6 +72,7 @@ namespace PeterO {
     #endif
 
     public static readonly CBORObject False = new CBORObject(CBORObjectTypeSimpleValue, 20);
+
     /// <summary>Represents the value true.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -80,6 +82,7 @@ namespace PeterO {
     #endif
 
     public static readonly CBORObject True = new CBORObject(CBORObjectTypeSimpleValue, 21);
+
     /// <summary>Represents the value null.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -89,6 +92,7 @@ namespace PeterO {
     #endif
 
     public static readonly CBORObject Null = new CBORObject(CBORObjectTypeSimpleValue, 22);
+
     /// <summary>Represents the value undefined.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -99,7 +103,8 @@ namespace PeterO {
 
     public static readonly CBORObject Undefined = new CBORObject(CBORObjectTypeSimpleValue, 23);
 
-    private CBORObject() { }
+    private CBORObject() {
+    }
 
     private CBORObject(CBORObject obj, int tagLow, int tagHigh) :
       this(CBORObjectTypeTagged, obj) {
@@ -215,14 +220,14 @@ namespace PeterO {
     }
 
     /// <summary>Gets this object&apos;s value with the sign reversed.</summary>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     /// <returns>A CBORObject object.</returns>
     public CBORObject Negate() {
       switch (this.ItemType) {
         case CBORObject.CBORObjectTypeInteger:
           if (((long)this.ThisItem) == Int64.MinValue) {
-            return CBORObject.FromObject(OneShift63);
+            return CBORObject.FromObject(valueOneShift63);
           }
           return CBORObject.FromObject(-((long)this.ThisItem));
           case CBORObject.CBORObjectTypeBigInteger: {
@@ -286,7 +291,7 @@ namespace PeterO {
 
     /// <summary>Gets this value&apos;s sign: -1 if negative; 1 if positive;
     /// 0 if zero.</summary>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type, including the special not-a-number value
     /// (NaN).</exception>
     /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
@@ -484,9 +489,9 @@ namespace PeterO {
                 (string)objB);
             }
             case CBORObjectTypeArray: {
-              return ListCompare((
-                List<CBORObject>)objA,
-                                 (List<CBORObject>)objB);
+              return ListCompare(
+                (List<CBORObject>)objA,
+                (List<CBORObject>)objB);
             }
             case CBORObjectTypeMap: {
               return 0;
@@ -985,7 +990,7 @@ namespace PeterO {
 
     private static int CBORMapHashCode(IDictionary<CBORObject, CBORObject> a) {
       // To simplify matters, we use just the count of
-      // the map as the basis for the hash code.  More complicated
+      // the map as the basis for the hash code. More complicated
       // hash code calculation would generally involve defining
       // how CBORObjects ought to be compared (since a stable
       // sort order is necessary for two equal maps to have the
@@ -1114,28 +1119,28 @@ namespace PeterO {
       return null;
     }
 
-    private static CBORObject[] FixedObjects = InitializeFixedObjects();
+    private static CBORObject[] valueFixedObjects = InitializeFixedObjects();
     // Initialize fixed values for certain
     // head bytes
     private static CBORObject[] InitializeFixedObjects() {
-      FixedObjects = new CBORObject[256];
+      valueFixedObjects = new CBORObject[256];
       for (int i = 0; i < 0x18; ++i) {
-        FixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
+        valueFixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
       }
       for (int i = 0x20; i < 0x38; ++i) {
-        FixedObjects[i] = new CBORObject(
+        valueFixedObjects[i] = new CBORObject(
           CBORObjectTypeInteger,
           (long)(-1 - (i - 0x20)));
       }
-      FixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, String.Empty);
+      valueFixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, String.Empty);
       for (int i = 0xE0; i < 0xf8; ++i) {
-        FixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
+        valueFixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
       }
-      return FixedObjects;
+      return valueFixedObjects;
     }
     // Expected lengths for each head byte.
     // 0 means length varies. -1 means invalid.
-    private static int[] ExpectedLengths = new int[] {
+    private static int[] valueExpectedLengths = new int[] {
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 1
@@ -1157,7 +1162,7 @@ namespace PeterO {
     // Note that this function assumes that the length of the data
     // was already checked.
     private static CBORObject GetFixedLengthObject(int firstbyte, byte[] data) {
-      CBORObject fixedObj = FixedObjects[firstbyte];
+      CBORObject fixedObj = valueFixedObjects[firstbyte];
       if (fixedObj != null) {
         return fixedObj;
       }
@@ -1226,8 +1231,8 @@ namespace PeterO {
           case 7:
             if (firstbyte == 0xf9)
               return new CBORObject(
-                CBORObjectTypeSingle, CBORUtilities.HalfPrecisionToSingle(
-                  unchecked((int)uadditional)));
+                CBORObjectTypeSingle,
+                CBORUtilities.HalfPrecisionToSingle(unchecked((int)uadditional)));
             else if (firstbyte == 0xfa)
               return new CBORObject(
                 CBORObjectTypeSingle,
@@ -1257,8 +1262,9 @@ namespace PeterO {
       } else if (firstbyte == 0x80)  // empty array
         return FromObject(new List<CBORObject>());
       else if (firstbyte == 0xA0)  // empty map
+      {
         return FromObject(new Dictionary<CBORObject, CBORObject>());
-      else {
+  } else {
         throw new CBORException("Unexpected data encountered");
       }
     }
@@ -1277,7 +1283,7 @@ namespace PeterO {
         throw new ArgumentException("data is empty.");
       }
       int firstbyte = (int)(data[0] & (int)0xFF);
-      int expectedLength = ExpectedLengths[firstbyte];
+      int expectedLength = valueExpectedLengths[firstbyte];
       if (expectedLength == -1)  // if invalid
         throw new CBORException("Unexpected data encountered");
       else if (expectedLength != 0)  // if fixed length
@@ -1377,12 +1383,13 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger[] EmptyTags = new BigInteger[0];
+    private static BigInteger[] valueEmptyTags = new BigInteger[0];
+
     /// <summary>Gets a list of all tags, from outermost to innermost.</summary>
     /// <returns>A BigInteger[] object.</returns>
     public BigInteger[] GetTags() {
       if (!this.IsTagged) {
-        return EmptyTags;
+        return valueEmptyTags;
       }
       CBORObject curitem = this;
       if (curitem.IsTagged) {
@@ -1446,11 +1453,11 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not an array.</exception>
-    /// <exception cref='System.ArgumentNullException'>Value is null
-    /// (as opposed to CBORObject.Null).</exception>
+      /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not an array.</exception>
+      /// <exception cref='System.ArgumentNullException'>Value is null
+      /// (as opposed to CBORObject.Null).</exception>
       set {
         if (this.ItemType == CBORObjectTypeArray) {
           if (value == null) {
@@ -1501,12 +1508,12 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1537,12 +1544,12 @@ namespace PeterO {
         return this[objkey];
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a string
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a string
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1691,7 +1698,7 @@ namespace PeterO {
     /// <returns>The closest 64-bit floating point number to this object.
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 64-bit floating point number.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public double AsDouble() {
       int type = this.ItemType;
@@ -1717,7 +1724,7 @@ namespace PeterO {
 
     /// <summary>Converts this object to a decimal fraction.</summary>
     /// <returns>A decimal fraction for this object&apos;s value.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public ExtendedDecimal AsExtendedDecimal() {
       int type = this.ItemType;
@@ -1746,7 +1753,7 @@ namespace PeterO {
     /// for this object&apos;s value. Note that if this object is a decimal
     /// fraction with a fractional part, the conversion may lose information
     /// depending on the number.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public ExtendedFloat AsExtendedFloat() {
       int type = this.ItemType;
@@ -1774,7 +1781,7 @@ namespace PeterO {
     /// The return value can be positive infinity or negative infinity if
     /// this object&apos;s value exceeds the range of a 32-bit floating point
     /// number.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public float AsSingle() {
       int type = this.ItemType;
@@ -1801,7 +1808,7 @@ namespace PeterO {
     /// <summary>Converts this object to an arbitrary-precision integer.
     /// Fractional values are truncated to an integer.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public BigInteger AsBigInteger() {
       int type = this.ItemType;
@@ -1838,10 +1845,10 @@ namespace PeterO {
     /// <summary>Converts this object to a 16-bit signed integer. Floating
     /// point values are truncated to an integer.</summary>
     /// <returns>The closest 16-bit signed integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object&apos;s
-    /// value exceeds the range of a 16-bit signed integer.</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a 16-bit signed integer.</exception>
     public short AsInt16() {
       return (short)this.AsInt32(Int16.MinValue, Int16.MaxValue);
     }
@@ -1849,11 +1856,11 @@ namespace PeterO {
     /// <summary>Converts this object to a byte (0 to 255). Floating point
     /// values are truncated to an integer.</summary>
     /// <returns>The closest byte-sized integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object&apos;s
-    /// value exceeds the range of a byte (is less than 0 or would be greater
-    /// than 255 when truncated to an integer).</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a byte (is less than 0 or would be greater than 255
+    /// when truncated to an integer).</exception>
     public byte AsByte() {
       return (byte)this.AsInt32(0, 255);
     }
@@ -1861,10 +1868,10 @@ namespace PeterO {
     /// <summary>Converts this object to a 64-bit signed integer. Floating
     /// point values are truncated to an integer.</summary>
     /// <returns>The closest 64-bit signed integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object&apos;s
-    /// value exceeds the range of a 64-bit signed integer.</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a 64-bit signed integer.</exception>
     public long AsInt64() {
       int type = this.ItemType;
       switch (type) {
@@ -1873,8 +1880,9 @@ namespace PeterO {
           }
           case CBORObjectTypeBigInteger: {
             if (((BigInteger)this.ThisItem).CompareTo(Int64MaxValue) > 0 ||
-                ((BigInteger)this.ThisItem).CompareTo(Int64MinValue) < 0)
+                ((BigInteger)this.ThisItem).CompareTo(Int64MinValue) < 0) {
               throw new OverflowException("This object's value is out of range");
+            }
             return (long)(BigInteger)this.ThisItem;
           }
           case CBORObjectTypeSingle: {
@@ -1902,15 +1910,17 @@ namespace PeterO {
           case CBORObjectTypeExtendedDecimal: {
             BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
             if (bi.CompareTo(Int64MaxValue) > 0 ||
-                bi.CompareTo(Int64MinValue) < 0)
+                bi.CompareTo(Int64MinValue) < 0) {
               throw new OverflowException("This object's value is out of range");
+            }
             return (long)bi;
           }
           case CBORObjectTypeExtendedFloat: {
             BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
             if (bi.CompareTo(Int64MaxValue) > 0 ||
-                bi.CompareTo(Int64MinValue) < 0)
+                bi.CompareTo(Int64MinValue) < 0) {
               throw new OverflowException("This object's value is out of range");
+            }
             return (long)bi;
           }
         default:
@@ -1932,8 +1942,9 @@ namespace PeterO {
           case CBORObjectTypeBigInteger: {
             BigInteger bigintItem = (BigInteger)thisItem;
             if (bigintItem.CompareTo((BigInteger)maxValue) > 0 ||
-                bigintItem.CompareTo((BigInteger)minValue) < 0)
+                bigintItem.CompareTo((BigInteger)minValue) < 0) {
               throw new OverflowException("This object's value is out of range");
+            }
             return (int)bigintItem;
           }
           case CBORObjectTypeSingle: {
@@ -1961,15 +1972,17 @@ namespace PeterO {
           case CBORObjectTypeExtendedDecimal: {
             BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
             if (bi.CompareTo((BigInteger)maxValue) > 0 ||
-                bi.CompareTo((BigInteger)minValue) < 0)
+                bi.CompareTo((BigInteger)minValue) < 0) {
               throw new OverflowException("This object's value is out of range");
+            }
             return (int)bi;
           }
           case CBORObjectTypeExtendedFloat: {
             BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
             if (bi.CompareTo((BigInteger)maxValue) > 0 ||
-                bi.CompareTo((BigInteger)minValue) < 0)
+                bi.CompareTo((BigInteger)minValue) < 0) {
               throw new OverflowException("This object's value is out of range");
+            }
             return (int)bi;
           }
         default:
@@ -1980,17 +1993,17 @@ namespace PeterO {
     /// <summary>Converts this object to a 32-bit signed integer. Floating
     /// point values are truncated to an integer.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object&apos;s
-    /// value exceeds the range of a 32-bit signed integer.</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a 32-bit signed integer.</exception>
     public int AsInt32() {
       return this.AsInt32(Int32.MinValue, Int32.MaxValue);
     }
 
     /// <summary>Gets the value of this object as a string object.</summary>
     /// <returns>Gets this object&apos;s string.</returns>
-    /// <exception cref='InvalidOperationException'>This object&apos;s
+    /// <exception cref='InvalidOperationException'>This object's
     /// type is not a string.</exception>
     public string AsString() {
       int type = this.ItemType;
@@ -2006,8 +2019,8 @@ namespace PeterO {
     /// <summary>Reads an object in CBOR format from a data stream.</summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <returns>A CBOR object that was read.</returns>
-    /// <exception cref='System.ArgumentNullException'>&quot;Stream&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     /// <exception cref='CBORException'>There was an error in reading
     /// or parsing the data.</exception>
     public static CBORObject Read(Stream stream) {
@@ -2059,14 +2072,14 @@ namespace PeterO {
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5)) };
       } else if (value <= 0xFF) {
-        return new byte[] {(byte)(24 | (type << 5)),
+        return new byte[] { (byte)(24 | (type << 5)),
           (byte)(value & 0xFF) };
       } else if (value <= 0xFFFF) {
-        return new byte[] {(byte)(25 | (type << 5)),
+        return new byte[] { (byte)(25 | (type << 5)),
           (byte)((value >> 8) & 0xFF),
           (byte)(value & 0xFF) };
       } else {
-        return new byte[] {(byte)(26 | (type << 5)),
+        return new byte[] { (byte)(26 | (type << 5)),
           (byte)((value >> 24) & 0xFF),
           (byte)((value >> 16) & 0xFF),
           (byte)((value >> 8) & 0xFF),
@@ -2086,20 +2099,20 @@ namespace PeterO {
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5)) };
       } else if (value <= 0xFF) {
-        return new byte[] {(byte)(24 | (type << 5)),
+        return new byte[] { (byte)(24 | (type << 5)),
           (byte)(value & 0xFF) };
       } else if (value <= 0xFFFF) {
-        return new byte[] {(byte)(25 | (type << 5)),
+        return new byte[] { (byte)(25 | (type << 5)),
           (byte)((value >> 8) & 0xFF),
           (byte)(value & 0xFF) };
       } else if (value <= 0xFFFFFFFF) {
-        return new byte[] {(byte)(26 | (type << 5)),
+        return new byte[] { (byte)(26 | (type << 5)),
           (byte)((value >> 24) & 0xFF),
           (byte)((value >> 16) & 0xFF),
           (byte)((value >> 8) & 0xFF),
           (byte)(value & 0xFF) };
       } else {
-        return new byte[] {(byte)(27 | (type << 5)),
+        return new byte[] { (byte)(27 | (type << 5)),
           (byte)((value >> 56) & 0xFF),
           (byte)((value >> 48) & 0xFF),
           (byte)((value >> 40) & 0xFF),
@@ -2220,17 +2233,17 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger OneShift63 = BigInteger.One << 63;
+    private static BigInteger valueOneShift63 = BigInteger.One << 63;
 
-    private static BigInteger LowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
+    private static BigInteger valueLowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
 
-    private static BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
+    private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     /// <summary>Writes a binary floating-point number in CBOR format to
     /// a data stream.</summary>
     /// <exception cref='System.ArgumentNullException'>Stream is null.</exception>
-    /// <exception cref='System.ArgumentException'>The value&apos;s
-    /// exponent is less than -(2^64) or greater than (2^64-1).</exception>
+    /// <exception cref='System.ArgumentException'>The value's exponent
+    /// is less than -(2^64) or greater than (2^64-1).</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='bignum'>An ExtendedFloat object.</param>
     /// <param name='stream'>A writable data stream.</param>
@@ -2266,8 +2279,8 @@ namespace PeterO {
     /// <param name='stream'>Stream to write to.</param>
     /// <exception cref='System.ArgumentNullException'>Stream is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
-    /// <exception cref='System.ArgumentException'>The value&apos;s
-    /// exponent is less than -(2^64) or greater than (2^64-1).</exception>
+    /// <exception cref='System.ArgumentException'>The value's exponent
+    /// is less than -(2^64) or greater than (2^64-1).</exception>
     public static void Write(ExtendedDecimal bignum, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -2296,8 +2309,7 @@ namespace PeterO {
 
     /// <summary>Writes a big integer in CBOR format to a data stream.</summary>
     /// <param name='bigint'>Big integer to write.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(BigInteger bigint, Stream stream) {
@@ -2369,8 +2381,7 @@ namespace PeterO {
     }
 
     /// <summary>Writes this CBOR object to a data stream.</summary>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='stream'>A writable data stream.</param>
     public void WriteTo(Stream stream) {
@@ -2385,9 +2396,10 @@ namespace PeterO {
         Write((BigInteger)this.ThisItem, stream);
       } else if (type == CBORObjectTypeByteString) {
         byte[] arr = (byte[])this.ThisItem;
-        WritePositiveInt((
-          this.ItemType == CBORObjectTypeByteString) ? 2 : 3,
-                         arr.Length, stream);
+        WritePositiveInt(
+          (this.ItemType == CBORObjectTypeByteString) ? 2 : 3,
+          arr.Length,
+          stream);
         stream.Write(arr, 0, arr.Length);
       } else if (type == CBORObjectTypeTextString) {
         Write((string)this.ThisItem, stream);
@@ -2421,8 +2433,7 @@ namespace PeterO {
     /// <summary>Writes a 64-bit unsigned integer in CBOR format to a data
     /// stream.</summary>
     /// <param name='value'>The value to write.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(long value, Stream stream) {
@@ -2440,8 +2451,7 @@ namespace PeterO {
 
     /// <summary>Writes a 32-bit signed integer in CBOR format to a data stream.</summary>
     /// <param name='value'>The value to write.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(int value, Stream stream) {
@@ -2450,8 +2460,7 @@ namespace PeterO {
 
     /// <summary>Writes a 16-bit signed integer in CBOR format to a data stream.</summary>
     /// <param name='value'>The value to write.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(short value, Stream stream) {
@@ -2461,10 +2470,9 @@ namespace PeterO {
     /// <summary>Writes a Unicode character as a string in CBOR format to
     /// a data stream.</summary>
     /// <param name='value'>The value to write.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
-    /// <exception cref='System.ArgumentException'>&quot;S&quot;
-    /// is a surrogate code point.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
+    /// <exception cref='System.ArgumentException'>"S" is a surrogate
+    /// code point.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(char value, Stream stream) {
@@ -2476,8 +2484,7 @@ namespace PeterO {
 
     /// <summary>Writes a Boolean value in CBOR format to a data stream.</summary>
     /// <param name='value'>The value to write.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(bool value, Stream stream) {
@@ -2489,8 +2496,7 @@ namespace PeterO {
 
     /// <summary>Writes a byte (0 to 255) in CBOR format to a data stream.</summary>
     /// <param name='value'>The value to write.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(byte value, Stream stream) {
@@ -2509,15 +2515,15 @@ namespace PeterO {
     /// a data stream.</summary>
     /// <param name='value'>The value to write.</param>
     /// <param name='s'>A writable data stream.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='s'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static void Write(float value, Stream s) {
       if (s == null) {
         throw new ArgumentNullException("s");
       }
       int bits = BitConverter.ToInt32(BitConverter.GetBytes((float)value), 0);
-      byte[] data = new byte[] {(byte)0xFA,
+      byte[] data = new byte[] { (byte)0xFA,
         (byte)((bits >> 24) & 0xFF),
         (byte)((bits >> 16) & 0xFF),
         (byte)((bits >> 8) & 0xFF),
@@ -2529,15 +2535,14 @@ namespace PeterO {
     /// a data stream.</summary>
     /// <param name='value'>The value to write.</param>
     /// <param name='stream'>A writable data stream.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static void Write(double value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
       long bits = BitConverter.ToInt64(BitConverter.GetBytes((double)(double)value), 0);
-      byte[] data = new byte[] {(byte)0xFB,
+      byte[] data = new byte[] { (byte)0xFB,
         (byte)((bits >> 56) & 0xFF),
         (byte)((bits >> 48) & 0xFF),
         (byte)((bits >> 40) & 0xFF),
@@ -2666,12 +2671,12 @@ namespace PeterO {
           float value = (float)this.ThisItem;
           int bits = BitConverter.ToInt32(BitConverter.GetBytes(value), 0);
           return tagged ?
-            new byte[] {tagbyte, (byte)0xFA,
+            new byte[] { tagbyte, (byte)0xFA,
             (byte)((bits >> 24) & 0xFF),
             (byte)((bits >> 16) & 0xFF),
             (byte)((bits >> 8) & 0xFF),
             (byte)(bits & 0xFF) } :
-            new byte[] {(byte)0xFA,
+            new byte[] { (byte)0xFA,
             (byte)((bits >> 24) & 0xFF),
             (byte)((bits >> 16) & 0xFF),
             (byte)((bits >> 8) & 0xFF),
@@ -2680,7 +2685,7 @@ namespace PeterO {
           double value = (double)this.ThisItem;
           long bits = BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
           return tagged ?
-            new byte[] {tagbyte, (byte)0xFB,
+            new byte[] { tagbyte, (byte)0xFB,
             (byte)((bits >> 56) & 0xFF),
             (byte)((bits >> 48) & 0xFF),
             (byte)((bits >> 40) & 0xFF),
@@ -2689,7 +2694,7 @@ namespace PeterO {
             (byte)((bits >> 16) & 0xFF),
             (byte)((bits >> 8) & 0xFF),
             (byte)(bits & 0xFF) } :
-            new byte[] {(byte)0xFB,
+            new byte[] { (byte)0xFB,
             (byte)((bits >> 56) & 0xFF),
             (byte)((bits >> 48) & 0xFF),
             (byte)((bits >> 40) & 0xFF),
@@ -2752,8 +2757,8 @@ namespace PeterO {
     /// <summary>Generates a CBOR object from a string in JavaScript Object
     /// Notation (JSON) format. This function only accepts maps and arrays.</summary>
     /// <param name='str'>A string in JSON format.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;Str&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
     /// <exception cref='CBORException'>The string is not in JSON format.</exception>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromJSONString(string str) {
@@ -2769,8 +2774,8 @@ namespace PeterO {
     /// Object Notation (JSON) format and UTF-8 encoding. This function
     /// only accepts maps and arrays.</summary>
     /// <param name='stream'>A readable data stream.</param>
-    /// <exception cref='System.ArgumentNullException'>&quot;Stream&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='CBORException'>The data stream contains invalid
     /// UTF-8 or is not in JSON format.</exception>
@@ -2860,7 +2865,9 @@ namespace PeterO {
             float f = (float)this.ThisItem;
             if (Single.IsNegativeInfinity(f) ||
                 Single.IsPositiveInfinity(f) ||
-                Single.IsNaN(f)) return "null";
+                Single.IsNaN(f)) {
+              return "null";
+            }
             else
               return TrimDotZero(
                 Convert.ToString(
@@ -2871,7 +2878,9 @@ namespace PeterO {
             double f = (double)this.ThisItem;
             if (Double.IsNegativeInfinity(f) ||
                 Double.IsPositiveInfinity(f) ||
-                Double.IsNaN(f)) return "null";
+                Double.IsNaN(f)) {
+              return "null";
+            }
             else
               return TrimDotZero(
                 Convert.ToString(
@@ -3076,8 +3085,9 @@ namespace PeterO {
     /// <param name='bigintValue'>An arbitrary-precision value.</param>
     /// <returns>A CBOR number object.</returns>
     public static CBORObject FromObject(BigInteger bigintValue) {
-      if ((object)bigintValue == (object)null)
+      if ((object)bigintValue == (object)null) {
         return CBORObject.Null;
+      }
       if (bigintValue.CompareTo(Int64MinValue) >= 0 &&
           bigintValue.CompareTo(Int64MaxValue) <= 0) {
         return new CBORObject(CBORObjectTypeInteger, (long)(BigInteger)bigintValue);
@@ -3091,11 +3101,12 @@ namespace PeterO {
     /// <param name='bigValue'>An arbitrary-precision binary floating-point
     /// number.</param>
     /// <returns>A CBOR number object.</returns>
-    /// <exception cref='System.ArgumentException'>The value&apos;s
-    /// exponent is less than -(2^64) or greater than (2^64-1).</exception>
+    /// <exception cref='System.ArgumentException'>The value's exponent
+    /// is less than -(2^64) or greater than (2^64-1).</exception>
     public static CBORObject FromObject(ExtendedFloat bigValue) {
-      if ((object)bigValue == (object)null)
+      if ((object)bigValue == (object)null) {
         return CBORObject.Null;
+      }
       if (bigValue.IsNaN() || bigValue.IsInfinity()) {
         return new CBORObject(CBORObjectTypeExtendedFloat, bigValue);
       }
@@ -3113,11 +3124,12 @@ namespace PeterO {
     /// <summary>Generates a CBOR object from a decimal fraction.</summary>
     /// <param name='decfrac'>An arbitrary-precision decimal number.</param>
     /// <returns>A CBOR number object.</returns>
-    /// <exception cref='System.ArgumentException'>The value&apos;s
-    /// exponent is less than -(2^64) or greater than (2^64-1).</exception>
+    /// <exception cref='System.ArgumentException'>The value's exponent
+    /// is less than -(2^64) or greater than (2^64-1).</exception>
     public static CBORObject FromObject(ExtendedDecimal decfrac) {
-      if ((object)decfrac == (object)null)
+      if ((object)decfrac == (object)null) {
         return CBORObject.Null;
+      }
       if (decfrac.IsNaN() || decfrac.IsInfinity()) {
         return new CBORObject(CBORObjectTypeExtendedDecimal, decfrac);
       }
@@ -3265,6 +3277,7 @@ namespace PeterO {
     /// <returns>A CBOR object where each element of the given array is converted
     /// to a CBOR object and copied to a new array, or CBORObject.Null if &quot;
     /// value&quot; is null.</returns>
+    /// <typeparam name="T">A type convertible to CBORObject.</typeparam>
     public static CBORObject FromObject<T>(IList<T> value) {
       if (value == null) {
         return CBORObject.Null;
@@ -3281,7 +3294,9 @@ namespace PeterO {
     /// <param name='dic'>A map of CBOR objects.</param>
     /// <returns>A CBOR object where each key and value of the given map is
     /// converted to a CBOR object and copied to a new map, or CBORObject.Null
-    /// if &quot; dic&quot; is null.</returns>
+    /// if <paramref name='dic'/> is null.</returns>
+    /// <typeparam name="TKey">A type convertible to CBORObject; the type of the keys.</typeparam>
+    /// <typeparam name="TValue">A type convertible to CBORObject; the type of the values.</typeparam>
     public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey, TValue> dic) {
       if (dic == null) {
         return CBORObject.Null;
@@ -3299,8 +3314,8 @@ namespace PeterO {
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
     /// CBORObject.Null if the object is null.</returns>
-    /// <exception cref='System.ArgumentException'>The object&apos;s
-    /// type is not supported.</exception>
+    /// <exception cref='System.ArgumentException'>The object's type
+    /// is not supported.</exception>
     public static CBORObject FromObject(object obj) {
       if (obj == null) {
         return CBORObject.Null;
@@ -3389,26 +3404,27 @@ namespace PeterO {
       throw new ArgumentException("Unsupported object type.");
     }
 
-    private static BigInteger BigInt65536 = (BigInteger)65536;
+    private static BigInteger valueBigInt65536 = (BigInteger)65536;
+
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='bigintTag'>A big integer that specifies a tag number.</param>
     /// <returns>A CBOR object where the object &quot; o&quot; is converted
     /// to a CBOR object and given the tag &quot; bigintTag&quot; .</returns>
-    /// <exception cref='System.ArgumentException'>&quot;BigintTag&quot;
-    /// is less than 0 or greater than 2^64-1, or &quot; o&quot; &apos;s type
-    /// is unsupported.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='bigintTag'/> is less than 0 or greater than 2^64-1, or <paramref
+    /// name='o'/>'s type is unsupported.</exception>
     public static CBORObject FromObjectAndTag(object o, BigInteger bigintTag) {
       if (bigintTag == null) {
         throw new ArgumentNullException("bigintTag");
       }
       if (bigintTag.Sign < 0) throw new ArgumentException(
         "tag not greater or equal to 0 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      if (bigintTag.CompareTo(UInt64MaxValue) > 0) throw new ArgumentException(
+      if (bigintTag.CompareTo(valueUInt64MaxValue) > 0) throw new ArgumentException(
         "tag not less or equal to 18446744073709551615 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
       CBORObject c = FromObject(o);
-      if (bigintTag.CompareTo(BigInt65536) < 0) {
+      if (bigintTag.CompareTo(valueBigInt65536) < 0) {
         // Low-numbered, commonly used tags
         return new CBORObject(c, (int)bigintTag, 0);
       } else if (bigintTag.CompareTo((BigInteger)2) == 0) {
@@ -3441,8 +3457,9 @@ namespace PeterO {
     /// <param name='smallTag'>A 32-bit integer that specifies a tag number.</param>
     /// <returns>A CBOR object where the object &quot; value&quot; is converted
     /// to a CBOR object and given the tag &quot; smallTag&quot; .</returns>
-    /// <exception cref='System.ArgumentException'>&quot;SmallTag&quot;
-    /// is less than 0 or &quot; obValue&quot; &apos;s type is unsupported.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='smallTag'/> is less than 0 or <paramref name='obValue'/>
+    /// 's type is unsupported.</exception>
     public static CBORObject FromObjectAndTag(object obValue, int smallTag) {
       if (smallTag < 0) throw new ArgumentException(
         "tag not greater or equal to 0 (" +
@@ -3481,7 +3498,7 @@ namespace PeterO {
           value |= highValue << 32;
           WritePositiveInt64(6, value, s);
         } else {
-          byte[] arrayToWrite = new byte[] {(byte)0xDB,
+          byte[] arrayToWrite = new byte[] { (byte)0xDB,
             (byte)((high >> 24) & 0xFF),
             (byte)((high >> 16) & 0xFF),
             (byte)((high >> 8) & 0xFF),
@@ -3717,9 +3734,9 @@ namespace PeterO {
     private static bool BigIntFits(BigInteger bigint) {
       int sign = bigint.Sign;
       if (sign < 0) {
-        return bigint.CompareTo(LowestMajorType1) >= 0;
+        return bigint.CompareTo(valueLowestMajorType1) >= 0;
       } else if (sign > 0) {
-        return bigint.CompareTo(UInt64MaxValue) <= 0;
+        return bigint.CompareTo(valueUInt64MaxValue) <= 0;
       } else {
         return true;
       }
@@ -3731,8 +3748,8 @@ namespace PeterO {
           return true;
           case CBORObjectTypeBigInteger: {
             BigInteger bigint = (BigInteger)this.ThisItem;
-            return bigint.CompareTo(LowestMajorType1) >= 0 &&
-              bigint.CompareTo(UInt64MaxValue) <= 0;
+            return bigint.CompareTo(valueLowestMajorType1) >= 0 &&
+              bigint.CompareTo(valueUInt64MaxValue) <= 0;
           }
           case CBORObjectTypeSingle: {
             float value = (float)this.ThisItem;
@@ -3746,13 +3763,13 @@ namespace PeterO {
           }
           case CBORObjectTypeExtendedDecimal: {
             ExtendedDecimal value = (ExtendedDecimal)this.ThisItem;
-            return value.CompareTo(ExtendedDecimal.FromBigInteger(LowestMajorType1)) >= 0 &&
-              value.CompareTo(ExtendedDecimal.FromBigInteger(UInt64MaxValue)) <= 0;
+            return value.CompareTo(ExtendedDecimal.FromBigInteger(valueLowestMajorType1)) >= 0 &&
+              value.CompareTo(ExtendedDecimal.FromBigInteger(valueUInt64MaxValue)) <= 0;
           }
           case CBORObjectTypeExtendedFloat: {
             ExtendedFloat value = (ExtendedFloat)this.ThisItem;
-            return value.CompareTo(ExtendedFloat.FromBigInteger(LowestMajorType1)) >= 0 &&
-              value.CompareTo(ExtendedFloat.FromBigInteger(UInt64MaxValue)) <= 0;
+            return value.CompareTo(ExtendedFloat.FromBigInteger(valueLowestMajorType1)) >= 0 &&
+              value.CompareTo(ExtendedFloat.FromBigInteger(valueUInt64MaxValue)) <= 0;
           }
         default:
           return false;
@@ -3790,15 +3807,19 @@ namespace PeterO {
         return RewrapObject(o, list[1]);
       }
       if (isDecimal) {
-        return RewrapObject(
-          o, new CBORObject(
+        CBORObject objectToWrap = new CBORObject(
             CBORObjectTypeExtendedDecimal,
-            ExtendedDecimal.Create(list[1].AsBigInteger(), list[0].AsBigInteger())));
-      } else {
+            ExtendedDecimal.Create(list[1].AsBigInteger(), list[0].AsBigInteger()));
         return RewrapObject(
-          o, new CBORObject(
+          o,
+          objectToWrap);
+      } else {
+        CBORObject objectToWrap = new CBORObject(
             CBORObjectTypeExtendedFloat,
-            ExtendedFloat.Create(list[1].AsBigInteger(), list[0].AsBigInteger())));
+            ExtendedFloat.Create(list[1].AsBigInteger(), list[0].AsBigInteger()));
+        return RewrapObject(
+          o,
+          objectToWrap);
       }
     }
 
@@ -3835,7 +3856,7 @@ namespace PeterO {
       }
       int type = (firstbyte >> 5) & 0x07;
       int additional = firstbyte & 0x1F;
-      int expectedLength = ExpectedLengths[firstbyte];
+      int expectedLength = valueExpectedLengths[firstbyte];
       // Data checks
       if (expectedLength == -1)  // if the head byte is invalid
         throw new CBORException("Unexpected data encountered");
@@ -3860,7 +3881,7 @@ namespace PeterO {
         }
       }
       // Check if this represents a fixed object
-      CBORObject fixedObject = FixedObjects[firstbyte];
+      CBORObject fixedObject = valueFixedObjects[firstbyte];
       if (fixedObject != null) {
         return fixedObject;
       }
@@ -3956,8 +3977,8 @@ namespace PeterO {
             while (true) {
               CBORObject o = Read(s, depth + 1, true, type, subFlags, 0);
               if (o == null) {
-                break;
-              }// break if the "break" code was read
+                break;// break if the "break" code was read
+              }
               data = (byte[])o.ThisItem;
               ms.Write(data, 0, data.Length);
             }
@@ -4014,7 +4035,8 @@ namespace PeterO {
           while (true) {
             CBORObject o = Read(s, depth + 1, true, type, subFlags, 0);
             if (o == null) {
-              break;// break if the "break" code was read
+              // break if the "break" code was read
+              break;
             }
             builder.Append((string)o.ThisItem);
           }
@@ -4037,8 +4059,8 @@ namespace PeterO {
               throw new CBORException("Invalid UTF-8");
             case -2:
               throw new CBORException("Premature end of data");
-            default:  // No error
-              break;
+            default:
+              break;  // No error
           }
           return new CBORObject(CBORObjectTypeTextString, builder.ToString());
         }
@@ -4049,8 +4071,8 @@ namespace PeterO {
           while (true) {
             CBORObject o = Read(s, depth + 1, true, -1, validTypeFlags, vtindex);
             if (o == null) {
-              break;
-            }// break if the "break" code was read
+              break;// break if the "break" code was read
+            }
             list.Add(o);
             vtindex++;
           }
@@ -4077,8 +4099,8 @@ namespace PeterO {
           while (true) {
             CBORObject key = Read(s, depth + 1, true, -1, null, 0);
             if (key == null) {
-              break;
-            }// break if the "break" code was read
+              break;// break if the "break" code was read
+            }
             CBORObject value = Read(s, depth + 1, false, -1, null, 0);
             dict[key] = value;
           }

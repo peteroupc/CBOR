@@ -194,14 +194,16 @@ at: http://peteroupc.github.io/CBOR/
             (str.charAt(i + 4) == 'N' || str.charAt(i + 4) == 'n') &&
             (str.charAt(i + 5) == 'I' || str.charAt(i + 5) == 'i') &&
             (str.charAt(i + 6) == 'T' || str.charAt(i + 6) == 't') &&
-            (str.charAt(i + 7) == 'Y' || str.charAt(i + 7) == 'y'))
-          return negative ? NegativeInfinity : PositiveInfinity;
+            (str.charAt(i + 7) == 'Y' || str.charAt(i + 7) == 'y')) {
+ return negative ? NegativeInfinity : PositiveInfinity;
+}
       }
       if (i + 3 == str.length()) {
         if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') &&
             (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') &&
-            (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f'))
-          return negative ? NegativeInfinity : PositiveInfinity;
+            (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f')) {
+ return negative ? NegativeInfinity : PositiveInfinity;
+}
       }
       if (i + 3 <= str.length()) {
         // Quiet NaN
@@ -792,7 +794,8 @@ bigrem=divrem[1]; }
             }
             builder.append(mantissaString,0,(0)+(tmpInt));
             AppendString(
-              builder, '0',
+              builder,
+              '0',
               FastInteger.Copy(decimalPoint).SubtractInt(builder.length()));
             builder.append('.');
             builder.append(mantissaString,tmpInt,(tmpInt)+(mantissaString.length() - tmpInt));
@@ -926,7 +929,7 @@ bigrem=divrem[1]; }
       }
     }
 
-    private static BigInteger OneShift62 = BigInteger.ONE.shiftLeft(62);
+    private static BigInteger valueOneShift62 = BigInteger.ONE.shiftLeft(62);
 
     /**
      * Creates a binary floating-point number from this object&apos;s
@@ -975,7 +978,7 @@ remainder=divrem[1]; }
           // Ensure that the quotient has enough precision
           // to be converted accurately to a single or double
           if (remainder.signum()!=0 &&
-              quotient.compareTo(OneShift62) < 0) {
+              quotient.compareTo(valueOneShift62) < 0) {
             // At this point, the quotient has 62 or fewer bits
             int[] bits = FastInteger.GetLastWords(quotient, 2);
             int shift = 0;
@@ -1095,10 +1098,9 @@ remainder=divrem[1]; }
           return quiet ? NaN : SignalingNaN;
         } else {
           return CreateWithFlags(
-            info, BigInteger.ZERO,
-            (neg ? BigNumberFlags.FlagNegative : 0) |
-            (quiet ? BigNumberFlags.FlagQuietNaN :
-             BigNumberFlags.FlagSignalingNaN));
+            info,
+            BigInteger.ZERO,
+            (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
       }
       if (floatExponent == 0) {
@@ -1173,10 +1175,9 @@ remainder=divrem[1]; }
           return quiet ? NaN : SignalingNaN;
         } else {
           return CreateWithFlags(
-            info, BigInteger.ZERO,
-            (neg ? BigNumberFlags.FlagNegative : 0) |
-            (quiet ? BigNumberFlags.FlagQuietNaN :
-             BigNumberFlags.FlagSignalingNaN));
+            info,
+            BigInteger.ZERO,
+            (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
       }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
@@ -1316,6 +1317,7 @@ remainder=divrem[1]; }
       BigInteger.ZERO,
       BigInteger.ZERO,
       BigNumberFlags.FlagNegative);
+
     /**
      * Represents the number 10.
      */
@@ -1331,6 +1333,7 @@ remainder=divrem[1]; }
       BigInteger.ZERO,
       BigInteger.ZERO,
       BigNumberFlags.FlagQuietNaN);
+
     /**
      * A not-a-number value that signals an invalid operation flag when
      * it&apos;s passed as an argument to any arithmetic operation in ExtendedDecimal.
@@ -1339,6 +1342,7 @@ remainder=divrem[1]; }
       BigInteger.ZERO,
       BigInteger.ZERO,
       BigNumberFlags.FlagSignalingNaN);
+
     /**
      * Positive infinity, greater than any other number.
      */
@@ -1346,6 +1350,7 @@ remainder=divrem[1]; }
       BigInteger.ZERO,
       BigInteger.ZERO,
       BigNumberFlags.FlagInfinity);
+
     /**
      * Negative infinity, less than any other number.
      */
@@ -1419,7 +1424,7 @@ remainder=divrem[1]; }
      * Gets this value&apos;s sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
-        return  (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
+        return (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
                  this.unsignedMantissa.signum()==0) ? 0 :
           (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
@@ -1456,8 +1461,8 @@ remainder=divrem[1]; }
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException The result can&apos;t be exact because
-     * it would have a nonterminating decimal expansion.
+     * @throws ArithmeticException The result can't be exact because it
+     * would have a nonterminating decimal expansion.
      */
     public ExtendedDecimal Divide(ExtendedDecimal divisor) {
       return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
@@ -1531,8 +1536,8 @@ remainder=divrem[1]; }
       ExtendedDecimal divisor,
       PrecisionContext ctx) {
       return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null)
-        .Multiply(divisor, null), ctx);
+        this.DivideToIntegerNaturalScale(divisor, null) .Multiply(divisor, null),
+        ctx);
     }
 
     /**
@@ -1576,7 +1581,7 @@ remainder=divrem[1]; }
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException Either ctx is null or ctx&apos;s precision
+     * @throws ArithmeticException Either "ctx" is null or "ctx"'s precision
      * is 0, and the result would have a nonterminating decimal expansion;
      * or, the rounding mode is Rounding.Unnecessary and the result is not
      * exact.
@@ -1749,7 +1754,6 @@ remainder=divrem[1]; }
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-
     private static RadixMath<ExtendedDecimal> math = new RadixMath<ExtendedDecimal>(
       new DecimalMathHelper());
 
@@ -1856,8 +1860,8 @@ remainder=divrem[1]; }
      * pre-existing flags).
      * @return Returns the largest value that&apos;s less than the given
      * value. Returns negative infinity if the result is negative infinity.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
-     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
+     * the precision is 0, or "ctx" has an unlimited exponent range.
      */
     public ExtendedDecimal NextMinus(
       PrecisionContext ctx) {
@@ -1873,8 +1877,8 @@ remainder=divrem[1]; }
      * pre-existing flags).
      * @return Returns the smallest value that&apos;s greater than the
      * given value.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
-     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
+     * the precision is 0, or "ctx" has an unlimited exponent range.
      */
     public ExtendedDecimal NextPlus(
       PrecisionContext ctx) {
@@ -1892,8 +1896,8 @@ remainder=divrem[1]; }
      * pre-existing flags).
      * @return Returns the next value that is closer to the other object&apos;
      * s value than this object&apos;s value.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
-     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
+     * the precision is 0, or "ctx" has an unlimited exponent range.
      */
     public ExtendedDecimal NextToward(
       ExtendedDecimal otherValue,
@@ -2366,8 +2370,8 @@ remainder=divrem[1]; }
      * NaN if this object is less than 0 (the result would be a complex number
      * with a real part of 0 and an imaginary part of this object&apos;s absolute
      * value, but the return value is still NaN).
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null or the
-     * precision range is unlimited.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
+     * the precision range is unlimited.
      */
     public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this, ctx);
@@ -2383,8 +2387,8 @@ remainder=divrem[1]; }
      * null, as the exp function&apos;s results are generally not exact.--.
      * @return Exp(this object). If this object&apos;s value is 1, returns
      * an approximation to &quot; e&quot; within the given precision.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null or the
-     * precision range is unlimited.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
+     * the precision range is unlimited.
      */
     public ExtendedDecimal Exp(PrecisionContext ctx) {
       return math.Exp(this, ctx);
@@ -2403,8 +2407,8 @@ remainder=divrem[1]; }
      * NaN if this object is less than 0 (the result would be a complex number
      * with a real part equal to Ln of this object&apos;s absolute value and
      * an imaginary part equal to pi, but the return value is still NaN.).
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null or the
-     * precision range is unlimited.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
+     * the precision range is unlimited.
      */
     public ExtendedDecimal Log(PrecisionContext ctx) {
       return math.Ln(this, ctx);
@@ -2428,8 +2432,9 @@ remainder=divrem[1]; }
      * @return This^exponent. Signals the flag FlagInvalid and returns
      * NaN if this object and exponent are both 0; or if this value is less than
      * 0 and the exponent either has a fractional part or is infinity.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null or the
-     * precision range is unlimited, and the exponent has a fractional part.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
+     * the precision range is unlimited, and the exponent has a fractional
+     * part.
      */
     public ExtendedDecimal Pow(ExtendedDecimal exponent, PrecisionContext ctx) {
       return math.Power(this, exponent, ctx);
@@ -2443,8 +2448,8 @@ remainder=divrem[1]; }
      * addition to the pre-existing flags). --This parameter cannot be
      * null, as pi can never be represented exactly.--.
      * @return Pi rounded to the given precision.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null or the
-     * precision range is unlimited.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
+     * the precision range is unlimited.
      */
     public static ExtendedDecimal PI(PrecisionContext ctx) {
       return math.Pi(ctx);

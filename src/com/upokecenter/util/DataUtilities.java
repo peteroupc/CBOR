@@ -15,7 +15,8 @@ import java.io.*;
      */
   public final class DataUtilities {
 private DataUtilities(){}
-    private static int StreamedStringBufferLength = 4096;
+    private static int valueStreamedStringBufferLength = 4096;
+
     /**
      * Generates a text string from a UTF-8 byte array.
      * @param bytes A byte array containing text encoded in UTF-8.
@@ -23,9 +24,10 @@ private DataUtilities(){}
      * character (U + FFFD). If false, stops processing when invalid UTF-8
      * is seen.
      * @return A string represented by the UTF-8 byte array.
-     * @throws java.lang.NullPointerException &quot;Bytes&quot; is null.
+     * @throws java.lang.NullPointerException The parameter "bytes" is
+     * null.
      * @throws java.lang.IllegalArgumentException The string is not valid UTF-8
-     * and &quot; replace&quot; is false.
+     * and "replace" is false.
      */
     public static String GetUtf8String(byte[] bytes, boolean replace) {
       if (bytes == null) {
@@ -47,9 +49,10 @@ private DataUtilities(){}
      * character (U + FFFD). If false, stops processing when invalid UTF-8
      * is seen.
      * @return A string represented by the UTF-8 byte array.
-     * @throws java.lang.NullPointerException &quot;Bytes&quot; is null.
+     * @throws java.lang.NullPointerException The parameter "bytes" is
+     * null.
      * @throws java.lang.IllegalArgumentException The portion of the byte array
-     * is not valid UTF-8 and &quot; replace&quot; is false.
+     * is not valid UTF-8 and "replace" is false.
      */
     public static String GetUtf8String(byte[] bytes, int offset, int bytesCount, boolean replace) {
       StringBuilder b = new StringBuilder();
@@ -66,10 +69,10 @@ private DataUtilities(){}
      * with the replacement character (U + FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
      * @return The string encoded in UTF-8.
-     * @throws java.lang.NullPointerException &quot;Str&quot; is null.
+     * @throws java.lang.NullPointerException The parameter "str" is null.
      * @throws java.lang.IllegalArgumentException The string contains an unpaired
-     * surrogate code point and &quot; replace&quot; is false, or an internal
-     * error occurred.
+     * surrogate code point and "replace" is false, or an internal error
+     * occurred.
      */
     public static byte[] GetUtf8Bytes(String str, boolean replace) {
       try {
@@ -97,7 +100,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @return The number of bytes needed to encode the given string in UTF-8,
      * or -1 if the string contains an unpaired surrogate code point and &quot;
      * replace&quot; is false.
-     * @throws java.lang.NullPointerException &quot;S&quot; is null.
+     * @throws java.lang.NullPointerException "S" is null.
      */
     public static long GetUtf8Length(String str, boolean replace) {
       if (str == null) {
@@ -181,8 +184,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             i++;
           }
         } else {
-          if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800)
-            return ca - cb;
+          if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800) {
+ return ca - cb;
+}
           if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.length() &&
               strA.charAt(i + 1) >= 0xDC00 && strA.charAt(i + 1) <= 0xDFFF) {
             ca = 0x10000 + (ca - 0xD800) * 0x400 + (strA.charAt(i + 1) - 0xDC00);
@@ -213,11 +217,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @return 0 if the entire string portion was written; or -1 if the string
      * portion contains an unpaired surrogate code point and &quot; replace&quot;
      * is false.
-     * @throws java.lang.NullPointerException &quot;Str&quot; is null
-     * or &quot; stream&quot; is null.
-     * @throws java.lang.IllegalArgumentException &quot;Offset&quot; is less
-     * than 0, &quot; length&quot; is less than 0, or &quot; offset&quot;
-     * plus &quot; length&quot; is greater than the string&apos;s length.
+     * @throws java.lang.NullPointerException The parameter "str" is null
+     * or "stream" is null.
+     * @throws java.lang.IllegalArgumentException The parameter "offset" is less
+     * than 0, "length" is less than 0, or "offset" plus "length" is greater
+     * than the string's length.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
@@ -242,20 +246,20 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       if ((str.length() - offset) < length) throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to "+length+" ("+str.length() - offset+")");
       byte[] bytes;
       int retval = 0;
-      bytes = new byte[StreamedStringBufferLength];
+      bytes = new byte[valueStreamedStringBufferLength];
       int byteIndex = 0;
       int endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
         int c = str.charAt(index);
         if (c <= 0x7F) {
-          if (byteIndex >= StreamedStringBufferLength) {
+          if (byteIndex >= valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.write(bytes,0,byteIndex);
             byteIndex = 0;
           }
           bytes[byteIndex++] = (byte)c;
         } else if (c <= 0x7FF) {
-          if (byteIndex + 2 > StreamedStringBufferLength) {
+          if (byteIndex + 2 > valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.write(bytes,0,byteIndex);
             byteIndex = 0;
@@ -277,7 +281,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             c = 0xFFFD;
           }
           if (c <= 0xFFFF) {
-            if (byteIndex + 3 > StreamedStringBufferLength) {
+            if (byteIndex + 3 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.write(bytes,0,byteIndex);
               byteIndex = 0;
@@ -286,7 +290,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
             bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
           } else {
-            if (byteIndex + 4 > StreamedStringBufferLength) {
+            if (byteIndex + 4 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.write(bytes,0,byteIndex);
               byteIndex = 0;
@@ -311,8 +315,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * when an unpaired surrogate code point is seen.
      * @return 0 if the entire string was written; or -1 if the string contains
      * an unpaired surrogate code point and &quot; replace&quot; is false.
-     * @throws java.lang.NullPointerException &quot;Str&quot; is null
-     * or &quot; stream&quot; is null.
+     * @throws java.lang.NullPointerException The parameter "str" is null
+     * or "stream" is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(String str, OutputStream stream, boolean replace) throws IOException {
@@ -334,11 +338,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * is seen.
      * @return 0 if the entire string was read without errors, or -1 if the
      * string is not valid UTF-8 and &quot; replace&quot; is false.
-     * @throws java.lang.NullPointerException &quot;Data&quot; is null
-     * or &quot; builder&quot; is null.
-     * @throws java.lang.IllegalArgumentException &quot;Offset&quot; is less
-     * than 0, &quot; bytesCount&quot; is less than 0, or offset plus bytesCount
-     * is greater than the length of &quot; data&quot; .
+     * @throws java.lang.NullPointerException The parameter "data" is
+     * null or "builder" is null.
+     * @throws java.lang.IllegalArgumentException The parameter "offset" is less
+     * than 0, "bytesCount" is less than 0, or offset plus bytesCount is greater
+     * than the length of "data" .
      */
     public static int ReadUtf8FromBytes(
       byte[] data,
@@ -460,8 +464,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * of the stream is reached), or -2 if the end of the stream was reached
      * before the entire string was read.
      * @throws java.io.IOException An I/O error occurred.
-     * @throws java.lang.NullPointerException &quot;InputStream&quot; is
-     * null or &quot; builder&quot; is null.
+     * @throws java.lang.NullPointerException The parameter "stream"
+     * is null or "builder" is null.
      */
     public static int ReadUtf8(
       InputStream stream,
