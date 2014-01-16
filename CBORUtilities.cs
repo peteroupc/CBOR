@@ -18,7 +18,6 @@ namespace PeterO {
     /// <param name='str'>A StringBuilder object.</param>
     /// <param name='data'>A byte[] object.</param>
     /// <param name='padding'>A Boolean object.</param>
-    /// <returns></returns>
     public static void ToBase64(StringBuilder str, byte[] data, bool padding) {
       ToBase64(str, data, Base64, padding);
     }

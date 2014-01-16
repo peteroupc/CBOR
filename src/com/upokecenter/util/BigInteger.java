@@ -17,10 +17,11 @@ at: http://peteroupc.github.io/CBOR/
      */
   public final class BigInteger implements Comparable<BigInteger>
   {
-    private static int CountWords(short[] X, int N) {
-      while (N != 0 && X[N - 1] == 0)
-        N--;
-      return (int)N;
+    private static int CountWords(short[] X, int n) {
+      while (n != 0 && X[n - 1] == 0) {
+        n--;
+      }
+      return (int)n;
     }
 
     private static short ShiftWordsLeftByBits(short[] r, int rstart, int n, int shiftBits) {
@@ -43,11 +44,11 @@ at: http://peteroupc.github.io/CBOR/
       short u, carry = 0;
       {
         if (shiftBits != 0) {
-  for (int i = n; i > 0; --i) {
-          u = r[rstart + i - 1];
-          r[rstart + i - 1] = (short)((((((int)u) & 0xFFFF) >> (int)shiftBits) & 0xFFFF) | (((int)carry) & 0xFFFF));
-          carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
-        }
+          for (int i = n; i > 0; --i) {
+            u = r[rstart + i - 1];
+            r[rstart + i - 1] = (short)((((((int)u) & 0xFFFF) >> (int)shiftBits) & 0xFFFF) | (((int)carry) & 0xFFFF));
+            carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
+          }
         }
         return carry;
       }
@@ -58,12 +59,12 @@ at: http://peteroupc.github.io/CBOR/
       {
         short u, carry = (short)((int)0xFFFF << (int)(16 - shiftBits));
         if (shiftBits != 0) {
-  for (int i = n; i > 0; --i) {
-          u = r[rstart + i - 1];
-          r[rstart + i - 1] = (short)(((((int)u) & 0xFFFF) >> (int)shiftBits) | (((int)carry) & 0xFFFF));
-          carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
+          for (int i = n; i > 0; --i) {
+            u = r[rstart + i - 1];
+            r[rstart + i - 1] = (short)(((((int)u) & 0xFFFF) >> (int)shiftBits) | (((int)carry) & 0xFFFF));
+            carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
+          }
         }
-      }
         return carry;
       }
     }
@@ -99,72 +100,73 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private static int Compare(short[] A, int astart, short[] B, int bstart, int N) {
-      while ((N--) != 0) {
-        int an = ((int)A[astart + N]) & 0xFFFF;
-        int bn = ((int)B[bstart + N]) & 0xFFFF;
+    private static int Compare(short[] words1, int astart, short[] words2, int bstart, int n) {
+      while ((n--) != 0) {
+        int an = ((int)words1[astart + n]) & 0xFFFF;
+        int bn = ((int)words2[bstart + n]) & 0xFFFF;
         if (an > bn) {
- return 1;
-  } else if (an < bn) {
- return -1;
-}
+          return 1;
+        } else if (an < bn) {
+          return -1;
+        }
       }
       return 0;
     }
 
-    private static int Increment(short[] A, int Astart, int N, short B) {
+    private static int Increment(short[] words1, int words1Start, int n, short words2) {
       {
-        // Debugif(!(N!=0))Assert.fail("{0} line {1}: N","integer.cpp",63);
-        short tmp = A[Astart];
-        A[Astart] = (short)(tmp + B);
-        if ((((int)A[Astart]) & 0xFFFF) >= (((int)tmp) & 0xFFFF))
+        // Debugif(!(n!=0))Assert.fail("{0} line {1}: n","integer.cpp",63);
+        short tmp = words1[words1Start];
+        words1[words1Start] = (short)(tmp + words2);
+        if ((((int)words1[words1Start]) & 0xFFFF) >= (((int)tmp) & 0xFFFF))
           return 0;
-        for (int i = 1; i < N; ++i) {
-          A[Astart + i]++;
-          if (A[Astart + i] != 0) {
- return 0;
-}
+        for (int i = 1; i < n; ++i) {
+          words1[words1Start + i]++;
+          if (words1[words1Start + i] != 0) {
+            return 0;
+          }
         }
         return 1;
       }
     }
 
-    private static int Decrement(short[] A, int Astart, int N, short B) {
-      // Debugif(!(N!=0))Assert.fail("{0} line {1}: N","integer.cpp",76);
+    private static int Decrement(short[] words1, int words1Start, int n, short words2) {
+      // Debugif(!(n!=0))Assert.fail("{0} line {1}: n","integer.cpp",76);
       {
-        short tmp = A[Astart];
-        A[Astart] = (short)(tmp - B);
-        if ((((int)A[Astart]) & 0xFFFF) <= (((int)tmp) & 0xFFFF))
+        short tmp = words1[words1Start];
+        words1[words1Start] = (short)(tmp - words2);
+        if ((((int)words1[words1Start]) & 0xFFFF) <= (((int)tmp) & 0xFFFF)) {
           return 0;
-        for (int i = 1; i < N; ++i) {
-          tmp = A[Astart + i];
-          A[Astart + i]--;
+        }
+        for (int i = 1; i < n; ++i) {
+          tmp = words1[words1Start + i];
+          words1[words1Start + i]--;
           if (tmp != 0) {
- return 0;
-}
+            return 0;
+          }
         }
         return 1;
       }
     }
 
-    private static void TwosComplement(short[] A, int Astart, int N) {
-      Decrement(A, Astart, N, (short)1);
-      for (int i = 0; i < N; ++i)
-        A[Astart + i] = ((short)(~A[Astart + i]));
+    private static void TwosComplement(short[] words1, int words1Start, int n) {
+      Decrement(words1, words1Start, n, (short)1);
+      for (int i = 0; i < n; ++i)
+        words1[words1Start + i] = ((short)(~words1[words1Start + i]));
     }
 
     private static int Add(
       short[] C, int cstart,
-      short[] A, int astart,
-      short[] B, int bstart, int N) {
-      // Debugif(!(N%2 == 0))Assert.fail("{0} line {1}: N%2 == 0","integer.cpp",799);
+      short[] words1, int astart,
+      short[] words2, int bstart, int n) {
+      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0","integer.cpp",799);
       {
         int u;
         u = 0;
-        for (int i = 0; i < N; i += 2) {
-          u = (((int)A[astart + i]) & 0xFFFF) + (((int)B[bstart + i]) & 0xFFFF) + (short)(u >> 16);
+        for (int i = 0; i < n; i += 2) {
+          u = (((int)words1[astart + i]) & 0xFFFF) + (((int)words2[bstart + i]) & 0xFFFF) + (short)(u >> 16);
           C[cstart + i] = (short)u;
-          u = (((int)A[astart + i + 1]) & 0xFFFF) + (((int)B[bstart + i + 1]) & 0xFFFF) + (short)(u >> 16);
+          u = (((int)words1[astart + i + 1]) & 0xFFFF) + (((int)words2[bstart + i + 1]) & 0xFFFF) + (short)(u >> 16);
           C[cstart + i + 1] = (short)u;
         }
         return ((int)u >> 16) & 0xFFFF;
@@ -173,18 +175,18 @@ at: http://peteroupc.github.io/CBOR/
 
     private static int Subtract(
       short[] C, int cstart,
-      short[] A, int astart,
-      short[] B, int bstart, int N) {
-      // Debugif(!(N%2 == 0))Assert.fail("{0} line {1}: N%2 == 0","integer.cpp",799);
+      short[] words1, int astart,
+      short[] words2, int bstart, int n) {
+      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0","integer.cpp",799);
       {
         int u;
         u = 0;
-        for (int i = 0; i < N; i += 2) {
-          u = (((int)A[astart]) & 0xFFFF) - (((int)B[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+        for (int i = 0; i < n; i += 2) {
+          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
           C[cstart++] = (short)u;
           astart++;
           bstart++;
-          u = (((int)A[astart]) & 0xFFFF) - (((int)B[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
           C[cstart++] = (short)u;
           astart++;
           bstart++;
@@ -194,14 +196,14 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private static short LinearMultiply(
-short[] productArr, int cstart,
-                                        short[] A, int astart, short B, int N) {
+      short[] productArr, int cstart,
+      short[] words1, int astart, short words2, int n) {
       {
         short carry = 0;
-        int Bint = ((int)B) & 0xFFFF;
-        for (int i = 0; i < N; ++i) {
+        int Bint = ((int)words2) & 0xFFFF;
+        for (int i = 0; i < n; ++i) {
           int p;
-          p = (((int)A[astart + i]) & 0xFFFF) * Bint;
+          p = (((int)words1[astart + i]) & 0xFFFF) * Bint;
           p = p + (((int)carry) & 0xFFFF);
           productArr[cstart + i] = (short)p;
           carry = (short)(p >> 16);
@@ -213,96 +215,96 @@ short[] productArr, int cstart,
     //  Baseline Square
     //-----------------------------
 
-    private static void Baseline_Square2(short[] R, int rstart, short[] A, int astart) {
+    private static void Baseline_Square2(short[] R, int rstart, short[] words1, int astart) {
       {
         int p; short c; int d; int e;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart]) & 0xFFFF); R[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 4 -  3] = c;
-        p = (((int)A[astart + 2 - 1]) & 0xFFFF) * (((int)A[astart + 2 - 1]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); R[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 4 -  3] = c;
+        p = (((int)words1[astart + 2 - 1]) & 0xFFFF) * (((int)words1[astart + 2 - 1]) & 0xFFFF);
         p += e; R[rstart + 4 -  2] = (short)p; R[rstart + 4 -  1] = (short)(p >> 16);
       }
     }
 
-    private static void Baseline_Square4(short[] R, int rstart, short[] A, int astart) {
+    private static void Baseline_Square4(short[] R, int rstart, short[] words1, int astart) {
       {
         int p; short c; int d; int e;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart]) & 0xFFFF); R[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 1] = c;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 2]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 1]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); R[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 1] = c;
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 2] = c;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 2]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 3] = c;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)A[astart + 2]) & 0xFFFF) * (((int)A[astart + 2]) & 0xFFFF);
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 4] = c;
-        p = (((int)A[astart + 2]) & 0xFFFF) * (((int)A[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 2 * 4 - 3] = c;
-        p = (((int)A[astart + 4 - 1]) & 0xFFFF) * (((int)A[astart + 4 - 1]) & 0xFFFF);
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 2 * 4 - 3] = c;
+        p = (((int)words1[astart + 4 - 1]) & 0xFFFF) * (((int)words1[astart + 4 - 1]) & 0xFFFF);
         p += e; R[rstart + 2 * 4 - 2] = (short)p; R[rstart + 2 * 4 - 1] = (short)(p >> 16);
       }
     }
 
-    private static void Baseline_Square8(short[] R, int rstart, short[] A, int astart) {
+    private static void Baseline_Square8(short[] R, int rstart, short[] words1, int astart) {
       {
         int p; short c; int d; int e;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart]) & 0xFFFF); R[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 1] = c;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 2]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 1]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); R[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 1] = c;
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 2] = c;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 2]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 3] = c;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 4]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 3]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)A[astart + 2]) & 0xFFFF) * (((int)A[astart + 2]) & 0xFFFF);
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 4] = c;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 5]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 4]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
-        p = (((int)A[astart + 2]) & 0xFFFF) * (((int)A[astart + 3]) & 0xFFFF);
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 5] = c;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 6]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 5]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
-        p = (((int)A[astart + 2]) & 0xFFFF) * (((int)A[astart + 4]) & 0xFFFF);
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)A[astart + 3]) & 0xFFFF) * (((int)A[astart + 3]) & 0xFFFF);
+        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 6] = c;
-        p = (((int)A[astart]) & 0xFFFF) * (((int)A[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 6]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
-        p = (((int)A[astart + 2]) & 0xFFFF) * (((int)A[astart + 5]) & 0xFFFF);
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
-        p = (((int)A[astart + 3]) & 0xFFFF) * (((int)A[astart + 4]) & 0xFFFF);
+        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 7] = c;
-        p = (((int)A[astart + 1]) & 0xFFFF) * (((int)A[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 2]) & 0xFFFF) * (((int)A[astart + 6]) & 0xFFFF);
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
-        p = (((int)A[astart + 3]) & 0xFFFF) * (((int)A[astart + 5]) & 0xFFFF);
+        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)A[astart + 4]) & 0xFFFF) * (((int)A[astart + 4]) & 0xFFFF);
+        p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 8] = c;
-        p = (((int)A[astart + 2]) & 0xFFFF) * (((int)A[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 3]) & 0xFFFF) * (((int)A[astart + 6]) & 0xFFFF);
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
-        p = (((int)A[astart + 4]) & 0xFFFF) * (((int)A[astart + 5]) & 0xFFFF);
+        p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 9] = c;
-        p = (((int)A[astart + 3]) & 0xFFFF) * (((int)A[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 4]) & 0xFFFF) * (((int)A[astart + 6]) & 0xFFFF);
+        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)A[astart + 5]) & 0xFFFF) * (((int)A[astart + 5]) & 0xFFFF);
+        p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 10] = c;
-        p = (((int)A[astart + 4]) & 0xFFFF) * (((int)A[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)A[astart + 5]) & 0xFFFF) * (((int)A[astart + 6]) & 0xFFFF);
+        p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
+        p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 11] = c;
-        p = (((int)A[astart + 5]) & 0xFFFF) * (((int)A[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)A[astart + 6]) & 0xFFFF) * (((int)A[astart + 6]) & 0xFFFF);
+        p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 12] = c;
-        p = (((int)A[astart + 6]) & 0xFFFF) * (((int)A[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 2 * 8 - 3] = c;
-        p = (((int)A[astart + 8 - 1]) & 0xFFFF) * (((int)A[astart + 8 - 1]) & 0xFFFF);
+        p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); R[rstart + 2 * 8 - 3] = c;
+        p = (((int)words1[astart + 8 - 1]) & 0xFFFF) * (((int)words1[astart + 8 - 1]) & 0xFFFF);
         p += e; R[rstart + 2 * 8 - 2] = (short)p; R[rstart + 2 * 8 - 1] = (short)(p >> 16);
       }
     }
@@ -311,13 +313,13 @@ short[] productArr, int cstart,
     //  Baseline multiply
     //---------------------
 
-    private static void Baseline_Multiply2(short[] R, int rstart, short[] A, int astart, short[] B, int bstart) {
+    private static void Baseline_Multiply2(short[] R, int rstart, short[] words1, int astart, short[] words2, int bstart) {
       {
         int p; short c; int d;
-        int a0 = ((int)A[astart]) & 0xFFFF;
-        int a1 = ((int)A[astart + 1]) & 0xFFFF;
-        int b0 = ((int)B[bstart]) & 0xFFFF;
-        int b1 = ((int)B[bstart + 1]) & 0xFFFF;
+        int a0 = ((int)words1[astart]) & 0xFFFF;
+        int a1 = ((int)words1[astart + 1]) & 0xFFFF;
+        int b0 = ((int)words2[bstart]) & 0xFFFF;
+        int b1 = ((int)words2[bstart + 1]) & 0xFFFF;
         p = a0 * b0; c = (short)p; d = ((int)p >> 16) & 0xFFFF; R[rstart] = c; c = (short)d; d = ((int)d >> 16) & 0xFFFF;
         p = a0 * b1;
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
@@ -328,178 +330,178 @@ short[] productArr, int cstart,
       }
     }
 
-    private static void Baseline_Multiply4(short[] R, int rstart, short[] A, int astart, short[] B, int bstart) {
+    private static void Baseline_Multiply4(short[] R, int rstart, short[] words1, int astart, short[] words2, int bstart) {
       int mask = 0xFFFF;
       {
         int p; short c; int d;
-        int a0 = ((int)A[astart]) &  mask;
-        int b0 = ((int)B[bstart]) &  mask;
+        int a0 = ((int)words1[astart]) &  mask;
+        int b0 = ((int)words2[bstart]) &  mask;
         p = a0 * b0; c = (short)p; d = ((int)p >> 16) & mask; R[rstart] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = a0 * (((int)B[bstart + 1]) & mask);
+        p = a0 * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * b0;
+        p = (((int)words1[astart + 1]) & mask) * b0;
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 1] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = a0 * (((int)B[bstart + 2]) & mask);
+        p = a0 * (((int)words2[bstart + 2]) & mask);
 
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * b0;
+        p = (((int)words1[astart + 2]) & mask) * b0;
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 2] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = a0 * (((int)B[bstart + 3]) & mask);
+        p = a0 * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
 
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * b0;
+        p = (((int)words1[astart + 3]) & mask) * b0;
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 3] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 4] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 5] = c;
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 3]) & mask);
         p += d; R[rstart + 5 + 1] = (short)p; R[rstart + 5 + 2] = (short)(p >> 16);
       }
     }
 
-    private static void Baseline_Multiply8(short[] R, int rstart, short[] A, int astart, short[] B, int bstart) {
+    private static void Baseline_Multiply8(short[] R, int rstart, short[] words1, int astart, short[] words2, int bstart) {
       int mask = 0xFFFF;
       {
         int p; short c; int d;
-        p = (((int)A[astart]) & mask) * (((int)B[bstart]) & mask); c = (short)p; d = ((int)p >> 16) & mask; R[rstart] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart]) & mask) * (((int)words2[bstart]) & mask); c = (short)p; d = ((int)p >> 16) & mask; R[rstart] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 1] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 2] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 3] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 4]) & mask);
+        p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 4]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart]) & mask);
+        p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 4] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 5]) & mask);
+        p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 5]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 4]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 4]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart]) & mask);
+        p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 5] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 6]) & mask);
+        p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 6]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 5]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 5]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 4]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 4]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart]) & mask);
+        p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 6] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart]) & mask) * (((int)B[bstart + 7]) & mask);
+        p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 7]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 6]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 6]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 5]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 5]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 4]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 4]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart]) & mask);
+        p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 7] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart + 1]) & mask) * (((int)B[bstart + 7]) & mask);
+        p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 7]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 6]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 6]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 5]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 5]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 4]) & mask);
+        p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 4]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 1]) & mask);
+        p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 8] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart + 2]) & mask) * (((int)B[bstart + 7]) & mask);
+        p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 7]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 6]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 6]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 5]) & mask);
+        p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 5]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 4]) & mask);
+        p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 4]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 2]) & mask);
+        p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 2]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 9] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart + 3]) & mask) * (((int)B[bstart + 7]) & mask);
+        p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 7]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 6]) & mask);
+        p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 6]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 5]) & mask);
+        p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 5]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 4]) & mask);
+        p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 4]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 3]) & mask);
+        p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 3]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 10] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart + 4]) & mask) * (((int)B[bstart + 7]) & mask);
+        p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 7]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 6]) & mask);
+        p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 6]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 5]) & mask);
+        p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 5]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 4]) & mask);
+        p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 4]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 11] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart + 5]) & mask) * (((int)B[bstart + 7]) & mask);
+        p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 7]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 6]) & mask);
+        p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 6]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 5]) & mask);
+        p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 5]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 12] = c; c = (short)d; d = ((int)d >> 16) & mask;
-        p = (((int)A[astart + 6]) & mask) * (((int)B[bstart + 7]) & mask);
+        p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 7]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 6]) & mask);
+        p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 6]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask); R[rstart + 13] = c;
-        p = (((int)A[astart + 7]) & mask) * (((int)B[bstart + 7]) & mask);
+        p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 7]) & mask);
         p += d; R[rstart + 13 + 1] = (short)p; R[rstart + 13 + 2] = (short)(p >> 16);
       }
     }
@@ -507,226 +509,230 @@ short[] productArr, int cstart,
     private static final int RecursionLimit = 8;
 
     private static void RecursiveMultiply(
-      short[] Rarr,  // size 2*N
-      int Rstart,
-      short[] Tarr,  // size 2*N
-      int Tstart,
-      short[] Aarr, int Astart,  // size N
-      short[] Barr, int Bstart,  // size N
-      int N) {
-      if (N <= RecursionLimit) {
-        N >>= 2;
-        if (N == 0) {
-          Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-        } else if (N == 1) {
-          Baseline_Multiply4(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-        } else if (N == 2) {
-          Baseline_Multiply8(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
+      short[] resultArr,  // size 2*n
+      int resultStart,
+      short[] tempArr,  // size 2*n
+      int tempStart,
+      short[] words1, int words1Start,  // size n
+      short[] words2, int words2Start,  // size n
+      int count) {
+      if (count <= RecursionLimit) {
+        count >>= 2;
+        if (count == 0) {
+          Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
+        } else if (count == 1) {
+          Baseline_Multiply4(resultArr, resultStart, words1, words1Start, words2, words2Start);
+        } else if (count == 2) {
+          Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
         } else {
           throw new IllegalStateException();
         }
       } else {
-        int N2 = N >> 1;
-        int rMediumHigh = Rstart + N;
-        int rHigh = rMediumHigh + N2;
-        int rMediumLow = Rstart + N2;
-        int tsn = Tstart + N;
-        int AN = N;
-        while (AN != 0 && Aarr[Astart + AN - 1] == 0) AN--;
-        int BN = N;
-        while (BN != 0 && Barr[Bstart + BN - 1] == 0) BN--;
-        int AN2 = 0;
-        int BN2 = 0;
-        if (AN == 0 || BN == 0) {
-          // A or B is empty, so result is 0
-          java.util.Arrays.fill(Rarr,Rstart,(Rstart)+(N << 1),(short)0);
+        int count2 = count >> 1;
+        int rMediumHigh = resultStart + count;
+        int rHigh = rMediumHigh + count2;
+        int rMediumLow = resultStart + count2;
+        int tsn = tempStart + count;
+        int countA = count;
+        while (countA != 0 && words1[words1Start + countA - 1] == 0) {
+          countA--;
+        }
+        int countB = count;
+        while (countB != 0 && words2[words2Start + countB - 1] == 0) {
+          countB--;
+        }
+        int count2For1 = 0;
+        int count2For2 = 0;
+        if (countA == 0 || countB == 0) {
+          // words1 or words2 is empty, so result is 0
+          java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(count << 1),(short)0);
           return;
         }
-        if (AN <= N2 && BN <= N2) {
-          // System.out.println("Can be smaller: {0},{1},{2}",AN,BN,N2);
-          java.util.Arrays.fill(Rarr,Rstart + N,(Rstart + N)+(N),(short)0);
-          if (N2 == 8) {
- Baseline_Multiply8(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-  } else {
- RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N2);
-}
+        if (countA <= count2 && countB <= count2) {
+          // System.out.println("Can be smaller: {0},{1},{2}",AN,BN,count2);
+          java.util.Arrays.fill(resultArr,resultStart + count,(resultStart + count)+(count),(short)0);
+          if (count2 == 8) {
+            Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
+          } else {
+            RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, count2);
+          }
           return;
         }
-        AN2 = Compare(Aarr, Astart, Aarr, (int)(Astart + N2), N2) > 0 ? 0 : N2;
-        Subtract(Rarr, Rstart, Aarr, (int)(Astart + AN2), Aarr, (int)(Astart + (N2 ^ AN2)), N2);
-        BN2 = Compare(Barr, Bstart, Barr, (int)(Bstart + N2), N2) > 0 ? 0 : N2;
-        Subtract(Rarr, rMediumLow, Barr, (int)(Bstart + BN2), Barr, (int)(Bstart + (N2 ^ BN2)), N2);
+        count2For1 = Compare(words1, words1Start, words1, (int)(words1Start + count2), count2) > 0 ? 0 : count2;
+        Subtract(resultArr, resultStart, words1, (int)(words1Start + count2For1), words1, (int)(words1Start + (count2 ^ count2For1)), count2);
+        count2For2 = Compare(words2, words2Start, words2, (int)(words2Start + count2), count2) > 0 ? 0 : count2;
+        Subtract(resultArr, rMediumLow, words2, (int)(words2Start + count2For2), words2, (int)(words2Start + (count2 ^ count2For2)), count2);
         //---------
         // Medium high result = HighA * HighB
-        RecursiveMultiply(Rarr, rMediumHigh, Tarr, tsn, Aarr, (int)(Astart + N2), Barr, (int)(Bstart + N2), N2);
+        RecursiveMultiply(resultArr, rMediumHigh, tempArr, tsn, words1, (int)(words1Start + count2), words2, (int)(words2Start + count2), count2);
         // Medium high result = Abs(LowA-HighA) * Abs(LowB-HighB)
-        RecursiveMultiply(Tarr, Tstart, Tarr, tsn, Rarr, Rstart, Rarr, (int)rMediumLow, N2);
+        RecursiveMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (int)rMediumLow, count2);
         // Low result = LowA * LowB
-        RecursiveMultiply(Rarr, Rstart, Tarr, tsn, Aarr, Astart, Barr, Bstart, N2);
+        RecursiveMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
         //
-        int c2 = Add(Rarr, rMediumHigh, Rarr, rMediumHigh, Rarr, rMediumLow, N2);
+        int c2 = Add(resultArr, rMediumHigh, resultArr, rMediumHigh, resultArr, rMediumLow, count2);
         int c3 = c2;
-        c2 += Add(Rarr, rMediumLow, Rarr, rMediumHigh, Rarr, Rstart, N2);
-        c3 += Add(Rarr, rMediumHigh, Rarr, rMediumHigh, Rarr, rHigh, N2);
-        if (AN2 == BN2) {
- c3 -= Subtract(Rarr, rMediumLow, Rarr, rMediumLow, Tarr, Tstart, N);
-  } else {
- c3 += Add(Rarr, rMediumLow, Rarr, rMediumLow, Tarr, Tstart, N);
-}
-        c3 += Increment(Rarr, rMediumHigh, N2, (short)c2);
+        c2 += Add(resultArr, rMediumLow, resultArr, rMediumHigh, resultArr, resultStart, count2);
+        c3 += Add(resultArr, rMediumHigh, resultArr, rMediumHigh, resultArr, rHigh, count2);
+        if (count2For1 == count2For2) {
+          c3 -= Subtract(resultArr, rMediumLow, resultArr, rMediumLow, tempArr, tempStart, count);
+        } else {
+          c3 += Add(resultArr, rMediumLow, resultArr, rMediumLow, tempArr, tempStart, count);
+        }
+        c3 += Increment(resultArr, rMediumHigh, count2, (short)c2);
         if (c3 != 0) {
- Increment(Rarr, rHigh, N2, (short)c3);
-}
+          Increment(resultArr, rHigh, count2, (short)c3);
+        }
       }
     }
 
     private static void RecursiveSquare(
-short[] Rarr,
-                                        int Rstart,
-                                        short[] Tarr,
-                                        int Tstart, short[] Aarr, int Astart, int N) {
-      if (N <= RecursionLimit) {
-        N >>= 2;
-        switch (N) {
+      short[] resultArr,
+      int resultStart,
+      short[] tempArr,
+      int tempStart, short[] words1, int words1Start, int n) {
+      if (n <= RecursionLimit) {
+        n >>= 2;
+        switch (n) {
           case 0:
-            Baseline_Square2(Rarr, Rstart, Aarr, Astart);
+            Baseline_Square2(resultArr, resultStart, words1, words1Start);
             break;
           case 1:
-            Baseline_Square4(Rarr, Rstart, Aarr, Astart);
+            Baseline_Square4(resultArr, resultStart, words1, words1Start);
             break;
           case 2:
-            Baseline_Square8(Rarr, Rstart, Aarr, Astart);
+            Baseline_Square8(resultArr, resultStart, words1, words1Start);
             break;
           default:
             throw new IllegalStateException();
         }
       } else {
-        int N2 = N >> 1;
+        int count2 = n >> 1;
 
-        RecursiveSquare(Rarr, Rstart, Tarr, (int)(Tstart + N), Aarr, Astart, N2);
-        RecursiveSquare(Rarr, (int)(Rstart + N), Tarr, (int)(Tstart + N), Aarr, (int)(Astart + N2), N2);
+        RecursiveSquare(resultArr, resultStart, tempArr, (int)(tempStart + n), words1, words1Start, count2);
+        RecursiveSquare(resultArr, (int)(resultStart + n), tempArr, (int)(tempStart + n), words1, (int)(words1Start + count2), count2);
         RecursiveMultiply(
-Tarr, Tstart, Tarr, (int)(Tstart + N),
-                          Aarr, Astart, Aarr, (int)(Astart + N2), N2);
+          tempArr, tempStart, tempArr, (int)(tempStart + n),
+          words1, words1Start, words1, (int)(words1Start + count2), count2);
 
-        int carry = Add(Rarr, (int)(Rstart + N2), Rarr, (int)(Rstart + N2), Tarr, Tstart, N);
-        carry += Add(Rarr, (int)(Rstart + N2), Rarr, (int)(Rstart + N2), Tarr, Tstart, N);
+        int carry = Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
+        carry += Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
 
-        Increment(Rarr, (int)(Rstart + N + N2), N2, (short)carry);
+        Increment(resultArr, (int)(resultStart + n + count2), count2, (short)carry);
       }
     }
 
     private static void SchoolbookMultiply(
-      short[] Rarr, int Rstart,
-      short[] Aarr, int Astart, int NA, short[] Barr, int Bstart, int NB) {
-      // Method assumes that Rarr was already zeroed
+      short[] resultArr, int resultStart,
+      short[] words1, int words1Start, int NA, short[] words2, int words2Start, int NB) {
+      // Method assumes that resultArr was already zeroed
       int cstart;
       if (NA < NB) {
-        // A is shorter than B, so put B on top
+        // words1 is shorter than words2, so put words2 on top
         for (int i = 0; i < NA; ++i) {
-          cstart = Rstart + i;
+          cstart = resultStart + i;
           {
             short carry = 0;
-            int Bint = ((int)Aarr[Astart + i]) & 0xFFFF;
+            int Bint = ((int)words1[words1Start + i]) & 0xFFFF;
             for (int j = 0; j < NB; ++j) {
               int p;
-              p = (((int)Barr[Bstart + j]) & 0xFFFF) * Bint;
+              p = (((int)words2[words2Start + j]) & 0xFFFF) * Bint;
               p = p + (((int)carry) & 0xFFFF);
               if (i != 0) {
- p += ((int)Rarr[cstart + j]) & 0xFFFF;
-}
-              Rarr[cstart + j] = (short)p;
+                p += ((int)resultArr[cstart + j]) & 0xFFFF;
+              }
+              resultArr[cstart + j] = (short)p;
               carry = (short)(p >> 16);
             }
-            Rarr[cstart + NB] = carry;
+            resultArr[cstart + NB] = carry;
           }
         }
       } else {
-        // B is shorter than A
+        // words2 is shorter than words1
         for (int i = 0; i < NB; ++i) {
-          cstart = Rstart + i;
+          cstart = resultStart + i;
           {
             short carry = 0;
-            int Bint = ((int)Barr[Bstart + i]) & 0xFFFF;
+            int Bint = ((int)words2[words2Start + i]) & 0xFFFF;
             for (int j = 0; j < NA; ++j) {
               int p;
-              p = (((int)Aarr[Astart + j]) & 0xFFFF) * Bint;
+              p = (((int)words1[words1Start + j]) & 0xFFFF) * Bint;
               p = p + (((int)carry) & 0xFFFF);
               if (i != 0) {
- p += ((int)Rarr[cstart + j]) & 0xFFFF;
-}
-              Rarr[cstart + j] = (short)p;
+                p += ((int)resultArr[cstart + j]) & 0xFFFF;
+              }
+              resultArr[cstart + j] = (short)p;
               carry = (short)(p >> 16);
             }
-            Rarr[cstart + NA] = carry;
+            resultArr[cstart + NA] = carry;
           }
         }
       }
     }
 
     private static void AsymmetricMultiply(
-      short[] Rarr,
-      int Rstart,
-      short[] Tarr,
-      int Tstart, short[] Aarr, int Astart, int NA, short[] Barr, int Bstart, int NB) {
+      short[] resultArr,
+      int resultStart,
+      short[] tempArr,
+      int tempStart, short[] words1, int words1Start, int NA, short[] words2, int words2Start, int NB) {
       if (NA == NB) {
-        if (Astart == Bstart && Aarr == Barr) {
-          RecursiveSquare(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, NA);
+        if (words1Start == words2Start && words1 == words2) {
+          RecursiveSquare(resultArr, resultStart, tempArr, tempStart, words1, words1Start, NA);
         } else if (NA == 2) {
- Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-  } else {
- RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, NA);
-}
+          Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
+        } else {
+          RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, NA);
+        }
 
         return;
       }
 
       if (NA > NB) {
-        short[] tmp1 = Aarr; Aarr = Barr; Barr = tmp1;
-        int tmp3 = Astart; Astart = Bstart; Bstart = tmp3;
+        short[] tmp1 = words1; words1 = words2; words2 = tmp1;
+        int tmp3 = words1Start; words1Start = words2Start; words2Start = tmp3;
         int tmp2 = NA; NA = NB; NB = tmp2;
       }
 
-      if (NA == 2 && Aarr[Astart + 1] == 0) {
-        switch (Aarr[Astart]) {
+      if (NA == 2 && words1[words1Start + 1] == 0) {
+        switch (words1[words1Start]) {
           case 0:
-            java.util.Arrays.fill(Rarr,Rstart,(Rstart)+(NB + 2),(short)0);
+            java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(NB + 2),(short)0);
             return;
           case 1:
-            System.arraycopy(Barr, Bstart, Rarr, Rstart, (int)NB);
-            Rarr[Rstart + NB] = (short)0;
-            Rarr[Rstart + NB + 1] = (short)0;
+            System.arraycopy(words2, words2Start, resultArr, resultStart, (int)NB);
+            resultArr[resultStart + NB] = (short)0;
+            resultArr[resultStart + NB + 1] = (short)0;
             return;
           default:
-            Rarr[Rstart + NB] = LinearMultiply(Rarr, Rstart, Barr, Bstart, Aarr[Astart], NB);
-            Rarr[Rstart + NB + 1] = (short)0;
+            resultArr[resultStart + NB] = LinearMultiply(resultArr, resultStart, words2, words2Start, words1[words1Start], NB);
+            resultArr[resultStart + NB + 1] = (short)0;
             return;
         }
       } else if (NA == 2) {
-        int a0 = ((int)Aarr[Astart]) & 0xFFFF;
-        int a1 = ((int)Aarr[Astart + 1]) & 0xFFFF;
-        Rarr[Rstart + NB] = (short)0;
-        Rarr[Rstart + NB + 1] = (short)0;
-        AtomicMultiplyOpt(Rarr, Rstart, a0, a1, Barr, Bstart, 0, NB);
-        AtomicMultiplyAddOpt(Rarr, Rstart, a0, a1, Barr, Bstart, 2, NB);
+        int a0 = ((int)words1[words1Start]) & 0xFFFF;
+        int a1 = ((int)words1[words1Start + 1]) & 0xFFFF;
+        resultArr[resultStart + NB] = (short)0;
+        resultArr[resultStart + NB + 1] = (short)0;
+        AtomicMultiplyOpt(resultArr, resultStart, a0, a1, words2, words2Start, 0, NB);
+        AtomicMultiplyAddOpt(resultArr, resultStart, a0, a1, words2, words2Start, 2, NB);
         return;
       } else {
         int i;
         if (((NB / NA) & 1) == 0) {
-          RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, NA);
-          System.arraycopy(Rarr, (int)(Rstart + NA), Tarr, (int)(Tstart + (NA << 1)), (int)NA);
+          RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, NA);
+          System.arraycopy(resultArr, (int)(resultStart + NA), tempArr, (int)(tempStart + (NA << 1)), (int)NA);
           for (i = NA << 1; i < NB; i += NA << 1)
-            RecursiveMultiply(Tarr, (int)(Tstart + NA + i), Tarr, Tstart, Aarr, Astart, Barr, (int)(Bstart + i), NA);
+            RecursiveMultiply(tempArr, (int)(tempStart + NA + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), NA);
           for (i = NA; i < NB; i += NA << 1)
-            RecursiveMultiply(Rarr, (int)(Rstart + i), Tarr, Tstart, Aarr, Astart, Barr, (int)(Bstart + i), NA);
+            RecursiveMultiply(resultArr, (int)(resultStart + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), NA);
         } else {
           for (i = 0; i < NB; i += NA << 1)
-            RecursiveMultiply(Rarr, (int)(Rstart + i), Tarr, Tstart, Aarr, Astart, Barr, (int)(Bstart + i), NA);
+            RecursiveMultiply(resultArr, (int)(resultStart + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), NA);
           for (i = NA; i < NB; i += NA << 1)
-            RecursiveMultiply(Tarr, (int)(Tstart + NA + i), Tarr, Tstart, Aarr, Astart, Barr, (int)(Bstart + i), NA);
+            RecursiveMultiply(tempArr, (int)(tempStart + NA + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), NA);
         }
-        if (Add(Rarr, (int)(Rstart + NA), Rarr, (int)(Rstart + NA), Tarr, (int)(Tstart + (NA << 1)), NB - NA) != 0)
-          Increment(Rarr, (int)(Rstart + NB), NA, (short)1);
+        if (Add(resultArr, (int)(resultStart + NA), resultArr, (int)(resultStart + NA), tempArr, (int)(tempStart + (NA << 1)), NB - NA) != 0)
+          Increment(resultArr, (int)(resultStart + NB), NA, (short)1);
       }
     }
 
@@ -748,8 +754,8 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
 
     private static int BitPrecision(short numberValue) {
       if (numberValue == 0) {
- return 0;
-}
+        return 0;
+      }
       int i = 16;
       {
         if ((numberValue >> 8) == 0) {
@@ -768,16 +774,16 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
         }
 
         if ((numberValue >> 15) == 0) {
- --i;
-}
+          --i;
+        }
       }
       return i;
     }
 
     private static int BitPrecisionInt(int numberValue) {
       if (numberValue == 0) {
- return 0;
-}
+        return 0;
+      }
       int i = 32;
       {
         if ((numberValue >> 16) == 0) {
@@ -801,8 +807,8 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
         }
 
         if ((numberValue >> 31) == 0) {
- --i;
-}
+          --i;
+        }
       }
       return i;
     }
@@ -855,36 +861,36 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
       }
     }
 
-    private static short DivideThreeWordsByTwo(short[] A, int Astart, short B0, short B1) {
-      // Debugif(!(A[2] < B1 || (A[2]==B1 && A[1] < B0)))Assert.fail("{0} line {1}: A[2] < B1 || (A[2]==B1 && A[1] < B0)","integer.cpp",360);
+    private static short DivideThreeWordsByTwo(short[] words1, int words1Start, short B0, short B1) {
+      // Debugif(!(words1[2] < B1 || (words1[2]==B1 && words1[1] < B0)))Assert.fail("{0} line {1}: words1[2] < B1 || (words1[2]==B1 && words1[1] < B0)","integer.cpp",360);
       short Q;
       {
         if ((short)(B1 + 1) == 0)
-          Q = A[Astart + 2];
+          Q = words1[words1Start + 2];
         else if (B1 != 0) {
- Q = DivideUnsigned(MakeUint(A[Astart + 1], A[Astart + 2]), (short)(((int)B1 + 1) & 0xFFFF));
-  } else {
- Q = DivideUnsigned(MakeUint(A[Astart], A[Astart + 1]), B0);
-}
+          Q = DivideUnsigned(MakeUint(words1[words1Start + 1], words1[words1Start + 2]), (short)(((int)B1 + 1) & 0xFFFF));
+        } else {
+          Q = DivideUnsigned(MakeUint(words1[words1Start], words1[words1Start + 1]), B0);
+        }
 
         int Qint = ((int)Q) & 0xFFFF;
         int B0int = ((int)B0) & 0xFFFF;
         int B1int = ((int)B1) & 0xFFFF;
         int p = B0int * Qint;
-        int u = (((int)A[Astart]) & 0xFFFF) - (p & 0xFFFF);
-        A[Astart] = GetLowHalf(u);
-        u = (((int)A[Astart + 1]) & 0xFFFF) - ((p >> 16) & 0xFFFF) -
+        int u = (((int)words1[words1Start]) & 0xFFFF) - (p & 0xFFFF);
+        words1[words1Start] = GetLowHalf(u);
+        u = (((int)words1[words1Start + 1]) & 0xFFFF) - ((p >> 16) & 0xFFFF) -
           (((int)GetHighHalfAsBorrow(u)) & 0xFFFF) - (B1int * Qint);
-        A[Astart + 1] = GetLowHalf(u);
-        A[Astart + 2] += GetHighHalf(u);
-        while (A[Astart + 2] != 0 ||
-               (((int)A[Astart + 1]) & 0xFFFF) > (((int)B1) & 0xFFFF) ||
-               (A[Astart + 1] == B1 && (((int)A[Astart]) & 0xFFFF) >= (((int)B0) & 0xFFFF))) {
-          u = (((int)A[Astart]) & 0xFFFF) - B0int;
-          A[Astart] = GetLowHalf(u);
-          u = (((int)A[Astart + 1]) & 0xFFFF) - B1int - (((int)GetHighHalfAsBorrow(u)) & 0xFFFF);
-          A[Astart + 1] = GetLowHalf(u);
-          A[Astart + 2] += GetHighHalf(u);
+        words1[words1Start + 1] = GetLowHalf(u);
+        words1[words1Start + 2] += GetHighHalf(u);
+        while (words1[words1Start + 2] != 0 ||
+               (((int)words1[words1Start + 1]) & 0xFFFF) > (((int)B1) & 0xFFFF) ||
+               (words1[words1Start + 1] == B1 && (((int)words1[words1Start]) & 0xFFFF) >= (((int)B0) & 0xFFFF))) {
+          u = (((int)words1[words1Start]) & 0xFFFF) - B0int;
+          words1[words1Start] = GetLowHalf(u);
+          u = (((int)words1[words1Start + 1]) & 0xFFFF) - B1int - (((int)GetHighHalfAsBorrow(u)) & 0xFFFF);
+          words1[words1Start + 1] = GetLowHalf(u);
+          words1[words1Start + 2] += GetHighHalf(u);
           Q++;
         }
       }
@@ -892,24 +898,24 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
     }
 
     private static void AtomicDivide(
-short[] Q, int Qstart, short[] A, int Astart,
-                                     short B0, short B1, short[] T) {
-      if (B0 == 0 && B1 == 0) {
-        Q[Qstart] = A[Astart];
-        Q[Qstart + 1] = A[Astart + 3];
+      short[] quotient, int quotientStart, short[] words1, int words1Start,
+      short word2A, short word2B, short[] temp) {
+      if (word2A == 0 && word2B == 0) {
+        quotient[quotientStart] = words1[words1Start];
+        quotient[quotientStart + 1] = words1[words1Start + 3];
       } else {
-        T[0] = A[Astart];
-        T[1] = A[Astart + 1];
-        T[2] = A[Astart + 2];
-        T[3] = A[Astart + 3];
-        short Q1 = DivideThreeWordsByTwo(T, 1, B0, B1);
-        short Q0 = DivideThreeWordsByTwo(T, 0, B0, B1);
-        Q[Qstart] = Q0;
-        Q[Qstart + 1] = Q1;
+        temp[0] = words1[words1Start];
+        temp[1] = words1[words1Start + 1];
+        temp[2] = words1[words1Start + 2];
+        temp[3] = words1[words1Start + 3];
+        short Q1 = DivideThreeWordsByTwo(temp, 1, word2A, word2B);
+        short Q0 = DivideThreeWordsByTwo(temp, 0, word2A, word2B);
+        quotient[quotientStart] = Q0;
+        quotient[quotientStart + 1] = Q1;
       }
     }
 
-    private static void AtomicMultiplyOpt(short[] C, int Cstart, int A0, int A1, short[] B, int Bstart, int istart, int iend) {
+    private static void AtomicMultiplyOpt(short[] C, int Cstart, int A0, int A1, short[] words2, int words2Start, int istart, int iend) {
       short s;
       int d;
       int first1MinusFirst0 = ((int)A1 - A0) & 0xFFFF;
@@ -918,8 +924,8 @@ short[] Q, int Qstart, short[] A, int Astart,
       {
         if (A1 >= A0) {
           for (int i = istart; i < iend; i += 4) {
-            int B0 = ((int)B[Bstart + i]) & 0xFFFF;
-            int B1 = ((int)B[Bstart + i + 1]) & 0xFFFF;
+            int B0 = ((int)words2[words2Start + i]) & 0xFFFF;
+            int B1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
             int csi = Cstart + i;
             if (B0 >= B1)
             {
@@ -947,8 +953,8 @@ short[] Q, int Qstart, short[] A, int Astart,
           }
         } else {
           for (int i = istart; i < iend; i += 4) {
-            int B0 = ((int)B[Bstart + i]) & 0xFFFF;
-            int B1 = ((int)B[Bstart + i + 1]) & 0xFFFF;
+            int B0 = ((int)words2[words2Start + i]) & 0xFFFF;
+            int B1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
             int csi = Cstart + i;
             if (B0 > B1) {
               s = (short)(((int)B0 - B1) & 0xFFFF);
@@ -978,7 +984,7 @@ short[] Q, int Qstart, short[] A, int Astart,
       }
     }
 
-    private static void AtomicMultiplyAddOpt(short[] C, int Cstart, int A0, int A1, short[] B, int Bstart, int istart, int iend) {
+    private static void AtomicMultiplyAddOpt(short[] C, int Cstart, int A0, int A1, short[] words2, int words2Start, int istart, int iend) {
       short s;
       int d;
       int first1MinusFirst0 = ((int)A1 - A0) & 0xFFFF;
@@ -987,8 +993,8 @@ short[] Q, int Qstart, short[] A, int Astart,
       {
         if (A1 >= A0) {
           for (int i = istart; i < iend; i += 4) {
-            int b0 = ((int)B[Bstart + i]) & 0xFFFF;
-            int b1 = ((int)B[Bstart + i + 1]) & 0xFFFF;
+            int b0 = ((int)words2[words2Start + i]) & 0xFFFF;
+            int b1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
             int csi = Cstart + i;
             if (b0 >= b1)
             {
@@ -1023,8 +1029,8 @@ short[] Q, int Qstart, short[] A, int Astart,
           }
         } else {
           for (int i = istart; i < iend; i += 4) {
-            int B0 = ((int)B[Bstart + i]) & 0xFFFF;
-            int B1 = ((int)B[Bstart + i + 1]) & 0xFFFF;
+            int B0 = ((int)words2[words2Start + i]) & 0xFFFF;
+            int B1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
             int csi = Cstart + i;
             if (B0 > B1) {
               s = (short)(((int)B0 - B1) & 0xFFFF);
@@ -1061,11 +1067,11 @@ short[] Q, int Qstart, short[] A, int Astart,
     }
 
     private static void Divide(
-      short[] Rarr, int Rstart,  // remainder
+      short[] resultArr, int resultStart,  // remainder
       short[] Qarr, int Qstart,  // quotient
-      short[] TA, int Tstart,  // scratch space
-      short[] Aarr, int Astart, int NAint,  // dividend
-      short[] Barr, int Bstart, int NBint  // divisor
+      short[] TA, int tempStart,  // scratch space
+      short[] words1, int words1Start, int NAint,  // dividend
+      short[] words2, int words2Start, int NBint  // divisor
      ) {
       // set up temporary work space
       int NA = (int)NAint;
@@ -1077,43 +1083,48 @@ short[] Q, int Qstart, short[] A, int Astart,
       if (Qarr == null) {
         quot = new short[2];
       }
-      int TBstart = (int)(Tstart + (NA + 2));
-      int TPstart = (int)(Tstart + (NA + 2 + NB));
+      int TBstart = (int)(tempStart + (NA + 2));
+      int TPstart = (int)(tempStart + (NA + 2 + NB));
       {
-        // copy B into TB and normalize it so that TB has highest bit set to 1
-        int shiftWords = (short)(Barr[Bstart + NB - 1] == 0 ? 1 : 0);
+        // copy words2 into TB and normalize it so that TB has highest bit set to 1
+        int shiftWords = (short)(words2[words2Start + NB - 1] == 0 ? 1 : 0);
         TBarr[TBstart] = (short)0;
         TBarr[TBstart + NB - 1] = (short)0;
-        System.arraycopy(Barr, Bstart, TBarr, (int)(TBstart + shiftWords), NB - shiftWords);
+        System.arraycopy(words2, words2Start, TBarr, (int)(TBstart + shiftWords), NB - shiftWords);
         short shiftBits = (short)((short)16 - BitPrecision(TBarr[TBstart + NB - 1]));
         ShiftWordsLeftByBits(
-          TBarr, TBstart,
-          NB, shiftBits);
-        // copy A into TA and normalize it
+          TBarr,
+          TBstart,
+          NB,
+          shiftBits);
+        // copy words1 into TA and normalize it
         TA[0] = (short)0;
         TA[NA] = (short)0;
         TA[NA + 1] = (short)0;
-        System.arraycopy(Aarr, Astart, TA, (int)(Tstart + shiftWords), NAint);
+        System.arraycopy(words1, words1Start, TA, (int)(tempStart + shiftWords), NAint);
         ShiftWordsLeftByBits(
-          TA, Tstart, NA + 2, shiftBits);
+          TA,
+          tempStart,
+          NA + 2,
+          shiftBits);
 
-        if (TA[Tstart + NA + 1] == 0 && (((int)TA[Tstart + NA]) & 0xFFFF) <= 1) {
+        if (TA[tempStart + NA + 1] == 0 && (((int)TA[tempStart + NA]) & 0xFFFF) <= 1) {
           if (Qarr != null) {
             Qarr[Qstart + NA - NB + 1] = (short)0;
             Qarr[Qstart + NA - NB] = (short)0;
           }
           while (
-TA[NA] != 0 || Compare(
-TA, (int)(Tstart + NA - NB),
-                                        TBarr, TBstart, NB) >= 0) {
+            TA[NA] != 0 || Compare(
+              TA, (int)(tempStart + NA - NB),
+              TBarr, TBstart, NB) >= 0) {
             TA[NA] -= (
-short)Subtract(
-TA, (int)(Tstart + NA - NB),
-                                      TA, (int)(Tstart + NA - NB),
-                                      TBarr, TBstart, NB);
+              short)Subtract(
+              TA, (int)(tempStart + NA - NB),
+              TA, (int)(tempStart + NA - NB),
+              TBarr, TBstart, NB);
             if (Qarr != null) {
- Qarr[Qstart + NA - NB] += (short)1;
-}
+              Qarr[Qstart + NA - NB] += (short)1;
+            }
           }
         } else {
           NA += 2;
@@ -1126,30 +1137,30 @@ TA, (int)(Tstart + NA - NB),
         short[] TAtomic = new short[4];
         for (int i = NA - 2; i >= NB; i -= 2) {
           int qs = (Qarr == null) ? 0 : Qstart + i - NB;
-          AtomicDivide(quot, qs, TA, (int)(Tstart + i - 2), BT0, BT1, TAtomic);
+          AtomicDivide(quot, qs, TA, (int)(tempStart + i - 2), BT0, BT1, TAtomic);
           // now correct the underestimated quotient
-          int Rstart2 = Tstart + i - NB;
-          int N = NB;
+          int Rstart2 = tempStart + i - NB;
+          int n = NB;
           {
             int Q0 = quot[qs];
             int Q1 = quot[qs + 1];
             if (Q1 == 0) {
-              short carry = LinearMultiply(TParr, TPstart, TBarr, TBstart, (short)Q0, N);
-              TParr[TPstart + N] = carry;
-              TParr[TPstart + N + 1] = 0;
-            } else if (N == 2) {
+              short carry = LinearMultiply(TParr, TPstart, TBarr, TBstart, (short)Q0, n);
+              TParr[TPstart + n] = carry;
+              TParr[TPstart + n + 1] = 0;
+            } else if (n == 2) {
               Baseline_Multiply2(TParr, TPstart, quot, qs, TBarr, TBstart);
             } else {
-              TParr[TPstart + N] = (short)0;
-              TParr[TPstart + N + 1] = (short)0;
+              TParr[TPstart + n] = (short)0;
+              TParr[TPstart + n + 1] = (short)0;
               Q0 &= 0xFFFF;
               Q1 &= 0xFFFF;
-              AtomicMultiplyOpt(TParr, TPstart, Q0, Q1, TBarr, TBstart, 0, N);
-              AtomicMultiplyAddOpt(TParr, TPstart, Q0, Q1, TBarr, TBstart, 2, N);
+              AtomicMultiplyOpt(TParr, TPstart, Q0, Q1, TBarr, TBstart, 0, n);
+              AtomicMultiplyAddOpt(TParr, TPstart, Q0, Q1, TBarr, TBstart, 2, n);
             }
-            Subtract(TA, Rstart2, TA, Rstart2, TParr, TPstart, N + 2);
-            while (TA[Rstart2 + N] != 0 || Compare(TA, Rstart2, TBarr, TBstart, N) >= 0) {
-              TA[Rstart2 + N] -= (short)Subtract(TA, Rstart2, TA, Rstart2, TBarr, TBstart, N);
+            Subtract(TA, Rstart2, TA, Rstart2, TParr, TPstart, n + 2);
+            while (TA[Rstart2 + n] != 0 || Compare(TA, Rstart2, TBarr, TBstart, n) >= 0) {
+              TA[Rstart2 + n] -= (short)Subtract(TA, Rstart2, TA, Rstart2, TBarr, TBstart, n);
               if (Qarr != null) {
                 Qarr[qs]++;
                 Qarr[qs + 1] += (short)((Qarr[qs] == 0) ? 1 : 0);
@@ -1157,10 +1168,10 @@ TA, (int)(Tstart + NA - NB),
             }
           }
         }
-        if (Rarr != null) {  // If the remainder is non-null
+        if (resultArr != null) {  // If the remainder is non-null
           // copy TA into R, and denormalize it
-          System.arraycopy(TA, (int)(Tstart + shiftWords), Rarr, Rstart, NB);
-          ShiftWordsRightByBits(Rarr, Rstart, NB, shiftBits);
+          System.arraycopy(TA, (int)(tempStart + shiftWords), resultArr, resultStart, NB);
+          ShiftWordsRightByBits(resultArr, resultStart, NB, shiftBits);
         }
       }
     }
@@ -1172,14 +1183,14 @@ TA, (int)(Tstart + NA - NB),
 
     private static int RoundupSize(int n) {
       if (n <= 16) {
- return RoundupSizeTable[n];
-  } else if (n <= 32) {
- return 32;
-  } else if (n <= 64) {
- return 64;
-  } else {
- return (int)1 << (int)BitPrecisionInt(n - 1);
-}
+        return RoundupSizeTable[n];
+      } else if (n <= 32) {
+        return 32;
+      } else if (n <= 64) {
+        return 64;
+      } else {
+        return (int)1 << (int)BitPrecisionInt(n - 1);
+      }
     }
 
     private boolean negative;
@@ -1204,8 +1215,8 @@ TA, (int)(Tstart + NA - NB),
 
     private void fromByteArrayInternal(byte[] bytes, boolean littleEndian) {
       if (bytes == null) {
- throw new NullPointerException("bytes");
-}
+        throw new NullPointerException("bytes");
+      }
       if (bytes.length == 0) {
         this.reg = new short[] { (short)0, (short)0 };
         this.wordCount = 0;
@@ -1248,8 +1259,9 @@ TA, (int)(Tstart + NA - NB),
         }
         this.wordCount = this.reg.length;
         while (this.wordCount != 0 &&
-               this.reg[this.wordCount - 1] == 0)
+               this.reg[this.wordCount - 1] == 0) {
           this.wordCount--;
+        }
       }
     }
 
@@ -1283,8 +1295,8 @@ TA, (int)(Tstart + NA - NB),
         this.wordCount = this.CalcWordCount();
       } else {
         if ((n >> 4) < this.reg.length) {
- this.reg[(n >> 4)] &= ((short)(~((short)1 << (int)(n % 16))));
-}
+          this.reg[(n >> 4)] &= ((short)(~((short)1 << (int)(n % 16))));
+        }
         this.wordCount = this.CalcWordCount();
       }
     }
@@ -1296,14 +1308,14 @@ TA, (int)(Tstart + NA - NB),
      */
     public boolean testBit(int index) {
       if (index < 0) {
- throw new IllegalArgumentException("index");
-}
+        throw new IllegalArgumentException("index");
+      }
       if (this.signum() < 0) {
         int tcindex = 0;
         int wordpos = index / 16;
         if (wordpos >= this.reg.length) {
- return true;
-}
+          return true;
+        }
         while (tcindex < wordpos && this.reg[tcindex] == 0) {
           tcindex++;
         }
@@ -1311,8 +1323,8 @@ TA, (int)(Tstart + NA - NB),
         {
           tc = this.reg[wordpos];
           if (tcindex == wordpos) {
- tc--;
-}
+            tc--;
+          }
           tc = (short)~tc;
         }
         return (boolean)(((tc >> (int)(index & 15)) & 1) != 0);
@@ -1328,10 +1340,10 @@ TA, (int)(Tstart + NA - NB),
     private boolean GetUnsignedBit(int n) {
 
       if ((n >> 4) >= this.reg.length) {
- return false;
-  } else {
- return (boolean)(((this.reg[(n >> 4)] >> (int)(n & 15)) & 1) != 0);
-}
+        return false;
+      } else {
+        return (boolean)(((this.reg[(n >> 4)] >> (int)(n & 15)) & 1) != 0);
+      }
     }
 
     private BigInteger InitializeInt(int numberValue) {
@@ -1402,8 +1414,8 @@ TA, (int)(Tstart + NA - NB),
           }
         }
         if (byteCount == 0) {
- byteCount = 1;
-}
+          byteCount = 1;
+        }
         byte[] bytes = new byte[byteCount];
         bytes[littleEndian ? bytes.length - 1 : 0] = (byte)0xFF;
         byteCount = Math.min(byteCount, regdata.length * 2);
@@ -1431,12 +1443,12 @@ TA, (int)(Tstart + NA - NB),
      */
     public BigInteger shiftLeft(int numberBits) {
       if (numberBits == 0) {
- return this;
-}
+        return this;
+      }
       if (numberBits < 0) {
         if (numberBits == Integer.MIN_VALUE) {
- return this.shiftRight(1).shiftRight(Integer.MAX_VALUE);
-}
+          return this.shiftRight(1).shiftRight(Integer.MAX_VALUE);
+        }
         return this.shiftRight(-numberBits);
       }
       BigInteger ret = new BigInteger();
@@ -1455,10 +1467,10 @@ TA, (int)(Tstart + NA - NB),
         ret.negative = true;
         ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
         System.arraycopy(this.reg,0,ret.reg,0,numWords);
-        TwosComplement(ret.reg, 0, ret.intValue().reg.length);
+        TwosComplement(ret.reg, 0, (int)ret.reg.length);
         ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
         ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
-        TwosComplement(ret.reg, 0, ret.intValue().reg.length);
+        TwosComplement(ret.reg, 0, (int)ret.reg.length);
         ret.wordCount = ret.CalcWordCount();
       }
       return ret;
@@ -1471,12 +1483,12 @@ TA, (int)(Tstart + NA - NB),
      */
     public BigInteger shiftRight(int numberBits) {
       if (numberBits == 0) {
- return this;
-}
+        return this;
+      }
       if (numberBits < 0) {
         if (numberBits == Integer.MIN_VALUE) {
- return this.shiftLeft(1).shiftLeft(Integer.MAX_VALUE);
-}
+          return this.shiftLeft(1).shiftLeft(Integer.MAX_VALUE);
+        }
         return this.shiftLeft(-numberBits);
       }
       BigInteger ret = new BigInteger();
@@ -1487,17 +1499,17 @@ TA, (int)(Tstart + NA - NB),
       ret.reg = new short[RoundupSize(numWords)];
       System.arraycopy(this.reg,0,ret.reg,0,numWords);
       if (this.signum() < 0) {
-        TwosComplement(ret.reg, 0, ret.intValue().reg.length);
+        TwosComplement(ret.reg, 0, (int)ret.reg.length);
         ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
         if (numWords > shiftWords) {
- ShiftWordsRightByBitsSignExtend(ret.reg, 0, numWords - shiftWords, shiftBits);
-}
-        TwosComplement(ret.reg, 0, ret.intValue().reg.length);
+          ShiftWordsRightByBitsSignExtend(ret.reg, 0, numWords - shiftWords, shiftBits);
+        }
+        TwosComplement(ret.reg, 0, (int)ret.reg.length);
       } else {
         ShiftWordsRightByWords(ret.reg, 0, numWords, shiftWords);
         if (numWords > shiftWords) {
- ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
-}
+          ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+        }
       }
       ret.wordCount = ret.CalcWordCount();
       return ret;
@@ -1510,11 +1522,11 @@ TA, (int)(Tstart + NA - NB),
      */
     public static BigInteger valueOf(long longerValue) {
       if (longerValue == 0) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       if (longerValue == 1) {
- return BigInteger.ONE;
-}
+        return BigInteger.ONE;
+      }
       BigInteger ret = new BigInteger();
       {
         ret.negative = longerValue < 0;
@@ -1528,8 +1540,8 @@ TA, (int)(Tstart + NA - NB),
         } else {
           long ut = longerValue;
           if (ut < 0) {
- ut = -ut;
-}
+            ut = -ut;
+          }
           ret.reg[0] = (short)(ut & 0xFFFF);
           ut >>= 16;
           ret.reg[1] = (short)(ut & 0xFFFF);
@@ -1541,8 +1553,9 @@ TA, (int)(Tstart + NA - NB),
           // be 0 (the check for 0 was already done above)
           ret.wordCount = 4;
           while (ret.wordCount != 0 &&
-                 ret.reg[ret.wordCount - 1] == 0)
+                 ret.reg[ret.wordCount - 1] == 0) {
             ret.wordCount--;
+          }
         }
       }
       return ret;
@@ -1555,11 +1568,11 @@ TA, (int)(Tstart + NA - NB),
     public int intValue() {
       int c = (int)this.wordCount;
       if (c == 0) {
- return 0;
-}
+        return 0;
+      }
       if (c > 2) {
- throw new ArithmeticException();
-}
+        throw new ArithmeticException();
+      }
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
         if (((short)(this.reg[1] & (short)0x7FFF) | this.reg[0]) == 0 && this.negative) {
           return Integer.MIN_VALUE;
@@ -1569,11 +1582,11 @@ TA, (int)(Tstart + NA - NB),
       } else {
         int ivv = ((int)this.reg[0]) & 0xFFFF;
         if (c > 1) {
- ivv |= (((int)this.reg[1]) & 0xFFFF) << 16;
-}
+          ivv |= (((int)this.reg[1]) & 0xFFFF) << 16;
+        }
         if (this.negative) {
- ivv = -ivv;
-}
+          ivv = -ivv;
+        }
         return ivv;
       }
     }
@@ -1585,8 +1598,8 @@ TA, (int)(Tstart + NA - NB),
     public boolean canFitInInt() {
       int c = (int)this.wordCount;
       if (c > 2) {
- return false;
-}
+        return false;
+      }
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
         return (this.negative && this.reg[1] == ((short)0x8000) &&
                 this.reg[0] == 0);
@@ -1597,8 +1610,8 @@ TA, (int)(Tstart + NA - NB),
     private boolean HasSmallValue() {
       int c = (int)this.wordCount;
       if (c > 4) {
- return false;
-}
+        return false;
+      }
       if (c == 4 && (this.reg[3] & 0x8000) != 0) {
         return (this.negative && this.reg[3] == ((short)0x8000) &&
                 this.reg[2] == 0 &&
@@ -1615,11 +1628,11 @@ TA, (int)(Tstart + NA - NB),
     public long longValue() {
       int count = this.wordCount;
       if (count == 0) {
- return (long)0;
-}
+        return (long)0;
+      }
       if (count > 4) {
- throw new ArithmeticException();
-}
+        throw new ArithmeticException();
+      }
       if (count == 4 && (this.reg[3] & 0x8000) != 0) {
         if (this.negative && this.reg[3] == ((short)0x8000) &&
             this.reg[2] == 0 &&
@@ -1645,8 +1658,8 @@ TA, (int)(Tstart + NA - NB),
           vv |= (long)tmp << 48;
         }
         if (this.negative) {
- vv = -vv;
-}
+          vv = -vv;
+        }
         return vv;
       }
     }
@@ -1664,23 +1677,23 @@ TA, (int)(Tstart + NA - NB),
      */
     public BigInteger PowBigIntVar(BigInteger power) {
       if (power == null) {
- throw new NullPointerException("power");
-}
+        throw new NullPointerException("power");
+      }
       int sign = power.signum();
       if (sign < 0) {
- throw new IllegalArgumentException("power is negative");
-}
+        throw new IllegalArgumentException("power is negative");
+      }
       BigInteger thisVar = this;
       if (sign == 0) {
- return BigInteger.ONE;
-}  // however 0 to the power of 0 is undefined
+        return BigInteger.ONE;
+      }  // however 0 to the power of 0 is undefined
       else if (power.equals(BigInteger.ONE)) {
- return this;
-  } else if (power.wordCount == 1 && power.reg[0] == 2) {
- return thisVar.multiply(thisVar);
-  } else if (power.wordCount == 1 && power.reg[0] == 3) {
- return (thisVar.multiply(thisVar)).multiply(thisVar);
-}
+        return this;
+      } else if (power.wordCount == 1 && power.reg[0] == 2) {
+        return thisVar.multiply(thisVar);
+      } else if (power.wordCount == 1 && power.reg[0] == 3) {
+        return (thisVar.multiply(thisVar)).multiply(thisVar);
+      }
       BigInteger r = BigInteger.ONE;
       while (power.signum()!=0) {
         if (power.testBit(0)) {
@@ -1701,19 +1714,19 @@ TA, (int)(Tstart + NA - NB),
      */
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) {
- throw new IllegalArgumentException("power is negative");
-}
+        throw new IllegalArgumentException("power is negative");
+      }
       BigInteger thisVar = this;
       if (powerSmall == 0) {
- return BigInteger.ONE;
-}  // however 0 to the power of 0 is undefined
+        return BigInteger.ONE;
+      }  // however 0 to the power of 0 is undefined
       else if (powerSmall == 1) {
- return this;
-  } else if (powerSmall == 2) {
- return thisVar.multiply(thisVar);
-  } else if (powerSmall == 3) {
- return (thisVar.multiply(thisVar)).multiply(thisVar);
-}
+        return this;
+      } else if (powerSmall == 2) {
+        return thisVar.multiply(thisVar);
+      } else if (powerSmall == 3) {
+        return (thisVar.multiply(thisVar)).multiply(thisVar);
+      }
       BigInteger r = BigInteger.ONE;
       while (powerSmall != 0) {
         if ((powerSmall & 1) != 0) {
@@ -1760,13 +1773,13 @@ TA, (int)(Tstart + NA - NB),
     private int ByteCount() {
       int wc = this.wordCount;
       if (wc == 0) {
- return 0;
-}
+        return 0;
+      }
       short s = this.reg[wc - 1];
       wc = (wc - 1) << 1;
       if (s == 0) {
- return wc;
-}
+        return wc;
+      }
       return ((s >> 8) == 0) ? wc + 1 : wc + 2;
     }
 
@@ -1783,8 +1796,8 @@ TA, (int)(Tstart + NA - NB),
         int numberValue = ((int)this.reg[wc - 1]) & 0xFFFF;
         wc = (wc - 1) << 4;
         if (numberValue == 0) {
- return wc;
-}
+          return wc;
+        }
         wc += 16;
         {
           if ((numberValue >> 8) == 0) {
@@ -1800,8 +1813,8 @@ TA, (int)(Tstart + NA - NB),
             wc -= 2;
           }
           if ((numberValue >> 15) == 0) {
- --wc;
-}
+            --wc;
+          }
         }
         return wc;
       } else {
@@ -1820,8 +1833,8 @@ TA, (int)(Tstart + NA - NB),
       if (wc != 0) {
         wc = (wc - 1) << 4;
         if (numberValue == 0) {
- return wc;
-}
+          return wc;
+        }
         wc += 16;
         {
           if ((numberValue >> 8) == 0) {
@@ -1901,8 +1914,8 @@ TA, (int)(Tstart + NA - NB),
     private String SmallValueToString() {
       long value = this.longValue();
       if (value == Long.MIN_VALUE) {
- return "-9223372036854775808";
-}
+        return "-9223372036854775808";
+      }
       boolean neg = value < 0;
       char[] chars = new char[24];
       int count = 0;
@@ -1917,10 +1930,10 @@ TA, (int)(Tstart + NA - NB),
         value = value / 10;
       }
       if (neg) {
- ReverseChars(chars, 1, count - 1);
-  } else {
- ReverseChars(chars, 0, count);
-}
+        ReverseChars(chars, 1, count - 1);
+      } else {
+        ReverseChars(chars, 0, count);
+      }
       return new String(chars, 0, count);
     }
 
@@ -1957,74 +1970,74 @@ TA, (int)(Tstart + NA - NB),
      */
     public int getDigitCount() {
       if (this.signum()==0) {
- return 1;
-}
+        return 1;
+      }
       if (this.HasSmallValue()) {
         long value = this.longValue();
         if (value == Long.MIN_VALUE) {
- return 19;
-}
+          return 19;
+        }
         if (value < 0) {
- value = -value;
-}
+          value = -value;
+        }
         if (value >= 1000000000L) {
           if (value >= 1000000000000000000L) {
- return 19;
-}
+            return 19;
+          }
           if (value >= 100000000000000000L) {
- return 18;
-}
+            return 18;
+          }
           if (value >= 10000000000000000L) {
- return 17;
-}
+            return 17;
+          }
           if (value >= 1000000000000000L) {
- return 16;
-}
+            return 16;
+          }
           if (value >= 100000000000000L) {
- return 15;
-}
+            return 15;
+          }
           if (value >= 10000000000000L) {
- return 14;
-}
+            return 14;
+          }
           if (value >= 1000000000000L) {
- return 13;
-}
+            return 13;
+          }
           if (value >= 100000000000L) {
- return 12;
-}
+            return 12;
+          }
           if (value >= 10000000000L) {
- return 11;
-}
+            return 11;
+          }
           if (value >= 1000000000L) {
- return 10;
-}
+            return 10;
+          }
           return 9;
         } else {
           int v2 = (int)value;
           if (v2 >= 100000000) {
- return 9;
-}
+            return 9;
+          }
           if (v2 >= 10000000) {
- return 8;
-}
+            return 8;
+          }
           if (v2 >= 1000000) {
- return 7;
-}
+            return 7;
+          }
           if (v2 >= 100000) {
- return 6;
-}
+            return 6;
+          }
           if (v2 >= 10000) {
- return 5;
-}
+            return 5;
+          }
           if (v2 >= 1000) {
- return 4;
-}
+            return 4;
+          }
           if (v2 >= 100) {
- return 3;
-}
+            return 3;
+          }
           if (v2 >= 10) {
- return 2;
-}
+            return 2;
+          }
           return 1;
         }
       }
@@ -2059,45 +2072,45 @@ TA, (int)(Tstart + NA - NB),
         if (wordCount == 1) {
           int rest = ((int)tempReg[0]) & 0xFFFF;
           if (rest >= 10000) {
- i += 5;
-  } else if (rest >= 1000) {
- i += 4;
-  } else if (rest >= 100) {
- i += 3;
-  } else if (rest >= 10) {
- i += 2;
-  } else {
- i++;
-}
+            i += 5;
+          } else if (rest >= 1000) {
+            i += 4;
+          } else if (rest >= 100) {
+            i += 3;
+          } else if (rest >= 10) {
+            i += 2;
+          } else {
+            i++;
+          }
           break;
         } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7FFF) {
           int rest = ((int)tempReg[0]) & 0xFFFF;
           rest |= (((int)tempReg[1]) & 0xFFFF) << 16;
           if (rest >= 1000000000) {
- i += 10;
-  } else if (rest >= 100000000) {
- i += 9;
-  } else if (rest >= 10000000) {
- i += 8;
-  } else if (rest >= 1000000) {
- i += 7;
-  } else if (rest >= 100000) {
- i += 6;
-  } else if (rest >= 10000) {
- i += 5;
-  } else if (rest >= 1000) {
- i += 4;
-  } else if (rest >= 100) {
- i += 3;
-  } else if (rest >= 10) {
- i += 2;
-  } else {
- i++;
-}
+            i += 10;
+          } else if (rest >= 100000000) {
+            i += 9;
+          } else if (rest >= 10000000) {
+            i += 8;
+          } else if (rest >= 1000000) {
+            i += 7;
+          } else if (rest >= 100000) {
+            i += 6;
+          } else if (rest >= 10000) {
+            i += 5;
+          } else if (rest >= 1000) {
+            i += 4;
+          } else if (rest >= 100) {
+            i += 3;
+          } else if (rest >= 10) {
+            i += 2;
+          } else {
+            i++;
+          }
           break;
         } else {
           int wci = wordCount;
-          short remainder = 0;
+          short remainderShort = 0;
           int quo, rem;
           boolean firstdigit = false;
           short[] dividend = (tempReg == null) ? this.reg : tempReg;
@@ -2105,7 +2118,7 @@ TA, (int)(Tstart + NA - NB),
           while ((wci--) > 0) {
             int curValue = ((int)dividend[wci]) & 0xFFFF;
             int currentDividend = ((int)(curValue |
-                                                  (remainder.intValue().shiftLeft(16))));
+                                                  ((int)remainderShort << 16)));
             quo = currentDividend / 10000;
             if (!firstdigit && quo != 0) {
               firstdigit = true;
@@ -2151,11 +2164,12 @@ TA, (int)(Tstart + NA - NB),
               tempReg[wci] = ((short)quo);
             }
             rem = currentDividend - (10000 * quo);
-            remainder = ((short)rem);
+            remainderShort = ((short)rem);
           }
           // Recalculate word count
-          while (wordCount != 0 && tempReg[wordCount - 1] == 0)
+          while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
             wordCount--;
+          }
           i += 4;
         }
       }
@@ -2168,16 +2182,17 @@ TA, (int)(Tstart + NA - NB),
      */
     @Override public String toString() {
       if (this.signum()==0) {
- return "0";
-}
+        return "0";
+      }
       if (this.HasSmallValue()) {
         return this.SmallValueToString();
       }
       short[] tempReg = new short[this.wordCount];
       System.arraycopy(this.reg,0,tempReg,0,tempReg.length);
       int wordCount = tempReg.length;
-      while (wordCount != 0 && tempReg[wordCount - 1] == 0)
+      while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
         wordCount--;
+      }
       int i = 0;
       char[] s = new char[(wordCount << 4) + 1];
       while (wordCount != 0) {
@@ -2202,21 +2217,22 @@ TA, (int)(Tstart + NA - NB),
           break;
         } else {
           int wci = wordCount;
-          short remainder = 0;
+          short remainderShort = 0;
           int quo, rem;
           // Divide by 10000
           while ((wci--) > 0) {
             int currentDividend = ((int)((((int)tempReg[wci]) & 0xFFFF) |
-                                                  (remainder.intValue().shiftLeft(16))));
+                                                  ((int)remainderShort << 16)));
             quo = currentDividend / 10000;
             tempReg[wci] = ((short)quo);
             rem = currentDividend - (10000 * quo);
-            remainder = ((short)rem);
+            remainderShort = ((short)rem);
           }
-          int remainderSmall = remainder;
+          int remainderSmall = remainderShort;
           // Recalculate word count
-          while (wordCount != 0 && tempReg[wordCount - 1] == 0)
+          while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
             wordCount--;
+          }
           // accurate approximation to rest/10 up to 16388,
           // and rest can go up to 9999
           int newrest = (remainderSmall * 3277) >> 15;
@@ -2249,8 +2265,8 @@ TA, (int)(Tstart + NA - NB),
      */
     public static BigInteger fromString(String str) {
       if (str == null) {
- throw new NullPointerException("str");
-}
+        throw new NullPointerException("str");
+      }
       return fromSubstring(str, 0, str.length());
     }
 
@@ -2258,26 +2274,26 @@ TA, (int)(Tstart + NA - NB),
 
     public static BigInteger fromSubstring(String str, int index, int endIndex) {
       if (str == null) {
- throw new NullPointerException("str");
-}
+        throw new NullPointerException("str");
+      }
       if (index < 0) {
- throw new IllegalArgumentException("\"str\"" + " not greater or equal to " + "0" + " (" + Long.toString((long)index) + ")");
-}
+        throw new IllegalArgumentException("\"str\"" + " not greater or equal to " + "0" + " (" + Long.toString((long)index) + ")");
+      }
       if (index > str.length()) {
- throw new IllegalArgumentException("\"str\"" + " not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)index) + ")");
-}
+        throw new IllegalArgumentException("\"str\"" + " not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)index) + ")");
+      }
       if (endIndex < 0) {
- throw new IllegalArgumentException("\"index\"" + " not greater or equal to " + "0" + " (" + Long.toString((long)endIndex) + ")");
-}
+        throw new IllegalArgumentException("\"index\"" + " not greater or equal to " + "0" + " (" + Long.toString((long)endIndex) + ")");
+      }
       if (endIndex > str.length()) {
- throw new IllegalArgumentException("\"index\"" + " not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)endIndex) + ")");
-}
+        throw new IllegalArgumentException("\"index\"" + " not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)endIndex) + ")");
+      }
       if (endIndex < index) {
- throw new IllegalArgumentException("\"endIndex\"" + " not greater or equal to " + Long.toString((long)index) + " (" + Long.toString((long)endIndex) + ")");
-}
+        throw new IllegalArgumentException("\"endIndex\"" + " not greater or equal to " + Long.toString((long)index) + " (" + Long.toString((long)endIndex) + ")");
+      }
       if (index == endIndex) {
- throw new NumberFormatException("No digits");
-}
+        throw new NumberFormatException("No digits");
+      }
       boolean negative = false;
       if (str.charAt(0) == '-') {
         index++;
@@ -2290,8 +2306,8 @@ TA, (int)(Tstart + NA - NB),
       for (int i = index; i < endIndex; ++i) {
         char c = str.charAt(i);
         if (c < '0' || c > '9') {
- throw new NumberFormatException("Illegal character found");
-}
+          throw new NumberFormatException("Illegal character found");
+        }
         haveDigits = true;
         int digit = (int)(c - '0');
         if (haveSmallInt && smallInt < MaxSafeInt) {
@@ -2305,19 +2321,19 @@ TA, (int)(Tstart + NA - NB),
           }
           // Multiply by 10
           short carry = 0;
-          int N = bigint.reg.length;
-          for (int j = 0; j < N; ++j) {
+          int n = bigint.reg.length;
+          for (int j = 0; j < n; ++j) {
             int p;
             {
-              p = ((bigint.intValue().reg[j]) & 0xFFFF) * 10;
+              p = (((int)bigint.reg[j]) & 0xFFFF) * 10;
               p = p + (((int)carry) & 0xFFFF);
               bigint.reg[j] = (short)p;
               carry = (short)(p >> 16);
             }
           }
           if (carry != 0) {
- bigint.reg = GrowForCarry(bigint.reg, carry);
-}
+            bigint.reg = GrowForCarry(bigint.reg, carry);
+          }
           // Add the parsed digit
           if (digit != 0) {
             int d = bigint.reg[0] & 0xFFFF;
@@ -2330,8 +2346,8 @@ TA, (int)(Tstart + NA - NB),
         }
       }
       if (!haveDigits) {
- throw new NumberFormatException("No digits");
-}
+        throw new NumberFormatException("No digits");
+      }
       if (haveSmallInt) {
         bigint.reg[0] = ((short)(smallInt & 0xFFFF));
         bigint.reg[1] = ((short)((smallInt >> 16) & 0xFFFF));
@@ -2353,50 +2369,50 @@ TA, (int)(Tstart + NA - NB),
           retSetBit += 16;
         } else {
           if (((c << 15) & 0xFFFF) != 0) {
- return retSetBit + 0;
-}
+            return retSetBit + 0;
+          }
           if (((c << 14) & 0xFFFF) != 0) {
- return retSetBit + 1;
-}
+            return retSetBit + 1;
+          }
           if (((c << 13) & 0xFFFF) != 0) {
- return retSetBit + 2;
-}
+            return retSetBit + 2;
+          }
           if (((c << 12) & 0xFFFF) != 0) {
- return retSetBit + 3;
-}
+            return retSetBit + 3;
+          }
           if (((c << 11) & 0xFFFF) != 0) {
- return retSetBit + 4;
-}
+            return retSetBit + 4;
+          }
           if (((c << 10) & 0xFFFF) != 0) {
- return retSetBit + 5;
-}
+            return retSetBit + 5;
+          }
           if (((c << 9) & 0xFFFF) != 0) {
- return retSetBit + 6;
-}
+            return retSetBit + 6;
+          }
           if (((c << 8) & 0xFFFF) != 0) {
- return retSetBit + 7;
-}
+            return retSetBit + 7;
+          }
           if (((c << 7) & 0xFFFF) != 0) {
- return retSetBit + 8;
-}
+            return retSetBit + 8;
+          }
           if (((c << 6) & 0xFFFF) != 0) {
- return retSetBit + 9;
-}
+            return retSetBit + 9;
+          }
           if (((c << 5) & 0xFFFF) != 0) {
- return retSetBit + 10;
-}
+            return retSetBit + 10;
+          }
           if (((c << 4) & 0xFFFF) != 0) {
- return retSetBit + 11;
-}
+            return retSetBit + 11;
+          }
           if (((c << 3) & 0xFFFF) != 0) {
- return retSetBit + 12;
-}
+            return retSetBit + 12;
+          }
           if (((c << 2) & 0xFFFF) != 0) {
- return retSetBit + 13;
-}
+            return retSetBit + 13;
+          }
           if (((c << 1) & 0xFFFF) != 0) {
- return retSetBit + 14;
-}
+            return retSetBit + 14;
+          }
           return retSetBit + 15;
         }
       }
@@ -2410,25 +2426,25 @@ TA, (int)(Tstart + NA - NB),
      */
     public BigInteger gcd(BigInteger bigintSecond) {
       if (bigintSecond == null) {
- throw new NullPointerException("bigintSecond");
-}
+        throw new NullPointerException("bigintSecond");
+      }
       if (this.signum()==0) {
- return (bigintSecond).abs();
-}
+        return (bigintSecond).abs();
+      }
       if (bigintSecond.signum()==0) {
- return (this).abs();
-}
+        return (this).abs();
+      }
       BigInteger thisValue = this.abs();
       bigintSecond = bigintSecond.abs();
       if (bigintSecond.equals(BigInteger.ONE) ||
           thisValue.equals(bigintSecond))
         return bigintSecond;
       if (thisValue.equals(BigInteger.ONE)) {
- return thisValue;
-}
+        return thisValue;
+      }
       int expOfTwo = Math.min(
-this.getLowestSetBit(),
-                            bigintSecond.getLowestSetBit());
+        this.getLowestSetBit(),
+        bigintSecond.getLowestSetBit());
       if (thisValue.wordCount <= 10 && bigintSecond.wordCount <= 10) {
         while (true) {
           BigInteger bigintA = (thisValue.subtract(bigintSecond)).abs();
@@ -2466,11 +2482,11 @@ this.getLowestSetBit(),
      */
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
       if (pow == null) {
- throw new NullPointerException("pow");
-}
+        throw new NullPointerException("pow");
+      }
       if (pow.signum() < 0) {
- throw new IllegalArgumentException("pow is negative");
-}
+        throw new IllegalArgumentException("pow is negative");
+      }
       BigInteger r = BigInteger.ONE;
       BigInteger v = this;
       while (pow.signum()!=0) {
@@ -2486,43 +2502,43 @@ this.getLowestSetBit(),
     }
 
     static void PositiveSubtract(
-BigInteger diff,
-                                 BigInteger minuend,
-                                 BigInteger subtrahend) {
-      int aSize = minuend.wordCount;
-      aSize += aSize & 1;
-      int bSize = subtrahend.wordCount;
-      bSize += bSize & 1;
-      if (aSize == bSize) {
-        if (Compare(minuend.reg, 0, subtrahend.reg, 0, (int)aSize) >= 0) {
-          // A is at least as high as B
-          Subtract(diff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)aSize);
+      BigInteger diff,
+      BigInteger minuend,
+      BigInteger subtrahend) {
+      int words1Size = minuend.wordCount;
+      words1Size += words1Size & 1;
+      int words2Size = subtrahend.wordCount;
+      words2Size += words2Size & 1;
+      if (words1Size == words2Size) {
+        if (Compare(minuend.reg, 0, subtrahend.reg, 0, (int)words1Size) >= 0) {
+          // words1 is at least as high as words2
+          Subtract(diff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words1Size);
           diff.negative = false;  // difference will not be negative at this point
         } else {
-          // A is less than B
-          Subtract(diff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)aSize);
+          // words1 is less than words2
+          Subtract(diff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
           diff.negative = true;  // difference will be negative
         }
-      } else if (aSize > bSize) {
-        // A is greater than B
-        short borrow = (short)Subtract(diff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)bSize);
-        System.arraycopy(minuend.reg, bSize, diff.reg, bSize, aSize - bSize);
-        borrow = (short)Decrement(diff.reg, bSize, (int)(aSize - bSize), borrow);
+      } else if (words1Size > words2Size) {
+        // words1 is greater than words2
+        short borrow = (short)Subtract(diff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words2Size);
+        System.arraycopy(minuend.reg, words2Size, diff.reg, words2Size, words1Size - words2Size);
+        borrow = (short)Decrement(diff.reg, words2Size, (int)(words1Size - words2Size), borrow);
         // Debugif(!(borrow==0))Assert.fail("{0} line {1}: !borrow","integer.cpp",3524);
         diff.negative = false;
       } else {
-        // A is less than B
-        short borrow = (short)Subtract(diff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)aSize);
-        System.arraycopy(subtrahend.reg, aSize, diff.reg, aSize, bSize - aSize);
-        borrow = (short)Decrement(diff.reg, aSize, (int)(bSize - aSize), borrow);
+        // words1 is less than words2
+        short borrow = (short)Subtract(diff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
+        System.arraycopy(subtrahend.reg, words1Size, diff.reg, words1Size, words2Size - words1Size);
+        borrow = (short)Decrement(diff.reg, words1Size, (int)(words2Size - words1Size), borrow);
         // Debugif(!(borrow==0))Assert.fail("{0} line {1}: !borrow","integer.cpp",3532);
         diff.negative = true;
       }
       diff.wordCount = diff.CalcWordCount();
       diff.ShortenArray();
       if (diff.wordCount == 0) {
- diff.negative = false;
-}
+        diff.negative = false;
+      }
     }
 
     /**
@@ -2533,16 +2549,16 @@ BigInteger diff,
     @Override public boolean equals(Object obj) {
       BigInteger other = ((obj instanceof BigInteger) ? (BigInteger)obj : null);
       if (other == null) {
- return false;
-}
+        return false;
+      }
       if (this.wordCount == other.wordCount) {
         if (this.negative != other.negative) {
- return false;
-}
+          return false;
+        }
         for (int i = 0; i < this.wordCount; ++i) {
           if (this.reg[i] != other.reg[i]) {
- return false;
-}
+            return false;
+          }
         }
         return true;
       }
@@ -2573,18 +2589,18 @@ BigInteger diff,
      */
     public BigInteger add(BigInteger bigintAugend) {
       if (bigintAugend == null) {
- throw new NullPointerException("bigintAugend");
-}
+        throw new NullPointerException("bigintAugend");
+      }
       BigInteger sum;
       if (this.wordCount == 0) {
- return bigintAugend;
-}
+        return bigintAugend;
+      }
       if (bigintAugend.wordCount == 0) {
- return this;
-}
+        return this;
+      }
       if (bigintAugend.wordCount == 1 && this.wordCount == 1) {
         if (this.negative == bigintAugend.negative) {
-          int intSum = (((int)this.reg[0]) & 0xFFFF) + ((bigintAugend.intValue().reg[0]) & 0xFFFF);
+          int intSum = (((int)this.reg[0]) & 0xFFFF) + (((int)bigintAugend.reg[0]) & 0xFFFF);
           sum = new BigInteger();
           sum.reg = new short[2];
           sum.reg[0] = ((short)intSum);
@@ -2594,10 +2610,10 @@ BigInteger diff,
           return sum;
         } else {
           int a = ((int)this.reg[0]) & 0xFFFF;
-          int b = (bigintAugend.intValue().reg[0]) & 0xFFFF;
+          int b = ((int)bigintAugend.reg[0]) & 0xFFFF;
           if (a == b) {
- return BigInteger.ZERO;
-}
+            return BigInteger.ZERO;
+          }
           if (a > b) {
             a -= b;
             sum = new BigInteger();
@@ -2625,39 +2641,48 @@ BigInteger diff,
         int augendCount = bigintAugend.wordCount + (bigintAugend.wordCount & 1);
         int desiredLength = Math.max(addendCount, augendCount);
         if (addendCount == augendCount) {
- carry = Add(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
-  } else if (addendCount > augendCount) {
+          carry = Add(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
+        } else if (addendCount > augendCount) {
           // Addend is bigger
           carry = Add(
-sum.reg, 0,
-                      this.reg, 0,
-                      bigintAugend.reg, 0,
-                      (int)augendCount);
+            sum.reg, 0,
+            this.reg, 0,
+            bigintAugend.reg, 0,
+            (int)augendCount);
           System.arraycopy(
-            this.reg, augendCount,
-            sum.reg, augendCount,
+            this.reg,
+            augendCount,
+            sum.reg,
+            augendCount,
             addendCount - augendCount);
           if (carry != 0)
             carry = Increment(
-sum.reg, augendCount,
-                              (int)(addendCount - augendCount),
-                              (short)carry);
+              sum.reg,
+              augendCount,
+              (int)(addendCount - augendCount),
+              (short)carry);
         } else {
           // Augend is bigger
           carry = Add(
-sum.reg, 0,
-                      this.reg, 0,
-                      bigintAugend.reg, 0,
-                      (int)addendCount);
+            sum.reg,
+            0,
+            this.reg,
+            0,
+            bigintAugend.reg,
+            0,
+            (int)addendCount);
           System.arraycopy(
-            bigintAugend.reg, addendCount,
-            sum.reg, addendCount,
+            bigintAugend.reg,
+            addendCount,
+            sum.reg,
+            addendCount,
             augendCount - addendCount);
           if (carry != 0)
             carry = Increment(
-sum.reg, addendCount,
-                              (int)(augendCount - addendCount),
-                              (short)carry);
+              sum.reg,
+              addendCount,
+              (int)(augendCount - addendCount),
+              (short)carry);
         }
         boolean needShorten = true;
         if (carry != 0) {
@@ -2670,8 +2695,8 @@ sum.reg, addendCount,
         sum.negative = false;
         sum.wordCount = sum.CalcWordCount();
         if (needShorten) {
- sum.ShortenArray();
-}
+          sum.ShortenArray();
+        }
         sum.negative = this.negative && sum.signum()!=0;
       } else if (this.negative) {
         PositiveSubtract(sum, bigintAugend, this);  // this is negative, b is nonnegative
@@ -2688,14 +2713,14 @@ sum.reg, addendCount,
      */
     public BigInteger subtract(BigInteger subtrahend) {
       if (subtrahend == null) {
- throw new NullPointerException("subtrahend");
-}
+        throw new NullPointerException("subtrahend");
+      }
       if (this.wordCount == 0) {
- return subtrahend.negate();
-}
+        return subtrahend.negate();
+      }
       if (subtrahend.wordCount == 0) {
- return this;
-}
+        return this;
+      }
       return this.add(subtrahend.negate());
     }
 
@@ -2703,7 +2728,7 @@ sum.reg, addendCount,
       if (this.reg.length > 32) {
         int newLength = RoundupSize(this.wordCount);
         if (newLength < this.reg.length &&
-           (this.reg.length - newLength) >= 16) {
+            (this.reg.length - newLength) >= 16) {
           // Reallocate the array if the rounded length
           // is much smaller than the current length
           short[] newreg = new short[newLength];
@@ -2720,17 +2745,17 @@ sum.reg, addendCount,
      */
     public BigInteger multiply(BigInteger bigintMult) {
       if (bigintMult == null) {
- throw new NullPointerException("bigintMult");
-}
+        throw new NullPointerException("bigintMult");
+      }
       if (this.wordCount == 0 || bigintMult.wordCount == 0) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       if (this.wordCount == 1 && this.reg[0] == 1) {
- return this.negative ? bigintMult.negate() : bigintMult;
-}
+        return this.negative ? bigintMult.negate() : bigintMult;
+      }
       if (bigintMult.wordCount == 1 && bigintMult.reg[0] == 1) {
- return bigintMult.negative ? this.negate() : this;
-}
+        return bigintMult.negative ? this.negate() : this;
+      }
       BigInteger product = new BigInteger();
       boolean needShorten = true;
       if (this.wordCount == 1) {
@@ -2756,44 +2781,45 @@ sum.reg, addendCount,
         product.negative = false;
         product.wordCount = product.reg.length;
         SchoolbookMultiply(
-product.reg, 0,
-                           this.reg, 0, this.wordCount,
-                           bigintMult.reg, 0, bigintMult.wordCount);
+          product.reg, 0,
+          this.reg, 0, this.wordCount,
+          bigintMult.reg, 0, bigintMult.wordCount);
         needShorten = false;
       } else if (this.equals(bigintMult)) {
-        int aSize = RoundupSize(this.wordCount);
-        product.reg = new short[RoundupSize(aSize + aSize)];
+        int words1Size = RoundupSize(this.wordCount);
+        product.reg = new short[RoundupSize(words1Size + words1Size)];
         product.wordCount = product.reg.length;
         product.negative = false;
-        short[] workspace = new short[aSize + aSize];
+        short[] workspace = new short[words1Size + words1Size];
         RecursiveSquare(
-product.reg, 0,
-                        workspace, 0,
-                        this.reg, 0, aSize);
+          product.reg, 0,
+          workspace, 0,
+          this.reg, 0, words1Size);
       } else {
-        int aSize = this.wordCount;
-        int bSize = bigintMult.wordCount;
-        aSize = (aSize <= 16) ? RoundupSizeTable[aSize] : RoundupSize(aSize);
-        bSize = (bSize <= 16) ? RoundupSizeTable[bSize] : RoundupSize(bSize);
-        product.reg = new short[RoundupSize(aSize + bSize)];
+        int words1Size = this.wordCount;
+        int words2Size = bigintMult.wordCount;
+        words1Size = (words1Size <= 16) ? RoundupSizeTable[words1Size] : RoundupSize(words1Size);
+        words2Size = (words2Size <= 16) ? RoundupSizeTable[words2Size] : RoundupSize(words2Size);
+        product.reg = new short[RoundupSize(words1Size + words2Size)];
         product.negative = false;
-        short[] workspace = new short[aSize + bSize];
+        short[] workspace = new short[words1Size + words2Size];
         product.wordCount = product.reg.length;
         AsymmetricMultiply(
-product.reg, 0,
-                           workspace, 0,
-                           this.reg, 0, aSize,
-                           bigintMult.reg, 0, bSize);
+          product.reg, 0,
+          workspace, 0,
+          this.reg, 0, words1Size,
+          bigintMult.reg, 0, words2Size);
       }
       // Recalculate word count
-      while (product.wordCount != 0 && product.reg[product.wordCount - 1] == 0)
+      while (product.wordCount != 0 && product.reg[product.wordCount - 1] == 0) {
         product.wordCount--;
+      }
       if (needShorten) {
- product.ShortenArray();
-}
+        product.ShortenArray();
+      }
       if (this.negative != bigintMult.negative) {
- product.NegateInternal();
-}
+        product.NegateInternal();
+      }
       return product;
     }
 
@@ -2806,56 +2832,59 @@ product.reg, 0,
       short remainder = 0;
       while ((i--) > 0) {
         remainder = RemainderUnsigned(
-          MakeUint(dividendReg[i], remainder), divisorSmall);
+          MakeUint(dividendReg[i], remainder),
+          divisorSmall);
       }
       return remainder;
     }
 
     private static void FastDivide(short[] quotientReg, short[] dividendReg, int count, short divisorSmall) {
       int i = count;
-      short remainder = 0;
+      short remainderShort = 0;
       int idivisor = ((int)divisorSmall) & 0xFFFF;
       int quo, rem;
       while ((i--) > 0) {
         int currentDividend = ((int)((((int)dividendReg[i]) & 0xFFFF) |
-                                              (remainder.intValue().shiftLeft(16))));
+                                              ((int)remainderShort << 16)));
         if ((currentDividend >> 31) == 0) {
           quo = currentDividend / idivisor;
           quotientReg[i] = ((short)quo);
           if (i > 0) {
             rem = currentDividend - (idivisor * quo);
-            remainder = ((short)rem);
+            remainderShort = ((short)rem);
           }
         } else {
           quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
           if (i > 0) {
- remainder = RemainderUnsigned(currentDividend, divisorSmall);
-}
+            remainderShort = RemainderUnsigned(currentDividend, divisorSmall);
+          }
         }
       }
     }
 
     private static short FastDivideAndRemainderEx(
-short[] quotientReg,
-                                                  short[] dividendReg, int count, short divisorSmall) {
+      short[] quotientReg,
+      short[] dividendReg,
+      int count,
+      short divisorSmall) {
       int i = count;
-      short remainder = 0;
+      short remainderShort = 0;
       int idivisor = ((int)divisorSmall) & 0xFFFF;
       int quo, rem;
       while ((i--) > 0) {
         int currentDividend = ((int)((((int)dividendReg[i]) & 0xFFFF) |
-                                              (remainder.intValue().shiftLeft(16))));
+                                              ((int)remainderShort << 16)));
         if ((currentDividend >> 31) == 0) {
           quo = currentDividend / idivisor;
           quotientReg[i] = ((short)quo);
           rem = currentDividend - (idivisor * quo);
-          remainder = ((short)rem);
+          remainderShort = ((short)rem);
         } else {
           quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
-          remainder = RemainderUnsigned(currentDividend, divisorSmall);
+          remainderShort = RemainderUnsigned(currentDividend, divisorSmall);
         }
       }
-      return remainder;
+      return remainderShort;
     }
 
     /**
@@ -2870,37 +2899,38 @@ short[] quotientReg,
      */
     public BigInteger divide(BigInteger bigintDivisor) {
       if (bigintDivisor == null) {
- throw new NullPointerException("bigintDivisor");
-}
-      int aSize = this.wordCount;
-      int bSize = bigintDivisor.wordCount;
-      if (bSize == 0) {
- throw new ArithmeticException();
-}
-      if (aSize < bSize) {
+        throw new NullPointerException("bigintDivisor");
+      }
+      int words1Size = this.wordCount;
+      int words2Size = bigintDivisor.wordCount;
+      if (words2Size == 0) {
+        throw new ArithmeticException();
+      }
+      if (words1Size < words2Size) {
         // dividend is less than divisor (includes case
         // where dividend is 0)
         return BigInteger.ZERO;
       }
-      if (aSize <= 2 && bSize <= 2 && this.canFitInInt() && bigintDivisor.canFitInInt()) {
+      if (words1Size <= 2 && words2Size <= 2 && this.canFitInInt() && bigintDivisor.canFitInInt()) {
         int aSmall = this.intValue();
-        int  bSmall = bigintDivisor.intValue();
+        int bSmall = bigintDivisor.intValue();
         if (aSmall != Integer.MIN_VALUE || bSmall != -1) {
           int result = aSmall / bSmall;
           return new BigInteger().InitializeInt(result);
         }
       }
       BigInteger quotient;
-      if (bSize == 1) {
+      if (words2Size == 1) {
         // divisor is small, use a fast path
         quotient = new BigInteger();
         quotient.reg = new short[this.reg.length];
         quotient.wordCount = this.wordCount;
         quotient.negative = this.negative;
-        FastDivide(quotient.reg, this.reg, aSize, bigintDivisor.reg[0]);
+        FastDivide(quotient.reg, this.reg, words1Size, bigintDivisor.reg[0]);
         while (quotient.wordCount != 0 &&
-               quotient.reg[quotient.wordCount - 1] == 0)
+               quotient.reg[quotient.wordCount - 1] == 0) {
           quotient.wordCount--;
+        }
         if (quotient.wordCount != 0) {
           quotient.negative = this.negative ^ bigintDivisor.negative;
           return quotient;
@@ -2909,17 +2939,17 @@ short[] quotientReg,
         }
       }
       quotient = new BigInteger();
-      aSize += aSize % 2;
-      bSize += bSize % 2;
-      quotient.reg = new short[RoundupSize((int)(aSize - bSize + 2))];
+      words1Size += words1Size % 2;
+      words2Size += words2Size % 2;
+      quotient.reg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
       quotient.negative = false;
-      short[] tempbuf = new short[aSize + 3 * (bSize + 2)];
+      short[] tempbuf = new short[words1Size + 3 * (words2Size + 2)];
       Divide(
-null, 0,
-             quotient.reg, 0,
-             tempbuf, 0,
-             this.reg, 0, aSize,
-             bigintDivisor.reg, 0, bSize);
+        null, 0,
+        quotient.reg, 0,
+        tempbuf, 0,
+        this.reg, 0, words1Size,
+        bigintDivisor.reg, 0, words2Size);
       quotient.wordCount = quotient.CalcWordCount();
       quotient.ShortenArray();
       if ((this.signum() < 0) ^ (bigintDivisor.signum() < 0)) {
@@ -2935,31 +2965,35 @@ null, 0,
      */
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
       if (divisor == null) {
- throw new NullPointerException("divisor");
-}
+        throw new NullPointerException("divisor");
+      }
       BigInteger quotient;
-      int aSize = this.wordCount;
-      int bSize = divisor.wordCount;
-      if (bSize == 0) {
- throw new ArithmeticException();
-}
+      int words1Size = this.wordCount;
+      int words2Size = divisor.wordCount;
+      if (words2Size == 0) {
+        throw new ArithmeticException();
+      }
 
-      if (aSize < bSize) {
+      if (words1Size < words2Size) {
         // dividend is less than divisor (includes case
         // where dividend is 0)
         return new BigInteger[] { BigInteger.ZERO, this };
       }
-      if (bSize == 1) {
+      if (words2Size == 1) {
         // divisor is small, use a fast path
         quotient = new BigInteger();
         quotient.reg = new short[this.reg.length];
         quotient.wordCount = this.wordCount;
         quotient.negative = this.negative;
         int smallRemainder = (((int)FastDivideAndRemainderEx(
-          quotient.reg, this.reg, aSize, divisor.reg[0])) & 0xFFFF);
+          quotient.reg,
+          this.reg,
+          words1Size,
+          divisor.reg[0])) & 0xFFFF);
         while (quotient.wordCount != 0 &&
-               quotient.reg[quotient.wordCount - 1] == 0)
+               quotient.reg[quotient.wordCount - 1] == 0) {
           quotient.wordCount--;
+        }
         quotient.ShortenArray();
         if (quotient.wordCount != 0) {
           quotient.negative = this.negative ^ divisor.negative;
@@ -2967,22 +3001,22 @@ null, 0,
           quotient = BigInteger.ZERO;
         }
         if (this.negative) {
- smallRemainder = -smallRemainder;
-}
+          smallRemainder = -smallRemainder;
+        }
         return new BigInteger[] { quotient, new BigInteger().InitializeInt(smallRemainder) };
       }
       if (this.wordCount == 2 && divisor.wordCount == 2 &&
-         (this.reg[1] >> 15) != 0 &&
-         (divisor.reg[1] >> 15) != 0) {
+          (this.reg[1] >> 15) != 0 &&
+          (divisor.reg[1] >> 15) != 0) {
         int a = ((int)this.reg[0]) & 0xFFFF;
-        int b = (divisor.intValue().reg[0]) & 0xFFFF;
+        int b = ((int)divisor.reg[0]) & 0xFFFF;
         {
           a |= (((int)this.reg[1]) & 0xFFFF) << 16;
-          b |= ((divisor.intValue().reg[1]) & 0xFFFF) << 16;
+          b |= (((int)divisor.reg[1]) & 0xFFFF) << 16;
           int quo = a / b;
           if (this.negative) {
- quo = -quo;
-}
+            quo = -quo;
+          }
           int rem = a - (b * quo);
           return new BigInteger[] {
             new BigInteger().InitializeInt(quo),
@@ -2992,19 +3026,19 @@ null, 0,
       }
       BigInteger remainder = new BigInteger();
       quotient = new BigInteger();
-      aSize += aSize & 1;
-      bSize += bSize & 1;
-      remainder.reg = new short[RoundupSize((int)bSize)];
+      words1Size += words1Size & 1;
+      words2Size += words2Size & 1;
+      remainder.reg = new short[RoundupSize((int)words2Size)];
       remainder.negative = false;
-      quotient.reg = new short[RoundupSize((int)(aSize - bSize + 2))];
+      quotient.reg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
       quotient.negative = false;
-      short[] tempbuf = new short[aSize + 3 * (bSize + 2)];
+      short[] tempbuf = new short[words1Size + 3 * (words2Size + 2)];
       Divide(
-remainder.reg, 0,
-             quotient.reg, 0,
-             tempbuf, 0,
-             this.reg, 0, aSize,
-             divisor.reg, 0, bSize);
+        remainder.reg, 0,
+        quotient.reg, 0,
+        tempbuf, 0,
+        this.reg, 0, words1Size,
+        divisor.reg, 0, words2Size);
       remainder.wordCount = remainder.CalcWordCount();
       quotient.wordCount = quotient.CalcWordCount();
       // System.out.println("Divd={0} divs={1} quo={2} rem={3}",this.wordCount,
@@ -3018,8 +3052,8 @@ remainder.reg, 0,
         }
       }
       if (divisor.signum() < 0) {
- quotient.NegateInternal();
-}
+        quotient.NegateInternal();
+      }
       return new BigInteger[] { quotient, remainder };
     }
 
@@ -3033,15 +3067,15 @@ remainder.reg, 0,
      */
     public BigInteger mod(BigInteger divisor) {
       if (divisor == null) {
- throw new NullPointerException("divisor");
-}
+        throw new NullPointerException("divisor");
+      }
       if (divisor.signum() < 0) {
         throw new ArithmeticException("Divisor is negative");
       }
       BigInteger rem = this.remainder(divisor);
       if (rem.signum() < 0) {
- rem = divisor.subtract(rem);
-}
+        rem = divisor.subtract(rem);
+      }
       return rem;
     }
 
@@ -3055,41 +3089,41 @@ remainder.reg, 0,
      * @return The remainder of the two objects.
      */
     public BigInteger remainder(BigInteger divisor) {
-      int aSize = this.wordCount;
-      int bSize = divisor.wordCount;
-      if (bSize == 0) {
- throw new ArithmeticException();
-}
-      if (aSize < bSize) {
+      int words1Size = this.wordCount;
+      int words2Size = divisor.wordCount;
+      if (words2Size == 0) {
+        throw new ArithmeticException();
+      }
+      if (words1Size < words2Size) {
         // dividend is less than divisor
         return this;
       }
-      if (bSize == 1) {
+      if (words2Size == 1) {
         short shortRemainder = FastRemainder(this.reg, this.wordCount, divisor.reg[0]);
         int smallRemainder = ((int)shortRemainder) & 0xFFFF;
         if (this.negative) {
- smallRemainder = -smallRemainder;
-}
+          smallRemainder = -smallRemainder;
+        }
         return new BigInteger().InitializeInt(smallRemainder);
       }
       if (this.PositiveCompare(divisor) < 0) {
         if (divisor.signum()==0) {
- throw new ArithmeticException();
-}
+          throw new ArithmeticException();
+        }
         return this;
       }
       BigInteger remainder = new BigInteger();
-      aSize += aSize % 2;
-      bSize += bSize % 2;
-      remainder.reg = new short[RoundupSize((int)bSize)];
+      words1Size += words1Size % 2;
+      words2Size += words2Size % 2;
+      remainder.reg = new short[RoundupSize((int)words2Size)];
       remainder.negative = false;
-      short[] tempbuf = new short[aSize + 3 * (bSize + 2)];
+      short[] tempbuf = new short[words1Size + 3 * (words2Size + 2)];
       Divide(
-remainder.reg, 0,
-             null, 0,
-             tempbuf, 0,
-             this.reg, 0, aSize,
-             divisor.reg, 0, bSize);
+        remainder.reg, 0,
+        null, 0,
+        tempbuf, 0,
+        this.reg, 0, words1Size,
+        divisor.reg, 0, words2Size);
       remainder.wordCount = remainder.CalcWordCount();
       remainder.ShortenArray();
       if (this.signum() < 0 && remainder.signum()!=0) {
@@ -3100,17 +3134,17 @@ remainder.reg, 0,
 
     void NegateInternal() {
       if (this.wordCount != 0) {
- this.negative = this.signum() > 0;
-}
+        this.negative = this.signum() > 0;
+      }
     }
 
     int PositiveCompare(BigInteger t) {
-      int size = this.wordCount, tSize = t.wordCount;
-      if (size == tSize) {
- return Compare(this.reg, 0, t.reg, 0, (int)size);
-  } else {
- return size > tSize ? 1 : -1;
-}
+      int size = this.wordCount, tempSize = t.wordCount;
+      if (size == tempSize) {
+        return Compare(this.reg, 0, t.reg, 0, (int)size);
+      } else {
+        return size > tempSize ? 1 : -1;
+      }
     }
 
     /**
@@ -3121,39 +3155,39 @@ remainder.reg, 0,
      */
     public int compareTo(BigInteger other) {
       if (other == null) {
- return 1;
-}
+        return 1;
+      }
       if (this == other) {
- return 0;
-}
-      int size = this.wordCount, tSize = other.wordCount;
+        return 0;
+      }
+      int size = this.wordCount, tempSize = other.wordCount;
       int sa = size == 0 ? 0 : (this.negative ? -1 : 1);
-      int sb = tSize == 0 ? 0 : (other.negative ? -1 : 1);
+      int sb = tempSize == 0 ? 0 : (other.negative ? -1 : 1);
       if (sa != sb) {
- return (sa < sb) ? -1 : 1;
-}
+        return (sa < sb) ? -1 : 1;
+      }
       if (sa == 0) {
- return 0;
-}
-      if (size == tSize) {
+        return 0;
+      }
+      if (size == tempSize) {
         if (size == 1 && this.reg[0] == other.reg[0]) {
           return 0;
         } else {
-          short[] A = this.reg;
-          short[] B = other.reg;
+          short[] words1 = this.reg;
+          short[] words2 = other.reg;
           while ((size--) != 0) {
-            int an = ((int)A[size]) & 0xFFFF;
-            int bn = ((int)B[size]) & 0xFFFF;
+            int an = ((int)words1[size]) & 0xFFFF;
+            int bn = ((int)words2[size]) & 0xFFFF;
             if (an > bn) {
- return (sa > 0) ? 1 : -1;
-  } else if (an < bn) {
- return (sa > 0) ? -1 : 1;
-}
+              return (sa > 0) ? 1 : -1;
+            } else if (an < bn) {
+              return (sa > 0) ? -1 : 1;
+            }
           }
           return 0;
         }
       } else {
-        return ((size > tSize) ^ (sa <= 0)) ? 1 : -1;
+        return ((size > tempSize) ^ (sa <= 0)) ? 1 : -1;
       }
     }
 
@@ -3162,8 +3196,8 @@ remainder.reg, 0,
      */
     public int signum() {
         if (this.wordCount == 0) {
- return 0;
-}
+          return 0;
+        }
         return this.negative ? -1 : 1;
       }
 
@@ -3171,8 +3205,8 @@ remainder.reg, 0,
      * Not documented yet.
      */
     public boolean isZero() {
- return this.wordCount == 0;
-}
+        return this.wordCount == 0;
+      }
 
     /**
      * Finds the square root of this instance&apos;s value, rounded down.
@@ -3181,8 +3215,8 @@ remainder.reg, 0,
      */
     public BigInteger sqrt() {
       if (this.signum() <= 0) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       BigInteger bigintX = null;
       BigInteger bigintY = Power2((this.getUnsignedBitLength() + 1) / 2);
       do {
@@ -3196,8 +3230,8 @@ remainder.reg, 0,
 
     public BigInteger[] sqrtWithRemainder() {
       if (this.signum() <= 0) {
- return new BigInteger[]{ BigInteger.ZERO, BigInteger.ZERO };
-}
+        return new BigInteger[]{ BigInteger.ZERO, BigInteger.ZERO };
+      }
       BigInteger bigintX = null;
       BigInteger bigintY = Power2((this.getUnsignedBitLength() + 1) / 2);
       do {
@@ -3217,8 +3251,8 @@ remainder.reg, 0,
      * Gets a value indicating whether this value is even.
      */
     public boolean isEven() {
- return !this.GetUnsignedBit(0);
-}
+        return !this.GetUnsignedBit(0);
+      }
 
     /**
      * BigInteger object for the number zero.

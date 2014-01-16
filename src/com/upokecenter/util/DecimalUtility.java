@@ -349,7 +349,7 @@ public BigInteger GetCachedPowerInt(int bi) {
       return mantissa;
     }
 
-    private static BigInteger FivePower40 = (BigInteger.valueOf(95367431640625L)).multiply(BigInteger.valueOf(95367431640625))L;
+    private static BigInteger FivePower40 = (BigInteger.valueOf(95367431640625L)).multiply(BigInteger.valueOf(95367431640625L));
 
     static BigInteger FindPowerOfFive(int precision) {
       if (precision < 0) {

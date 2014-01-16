@@ -122,7 +122,9 @@ private CBORObjectMath(){}
                            (Long.MAX_VALUE / valueA) > valueB) ||
                          (bpos && valueA < (Long.MIN_VALUE / valueB))))) {
               // would overflow, convert to BigInteger
-              return CBORObject.FromObject((BigInteger.valueOf(valueA)).multiply(BigInteger.valueOf(valueB)));
+              bvalueA = BigInteger.valueOf(valueA);
+              bvalueB = BigInteger.valueOf(valueB);
+              return CBORObject.FromObject(bvalueA.multiply(bvalueB));
             }
             return CBORObject.FromObject(valueA * valueB);
           }

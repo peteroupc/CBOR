@@ -885,7 +885,7 @@ namespace Test {
     ///
     [Test]
     public void TestULong() {
-      ulong[] ranges = new ulong[]{
+      ulong[] ranges = new ulong[] {
         0, 65539,
         0xFFFFF000UL, 0x100000400UL,
         0x7FFFFFFFFFFFF000UL, 0x8000000000000400UL,
@@ -1005,7 +1005,7 @@ namespace Test {
     ///
     [Test]
     public void TestUInt() {
-      uint[] ranges = new uint[]{
+      uint[] ranges = new uint[] {
         0, 65539,
         0x7FFFF000U, 0x80000400U,
         UInt32.MaxValue-1000, UInt32.MaxValue
@@ -1093,7 +1093,7 @@ namespace Test {
     ///
     [Test]
     public void TestDateTime() {
-      DateTime[] ranges = new DateTime[]{
+      DateTime[] ranges = new DateTime[] {
         new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc),
         new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc),
         new DateTime(1998, 1, 1, 0, 0, 0, DateTimeKind.Utc),

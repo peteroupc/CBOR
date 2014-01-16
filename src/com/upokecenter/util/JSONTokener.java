@@ -14,7 +14,7 @@ package com.upokecenter.util;
 
   import java.util.*;
 
-  internal class JSONTokener {
+  class JSONTokener {
     /**
      * Trailing commas are allowed in the JSON _string.
      */

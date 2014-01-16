@@ -3380,7 +3380,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test(expected=CBORException.class)
     public void TestDecimalFracExactlyTwoElements() {
       TestCommon.FromBytesTestAB(
-        new byte[]{ (byte)0xc4, (byte)0x82, (byte)0xc2, 0x41, 1 });
+        new byte[]{ (byte)0xc4,
+        (byte)0x82,
+        (byte)0xc2,
+        0x41,
+        1 });
     }
 
     /**
@@ -3412,7 +3416,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test
     public void TestByteArray() {
       TestCommon.AssertSer(
-        CBORObject.FromObject(new byte[]{ 0x20, 0x78 }), "h'2078'");
+        CBORObject.FromObject(new byte[]{ 0x20, 0x78 }),
+        "h'2078'");
     }
 
     /**

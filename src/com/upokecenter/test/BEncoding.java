@@ -61,7 +61,10 @@ private BEncoding(){}
         }
       }
       return CBORDataUtilities.ParseJSONNumber(
-        builder.toString(), true, false, true);
+        builder.toString(),
+        true,
+        false,
+        true);
     }
     private static CBORObject readList(InputStream stream) throws IOException {
       CBORObject obj = CBORObject.NewArray();
@@ -114,7 +117,10 @@ private BEncoding(){}
         }
       }
       CBORObject number = CBORDataUtilities.ParseJSONNumber(
-        builder.toString(), true, true, true);
+        builder.toString(),
+        true,
+        true,
+        true);
       int length = 0;
       try {
         length = number.AsInt32();

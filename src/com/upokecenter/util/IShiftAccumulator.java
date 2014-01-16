@@ -6,7 +6,7 @@ package com.upokecenter.util;
      * Common interface for classes that shift a number of digits and record
      * information on whether a non-zero digit was discarded this way.
      */
-  internal interface IShiftAccumulator {
+  interface IShiftAccumulator {
     BigInteger getShiftedInt();
 
     FastInteger GetDigitLength();

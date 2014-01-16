@@ -16,8 +16,6 @@ namespace PeterO {
 
     BigInteger GetExponent(T value);
 
-    BigInteger RescaleByExponentDiff(BigInteger value, BigInteger exp1, BigInteger exp2);
-
     T ValueOf(int val);
 
     T CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags);

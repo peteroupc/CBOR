@@ -21,14 +21,15 @@ at: http://peteroupc.github.io/CBOR/
      */
   final class FastInteger implements Comparable<FastInteger> {
     private static final class MutableNumber {
-      public int[] data;
-      public int wordCount;
+      private int[] data;
+
+      private int wordCount;
 
       public static MutableNumber FromBigInteger(BigInteger bigintVal) {
         MutableNumber mnum = new MutableNumber(0);
-        if ( bigintVal.signum() < 0) {
- throw new IllegalArgumentException("Only positive integers are supported");
-}
+        if (bigintVal.signum() < 0) {
+          throw new IllegalArgumentException("Only positive integers are supported");
+        }
         byte[] bytes = bigintVal.toByteArray(true);
         int len = bytes.length;
         int newWordCount = Math.max(4, (len / 4) + 1);
@@ -52,15 +53,16 @@ at: http://peteroupc.github.io/CBOR/
           }
         }
         // Calculate the correct data length
-        while (mnum.wordCount != 0 && mnum.data[mnum.wordCount - 1] == 0)
-          mnum.wordCount--;
+        while (mnum.wordCount != 0 && mnum.data[mnum.wordCount - 1] == 0) {
+ mnum.wordCount--;
+}
         return mnum;
       }
 
       public MutableNumber (int val) {
         if (val < 0) {
- throw new IllegalArgumentException("Only positive integers are supported");
-}
+          throw new IllegalArgumentException("Only positive integers are supported");
+        }
         this.data = new int[4];
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = ((int)(val & 0xFFFFFFFFL));
@@ -73,8 +75,8 @@ at: http://peteroupc.github.io/CBOR/
      */
       public MutableNumber SetInt(int val) {
         if (val < 0) {
- throw new IllegalArgumentException("Only positive integers are supported");
-}
+          throw new IllegalArgumentException("Only positive integers are supported");
+        }
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = ((int)(val & 0xFFFFFFFFL));
         return this;
@@ -142,16 +144,16 @@ at: http://peteroupc.github.io/CBOR/
      */
       public MutableNumber MultiplyByTenAndAdd(int digit) {
         if (digit < 0 || digit >= 10) {
- throw new IllegalArgumentException("Only digits 0 to 9 are supported");
-}
+          throw new IllegalArgumentException("Only digits 0 to 9 are supported");
+        }
         int s;
         int d;
         digit &= 0xFFFF;
         int carry = 0;
         if (this.wordCount == 0) {
           if (this.data.length == 0) {
- this.data = new int[4];
-}
+            this.data = new int[4];
+          }
           this.data[0] = 0;
           this.wordCount = 1;
         }
@@ -173,8 +175,8 @@ at: http://peteroupc.github.io/CBOR/
             int tempInt;
             tempInt = A0B0 + carry;
             if (i == 0) {
- tempInt += digit;
-}
+              tempInt += digit;
+            }
             int result0 = tempInt & 0xFFFF;
             tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) +
               (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
@@ -195,8 +197,9 @@ at: http://peteroupc.github.io/CBOR/
           this.wordCount++;
         }
         // Calculate the correct data length
-        while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0)
-          this.wordCount--;
+        while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
+ this.wordCount--;
+}
         return this;
       }
 
@@ -207,13 +210,13 @@ at: http://peteroupc.github.io/CBOR/
      */
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
- throw new IllegalArgumentException("Only positive multiplicands are supported");
-  } else if (multiplicand != 0) {
+          throw new IllegalArgumentException("Only positive multiplicands are supported");
+        } else if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
             if (this.data.length == 0) {
- this.data = new int[4];
-}
+              this.data = new int[4];
+            }
             this.data[0] = 0;
             this.wordCount = 1;
           }
@@ -237,7 +240,7 @@ at: http://peteroupc.github.io/CBOR/
               x1 = ((int)(result2 | (result3 << 16)));
               int x2 = (x0 + carry);
               if (((x2 >> 31) == (x0 >> 31)) ? ((x2 & Integer.MAX_VALUE) < (x0 & Integer.MAX_VALUE)) :
-                 ((x2 >> 31) == 0)) {
+                  ((x2 >> 31) == 0)) {
                 // Carry in addition
                 x1 = (x1 + 1);
               }
@@ -271,7 +274,7 @@ at: http://peteroupc.github.io/CBOR/
               x1 = ((int)(result2 | (result3 << 16)));
               int x2 = (x0 + carry);
               if (((x2 >> 31) == (x0 >> 31)) ? ((x2 & Integer.MAX_VALUE) < (x0 & Integer.MAX_VALUE)) :
-                 ((x2 >> 31) == 0)) {
+                  ((x2 >> 31) == 0)) {
                 // Carry in addition
                 x1 = (x1 + 1);
               }
@@ -289,12 +292,13 @@ at: http://peteroupc.github.io/CBOR/
             this.wordCount++;
           }
           // Calculate the correct data length
-          while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0)
-            this.wordCount--;
+          while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
+ this.wordCount--;
+}
         } else {
           if (this.data.length > 0) {
- this.data[0] = 0;
-}
+            this.data[0] = 0;
+          }
           this.wordCount = 0;
         }
         return this;
@@ -321,8 +325,8 @@ at: http://peteroupc.github.io/CBOR/
      */
       public int CompareToInt(int val) {
         if (val < 0 || this.wordCount > 1) {
- return 1;
-}
+          return 1;
+        }
         if (this.wordCount == 0) {
           // this value is 0
           return (val == 0) ? 0 : -1;
@@ -342,15 +346,15 @@ at: http://peteroupc.github.io/CBOR/
       public MutableNumber SubtractInt(
         int other) {
         if (other < 0) {
- throw new IllegalArgumentException("Only positive values are supported");
-  } else if (other != 0)
+          throw new IllegalArgumentException("Only positive values are supported");
+        } else if (other != 0)
         {
           {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
               if (this.data.length == 0) {
- this.data = new int[4];
-}
+                this.data = new int[4];
+              }
               this.data[0] = 0;
               this.wordCount = 1;
             }
@@ -359,21 +363,22 @@ at: http://peteroupc.github.io/CBOR/
             int a = this.data[0];
             u = a - other;
             borrow = ((((a >> 31) == (u >> 31)) ?
-                     ((a & Integer.MAX_VALUE) < (u & Integer.MAX_VALUE)) :
-                     ((a >> 31) == 0)) || (a == u && other != 0)) ? 1 : 0;
+                       ((a & Integer.MAX_VALUE) < (u & Integer.MAX_VALUE)) :
+                       ((a >> 31) == 0)) || (a == u && other != 0)) ? 1 : 0;
             this.data[0] = (int)u;
             if (borrow != 0) {
               for (int i = 1; i < this.wordCount; ++i) {
                 u = this.data[i] - borrow;
                 borrow = ((((this.data[i] >> 31) == (u >> 31)) ?
-                         ((this.data[i] & Integer.MAX_VALUE) < (u & Integer.MAX_VALUE)) :
-                         ((this.data[i] >> 31) == 0))) ? 1 : 0;
+                           ((this.data[i] & Integer.MAX_VALUE) < (u & Integer.MAX_VALUE)) :
+                           ((this.data[i] >> 31) == 0))) ? 1 : 0;
                 this.data[i] = (int)u;
               }
             }
             // Calculate the correct data length
-            while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0)
-              this.wordCount--;
+            while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
+ this.wordCount--;
+}
           }
         }
         return this;
@@ -402,7 +407,7 @@ at: http://peteroupc.github.io/CBOR/
               int a = this.data[i];
               u = (a - other.data[i]) - borrow;
               borrow = ((((a >> 31) == (u >> 31)) ? ((a & Integer.MAX_VALUE) < (u & Integer.MAX_VALUE)) :
-                       ((a >> 31) == 0)) || (a == u && other.data[i] != 0)) ? 1 : 0;
+                         ((a >> 31) == 0)) || (a == u && other.data[i] != 0)) ? 1 : 0;
               this.data[i] = (int)u;
             }
             if (borrow != 0) {
@@ -410,13 +415,14 @@ at: http://peteroupc.github.io/CBOR/
                 int a = this.data[i];
                 u = (a - other.data[i]) - borrow;
                 borrow = ((((a >> 31) == (u >> 31)) ? ((a & Integer.MAX_VALUE) < (u & Integer.MAX_VALUE)) :
-                         ((a >> 31) == 0)) || (a == u && other.data[i] != 0)) ? 1 : 0;
+                           ((a >> 31) == 0)) || (a == u && other.data[i] != 0)) ? 1 : 0;
                 this.data[i] = (int)u;
               }
             }
             // Calculate the correct data length
-            while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0)
-              this.wordCount--;
+            while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
+ this.wordCount--;
+}
             return this;
           }
         }
@@ -454,15 +460,15 @@ at: http://peteroupc.github.io/CBOR/
      */
       public MutableNumber Add(int augend) {
         if (augend < 0) {
- throw new IllegalArgumentException("Only positive augends are supported");
-  } else if (augend != 0)
+          throw new IllegalArgumentException("Only positive augends are supported");
+        } else if (augend != 0)
         {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {
             if (this.data.length == 0) {
- this.data = new int[4];
-}
+              this.data = new int[4];
+            }
             this.data[0] = 0;
             this.wordCount = 1;
           }
@@ -471,11 +477,11 @@ at: http://peteroupc.github.io/CBOR/
             int a = this.data[i];
             u = (a + augend) + carry;
             carry = ((((u >> 31) == (a >> 31)) ? ((u & Integer.MAX_VALUE) < (a & Integer.MAX_VALUE)) :
-                    ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
+                      ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
             this.data[i] = u;
             if (carry == 0) {
- return this;
-}
+              return this;
+            }
             augend = 0;
           }
           if (carry != 0) {
@@ -489,8 +495,9 @@ at: http://peteroupc.github.io/CBOR/
           }
         }
         // Calculate the correct data length
-        while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0)
-          this.wordCount--;
+        while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
+ this.wordCount--;
+}
         return this;
       }
     }
@@ -537,13 +544,13 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int AsInt32() {
-       switch (this.integerMode) {
+      switch (this.integerMode) {
         case 0:
           return this.smallValue;
         case 1:
           return this.mnum.ToInt32();
         case 2:
-          return (int)this.largeValue;
+          return this.largeValue.intValue();
         default:
           throw new IllegalStateException();
       }
@@ -556,7 +563,7 @@ at: http://peteroupc.github.io/CBOR/
      * is less, or a positive number if this instance is greater.
      */
     public int compareTo(FastInteger val) {
-       switch ((this.integerMode << 2) | val.integerMode) {
+      switch ((this.integerMode << 2) | val.integerMode) {
           case (0 << 2) | 0:{
             int vsv = val.smallValue;
             return (this.smallValue == vsv) ? 0 :
@@ -618,27 +625,6 @@ at: http://peteroupc.github.io/CBOR/
       this.smallValue = val;
       this.integerMode = 0;
       return this;
-    }
-
-    /**
-     * Not documented yet.
-     * @param digit A 32-bit signed integer from 0 through 9.
-     * @return A FastInteger object.
-     */
-    public FastInteger MultiplyByTenAndAdd(int digit) {
-      if (this.integerMode == 1) {
-        this.mnum.MultiplyByTenAndAdd(digit);
-        return this;
-      }
-      if (digit > 0) {
-        if (this.integerMode == 0 && this.smallValue >= 214748363) {
-          this.integerMode = 1;
-          this.mnum = new MutableNumber(this.smallValue);
-          this.mnum.MultiplyByTenAndAdd(digit);
-          return this;
-        }
-      }
-      return this.Multiply(10).AddInt(digit);
     }
 
     /**
@@ -726,8 +712,8 @@ bigrem=divrem[1]; }
                 // if either operand is negative
                 // convert to big integer
                 this.integerMode = 2;
-                this.largeValue = (BigInteger)this.smallValue;
-                this.largeValue *= BigInteger.valueOf(val);
+                this.largeValue = BigInteger.valueOf(this.smallValue);
+                this.largeValue=this.largeValue.multiply(BigInteger.valueOf(val));
               }
             } else {
               smallValue *= val;
@@ -737,13 +723,13 @@ bigrem=divrem[1]; }
             if (val < 0) {
               this.integerMode = 2;
               this.largeValue = this.mnum.ToBigInteger();
-              this.largeValue *= BigInteger.valueOf(val);
+              this.largeValue=this.largeValue.multiply(BigInteger.valueOf(val));
             } else {
               mnum.Multiply(val);
             }
             break;
           case 2:
-            this.largeValue *= BigInteger.valueOf(val);
+            this.largeValue=this.largeValue.multiply(BigInteger.valueOf(val));
             break;
           default:
             throw new IllegalStateException();
@@ -798,8 +784,8 @@ bigrem=divrem[1]; }
                 (vsv > 0 && Integer.MIN_VALUE + vsv > this.smallValue)) {
               // would overflow, convert to large
               this.integerMode = 2;
-              this.largeValue = (BigInteger)this.smallValue;
-              this.largeValue -= BigInteger.valueOf(vsv);
+              this.largeValue = BigInteger.valueOf(this.smallValue);
+              this.largeValue=this.largeValue.subtract(BigInteger.valueOf(vsv));
             } else {
               this.smallValue -= vsv;
             }
@@ -848,8 +834,8 @@ bigrem=divrem[1]; }
             (val > 0 && Integer.MIN_VALUE + val > this.smallValue)) {
           // would overflow, convert to large
           this.integerMode = 2;
-          this.largeValue = (BigInteger)this.smallValue;
-          this.largeValue -= BigInteger.valueOf(val);
+          this.largeValue = BigInteger.valueOf(this.smallValue);
+          this.largeValue=this.largeValue.subtract(BigInteger.valueOf(val));
         } else {
           this.smallValue -= val;
         }
@@ -900,8 +886,8 @@ bigrem=divrem[1]; }
       } else {
         int sign = bigintVal.signum();
         if (sign == 0) {
- return this;
-}
+          return this;
+        }
         // Check if this value fits an int, except if
         // it's MinValue
         if (sign < 0 && bigintVal.compareTo(Int32MinValue) > 0) {
@@ -934,8 +920,8 @@ bigrem=divrem[1]; }
                 this.mnum.Add(val.smallValue);
               } else {
                 this.integerMode = 2;
-                this.largeValue = (BigInteger)this.smallValue;
-                this.largeValue += BigInteger.valueOf(val.smallValue);
+                this.largeValue = BigInteger.valueOf(this.smallValue);
+                this.largeValue=this.largeValue.add(BigInteger.valueOf(val)).smallValue;
               }
             } else {
               this.smallValue += val.smallValue;
@@ -973,7 +959,7 @@ bigrem=divrem[1]; }
      * @param divisor The divisor.
      * @return This object.
      */
-    public FastInteger Mod(int divisor) {
+    public FastInteger Remainder(int divisor) {
       // Mod operator will always result in a
       // number that fits an int for int divisors
       if (divisor != 0) {
@@ -983,13 +969,13 @@ bigrem=divrem[1]; }
             break;
           case 1:
             this.largeValue = this.mnum.ToBigInteger();
-            this.largeValue = this.largeValue.remainder(BigInteger.valueOf(divisor));
-            this.smallValue = (int)this.largeValue;
+            this.largeValue = this.largeValue % BigInteger.valueOf(divisor);
+            this.smallValue = this.largeValue.intValue();
             this.integerMode = 0;
             break;
           case 2:
-            this.largeValue = this.largeValue.remainder(BigInteger.valueOf(divisor));
-            this.smallValue = (int)this.largeValue;
+            this.largeValue = this.largeValue % BigInteger.valueOf(divisor);
+            this.smallValue = this.largeValue.intValue();
             this.integerMode = 0;
             break;
           default:
@@ -1081,7 +1067,7 @@ bigrem=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
+     * Gets a value indicating whether this object&apos;s value is even.
      */
     public boolean isEvenNumber() {
         switch (this.integerMode) {
@@ -1097,9 +1083,9 @@ bigrem=divrem[1]; }
       }
 
     /**
-     * Not documented yet.
+     * Adds a 32-bit signed integer to this instance.
      * @param val A 32-bit signed integer.
-     * @return A FastInteger object.
+     * @return This instance.
      */
     public FastInteger AddInt(int val) {
       BigInteger valValue;
@@ -1114,8 +1100,8 @@ bigrem=divrem[1]; }
               this.mnum.Add(val);
             } else {
               this.integerMode = 2;
-              this.largeValue = (BigInteger)this.smallValue;
-              this.largeValue += BigInteger.valueOf(val);
+              this.largeValue = BigInteger.valueOf(this.smallValue);
+              this.largeValue=this.largeValue.add(BigInteger.valueOf(val));
             }
           } else {
             smallValue += val;
@@ -1146,7 +1132,7 @@ bigrem=divrem[1]; }
      * @return A Boolean object.
      */
     public boolean CanFitInInt32() {
-       switch (this.integerMode) {
+      switch (this.integerMode) {
         case 0:
           return true;
         case 1:
@@ -1164,7 +1150,7 @@ bigrem=divrem[1]; }
      * @return A string representation of this object.
      */
     @Override public String toString() {
-       switch (this.integerMode) {
+      switch (this.integerMode) {
         case 0:
           return Integer.toString((int)this.smallValue);
         case 1:
@@ -1177,10 +1163,10 @@ bigrem=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
+     * Gets the sign of this object&apos;s value.
      */
     public int signum() {
-         switch (this.integerMode) {
+        switch (this.integerMode) {
           case 0:
             return ((this.smallValue==0) ? 0 : ((this.smallValue<0) ? -1 : 1));
           case 1:
@@ -1196,7 +1182,7 @@ bigrem=divrem[1]; }
      * Not documented yet.
      */
     public boolean isValueZero() {
-         switch (this.integerMode) {
+        switch (this.integerMode) {
           case 0:
             return this.smallValue == 0;
           case 1:
@@ -1215,7 +1201,7 @@ bigrem=divrem[1]; }
      * is less, or a positive number if this instance is greater.
      */
     public int CompareToInt(int val) {
-       switch (this.integerMode) {
+      switch (this.integerMode) {
         case 0:
           return (val == this.smallValue) ? 0 : (this.smallValue < val ? -1 : 1);
         case 1:
@@ -1241,7 +1227,7 @@ bigrem=divrem[1]; }
      * @return A BigInteger object.
      */
     public BigInteger AsBigInteger() {
-       switch (this.integerMode) {
+      switch (this.integerMode) {
         case 0:
           return BigInteger.valueOf(this.smallValue);
         case 1:

@@ -14,7 +14,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether the last discarded bit
     /// was set.</summary>
-    /// <value>Whetherthe last discarded bit was set.</value>
+    /// <value>Whether the last discarded bit was set.</value>
     public int LastDiscardedDigit {
       get {
  return this.bitLeftmost;
@@ -26,7 +26,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether any of the discarded bits
     /// to the right of the last one was set.</summary>
-    /// <value>Whetherany of the discarded bits to the right of the last one
+    /// <value>Whether any of the discarded bits to the right of the last one
     /// was set.</value>
     public int OlderDiscardedDigits {
       get {
@@ -48,7 +48,6 @@ namespace PeterO {
 
     /// <summary>Not documented yet.</summary>
     /// <param name='bits'>A FastInteger object.</param>
-    /// <returns></returns>
     public void ShiftToDigits(FastInteger bits) {
       if (bits.Sign < 0) {
  throw new ArgumentException("bits is negative");
@@ -72,7 +71,7 @@ namespace PeterO {
     private bool isSmall;
 
     /// <summary>Not documented yet.</summary>
-    /// <value>Not documented yet.</value>
+    /// <value>Value not documented yet.</value>
     public BigInteger ShiftedInt {
       get {
         if (this.isSmall) {
@@ -84,7 +83,7 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <value>Not documented yet.</value>
+    /// <value>Value not documented yet.</value>
     public FastInteger ShiftedIntFast{
       get {
         if (this.isSmall) {
@@ -106,8 +105,8 @@ namespace PeterO {
 
     public BitShiftAccumulator(
 BigInteger bigint,
-                               int lastDiscarded,
-                               int olderDiscarded)
+int lastDiscarded,
+int olderDiscarded)
                                {
       if (bigint.Sign < 0) {
  throw new ArgumentException("bigint is negative");
@@ -131,7 +130,6 @@ BigInteger bigint,
 
     /// <summary>Not documented yet.</summary>
     /// <param name='fastint'>A FastInteger object.</param>
-    /// <returns></returns>
     public void ShiftRight(FastInteger fastint) {
       if (fastint.Sign <= 0) {
  return;
@@ -323,7 +321,6 @@ BigInteger bigint,
     /// to the right of that bit are set. Assumes that the big integer being
     /// shifted is positive.</summary>
     /// <param name='bits'>A 32-bit signed integer.</param>
-    /// <returns></returns>
     public void ShiftRightInt(int bits) {
       if (this.isSmall) {
  this.ShiftRightSmall(bits);
@@ -375,7 +372,6 @@ BigInteger bigint,
     /// whether the discarded bits to the right of that bit are set. Assumes
     /// that the big integer being shifted is positive.</summary>
     /// <param name='bits'>A 32-bit signed integer.</param>
-    /// <returns></returns>
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
  throw new ArgumentException("bits is negative");

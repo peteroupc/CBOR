@@ -13,8 +13,9 @@ namespace PeterO
   {
     public static int[] DoubleToIntegers(double dbl) {
       long value = BitConverter.ToInt64(
-        BitConverter.GetBytes((double)dbl), 0);
-      return new int[]{
+        BitConverter.GetBytes((double)dbl),
+        0);
+      return new int[] {
         unchecked((int)(value & 0xFFFFFFFFL)),
         unchecked((int)((value >> 32) & 0xFFFFFFFFL))
       };
