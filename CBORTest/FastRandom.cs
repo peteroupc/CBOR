@@ -9,9 +9,9 @@
 using System;
 namespace Test
 {
-    /// <summary> The system's random number generator will be called many
-    /// times during testing. Unfortunately it can be very slow. So we use
-    /// this wrapper class. </summary>
+    /// <summary>The system&apos;s random number generator will be called
+    /// many times during testing. Unfortunately it can be very slow. So we
+    /// use this wrapper class.</summary>
   public class FastRandom
   {
     private const int ReseedCount = 10000;
@@ -37,14 +37,16 @@ namespace Test
       return ((z << 16) | (w & 65535)) & 0x7FFFFFFF;
     }
 
-    /// <summary> Not documented yet. </summary>
-    /// <param name='v'>A 32-bit signed integer. (2)</param>
+    /// <summary>Not documented yet.</summary>
+    /// <param name='v'>A 32-bit signed integer. (2).</param>
     /// <returns>A 32-bit signed integer.</returns>
 public int NextValue(int v) {
       if ((v)<0)throw new ArgumentException(
         "v"+" not greater or equal to "+"0"+" ("+
         Convert.ToString((int)v,System.Globalization.CultureInfo.InvariantCulture)+")");
-      if (v <= 1) { return 0; }
+      if (v <= 1) {
+ return 0;
+}
       if (count >= ReseedCount) {
         // Call the default random number generator
         // every once in a while, to reseed
@@ -60,8 +62,9 @@ public int NextValue(int v) {
       int maxExclusive=(Int32.MaxValue/v)*v;
       while (true) {
         int vi = NextValueInternal();
-        if (vi<maxExclusive)
-          return vi%v;
+        if (vi<maxExclusive) {
+ return vi%v;
+}
       }
     }
   }

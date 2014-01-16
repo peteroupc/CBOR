@@ -11,16 +11,19 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Implements arithmetic operations with CBOR objects.
-     * @param a A CBORObject object. (2)
-     * @param b A CBORObject object. (3)
+     * @param a A CBORObject object. (2).
+     * @param b A CBORObject object. (3).
      * @return A CBORObject object.
      */
   final class CBORObjectMath {
 private CBORObjectMath(){}
-
     public static CBORObject Addition(CBORObject a, CBORObject b) {
-      if (a == null) { throw new NullPointerException("a"); }
-      if (b == null) { throw new NullPointerException("b"); }
+      if (a == null) {
+ throw new NullPointerException("a");
+}
+      if (b == null) {
+ throw new NullPointerException("b");
+}
       int combo = (a.getItemType() << 4) | b.getItemType();
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -56,8 +59,12 @@ private CBORObjectMath(){}
     }
 
     public static CBORObject Subtract(CBORObject a, CBORObject b) {
-      if (a == null) { throw new NullPointerException("a"); }
-      if (b == null) { throw new NullPointerException("b"); }
+      if (a == null) {
+ throw new NullPointerException("a");
+}
+      if (b == null) {
+ throw new NullPointerException("b");
+}
       int combo = (a.getItemType() << 4) | b.getItemType();
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -93,8 +100,12 @@ private CBORObjectMath(){}
     }
 
     public static CBORObject Multiply(CBORObject a, CBORObject b) {
-      if (a == null) { throw new NullPointerException("a"); }
-      if (b == null) { throw new NullPointerException("b"); }
+      if (a == null) {
+ throw new NullPointerException("a");
+}
+      if (b == null) {
+ throw new NullPointerException("b");
+}
       int combo = (a.getItemType() << 4) | b.getItemType();
       BigInteger bvalueA;
       BigInteger bvalueB;

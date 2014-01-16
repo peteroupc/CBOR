@@ -22,7 +22,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     Boolean,
     /**
-     * A "simple value" other than floating point values, true, and false.
+     * A &quot;simple value&quot; other than floating point values, true,
+     * and false.
      */
     SimpleValue,
     /**

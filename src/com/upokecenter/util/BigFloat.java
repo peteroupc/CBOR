@@ -17,30 +17,37 @@ at: http://peteroupc.github.io/CBOR/
  */
 @Deprecated
   public final class BigFloat implements Comparable<BigFloat> {
-    BigInteger exponent;
-    BigInteger mantissa;
+    private BigInteger exponent;
+    private BigInteger mantissa;
     /**
-     * Gets this object's exponent. This object's value will be an integer
-     * if the exponent is positive or zero.
+     * Gets this object&apos;s exponent. This object&apos;s value will
+     * be an integer if the exponent is positive or zero.
      */
-    public BigInteger getExponent() { return this.exponent; }
-    /**
-     * Gets this object's unscaled value.
-     */
-    public BigInteger getMantissa() { return this.mantissa; }
+    public BigInteger getExponent() {
+ return this.exponent;
+}
 
     /**
-     * Determines whether this object's mantissa and exponent are equal
-     * to those of another object.
+     * Gets this object&apos;s unscaled value.
+     */
+    public BigInteger getMantissa() {
+ return this.mantissa;
+}
+
+    /**
+     * Determines whether this object&apos;s mantissa and exponent are
+     * equal to those of another object.
      * @param other A BigFloat object.
      */
     private boolean EqualsInternal(BigFloat other) {
       BigFloat otherValue = ((other instanceof BigFloat) ? (BigFloat)other : null);
-      if (otherValue == null)
-        return false;
+      if (otherValue == null) {
+ return false;
+}
       return this.exponent.equals(otherValue.exponent) &&
         this.mantissa.equals(otherValue.mantissa);
     }
+
     /**
      * Not documented yet.
      * @param other A BigFloat object.
@@ -49,18 +56,20 @@ at: http://peteroupc.github.io/CBOR/
     public boolean equals(BigFloat other) {
       return this.EqualsInternal(other);
     }
+
     /**
-     * Determines whether this object's mantissa and exponent are equal
-     * to those of another object and that object is a Bigfloat.
+     * Determines whether this object&apos;s mantissa and exponent are
+     * equal to those of another object and that object is a Bigfloat.
      * @param obj An arbitrary object.
      * @return True if the objects are equal; false otherwise.
      */
     @Override public boolean equals(Object obj) {
       return this.EqualsInternal(((obj instanceof BigFloat) ? (BigFloat)obj : null));
     }
+
     /**
-     * Calculates this object's hash code.
-     * @return This object&apos; s hash code.
+     * Calculates this object&apos;s hash code.
+     * @return This object&apos;s hash code.
      */
     @Override public int hashCode() {
       int hashCode_ = 0;
@@ -72,7 +81,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Creates a bigfloat with the value exponent*2^mantissa.
+     * Creates a binary floating-point number with the value exponent*2^mantissa.
      * @param mantissa The unscaled value.
      * @param exponent The binary exponent.
      */
@@ -124,15 +133,16 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     public static BigFloat FromExtendedFloat(ExtendedFloat ef) {
-      if (ef.IsNaN() || ef.IsInfinity())throw new ArithmeticException("Is NaN or infinity");
+      if (ef.IsNaN() || ef.IsInfinity()) throw new ArithmeticException("Is NaN or infinity");
       return new BigFloat(ef.getMantissa(), ef.getExponent());
     }
 
     /**
-     * Creates a bigfloat from its string representation. Note that if the
-     * bigfloat contains a negative exponent, the resulting value might
-     * not be exact. However, it will contain enough precision to accurately
-     * convert it to a 32-bit or 64-bit floating point number (float or double).
+     * Creates a binary floating-point number from its string representation.
+     * Note that if the binary floating-point number contains a negative
+     * exponent, the resulting value might not be exact. However, it will
+     * contain enough precision to accurately convert it to a 32-bit or 64-bit
+     * floating point number (float or double).
      * @param str A string object.
      * @return A BigFloat object.
      */
@@ -141,7 +151,8 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Creates a bigfloat from a 32-bit floating-point number.
+     * Creates a binary floating-point number from a 32-bit floating-point
+     * number.
      * @param flt A 32-bit floating-point number.
      * @return A bigfloat with the same value as &quot; flt&quot; .
      * @throws ArithmeticException &quot;flt&quot; is infinity or not-a-number.
@@ -149,15 +160,18 @@ at: http://peteroupc.github.io/CBOR/
     public static BigFloat FromSingle(float flt) {
       return BigFloat.FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
+
     /**
-     * Creates a bigfloat from a 64-bit floating-point number.
+     * Creates a binary floating-point number from a 64-bit floating-point
+     * number.
      * @param dbl A 64-bit floating-point number.
-     * @return A bigfloat with the same value as &quot; dbl&quot;.
+     * @return A bigfloat with the same value as &quot; dbl&quot; .
      * @throws ArithmeticException &quot;dbl&quot; is infinity or not-a-number.
      */
     public static BigFloat FromDouble(double dbl) {
       return BigFloat.FromExtendedFloat(ExtendedFloat.FromDouble(dbl));
     }
+
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
@@ -188,6 +202,7 @@ at: http://peteroupc.github.io/CBOR/
     public double ToDouble() {
       return ExtendedFloat.Create(this.getMantissa(), this.getExponent()).ToDouble();
     }
+
     /**
      * Converts this value to a string.The format of the return value is exactly
      * the same as that of the java.math.BigDecimal.toString() method.
@@ -196,6 +211,7 @@ at: http://peteroupc.github.io/CBOR/
     @Override public String toString() {
       return ExtendedFloat.Create(this.getMantissa(), this.getExponent()).toString();
     }
+
     /**
      * Same as toString(), except that when an exponent is used it will be
      * a multiple of 3. The format of the return value follows the format of
@@ -205,6 +221,7 @@ at: http://peteroupc.github.io/CBOR/
     public String ToEngineeringString() {
       return ExtendedFloat.Create(this.getMantissa(), this.getExponent()).ToEngineeringString();
     }
+
     /**
      * Converts this value to a string, but without an exponent part. The
      * format of the return value follows the format of the java.math.BigDecimal.toPlainString()
@@ -233,7 +250,6 @@ at: http://peteroupc.github.io/CBOR/
     public static final BigFloat Ten = FromInt64((long)10);
 
     private static final class BinaryMathHelper implements IRadixMathHelper<BigFloat> {
-
     /**
      * Not documented yet.
      * @return A 32-bit signed integer.
@@ -271,24 +287,28 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Not documented yet.
-     * @param mantissa A BigInteger object. (2)
-     * @param e1 A BigInteger object. (3)
-     * @param e2 A BigInteger object. (4)
+     * @param mantissa A BigInteger object. (2).
+     * @param e1 A BigInteger object. (3).
+     * @param e2 A BigInteger object. (4).
      * @return A BigInteger object.
      */
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
         boolean negative = mantissa.signum() < 0;
-        if (negative) mantissa=mantissa.negate();
+        if (negative) {
+ mantissa=mantissa.negate();
+}
         BigInteger diff = (e1.subtract(e2)).abs();
         mantissa = ShiftLeft(mantissa, diff);
-        if (negative) mantissa=mantissa.negate();
+        if (negative) {
+ mantissa=mantissa.negate();
+}
         return mantissa;
       }
 
     /**
      * Not documented yet.
      * @param lastDigit A 32-bit signed integer.
-     * @param olderDigits A 32-bit signed integer. (2)
+     * @param olderDigits A 32-bit signed integer. (2).
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
@@ -308,12 +328,14 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      * @param num A BigInteger object.
-     * @param den A BigInteger object. (2)
+     * @param den A BigInteger object. (2).
      * @return A Boolean object.
      */
       public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
         BigInteger gcd = num.gcd(den);
-        if (gcd.signum()==0) { return false; }
+        if (gcd.signum()==0) {
+ return false;
+}
         den=den.divide(gcd);
         while (den.testBit(0)==false) {
           den=den.shiftRight(1);
@@ -323,12 +345,14 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Not documented yet.
-     * @param bigint A BigInteger object. (2)
+     * @param bigint A BigInteger object. (2).
      * @param power A FastInteger object.
      * @return A BigInteger object.
      */
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
-        if (power.signum() <= 0) { return bigint; }
+        if (power.signum() <= 0) {
+ return bigint;
+}
         if (power.CanFitInInt32()) {
           return ShiftLeftInt(bigint, power.AsInt32());
         } else {
@@ -348,7 +372,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      * @param mantissa A BigInteger object.
-     * @param exponent A BigInteger object. (2)
+     * @param exponent A BigInteger object. (2).
      * @param flags A 32-bit signed integer.
      * @return A BigFloat object.
      */
@@ -358,6 +382,7 @@ at: http://peteroupc.github.io/CBOR/
           mantissa=mantissa.negate();
         return new BigFloat(mantissa, exponent);
       }
+
     /**
      * Not documented yet.
      * @return A 32-bit signed integer.
@@ -378,17 +403,20 @@ at: http://peteroupc.github.io/CBOR/
 
     //----------------------------
     /**
-     * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+     * Gets this value&apos;s sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
         return this.mantissa.signum();
       }
+
     /**
-     * Gets whether this object's value equals 0.
+     * Gets a value indicating whether this object&apos;s value equals
+     * 0.
      */
     public boolean isZero() {
         return this.mantissa.signum()==0;
       }
+
     /**
      * Gets the absolute value of this object.
      * @return A BigFloat object.
@@ -406,8 +434,8 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Divides this object by another bigfloat and returns the result. When
-     * possible, the result will be exact.
+     * Divides this object by another binary floating-point number and
+     * returns the result. When possible, the result will be exact.
      * @param divisor The divisor.
      * @return The quotient of the two numbers.
      * @throws ArithmeticException Attempted to divide by zero.
@@ -419,8 +447,8 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Divides this object by another bigfloat and returns a result with
-     * the same exponent as this object (the dividend).
+     * Divides this object by another binary floating-point number and
+     * returns a result with the same exponent as this object (the dividend).
      * @param divisor The divisor.
      * @param rounding The rounding mode to use if the result must be scaled
      * down to have the same exponent as this value.
@@ -435,8 +463,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Divides two BigFloat objects, and returns the integer part of the
-     * result, rounded down, with the preferred exponent set to this value's
-     * exponent minus the divisor's exponent.
+     * result, rounded down, with the preferred exponent set to this value&apos;s
+     * exponent minus the divisor&apos;s exponent.
      * @param divisor The divisor.
      * @return The integer part of the quotient of the two objects.
      * @throws ArithmeticException Attempted to divide by zero.
@@ -447,7 +475,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Removes trailing zeros from this object's mantissa. For example,
+     * Removes trailing zeros from this object&apos;s mantissa. For example,
      * 1.000 becomes 1.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
@@ -463,9 +491,10 @@ at: http://peteroupc.github.io/CBOR/
       PrecisionContext ctx) {
       return math.Reduce(this, ctx);
     }
+
     /**
      * Not documented yet.
-     * @param divisor A BigFloat object. (2)
+     * @param divisor A BigFloat object. (2).
      * @return A BigFloat object.
      */
     public BigFloat RemainderNaturalScale(
@@ -475,7 +504,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Not documented yet.
-     * @param divisor A BigFloat object. (2)
+     * @param divisor A BigFloat object. (2).
      * @param ctx A PrecisionContext object.
      * @return A BigFloat object.
      */
@@ -584,8 +613,8 @@ this.DivideToIntegerNaturalScale(divisor, null)
     }
 
     /**
-     * Finds the absolute value of this object (if it's negative, it becomes
-     * positive).
+     * Finds the absolute value of this object (if it&apos;s negative, it
+     * becomes positive).
      * @param context A precision context to control precision, rounding,
      * and exponent range of the result. If HasFlags of the context is true,
      * will also store the flags resulting from the operation (the flags
@@ -601,8 +630,8 @@ this.DivideToIntegerNaturalScale(divisor, null)
     }
 
     /**
-     * Returns a bigfloat with the same value as this object but with the sign
-     * reversed.
+     * Returns a binary floating-point number with the same value as this
+     * object but with the sign reversed.
      * @param context A precision context to control precision, rounding,
      * and exponent range of the result. If HasFlags of the context is true,
      * will also store the flags resulting from the operation (the flags
@@ -615,12 +644,15 @@ this.DivideToIntegerNaturalScale(divisor, null)
     }
 
     /**
-     * Adds this object and another bigfloat and returns the result.
+     * Adds this object and another binary floating-point number and returns
+     * the result.
      * @param decfrac A BigFloat object.
      * @return The sum of the two objects.
      */
     public BigFloat Add(BigFloat decfrac) {
-      if (decfrac == null) { throw new NullPointerException("decfrac"); }
+      if (decfrac == null) {
+ throw new NullPointerException("decfrac");
+}
       return this.Add(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -645,24 +677,30 @@ this.DivideToIntegerNaturalScale(divisor, null)
      * exponent range.
      */
     public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
-      if (decfrac == null) { throw new NullPointerException("decfrac"); }
+      if (decfrac == null) {
+ throw new NullPointerException("decfrac");
+}
       return this.Add(decfrac.Negate(null), ctx);
     }
+
     /**
-     * Multiplies two bigfloats. The resulting scale will be the sum of the
-     * scales of the two bigfloats.
+     * Multiplies two binary floating-point numbers. The resulting scale
+     * will be the sum of the scales of the two binary floating-point numbers.
      * @param decfrac Another bigfloat.
      * @return The product of the two bigfloats. If a precision context is
      * given, returns null if the result of the rounding overflowed the exponent
      * range.
      */
     public BigFloat Multiply(BigFloat decfrac) {
-      if (decfrac == null) { throw new NullPointerException("decfrac"); }
+      if (decfrac == null) {
+ throw new NullPointerException("decfrac");
+}
       return this.Multiply(decfrac, PrecisionContext.Unlimited);
     }
 
     /**
-     * Multiplies by one bigfloat, and then adds another bigfloat.
+     * Multiplies by one binary floating-point number, and then adds another
+     * binary floating-point number.
      * @param multiplicand The value to multiply.
      * @param augend The value to add.
      * @return The result this * multiplicand + augend.
@@ -679,13 +717,13 @@ BigFloat multiplicand,
 
     /**
      * Divides this object by another object, and returns the integer part
-     * of the result, with the preferred exponent set to this value's exponent
-     * minus the divisor's exponent.
+     * of the result, with the preferred exponent set to this value&apos;s
+     * exponent minus the divisor&apos;s exponent.
      * @param divisor The divisor.
      * @param ctx A precision context object to control the precision, rounding,
      * and exponent range of the integer part of the result. Flags will be
-     * set on the given context only if the context&apos; s HasFlags is true
-     * and the integer part of the result doesn&apos; t fit the precision
+     * set on the given context only if the context&apos;s HasFlags is true
+     * and the integer part of the result doesn&apos;t fit the precision
      * and exponent range without rounding.
      * @return The integer part of the quotient of the two objects. If a precision
      * context is given, returns null if the result of the rounding overflowed
@@ -737,10 +775,11 @@ BigFloat multiplicand,
       BigFloat divisor, PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
     }
+
     /**
      * Finds the distance to the closest multiple of the given divisor, based
-     * on the result of dividing this object's value by another object's
-     * value. <ul> <li> If this and the other object divide evenly, the result
+     * on the result of dividing this object&apos;s value by another object&apos;s
+     * value.<ul> <li> If this and the other object divide evenly, the result
      * is 0.</li> <li>If the remainder's absolute value is less than half
      * of the divisor's absolute value, the result has the same sign as this
      * object and will be the distance to the closest multiple.</li> <li>If
@@ -770,15 +809,15 @@ BigFloat multiplicand,
     }
 
     /**
-     * Finds the largest value that's smaller than the given value.
+     * Finds the largest value that&apos;s smaller than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the largest value that&apos; s less than the given
+     * @return Returns the largest value that&apos;s less than the given
      * value. Returns null if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
-     * precision is 0, or &quot;ctx&quot; has an unlimited exponent range.
+     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
      */
     public BigFloat NextMinus(
       PrecisionContext ctx) {
@@ -786,15 +825,15 @@ BigFloat multiplicand,
     }
 
     /**
-     * Finds the smallest value that's greater than the given value.
+     * Finds the smallest value that&apos;s greater than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the smallest value that&apos; s greater than the
+     * @return Returns the smallest value that&apos;s greater than the
      * given value. Returns null if the result is positive infinity.
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
-     * precision is 0, or &quot;ctx&quot; has an unlimited exponent range.
+     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
      */
     public BigFloat NextPlus(
       PrecisionContext ctx) {
@@ -802,18 +841,18 @@ BigFloat multiplicand,
     }
 
     /**
-     * Finds the next value that is closer to the other object's value than
-     * this object's value.
+     * Finds the next value that is closer to the other object&apos;s value
+     * than this object&apos;s value.
      * @param otherValue A BigFloat object.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
      * @return Returns the next value that is closer to the other object&apos;
-     * s value than this object&apos; s value. Returns null if the result
+     * s value than this object&apos;s value. Returns null if the result
      * is infinity.
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
-     * precision is 0, or &quot;ctx&quot; has an unlimited exponent range.
+     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
      */
     public BigFloat NextToward(
       BigFloat otherValue,
@@ -823,8 +862,8 @@ BigFloat multiplicand,
 
     /**
      * Divides this BigFloat object by another BigFloat object. The preferred
-     * exponent for the result is this object's exponent minus the divisor's
-     * exponent.
+     * exponent for the result is this object&apos;s exponent minus the
+     * divisor&apos;s exponent.
      * @param divisor The divisor.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
@@ -846,9 +885,9 @@ BigFloat multiplicand,
     }
 
     /**
-     * Gets the greater value between two bigfloats.
+     * Gets the greater value between two binary floating-point numbers.
      * @param first A BigFloat object.
-     * @param second A BigFloat object. (2)
+     * @param second A BigFloat object. (2).
      * @return The larger value of the two objects.
      */
     public static BigFloat Max(
@@ -857,20 +896,21 @@ BigFloat multiplicand,
     }
 
     /**
-     * Gets the lesser value between two bigfloats.
+     * Gets the lesser value between two binary floating-point numbers.
      * @param first A BigFloat object.
-     * @param second A BigFloat object. (2)
+     * @param second A BigFloat object. (2).
      * @return The smaller value of the two objects.
      */
     public static BigFloat Min(
       BigFloat first, BigFloat second) {
       return math.Min(first, second, null);
     }
+
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param first A BigFloat object. (2)
-     * @param second A BigFloat object. (3)
+     * @param first A BigFloat object. (2).
+     * @param second A BigFloat object. (3).
      * @return A BigFloat object.
      */
     public static BigFloat MaxMagnitude(
@@ -881,22 +921,23 @@ BigFloat multiplicand,
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param first A BigFloat object. (2)
-     * @param second A BigFloat object. (3)
+     * @param first A BigFloat object. (2).
+     * @param second A BigFloat object. (3).
      * @return A BigFloat object.
      */
     public static BigFloat MinMagnitude(
       BigFloat first, BigFloat second) {
       return math.MinMagnitude(first, second, null);
     }
+
     /**
-     * Compares the mathematical values of this object and another object.
-     * <p> This method is not consistent with the Equals method because two
-     * different bigfloats with the same mathematical value, but different
-     * exponents, will compare as equal.</p>
+     * Compares the mathematical values of this object and another object.<p>
+     * This method is not consistent with the Equals method because two different
+     * bigfloats with the same mathematical value, but different exponents,
+     * will compare as equal.</p>
      * @param other A BigFloat object.
-     * @return Less than 0 if this object&apos; s value is less than the other
-     * value, or greater than 0 if this object&apos; s value is greater than
+     * @return Less than 0 if this object&apos;s value is less than the other
+     * value, or greater than 0 if this object&apos;s value is greater than
      * the other value or if &quot; other&quot; is null, or 0 if both values
      * are equal.
      */
@@ -907,7 +948,7 @@ BigFloat multiplicand,
 
     /**
      * Compares a BigFloat object with this instance.
-     * @param other A BigFloat object. (2)
+     * @param other A BigFloat object. (2).
      * @param ctx A PrecisionContext object.
      * @return A BigFloat object.
      */
@@ -918,7 +959,7 @@ BigFloat multiplicand,
 
     /**
      * Compares a BigFloat object with this instance.
-     * @param other A BigFloat object. (2)
+     * @param other A BigFloat object. (2).
      * @param ctx A PrecisionContext object.
      * @return A BigFloat object.
      */
@@ -928,8 +969,8 @@ BigFloat multiplicand,
     }
 
     /**
-     * Finds the sum of this object and another object. The result's exponent
-     * is set to the lower of the exponents of the two operands.
+     * Finds the sum of this object and another object. The result&apos;s
+     * exponent is set to the lower of the exponents of the two operands.
      * @param decfrac The number to add to.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
@@ -945,7 +986,8 @@ BigFloat multiplicand,
     }
 
     /**
-     * Returns a bigfloat with the same value but a new exponent.
+     * Returns a binary floating-point number with the same value but a new
+     * exponent.
      * @param desiredExponent The desired exponent of the result.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
@@ -965,7 +1007,8 @@ BigFloat multiplicand,
     }
 
     /**
-     * Returns a bigfloat with the same value but a new exponent.
+     * Returns a binary floating-point number with the same value but a new
+     * exponent.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
@@ -985,8 +1028,9 @@ BigFloat multiplicand,
     }
 
     /**
-     * Returns a bigfloat with the same value as this object but with the same
-     * exponent as another bigfloat.
+     * Returns a binary floating-point number with the same value as this
+     * object but with the same exponent as another binary floating-point
+     * number.
      * @param otherValue A bigfloat containing the desired exponent of
      * the result. The mantissa is ignored.
      * @param ctx A precision context to control precision and rounding
@@ -1006,9 +1050,10 @@ BigFloat multiplicand,
       BigFloat otherValue, PrecisionContext ctx) {
       return math.Quantize(this, otherValue, ctx);
     }
+
     /**
-     * Returns a bigfloat with the same value as this object but rounded to
-     * an integer.
+     * Returns a binary floating-point number with the same value as this
+     * object but rounded to an integer.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
@@ -1026,9 +1071,11 @@ BigFloat multiplicand,
       PrecisionContext ctx) {
       return math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     }
+
     /**
-     * Returns a bigfloat with the same value as this object but rounded to
-     * an integer, without adding the FlagInexact or FlagRounded flags.
+     * Returns a binary floating-point number with the same value as this
+     * object but rounded to an integer, without adding the FlagInexact
+     * or FlagRounded flags.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
@@ -1048,9 +1095,10 @@ BigFloat multiplicand,
       PrecisionContext ctx) {
       return math.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
     }
+
     /**
-     * Returns a bigfloat with the same value as this object but rounded to
-     * a given exponent.
+     * Returns a binary floating-point number with the same value as this
+     * object but rounded to a given exponent.
      * @param exponent The minimum exponent the result can have. This is
      * the maximum number of fractional digits in the result, expressed
      * as a negative number. Can also be positive, which eliminates lower-order
@@ -1073,10 +1121,11 @@ BigFloat multiplicand,
       BigInteger exponent, PrecisionContext ctx) {
       return math.RoundToExponentExact(this, exponent, ctx);
     }
+
     /**
-     * Returns a bigfloat with the same value as this object but rounded to
-     * a given exponent, without throwing an exception if the result overflows
-     * or doesn't fit the precision range.
+     * Returns a binary floating-point number with the same value as this
+     * object but rounded to a given exponent, without throwing an exception
+     * if the result overflows or doesn&apos;t fit the precision range.
      * @param exponent The minimum exponent the result can have. This is
      * the maximum number of fractional digits in the result, expressed
      * as a negative number. Can also be positive, which eliminates lower-order
@@ -1089,7 +1138,7 @@ BigFloat multiplicand,
      * addition to the pre-existing flags). Can be null, in which case the
      * default rounding mode is HalfEven.
      * @return A bigfloat rounded to the closest value representable in
-     * the given precision, meaning if the result can&apos; t fit the precision,
+     * the given precision, meaning if the result can&apos;t fit the precision,
      * additional digits are discarded to make it fit. If a precision context
      * is given, returns null if the result of the rounding overflowed the
      * exponent range.
@@ -1103,8 +1152,8 @@ BigFloat multiplicand,
     }
 
     /**
-     * Multiplies two bigfloats. The resulting scale will be the sum of the
-     * scales of the two bigfloats.
+     * Multiplies two binary floating-point numbers. The resulting scale
+     * will be the sum of the scales of the two binary floating-point numbers.
      * @param op Another bigfloat.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
@@ -1118,6 +1167,7 @@ BigFloat multiplicand,
       BigFloat op, PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);
     }
+
     /**
      * Multiplies by one value, and then adds another value.
      * @param op The value to multiply.
@@ -1134,12 +1184,13 @@ BigFloat multiplicand,
       BigFloat op, BigFloat augend, PrecisionContext ctx) {
       return math.MultiplyAndAdd(this, op, augend, ctx);
     }
+
     /**
-     * Rounds this object's value to a given precision, using the given rounding
-     * mode and range of exponent.
+     * Rounds this object&apos;s value to a given precision, using the given
+     * rounding mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
-     * @return The closest value to this object&apos; s value, rounded to
+     * @return The closest value to this object&apos;s value, rounded to
      * the specified precision. Returns the same value as this object if
      * &quot; context&quot; is null or the precision and exponent range
      * are unlimited. If a precision context is given, returns null if the
@@ -1151,12 +1202,12 @@ BigFloat multiplicand,
     }
 
     /**
-     * Rounds this object's value to a given maximum bit length, using the
-     * given rounding mode and range of exponent.
+     * Rounds this object&apos;s value to a given maximum bit length, using
+     * the given rounding mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. The precision is interpreted as the maximum bit
      * length of the mantissa. Can be null.
-     * @return The closest value to this object&apos; s value, rounded to
+     * @return The closest value to this object&apos;s value, rounded to
      * the specified precision. Returns the same value as this object if
      * &quot; context&quot; is null or the precision and exponent range
      * are unlimited. Returns null if the result of the rounding overflowed
@@ -1166,6 +1217,5 @@ BigFloat multiplicand,
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
     }
-
   }
 

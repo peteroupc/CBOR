@@ -22,6 +22,5 @@ private Extras(){}
       value |= (((long)integers[1]) & 0xFFFFFFFFL) << 32;
       return Double.longBitsToDouble(value);
     }
-
   }
 

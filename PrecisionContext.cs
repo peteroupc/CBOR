@@ -8,112 +8,157 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 // using System.Numerics;
 namespace PeterO {
-    /// <summary> Contains parameters for controlling the precision, rounding,
-    /// and exponent range of arbitrary-precision numbers. </summary>
+    /// <summary>Contains parameters for controlling the precision, rounding,
+    /// and exponent range of arbitrary-precision numbers.</summary>
   public class PrecisionContext {
-    BigInteger exponentMax;
-    /// <summary> Gets the highest exponent possible when a converted number
+    private BigInteger exponentMax;
+    /// <summary>Gets the highest exponent possible when a converted number
     /// is expressed in scientific notation with one digit before the decimal
     /// point. For example, with a precision of 3 and an EMax of 100, the maximum
     /// value possible is 9.99E + 100. (This is not the same as the highest possible
     /// Exponent property.) If HasExponentRange is false, this value will
     /// be 0.</summary>
+    /// <value>The highest exponent possible when a converted number is
+    /// expressed in scientific notation with one digit before the decimal
+    /// point. For example, with a precision of 3 and an EMax of 100, the maximum
+    /// value possible is 9.99E + 100. (This is not the same as the highest possible
+    /// Exponent property.) If HasExponentRange is false, this value will
+    /// be 0.</value>
     public BigInteger EMax {
-      get { return this.hasExponentRange ? this.exponentMax : BigInteger.Zero; }
+      get {
+ return this.hasExponentRange ? this.exponentMax : BigInteger.Zero;
+}
     }
 
-    BigInteger exponentMin;
+    private BigInteger exponentMin;
 
-    bool hasExponentRange;
-    /// <summary> Gets whether this context defines a minimum and maximum
-    /// exponent. If false, converted exponents can have any exponent. </summary>
+    private bool hasExponentRange;
+    /// <summary>Gets a value indicating whether this context defines a
+    /// minimum and maximum exponent. If false, converted exponents can
+    /// have any exponent.</summary>
+    /// <value>Whetherthis context defines a minimum and maximum exponent.
+    /// If false, converted exponents can have any exponent.</value>
     public bool HasExponentRange {
-      get { return this.hasExponentRange; }
+      get {
+ return this.hasExponentRange;
+}
     }
 
-    /// <summary> Gets the lowest exponent possible when a converted number
+    /// <summary>Gets the lowest exponent possible when a converted number
     /// is expressed in scientific notation with one digit before the decimal
     /// point. For example, with a precision of 3 and an EMin of -100, the next
     /// value that comes after 0 is 0.001E-100. (This is not the same as the
     /// lowest possible Exponent property.) If HasExponentRange is false,
     /// this value will be 0.</summary>
+    /// <value>The lowest exponent possible when a converted number is expressed
+    /// in scientific notation with one digit before the decimal point. For
+    /// example, with a precision of 3 and an EMin of -100, the next value that
+    /// comes after 0 is 0.001E-100. (This is not the same as the lowest possible
+    /// Exponent property.) If HasExponentRange is false, this value will
+    /// be 0.</value>
     public BigInteger EMin {
-      get { return this.hasExponentRange ? this.exponentMin : BigInteger.Zero; }
+      get {
+ return this.hasExponentRange ? this.exponentMin : BigInteger.Zero;
+}
     }
 
-    BigInteger bigintPrecision;
+    private BigInteger bigintPrecision;
 
-    /// <summary> Gets the maximum length of a converted number in digits,
+    /// <summary>Gets the maximum length of a converted number in digits,
     /// ignoring the decimal point and exponent. For example, if precision
-    /// is 3, a converted number's mantissa can range from 0 to 999 (up to three
-    /// digits long). If 0, converted numbers can have any precision. </summary>
+    /// is 3, a converted number&apos;s mantissa can range from 0 to 999 (up
+    /// to three digits long). If 0, converted numbers can have any precision.</summary>
+    /// <value>The maximum length of a converted number in digits, ignoring
+    /// the decimal point and exponent. For example, if precision is 3, a converted
+    /// number&apos;s mantissa can range from 0 to 999 (up to three digits
+    /// long). If 0, converted numbers can have any precision.</value>
     public BigInteger Precision {
-      get { return this.bigintPrecision; }
+      get {
+ return this.bigintPrecision;
+}
     }
 
-    Rounding rounding;
+    private Rounding rounding;
 
-    bool clampNormalExponents;
+    private bool clampNormalExponents;
 
-    /// <summary> If true, a converted number's Exponent property will not
-    /// be higher than EMax + 1 - Precision. If a number's exponent is higher
-    /// than that value, but not high enough to cause overflow, the exponent
-    /// is clamped to that value and enough zeros are added to the number's
-    /// mantissa to account for the adjustment. If HasExponentRange is false,
-    /// this value is always false.</summary>
+    /// <summary>If true, a converted number&apos;s Exponent property
+    /// will not be higher than EMax + 1 - Precision. If a number&apos;s exponent
+    /// is higher than that value, but not high enough to cause overflow, the
+    /// exponent is clamped to that value and enough zeros are added to the
+    /// number&apos;s mantissa to account for the adjustment. If HasExponentRange
+    /// is false, this value is always false.</summary>
+    /// <value>If true, a converted number&apos;s Exponent property will
+    /// not be higher than EMax + 1 - Precision. If a number&apos;s exponent
+    /// is higher than that value, but not high enough to cause overflow, the
+    /// exponent is clamped to that value and enough zeros are added to the
+    /// number&apos;s mantissa to account for the adjustment. If HasExponentRange
+    /// is false, this value is always false.</value>
     public bool ClampNormalExponents {
-      get { return this.hasExponentRange ? this.clampNormalExponents : false; }
+      get {
+ return this.hasExponentRange ? this.clampNormalExponents : false;
+}
     }
 
-    /// <summary> Gets the desired rounding mode when converting numbers
-    /// that can't be represented in the given precision and exponent range.
-    /// </summary>
+    /// <summary>Gets the desired rounding mode when converting numbers
+    /// that can&apos;t be represented in the given precision and exponent
+    /// range.</summary>
+    /// <value>The desired rounding mode when converting numbers that can&apos;t
+    /// be represented in the given precision and exponent range.</value>
     public Rounding Rounding {
-      get { return this.rounding; }
+      get {
+ return this.rounding;
+}
     }
 
-    int flags;
-    bool hasFlags;
+    private int flags;
+    private bool hasFlags;
 
-    /// <summary> Returns whether this context has a mutable Flags field.
-    /// </summary>
+    /// <summary>Returns whether this context has a mutable Flags field.</summary>
+    /// <value>Returns whether this context has a mutable Flags field.</value>
     public bool HasFlags {
-      get { return this.hasFlags; }
+      get {
+ return this.hasFlags;
+}
     }
 
-    /// <summary> Signals that the result was rounded to a different mathematical
-    /// value, but as close as possible to the original. </summary>
+    /// <summary>Signals that the result was rounded to a different mathematical
+    /// value, but as close as possible to the original.</summary>
     public const int FlagInexact = 1;
-    /// <summary> Signals that the result was rounded to fit the precision;
-    /// either the value or the exponent may have changed from the original.
-    /// </summary>
+    /// <summary>Signals that the result was rounded to fit the precision;
+    /// either the value or the exponent may have changed from the original.</summary>
     public const int FlagRounded = 2;
-    /// <summary> Signals that the result's exponent, before rounding,
-    /// is lower than the lowest exponent allowed. </summary>
+    /// <summary>Signals that the result&apos;s exponent, before rounding,
+    /// is lower than the lowest exponent allowed.</summary>
     public const int FlagSubnormal = 4;
-    /// <summary> Signals that the result's exponent, before rounding,
+    /// <summary>Signals that the result&apos;s exponent, before rounding,
     /// is lower than the lowest exponent allowed, and the result was rounded
     /// to a different mathematical value, but as close as possible to the
-    /// original. </summary>
+    /// original.</summary>
     public const int FlagUnderflow = 8;
-    /// <summary> Signals that the result is non-zero and the exponent is
-    /// higher than the highest exponent allowed. </summary>
+    /// <summary>Signals that the result is non-zero and the exponent is
+    /// higher than the highest exponent allowed.</summary>
     public const int FlagOverflow = 16;
-    /// <summary> Signals that the exponent was adjusted to fit the exponent
-    /// range. </summary>
+    /// <summary>Signals that the exponent was adjusted to fit the exponent
+    /// range.</summary>
     public const int FlagClamped = 32;
-    /// <summary> Signals an invalid operation. </summary>
+    /// <summary>Signals an invalid operation.</summary>
     public const int FlagInvalid = 64;
-    /// <summary> Signals a division of a nonzero number by zero. </summary>
+    /// <summary>Signals a division of a nonzero number by zero.</summary>
     public const int FlagDivideByZero = 128;
-    /// <summary> Gets the flags that are set from converting numbers according
+    /// <summary>Gets the flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be
-    /// 0. </summary>
+    /// 0.</summary>
+    /// <value>The flags that are set from converting numbers according
+    /// to this precision context. If HasFlags is false, this value will be
+    /// 0.</value>
     public int Flags {
-      get { return this.flags; }
+      get {
+ return this.flags;
+}
 
-    /// <summary> Sets the flags that occur from converting numbers according
-    /// to this precision context. </summary>
+    /// <summary>Sets the flags that occur from converting numbers according
+    /// to this precision context.</summary>
     /// <exception cref='InvalidOperationException'>HasFlags is false.</exception>
       set {
         if (!this.HasFlags) {
@@ -123,13 +168,16 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='exponent'>A BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
     public bool ExponentWithinRange(BigInteger exponent) {
-      if (exponent == null) { throw new ArgumentNullException("exponent"); }
-      if (!this.HasExponentRange)
-        return true;
+      if (exponent == null) {
+ throw new ArgumentNullException("exponent");
+}
+      if (!this.HasExponentRange) {
+ return true;
+}
       if (this.bigintPrecision.IsZero) {
         // Only check EMax, since with an unlimited
         // precision, any exponent less than EMin will exceed EMin if
@@ -139,16 +187,18 @@ namespace PeterO {
         BigInteger bigint = exponent;
         bigint += (BigInteger)this.bigintPrecision;
         bigint -= BigInteger.One;
-        if (bigint.CompareTo(this.EMin) < 0)
-          return false;
-        if (exponent.CompareTo(this.EMax) > 0)
-          return false;
+        if (bigint.CompareTo(this.EMin) < 0) {
+ return false;
+}
+        if (exponent.CompareTo(this.EMax) > 0) {
+ return false;
+}
         return true;
       }
     }
 
-    /// <summary> Copies this PrecisionContext with the specified rounding
-    /// mode. </summary>
+    /// <summary>Copies this PrecisionContext with the specified rounding
+    /// mode.</summary>
     /// <returns>A PrecisionContext object.</returns>
     /// <param name='rounding'>A Rounding object.</param>
     public PrecisionContext WithRounding(Rounding rounding) {
@@ -157,8 +207,8 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary> Copies this PrecisionContext with HasFlags set to true
-    /// and a Flags value of 0. </summary>
+    /// <summary>Copies this PrecisionContext with HasFlags set to true
+    /// and a Flags value of 0.</summary>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithBlankFlags() {
       PrecisionContext pc = this.Copy();
@@ -167,8 +217,8 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary> Copies this precision context and sets the copy's "ClampNormalExponents"
-    /// flag to the given value.</summary>
+    /// <summary>Copies this precision context and sets the copy&apos;s
+    /// &quot;ClampNormalExponents&quot; flag to the given value.</summary>
     /// <param name='clamp'>A Boolean object.</param>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithExponentClamp(bool clamp) {
@@ -177,12 +227,14 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='exponentMin'>A BigInteger object.</param>
-    /// <param name='exponentMax'>A BigInteger object. (2)</param>
+    /// <param name='exponentMax'>A BigInteger object. (2).</param>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
-      if (exponentMin == null) { throw new ArgumentNullException("exponentMin"); }
+      if (exponentMin == null) {
+ throw new ArgumentNullException("exponentMin");
+}
       if (exponentMin.CompareTo(exponentMax) > 0) {
  throw new ArgumentException("exponentMin greater than exponentMax");
 }
@@ -193,8 +245,8 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary> Copies this PrecisionContext with HasFlags set to false
-    /// and a Flags value of 0. </summary>
+    /// <summary>Copies this PrecisionContext with HasFlags set to false
+    /// and a Flags value of 0.</summary>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithNoFlags() {
       PrecisionContext pc = this.Copy();
@@ -203,8 +255,8 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary> Copies this PrecisionContext with an unlimited exponent
-    /// range. </summary>
+    /// <summary>Copies this PrecisionContext with an unlimited exponent
+    /// range.</summary>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithUnlimitedExponents() {
       PrecisionContext pc = this.Copy();
@@ -212,23 +264,27 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary> Copies this PrecisionContext and gives it a particular
+    /// <summary>Copies this PrecisionContext and gives it a particular
     /// precision value.</summary>
     /// <returns>A PrecisionContext object.</returns>
     /// <param name='precision'>Desired precision. 0 means unlimited
     /// precision.</param>
     public PrecisionContext WithPrecision(int precision) {
-      if (precision < 0) { throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
+      if (precision < 0) {
+ throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = (BigInteger)precision;
       return pc;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='bigintPrecision'>A BigInteger object.</param>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
-      if (bigintPrecision == null) { throw new ArgumentNullException("bigintPrecision"); }
+      if (bigintPrecision == null) {
+ throw new ArgumentNullException("bigintPrecision");
+}
       if (bigintPrecision.Sign < 0) throw new ArgumentException(
         "precision" + " not greater or equal to " + "0" + " (" +
         bigintPrecision + ")");
@@ -237,8 +293,8 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary> Initializes a new PrecisionContext that is a copy of another
-    /// PrecisionContext. </summary>
+    /// <summary>Initializes a new PrecisionContext that is a copy of another
+    /// PrecisionContext.</summary>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext Copy() {
       PrecisionContext pcnew = new PrecisionContext(
@@ -267,13 +323,17 @@ namespace PeterO {
       return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
     }
 
-    /// <summary> Initializes a new PrecisionContext. HasFlags will be
-    /// set to false. </summary>
+    /// <summary>Initializes a new PrecisionContext. HasFlags will be
+    /// set to false.</summary>
     public PrecisionContext(
 int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
                             bool clampNormalExponents) {
-      if (precision < 0) { throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (exponentMinSmall > exponentMaxSmall) { throw new ArgumentException("exponentMinSmall" + " not less or equal to " + Convert.ToString(exponentMaxSmall,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(exponentMinSmall,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
+      if (precision < 0) {
+ throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (exponentMinSmall > exponentMaxSmall) {
+ throw new ArgumentException("exponentMinSmall" + " not less or equal to " + Convert.ToString(exponentMaxSmall,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(exponentMinSmall,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
       this.bigintPrecision = precision == 0 ? BigInteger.Zero : (BigInteger)precision;
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
@@ -282,7 +342,7 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
       this.exponentMin = exponentMinSmall == 0 ? BigInteger.Zero : (BigInteger)exponentMinSmall;
     }
 
-    /// <summary> No specific limit on precision. Rounding mode HalfUp.</summary>
+    /// <summary>No specific limit on precision. Rounding mode HalfUp.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",
@@ -290,8 +350,7 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
     #endif
 
     public static readonly PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
-    /// <summary> Precision context for the IEEE-754-2008 decimal32 format.
-    /// </summary>
+    /// <summary>Precision context for the IEEE-754-2008 decimal32 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",
@@ -300,8 +359,7 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
 
     public static readonly PrecisionContext Decimal32 =
       new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
-    /// <summary> Precision context for the IEEE-754-2008 decimal64 format.
-    /// </summary>
+    /// <summary>Precision context for the IEEE-754-2008 decimal64 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",
@@ -310,8 +368,7 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
 
     public static readonly PrecisionContext Decimal64 =
       new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
-    /// <summary> Precision context for the IEEE-754-2008 decimal128 format.
-    /// </summary>
+    /// <summary>Precision context for the IEEE-754-2008 decimal128 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",
@@ -320,9 +377,9 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
 
     public static readonly PrecisionContext Decimal128 =
       new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
-    /// <summary> Precision context for the Common Language Infrastructure
+    /// <summary>Precision context for the Common Language Infrastructure
     /// (.NET Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
-    /// to round a decimal fraction to this format. </summary>
+    /// to round a decimal fraction to this format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",
@@ -331,6 +388,5 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
 
     public static readonly PrecisionContext CliDecimal =
       new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
-
   }
 }

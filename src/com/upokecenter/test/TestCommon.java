@@ -15,7 +15,6 @@ import java.io.*;
 
   final class TestCommon {
 private TestCommon(){}
-
     public static void AssertBigIntegersEqual(String a, BigInteger b) {
       Assert.assertEquals(a, b.toString());
       BigInteger a2 = BigInteger.fromString(a);
@@ -96,7 +95,9 @@ rembi=divrem[1]; }
     }
 
     public static void AssertDecFrac(ExtendedDecimal d3, String output, String name) {
-      if (output==null && d3!=null)Assert.fail(name+": d3 must be null");
+      if (output == null && d3 != null) {
+ Assert.fail(name+": d3 must be null");
+}
       if (output != null && !d3.toString().equals(output)) {
         ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
         Assert.assertEquals(output, d3.toString(), (
@@ -106,7 +107,9 @@ rembi=divrem[1]; }
     }
 
     public static void AssertFlags(int expected, int actual, String name) {
-      if (expected == actual) { return; }
+      if (expected == actual) {
+ return;
+}
       Assert.assertEquals(name+": Inexact",(expected&PrecisionContext.FlagInexact) != 0,(actual&PrecisionContext.FlagInexact)!=0);
       Assert.assertEquals(name+": Rounded",(expected&PrecisionContext.FlagRounded) != 0,(actual&PrecisionContext.FlagRounded)!=0);
       Assert.assertEquals(name+": Subnormal",(expected&PrecisionContext.FlagSubnormal) != 0,(actual&PrecisionContext.FlagSubnormal)!=0);
@@ -142,8 +145,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     public static CBORObject FromBytesTestAB(byte[] b) {
       CBORObject oa = FromBytesA(b);
       CBORObject ob = FromBytesB(b);
-      if (!oa.equals(ob))
-        Assert.assertEquals(oa, ob);
+      if (!oa.equals(ob)) {
+ Assert.assertEquals(oa, ob);
+}
       return oa;
     }
     public static void AssertEqualsHashCode(Object o, Object o2) {
@@ -199,12 +203,14 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       AssertEqualsHashCode(o, o2);
     }
     public static void AssertSer(CBORObject o, String s) {
-      if (!s.equals(o.toString()))
-        Assert.assertEquals("o is not equal to s",s,o.toString());
+      if (!s.equals(o.toString())) {
+ Assert.assertEquals("o is not equal to s",s,o.toString());
+}
       // Test round-tripping
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!s.equals(o2.toString()))
-        Assert.assertEquals("o2 is not equal to s",s,o2.toString());
+      if (!s.equals(o2.toString())) {
+ Assert.assertEquals("o2 is not equal to s",s,o2.toString());
+}
       TestNumber(o);
       AssertEqualsHashCode(o, o2);
     }

@@ -10,12 +10,12 @@ using System.IO;
 using System.Text;
 
 namespace PeterO {
-    /// <summary> Contains methods useful for reading and writing strings.
+    /// <summary>Contains methods useful for reading and writing strings.
     /// It is designed to have no dependencies other than the basic runtime
-    /// class library. </summary>
+    /// class library.</summary>
   public static class DataUtilities {
     private static int StreamedStringBufferLength = 4096;
-    /// <summary> Generates a text string from a UTF-8 byte array. </summary>
+    /// <summary>Generates a text string from a UTF-8 byte array.</summary>
     /// <param name='bytes'>A byte array containing text encoded in UTF-8.</param>
     /// <param name='replace'>If true, replaces invalid encoding with
     /// the replacement character (U + FFFD). If false, stops processing
@@ -26,7 +26,9 @@ namespace PeterO {
     /// <exception cref='System.ArgumentException'>The string is not
     /// valid UTF-8 and &quot; replace&quot; is false.</exception>
     public static string GetUtf8String(byte[] bytes, bool replace) {
-      if (bytes == null) { throw new ArgumentNullException("bytes"); }
+      if (bytes == null) {
+ throw new ArgumentNullException("bytes");
+}
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, 0, bytes.Length, b, replace) != 0) {
  throw new ArgumentException("Invalid UTF-8");
@@ -34,8 +36,7 @@ namespace PeterO {
       return b.ToString();
     }
 
-    /// <summary> Generates a text string from a portion of a UTF-8 byte array.
-    /// </summary>
+    /// <summary>Generates a text string from a portion of a UTF-8 byte array.</summary>
     /// <param name='bytes'>A byte array containing text encoded in UTF-8.</param>
     /// <param name='offset'>Offset into the byte array to start reading.</param>
     /// <param name='bytesCount'>Length, in bytes, of the UTF-8 string.</param>
@@ -55,7 +56,7 @@ namespace PeterO {
       return b.ToString();
     }
 
-    /// <summary> Encodes a string in UTF-8 as a byte array. </summary>
+    /// <summary>Encodes a string in UTF-8 as a byte array.</summary>
     /// <param name='str'>A text string.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
     /// points with the replacement character (U + FFFD). If false, stops
@@ -79,8 +80,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Calculates the number of bytes needed to encode a string
-    /// in UTF-8. </summary>
+    /// <summary>Calculates the number of bytes needed to encode a string
+    /// in UTF-8.</summary>
     /// <param name='replace'>If true, treats unpaired surrogate code
     /// points as replacement characters (U + FFFD) instead, meaning each
     /// one takes 3 UTF-8 bytes. If false, stops processing when an unpaired
@@ -92,7 +93,9 @@ namespace PeterO {
     /// is null.</exception>
     /// <param name='str'>A String object.</param>
     public static long GetUtf8Length(String str, bool replace) {
-      if (str == null) { throw new ArgumentNullException("str"); }
+      if (str == null) {
+ throw new ArgumentNullException("str");
+}
       long size = 0;
       for (int i = 0; i < str.Length; ++i) {
         int c = str[i];
@@ -115,8 +118,9 @@ namespace PeterO {
             size += 4;
           }
         } else {
-          if (replace) size += 3;
-          else {
+          if (replace) {
+ size += 3;
+  } else {
  return -1;
 }
         }
@@ -124,7 +128,7 @@ namespace PeterO {
       return size;
     }
 
-    /// <summary> Compares two strings in Unicode code point order. Unpairedsurrogates
+    /// <summary>Compares two strings in Unicode code point order. Unpairedsurrogates
     /// are treated as individual code points.</summary>
     /// <returns>A value indicating which string is &quot; less&quot; or
     /// &quot; greater&quot; . 0: Both strings are equal or null. Less than
@@ -136,8 +140,12 @@ namespace PeterO {
     /// <param name='strA'>The first string.</param>
     /// <param name='strB'>The second string.</param>
     public static int CodePointCompare(String strA, String strB) {
-      if (strA == null) { return (strB == null) ? 0 : -1; }
-      if (strB == null) { return 1; }
+      if (strA == null) {
+ return (strB == null) ? 0 : -1;
+}
+      if (strB == null) {
+ return 1;
+}
       int len = Math.Min(strA.Length, strB.Length);
       for (int i = 0; i < len; ++i) {
         int ca = strA[i];
@@ -157,7 +165,9 @@ namespace PeterO {
             cb = 0x10000 + (cb - 0xD800) * 0x400 + (strB[i + 1] - 0xDC00);
             incindex = true;
           }
-          if (ca != cb) { return ca - cb; }
+          if (ca != cb) {
+ return ca - cb;
+}
           if (incindex) {
             i++;
           }
@@ -175,12 +185,13 @@ namespace PeterO {
           return ca - cb;
         }
       }
-      if (strA.Length == strB.Length) { return 0; }
+      if (strA.Length == strB.Length) {
+ return 0;
+}
       return (strA.Length < strB.Length) ? -1 : 1;
     }
 
-    /// <summary> Writes a portion of a string in UTF-8 encoding to a data stream.
-    /// </summary>
+    /// <summary>Writes a portion of a string in UTF-8 encoding to a data stream.</summary>
     /// <param name='str'>A string to write.</param>
     /// <param name='offset'>The zero-based index where the string portion
     /// to write begins.</param>
@@ -199,12 +210,24 @@ namespace PeterO {
     /// plus &quot; length&quot; is greater than the string&apos;s length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
-      if (stream == null) { throw new ArgumentNullException("stream"); }
-      if (str == null) { throw new ArgumentNullException("str"); }
-      if (offset < 0) { throw new ArgumentException("offset" + " not greater or equal to " + "0" + " (" + Convert.ToString(offset,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (offset > str.Length) { throw new ArgumentException("offset" + " not less or equal to " + Convert.ToString(str.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(offset,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (length < 0) { throw new ArgumentException("length" + " not greater or equal to " + "0" + " (" + Convert.ToString(length,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (length > str.Length) { throw new ArgumentException("length" + " not less or equal to " + Convert.ToString(str.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(length,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
+      if (stream == null) {
+ throw new ArgumentNullException("stream");
+}
+      if (str == null) {
+ throw new ArgumentNullException("str");
+}
+      if (offset < 0) {
+ throw new ArgumentException("offset" + " not greater or equal to " + "0" + " (" + Convert.ToString(offset,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (offset > str.Length) {
+ throw new ArgumentException("offset" + " not less or equal to " + Convert.ToString(str.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(offset,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (length < 0) {
+ throw new ArgumentException("length" + " not greater or equal to " + "0" + " (" + Convert.ToString(length,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (length > str.Length) {
+ throw new ArgumentException("length" + " not less or equal to " + Convert.ToString(str.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(length,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
       if ((str.Length - offset) < length) throw new ArgumentException("str's length minus " + offset + " not greater or equal to " + Convert.ToString(length,System.Globalization.CultureInfo.InvariantCulture) + " (" +
                                                                         Convert.ToString(str.Length - offset,System.Globalization.CultureInfo.InvariantCulture) + ")");
       byte[] bytes;
@@ -269,7 +292,7 @@ namespace PeterO {
       return retval;
     }
 
-    /// <summary> Writes a string in UTF-8 encoding to a data stream. </summary>
+    /// <summary>Writes a string in UTF-8 encoding to a data stream.</summary>
     /// <param name='str'>A string to write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='replace'>If true, replaces unpaired surrogate code
@@ -281,11 +304,13 @@ namespace PeterO {
     /// is null or &quot; stream&quot; is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static int WriteUtf8(String str, Stream stream, bool replace) {
-      if (str == null) { throw new ArgumentNullException("str"); }
+      if (str == null) {
+ throw new ArgumentNullException("str");
+}
       return WriteUtf8(str, 0, str.Length, stream, replace);
     }
 
-    /// <summary> Reads a string in UTF-8 encoding from a byte array. </summary>
+    /// <summary>Reads a string in UTF-8 encoding from a byte array.</summary>
     /// <param name='data'>A byte array containing a UTF-8 string.</param>
     /// <param name='offset'>Offset into the byte array to start reading.</param>
     /// <param name='bytesCount'>Length, in bytes, of the UTF-8 string.</param>
@@ -305,13 +330,27 @@ namespace PeterO {
 byte[] data, int offset, int bytesCount,
                                         StringBuilder builder,
                                         bool replace) {
-      if (data == null) { throw new ArgumentNullException("data"); }
-      if (offset < 0) { throw new ArgumentException("offset" + " not greater or equal to " + "0" + " (" + Convert.ToString(offset,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (offset > data.Length) { throw new ArgumentException("offset" + " not less or equal to " + Convert.ToString(data.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(offset,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (bytesCount < 0) { throw new ArgumentException("bytesCount" + " not greater or equal to " + "0" + " (" + Convert.ToString(bytesCount,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (bytesCount > data.Length) { throw new ArgumentException("bytesCount" + " not less or equal to " + Convert.ToString(data.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(bytesCount,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if ((data.Length - offset) < bytesCount) { throw new ArgumentException("data's length minus " + offset + " not greater or equal to " + Convert.ToString(bytesCount,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(data.Length - offset,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (builder == null) { throw new ArgumentNullException("builder"); }
+      if (data == null) {
+ throw new ArgumentNullException("data");
+}
+      if (offset < 0) {
+ throw new ArgumentException("offset" + " not greater or equal to " + "0" + " (" + Convert.ToString(offset,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (offset > data.Length) {
+ throw new ArgumentException("offset" + " not less or equal to " + Convert.ToString(data.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(offset,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (bytesCount < 0) {
+ throw new ArgumentException("bytesCount" + " not greater or equal to " + "0" + " (" + Convert.ToString(bytesCount,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (bytesCount > data.Length) {
+ throw new ArgumentException("bytesCount" + " not less or equal to " + Convert.ToString(data.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(bytesCount,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if ((data.Length - offset) < bytesCount) {
+ throw new ArgumentException("data's length minus " + offset + " not greater or equal to " + Convert.ToString(bytesCount,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(data.Length - offset,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (builder == null) {
+ throw new ArgumentNullException("builder");
+}
       int cp = 0;
       int bytesSeen = 0;
       int bytesNeeded = 0;
@@ -339,10 +378,11 @@ byte[] data, int offset, int bytesCount,
             bytesNeeded = 3;
             cp = (b - 0xf0) << 18;
           } else {
-            if (replace)
-              builder.Append((char)0xFFFD);
-            else
-              return -1;
+            if (replace) {
+ builder.Append((char)0xFFFD);
+  } else {
+ return -1;
+}
           }
           continue;
         } else if (b < lower || b > upper) {
@@ -380,15 +420,16 @@ byte[] data, int offset, int bytesCount,
         }
       }
       if (bytesNeeded != 0) {
-        if (replace)
-          builder.Append((char)0xFFFD);
-        else
-          return -1;
+        if (replace) {
+ builder.Append((char)0xFFFD);
+  } else {
+ return -1;
+}
       }
       return 0;
     }
 
-    /// <summary> Reads a string in UTF-8 encoding from a data stream. </summary>
+    /// <summary>Reads a string in UTF-8 encoding from a data stream.</summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <param name='bytesCount'>The length, in bytes, of the string. If
     /// this is less than 0, this function will read until the end of the stream.</param>
@@ -407,8 +448,12 @@ byte[] data, int offset, int bytesCount,
     public static int ReadUtf8(
 Stream stream, int bytesCount, StringBuilder builder,
                                bool replace) {
-      if (stream == null) { throw new ArgumentNullException("stream"); }
-      if (builder == null) { throw new ArgumentNullException("builder"); }
+      if (stream == null) {
+ throw new ArgumentNullException("stream");
+}
+      if (builder == null) {
+ throw new ArgumentNullException("builder");
+}
       int cp = 0;
       int bytesSeen = 0;
       int bytesNeeded = 0;
@@ -422,14 +467,16 @@ Stream stream, int bytesCount, StringBuilder builder,
             bytesNeeded = 0;
             if (replace) {
               builder.Append((char)0xFFFD);
-              if (bytesCount >= 0)
-                return -2;
+              if (bytesCount >= 0) {
+ return -2;
+}
               break;  // end of stream
             }
             return -1;
           } else {
-            if (bytesCount >= 0)
-              return -2;
+            if (bytesCount >= 0) {
+ return -2;
+}
             break;  // end of stream
           }
         }
@@ -453,10 +500,11 @@ Stream stream, int bytesCount, StringBuilder builder,
             bytesNeeded = 3;
             cp = (b - 0xf0) << 18;
           } else {
-            if (replace)
-              builder.Append((char)0xFFFD);
-            else
-              return -1;
+            if (replace) {
+ builder.Append((char)0xFFFD);
+  } else {
+ return -1;
+}
           }
           continue;
         } else if (b < lower || b > upper) {
@@ -512,10 +560,11 @@ Stream stream, int bytesCount, StringBuilder builder,
         }
       }
       if (bytesNeeded != 0) {
-        if (replace)
-          builder.Append((char)0xFFFD);
-        else
-          return -1;
+        if (replace) {
+ builder.Append((char)0xFFFD);
+  } else {
+ return -1;
+}
       }
       return 0;
     }

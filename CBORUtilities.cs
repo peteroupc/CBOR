@@ -9,12 +9,12 @@ using System;
 using System.Text;
 // using System.Numerics;
 namespace PeterO {
-    /// <summary> Contains utility methods that may have use outside of the
-    /// CBORObject class. </summary>
+    /// <summary>Contains utility methods that may have use outside of the
+    /// CBORObject class.</summary>
   internal static class CBORUtilities {
     private const string Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private const string Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='str'>A StringBuilder object.</param>
     /// <param name='data'>A byte[] object.</param>
     /// <param name='padding'>A Boolean object.</param>
@@ -43,10 +43,14 @@ namespace PeterO {
         if (lenmod3 == 2) {
           str.Append(alphabet[((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 63)]);
           str.Append(alphabet[(data[i + 1] & 15) << 2]);
-          if (padding) str.Append("=");
+          if (padding) {
+ str.Append("=");
+}
         } else {
           str.Append(alphabet[(data[i] & 3) << 4]);
-          if (padding) str.Append("==");
+          if (padding) {
+ str.Append("==");
+}
         }
       }
     }
@@ -62,17 +66,27 @@ namespace PeterO {
     }
 
     public static bool ByteArrayEquals(byte[] a, byte[] b) {
-      if (a == null) { return b == null; }
-      if (b == null) { return false; }
-      if (a.Length != b.Length) { return false; }
+      if (a == null) {
+ return b == null;
+}
+      if (b == null) {
+ return false;
+}
+      if (a.Length != b.Length) {
+ return false;
+}
       for (int i = 0; i < a.Length; ++i) {
-        if (a[i] != b[i]) { return false; }
+        if (a[i] != b[i]) {
+ return false;
+}
       }
       return true;
     }
 
     public static int ByteArrayHashCode(byte[] a) {
-      if (a == null) { return 0; }
+      if (a == null) {
+ return 0;
+}
       int ret = 19;
       unchecked {
         ret = ret * 31 + a.Length;
@@ -84,15 +98,21 @@ namespace PeterO {
     }
 
     public static int ByteArrayCompare(byte[] a, byte[] b) {
-      if (a == null) { return (b == null) ? 0 : -1; }
-      if (b == null) { return 1; }
+      if (a == null) {
+ return (b == null) ? 0 : -1;
+}
+      if (b == null) {
+ return 1;
+}
       int c = Math.Min(a.Length, b.Length);
       for (int i = 0; i < c; ++i) {
-        if (a[i] != b[i])
-          return (a[i] < b[i]) ? -1 : 1;
+        if (a[i] != b[i]) {
+ return (a[i] < b[i]) ? -1 : 1;
+}
       }
-      if (a.Length != b.Length)
-        return (a.Length < b.Length) ? -1 : 1;
+      if (a.Length != b.Length) {
+ return (a.Length < b.Length) ? -1 : 1;
+}
       return 0;
     }
 
@@ -103,9 +123,14 @@ namespace PeterO {
  throw new OverflowException("Value is infinity or NaN");
 }
       int mantissa = value & 0x7FFFFF;
-      if (fpexponent == 0) fpexponent++;
-      else mantissa |= 1 << 23;
-      if (mantissa == 0) { return BigInteger.Zero; }
+      if (fpexponent == 0) {
+ fpexponent++;
+  } else {
+ mantissa |= 1 << 23;
+}
+      if (mantissa == 0) {
+ return BigInteger.Zero;
+}
       fpexponent -= 150;
       while ((mantissa & 1) == 0) {
         fpexponent++;
@@ -113,13 +138,17 @@ namespace PeterO {
       }
       bool neg = (value >> 31) != 0;
       if (fpexponent == 0) {
-        if (neg) mantissa = -mantissa;
+        if (neg) {
+ mantissa = -mantissa;
+}
         return (BigInteger)mantissa;
       } else if (fpexponent > 0) {
         // Value is an integer
         BigInteger bigmantissa = (BigInteger)mantissa;
         bigmantissa <<= fpexponent;
-        if (neg) bigmantissa = -(BigInteger)bigmantissa;
+        if (neg) {
+ bigmantissa = -(BigInteger)bigmantissa;
+}
         return bigmantissa;
       } else {
         // Value has a fractional part
@@ -137,32 +166,41 @@ namespace PeterO {
 
     public static BigInteger BigIntegerFromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
-      int fpExponent = (int)((value[1] >> 20) & 0x7ff);
+      int floatExponent = (int)((value[1] >> 20) & 0x7ff);
       bool neg = (value[1] >> 31) != 0;
-      if (fpExponent == 2047) {
+      if (floatExponent == 2047) {
  throw new OverflowException("Value is infinity or NaN");
 }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
-      if (fpExponent == 0) fpExponent++;
-      else value[1] |= 0x100000;
+      if (floatExponent == 0) {
+ floatExponent++;
+  } else {
+ value[1] |= 0x100000;
+}
       if ((value[1] | value[0]) != 0) {
-        fpExponent += DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
+        floatExponent += DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
       }
-      fpExponent -= 1075;
+      floatExponent -= 1075;
       BigInteger bigmantissa = FastInteger.WordsToBigInteger(value);
-      if (fpExponent == 0) {
-        if (neg) bigmantissa = -bigmantissa;
+      if (floatExponent == 0) {
+        if (neg) {
+ bigmantissa = -bigmantissa;
+}
         return bigmantissa;
-      } else if (fpExponent > 0) {
+      } else if (floatExponent > 0) {
         // Value is an integer
-        bigmantissa <<= fpExponent;
-        if (neg) bigmantissa = -(BigInteger)bigmantissa;
+        bigmantissa <<= floatExponent;
+        if (neg) {
+ bigmantissa = -(BigInteger)bigmantissa;
+}
         return bigmantissa;
       } else {
         // Value has a fractional part
-        int exp = -fpExponent;
+        int exp = -floatExponent;
         bigmantissa >>= exp;
-        if (neg) bigmantissa = -(BigInteger)bigmantissa;
+        if (neg) {
+ bigmantissa = -(BigInteger)bigmantissa;
+}
         return bigmantissa;
       }
     }

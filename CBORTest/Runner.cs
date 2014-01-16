@@ -9,7 +9,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 namespace PeterO {
-    /// <summary> Description of Runner. </summary>
+    /// <summary>Description of Runner.</summary>
     /// <param name='args'>A string[] object.</param>
     /// <returns></returns>
   public class Runner {
@@ -36,16 +36,21 @@ namespace PeterO {
         Console.WriteLine(param);
       }
       new Test.DecimalTest().TestParser();
-      if (args.Length == 0) { return; }
+      if (args.Length == 0) {
+ return;
+}
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
-        if (!HasAttribute(type, typeof(TestFixtureAttribute))) continue;
+        if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
+ continue;
+}
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
         if (param != null && param.Length>0) {
-          if (!type.FullName.Contains(param))
-            continue;
+          if (!type.FullName.Contains(param)) {
+ continue;
+}
         }
         object test = Activator.CreateInstance(type);
         var setup = type.GetMethod("SetUp");
@@ -53,9 +58,13 @@ namespace PeterO {
           setup.Invoke(test, new object[] { });
         }
         foreach (var method in test.GetType().GetMethods()) {
-          if (!HasAttribute(method, typeof(TestAttribute))) continue;
+          if (!HasAttribute(method, typeof(TestAttribute))) {
+ continue;
+}
           Console.WriteLine(method.Name);
-          if (!method.Name.Contains("TestParser"))continue;
+          if (!method.Name.Contains("TestParser")) {
+ continue;
+}
           Type exctype = null;
           foreach (var a in method.GetCustomAttributes(false)) {
             if (a is ExpectedExceptionAttribute) {
@@ -69,8 +78,9 @@ namespace PeterO {
             if (exctype == null || !e.InnerException.GetType().Equals(exctype)) {
               Console.WriteLine(e.InnerException.GetType().FullName);
               string message = e.InnerException.Message;
-              if (message.Length > 140)
-                message = message.Substring(0, 140);
+              if (message.Length > 140) {
+ message = message.Substring(0, 140);
+}
               Console.WriteLine(message);
             }
           }

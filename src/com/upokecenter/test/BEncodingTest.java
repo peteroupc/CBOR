@@ -41,6 +41,7 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
         throw new CBORException("", ex);
       }
     }
+
     /**
      *
      * @param value A 64-bit signed integer.
@@ -52,6 +53,7 @@ public void doTestLong(long value) {
       String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo),true);
       Assert.assertEquals(b, newb);
     }
+
     /**
      *
      * @param value A string object.
@@ -63,6 +65,7 @@ public void doTestString(String value) {
       String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo),true);
       Assert.assertEquals(b, newb);
     }
+
     /**
      *
      */
@@ -75,6 +78,7 @@ public void doTestString(String value) {
       doTestLong(Long.MIN_VALUE);
       doTestLong(Long.MAX_VALUE);
     }
+
     /**
      *
      */
@@ -98,6 +102,7 @@ public void doTestString(String value) {
       Assert.assertEquals(3, beo.get(2).AsInt64());
       Assert.assertEquals("four", beo.get(3).AsString());
     }
+
     /**
      *
      */
@@ -121,6 +126,7 @@ public void doTestString(String value) {
       Assert.assertEquals(3, beo.get("two").AsInt64());
       Assert.assertEquals("four", beo.get("three").AsString());
     }
+
     /**
      *
      */

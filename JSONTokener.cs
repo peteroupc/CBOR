@@ -15,7 +15,7 @@ namespace PeterO {
   using System.Text;
   using System.Collections.Generic;
 
-  class JSONTokener {
+  internal class JSONTokener {
     /**
      * Trailing commas are allowed in the JSON _string.
      */
@@ -51,12 +51,15 @@ namespace PeterO {
      * @return  An int between 0 and 15, or -1 if c was not a hex digit.
      */
     private static int dehexchar(int c) {
-      if (c >= '0' && c <= '9')
-        return c - '0';
-      if (c >= 'A' && c <= 'F')
-        return c + 10 - 'A';
-      if (c >= 'a' && c <= 'f')
-        return c + 10 - 'a';
+      if (c >= '0' && c <= '9') {
+ return c - '0';
+}
+      if (c >= 'A' && c <= 'F') {
+ return c + 10 - 'A';
+}
+      if (c >= 'a' && c <= 'f') {
+ return c + 10 - 'a';
+}
       return -1;
     }
     /**
@@ -75,13 +78,17 @@ namespace PeterO {
      * @param s     A source _string.
      */
     public JSONTokener(string str, int options) {
-      if (str == null) { throw new ArgumentNullException("str"); }
+      if (str == null) {
+ throw new ArgumentNullException("str");
+}
       this.mySource = str;
       this.options = options;
     }
 
     public JSONTokener(Stream stream, int options) {
-      if (stream == null) { throw new ArgumentNullException("stream"); }
+      if (stream == null) {
+ throw new ArgumentNullException("stream");
+}
       this.stream = stream;
       this.options = options;
     }
@@ -158,7 +165,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int GetOptions() {
       return this.options;
@@ -166,8 +173,9 @@ namespace PeterO {
 
     private int NextParseComment(int firstChar) {
       if ((this.options & JSONTokener.OPTION_ALLOW_COMMENTS) == 0) {
-        if (firstChar == -1)
-          return this.NextChar();
+        if (firstChar == -1) {
+ return this.NextChar();
+}
         if (firstChar == '/' || firstChar == '#') {
  throw this.syntaxError("Comments not allowed");
 }
@@ -187,8 +195,9 @@ namespace PeterO {
           while (true) {
             c = this.NextChar();
             if (c != '\n' && c != -1) {
-            } else
-              break;  // end of line
+            } else {
+ break;
+}  // end of line
           }
         } else if (c == '/') {
           c = this.NextChar();
@@ -197,8 +206,9 @@ namespace PeterO {
                 while (true) {
                   c = this.NextChar();
                   if (c != '\n' && c != -1) {
-                  } else
-                    break;  // end of line
+                  } else {
+ break;
+}  // end of line
                 }
                 break;
               }
@@ -218,8 +228,9 @@ namespace PeterO {
                       break;
                     }
                   }
-                  if (endOfComment)
-                    break;
+                  if (endOfComment) {
+ break;
+}
                 }
                 break;
               }
@@ -234,24 +245,26 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int NextClean() {
       while (true) {
         int c = this.NextParseComment(-1);
-        if (c == -1 || c > ' ')
-          return c;
+        if (c == -1 || c > ' ') {
+ return c;
+}
       }
     }
 
-    /// <summary> Not documented yet. </summary>
-    /// <param name='lastChar'>A 32-bit signed integer. (2)</param>
+    /// <summary>Not documented yet.</summary>
+    /// <param name='lastChar'>A 32-bit signed integer. (2).</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int NextClean(int lastChar) {
       while (true) {
         int c = this.NextParseComment(lastChar);
-        if (c == -1 || c > ' ')
-          return c;
+        if (c == -1 || c > ' ') {
+ return c;
+}
         lastChar = -1;
       }
     }
@@ -349,7 +362,9 @@ namespace PeterO {
         }
         if (c == quote && !escaped)  // End quote reached
           return sb.ToString();
-        if (c <= 0xFFFF) { sb.Append((char)c);
+        if (c <= 0xFFFF) {
+  { sb.Append((char)c);
+}
   } else if (c <= 0x10FFFF) {
           sb.Append((char)((((c - 0x10000) >> 10) & 0x3FF) + 0xD800));
           sb.Append((char)(((c - 0x10000) & 0x3FF) + 0xDC00));
@@ -466,7 +481,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A CBORObject object.</returns>
     public CBORObject ParseJSONObjectOrArray() {
       int c;

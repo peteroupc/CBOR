@@ -9,8 +9,8 @@ package com.upokecenter.test;
  */
 
     /**
-     * The system's random number generator will be called many times during
-     * testing. Unfortunately it can be very slow. So we use this wrapper
+     * The system&apos;s random number generator will be called many times
+     * during testing. Unfortunately it can be very slow. So we use this wrapper
      * class.
      */
   public class FastRandom
@@ -39,14 +39,16 @@ package com.upokecenter.test;
 
     /**
      * Not documented yet.
-     * @param v A 32-bit signed integer. (2)
+     * @param v A 32-bit signed integer. (2).
      * @return A 32-bit signed integer.
      */
 public int NextValue(int v) {
       if ((v)<0)throw new IllegalArgumentException(
         "v"+" not greater or equal to "+"0"+" ("+
         Integer.toString((int)v)+")");
-      if (v <= 1) { return 0; }
+      if (v <= 1) {
+ return 0;
+}
       if (count >= ReseedCount) {
         // Call the default random number generator
         // every once in a while, to reseed
@@ -62,8 +64,9 @@ public int NextValue(int v) {
       int maxExclusive=(Integer.MAX_VALUE/v)*v;
       while (true) {
         int vi = NextValueInternal();
-        if (vi<maxExclusive)
-          return vi%v;
+        if (vi<maxExclusive) {
+ return vi%v;
+}
       }
     }
   }

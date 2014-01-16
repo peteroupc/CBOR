@@ -11,12 +11,12 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
 namespace PeterO {
-    /// <summary> Contains methods for reading and writing objects represented
+    /// <summary>Contains methods for reading and writing objects represented
     /// in BEncode, a serialization format used in the BitTorrent protocol.
     /// For more information, see: https://wiki.theory.org/BitTorrentSpecification#bencoding
     /// This class accepts BEncoded strings in UTF-8, and outputs BEncoded
     /// strings in UTF-8. This class also demonstrates how CBORObject supports
-    /// predefined serialization formats. </summary>
+    /// predefined serialization formats.</summary>
     /// <returns>A CBORObject object.</returns>
     /// <param name='stream'>A readable data stream.</param>
   public static class BEncoding {
@@ -65,7 +65,9 @@ namespace PeterO {
       CBORObject obj = CBORObject.NewArray();
       while (true) {
         CBORObject o = readObject(stream, true);
-        if (o == null) break;// 'e' was read
+        if (o == null) {
+ break;
+}// 'e' was read
         obj.Add(o);
       }
       return obj;
@@ -75,15 +77,15 @@ namespace PeterO {
     }
     private static CBORObject readObject(Stream stream, bool allowEnd) {
       int c = stream.ReadByte();
-      if (c == 'd')
-        return readDictionary(stream);
-      else if (c == 'l')
-        return readList(stream);
-      else if (allowEnd && c == 'e')
-        return null;
-      else if (c == 'i')
-        return readInteger(stream);
-      else if (c >= '0' && c <= '9') {
+      if (c == 'd') {
+ return readDictionary(stream);
+  } else if (c == 'l') {
+ return readList(stream);
+  } else if (allowEnd && c == 'e') {
+ return null;
+  } else if (c == 'i') {
+ return readInteger(stream);
+  } else if (c >= '0' && c <= '9') {
         return readString(stream, (char)c);
       } else {
         throw new CBORException("Object expected");

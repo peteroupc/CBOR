@@ -30,6 +30,7 @@ private CBORDataUtilities(){}
     public static CBORObject ParseJSONNumber(String str) {
       return ParseJSONNumber(str, false, false, false);
     }
+
     /**
      * Parses a number whose format follows the JSON specification (RFC
      * 4627). Roughly speaking, a valid number consists of an optional minus
@@ -54,20 +55,23 @@ String str,
                                              boolean integersOnly,
                                              boolean positiveOnly,
                                              boolean failOnExponentOverflow) {
-      if (((str)==null || (str).length()==0))
-        return null;
+      if (((str)==null || (str).length()==0)) {
+ return null;
+}
       char c = str.charAt(0);
       boolean negative = false;
       int index = 0;
-      if (index >= str.length())
-        return null;
+      if (index >= str.length()) {
+ return null;
+}
       c = str.charAt(index);
       if (c == '-' && !positiveOnly) {
         negative = true;
         index++;
       }
-      if (index >= str.length())
-        return null;
+      if (index >= str.length()) {
+ return null;
+}
       c = str.charAt(index);
       index++;
       boolean negExp = false;
@@ -93,8 +97,9 @@ String str,
         if (index < str.length() && str.charAt(index) == '.') {
           // Fraction
           index++;
-          if (index >= str.length())
-            return null;
+          if (index >= str.length()) {
+ return null;
+}
           c = str.charAt(index);
           index++;
           if (c >= '0' && c <= '9') {
@@ -124,16 +129,20 @@ String str,
         if (index < str.length() && (str.charAt(index) == 'e' || str.charAt(index) == 'E')) {
           // Exponent
           index++;
-          if (index >= str.length())
-            return null;
+          if (index >= str.length()) {
+ return null;
+}
           c = str.charAt(index);
           if (c == '-') {
             negExp = true;
             index++;
           }
-          if (c == '+') index++;
-          if (index >= str.length())
-            return null;
+          if (c == '+') {
+ index++;
+}
+          if (index >= str.length()) {
+ return null;
+}
           c = str.charAt(index);
           index++;
           if (c >= '0' && c <= '9') {
@@ -154,10 +163,12 @@ String str,
           }
         }
       }
-      if (negExp)
-        fastExponent.Negate();
-      if (negative)
-        fastNumber.Negate();
+      if (negExp) {
+ fastExponent.Negate();
+}
+      if (negative) {
+ fastNumber.Negate();
+}
       fastExponent.Add(exponentAdjust);
       if (index != str.length()) {
         // End of the String wasn't reached, so isn't a number
@@ -165,10 +176,11 @@ String str,
       }
       // No fractional part
       if (fastExponent.signum() == 0) {
-        if (fastNumber.CanFitInInt32())
-          return CBORObject.FromObject(fastNumber.AsInt32());
-        else
-          return CBORObject.FromObject(fastNumber.AsBigInteger());
+        if (fastNumber.CanFitInInt32()) {
+ return CBORObject.FromObject(fastNumber.AsInt32());
+  } else {
+ return CBORObject.FromObject(fastNumber.AsBigInteger());
+}
       } else {
         if (fastNumber.signum() == 0) {
           return CBORObject.FromObject(0);
@@ -182,8 +194,9 @@ String str,
             if (bigintExponent.compareTo(UInt64MaxValue) > 0) {
               // Exponent is higher than the highest representable
               // integer of major type 0
-              if (failOnExponentOverflow)
-                return null;
+              if (failOnExponentOverflow) {
+ return null;
+}
               else
                 return (fastExponent.signum() < 0) ?
                   CBORObject.FromObject(Double.NEGATIVE_INFINITY) :
@@ -192,10 +205,11 @@ String str,
             if (bigintExponent.compareTo(LowestMajorType1) < 0) {
               // Exponent is lower than the lowest representable
               // integer of major type 1
-              if (failOnExponentOverflow)
-                return null;
-              else
-                return CBORObject.FromObject(0);
+              if (failOnExponentOverflow) {
+ return null;
+  } else {
+ return CBORObject.FromObject(0);
+}
             }
           }
           return CBORObject.FromObject(ExtendedDecimal.Create(

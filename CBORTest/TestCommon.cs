@@ -13,7 +13,6 @@ using PeterO;
 using System.IO;
 namespace Test {
   static class TestCommon {
-
     public static void AssertBigIntegersEqual(string a, BigInteger b) {
       Assert.AreEqual(a, b.ToString());
       BigInteger a2 = BigInteger.fromString(a);
@@ -86,7 +85,9 @@ namespace Test {
     }
 
     public static void AssertDecFrac(ExtendedDecimal d3, string output, string name) {
-      if (output==null && d3!=null)Assert.Fail(name+": d3 must be null");
+      if (output == null && d3 != null) {
+ Assert.Fail(name+": d3 must be null");
+}
       if (output != null && !d3.ToString().Equals(output)) {
         ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
         Assert.AreEqual(output, d3.ToString(), (
@@ -96,7 +97,9 @@ namespace Test {
     }
 
     public static void AssertFlags(int expected, int actual, string name) {
-      if (expected == actual) { return; }
+      if (expected == actual) {
+ return;
+}
       Assert.AreEqual((expected&PrecisionContext.FlagInexact) != 0,
                       (actual&PrecisionContext.FlagInexact)!=0,name+": Inexact");
       Assert.AreEqual((expected&PrecisionContext.FlagRounded) != 0,
@@ -133,8 +136,9 @@ namespace Test {
     public static CBORObject FromBytesTestAB(byte[] b) {
       CBORObject oa = FromBytesA(b);
       CBORObject ob = FromBytesB(b);
-      if (!oa.Equals(ob))
-        Assert.AreEqual(oa, ob);
+      if (!oa.Equals(ob)) {
+ Assert.AreEqual(oa, ob);
+}
       return oa;
     }
     public static void AssertEqualsHashCode(Object o, Object o2) {
@@ -193,12 +197,14 @@ namespace Test {
       AssertEqualsHashCode(o, o2);
     }
     public static void AssertSer(CBORObject o, String s) {
-      if (!s.Equals(o.ToString()))
-        Assert.AreEqual(s, o.ToString(), "o is not equal to s");
+      if (!s.Equals(o.ToString())) {
+ Assert.AreEqual(s, o.ToString(), "o is not equal to s");
+}
       // Test round-tripping
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!s.Equals(o2.ToString()))
-        Assert.AreEqual(s, o2.ToString(), "o2 is not equal to s");
+      if (!s.Equals(o2.ToString())) {
+ Assert.AreEqual(s, o2.ToString(), "o2 is not equal to s");
+}
       TestNumber(o);
       AssertEqualsHashCode(o, o2);
     }

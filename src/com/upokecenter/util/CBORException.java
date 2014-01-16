@@ -16,6 +16,7 @@ private static final long serialVersionUID=1L;
      */
     public CBORException () {
     }
+
     /**
      * Not documented yet.
      * @param message A string object.
@@ -23,6 +24,7 @@ private static final long serialVersionUID=1L;
     public CBORException (String message) {
  super(message);
     }
+
     /**
      * Not documented yet.
      * @param message A string object.

@@ -8,16 +8,18 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 // using System.Numerics;
 namespace PeterO {
-    /// <summary> Implements arithmetic operations with CBOR objects.
-    /// </summary>
+    /// <summary>Implements arithmetic operations with CBOR objects.</summary>
     /// <returns>A CBORObject object.</returns>
-    /// <param name='a'>A CBORObject object. (2)</param>
-    /// <param name='b'>A CBORObject object. (3)</param>
-  static class CBORObjectMath {
-
+    /// <param name='a'>A CBORObject object. (2).</param>
+    /// <param name='b'>A CBORObject object. (3).</param>
+  internal static class CBORObjectMath {
     public static CBORObject Addition(CBORObject a, CBORObject b) {
-      if (a == null) { throw new ArgumentNullException("a"); }
-      if (b == null) { throw new ArgumentNullException("b"); }
+      if (a == null) {
+ throw new ArgumentNullException("a");
+}
+      if (b == null) {
+ throw new ArgumentNullException("b");
+}
       int combo = (a.ItemType << 4) | b.ItemType;
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -53,8 +55,12 @@ namespace PeterO {
     }
 
     public static CBORObject Subtract(CBORObject a, CBORObject b) {
-      if (a == null) { throw new ArgumentNullException("a"); }
-      if (b == null) { throw new ArgumentNullException("b"); }
+      if (a == null) {
+ throw new ArgumentNullException("a");
+}
+      if (b == null) {
+ throw new ArgumentNullException("b");
+}
       int combo = (a.ItemType << 4) | b.ItemType;
       BigInteger bvalueA;
       BigInteger bvalueB;
@@ -90,8 +96,12 @@ namespace PeterO {
     }
 
     public static CBORObject Multiply(CBORObject a, CBORObject b) {
-      if (a == null) { throw new ArgumentNullException("a"); }
-      if (b == null) { throw new ArgumentNullException("b"); }
+      if (a == null) {
+ throw new ArgumentNullException("a");
+}
+      if (b == null) {
+ throw new ArgumentNullException("b");
+}
       int combo = (a.ItemType << 4) | b.ItemType;
       BigInteger bvalueA;
       BigInteger bvalueB;

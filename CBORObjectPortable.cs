@@ -13,11 +13,13 @@ using System.Numerics;
 using System.Text;
 namespace PeterO
 {
-    /// <summary> </summary>
+    /// <summary></summary>
  sealed class CBORObjectPortable
   {
     private static void WritePortable(BigInteger bigint, Stream s) {
-      if ((s)==null) { throw new ArgumentNullException("s"); }
+      if ((s) == null) {
+ throw new ArgumentNullException("s");
+}
       if ((object)bigint==(object)null) {
         s.WriteByte(0xf6);
         return;
@@ -146,14 +148,30 @@ namespace PeterO
       byte[] data=(byte[])o.ThisItem;
       if (data.Length <= 7) {
         long x = 0;
-        if (data.Length>0)x|=(((long)data[0]) & 0xFF) << 48;
-        if (data.Length>1)x|=(((long)data[1]) & 0xFF) << 40;
-        if (data.Length>2)x|=(((long)data[2]) & 0xFF) << 32;
-        if (data.Length>3)x|=(((long)data[3]) & 0xFF) << 24;
-        if (data.Length>4)x|=(((long)data[4]) & 0xFF) << 16;
-        if (data.Length>5)x|=(((long)data[5]) & 0xFF) << 8;
-        if (data.Length>6)x|=(((long)data[6]) & 0xFF);
-        if (negative)x=-x;
+        if (data.Length>0) {
+ x|=(((long)data[0]) & 0xFF) << 48;
+}
+        if (data.Length>1) {
+ x|=(((long)data[1]) & 0xFF) << 40;
+}
+        if (data.Length>2) {
+ x|=(((long)data[2]) & 0xFF) << 32;
+}
+        if (data.Length>3) {
+ x|=(((long)data[3]) & 0xFF) << 24;
+}
+        if (data.Length>4) {
+ x|=(((long)data[4]) & 0xFF) << 16;
+}
+        if (data.Length>5) {
+ x|=(((long)data[5]) & 0xFF) << 8;
+}
+        if (data.Length>6) {
+ x|=(((long)data[6]) & 0xFF);
+}
+        if (negative) {
+ x=-x;
+}
         return FromObject(x);
       }
       BigInteger bi = BigInteger.Zero;
@@ -180,6 +198,5 @@ namespace PeterO
       }
       return RewrapObject(o, FromObject(bi));
     }
-
   }
 }

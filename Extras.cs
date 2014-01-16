@@ -25,6 +25,5 @@ namespace PeterO
       value |= (((long)integers[1]) & 0xFFFFFFFFL) << 32;
       return BitConverter.ToDouble(BitConverter.GetBytes((long)value), 0);
     }
-
   }
 }

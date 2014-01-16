@@ -8,9 +8,10 @@ at: http://peteroupc.github.io/CBOR/
  */
 
     /**
-     * Specifies the mode to use when "shortening" numbers that otherwise
-     * can't fit a given number of digits, so that the shortened number has
-     * about the same value. This "shortening" is known as rounding.
+     * Specifies the mode to use when &quot;shortening&quot; numbers that
+     * otherwise can&apos;t fit a given number of digits, so that the shortened
+     * number has about the same value. This &quot;shortening&quot; is
+     * known as rounding.
      */
   public enum Rounding {
     /**
@@ -24,12 +25,12 @@ at: http://peteroupc.github.io/CBOR/
     Down,
     /**
      * If there is a fractional part, the number is rounded to the highest
-     * representable number that's closest to it.
+     * representable number that&apos;s closest to it.
      */
     Ceiling,
     /**
      * If there is a fractional part, the number is rounded to the lowest representable
-     * number that's closest to it.
+     * number that&apos;s closest to it.
      */
     Floor,
     /**
@@ -46,7 +47,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Rounded to the nearest number; if the fractional part is exactly half,
      * the number is rounded to the closest representable number that is
-     * even. This is sometimes also known as "banker's rounding".
+     * even. This is sometimes also known as &quot;banker&apos;s rounding&quot;.
      */
     HalfEven,
     /**
