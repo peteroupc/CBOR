@@ -14,17 +14,23 @@ namespace PeterO {
     /// floating point numbers, and decimal fractions. The floating-point
     /// value Not-a-Number is also included in the Number type.</summary>
     Number,
+
     /// <summary>The simple values true and false.</summary>
     Boolean,
+
     /// <summary>A &quot;simple value&quot; other than floating point
     /// values, true, and false.</summary>
     SimpleValue,
+
     /// <summary>An array of bytes.</summary>
     ByteString,
+
     /// <summary>A text string.</summary>
     TextString,
+
     /// <summary>An array of CBOR objects.</summary>
     Array,
+
     /// <summary>A map of CBOR objects.</summary>
     Map
   }

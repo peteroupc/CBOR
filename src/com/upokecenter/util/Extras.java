@@ -11,7 +11,7 @@ at: http://peteroupc.github.io/CBOR/
 private Extras(){}
     public static int[] DoubleToIntegers(double dbl) {
       long value = Double.doubleToRawLongBits(dbl);
-      return new int[]{
+      return new int[] {
         ((int)(value & 0xFFFFFFFFL)),
         ((int)((value >> 32) & 0xFFFFFFFFL))
       };

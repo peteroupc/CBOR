@@ -73,7 +73,9 @@ at: http://peteroupc.github.io/CBOR/
       int otherFlags = this.helper.GetFlags(other);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         T result = this.HandleNotANumber(thisValue, other, ctx);
-        if ((Object)result != (Object)null) return result;
+        if ((Object)result != (Object)null) {
+ return result;
+}
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0 && (otherFlags & BigNumberFlags.FlagInfinity) != 0) {
           // Attempt to divide infinity by infinity
           return this.SignalInvalid(ctx);
@@ -99,10 +101,7 @@ at: http://peteroupc.github.io/CBOR/
           }
           thisFlags = (thisFlags ^ otherFlags) & BigNumberFlags.FlagNegative;
           return this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              BigInteger.ZERO,
-              BigInteger.ZERO,
-              thisFlags),
+            this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, thisFlags),
             ctx);
         }
       }
@@ -114,7 +113,9 @@ at: http://peteroupc.github.io/CBOR/
       int otherFlags = this.helper.GetFlags(other);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         T result = this.HandleNotANumber(thisValue, other, ctx);
-        if ((Object)result != (Object)null) return result;
+        if ((Object)result != (Object)null) {
+ return result;
+}
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           return this.SignalInvalid(ctx);
         }
@@ -165,12 +166,14 @@ at: http://peteroupc.github.io/CBOR/
           }
           // This value is infinity
           if (isMinOp) {
+            // if negative, will be less than every other number
             return ((thisFlags & BigNumberFlags.FlagNegative) != 0) ?
-              thisValue ://if negative, will be less than every other number
+              thisValue :
               this.RoundToPrecision(otherValue, ctx);  // if positive, will be greater
           } else {
+            // if positive, will be greater than every other number
             return ((thisFlags & BigNumberFlags.FlagNegative) == 0) ?
-              thisValue ://if positive, will be greater than every other number
+              thisValue :
               this.RoundToPrecision(otherValue, ctx);
           }
         }
@@ -241,13 +244,15 @@ at: http://peteroupc.github.io/CBOR/
       // with multiplying only the first two operands)
       if ((op1Flags & BigNumberFlags.FlagInfinity) != 0) {
         // Attempt to multiply infinity by 0
-        if ((op2Flags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(op2).signum()==0)
+        if ((op2Flags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(op2).signum()==0) {
           return this.SignalInvalid(ctx);
+        }
       }
       if ((op2Flags & BigNumberFlags.FlagInfinity) != 0) {
         // Attempt to multiply infinity by 0
-        if ((op1Flags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(op1).signum()==0)
+        if ((op1Flags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(op1).signum()==0) {
           return this.SignalInvalid(ctx);
+        }
       }
       // Now check third operand for quiet NaN
       if ((op3Flags & BigNumberFlags.FlagQuietNaN) != 0) {
@@ -275,15 +280,17 @@ at: http://peteroupc.github.io/CBOR/
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           // thisValue is infinity
           if ((thisFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
-              (otherFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)))
-            return 0;
+              (otherFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative))) {
+ return 0;
+}
           return ((thisFlags & BigNumberFlags.FlagNegative) == 0) ? 1 : -1;
         }
         if ((otherFlags & BigNumberFlags.FlagInfinity) != 0) {
           // the other value is infinity
           if ((thisFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
-              (otherFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)))
-            return 0;
+              (otherFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative))) {
+ return 0;
+}
           return ((otherFlags & BigNumberFlags.FlagNegative) == 0) ? -1 : 1;
         }
       }
@@ -320,16 +327,18 @@ at: http://peteroupc.github.io/CBOR/
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           // thisValue is infinity
           if ((thisFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
-              (otherFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)))
-            return this.ValueOf(0, null);
+              (otherFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative))) {
+ return this.ValueOf(0, null);
+}
           return ((thisFlags & BigNumberFlags.FlagNegative) == 0) ?
             this.ValueOf(1, null) : this.ValueOf(-1, null);
         }
         if ((otherFlags & BigNumberFlags.FlagInfinity) != 0) {
           // the other value is infinity
           if ((thisFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
-              (otherFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)))
-            return this.ValueOf(0, null);
+              (otherFlags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative))) {
+ return this.ValueOf(0, null);
+}
           return ((otherFlags & BigNumberFlags.FlagNegative) == 0) ?
             this.ValueOf(-1, null) : this.ValueOf(1, null);
         }
@@ -716,35 +725,23 @@ bigrem=divrem[1]; }
         if ((flags & BigNumberFlags.FlagNegative) == 0) {
           // positive 0 minus positive 0 is always positive 0
           return this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              mant,
-              this.helper.GetExponent(value),
-              flags & ~BigNumberFlags.FlagNegative),
+            this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags & ~BigNumberFlags.FlagNegative),
             ctx);
         } else if (ctx != null && ctx.getRounding() == Rounding.Floor) {
           // positive 0 minus negative 0 is negative 0 only if
           // the rounding is Floor
           return this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              mant,
-              this.helper.GetExponent(value),
-              flags | BigNumberFlags.FlagNegative),
+            this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags | BigNumberFlags.FlagNegative),
             ctx);
         } else {
           return this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              mant,
-              this.helper.GetExponent(value),
-              flags & ~BigNumberFlags.FlagNegative),
+            this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags & ~BigNumberFlags.FlagNegative),
             ctx);
         }
       }
       flags = flags ^ BigNumberFlags.FlagNegative;
       return this.RoundToPrecision(
-        this.helper.CreateNewWithFlags(
-          mant,
-          this.helper.GetExponent(value),
-          flags),
+        this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags),
         ctx);
     }
 
@@ -1054,9 +1051,9 @@ bigrem=divrem[1]; }
       int sign = powIntBig.signum();
       T one = this.helper.ValueOf(1);
       if (sign == 0) {
+        // however 0 to the power of 0 is undefined
         return this.RoundToPrecision(one, ctx);
-      }  // however 0 to the power of 0 is undefined
-      else if (powIntBig.equals(BigInteger.ONE)) {
+  } else if (powIntBig.equals(BigInteger.ONE)) {
         return this.RoundToPrecision(thisValue, ctx);
       } else if (powIntBig.equals(BigInteger.valueOf(2))) {
         return this.Multiply(thisValue, thisValue, ctx);
@@ -1119,10 +1116,7 @@ bigrem=divrem[1]; }
         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact));
       }
       return this.RoundToPrecision(
-        this.helper.CreateNewWithFlags(
-          mant,
-          exponent,
-          0),
+        this.helper.CreateNewWithFlags(mant, exponent, 0),
         ctx);
     }
 
@@ -1189,10 +1183,7 @@ bigrem=divrem[1]; }
           } else {
             // Power is positive infinity, return 0
             return this.RoundToPrecision(
-              this.helper.CreateNewWithFlags(
-                BigInteger.ZERO,
-                BigInteger.ZERO,
-                0),
+              this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0),
               ctx);
           }
         } else if (cmp == 0) {
@@ -1207,10 +1198,7 @@ bigrem=divrem[1]; }
           } else {
             // Power is negative infinity, return 0
             return this.RoundToPrecision(
-              this.helper.CreateNewWithFlags(
-                BigInteger.ZERO,
-                BigInteger.ZERO,
-                0),
+              this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0),
               ctx);
           }
         }
@@ -1222,9 +1210,7 @@ bigrem=divrem[1]; }
       if (!isPowIntegral) {
         powInt = this.Quantize(
           pow,
-          this.helper.CreateNewWithFlags(
-            BigInteger.ZERO,
-            BigInteger.ZERO, 0),
+          this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0),
           PrecisionContext.ForRounding(Rounding.Down));
         isPowIntegral = this.compareTo(powInt, pow) == 0;
         isPowOdd = !this.helper.GetMantissa(powInt).testBit(0)==false;
@@ -1237,9 +1223,7 @@ bigrem=divrem[1]; }
         } else {
           powInt = this.Quantize(
             pow,
-            this.helper.CreateNewWithFlags(
-              BigInteger.ZERO,
-              BigInteger.ZERO, 0),
+            this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0),
             PrecisionContext.ForRounding(Rounding.Down));
           isPowOdd = !this.helper.GetMantissa(powInt).testBit(0)==false;
         }
@@ -1264,8 +1248,9 @@ bigrem=divrem[1]; }
         }
         return thisValue;
       }
-      if ((!isPowIntegral || powSign < 0) &&  (ctx == null || ctx.getPrecision().signum()==0))
-        throw new IllegalArgumentException("ctx is null or has unlimited precision, and pow's exponent is not an integer or is negative");
+      if ((!isPowIntegral || powSign < 0) && (ctx == null || ctx.getPrecision().signum()==0)) {
+ throw new IllegalArgumentException("ctx is null or has unlimited precision, and pow's exponent is not an integer or is negative");
+}
       if (thisSign < 0 && !isPowIntegral) {
         return this.SignalInvalid(ctx);
       }
@@ -1273,35 +1258,21 @@ bigrem=divrem[1]; }
         // This value is infinity
         if (powSign > 0) {
           return this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              BigInteger.ZERO,
-              BigInteger.ZERO,
-              (isResultNegative ?
-               BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity),
+            this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, (isResultNegative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity),
             ctx);
         } else if (powSign < 0) {
           return this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              BigInteger.ZERO,
-              BigInteger.ZERO,
-              (isResultNegative ?
-               BigNumberFlags.FlagNegative : 0)),
+            this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, isResultNegative ? BigNumberFlags.FlagNegative : 0),
             ctx);
         } else {
           return this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              BigInteger.ONE,
-              BigInteger.ZERO,
-              0),
+            this.helper.CreateNewWithFlags(BigInteger.ONE, BigInteger.ZERO, 0),
             ctx);
         }
       }
       if (powSign == 0) {
         return this.RoundToPrecision(
-          this.helper.CreateNewWithFlags(
-            BigInteger.ONE,
-            BigInteger.ZERO,
-            0),
+          this.helper.CreateNewWithFlags(BigInteger.ONE, BigInteger.ZERO, 0),
           ctx);
       }
       if (isPowIntegral) {
@@ -1315,9 +1286,7 @@ bigrem=divrem[1]; }
         if ((Object)powInt == (Object)null) {
           powInt = this.Quantize(
             pow,
-            this.helper.CreateNewWithFlags(
-              BigInteger.ZERO,
-              BigInteger.ZERO, 0),
+            this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0),
             PrecisionContext.ForRounding(Rounding.Down));
         }
         BigInteger signedMant = (this.helper.GetMantissa(powInt)).abs();
@@ -1387,18 +1356,12 @@ bigrem=divrem[1]; }
       if (sign == 0) {
         // Result is negative infinity if input is 0
         thisValue = this.RoundToPrecision(
-          this.helper.CreateNewWithFlags(
-            BigInteger.ZERO,
-            BigInteger.ZERO,
-            BigNumberFlags.FlagNegative | BigNumberFlags.FlagInfinity),
+          this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative | BigNumberFlags.FlagInfinity),
           ctxCopy);
       } else if (this.compareTo(thisValue, one) == 0) {
         // Result is 0 if input is 1
         thisValue = this.RoundToPrecision(
-          this.helper.CreateNewWithFlags(
-            BigInteger.ZERO,
-            BigInteger.ZERO,
-            0),
+          this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0),
           ctxCopy);
       } else {
         BigInteger exp = this.helper.GetExponent(thisValue);
@@ -1406,10 +1369,7 @@ bigrem=divrem[1]; }
         if (mant.equals(BigInteger.ONE) && this.thisRadix == 10) {
           // Value is 1 and radix is 10, so the result is the exponent
           thisValue = this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              exp,
-              BigInteger.ZERO,
-              exp.signum() < 0 ? BigNumberFlags.FlagNegative : 0),
+            this.helper.CreateNewWithFlags(exp, BigInteger.ZERO, exp.signum() < 0 ? BigNumberFlags.FlagNegative : 0),
             ctxCopy);
         } else {
           BigInteger mantissa = this.helper.GetMantissa(thisValue);
@@ -1431,10 +1391,7 @@ bigrem=divrem[1]; }
           if (mantissa.compareTo(BigInteger.ONE) == 0) {
             // Value is an integer power of 10
             thisValue = this.RoundToPrecision(
-              this.helper.CreateNewWithFlags(
-                expTmp.AsBigInteger(),
-                BigInteger.ZERO,
-                expTmp.signum() < 0 ? BigNumberFlags.FlagNegative : 0),
+              this.helper.CreateNewWithFlags(expTmp.AsBigInteger(), BigInteger.ZERO, expTmp.signum() < 0 ? BigNumberFlags.FlagNegative : 0),
               ctxCopy);
           } else {
             PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN))
@@ -1522,10 +1479,7 @@ bigrem=divrem[1]; }
         if (cmpOne == 0) {
           // Equal to 1
           thisValue = this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              BigInteger.ZERO,
-              BigInteger.ZERO,
-              0),
+            this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0),
             ctxCopy);
         } else if (cmpOne < 0) {
           // Less than 1
@@ -1553,8 +1507,7 @@ bigrem=divrem[1]; }
             // of square root calls
             thisValue = this.Multiply(
               thisValue,
-              this.helper.CreateNewWithFlags(
-                bigintRoots, BigInteger.ZERO, 0),
+              this.helper.CreateNewWithFlags(bigintRoots, BigInteger.ZERO, 0),
               ctxCopy);
           } else {
             thisValue = this.LnSeries1(thisValue, ctxCopy);
@@ -1590,9 +1543,7 @@ bigrem=divrem[1]; }
             // of square root calls
             thisValue = this.Multiply(
               thisValue,
-              this.helper.CreateNewWithFlags(
-                bigintRoots,
-                BigInteger.ZERO, 0),
+              this.helper.CreateNewWithFlags(bigintRoots, BigInteger.ZERO, 0),
               ctxCopy);
           } else {
             // Find -Ln(1/thisValue)
@@ -1638,10 +1589,7 @@ bigrem=divrem[1]; }
       if ((flags & BigNumberFlags.FlagInfinity) != 0) {
         if ((flags & BigNumberFlags.FlagNegative) != 0) {
           T retval = this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              BigInteger.ZERO,
-              BigInteger.ZERO,
-              0),
+            this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0),
             ctxCopy);
           if (ctx.getHasFlags()) {
             ctx.setFlags(ctx.getFlags()|(ctxCopy.getFlags()));
@@ -1734,10 +1682,7 @@ bigrem=divrem[1]; }
       // System.out.println("curr={0} ideal={1}",currentExp,idealExp);
       if (this.helper.GetSign(thisValue) == 0) {
         ret = this.RoundToPrecision(
-          this.helper.CreateNewWithFlags(
-            BigInteger.ZERO,
-            idealExp,
-            this.helper.GetFlags(thisValue)),
+          this.helper.CreateNewWithFlags(BigInteger.ZERO, idealExp, this.helper.GetFlags(thisValue)),
           ctxtmp);
         if (ctx.getHasFlags()) {
           ctx.setFlags(ctx.getFlags()|(ctxtmp.getFlags()));
@@ -1772,8 +1717,8 @@ bigrem=divrem[1]; }
       BigInteger[] sr = mantissa.sqrtWithRemainder();
       digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();
       // System.out.println("I {0} -> {1} [target={2}], (zero={3})",
-      //                mantissa, sr[0], targetPrecision,
-      //                sr[1].signum()==0);
+      // mantissa, sr[0], targetPrecision,
+      // sr[1].signum()==0);
       mantissa = sr[0];
       if (!sr[1].signum()==0) {
         rounded = true;
@@ -1792,7 +1737,7 @@ bigrem=divrem[1]; }
         retval, 0, inexact ? 1 : 0, null, false, false, ctxtmp);
       currentExp = this.helper.GetExponent(retval);
       // System.out.println("guess I {0} idealExp={1}, curr {2} clamped={3}",guess,
-      //                idealExp, currentExp, (ctxtmp.getFlags()&PrecisionContext.FlagClamped));
+      // idealExp, currentExp, (ctxtmp.getFlags()&PrecisionContext.FlagClamped));
       if ((ctxtmp.getFlags() & PrecisionContext.FlagUnderflow) == 0) {
         int expcmp = currentExp.compareTo(idealExp);
         if (expcmp <= 0 || !this.IsFinite(retval)) {
@@ -1914,7 +1859,9 @@ bigrem=divrem[1]; }
       int otherFlags = this.helper.GetFlags(otherValue);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         T result = this.HandleNotANumber(thisValue, otherValue, ctx);
-        if ((Object)result != (Object)null) return result;
+        if ((Object)result != (Object)null) {
+ return result;
+}
       }
       PrecisionContext ctx2;
       int cmp = this.compareTo(thisValue, otherValue);
@@ -1971,7 +1918,8 @@ bigrem=divrem[1]; }
         if ((ctx2.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
           BigInteger bigmant = (this.helper.GetMantissa(val)).abs();
           BigInteger maxmant = this.helper.MultiplyByRadixPower(
-            BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()).Decrement());
+            BigInteger.ONE,
+            FastInteger.FromBig(ctx.getPrecision()).Decrement());
           if (bigmant.compareTo(maxmant) >= 0 || ctx.getPrecision().compareTo(BigInteger.ONE) == 0) {
             // don't treat max-precision results as having underflowed
             ctx2.setFlags(0);
@@ -2093,11 +2041,7 @@ bigrem=divrem[1]; }
 
     private int[] RoundToScaleStatus(
       BigInteger remainder,
-      // Assumes value is nonnegative
       BigInteger divisor,
-      // Assumes value is nonnegative
-      boolean neg,
-      // Whether return value should be negated
       PrecisionContext ctx) {
       Rounding rounding = (ctx == null) ? Rounding.HalfEven : ctx.getRounding();
       int lastDiscarded = 0;
@@ -2131,7 +2075,7 @@ bigrem=divrem[1]; }
           olderDiscarded = 1;
         }
       }
-      return new int[]{lastDiscarded, olderDiscarded};
+      return new int[] { lastDiscarded, olderDiscarded};
     }
 
     private BigInteger RoundToScale(
@@ -2233,7 +2177,9 @@ bigrem=divrem[1]; }
       int integerMode,
       BigInteger desiredExponent) {
       T ret = this.DivisionHandleSpecial(thisValue, divisor, ctx);
-      if ((Object)ret != (Object)null) return ret;
+      if ((Object)ret != (Object)null) {
+ return ret;
+}
       int signA = this.helper.GetSign(thisValue);
       int signB = this.helper.GetSign(divisor);
       if (signB == 0) {
@@ -2258,10 +2204,7 @@ bigrem=divrem[1]; }
           int newflags = (this.helper.GetFlags(thisValue) & BigNumberFlags.FlagNegative) ^
             (this.helper.GetFlags(divisor) & BigNumberFlags.FlagNegative);
           retval = this.RoundToPrecision(
-            this.helper.CreateNewWithFlags(
-              BigInteger.ZERO,
-              dividendExp.subtract(divisorExp),
-              newflags),
+            this.helper.CreateNewWithFlags(BigInteger.ZERO, dividendExp.subtract(divisorExp), newflags),
             ctx);
         }
         return retval;
@@ -2301,11 +2244,10 @@ rem=divrem[1]; }
             return this.helper.CreateNewWithFlags(
               quo,
               desiredExponent,
-              resultNeg ?
-              BigNumberFlags.FlagNegative : 0);
+              resultNeg ? BigNumberFlags.FlagNegative : 0);
           } else if (ctx != null && ctx.getPrecision().signum() != 0 &&
                      FastInteger.Copy(expdiff).SubtractInt(8).compareTo(fastPrecision) > 0
-                    ) {  // NOTE: 8 guard digits
+) {  // NOTE: 8 guard digits
             // Result would require a too-high precision since
             // exponent difference is much higher
             return this.SignalInvalidWithMessage(ctx, "Result can't fit the precision");
@@ -2321,24 +2263,19 @@ rem=divrem[1]; }
             return this.helper.CreateNewWithFlags(
               quo,
               desiredExponent,
-              resultNeg ?
-              BigNumberFlags.FlagNegative : 0);
+              resultNeg ? BigNumberFlags.FlagNegative : 0);
           }
         }
         if (integerMode == IntegerModeRegular) {
           BigInteger rem = null;
           BigInteger quo = null;
           // System.out.println("div={0} divs={1}",mantissaDividend.getUnsignedBitLength(),
-          //                mantissaDivisor.getUnsignedBitLength());
+          // mantissaDivisor.getUnsignedBitLength());
           if ((mantissaDividend % mantissaDivisor).signum()==0) {
             quo = mantissaDividend / mantissaDivisor;
             quo = this.RoundToScale(quo, BigInteger.ZERO, mantissaDivisor, new FastInteger(0), resultNeg, ctx);
             return this.RoundToPrecision(
-              this.helper.CreateNewWithFlags(
-                quo,
-                naturalExponent.AsBigInteger(),
-                resultNeg ?
-                BigNumberFlags.FlagNegative : 0),
+              this.helper.CreateNewWithFlags(quo, naturalExponent.AsBigInteger(), resultNeg ? BigNumberFlags.FlagNegative : 0),
               ctx);
           }
           if (hasPrecision) {
@@ -2382,7 +2319,7 @@ BigInteger[] divrem=(divid).divideAndRemainder(mantissaDivisor);
 quo=divrem[0];
 rem=divrem[1]; }
             }
-            int[] digitStatus = this.RoundToScaleStatus(rem, mantissaDivisor, resultNeg, ctx);
+            int[] digitStatus = this.RoundToScaleStatus(rem, mantissaDivisor, ctx);
             FastInteger natexp = FastInteger.Copy(naturalExponent).Subtract(shift);
             PrecisionContext ctxcopy = ctx.WithBlankFlags();
             T retval2 = this.RoundToPrecisionWithShift(
@@ -2522,7 +2459,7 @@ rem=divrem[1]; }
           if (rounding == Rounding.HalfDown ||
               rounding == Rounding.HalfEven ||
               rounding == Rounding.HalfUp
-             ) {
+) {
             BigInteger halfDivisor = mantissaDivisor >> 1;
             int cmpHalf = mantissaDividend.compareTo(halfDivisor);
             if ((cmpHalf == 0) && mantissaDivisor.testBit(0)==false) {
@@ -2581,7 +2518,9 @@ rem=divrem[1]; }
       }
       // Handle infinity and NaN
       T result = this.MinMaxHandleSpecial(a, b, ctx, true, true);
-      if ((Object)result != (Object)null) return result;
+      if ((Object)result != (Object)null) {
+ return result;
+}
       int cmp = this.compareTo(this.AbsRaw(a), this.AbsRaw(b));
       if (cmp == 0) {
         return this.Min(a, b, ctx);
@@ -2607,7 +2546,9 @@ rem=divrem[1]; }
       }
       // Handle infinity and NaN
       T result = this.MinMaxHandleSpecial(a, b, ctx, false, true);
-      if ((Object)result != (Object)null) return result;
+      if ((Object)result != (Object)null) {
+ return result;
+}
       int cmp = this.compareTo(this.AbsRaw(a), this.AbsRaw(b));
       if (cmp == 0) {
         return this.Max(a, b, ctx);
@@ -2632,7 +2573,9 @@ rem=divrem[1]; }
       }
       // Handle infinity and NaN
       T result = this.MinMaxHandleSpecial(a, b, ctx, false, false);
-      if ((Object)result != (Object)null) return result;
+      if ((Object)result != (Object)null) {
+ return result;
+}
       int cmp = this.compareTo(a, b);
       if (cmp != 0)
         return cmp < 0 ? this.RoundToPrecision(b, ctx) :
@@ -2667,7 +2610,9 @@ rem=divrem[1]; }
       }
       // Handle infinity and NaN
       T result = this.MinMaxHandleSpecial(a, b, ctx, true, false);
-      if ((Object)result != (Object)null) return result;
+      if ((Object)result != (Object)null) {
+ return result;
+}
       int cmp = this.compareTo(a, b);
       if (cmp != 0)
         return cmp > 0 ? this.RoundToPrecision(b, ctx) :
@@ -2698,17 +2643,21 @@ rem=divrem[1]; }
       int otherFlags = this.helper.GetFlags(other);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         T result = this.HandleNotANumber(thisValue, other, ctx);
-        if ((Object)result != (Object)null) return result;
+        if ((Object)result != (Object)null) {
+ return result;
+}
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           // Attempt to multiply infinity by 0
-          if ((otherFlags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(other).signum()==0)
-            return this.SignalInvalid(ctx);
+          if ((otherFlags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(other).signum()==0) {
+ return this.SignalInvalid(ctx);
+}
           return this.EnsureSign(thisValue, ((thisFlags & BigNumberFlags.FlagNegative) ^ (otherFlags & BigNumberFlags.FlagNegative)) != 0);
         }
         if ((otherFlags & BigNumberFlags.FlagInfinity) != 0) {
           // Attempt to multiply infinity by 0
-          if ((thisFlags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(thisValue).signum()==0)
-            return this.SignalInvalid(ctx);
+          if ((thisFlags & BigNumberFlags.FlagSpecial) == 0 && this.helper.GetMantissa(thisValue).signum()==0) {
+ return this.SignalInvalid(ctx);
+}
           return this.EnsureSign(other, ((thisFlags & BigNumberFlags.FlagNegative) ^ (otherFlags & BigNumberFlags.FlagNegative)) != 0);
         }
       }
@@ -2716,7 +2665,8 @@ rem=divrem[1]; }
       BigInteger newexp = this.helper.GetExponent(thisValue).add(bigintOp2);
       thisFlags = (thisFlags & BigNumberFlags.FlagNegative) ^ (otherFlags & BigNumberFlags.FlagNegative);
       T ret = this.helper.CreateNewWithFlags(
-        this.helper.GetMantissa(thisValue).multiply(BigInteger.valueOf(this.helper)).GetMantissa(other), newexp,
+        this.helper.GetMantissa(thisValue).multiply(BigInteger.valueOf(this.helper)).GetMantissa(other),
+        newexp,
         thisFlags)
         ;
       if (ctx != null) {
@@ -2740,7 +2690,9 @@ rem=divrem[1]; }
       PrecisionContext ctx) {
       PrecisionContext ctx2 = PrecisionContext.Unlimited.WithBlankFlags();
       T ret = this.MultiplyAddHandleSpecial(thisValue, multiplicand, augend, ctx);
-      if ((Object)ret != (Object)null) return ret;
+      if ((Object)ret != (Object)null) {
+ return ret;
+}
       ret = this.Add(this.Multiply(thisValue, multiplicand, ctx2), augend, ctx);
       if (ctx != null && ctx.getHasFlags()) {
         ctx.setFlags(ctx.getFlags()|(ctx2.getFlags()));
@@ -2829,7 +2781,9 @@ rem=divrem[1]; }
       int otherFlags = this.helper.GetFlags(otherValue);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         T result = this.HandleNotANumber(thisValue, otherValue, ctx);
-        if ((Object)result != (Object)null) return result;
+        if ((Object)result != (Object)null) {
+ return result;
+}
         if (((thisFlags & otherFlags) & BigNumberFlags.FlagInfinity) != 0) {
           return this.RoundToPrecision(thisValue, ctx);
         }
@@ -2903,8 +2857,7 @@ rem=divrem[1]; }
           ctx.WithPrecision(0).WithBlankFlags();
         T ret = this.Quantize(
           thisValue,
-          this.helper.CreateNewWithFlags(
-            BigInteger.ONE, expOther, 0),
+          this.helper.CreateNewWithFlags(BigInteger.ONE, expOther, 0),
           pctx);
         if (ctx != null && ctx.getHasFlags()) {
           ctx.setFlags(ctx.getFlags()|(pctx.getFlags()));
@@ -2927,7 +2880,9 @@ rem=divrem[1]; }
       int thisFlags = this.helper.GetFlags(thisValue);
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         T result = this.HandleNotANumber(thisValue, thisValue, ctx);
-        if ((Object)result != (Object)null) return result;
+        if ((Object)result != (Object)null) {
+ return result;
+}
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           return thisValue;
         }
@@ -3057,8 +3012,9 @@ bigrem=divrem[1]; }
       // If context has unlimited precision and exponent range,
       // and no discarded digits or shifting
       if (ctx.getPrecision().signum()==0 && !ctx.getHasExponentRange() &&
-          (lastDiscarded | olderDiscarded) == 0 && (shift == null || shift.isValueZero()))
-        return thisValue;
+          (lastDiscarded | olderDiscarded) == 0 && (shift == null || shift.isValueZero())) {
+ return thisValue;
+}
       int thisFlags = this.helper.GetFlags(thisValue);
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -3229,7 +3185,7 @@ bigrem=divrem[1]; }
       FastInteger adjExponent = FastInteger.Copy(exp)
         .Add(accum.GetDigitLength()).Decrement();
       // System.out.println("{0}->{1} digits={2} exp={3} [curexp={4}] adj={5},max={6}",bigmantissa,accum.getShiftedInt(),
-      //              accum.getDiscardedDigitCount(), exp, helper.GetExponent(thisValue), adjExponent, fastEMax);
+      // accum.getDiscardedDigitCount(), exp, helper.GetExponent(thisValue), adjExponent, fastEMax);
       FastInteger newAdjExponent = adjExponent;
       FastInteger clamp = null;
       BigInteger earlyRounded = BigInteger.ZERO;
@@ -3423,7 +3379,7 @@ bigrem=divrem[1]; }
           if (!unlimitedPrec &&
               (bigmantissa.testBit(0)==false || (this.thisRadix & 1) != 0) &&
               (binaryPrec || oldDigitLength.compareTo(fastPrecision) >= 0)
-             ) {
+) {
             accum = this.helper.CreateShiftAccumulator(bigmantissa);
             FastInteger newDigitLength = accum.GetDigitLength();
             if (binaryPrec || newDigitLength.compareTo(fastPrecision) > 0) {
@@ -3561,11 +3517,14 @@ bigrem=divrem[1]; }
       int otherFlags = this.helper.GetFlags(other);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         T result = this.HandleNotANumber(thisValue, other, ctx);
-        if ((Object)result != (Object)null) return result;
+        if ((Object)result != (Object)null) {
+ return result;
+}
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           if ((otherFlags & BigNumberFlags.FlagInfinity) != 0) {
-            if ((thisFlags & BigNumberFlags.FlagNegative) != (otherFlags & BigNumberFlags.FlagNegative))
-              return this.SignalInvalid(ctx);
+            if ((thisFlags & BigNumberFlags.FlagNegative) != (otherFlags & BigNumberFlags.FlagNegative)) {
+ return this.SignalInvalid(ctx);
+}
           }
           return thisValue;
         }
@@ -3602,8 +3561,8 @@ bigrem=divrem[1]; }
                 // and second operand isn't zero
                 // second mantissa will be shifted by the exponent
                 // difference
-                //                    111111111111|
-                //        222222222222222|
+                // 111111111111|
+                // 222222222222222|
                 FastInteger digitLength1 = this.helper.CreateShiftAccumulator(op1MantAbs)
                   .GetDigitLength();
                 if (
@@ -3676,8 +3635,8 @@ bigrem=divrem[1]; }
                 // and first operand isn't zero
                 // first mantissa will be shifted by the exponent
                 // difference
-                //       111111111111|
-                //                222222222222222|
+                // 111111111111|
+                // 222222222222222|
                 FastInteger digitLength2 = this.helper.CreateShiftAccumulator(op2MantAbs).GetDigitLength();
                 if (
                   FastInteger.Copy(fastOp2Exp)
@@ -3787,7 +3746,9 @@ bigrem=divrem[1]; }
         return this.SignalInvalid(ctx);
       }
       T result = this.CompareToHandleSpecial(thisValue, decfrac, treatQuietNansAsSignaling, ctx);
-      if ((Object)result != (Object)null) return result;
+      if ((Object)result != (Object)null) {
+ return result;
+}
       return this.ValueOf(this.compareTo(thisValue, decfrac), null);
     }
 
@@ -3871,8 +3832,8 @@ bigrem=divrem[1]; }
               // and second operand isn't zero
               // second mantissa will be shifted by the exponent
               // difference
-              //                    111111111111|
-              //        222222222222222|
+              // 111111111111|
+              // 222222222222222|
               FastInteger digitLength1 = this.helper.CreateShiftAccumulator(
                 op1MantAbs).GetDigitLength();
               if (
@@ -3902,8 +3863,8 @@ bigrem=divrem[1]; }
               // and second operand isn't zero
               // first mantissa will be shifted by the exponent
               // difference
-              //       111111111111|
-              //                222222222222222|
+              // 111111111111|
+              // 222222222222222|
               FastInteger digitLength2 = this.helper.CreateShiftAccumulator(
                 op2MantAbs).GetDigitLength();
               if (

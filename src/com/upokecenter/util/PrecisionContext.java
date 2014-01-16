@@ -15,6 +15,7 @@ at: http://peteroupc.github.io/CBOR/
      */
   public class PrecisionContext {
     private BigInteger exponentMax;
+
     /**
      * Gets the highest exponent possible when a converted number is expressed
      * in scientific notation with one digit before the decimal point. For
@@ -30,6 +31,7 @@ at: http://peteroupc.github.io/CBOR/
     private BigInteger exponentMin;
 
     private boolean hasExponentRange;
+
     /**
      * Gets a value indicating whether this context defines a minimum and
      * maximum exponent. If false, converted exponents can have any exponent.
@@ -101,39 +103,47 @@ at: http://peteroupc.github.io/CBOR/
      * but as close as possible to the original.
      */
     public static final int FlagInexact = 1;
+
     /**
      * Signals that the result was rounded to fit the precision; either the
      * value or the exponent may have changed from the original.
      */
     public static final int FlagRounded = 2;
+
     /**
      * Signals that the result&apos;s exponent, before rounding, is lower
      * than the lowest exponent allowed.
      */
     public static final int FlagSubnormal = 4;
+
     /**
      * Signals that the result&apos;s exponent, before rounding, is lower
      * than the lowest exponent allowed, and the result was rounded to a different
      * mathematical value, but as close as possible to the original.
      */
     public static final int FlagUnderflow = 8;
+
     /**
      * Signals that the result is non-zero and the exponent is higher than
      * the highest exponent allowed.
      */
     public static final int FlagOverflow = 16;
+
     /**
      * Signals that the exponent was adjusted to fit the exponent range.
      */
     public static final int FlagClamped = 32;
+
     /**
      * Signals an invalid operation.
      */
     public static final int FlagInvalid = 64;
+
     /**
      * Signals a division of a nonzero number by zero.
      */
     public static final int FlagDivideByZero = 128;
+
     /**
      * Gets the flags that are set from converting numbers according to this
      * precision context. If HasFlags is false, this value will be 0.
@@ -357,24 +367,28 @@ boolean clampNormalExponents) {
      */
 
     public static final PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
+
     /**
      * Precision context for the IEEE-754-2008 decimal32 format.
      */
 
     public static final PrecisionContext Decimal32 =
       new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
+
     /**
      * Precision context for the IEEE-754-2008 decimal64 format.
      */
 
     public static final PrecisionContext Decimal64 =
       new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
+
     /**
      * Precision context for the IEEE-754-2008 decimal128 format.
      */
 
     public static final PrecisionContext Decimal128 =
       new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
+
     /**
      * Precision context for the Common Language Infrastructure (.NET
      * Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision

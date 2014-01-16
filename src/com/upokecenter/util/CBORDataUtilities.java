@@ -15,8 +15,8 @@ at: http://peteroupc.github.io/CBOR/
      */
   public final class CBORDataUtilities {
 private CBORDataUtilities(){}
-    private static BigInteger LowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
-    private static BigInteger UInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
+    private static BigInteger valueLowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
+    private static BigInteger valueUInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
     /**
      * Parses a number whose format follows the JSON specification. See
@@ -192,7 +192,7 @@ boolean failOnExponentOverflow) {
         } else {
           BigInteger bigintExponent = fastExponent.AsBigInteger();
           if (!fastExponent.CanFitInInt32()) {
-            if (bigintExponent.compareTo(UInt64MaxValue) > 0) {
+            if (bigintExponent.compareTo(valueUInt64MaxValue) > 0) {
               // Exponent is higher than the highest representable
               // integer of major type 0
               if (failOnExponentOverflow) {
@@ -203,7 +203,7 @@ boolean failOnExponentOverflow) {
                   CBORObject.FromObject(Double.NEGATIVE_INFINITY) :
                   CBORObject.FromObject(Double.POSITIVE_INFINITY);
             }
-            if (bigintExponent.compareTo(LowestMajorType1) < 0) {
+            if (bigintExponent.compareTo(valueLowestMajorType1) < 0) {
               // Exponent is lower than the lowest representable
               // integer of major type 1
               if (failOnExponentOverflow) {

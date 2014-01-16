@@ -13,10 +13,10 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer.</summary>
+  /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
-    private static int CountWords(short[] sarray, int n) {
+    private static int CountWords(short[] array, int n) {
       while (n != 0 && array[n - 1] == 0) {
         n--;
       }
@@ -96,11 +96,15 @@ namespace PeterO {
       shiftWords = Math.Min(shiftWords, n);
       if (shiftWords != 0) {
         for (int i = 0; i + shiftWords < n; ++i)
+        {
           r[rstart + i] = r[rstart + i + shiftWords];
+        }
         rstart = rstart + n - shiftWords;
         // Sign extend
         for (int i = 0; i < shiftWords; ++i)
+        {
           r[rstart + i] = unchecked((short)0xFFFF);
+        }
       }
     }
 
@@ -155,8 +159,9 @@ namespace PeterO {
 
     private static void TwosComplement(short[] words1, int words1Start, int n) {
       Decrement(words1, words1Start, n, (short)1);
-      for (int i = 0; i < n; ++i)
+      for (int i = 0; i < n; ++i) {
         words1[words1Start + i] = unchecked((short)(~words1[words1Start + i]));
+      }
     }
 
     private static int Add(
@@ -216,18 +221,17 @@ namespace PeterO {
       }
     }
     //-----------------------------
-    //  Baseline Square
+    // Baseline Square
     //-----------------------------
-
     #region Baseline Square
 
     private static void Baseline_Square2(short[] result, int rstart, short[] words1, int astart) {
       unchecked {
         int p; short c; int d; int e;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); result[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4 -  3] = c;
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4 - 3] = c;
         p = (((int)words1[astart + 2 - 1]) & 0xFFFF) * (((int)words1[astart + 2 - 1]) & 0xFFFF);
-        p += e; result[rstart + 4 -  2] = (short)p; result[rstart + 4 -  1] = (short)(p >> 16);
+        p += e; result[rstart + 4 - 2] = (short)p; result[rstart + 4 - 1] = (short)(p >> 16);
       }
     }
 
@@ -316,7 +320,7 @@ namespace PeterO {
     }
     #endregion
     //---------------------
-    //  Baseline multiply
+    // Baseline multiply
     //---------------------
     #region Baseline Multiply
 
@@ -341,8 +345,8 @@ namespace PeterO {
       int mask = 0xFFFF;
       unchecked {
         int p; short c; int d;
-        int a0 = ((int)words1[astart]) &  mask;
-        int b0 = ((int)words2[bstart]) &  mask;
+        int a0 = ((int)words1[astart]) & mask;
+        int b0 = ((int)words2[bstart]) & mask;
         p = a0 * b0; c = (short)p; d = ((int)p >> 16) & mask; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = a0 * (((int)words2[bstart + 1]) & mask);
         p = p + (((int)c) & mask); c = (short)p; d = d + (((int)p >> 16) & mask);
@@ -577,7 +581,6 @@ namespace PeterO {
         RecursiveMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (int)resultMediumLow, count2);
         // Low result = LowA * LowB
         RecursiveMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
-        //
         int c2 = Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultMediumLow, count2);
         int c3 = c2;
         c2 += Add(resultArr, resultMediumLow, resultArr, resultMediumHigh, resultArr, resultStart, count2);
@@ -641,10 +644,10 @@ namespace PeterO {
           cstart = resultStart + i;
           unchecked {
             short carry = 0;
-            int Bint = ((int)words1[words1Start + i]) & 0xFFFF;
+            int valueBint = ((int)words1[words1Start + i]) & 0xFFFF;
             for (int j = 0; j < words2Count; ++j) {
               int p;
-              p = (((int)words2[words2Start + j]) & 0xFFFF) * Bint;
+              p = (((int)words2[words2Start + j]) & 0xFFFF) * valueBint;
               p = p + (((int)carry) & 0xFFFF);
               if (i != 0) {
                 p += ((int)resultArr[cstart + j]) & 0xFFFF;
@@ -661,10 +664,10 @@ namespace PeterO {
           cstart = resultStart + i;
           unchecked {
             short carry = 0;
-            int Bint = ((int)words2[words2Start + i]) & 0xFFFF;
+            int valueBint = ((int)words2[words2Start + i]) & 0xFFFF;
             for (int j = 0; j < words1Count; ++j) {
               int p;
-              p = (((int)words1[words1Start + j]) & 0xFFFF) * Bint;
+              p = (((int)words1[words1Start + j]) & 0xFFFF) * valueBint;
               p = p + (((int)carry) & 0xFFFF);
               if (i != 0) {
                 p += ((int)resultArr[cstart + j]) & 0xFFFF;
@@ -729,15 +732,19 @@ namespace PeterO {
         if (((words2Count / words1Count) & 1) == 0) {
           RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
           Array.Copy(resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), (int)words1Count);
-          for (i = words1Count << 1; i < words2Count; i += words1Count << 1)
+          for (i = words1Count << 1; i < words2Count; i += words1Count << 1) {
             RecursiveMultiply(tempArr, (int)(tempStart + words1Count + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
-          for (i = words1Count; i < words2Count; i += words1Count << 1)
+          }
+          for (i = words1Count; i < words2Count; i += words1Count << 1) {
             RecursiveMultiply(resultArr, (int)(resultStart + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
+          }
         } else {
-          for (i = 0; i < words2Count; i += words1Count << 1)
+          for (i = 0; i < words2Count; i += words1Count << 1) {
             RecursiveMultiply(resultArr, (int)(resultStart + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
-          for (i = words1Count; i < words2Count; i += words1Count << 1)
+          }
+          for (i = words1Count; i < words2Count; i += words1Count << 1) {
             RecursiveMultiply(tempArr, (int)(tempStart + words1Count + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
+          }
         }
         if (Add(resultArr, (int)(resultStart + words1Count), resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), words2Count - words1Count) != 0)
           Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
@@ -842,7 +849,7 @@ namespace PeterO {
       return (returnRemainder ?
               unchecked((short)(((int)dividendHigh) & 0xFFFF)) :
               unchecked((short)(((int)dividendLow) & 0xFFFF))
-             );
+);
     }
 
     private static short DivideUnsigned(int x, short y) {
@@ -869,40 +876,40 @@ namespace PeterO {
       }
     }
 
-    private static short DivideThreeWordsByTwo(short[] words1, int words1Start, short B0, short B1) {
-      // DebugAssert.IsTrue(words1[2] < B1 || (words1[2]==B1 && words1[1] < B0),"{0} line {1}: words1[2] < B1 || (words1[2]==B1 && words1[1] < B0)","integer.cpp",360);
-      short Q;
+    private static short DivideThreeWordsByTwo(short[] words1, int words1Start, short valueB0, short valueB1) {
+      // DebugAssert.IsTrue(words1[2] < valueB1 || (words1[2]==valueB1 && words1[1] < valueB0),"{0} line {1}: words1[2] < valueB1 || (words1[2]==valueB1 && words1[1] < valueB0)","integer.cpp",360);
+      short valueQ;
       unchecked {
-        if ((short)(B1 + 1) == 0)
-          Q = words1[words1Start + 2];
-        else if (B1 != 0) {
-          Q = DivideUnsigned(MakeUint(words1[words1Start + 1], words1[words1Start + 2]), (short)(((int)B1 + 1) & 0xFFFF));
+        if ((short)(valueB1 + 1) == 0) {
+          valueQ = words1[words1Start + 2];
+        } else if (valueB1 != 0) {
+          valueQ = DivideUnsigned(MakeUint(words1[words1Start + 1], words1[words1Start + 2]), (short)(((int)valueB1 + 1) & 0xFFFF));
         } else {
-          Q = DivideUnsigned(MakeUint(words1[words1Start], words1[words1Start + 1]), B0);
+          valueQ = DivideUnsigned(MakeUint(words1[words1Start], words1[words1Start + 1]), valueB0);
         }
 
-        int Qint = ((int)Q) & 0xFFFF;
-        int B0int = ((int)B0) & 0xFFFF;
-        int B1int = ((int)B1) & 0xFFFF;
-        int p = B0int * Qint;
+        int valueQint = ((int)valueQ) & 0xFFFF;
+        int valueB0int = ((int)valueB0) & 0xFFFF;
+        int valueB1int = ((int)valueB1) & 0xFFFF;
+        int p = valueB0int * valueQint;
         int u = (((int)words1[words1Start]) & 0xFFFF) - (p & 0xFFFF);
         words1[words1Start] = GetLowHalf(u);
         u = (((int)words1[words1Start + 1]) & 0xFFFF) - ((p >> 16) & 0xFFFF) -
-          (((int)GetHighHalfAsBorrow(u)) & 0xFFFF) - (B1int * Qint);
+          (((int)GetHighHalfAsBorrow(u)) & 0xFFFF) - (valueB1int * valueQint);
         words1[words1Start + 1] = GetLowHalf(u);
         words1[words1Start + 2] += GetHighHalf(u);
         while (words1[words1Start + 2] != 0 ||
-               (((int)words1[words1Start + 1]) & 0xFFFF) > (((int)B1) & 0xFFFF) ||
-               (words1[words1Start + 1] == B1 && (((int)words1[words1Start]) & 0xFFFF) >= (((int)B0) & 0xFFFF))) {
-          u = (((int)words1[words1Start]) & 0xFFFF) - B0int;
+               (((int)words1[words1Start + 1]) & 0xFFFF) > (((int)valueB1) & 0xFFFF) ||
+               (words1[words1Start + 1] == valueB1 && (((int)words1[words1Start]) & 0xFFFF) >= (((int)valueB0) & 0xFFFF))) {
+          u = (((int)words1[words1Start]) & 0xFFFF) - valueB0int;
           words1[words1Start] = GetLowHalf(u);
-          u = (((int)words1[words1Start + 1]) & 0xFFFF) - B1int - (((int)GetHighHalfAsBorrow(u)) & 0xFFFF);
+          u = (((int)words1[words1Start + 1]) & 0xFFFF) - valueB1int - (((int)GetHighHalfAsBorrow(u)) & 0xFFFF);
           words1[words1Start + 1] = GetLowHalf(u);
           words1[words1Start + 2] += GetHighHalf(u);
-          Q++;
+          valueQ++;
         }
       }
-      return Q;
+      return valueQ;
     }
 
     private static void AtomicDivide(
@@ -916,45 +923,45 @@ namespace PeterO {
         temp[1] = words1[words1Start + 1];
         temp[2] = words1[words1Start + 2];
         temp[3] = words1[words1Start + 3];
-        short Q1 = DivideThreeWordsByTwo(temp, 1, word2A, word2B);
-        short Q0 = DivideThreeWordsByTwo(temp, 0, word2A, word2B);
-        quotient[quotientStart] = Q0;
-        quotient[quotientStart + 1] = Q1;
+        short valueQ1 = DivideThreeWordsByTwo(temp, 1, word2A, word2B);
+        short valueQ0 = DivideThreeWordsByTwo(temp, 0, word2A, word2B);
+        quotient[quotientStart] = valueQ0;
+        quotient[quotientStart + 1] = valueQ1;
       }
     }
 
-    private static void AtomicMultiplyOpt(short[] c, int Cstart, int A0, int A1, short[] words2, int words2Start, int istart, int iend)
+    private static void AtomicMultiplyOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend)
     {
       short s;
       int d;
-      int first1MinusFirst0 = ((int)A1 - A0) & 0xFFFF;
-      A1 &= 0xFFFF;
-      A0 &= 0xFFFF;
+      int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xFFFF;
+      valueA1 &= 0xFFFF;
+      valueA0 &= 0xFFFF;
       unchecked {
-        if (A1 >= A0) {
+        if (valueA1 >= valueA0) {
           for (int i = istart; i < iend; i += 4) {
-            int B0 = ((int)words2[words2Start + i]) & 0xFFFF;
-            int B1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
-            int csi = Cstart + i;
-            if (B0 >= B1)
+            int valueB0 = ((int)words2[words2Start + i]) & 0xFFFF;
+            int valueB1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
+            int csi = valueCstart + i;
+            if (valueB0 >= valueB1)
             {
               s = (short)0;
-              d = first1MinusFirst0 * (((int)B0 - B1) & 0xFFFF);
+              d = first1MinusFirst0 * (((int)valueB0 - valueB1) & 0xFFFF);
             } else {
               s = (short)first1MinusFirst0;
-              d = (((int)s) & 0xFFFF) * (((int)B0 - B1) & 0xFFFF);
+              d = (((int)s) & 0xFFFF) * (((int)valueB0 - valueB1) & 0xFFFF);
             }
-            int A0B0 = A0 * B0;
-            c[csi] = (short)(((int)A0B0) & 0xFFFF);
-            int a0b0high = (A0B0 >> 16) & 0xFFFF;
-            int A1B1 = A1 * B1;
+            int valueA0B0 = valueA0 * valueB0;
+            c[csi] = (short)(((int)valueA0B0) & 0xFFFF);
+            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
+            int valueA1B1 = valueA1 * valueB1;
             int tempInt;
             tempInt = a0b0high +
-              (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + (((int)A1B1) & 0xFFFF);
+              (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + (((int)valueA1B1) & 0xFFFF);
             c[csi + 1] = (short)(((int)tempInt) & 0xFFFF);
 
-            tempInt = A1B1 + (((int)(tempInt >> 16)) & 0xFFFF) +
-              a0b0high + (((int)(d >> 16)) & 0xFFFF) + (((int)(A1B1 >> 16)) & 0xFFFF) -
+            tempInt = valueA1B1 + (((int)(tempInt >> 16)) & 0xFFFF) +
+              a0b0high + (((int)(d >> 16)) & 0xFFFF) + (((int)(valueA1B1 >> 16)) & 0xFFFF) -
               (((int)s) & 0xFFFF);
 
             c[csi + 2] = (short)(((int)tempInt) & 0xFFFF);
@@ -962,28 +969,28 @@ namespace PeterO {
           }
         } else {
           for (int i = istart; i < iend; i += 4) {
-            int B0 = ((int)words2[words2Start + i]) & 0xFFFF;
-            int B1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
-            int csi = Cstart + i;
-            if (B0 > B1) {
-              s = (short)(((int)B0 - B1) & 0xFFFF);
+            int valueB0 = ((int)words2[words2Start + i]) & 0xFFFF;
+            int valueB1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
+            int csi = valueCstart + i;
+            if (valueB0 > valueB1) {
+              s = (short)(((int)valueB0 - valueB1) & 0xFFFF);
               d = first1MinusFirst0 * (((int)s) & 0xFFFF);
             } else {
               s = (short)0;
-              d = (((int)A0 - A1) & 0xFFFF) * (((int)B1 - B0) & 0xFFFF);
+              d = (((int)valueA0 - valueA1) & 0xFFFF) * (((int)valueB1 - valueB0) & 0xFFFF);
             }
-            int A0B0 = A0 * B0;
-            int a0b0high = (A0B0 >> 16) & 0xFFFF;
-            c[csi] = (short)(((int)A0B0) & 0xFFFF);
+            int valueA0B0 = valueA0 * valueB0;
+            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
+            c[csi] = (short)(((int)valueA0B0) & 0xFFFF);
 
-            int A1B1 = A1 * B1;
+            int valueA1B1 = valueA1 * valueB1;
             int tempInt;
             tempInt = a0b0high +
-              (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + (((int)A1B1) & 0xFFFF);
+              (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + (((int)valueA1B1) & 0xFFFF);
             c[csi + 1] = (short)(((int)tempInt) & 0xFFFF);
 
-            tempInt = A1B1 + (((int)(tempInt >> 16)) & 0xFFFF) +
-              a0b0high + (((int)(d >> 16)) & 0xFFFF) + (((int)(A1B1 >> 16)) & 0xFFFF) -
+            tempInt = valueA1B1 + (((int)(tempInt >> 16)) & 0xFFFF) +
+              a0b0high + (((int)(d >> 16)) & 0xFFFF) + (((int)(valueA1B1 >> 16)) & 0xFFFF) -
               (((int)s) & 0xFFFF);
 
             c[csi + 2] = (short)(((int)tempInt) & 0xFFFF);
@@ -993,19 +1000,19 @@ namespace PeterO {
       }
     }
 
-    private static void AtomicMultiplyAddOpt(short[] c, int Cstart, int A0, int A1, short[] words2, int words2Start, int istart, int iend)
+    private static void AtomicMultiplyAddOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend)
     {
       short s;
       int d;
-      int first1MinusFirst0 = ((int)A1 - A0) & 0xFFFF;
-      A1 &= 0xFFFF;
-      A0 &= 0xFFFF;
+      int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xFFFF;
+      valueA1 &= 0xFFFF;
+      valueA0 &= 0xFFFF;
       unchecked {
-        if (A1 >= A0) {
+        if (valueA1 >= valueA0) {
           for (int i = istart; i < iend; i += 4) {
             int b0 = ((int)words2[words2Start + i]) & 0xFFFF;
             int b1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
-            int csi = Cstart + i;
+            int csi = valueCstart + i;
             if (b0 >= b1)
             {
               s = (short)0;
@@ -1014,23 +1021,23 @@ namespace PeterO {
               s = (short)first1MinusFirst0;
               d = (((int)s) & 0xFFFF) * (((int)b0 - b1) & 0xFFFF);
             }
-            int A0B0 = A0 * b0;
-            int a0b0high = (A0B0 >> 16) & 0xFFFF;
+            int valueA0B0 = valueA0 * b0;
+            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
             int tempInt;
-            tempInt = A0B0 + (((int)c[csi]) & 0xFFFF);
+            tempInt = valueA0B0 + (((int)c[csi]) & 0xFFFF);
             c[csi] = (short)(((int)tempInt) & 0xFFFF);
 
-            int A1B1 = A1 * b1;
-            int a1b1low = A1B1 & 0xFFFF;
-            int a1b1high = ((int)(A1B1 >> 16)) & 0xFFFF;
-            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) + (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + a1b1low + (((int)c[csi + 1]) & 0xFFFF);
+            int valueA1B1 = valueA1 * b1;
+            int a1b1low = valueA1B1 & 0xFFFF;
+            int a1b1high = ((int)(valueA1B1 >> 16)) & 0xFFFF;
+            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + a1b1low + (((int)c[csi + 1]) & 0xFFFF);
             c[csi + 1] = (short)(((int)tempInt) & 0xFFFF);
 
-            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xFFFF) +
+            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xFFFF) +
               a1b1high - (((int)s) & 0xFFFF) + (((int)c[csi + 2]) & 0xFFFF);
             c[csi + 2] = (short)(((int)tempInt) & 0xFFFF);
 
-            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) + a1b1high + (((int)c[csi + 3]) & 0xFFFF);
+            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1high + (((int)c[csi + 3]) & 0xFFFF);
             c[csi + 3] = (short)(((int)tempInt) & 0xFFFF);
             if ((tempInt >> 16) != 0) {
               c[csi + 4]++;
@@ -1039,33 +1046,33 @@ namespace PeterO {
           }
         } else {
           for (int i = istart; i < iend; i += 4) {
-            int B0 = ((int)words2[words2Start + i]) & 0xFFFF;
-            int B1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
-            int csi = Cstart + i;
-            if (B0 > B1) {
-              s = (short)(((int)B0 - B1) & 0xFFFF);
+            int valueB0 = ((int)words2[words2Start + i]) & 0xFFFF;
+            int valueB1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
+            int csi = valueCstart + i;
+            if (valueB0 > valueB1) {
+              s = (short)(((int)valueB0 - valueB1) & 0xFFFF);
               d = first1MinusFirst0 * (((int)s) & 0xFFFF);
             } else {
               s = (short)0;
-              d = (((int)A0 - A1) & 0xFFFF) * (((int)B1 - B0) & 0xFFFF);
+              d = (((int)valueA0 - valueA1) & 0xFFFF) * (((int)valueB1 - valueB0) & 0xFFFF);
             }
-            int A0B0 = A0 * B0;
-            int a0b0high = (A0B0 >> 16) & 0xFFFF;
+            int valueA0B0 = valueA0 * valueB0;
+            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
             int tempInt;
-            tempInt = A0B0 + (((int)c[csi]) & 0xFFFF);
+            tempInt = valueA0B0 + (((int)c[csi]) & 0xFFFF);
             c[csi] = (short)(((int)tempInt) & 0xFFFF);
 
-            int A1B1 = A1 * B1;
-            int a1b1low = A1B1 & 0xFFFF;
-            int a1b1high = (A1B1 >> 16) & 0xFFFF;
-            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) + (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + a1b1low + (((int)c[csi + 1]) & 0xFFFF);
+            int valueA1B1 = valueA1 * valueB1;
+            int a1b1low = valueA1B1 & 0xFFFF;
+            int a1b1high = (valueA1B1 >> 16) & 0xFFFF;
+            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + a1b1low + (((int)c[csi + 1]) & 0xFFFF);
             c[csi + 1] = (short)(((int)tempInt) & 0xFFFF);
 
-            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xFFFF) +
+            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xFFFF) +
               a1b1high - (((int)s) & 0xFFFF) + (((int)c[csi + 2]) & 0xFFFF);
             c[csi + 2] = (short)(((int)tempInt) & 0xFFFF);
 
-            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) + a1b1high + (((int)c[csi + 3]) & 0xFFFF);
+            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1high + (((int)c[csi + 3]) & 0xFFFF);
             c[csi + 3] = (short)(((int)tempInt) & 0xFFFF);
             if ((tempInt >> 16) != 0) {
               c[csi + 4]++;
@@ -1078,127 +1085,130 @@ namespace PeterO {
 
     private static void Divide(
       short[] resultArr, int resultStart,  // remainder
-      short[] Qarr, int Qstart,  // quotient
-      short[] TA, int tempStart,  // scratch space
-      short[] words1, int words1Start, int NAint,  // dividend
-      short[] words2, int words2Start, int NBint  // divisor
-     ) {
+      short[] valueQarr, int valueQstart,  // quotient
+      short[] valueTA, int tempStart,  // scratch space
+      short[] words1, int words1Start, int valueNAint,  // dividend
+      short[] words2, int words2Start, int valueNBint  // divisor
+) {
       // set up temporary work space
-      int NA = (int)NAint;
-      int NB = (int)NBint;
+      int valueNA = (int)valueNAint;
+      int valueNB = (int)valueNBint;
       #if DEBUG
-      if (NAint <= 0) {
-        throw new ArgumentException("NAint" + " not less than " + "0" + " (" + Convert.ToString((int)NAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if (valueNAint <= 0) {
+        throw new ArgumentException("valueNAint" + " not less than " + "0" + " (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
-      if (NBint <= 0) {
-        throw new ArgumentException("NBint" + " not less than " + "0" + " (" + Convert.ToString((int)NBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if (valueNBint <= 0) {
+        throw new ArgumentException("valueNBint" + " not less than " + "0" + " (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
-      if (!(NA % 2 == 0 && NB % 2 == 0)) {
-        throw new ArgumentException("doesn't satisfy NA%2==0 && NB%2==0");
+      if (!(valueNA % 2 == 0 && valueNB % 2 == 0)) {
+        throw new ArgumentException("doesn't satisfy valueNA%2==0 && valueNB%2==0");
       }
-      if (!(words2[words2Start + NB - 1] != 0 ||
-            words2[words2Start + NB - 2] != 0)) {
-        throw new ArgumentException("doesn't satisfy words2[NB-1]!=0 || words2[NB-2]!=0");
+      if (!(words2[words2Start + valueNB - 1] != 0 ||
+            words2[words2Start + valueNB - 2] != 0)) {
+        throw new ArgumentException("doesn't satisfy words2[valueNB-1]!=0 || words2[valueNB-2]!=0");
       }
-      if (!(NB <= NA)) {
-        throw new ArgumentException("doesn't satisfy NB<= NA");
+      if (!(valueNB <= valueNA)) {
+        throw new ArgumentException("doesn't satisfy valueNB<= valueNA");
       }
       #endif
-      short[] TBarr = TA;
-      short[] TParr = TA;
-      short[] quot = Qarr;
-      if (Qarr == null) {
+      short[] valueTBarr = valueTA;
+      short[] valueTParr = valueTA;
+      short[] quot = valueQarr;
+      if (valueQarr == null) {
         quot = new short[2];
       }
-      int TBstart = (int)(tempStart + (NA + 2));
-      int TPstart = (int)(tempStart + (NA + 2 + NB));
+      int valueTBstart = (int)(tempStart + (valueNA + 2));
+      int valueTPstart = (int)(tempStart + (valueNA + 2 + valueNB));
       unchecked {
         // copy words2 into TB and normalize it so that TB has highest bit set to 1
-        int shiftWords = (short)(words2[words2Start + NB - 1] == 0 ? 1 : 0);
-        TBarr[TBstart] = (short)0;
-        TBarr[TBstart + NB - 1] = (short)0;
-        Array.Copy(words2, words2Start, TBarr, (int)(TBstart + shiftWords), NB - shiftWords);
-        short shiftBits = (short)((short)16 - BitPrecision(TBarr[TBstart + NB - 1]));
+        int shiftWords = (short)(words2[words2Start + valueNB - 1] == 0 ? 1 : 0);
+        valueTBarr[valueTBstart] = (short)0;
+        valueTBarr[valueTBstart + valueNB - 1] = (short)0;
+        Array.Copy(words2, words2Start, valueTBarr, (int)(valueTBstart + shiftWords), valueNB - shiftWords);
+        short shiftBits = (short)((short)16 - BitPrecision(valueTBarr[valueTBstart + valueNB - 1]));
         ShiftWordsLeftByBits(
-          TBarr,
-          TBstart,
-          NB,
+          valueTBarr,
+          valueTBstart,
+          valueNB,
           shiftBits);
-        // copy words1 into TA and normalize it
-        TA[0] = (short)0;
-        TA[NA] = (short)0;
-        TA[NA + 1] = (short)0;
-        Array.Copy(words1, words1Start, TA, (int)(tempStart + shiftWords), NAint);
+        // copy words1 into valueTA and normalize it
+        valueTA[0] = (short)0;
+        valueTA[valueNA] = (short)0;
+        valueTA[valueNA + 1] = (short)0;
+        Array.Copy(words1, words1Start, valueTA, (int)(tempStart + shiftWords), valueNAint);
         ShiftWordsLeftByBits(
-          TA,
+          valueTA,
           tempStart,
-          NA + 2,
+          valueNA + 2,
           shiftBits);
 
-        if (TA[tempStart + NA + 1] == 0 && (((int)TA[tempStart + NA]) & 0xFFFF) <= 1) {
-          if (Qarr != null) {
-            Qarr[Qstart + NA - NB + 1] = (short)0;
-            Qarr[Qstart + NA - NB] = (short)0;
+        if (valueTA[tempStart + valueNA + 1] == 0 && (((int)valueTA[tempStart + valueNA]) & 0xFFFF) <= 1) {
+          if (valueQarr != null) {
+            valueQarr[valueQstart + valueNA - valueNB + 1] = (short)0;
+            valueQarr[valueQstart + valueNA - valueNB] = (short)0;
           }
           while (
-            TA[NA] != 0 || Compare(
-              TA, (int)(tempStart + NA - NB),
-              TBarr, TBstart, NB) >= 0) {
-            TA[NA] -= (
+            valueTA[valueNA] != 0 || Compare(
+              valueTA,
+              (int)(tempStart + valueNA - valueNB),
+              valueTBarr,
+              valueTBstart,
+              valueNB) >= 0) {
+            valueTA[valueNA] -= (
               short)Subtract(
-              TA, (int)(tempStart + NA - NB),
-              TA, (int)(tempStart + NA - NB),
-              TBarr, TBstart, NB);
-            if (Qarr != null) {
-              Qarr[Qstart + NA - NB] += (short)1;
+              valueTA, (int)(tempStart + valueNA - valueNB),
+              valueTA, (int)(tempStart + valueNA - valueNB),
+              valueTBarr, valueTBstart, valueNB);
+            if (valueQarr != null) {
+              valueQarr[valueQstart + valueNA - valueNB] += (short)1;
             }
           }
         } else {
-          NA += 2;
+          valueNA += 2;
         }
 
-        short BT0 = (short)(TBarr[TBstart + NB - 2] + (short)1);
-        short BT1 = (short)(TBarr[TBstart + NB - 1] + (short)(BT0 == (short)0 ? 1 : 0));
+        short valueBT0 = (short)(valueTBarr[valueTBstart + valueNB - 2] + (short)1);
+        short valueBT1 = (short)(valueTBarr[valueTBstart + valueNB - 1] + (short)(valueBT0 == (short)0 ? 1 : 0));
 
-        // start reducing TA mod TB, 2 words at a time
-        short[] TAtomic = new short[4];
-        for (int i = NA - 2; i >= NB; i -= 2) {
-          int qs = (Qarr == null) ? 0 : Qstart + i - NB;
-          AtomicDivide(quot, qs, TA, (int)(tempStart + i - 2), BT0, BT1, TAtomic);
+        // start reducing valueTA mod TB, 2 words at a time
+        short[] valueTAtomic = new short[4];
+        for (int i = valueNA - 2; i >= valueNB; i -= 2) {
+          int qs = (valueQarr == null) ? 0 : valueQstart + i - valueNB;
+          AtomicDivide(quot, qs, valueTA, (int)(tempStart + i - 2), valueBT0, valueBT1, valueTAtomic);
           // now correct the underestimated quotient
-          int Rstart2 = tempStart + i - NB;
-          int n = NB;
+          int valueRstart2 = tempStart + i - valueNB;
+          int n = valueNB;
           unchecked {
             int quotient0 = quot[qs];
             int quotient1 = quot[qs + 1];
             if (quotient1 == 0) {
-              short carry = LinearMultiply(TParr, TPstart, TBarr, TBstart, (short)quotient0, n);
-              TParr[TPstart + n] = carry;
-              TParr[TPstart + n + 1] = 0;
+              short carry = LinearMultiply(valueTParr, valueTPstart, valueTBarr, valueTBstart, (short)quotient0, n);
+              valueTParr[valueTPstart + n] = carry;
+              valueTParr[valueTPstart + n + 1] = 0;
             } else if (n == 2) {
-              Baseline_Multiply2(TParr, TPstart, quot, qs, TBarr, TBstart);
+              Baseline_Multiply2(valueTParr, valueTPstart, quot, qs, valueTBarr, valueTBstart);
             } else {
-              TParr[TPstart + n] = (short)0;
-              TParr[TPstart + n + 1] = (short)0;
+              valueTParr[valueTPstart + n] = (short)0;
+              valueTParr[valueTPstart + n + 1] = (short)0;
               quotient0 &= 0xFFFF;
               quotient1 &= 0xFFFF;
-              AtomicMultiplyOpt(TParr, TPstart, quotient0, quotient1, TBarr, TBstart, 0, n);
-              AtomicMultiplyAddOpt(TParr, TPstart, quotient0, quotient1, TBarr, TBstart, 2, n);
+              AtomicMultiplyOpt(valueTParr, valueTPstart, quotient0, quotient1, valueTBarr, valueTBstart, 0, n);
+              AtomicMultiplyAddOpt(valueTParr, valueTPstart, quotient0, quotient1, valueTBarr, valueTBstart, 2, n);
             }
-            Subtract(TA, Rstart2, TA, Rstart2, TParr, TPstart, n + 2);
-            while (TA[Rstart2 + n] != 0 || Compare(TA, Rstart2, TBarr, TBstart, n) >= 0) {
-              TA[Rstart2 + n] -= (short)Subtract(TA, Rstart2, TA, Rstart2, TBarr, TBstart, n);
-              if (Qarr != null) {
-                Qarr[qs]++;
-                Qarr[qs + 1] += (short)((Qarr[qs] == 0) ? 1 : 0);
+            Subtract(valueTA, valueRstart2, valueTA, valueRstart2, valueTParr, valueTPstart, n + 2);
+            while (valueTA[valueRstart2 + n] != 0 || Compare(valueTA, valueRstart2, valueTBarr, valueTBstart, n) >= 0) {
+              valueTA[valueRstart2 + n] -= (short)Subtract(valueTA, valueRstart2, valueTA, valueRstart2, valueTBarr, valueTBstart, n);
+              if (valueQarr != null) {
+                valueQarr[qs]++;
+                valueQarr[qs + 1] += (short)((valueQarr[qs] == 0) ? 1 : 0);
               }
             }
           }
         }
         if (resultArr != null) {  // If the remainder is non-null
-          // copy TA into result, and denormalize it
-          Array.Copy(TA, (int)(tempStart + shiftWords), resultArr, resultStart, NB);
-          ShiftWordsRightByBits(resultArr, resultStart, NB, shiftBits);
+          // copy valueTA into result, and denormalize it
+          Array.Copy(valueTA, (int)(tempStart + shiftWords), resultArr, resultStart, valueNB);
+          ShiftWordsRightByBits(resultArr, resultStart, valueNB, shiftBits);
         }
       }
     }
@@ -1223,8 +1233,10 @@ namespace PeterO {
     private bool negative;
     private int wordCount = -1;
     private short[] reg;
+
     /// <summary>Initializes a BigInteger object set to zero.</summary>
-    private BigInteger() {}
+    private BigInteger() {
+    }
 
     /// <summary>Initializes a BigInteger object from an array of bytes.</summary>
     /// <param name='bytes'>A byte[] object.</param>
@@ -1354,8 +1366,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='n'>A 32-bit unsigned integer.</param>
     private bool GetUnsignedBit(int n) {
       #if DEBUG
       if (n < 0) {
@@ -1693,7 +1703,7 @@ namespace PeterO {
       BigInteger thisVar = this;
       if (sign == 0) {
         return BigInteger.One;
-      }  // however 0 to the power of 0 is undefined
+      }
       else if (power.Equals(BigInteger.One)) {
         return this;
       } else if (power.wordCount == 1 && power.reg[0] == 2) {
@@ -1723,9 +1733,9 @@ namespace PeterO {
       }
       BigInteger thisVar = this;
       if (powerSmall == 0) {
+        // however 0 to the power of 0 is undefined
         return BigInteger.One;
-      }  // however 0 to the power of 0 is undefined
-      else if (powerSmall == 1) {
+  } else if (powerSmall == 1) {
         return this;
       } else if (powerSmall == 2) {
         return thisVar * (BigInteger)thisVar;
@@ -1761,12 +1771,10 @@ namespace PeterO {
       return (this.wordCount == 0 || !this.negative) ? this : this.negate();
     }
 
-    /// <summary>Not documented yet.</summary>
     private int CalcWordCount() {
       return (int)CountWords(this.reg, this.reg.Length);
     }
 
-    /// <summary>Not documented yet.</summary>
     private int ByteCount() {
       int wc = this.wordCount;
       if (wc == 0) {
@@ -1890,7 +1898,7 @@ namespace PeterO {
       }
     }
 
-    private const string vec = "0123456789ABCDEF";
+    private const string HexChars = "0123456789ABCDEF";
 
     private static void ReverseChars(char[] chars, int offset, int length) {
       int half = length >> 1;
@@ -1916,7 +1924,7 @@ namespace PeterO {
         value = -value;
       }
       while (value != 0) {
-        char digit = vec[(int)(value % 10)];
+        char digit = HexChars[(int)(value % 10)];
         chars[count++] = digit;
         value = value / 10;
       }
@@ -2189,7 +2197,7 @@ namespace PeterO {
             // accurate approximation to rest/10 up to 43698,
             // and rest can go up to 32767
             int newrest = (rest * 26215) >> 18;
-            s[i++] = vec[rest - (newrest * 10)];
+            s[i++] = HexChars[rest - (newrest * 10)];
             rest = newrest;
           }
           break;
@@ -2198,7 +2206,7 @@ namespace PeterO {
           rest |= (((int)tempReg[1]) & 0xFFFF) << 16;
           while (rest != 0) {
             int newrest = rest / 10;
-            s[i++] = vec[rest - (newrest * 10)];
+            s[i++] = HexChars[rest - (newrest * 10)];
             rest = newrest;
           }
           break;
@@ -2223,15 +2231,15 @@ namespace PeterO {
           // accurate approximation to rest/10 up to 16388,
           // and rest can go up to 9999
           int newrest = (remainderSmall * 3277) >> 15;
-          s[i++] = vec[(int)(remainderSmall - (newrest * 10))];
+          s[i++] = HexChars[(int)(remainderSmall - (newrest * 10))];
           remainderSmall = newrest;
           newrest = (remainderSmall * 3277) >> 15;
-          s[i++] = vec[(int)(remainderSmall - (newrest * 10))];
+          s[i++] = HexChars[(int)(remainderSmall - (newrest * 10))];
           remainderSmall = newrest;
           newrest = (remainderSmall * 3277) >> 15;
-          s[i++] = vec[(int)(remainderSmall - (newrest * 10))];
+          s[i++] = HexChars[(int)(remainderSmall - (newrest * 10))];
           remainderSmall = newrest;
-          s[i++] = vec[remainderSmall];
+          s[i++] = HexChars[remainderSmall];
         }
       }
       ReverseChars(s, 0, i);
@@ -2420,8 +2428,9 @@ namespace PeterO {
       BigInteger thisValue = this.abs();
       bigintSecond = bigintSecond.abs();
       if (bigintSecond.Equals(BigInteger.One) ||
-          thisValue.Equals(bigintSecond))
+          thisValue.Equals(bigintSecond)) {
         return bigintSecond;
+      }
       if (thisValue.Equals(BigInteger.One)) {
         return thisValue;
       }
@@ -2915,7 +2924,7 @@ namespace PeterO {
       words2Size += words2Size % 2;
       quotient.reg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
       quotient.negative = false;
-      short[] tempbuf = new short[words1Size + 3 * (words2Size + 2)];
+      short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];
       Divide(
         null, 0,
         quotient.reg, 0,
@@ -3012,7 +3021,7 @@ namespace PeterO {
       remainder.wordCount = remainder.CalcWordCount();
       quotient.wordCount = quotient.CalcWordCount();
       // Console.WriteLine("Divd={0} divs={1} quo={2} rem={3}",this.wordCount,
-      //                divisor.wordCount, quotient.wordCount, remainder.wordCount);
+      // divisor.wordCount, quotient.wordCount, remainder.wordCount);
       remainder.ShortenArray();
       quotient.ShortenArray();
       if (this.Sign < 0) {
@@ -3156,8 +3165,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <value>Value not documented yet.</value>
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
     public int Sign {
       get {
         if (this.wordCount == 0) {
@@ -3167,8 +3176,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <value>Value not documented yet.</value>
+    /// <summary>Gets whether this value is 0.</summary>
+    /// <value>A value not documented yet.</value>
     public bool IsZero {
       get {
         return this.wordCount == 0;
@@ -3215,9 +3224,11 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this value is even.</summary>
     /// <value>Whetherthis value is even.</value>
-    public bool IsEven { get {
+    public bool IsEven {
+      get {
         return !this.GetUnsignedBit(0);
-      } }
+      }
+    }
 
     /// <summary>BigInteger object for the number zero.</summary>
     #if CODE_ANALYSIS
@@ -3227,6 +3238,7 @@ namespace PeterO {
       Justification="BigInteger is immutable")]
     #endif
     public static readonly BigInteger ZERO = new BigInteger().InitializeInt(0);
+
     /// <summary>BigInteger object for the number one.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -3236,6 +3248,7 @@ namespace PeterO {
     #endif
 
     public static readonly BigInteger ONE = new BigInteger().InitializeInt(1);
+
     /// <summary>BigInteger object for the number ten.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(

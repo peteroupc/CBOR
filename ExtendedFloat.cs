@@ -175,16 +175,16 @@ namespace PeterO {
       return FromString(str, null);
     }
 
-    private static BigInteger BigShiftIteration = (BigInteger)1000000;
-    private static int ShiftIteration = 1000000;
+    private static BigInteger valueBigShiftIteration = (BigInteger)1000000;
+    private static int valueShiftIteration = 1000000;
 
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
       if (val.IsZero) {
  return val;
 }
-      while (bigShift.CompareTo(BigShiftIteration) > 0) {
+      while (bigShift.CompareTo(valueBigShiftIteration) > 0) {
         val <<= 1000000;
-        bigShift -= (BigInteger)BigShiftIteration;
+        bigShift -= (BigInteger)valueBigShiftIteration;
       }
       int lastshift = (int)bigShift;
       val <<= lastshift;
@@ -195,9 +195,9 @@ namespace PeterO {
       if (val.IsZero) {
  return val;
 }
-      while (shift > ShiftIteration) {
+      while (shift > valueShiftIteration) {
         val <<= 1000000;
-        shift -= ShiftIteration;
+        shift -= valueShiftIteration;
       }
       int lastshift = (int)shift;
       val <<= lastshift;
@@ -305,8 +305,9 @@ namespace PeterO {
     /// <returns>An ExtendedFloat object.</returns>
       public ExtendedFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         bool neg = (flags & BigNumberFlags.FlagNegative) != 0;
-        if ((neg && mantissa.Sign > 0) || (!neg && mantissa.Sign < 0))
-          mantissa = -mantissa;
+        if ((neg && mantissa.Sign > 0) || (!neg && mantissa.Sign < 0)) {
+ mantissa = -mantissa;
+}
         return ExtendedFloat.Create(mantissa, exponent);
       }
 
@@ -376,8 +377,8 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger OneShift23 = BigInteger.One << 23;
-    private static BigInteger OneShift52 = BigInteger.One << 52;
+    private static BigInteger valueOneShift23 = BigInteger.One << 23;
+    private static BigInteger valueOneShift52 = BigInteger.One << 52;
 
     /// <summary>Converts this value to a 32-bit floating-point number.
     /// The half-even rounding mode is used.<para>If this value is a NaN,
@@ -403,9 +404,9 @@ namespace PeterO {
           nan |= unchecked((int)(1 << 31));
         }
         if (this.IsQuietNaN()) {
+          // the quiet bit for X86 at least
           nan |= 0x400000;
-        }  // the quiet bit for X86 at least
-        else {
+        } else {
           // not really the signaling bit, but done to keep
           // the mantissa from being zero
           nan |= 0x200000;
@@ -429,7 +430,7 @@ namespace PeterO {
       }
       int smallmant = 0;
       FastInteger fastSmallMant;
-      if (bigmant.CompareTo(OneShift23) < 0) {
+      if (bigmant.CompareTo(valueOneShift23) < 0) {
         smallmant = (int)bigmant;
         int exponentchange = 0;
         while (smallmant < (1 << 23)) {
@@ -526,7 +527,7 @@ namespace PeterO {
         }
         if (this.IsQuietNaN()) {
           nan[1] |= 0x80000;
-        }  // the quiet bit for X86 at least
+        }
         else {
           // not really the signaling bit, but done to keep
           // the mantissa from being zero
@@ -551,7 +552,7 @@ namespace PeterO {
         return 0.0d;
       }
       int[] mantissaBits;
-      if (bigmant.CompareTo(OneShift52) < 0) {
+      if (bigmant.CompareTo(valueOneShift52) < 0) {
         mantissaBits = FastInteger.GetLastWords(bigmant, 2);
         // This will be an infinite loop if both elements
         // of the bits array are 0, but the check for
@@ -662,10 +663,9 @@ namespace PeterO {
           return quiet ? NaN : SignalingNaN;
         } else {
           return CreateWithFlags(
-            bigmant, BigInteger.Zero,
-            (neg ? BigNumberFlags.FlagNegative : 0) |
-            (quiet ? BigNumberFlags.FlagQuietNaN :
-             BigNumberFlags.FlagSignalingNaN));
+            bigmant,
+            BigInteger.Zero,
+            (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
       }
       if (floatExponent == 0) {
@@ -703,7 +703,7 @@ namespace PeterO {
     /// not an approximation, as is often the case by converting the number
     /// to a string.</summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
-    /// <returns>A binary float with the same value as &quot; dbl&quot; .</returns>
+    /// <returns>A binary float with the same value as <paramref name='dbl'/> .</returns>
     public static ExtendedFloat FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
       int floatExponent = (int)((value[1] >> 20) & 0x7ff);
@@ -721,10 +721,9 @@ namespace PeterO {
           return quiet ? NaN : SignalingNaN;
         } else {
           return CreateWithFlags(
-            info, BigInteger.Zero,
-            (neg ? BigNumberFlags.FlagNegative : 0) |
-            (quiet ? BigNumberFlags.FlagQuietNaN :
-             BigNumberFlags.FlagSignalingNaN));
+            info,
+            BigInteger.Zero,
+            (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
       }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
@@ -799,6 +798,7 @@ namespace PeterO {
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagNegative);
+
     /// <summary>Represents the number 10.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -816,6 +816,7 @@ namespace PeterO {
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagQuietNaN);
+
     /// <summary>A not-a-number value that signals an invalid operation
     /// flag when it&apos;s passed as an argument to any arithmetic operation
     /// in ExtendedFloat.</summary>
@@ -823,11 +824,13 @@ namespace PeterO {
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagSignalingNaN);
+
     /// <summary>Positive infinity, greater than any other number.</summary>
     public static readonly ExtendedFloat PositiveInfinity = CreateWithFlags(
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagInfinity);
+
     /// <summary>Negative infinity, less than any other number.</summary>
     public static readonly ExtendedFloat NegativeInfinity = CreateWithFlags(
       BigInteger.Zero,
@@ -925,8 +928,8 @@ namespace PeterO {
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0.</returns>
-    /// <exception cref='ArithmeticException'>The result can&apos;t
-    /// be exact because it would have a nonterminating binary expansion.</exception>
+    /// <exception cref='ArithmeticException'>The result can't be exact
+    /// because it would have a nonterminating binary expansion.</exception>
     public ExtendedFloat Divide(ExtendedFloat divisor) {
       return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
@@ -992,8 +995,8 @@ namespace PeterO {
       PrecisionContext ctx)
     {
       return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null)
-        .Multiply(divisor, null), ctx);
+        this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null),
+        ctx);
     }
 
     /// <summary>Divides two ExtendedFloat objects, and gives a particular
@@ -1036,10 +1039,10 @@ namespace PeterO {
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0.</returns>
-    /// <exception cref='ArithmeticException'>Either ctx is null or ctx&apos;s
-    /// precision is 0, and the result would have a nonterminating binary
-    /// expansion; or, the rounding mode is Rounding.Unnecessary and the
-    /// result is not exact.</exception>
+    /// <exception cref='ArithmeticException'>Either <paramref name='ctx'/>
+    /// is null or <paramref name='ctx'/>'s precision is 0, and the result
+    /// would have a nonterminating binary expansion; or, the rounding mode
+    /// is Rounding.Unnecessary and the result is not exact.</exception>
     public ExtendedFloat Divide(
       ExtendedFloat divisor,
       PrecisionContext ctx)
@@ -1195,7 +1198,6 @@ namespace PeterO {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-
     private static RadixMath<ExtendedFloat> math = new RadixMath<ExtendedFloat>(
       new BinaryMathHelper());
 
@@ -1295,9 +1297,9 @@ namespace PeterO {
     /// pre-existing flags).</param>
     /// <returns>Returns the largest value that&apos;s less than the given
     /// value. Returns negative infinity if the result is negative infinity.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
-    /// range.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
+    /// has an unlimited exponent range.</exception>
     public ExtendedFloat NextMinus(
       PrecisionContext ctx)
     {
@@ -1313,9 +1315,9 @@ namespace PeterO {
     /// pre-existing flags).</param>
     /// <returns>Returns the smallest value that&apos;s greater than the
     /// given value.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
-    /// range.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
+    /// has an unlimited exponent range.</exception>
     public ExtendedFloat NextPlus(
       PrecisionContext ctx)
     {
@@ -1332,9 +1334,9 @@ namespace PeterO {
     /// pre-existing flags).</param>
     /// <returns>Returns the next value that is closer to the other object&apos;
     /// s value than this object&apos;s value.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null, the precision is 0, or &quot; ctx&quot; has an unlimited exponent
-    /// range.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
+    /// has an unlimited exponent range.</exception>
     public ExtendedFloat NextToward(
       ExtendedFloat otherValue,
       PrecisionContext ctx)
@@ -1763,8 +1765,8 @@ namespace PeterO {
     /// NaN if this object is less than 0 (the result would be a complex number
     /// with a real part of 0 and an imaginary part of this object&apos;s absolute
     /// value, but the return value is still NaN).</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public ExtendedFloat SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this, ctx);
     }
@@ -1778,8 +1780,8 @@ namespace PeterO {
     /// be null, as the exp function&apos;s results are generally not exact.--.</param>
     /// <returns>Exp(this object). If this object&apos;s value is 1, returns
     /// an approximation to &quot; e&quot; within the given precision.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public ExtendedFloat Exp(PrecisionContext ctx) {
       return math.Exp(this, ctx);
     }
@@ -1796,8 +1798,8 @@ namespace PeterO {
     /// NaN if this object is less than 0 (the result would be a complex number
     /// with a real part equal to Ln of this object&apos;s absolute value and
     /// an imaginary part equal to pi, but the return value is still NaN.).</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public ExtendedFloat Log(PrecisionContext ctx) {
       return math.Ln(this, ctx);
     }
@@ -1815,9 +1817,9 @@ namespace PeterO {
     /// <returns>This^exponent. Signals the flag FlagInvalid and returns
     /// NaN if this object and exponent are both 0; or if this value is less than
     /// 0 and the exponent either has a fractional part or is infinity.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited, and the exponent has a
-    /// fractional part.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited, and the
+    /// exponent has a fractional part.</exception>
     /// <param name='exponent'>An ExtendedFloat object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
@@ -1831,8 +1833,8 @@ namespace PeterO {
     /// are in addition to the pre-existing flags). --This parameter cannot
     /// be null, as pi can never be represented exactly.--.</param>
     /// <returns>Pi rounded to the given precision.</returns>
-    /// <exception cref='System.ArgumentException'>&quot;Ctx&quot;
-    /// is null or the precision range is unlimited.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public static ExtendedFloat PI(PrecisionContext ctx) {
       return math.Pi(ctx);
     }

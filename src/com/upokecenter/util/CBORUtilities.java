@@ -17,6 +17,7 @@ at: http://peteroupc.github.io/CBOR/
 private CBORUtilities(){}
     private static final String Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private static final String Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
     /**
      * Not documented yet.
      * @param str A StringBuilder object.

@@ -8,7 +8,7 @@ namespace Test {
     /// </summary>
     ///
 [TestFixture]
-  public class BEncodingTest{
+  public class BEncodingTest {
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {
         using (var s = new MemoryStream(b)) {
@@ -152,4 +152,3 @@ public void doTestString(String value) {
     }
   }
 }
-

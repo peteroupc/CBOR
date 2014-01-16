@@ -19,6 +19,7 @@ at: http://peteroupc.github.io/CBOR/
   public final class BigFloat implements Comparable<BigFloat> {
     private BigInteger exponent;
     private BigInteger mantissa;
+
     /**
      * Gets this object&apos;s exponent. This object&apos;s value will
      * be an integer if the exponent is positive or zero.
@@ -90,13 +91,13 @@ at: http://peteroupc.github.io/CBOR/
       this.mantissa = mantissa;
     }
 
-    private static BigInteger BigShiftIteration = BigInteger.valueOf(1000000);
-    private static int ShiftIteration = 1000000;
+    private static BigInteger valueBigShiftIteration = BigInteger.valueOf(1000000);
+    private static int valueShiftIteration = 1000000;
 
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
-      while (bigShift.compareTo(BigShiftIteration) > 0) {
+      while (bigShift.compareTo(valueBigShiftIteration) > 0) {
         val=val.shiftLeft(1000000);
-        bigShift=bigShift.subtract(BigShiftIteration);
+        bigShift=bigShift.subtract(valueBigShiftIteration);
       }
       int lastshift = bigShift.intValue();
       val=val.shiftLeft(lastshift);
@@ -104,9 +105,9 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
-      while (shift > ShiftIteration) {
+      while (shift > valueShiftIteration) {
         val=val.shiftLeft(1000000);
-        shift -= ShiftIteration;
+        shift -= valueShiftIteration;
       }
       int lastshift = (int)shift;
       val=val.shiftLeft(lastshift);
@@ -133,7 +134,9 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     public static BigFloat FromExtendedFloat(ExtendedFloat ef) {
-      if (ef.IsNaN() || ef.IsInfinity()) throw new ArithmeticException("Is NaN or infinity");
+      if (ef.IsNaN() || ef.IsInfinity()) {
+ throw new ArithmeticException("Is NaN or infinity");
+}
       return new BigFloat(ef.getMantissa(), ef.getExponent());
     }
 
@@ -155,7 +158,7 @@ at: http://peteroupc.github.io/CBOR/
      * number.
      * @param flt A 32-bit floating-point number.
      * @return A bigfloat with the same value as &quot; flt&quot; .
-     * @throws ArithmeticException &quot;Flt&quot; is infinity or not-a-number.
+     * @throws ArithmeticException The parameter "flt" is infinity or not-a-number.
      */
     public static BigFloat FromSingle(float flt) {
       return BigFloat.FromExtendedFloat(ExtendedFloat.FromSingle(flt));
@@ -166,7 +169,7 @@ at: http://peteroupc.github.io/CBOR/
      * number.
      * @param dbl A 64-bit floating-point number.
      * @return A bigfloat with the same value as &quot; dbl&quot; .
-     * @throws ArithmeticException &quot;Dbl&quot; is infinity or not-a-number.
+     * @throws ArithmeticException The parameter "dbl" is infinity or not-a-number.
      */
     public static BigFloat FromDouble(double dbl) {
       return BigFloat.FromExtendedFloat(ExtendedFloat.FromDouble(dbl));
@@ -243,6 +246,7 @@ at: http://peteroupc.github.io/CBOR/
      */
 
     public static final BigFloat Zero = new BigFloat(BigInteger.ZERO, BigInteger.ZERO);
+
     /**
      * Represents the number 10.
      */
@@ -370,8 +374,9 @@ at: http://peteroupc.github.io/CBOR/
      */
       public BigFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         boolean neg = (flags & BigNumberFlags.FlagNegative) != 0;
-        if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0))
-          mantissa=mantissa.negate();
+        if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0)) {
+ mantissa=mantissa.negate();
+}
         return new BigFloat(mantissa, exponent);
       }
 
@@ -504,8 +509,8 @@ at: http://peteroupc.github.io/CBOR/
       BigFloat divisor,
       PrecisionContext ctx) {
       return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null)
-        .Multiply(divisor, null), ctx);
+        this.DivideToIntegerNaturalScale(divisor, null) .Multiply(divisor, null),
+        ctx);
     }
 
     /**
@@ -705,7 +710,6 @@ at: http://peteroupc.github.io/CBOR/
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-
     private static RadixMath<BigFloat> math = new RadixMath<BigFloat>(
       new BinaryMathHelper());
 
@@ -743,8 +747,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return The integer part of the quotient of the two objects. The exponent
      * will be set to 0.
      * @throws ArithmeticException Attempted to divide by zero.
-     * @throws ArithmeticException The result doesn&apos;t fit the given
-     * precision.
+     * @throws ArithmeticException The result doesn't fit the given precision.
      */
     public BigFloat DivideToIntegerZeroScale(
       BigFloat divisor,
@@ -765,7 +768,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return The remainder of the two objects.
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException The result of integer division (the
-     * quotient, not the remainder) wouldn&apos;t fit the given precision.
+     * quotient, not the remainder) wouldn't fit the given precision.
      */
     public BigFloat Remainder(
       BigFloat divisor,
@@ -798,7 +801,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return The distance of the closest multiple.
      * @throws ArithmeticException Attempted to divide by zero.
      * @throws ArithmeticException Either the result of integer division
-     * (the quotient) or the remainder wouldn&apos;t fit the given precision.
+     * (the quotient) or the remainder wouldn't fit the given precision.
      */
     public BigFloat RemainderNear(
       BigFloat divisor,
@@ -814,8 +817,8 @@ at: http://peteroupc.github.io/CBOR/
      * of the context is true.
      * @return Returns the largest value that&apos;s less than the given
      * value. Returns null if the result is negative infinity.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
-     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
+     * the precision is 0, or "ctx" has an unlimited exponent range.
      */
     public BigFloat NextMinus(
       PrecisionContext ctx) {
@@ -830,8 +833,8 @@ at: http://peteroupc.github.io/CBOR/
      * of the context is true.
      * @return Returns the smallest value that&apos;s greater than the
      * given value. Returns null if the result is positive infinity.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
-     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
+     * the precision is 0, or "ctx" has an unlimited exponent range.
      */
     public BigFloat NextPlus(
       PrecisionContext ctx) {
@@ -849,8 +852,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return Returns the next value that is closer to the other object&apos;
      * s value than this object&apos;s value. Returns null if the result
      * is infinity.
-     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
-     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
+     * the precision is 0, or "ctx" has an unlimited exponent range.
      */
     public BigFloat NextToward(
       BigFloat otherValue,
@@ -871,7 +874,7 @@ at: http://peteroupc.github.io/CBOR/
      * given, returns null if the result of the rounding overflowed the exponent
      * range.
      * @throws ArithmeticException Attempted to divide by zero.
-     * @throws ArithmeticException Either ctx is null or ctx&apos;s precision
+     * @throws ArithmeticException Either ctx is null or ctx's precision
      * is 0, and the result would have a nonterminating decimal expansion;
      * or, the rounding mode is Rounding.Unnecessary and the result is not
      * exact.
@@ -1002,7 +1005,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A bigfloat with the same value as this object but with the exponent
      * changed.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The exponent is outside of the
      * valid range of the precision context, if it defines an exponent range.
      */
@@ -1020,7 +1023,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A bigfloat with the same value as this object but with the exponent
      * changed.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The exponent is outside of the
      * valid range of the precision context, if it defines an exponent range.
      */
@@ -1044,7 +1047,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A bigfloat with the same value as this object but with the exponent
      * changed.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent is outside of
      * the valid range of the precision context, if it defines an exponent
      * range.
@@ -1066,7 +1069,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A bigfloat with the same value as this object but rounded to
      * an integer.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
      * to 0 when rounding and 0 is outside of the valid range of the precision
      * context, if it defines an exponent range.
@@ -1090,7 +1093,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A bigfloat with the same value as this object but rounded to
      * an integer.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
      * to 0 when rounding and 0 is outside of the valid range of the precision
      * context, if it defines an exponent range.
@@ -1116,7 +1119,7 @@ at: http://peteroupc.github.io/CBOR/
      * mode is HalfEven.
      * @return A bigfloat rounded to the given exponent.
      * @throws ArithmeticException An overflow error occurred, or the
-     * result can&apos;t fit the given precision without rounding.
+     * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
      * when rounding and the new exponent is outside of the valid range of
      * the precision context, if it defines an exponent range.

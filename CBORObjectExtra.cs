@@ -114,7 +114,7 @@ namespace PeterO {
       data[11] = (byte)((bits[2] >> 24) & 0xFF);
       data[12] = 0;
       int scale = (bits[3] >> 16) & 0xFF;
-      BigsInteger bigint = new BigInteger((byte[])data);
+      BigInteger bigint = new BigInteger((byte[])data);
       for (int i = 0; i < scale; ++i) {
         bigint /= (BigInteger)10;
       }
@@ -138,31 +138,31 @@ namespace PeterO {
 
     /// <summary>Converts this object to a .NET decimal.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object&apos;s
-    /// value exceeds the range of a .NET decimal.</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a .NET decimal.</exception>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
       if (this.ItemType == CBORObjectTypeInteger) {
         return (decimal)(long)this.ThisItem;
       } else if (this.ItemType == CBORObjectTypeBigInteger) {
         if ((BigInteger)this.ThisItem > DecimalMaxValue ||
-            (BigInteger)this.ThisItem < DecimalMinValue){
+            (BigInteger)this.ThisItem < DecimalMinValue) {
           throw new OverflowException("This object's value is out of range");
         }
         return BigIntegerToDecimal((BigInteger)this.ThisItem);
       } else if (this.ItemType == CBORObjectTypeSingle) {
         if (Single.IsNaN((float)this.ThisItem) ||
             (float)this.ThisItem > (float)Decimal.MaxValue ||
-            (float)this.ThisItem < (float)Decimal.MinValue){
+            (float)this.ThisItem < (float)Decimal.MinValue) {
           throw new OverflowException("This object's value is out of range");
         }
         return (decimal)(float)this.ThisItem;
       } else if (this.ItemType == CBORObjectTypeDouble) {
         if (Double.IsNaN((double)this.ThisItem) ||
             (double)this.ThisItem > (double)Decimal.MaxValue ||
-            (double)this.ThisItem < (double)Decimal.MinValue){
+            (double)this.ThisItem < (double)Decimal.MinValue) {
           throw new OverflowException("This object's value is out of range");
         }
         return (decimal)(double)this.ThisItem;
@@ -179,10 +179,10 @@ namespace PeterO {
     /// <summary>Converts this object to a 64-bit unsigned integer. Floating
     /// point values are truncated to an integer.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object&apos;s
+    /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object&apos;s
-    /// value exceeds the range of a 64-bit unsigned integer.</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       if (this.ItemType == CBORObjectTypeInteger) {
@@ -191,7 +191,7 @@ namespace PeterO {
         }
         return (ulong)(long)this.ThisItem;
       } else if (this.ItemType == CBORObjectTypeBigInteger) {
-        if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
+        if (((BigInteger)this.ThisItem).CompareTo(valueUInt64MaxValue) > 0 ||
             ((BigInteger)this.ThisItem).Sign < 0)
           throw new OverflowException("This object's value is out of range");
         return (ulong)BigIntegerToDecimal((BigInteger)this.ThisItem);
@@ -217,15 +217,15 @@ namespace PeterO {
         throw new OverflowException("This object's value is out of range");
       } else if (this.ItemType == CBORObjectTypeExtendedDecimal) {
         BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
-        if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
-            bi.Sign < 0){
+        if (((BigInteger)this.ThisItem).CompareTo(valueUInt64MaxValue) > 0 ||
+            bi.Sign < 0) {
           throw new OverflowException("This object's value is out of range");
         }
         return (ulong)BigIntegerToDecimal(bi);
       } else if (this.ItemType == CBORObjectTypeExtendedFloat) {
         BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
-        if (((BigInteger)this.ThisItem).CompareTo(UInt64MaxValue) > 0 ||
-            bi.Sign < 0){
+        if (((BigInteger)this.ThisItem).CompareTo(valueUInt64MaxValue) > 0 ||
+            bi.Sign < 0) {
           throw new OverflowException("This object's value is out of range");
         }
         return (ulong)BigIntegerToDecimal(bi);
@@ -301,10 +301,8 @@ namespace PeterO {
  mantissa = -mantissa;
 }
         return FromObjectAndTag(
-          new CBORObject[] {
-            FromObject(-scale),
-          FromObject(mantissa)
-          },
+          new CBORObject[] { FromObject(-scale),
+          FromObject(mantissa) },
           4);
       }
     }

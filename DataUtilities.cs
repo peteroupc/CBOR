@@ -14,17 +14,18 @@ namespace PeterO {
     /// It is designed to have no dependencies other than the basic runtime
     /// class library.</summary>
   public static class DataUtilities {
-    private static int StreamedStringBufferLength = 4096;
+    private static int valueStreamedStringBufferLength = 4096;
+
     /// <summary>Generates a text string from a UTF-8 byte array.</summary>
     /// <param name='bytes'>A byte array containing text encoded in UTF-8.</param>
     /// <param name='replace'>If true, replaces invalid encoding with
     /// the replacement character (U + FFFD). If false, stops processing
     /// when invalid UTF-8 is seen.</param>
     /// <returns>A string represented by the UTF-8 byte array.</returns>
-    /// <exception cref='System.ArgumentNullException'>&quot;Bytes&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bytes'/> is null.</exception>
     /// <exception cref='System.ArgumentException'>The string is not
-    /// valid UTF-8 and &quot; replace&quot; is false.</exception>
+    /// valid UTF-8 and <paramref name='replace'/> is false.</exception>
     public static string GetUtf8String(byte[] bytes, bool replace) {
       if (bytes == null) {
         throw new ArgumentNullException("bytes");
@@ -44,10 +45,10 @@ namespace PeterO {
     /// the replacement character (U + FFFD). If false, stops processing
     /// when invalid UTF-8 is seen.</param>
     /// <returns>A string represented by the UTF-8 byte array.</returns>
-    /// <exception cref='System.ArgumentNullException'>&quot;Bytes&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bytes'/> is null.</exception>
     /// <exception cref='System.ArgumentException'>The portion of the
-    /// byte array is not valid UTF-8 and &quot; replace&quot; is false.</exception>
+    /// byte array is not valid UTF-8 and <paramref name='replace'/> is false.</exception>
     public static string GetUtf8String(byte[] bytes, int offset, int bytesCount, bool replace) {
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0) {
@@ -62,11 +63,11 @@ namespace PeterO {
     /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>The string encoded in UTF-8.</returns>
-    /// <exception cref='System.ArgumentNullException'>&quot;Str&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
     /// <exception cref='System.ArgumentException'>The string contains
-    /// an unpaired surrogate code point and &quot; replace&quot; is false,
-    /// or an internal error occurred.</exception>
+    /// an unpaired surrogate code point and <paramref name='replace'/>
+    /// is false, or an internal error occurred.</exception>
     public static byte[] GetUtf8Bytes(string str, bool replace) {
       try {
         using (MemoryStream ms = new MemoryStream()) {
@@ -85,8 +86,7 @@ namespace PeterO {
     /// <returns>The number of bytes needed to encode the given string in
     /// UTF-8, or -1 if the string contains an unpaired surrogate code point
     /// and &quot; replace&quot; is false.</returns>
-    /// <exception cref='System.ArgumentNullException'>&quot;S&quot;
-    /// is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
     /// <param name='str'>A String object.</param>
     /// <param name='replace'>A Boolean object.</param>
     public static long GetUtf8Length(String str, bool replace) {
@@ -169,8 +169,9 @@ namespace PeterO {
             i++;
           }
         } else {
-          if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800)
-            return ca - cb;
+          if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800) {
+ return ca - cb;
+}
           if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.Length &&
               strA[i + 1] >= 0xDC00 && strA[i + 1] <= 0xDFFF) {
             ca = 0x10000 + (ca - 0xD800) * 0x400 + (strA[i + 1] - 0xDC00);
@@ -200,11 +201,13 @@ namespace PeterO {
     /// <returns>0 if the entire string portion was written; or -1 if the string
     /// portion contains an unpaired surrogate code point and &quot; replace&quot;
     /// is false.</returns>
-    /// <exception cref='System.ArgumentNullException'>&quot;Str&quot;
-    /// is null or &quot; stream&quot; is null.</exception>
-    /// <exception cref='System.ArgumentException'>&quot;Offset&quot;
-    /// is less than 0, &quot; length&quot; is less than 0, or &quot; offset&quot;
-    /// plus &quot; length&quot; is greater than the string&apos;s length.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null or <paramref name='stream'/> is
+    /// null.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='offset'/> is less than 0, <paramref name='length'/> is less
+    /// than 0, or <paramref name='offset'/> plus <paramref name='length'/>
+    /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
       if (stream == null) {
@@ -229,20 +232,20 @@ namespace PeterO {
                                                                       Convert.ToString(str.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ")");
       byte[] bytes;
       int retval = 0;
-      bytes = new byte[StreamedStringBufferLength];
+      bytes = new byte[valueStreamedStringBufferLength];
       int byteIndex = 0;
       int endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
         int c = str[index];
         if (c <= 0x7F) {
-          if (byteIndex >= StreamedStringBufferLength) {
+          if (byteIndex >= valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.Write(bytes, 0, byteIndex);
             byteIndex = 0;
           }
           bytes[byteIndex++] = (byte)c;
         } else if (c <= 0x7FF) {
-          if (byteIndex + 2 > StreamedStringBufferLength) {
+          if (byteIndex + 2 > valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.Write(bytes, 0, byteIndex);
             byteIndex = 0;
@@ -264,7 +267,7 @@ namespace PeterO {
             c = 0xFFFD;
           }
           if (c <= 0xFFFF) {
-            if (byteIndex + 3 > StreamedStringBufferLength) {
+            if (byteIndex + 3 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.Write(bytes, 0, byteIndex);
               byteIndex = 0;
@@ -273,7 +276,7 @@ namespace PeterO {
             bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
             bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
           } else {
-            if (byteIndex + 4 > StreamedStringBufferLength) {
+            if (byteIndex + 4 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.Write(bytes, 0, byteIndex);
               byteIndex = 0;
@@ -297,8 +300,9 @@ namespace PeterO {
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string was written; or -1 if the string contains
     /// an unpaired surrogate code point and &quot; replace&quot; is false.</returns>
-    /// <exception cref='System.ArgumentNullException'>&quot;Str&quot;
-    /// is null or &quot; stream&quot; is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null or <paramref name='stream'/> is
+    /// null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static int WriteUtf8(String str, Stream stream, bool replace) {
       if (str == null) {
@@ -318,11 +322,13 @@ namespace PeterO {
     /// when invalid UTF-8 is seen.</param>
     /// <returns>0 if the entire string was read without errors, or -1 if the
     /// string is not valid UTF-8 and &quot; replace&quot; is false.</returns>
-    /// <exception cref='System.ArgumentNullException'>&quot;Data&quot;
-    /// is null or &quot; builder&quot; is null.</exception>
-    /// <exception cref='System.ArgumentException'>&quot;Offset&quot;
-    /// is less than 0, &quot; bytesCount&quot; is less than 0, or offset plus
-    /// bytesCount is greater than the length of &quot; data&quot; .</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='data'/> is null or <paramref name='builder'/>
+    /// is null.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='offset'/> is less than 0, <paramref name='bytesCount'/>
+    /// is less than 0, or offset plus bytesCount is greater than the length
+    /// of <paramref name='data'/> .</exception>
     public static int ReadUtf8FromBytes(
       byte[] data,
       int offset,
@@ -442,8 +448,9 @@ namespace PeterO {
     /// if the end of the stream is reached), or -2 if the end of the stream was
     /// reached before the entire string was read.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
-    /// <exception cref='System.ArgumentNullException'>&quot;Stream&quot;
-    /// is null or &quot; builder&quot; is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null or <paramref name='builder'/>
+    /// is null.</exception>
     public static int ReadUtf8(
       Stream stream,
       int bytesCount,

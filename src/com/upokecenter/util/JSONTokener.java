@@ -47,7 +47,7 @@ package com.upokecenter.util;
      * Get the hex value of a character (base16).
      * @param c A character between '0' and '9' or between 'A' and 'F' or
      * between 'a' and 'f'.
-     * @return  An int between 0 and 15, or -1 if c was not a hex digit.
+     * @return An int between 0 and 15, or -1 if c was not a hex digit.
      */
     private static int dehexchar(int c) {
       if (c >= '0' && c <= '9') {
@@ -74,7 +74,7 @@ package com.upokecenter.util;
     /**
      * Construct a JSONTokener from a String.
      *
-     * @param s     A source _string.
+     * @param s A source _string.
      */
     public JSONTokener (String str, int options) {
       if (str == null) {
@@ -154,7 +154,7 @@ package com.upokecenter.util;
             this.myIndex += 1;
             return ret;
           }
-        }  catch (IOException ex) {
+        } catch (IOException ex) {
           throw this.syntaxError("I/O error occurred", ex);
         }
       } else {
@@ -280,7 +280,7 @@ package com.upokecenter.util;
      * accept them.
      * @param quote The quoting character, either <code>"</code>&#xa0;
      * <small>(double quote)</small> or <code>'</code>&#xa0;<small>(single quote)</small>.
-     * @return      A String.
+     * @return A String.
      * @exception NumberFormatException Unterminated _string.
      */
     private String NextString(int quote) {

@@ -101,9 +101,9 @@ rembi=divrem[1]; }
       if (output != null && !d3.toString().equals(output)) {
         ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
         Assert.assertEquals(output, d3.toString(), (
-          name+": expected: ["+(d4.getUnsignedMantissa()).toString()+","+(d4.getExponent()).toString()+"]\\n"+
-          "but was: ["+(d3.getUnsignedMantissa()).toString()+","+(d3.getExponent()).toString()+"]"
-         )); }
+          name+": expected: ["+(d4.getUnsignedMantissa()).toString()+",
+          "+(d4.getExponent()).toString()+"]\\n"+ "but was: ["+(d3.getUnsignedMantissa()).toString()+",
+          "+(d3.getExponent()).toString()+"]")); }
     }
 
     public static void AssertFlags(int expected, int actual, String name) {

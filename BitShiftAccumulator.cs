@@ -10,6 +10,8 @@ using System.Text;
 // using System.Numerics;
 namespace PeterO {
   internal sealed class BitShiftAccumulator : IShiftAccumulator {
+    private const int SmallBitLength = 32;
+
     private int bitLeftmost;
 
     /// <summary>Gets a value indicating whether the last discarded bit
@@ -22,7 +24,6 @@ namespace PeterO {
     }
 
     private int bitsAfterLeftmost;
-    private const int SmallBitLength = 32;
 
     /// <summary>Gets a value indicating whether any of the discarded bits
     /// to the right of the last one was set.</summary>
@@ -70,8 +71,8 @@ namespace PeterO {
     private int shiftedSmall;
     private bool isSmall;
 
-    /// <summary>Not documented yet.</summary>
-    /// <value>Value not documented yet.</value>
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
     public BigInteger ShiftedInt {
       get {
         if (this.isSmall) {
@@ -82,9 +83,9 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <value>Value not documented yet.</value>
-    public FastInteger ShiftedIntFast{
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+    public FastInteger ShiftedIntFast {
       get {
         if (this.isSmall) {
           return new FastInteger(this.shiftedSmall);
@@ -96,7 +97,7 @@ namespace PeterO {
 
     private FastInteger discardedBitCount;
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Gets the number of digits discarded.</summary>
     public FastInteger DiscardedDigitCount {
       get {
  return this.discardedBitCount;
@@ -272,11 +273,11 @@ int olderDiscarded)
       }
     }
 
-    /// <summary>Shifts a number until it reaches the given number of bits,
-    /// gathering information on whether the last bit discarded is set and
-    /// whether the discarded bits to the right of that bit are set. Assumes
-    /// that the big integer being shifted is positive.</summary>
     private void ShiftBigToBits(int bits) {
+    // Shifts a number until it reaches the given number of bits,
+    // gathering information on whether the last bit discarded is set and
+    // whether the discarded bits to the right of that bit are set. Assumes
+    // that the big integer being shifted is positive.
       byte[] bytes = this.shiftedBigInt.ToByteArray();
       this.knownBitLength = ByteArrayBitLength(bytes);
       // Shift by the difference in bit length

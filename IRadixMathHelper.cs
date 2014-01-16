@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 // using System.Numerics;
-
 namespace PeterO {
   internal interface IRadixMathHelper<T> {
     int GetRadix();

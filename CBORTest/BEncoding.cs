@@ -69,8 +69,8 @@ namespace PeterO {
       while (true) {
         CBORObject o = readObject(stream, true);
         if (o == null) {
- break;
-}// 'e' was read
+ break;// 'e' was read
+}
         obj.Add(o);
       }
       return obj;

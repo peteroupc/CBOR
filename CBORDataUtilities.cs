@@ -6,16 +6,15 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 using System;
-using System.Text;
-// using System.Numerics;
 using System.Globalization;
+using System.Text;
 
 namespace PeterO {
-    /// <summary>Contains methods useful for reading and writing data,
-    /// with a focus on CBOR.</summary>
+  /// <summary>Contains methods useful for reading and writing data,
+  /// with a focus on CBOR.</summary>
   public static class CBORDataUtilities {
-    private static BigInteger LowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
-    private static BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
+    private static BigInteger valueLowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
+    private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     /// <summary>Parses a number whose format follows the JSON specification.
     /// See #ParseJSONNumber(str, integersOnly, parseOnly) for more information.</summary>
@@ -46,28 +45,28 @@ namespace PeterO {
     /// if the exponent is less than -(2^64).</param>
     /// <returns>A CBOR object that represents the parsed number.</returns>
     public static CBORObject ParseJSONNumber(
-string str,
-bool integersOnly,
-bool positiveOnly,
-bool failOnExponentOverflow)
-                                             {
+      string str,
+      bool integersOnly,
+      bool positiveOnly,
+      bool failOnExponentOverflow)
+    {
       if (String.IsNullOrEmpty(str)) {
- return null;
-}
+        return null;
+      }
       char c = str[0];
       bool negative = false;
       int index = 0;
       if (index >= str.Length) {
- return null;
-}
+        return null;
+      }
       c = str[index];
       if (c == '-' && !positiveOnly) {
         negative = true;
         index++;
       }
       if (index >= str.Length) {
- return null;
-}
+        return null;
+      }
       c = str[index];
       index++;
       bool negExp = false;
@@ -94,8 +93,8 @@ bool failOnExponentOverflow)
           // Fraction
           index++;
           if (index >= str.Length) {
- return null;
-}
+            return null;
+          }
           c = str[index];
           index++;
           if (c >= '0' && c <= '9') {
@@ -126,19 +125,19 @@ bool failOnExponentOverflow)
           // Exponent
           index++;
           if (index >= str.Length) {
- return null;
-}
+            return null;
+          }
           c = str[index];
           if (c == '-') {
             negExp = true;
             index++;
           }
           if (c == '+') {
- index++;
-}
+            index++;
+          }
           if (index >= str.Length) {
- return null;
-}
+            return null;
+          }
           c = str[index];
           index++;
           if (c >= '0' && c <= '9') {
@@ -160,11 +159,11 @@ bool failOnExponentOverflow)
         }
       }
       if (negExp) {
- fastExponent.Negate();
-}
+        fastExponent.Negate();
+      }
       if (negative) {
- fastNumber.Negate();
-}
+        fastNumber.Negate();
+      }
       fastExponent.Add(exponentAdjust);
       if (index != str.Length) {
         // End of the string wasn't reached, so isn't a number
@@ -173,10 +172,10 @@ bool failOnExponentOverflow)
       // No fractional part
       if (fastExponent.Sign == 0) {
         if (fastNumber.CanFitInInt32()) {
- return CBORObject.FromObject(fastNumber.AsInt32());
-  } else {
- return CBORObject.FromObject(fastNumber.AsBigInteger());
-}
+          return CBORObject.FromObject(fastNumber.AsInt32());
+        } else {
+          return CBORObject.FromObject(fastNumber.AsBigInteger());
+        }
       } else {
         if (fastNumber.Sign == 0) {
           return CBORObject.FromObject(0);
@@ -188,25 +187,25 @@ bool failOnExponentOverflow)
         } else {
           BigInteger bigintExponent = fastExponent.AsBigInteger();
           if (!fastExponent.CanFitInInt32()) {
-            if (bigintExponent.CompareTo(UInt64MaxValue) > 0) {
+            if (bigintExponent.CompareTo(valueUInt64MaxValue) > 0) {
               // Exponent is higher than the highest representable
               // integer of major type 0
               if (failOnExponentOverflow) {
- return null;
-}
-              else
+                return null;
+              } else {
                 return (fastExponent.Sign < 0) ?
                   CBORObject.FromObject(Double.NegativeInfinity) :
                   CBORObject.FromObject(Double.PositiveInfinity);
+              }
             }
-            if (bigintExponent.CompareTo(LowestMajorType1) < 0) {
+            if (bigintExponent.CompareTo(valueLowestMajorType1) < 0) {
               // Exponent is lower than the lowest representable
               // integer of major type 1
               if (failOnExponentOverflow) {
- return null;
-  } else {
- return CBORObject.FromObject(0);
-}
+                return null;
+              } else {
+                return CBORObject.FromObject(0);
+              }
             }
           }
           return CBORObject.FromObject(ExtendedDecimal.Create(

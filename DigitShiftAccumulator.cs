@@ -50,8 +50,8 @@ namespace PeterO {
 
     private FastInteger discardedBitCount;
 
-    /// <summary>Not documented yet.</summary>
-    /// <value>Value not documented yet.</value>
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
     public FastInteger DiscardedDigitCount {
       get {
         if (this.discardedBitCount == null) {
@@ -61,10 +61,10 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger Ten = (BigInteger)10;
+    private static BigInteger valueTen = (BigInteger)10;
 
-    /// <summary>Not documented yet.</summary>
-    public BigInteger ShiftedInt{
+    /// <summary>Gets the current integer after shifting.</summary>
+    public BigInteger ShiftedInt {
       get {
         if (this.isSmall) {
  return (BigInteger)this.shiftedSmall;
@@ -98,7 +98,7 @@ int olderDiscarded)
       // only the digits '0' through '9'
       if (length > 9) throw new ArgumentException(
         "length" + " not less or equal to " + "9" + " (" +
-        Convert.ToString(length,System.Globalization.CultureInfo.InvariantCulture) + ")");
+        Convert.ToString(length, System.Globalization.CultureInfo.InvariantCulture) + ")");
       int ret = 0;
       for (int i = 0; i < length; ++i) {
         int digit = (int)(str[offset + i] - '0');
@@ -108,9 +108,9 @@ int olderDiscarded)
       return ret;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <value>Value not documented yet.</value>
-    public FastInteger ShiftedIntFast{
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+    public FastInteger ShiftedIntFast {
       get {
         if (this.isSmall) {
           return new FastInteger(this.shiftedSmall);
@@ -214,7 +214,7 @@ out bigrem);
       }
       if (digits == 1) {
         BigInteger bigrem;
-        BigInteger bigquo = BigInteger.DivRem(this.shiftedBigInt, Ten, out bigrem);
+        BigInteger bigquo = BigInteger.DivRem(this.shiftedBigInt, valueTen, out bigrem);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
@@ -317,7 +317,7 @@ out bigrem);
       FastInteger digitDiff = FastInteger.Copy(this.knownBitLength).SubtractInt(digits);
       if (digitDiff.CompareToInt(1) == 0) {
         BigInteger bigrem;
-        BigInteger bigquo = BigInteger.DivRem(this.shiftedBigInt, Ten, out bigrem);
+        BigInteger bigquo = BigInteger.DivRem(this.shiftedBigInt, valueTen, out bigrem);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
@@ -366,7 +366,7 @@ out bigrem);
  this.bitsAfterLeftmost |= 1;
 }
         {
-          BigInteger bigquo2 = BigInteger.DivRem(bigquo, Ten, out bigrem);
+          BigInteger bigquo2 = BigInteger.DivRem(bigquo, valueTen, out bigrem);
           this.bitLeftmost = (int)bigrem;
           this.shiftedBigInt = bigquo2;
         }
@@ -388,7 +388,7 @@ out bigrem);
         this.knownBitLength.SubtractInt(digitShift);
         int newLength = (int)(digitLength - digitShift);
         // Console.WriteLine("dlen={0} dshift={1} newlen={2}",digitLength,
-        //                digitShift, newLength);
+        // digitShift, newLength);
         if (this.discardedBitCount == null) {
  this.discardedBitCount = new FastInteger(0);
 }

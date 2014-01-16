@@ -97,7 +97,7 @@ namespace PeterO
     /// <param name='bigintValue'>A BigInteger object.</param>
     /// <param name='pow'>A BigInteger object. (2).</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
-    /// <returns>The value (bigintValue^pow)%mod.</returns>
+    /// <returns>The value ("bigintValue"^"pow")%"mod".</returns>
     public static BigInteger ModPow(BigInteger bigintValue, BigInteger pow, BigInteger mod) {
       if (bigintValue == null) {
  throw new ArgumentNullException("bigintValue");
@@ -153,7 +153,7 @@ namespace PeterO
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
     /// <returns>True if &apos;thisValue&apos; is less than &apos; otherValue&apos;
-    /// ; otherwise, false.</returns>
+    ///; otherwise, false.</returns>
     public static bool operator <(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
  return otherValue != null;
@@ -166,7 +166,7 @@ namespace PeterO
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
     /// <returns>True if &apos;thisValue&apos; is less than or equal to
-    /// &apos; otherValue&apos; ; otherwise, false.</returns>
+    /// &apos; otherValue&apos;; otherwise, false.</returns>
     public static bool operator <= (BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
  return true;
@@ -179,7 +179,7 @@ namespace PeterO
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
     /// <returns>True if &apos;thisValue&apos; is greater than &apos;
-    /// otherValue&apos; ; otherwise, false.</returns>
+    /// otherValue&apos;; otherwise, false.</returns>
     public static bool operator >(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
  return false;
@@ -192,7 +192,7 @@ namespace PeterO
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
     /// <returns>True if &apos;thisValue&apos; is greater than or equal
-    /// to &apos; otherValue&apos; ; otherwise, false.</returns>
+    /// to &apos; otherValue&apos;; otherwise, false.</returns>
     public static bool operator >= (BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
  return otherValue == null;
@@ -200,10 +200,10 @@ namespace PeterO
       return thisValue.CompareTo(otherValue) >= 0;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Gets a value not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
-    /// <value>Value not documented yet.</value>
-    public bool IsPowerOfTwo{
+    /// <value>A value not documented yet.</value>
+    public bool IsPowerOfTwo {
       get {
         int bits = this.bitLength();
         int ret = 0;
@@ -253,12 +253,13 @@ namespace PeterO
     public long GetBits(int index, int numberBits)
     {
       if (numberBits < 0 || numberBits > 64) {
- throw new ArgumentOutOfRangeException("n");
+ throw new ArgumentOutOfRangeException("numberBits");
 }
       long v = 0;
       // DebugAssert.IsTrue(n <= 8*8,"{0} line {1}: n <= sizeof(v)*8","integer.cpp",2939);
-      for (int j = 0; j < numberBits; ++j)
+      for (int j = 0; j < numberBits; ++j) {
         v |= (long)(this.testBit((int)(index + j)) ? 1 : 0) << j;
+      }
       return v;
     }
 
@@ -308,7 +309,7 @@ namespace PeterO
  throw new ArgumentNullException("power");
 }
       if (power.Sign < 0) {
- throw new ArgumentException("power.Sign" + " not greater or equal to " + "0" + " (" + Convert.ToString(power.Sign,System.Globalization.CultureInfo.InvariantCulture) + ")");
+ throw new ArgumentException("power.Sign" + " not greater or equal to " + "0" + " (" + Convert.ToString(power.Sign, System.Globalization.CultureInfo.InvariantCulture) + ")");
 }
       BigInteger val = BigInteger.One;
       while (power.Sign > 0) {
@@ -330,7 +331,7 @@ namespace PeterO
  throw new ArgumentNullException("bigValue");
 }
       if (power < 0) {
- throw new ArgumentException("power" + " not greater or equal to " + "0" + " (" + Convert.ToString(power,System.Globalization.CultureInfo.InvariantCulture) + ")");
+ throw new ArgumentException("power" + " not greater or equal to " + "0" + " (" + Convert.ToString(power, System.Globalization.CultureInfo.InvariantCulture) + ")");
 }
       return bigValue.pow(power);
     }
@@ -352,7 +353,7 @@ namespace PeterO
     private static void NotWords(short[] r, int n)
     {
       for (int i = 0; i < n; ++i) {
-        r[i] =unchecked((short)(~r[i]));
+        r[i] = unchecked((short)(~r[i]));
       }
     }
 

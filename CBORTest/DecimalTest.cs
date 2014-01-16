@@ -22,7 +22,8 @@ namespace Test
   public class DecimalTest
   {
     public static Regex PropertyLine = new Regex(
-      "^(\\w+)\\:\\s*(\\S+)",RegexOptions.Compiled);
+      "^(\\w+)\\:\\s*(\\S+)",
+      RegexOptions.Compiled);
     public static Regex Quotes = new Regex(
       "^[\\'\\\"]|[\\'\\\"]$",
       RegexOptions.Compiled);
@@ -194,13 +195,15 @@ namespace Test
                       flags.Contains("Invalid_operation"));
         bool divzero=(flags.Contains("Division_by_zero"));
         int expectedFlags = 0;
-        if (flags.Contains("Inexact") || flags.Contains("inexact"))
-          expectedFlags|=PrecisionContext.FlagInexact;
+        if (flags.Contains("Inexact") || flags.Contains("inexact")) {
+ expectedFlags|=PrecisionContext.FlagInexact;
+}
         if (flags.Contains("Subnormal")) {
  expectedFlags|=PrecisionContext.FlagSubnormal;
 }
-        if (flags.Contains("Rounded") || flags.Contains("rounded"))
-          expectedFlags|=PrecisionContext.FlagRounded;
+        if (flags.Contains("Rounded") || flags.Contains("rounded")) {
+ expectedFlags|=PrecisionContext.FlagRounded;
+}
         if (flags.Contains("Underflow")) {
  expectedFlags|=PrecisionContext.FlagUnderflow;
 }
@@ -263,7 +266,9 @@ namespace Test
 }
       for (int i = 0; i < 1; ++i) {
         foreach(var f in Directory.GetFiles(TestPath)) {
-          if (!Path.GetFileName(f).Contains(".decTest"))continue;
+          if (!Path.GetFileName(f).Contains(".decTest")) {
+ continue;
+}
           Console.WriteLine("//"+f);
           IDictionary<string, string> context = new Dictionary<string, string>();
           using(StreamReader w = new StreamReader(f)) {
@@ -299,4 +304,3 @@ namespace Test
     }
   }
 }
-
