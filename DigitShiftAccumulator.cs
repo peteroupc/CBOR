@@ -14,7 +14,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether the last discarded digit
     /// was set.</summary>
-    /// <value>Whetherthe last discarded digit was set.</value>
+    /// <value>Whether the last discarded digit was set.</value>
     public int LastDiscardedDigit {
       get {
  return this.bitLeftmost;
@@ -25,7 +25,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether any of the discarded digits
     /// to the right of the last one was set.</summary>
-    /// <value>Whetherany of the discarded digits to the right of the last
+    /// <value>Whether any of the discarded digits to the right of the last
     /// one was set.</value>
     public int OlderDiscardedDigits {
       get {
@@ -51,7 +51,7 @@ namespace PeterO {
     private FastInteger discardedBitCount;
 
     /// <summary>Not documented yet.</summary>
-    /// <value>Not documented yet.</value>
+    /// <value>Value not documented yet.</value>
     public FastInteger DiscardedDigitCount {
       get {
         if (this.discardedBitCount == null) {
@@ -76,8 +76,8 @@ namespace PeterO {
 
     public DigitShiftAccumulator(
 BigInteger bigint,
-                                 int lastDiscarded,
-                                 int olderDiscarded)
+int lastDiscarded,
+int olderDiscarded)
                                 {
       if (bigint.canFitInInt()) {
         this.shiftedSmall = (int)bigint;
@@ -109,7 +109,7 @@ BigInteger bigint,
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <value>Not documented yet.</value>
+    /// <value>Value not documented yet.</value>
     public FastInteger ShiftedIntFast{
       get {
         if (this.isSmall) {
@@ -122,7 +122,6 @@ BigInteger bigint,
 
     /// <summary>Not documented yet.</summary>
     /// <param name='fastint'>A FastInteger object.</param>
-    /// <returns></returns>
     public void ShiftRight(FastInteger fastint) {
       if (fastint == null) {
  throw new ArgumentNullException("fastint");
@@ -166,8 +165,9 @@ BigInteger bigint,
       if (digits == 1) {
         BigInteger bigrem;
         BigInteger bigquo = BigInteger.DivRem(
-this.shiftedBigInt, (BigInteger)10,
-                                            out bigrem);
+this.shiftedBigInt,
+(BigInteger)10,
+out bigrem);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
@@ -189,8 +189,9 @@ this.shiftedBigInt, (BigInteger)10,
         BigInteger bigrem;
         BigInteger radixPower = DecimalUtility.FindPowerOfTen(startCount);
         BigInteger bigquo = BigInteger.DivRem(
-this.shiftedBigInt, radixPower,
-                                            out bigrem);
+this.shiftedBigInt,
+radixPower,
+out bigrem);
         if (!bigrem.IsZero) {
  this.bitsAfterLeftmost |= 1;
 }
@@ -332,8 +333,9 @@ this.shiftedBigInt, radixPower,
         int diffInt = digitDiff.AsInt32();
         BigInteger radixPower = DecimalUtility.FindPowerOfTen(diffInt);
         BigInteger bigquo = BigInteger.DivRem(
-this.shiftedBigInt, radixPower,
-                                            out bigrem);
+this.shiftedBigInt,
+radixPower,
+out bigrem);
         int rem = (int)bigrem;
         this.bitsAfterLeftmost |= this.bitLeftmost;
         for (int i = 0; i < diffInt; ++i) {
@@ -356,8 +358,9 @@ this.shiftedBigInt, radixPower,
         BigInteger bigrem;
         BigInteger radixPower = DecimalUtility.FindPowerOfTen(digitDiff.AsInt32() - 1);
         BigInteger bigquo = BigInteger.DivRem(
-this.shiftedBigInt, radixPower,
-                                            out bigrem);
+this.shiftedBigInt,
+radixPower,
+out bigrem);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         if (!bigrem.IsZero) {
  this.bitsAfterLeftmost |= 1;
@@ -417,7 +420,6 @@ this.shiftedBigInt, radixPower,
     /// digits to the right of that digit are set. Assumes that the big integer
     /// being shifted is positive.</summary>
     /// <param name='digits'>A 32-bit signed integer.</param>
-    /// <returns></returns>
     public void ShiftRightInt(int digits) {
       if (this.isSmall) {
  this.ShiftRightSmall(digits);
@@ -476,7 +478,6 @@ this.shiftedBigInt, radixPower,
 
     /// <summary>Not documented yet.</summary>
     /// <param name='bits'>A FastInteger object.</param>
-    /// <returns></returns>
     public void ShiftToDigits(FastInteger bits) {
       if (bits.CanFitInInt32()) {
         int intval = bits.AsInt32();
@@ -505,7 +506,6 @@ this.shiftedBigInt, radixPower,
     /// and whether the discarded digits to the right of that digit are set.
     /// Assumes that the big integer being shifted is positive.</summary>
     /// <param name='digits'>A 64-bit signed integer.</param>
-    /// <returns></returns>
     public void ShiftToDigitsInt(int digits) {
       if (this.isSmall) {
  this.ShiftToBitsSmall(digits);

@@ -59,7 +59,10 @@ namespace PeterO {
         }
       }
       return CBORDataUtilities.ParseJSONNumber(
-        builder.ToString(), true, false, true);
+        builder.ToString(),
+        true,
+        false,
+        true);
     }
     private static CBORObject readList(Stream stream) {
       CBORObject obj = CBORObject.NewArray();
@@ -112,7 +115,10 @@ namespace PeterO {
         }
       }
       CBORObject number = CBORDataUtilities.ParseJSONNumber(
-        builder.ToString(), true, true, true);
+        builder.ToString(),
+        true,
+        true,
+        true);
       int length = 0;
       try {
         length = number.AsInt32();

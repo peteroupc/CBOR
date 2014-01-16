@@ -36,7 +36,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether this context defines a
     /// minimum and maximum exponent. If false, converted exponents can
     /// have any exponent.</summary>
-    /// <value>Whetherthis context defines a minimum and maximum exponent.
+    /// <value>Whether this context defines a minimum and maximum exponent.
     /// If false, converted exponents can have any exponent.</value>
     public bool HasExponentRange {
       get {
@@ -114,8 +114,9 @@ namespace PeterO {
     private int flags;
     private bool hasFlags;
 
-    /// <summary>Returns whether this context has a mutable Flags field.</summary>
-    /// <value>Returns whether this context has a mutable Flags field.</value>
+    /// <summary>Gets a value indicating whether this context has a mutable
+    /// Flags field.</summary>
+    /// <value>Whether this context has a mutable Flags field.</value>
     public bool HasFlags {
       get {
  return this.hasFlags;
@@ -227,9 +228,10 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='exponentMin'>A BigInteger object.</param>
-    /// <param name='exponentMax'>A BigInteger object. (2).</param>
+    /// <summary>Copies this precision context and sets the copy&apos;s
+    /// exponent range.</summary>
+    /// <param name='exponentMin'>Desired minimum exponent (EMin).</param>
+    /// <param name='exponentMax'>Desired maximum exponent.</param>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if (exponentMin == null) {
@@ -271,7 +273,7 @@ namespace PeterO {
     /// precision.</param>
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
- throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision,System.Globalization.CultureInfo.InvariantCulture) + ")");
+ throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
 }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = (BigInteger)precision;
@@ -298,8 +300,11 @@ namespace PeterO {
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext Copy() {
       PrecisionContext pcnew = new PrecisionContext(
-0, this.rounding,
-                                                  0, 0, this.clampNormalExponents);
+0,
+this.rounding,
+0,
+0,
+this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
@@ -326,13 +331,16 @@ namespace PeterO {
     /// <summary>Initializes a new PrecisionContext. HasFlags will be
     /// set to false.</summary>
     public PrecisionContext(
-int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
-                            bool clampNormalExponents) {
+int precision,
+Rounding rounding,
+int exponentMinSmall,
+int exponentMaxSmall,
+bool clampNormalExponents) {
       if (precision < 0) {
- throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision,System.Globalization.CultureInfo.InvariantCulture) + ")");
+ throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
 }
       if (exponentMinSmall > exponentMaxSmall) {
- throw new ArgumentException("exponentMinSmall" + " not less or equal to " + Convert.ToString(exponentMaxSmall,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(exponentMinSmall,System.Globalization.CultureInfo.InvariantCulture) + ")");
+ throw new ArgumentException("exponentMinSmall" + " not less or equal to " + Convert.ToString(exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ")");
 }
       this.bigintPrecision = precision == 0 ? BigInteger.Zero : (BigInteger)precision;
       this.rounding = rounding;
@@ -345,7 +353,8 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
     /// <summary>No specific limit on precision. Rounding mode HalfUp.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104",
+      "Microsoft.Security",
+      "CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
 
@@ -353,7 +362,8 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
     /// <summary>Precision context for the IEEE-754-2008 decimal32 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104",
+      "Microsoft.Security",
+      "CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
 
@@ -362,7 +372,8 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
     /// <summary>Precision context for the IEEE-754-2008 decimal64 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104",
+      "Microsoft.Security",
+      "CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
 
@@ -371,7 +382,8 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
     /// <summary>Precision context for the IEEE-754-2008 decimal128 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104",
+      "Microsoft.Security",
+      "CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
 
@@ -382,7 +394,8 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
     /// to round a decimal fraction to this format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security","CA2104",
+      "Microsoft.Security",
+      "CA2104",
       Justification="This PrecisionContext is immutable")]
     #endif
 

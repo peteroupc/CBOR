@@ -43,7 +43,7 @@ namespace Test
 public int NextValue(int v) {
       if ((v)<0)throw new ArgumentException(
         "v"+" not greater or equal to "+"0"+" ("+
-        Convert.ToString((int)v,System.Globalization.CultureInfo.InvariantCulture)+")");
+        Convert.ToString((int)v, System.Globalization.CultureInfo.InvariantCulture)+")");
       if (v <= 1) {
  return 0;
 }

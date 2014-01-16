@@ -65,7 +65,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger getShiftedInt() {
         if (this.isSmall) {
- return (BigInteger)this.shiftedSmall;
+ return BigInteger.valueOf(this.shiftedSmall);
   } else {
  return this.shiftedBigInt;
 }
@@ -73,8 +73,8 @@ at: http://peteroupc.github.io/CBOR/
 
     public DigitShiftAccumulator (
 BigInteger bigint,
-                                 int lastDiscarded,
-                                 int olderDiscarded) {
+int lastDiscarded,
+int olderDiscarded) {
       if (bigint.canFitInInt()) {
         this.shiftedSmall = bigint.intValue();
         if (this.shiftedSmall < 0) {
@@ -251,7 +251,7 @@ bigrem=divrem[1]; }
       }
       if (this.shiftedBigInt.canFitInInt()) {
         this.isSmall = true;
-        this.shiftedSmall = (int)this.shiftedBigInt;
+        this.shiftedSmall = this.shiftedBigInt.intValue();
         this.ShiftRightSmall(digits);
         return;
       }

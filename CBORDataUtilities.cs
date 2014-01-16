@@ -47,9 +47,9 @@ namespace PeterO {
     /// <returns>A CBOR object that represents the parsed number.</returns>
     public static CBORObject ParseJSONNumber(
 string str,
-                                             bool integersOnly,
-                                             bool positiveOnly,
-                                             bool failOnExponentOverflow)
+bool integersOnly,
+bool positiveOnly,
+bool failOnExponentOverflow)
                                              {
       if (String.IsNullOrEmpty(str)) {
  return null;
@@ -183,7 +183,8 @@ string str,
         }
         if (fastNumber.CanFitInInt32() && fastExponent.CanFitInInt32()) {
           return CBORObject.FromObject(ExtendedDecimal.Create(
-            fastNumber.AsBigInteger(), fastExponent.AsBigInteger()));
+            fastNumber.AsBigInteger(),
+            fastExponent.AsBigInteger()));
         } else {
           BigInteger bigintExponent = fastExponent.AsBigInteger();
           if (!fastExponent.CanFitInInt32()) {
@@ -209,7 +210,8 @@ string str,
             }
           }
           return CBORObject.FromObject(ExtendedDecimal.Create(
-            fastNumber.AsBigInteger(), bigintExponent));
+            fastNumber.AsBigInteger(),
+            bigintExponent));
         }
       }
     }

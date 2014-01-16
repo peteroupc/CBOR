@@ -2,7 +2,7 @@ package com.upokecenter.util;
 
 // import java.math.*;
 
-  internal interface IRadixMathHelper<T> {
+  interface IRadixMathHelper<T> {
     int GetRadix();
 
     int GetArithmeticSupport();
@@ -14,8 +14,6 @@ package com.upokecenter.util;
     BigInteger GetMantissa(T value);
 
     BigInteger GetExponent(T value);
-
-    BigInteger RescaleByExponentDiff(BigInteger value, BigInteger exp1, BigInteger exp2);
 
     T ValueOf(int val);
 

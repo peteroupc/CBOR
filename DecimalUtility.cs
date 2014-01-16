@@ -12,14 +12,14 @@ namespace PeterO
     /// <summary>Description of DecimalUtility.</summary>
   internal static class DecimalUtility
   {
-    private static BigInteger[] BigIntPowersOfTen = new BigInteger[]{
+    private static BigInteger[] BigIntPowersOfTen = new BigInteger[] {
       (BigInteger)1, (BigInteger)10, (BigInteger)100, (BigInteger)1000, (BigInteger)10000, (BigInteger)100000, (BigInteger)1000000, (BigInteger)10000000, (BigInteger)100000000, (BigInteger)1000000000,
       (BigInteger)10000000000L, (BigInteger)100000000000L, (BigInteger)1000000000000L, (BigInteger)10000000000000L,
       (BigInteger)100000000000000L, (BigInteger)1000000000000000L, (BigInteger)10000000000000000L,
       (BigInteger)100000000000000000L, (BigInteger)1000000000000000000L
     };
 
-    private static BigInteger[] BigIntPowersOfFive = new BigInteger[]{
+    private static BigInteger[] BigIntPowersOfFive = new BigInteger[] {
       (BigInteger)1, (BigInteger)5, (BigInteger)25, (BigInteger)125, (BigInteger)625, (BigInteger)3125, (BigInteger)15625, (BigInteger)78125, (BigInteger)390625,
       (BigInteger)1953125, (BigInteger)9765625, (BigInteger)48828125, (BigInteger)244140625, (BigInteger)1220703125,
       (BigInteger)6103515625L, (BigInteger)30517578125L, (BigInteger)152587890625L, (BigInteger)762939453125L,
@@ -160,7 +160,7 @@ namespace PeterO
           for (int i = 0; i < this.size; ++i) {
             if (this.inputs[i].CompareTo(bi) <= 0 && (minValue == null || this.inputs[i].CompareTo(minValue) >= 0)) {
               // Console.WriteLine("Have cached power ({0}, {1})",inputs[i],bi);
-              ret = new BigInteger[]{this.inputs[i], this.outputs[i]};
+              ret = new BigInteger[] {this.inputs[i], this.outputs[i]};
               minValue = this.inputs[i];
             }
           }
@@ -225,7 +225,6 @@ public BigInteger GetCachedPowerInt(int bi) {
     /// <summary>Not documented yet.</summary>
     /// <param name='input'>A BigInteger object.</param>
     /// <param name='output'>A BigInteger object. (2).</param>
-    /// <returns></returns>
       public void AddPower(BigInteger input, BigInteger output) {
          lock (this.outputs) {
           if (this.size < MaxSize) {

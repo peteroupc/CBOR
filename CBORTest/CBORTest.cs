@@ -151,7 +151,8 @@ namespace Test {
           sb.Append(r.NextValue(2) == 0 ? '+' : '-');
         }
         sb.Append(Convert.ToString(
-          (int)count, CultureInfo.InvariantCulture));
+          (int)count,
+          CultureInfo.InvariantCulture));
       }
       return sb.ToString();
     }
@@ -245,7 +246,7 @@ namespace Test {
       byte[] bytes = obj.EncodeToBytes();
       StringBuilder sb = new StringBuilder();
       string hex = "0123456789ABCDEF";
-      sb.Append("CBORObject.DecodeFromBytes(new byte[]{");
+      sb.Append("CBORObject.DecodeFromBytes(new byte[] {");
       for (int i = 0; i < bytes.Length; ++i) {
         if (i > 0) {
  sb.Append(",");
@@ -271,7 +272,7 @@ namespace Test {
       CBORObject o1 = null;
       CBORObject o2 = null;
       o1 = CBORObject.DecodeFromBytes(new byte[] { (byte)0xFB, (byte)0x8B, 0x44, (byte)0xF2, (byte)0xA9, 0x0C, 0x27, 0x42, 0x28 });
-      o2 = CBORObject.DecodeFromBytes(new byte[]{(byte)0xC5, (byte)0x82, 0x38, (byte)0xA4, (byte)0xC3, 0x50, 0x02, (byte)0x98,
+      o2 = CBORObject.DecodeFromBytes(new byte[] {(byte)0xC5, (byte)0x82, 0x38, (byte)0xA4, (byte)0xC3, 0x50, 0x02, (byte)0x98,
                                       (byte)0xC5, (byte)0xA8, 0x02, (byte)0xC1, (byte)0xF6, (byte)0xC0, 0x1A, (byte)0xBE, 0x08,
                                       0x04, (byte)0x86, (byte)0x99, 0x3E, (byte)0xF1});
       AddSubCompare(o1, o2);
@@ -3461,7 +3462,11 @@ namespace Test {
     [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExactlyTwoElements() {
       TestCommon.FromBytesTestAB(
-        new byte[] { 0xc4, 0x82, 0xc2, 0x41, 1 });
+        new byte[] { 0xc4,
+        0x82,
+        0xc2,
+        0x41,
+        1 });
     }
 
     /// <summary>
@@ -3499,7 +3504,8 @@ namespace Test {
     [Test]
     public void TestByteArray() {
       TestCommon.AssertSer(
-        CBORObject.FromObject(new byte[] { 0x20, 0x78 }), "h'2078'");
+        CBORObject.FromObject(new byte[] { 0x20, 0x78 }),
+        "h'2078'");
     }
 
     /// <summary>
@@ -3639,7 +3645,7 @@ namespace Test {
           String.Format(CultureInfo.InvariantCulture, "{0}", bi));
         bi *= (BigInteger)negseven;
       }
-      BigInteger[] ranges = new BigInteger[]{
+      BigInteger[] ranges = new BigInteger[] {
         (BigInteger)Int64.MinValue-(BigInteger)512,
         (BigInteger)Int64.MinValue+(BigInteger)512,
         BigInteger.Zero-(BigInteger)512,
@@ -3670,7 +3676,7 @@ namespace Test {
     ///
     [Test]
     public void TestLong() {
-      long[] ranges = new long[]{
+      long[] ranges = new long[] {
         -65539, 65539,
         0xFFFFF000L, 0x100000400L,
         Int64.MaxValue-1000, Int64.MaxValue,
@@ -3797,7 +3803,7 @@ namespace Test {
     [Test]
     public void TestTags() {
       BigInteger maxuint = ((BigInteger.One << 64) - BigInteger.One);
-      BigInteger[] ranges = new BigInteger[]{
+      BigInteger[] ranges = new BigInteger[] {
         (BigInteger)6,
         (BigInteger)65539,
         (BigInteger)Int32.MaxValue-(BigInteger)500,

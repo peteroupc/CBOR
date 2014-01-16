@@ -52,9 +52,9 @@ private CBORDataUtilities(){}
      */
     public static CBORObject ParseJSONNumber(
 String str,
-                                             boolean integersOnly,
-                                             boolean positiveOnly,
-                                             boolean failOnExponentOverflow) {
+boolean integersOnly,
+boolean positiveOnly,
+boolean failOnExponentOverflow) {
       if (((str)==null || (str).length()==0)) {
  return null;
 }
@@ -187,7 +187,8 @@ String str,
         }
         if (fastNumber.CanFitInInt32() && fastExponent.CanFitInInt32()) {
           return CBORObject.FromObject(ExtendedDecimal.Create(
-            fastNumber.AsBigInteger(), fastExponent.AsBigInteger()));
+            fastNumber.AsBigInteger(),
+            fastExponent.AsBigInteger()));
         } else {
           BigInteger bigintExponent = fastExponent.AsBigInteger();
           if (!fastExponent.CanFitInInt32()) {
@@ -213,7 +214,8 @@ String str,
             }
           }
           return CBORObject.FromObject(ExtendedDecimal.Create(
-            fastNumber.AsBigInteger(), bigintExponent));
+            fastNumber.AsBigInteger(),
+            bigintExponent));
         }
       }
     }

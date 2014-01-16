@@ -202,7 +202,7 @@ namespace PeterO
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
-    /// <value>Not documented yet.</value>
+    /// <value>Value not documented yet.</value>
     public bool IsPowerOfTwo{
       get {
         int bits = this.bitLength();

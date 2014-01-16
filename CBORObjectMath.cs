@@ -118,7 +118,9 @@ namespace PeterO {
                            (Int64.MaxValue / valueA) > valueB) ||
                          (bpos && valueA < (Int64.MinValue / valueB))))) {
               // would overflow, convert to BigInteger
-              return CBORObject.FromObject(((BigInteger)valueA) * (BigInteger)valueB);
+              bvalueA = (BigInteger)valueA;
+              bvalueB = (BigInteger)valueB;
+              return CBORObject.FromObject(bvalueA * (BigInteger)bvalueB);
             }
             return CBORObject.FromObject(valueA * valueB);
           }

@@ -90,7 +90,7 @@ at: http://peteroupc.github.io/CBOR/
     private boolean hasFlags;
 
     /**
-     * Returns whether this context has a mutable Flags field.
+     * Gets a value indicating whether this context has a mutable Flags field.
      */
     public boolean getHasFlags() {
  return this.hasFlags;
@@ -221,9 +221,10 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Not documented yet.
-     * @param exponentMin A BigInteger object.
-     * @param exponentMax A BigInteger object. (2).
+     * Copies this precision context and sets the copy&apos;s exponent
+     * range.
+     * @param exponentMin Desired minimum exponent (EMin).
+     * @param exponentMax Desired maximum exponent.
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
@@ -300,8 +301,11 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext Copy() {
       PrecisionContext pcnew = new PrecisionContext(
-0, this.rounding,
-                                                  0, 0, this.clampNormalExponents);
+0,
+this.rounding,
+0,
+0,
+this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
@@ -329,8 +333,11 @@ at: http://peteroupc.github.io/CBOR/
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
     public PrecisionContext (
-int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
-                            boolean clampNormalExponents) {
+int precision,
+Rounding rounding,
+int exponentMinSmall,
+int exponentMaxSmall,
+boolean clampNormalExponents) {
       if (precision < 0) {
  throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+precision+")");
 }

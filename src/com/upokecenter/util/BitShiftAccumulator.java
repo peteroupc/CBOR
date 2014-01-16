@@ -75,7 +75,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger getShiftedInt() {
         if (this.isSmall) {
- return (BigInteger)this.shiftedSmall;
+ return BigInteger.valueOf(this.shiftedSmall);
   } else {
  return this.shiftedBigInt;
 }
@@ -103,8 +103,8 @@ at: http://peteroupc.github.io/CBOR/
 
     public BitShiftAccumulator (
 BigInteger bigint,
-                               int lastDiscarded,
-                               int olderDiscarded) {
+int lastDiscarded,
+int olderDiscarded) {
       if (bigint.signum() < 0) {
  throw new IllegalArgumentException("bigint is negative");
 }
@@ -178,7 +178,7 @@ BigInteger bigint,
         this.knownBitLength.SetInt(1);
       } else {
         FastInteger tmpBitShift = FastInteger.Copy(bitShift);
-        while (tmpBitShift.signum() > 0 && !this.shiftedBigInt.signum()==0) {
+        while (tmpBitShift.signum() > 0 && this.shiftedBigInt.signum()!=0) {
           int bs = tmpBitShift.MinInt32(1000000);
           this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
           tmpBitShift.SubtractInt(bs);
@@ -284,7 +284,7 @@ BigInteger bigint,
       if (this.knownBitLength.CompareToInt(bits) > 0) {
         FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
         FastInteger tmpBitShift = FastInteger.Copy(bitShift);
-        while (tmpBitShift.signum() > 0 && !this.shiftedBigInt.signum()==0) {
+        while (tmpBitShift.signum() > 0 && this.shiftedBigInt.signum()!=0) {
           int bs = tmpBitShift.MinInt32(1000000);
           this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
           tmpBitShift.SubtractInt(bs);
@@ -294,7 +294,7 @@ BigInteger bigint,
           // Shifting to small number of bits,
           // convert to small integer
           this.isSmall = true;
-          this.shiftedSmall = (int)this.shiftedBigInt;
+          this.shiftedSmall = this.shiftedBigInt.intValue();
         }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.discardedBitCount.Add(bitShift);

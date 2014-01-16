@@ -24,12 +24,16 @@ namespace Test
     public static Regex PropertyLine = new Regex(
       "^(\\w+)\\:\\s*(\\S+)",RegexOptions.Compiled);
     public static Regex Quotes = new Regex(
-      "^[\\'\\\"]|[\\'\\\"]$",RegexOptions.Compiled);
+      "^[\\'\\\"]|[\\'\\\"]$",
+      RegexOptions.Compiled);
     public static Regex TestLine = new Regex(
       "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",RegexOptions.Compiled);
 
     private static TValue GetKeyOrDefault<TKey, TValue>(
-      IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue) {
+      IDictionary<TKey,
+      TValue> dict,
+      TKey key,
+      TValue defaultValue) {
       if (!dict.ContainsKey(key)) {
  return defaultValue;
 }
@@ -80,7 +84,8 @@ namespace Test
 }
         PrecisionContext ctx = PrecisionContext.ForPrecision(precision)
           .WithExponentClamp(clamp).WithExponentRange(
-            (BigInteger)minexponent, (BigInteger)maxexponent);
+            (BigInteger)minexponent,
+            (BigInteger)maxexponent);
         string rounding=context["rounding"];
         if (rounding.Equals("half_up")) {
  ctx = ctx.WithRounding(Rounding.HalfUp);

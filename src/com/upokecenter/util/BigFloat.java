@@ -24,15 +24,15 @@ at: http://peteroupc.github.io/CBOR/
      * be an integer if the exponent is positive or zero.
      */
     public BigInteger getExponent() {
- return this.exponent;
-}
+        return this.exponent;
+      }
 
     /**
-     * Gets this object&apos;s unscaled value.
+     * Gets this object&apos;s un-scaled value.
      */
     public BigInteger getMantissa() {
- return this.mantissa;
-}
+        return this.mantissa;
+      }
 
     /**
      * Determines whether this object&apos;s mantissa and exponent are
@@ -42,8 +42,8 @@ at: http://peteroupc.github.io/CBOR/
     private boolean EqualsInternal(BigFloat other) {
       BigFloat otherValue = ((other instanceof BigFloat) ? (BigFloat)other : null);
       if (otherValue == null) {
- return false;
-}
+        return false;
+      }
       return this.exponent.equals(otherValue.exponent) &&
         this.mantissa.equals(otherValue.mantissa);
     }
@@ -82,7 +82,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Creates a binary floating-point number with the value exponent*2^mantissa.
-     * @param mantissa The unscaled value.
+     * @param mantissa The un-scaled value.
      * @param exponent The binary exponent.
      */
     public BigFloat (BigInteger mantissa, BigInteger exponent) {
@@ -155,7 +155,7 @@ at: http://peteroupc.github.io/CBOR/
      * number.
      * @param flt A 32-bit floating-point number.
      * @return A bigfloat with the same value as &quot; flt&quot; .
-     * @throws ArithmeticException &quot;flt&quot; is infinity or not-a-number.
+     * @throws ArithmeticException &quot;Flt&quot; is infinity or not-a-number.
      */
     public static BigFloat FromSingle(float flt) {
       return BigFloat.FromExtendedFloat(ExtendedFloat.FromSingle(flt));
@@ -166,7 +166,7 @@ at: http://peteroupc.github.io/CBOR/
      * number.
      * @param dbl A 64-bit floating-point number.
      * @return A bigfloat with the same value as &quot; dbl&quot; .
-     * @throws ArithmeticException &quot;dbl&quot; is infinity or not-a-number.
+     * @throws ArithmeticException &quot;Dbl&quot; is infinity or not-a-number.
      */
     public static BigFloat FromDouble(double dbl) {
       return BigFloat.FromExtendedFloat(ExtendedFloat.FromDouble(dbl));
@@ -287,29 +287,9 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Not documented yet.
-     * @param mantissa A BigInteger object. (2).
-     * @param e1 A BigInteger object. (3).
-     * @param e2 A BigInteger object. (4).
-     * @return A BigInteger object.
-     */
-      public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
-        boolean negative = mantissa.signum() < 0;
-        if (negative) {
- mantissa=mantissa.negate();
-}
-        BigInteger diff = (e1.subtract(e2)).abs();
-        mantissa = ShiftLeft(mantissa, diff);
-        if (negative) {
- mantissa=mantissa.negate();
-}
-        return mantissa;
-      }
-
-    /**
-     * Not documented yet.
+     * @param bigint A BigInteger object.
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer. (2).
-     * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
@@ -334,8 +314,8 @@ at: http://peteroupc.github.io/CBOR/
       public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
         BigInteger gcd = num.gcd(den);
         if (gcd.signum()==0) {
- return false;
-}
+          return false;
+        }
         den=den.divide(gcd);
         while (den.testBit(0)==false) {
           den=den.shiftRight(1);
@@ -351,12 +331,24 @@ at: http://peteroupc.github.io/CBOR/
      */
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.signum() <= 0) {
- return bigint;
-}
-        if (power.CanFitInInt32()) {
-          return ShiftLeftInt(bigint, power.AsInt32());
+          return bigint;
+        }
+         if (bigint.signum() < 0) {
+          bigint=bigint.negate();
+          if (power.CanFitInInt32()) {
+            bigint = ShiftLeftInt(bigint, power.AsInt32());
+            bigint=bigint.negate();
+          } else {
+            bigint = ShiftLeft(bigint, power.AsBigInteger());
+            bigint=bigint.negate();
+          }
+          return bigint;
         } else {
-          return ShiftLeft(bigint, power.AsBigInteger());
+          if (power.CanFitInInt32()) {
+            return ShiftLeftInt(bigint, power.AsInt32());
+          } else {
+            return ShiftLeft(bigint, power.AsBigInteger());
+          }
         }
       }
 
@@ -512,8 +504,8 @@ at: http://peteroupc.github.io/CBOR/
       BigFloat divisor,
       PrecisionContext ctx) {
       return this.Subtract(
-this.DivideToIntegerNaturalScale(divisor, null)
-                      .Multiply(divisor, null), ctx);
+        this.DivideToIntegerNaturalScale(divisor, null)
+        .Multiply(divisor, null), ctx);
     }
 
     /**
@@ -541,7 +533,7 @@ this.DivideToIntegerNaturalScale(divisor, null)
       BigFloat divisor,
       long desiredExponentSmall,
       PrecisionContext ctx) {
-      return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, ctx);
+      return this.DivideToExponent(divisor, BigInteger.valueOf(desiredExponentSmall), ctx);
     }
 
     /**
@@ -562,7 +554,7 @@ this.DivideToIntegerNaturalScale(divisor, null)
       BigFloat divisor,
       long desiredExponentSmall,
       Rounding rounding) {
-      return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, PrecisionContext.ForRounding(rounding));
+      return this.DivideToExponent(divisor, BigInteger.valueOf(desiredExponentSmall), PrecisionContext.ForRounding(rounding));
     }
 
     /**
@@ -587,7 +579,9 @@ this.DivideToIntegerNaturalScale(divisor, null)
      * and the result is not exact.
      */
     public BigFloat DivideToExponent(
-      BigFloat divisor, BigInteger exponent, PrecisionContext ctx) {
+      BigFloat divisor,
+      BigInteger exponent,
+      PrecisionContext ctx) {
       return math.DivideToExponent(this, divisor, exponent, ctx);
     }
 
@@ -651,8 +645,8 @@ this.DivideToIntegerNaturalScale(divisor, null)
      */
     public BigFloat Add(BigFloat decfrac) {
       if (decfrac == null) {
- throw new NullPointerException("decfrac");
-}
+        throw new NullPointerException("decfrac");
+      }
       return this.Add(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -678,8 +672,8 @@ this.DivideToIntegerNaturalScale(divisor, null)
      */
     public BigFloat Subtract(BigFloat decfrac, PrecisionContext ctx) {
       if (decfrac == null) {
- throw new NullPointerException("decfrac");
-}
+        throw new NullPointerException("decfrac");
+      }
       return this.Add(decfrac.Negate(null), ctx);
     }
 
@@ -693,8 +687,8 @@ this.DivideToIntegerNaturalScale(divisor, null)
      */
     public BigFloat Multiply(BigFloat decfrac) {
       if (decfrac == null) {
- throw new NullPointerException("decfrac");
-}
+        throw new NullPointerException("decfrac");
+      }
       return this.Multiply(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -706,8 +700,8 @@ this.DivideToIntegerNaturalScale(divisor, null)
      * @return The result this * multiplicand + augend.
      */
     public BigFloat MultiplyAndAdd(
-BigFloat multiplicand,
-                                   BigFloat augend) {
+      BigFloat multiplicand,
+      BigFloat augend) {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
@@ -733,7 +727,8 @@ BigFloat multiplicand,
      * and the integer part of the result is not exact.
      */
     public BigFloat DivideToIntegerNaturalScale(
-      BigFloat divisor, PrecisionContext ctx) {
+      BigFloat divisor,
+      PrecisionContext ctx) {
       return math.DivideToIntegerNaturalScale(this, divisor, ctx);
     }
 
@@ -752,7 +747,8 @@ BigFloat multiplicand,
      * precision.
      */
     public BigFloat DivideToIntegerZeroScale(
-      BigFloat divisor, PrecisionContext ctx) {
+      BigFloat divisor,
+      PrecisionContext ctx) {
       return math.DivideToIntegerZeroScale(this, divisor, ctx);
     }
 
@@ -772,7 +768,8 @@ BigFloat multiplicand,
      * quotient, not the remainder) wouldn&apos;t fit the given precision.
      */
     public BigFloat Remainder(
-      BigFloat divisor, PrecisionContext ctx) {
+      BigFloat divisor,
+      PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
     }
 
@@ -804,7 +801,8 @@ BigFloat multiplicand,
      * (the quotient) or the remainder wouldn&apos;t fit the given precision.
      */
     public BigFloat RemainderNear(
-      BigFloat divisor, PrecisionContext ctx) {
+      BigFloat divisor,
+      PrecisionContext ctx) {
       return math.RemainderNear(this, divisor, ctx);
     }
 
@@ -816,7 +814,7 @@ BigFloat multiplicand,
      * of the context is true.
      * @return Returns the largest value that&apos;s less than the given
      * value. Returns null if the result is negative infinity.
-     * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
+     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
      * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
      */
     public BigFloat NextMinus(
@@ -832,7 +830,7 @@ BigFloat multiplicand,
      * of the context is true.
      * @return Returns the smallest value that&apos;s greater than the
      * given value. Returns null if the result is positive infinity.
-     * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
+     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
      * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
      */
     public BigFloat NextPlus(
@@ -851,7 +849,7 @@ BigFloat multiplicand,
      * @return Returns the next value that is closer to the other object&apos;
      * s value than this object&apos;s value. Returns null if the result
      * is infinity.
-     * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
+     * @throws java.lang.IllegalArgumentException &quot;Ctx&quot; is null, the
      * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
      */
     public BigFloat NextToward(
@@ -891,7 +889,8 @@ BigFloat multiplicand,
      * @return The larger value of the two objects.
      */
     public static BigFloat Max(
-      BigFloat first, BigFloat second) {
+      BigFloat first,
+      BigFloat second) {
       return math.Max(first, second, null);
     }
 
@@ -902,7 +901,8 @@ BigFloat multiplicand,
      * @return The smaller value of the two objects.
      */
     public static BigFloat Min(
-      BigFloat first, BigFloat second) {
+      BigFloat first,
+      BigFloat second) {
       return math.Min(first, second, null);
     }
 
@@ -914,7 +914,8 @@ BigFloat multiplicand,
      * @return A BigFloat object.
      */
     public static BigFloat MaxMagnitude(
-      BigFloat first, BigFloat second) {
+      BigFloat first,
+      BigFloat second) {
       return math.MaxMagnitude(first, second, null);
     }
 
@@ -926,7 +927,8 @@ BigFloat multiplicand,
      * @return A BigFloat object.
      */
     public static BigFloat MinMagnitude(
-      BigFloat first, BigFloat second) {
+      BigFloat first,
+      BigFloat second) {
       return math.MinMagnitude(first, second, null);
     }
 
@@ -953,7 +955,8 @@ BigFloat multiplicand,
      * @return A BigFloat object.
      */
     public BigFloat CompareToWithContext(
-      BigFloat other, PrecisionContext ctx) {
+      BigFloat other,
+      PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, false, ctx);
     }
 
@@ -964,7 +967,8 @@ BigFloat multiplicand,
      * @return A BigFloat object.
      */
     public BigFloat CompareToSignal(
-      BigFloat other, PrecisionContext ctx) {
+      BigFloat other,
+      PrecisionContext ctx) {
       return math.CompareToWithContext(this, other, true, ctx);
     }
 
@@ -981,7 +985,8 @@ BigFloat multiplicand,
      * exponent range.
      */
     public BigFloat Add(
-      BigFloat decfrac, PrecisionContext ctx) {
+      BigFloat decfrac,
+      PrecisionContext ctx) {
       return math.Add(this, decfrac, ctx);
     }
 
@@ -1002,19 +1007,16 @@ BigFloat multiplicand,
      * valid range of the precision context, if it defines an exponent range.
      */
     public BigFloat Quantize(
-      BigInteger desiredExponent, PrecisionContext ctx) {
+      BigInteger desiredExponent,
+      PrecisionContext ctx) {
       return this.Quantize(new BigFloat(BigInteger.ONE, desiredExponent), ctx);
     }
 
     /**
      * Returns a binary floating-point number with the same value but a new
      * exponent.
-     * @param ctx A precision context to control precision and rounding
-     * of the result. If HasFlags of the context is true, will also store the
-     * flags resulting from the operation (the flags are in addition to the
-     * pre-existing flags). Can be null, in which case the default rounding
-     * mode is HalfEven.
      * @param desiredExponentSmall A 32-bit signed integer.
+     * @param ctx A PrecisionContext object.
      * @return A bigfloat with the same value as this object but with the exponent
      * changed.
      * @throws ArithmeticException An overflow error occurred, or the
@@ -1023,7 +1025,8 @@ BigFloat multiplicand,
      * valid range of the precision context, if it defines an exponent range.
      */
     public BigFloat Quantize(
-      int desiredExponentSmall, PrecisionContext ctx) {
+      int desiredExponentSmall,
+      PrecisionContext ctx) {
       return this.Quantize(new BigFloat(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
@@ -1047,7 +1050,8 @@ BigFloat multiplicand,
      * range.
      */
     public BigFloat Quantize(
-      BigFloat otherValue, PrecisionContext ctx) {
+      BigFloat otherValue,
+      PrecisionContext ctx) {
       return math.Quantize(this, otherValue, ctx);
     }
 
@@ -1118,7 +1122,8 @@ BigFloat multiplicand,
      * the precision context, if it defines an exponent range.
      */
     public BigFloat RoundToExponentExact(
-      BigInteger exponent, PrecisionContext ctx) {
+      BigInteger exponent,
+      PrecisionContext ctx) {
       return math.RoundToExponentExact(this, exponent, ctx);
     }
 
@@ -1147,7 +1152,8 @@ BigFloat multiplicand,
      * the precision context, if it defines an exponent range.
      */
     public BigFloat RoundToExponent(
-      BigInteger exponent, PrecisionContext ctx) {
+      BigInteger exponent,
+      PrecisionContext ctx) {
       return math.RoundToExponentSimple(this, exponent, ctx);
     }
 
@@ -1164,7 +1170,8 @@ BigFloat multiplicand,
      * range.
      */
     public BigFloat Multiply(
-      BigFloat op, PrecisionContext ctx) {
+      BigFloat op,
+      PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);
     }
 
@@ -1181,7 +1188,9 @@ BigFloat multiplicand,
      * the exponent range.
      */
     public BigFloat MultiplyAndAdd(
-      BigFloat op, BigFloat augend, PrecisionContext ctx) {
+      BigFloat op,
+      BigFloat augend,
+      PrecisionContext ctx) {
       return math.MultiplyAndAdd(this, op, augend, ctx);
     }
 
