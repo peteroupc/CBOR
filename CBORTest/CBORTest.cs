@@ -73,8 +73,9 @@ namespace Test {
       return r;
     }
     private static double RandomDouble(FastRandom rand, int exponent) {
-      if (exponent == Int32.MaxValue)
-        exponent = rand.NextValue(2047);
+      if (exponent == Int32.MaxValue) {
+ exponent = rand.NextValue(2047);
+}
       long r = rand.NextValue(0x10000);
       r |= ((long)rand.NextValue(0x10000)) << 16;
       if (rand.NextValue(2) == 0) {
@@ -88,8 +89,9 @@ namespace Test {
       return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
     }
     private static float RandomSingle(FastRandom rand, int exponent) {
-      if (exponent == Int32.MaxValue)
-        exponent = rand.NextValue(255);
+      if (exponent == Int32.MaxValue) {
+ exponent = rand.NextValue(255);
+}
       int r = rand.NextValue(0x10000);
       if (rand.NextValue(2) == 0) {
         r |= ((int)rand.NextValue(0x10000)) << 16;
@@ -110,24 +112,30 @@ namespace Test {
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
       StringBuilder sb = new StringBuilder();
-      if (r.NextValue(2) == 0) sb.Append('-');
+      if (r.NextValue(2) == 0) {
+ sb.Append('-');
+}
       for (int i = 0; i < count; ++i) {
-        if (i == 0)
-          sb.Append((char)('1' + r.NextValue(9)));
-        else
-          sb.Append((char)('0' + r.NextValue(10)));
+        if (i == 0) {
+ sb.Append((char)('1' + r.NextValue(9)));
+  } else {
+ sb.Append((char)('0' + r.NextValue(10)));
+}
       }
       return sb.ToString();
     }
     public static String RandomDecimalString(FastRandom r) {
       int count = r.NextValue(20) + 1;
       StringBuilder sb = new StringBuilder();
-      if (r.NextValue(2) == 0) sb.Append('-');
+      if (r.NextValue(2) == 0) {
+ sb.Append('-');
+}
       for (int i = 0; i < count; ++i) {
-        if (i == 0)
-          sb.Append((char)('1' + r.NextValue(9)));
-        else
-          sb.Append((char)('0' + r.NextValue(10)));
+        if (i == 0) {
+ sb.Append((char)('1' + r.NextValue(9)));
+  } else {
+ sb.Append((char)('0' + r.NextValue(10)));
+}
       }
       if (r.NextValue(2) == 0) {
         sb.Append('.');
@@ -208,17 +216,23 @@ namespace Test {
     }
 
     private static void CompareTestEqual(CBORObject o1, CBORObject o2) {
-      if (CompareTestReciprocal(o1, o2) != 0)
-        Assert.Fail(ObjectMessages(o1, o2, "Not equal: " + CompareTestReciprocal(o1, o2)));
+      if (CompareTestReciprocal(o1, o2) != 0) {
+ Assert.Fail(ObjectMessages(o1, o2, "Not equal: " + CompareTestReciprocal(o1, o2)));
+}
     }
     private static void CompareTestLess(CBORObject o1, CBORObject o2) {
-      if (CompareTestReciprocal(o1, o2) >= 0)
-        Assert.Fail(ObjectMessages(o1, o2, "Not less: " + CompareTestReciprocal(o1, o2)));
+      if (CompareTestReciprocal(o1, o2) >= 0) {
+ Assert.Fail(ObjectMessages(o1, o2, "Not less: " + CompareTestReciprocal(o1, o2)));
+}
     }
 
     private static int CompareTestReciprocal(CBORObject o1, CBORObject o2) {
-      if ((o1) == null) { throw new ArgumentNullException("o1"); }
-      if ((o2) == null) { throw new ArgumentNullException("o2"); }
+      if ((o1) == null) {
+ throw new ArgumentNullException("o1");
+}
+      if ((o2) == null) {
+ throw new ArgumentNullException("o2");
+}
       int cmp = o1.CompareTo(o2);
       int cmp2 = o2.CompareTo(o1);
       if (-cmp2 != cmp) {
@@ -233,12 +247,14 @@ namespace Test {
       string hex = "0123456789ABCDEF";
       sb.Append("CBORObject.DecodeFromBytes(new byte[]{");
       for (int i = 0; i < bytes.Length; ++i) {
-        if (i > 0)
-          sb.Append(",");
-        if ((bytes[i] & 0x80) != 0)
-          sb.Append("(byte)0x");
-        else
-          sb.Append("0x");
+        if (i > 0) {
+ sb.Append(",");
+}
+        if ((bytes[i] & 0x80) != 0) {
+ sb.Append("(byte)0x");
+  } else {
+ sb.Append("0x");
+}
         sb.Append(hex[(bytes[i] >> 4) & 0xF]);
         sb.Append(hex[(bytes[i]) & 0xF]);
       }
@@ -416,7 +432,9 @@ namespace Test {
           while (ms.Position != ms.Length) {
             try {
               CBORObject o = CBORObject.Read(ms);
-              if (o == null) Assert.Fail("object read is null");
+              if (o == null) {
+ Assert.Fail("object read is null");
+}
             } catch (CBORException) {
               // Expected exception
             }
@@ -805,11 +823,19 @@ namespace Test {
                      0, " \ufffd\ufffd", -1, null);
     }
     private static bool ByteArrayEquals(byte[] arrayA, byte[] arrayB) {
-      if (arrayA == null) { return (arrayB == null); }
-      if (arrayB == null) { return false; }
-      if (arrayA.Length != arrayB.Length) { return false; }
+      if (arrayA == null) {
+ return (arrayB == null);
+}
+      if (arrayB == null) {
+ return false;
+}
+      if (arrayA.Length != arrayB.Length) {
+ return false;
+}
       for (int i = 0; i < arrayA.Length; ++i) {
-        if (arrayA[i] != arrayB[i]) { return false; }
+        if (arrayA[i] != arrayB[i]) {
+ return false;
+}
       }
       return true;
     }
@@ -3629,7 +3655,9 @@ namespace Test {
           TestCommon.AssertSer(
             CBORObject.FromObject(bigintTemp),
             String.Format(CultureInfo.InvariantCulture, "{0}", bigintTemp));
-          if (bigintTemp.Equals(ranges[i + 1])) break;
+          if (bigintTemp.Equals(ranges[i + 1])) {
+ break;
+}
           bigintTemp = bigintTemp + BigInteger.One;
         }
       }
@@ -3661,7 +3689,9 @@ namespace Test {
             String.Format(CultureInfo.InvariantCulture, "[{0}]", j));
           TestCommon.AssertSer(obj,
                                String.Format(CultureInfo.InvariantCulture, "[{0}]", j));
-          if (j == ranges[i + 1]) break;
+          if (j == ranges[i + 1]) {
+ break;
+}
           j++;
         }
       }
@@ -3817,7 +3847,9 @@ namespace Test {
               String.Format(CultureInfo.InvariantCulture, "{0}({1}(0))",
                             bigintTemp + BigInteger.One, bigintTemp));
           }
-          if (bigintTemp.Equals(ranges[i + 1])) break;
+          if (bigintTemp.Equals(ranges[i + 1])) {
+ break;
+}
           bigintTemp = bigintTemp + BigInteger.One;
         }
       }

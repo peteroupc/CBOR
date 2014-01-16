@@ -10,24 +10,28 @@ at: http://peteroupc.github.io/CBOR/
 // import java.math.*;
 
   final class BitShiftAccumulator implements IShiftAccumulator {
-    int bitLeftmost;
+    private int bitLeftmost;
 
     /**
-     * Gets whether the last discarded bit was set.
+     * Gets a value indicating whether the last discarded bit was set.
      */
-    public int getLastDiscardedDigit() { return this.bitLeftmost; }
+    public int getLastDiscardedDigit() {
+ return this.bitLeftmost;
+}
 
-    int bitsAfterLeftmost;
+    private int bitsAfterLeftmost;
     private static final int SmallBitLength = 32;
 
     /**
-     * Gets whether any of the discarded bits to the right of the last one was
-     * set.
+     * Gets a value indicating whether any of the discarded bits to the right
+     * of the last one was set.
      */
-    public int getOlderDiscardedDigits() { return this.bitsAfterLeftmost; }
+    public int getOlderDiscardedDigits() {
+ return this.bitsAfterLeftmost;
+}
 
-    BigInteger shiftedBigInt;
-    FastInteger knownBitLength;
+    private BigInteger shiftedBigInt;
+    private FastInteger knownBitLength;
 
     /**
      * Not documented yet.
@@ -63,18 +67,20 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    int shiftedSmall;
-    boolean isSmall;
+    private int shiftedSmall;
+    private boolean isSmall;
 
     /**
      * Not documented yet.
      */
     public BigInteger getShiftedInt() {
-        if (this.isSmall)
-          return (BigInteger)this.shiftedSmall;
-        else
-          return this.shiftedBigInt;
+        if (this.isSmall) {
+ return (BigInteger)this.shiftedSmall;
+  } else {
+ return this.shiftedBigInt;
+}
       }
+
     /**
      * Not documented yet.
      */
@@ -86,12 +92,14 @@ at: http://peteroupc.github.io/CBOR/
         }
       }
 
-    FastInteger discardedBitCount;
+    private FastInteger discardedBitCount;
 
     /**
      * Not documented yet.
      */
-    public FastInteger getDiscardedDigitCount() { return this.discardedBitCount; }
+    public FastInteger getDiscardedDigitCount() {
+ return this.discardedBitCount;
+}
 
     public BitShiftAccumulator (
 BigInteger bigint,
@@ -116,12 +124,15 @@ BigInteger bigint,
       bsa.isSmall = true;
       return bsa;
     }
+
     /**
      * Not documented yet.
      * @param fastint A FastInteger object.
      */
     public void ShiftRight(FastInteger fastint) {
-      if (fastint.signum() <= 0) { return; }
+      if (fastint.signum() <= 0) {
+ return;
+}
       if (fastint.CanFitInInt32()) {
         this.ShiftRightInt(fastint.AsInt32());
       } else {
@@ -141,7 +152,9 @@ BigInteger bigint,
     }
 
     private void ShiftRightBig(int bits) {
-      if (bits <= 0) { return; }
+      if (bits <= 0) {
+ return;
+}
       if (this.shiftedBigInt.signum()==0) {
         this.discardedBitCount.AddInt(bits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -202,19 +215,37 @@ BigInteger bigint,
       for (int i = bytes.length - 1; i >= 0; --i) {
         int b = (int)bytes[i];
         if (b != 0) {
-          if ((b & 0x80) != 0) { break; }
-          if ((b & 0x40) != 0) { fastKB.Decrement(); break; }
-          if ((b & 0x20) != 0) { fastKB.SubtractInt(2); break; }
-          if ((b & 0x10) != 0) { fastKB.SubtractInt(3); break; }
-          if ((b & 0x08) != 0) { fastKB.SubtractInt(4); break; }
-          if ((b & 0x04) != 0) { fastKB.SubtractInt(5); break; }
-          if ((b & 0x02) != 0) { fastKB.SubtractInt(6); break; }
-          if ((b & 0x01) != 0) { fastKB.SubtractInt(7); break; }
+          if ((b & 0x80) != 0) {
+ break;
+}
+          if ((b & 0x40) != 0) {
+  { fastKB.Decrement();
+} break; }
+          if ((b & 0x20) != 0) {
+  { fastKB.SubtractInt(2);
+} break; }
+          if ((b & 0x10) != 0) {
+  { fastKB.SubtractInt(3);
+} break; }
+          if ((b & 0x08) != 0) {
+  { fastKB.SubtractInt(4);
+} break; }
+          if ((b & 0x04) != 0) {
+  { fastKB.SubtractInt(5);
+} break; }
+          if ((b & 0x02) != 0) {
+  { fastKB.SubtractInt(6);
+} break; }
+          if ((b & 0x01) != 0) {
+  { fastKB.SubtractInt(7);
+} break; }
         }
         fastKB.SubtractInt(8);
       }
       // Make sure bit length is 1 if value is 0
-      if (fastKB.signum() == 0) fastKB.Increment();
+      if (fastKB.signum() == 0) {
+ fastKB.Increment();
+}
       return fastKB;
     }
 
@@ -229,7 +260,9 @@ BigInteger bigint,
           }
         }
         // Make sure bit length is 1 if value is 0
-        if (kb == 0) kb++;
+        if (kb == 0) {
+ kb++;
+}
         return new FastInteger(kb);
       } else {
         byte[] bytes = this.shiftedBigInt.toByteArray(true);
@@ -291,14 +324,17 @@ BigInteger bigint,
      * @param bits A 32-bit signed integer.
      */
     public void ShiftRightInt(int bits) {
-      if (this.isSmall)
-        this.ShiftRightSmall(bits);
-      else
-        this.ShiftRightBig(bits);
+      if (this.isSmall) {
+ this.ShiftRightSmall(bits);
+  } else {
+ this.ShiftRightBig(bits);
+}
     }
 
     private void ShiftRightSmall(int bits) {
-      if (bits <= 0) { return; }
+      if (bits <= 0) {
+ return;
+}
       if (this.shiftedSmall == 0) {
         this.discardedBitCount.AddInt(bits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -323,7 +359,7 @@ BigInteger bigint,
       // Get the bottommost shift minus 1 bits
       this.bitsAfterLeftmost |= ((this.shiftedSmall << (SmallBitLength + 1 - shift)) != 0) ? 1 : 0;
       // Get the bit just above that bit
-      this.bitLeftmost = (int)((this.shiftedSmall >> ((shift) - 1)) & 0x01);
+      this.bitLeftmost = (int)((this.shiftedSmall >> (shift - 1)) & 0x01);
       this.shiftedSmall >>= shift;
       if (shiftingMoreBits) {
         // Shifted more bits than the bit length
@@ -344,10 +380,11 @@ BigInteger bigint,
       if (bits < 0) {
  throw new IllegalArgumentException("bits is negative");
 }
-      if (this.isSmall)
-        this.ShiftSmallToBits(bits);
-      else
-        this.ShiftBigToBits(bits);
+      if (this.isSmall) {
+ this.ShiftSmallToBits(bits);
+  } else {
+ this.ShiftBigToBits(bits);
+}
     }
 
     private void ShiftSmallToBits(int bits) {
@@ -359,7 +396,9 @@ BigInteger bigint,
           kbl--;
         }
       }
-      if (kbl == 0) kbl++;
+      if (kbl == 0) {
+ kbl++;
+}
       // Shift by the difference in bit length
       if (kbl > bits) {
         int bitShift = kbl - (int)bits;

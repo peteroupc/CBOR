@@ -14,7 +14,7 @@ package com.upokecenter.util;
 
   import java.util.*;
 
-  class JSONTokener {
+  internal class JSONTokener {
     /**
      * Trailing commas are allowed in the JSON _string.
      */
@@ -50,12 +50,15 @@ package com.upokecenter.util;
      * @return  An int between 0 and 15, or -1 if c was not a hex digit.
      */
     private static int dehexchar(int c) {
-      if (c >= '0' && c <= '9')
-        return c - '0';
-      if (c >= 'A' && c <= 'F')
-        return c + 10 - 'A';
-      if (c >= 'a' && c <= 'f')
-        return c + 10 - 'a';
+      if (c >= '0' && c <= '9') {
+ return c - '0';
+}
+      if (c >= 'A' && c <= 'F') {
+ return c + 10 - 'A';
+}
+      if (c >= 'a' && c <= 'f') {
+ return c + 10 - 'a';
+}
       return -1;
     }
     /**
@@ -74,13 +77,17 @@ package com.upokecenter.util;
      * @param s     A source _string.
      */
     public JSONTokener (String str, int options) {
-      if (str == null) { throw new NullPointerException("str"); }
+      if (str == null) {
+ throw new NullPointerException("str");
+}
       this.mySource = str;
       this.options = options;
     }
 
     public JSONTokener (InputStream stream, int options) {
-      if (stream == null) { throw new NullPointerException("stream"); }
+      if (stream == null) {
+ throw new NullPointerException("stream");
+}
       this.stream = stream;
       this.options = options;
     }
@@ -156,6 +163,7 @@ package com.upokecenter.util;
         return c;
       }
     }
+
     /**
      * Not documented yet.
      * @return A 32-bit signed integer.
@@ -166,8 +174,9 @@ package com.upokecenter.util;
 
     private int NextParseComment(int firstChar) {
       if ((this.options & JSONTokener.OPTION_ALLOW_COMMENTS) == 0) {
-        if (firstChar == -1)
-          return this.NextChar();
+        if (firstChar == -1) {
+ return this.NextChar();
+}
         if (firstChar == '/' || firstChar == '#') {
  throw this.syntaxError("Comments not allowed");
 }
@@ -187,8 +196,9 @@ package com.upokecenter.util;
           while (true) {
             c = this.NextChar();
             if (c != '\n' && c != -1) {
-            } else
-              break;  // end of line
+            } else {
+ break;
+}  // end of line
           }
         } else if (c == '/') {
           c = this.NextChar();
@@ -197,8 +207,9 @@ package com.upokecenter.util;
                 while (true) {
                   c = this.NextChar();
                   if (c != '\n' && c != -1) {
-                  } else
-                    break;  // end of line
+                  } else {
+ break;
+}  // end of line
                 }
                 break;
               }
@@ -218,8 +229,9 @@ package com.upokecenter.util;
                       break;
                     }
                   }
-                  if (endOfComment)
-                    break;
+                  if (endOfComment) {
+ break;
+}
                 }
                 break;
               }
@@ -233,6 +245,7 @@ package com.upokecenter.util;
         }
       }
     }
+
     /**
      * Not documented yet.
      * @return A 32-bit signed integer.
@@ -240,20 +253,23 @@ package com.upokecenter.util;
     public int NextClean() {
       while (true) {
         int c = this.NextParseComment(-1);
-        if (c == -1 || c > ' ')
-          return c;
+        if (c == -1 || c > ' ') {
+ return c;
+}
       }
     }
+
     /**
      * Not documented yet.
-     * @param lastChar A 32-bit signed integer. (2)
+     * @param lastChar A 32-bit signed integer. (2).
      * @return A 32-bit signed integer.
      */
     public int NextClean(int lastChar) {
       while (true) {
         int c = this.NextParseComment(lastChar);
-        if (c == -1 || c > ' ')
-          return c;
+        if (c == -1 || c > ' ') {
+ return c;
+}
         lastChar = -1;
       }
     }
@@ -351,7 +367,9 @@ package com.upokecenter.util;
         }
         if (c == quote && !escaped)  // End quote reached
           return sb.toString();
-        if (c <= 0xFFFF) { sb.append((char)c);
+        if (c <= 0xFFFF) {
+  { sb.append((char)c);
+}
   } else if (c <= 0x10FFFF) {
           sb.append((char)((((c - 0x10000) >> 10) & 0x3FF) + 0xD800));
           sb.append((char)(((c - 0x10000) & 0x3FF) + 0xDC00));
@@ -421,38 +439,38 @@ package com.upokecenter.util;
         obj = this.ParseJSONArray();
         nextChar[0] = this.NextClean();
         return obj;
-      } else if (c == 't'){
+      } else if (c == 't') {
         // Parse true
         if (this.NextChar() != 'r' ||
            this.NextChar() != 'u' ||
-           this.NextChar() != 'e'){
+           this.NextChar() != 'e') {
           throw this.syntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
         return CBORObject.True;
-      } else if (c == 'f'){
+      } else if (c == 'f') {
         // Parse false
         if (this.NextChar() != 'a' ||
            this.NextChar() != 'l' ||
            this.NextChar() != 's' ||
-           this.NextChar() != 'e'){
+           this.NextChar() != 'e') {
           throw this.syntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
         return CBORObject.False;
-      } else if (c == 'n'){
+      } else if (c == 'n') {
         // Parse null
         if (this.NextChar() != 'u' ||
            this.NextChar() != 'l' ||
-           this.NextChar() != 'l'){
+           this.NextChar() != 'l') {
           throw this.syntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
         return CBORObject.False;
-      } else if (c == '-' || (c >=  '0' && c <=  '9')){
+      } else if (c == '-' || (c >= '0' && c <= '9')) {
         // Parse a number
         StringBuilder sb = new StringBuilder();
-        while (c == '-' || c == '+' || c == '.' || c == 'e' || c == 'E' || (c >=  '0' && c <=  '9')) {
+        while (c == '-' || c == '+' || c == '.' || c == 'e' || c == 'E' || (c >= '0' && c <= '9')) {
           sb.append((char)c);
           c = this.NextChar();
         }
@@ -467,6 +485,7 @@ package com.upokecenter.util;
         throw this.syntaxError("Value can't be parsed.");
       }
     }
+
     /**
      * Not documented yet.
      * @return A CBORObject object.
@@ -477,7 +496,7 @@ package com.upokecenter.util;
       if (c == '[') {
         return this.ParseJSONArray();
       }
-      if (c == '{'){
+      if (c == '{') {
         return this.ParseJSONObject();
       }
       throw this.syntaxError("A JSON Object must begin with '{' or '['");
@@ -542,7 +561,7 @@ package com.upokecenter.util;
           }
           myArrayList.add(CBORObject.Null);
           c = ',';  // Reuse the comma in the code that follows
-        } else if (c == ']'){
+        } else if (c == ']') {
           if (seenComma && (this.GetOptions() & JSONTokener.OPTION_TRAILING_COMMAS) == 0) {
             // 2013-05-24 -- Peter O. Disallow trailing comma.
             throw this.syntaxError("Trailing comma");

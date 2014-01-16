@@ -16,28 +16,34 @@ at: http://peteroupc.github.io/CBOR/
  */
 @Deprecated
   public final class DecimalFraction implements Comparable<DecimalFraction> {
-    BigInteger exponent;
-    BigInteger mantissa;
+    private BigInteger exponent;
+    private BigInteger mantissa;
     /**
-     * Gets this object's exponent. This object's value will be an integer
-     * if the exponent is positive or zero.
+     * Gets this object&apos;s exponent. This object&apos;s value will
+     * be an integer if the exponent is positive or zero.
      */
-    public BigInteger getExponent() { return this.exponent; }
-    /**
-     * Gets this object's unscaled value.
-     */
-    public BigInteger getMantissa() { return this.mantissa; }
+    public BigInteger getExponent() {
+ return this.exponent;
+}
 
     /**
-     * Determines whether this object's mantissa and exponent are equal
-     * to those of another object.
+     * Gets this object&apos;s unscaled value.
+     */
+    public BigInteger getMantissa() {
+ return this.mantissa;
+}
+
+    /**
+     * Determines whether this object&apos;s mantissa and exponent are
+     * equal to those of another object.
      * @param other A DecimalFraction object.
      * @return A Boolean object.
      */
     public boolean EqualsInternal(DecimalFraction other) {
       DecimalFraction otherValue = ((other instanceof DecimalFraction) ? (DecimalFraction)other : null);
-      if (otherValue == null)
-        return false;
+      if (otherValue == null) {
+ return false;
+}
       return this.exponent.equals(otherValue.exponent) &&
         this.mantissa.equals(otherValue.mantissa);
     }
@@ -50,18 +56,21 @@ at: http://peteroupc.github.io/CBOR/
     public boolean equals(DecimalFraction other) {
       return this.EqualsInternal(other);
     }
+
     /**
-     * Determines whether this object's mantissa and exponent are equal
-     * to those of another object and that other object is a decimal fraction.
+     * Determines whether this object&apos;s mantissa and exponent are
+     * equal to those of another object and that other object is a decimal
+     * fraction.
      * @param obj An arbitrary object.
      * @return True if the objects are equal; false otherwise.
      */
     @Override public boolean equals(Object obj) {
       return this.EqualsInternal(((obj instanceof DecimalFraction) ? (DecimalFraction)obj : null));
     }
+
     /**
-     * Calculates this object's hash code.
-     * @return This object&apos; s hash code.
+     * Calculates this object&apos;s hash code.
+     * @return This object&apos;s hash code.
      */
     @Override public int hashCode() {
       int hashCode_ = 0;
@@ -83,8 +92,8 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Creates a decimal fraction from a string that represents a number.
-     * <p> The format of the string generally consists of:<ul> <li> An optional
+     * Creates a decimal fraction from a string that represents a number.<p>
+     * The format of the string generally consists of:<ul> <li> An optional
      * '-' or '+' character (if '-', the value is negative.)</li> <li> One
      * or more digits, with a single optional decimal point after the first
      * digit and before the last digit.</li> <li> Optionally, E+ (positive
@@ -103,7 +112,6 @@ at: http://peteroupc.github.io/CBOR/
     private static DecimalFraction MinusOne = new DecimalFraction(BigInteger.ZERO.subtract(BigInteger.ONE), BigInteger.ZERO);
 
     private static final class DecimalMathHelper implements IRadixMathHelper<DecimalFraction> {
-
     /**
      * Not documented yet.
      * @return A 32-bit signed integer.
@@ -141,13 +149,15 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Not documented yet.
-     * @param mantissa A BigInteger object. (2)
-     * @param e1 A BigInteger object. (3)
-     * @param e2 A BigInteger object. (4)
+     * @param mantissa A BigInteger object. (2).
+     * @param e1 A BigInteger object. (3).
+     * @param e2 A BigInteger object. (4).
      * @return A BigInteger object.
      */
       public BigInteger RescaleByExponentDiff(BigInteger mantissa, BigInteger e1, BigInteger e2) {
-        if (mantissa.signum() == 0) { return BigInteger.ZERO; }
+        if (mantissa.signum() == 0) {
+ return BigInteger.ZERO;
+}
         FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
         if (diff.CanFitInInt32()) {
           mantissa=mantissa.multiply(DecimalUtility.FindPowerOfTen)(diff.AsInt32());
@@ -160,7 +170,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      * @param lastDigit A 32-bit signed integer.
-     * @param olderDigits A 32-bit signed integer. (2)
+     * @param olderDigits A 32-bit signed integer. (2).
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
@@ -180,15 +190,16 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      * @param numerator A BigInteger object.
-     * @param denominator A BigInteger object. (2)
+     * @param denominator A BigInteger object. (2).
      * @return A Boolean object.
      */
       public boolean HasTerminatingRadixExpansion(BigInteger numerator, BigInteger denominator) {
         // Simplify denominator based on numerator
         BigInteger gcd = numerator.gcd(denominator);
         denominator=denominator.divide(gcd);
-        if (denominator.signum()==0)
-          return false;
+        if (denominator.signum()==0) {
+ return false;
+}
         // Eliminate factors of 2
         while (denominator.testBit(0)==false) {
           denominator=denominator.shiftRight(1);
@@ -201,8 +212,9 @@ at: http://peteroupc.github.io/CBOR/
 BigInteger[] divrem=(denominator).divideAndRemainder(BigInteger.valueOf(5));
 bigquo=divrem[0];
 bigrem=divrem[1]; }
-          if (bigrem.signum()!=0)
-            break;
+          if (bigrem.signum()!=0) {
+ break;
+}
           denominator = bigquo;
         }
         return denominator.compareTo(BigInteger.ONE) == 0;
@@ -210,13 +222,17 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param bigint A BigInteger object. (2)
+     * @param bigint A BigInteger object. (2).
      * @param power A FastInteger object.
      * @return A BigInteger object.
      */
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
-        if (power.signum() <= 0) { return bigint; }
-        if (bigint.signum()==0) { return bigint; }
+        if (power.signum() <= 0) {
+ return bigint;
+}
+        if (bigint.signum()==0) {
+ return bigint;
+}
         if (bigint.compareTo(BigInteger.ONE) != 0) {
           if (power.CanFitInInt32()) {
             bigint=bigint.multiply(DecimalUtility.FindPowerOfTen)(power.AsInt32());
@@ -245,7 +261,7 @@ bigrem=divrem[1]; }
     /**
      * Not documented yet.
      * @param mantissa A BigInteger object.
-     * @param exponent A BigInteger object. (2)
+     * @param exponent A BigInteger object. (2).
      * @param flags A 32-bit signed integer.
      * @return A DecimalFraction object.
      */
@@ -270,9 +286,15 @@ bigrem=divrem[1]; }
      * @return A DecimalFraction object.
      */
       public DecimalFraction ValueOf(int val) {
-        if (val == 0) { return Zero; }
-        if (val == 1) { return One; }
-        if (val == -1) { return MinusOne; }
+        if (val == 0) {
+ return Zero;
+}
+        if (val == 1) {
+ return One;
+}
+        if (val == -1) {
+ return MinusOne;
+}
         return FromInt64(val);
       }
     }
@@ -298,6 +320,7 @@ bigrem=divrem[1]; }
     public BigInteger ToBigInteger() {
       return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).ToBigInteger();
     }
+
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
      * rounding mode is used.
@@ -308,6 +331,7 @@ bigrem=divrem[1]; }
     public float ToSingle() {
       return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).ToSingle();
     }
+
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
      * rounding mode is used.
@@ -318,6 +342,7 @@ bigrem=divrem[1]; }
     public double ToDouble() {
       return ExtendedDecimal.Create(this.getMantissa(), this.getExponent()).ToDouble();
     }
+
     /**
      * Creates a decimal fraction from a 32-bit floating-point number.
      * This method computes the exact value of the floating point number,
@@ -348,7 +373,8 @@ bigrem=divrem[1]; }
      * not an approximation, as is often the case by converting the number
      * to a string.
      * @param dbl A 64-bit floating-point number.
-     * @return A decimal fraction with the same value as &quot; dbl&quot;.
+     * @return A decimal fraction with the same value as &quot; dbl&quot;
+     * .
      * @throws ArithmeticException &quot;dbl&quot; is infinity or not-a-number.
      */
     public static DecimalFraction FromDouble(double dbl) {
@@ -376,6 +402,7 @@ bigrem=divrem[1]; }
     @Override public String toString() {
       return this.ToStringInternal(0);
     }
+
     /**
      * Same as toString(), except that when an exponent is used it will be
      * a multiple of 3. The format of the return value follows the format of
@@ -385,6 +412,7 @@ bigrem=divrem[1]; }
     public String ToEngineeringString() {
       return this.ToStringInternal(1);
     }
+
     /**
      * Converts this value to a string, but without an exponent part. The
      * format of the return value follows the format of the java.math.BigDecimal.toPlainString()
@@ -415,17 +443,20 @@ bigrem=divrem[1]; }
     //----------------------------------------------------------------
 
     /**
-     * Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
+     * Gets this value&apos;s sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
         return this.mantissa.signum();
       }
+
     /**
-     * Gets whether this object's value equals 0.
+     * Gets a value indicating whether this object&apos;s value equals
+     * 0.
      */
     public boolean isZero() {
         return this.mantissa.signum()==0;
       }
+
     /**
      * Gets the absolute value of this object.
      * @return A DecimalFraction object.
@@ -473,7 +504,7 @@ bigrem=divrem[1]; }
     /**
      * Divides two DecimalFraction objects, and returns the integer part
      * of the result, rounded down, with the preferred exponent set to this
-     * value's exponent minus the divisor's exponent.
+     * value&apos;s exponent minus the divisor&apos;s exponent.
      * @param divisor The divisor.
      * @return The integer part of the quotient of the two objects.
      * @throws ArithmeticException Attempted to divide by zero.
@@ -484,7 +515,7 @@ bigrem=divrem[1]; }
     }
 
     /**
-     * Removes trailing zeros from this object's mantissa. For example,
+     * Removes trailing zeros from this object&apos;s mantissa. For example,
      * 1.000 becomes 1.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
@@ -500,9 +531,10 @@ bigrem=divrem[1]; }
       PrecisionContext ctx) {
       return math.Reduce(this, ctx);
     }
+
     /**
      * Not documented yet.
-     * @param divisor A DecimalFraction object. (2)
+     * @param divisor A DecimalFraction object. (2).
      * @return A DecimalFraction object.
      */
     public DecimalFraction RemainderNaturalScale(
@@ -512,7 +544,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param divisor A DecimalFraction object. (2)
+     * @param divisor A DecimalFraction object. (2).
      * @param ctx A PrecisionContext object.
      * @return A DecimalFraction object.
      */
@@ -621,8 +653,8 @@ this.DivideToIntegerNaturalScale(divisor, null)
     }
 
     /**
-     * Finds the absolute value of this object (if it's negative, it becomes
-     * positive).
+     * Finds the absolute value of this object (if it&apos;s negative, it
+     * becomes positive).
      * @param context A precision context to control precision, rounding,
      * and exponent range of the result. If HasFlags of the context is true,
      * will also store the flags resulting from the operation (the flags
@@ -657,7 +689,9 @@ this.DivideToIntegerNaturalScale(divisor, null)
      * @return The sum of the two objects.
      */
     public DecimalFraction Add(DecimalFraction decfrac) {
-      if (decfrac == null) { throw new NullPointerException("decfrac"); }
+      if (decfrac == null) {
+ throw new NullPointerException("decfrac");
+}
       return this.Add(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -683,9 +717,12 @@ this.DivideToIntegerNaturalScale(divisor, null)
      * exponent range.
      */
     public DecimalFraction Subtract(DecimalFraction decfrac, PrecisionContext ctx) {
-      if (decfrac == null) { throw new NullPointerException("decfrac"); }
+      if (decfrac == null) {
+ throw new NullPointerException("decfrac");
+}
       return this.Add(decfrac.Negate(null), ctx);
     }
+
     /**
      * Multiplies two decimal fractions. The resulting scale will be the
      * sum of the scales of the two decimal fractions.
@@ -695,7 +732,9 @@ this.DivideToIntegerNaturalScale(divisor, null)
      * exponent range.
      */
     public DecimalFraction Multiply(DecimalFraction decfrac) {
-      if (decfrac == null) { throw new NullPointerException("decfrac"); }
+      if (decfrac == null) {
+ throw new NullPointerException("decfrac");
+}
       return this.Multiply(decfrac, PrecisionContext.Unlimited);
     }
 
@@ -711,20 +750,19 @@ DecimalFraction multiplicand,
                                           DecimalFraction augend) {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
-    //----------------------------------------------------------------
 
     private static RadixMath<DecimalFraction> math = new RadixMath<DecimalFraction>(
       new DecimalMathHelper());
 
     /**
      * Divides this object by another object, and returns the integer part
-     * of the result, with the preferred exponent set to this value's exponent
-     * minus the divisor's exponent.
+     * of the result, with the preferred exponent set to this value&apos;s
+     * exponent minus the divisor&apos;s exponent.
      * @param divisor The divisor.
      * @param ctx A precision context object to control the precision, rounding,
      * and exponent range of the integer part of the result. Flags will be
-     * set on the given context only if the context&apos; s HasFlags is true
-     * and the integer part of the result doesn&apos; t fit the precision
+     * set on the given context only if the context&apos;s HasFlags is true
+     * and the integer part of the result doesn&apos;t fit the precision
      * and exponent range without rounding.
      * @return The integer part of the quotient of the two objects. If a precision
      * context is given, returns null if the result of the rounding overflowed
@@ -776,10 +814,11 @@ DecimalFraction multiplicand,
       DecimalFraction divisor, PrecisionContext ctx) {
       return math.Remainder(this, divisor, ctx);
     }
+
     /**
      * Finds the distance to the closest multiple of the given divisor, based
-     * on the result of dividing this object's value by another object's
-     * value. <ul> <li> If this and the other object divide evenly, the result
+     * on the result of dividing this object&apos;s value by another object&apos;s
+     * value.<ul> <li> If this and the other object divide evenly, the result
      * is 0.</li> <li>If the remainder's absolute value is less than half
      * of the divisor's absolute value, the result has the same sign as this
      * object and will be the distance to the closest multiple.</li> <li>If
@@ -809,15 +848,15 @@ DecimalFraction multiplicand,
     }
 
     /**
-     * Finds the largest value that's smaller than the given value.
+     * Finds the largest value that&apos;s smaller than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the largest value that&apos; s less than the given
+     * @return Returns the largest value that&apos;s less than the given
      * value. Returns null if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
-     * precision is 0, or &quot;ctx&quot; has an unlimited exponent range.
+     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
      */
     public DecimalFraction NextMinus(
       PrecisionContext ctx) {
@@ -825,15 +864,15 @@ DecimalFraction multiplicand,
     }
 
     /**
-     * Finds the smallest value that's greater than the given value.
+     * Finds the smallest value that&apos;s greater than the given value.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the smallest value that&apos; s greater than the
+     * @return Returns the smallest value that&apos;s greater than the
      * given value. Returns null if the result is positive infinity.
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
-     * precision is 0, or &quot;ctx&quot; has an unlimited exponent range.
+     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
      */
     public DecimalFraction NextPlus(
       PrecisionContext ctx) {
@@ -841,18 +880,18 @@ DecimalFraction multiplicand,
     }
 
     /**
-     * Finds the next value that is closer to the other object's value than
-     * this object's value.
+     * Finds the next value that is closer to the other object&apos;s value
+     * than this object&apos;s value.
      * @param otherValue A DecimalFraction object.
      * @param ctx A precision context object to control the precision and
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
      * @return Returns the next value that is closer to the other object&apos;
-     * s value than this object&apos; s value. Returns null if the result
+     * s value than this object&apos;s value. Returns null if the result
      * is infinity.
      * @throws java.lang.IllegalArgumentException &quot;ctx&quot; is null, the
-     * precision is 0, or &quot;ctx&quot; has an unlimited exponent range.
+     * precision is 0, or &quot; ctx&quot; has an unlimited exponent range.
      */
     public DecimalFraction NextToward(
       DecimalFraction otherValue,
@@ -862,8 +901,8 @@ DecimalFraction multiplicand,
 
     /**
      * Divides this DecimalFraction object by another DecimalFraction
-     * object. The preferred exponent for the result is this object's exponent
-     * minus the divisor's exponent.
+     * object. The preferred exponent for the result is this object&apos;s
+     * exponent minus the divisor&apos;s exponent.
      * @param divisor The divisor.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
@@ -887,7 +926,7 @@ DecimalFraction multiplicand,
     /**
      * Gets the greater value between two decimal fractions.
      * @param first A DecimalFraction object.
-     * @param second A DecimalFraction object. (2)
+     * @param second A DecimalFraction object. (2).
      * @return The larger value of the two objects.
      */
     public static DecimalFraction Max(
@@ -898,18 +937,19 @@ DecimalFraction multiplicand,
     /**
      * Gets the lesser value between two decimal fractions.
      * @param first A DecimalFraction object.
-     * @param second A DecimalFraction object. (2)
+     * @param second A DecimalFraction object. (2).
      * @return The smaller value of the two objects.
      */
     public static DecimalFraction Min(
       DecimalFraction first, DecimalFraction second) {
       return math.Min(first, second, null);
     }
+
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param first A DecimalFraction object. (2)
-     * @param second A DecimalFraction object. (3)
+     * @param first The first object to compare.
+     * @param second The second object to compare.
      * @return A DecimalFraction object.
      */
     public static DecimalFraction MaxMagnitude(
@@ -920,22 +960,23 @@ DecimalFraction multiplicand,
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param first A DecimalFraction object. (2)
-     * @param second A DecimalFraction object. (3)
+     * @param first A DecimalFraction object. (2).
+     * @param second A DecimalFraction object. (3).
      * @return A DecimalFraction object.
      */
     public static DecimalFraction MinMagnitude(
       DecimalFraction first, DecimalFraction second) {
       return math.MinMagnitude(first, second, null);
     }
+
     /**
-     * Compares the mathematical values of this object and another object.
-     * <p> This method is not consistent with the Equals method because two
-     * different decimal fractions with the same mathematical value, but
-     * different exponents, will compare as equal.</p>
+     * Compares the mathematical values of this object and another object.<p>
+     * This method is not consistent with the Equals method because two different
+     * decimal fractions with the same mathematical value, but different
+     * exponents, will compare as equal.</p>
      * @param other A DecimalFraction object.
-     * @return Less than 0 if this object&apos; s value is less than the other
-     * value, or greater than 0 if this object&apos; s value is greater than
+     * @return Less than 0 if this object&apos;s value is less than the other
+     * value, or greater than 0 if this object&apos;s value is greater than
      * the other value or if &quot; other&quot; is null, or 0 if both values
      * are equal.
      */
@@ -946,7 +987,7 @@ DecimalFraction multiplicand,
 
     /**
      * Compares a DecimalFraction object with this instance.
-     * @param other A DecimalFraction object. (2)
+     * @param other A DecimalFraction object. (2).
      * @param ctx A PrecisionContext object.
      * @return A DecimalFraction object.
      */
@@ -957,7 +998,7 @@ DecimalFraction multiplicand,
 
     /**
      * Compares a DecimalFraction object with this instance.
-     * @param other A DecimalFraction object. (2)
+     * @param other A DecimalFraction object. (2).
      * @param ctx A PrecisionContext object.
      * @return A DecimalFraction object.
      */
@@ -967,8 +1008,8 @@ DecimalFraction multiplicand,
     }
 
     /**
-     * Finds the sum of this object and another object. The result's exponent
-     * is set to the lower of the exponents of the two operands.
+     * Finds the sum of this object and another object. The result&apos;s
+     * exponent is set to the lower of the exponents of the two operands.
      * @param decfrac The number to add to.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
@@ -1045,6 +1086,7 @@ DecimalFraction multiplicand,
       DecimalFraction otherValue, PrecisionContext ctx) {
       return math.Quantize(this, otherValue, ctx);
     }
+
     /**
      * Returns a decimal fraction with the same value as this object but rounded
      * to an integer.
@@ -1065,6 +1107,7 @@ DecimalFraction multiplicand,
       PrecisionContext ctx) {
       return math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     }
+
     /**
      * Returns a decimal fraction with the same value as this object but rounded
      * to an integer, without adding the FlagInexact or FlagRounded flags.
@@ -1087,6 +1130,7 @@ DecimalFraction multiplicand,
       PrecisionContext ctx) {
       return math.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
     }
+
     /**
      * Returns a decimal fraction with the same value as this object but rounded
      * to a given exponent.
@@ -1112,10 +1156,11 @@ DecimalFraction multiplicand,
       BigInteger exponent, PrecisionContext ctx) {
       return math.RoundToExponentExact(this, exponent, ctx);
     }
+
     /**
      * Returns a decimal fraction with the same value as this object but rounded
      * to a given exponent, without throwing an exception if the result overflows
-     * or doesn't fit the precision range.
+     * or doesn&apos;t fit the precision range.
      * @param exponent The minimum exponent the result can have. This is
      * the maximum number of fractional digits in the result, expressed
      * as a negative number. Can also be positive, which eliminates lower-order
@@ -1128,7 +1173,7 @@ DecimalFraction multiplicand,
      * addition to the pre-existing flags). Can be null, in which case the
      * default rounding mode is HalfEven.
      * @return A decimal fraction rounded to the closest value representable
-     * in the given precision, meaning if the result can&apos; t fit the precision,
+     * in the given precision, meaning if the result can&apos;t fit the precision,
      * additional digits are discarded to make it fit. If a precision context
      * is given, returns null if the result of the rounding overflowed the
      * exponent range.
@@ -1157,6 +1202,7 @@ DecimalFraction multiplicand,
       DecimalFraction op, PrecisionContext ctx) {
       return math.Multiply(this, op, ctx);
     }
+
     /**
      * Multiplies by one value, and then adds another value.
      * @param op The value to multiply.
@@ -1173,12 +1219,13 @@ DecimalFraction multiplicand,
       DecimalFraction op, DecimalFraction augend, PrecisionContext ctx) {
       return math.MultiplyAndAdd(this, op, augend, ctx);
     }
+
     /**
-     * Rounds this object's value to a given precision, using the given rounding
-     * mode and range of exponent.
+     * Rounds this object&apos;s value to a given precision, using the given
+     * rounding mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
-     * @return The closest value to this object&apos; s value, rounded to
+     * @return The closest value to this object&apos;s value, rounded to
      * the specified precision. Returns the same value as this object if
      * &quot; context&quot; is null or the precision and exponent range
      * are unlimited. If a precision context is given, returns null if the
@@ -1190,12 +1237,12 @@ DecimalFraction multiplicand,
     }
 
     /**
-     * Rounds this object's value to a given maximum bit length, using the
-     * given rounding mode and range of exponent.
+     * Rounds this object&apos;s value to a given maximum bit length, using
+     * the given rounding mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. The precision is interpreted as the maximum bit
      * length of the mantissa. Can be null.
-     * @return The closest value to this object&apos; s value, rounded to
+     * @return The closest value to this object&apos;s value, rounded to
      * the specified precision. Returns the same value as this object if
      * &quot; context&quot; is null or the precision and exponent range
      * are unlimited. Returns null if the result of the rounding overflowed
@@ -1205,6 +1252,5 @@ DecimalFraction multiplicand,
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
     }
-
   }
 

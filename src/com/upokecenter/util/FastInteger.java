@@ -12,7 +12,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * A mutable integer class initially backed by a small integer, that
      * only uses a big integer when arithmetic operations would overflow
-     * the small integer. <p> This class is ideal for cases where operations
+     * the small integer.<p> This class is ideal for cases where operations
      * should be arbitrary precision, but the need to use a high precision
      * is rare.</p> <p> Many methods in this class return a reference to the
      * same object as used in the call. This allows chaining operations in
@@ -20,7 +20,6 @@ at: http://peteroupc.github.io/CBOR/
      * </code>
      */
   final class FastInteger implements Comparable<FastInteger> {
-
     private static final class MutableNumber {
       public int[] data;
       public int wordCount;
@@ -150,7 +149,9 @@ at: http://peteroupc.github.io/CBOR/
         digit &= 0xFFFF;
         int carry = 0;
         if (this.wordCount == 0) {
-          if (this.data.length == 0)this.data = new int[4];
+          if (this.data.length == 0) {
+ this.data = new int[4];
+}
           this.data[0] = 0;
           this.wordCount = 1;
         }
@@ -171,7 +172,9 @@ at: http://peteroupc.github.io/CBOR/
             int a0b0high = (A0B0 >> 16) & 0xFFFF;
             int tempInt;
             tempInt = A0B0 + carry;
-            if (i == 0)tempInt += digit;
+            if (i == 0) {
+ tempInt += digit;
+}
             int result0 = tempInt & 0xFFFF;
             tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) +
               (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
@@ -205,11 +208,12 @@ at: http://peteroupc.github.io/CBOR/
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
  throw new IllegalArgumentException("Only positive multiplicands are supported");
-
   } else if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
-            if (this.data.length == 0)this.data = new int[4];
+            if (this.data.length == 0) {
+ this.data = new int[4];
+}
             this.data[0] = 0;
             this.wordCount = 1;
           }
@@ -288,7 +292,9 @@ at: http://peteroupc.github.io/CBOR/
           while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0)
             this.wordCount--;
         } else {
-          if (this.data.length > 0)this.data[0] = 0;
+          if (this.data.length > 0) {
+ this.data[0] = 0;
+}
           this.wordCount = 0;
         }
         return this;
@@ -310,11 +316,13 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Compares a 32-bit signed integer with this instance.
-     * @param val A 32-bit signed integer. (2)
+     * @param val A 32-bit signed integer. (2).
      * @return A 32-bit signed integer.
      */
       public int CompareToInt(int val) {
-        if (val < 0 || this.wordCount > 1) { return 1; }
+        if (val < 0 || this.wordCount > 1) {
+ return 1;
+}
         if (this.wordCount == 0) {
           // this value is 0
           return (val == 0) ? 0 : -1;
@@ -335,13 +343,14 @@ at: http://peteroupc.github.io/CBOR/
         int other) {
         if (other < 0) {
  throw new IllegalArgumentException("Only positive values are supported");
-
   } else if (other != 0)
         {
           {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
-              if (this.data.length == 0)this.data = new int[4];
+              if (this.data.length == 0) {
+ this.data = new int[4];
+}
               this.data[0] = 0;
               this.wordCount = 1;
             }
@@ -446,13 +455,14 @@ at: http://peteroupc.github.io/CBOR/
       public MutableNumber Add(int augend) {
         if (augend < 0) {
  throw new IllegalArgumentException("Only positive augends are supported");
-
   } else if (augend != 0)
         {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {
-            if (this.data.length == 0)this.data = new int[4];
+            if (this.data.length == 0) {
+ this.data = new int[4];
+}
             this.data[0] = 0;
             this.wordCount = 1;
           }
@@ -463,7 +473,9 @@ at: http://peteroupc.github.io/CBOR/
             carry = ((((u >> 31) == (a >> 31)) ? ((u & Integer.MAX_VALUE) < (a & Integer.MAX_VALUE)) :
                     ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
             this.data[i] = u;
-            if (carry == 0) { return this; }
+            if (carry == 0) {
+ return this;
+}
             augend = 0;
           }
           if (carry != 0) {
@@ -483,10 +495,10 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    int smallValue;  // if integerMode is 0
-    MutableNumber mnum;  // if integerMode is 1
-    BigInteger largeValue;  // if integerMode is 2
-    int integerMode = 0;
+    private int smallValue;  // if integerMode is 0
+    private MutableNumber mnum;  // if integerMode is 1
+    private BigInteger largeValue;  // if integerMode is 2
+    private int integerMode = 0;
 
     private static BigInteger Int32MinValue = BigInteger.valueOf(Integer.MIN_VALUE);
     private static BigInteger Int32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
@@ -568,6 +580,7 @@ at: http://peteroupc.github.io/CBOR/
           throw new IllegalStateException();
       }
     }
+
     /**
      * Not documented yet.
      * @return A FastInteger object.
@@ -682,7 +695,8 @@ bigrem=divrem[1]; }
     }
 
     /**
-     * Sets this object's value to the current value times another integer.
+     * Sets this object&apos;s value to the current value times another
+     * integer.
      * @param val The integer to multiply by.
      * @return This object.
      */
@@ -739,8 +753,8 @@ bigrem=divrem[1]; }
     }
 
     /**
-     * Sets this object's value to 0 minus its current value (reverses its
-     * sign).
+     * Sets this object&apos;s value to 0 minus its current value (reverses
+     * its sign).
      * @return This object.
      */
     public FastInteger Negate() {
@@ -769,8 +783,8 @@ bigrem=divrem[1]; }
     }
 
     /**
-     * Sets this object's value to the current value minus the given FastInteger
-     * value.
+     * Sets this object&apos;s value to the current value minus the given
+     * FastInteger value.
      * @param val The subtrahend.
      * @return This object.
      */
@@ -819,8 +833,10 @@ bigrem=divrem[1]; }
       }
       return this;
     }
+
     /**
-     * Sets this object's value to the current value minus the given integer.
+     * Sets this object&apos;s value to the current value minus the given
+     * integer.
      * @param val The subtrahend.
      * @return This object.
      */
@@ -844,7 +860,8 @@ bigrem=divrem[1]; }
     }
 
     /**
-     * Sets this object's value to the current value plus the given integer.
+     * Sets this object&apos;s value to the current value plus the given
+     * integer.
      * @param bigintVal The number to add.
      * @return This object.
      */
@@ -871,7 +888,8 @@ bigrem=divrem[1]; }
     }
 
     /**
-     * Sets this object's value to the current value minus the given integer.
+     * Sets this object&apos;s value to the current value minus the given
+     * integer.
      * @param bigintVal The subtrahend.
      * @return This object.
      */
@@ -881,7 +899,9 @@ bigrem=divrem[1]; }
         return this;
       } else {
         int sign = bigintVal.signum();
-        if (sign == 0) { return this; }
+        if (sign == 0) {
+ return this;
+}
         // Check if this value fits an int, except if
         // it's MinValue
         if (sign < 0 && bigintVal.compareTo(Int32MinValue) > 0) {
@@ -894,9 +914,10 @@ bigrem=divrem[1]; }
         return this.AddBig(bigintVal);
       }
     }
+
     /**
      * Not documented yet.
-     * @param val A FastInteger object. (2)
+     * @param val A FastInteger object. (2).
      * @return A FastInteger object.
      */
     public FastInteger Add(FastInteger val) {
@@ -945,9 +966,10 @@ bigrem=divrem[1]; }
       }
       return this;
     }
+
     /**
-     * Sets this object's value to the remainder of the current value divided
-     * by the given integer.
+     * Sets this object&apos;s value to the remainder of the current value
+     * divided by the given integer.
      * @param divisor The divisor.
      * @return This object.
      */
@@ -1153,6 +1175,7 @@ bigrem=divrem[1]; }
           return "";
       }
     }
+
     /**
      * Not documented yet.
      */
@@ -1206,7 +1229,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param val A 32-bit signed integer. (2)
+     * @param val A 32-bit signed integer. (2).
      * @return A 32-bit signed integer.
      */
     public int MinInt32(int val) {

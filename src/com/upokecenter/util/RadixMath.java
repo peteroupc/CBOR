@@ -12,11 +12,10 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Encapsulates radix-independent arithmetic.
      */
-  class RadixMath<T> {
-
-    IRadixMathHelper<T> helper;
-    int thisRadix;
-    int support;
+  internal class RadixMath<T> {
+    private IRadixMathHelper<T> helper;
+    private int thisRadix;
+    private int support;
 
     public RadixMath (IRadixMathHelper<T> helper) {
       this.helper = helper;
@@ -250,8 +249,9 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private T ValueOf(int value, PrecisionContext ctx) {
-      if (ctx == null || !ctx.getHasExponentRange() || ctx.ExponentWithinRange(BigInteger.ZERO))
-        return this.helper.ValueOf(value);
+      if (ctx == null || !ctx.getHasExponentRange() || ctx.ExponentWithinRange(BigInteger.ZERO)) {
+ return this.helper.ValueOf(value);
+}
       return this.RoundToPrecision(this.helper.ValueOf(value), ctx);
     }
 
@@ -508,7 +508,9 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private T EnsureSign(T val, boolean negative) {
-      if (val == null) { return val; }
+      if (val == null) {
+ return val;
+}
       int flags = this.helper.GetFlags(val);
       if ((negative && (flags & BigNumberFlags.FlagNegative) == 0) ||
           (!negative && (flags & BigNumberFlags.FlagNegative) != 0)) {
@@ -522,8 +524,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
-     * @param divisor A T object. (3)
+     * @param thisValue A T object. (2).
+     * @param divisor A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -573,16 +575,18 @@ at: http://peteroupc.github.io/CBOR/
           FastInteger fastexponent = FastInteger.FromBig(this.helper.GetExponent(ret));
           BigInteger bigradix = (BigInteger)this.thisRadix;
           while (true) {
-            if (desiredScale.compareTo(fastexponent) == 0)
-              break;
+            if (desiredScale.compareTo(fastexponent) == 0) {
+ break;
+}
             BigInteger bigrem;
             BigInteger bigquo;
 {
 BigInteger[] divrem=(bigmantissa).divideAndRemainder(bigradix);
 bigquo=divrem[0];
 bigrem=divrem[1]; }
-            if (bigrem.signum()!=0)
-              break;
+            if (bigrem.signum()!=0) {
+ break;
+}
             bigmantissa = bigquo;
             fastexponent.Increment();
           }
@@ -600,8 +604,8 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
-     * @param divisor A T object. (3)
+     * @param thisValue A T object. (2).
+     * @param divisor A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -633,7 +637,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param value A T object. (2)
+     * @param value A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -657,7 +661,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param value A T object. (2)
+     * @param value A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -712,7 +716,9 @@ bigrem=divrem[1]; }
     }
 
     private T NegateRaw(T val) {
-      if (val == null) { return val; }
+      if (val == null) {
+ return val;
+}
       int sign = this.helper.GetFlags(val) & BigNumberFlags.FlagNegative;
       return this.helper.CreateNewWithFlags(
         this.helper.GetMantissa(val), this.helper.GetExponent(val),
@@ -732,7 +738,7 @@ bigrem=divrem[1]; }
     /**
      * Finds the remainder that results when dividing two T objects.
      * @param thisValue A T object.
-     * @param divisor A T object. (2)
+     * @param divisor A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return The remainder of the two objects.
      */
@@ -758,8 +764,8 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
-     * @param divisor A T object. (3)
+     * @param thisValue A T object. (2).
+     * @param divisor A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -920,7 +926,9 @@ bigrem=divrem[1]; }
       while (more) {
         lastGuess = guess;
         T tmp = Divide(zpow, helper.CreateNewWithFlags(denom, BigInteger.ZERO, 0), ctxdiv);
-        if (negative)tmp = NegateRaw(tmp);
+        if (negative) {
+ tmp = NegateRaw(tmp);
+}
         T newGuess = Add(guess, NegateRaw(tmp), ctxdiv);
         {
           int guessCmp = compareTo(lastGuess, newGuess);
@@ -996,14 +1004,16 @@ bigrem=divrem[1]; }
     private T PowerIntegral(T thisValue, BigInteger powIntBig, PrecisionContext ctx) {
       int sign = powIntBig.signum();
       T one = this.helper.ValueOf(1);
-      if (sign == 0)
-        return this.RoundToPrecision(one, ctx);  // however 0 to the power of 0 is undefined
-      else if (powIntBig.equals(BigInteger.ONE))
-        return this.RoundToPrecision(thisValue, ctx);
-      else if (powIntBig.equals(BigInteger.valueOf(2)))
-        return this.Multiply(thisValue, thisValue, ctx);
-      else if (powIntBig.equals(BigInteger.valueOf(3)))
-        return this.Multiply(thisValue, this.Multiply(thisValue, thisValue, null), ctx);
+      if (sign == 0) {
+ return this.RoundToPrecision(one, ctx);
+}  // however 0 to the power of 0 is undefined
+      else if (powIntBig.equals(BigInteger.ONE)) {
+ return this.RoundToPrecision(thisValue, ctx);
+  } else if (powIntBig.equals(BigInteger.valueOf(2))) {
+ return this.Multiply(thisValue, thisValue, ctx);
+  } else if (powIntBig.equals(BigInteger.valueOf(3))) {
+ return this.Multiply(thisValue, this.Multiply(thisValue, thisValue, null), ctx);
+}
       boolean retvalNeg = this.IsNegative(thisValue) && powIntBig.testBit(0);
       FastInteger error = this.helper.CreateShiftAccumulator(
         (powIntBig).abs()).GetDigitLength();
@@ -1065,8 +1075,9 @@ bigrem=divrem[1]; }
     }
 
     private boolean IsWithinExponentRangeForPow(T thisValue, PrecisionContext ctx) {
-      if (ctx == null || !ctx.getHasExponentRange())
-        return true;
+      if (ctx == null || !ctx.getHasExponentRange()) {
+ return true;
+}
       FastInteger digits = this.helper.CreateShiftAccumulator((
         this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
       BigInteger exp = this.helper.GetExponent(thisValue);
@@ -1087,8 +1098,8 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
-     * @param pow A T object. (3)
+     * @param thisValue A T object. (2).
+     * @param pow A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1243,7 +1254,9 @@ bigrem=divrem[1]; }
             PrecisionContext.ForRounding(Rounding.Down));
         }
         BigInteger signedMant = (this.helper.GetMantissa(powInt)).abs();
-        if (powSign < 0)signedMant=signedMant.negate();
+        if (powSign < 0) {
+ signedMant=signedMant.negate();
+}
         // System.out.println("tv={0} mant={1}",thisValue,signedMant);
         return this.PowerIntegral(thisValue, signedMant, ctx);
       }
@@ -1273,9 +1286,10 @@ bigrem=divrem[1]; }
       }
       return lnresult;
     }
+
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1295,8 +1309,9 @@ bigrem=divrem[1]; }
         return this.ReturnQuietNaN(thisValue, ctx);
       }
       int sign = this.helper.GetSign(thisValue);
-      if (sign < 0)
-        return this.SignalInvalid(ctx);
+      if (sign < 0) {
+ return this.SignalInvalid(ctx);
+}
       if ((flags & BigNumberFlags.FlagInfinity) != 0) {
         return thisValue;
       }
@@ -1334,8 +1349,9 @@ bigrem=divrem[1]; }
 BigInteger[] divrem=(mantissa).divideAndRemainder(tenBig);
 bigquo=divrem[0];
 bigrem=divrem[1]; }
-            if (bigrem.signum()!=0)
-              break;
+            if (bigrem.signum()!=0) {
+ break;
+}
             mantissa = bigquo;
             expTmp.Increment();
           }
@@ -1363,7 +1379,9 @@ bigrem=divrem[1]; }
     }
 
     private static BigInteger PowerOfTwo(FastInteger fi) {
-      if (fi.signum() <= 0) { return BigInteger.ONE; }
+      if (fi.signum() <= 0) {
+ return BigInteger.ONE;
+}
       if (fi.CanFitInInt32()) {
         int val = fi.AsInt32();
         if (val <= 30) {
@@ -1388,7 +1406,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1408,8 +1426,9 @@ bigrem=divrem[1]; }
         return this.ReturnQuietNaN(thisValue, ctx);
       }
       int sign = this.helper.GetSign(thisValue);
-      if (sign < 0)
-        return this.SignalInvalid(ctx);
+      if (sign < 0) {
+ return this.SignalInvalid(ctx);
+}
       if ((flags & BigNumberFlags.FlagInfinity) != 0) {
         return thisValue;
       }
@@ -1513,7 +1532,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1603,7 +1622,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1726,16 +1745,22 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
     public T NextMinus(
       T thisValue,
       PrecisionContext ctx) {
-      if (ctx == null) { throw new NullPointerException("ctx"); }
-      if (ctx.Precision.signum() <= 0) { throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+ctx.getPrecision()+")"); }
-      if (!ctx.getHasExponentRange()) { throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()"); }
+      if (ctx == null) {
+ throw new NullPointerException("ctx");
+}
+      if (ctx.Precision.signum() <= 0) {
+ throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+ctx.getPrecision()+")");
+}
+      if (!ctx.getHasExponentRange()) {
+ throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()");
+}
       int flags = this.helper.GetFlags(thisValue);
       if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
         return this.SignalingNaNInvalid(thisValue, ctx);
@@ -1774,8 +1799,8 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
-     * @param otherValue A T object. (3)
+     * @param thisValue A T object. (2).
+     * @param otherValue A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -1783,9 +1808,15 @@ bigrem=divrem[1]; }
       T thisValue,
       T otherValue,
       PrecisionContext ctx) {
-      if (ctx == null) { throw new NullPointerException("ctx"); }
-      if (ctx.Precision.signum() <= 0) { throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+ctx.getPrecision()+")"); }
-      if (!ctx.getHasExponentRange()) { throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()"); }
+      if (ctx == null) {
+ throw new NullPointerException("ctx");
+}
+      if (ctx.Precision.signum() <= 0) {
+ throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+ctx.getPrecision()+")");
+}
+      if (!ctx.getHasExponentRange()) {
+ throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()");
+}
       int thisFlags = this.helper.GetFlags(thisValue);
       int otherFlags = this.helper.GetFlags(otherValue);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
@@ -1859,16 +1890,22 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
     public T NextPlus(
       T thisValue,
       PrecisionContext ctx) {
-      if (ctx == null) { throw new NullPointerException("ctx"); }
-      if (ctx.Precision.signum() <= 0) { throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+ctx.getPrecision()+")"); }
-      if (!ctx.getHasExponentRange()) { throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()"); }
+      if (ctx == null) {
+ throw new NullPointerException("ctx");
+}
+      if (ctx.Precision.signum() <= 0) {
+ throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+ctx.getPrecision()+")");
+}
+      if (!ctx.getHasExponentRange()) {
+ throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()");
+}
       int flags = this.helper.GetFlags(thisValue);
       if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
         return this.SignalingNaNInvalid(thisValue, ctx);
@@ -1909,7 +1946,7 @@ bigrem=divrem[1]; }
     /**
      * Divides two T objects.
      * @param thisValue A T object.
-     * @param divisor A T object. (2)
+     * @param divisor A T object. (2).
      * @param desiredExponent A BigInteger object.
      * @param ctx A PrecisionContext object.
      * @return The quotient of the two objects.
@@ -1919,8 +1956,9 @@ bigrem=divrem[1]; }
       T divisor,
       BigInteger desiredExponent,
       PrecisionContext ctx) {
-      if (ctx != null && !ctx.ExponentWithinRange(desiredExponent))
-        return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + desiredExponent.toString());
+      if (ctx != null && !ctx.ExponentWithinRange(desiredExponent)) {
+ return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + desiredExponent.toString());
+}
       PrecisionContext ctx2 = (ctx == null) ?
         PrecisionContext.ForRounding(Rounding.HalfDown) :
         ctx.WithUnlimitedExponents().WithPrecision(0);
@@ -1937,7 +1975,7 @@ bigrem=divrem[1]; }
     /**
      * Divides two T objects.
      * @param thisValue A T object.
-     * @param divisor A T object. (2)
+     * @param divisor A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return The quotient of the two objects.
      */
@@ -2051,8 +2089,9 @@ bigrem=divrem[1]; }
         newmantissa = accum.getShiftedInt();
         if (accum.DiscardedDigitCount.signum() != 0 ||
             (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-          if (mantissa.signum()!=0)
-            flags |= PrecisionContext.FlagRounded;
+          if (mantissa.signum()!=0) {
+ flags |= PrecisionContext.FlagRounded;
+}
           if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
             flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
             if (rounding == Rounding.Unnecessary) {
@@ -2230,8 +2269,9 @@ rem=divrem[1]; }
                 resultNeg ? BigNumberFlags.FlagNegative : 0), ctxcopy,
               digitStatus[0], digitStatus[1], new FastInteger(0), false);
             if ((ctxcopy.getFlags() & PrecisionContext.FlagInexact) != 0) {
-              if (ctx != null && ctx.getHasFlags())
-                ctx.setFlags(ctx.getFlags()|(ctxcopy.getFlags()));
+              if (ctx != null && ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(ctxcopy.getFlags()));
+}
               return retval2;
             } else {
               if (ctx != null && ctx.getHasFlags()) {
@@ -2258,8 +2298,9 @@ rem=divrem[1]; }
           divisorPrecision =
             this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
           divisorPrecision.Subtract(dividendPrecision);
-          if (divisorPrecision.isValueZero())
-            divisorPrecision.Increment();
+          if (divisorPrecision.isValueZero()) {
+ divisorPrecision.Increment();
+}
           // multiply dividend mantissa so precisions are the same
           // (except if they're already the same, in which case multiply
           // by radix)
@@ -2398,51 +2439,69 @@ rem=divrem[1]; }
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param a A T object. (2)
-     * @param b A T object. (3)
+     * @param a A T object. (2).
+     * @param b A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
-      if (a == null) { throw new NullPointerException("a"); }
-      if (b == null) { throw new NullPointerException("b"); }
+      if (a == null) {
+ throw new NullPointerException("a");
+}
+      if (b == null) {
+ throw new NullPointerException("b");
+}
       // Handle infinity and NaN
       T result = this.MinMaxHandleSpecial(a, b, ctx, true, true);
       if ((Object)result != (Object)null) return result;
       int cmp = this.compareTo(this.AbsRaw(a), this.AbsRaw(b));
-      if (cmp == 0) { return this.Min(a, b, ctx); }
+      if (cmp == 0) {
+ return this.Min(a, b, ctx);
+}
       return (cmp < 0) ? this.RoundToPrecision(a, ctx) :
         this.RoundToPrecision(b, ctx);
     }
+
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param a A T object. (2)
-     * @param b A T object. (3)
+     * @param a A T object. (2).
+     * @param b A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
-      if (a == null) { throw new NullPointerException("a"); }
-      if (b == null) { throw new NullPointerException("b"); }
+      if (a == null) {
+ throw new NullPointerException("a");
+}
+      if (b == null) {
+ throw new NullPointerException("b");
+}
       // Handle infinity and NaN
       T result = this.MinMaxHandleSpecial(a, b, ctx, false, true);
       if ((Object)result != (Object)null) return result;
       int cmp = this.compareTo(this.AbsRaw(a), this.AbsRaw(b));
-      if (cmp == 0) { return this.Max(a, b, ctx); }
+      if (cmp == 0) {
+ return this.Max(a, b, ctx);
+}
       return (cmp > 0) ? this.RoundToPrecision(a, ctx) :
         this.RoundToPrecision(b, ctx);
     }
+
     /**
      * Gets the greater value between two T values.
      * @param a A T object.
-     * @param b A T object. (2)
+     * @param b A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return The larger value of the two objects.
      */
     public T Max(T a, T b, PrecisionContext ctx) {
-      if (a == null) { throw new NullPointerException("a"); }
-      if (b == null) { throw new NullPointerException("b"); }
+      if (a == null) {
+ throw new NullPointerException("a");
+}
+      if (b == null) {
+ throw new NullPointerException("b");
+}
       // Handle infinity and NaN
       T result = this.MinMaxHandleSpecial(a, b, ctx, false, false);
       if ((Object)result != (Object)null) return result;
@@ -2467,13 +2526,17 @@ rem=divrem[1]; }
     /**
      * Gets the lesser value between two T values.
      * @param a A T object.
-     * @param b A T object. (2)
+     * @param b A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return The smaller value of the two objects.
      */
     public T Min(T a, T b, PrecisionContext ctx) {
-      if (a == null) { throw new NullPointerException("a"); }
-      if (b == null) { throw new NullPointerException("b"); }
+      if (a == null) {
+ throw new NullPointerException("a");
+}
+      if (b == null) {
+ throw new NullPointerException("b");
+}
       // Handle infinity and NaN
       T result = this.MinMaxHandleSpecial(a, b, ctx, true, false);
       if ((Object)result != (Object)null) return result;
@@ -2499,7 +2562,7 @@ rem=divrem[1]; }
      * Multiplies two T objects.
      * @param thisValue A T object.
      * @param ctx A PrecisionContext object.
-     * @param other A T object. (2)
+     * @param other A T object. (2).
      * @return The product of the two objects.
      */
     public T Multiply(T thisValue, T other, PrecisionContext ctx) {
@@ -2533,11 +2596,12 @@ rem=divrem[1]; }
       }
       return ret;
     }
+
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
-     * @param multiplicand A T object. (3)
-     * @param augend A T object. (4)
+     * @param thisValue A T object. (2).
+     * @param multiplicand A T object. (3).
+     * @param augend A T object. (4).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -2547,15 +2611,17 @@ rem=divrem[1]; }
       PrecisionContext ctx) {
       PrecisionContext ctx2 = PrecisionContext.Unlimited.WithBlankFlags();
       T ret = this.MultiplyAddHandleSpecial(thisValue, multiplicand, augend, ctx);
-      if ((Object)ret != (Object)null)return ret;
+      if ((Object)ret != (Object)null) return ret;
       ret = this.Add(this.Multiply(thisValue, multiplicand, ctx2), augend, ctx);
-      if (ctx != null && ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(ctx2.getFlags()));
+      if (ctx != null && ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(ctx2.getFlags()));
+}
       return ret;
     }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param context A PrecisionContext object.
      * @return A T object.
      */
@@ -2582,7 +2648,7 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param context A PrecisionContext object.
      * @return A T object.
      */
@@ -2591,9 +2657,10 @@ rem=divrem[1]; }
       PrecisionContext context) {
       return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, true, context);
     }
+
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param context A PrecisionContext object.
      * @return A T object.
      */
@@ -2620,8 +2687,8 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
-     * @param otherValue A T object. (3)
+     * @param thisValue A T object. (2).
+     * @param otherValue A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -2642,8 +2709,9 @@ rem=divrem[1]; }
         }
       }
       BigInteger expOther = this.helper.GetExponent(otherValue);
-      if (ctx != null && !ctx.ExponentWithinRange(expOther))
-        return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + expOther.toString());
+      if (ctx != null && !ctx.ExponentWithinRange(expOther)) {
+ return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + expOther.toString());
+}
       PrecisionContext tmpctx = (ctx == null ?
                                  PrecisionContext.ForRounding(Rounding.HalfEven) :
                                  ctx.Copy()).WithBlankFlags();
@@ -2690,7 +2758,7 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param expOther A BigInteger object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -2717,7 +2785,7 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param expOther A BigInteger object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
@@ -2737,8 +2805,9 @@ rem=divrem[1]; }
       if (this.helper.GetExponent(thisValue).compareTo(expOther) >= 0) {
         return this.RoundToPrecision(thisValue, ctx);
       } else {
-        if (ctx != null && !ctx.ExponentWithinRange(expOther))
-          return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + expOther.toString());
+        if (ctx != null && !ctx.ExponentWithinRange(expOther)) {
+ return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + expOther.toString());
+}
         BigInteger bigmantissa = (this.helper.GetMantissa(thisValue)).abs();
         FastInteger shift = FastInteger.FromBig(expOther).SubtractBig(this.helper.GetExponent(thisValue));
         IShiftAccumulator accum = this.helper.CreateShiftAccumulator(bigmantissa);
@@ -2753,7 +2822,7 @@ rem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
      * @param exponent A BigInteger object.
      * @return A T object.
@@ -2770,12 +2839,13 @@ rem=divrem[1]; }
       }
       return ret;
     }
+
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
      * @param precision A FastInteger object.
-     * @param idealExp A FastInteger object. (2)
+     * @param idealExp A FastInteger object. (2).
      * @return A T object.
      */
     public T ReduceToPrecisionAndIdealExponent(
@@ -2807,11 +2877,14 @@ rem=divrem[1]; }
 BigInteger[] divrem=(bigmant).divideAndRemainder(bigradix);
 bigquo=divrem[0];
 bigrem=divrem[1]; }
-            if (bigrem.signum()!=0)
-              break;
+            if (bigrem.signum()!=0) {
+ break;
+}
             bigmant = bigquo;
             exp.Increment();
-            if (digits != null)digits.Decrement();
+            if (digits != null) {
+ digits.Decrement();
+}
           }
         }
         int flags = this.helper.GetFlags(thisValue);
@@ -2830,7 +2903,7 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
@@ -2848,8 +2921,9 @@ bigrem=divrem[1]; }
       boolean binaryPrec, // whether "precision" is the number of bits, not digits
       boolean adjustNegativeZero,
       PrecisionContext ctx) {
-      if (ctx == null)
-        ctx = PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven);
+      if (ctx == null) {
+ ctx = PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven);
+}
       // If context has unlimited precision and exponent range,
       // and no discarded digits or shifting
       if (ctx.Precision.signum()==0 && !ctx.getHasExponentRange() &&
@@ -2874,7 +2948,9 @@ bigrem=divrem[1]; }
       FastInteger fastPrecision = ctx.Precision.canFitInInt() ?
         new FastInteger(ctx.Precision.intValue()) :
         FastInteger.FromBig(ctx.getPrecision());
-      if (fastPrecision.signum() < 0) { throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + fastPrecision + ")"); }
+      if (fastPrecision.signum() < 0) {
+ throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + fastPrecision + ")");
+}
       if (this.thisRadix == 2 || fastPrecision.isValueZero()) {
         // "binaryPrec" will have no special effect here
         binaryPrec = false;
@@ -2915,8 +2991,9 @@ bigrem=divrem[1]; }
               if (ctx.getHasFlags() && (lastDiscarded | olderDiscarded) != 0) {
                 ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
               }
-              if (!ctx.getHasExponentRange())
-                return thisValue;
+              if (!ctx.getHasExponentRange()) {
+ return thisValue;
+}
               BigInteger bigexp = this.helper.GetExponent(thisValue);
               FastInteger fastExp = bigexp.canFitInInt() ?
                 new FastInteger(bigexp.intValue()) :
@@ -2942,8 +3019,9 @@ bigrem=divrem[1]; }
                 stillWithinPrecision = mantabs.compareTo(radixPower) < 0;
               }
               if (stillWithinPrecision) {
-                if (!ctx.getHasExponentRange())
-                  return this.helper.CreateNewWithFlags(mantabs, this.helper.GetExponent(thisValue), thisFlags);
+                if (!ctx.getHasExponentRange()) {
+ return this.helper.CreateNewWithFlags(mantabs, this.helper.GetExponent(thisValue), thisFlags);
+}
                 BigInteger bigexp = this.helper.GetExponent(thisValue);
                 FastInteger fastExp = bigexp.canFitInInt() ?
                   new FastInteger(bigexp.intValue()) :
@@ -3061,8 +3139,9 @@ bigrem=divrem[1]; }
             }
             FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
             if (fastEMax.compareTo(clampExp) > 0) {
-              if (ctx.getHasFlags())
-                ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+              if (ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+}
               fastEMax = clampExp;
             }
           }
@@ -3088,7 +3167,9 @@ bigrem=divrem[1]; }
               overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
               overflowMant=overflowMant.subtract(BigInteger.ONE);
             }
-            if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
+            if (ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(flags));
+}
             clamp = FastInteger.Copy(fastEMax).Increment()
               .Subtract(fastPrecision);
             return this.helper.CreateNewWithFlags(
@@ -3097,7 +3178,9 @@ bigrem=divrem[1]; }
               neg ? BigNumberFlags.FlagNegative : 0)
               ;
           }
-          if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
+          if (ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(flags));
+}
           return this.SignalOverflow(neg);
         }
       } else if (fastEMin != null && adjExponent.compareTo(fastEMin) < 0) {
@@ -3131,8 +3214,9 @@ bigrem=divrem[1]; }
           if (accum.DiscardedDigitCount.signum() != 0 ||
               (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
             if (ctx.getHasFlags()) {
-              if (!mantissaWasZero)
-                flags |= PrecisionContext.FlagRounded;
+              if (!mantissaWasZero) {
+ flags |= PrecisionContext.FlagRounded;
+}
               if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
                 flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
               }
@@ -3142,8 +3226,9 @@ bigrem=divrem[1]; }
             }
           }
           if (ctx.getHasFlags()) {
-            if (newmantissa.isValueZero())
-              flags |= PrecisionContext.FlagClamped;
+            if (newmantissa.isValueZero()) {
+ flags |= PrecisionContext.FlagClamped;
+}
             if ((flags & (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact)) ==
                 (PrecisionContext.FlagSubnormal | PrecisionContext.FlagInexact))
               flags |= PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
@@ -3163,8 +3248,9 @@ bigrem=divrem[1]; }
                 expdiff = FastInteger.Copy(fastETiny).Subtract(clampExp);
                 bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, expdiff);
               }
-              if (ctx.getHasFlags())
-                ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+              if (ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+}
               fastETiny = clampExp;
             }
           }
@@ -3176,8 +3262,9 @@ bigrem=divrem[1]; }
       boolean recheckOverflow = false;
       if (accum.DiscardedDigitCount.signum() != 0 ||
           (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-        if (bigmantissa.signum()!=0)
-          flags |= PrecisionContext.FlagRounded;
+        if (bigmantissa.signum()!=0) {
+ flags |= PrecisionContext.FlagRounded;
+}
         bigmantissa = accum.getShiftedInt();
         if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
           flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
@@ -3188,7 +3275,9 @@ bigrem=divrem[1]; }
         if (this.RoundGivenBigInt(accum, rounding, neg, bigmantissa)) {
           FastInteger oldDigitLength = accum.GetDigitLength();
           bigmantissa=bigmantissa.add(BigInteger.ONE);
-          if (binaryPrec) recheckOverflow = true;
+          if (binaryPrec) {
+ recheckOverflow = true;
+}
           // Check if mantissa's precision is now greater
           // than the one set by the context
           if (!unlimitedPrec &&
@@ -3209,7 +3298,9 @@ bigrem=divrem[1]; }
                 exp.Add(accum.getDiscardedDigitCount());
                 discardedBits.Add(accum.getDiscardedDigitCount());
                 bigmantissa = accum.getShiftedInt();
-                if (!binaryPrec) recheckOverflow = true;
+                if (!binaryPrec) {
+ recheckOverflow = true;
+}
               }
             }
           }
@@ -3247,7 +3338,9 @@ bigrem=divrem[1]; }
               overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
               overflowMant=overflowMant.subtract(BigInteger.ONE);
             }
-            if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
+            if (ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(flags));
+}
             clamp = FastInteger.Copy(fastEMax).Increment()
               .Subtract(fastPrecision);
             return this.helper.CreateNewWithFlags(
@@ -3255,11 +3348,15 @@ bigrem=divrem[1]; }
               clamp.AsBigInteger(),
               neg ? BigNumberFlags.FlagNegative : 0);
           }
-          if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
+          if (ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(flags));
+}
           return this.SignalOverflow(neg);
         }
       }
-      if (ctx.getHasFlags()) ctx.setFlags(ctx.getFlags()|(flags));
+      if (ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(flags));
+}
       if (ctx.getClampNormalExponents()) {
         // Clamp exponents to eMax + 1 - precision
         // if directed
@@ -3273,8 +3370,9 @@ bigrem=divrem[1]; }
             FastInteger expdiff = FastInteger.Copy(exp).Subtract(clampExp);
             bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, expdiff);
           }
-          if (ctx.getHasFlags())
-            ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+          if (ctx.getHasFlags()) {
+ ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
+}
           exp = clampExp;
         }
       }
@@ -3312,9 +3410,9 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param thisValue A T object. (2)
+     * @param thisValue A T object. (2).
      * @param ctx A PrecisionContext object.
-     * @param other A T object. (3)
+     * @param other A T object. (3).
      * @return A T object.
      */
     public T Add(T thisValue, T other, PrecisionContext ctx) {
@@ -3499,7 +3597,6 @@ bigrem=divrem[1]; }
                           sameSign ? 1 : 0, shift2, false);
                       }
                     }
-
                   }
                 }
               }
@@ -3532,14 +3629,16 @@ bigrem=divrem[1]; }
 
     /**
      * Compares a T object with this instance.
-     * @param thisValue A T object. (2)
-     * @param decfrac A T object. (3)
+     * @param thisValue A T object. (2).
+     * @param decfrac A T object. (3).
      * @param treatQuietNansAsSignaling A Boolean object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
     public T CompareToWithContext(T thisValue, T decfrac, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
-      if (decfrac == null) { return this.SignalInvalid(ctx); }
+      if (decfrac == null) {
+ return this.SignalInvalid(ctx);
+}
       T result = this.CompareToHandleSpecial(thisValue, decfrac, treatQuietNansAsSignaling, ctx);
       if ((Object)result != (Object)null) return result;
       return this.ValueOf(this.compareTo(thisValue, decfrac), null);
@@ -3548,12 +3647,14 @@ bigrem=divrem[1]; }
     /**
      * Compares a T object with this instance.
      * @param thisValue A T object.
-     * @param decfrac A T object. (2)
+     * @param decfrac A T object. (2).
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
     public int compareTo(T thisValue, T decfrac) {
-      if (decfrac == null) { return 1; }
+      if (decfrac == null) {
+ return 1;
+}
       int flagsThis = this.helper.GetFlags(thisValue);
       int flagsOther = this.helper.GetFlags(decfrac);
       if ((flagsThis & BigNumberFlags.FlagNaN) != 0) {
@@ -3566,10 +3667,14 @@ bigrem=divrem[1]; }
         return -1;  // Treat as less than NaN
       }
       int s = this.CompareToHandleSpecialReturnInt(thisValue, decfrac);
-      if (s <= 1) { return s; }
+      if (s <= 1) {
+ return s;
+}
       s = this.helper.GetSign(thisValue);
       int ds = this.helper.GetSign(decfrac);
-      if (s != ds) { return (s < ds) ? -1 : 1; }
+      if (s != ds) {
+ return (s < ds) ? -1 : 1;
+}
       if (ds == 0 || s == 0) {
         // Special case: Either operand is zero
         return 0;
@@ -3579,7 +3684,9 @@ bigrem=divrem[1]; }
       // their absolute values instead
       int mantcmp = (this.helper.GetMantissa(thisValue)).abs()
         .compareTo((this.helper.GetMantissa(decfrac)).abs());
-      if (s < 0) mantcmp = -mantcmp;
+      if (s < 0) {
+ mantcmp = -mantcmp;
+}
       if (mantcmp == 0) {
         // Special case: Mantissas are equal
         return s < 0 ? -expcmp : expcmp;
@@ -3602,10 +3709,11 @@ bigrem=divrem[1]; }
         FastInteger precision2 = this.helper.CreateShiftAccumulator(
           op2MantAbs).GetDigitLength();
         FastInteger maxPrecision = null;
-        if (precision1.compareTo(precision2) > 0)
-          maxPrecision = precision1;
-        else
-          maxPrecision = precision2;
+        if (precision1.compareTo(precision2) > 0) {
+ maxPrecision = precision1;
+  } else {
+ maxPrecision = precision2;
+}
         // If exponent difference is greater than the
         // maximum precision of the two operands
         if (FastInteger.Copy(expdiff).compareTo(maxPrecision) > 0) {

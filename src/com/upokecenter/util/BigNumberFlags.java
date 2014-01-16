@@ -11,7 +11,7 @@ package com.upokecenter.util;
     /**
      * Description of BigNumberFlags.
      */
-  class BigNumberFlags
+  internal class BigNumberFlags
   {
     static final int FlagNegative = 1;
     static final int FlagQuietNaN = 4;

@@ -72,8 +72,9 @@ import org.junit.Test;
       return r;
     }
     private static double RandomDouble(FastRandom rand, int exponent) {
-      if (exponent == Integer.MAX_VALUE)
-        exponent = rand.NextValue(2047);
+      if (exponent == Integer.MAX_VALUE) {
+ exponent = rand.NextValue(2047);
+}
       long r = rand.NextValue(0x10000);
       r |= ((long)rand.NextValue(0x10000)) << 16;
       if (rand.NextValue(2) == 0) {
@@ -87,8 +88,9 @@ import org.junit.Test;
       return Double.longBitsToDouble(r);
     }
     private static float RandomSingle(FastRandom rand, int exponent) {
-      if (exponent == Integer.MAX_VALUE)
-        exponent = rand.NextValue(255);
+      if (exponent == Integer.MAX_VALUE) {
+ exponent = rand.NextValue(255);
+}
       int r = rand.NextValue(0x10000);
       if (rand.NextValue(2) == 0) {
         r |= ((int)rand.NextValue(0x10000)) << 16;
@@ -109,24 +111,30 @@ import org.junit.Test;
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
       StringBuilder sb = new StringBuilder();
-      if (r.NextValue(2) == 0) sb.append('-');
+      if (r.NextValue(2) == 0) {
+ sb.append('-');
+}
       for (int i = 0; i < count; ++i) {
-        if (i == 0)
-          sb.append((char)('1' + r.NextValue(9)));
-        else
-          sb.append((char)('0' + r.NextValue(10)));
+        if (i == 0) {
+ sb.append((char)('1' + r.NextValue(9)));
+  } else {
+ sb.append((char)('0' + r.NextValue(10)));
+}
       }
       return sb.toString();
     }
     public static String RandomDecimalString(FastRandom r) {
       int count = r.NextValue(20) + 1;
       StringBuilder sb = new StringBuilder();
-      if (r.NextValue(2) == 0) sb.append('-');
+      if (r.NextValue(2) == 0) {
+ sb.append('-');
+}
       for (int i = 0; i < count; ++i) {
-        if (i == 0)
-          sb.append((char)('1' + r.NextValue(9)));
-        else
-          sb.append((char)('0' + r.NextValue(10)));
+        if (i == 0) {
+ sb.append((char)('1' + r.NextValue(9)));
+  } else {
+ sb.append((char)('0' + r.NextValue(10)));
+}
       }
       if (r.NextValue(2) == 0) {
         sb.append('.');
@@ -169,6 +177,7 @@ import org.junit.Test;
         TestCommon.AssertRoundTrip(o2);
       }
     }
+
     /**
      *
      */
@@ -199,17 +208,23 @@ import org.junit.Test;
     }
 
     private static void CompareTestEqual(CBORObject o1, CBORObject o2) {
-      if (CompareTestReciprocal(o1, o2) != 0)
-        Assert.fail(ObjectMessages(o1, o2, "Not equal: " + CompareTestReciprocal(o1, o2)));
+      if (CompareTestReciprocal(o1, o2) != 0) {
+ Assert.fail(ObjectMessages(o1, o2, "Not equal: " + CompareTestReciprocal(o1, o2)));
+}
     }
     private static void CompareTestLess(CBORObject o1, CBORObject o2) {
-      if (CompareTestReciprocal(o1, o2) >= 0)
-        Assert.fail(ObjectMessages(o1, o2, "Not less: " + CompareTestReciprocal(o1, o2)));
+      if (CompareTestReciprocal(o1, o2) >= 0) {
+ Assert.fail(ObjectMessages(o1, o2, "Not less: " + CompareTestReciprocal(o1, o2)));
+}
     }
 
     private static int CompareTestReciprocal(CBORObject o1, CBORObject o2) {
-      if ((o1) == null) { throw new NullPointerException("o1"); }
-      if ((o2) == null) { throw new NullPointerException("o2"); }
+      if ((o1) == null) {
+ throw new NullPointerException("o1");
+}
+      if ((o2) == null) {
+ throw new NullPointerException("o2");
+}
       int cmp = o1.compareTo(o2);
       int cmp2 = o2.compareTo(o1);
       if (-cmp2 != cmp) {
@@ -224,12 +239,14 @@ import org.junit.Test;
       String hex = "0123456789ABCDEF";
       sb.append("CBORObject.DecodeFromBytes(new byte[]{");
       for (int i = 0; i < bytes.length; ++i) {
-        if (i > 0)
-          sb.append(",");
-        if ((bytes[i] & 0x80) != 0)
-          sb.append("(byte)0x");
-        else
-          sb.append("0x");
+        if (i > 0) {
+ sb.append(",");
+}
+        if ((bytes[i] & 0x80) != 0) {
+ sb.append("(byte)0x");
+  } else {
+ sb.append("0x");
+}
         sb.append(hex.charAt((bytes[i] >> 4) & 0xF));
         sb.append(hex.charAt((bytes[i]) & 0xF));
       }
@@ -363,6 +380,7 @@ import org.junit.Test;
       CompareTestLess(dn, dp);
       CompareTestLess(dp, dnan);
     }
+
     /**
      *
      */
@@ -374,6 +392,7 @@ import org.junit.Test;
         TestDecimalString(r);
       }
     }
+
     /**
      *
      */
@@ -401,7 +420,9 @@ int startingAvailable=ms.available();
           while ((startingAvailable-ms.available()) != startingAvailable) {
             try {
               CBORObject o = CBORObject.Read(ms);
-              if (o == null) Assert.fail("Object read is null");
+              if (o == null) {
+ Assert.fail("Object read is null");
+}
             } catch(CBORException ex) {
               // Expected exception
             }
@@ -412,6 +433,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
 }
       }
     }
+
     /**
      *
      */
@@ -461,6 +483,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]"); } catch(CBORException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); throw new IllegalStateException("",ex); }
       try { CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]"); } catch (Exception ex) { Assert.fail(ex.toString()); throw new IllegalStateException("",ex); }
     }
+
     /**
      *
      */
@@ -474,6 +497,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
                       o.ToJSONString());
       TestCommon.AssertRoundTrip(o);
     }
+
     /**
      *
      */
@@ -486,6 +510,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(3, o.get(2).AsInt32());
       TestCommon.AssertRoundTrip(o);
     }
+
     /**
      *
      */
@@ -508,6 +533,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("false", CBORObject.False.ToJSONString());
       Assert.assertEquals("null", CBORObject.Null.ToJSONString());
     }
+
     /**
      *
      */
@@ -519,6 +545,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           String.format(java.util.Locale.US,"%s", i));
       }
     }
+
     /**
      *
      * @param bytes A byte[] object.
@@ -534,6 +561,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       DoTestReadUtf8(bytes, bytes.length, expectedRet, expectedString,
                      noReplaceRet, noReplaceString);
     }
+
     /**
      *
      * @param bytes A byte[] object.
@@ -588,6 +616,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         throw new CBORException("", ex);
       }
     }
+
     /**
      *
      */
@@ -600,6 +629,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
       Assert.assertTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
     }
+
     /**
      *
      */
@@ -626,6 +656,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsBigInteger(); Assert.fail("Should have failed"); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); throw new IllegalStateException("",ex); }
       try { CBORObject.FromObject(Double.NaN).AsBigInteger(); Assert.fail("Should have failed"); } catch(ArithmeticException ex) { } catch (Exception ex) { Assert.fail(ex.toString()); throw new IllegalStateException("",ex); }
     }
+
     /**
      *
      */
@@ -642,6 +673,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("0.875", ExtendedDecimal.FromSingle(0.875f).toString());
       Assert.assertEquals("0.125", ExtendedDecimal.FromSingle(0.125f).toString());
     }
+
     /**
      *
      */
@@ -698,6 +730,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals((BigInteger.valueOf(11)).negate(), ExtendedDecimal.FromString("0.574848e-5").getExponent());
       Assert.assertEquals((BigInteger.valueOf(3)).negate(), ExtendedDecimal.FromString("0.565055e+3").getExponent());
     }
+
     /**
      *
      */
@@ -747,14 +780,23 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
                      0, " \ufffd\ufffd", -1, null);
     }
     private static boolean ByteArrayEquals(byte[] arrayA, byte[] arrayB) {
-      if (arrayA == null) { return (arrayB == null); }
-      if (arrayB == null) { return false; }
-      if (arrayA.length != arrayB.length) { return false; }
+      if (arrayA == null) {
+ return (arrayB == null);
+}
+      if (arrayB == null) {
+ return false;
+}
+      if (arrayA.length != arrayB.length) {
+ return false;
+}
       for (int i = 0; i < arrayA.length; ++i) {
-        if (arrayA[i] != arrayB[i]) { return false; }
+        if (arrayA[i] != arrayB[i]) {
+ return false;
+}
       }
       return true;
     }
+
     /**
      *
      */
@@ -767,6 +809,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       boolean isequal = ByteArrayEquals(new byte[]{ (byte)(0x80 | 2), 3, 4 }, bytes);
       if(!(isequal))Assert.fail( "array not equal");
     }
+
     /**
      *
      */
@@ -839,6 +882,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x7F, 0x61, 0x20, 0x7F, 0x61, 0x20, (byte)0xFF, (byte)0xFF });
     }
+
     /**
      *
      */
@@ -859,6 +903,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.AssertRoundTrip(ca);
       TestCommon.AssertRoundTrip(cb);
     }
+
     /**
      *
      */
@@ -1709,6 +1754,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("0.000761999999999999982035203682784185730270110070705413818359375", ExtendedDecimal.FromDouble(7.62E-4).toString());
       Assert.assertEquals("313300000000", ExtendedDecimal.FromDouble(3.133E11).toString());
     }
+
     /**
      *
      */
@@ -1815,6 +1861,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("2242600000000", ExtendedDecimal.FromString("224.26E10").ToPlainString());
       Assert.assertEquals("0.00000026818", ExtendedDecimal.FromString("268.18E-9").ToPlainString());
     }
+
     /**
      *
      */
@@ -1921,6 +1968,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals("1.8533", ExtendedDecimal.FromString("185.33E-2").ToEngineeringString());
       Assert.assertEquals("70.7E+6", ExtendedDecimal.FromString("70.7E6").ToEngineeringString());
     }
+
     /**
      *
      */
@@ -2048,6 +2096,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.FromBytesTestAB(
         new byte[]{ 0x5F, 0x41, 0x20, 0x5F, 0x41, 0x20, (byte)0xFF, (byte)0xFF });
     }
+
     /**
      *
      */
@@ -3287,6 +3336,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       if (-1.0d != ExtendedDecimal.FromString("-1").ToDouble())
         Assert.fail("decfrac double -1\nExpected: -1.0d\nWas: " + ExtendedDecimal.FromString("-1").ToDouble());
     }
+
     /**
      *
      */
@@ -3300,6 +3350,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, (byte)0xc2, 0x41, 1, 0x1a, 1, 2, 3, 4 });
     }
+
     /**
      *
      */
@@ -3318,6 +3369,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       try { dbl2.AsInt64(); } catch (Exception ex) { Assert.fail(ex.toString()); throw new IllegalStateException("",ex); }
       try { dbl2.AsBigInteger(); } catch (Exception ex) { Assert.fail(ex.toString()); throw new IllegalStateException("",ex); }
     }
+
     /**
      *
      */
@@ -3330,6 +3382,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.FromBytesTestAB(
         new byte[]{ (byte)0xc4, (byte)0x82, (byte)0xc2, 0x41, 1 });
     }
+
     /**
      *
      */
@@ -3340,6 +3393,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(ExtendedDecimal.Create(BigInteger.ONE, BigInteger.valueOf(3)),
         o.AsExtendedDecimal());
     }
+
     /**
      *
      */
@@ -3351,6 +3405,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           String.format(java.util.Locale.US,"%s", i));
       }
     }
+
     /**
      *
      */
@@ -3507,11 +3562,14 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           TestCommon.AssertSer(
             CBORObject.FromObject(bigintTemp),
             String.format(java.util.Locale.US,"%s", bigintTemp));
-          if (bigintTemp.equals(ranges[i + 1])) break;
+          if (bigintTemp.equals(ranges[i + 1])) {
+ break;
+}
           bigintTemp = bigintTemp .add(BigInteger.ONE);
         }
       }
     }
+
     /**
      *
      */
@@ -3536,11 +3594,14 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             String.format(java.util.Locale.US,"[%s]", j));
           TestCommon.AssertSer(obj,
                                String.format(java.util.Locale.US,"[%s]", j));
-          if (j == ranges[i + 1]) break;
+          if (j == ranges[i + 1]) {
+ break;
+}
           j++;
         }
       }
     }
+
     /**
      *
      */
@@ -3558,6 +3619,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           String.format(java.util.Locale.US,"%s", i));
       }
     }
+
     /**
      *
      */
@@ -3569,6 +3631,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(-1, ((DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")<0) ? -1 : 1)));
       Assert.assertEquals(1, ((DataUtilities.CodePointCompare("\uf000", "\ud800")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000", "\ud800")<0) ? -1 : 1)));
     }
+
     /**
      *
      */
@@ -3581,6 +3644,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       TestCommon.AssertSer(CBORObject.FromObject((Object)null),
                            "null");
     }
+
     /**
      *
      */
@@ -3594,6 +3658,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       Assert.assertEquals(6, DataUtilities.GetUtf8Length("\ud800\ud800", true));
       Assert.assertEquals(-1, DataUtilities.GetUtf8Length("\ud800\ud800", false));
     }
+
     /**
      *
      */
@@ -3618,6 +3683,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         oldobj = o;
       }
     }
+
     /**
      *
      */
@@ -3664,7 +3730,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
               String.format(java.util.Locale.US,"%s(%s(0))",
                             bigintTemp .add(BigInteger.ONE), bigintTemp));
           }
-          if (bigintTemp.equals(ranges[i + 1])) break;
+          if (bigintTemp.equals(ranges[i + 1])) {
+ break;
+}
           bigintTemp = bigintTemp .add(BigInteger.ONE);
         }
       }

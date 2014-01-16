@@ -14,7 +14,7 @@ at: http://peteroupc.github.io/CBOR/
      * exponent range of arbitrary-precision numbers.
      */
   public class PrecisionContext {
-    BigInteger exponentMax;
+    private BigInteger exponentMax;
     /**
      * Gets the highest exponent possible when a converted number is expressed
      * in scientific notation with one digit before the decimal point. For
@@ -23,16 +23,20 @@ at: http://peteroupc.github.io/CBOR/
      * Exponent property.) If HasExponentRange is false, this value will
      * be 0.
      */
-    public BigInteger getEMax() { return this.hasExponentRange ? this.exponentMax : BigInteger.ZERO; }
+    public BigInteger getEMax() {
+ return this.hasExponentRange ? this.exponentMax : BigInteger.ZERO;
+}
 
-    BigInteger exponentMin;
+    private BigInteger exponentMin;
 
-    boolean hasExponentRange;
+    private boolean hasExponentRange;
     /**
-     * Gets whether this context defines a minimum and maximum exponent.
-     * If false, converted exponents can have any exponent.
+     * Gets a value indicating whether this context defines a minimum and
+     * maximum exponent. If false, converted exponents can have any exponent.
      */
-    public boolean getHasExponentRange() { return this.hasExponentRange; }
+    public boolean getHasExponentRange() {
+ return this.hasExponentRange;
+}
 
     /**
      * Gets the lowest exponent possible when a converted number is expressed
@@ -42,45 +46,56 @@ at: http://peteroupc.github.io/CBOR/
      * Exponent property.) If HasExponentRange is false, this value will
      * be 0.
      */
-    public BigInteger getEMin() { return this.hasExponentRange ? this.exponentMin : BigInteger.ZERO; }
+    public BigInteger getEMin() {
+ return this.hasExponentRange ? this.exponentMin : BigInteger.ZERO;
+}
 
-    BigInteger bigintPrecision;
+    private BigInteger bigintPrecision;
 
     /**
      * Gets the maximum length of a converted number in digits, ignoring
      * the decimal point and exponent. For example, if precision is 3, a converted
-     * number's mantissa can range from 0 to 999 (up to three digits long).
-     * If 0, converted numbers can have any precision.
+     * number&apos;s mantissa can range from 0 to 999 (up to three digits
+     * long). If 0, converted numbers can have any precision.
      */
-    public BigInteger getPrecision() { return this.bigintPrecision; }
+    public BigInteger getPrecision() {
+ return this.bigintPrecision;
+}
 
-    Rounding rounding;
+    private Rounding rounding;
 
-    boolean clampNormalExponents;
+    private boolean clampNormalExponents;
 
     /**
-     * If true, a converted number's Exponent property will not be higher
-     * than EMax + 1 - Precision. If a number's exponent is higher than that
-     * value, but not high enough to cause overflow, the exponent is clamped
-     * to that value and enough zeros are added to the number's mantissa to
-     * account for the adjustment. If HasExponentRange is false, this value
-     * is always false.
+     * If true, a converted number&apos;s Exponent property will not be
+     * higher than EMax + 1 - Precision. If a number&apos;s exponent is higher
+     * than that value, but not high enough to cause overflow, the exponent
+     * is clamped to that value and enough zeros are added to the number&apos;s
+     * mantissa to account for the adjustment. If HasExponentRange is false,
+     * this value is always false.
      */
-    public boolean getClampNormalExponents() { return this.hasExponentRange ? this.clampNormalExponents : false; }
+    public boolean getClampNormalExponents() {
+ return this.hasExponentRange ? this.clampNormalExponents : false;
+}
 
     /**
-     * Gets the desired rounding mode when converting numbers that can't
+     * Gets the desired rounding mode when converting numbers that can&apos;t
      * be represented in the given precision and exponent range.
      */
-    public Rounding getRounding() { return this.rounding; }
+    public Rounding getRounding() {
+ return this.rounding;
+}
 
-    int flags;
-    boolean hasFlags;
+    private int flags;
+    private boolean hasFlags;
 
     /**
      * Returns whether this context has a mutable Flags field.
      */
-    public boolean getHasFlags() { return this.hasFlags; }
+    public boolean getHasFlags() {
+ return this.hasFlags;
+}
+
     /**
      * Signals that the result was rounded to a different mathematical value,
      * but as close as possible to the original.
@@ -92,13 +107,13 @@ at: http://peteroupc.github.io/CBOR/
      */
     public static final int FlagRounded = 2;
     /**
-     * Signals that the result's exponent, before rounding, is lower than
-     * the lowest exponent allowed.
+     * Signals that the result&apos;s exponent, before rounding, is lower
+     * than the lowest exponent allowed.
      */
     public static final int FlagSubnormal = 4;
     /**
-     * Signals that the result's exponent, before rounding, is lower than
-     * the lowest exponent allowed, and the result was rounded to a different
+     * Signals that the result&apos;s exponent, before rounding, is lower
+     * than the lowest exponent allowed, and the result was rounded to a different
      * mathematical value, but as close as possible to the original.
      */
     public static final int FlagUnderflow = 8;
@@ -123,7 +138,10 @@ at: http://peteroupc.github.io/CBOR/
      * Gets the flags that are set from converting numbers according to this
      * precision context. If HasFlags is false, this value will be 0.
      */
-    public int getFlags() { return this.flags; }
+    public int getFlags() {
+ return this.flags;
+}
+
     /**
      * Sets the flags that occur from converting numbers according to this
      * precision context.
@@ -142,9 +160,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean ExponentWithinRange(BigInteger exponent) {
-      if (exponent == null) { throw new NullPointerException("exponent"); }
-      if (!this.getHasExponentRange())
-        return true;
+      if (exponent == null) {
+ throw new NullPointerException("exponent");
+}
+      if (!this.getHasExponentRange()) {
+ return true;
+}
       if (this.bigintPrecision.signum()==0) {
         // Only check EMax, since with an unlimited
         // precision, any exponent less than EMin will exceed EMin if
@@ -154,10 +175,12 @@ at: http://peteroupc.github.io/CBOR/
         BigInteger bigint = exponent;
         bigint=bigint.add(this.bigintPrecision);
         bigint=bigint.subtract(BigInteger.ONE);
-        if (bigint.compareTo(this.getEMin()) < 0)
-          return false;
-        if (exponent.compareTo(this.getEMax()) > 0)
-          return false;
+        if (bigint.compareTo(this.getEMin()) < 0) {
+ return false;
+}
+        if (exponent.compareTo(this.getEMax()) > 0) {
+ return false;
+}
         return true;
       }
     }
@@ -186,7 +209,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Copies this precision context and sets the copy's "ClampNormalExponents"
+     * Copies this precision context and sets the copy&apos;s &quot;ClampNormalExponents&quot;
      * flag to the given value.
      * @param clamp A Boolean object.
      * @return A PrecisionContext object.
@@ -200,11 +223,13 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      * @param exponentMin A BigInteger object.
-     * @param exponentMax A BigInteger object. (2)
+     * @param exponentMax A BigInteger object. (2).
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
-      if (exponentMin == null) { throw new NullPointerException("exponentMin"); }
+      if (exponentMin == null) {
+ throw new NullPointerException("exponentMin");
+}
       if (exponentMin.compareTo(exponentMax) > 0) {
  throw new IllegalArgumentException("exponentMin greater than exponentMax");
 }
@@ -226,6 +251,7 @@ at: http://peteroupc.github.io/CBOR/
       pc.flags = 0;
       return pc;
     }
+
     /**
      * Copies this PrecisionContext with an unlimited exponent range.
      * @return A PrecisionContext object.
@@ -235,6 +261,7 @@ at: http://peteroupc.github.io/CBOR/
       pc.hasExponentRange = false;
       return pc;
     }
+
     /**
      * Copies this PrecisionContext and gives it a particular precision
      * value.
@@ -242,7 +269,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithPrecision(int precision) {
-      if (precision < 0) { throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+precision+")"); }
+      if (precision < 0) {
+ throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+precision+")");
+}
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = BigInteger.valueOf(precision);
       return pc;
@@ -254,7 +283,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
-      if (bigintPrecision == null) { throw new NullPointerException("bigintPrecision"); }
+      if (bigintPrecision == null) {
+ throw new NullPointerException("bigintPrecision");
+}
       if (bigintPrecision.signum() < 0) throw new IllegalArgumentException(
         "precision" + " not greater or equal to " + "0" + " (" +
         bigintPrecision + ")");
@@ -293,14 +324,19 @@ at: http://peteroupc.github.io/CBOR/
     public static PrecisionContext ForPrecisionAndRounding(int precision, Rounding rounding) {
       return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
     }
+
     /**
      * Initializes a new PrecisionContext. HasFlags will be set to false.
      */
     public PrecisionContext (
 int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
                             boolean clampNormalExponents) {
-      if (precision < 0) { throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+precision+")"); }
-      if (exponentMinSmall > exponentMaxSmall) { throw new IllegalArgumentException("exponentMinSmall" + " not less or equal to "+exponentMaxSmall+" ("+exponentMinSmall+")"); }
+      if (precision < 0) {
+ throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " ("+precision+")");
+}
+      if (exponentMinSmall > exponentMaxSmall) {
+ throw new IllegalArgumentException("exponentMinSmall" + " not less or equal to "+exponentMaxSmall+" ("+exponentMinSmall+")");
+}
       this.bigintPrecision = precision == 0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
@@ -308,6 +344,7 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
       this.exponentMax = exponentMaxSmall == 0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMaxSmall);
       this.exponentMin = exponentMinSmall == 0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMinSmall);
     }
+
     /**
      * No specific limit on precision. Rounding mode HalfUp.
      */
@@ -339,6 +376,5 @@ int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall,
 
     public static final PrecisionContext CliDecimal =
       new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
-
   }
 

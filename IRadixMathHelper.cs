@@ -3,7 +3,7 @@ using System.Text;
 // using System.Numerics;
 
 namespace PeterO {
-  interface IRadixMathHelper<T> {
+  internal interface IRadixMathHelper<T> {
     int GetRadix();
 
     int GetArithmeticSupport();

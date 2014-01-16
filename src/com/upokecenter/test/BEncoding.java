@@ -67,7 +67,9 @@ private BEncoding(){}
       CBORObject obj = CBORObject.NewArray();
       while (true) {
         CBORObject o = readObject(stream, true);
-        if (o == null) break;// 'e' was read
+        if (o == null) {
+ break;
+}// 'e' was read
         obj.Add(o);
       }
       return obj;
@@ -77,15 +79,15 @@ private BEncoding(){}
     }
     private static CBORObject readObject(InputStream stream, boolean allowEnd) throws IOException {
       int c = stream.read();
-      if (c == 'd')
-        return readDictionary(stream);
-      else if (c == 'l')
-        return readList(stream);
-      else if (allowEnd && c == 'e')
-        return null;
-      else if (c == 'i')
-        return readInteger(stream);
-      else if (c >= '0' && c <= '9') {
+      if (c == 'd') {
+ return readDictionary(stream);
+  } else if (c == 'l') {
+ return readList(stream);
+  } else if (allowEnd && c == 'e') {
+ return null;
+  } else if (c == 'i') {
+ return readInteger(stream);
+  } else if (c >= '0' && c <= '9') {
         return readString(stream, (char)c);
       } else {
         throw new CBORException("Object expected");

@@ -17,7 +17,6 @@ namespace Test {
   ///
   [TestFixture]
   public class CBORExtraTest{
-
     //[Test]
     public void GenerateDecimalTests() {
       FastRandom r = new FastRandom();
@@ -898,7 +897,9 @@ namespace Test {
           TestCommon.AssertSer(
             CBORObject.FromObject(j),
             String.Format(CultureInfo.InvariantCulture, "{0}", j));
-          if (j == ranges[i + 1]) break;
+          if (j == ranges[i + 1]) {
+ break;
+}
           j++;
         }
       }
@@ -961,7 +962,9 @@ namespace Test {
           ushort y=(ushort)fr.NextValue(0x10000);
           int dx=(int)x;
           short dy=(short)y;
-          if (dy == 0)continue;
+          if (dy == 0) {
+ continue;
+}
           short expected=(short)(x/y);
           short actual = DivideUnsigned(dx, dy);
           if (expected != actual) {
@@ -979,7 +982,9 @@ namespace Test {
           y|=((uint)fr.NextValue(0x10000)) << 16;
           y&=~(1U << 31);
           int dy=(int)y;
-          if (dy == 0)continue;
+          if (dy == 0) {
+ continue;
+}
           long dxrem = dx/dy;
           ulong udxrem=(ulong)dxrem;
           Console.WriteLine(
@@ -1014,7 +1019,9 @@ namespace Test {
           Assert.AreEqual(
             CBORObject.FromObject(j),
             CBORObject.FromObject((BigInteger)j));
-          if (j == ranges[i + 1]) break;
+          if (j == ranges[i + 1]) {
+ break;
+}
           j++;
         }
       }
@@ -1100,7 +1107,9 @@ namespace Test {
           TestCommon.AssertSer(
             CBORObject.FromObject(j),
             "0(\"" + DateTimeToString(j) + "\")");
-          if (j >= ranges[i + 1]) break;
+          if (j >= ranges[i + 1]) {
+ break;
+}
           try {
             j = j.AddHours(10);
           } catch (ArgumentOutOfRangeException) {

@@ -9,9 +9,9 @@ using System;
 using System.Text;
 // using System.Numerics;
 namespace PeterO {
-    /// <summary> A mutable integer class initially backed by a small integer,
+    /// <summary>A mutable integer class initially backed by a small integer,
     /// that only uses a big integer when arithmetic operations would overflow
-    /// the small integer. <para> This class is ideal for cases where operations
+    /// the small integer.<para> This class is ideal for cases where operations
     /// should be arbitrary precision, but the need to use a high precision
     /// is rare.</para>
     /// <para> Many methods in this class return a reference to the same object
@@ -19,8 +19,7 @@ namespace PeterO {
     /// of code. For example:</para>
     /// <code> fastInt.Add(5).Multiply(10); </code>
     /// </summary>
-  sealed class FastInteger : IComparable<FastInteger> {
-
+  internal sealed class FastInteger : IComparable<FastInteger> {
     private sealed class MutableNumber {
       public int[] data;
       public int wordCount;
@@ -67,7 +66,7 @@ namespace PeterO {
         this.data[0] = unchecked((int)(val & 0xFFFFFFFFL));
       }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A MutableNumber object.</returns>
       public MutableNumber SetInt(int val) {
@@ -79,7 +78,7 @@ namespace PeterO {
         return this;
       }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
       public BigInteger ToBigInteger() {
         if (this.wordCount == 1 && (this.data[0] >> 31) == 0) {
@@ -102,19 +101,19 @@ namespace PeterO {
         return ret;
       }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
       public bool CanFitInInt32() {
         return this.wordCount == 0 || (this.wordCount == 1 && (this.data[0] >> 31) == 0);
       }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int ToInt32() {
         return this.wordCount == 0 ? 0 : this.data[0];
       }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A MutableNumber object.</returns>
       public MutableNumber Copy() {
         MutableNumber mbi = new MutableNumber(0);
@@ -126,7 +125,7 @@ namespace PeterO {
         return mbi;
       }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='digit'>A 32-bit signed integer.</param>
     /// <returns>A MutableNumber object.</returns>
       public MutableNumber MultiplyByTenAndAdd(int digit) {
@@ -138,7 +137,9 @@ namespace PeterO {
         digit &= 0xFFFF;
         int carry = 0;
         if (this.wordCount == 0) {
-          if (this.data.Length == 0) this.data = new int[4];
+          if (this.data.Length == 0) {
+ this.data = new int[4];
+}
           this.data[0] = 0;
           this.wordCount = 1;
         }
@@ -159,7 +160,9 @@ namespace PeterO {
             int a0b0high = (A0B0 >> 16) & 0xFFFF;
             int tempInt;
             tempInt = A0B0 + carry;
-            if (i == 0) tempInt += digit;
+            if (i == 0) {
+ tempInt += digit;
+}
             int result0 = tempInt & 0xFFFF;
             tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) +
               (((int)A0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
@@ -185,18 +188,19 @@ namespace PeterO {
         return this;
       }
 
-    /// <summary> Multiplies this instance by the value of a 32-bit signed
+    /// <summary>Multiplies this instance by the value of a 32-bit signed
     /// integer.</summary>
     /// <param name='multiplicand'>A 32-bit signed integer.</param>
     /// <returns>The product of the two objects.</returns>
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
  throw new ArgumentException("Only positive multiplicands are supported");
-
   } else if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
-            if (this.data.Length == 0) this.data = new int[4];
+            if (this.data.Length == 0) {
+ this.data = new int[4];
+}
             this.data[0] = 0;
             this.wordCount = 1;
           }
@@ -275,20 +279,24 @@ namespace PeterO {
           while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0)
             this.wordCount--;
         } else {
-          if (this.data.Length > 0) this.data[0] = 0;
+          if (this.data.Length > 0) {
+ this.data[0] = 0;
+}
           this.wordCount = 0;
         }
         return this;
       }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
+    /// <value>Not documented yet.</value>
       public int Sign{
         get {
           return this.wordCount == 0 ? 0 : 1;
         }
       }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
+    /// <value>Not documented yet.</value>
       public bool IsEvenNumber{
         get {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
@@ -296,10 +304,12 @@ namespace PeterO {
       }
 
     /// <summary>Compares a 32-bit signed integer with this instance.</summary>
-    /// <param name='val'>A 32-bit signed integer. (2)</param>
+    /// <param name='val'>A 32-bit signed integer. (2).</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int CompareToInt(int val) {
-        if (val < 0 || this.wordCount > 1) { return 1; }
+        if (val < 0 || this.wordCount > 1) {
+ return 1;
+}
         if (this.wordCount == 0) {
           // this value is 0
           return (val == 0) ? 0 : -1;
@@ -319,13 +329,14 @@ namespace PeterO {
         {
         if (other < 0) {
  throw new ArgumentException("Only positive values are supported");
-
   } else if (other != 0)
         {
           unchecked {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
-              if (this.data.Length == 0) this.data = new int[4];
+              if (this.data.Length == 0) {
+ this.data = new int[4];
+}
               this.data[0] = 0;
               this.wordCount = 1;
             }
@@ -420,18 +431,19 @@ namespace PeterO {
         return 0;
       }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='augend'> A 32-bit signed integer.</param>
       public MutableNumber Add(int augend) {
         if (augend < 0) {
  throw new ArgumentException("Only positive augends are supported");
-
   } else if (augend != 0)
         {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {
-            if (this.data.Length == 0) this.data = new int[4];
+            if (this.data.Length == 0) {
+ this.data = new int[4];
+}
             this.data[0] = 0;
             this.wordCount = 1;
           }
@@ -442,7 +454,9 @@ namespace PeterO {
             carry = ((((u >> 31) == (a >> 31)) ? ((u & Int32.MaxValue) < (a & Int32.MaxValue)) :
                     ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
             this.data[i] = u;
-            if (carry == 0) { return this; }
+            if (carry == 0) {
+ return this;
+}
             augend = 0;
           }
           if (carry != 0) {
@@ -462,10 +476,10 @@ namespace PeterO {
       }
     }
 
-    int smallValue;  // if integerMode is 0
-    MutableNumber mnum;  // if integerMode is 1
-    BigInteger largeValue;  // if integerMode is 2
-    int integerMode = 0;
+    private int smallValue;  // if integerMode is 0
+    private MutableNumber mnum;  // if integerMode is 1
+    private BigInteger largeValue;  // if integerMode is 2
+    private int integerMode = 0;
 
     private static BigInteger Int32MinValue = (BigInteger)Int32.MinValue;
     private static BigInteger Int32MaxValue = (BigInteger)Int32.MaxValue;
@@ -499,7 +513,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32() {
        switch (this.integerMode) {
@@ -544,7 +558,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A FastInteger object.</returns>
     public FastInteger Abs() {
       return (this.Sign < 0) ? this.Negate() : this;
@@ -570,7 +584,7 @@ namespace PeterO {
       return MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A FastInteger object.</returns>
     public FastInteger SetInt(int val) {
@@ -579,7 +593,7 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='digit'>A 32-bit signed integer from 0 through 9.</param>
     /// <returns>A FastInteger object.</returns>
     public FastInteger MultiplyByTenAndAdd(int digit) {
@@ -598,7 +612,7 @@ namespace PeterO {
       return this.Multiply(10).AddInt(digit);
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='divisor'>A FastInteger object.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int RepeatedSubtract(FastInteger divisor) {
@@ -641,8 +655,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Sets this object's value to the current value times another
-    /// integer. </summary>
+    /// <summary>Sets this object&apos;s value to the current value times
+    /// another integer.</summary>
     /// <param name='val'>The integer to multiply by.</param>
     /// <returns>This object.</returns>
     public FastInteger Multiply(int val) {
@@ -697,8 +711,8 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Sets this object's value to 0 minus its current value (reverses
-    /// its sign). </summary>
+    /// <summary>Sets this object&apos;s value to 0 minus its current value
+    /// (reverses its sign).</summary>
     /// <returns>This object.</returns>
     public FastInteger Negate() {
       switch (this.integerMode) {
@@ -725,8 +739,8 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Sets this object's value to the current value minus the
-    /// given FastInteger value. </summary>
+    /// <summary>Sets this object&apos;s value to the current value minus
+    /// the given FastInteger value.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
     public FastInteger Subtract(FastInteger val) {
@@ -775,8 +789,8 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Sets this object's value to the current value minus the
-    /// given integer. </summary>
+    /// <summary>Sets this object&apos;s value to the current value minus
+    /// the given integer.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
     public FastInteger SubtractInt(int val) {
@@ -798,8 +812,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Sets this object's value to the current value plus the given
-    /// integer. </summary>
+    /// <summary>Sets this object&apos;s value to the current value plus
+    /// the given integer.</summary>
     /// <param name='bigintVal'>The number to add.</param>
     /// <returns>This object.</returns>
     public FastInteger AddBig(BigInteger bigintVal) {
@@ -824,8 +838,8 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Sets this object's value to the current value minus the
-    /// given integer. </summary>
+    /// <summary>Sets this object&apos;s value to the current value minus
+    /// the given integer.</summary>
     /// <param name='bigintVal'>The subtrahend.</param>
     /// <returns>This object.</returns>
     public FastInteger SubtractBig(BigInteger bigintVal) {
@@ -834,7 +848,9 @@ namespace PeterO {
         return this;
       } else {
         int sign = bigintVal.Sign;
-        if (sign == 0) { return this; }
+        if (sign == 0) {
+ return this;
+}
         // Check if this value fits an int, except if
         // it's MinValue
         if (sign < 0 && bigintVal.CompareTo(Int32MinValue) > 0) {
@@ -848,8 +864,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
-    /// <param name='val'>A FastInteger object. (2)</param>
+    /// <summary>Not documented yet.</summary>
+    /// <param name='val'>A FastInteger object. (2).</param>
     /// <returns>A FastInteger object.</returns>
     public FastInteger Add(FastInteger val) {
       BigInteger valValue;
@@ -898,8 +914,8 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Sets this object's value to the remainder of the current
-    /// value divided by the given integer. </summary>
+    /// <summary>Sets this object&apos;s value to the remainder of the current
+    /// value divided by the given integer.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>This object.</returns>
     public FastInteger Mod(int divisor) {
@@ -930,7 +946,7 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A FastInteger object.</returns>
     public FastInteger Increment() {
       if (this.integerMode == 0) {
@@ -946,7 +962,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A FastInteger object.</returns>
     public FastInteger Decrement() {
       if (this.integerMode == 0) {
@@ -963,7 +979,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Divides this instance by the value of a 32-bit signed integer.</summary>
+    /// <summary>Divides this instance by the value of a 32-bit signed integer.</summary>
     /// <param name='divisor'>A 32-bit signed integer.</param>
     /// <returns>The quotient of the two objects.</returns>
     public FastInteger Divide(int divisor) {
@@ -1003,7 +1019,8 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
+    /// <value>Not documented yet.</value>
     public bool IsEvenNumber{
       get {
         switch (this.integerMode) {
@@ -1019,7 +1036,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>A FastInteger object.</returns>
     public FastInteger AddInt(int val) {
@@ -1062,7 +1079,7 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInInt32() {
        switch (this.integerMode) {
@@ -1078,7 +1095,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Converts this object to a text string.</summary>
+    /// <summary>Converts this object to a text string.</summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
        switch (this.integerMode) {
@@ -1093,7 +1110,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
+    /// <value>Not documented yet.</value>
     public int Sign {
       get {
          switch (this.integerMode) {
@@ -1109,7 +1127,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
+    /// <value>Not documented yet.</value>
     public bool IsValueZero{
       get {
          switch (this.integerMode) {
@@ -1142,14 +1161,14 @@ namespace PeterO {
       }
     }
 
-    /// <summary> Not documented yet. </summary>
-    /// <param name='val'>A 32-bit signed integer. (2)</param>
+    /// <summary>Not documented yet.</summary>
+    /// <param name='val'>A 32-bit signed integer. (2).</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int MinInt32(int val) {
       return this.CompareToInt(val) < 0 ? this.AsInt32() : val;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger AsBigInteger() {
        switch (this.integerMode) {

@@ -25,16 +25,19 @@ private DataUtilities(){}
      * @return A string represented by the UTF-8 byte array.
      * @throws java.lang.NullPointerException &quot;bytes&quot; is null.
      * @throws java.lang.IllegalArgumentException The string is not valid UTF-8
-     * and &quot;replace&quot; is false.
+     * and &quot; replace&quot; is false.
      */
     public static String GetUtf8String(byte[] bytes, boolean replace) {
-      if (bytes == null) { throw new NullPointerException("bytes"); }
+      if (bytes == null) {
+ throw new NullPointerException("bytes");
+}
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, 0, bytes.length, b, replace) != 0) {
  throw new IllegalArgumentException("Invalid UTF-8");
 }
       return b.toString();
     }
+
     /**
      * Generates a text string from a portion of a UTF-8 byte array.
      * @param bytes A byte array containing text encoded in UTF-8.
@@ -46,7 +49,7 @@ private DataUtilities(){}
      * @return A string represented by the UTF-8 byte array.
      * @throws java.lang.NullPointerException &quot;bytes&quot; is null.
      * @throws java.lang.IllegalArgumentException The portion of the byte array
-     * is not valid UTF-8 and &quot;replace&quot; is false.
+     * is not valid UTF-8 and &quot; replace&quot; is false.
      */
     public static String GetUtf8String(byte[] bytes, int offset, int bytesCount, boolean replace) {
       StringBuilder b = new StringBuilder();
@@ -55,6 +58,7 @@ private DataUtilities(){}
 }
       return b.toString();
     }
+
     /**
      * Encodes a string in UTF-8 as a byte array.
      * @param str A text string.
@@ -64,7 +68,7 @@ private DataUtilities(){}
      * @return The string encoded in UTF-8.
      * @throws java.lang.NullPointerException &quot;str&quot; is null.
      * @throws java.lang.IllegalArgumentException The string contains an unpaired
-     * surrogate code point and &quot;replace&quot; is false, or an internal
+     * surrogate code point and &quot; replace&quot; is false, or an internal
      * error occurred.
      */
     public static byte[] GetUtf8Bytes(String str, boolean replace) {
@@ -85,6 +89,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
         throw new IllegalArgumentException("I/O error occurred", ex);
       }
     }
+
     /**
      * Calculates the number of bytes needed to encode a string in UTF-8.
      * @param replace If true, treats unpaired surrogate code points as
@@ -98,7 +103,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @throws java.lang.NullPointerException &quot;s&quot; is null.
      */
     public static long GetUtf8Length(String str, boolean replace) {
-      if (str == null) { throw new NullPointerException("str"); }
+      if (str == null) {
+ throw new NullPointerException("str");
+}
       long size = 0;
       for (int i = 0; i < str.length(); ++i) {
         int c = str.charAt(i);
@@ -121,14 +128,16 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             size += 4;
           }
         } else {
-          if (replace) size += 3;
-          else {
+          if (replace) {
+ size += 3;
+  } else {
  return -1;
 }
         }
       }
       return size;
     }
+
     /**
      * Compares two strings in Unicode code point order. Unpairedsurrogates
      * are treated as individual code points.
@@ -136,15 +145,19 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @param strB The second string.
      * @return A value indicating which string is &quot; less&quot; or &quot;
      * greater&quot; . 0: Both strings are equal or null. Less than 0: a is
-     * null and b isn&apos; t; or the first code point that&apos; s different
+     * null and b isn&apos;t; or the first code point that&apos;s different
      * is less in A than in B; or b starts with a and is longer than a. Greater
-     * than 0: b is null and a isn&apos; t; or the first code point that&apos;
+     * than 0: b is null and a isn&apos;t; or the first code point that&apos;
      * s different is greater in A than in B; or a starts with b and is longer
      * than b.
      */
     public static int CodePointCompare(String strA, String strB) {
-      if (strA == null) { return (strB == null) ? 0 : -1; }
-      if (strB == null) { return 1; }
+      if (strA == null) {
+ return (strB == null) ? 0 : -1;
+}
+      if (strB == null) {
+ return 1;
+}
       int len = Math.min(strA.length(), strB.length());
       for (int i = 0; i < len; ++i) {
         int ca = strA.charAt(i);
@@ -164,7 +177,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             cb = 0x10000 + (cb - 0xD800) * 0x400 + (strB.charAt(i + 1) - 0xDC00);
             incindex = true;
           }
-          if (ca != cb) { return ca - cb; }
+          if (ca != cb) {
+ return ca - cb;
+}
           if (incindex) {
             i++;
           }
@@ -182,9 +197,12 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           return ca - cb;
         }
       }
-      if (strA.length() == strB.length()) { return 0; }
+      if (strA.length() == strB.length()) {
+ return 0;
+}
       return (strA.length() < strB.length()) ? -1 : 1;
     }
+
     /**
      * Writes a portion of a string in UTF-8 encoding to a data stream.
      * @param str A string to write.
@@ -199,19 +217,31 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * portion contains an unpaired surrogate code point and &quot; replace&quot;
      * is false.
      * @throws java.lang.NullPointerException &quot;str&quot; is null
-     * or &quot;stream&quot; is null.
+     * or &quot; stream&quot; is null.
      * @throws java.lang.IllegalArgumentException &quot;offset&quot; is less
-     * than 0, &quot;length&quot; is less than 0, or &quot;offset&quot;
-     * plus &quot;length&quot; is greater than the string&apos;s length.
+     * than 0, &quot; length&quot; is less than 0, or &quot; offset&quot;
+     * plus &quot; length&quot; is greater than the string&apos;s length.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
-      if (stream == null) { throw new NullPointerException("stream"); }
-      if (str == null) { throw new NullPointerException("str"); }
-      if (offset < 0) { throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " ("+offset+")"); }
-      if (offset > str.length()) { throw new IllegalArgumentException("offset" + " not less or equal to "+str.length()+" ("+offset+")"); }
-      if (length < 0) { throw new IllegalArgumentException("length" + " not greater or equal to " + "0" + " ("+length+")"); }
-      if (length > str.length()) { throw new IllegalArgumentException("length" + " not less or equal to "+str.length()+" ("+length+")"); }
+      if (stream == null) {
+ throw new NullPointerException("stream");
+}
+      if (str == null) {
+ throw new NullPointerException("str");
+}
+      if (offset < 0) {
+ throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " ("+offset+")");
+}
+      if (offset > str.length()) {
+ throw new IllegalArgumentException("offset" + " not less or equal to "+str.length()+" ("+offset+")");
+}
+      if (length < 0) {
+ throw new IllegalArgumentException("length" + " not greater or equal to " + "0" + " ("+length+")");
+}
+      if (length > str.length()) {
+ throw new IllegalArgumentException("length" + " not less or equal to "+str.length()+" ("+length+")");
+}
       if ((str.length() - offset) < length) throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to "+length+" ("+str.length() - offset+")");
       byte[] bytes;
       int retval = 0;
@@ -274,6 +304,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       stream.write(bytes,0,byteIndex);
       return retval;
     }
+
     /**
      * Writes a string in UTF-8 encoding to a data stream.
      * @param str A string to write.
@@ -284,13 +315,16 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @return 0 if the entire string was written; or -1 if the string contains
      * an unpaired surrogate code point and &quot; replace&quot; is false.
      * @throws java.lang.NullPointerException &quot;str&quot; is null
-     * or &quot;stream&quot; is null.
+     * or &quot; stream&quot; is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(String str, OutputStream stream, boolean replace) throws IOException {
-      if (str == null) { throw new NullPointerException("str"); }
+      if (str == null) {
+ throw new NullPointerException("str");
+}
       return WriteUtf8(str, 0, str.length(), stream, replace);
     }
+
     /**
      * Reads a string in UTF-8 encoding from a byte array.
      * @param data A byte array containing a UTF-8 string.
@@ -304,22 +338,36 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @return 0 if the entire string was read without errors, or -1 if the
      * string is not valid UTF-8 and &quot; replace&quot; is false.
      * @throws java.lang.NullPointerException &quot;data&quot; is null
-     * or &quot;builder&quot; is null.
+     * or &quot; builder&quot; is null.
      * @throws java.lang.IllegalArgumentException &quot;offset&quot; is less
-     * than 0, &quot;bytesCount&quot; is less than 0, or offset plus bytesCount
-     * is greater than the length of &quot;data&quot;.
+     * than 0, &quot; bytesCount&quot; is less than 0, or offset plus bytesCount
+     * is greater than the length of &quot; data&quot; .
      */
     public static int ReadUtf8FromBytes(
 byte[] data, int offset, int bytesCount,
                                         StringBuilder builder,
                                         boolean replace) {
-      if (data == null) { throw new NullPointerException("data"); }
-      if (offset < 0) { throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " ("+offset+")"); }
-      if (offset > data.length) { throw new IllegalArgumentException("offset" + " not less or equal to "+data.length+" ("+offset+")"); }
-      if (bytesCount < 0) { throw new IllegalArgumentException("bytesCount" + " not greater or equal to " + "0" + " ("+bytesCount+")"); }
-      if (bytesCount > data.length) { throw new IllegalArgumentException("bytesCount" + " not less or equal to "+data.length+" ("+bytesCount+")"); }
-      if ((data.length - offset) < bytesCount) { throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to "+bytesCount+" ("+data.length - offset+")"); }
-      if (builder == null) { throw new NullPointerException("builder"); }
+      if (data == null) {
+ throw new NullPointerException("data");
+}
+      if (offset < 0) {
+ throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " ("+offset+")");
+}
+      if (offset > data.length) {
+ throw new IllegalArgumentException("offset" + " not less or equal to "+data.length+" ("+offset+")");
+}
+      if (bytesCount < 0) {
+ throw new IllegalArgumentException("bytesCount" + " not greater or equal to " + "0" + " ("+bytesCount+")");
+}
+      if (bytesCount > data.length) {
+ throw new IllegalArgumentException("bytesCount" + " not less or equal to "+data.length+" ("+bytesCount+")");
+}
+      if ((data.length - offset) < bytesCount) {
+ throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to "+bytesCount+" ("+data.length - offset+")");
+}
+      if (builder == null) {
+ throw new NullPointerException("builder");
+}
       int cp = 0;
       int bytesSeen = 0;
       int bytesNeeded = 0;
@@ -347,10 +395,11 @@ byte[] data, int offset, int bytesCount,
             bytesNeeded = 3;
             cp = (b - 0xf0) << 18;
           } else {
-            if (replace)
-              builder.append((char)0xFFFD);
-            else
-              return -1;
+            if (replace) {
+ builder.append((char)0xFFFD);
+  } else {
+ return -1;
+}
           }
           continue;
         } else if (b < lower || b > upper) {
@@ -388,13 +437,15 @@ byte[] data, int offset, int bytesCount,
         }
       }
       if (bytesNeeded != 0) {
-        if (replace)
-          builder.append((char)0xFFFD);
-        else
-          return -1;
+        if (replace) {
+ builder.append((char)0xFFFD);
+  } else {
+ return -1;
+}
       }
       return 0;
     }
+
     /**
      * Reads a string in UTF-8 encoding from a data stream.
      * @param stream A readable data stream.
@@ -411,13 +462,17 @@ byte[] data, int offset, int bytesCount,
      * before the entire string was read.
      * @throws java.io.IOException An I/O error occurred.
      * @throws java.lang.NullPointerException &quot;stream&quot; is
-     * null or &quot;builder&quot; is null.
+     * null or &quot; builder&quot; is null.
      */
     public static int ReadUtf8(
 InputStream stream, int bytesCount, StringBuilder builder,
                                boolean replace) throws IOException {
-      if (stream == null) { throw new NullPointerException("stream"); }
-      if (builder == null) { throw new NullPointerException("builder"); }
+      if (stream == null) {
+ throw new NullPointerException("stream");
+}
+      if (builder == null) {
+ throw new NullPointerException("builder");
+}
       int cp = 0;
       int bytesSeen = 0;
       int bytesNeeded = 0;
@@ -431,14 +486,16 @@ InputStream stream, int bytesCount, StringBuilder builder,
             bytesNeeded = 0;
             if (replace) {
               builder.append((char)0xFFFD);
-              if (bytesCount >= 0)
-                return -2;
+              if (bytesCount >= 0) {
+ return -2;
+}
               break;  // end of stream
             }
             return -1;
           } else {
-            if (bytesCount >= 0)
-              return -2;
+            if (bytesCount >= 0) {
+ return -2;
+}
             break;  // end of stream
           }
         }
@@ -462,10 +519,11 @@ InputStream stream, int bytesCount, StringBuilder builder,
             bytesNeeded = 3;
             cp = (b - 0xf0) << 18;
           } else {
-            if (replace)
-              builder.append((char)0xFFFD);
-            else
-              return -1;
+            if (replace) {
+ builder.append((char)0xFFFD);
+  } else {
+ return -1;
+}
           }
           continue;
         } else if (b < lower || b > upper) {
@@ -521,10 +579,11 @@ InputStream stream, int bytesCount, StringBuilder builder,
         }
       }
       if (bytesNeeded != 0) {
-        if (replace)
-          builder.append((char)0xFFFD);
-        else
-          return -1;
+        if (replace) {
+ builder.append((char)0xFFFD);
+  } else {
+ return -1;
+}
       }
       return 0;
     }

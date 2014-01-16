@@ -30,8 +30,9 @@ namespace Test
 
     private static TValue GetKeyOrDefault<TKey, TValue>(
       IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue) {
-      if (!dict.ContainsKey(key))
-        return defaultValue;
+      if (!dict.ContainsKey(key)) {
+ return defaultValue;
+}
       return dict[key];
     }
 
@@ -74,27 +75,37 @@ namespace Test
            output.Contains("#")){
           return;
         }
-        if (flags.Contains("Invalid_context")) { return; }
+        if (flags.Contains("Invalid_context")) {
+ return;
+}
         PrecisionContext ctx = PrecisionContext.ForPrecision(precision)
           .WithExponentClamp(clamp).WithExponentRange(
             (BigInteger)minexponent, (BigInteger)maxexponent);
         string rounding=context["rounding"];
-        if (rounding.Equals("half_up"))
-          ctx = ctx.WithRounding(Rounding.HalfUp);
-        if (rounding.Equals("half_down"))
-          ctx = ctx.WithRounding(Rounding.HalfDown);
-        if (rounding.Equals("half_even"))
-          ctx = ctx.WithRounding(Rounding.HalfEven);
-        if (rounding.Equals("up"))
-          ctx = ctx.WithRounding(Rounding.Up);
-        if (rounding.Equals("down"))
-          ctx = ctx.WithRounding(Rounding.Down);
-        if (rounding.Equals("ceiling"))
-          ctx = ctx.WithRounding(Rounding.Ceiling);
-        if (rounding.Equals("floor"))
-          ctx = ctx.WithRounding(Rounding.Floor);
-        if (rounding.Equals("05up"))
-          ctx = ctx.WithRounding(Rounding.ZeroFiveUp);
+        if (rounding.Equals("half_up")) {
+ ctx = ctx.WithRounding(Rounding.HalfUp);
+}
+        if (rounding.Equals("half_down")) {
+ ctx = ctx.WithRounding(Rounding.HalfDown);
+}
+        if (rounding.Equals("half_even")) {
+ ctx = ctx.WithRounding(Rounding.HalfEven);
+}
+        if (rounding.Equals("up")) {
+ ctx = ctx.WithRounding(Rounding.Up);
+}
+        if (rounding.Equals("down")) {
+ ctx = ctx.WithRounding(Rounding.Down);
+}
+        if (rounding.Equals("ceiling")) {
+ ctx = ctx.WithRounding(Rounding.Ceiling);
+}
+        if (rounding.Equals("floor")) {
+ ctx = ctx.WithRounding(Rounding.Floor);
+}
+        if (rounding.Equals("05up")) {
+ ctx = ctx.WithRounding(Rounding.ZeroFiveUp);
+}
         ctx = ctx.WithBlankFlags();
         ExtendedDecimal d1 = null, d2 = null, d2a = null;
         if (!op.Equals("toSci") && !op.Equals("toEng")){
@@ -106,48 +117,71 @@ namespace Test
             ExtendedDecimal.FromString(input3);
         }
         ExtendedDecimal d3 = null;
-        if (op.Equals("multiply"))d3=d1.Multiply(d2,ctx);
-        else if (op.Equals("toSci")){ /* handled below */
+        if (op.Equals("multiply")) {
+ d3 = d1.Multiply(d2, ctx);
+  } else if (op.Equals("toSci")){ /* handled below */
   } else if (op.Equals("toEng")){ /* handled below */
-  } else if (op.Equals("fma"))d3=d1.MultiplyAndAdd(d2,d2a,ctx);
-        else if (op.Equals("min"))d3=ExtendedDecimal.Min(d1,d2,ctx);
-        else if (op.Equals("max"))d3=ExtendedDecimal.Max(d1,d2,ctx);
-        else if (op.Equals("minmag"))d3=ExtendedDecimal.MinMagnitude(d1,d2,ctx);
-        else if (op.Equals("maxmag"))d3=ExtendedDecimal.MaxMagnitude(d1,d2,ctx);
-        else if (op.Equals("compare"))d3=d1.CompareToWithContext(d2,ctx);
-        else if (op.Equals("comparesig"))d3=d1.CompareToSignal(d2,ctx);
-        else if (op.Equals("subtract"))d3=d1.Subtract(d2,ctx);
-        else if (op.Equals("tointegral"))d3=d1.RoundToIntegralNoRoundedFlag(ctx);
-        else if (op.Equals("tointegralx"))d3=d1.RoundToIntegralExact(ctx);
-        else if (op.Equals("divideint"))d3=d1.DivideToIntegerZeroScale(d2,ctx);
-        else if (op.Equals("divide"))d3=d1.Divide(d2,ctx);
-        else if (op.Equals("remainder"))d3=d1.Remainder(d2,ctx);
-        else if (op.Equals("exp")){
+  } else if (op.Equals("fma")) {
+ d3 = d1.MultiplyAndAdd(d2, d2a, ctx);
+  } else if (op.Equals("min")) {
+ d3 = ExtendedDecimal.Min(d1, d2, ctx);
+  } else if (op.Equals("max")) {
+ d3 = ExtendedDecimal.Max(d1, d2, ctx);
+  } else if (op.Equals("minmag")) {
+ d3 = ExtendedDecimal.MinMagnitude(d1, d2, ctx);
+  } else if (op.Equals("maxmag")) {
+ d3 = ExtendedDecimal.MaxMagnitude(d1, d2, ctx);
+  } else if (op.Equals("compare")) {
+ d3 = d1.CompareToWithContext(d2, ctx);
+  } else if (op.Equals("comparesig")) {
+ d3 = d1.CompareToSignal(d2, ctx);
+  } else if (op.Equals("subtract")) {
+ d3 = d1.Subtract(d2, ctx);
+  } else if (op.Equals("tointegral")) {
+ d3 = d1.RoundToIntegralNoRoundedFlag(ctx);
+  } else if (op.Equals("tointegralx")) {
+ d3 = d1.RoundToIntegralExact(ctx);
+  } else if (op.Equals("divideint")) {
+ d3 = d1.DivideToIntegerZeroScale(d2, ctx);
+  } else if (op.Equals("divide")) {
+ d3 = d1.Divide(d2, ctx);
+  } else if (op.Equals("remainder")) {
+ d3 = d1.Remainder(d2, ctx);
+  } else if (op.Equals("exp")){
           d3 = d1.Exp(ctx);
-
   } else if (op.Equals("ln")){
          d3 = d1.Log(ctx);
-
   } else if (op.Equals("log10")){
          d3 = d1.Log10(ctx);
-
   } else if (op.Equals("power")){
           d3 = d1.Pow(d2, ctx);
-
-  } else if (op.Equals("squareroot"))d3=d1.SquareRoot(ctx);
-        else if (op.Equals("remaindernear"))d3=d1.RemainderNear(d2,ctx);
-        else if (op.Equals("nexttoward"))d3=d1.NextToward(d2,ctx);
-        else if (op.Equals("nextplus"))d3=d1.NextPlus(ctx);
-        else if (op.Equals("nextminus"))d3=d1.NextMinus(ctx);
-        else if (op.Equals("copy"))d3=d1;
-        else if (op.Equals("abs"))d3=d1.Abs(ctx);
-        else if (op.Equals("reduce"))d3=d1.Reduce(ctx);
-        else if (op.Equals("quantize"))d3=d1.Quantize(d2,ctx);
-        else if (op.Equals("add"))d3=d1.Add(d2,ctx);
-        else if (op.Equals("minus"))d3=d1.Negate(ctx);
-        else if (op.Equals("apply"))d3=d1.RoundToPrecision(ctx);
-        else if (op.Equals("plus"))d3=d1.Plus(ctx);
-        else {
+  } else if (op.Equals("squareroot")) {
+ d3 = d1.SquareRoot(ctx);
+  } else if (op.Equals("remaindernear")) {
+ d3 = d1.RemainderNear(d2, ctx);
+  } else if (op.Equals("nexttoward")) {
+ d3 = d1.NextToward(d2, ctx);
+  } else if (op.Equals("nextplus")) {
+ d3 = d1.NextPlus(ctx);
+  } else if (op.Equals("nextminus")) {
+ d3 = d1.NextMinus(ctx);
+  } else if (op.Equals("copy")) {
+ d3 = d1;
+  } else if (op.Equals("abs")) {
+ d3 = d1.Abs(ctx);
+  } else if (op.Equals("reduce")) {
+ d3 = d1.Reduce(ctx);
+  } else if (op.Equals("quantize")) {
+ d3 = d1.Quantize(d2, ctx);
+  } else if (op.Equals("add")) {
+ d3 = d1.Add(d2, ctx);
+  } else if (op.Equals("minus")) {
+ d3 = d1.Negate(ctx);
+  } else if (op.Equals("apply")) {
+ d3 = d1.RoundToPrecision(ctx);
+  } else if (op.Equals("plus")) {
+ d3 = d1.Plus(ctx);
+  } else {
  return;
 }
         bool invalid=(flags.Contains("Division_impossible") ||
@@ -157,15 +191,27 @@ namespace Test
         int expectedFlags = 0;
         if (flags.Contains("Inexact") || flags.Contains("inexact"))
           expectedFlags|=PrecisionContext.FlagInexact;
-        if (flags.Contains("Subnormal"))expectedFlags|=PrecisionContext.FlagSubnormal;
+        if (flags.Contains("Subnormal")) {
+ expectedFlags|=PrecisionContext.FlagSubnormal;
+}
         if (flags.Contains("Rounded") || flags.Contains("rounded"))
           expectedFlags|=PrecisionContext.FlagRounded;
-        if (flags.Contains("Underflow"))expectedFlags|=PrecisionContext.FlagUnderflow;
-        if (flags.Contains("Overflow"))expectedFlags|=PrecisionContext.FlagOverflow;
-        if (flags.Contains("Clamped"))expectedFlags|=PrecisionContext.FlagClamped;
+        if (flags.Contains("Underflow")) {
+ expectedFlags|=PrecisionContext.FlagUnderflow;
+}
+        if (flags.Contains("Overflow")) {
+ expectedFlags|=PrecisionContext.FlagOverflow;
+}
+        if (flags.Contains("Clamped")) {
+ expectedFlags|=PrecisionContext.FlagClamped;
+}
         bool conversionError=flags.Contains("Conversion_syntax");
-        if (invalid)expectedFlags|=PrecisionContext.FlagInvalid;
-        if (divzero)expectedFlags|=PrecisionContext.FlagDivideByZero;
+        if (invalid) {
+ expectedFlags|=PrecisionContext.FlagInvalid;
+}
+        if (divzero) {
+ expectedFlags|=PrecisionContext.FlagDivideByZero;
+}
         if (op.Equals("toSci")){
           try {
             d1 = ExtendedDecimal.FromString(input1, ctx);
@@ -207,8 +253,9 @@ namespace Test
     [Test]
     public void TestParser() {
       long failures = 0;
-      if (!Directory.Exists(TestPath))
-        return;
+      if (!Directory.Exists(TestPath)) {
+ return;
+}
       for (int i = 0; i < 1; ++i) {
         foreach(var f in Directory.GetFiles(TestPath)) {
           if (!Path.GetFileName(f).Contains(".decTest"))continue;

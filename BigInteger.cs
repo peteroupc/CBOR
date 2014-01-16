@@ -13,10 +13,9 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-    /// <summary> An arbitrary-precision integer. </summary>
+    /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
-
     private static int CountWords(short[] X, int N) {
       while (N != 0 && X[N - 1] == 0)
         N--;
@@ -25,7 +24,9 @@ namespace PeterO {
 
     private static short ShiftWordsLeftByBits(short[] r, int rstart, int n, int shiftBits) {
       #if DEBUG
-      if (!(shiftBits < 16)) { throw new ArgumentException("doesn't satisfy shiftBits<16"); }
+      if (!(shiftBits < 16)) {
+ throw new ArgumentException("doesn't satisfy shiftBits<16");
+}
       #endif
 
       unchecked {
@@ -45,11 +46,12 @@ namespace PeterO {
       // DebugAssert.IsTrue(shiftBits<16,"{0} line {1}: shiftBits<16","words.h",67);
       short u, carry = 0;
       unchecked {
-        if (shiftBits != 0)
-          for (int i = n; i > 0; --i) {
+        if (shiftBits != 0) {
+  for (int i = n; i > 0; --i) {
           u = r[rstart + i - 1];
           r[rstart + i - 1] = (short)((((((int)u) & 0xFFFF) >> (int)shiftBits) & 0xFFFF) | (((int)carry) & 0xFFFF));
           carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
+        }
         }
         return carry;
       }
@@ -59,12 +61,13 @@ namespace PeterO {
       // DebugAssert.IsTrue(shiftBits<16,"{0} line {1}: shiftBits<16","words.h",67);
       unchecked {
         short u, carry = (short)((int)0xFFFF << (int)(16 - shiftBits));
-        if (shiftBits != 0)
-          for (int i = n; i > 0; --i) {
+        if (shiftBits != 0) {
+  for (int i = n; i > 0; --i) {
           u = r[rstart + i - 1];
           r[rstart + i - 1] = (short)(((((int)u) & 0xFFFF) >> (int)shiftBits) | (((int)carry) & 0xFFFF));
           carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
         }
+      }
         return carry;
       }
     }
@@ -104,10 +107,11 @@ namespace PeterO {
       while (unchecked(N--) != 0) {
         int an = ((int)A[astart + N]) & 0xFFFF;
         int bn = ((int)B[bstart + N]) & 0xFFFF;
-        if (an > bn)
-          return 1;
-        else if (an < bn)
-          return -1;
+        if (an > bn) {
+ return 1;
+  } else if (an < bn) {
+ return -1;
+}
       }
       return 0;
     }
@@ -121,8 +125,9 @@ namespace PeterO {
           return 0;
         for (int i = 1; i < N; ++i) {
           A[Astart + i]++;
-          if (A[Astart + i] != 0)
-            return 0;
+          if (A[Astart + i] != 0) {
+ return 0;
+}
         }
         return 1;
       }
@@ -138,8 +143,9 @@ namespace PeterO {
         for (int i = 1; i < N; ++i) {
           tmp = A[Astart + i];
           A[Astart + i]--;
-          if (tmp != 0)
-            return 0;
+          if (tmp != 0) {
+ return 0;
+}
         }
         return 1;
       }
@@ -157,7 +163,6 @@ namespace PeterO {
       short[] B, int bstart, int N) {
       // DebugAssert.IsTrue(N%2 == 0,"{0} line {1}: N%2 == 0","integer.cpp",799);
       unchecked {
-
         int u;
         u = 0;
         for (int i = 0; i < N; i += 2) {
@@ -548,10 +553,11 @@ short[] productArr, int cstart,
         if (AN <= N2 && BN <= N2) {
           // Console.WriteLine("Can be smaller: {0},{1},{2}",AN,BN,N2);
           Array.Clear((short[])Rarr, Rstart + N, N);
-          if (N2 == 8)
-            Baseline_Multiply8(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-          else
-            RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N2);
+          if (N2 == 8) {
+ Baseline_Multiply8(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
+  } else {
+ RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, N2);
+}
           return;
         }
         AN2 = Compare(Aarr, Astart, Aarr, (int)(Astart + N2), N2) > 0 ? 0 : N2;
@@ -570,13 +576,15 @@ short[] productArr, int cstart,
         int c3 = c2;
         c2 += Add(Rarr, rMediumLow, Rarr, rMediumHigh, Rarr, Rstart, N2);
         c3 += Add(Rarr, rMediumHigh, Rarr, rMediumHigh, Rarr, rHigh, N2);
-        if (AN2 == BN2)
-          c3 -= Subtract(Rarr, rMediumLow, Rarr, rMediumLow, Tarr, Tstart, N);
-        else
-          c3 += Add(Rarr, rMediumLow, Rarr, rMediumLow, Tarr, Tstart, N);
+        if (AN2 == BN2) {
+ c3 -= Subtract(Rarr, rMediumLow, Rarr, rMediumLow, Tarr, Tstart, N);
+  } else {
+ c3 += Add(Rarr, rMediumLow, Rarr, rMediumLow, Tarr, Tstart, N);
+}
         c3 += Increment(Rarr, rMediumHigh, N2, (short)c2);
-        if (c3 != 0)
-          Increment(Rarr, rHigh, N2, (short)c3);
+        if (c3 != 0) {
+ Increment(Rarr, rHigh, N2, (short)c3);
+}
       }
     }
 
@@ -632,7 +640,9 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
               int p;
               p = (((int)Barr[Bstart + j]) & 0xFFFF) * Bint;
               p = p + (((int)carry) & 0xFFFF);
-              if (i != 0) p += ((int)Rarr[cstart + j]) & 0xFFFF;
+              if (i != 0) {
+ p += ((int)Rarr[cstart + j]) & 0xFFFF;
+}
               Rarr[cstart + j] = (short)p;
               carry = (short)(p >> 16);
             }
@@ -650,7 +660,9 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
               int p;
               p = (((int)Aarr[Astart + j]) & 0xFFFF) * Bint;
               p = p + (((int)carry) & 0xFFFF);
-              if (i != 0) p += ((int)Rarr[cstart + j]) & 0xFFFF;
+              if (i != 0) {
+ p += ((int)Rarr[cstart + j]) & 0xFFFF;
+}
               Rarr[cstart + j] = (short)p;
               carry = (short)(p >> 16);
             }
@@ -668,10 +680,11 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
       if (NA == NB) {
         if (Astart == Bstart && Aarr == Barr) {
           RecursiveSquare(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, NA);
-        } else if (NA == 2)
-          Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
-        else
-          RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, NA);
+        } else if (NA == 2) {
+ Baseline_Multiply2(Rarr, Rstart, Aarr, Astart, Barr, Bstart);
+  } else {
+ RecursiveMultiply(Rarr, Rstart, Tarr, Tstart, Aarr, Astart, Barr, Bstart, NA);
+}
 
         return;
       }
@@ -742,8 +755,9 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
     }
 
     private static int BitPrecision(short numberValue) {
-      if (numberValue == 0)
-        return 0;
+      if (numberValue == 0) {
+ return 0;
+}
       int i = 16;
       unchecked {
         if ((numberValue >> 8) == 0) {
@@ -761,15 +775,17 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
           i -= 2;
         }
 
-        if ((numberValue >> 15) == 0)
-          --i;
+        if ((numberValue >> 15) == 0) {
+ --i;
+}
       }
       return i;
     }
 
     private static int BitPrecisionInt(int numberValue) {
-      if (numberValue == 0)
-        return 0;
+      if (numberValue == 0) {
+ return 0;
+}
       int i = 32;
       unchecked {
         if ((numberValue >> 16) == 0) {
@@ -792,8 +808,9 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
           i -= 2;
         }
 
-        if ((numberValue >> 31) == 0)
-          --i;
+        if ((numberValue >> 31) == 0) {
+ --i;
+}
       }
       return i;
     }
@@ -852,10 +869,11 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
       unchecked {
         if ((short)(B1 + 1) == 0)
           Q = A[Astart + 2];
-        else if (B1 != 0)
-          Q = DivideUnsigned(MakeUint(A[Astart + 1], A[Astart + 2]), (short)(((int)B1 + 1) & 0xFFFF));
-        else
-          Q = DivideUnsigned(MakeUint(A[Astart], A[Astart + 1]), B0);
+        else if (B1 != 0) {
+ Q = DivideUnsigned(MakeUint(A[Astart + 1], A[Astart + 2]), (short)(((int)B1 + 1) & 0xFFFF));
+  } else {
+ Q = DivideUnsigned(MakeUint(A[Astart], A[Astart + 1]), B0);
+}
 
         int Qint = ((int)Q) & 0xFFFF;
         int B0int = ((int)B0) & 0xFFFF;
@@ -876,7 +894,6 @@ Tarr, Tstart, Tarr, (int)(Tstart + N),
           A[Astart + 1] = GetLowHalf(u);
           A[Astart + 2] += GetHighHalf(u);
           Q++;
-
         }
       }
       return Q;
@@ -904,7 +921,7 @@ short[] Q, int Qstart, short[] A, int Astart,
     {
       short s;
       int d;
-      int a1MinusA0 = ((int)A1 - A0) & 0xFFFF;
+      int first1MinusFirst0 = ((int)A1 - A0) & 0xFFFF;
       A1 &= 0xFFFF;
       A0 &= 0xFFFF;
       unchecked {
@@ -916,9 +933,9 @@ short[] Q, int Qstart, short[] A, int Astart,
             if (B0 >= B1)
             {
               s = (short)0;
-              d = a1MinusA0 * (((int)B0 - B1) & 0xFFFF);
+              d = first1MinusFirst0 * (((int)B0 - B1) & 0xFFFF);
             } else {
-              s = (short)a1MinusA0;
+              s = (short)first1MinusFirst0;
               d = (((int)s) & 0xFFFF) * (((int)B0 - B1) & 0xFFFF);
             }
             int A0B0 = A0 * B0;
@@ -944,7 +961,7 @@ short[] Q, int Qstart, short[] A, int Astart,
             int csi = Cstart + i;
             if (B0 > B1) {
               s = (short)(((int)B0 - B1) & 0xFFFF);
-              d = a1MinusA0 * (((int)s) & 0xFFFF);
+              d = first1MinusFirst0 * (((int)s) & 0xFFFF);
             } else {
               s = (short)0;
               d = (((int)A0 - A1) & 0xFFFF) * (((int)B1 - B0) & 0xFFFF);
@@ -974,7 +991,7 @@ short[] Q, int Qstart, short[] A, int Astart,
     {
       short s;
       int d;
-      int a1MinusA0 = ((int)A1 - A0) & 0xFFFF;
+      int first1MinusFirst0 = ((int)A1 - A0) & 0xFFFF;
       A1 &= 0xFFFF;
       A0 &= 0xFFFF;
       unchecked {
@@ -986,9 +1003,9 @@ short[] Q, int Qstart, short[] A, int Astart,
             if (b0 >= b1)
             {
               s = (short)0;
-              d = a1MinusA0 * (((int)b0 - b1) & 0xFFFF);
+              d = first1MinusFirst0 * (((int)b0 - b1) & 0xFFFF);
             } else {
-              s = (short)a1MinusA0;
+              s = (short)first1MinusFirst0;
               d = (((int)s) & 0xFFFF) * (((int)b0 - b1) & 0xFFFF);
             }
             int A0B0 = A0 * b0;
@@ -1021,7 +1038,7 @@ short[] Q, int Qstart, short[] A, int Astart,
             int csi = Cstart + i;
             if (B0 > B1) {
               s = (short)(((int)B0 - B1) & 0xFFFF);
-              d = a1MinusA0 * (((int)s) & 0xFFFF);
+              d = first1MinusFirst0 * (((int)s) & 0xFFFF);
             } else {
               s = (short)0;
               d = (((int)A0 - A1) & 0xFFFF) * (((int)B1 - B0) & 0xFFFF);
@@ -1042,7 +1059,7 @@ short[] Q, int Qstart, short[] A, int Astart,
               a1b1high - (((int)s) & 0xFFFF) + (((int)C[csi + 2]) & 0xFFFF);
             C[csi + 2] = (short)(((int)tempInt) & 0xFFFF);
 
-            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) +a1b1high + (((int)C[csi + 3]) & 0xFFFF);
+            tempInt =  (((int)(tempInt >> 16)) & 0xFFFF) + a1b1high + (((int)C[csi + 3]) & 0xFFFF);
             C[csi + 3] = (short)(((int)tempInt) & 0xFFFF);
             if ((tempInt >> 16) != 0) {
               C[csi + 4]++;
@@ -1064,12 +1081,22 @@ short[] Q, int Qstart, short[] A, int Astart,
       int NA = (int)NAint;
       int NB = (int)NBint;
       #if DEBUG
-      if (NAint <= 0) { throw new ArgumentException("NAint" + " not less than " + "0" + " (" + Convert.ToString((int)NAint, System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (NBint <= 0) { throw new ArgumentException("NBint" + " not less than " + "0" + " (" + Convert.ToString((int)NBint, System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (!(NA % 2 == 0 && NB % 2 == 0)) { throw new ArgumentException("doesn't satisfy NA%2==0 && NB%2==0"); }
+      if (NAint <= 0) {
+ throw new ArgumentException("NAint" + " not less than " + "0" + " (" + Convert.ToString((int)NAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (NBint <= 0) {
+ throw new ArgumentException("NBint" + " not less than " + "0" + " (" + Convert.ToString((int)NBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (!(NA % 2 == 0 && NB % 2 == 0)) {
+ throw new ArgumentException("doesn't satisfy NA%2==0 && NB%2==0");
+}
       if (!(Barr[Bstart + NB - 1] != 0 ||
-            Barr[Bstart + NB - 2] != 0)) { throw new ArgumentException("doesn't satisfy B[NB-1]!=0 || B[NB-2]!=0"); }
-      if (!(NB <= NA)) { throw new ArgumentException("doesn't satisfy NB<= NA"); }
+            Barr[Bstart + NB - 2] != 0)) {
+ throw new ArgumentException("doesn't satisfy B[NB-1]!=0 || B[NB-2]!=0");
+}
+      if (!(NB <= NA)) {
+ throw new ArgumentException("doesn't satisfy NB<= NA");
+}
       #endif
       short[] TBarr = TA;
       short[] TParr = TA;
@@ -1111,8 +1138,9 @@ short)Subtract(
 TA, (int)(Tstart + NA - NB),
                                       TA, (int)(Tstart + NA - NB),
                                       TBarr, TBstart, NB);
-            if (Qarr != null)
-              Qarr[Qstart + NA - NB] += (short)1;
+            if (Qarr != null) {
+ Qarr[Qstart + NA - NB] += (short)1;
+}
           }
         } else {
           NA += 2;
@@ -1155,7 +1183,6 @@ TA, (int)(Tstart + NA - NB),
               }
             }
           }
-
         }
         if (Rarr != null) {  // If the remainder is non-null
           // copy TA into R, and denormalize it
@@ -1171,25 +1198,24 @@ TA, (int)(Tstart + NA - NB),
     };
 
     private static int RoundupSize(int n) {
-      if (n <= 16)
-        return RoundupSizeTable[n];
-      else if (n <= 32)
-        return 32;
-      else if (n <= 64)
-        return 64;
-      else {
+      if (n <= 16) {
+ return RoundupSizeTable[n];
+  } else if (n <= 32) {
+ return 32;
+  } else if (n <= 64) {
+ return 64;
+  } else {
  return (int)1 << (int)BitPrecisionInt(n - 1);
 }
     }
 
-    bool negative;
-    int wordCount = -1;
-    short[] reg;
-    /// <summary> Initializes a BigInteger object set to zero. </summary>
+    private bool negative;
+    private int wordCount = -1;
+    private short[] reg;
+    /// <summary>Initializes a BigInteger object set to zero.</summary>
     private BigInteger() {}
 
-    /// <summary> Initializes a BigInteger object from an array of bytes.
-    /// </summary>
+    /// <summary>Initializes a BigInteger object from an array of bytes.</summary>
     /// <param name='bytes'>A byte[] object.</param>
     /// <returns>A BigInteger object.</returns>
     /// <param name='littleEndian'>A Boolean object.</param>
@@ -1279,28 +1305,35 @@ TA, (int)(Tstart + NA - NB),
         this.reg[(n >> 4)] |= (short)((short)1 << (int)(n & 0xf));
         this.wordCount = this.CalcWordCount();
       } else {
-        if ((n >> 4) < this.reg.Length)
-          this.reg[(n >> 4)] &= unchecked((short)(~((short)1 << (int)(n % 16))));
+        if ((n >> 4) < this.reg.Length) {
+ this.reg[(n >> 4)] &= unchecked((short)(~((short)1 << (int)(n % 16))));
+}
         this.wordCount = this.CalcWordCount();
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='index'>A 32-bit unsigned integer.</param>
     /// <returns>A Boolean object.</returns>
     public bool testBit(int index) {
-      if (index < 0) { throw new ArgumentOutOfRangeException("index"); }
+      if (index < 0) {
+ throw new ArgumentOutOfRangeException("index");
+}
       if (this.Sign < 0) {
         int tcindex = 0;
         int wordpos = index / 16;
-        if (wordpos >= this.reg.Length) { return true; }
+        if (wordpos >= this.reg.Length) {
+ return true;
+}
         while (tcindex < wordpos && this.reg[tcindex] == 0) {
           tcindex++;
         }
         short tc;
         unchecked {
           tc = this.reg[wordpos];
-          if (tcindex == wordpos) tc--;
+          if (tcindex == wordpos) {
+ tc--;
+}
           tc = (short)~tc;
         }
         return (bool)(((tc >> (int)(index & 15)) & 1) != 0);
@@ -1309,16 +1342,19 @@ TA, (int)(Tstart + NA - NB),
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='n'>A 32-bit unsigned integer.</param>
     private bool GetUnsignedBit(int n) {
       #if DEBUG
-      if (n < 0) { throw new ArgumentException("n" + " not greater or equal to " + "0" + " (" + Convert.ToString((int)n, System.Globalization.CultureInfo.InvariantCulture) + ")"); }
+      if (n < 0) {
+ throw new ArgumentException("n" + " not greater or equal to " + "0" + " (" + Convert.ToString((int)n, System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
       #endif
-      if ((n >> 4) >= this.reg.Length)
-        return false;
-      else
-        return (bool)(((this.reg[(n >> 4)] >> (int)(n & 15)) & 1) != 0);
+      if ((n >> 4) >= this.reg.Length) {
+ return false;
+  } else {
+ return (bool)(((this.reg[(n >> 4)] >> (int)(n & 15)) & 1) != 0);
+}
     }
 
     private BigInteger InitializeInt(int numberValue) {
@@ -1341,7 +1377,7 @@ TA, (int)(Tstart + NA - NB),
       return this;
     }
 
-    /// <summary>Returns a byte array of this object's value. </summary>
+    /// <summary>Returns a byte array of this object&apos;s value.</summary>
     /// <returns>A byte array that represents the value of this object.</returns>
     /// <param name='littleEndian'>A Boolean object.</param>
     public byte[] toByteArray(bool littleEndian) {
@@ -1386,7 +1422,9 @@ TA, (int)(Tstart + NA - NB),
             break;
           }
         }
-        if (byteCount == 0) byteCount = 1;
+        if (byteCount == 0) {
+ byteCount = 1;
+}
         byte[] bytes = new byte[byteCount];
         bytes[littleEndian ? bytes.Length - 1 : 0] = (byte)0xFF;
         byteCount = Math.Min(byteCount, regdata.Length * 2);
@@ -1403,18 +1441,21 @@ TA, (int)(Tstart + NA - NB),
       }
     }
 
-    /// <summary> Shifts this object's value by a number of bits. A value of
-    /// 1 doubles this value, a value of 2 multiplies it by 4, a value of 3 by 8,
-    /// a value of 4 by 16, and so on.</summary>
+    /// <summary>Shifts this object&apos;s value by a number of bits. A value
+    /// of 1 doubles this value, a value of 2 multiplies it by 4, a value of 3 by
+    /// 8, a value of 4 by 16, and so on.</summary>
     /// <param name='numberBits'>The number of bits to shift. Can be negative,
     /// in which case this is the same as shiftRight with the absolute value
     /// of numberBits.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger shiftLeft(int numberBits) {
-      if (numberBits == 0) { return this; }
+      if (numberBits == 0) {
+ return this;
+}
       if (numberBits < 0) {
-        if (numberBits == Int32.MinValue)
-          return this.shiftRight(1).shiftRight(Int32.MaxValue);
+        if (numberBits == Int32.MinValue) {
+ return this.shiftRight(1).shiftRight(Int32.MaxValue);
+}
         return this.shiftRight(-numberBits);
       }
       BigInteger ret = new BigInteger();
@@ -1442,14 +1483,17 @@ TA, (int)(Tstart + NA - NB),
       return ret;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
     /// <param name='numberBits'>A 32-bit signed integer.</param>
     public BigInteger shiftRight(int numberBits) {
-      if (numberBits == 0) { return this; }
+      if (numberBits == 0) {
+ return this;
+}
       if (numberBits < 0) {
-        if (numberBits == Int32.MinValue)
-          return this.shiftLeft(1).shiftLeft(Int32.MaxValue);
+        if (numberBits == Int32.MinValue) {
+ return this.shiftLeft(1).shiftLeft(Int32.MaxValue);
+}
         return this.shiftLeft(-numberBits);
       }
       BigInteger ret = new BigInteger();
@@ -1462,24 +1506,30 @@ TA, (int)(Tstart + NA - NB),
       if (this.Sign < 0) {
         TwosComplement(ret.reg, 0, (int)ret.reg.Length);
         ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
-        if (numWords > shiftWords)
-          ShiftWordsRightByBitsSignExtend(ret.reg, 0, numWords - shiftWords, shiftBits);
+        if (numWords > shiftWords) {
+ ShiftWordsRightByBitsSignExtend(ret.reg, 0, numWords - shiftWords, shiftBits);
+}
         TwosComplement(ret.reg, 0, (int)ret.reg.Length);
       } else {
         ShiftWordsRightByWords(ret.reg, 0, numWords, shiftWords);
-        if (numWords > shiftWords)
-          ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+        if (numWords > shiftWords) {
+ ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+}
       }
       ret.wordCount = ret.CalcWordCount();
       return ret;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
     /// <param name='longerValue'>A 64-bit signed integer.</param>
     public static BigInteger valueOf(long longerValue) {
-      if (longerValue == 0) { return BigInteger.Zero; }
-      if (longerValue == 1) { return BigInteger.One; }
+      if (longerValue == 0) {
+ return BigInteger.Zero;
+}
+      if (longerValue == 1) {
+ return BigInteger.One;
+}
       BigInteger ret = new BigInteger();
       unchecked {
         ret.negative = longerValue < 0;
@@ -1492,7 +1542,9 @@ TA, (int)(Tstart + NA - NB),
           ret.wordCount = 4;
         } else {
           long ut = longerValue;
-          if (ut < 0) ut = -ut;
+          if (ut < 0) {
+ ut = -ut;
+}
           ret.reg[0] = (short)(ut & 0xFFFF);
           ut >>= 16;
           ret.reg[1] = (short)(ut & 0xFFFF);
@@ -1511,12 +1563,16 @@ TA, (int)(Tstart + NA - NB),
       return ret;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int intValue() {
       int c = (int)this.wordCount;
-      if (c == 0) { return 0; }
-      if (c > 2) { throw new OverflowException(); }
+      if (c == 0) {
+ return 0;
+}
+      if (c > 2) {
+ throw new OverflowException();
+}
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
         if (((short)(this.reg[1] & (short)0x7FFF) | this.reg[0]) == 0 && this.negative) {
           return Int32.MinValue;
@@ -1525,17 +1581,23 @@ TA, (int)(Tstart + NA - NB),
         }
       } else {
         int ivv = ((int)this.reg[0]) & 0xFFFF;
-        if (c > 1) ivv |= (((int)this.reg[1]) & 0xFFFF) << 16;
-        if (this.negative) ivv = -ivv;
+        if (c > 1) {
+ ivv |= (((int)this.reg[1]) & 0xFFFF) << 16;
+}
+        if (this.negative) {
+ ivv = -ivv;
+}
         return ivv;
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
     public bool canFitInInt() {
       int c = (int)this.wordCount;
-      if (c > 2) { return false; }
+      if (c > 2) {
+ return false;
+}
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
         return (this.negative && this.reg[1] == unchecked((short)0x8000) &&
                 this.reg[0] == 0);
@@ -1545,7 +1607,9 @@ TA, (int)(Tstart + NA - NB),
 
     private bool HasSmallValue() {
       int c = (int)this.wordCount;
-      if (c > 4) { return false; }
+      if (c > 4) {
+ return false;
+}
       if (c == 4 && (this.reg[3] & 0x8000) != 0) {
         return (this.negative && this.reg[3] == unchecked((short)0x8000) &&
                 this.reg[2] == 0 &&
@@ -1555,12 +1619,16 @@ TA, (int)(Tstart + NA - NB),
       return true;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A 64-bit signed integer.</returns>
     public long longValue() {
       int count = this.wordCount;
-      if (count == 0) { return (long)0; }
-      if (count > 4) { throw new OverflowException(); }
+      if (count == 0) {
+ return (long)0;
+}
+      if (count > 4) {
+ throw new OverflowException();
+}
       if (count == 4 && (this.reg[3] & 0x8000) != 0) {
         if (this.negative && this.reg[3] == unchecked((short)0x8000) &&
             this.reg[2] == 0 &&
@@ -1585,7 +1653,9 @@ TA, (int)(Tstart + NA - NB),
           tmp = ((int)this.reg[3]) & 0xFFFF;
           vv |= (long)tmp << 48;
         }
-        if (this.negative) vv = -vv;
+        if (this.negative) {
+ vv = -vv;
+}
         return vv;
       }
     }
@@ -1596,22 +1666,28 @@ TA, (int)(Tstart + NA - NB),
       return r;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
-    /// <param name='power'>A BigInteger object. (2)</param>
+    /// <param name='power'>A BigInteger object. (2).</param>
     public BigInteger PowBigIntVar(BigInteger power) {
-      if (power == null) { throw new ArgumentNullException("power"); }
+      if (power == null) {
+ throw new ArgumentNullException("power");
+}
       int sign = power.Sign;
-      if (sign < 0) { throw new ArgumentException("power is negative"); }
+      if (sign < 0) {
+ throw new ArgumentException("power is negative");
+}
       BigInteger thisVar = this;
-      if (sign == 0)
-        return BigInteger.One;  // however 0 to the power of 0 is undefined
-      else if (power.Equals(BigInteger.One))
-        return this;
-      else if (power.wordCount == 1 && power.reg[0] == 2)
-        return thisVar * (BigInteger)thisVar;
-      else if (power.wordCount == 1 && power.reg[0] == 3)
-        return (thisVar * (BigInteger)thisVar) * (BigInteger)thisVar;
+      if (sign == 0) {
+ return BigInteger.One;
+}  // however 0 to the power of 0 is undefined
+      else if (power.Equals(BigInteger.One)) {
+ return this;
+  } else if (power.wordCount == 1 && power.reg[0] == 2) {
+ return thisVar * (BigInteger)thisVar;
+  } else if (power.wordCount == 1 && power.reg[0] == 3) {
+ return (thisVar * (BigInteger)thisVar) * (BigInteger)thisVar;
+}
       BigInteger r = BigInteger.One;
       while (!power.IsZero) {
         if (!power.IsEven) {
@@ -1625,20 +1701,24 @@ TA, (int)(Tstart + NA - NB),
       return r;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='powerSmall'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger pow(int powerSmall) {
-      if (powerSmall < 0) { throw new ArgumentException("power is negative"); }
+      if (powerSmall < 0) {
+ throw new ArgumentException("power is negative");
+}
       BigInteger thisVar = this;
-      if (powerSmall == 0)
-        return BigInteger.One;  // however 0 to the power of 0 is undefined
-      else if (powerSmall == 1)
-        return this;
-      else if (powerSmall == 2)
-        return thisVar * (BigInteger)thisVar;
-      else if (powerSmall == 3)
-        return (thisVar * (BigInteger)thisVar) * (BigInteger)thisVar;
+      if (powerSmall == 0) {
+ return BigInteger.One;
+}  // however 0 to the power of 0 is undefined
+      else if (powerSmall == 1) {
+ return this;
+  } else if (powerSmall == 2) {
+ return thisVar * (BigInteger)thisVar;
+  } else if (powerSmall == 3) {
+ return (thisVar * (BigInteger)thisVar) * (BigInteger)thisVar;
+}
       BigInteger r = BigInteger.One;
       while (powerSmall != 0) {
         if ((powerSmall & 1) != 0) {
@@ -1652,7 +1732,7 @@ TA, (int)(Tstart + NA - NB),
       return r;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger negate() {
       BigInteger bigintRet = new BigInteger();
@@ -1662,29 +1742,33 @@ TA, (int)(Tstart + NA - NB),
       return bigintRet;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger abs() {
       return (this.wordCount == 0 || !this.negative) ? this : this.negate();
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     private int CalcWordCount() {
       return (int)CountWords(this.reg, this.reg.Length);
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     private int ByteCount() {
       int wc = this.wordCount;
-      if (wc == 0) { return 0; }
+      if (wc == 0) {
+ return 0;
+}
       short s = this.reg[wc - 1];
       wc = (wc - 1) << 1;
-      if (s == 0) { return wc; }
+      if (s == 0) {
+ return wc;
+}
       return ((s >> 8) == 0) ? wc + 1 : wc + 2;
     }
 
-    /// <summary> Finds the minimum number of bits needed to represent this
-    /// object's absolute value. </summary>
+    /// <summary>Finds the minimum number of bits needed to represent this
+    /// object&apos;s absolute value.</summary>
     /// <returns>The number of bits in this object&apos;s value. Returns
     /// 0 if this object&apos;s value is 0, and returns 1 if the value is negative
     /// 1.</returns>
@@ -1693,7 +1777,9 @@ TA, (int)(Tstart + NA - NB),
       if (wc != 0) {
         int numberValue = ((int)this.reg[wc - 1]) & 0xFFFF;
         wc = (wc - 1) << 4;
-        if (numberValue == 0) { return wc; }
+        if (numberValue == 0) {
+ return wc;
+}
         wc += 16;
         unchecked {
           if ((numberValue >> 8) == 0) {
@@ -1708,8 +1794,9 @@ TA, (int)(Tstart + NA - NB),
             numberValue <<= 2;
             wc -= 2;
           }
-          if ((numberValue >> 15) == 0)
-            --wc;
+          if ((numberValue >> 15) == 0) {
+ --wc;
+}
         }
         return wc;
       } else {
@@ -1717,7 +1804,7 @@ TA, (int)(Tstart + NA - NB),
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='reg'>A short[] object.</param>
     /// <param name='wordCount'>A 32-bit signed integer.</param>
     /// <returns>A 32-bit signed integer.</returns>
@@ -1725,7 +1812,9 @@ TA, (int)(Tstart + NA - NB),
       int wc = wordCount;
       if (wc != 0) {
         wc = (wc - 1) << 4;
-        if (numberValue == 0) { return wc; }
+        if (numberValue == 0) {
+ return wc;
+}
         wc += 16;
         unchecked {
           if ((numberValue >> 8) == 0) {
@@ -1740,8 +1829,9 @@ TA, (int)(Tstart + NA - NB),
             numberValue <<= 2;
             wc -= 2;
           }
-          if ((numberValue >> 15) == 0)
+          if ((numberValue >> 15) == 0) {
             --wc;
+          }
         }
         return wc;
       } else {
@@ -1750,8 +1840,8 @@ TA, (int)(Tstart + NA - NB),
     }
 
     /// <summary>Finds the minimum number of bits needed to represent this
-    /// object's value, except for its sign. If the value is negative, finds
-    /// the number of bits in (its absolute value minus 1).</summary>
+    /// object&apos;s value, except for its sign. If the value is negative,
+    /// finds the number of bits in (its absolute value minus 1).</summary>
     /// <returns>The number of bits in this object&apos;s value. Returns
     /// 0 if this object&apos;s value is 0 or negative 1.</returns>
     public int bitLength() {
@@ -1759,7 +1849,9 @@ TA, (int)(Tstart + NA - NB),
       if (wc != 0) {
         int numberValue = ((int)this.reg[wc - 1]) & 0xFFFF;
         wc = (wc - 1) << 4;
-        if (numberValue == (this.negative ? 1 : 0)) { return wc; }
+        if (numberValue == (this.negative ? 1 : 0)) {
+          return wc;
+        }
         wc += 16;
         unchecked {
           if (this.negative) {
@@ -1799,8 +1891,9 @@ TA, (int)(Tstart + NA - NB),
 
     private string SmallValueToString() {
       long value = this.longValue();
-      if (value == Int64.MinValue)
-        return "-9223372036854775808";
+      if (value == Int64.MinValue) {
+ return "-9223372036854775808";
+}
       bool neg = value < 0;
       char[] chars = new char[24];
       int count = 0;
@@ -1814,10 +1907,11 @@ TA, (int)(Tstart + NA - NB),
         chars[count++] = digit;
         value = value / 10;
       }
-      if (neg)
-        ReverseChars(chars, 1, count - 1);
-      else
-        ReverseChars(chars, 0, count);
+      if (neg) {
+ ReverseChars(chars, 1, count - 1);
+  } else {
+ ReverseChars(chars, 0, count);
+}
       return new String(chars, 0, count);
     }
 
@@ -1847,38 +1941,79 @@ TA, (int)(Tstart + NA - NB),
       }
     }
 
-    /// <summary> Finds the number of decimal digits this number has.</summary>
+    /// <summary>Finds the number of decimal digits this number has.</summary>
     /// <returns>The number of decimal digits. Returns 1 if this object&apos;
     /// s value is 0.</returns>
     public int getDigitCount() {
-      if (this.IsZero)
-        return 1;
+      if (this.IsZero) {
+ return 1;
+}
       if (this.HasSmallValue()) {
         long value = this.longValue();
-        if (value == Int64.MinValue) { return 19; }
-        if (value < 0) value = -value;
+        if (value == Int64.MinValue) {
+ return 19;
+}
+        if (value < 0) {
+ value = -value;
+}
         if (value >= 1000000000L) {
-          if (value >= 1000000000000000000L) { return 19; }
-          if (value >= 100000000000000000L) { return 18; }
-          if (value >= 10000000000000000L) { return 17; }
-          if (value >= 1000000000000000L) { return 16; }
-          if (value >= 100000000000000L) { return 15; }
-          if (value >= 10000000000000L) { return 14; }
-          if (value >= 1000000000000L) { return 13; }
-          if (value >= 100000000000L) { return 12; }
-          if (value >= 10000000000L) { return 11; }
-          if (value >= 1000000000L) { return 10; }
+          if (value >= 1000000000000000000L) {
+ return 19;
+}
+          if (value >= 100000000000000000L) {
+ return 18;
+}
+          if (value >= 10000000000000000L) {
+ return 17;
+}
+          if (value >= 1000000000000000L) {
+ return 16;
+}
+          if (value >= 100000000000000L) {
+ return 15;
+}
+          if (value >= 10000000000000L) {
+ return 14;
+}
+          if (value >= 1000000000000L) {
+ return 13;
+}
+          if (value >= 100000000000L) {
+ return 12;
+}
+          if (value >= 10000000000L) {
+ return 11;
+}
+          if (value >= 1000000000L) {
+ return 10;
+}
           return 9;
         } else {
           int v2 = (int)value;
-          if (v2 >= 100000000) { return 9; }
-          if (v2 >= 10000000) { return 8; }
-          if (v2 >= 1000000) { return 7; }
-          if (v2 >= 100000) { return 6; }
-          if (v2 >= 10000) { return 5; }
-          if (v2 >= 1000) { return 4; }
-          if (v2 >= 100) { return 3; }
-          if (v2 >= 10) { return 2; }
+          if (v2 >= 100000000) {
+ return 9;
+}
+          if (v2 >= 10000000) {
+ return 8;
+}
+          if (v2 >= 1000000) {
+ return 7;
+}
+          if (v2 >= 100000) {
+ return 6;
+}
+          if (v2 >= 10000) {
+ return 5;
+}
+          if (v2 >= 1000) {
+ return 4;
+}
+          if (v2 >= 100) {
+ return 3;
+}
+          if (v2 >= 10) {
+ return 2;
+}
           return 1;
         }
       }
@@ -1912,25 +2047,42 @@ TA, (int)(Tstart + NA - NB),
       while (wordCount != 0) {
         if (wordCount == 1) {
           int rest = ((int)tempReg[0]) & 0xFFFF;
-          if (rest >= 10000) i += 5;
-          else if (rest >= 1000) i += 4;
-          else if (rest >= 100) i += 3;
-          else if (rest >= 10) i += 2;
-          else i++;
+          if (rest >= 10000) {
+ i += 5;
+  } else if (rest >= 1000) {
+ i += 4;
+  } else if (rest >= 100) {
+ i += 3;
+  } else if (rest >= 10) {
+ i += 2;
+  } else {
+ i++;
+}
           break;
         } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7FFF) {
           int rest = ((int)tempReg[0]) & 0xFFFF;
           rest |= (((int)tempReg[1]) & 0xFFFF) << 16;
-          if (rest >= 1000000000) i += 10;
-          else if (rest >= 100000000) i += 9;
-          else if (rest >= 10000000) i += 8;
-          else if (rest >= 1000000) i += 7;
-          else if (rest >= 100000) i += 6;
-          else if (rest >= 10000) i += 5;
-          else if (rest >= 1000) i += 4;
-          else if (rest >= 100) i += 3;
-          else if (rest >= 10) i += 2;
-          else i++;
+          if (rest >= 1000000000) {
+ i += 10;
+  } else if (rest >= 100000000) {
+ i += 9;
+  } else if (rest >= 10000000) {
+ i += 8;
+  } else if (rest >= 1000000) {
+ i += 7;
+  } else if (rest >= 100000) {
+ i += 6;
+  } else if (rest >= 10000) {
+ i += 5;
+  } else if (rest >= 1000) {
+ i += 4;
+  } else if (rest >= 100) {
+ i += 3;
+  } else if (rest >= 10) {
+ i += 2;
+  } else {
+ i++;
+}
           break;
         } else {
           int wci = wordCount;
@@ -2002,8 +2154,9 @@ TA, (int)(Tstart + NA - NB),
     /// <summary>Converts this object to a text string.</summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
-      if (this.IsZero)
-        return "0";
+      if (this.IsZero) {
+ return "0";
+}
       if (this.HasSmallValue()) {
         return this.SmallValueToString();
       }
@@ -2074,26 +2227,39 @@ TA, (int)(Tstart + NA - NB),
       } else {
         return new String(s, 0, i);
       }
-
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='str'>A string object.</param>
     /// <returns>A BigInteger object.</returns>
     public static BigInteger fromString(string str) {
-      if (str == null) { throw new ArgumentNullException("str"); }
+      if (str == null) {
+ throw new ArgumentNullException("str");
+}
       return fromSubstring(str, 0, str.Length);
     }
 
     private const int MaxSafeInt = 214748363;
 
     public static BigInteger fromSubstring(string str, int index, int endIndex) {
-      if (str == null) { throw new ArgumentNullException("str"); }
-      if (index < 0) { throw new ArgumentException("\"str\"" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)index,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (index > str.Length) { throw new ArgumentException("\"str\"" + " not less or equal to " + Convert.ToString((long)str.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)index,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (endIndex < 0) { throw new ArgumentException("\"index\"" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)endIndex,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (endIndex > str.Length) { throw new ArgumentException("\"index\"" + " not less or equal to " + Convert.ToString((long)str.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)endIndex,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
-      if (endIndex < index) { throw new ArgumentException("\"endIndex\"" + " not greater or equal to " + Convert.ToString((long)index,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)endIndex,System.Globalization.CultureInfo.InvariantCulture) + ")"); }
+      if (str == null) {
+ throw new ArgumentNullException("str");
+}
+      if (index < 0) {
+ throw new ArgumentException("\"str\"" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)index,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (index > str.Length) {
+ throw new ArgumentException("\"str\"" + " not less or equal to " + Convert.ToString((long)str.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)index,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (endIndex < 0) {
+ throw new ArgumentException("\"index\"" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)endIndex,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (endIndex > str.Length) {
+ throw new ArgumentException("\"index\"" + " not less or equal to " + Convert.ToString((long)str.Length,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)endIndex,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+      if (endIndex < index) {
+ throw new ArgumentException("\"endIndex\"" + " not greater or equal to " + Convert.ToString((long)index,System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)endIndex,System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
       if (index == endIndex) {
  throw new FormatException("No digits");
 }
@@ -2108,7 +2274,9 @@ TA, (int)(Tstart + NA - NB),
       int smallInt = 0;
       for (int i = index; i < endIndex; ++i) {
         char c = str[i];
-        if (c < '0' || c > '9') { throw new FormatException("Illegal character found"); }
+        if (c < '0' || c > '9') {
+ throw new FormatException("Illegal character found");
+}
         haveDigits = true;
         int digit = (int)(c - '0');
         if (haveSmallInt && smallInt < MaxSafeInt) {
@@ -2132,8 +2300,9 @@ TA, (int)(Tstart + NA - NB),
               carry = (short)(p >> 16);
             }
           }
-          if (carry != 0)
-            bigint.reg = GrowForCarry(bigint.reg, carry);
+          if (carry != 0) {
+ bigint.reg = GrowForCarry(bigint.reg, carry);
+}
           // Add the parsed digit
           if (digit != 0) {
             int d = bigint.reg[0] & 0xFFFF;
@@ -2157,7 +2326,7 @@ TA, (int)(Tstart + NA - NB),
       return bigint;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int getLowestSetBit() {
       int retSetBit = 0;
@@ -2166,50 +2335,84 @@ TA, (int)(Tstart + NA - NB),
         if (c == (short)0) {
           retSetBit += 16;
         } else {
-          if (((c << 15) & 0xFFFF) != 0) { return retSetBit + 0; }
-          if (((c << 14) & 0xFFFF) != 0) { return retSetBit + 1; }
-          if (((c << 13) & 0xFFFF) != 0) { return retSetBit + 2; }
-          if (((c << 12) & 0xFFFF) != 0) { return retSetBit + 3; }
-          if (((c << 11) & 0xFFFF) != 0) { return retSetBit + 4; }
-          if (((c << 10) & 0xFFFF) != 0) { return retSetBit + 5; }
-          if (((c << 9) & 0xFFFF) != 0) { return retSetBit + 6; }
-          if (((c << 8) & 0xFFFF) != 0) { return retSetBit + 7; }
-          if (((c << 7) & 0xFFFF) != 0) { return retSetBit + 8; }
-          if (((c << 6) & 0xFFFF) != 0) { return retSetBit + 9; }
-          if (((c << 5) & 0xFFFF) != 0) { return retSetBit + 10; }
-          if (((c << 4) & 0xFFFF) != 0) { return retSetBit + 11; }
-          if (((c << 3) & 0xFFFF) != 0) { return retSetBit + 12; }
-          if (((c << 2) & 0xFFFF) != 0) { return retSetBit + 13; }
-          if (((c << 1) & 0xFFFF) != 0) { return retSetBit + 14; }
+          if (((c << 15) & 0xFFFF) != 0) {
+ return retSetBit + 0;
+}
+          if (((c << 14) & 0xFFFF) != 0) {
+ return retSetBit + 1;
+}
+          if (((c << 13) & 0xFFFF) != 0) {
+ return retSetBit + 2;
+}
+          if (((c << 12) & 0xFFFF) != 0) {
+ return retSetBit + 3;
+}
+          if (((c << 11) & 0xFFFF) != 0) {
+ return retSetBit + 4;
+}
+          if (((c << 10) & 0xFFFF) != 0) {
+ return retSetBit + 5;
+}
+          if (((c << 9) & 0xFFFF) != 0) {
+ return retSetBit + 6;
+}
+          if (((c << 8) & 0xFFFF) != 0) {
+ return retSetBit + 7;
+}
+          if (((c << 7) & 0xFFFF) != 0) {
+ return retSetBit + 8;
+}
+          if (((c << 6) & 0xFFFF) != 0) {
+ return retSetBit + 9;
+}
+          if (((c << 5) & 0xFFFF) != 0) {
+ return retSetBit + 10;
+}
+          if (((c << 4) & 0xFFFF) != 0) {
+ return retSetBit + 11;
+}
+          if (((c << 3) & 0xFFFF) != 0) {
+ return retSetBit + 12;
+}
+          if (((c << 2) & 0xFFFF) != 0) {
+ return retSetBit + 13;
+}
+          if (((c << 1) & 0xFFFF) != 0) {
+ return retSetBit + 14;
+}
           return retSetBit + 15;
         }
       }
       return 0;
     }
 
-    /// <summary>Returns the greatest common divisor of two integers. </summary>
+    /// <summary>Returns the greatest common divisor of two integers.</summary>
     /// <returns>A BigInteger object.</returns>
     /// <remarks>The greatest common divisor (GCD) is also known as the greatest
     /// common factor (GCF).</remarks>
-    /// <param name='bigintSecond'>A BigInteger object. (2)</param>
+    /// <param name='bigintSecond'>A BigInteger object. (2).</param>
     public BigInteger gcd(BigInteger bigintSecond) {
-      if (bigintSecond == null) { throw new ArgumentNullException("bigintSecond"); }
-      if (this.IsZero)
-        return BigInteger.Abs(bigintSecond);
-      if (bigintSecond.IsZero)
-        return BigInteger.Abs(this);
+      if (bigintSecond == null) {
+ throw new ArgumentNullException("bigintSecond");
+}
+      if (this.IsZero) {
+ return BigInteger.Abs(bigintSecond);
+}
+      if (bigintSecond.IsZero) {
+ return BigInteger.Abs(this);
+}
       BigInteger thisValue = this.abs();
       bigintSecond = bigintSecond.abs();
       if (bigintSecond.Equals(BigInteger.One) ||
           thisValue.Equals(bigintSecond))
         return bigintSecond;
-      if (thisValue.Equals(BigInteger.One))
-        return thisValue;
+      if (thisValue.Equals(BigInteger.One)) {
+ return thisValue;
+}
       int expOfTwo = Math.Min(
 this.getLowestSetBit(),
                             bigintSecond.getLowestSetBit());
       if (thisValue.wordCount <= 10 && bigintSecond.wordCount <= 10) {
-
         while (true) {
           BigInteger bigintA = (thisValue - (BigInteger)bigintSecond).abs();
           if (bigintA.IsZero) {
@@ -2237,13 +2440,15 @@ this.getLowestSetBit(),
       }
     }
 
-    /// <summary> Calculates the remainder when a BigInteger raised to a
-    /// certain power is divided by another BigInteger. </summary>
-    /// <param name='pow'>A BigInteger object. (2)</param>
-    /// <param name='mod'>A BigInteger object. (3)</param>
+    /// <summary>Calculates the remainder when a BigInteger raised to a
+    /// certain power is divided by another BigInteger.</summary>
+    /// <param name='pow'>A BigInteger object. (2).</param>
+    /// <param name='mod'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
-      if (pow == null) { throw new ArgumentNullException("pow"); }
+      if (pow == null) {
+ throw new ArgumentNullException("pow");
+}
       if (pow.Sign < 0) {
  throw new ArgumentException("pow is negative");
 }
@@ -2261,7 +2466,7 @@ this.getLowestSetBit(),
       return r;
     }
 
-    static void PositiveSubtract(
+    internal static void PositiveSubtract(
 BigInteger diff,
                                  BigInteger minuend,
                                  BigInteger subtrahend) {
@@ -2296,7 +2501,9 @@ BigInteger diff,
       }
       diff.wordCount = diff.CalcWordCount();
       diff.ShortenArray();
-      if (diff.wordCount == 0) diff.negative = false;
+      if (diff.wordCount == 0) {
+ diff.negative = false;
+}
     }
 
     #region Equals and GetHashCode implementation
@@ -2306,12 +2513,17 @@ BigInteger diff,
     /// <param name='obj'>An arbitrary object.</param>
     public override bool Equals(object obj) {
       BigInteger other = obj as BigInteger;
-      if (other == null)
-        return false;
+      if (other == null) {
+ return false;
+}
       if (this.wordCount == other.wordCount) {
-        if (this.negative != other.negative) { return false; }
+        if (this.negative != other.negative) {
+ return false;
+}
         for (int i = 0; i < this.wordCount; ++i) {
-          if (this.reg[i] != other.reg[i]) { return false; }
+          if (this.reg[i] != other.reg[i]) {
+ return false;
+}
         }
         return true;
       }
@@ -2334,16 +2546,20 @@ BigInteger diff,
     }
     #endregion
 
-    /// <summary> Adds this object and another object.</summary>
+    /// <summary>Adds this object and another object.</summary>
     /// <returns>The sum of the two objects.</returns>
     /// <param name='bigintAugend'>A BigInteger object.</param>
     public BigInteger add(BigInteger bigintAugend) {
-      if (bigintAugend == null) { throw new ArgumentNullException("bigintAugend"); }
+      if (bigintAugend == null) {
+ throw new ArgumentNullException("bigintAugend");
+}
       BigInteger sum;
-      if (this.wordCount == 0)
-        return bigintAugend;
-      if (bigintAugend.wordCount == 0)
-        return this;
+      if (this.wordCount == 0) {
+ return bigintAugend;
+}
+      if (bigintAugend.wordCount == 0) {
+ return this;
+}
       if (bigintAugend.wordCount == 1 && this.wordCount == 1) {
         if (this.negative == bigintAugend.negative) {
           int intSum = (((int)this.reg[0]) & 0xFFFF) + (((int)bigintAugend.reg[0]) & 0xFFFF);
@@ -2357,7 +2573,9 @@ BigInteger diff,
         } else {
           int a = ((int)this.reg[0]) & 0xFFFF;
           int b = ((int)bigintAugend.reg[0]) & 0xFFFF;
-          if (a == b) { return BigInteger.Zero; }
+          if (a == b) {
+ return BigInteger.Zero;
+}
           if (a > b) {
             a -= b;
             sum = new BigInteger();
@@ -2384,9 +2602,9 @@ BigInteger diff,
         int addendCount = this.wordCount + (this.wordCount & 1);
         int augendCount = bigintAugend.wordCount + (bigintAugend.wordCount & 1);
         int desiredLength = Math.Max(addendCount, augendCount);
-        if (addendCount == augendCount)
-          carry = Add(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
-        else if (addendCount > augendCount) {
+        if (addendCount == augendCount) {
+ carry = Add(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
+  } else if (addendCount > augendCount) {
           // Addend is bigger
           carry = Add(
 sum.reg, 0,
@@ -2429,8 +2647,9 @@ sum.reg, addendCount,
         }
         sum.negative = false;
         sum.wordCount = sum.CalcWordCount();
-        if (needShorten)
-          sum.ShortenArray();
+        if (needShorten) {
+ sum.ShortenArray();
+}
         sum.negative = this.negative && !sum.IsZero;
       } else if (this.negative) {
         PositiveSubtract(sum, bigintAugend, this);  // this is negative, b is nonnegative
@@ -2440,15 +2659,19 @@ sum.reg, addendCount,
       return sum;
     }
 
-    /// <summary> Subtracts a BigInteger from this BigInteger. </summary>
+    /// <summary>Subtracts a BigInteger from this BigInteger.</summary>
     /// <param name='subtrahend'>A BigInteger object.</param>
     /// <returns>The difference of the two objects.</returns>
     public BigInteger subtract(BigInteger subtrahend) {
-      if (subtrahend == null) { throw new ArgumentNullException("subtrahend"); }
-      if (this.wordCount == 0)
-        return subtrahend.negate();
-      if (subtrahend.wordCount == 0)
-        return this;
+      if (subtrahend == null) {
+ throw new ArgumentNullException("subtrahend");
+}
+      if (this.wordCount == 0) {
+ return subtrahend.negate();
+}
+      if (subtrahend.wordCount == 0) {
+ return this;
+}
       return this.add(subtrahend.negate());
     }
 
@@ -2470,13 +2693,18 @@ sum.reg, addendCount,
     /// <param name='bigintMult'>A BigInteger object.</param>
     /// <returns>The product of the two objects.</returns>
     public BigInteger multiply(BigInteger bigintMult) {
-      if (bigintMult == null) { throw new ArgumentNullException("bigintMult"); }
-      if (this.wordCount == 0 || bigintMult.wordCount == 0)
-        return BigInteger.Zero;
-      if (this.wordCount == 1 && this.reg[0] == 1)
-        return this.negative ? bigintMult.negate() : bigintMult;
-      if (bigintMult.wordCount == 1 && bigintMult.reg[0] == 1)
-        return bigintMult.negative ? this.negate() : this;
+      if (bigintMult == null) {
+ throw new ArgumentNullException("bigintMult");
+}
+      if (this.wordCount == 0 || bigintMult.wordCount == 0) {
+ return BigInteger.Zero;
+}
+      if (this.wordCount == 1 && this.reg[0] == 1) {
+ return this.negative ? bigintMult.negate() : bigintMult;
+}
+      if (bigintMult.wordCount == 1 && bigintMult.reg[0] == 1) {
+ return bigintMult.negative ? this.negate() : this;
+}
       BigInteger product = new BigInteger();
       bool needShorten = true;
       if (this.wordCount == 1) {
@@ -2534,10 +2762,12 @@ product.reg, 0,
       // Recalculate word count
       while (product.wordCount != 0 && product.reg[product.wordCount - 1] == 0)
         product.wordCount--;
-      if (needShorten)
-        product.ShortenArray();
-      if (this.negative != bigintMult.negative)
-        product.NegateInternal();
+      if (needShorten) {
+ product.ShortenArray();
+}
+      if (this.negative != bigintMult.negative) {
+ product.NegateInternal();
+}
       return product;
     }
 
@@ -2572,7 +2802,9 @@ product.reg, 0,
           }
         } else {
           quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
-          if (i > 0) remainder = RemainderUnsigned(currentDividend, divisorSmall);
+          if (i > 0) {
+ remainder = RemainderUnsigned(currentDividend, divisorSmall);
+}
         }
       }
     }
@@ -2609,7 +2841,9 @@ short[] quotientReg,
     /// <exception cref='DivideByZeroException'>The divisor is zero.</exception>
     /// <param name='bigintDivisor'>A BigInteger object.</param>
     public BigInteger divide(BigInteger bigintDivisor) {
-      if (bigintDivisor == null) { throw new ArgumentNullException("bigintDivisor"); }
+      if (bigintDivisor == null) {
+ throw new ArgumentNullException("bigintDivisor");
+}
       int aSize = this.wordCount;
       int bSize = bigintDivisor.wordCount;
       if (bSize == 0) {
@@ -2666,11 +2900,13 @@ null, 0,
       return quotient;
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
     /// <param name='divisor'>A BigInteger object.</param>
     /// <returns>A BigInteger[] object.</returns>
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
-      if (divisor == null) { throw new ArgumentNullException("divisor"); }
+      if (divisor == null) {
+ throw new ArgumentNullException("divisor");
+}
       BigInteger quotient;
       int aSize = this.wordCount;
       int bSize = divisor.wordCount;
@@ -2700,7 +2936,9 @@ null, 0,
         } else {
           quotient = BigInteger.Zero;
         }
-        if (this.negative) smallRemainder = -smallRemainder;
+        if (this.negative) {
+ smallRemainder = -smallRemainder;
+}
         return new BigInteger[] { quotient, new BigInteger().InitializeInt(smallRemainder) };
       }
       if (this.wordCount == 2 && divisor.wordCount == 2 &&
@@ -2712,7 +2950,9 @@ null, 0,
           a |= (((int)this.reg[1]) & 0xFFFF) << 16;
           b |= (((int)divisor.reg[1]) & 0xFFFF) << 16;
           int quo = a / b;
-          if (this.negative) quo = -quo;
+          if (this.negative) {
+ quo = -quo;
+}
           int rem = a - (b * quo);
           return new BigInteger[] {
             new BigInteger().InitializeInt(quo),
@@ -2747,26 +2987,30 @@ remainder.reg, 0,
           remainder.NegateInternal();
         }
       }
-      if (divisor.Sign < 0)
-        quotient.NegateInternal();
+      if (divisor.Sign < 0) {
+ quotient.NegateInternal();
+}
       return new BigInteger[] { quotient, remainder };
     }
 
-    /// <summary> Finds the modulus remainder that results when this instance
+    /// <summary>Finds the modulus remainder that results when this instance
     /// is divided by the value of a BigInteger object. The modulus remainder
     /// is the same as the normal remainder if the normal remainder is positive,
     /// and equals divisor minus normal remainder if the normal remainder
-    /// is negative. </summary>
+    /// is negative.</summary>
     /// <param name='divisor'>A divisor greater than 0.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger mod(BigInteger divisor) {
-      if (divisor == null) { throw new ArgumentNullException("divisor"); }
+      if (divisor == null) {
+ throw new ArgumentNullException("divisor");
+}
       if (divisor.Sign < 0) {
         throw new ArithmeticException("Divisor is negative");
       }
       BigInteger rem = this.remainder(divisor);
-      if (rem.Sign < 0)
-        rem = divisor.subtract(rem);
+      if (rem.Sign < 0) {
+ rem = divisor.subtract(rem);
+}
       return rem;
     }
 
@@ -2790,11 +3034,15 @@ remainder.reg, 0,
       if (bSize == 1) {
         short shortRemainder = FastRemainder(this.reg, this.wordCount, divisor.reg[0]);
         int smallRemainder = ((int)shortRemainder) & 0xFFFF;
-        if (this.negative) smallRemainder = -smallRemainder;
+        if (this.negative) {
+ smallRemainder = -smallRemainder;
+}
         return new BigInteger().InitializeInt(smallRemainder);
       }
       if (this.PositiveCompare(divisor) < 0) {
-        if (divisor.IsZero) { throw new DivideByZeroException(); }
+        if (divisor.IsZero) {
+ throw new DivideByZeroException();
+}
         return this;
       }
       BigInteger remainder = new BigInteger();
@@ -2817,17 +3065,19 @@ remainder.reg, 0,
       return remainder;
     }
 
-    void NegateInternal() {
-      if (this.wordCount != 0)
-        this.negative = this.Sign > 0;
+    internal void NegateInternal() {
+      if (this.wordCount != 0) {
+ this.negative = this.Sign > 0;
+}
     }
 
-    int PositiveCompare(BigInteger t) {
+    internal int PositiveCompare(BigInteger t) {
       int size = this.wordCount, tSize = t.wordCount;
-      if (size == tSize)
-        return Compare(this.reg, 0, t.reg, 0, (int)size);
-      else
-        return size > tSize ? 1 : -1;
+      if (size == tSize) {
+ return Compare(this.reg, 0, t.reg, 0, (int)size);
+  } else {
+ return size > tSize ? 1 : -1;
+}
     }
 
     /// <summary>Compares a BigInteger object with this instance.</summary>
@@ -2835,13 +3085,21 @@ remainder.reg, 0,
     /// is less, or a positive number if this instance is greater.</returns>
     /// <param name='other'>A BigInteger object.</param>
     public int CompareTo(BigInteger other) {
-      if (other == null) { return 1; }
-      if (this == other) { return 0; }
+      if (other == null) {
+ return 1;
+}
+      if (this == other) {
+ return 0;
+}
       int size = this.wordCount, tSize = other.wordCount;
       int sa = size == 0 ? 0 : (this.negative ? -1 : 1);
       int sb = tSize == 0 ? 0 : (other.negative ? -1 : 1);
-      if (sa != sb) { return (sa < sb) ? -1 : 1; }
-      if (sa == 0) { return 0; }
+      if (sa != sb) {
+ return (sa < sb) ? -1 : 1;
+}
+      if (sa == 0) {
+ return 0;
+}
       if (size == tSize) {
         if (size == 1 && this.reg[0] == other.reg[0]) {
           return 0;
@@ -2851,10 +3109,11 @@ remainder.reg, 0,
           while (unchecked(size--) != 0) {
             int an = ((int)A[size]) & 0xFFFF;
             int bn = ((int)B[size]) & 0xFFFF;
-            if (an > bn)
-              return (sa > 0) ? 1 : -1;
-            else if (an < bn)
-              return (sa > 0) ? -1 : 1;
+            if (an > bn) {
+ return (sa > 0) ? 1 : -1;
+  } else if (an < bn) {
+ return (sa > 0) ? -1 : 1;
+}
           }
           return 0;
         }
@@ -2863,27 +3122,33 @@ remainder.reg, 0,
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
+    /// <value>Not documented yet.</value>
     public int Sign {
       get {
-        if (this.wordCount == 0)
-          return 0;
+        if (this.wordCount == 0) {
+ return 0;
+}
         return this.negative ? -1 : 1;
       }
     }
 
-    /// <summary> Not documented yet. </summary>
+    /// <summary>Not documented yet.</summary>
+    /// <value>Not documented yet.</value>
     public bool IsZero {
-      get { return this.wordCount == 0; }
+      get {
+ return this.wordCount == 0;
+}
     }
 
-    /// <summary> Finds the square root of this instance's value, rounded
+    /// <summary>Finds the square root of this instance&apos;s value, rounded
     /// down.</summary>
     /// <returns>The square root of this object&apos;s value. Returns 0
     /// if this value is 0 or less.</returns>
     public BigInteger sqrt() {
-      if (this.Sign <= 0)
-        return BigInteger.Zero;
+      if (this.Sign <= 0) {
+ return BigInteger.Zero;
+}
       BigInteger bigintX = null;
       BigInteger bigintY = Power2((this.getUnsignedBitLength() + 1) / 2);
       do {
@@ -2896,8 +3161,9 @@ remainder.reg, 0,
     }
 
     public BigInteger[] sqrtWithRemainder() {
-      if (this.Sign <= 0)
-        return new BigInteger[]{ BigInteger.Zero, BigInteger.Zero };
+      if (this.Sign <= 0) {
+ return new BigInteger[]{ BigInteger.Zero, BigInteger.Zero };
+}
       BigInteger bigintX = null;
       BigInteger bigintY = Power2((this.getUnsignedBitLength() + 1) / 2);
       do {
@@ -2913,17 +3179,20 @@ remainder.reg, 0,
       };
     }
 
-    /// <summary> Gets whether this value is even. </summary>
-    public bool IsEven { get { return !this.GetUnsignedBit(0); } }
+    /// <summary>Gets a value indicating whether this value is even.</summary>
+    /// <value>Whetherthis value is even.</value>
+    public bool IsEven { get {
+ return !this.GetUnsignedBit(0);
+} }
 
-    /// <summary> BigInteger object for the number zero.</summary>
+    /// <summary>BigInteger object for the number zero.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",
       Justification="BigInteger is immutable")]
     #endif
     public static readonly BigInteger ZERO = new BigInteger().InitializeInt(0);
-    /// <summary> BigInteger object for the number one. </summary>
+    /// <summary>BigInteger object for the number one.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",
@@ -2931,7 +3200,7 @@ remainder.reg, 0,
     #endif
 
     public static readonly BigInteger ONE = new BigInteger().InitializeInt(1);
-    /// <summary> BigInteger object for the number ten. </summary>
+    /// <summary>BigInteger object for the number ten.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security","CA2104",
