@@ -1286,7 +1286,7 @@ int startingAvailable=ms.available();
         return o;
 }
 finally {
-try { if(ms!=null)ms.close(); } catch(IOException ex){}
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
 }
     }
 
@@ -2750,7 +2750,7 @@ ms=new ByteArrayOutputStream(16);
           return ms.toByteArray();
 }
 finally {
-try { if(ms!=null)ms.close(); } catch(IOException ex){}
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
 }
       } catch (IOException ex) {
         throw new CBORException("I/O Error occurred", ex);
@@ -4082,7 +4082,7 @@ ms=new ByteArrayOutputStream();
               data);
 }
 finally {
-try { if(ms!=null)ms.close(); } catch(IOException ex){}
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
 }
         } else {
           if (hasBigAdditional) {
@@ -4119,7 +4119,7 @@ ms=new ByteArrayOutputStream();
               data = ms.toByteArray();
 }
 finally {
-try { if(ms!=null)ms.close(); } catch(IOException ex){}
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
 }
           }
           return new CBORObject(

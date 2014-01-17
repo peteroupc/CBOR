@@ -692,10 +692,7 @@ namespace PeterO {
       }
       if ((flags & BigNumberFlags.FlagNegative) != 0) {
         return this.RoundToPrecision(
-          this.helper.CreateNewWithFlags(
-            this.helper.GetMantissa(value),
-            this.helper.GetExponent(value),
-            flags & ~BigNumberFlags.FlagNegative),
+          this.helper.CreateNewWithFlags(this.helper.GetMantissa(value), this.helper.GetExponent(value), flags & ~BigNumberFlags.FlagNegative),
           ctx);
       }
       return this.RoundToPrecision(value, ctx);

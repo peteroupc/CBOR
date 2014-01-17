@@ -1,12 +1,10 @@
-using NUnit.Framework;
-using System.Text;
 using System;
 using System.IO;
+using System.Text;
+using NUnit.Framework;
 using PeterO;
+
 namespace Test {
-    /// <summary>
-    /// </summary>
-    ///
 [TestFixture]
   public class BEncodingTest {
     private static CBORObject EncodingFromBytes(byte[] b) {
@@ -15,9 +13,10 @@ namespace Test {
           return BEncoding.Read(s);
         }
       } catch (IOException ex) {
-        throw new CBORException("", ex);
+        throw new CBORException(String.Empty, ex);
       }
     }
+
     private static byte[] EncodingToBytes(CBORObject b) {
       try {
         using (var s = new MemoryStream()) {
@@ -25,17 +24,12 @@ namespace Test {
           return s.ToArray();
         }
       } catch (IOException ex) {
-        throw new CBORException("", ex);
+        throw new CBORException(String.Empty, ex);
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <param name='value'>
-    /// A 64-bit signed integer.</param>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
+    /// <param name='value'>A 64-bit signed integer.</param>
 public void doTestLong(long value) {
       String b = "i" + value + "e";
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
@@ -44,13 +38,8 @@ public void doTestLong(long value) {
       Assert.AreEqual(b, newb);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <param name='value'>
-    /// A String object.</param>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
+    /// <param name='value'>A String object.</param>
 public void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
@@ -59,26 +48,18 @@ public void doTestString(String value) {
       Assert.AreEqual(b, newb);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
 [Test]
     public void testLong() {
-      doTestLong(0);
-      doTestLong(-1);
-      doTestLong(Int32.MinValue);
-      doTestLong(Int32.MaxValue);
-      doTestLong(Int64.MinValue);
-      doTestLong(Int64.MaxValue);
+      this.doTestLong(0);
+      this.doTestLong(-1);
+      this.doTestLong(Int32.MinValue);
+      this.doTestLong(Int32.MaxValue);
+      this.doTestLong(Int64.MinValue);
+      this.doTestLong(Int64.MaxValue);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
 [Test]
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
@@ -100,11 +81,7 @@ public void doTestString(String value) {
       Assert.AreEqual("four", beo[3].AsString());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
 [Test]
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
@@ -126,30 +103,25 @@ public void doTestString(String value) {
       Assert.AreEqual("four", beo["three"].AsString());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
 [Test]
     public void testString() {
-      doTestString("");
-      doTestString(" ");
-      doTestString("test");
-      doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods");
-      doTestString("te\u007fst");
-      doTestString("te\u0080st");
-      doTestString("te\u3000st");
-      doTestString("te\u07ffst");
-      doTestString("te\u0800st");
-      doTestString("te\uffffst");
-      doTestString("te\ud7ffst");
-      doTestString("te\ue000st");
-      doTestString("te\ud800\udc00st");
-      doTestString("te\udbff\udc00st");
-      doTestString("te\ud800\udfffst");
-      doTestString("te\udbff\udfffst");
+      this.doTestString(String.Empty);
+      this.doTestString(" ");
+      this.doTestString("test");
+      this.doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods");
+      this.doTestString("te\u007fst");
+      this.doTestString("te\u0080st");
+      this.doTestString("te\u3000st");
+      this.doTestString("te\u07ffst");
+      this.doTestString("te\u0800st");
+      this.doTestString("te\uffffst");
+      this.doTestString("te\ud7ffst");
+      this.doTestString("te\ue000st");
+      this.doTestString("te\ud800\udc00st");
+      this.doTestString("te\udbff\udc00st");
+      this.doTestString("te\ud800\udfffst");
+      this.doTestString("te\udbff\udfffst");
     }
   }
 }
-

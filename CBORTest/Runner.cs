@@ -8,6 +8,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 using System.Reflection;
 using NUnit.Framework;
+
 namespace PeterO {
     /// <summary>Description of Runner.</summary>
     /// <param name='args'>A string[] object.</param>
@@ -20,6 +21,7 @@ namespace PeterO {
       }
       return false;
     }
+
     private static bool HasAttribute(MethodInfo mi, Type t) {
       foreach (object a in mi.GetCustomAttributes(t, false)) {
         if (t.IsAssignableFrom(a.GetType())) {
@@ -28,9 +30,10 @@ namespace PeterO {
       }
       return false;
     }
+
     public static void Main(string[] args) {
       String param = null;
-      if (args.Length>0) {
+      if (args.Length > 0) {
         param = args[0];
         Console.WriteLine(param);
       }
@@ -46,7 +49,7 @@ namespace PeterO {
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
-        if (param != null && param.Length>0) {
+        if (param != null && param.Length > 0) {
           if (!type.FullName.Contains(param)) {
  continue;
 }

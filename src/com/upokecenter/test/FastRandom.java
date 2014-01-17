@@ -17,23 +17,23 @@ package com.upokecenter.test;
   {
     private static final int ReseedCount = 10000;
 
-    java.util.Random rand;
-    int count;
+    private java.util.Random rand;
+    private int count;
 
-    int m_w = 521288629;
-    int m_z = 362436069;
+    private int w = 521288629;
+    private int z = 362436069;
 
     public FastRandom () {
-      rand = new java.util.Random();
-      count = ReseedCount;
+      this.rand = new java.util.Random();
+      this.count = ReseedCount;
     }
 
     private int NextValueInternal() {
-      int w = m_w, z = m_z;
+      int w = this.w, z = this.z;
       // Use George Marsaglia's multiply-with-carry
       // algorithm.
-      m_z = z = (36969 * (z & 65535) + ((z >> 16) & 0xFFFF));
-      m_w = w = (18000 * (w & 65535) + ((z >> 16) & 0xFFFF));
+      this.z = z = ((36969 * (z & 65535)) + ((z >> 16) & 0xFFFF));
+      this.w = w = ((18000 * (w & 65535)) + ((z >> 16) & 0xFFFF));
       return ((z << 16) | (w & 65535)) & 0x7FFFFFFF;
     }
 
@@ -42,31 +42,31 @@ package com.upokecenter.test;
      * @param v A 32-bit signed integer. (2).
      * @return A 32-bit signed integer.
      */
-public int NextValue(int v) {
-      if ((v)<0)throw new IllegalArgumentException(
-        "v"+" not greater or equal to "+"0"+" ("+
-        Integer.toString((int)v)+")");
-      if (v <= 1) {
- return 0;
+    public int NextValue(int v) {
+      if ((v)<=0) {
+ throw new IllegalArgumentException("v"+" not less than "+"0"+" ("+Long.toString((long)(v))+")");
 }
-      if (count >= ReseedCount) {
+      if (v <= 1) {
+        return 0;
+      }
+      if (this.count >= ReseedCount) {
         // Call the default random number generator
         // every once in a while, to reseed
-        count = 0;
-        if (rand != null) {
-          int seed = rand.nextInt(0x10000);
-          seed|=(rand.nextInt(0x10000)) << 16;
-          m_z^=seed;
-          return rand.nextInt(v);
+        this.count = 0;
+        if (this.rand != null) {
+          int seed = this.rand.nextInt(0x10000);
+          seed |= this.rand.nextInt(0x10000) << 16;
+          this.z ^= seed;
+          return this.rand.nextInt(v);
         }
       }
-      count+=1;
-      int maxExclusive=(Integer.MAX_VALUE/v)*v;
+      this.count += 1;
+      int maxExclusive = (Integer.MAX_VALUE / v) * v;
       while (true) {
-        int vi = NextValueInternal();
-        if (vi<maxExclusive) {
- return vi%v;
-}
+        int vi = this.NextValueInternal();
+        if (vi < maxExclusive) {
+          return vi % v;
+        }
       }
     }
   }

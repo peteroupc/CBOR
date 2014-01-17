@@ -7,18 +7,14 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 using System.Globalization;
-//using System.Numerics;
 using System.IO;
-using PeterO;
 using System.Text;
 using NUnit.Framework;
+using PeterO;
+
 namespace Test {
-  /// <summary>
-  /// </summary>
-  /// <returns>
-  /// </returns>
-  /// <param name='r'>
-  /// A FastRandom object.</param>
+    /// <summary>Contains CBOR tests.</summary>
+    /// <returns/><param name='r'> A FastRandom object.</param>
   [TestFixture]
   public class CBORTest {
     private static void TestExtendedFloatDoubleCore(double d, string s) {
@@ -32,6 +28,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
+
     private static void TestExtendedFloatSingleCore(float d, string s) {
       float oldd = d;
       ExtendedFloat bf = ExtendedFloat.FromSingle(d);
@@ -43,6 +40,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
+
     public static CBORObject RandomNumber(FastRandom rand) {
       switch (rand.NextValue(6)) {
         case 0:
@@ -61,6 +59,7 @@ namespace Test {
           throw new ArgumentException();
       }
     }
+
     private static long RandomInt64(FastRandom rand) {
       long r = rand.NextValue(0x10000);
       r |= ((long)rand.NextValue(0x10000)) << 16;
@@ -72,10 +71,11 @@ namespace Test {
       }
       return r;
     }
+
     private static double RandomDouble(FastRandom rand, int exponent) {
       if (exponent == Int32.MaxValue) {
- exponent = rand.NextValue(2047);
-}
+        exponent = rand.NextValue(2047);
+      }
       long r = rand.NextValue(0x10000);
       r |= ((long)rand.NextValue(0x10000)) << 16;
       if (rand.NextValue(2) == 0) {
@@ -88,10 +88,11 @@ namespace Test {
       r |= ((long)exponent) << 52;  // set exponent
       return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
     }
+
     private static float RandomSingle(FastRandom rand, int exponent) {
       if (exponent == Int32.MaxValue) {
- exponent = rand.NextValue(255);
-}
+        exponent = rand.NextValue(255);
+      }
       int r = rand.NextValue(0x10000);
       if (rand.NextValue(2) == 0) {
         r |= ((int)rand.NextValue(0x10000)) << 16;
@@ -100,42 +101,47 @@ namespace Test {
       r |= ((int)exponent) << 23;  // set exponent
       return BitConverter.ToSingle(BitConverter.GetBytes((int)r), 0);
     }
+
     public static ExtendedDecimal RandomExtendedDecimal(FastRandom r) {
       return ExtendedDecimal.FromString(RandomDecimalString(r));
     }
+
     public static BigInteger RandomBigInteger(FastRandom r) {
       return BigInteger.fromString(RandomBigIntString(r));
     }
+
     public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
       return ExtendedFloat.Create(RandomBigInteger(r), (BigInteger)(r.NextValue(400) - 200));
     }
+
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
       StringBuilder sb = new StringBuilder();
       if (r.NextValue(2) == 0) {
- sb.Append('-');
-}
+        sb.Append('-');
+      }
       for (int i = 0; i < count; ++i) {
         if (i == 0) {
- sb.Append((char)('1' + r.NextValue(9)));
-  } else {
- sb.Append((char)('0' + r.NextValue(10)));
-}
+          sb.Append((char)('1' + r.NextValue(9)));
+        } else {
+          sb.Append((char)('0' + r.NextValue(10)));
+        }
       }
       return sb.ToString();
     }
+
     public static String RandomDecimalString(FastRandom r) {
       int count = r.NextValue(20) + 1;
       StringBuilder sb = new StringBuilder();
       if (r.NextValue(2) == 0) {
- sb.Append('-');
-}
+        sb.Append('-');
+      }
       for (int i = 0; i < count; ++i) {
         if (i == 0) {
- sb.Append((char)('1' + r.NextValue(9)));
-  } else {
- sb.Append((char)('0' + r.NextValue(10)));
-}
+          sb.Append((char)('1' + r.NextValue(9)));
+        } else {
+          sb.Append((char)('0' + r.NextValue(10)));
+        }
       }
       if (r.NextValue(2) == 0) {
         sb.Append('.');
@@ -156,17 +162,14 @@ namespace Test {
       }
       return sb.ToString();
     }
+
     private static void TestDecimalString(String r) {
       CBORObject o = CBORObject.FromObject(ExtendedDecimal.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
       CompareTestEqual(o, o2);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestAdd() {
       FastRandom r = new FastRandom();
@@ -176,19 +179,17 @@ namespace Test {
         ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
         ExtendedDecimal cmpCobj = CBORObject.Addition(o1, o2).AsExtendedDecimal();
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
-          Assert.AreEqual(0, cmpDecFrac.CompareTo(cmpCobj),
-                          ObjectMessages(o1, o2, "Results don't match"));
+          Assert.AreEqual(
+            0,
+            cmpDecFrac.CompareTo(cmpCobj),
+            ObjectMessages(o1, o2, "Results don't match"));
         }
         TestCommon.AssertRoundTrip(o1);
         TestCommon.AssertRoundTrip(o2);
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestSubtract() {
       FastRandom r = new FastRandom();
@@ -198,13 +199,16 @@ namespace Test {
         ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Subtract(o2.AsExtendedDecimal());
         ExtendedDecimal cmpCobj = CBORObject.Subtract(o1, o2).AsExtendedDecimal();
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
-          Assert.AreEqual(0, cmpDecFrac.CompareTo(cmpCobj),
-                          ObjectMessages(o1, o2, "Results don't match"));
+          Assert.AreEqual(
+            0,
+            cmpDecFrac.CompareTo(cmpCobj),
+            ObjectMessages(o1, o2, "Results don't match"));
         }
         TestCommon.AssertRoundTrip(o1);
         TestCommon.AssertRoundTrip(o2);
       }
     }
+
     private static string ObjectMessages(CBORObject o1, CBORObject o2, String s) {
       if (o1.Type == CBORType.Number && o2.Type == CBORType.Number) {
         return s + ":\n" + o1.ToString() + " and\n" + o2.ToString() + "\nOR\n" +
@@ -218,22 +222,23 @@ namespace Test {
 
     private static void CompareTestEqual(CBORObject o1, CBORObject o2) {
       if (CompareTestReciprocal(o1, o2) != 0) {
- Assert.Fail(ObjectMessages(o1, o2, "Not equal: " + CompareTestReciprocal(o1, o2)));
-}
+        Assert.Fail(ObjectMessages(o1, o2, "Not equal: " + CompareTestReciprocal(o1, o2)));
+      }
     }
+
     private static void CompareTestLess(CBORObject o1, CBORObject o2) {
       if (CompareTestReciprocal(o1, o2) >= 0) {
- Assert.Fail(ObjectMessages(o1, o2, "Not less: " + CompareTestReciprocal(o1, o2)));
-}
+        Assert.Fail(ObjectMessages(o1, o2, "Not less: " + CompareTestReciprocal(o1, o2)));
+      }
     }
 
     private static int CompareTestReciprocal(CBORObject o1, CBORObject o2) {
-      if ((o1) == null) {
- throw new ArgumentNullException("o1");
-}
-      if ((o2) == null) {
- throw new ArgumentNullException("o2");
-}
+      if (o1 == null) {
+        throw new ArgumentNullException("o1");
+      }
+      if (o2 == null) {
+        throw new ArgumentNullException("o2");
+      }
       int cmp = o1.CompareTo(o2);
       int cmp2 = o2.CompareTo(o1);
       if (-cmp2 != cmp) {
@@ -249,15 +254,15 @@ namespace Test {
       sb.Append("CBORObject.DecodeFromBytes(new byte[] { ");
       for (int i = 0; i < bytes.Length; ++i) {
         if (i > 0) {
- sb.Append(",");
-}
+          sb.Append(",");
+        }
         if ((bytes[i] & 0x80) != 0) {
- sb.Append("(byte)0x");
-  } else {
- sb.Append("0x");
-}
+          sb.Append("(byte)0x");
+        } else {
+          sb.Append("0x");
+        }
         sb.Append(hex[(bytes[i] >> 4) & 0xF]);
-        sb.Append(hex[(bytes[i]) & 0xF]);
+        sb.Append(hex[bytes[i] & 0xF]);
       }
       sb.Append("})");
       return sb.ToString();
@@ -273,8 +278,8 @@ namespace Test {
       CBORObject o2 = null;
       o1 = CBORObject.DecodeFromBytes(new byte[] { (byte)0xFB, (byte)0x8B, 0x44, (byte)0xF2, (byte)0xA9, 0x0C, 0x27, 0x42, 0x28 });
       o2 = CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x38, (byte)0xA4, (byte)0xC3, 0x50, 0x02, (byte)0x98,
-                                      (byte)0xC5, (byte)0xA8, 0x02, (byte)0xC1, (byte)0xF6, (byte)0xC0, 0x1A, (byte)0xBE, 0x08,
-                                      0x04, (byte)0x86, (byte)0x99, 0x3E, (byte)0xF1});
+                                        (byte)0xC5, (byte)0xA8, 0x02, (byte)0xC1, (byte)0xF6, (byte)0xC0, 0x1A, (byte)0xBE, 0x08,
+                                        0x04, (byte)0x86, (byte)0x99, 0x3E, (byte)0xF1 });
       AddSubCompare(o1, o2);
     }
 
@@ -292,60 +297,67 @@ namespace Test {
       ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
       ExtendedDecimal cmpCobj = CBORObject.Addition(o1, o2).AsExtendedDecimal();
       if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
-        Assert.AreEqual(0, cmpDecFrac.CompareTo(cmpCobj),
-                        ObjectMessages(o1, o2, "Add: Results don't match:\n" + cmpDecFrac + " vs\n" + cmpCobj));
+        Assert.AreEqual(
+          0,
+          cmpDecFrac.CompareTo(cmpCobj),
+          ObjectMessages(o1, o2, "Add: Results don't match:\n" + cmpDecFrac + " vs\n" + cmpCobj));
       }
       cmpDecFrac = o1.AsExtendedDecimal().Subtract(o2.AsExtendedDecimal());
       cmpCobj = CBORObject.Subtract(o1, o2).AsExtendedDecimal();
       if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
-        Assert.AreEqual(0, cmpDecFrac.CompareTo(cmpCobj),
-                        ObjectMessages(o1, o2, "Subtract: Results don't match:\n" + cmpDecFrac + " vs\n" + cmpCobj));
+        Assert.AreEqual(
+          0,
+          cmpDecFrac.CompareTo(cmpCobj),
+          ObjectMessages(o1, o2, "Subtract: Results don't match:\n" + cmpDecFrac + " vs\n" + cmpCobj));
       }
       CompareDecimals(o1, o2);
     }
 
     [Test]
     public void TestCompareB() {
-      AddSubCompare(CBORObject.DecodeFromBytes(new byte[] { 0x1A, (byte)0xFC, 0x1A, (byte)0xB0, 0x52 }),
-                    CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x38, 0x5F, (byte)0xC2, 0x50, 0x08, 0x70, (byte)0xF3, (byte)0xC4, (byte)0x90, 0x4C, 0x14, (byte)0xBA, 0x59, (byte)0xF0, (byte)0xC6, (byte)0xCB, (byte)0x8C, (byte)0x8D, 0x40, (byte)0x80 }));
-      AddSubCompare(CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x38, (byte)0xC7, 0x3B, 0x00, 0x00, 0x08, (byte)0xBF, (byte)0xDA, (byte)0xAF, 0x73, 0x46 }),
-                    CBORObject.DecodeFromBytes(new byte[] { 0x3B, 0x5A, (byte)0x9B, (byte)0x9A, (byte)0x9C, (byte)0xB4, (byte)0x95, (byte)0xBF, 0x71 }));
-      AddSubCompare(CBORObject.DecodeFromBytes(new byte[] { 0x1A, (byte)0xBB, 0x0C, (byte)0xF7, 0x52 }),
-                    CBORObject.DecodeFromBytes(new byte[] { 0x1A, (byte)0x82, 0x00, (byte)0xBF, (byte)0xF9 }));
-      AddSubCompare(CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x1F, (byte)0x80, (byte)0xDB, (byte)0x9B }),
-                    CBORObject.DecodeFromBytes(new byte[] { (byte)0xFB, 0x31, (byte)0x90, (byte)0xEA, 0x16, (byte)0xBE, (byte)0x80, 0x0B, 0x37 }));
-      AddSubCompare(CBORObject.DecodeFromBytes(new byte[] { (byte)0xFB, 0x3C, 0x00, (byte)0xCF, (byte)0xB6, (byte)0xBD, (byte)0xFF, 0x37, 0x38 }),
-                    CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x30, (byte)0x80, 0x75, 0x63 }));
-      AddSubCompare(CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x38, 0x7D, 0x3A, 0x06, (byte)0xBC, (byte)0xD5, (byte)0xB8 }),
-                    CBORObject.DecodeFromBytes(new byte[] { 0x38, 0x5C }));
+      AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] { 0x1A, (byte)0xFC, 0x1A, (byte)0xB0, 0x52 }),
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x38, 0x5F, (byte)0xC2, 0x50, 0x08, 0x70, (byte)0xF3, (byte)0xC4, (byte)0x90, 0x4C, 0x14, (byte)0xBA, 0x59, (byte)0xF0, (byte)0xC6, (byte)0xCB, (byte)0x8C, (byte)0x8D, 0x40, (byte)0x80 }));
+      AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x38, (byte)0xC7, 0x3B, 0x00, 0x00, 0x08, (byte)0xBF, (byte)0xDA, (byte)0xAF, 0x73, 0x46 }),
+        CBORObject.DecodeFromBytes(new byte[] { 0x3B, 0x5A, (byte)0x9B, (byte)0x9A, (byte)0x9C, (byte)0xB4, (byte)0x95, (byte)0xBF, 0x71 }));
+      AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] { 0x1A, (byte)0xBB, 0x0C, (byte)0xF7, 0x52 }),
+        CBORObject.DecodeFromBytes(new byte[] { 0x1A, (byte)0x82, 0x00, (byte)0xBF, (byte)0xF9 }));
+      AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x1F, (byte)0x80, (byte)0xDB, (byte)0x9B }),
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xFB, 0x31, (byte)0x90, (byte)0xEA, 0x16, (byte)0xBE, (byte)0x80, 0x0B, 0x37 }));
+      AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xFB, 0x3C, 0x00, (byte)0xCF, (byte)0xB6, (byte)0xBD, (byte)0xFF, 0x37, 0x38 }),
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x30, (byte)0x80, 0x75, 0x63 }));
+      AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x38, 0x7D, 0x3A, 0x06, (byte)0xBC, (byte)0xD5, (byte)0xB8 }),
+        CBORObject.DecodeFromBytes(new byte[] { 0x38, 0x5C }));
     }
 
     [Test]
     public void ExtraDecimalTests() {
-      Assert.AreEqual(ExtendedDecimal.NegativeInfinity,
-                      ExtendedDecimal.FromString("-79228162514264337593543950336").
-                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
-      Assert.AreEqual(ExtendedDecimal.PositiveInfinity,
-                      ExtendedDecimal.FromString("8.782580686213340724E+28").
-                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
-      Assert.AreEqual(ExtendedDecimal.NegativeInfinity, ExtendedDecimal.FromString("-9.3168444507547E+28").
-                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
-      Assert.AreEqual("-9344285899206687626894794544", ExtendedDecimal.FromString(
-        "-9344285899206687626894794544.04982268810272216796875").RoundToBinaryPrecision(
-                        new PrecisionContext(96, Rounding.HalfEven, 0, 28, false)).ToPlainString());
-      Assert.AreEqual(ExtendedDecimal.PositiveInfinity,
-                      ExtendedDecimal.FromString("96148154858060747311034406200").
-                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
-      Assert.AreEqual(ExtendedDecimal.PositiveInfinity,
-                      ExtendedDecimal.FromString("90246605365627217170000000000").
-                      RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+      Assert.AreEqual(
+        ExtendedDecimal.NegativeInfinity,
+        ExtendedDecimal.FromString("-79228162514264337593543950336").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+      Assert.AreEqual(
+        ExtendedDecimal.PositiveInfinity,
+        ExtendedDecimal.FromString("8.782580686213340724E+28").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+      Assert.AreEqual(
+        ExtendedDecimal.NegativeInfinity,
+        ExtendedDecimal.FromString("-9.3168444507547E+28").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+      Assert.AreEqual(
+        "-9344285899206687626894794544",
+        ExtendedDecimal.FromString("-9344285899206687626894794544.04982268810272216796875").RoundToBinaryPrecision(new PrecisionContext(96, Rounding.HalfEven, 0, 28, false)).ToPlainString());
+      Assert.AreEqual(
+        ExtendedDecimal.PositiveInfinity,
+        ExtendedDecimal.FromString("96148154858060747311034406200").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+      Assert.AreEqual(
+        ExtendedDecimal.PositiveInfinity,
+        ExtendedDecimal.FromString("90246605365627217170000000000").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestCompare() {
       FastRandom r = new FastRandom();
@@ -394,11 +406,7 @@ namespace Test {
       CompareTestLess(dp, dnan);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestParseDecimalStrings() {
       FastRandom rand = new FastRandom();
@@ -408,11 +416,7 @@ namespace Test {
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
@@ -421,7 +425,7 @@ namespace Test {
         for (int j = 0; j < array.Length; ++j) {
           if (j + 3 <= array.Length) {
             int r = rand.NextValue(0x1000000);
-            array[j] = (byte)((r) & 0xFF);
+            array[j] = (byte)(r & 0xFF);
             array[j + 1] = (byte)((r >> 8) & 0xFF);
             array[j + 2] = (byte)((r >> 16) & 0xFF);
             j += 2;
@@ -434,8 +438,8 @@ namespace Test {
             try {
               CBORObject o = CBORObject.Read(ms);
               if (o == null) {
- Assert.Fail("object read is null");
-}
+                Assert.Fail("object read is null");
+              }
             } catch (CBORException) {
               // Expected exception
             }
@@ -444,11 +448,7 @@ namespace Test {
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestExtendedFloatSingle() {
       FastRandom rand = new FastRandom();
@@ -460,11 +460,7 @@ namespace Test {
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestExtendedFloatDouble() {
       TestExtendedFloatDoubleCore(3.5, "3.5");
@@ -485,43 +481,64 @@ namespace Test {
       TestCommon.FromBytesTestAB(new byte[] { 0xD1, 0xFF });
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestJSONSurrogates() {
-      try { CBORObject.FromJSONString("[\"\ud800\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromJSONString("[\"\\ud800\\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromJSONString("[\"\ud800\\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromJSONString("[\"\\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]"); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try {
+        CBORObject.FromJSONString("[\"\ud800\udc00\"]");
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"\\ud800\\udc00\"]");
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"\ud800\\udc00\"]");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"\\ud800\udc00\"]");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]");
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestJSONEscapedChars() {
       CBORObject o = CBORObject.FromJSONString(
         "[\"\\r\\n\\u0006\\\\\\\"\"]");
       Assert.AreEqual(1, o.Count);
       Assert.AreEqual("\r\n\u0006\\\"", o[0].AsString());
-      Assert.AreEqual("[\"\\r\\n\\u0006\\\\\\\"\"]",
-                      o.ToJSONString());
+      Assert.AreEqual(
+"[\"\\r\\n\\u0006\\\\\\\"\"]",
+o.ToJSONString());
       TestCommon.AssertRoundTrip(o);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestCBORFromArray() {
       CBORObject o = CBORObject.FromObject(new int[] { 1, 2, 3 });
@@ -532,19 +549,29 @@ namespace Test {
       TestCommon.AssertRoundTrip(o);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestJSON() {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,3]");
-      try { CBORObject.FromJSONString("[\"\\d800\"]"); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromJSONString("[1,2,"); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromJSONString("[1,2,3"); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromJSONString("[\""); Assert.Fail("Should have failed"); } catch (CBORException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try {
+        CBORObject.FromJSONString("[\"\\d800\"]"); Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[1,2,"); Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[1,2,3"); Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
       Assert.AreEqual(3, o.Count);
       Assert.AreEqual(1, o[0].AsInt32());
       Assert.AreEqual(2, o[1].AsInt32());
@@ -557,11 +584,7 @@ namespace Test {
       Assert.AreEqual("null", CBORObject.Null.ToJSONString());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestByte() {
       for (int i = 0; i <= 255; ++i) {
@@ -571,50 +594,41 @@ namespace Test {
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <param name='bytes'>
-    /// A byte[] object.</param>
-    /// <param name='expectedRet'>
-    /// A 32-bit signed integer.</param>
-    /// <param name='expectedString'>
-    /// A string object.</param>
-    /// <param name='noReplaceRet'>
-    /// A 32-bit signed integer.</param>
-    /// <param name='noReplaceString'>
-    /// A string object.</param>
-    /// <returns>
-    /// </returns>
-    ///
-    public void DoTestReadUtf8(byte[] bytes,
-                               int expectedRet, string expectedString,
-                               int noReplaceRet, string noReplaceString
-) {
-      DoTestReadUtf8(bytes, bytes.Length, expectedRet, expectedString,
-                     noReplaceRet, noReplaceString);
+    /// <summary>Not documented yet.</summary>
+    /// <param name='bytes'>A byte[] object.</param>
+    /// <param name='expectedRet'>A 32-bit signed integer.</param>
+    /// <param name='expectedString'>A string object.</param>
+    /// <param name='noReplaceRet'>A 32-bit signed integer. (2).</param>
+    /// <param name='noReplaceString'>A string object. (2).</param>
+    public void DoTestReadUtf8(
+      byte[] bytes,
+      int expectedRet,
+      string expectedString,
+      int noReplaceRet,
+      string noReplaceString) {
+      this.DoTestReadUtf8(
+        bytes,
+        bytes.Length,
+        expectedRet,
+        expectedString,
+        noReplaceRet,
+        noReplaceString);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <param name='bytes'>
-    /// A byte[] object.</param>
-    /// <param name='length'>
-    /// A 32-bit signed integer.</param>
-    /// <param name='expectedRet'>
-    /// A 32-bit signed integer.</param>
-    /// <param name='expectedString'>
-    /// A string object.</param>
-    /// <param name='noReplaceRet'>
-    /// A 32-bit signed integer.</param>
-    /// <param name='noReplaceString'>
-    /// A string object.</param>
-    /// <returns>
-    /// </returns>
-    ///
-    public void DoTestReadUtf8(byte[] bytes, int length,
-                               int expectedRet, string expectedString,
-                               int noReplaceRet, string noReplaceString
-) {
+    /// <summary>Not documented yet.</summary>
+    /// <param name='bytes'>A byte[] object.</param>
+    /// <param name='length'>A 32-bit signed integer.</param>
+    /// <param name='expectedRet'>A 32-bit signed integer. (2).</param>
+    /// <param name='expectedString'>A string object.</param>
+    /// <param name='noReplaceRet'>A 32-bit signed integer. (3).</param>
+    /// <param name='noReplaceString'>A string object. (2).</param>
+    public void DoTestReadUtf8(
+      byte[] bytes,
+      int length,
+      int expectedRet,
+      string expectedString,
+      int noReplaceRet,
+      string noReplaceString) {
       try {
         StringBuilder builder = new StringBuilder();
         int ret = 0;
@@ -647,15 +661,11 @@ namespace Test {
           }
         }
       } catch (IOException ex) {
-        throw new CBORException("", ex);
+        throw new CBORException(String.Empty, ex);
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestDecFracOverflow() {
       Assert.AreEqual(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Single.PositiveInfinity).AsExtendedDecimal());
@@ -666,11 +676,7 @@ namespace Test {
       Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestFPToBigInteger() {
       Assert.AreEqual("0", CBORObject.FromObject((float)0.75).AsBigInteger().ToString());
@@ -687,19 +693,45 @@ namespace Test {
       Assert.AreEqual("1", CBORObject.FromObject((double)1.5).AsBigInteger().ToString());
       Assert.AreEqual("2", CBORObject.FromObject((double)2.5).AsBigInteger().ToString());
       Assert.AreEqual("328323", CBORObject.FromObject((double)328323).AsBigInteger().ToString());
-      try { CBORObject.FromObject(Single.PositiveInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(Single.NegativeInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(Single.NaN).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(Double.PositiveInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(Double.NaN).AsBigInteger(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try {
+        CBORObject.FromObject(Single.PositiveInfinity).AsBigInteger(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(Single.NegativeInfinity).AsBigInteger(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(Single.NaN).AsBigInteger(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(Double.PositiveInfinity).AsBigInteger(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(Double.NegativeInfinity).AsBigInteger(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(Double.NaN).AsBigInteger(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestDecFracFP() {
       Assert.AreEqual("0.75", ExtendedDecimal.FromDouble(0.75).ToString());
@@ -714,11 +746,7 @@ namespace Test {
       Assert.AreEqual("0.125", ExtendedDecimal.FromSingle(0.125f).ToString());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void ScaleTest() {
       Assert.AreEqual(-(BigInteger)7, ExtendedDecimal.FromString("1.265e-4").Exponent);
@@ -773,79 +801,223 @@ namespace Test {
       Assert.AreEqual(-(BigInteger)3, ExtendedDecimal.FromString("0.565055e+3").Exponent);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestReadUtf8() {
-      DoTestReadUtf8(new byte[] { 0x20, 0x20, 0x20 },
-                     0, "   ", 0, "   ");
-      DoTestReadUtf8(new byte[] { 0x20, 0xc2, 0x80 },
-                     0, " \u0080", 0, " \u0080");
-      DoTestReadUtf8(new byte[] { 0x20, 0xc2, 0x80, 0x20 },
-                     0, " \u0080 ", 0, " \u0080 ");
-      DoTestReadUtf8(new byte[] { 0x20, 0xc2, 0x80, 0xc2 },
-                     0, " \u0080\ufffd", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xc2, 0x20, 0x20 },
-                     0, " \ufffd  ", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xc2, 0xff, 0x20 },
-                     0, " \ufffd\ufffd ", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xe0, 0xa0, 0x80 },
-                     0, " \u0800", 0, " \u0800");
-      DoTestReadUtf8(new byte[] { 0x20, 0xe0, 0xa0, 0x80, 0x20 },
-                     0, " \u0800 ", 0, " \u0800 ");
-      DoTestReadUtf8(new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80 },
-                     0, " \ud800\udc00", 0, " \ud800\udc00");
-      DoTestReadUtf8(new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80 }, 3,
-                     0, " \ufffd", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xf0, 0x90 }, 5,
-                     -2, null, -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0x20, 0x20 }, 5,
-                     -2, null, -2, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80, 0x20 },
-                     0, " \ud800\udc00 ", 0, " \ud800\udc00 ");
-      DoTestReadUtf8(new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x20 },
-                     0, " \ufffd ", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xf0, 0x90, 0x20 },
-                     0, " \ufffd ", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xf0, 0x90, 0x80, 0xff },
-                     0, " \ufffd\ufffd", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xf0, 0x90, 0xff },
-                     0, " \ufffd\ufffd", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xe0, 0xa0, 0x20 },
-                     0, " \ufffd ", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xe0, 0x20 },
-                     0, " \ufffd ", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xe0, 0xa0, 0xff },
-                     0, " \ufffd\ufffd", -1, null);
-      DoTestReadUtf8(new byte[] { 0x20, 0xe0, 0xff },
-                     0, " \ufffd\ufffd", -1, null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0x20,
+          0x20 },
+        0,
+        " ",
+        0,
+        " ");
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xc2,
+          0x80 },
+        0,
+        " \u0080",
+        0,
+        " \u0080");
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xc2,
+          0x80,
+          0x20 },
+        0,
+        " \u0080 ",
+        0,
+        " \u0080 ");
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xc2,
+          0x80,
+          0xc2 },
+        0,
+        " \u0080\ufffd",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xc2,
+          0x20,
+          0x20 },
+        0,
+        " \ufffd ",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xc2,
+          0xff,
+          0x20 },
+        0,
+        " \ufffd\ufffd ",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xe0,
+          0xa0,
+          0x80 },
+        0,
+        " \u0800",
+        0,
+        " \u0800");
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xe0,
+          0xa0,
+          0x80,
+          0x20 },
+        0,
+        " \u0800 ",
+        0,
+        " \u0800 ");
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xf0,
+          0x90,
+          0x80,
+          0x80 },
+        0,
+        " \ud800\udc00",
+        0,
+        " \ud800\udc00");
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xf0,
+          0x90,
+          0x80,
+          0x80 },
+        3,
+        0,
+        " \ufffd",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+        0xf0,
+        0x90 },
+        5,
+        -2,
+        null,
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+        0x20,
+        0x20 },
+        5,
+        -2,
+        null,
+        -2,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xf0,
+          0x90,
+          0x80,
+          0x80,
+          0x20 },
+        0,
+        " \ud800\udc00 ",
+        0,
+        " \ud800\udc00 ");
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xf0,
+          0x90,
+          0x80,
+          0x20 },
+        0,
+        " \ufffd ",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xf0,
+          0x90,
+          0x20 },
+        0,
+        " \ufffd ",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xf0,
+          0x90,
+          0x80,
+          0xff },
+        0,
+        " \ufffd\ufffd",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xf0,
+          0x90,
+          0xff },
+        0,
+        " \ufffd\ufffd",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xe0,
+          0xa0,
+          0x20 },
+        0,
+        " \ufffd ",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xe0,
+          0x20 },
+        0,
+        " \ufffd ",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xe0,
+          0xa0,
+          0xff },
+        0,
+        " \ufffd\ufffd",
+        -1,
+        null);
+      this.DoTestReadUtf8(
+        new byte[] { 0x20,
+          0xe0,
+          0xff },
+        0,
+        " \ufffd\ufffd",
+        -1,
+        null);
     }
+
     private static bool ByteArrayEquals(byte[] arrayA, byte[] arrayB) {
       if (arrayA == null) {
- return (arrayB == null);
-}
+        return arrayB == null;
+      }
       if (arrayB == null) {
- return false;
-}
+        return false;
+      }
       if (arrayA.Length != arrayB.Length) {
- return false;
-}
+        return false;
+      }
       for (int i = 0; i < arrayA.Length; ++i) {
         if (arrayA[i] != arrayB[i]) {
- return false;
-}
+          return false;
+        }
       }
       return true;
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestArray() {
       CBORObject cbor = CBORObject.FromJSONString("[]");
@@ -856,11 +1028,7 @@ namespace Test {
       Assert.IsTrue(isequal, "array not equal");
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestMap() {
       CBORObject cbor = CBORObject.FromJSONString("{\"a\":2,\"b\":4}");
@@ -874,6 +1042,7 @@ namespace Test {
       Assert.AreEqual(2, cbor[CBORObject.FromObject("a")].AsInt32());
       Assert.AreEqual(4, cbor[CBORObject.FromObject("b")].AsInt32());
     }
+
     private static String Repeat(char c, int num) {
       System.Text.StringBuilder sb = new System.Text.StringBuilder();
       for (int i = 0; i < num; ++i) {
@@ -881,6 +1050,7 @@ namespace Test {
       }
       return sb.ToString();
     }
+
     private static String Repeat(String c, int num) {
       System.Text.StringBuilder sb = new System.Text.StringBuilder();
       for (int i = 0; i < num; ++i) {
@@ -889,11 +1059,7 @@ namespace Test {
       return sb.ToString();
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
@@ -903,7 +1069,7 @@ namespace Test {
         0x61,
         0x20,
         0xFF });
-      Assert.AreEqual("  ", cbor.AsString());
+      Assert.AreEqual(" ", cbor.AsString());
       // Test streaming of long strings
       string longString = Repeat('x', 200000);
       CBORObject cbor2;
@@ -953,11 +1119,7 @@ namespace Test {
         0xFF });
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
@@ -980,6 +1142,7 @@ namespace Test {
         0x20,
         0xFF });
     }
+
     public static void AssertDecimalsEquivalent(string a, string b) {
       CBORObject ca = CBORDataUtilities.ParseJSONNumber(a);
       CBORObject cb = CBORDataUtilities.ParseJSONNumber(b);
@@ -988,11 +1151,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(cb);
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void ZeroStringTests2() {
       Assert.AreEqual("0.0001265", ExtendedDecimal.FromString("1.265e-4").ToString());
@@ -1300,445 +1459,2318 @@ namespace Test {
     // and doubles before bounds checking
     [Test]
     public void FloatingPointCloseToEdge() {
-      try { CBORObject.FromObject(2.147483647E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483647E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483647E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483647E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836470000002E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836470000002E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836469999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836469999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483648E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483648E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483648E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483648E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836480000005E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836480000005E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836479999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836479999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483646E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483646E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483646E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.147483646E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836460000002E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836460000002E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836459999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474836459999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483648E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483648E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483648E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483648E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836479999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836479999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836480000005E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836480000005E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483647E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483647E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483647E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483647E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836469999998E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836469999998E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836470000002E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836470000002E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483649E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483649E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483649E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.147483649E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836489999995E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836489999995E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836490000005E9d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474836490000005E9d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372036854776E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372036854776E18d).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372036854776E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372036854776E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372036854778E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372036854778E18d).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372036854778E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372036854778E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.2233720368547748E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.2233720368547748E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372036854776E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372036854776E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.2233720368547748E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.2233720368547748E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372036854778E18d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372036854778E18d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.000000000004d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.000000000004d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.000000000004d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.000000000004d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.0d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.00000000001d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.00000000001d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.00000000001d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.00000000001d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.000000000004d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.000000000004d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.000000000004d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.000000000004d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32765.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32765.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32765.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32765.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.00000000001d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.00000000001d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.00000000001d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.00000000001d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32766.999999999996d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32766.999999999996d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32766.999999999996d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32766.999999999996d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.000000000004d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.000000000004d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.000000000004d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.000000000004d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.0d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.99999999999d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.99999999999d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.99999999999d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.99999999999d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.00000000001d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.00000000001d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.00000000001d).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.00000000001d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(4.9E-324d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(4.9E-324d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(4.9E-324d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(4.9E-324d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-4.9E-324d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-4.9E-324d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-4.9E-324d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-4.9E-324d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0000000000000002d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0000000000000002d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0000000000000002d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0000000000000002d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.9999999999999999d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.9999999999999999d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.9999999999999999d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.9999999999999999d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-0.9999999999999999d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-0.9999999999999999d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-0.9999999999999999d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-0.9999999999999999d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0000000000000002d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0000000000000002d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0000000000000002d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0000000000000002d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.00000000000003d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.00000000000003d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.00000000000003d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.00000000000003d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.99999999999997d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.99999999999997d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.99999999999997d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.99999999999997d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.0d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.00000000000006d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.00000000000006d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.00000000000006d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.00000000000006d).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.99999999999997d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.99999999999997d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.99999999999997d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.99999999999997d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.0d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.0d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.0d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.0d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.00000000000003d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.00000000000003d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.00000000000003d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.00000000000003d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(253.99999999999997d).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(253.99999999999997d).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(253.99999999999997d).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(253.99999999999997d).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.14748365E9f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.14748365E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.14748365E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.14748365E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474839E9f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474839E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474839E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.1474839E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.14748352E9f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.14748352E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.14748352E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(2.14748352E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.14748365E9f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.14748365E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.14748365E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.14748365E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.14748352E9f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.14748352E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.14748352E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.14748352E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474839E9f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474839E9f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474839E9f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-2.1474839E9f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372E18f).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223372E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223373E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223373E18f).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223373E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.223373E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.2233715E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.2233715E18f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.2233715E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(9.2233715E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372E18f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223372E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.2233715E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.2233715E18f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.2233715E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.2233715E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223373E18f).AsInt32(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223373E18f).AsInt64(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223373E18f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-9.223373E18f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.002f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.0f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.004f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.004f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.004f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32768.004f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32767.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32766.002f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32765.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32765.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32765.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(32765.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.004f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.004f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.004f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.004f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32766.998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32766.998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32766.998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32766.998f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32767.002f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.0f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.996f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.996f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.996f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32768.996f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.004f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.004f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.004f).AsInt16(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-32769.004f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.4E-45f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.4E-45f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.4E-45f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.4E-45f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.4E-45f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.4E-45f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.4E-45f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.4E-45f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0000001f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0000001f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0000001f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(1.0000001f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.99999994f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.99999994f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.99999994f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(0.99999994f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-0.99999994f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-0.99999994f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-0.99999994f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-0.99999994f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0000001f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0000001f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0000001f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(-1.0000001f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.00002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.00002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.00002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.00002f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.99998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.99998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.99998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.99998f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.0f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.00003f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.00003f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.00003f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(256.00003f).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.99998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.99998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.99998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(255.99998f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.0f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.0f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.0f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.0f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.00002f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.00002f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.00002f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(254.00002f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(253.99998f).AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(253.99998f).AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(253.99998f).AsInt16(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { CBORObject.FromObject(253.99998f).AsByte(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try {
+        CBORObject.FromObject(2.147483647E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483647E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483647E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483647E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836470000002E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836470000002E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836470000002E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836470000002E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836469999998E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836469999998E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836469999998E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836469999998E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483648E9d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483648E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483648E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483648E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836480000005E9d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836480000005E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836480000005E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836480000005E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836479999998E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836479999998E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836479999998E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836479999998E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483646E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483646E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483646E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.147483646E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836460000002E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836460000002E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836460000002E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836460000002E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836459999998E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836459999998E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836459999998E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474836459999998E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483648E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483648E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483648E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483648E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836479999998E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836479999998E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836479999998E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836479999998E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836480000005E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836480000005E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836480000005E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836480000005E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483647E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483647E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483647E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483647E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836469999998E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836469999998E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836469999998E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836469999998E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836470000002E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836470000002E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836470000002E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836470000002E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483649E9d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483649E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483649E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.147483649E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836489999995E9d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836489999995E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836489999995E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836489999995E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836490000005E9d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836490000005E9d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836490000005E9d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474836490000005E9d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372036854776E18d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372036854776E18d).AsInt64();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372036854776E18d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372036854776E18d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372036854778E18d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372036854778E18d).AsInt64();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372036854778E18d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372036854778E18d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.2233720368547748E18d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.2233720368547748E18d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.2233720368547748E18d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.2233720368547748E18d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372036854776E18d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372036854776E18d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372036854776E18d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372036854776E18d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.2233720368547748E18d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.2233720368547748E18d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.2233720368547748E18d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.2233720368547748E18d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372036854778E18d).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372036854778E18d).AsInt64();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372036854778E18d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372036854778E18d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.0d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.000000000004d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.000000000004d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.000000000004d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.000000000004d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.999999999996d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.999999999996d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.999999999996d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.999999999996d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.0d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.0d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.00000000001d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.00000000001d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.00000000001d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.00000000001d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.999999999996d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.999999999996d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.999999999996d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.999999999996d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.0d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.000000000004d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.000000000004d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.000000000004d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.000000000004d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32765.999999999996d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32765.999999999996d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32765.999999999996d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32765.999999999996d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.0d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.999999999996d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.999999999996d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.999999999996d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.999999999996d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.00000000001d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.00000000001d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.00000000001d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.00000000001d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.0d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32766.999999999996d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32766.999999999996d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32766.999999999996d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32766.999999999996d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.000000000004d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.000000000004d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.000000000004d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.000000000004d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.0d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.0d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.99999999999d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.99999999999d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.99999999999d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.99999999999d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.00000000001d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.00000000001d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.00000000001d).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.00000000001d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.0d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(4.9E-324d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(4.9E-324d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(4.9E-324d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(4.9E-324d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-4.9E-324d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-4.9E-324d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-4.9E-324d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-4.9E-324d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0000000000000002d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0000000000000002d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0000000000000002d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0000000000000002d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.9999999999999999d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.9999999999999999d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.9999999999999999d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.9999999999999999d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-0.9999999999999999d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-0.9999999999999999d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-0.9999999999999999d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-0.9999999999999999d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0000000000000002d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0000000000000002d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0000000000000002d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0000000000000002d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.0d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.00000000000003d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.00000000000003d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.00000000000003d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.00000000000003d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.99999999999997d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.99999999999997d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.99999999999997d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.99999999999997d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.0d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.00000000000006d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.00000000000006d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.00000000000006d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.00000000000006d).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.99999999999997d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.99999999999997d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.99999999999997d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.99999999999997d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.0d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.0d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.0d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.0d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.00000000000003d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.00000000000003d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.00000000000003d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.00000000000003d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(253.99999999999997d).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(253.99999999999997d).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(253.99999999999997d).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(253.99999999999997d).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.14748365E9f).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.14748365E9f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.14748365E9f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.14748365E9f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474839E9f).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474839E9f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474839E9f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.1474839E9f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.14748352E9f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.14748352E9f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.14748352E9f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(2.14748352E9f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.14748365E9f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.14748365E9f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.14748365E9f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.14748365E9f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.14748352E9f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.14748352E9f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.14748352E9f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.14748352E9f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474839E9f).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474839E9f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474839E9f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-2.1474839E9f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372E18f).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372E18f).AsInt64();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372E18f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223372E18f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223373E18f).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223373E18f).AsInt64();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223373E18f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.223373E18f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.2233715E18f).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.2233715E18f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.2233715E18f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(9.2233715E18f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372E18f).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372E18f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372E18f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223372E18f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.2233715E18f).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.2233715E18f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.2233715E18f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.2233715E18f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223373E18f).AsInt32();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223373E18f).AsInt64();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223373E18f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-9.223373E18f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.0f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.002f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.002f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.002f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.002f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.998f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.998f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.998f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.998f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.0f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.0f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.004f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.004f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.004f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32768.004f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.998f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.998f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.998f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32767.998f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.0f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.002f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.002f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.002f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32766.002f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32765.998f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32765.998f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32765.998f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(32765.998f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.0f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.998f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.998f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.998f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.998f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.004f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.004f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.004f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.004f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.0f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32766.998f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32766.998f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32766.998f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32766.998f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.002f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.002f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.002f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32767.002f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.0f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.0f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.996f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.996f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.996f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32768.996f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.004f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.004f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.004f).AsInt16();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-32769.004f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.0f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.4E-45f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.4E-45f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.4E-45f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.4E-45f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.4E-45f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.4E-45f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.4E-45f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.4E-45f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0000001f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0000001f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0000001f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(1.0000001f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.99999994f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.99999994f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.99999994f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(0.99999994f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-0.99999994f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-0.99999994f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-0.99999994f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-0.99999994f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0000001f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0000001f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0000001f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(-1.0000001f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.0f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.00002f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.00002f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.00002f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.00002f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.99998f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.99998f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.99998f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.99998f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.0f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.00003f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.00003f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.00003f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(256.00003f).AsByte();
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.99998f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.99998f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.99998f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(255.99998f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.0f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.0f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.0f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.0f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.00002f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.00002f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.00002f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(254.00002f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(253.99998f).AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(253.99998f).AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(253.99998f).AsInt16();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(253.99998f).AsByte();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void FromDoubleTest() {
       Assert.AreEqual("0.213299999999999989608312489508534781634807586669921875", ExtendedDecimal.FromDouble(0.2133).ToString());
@@ -1843,11 +3875,7 @@ namespace Test {
       Assert.AreEqual("313300000000", ExtendedDecimal.FromDouble(3.133E11).ToString());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void ToPlainStringTest() {
       Assert.AreEqual("277220000000", ExtendedDecimal.FromString("277.22E9").ToPlainString());
@@ -1952,11 +3980,7 @@ namespace Test {
       Assert.AreEqual("0.00000026818", ExtendedDecimal.FromString("268.18E-9").ToPlainString());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void ToEngineeringStringTest() {
       Assert.AreEqual("8.912", ExtendedDecimal.FromString("89.12E-1").ToEngineeringString());
@@ -2061,11 +4085,7 @@ namespace Test {
       Assert.AreEqual("70.7E+6", ExtendedDecimal.FromString("70.7E6").ToEngineeringString());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestDecimalsEquivalent() {
       AssertDecimalsEquivalent("1.310E-7", "131.0E-9");
@@ -2170,21 +4190,27 @@ namespace Test {
       AssertDecimalsEquivalent("5.912E+7", "59.12E6");
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestAsByte() {
       for (int i = 0; i < 255; ++i) {
         Assert.AreEqual((byte)i, CBORObject.FromObject(i).AsByte());
       }
       for (int i = -200; i < 0; ++i) {
-        try { CBORObject.FromObject(i).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+        try {
+          CBORObject.FromObject(i).AsByte();
+        } catch (OverflowException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        }
       }
       for (int i = 256; i < 512; ++i) {
-        try { CBORObject.FromObject(i).AsByte(); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+        try {
+          CBORObject.FromObject(i).AsByte();
+        } catch (OverflowException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        }
       }
     }
     [Test]
@@ -2201,11 +4227,7 @@ namespace Test {
         0xFF });
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestExtendedFloatDecFrac() {
       ExtendedFloat bf;
@@ -2228,1830 +4250,1818 @@ namespace Test {
     [Test]
     public void TestDecFracToSingleDoubleHighExponents() {
       if (-5.731800748367376E125d != ExtendedDecimal.FromString("-57318007483673759194E+106").ToDouble()) {
- Assert.Fail("decfrac double -57318007483673759194E+106\nExpected: -5.731800748367376E125d\nWas: " + ExtendedDecimal.FromString("-57318007483673759194E+106").ToDouble());
-}
+        Assert.Fail("decfrac double -57318007483673759194E+106\nExpected: -5.731800748367376E125d\nWas: " + ExtendedDecimal.FromString("-57318007483673759194E+106").ToDouble());
+      }
       if (914323.0f != ExtendedDecimal.FromString("914323").ToSingle()) {
- Assert.Fail("decfrac single 914323\nExpected: 914323.0f\nWas: " + ExtendedDecimal.FromString("914323").ToSingle());
-}
+        Assert.Fail("decfrac single 914323\nExpected: 914323.0f\nWas: " + ExtendedDecimal.FromString("914323").ToSingle());
+      }
       if (914323.0d != ExtendedDecimal.FromString("914323").ToDouble()) {
- Assert.Fail("decfrac double 914323\nExpected: 914323.0d\nWas: " + ExtendedDecimal.FromString("914323").ToDouble());
-}
+        Assert.Fail("decfrac double 914323\nExpected: 914323.0d\nWas: " + ExtendedDecimal.FromString("914323").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-57318007483673759194E+106").ToSingle()) {
- Assert.Fail("decfrac single -57318007483673759194E+106\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-57318007483673759194E+106").ToSingle());
-}
+        Assert.Fail("decfrac single -57318007483673759194E+106\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-57318007483673759194E+106").ToSingle());
+      }
       if (0.0f != ExtendedDecimal.FromString("420685230629E-264").ToSingle()) {
- Assert.Fail("decfrac single 420685230629E-264\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("420685230629E-264").ToSingle());
-}
+        Assert.Fail("decfrac single 420685230629E-264\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("420685230629E-264").ToSingle());
+      }
       if (4.20685230629E-253d != ExtendedDecimal.FromString("420685230629E-264").ToDouble()) {
- Assert.Fail("decfrac double 420685230629E-264\nExpected: 4.20685230629E-253d\nWas: " + ExtendedDecimal.FromString("420685230629E-264").ToDouble());
-}
+        Assert.Fail("decfrac double 420685230629E-264\nExpected: 4.20685230629E-253d\nWas: " + ExtendedDecimal.FromString("420685230629E-264").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("1089152800893419E+168").ToSingle()) {
- Assert.Fail("decfrac single 1089152800893419E+168\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("1089152800893419E+168").ToSingle());
-}
+        Assert.Fail("decfrac single 1089152800893419E+168\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("1089152800893419E+168").ToSingle());
+      }
       if (1.089152800893419E183d != ExtendedDecimal.FromString("1089152800893419E+168").ToDouble()) {
- Assert.Fail("decfrac double 1089152800893419E+168\nExpected: 1.089152800893419E183d\nWas: " + ExtendedDecimal.FromString("1089152800893419E+168").ToDouble());
-}
+        Assert.Fail("decfrac double 1089152800893419E+168\nExpected: 1.089152800893419E183d\nWas: " + ExtendedDecimal.FromString("1089152800893419E+168").ToDouble());
+      }
       if (1.5936804E7f != ExtendedDecimal.FromString("15936804").ToSingle()) {
- Assert.Fail("decfrac single 15936804\nExpected: 1.5936804E7f\nWas: " + ExtendedDecimal.FromString("15936804").ToSingle());
-}
+        Assert.Fail("decfrac single 15936804\nExpected: 1.5936804E7f\nWas: " + ExtendedDecimal.FromString("15936804").ToSingle());
+      }
       if (1.5936804E7d != ExtendedDecimal.FromString("15936804").ToDouble()) {
- Assert.Fail("decfrac double 15936804\nExpected: 1.5936804E7d\nWas: " + ExtendedDecimal.FromString("15936804").ToDouble());
-}
+        Assert.Fail("decfrac double 15936804\nExpected: 1.5936804E7d\nWas: " + ExtendedDecimal.FromString("15936804").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-24681.2332E+61").ToSingle()) {
- Assert.Fail("decfrac single -24681.2332E+61\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-24681.2332E+61").ToSingle());
-}
+        Assert.Fail("decfrac single -24681.2332E+61\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-24681.2332E+61").ToSingle());
+      }
       if (-2.46812332E65d != ExtendedDecimal.FromString("-24681.2332E+61").ToDouble()) {
- Assert.Fail("decfrac double -24681.2332E+61\nExpected: -2.46812332E65d\nWas: " + ExtendedDecimal.FromString("-24681.2332E+61").ToDouble());
-}
+        Assert.Fail("decfrac double -24681.2332E+61\nExpected: -2.46812332E65d\nWas: " + ExtendedDecimal.FromString("-24681.2332E+61").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToSingle()) {
- Assert.Fail("decfrac single -417509591569.6827833177512321E-93\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToSingle());
-}
+        Assert.Fail("decfrac single -417509591569.6827833177512321E-93\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToSingle());
+      }
       if (-4.175095915696828E-82d != ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToDouble()) {
- Assert.Fail("decfrac double -417509591569.6827833177512321E-93\nExpected: -4.175095915696828E-82d\nWas: " + ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToDouble());
-}
+        Assert.Fail("decfrac double -417509591569.6827833177512321E-93\nExpected: -4.175095915696828E-82d\nWas: " + ExtendedDecimal.FromString("-417509591569.6827833177512321E-93").ToDouble());
+      }
       if (5.38988331E17f != ExtendedDecimal.FromString("538988338119784732").ToSingle()) {
- Assert.Fail("decfrac single 538988338119784732\nExpected: 5.38988331E17f\nWas: " + ExtendedDecimal.FromString("538988338119784732").ToSingle());
-}
+        Assert.Fail("decfrac single 538988338119784732\nExpected: 5.38988331E17f\nWas: " + ExtendedDecimal.FromString("538988338119784732").ToSingle());
+      }
       if (5.389883381197847E17d != ExtendedDecimal.FromString("538988338119784732").ToDouble()) {
- Assert.Fail("decfrac double 538988338119784732\nExpected: 5.389883381197847E17d\nWas: " + ExtendedDecimal.FromString("538988338119784732").ToDouble());
-}
+        Assert.Fail("decfrac double 538988338119784732\nExpected: 5.389883381197847E17d\nWas: " + ExtendedDecimal.FromString("538988338119784732").ToDouble());
+      }
       if (260.14423f != ExtendedDecimal.FromString("260.1442248").ToSingle()) {
- Assert.Fail("decfrac single 260.1442248\nExpected: 260.14423f\nWas: " + ExtendedDecimal.FromString("260.1442248").ToSingle());
-}
+        Assert.Fail("decfrac single 260.1442248\nExpected: 260.14423f\nWas: " + ExtendedDecimal.FromString("260.1442248").ToSingle());
+      }
       if (260.1442248d != ExtendedDecimal.FromString("260.1442248").ToDouble()) {
- Assert.Fail("decfrac double 260.1442248\nExpected: 260.1442248d\nWas: " + ExtendedDecimal.FromString("260.1442248").ToDouble());
-}
+        Assert.Fail("decfrac double 260.1442248\nExpected: 260.1442248d\nWas: " + ExtendedDecimal.FromString("260.1442248").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToSingle()) {
- Assert.Fail("decfrac single -8457715957008143770.130850853640402959E-181\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToSingle());
-}
+        Assert.Fail("decfrac single -8457715957008143770.130850853640402959E-181\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToSingle());
+      }
       if (-8.457715957008144E-163d != ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToDouble()) {
- Assert.Fail("decfrac double -8457715957008143770.130850853640402959E-181\nExpected: -8.457715957008144E-163d\nWas: " + ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToDouble());
-}
+        Assert.Fail("decfrac double -8457715957008143770.130850853640402959E-181\nExpected: -8.457715957008144E-163d\nWas: " + ExtendedDecimal.FromString("-8457715957008143770.130850853640402959E-181").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("22.7178448747E-225").ToSingle()) {
- Assert.Fail("decfrac single 22.7178448747E-225\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("22.7178448747E-225").ToSingle());
-}
+        Assert.Fail("decfrac single 22.7178448747E-225\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("22.7178448747E-225").ToSingle());
+      }
       if (2.27178448747E-224d != ExtendedDecimal.FromString("22.7178448747E-225").ToDouble()) {
- Assert.Fail("decfrac double 22.7178448747E-225\nExpected: 2.27178448747E-224d\nWas: " + ExtendedDecimal.FromString("22.7178448747E-225").ToDouble());
-}
+        Assert.Fail("decfrac double 22.7178448747E-225\nExpected: 2.27178448747E-224d\nWas: " + ExtendedDecimal.FromString("22.7178448747E-225").ToDouble());
+      }
       if (-790581.44f != ExtendedDecimal.FromString("-790581.4576317018014").ToSingle()) {
- Assert.Fail("decfrac single -790581.4576317018014\nExpected: -790581.44f\nWas: " + ExtendedDecimal.FromString("-790581.4576317018014").ToSingle());
-}
+        Assert.Fail("decfrac single -790581.4576317018014\nExpected: -790581.44f\nWas: " + ExtendedDecimal.FromString("-790581.4576317018014").ToSingle());
+      }
       if (-790581.4576317018d != ExtendedDecimal.FromString("-790581.4576317018014").ToDouble()) {
- Assert.Fail("decfrac double -790581.4576317018014\nExpected: -790581.4576317018d\nWas: " + ExtendedDecimal.FromString("-790581.4576317018014").ToDouble());
-}
+        Assert.Fail("decfrac double -790581.4576317018014\nExpected: -790581.4576317018d\nWas: " + ExtendedDecimal.FromString("-790581.4576317018014").ToDouble());
+      }
       if (-1.80151695E16f != ExtendedDecimal.FromString("-18015168704168440").ToSingle()) {
- Assert.Fail("decfrac single -18015168704168440\nExpected: -1.80151695E16f\nWas: " + ExtendedDecimal.FromString("-18015168704168440").ToSingle());
-}
+        Assert.Fail("decfrac single -18015168704168440\nExpected: -1.80151695E16f\nWas: " + ExtendedDecimal.FromString("-18015168704168440").ToSingle());
+      }
       if (-1.801516870416844E16d != ExtendedDecimal.FromString("-18015168704168440").ToDouble()) {
- Assert.Fail("decfrac double -18015168704168440\nExpected: -1.801516870416844E16d\nWas: " + ExtendedDecimal.FromString("-18015168704168440").ToDouble());
-}
+        Assert.Fail("decfrac double -18015168704168440\nExpected: -1.801516870416844E16d\nWas: " + ExtendedDecimal.FromString("-18015168704168440").ToDouble());
+      }
       if (-36.0f != ExtendedDecimal.FromString("-36").ToSingle()) {
- Assert.Fail("decfrac single -36\nExpected: -36.0f\nWas: " + ExtendedDecimal.FromString("-36").ToSingle());
-}
+        Assert.Fail("decfrac single -36\nExpected: -36.0f\nWas: " + ExtendedDecimal.FromString("-36").ToSingle());
+      }
       if (-36.0d != ExtendedDecimal.FromString("-36").ToDouble()) {
- Assert.Fail("decfrac double -36\nExpected: -36.0d\nWas: " + ExtendedDecimal.FromString("-36").ToDouble());
-}
+        Assert.Fail("decfrac double -36\nExpected: -36.0d\nWas: " + ExtendedDecimal.FromString("-36").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("653060307988076E-230").ToSingle()) {
- Assert.Fail("decfrac single 653060307988076E-230\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("653060307988076E-230").ToSingle());
-}
+        Assert.Fail("decfrac single 653060307988076E-230\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("653060307988076E-230").ToSingle());
+      }
       if (6.53060307988076E-216d != ExtendedDecimal.FromString("653060307988076E-230").ToDouble()) {
- Assert.Fail("decfrac double 653060307988076E-230\nExpected: 6.53060307988076E-216d\nWas: " + ExtendedDecimal.FromString("653060307988076E-230").ToDouble());
-}
+        Assert.Fail("decfrac double 653060307988076E-230\nExpected: 6.53060307988076E-216d\nWas: " + ExtendedDecimal.FromString("653060307988076E-230").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-4446345.5911E+316").ToSingle()) {
- Assert.Fail("decfrac single -4446345.5911E+316\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-4446345.5911E+316").ToSingle());
-}
+        Assert.Fail("decfrac single -4446345.5911E+316\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-4446345.5911E+316").ToSingle());
+      }
       if (Double.NegativeInfinity != ExtendedDecimal.FromString("-4446345.5911E+316").ToDouble()) {
- Assert.Fail("decfrac double -4446345.5911E+316\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-4446345.5911E+316").ToDouble());
-}
+        Assert.Fail("decfrac double -4446345.5911E+316\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-4446345.5911E+316").ToDouble());
+      }
       if (-5.3940226E15f != ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToSingle()) {
- Assert.Fail("decfrac single -5394022706804125.84338479899885\nExpected: -5.3940226E15f\nWas: " + ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToSingle());
-}
+        Assert.Fail("decfrac single -5394022706804125.84338479899885\nExpected: -5.3940226E15f\nWas: " + ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToSingle());
+      }
       if (-5.394022706804126E15d != ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToDouble()) {
- Assert.Fail("decfrac double -5394022706804125.84338479899885\nExpected: -5.394022706804126E15d\nWas: " + ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToDouble());
-}
+        Assert.Fail("decfrac double -5394022706804125.84338479899885\nExpected: -5.394022706804126E15d\nWas: " + ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("310504020304E+181").ToSingle()) {
- Assert.Fail("decfrac single 310504020304E+181\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("310504020304E+181").ToSingle());
-}
+        Assert.Fail("decfrac single 310504020304E+181\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("310504020304E+181").ToSingle());
+      }
       if (3.10504020304E192d != ExtendedDecimal.FromString("310504020304E+181").ToDouble()) {
- Assert.Fail("decfrac double 310504020304E+181\nExpected: 3.10504020304E192d\nWas: " + ExtendedDecimal.FromString("310504020304E+181").ToDouble());
-}
+        Assert.Fail("decfrac double 310504020304E+181\nExpected: 3.10504020304E192d\nWas: " + ExtendedDecimal.FromString("310504020304E+181").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToSingle()) {
- Assert.Fail("decfrac single -164609450222646.21988340572652533E+317\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToSingle());
-}
+        Assert.Fail("decfrac single -164609450222646.21988340572652533E+317\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToSingle());
+      }
       if (Double.NegativeInfinity != ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToDouble()) {
- Assert.Fail("decfrac double -164609450222646.21988340572652533E+317\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToDouble());
-}
+        Assert.Fail("decfrac double -164609450222646.21988340572652533E+317\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToDouble());
+      }
       if (7.1524661E18f != ExtendedDecimal.FromString("7152466127871812565.075310").ToSingle()) {
- Assert.Fail("decfrac single 7152466127871812565.075310\nExpected: 7.1524661E18f\nWas: " + ExtendedDecimal.FromString("7152466127871812565.075310").ToSingle());
-}
+        Assert.Fail("decfrac single 7152466127871812565.075310\nExpected: 7.1524661E18f\nWas: " + ExtendedDecimal.FromString("7152466127871812565.075310").ToSingle());
+      }
       if (7.1524661278718126E18d != ExtendedDecimal.FromString("7152466127871812565.075310").ToDouble()) {
- Assert.Fail("decfrac double 7152466127871812565.075310\nExpected: 7.1524661278718126E18d\nWas: " + ExtendedDecimal.FromString("7152466127871812565.075310").ToDouble());
-}
+        Assert.Fail("decfrac double 7152466127871812565.075310\nExpected: 7.1524661278718126E18d\nWas: " + ExtendedDecimal.FromString("7152466127871812565.075310").ToDouble());
+      }
       if (925.0f != ExtendedDecimal.FromString("925").ToSingle()) {
- Assert.Fail("decfrac single 925\nExpected: 925.0f\nWas: " + ExtendedDecimal.FromString("925").ToSingle());
-}
+        Assert.Fail("decfrac single 925\nExpected: 925.0f\nWas: " + ExtendedDecimal.FromString("925").ToSingle());
+      }
       if (925.0d != ExtendedDecimal.FromString("925").ToDouble()) {
- Assert.Fail("decfrac double 925\nExpected: 925.0d\nWas: " + ExtendedDecimal.FromString("925").ToDouble());
-}
+        Assert.Fail("decfrac double 925\nExpected: 925.0d\nWas: " + ExtendedDecimal.FromString("925").ToDouble());
+      }
       if (34794.0f != ExtendedDecimal.FromString("34794").ToSingle()) {
- Assert.Fail("decfrac single 34794\nExpected: 34794.0f\nWas: " + ExtendedDecimal.FromString("34794").ToSingle());
-}
+        Assert.Fail("decfrac single 34794\nExpected: 34794.0f\nWas: " + ExtendedDecimal.FromString("34794").ToSingle());
+      }
       if (34794.0d != ExtendedDecimal.FromString("34794").ToDouble()) {
- Assert.Fail("decfrac double 34794\nExpected: 34794.0d\nWas: " + ExtendedDecimal.FromString("34794").ToDouble());
-}
+        Assert.Fail("decfrac double 34794\nExpected: 34794.0d\nWas: " + ExtendedDecimal.FromString("34794").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-337655705333269E-276").ToSingle()) {
- Assert.Fail("decfrac single -337655705333269E-276\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-337655705333269E-276").ToSingle());
-}
+        Assert.Fail("decfrac single -337655705333269E-276\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-337655705333269E-276").ToSingle());
+      }
       if (-3.37655705333269E-262d != ExtendedDecimal.FromString("-337655705333269E-276").ToDouble()) {
- Assert.Fail("decfrac double -337655705333269E-276\nExpected: -3.37655705333269E-262d\nWas: " + ExtendedDecimal.FromString("-337655705333269E-276").ToDouble());
-}
+        Assert.Fail("decfrac double -337655705333269E-276\nExpected: -3.37655705333269E-262d\nWas: " + ExtendedDecimal.FromString("-337655705333269E-276").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-564484627E-81").ToSingle()) {
- Assert.Fail("decfrac single -564484627E-81\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-564484627E-81").ToSingle());
-}
+        Assert.Fail("decfrac single -564484627E-81\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-564484627E-81").ToSingle());
+      }
       if (-5.64484627E-73d != ExtendedDecimal.FromString("-564484627E-81").ToDouble()) {
- Assert.Fail("decfrac double -564484627E-81\nExpected: -5.64484627E-73d\nWas: " + ExtendedDecimal.FromString("-564484627E-81").ToDouble());
-}
+        Assert.Fail("decfrac double -564484627E-81\nExpected: -5.64484627E-73d\nWas: " + ExtendedDecimal.FromString("-564484627E-81").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToSingle()) {
- Assert.Fail("decfrac single -249095219081.80985049618E+175\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToSingle());
-}
+        Assert.Fail("decfrac single -249095219081.80985049618E+175\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToSingle());
+      }
       if (-2.4909521908180986E186d != ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToDouble()) {
- Assert.Fail("decfrac double -249095219081.80985049618E+175\nExpected: -2.4909521908180986E186d\nWas: " + ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToDouble());
-}
+        Assert.Fail("decfrac double -249095219081.80985049618E+175\nExpected: -2.4909521908180986E186d\nWas: " + ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-1696361380616078392E+221").ToSingle()) {
- Assert.Fail("decfrac single -1696361380616078392E+221\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-1696361380616078392E+221").ToSingle());
-}
+        Assert.Fail("decfrac single -1696361380616078392E+221\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-1696361380616078392E+221").ToSingle());
+      }
       if (-1.6963613806160784E239d != ExtendedDecimal.FromString("-1696361380616078392E+221").ToDouble()) {
- Assert.Fail("decfrac double -1696361380616078392E+221\nExpected: -1.6963613806160784E239d\nWas: " + ExtendedDecimal.FromString("-1696361380616078392E+221").ToDouble());
-}
+        Assert.Fail("decfrac double -1696361380616078392E+221\nExpected: -1.6963613806160784E239d\nWas: " + ExtendedDecimal.FromString("-1696361380616078392E+221").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToSingle()) {
- Assert.Fail("decfrac single 61520501993928105481.8536829047214988E+205\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToSingle());
-}
+        Assert.Fail("decfrac single 61520501993928105481.8536829047214988E+205\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToSingle());
+      }
       if (6.15205019939281E224d != ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToDouble()) {
- Assert.Fail("decfrac double 61520501993928105481.8536829047214988E+205\nExpected: 6.15205019939281E224d\nWas: " + ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToDouble());
-}
+        Assert.Fail("decfrac double 61520501993928105481.8536829047214988E+205\nExpected: 6.15205019939281E224d\nWas: " + ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToDouble());
+      }
       if (2.08756651E14f != ExtendedDecimal.FromString("208756654290770").ToSingle()) {
- Assert.Fail("decfrac single 208756654290770\nExpected: 2.08756651E14f\nWas: " + ExtendedDecimal.FromString("208756654290770").ToSingle());
-}
+        Assert.Fail("decfrac single 208756654290770\nExpected: 2.08756651E14f\nWas: " + ExtendedDecimal.FromString("208756654290770").ToSingle());
+      }
       if (2.0875665429077E14d != ExtendedDecimal.FromString("208756654290770").ToDouble()) {
- Assert.Fail("decfrac double 208756654290770\nExpected: 2.0875665429077E14d\nWas: " + ExtendedDecimal.FromString("208756654290770").ToDouble());
-}
+        Assert.Fail("decfrac double 208756654290770\nExpected: 2.0875665429077E14d\nWas: " + ExtendedDecimal.FromString("208756654290770").ToDouble());
+      }
       if (-1.31098592E13f != ExtendedDecimal.FromString("-13109858687380").ToSingle()) {
- Assert.Fail("decfrac single -13109858687380\nExpected: -1.31098592E13f\nWas: " + ExtendedDecimal.FromString("-13109858687380").ToSingle());
-}
+        Assert.Fail("decfrac single -13109858687380\nExpected: -1.31098592E13f\nWas: " + ExtendedDecimal.FromString("-13109858687380").ToSingle());
+      }
       if (-1.310985868738E13d != ExtendedDecimal.FromString("-13109858687380").ToDouble()) {
- Assert.Fail("decfrac double -13109858687380\nExpected: -1.310985868738E13d\nWas: " + ExtendedDecimal.FromString("-13109858687380").ToDouble());
-}
+        Assert.Fail("decfrac double -13109858687380\nExpected: -1.310985868738E13d\nWas: " + ExtendedDecimal.FromString("-13109858687380").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("6650596004E+280").ToSingle()) {
- Assert.Fail("decfrac single 6650596004E+280\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("6650596004E+280").ToSingle());
-}
+        Assert.Fail("decfrac single 6650596004E+280\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("6650596004E+280").ToSingle());
+      }
       if (6.650596004E289d != ExtendedDecimal.FromString("6650596004E+280").ToDouble()) {
- Assert.Fail("decfrac double 6650596004E+280\nExpected: 6.650596004E289d\nWas: " + ExtendedDecimal.FromString("6650596004E+280").ToDouble());
-}
+        Assert.Fail("decfrac double 6650596004E+280\nExpected: 6.650596004E289d\nWas: " + ExtendedDecimal.FromString("6650596004E+280").ToDouble());
+      }
       if (-9.2917935E13f != ExtendedDecimal.FromString("-92917937534357E0").ToSingle()) {
- Assert.Fail("decfrac single -92917937534357E0\nExpected: -9.2917935E13f\nWas: " + ExtendedDecimal.FromString("-92917937534357E0").ToSingle());
-}
+        Assert.Fail("decfrac single -92917937534357E0\nExpected: -9.2917935E13f\nWas: " + ExtendedDecimal.FromString("-92917937534357E0").ToSingle());
+      }
       if (-9.2917937534357E13d != ExtendedDecimal.FromString("-92917937534357E0").ToDouble()) {
- Assert.Fail("decfrac double -92917937534357E0\nExpected: -9.2917937534357E13d\nWas: " + ExtendedDecimal.FromString("-92917937534357E0").ToDouble());
-}
+        Assert.Fail("decfrac double -92917937534357E0\nExpected: -9.2917937534357E13d\nWas: " + ExtendedDecimal.FromString("-92917937534357E0").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-46E-153").ToSingle()) {
- Assert.Fail("decfrac single -46E-153\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-46E-153").ToSingle());
-}
+        Assert.Fail("decfrac single -46E-153\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-46E-153").ToSingle());
+      }
       if (-4.6E-152d != ExtendedDecimal.FromString("-46E-153").ToDouble()) {
- Assert.Fail("decfrac double -46E-153\nExpected: -4.6E-152d\nWas: " + ExtendedDecimal.FromString("-46E-153").ToDouble());
-}
+        Assert.Fail("decfrac double -46E-153\nExpected: -4.6E-152d\nWas: " + ExtendedDecimal.FromString("-46E-153").ToDouble());
+      }
       if (1.05161414E13f != ExtendedDecimal.FromString("10516141645281.77872161523035480").ToSingle()) {
- Assert.Fail("decfrac single 10516141645281.77872161523035480\nExpected: 1.05161414E13f\nWas: " + ExtendedDecimal.FromString("10516141645281.77872161523035480").ToSingle());
-}
+        Assert.Fail("decfrac single 10516141645281.77872161523035480\nExpected: 1.05161414E13f\nWas: " + ExtendedDecimal.FromString("10516141645281.77872161523035480").ToSingle());
+      }
       if (1.051614164528178E13d != ExtendedDecimal.FromString("10516141645281.77872161523035480").ToDouble()) {
- Assert.Fail("decfrac double 10516141645281.77872161523035480\nExpected: 1.051614164528178E13d\nWas: " + ExtendedDecimal.FromString("10516141645281.77872161523035480").ToDouble());
-}
+        Assert.Fail("decfrac double 10516141645281.77872161523035480\nExpected: 1.051614164528178E13d\nWas: " + ExtendedDecimal.FromString("10516141645281.77872161523035480").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-8312147094254E+299").ToSingle()) {
- Assert.Fail("decfrac single -8312147094254E+299\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-8312147094254E+299").ToSingle());
-}
+        Assert.Fail("decfrac single -8312147094254E+299\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-8312147094254E+299").ToSingle());
+      }
       if (Double.NegativeInfinity != ExtendedDecimal.FromString("-8312147094254E+299").ToDouble()) {
- Assert.Fail("decfrac double -8312147094254E+299\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-8312147094254E+299").ToDouble());
-}
+        Assert.Fail("decfrac double -8312147094254E+299\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-8312147094254E+299").ToDouble());
+      }
       if (5.10270368E8f != ExtendedDecimal.FromString("510270376.1879").ToSingle()) {
- Assert.Fail("decfrac single 510270376.1879\nExpected: 5.10270368E8f\nWas: " + ExtendedDecimal.FromString("510270376.1879").ToSingle());
-}
+        Assert.Fail("decfrac single 510270376.1879\nExpected: 5.10270368E8f\nWas: " + ExtendedDecimal.FromString("510270376.1879").ToSingle());
+      }
       if (5.102703761879E8d != ExtendedDecimal.FromString("510270376.1879").ToDouble()) {
- Assert.Fail("decfrac double 510270376.1879\nExpected: 5.102703761879E8d\nWas: " + ExtendedDecimal.FromString("510270376.1879").ToDouble());
-}
+        Assert.Fail("decfrac double 510270376.1879\nExpected: 5.102703761879E8d\nWas: " + ExtendedDecimal.FromString("510270376.1879").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-693696E-143").ToSingle()) {
- Assert.Fail("decfrac single -693696E-143\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-693696E-143").ToSingle());
-}
+        Assert.Fail("decfrac single -693696E-143\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-693696E-143").ToSingle());
+      }
       if (-6.93696E-138d != ExtendedDecimal.FromString("-693696E-143").ToDouble()) {
- Assert.Fail("decfrac double -693696E-143\nExpected: -6.93696E-138d\nWas: " + ExtendedDecimal.FromString("-693696E-143").ToDouble());
-}
+        Assert.Fail("decfrac double -693696E-143\nExpected: -6.93696E-138d\nWas: " + ExtendedDecimal.FromString("-693696E-143").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-91.43E+139").ToSingle()) {
- Assert.Fail("decfrac single -91.43E+139\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-91.43E+139").ToSingle());
-}
+        Assert.Fail("decfrac single -91.43E+139\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-91.43E+139").ToSingle());
+      }
       if (-9.143E140d != ExtendedDecimal.FromString("-91.43E+139").ToDouble()) {
- Assert.Fail("decfrac double -91.43E+139\nExpected: -9.143E140d\nWas: " + ExtendedDecimal.FromString("-91.43E+139").ToDouble());
-}
+        Assert.Fail("decfrac double -91.43E+139\nExpected: -9.143E140d\nWas: " + ExtendedDecimal.FromString("-91.43E+139").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToSingle()) {
- Assert.Fail("decfrac single -4103819741762400.45807953367286162E+235\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToSingle());
-}
+        Assert.Fail("decfrac single -4103819741762400.45807953367286162E+235\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToSingle());
+      }
       if (-4.1038197417624E250d != ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToDouble()) {
- Assert.Fail("decfrac double -4103819741762400.45807953367286162E+235\nExpected: -4.1038197417624E250d\nWas: " + ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToDouble());
-}
+        Assert.Fail("decfrac double -4103819741762400.45807953367286162E+235\nExpected: -4.1038197417624E250d\nWas: " + ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToDouble());
+      }
       if (-1.44700998E11f != ExtendedDecimal.FromString("-144701002301.18954542331279957").ToSingle()) {
- Assert.Fail("decfrac single -144701002301.18954542331279957\nExpected: -1.44700998E11f\nWas: " + ExtendedDecimal.FromString("-144701002301.18954542331279957").ToSingle());
-}
+        Assert.Fail("decfrac single -144701002301.18954542331279957\nExpected: -1.44700998E11f\nWas: " + ExtendedDecimal.FromString("-144701002301.18954542331279957").ToSingle());
+      }
       if (-1.4470100230118954E11d != ExtendedDecimal.FromString("-144701002301.18954542331279957").ToDouble()) {
- Assert.Fail("decfrac double -144701002301.18954542331279957\nExpected: -1.4470100230118954E11d\nWas: " + ExtendedDecimal.FromString("-144701002301.18954542331279957").ToDouble());
-}
+        Assert.Fail("decfrac double -144701002301.18954542331279957\nExpected: -1.4470100230118954E11d\nWas: " + ExtendedDecimal.FromString("-144701002301.18954542331279957").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("73.01E+211").ToSingle()) {
- Assert.Fail("decfrac single 73.01E+211\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("73.01E+211").ToSingle());
-}
+        Assert.Fail("decfrac single 73.01E+211\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("73.01E+211").ToSingle());
+      }
       if (7.301E212d != ExtendedDecimal.FromString("73.01E+211").ToDouble()) {
- Assert.Fail("decfrac double 73.01E+211\nExpected: 7.301E212d\nWas: " + ExtendedDecimal.FromString("73.01E+211").ToDouble());
-}
+        Assert.Fail("decfrac double 73.01E+211\nExpected: 7.301E212d\nWas: " + ExtendedDecimal.FromString("73.01E+211").ToDouble());
+      }
       if (-4.4030403E9f != ExtendedDecimal.FromString("-4403040441").ToSingle()) {
- Assert.Fail("decfrac single -4403040441\nExpected: -4.4030403E9f\nWas: " + ExtendedDecimal.FromString("-4403040441").ToSingle());
-}
+        Assert.Fail("decfrac single -4403040441\nExpected: -4.4030403E9f\nWas: " + ExtendedDecimal.FromString("-4403040441").ToSingle());
+      }
       if (-4.403040441E9d != ExtendedDecimal.FromString("-4403040441").ToDouble()) {
- Assert.Fail("decfrac double -4403040441\nExpected: -4.403040441E9d\nWas: " + ExtendedDecimal.FromString("-4403040441").ToDouble());
-}
+        Assert.Fail("decfrac double -4403040441\nExpected: -4.403040441E9d\nWas: " + ExtendedDecimal.FromString("-4403040441").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-19E+64").ToSingle()) {
- Assert.Fail("decfrac single -19E+64\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-19E+64").ToSingle());
-}
+        Assert.Fail("decfrac single -19E+64\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-19E+64").ToSingle());
+      }
       if (-1.9E65d != ExtendedDecimal.FromString("-19E+64").ToDouble()) {
- Assert.Fail("decfrac double -19E+64\nExpected: -1.9E65d\nWas: " + ExtendedDecimal.FromString("-19E+64").ToDouble());
-}
+        Assert.Fail("decfrac double -19E+64\nExpected: -1.9E65d\nWas: " + ExtendedDecimal.FromString("-19E+64").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToSingle()) {
- Assert.Fail("decfrac single 6454087684516815.5353496080253E-144\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToSingle());
-}
+        Assert.Fail("decfrac single 6454087684516815.5353496080253E-144\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToSingle());
+      }
       if (6.454087684516816E-129d != ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToDouble()) {
- Assert.Fail("decfrac double 6454087684516815.5353496080253E-144\nExpected: 6.454087684516816E-129d\nWas: " + ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToDouble());
-}
+        Assert.Fail("decfrac double 6454087684516815.5353496080253E-144\nExpected: 6.454087684516816E-129d\nWas: " + ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToSingle()) {
- Assert.Fail("decfrac single 1051852710343668.522107559786846776E+278\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToSingle());
-}
+        Assert.Fail("decfrac single 1051852710343668.522107559786846776E+278\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToSingle());
+      }
       if (1.0518527103436685E293d != ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToDouble()) {
- Assert.Fail("decfrac double 1051852710343668.522107559786846776E+278\nExpected: 1.0518527103436685E293d\nWas: " + ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToDouble());
-}
+        Assert.Fail("decfrac double 1051852710343668.522107559786846776E+278\nExpected: 1.0518527103436685E293d\nWas: " + ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("86077128802.374518623891E+218").ToSingle()) {
- Assert.Fail("decfrac single 86077128802.374518623891E+218\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("86077128802.374518623891E+218").ToSingle());
-}
+        Assert.Fail("decfrac single 86077128802.374518623891E+218\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("86077128802.374518623891E+218").ToSingle());
+      }
       if (8.607712880237452E228d != ExtendedDecimal.FromString("86077128802.374518623891E+218").ToDouble()) {
- Assert.Fail("decfrac double 86077128802.374518623891E+218\nExpected: 8.607712880237452E228d\nWas: " + ExtendedDecimal.FromString("86077128802.374518623891E+218").ToDouble());
-}
+        Assert.Fail("decfrac double 86077128802.374518623891E+218\nExpected: 8.607712880237452E228d\nWas: " + ExtendedDecimal.FromString("86077128802.374518623891E+218").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("367820230207102E-199").ToSingle()) {
- Assert.Fail("decfrac single 367820230207102E-199\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("367820230207102E-199").ToSingle());
-}
+        Assert.Fail("decfrac single 367820230207102E-199\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("367820230207102E-199").ToSingle());
+      }
       if (3.67820230207102E-185d != ExtendedDecimal.FromString("367820230207102E-199").ToDouble()) {
- Assert.Fail("decfrac double 367820230207102E-199\nExpected: 3.67820230207102E-185d\nWas: " + ExtendedDecimal.FromString("367820230207102E-199").ToDouble());
-}
+        Assert.Fail("decfrac double 367820230207102E-199\nExpected: 3.67820230207102E-185d\nWas: " + ExtendedDecimal.FromString("367820230207102E-199").ToDouble());
+      }
       if (9.105086E-27f != ExtendedDecimal.FromString("91050857573912688994E-46").ToSingle()) {
- Assert.Fail("decfrac single 91050857573912688994E-46\nExpected: 9.105086E-27f\nWas: " + ExtendedDecimal.FromString("91050857573912688994E-46").ToSingle());
-}
+        Assert.Fail("decfrac single 91050857573912688994E-46\nExpected: 9.105086E-27f\nWas: " + ExtendedDecimal.FromString("91050857573912688994E-46").ToSingle());
+      }
       if (9.105085757391269E-27d != ExtendedDecimal.FromString("91050857573912688994E-46").ToDouble()) {
- Assert.Fail("decfrac double 91050857573912688994E-46\nExpected: 9.105085757391269E-27d\nWas: " + ExtendedDecimal.FromString("91050857573912688994E-46").ToDouble());
-}
+        Assert.Fail("decfrac double 91050857573912688994E-46\nExpected: 9.105085757391269E-27d\nWas: " + ExtendedDecimal.FromString("91050857573912688994E-46").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("73.895899E+102").ToSingle()) {
- Assert.Fail("decfrac single 73.895899E+102\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("73.895899E+102").ToSingle());
-}
+        Assert.Fail("decfrac single 73.895899E+102\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("73.895899E+102").ToSingle());
+      }
       if (7.3895899E103d != ExtendedDecimal.FromString("73.895899E+102").ToDouble()) {
- Assert.Fail("decfrac double 73.895899E+102\nExpected: 7.3895899E103d\nWas: " + ExtendedDecimal.FromString("73.895899E+102").ToDouble());
-}
+        Assert.Fail("decfrac double 73.895899E+102\nExpected: 7.3895899E103d\nWas: " + ExtendedDecimal.FromString("73.895899E+102").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToSingle()) {
- Assert.Fail("decfrac single -796808893178.891470585829021E+330\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToSingle());
-}
+        Assert.Fail("decfrac single -796808893178.891470585829021E+330\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToSingle());
+      }
       if (Double.NegativeInfinity != ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToDouble()) {
- Assert.Fail("decfrac double -796808893178.891470585829021E+330\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToDouble());
-}
+        Assert.Fail("decfrac double -796808893178.891470585829021E+330\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("275081E-206").ToSingle()) {
- Assert.Fail("decfrac single 275081E-206\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("275081E-206").ToSingle());
-}
+        Assert.Fail("decfrac single 275081E-206\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("275081E-206").ToSingle());
+      }
       if (2.75081E-201d != ExtendedDecimal.FromString("275081E-206").ToDouble()) {
- Assert.Fail("decfrac double 275081E-206\nExpected: 2.75081E-201d\nWas: " + ExtendedDecimal.FromString("275081E-206").ToDouble());
-}
+        Assert.Fail("decfrac double 275081E-206\nExpected: 2.75081E-201d\nWas: " + ExtendedDecimal.FromString("275081E-206").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToSingle()) {
- Assert.Fail("decfrac single -4322898910615499.82096E-95\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToSingle());
-}
+        Assert.Fail("decfrac single -4322898910615499.82096E-95\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToSingle());
+      }
       if (-4.3228989106155E-80d != ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToDouble()) {
- Assert.Fail("decfrac double -4322898910615499.82096E-95\nExpected: -4.3228989106155E-80d\nWas: " + ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToDouble());
-}
+        Assert.Fail("decfrac double -4322898910615499.82096E-95\nExpected: -4.3228989106155E-80d\nWas: " + ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("143343913109764E+63").ToSingle()) {
- Assert.Fail("decfrac single 143343913109764E+63\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("143343913109764E+63").ToSingle());
-}
+        Assert.Fail("decfrac single 143343913109764E+63\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("143343913109764E+63").ToSingle());
+      }
       if (1.43343913109764E77d != ExtendedDecimal.FromString("143343913109764E+63").ToDouble()) {
- Assert.Fail("decfrac double 143343913109764E+63\nExpected: 1.43343913109764E77d\nWas: " + ExtendedDecimal.FromString("143343913109764E+63").ToDouble());
-}
+        Assert.Fail("decfrac double 143343913109764E+63\nExpected: 1.43343913109764E77d\nWas: " + ExtendedDecimal.FromString("143343913109764E+63").ToDouble());
+      }
       if (-7.9102981E16f != ExtendedDecimal.FromString("-79102983237104015").ToSingle()) {
- Assert.Fail("decfrac single -79102983237104015\nExpected: -7.9102981E16f\nWas: " + ExtendedDecimal.FromString("-79102983237104015").ToSingle());
-}
+        Assert.Fail("decfrac single -79102983237104015\nExpected: -7.9102981E16f\nWas: " + ExtendedDecimal.FromString("-79102983237104015").ToSingle());
+      }
       if (-7.9102983237104016E16d != ExtendedDecimal.FromString("-79102983237104015").ToDouble()) {
- Assert.Fail("decfrac double -79102983237104015\nExpected: -7.9102983237104016E16d\nWas: " + ExtendedDecimal.FromString("-79102983237104015").ToDouble());
-}
+        Assert.Fail("decfrac double -79102983237104015\nExpected: -7.9102983237104016E16d\nWas: " + ExtendedDecimal.FromString("-79102983237104015").ToDouble());
+      }
       if (-9.07E-10f != ExtendedDecimal.FromString("-907E-12").ToSingle()) {
- Assert.Fail("decfrac single -907E-12\nExpected: -9.07E-10f\nWas: " + ExtendedDecimal.FromString("-907E-12").ToSingle());
-}
+        Assert.Fail("decfrac single -907E-12\nExpected: -9.07E-10f\nWas: " + ExtendedDecimal.FromString("-907E-12").ToSingle());
+      }
       if (-9.07E-10d != ExtendedDecimal.FromString("-907E-12").ToDouble()) {
- Assert.Fail("decfrac double -907E-12\nExpected: -9.07E-10d\nWas: " + ExtendedDecimal.FromString("-907E-12").ToDouble());
-}
+        Assert.Fail("decfrac double -907E-12\nExpected: -9.07E-10d\nWas: " + ExtendedDecimal.FromString("-907E-12").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("191682103431.217475E-84").ToSingle()) {
- Assert.Fail("decfrac single 191682103431.217475E-84\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("191682103431.217475E-84").ToSingle());
-}
+        Assert.Fail("decfrac single 191682103431.217475E-84\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("191682103431.217475E-84").ToSingle());
+      }
       if (1.9168210343121748E-73d != ExtendedDecimal.FromString("191682103431.217475E-84").ToDouble()) {
- Assert.Fail("decfrac double 191682103431.217475E-84\nExpected: 1.9168210343121748E-73d\nWas: " + ExtendedDecimal.FromString("191682103431.217475E-84").ToDouble());
-}
+        Assert.Fail("decfrac double 191682103431.217475E-84\nExpected: 1.9168210343121748E-73d\nWas: " + ExtendedDecimal.FromString("191682103431.217475E-84").ToDouble());
+      }
       if (-5.6E-45f != ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToSingle()) {
- Assert.Fail("decfrac single -492913.1840948615992120438E-50\nExpected: -5.6E-45f\nWas: " + ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToSingle());
-}
+        Assert.Fail("decfrac single -492913.1840948615992120438E-50\nExpected: -5.6E-45f\nWas: " + ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToSingle());
+      }
       if (-4.929131840948616E-45d != ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToDouble()) {
- Assert.Fail("decfrac double -492913.1840948615992120438E-50\nExpected: -4.929131840948616E-45d\nWas: " + ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToDouble());
-}
+        Assert.Fail("decfrac double -492913.1840948615992120438E-50\nExpected: -4.929131840948616E-45d\nWas: " + ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-752873150058767E+272").ToSingle()) {
- Assert.Fail("decfrac single -752873150058767E+272\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-752873150058767E+272").ToSingle());
-}
+        Assert.Fail("decfrac single -752873150058767E+272\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-752873150058767E+272").ToSingle());
+      }
       if (-7.52873150058767E286d != ExtendedDecimal.FromString("-752873150058767E+272").ToDouble()) {
- Assert.Fail("decfrac double -752873150058767E+272\nExpected: -7.52873150058767E286d\nWas: " + ExtendedDecimal.FromString("-752873150058767E+272").ToDouble());
-}
+        Assert.Fail("decfrac double -752873150058767E+272\nExpected: -7.52873150058767E286d\nWas: " + ExtendedDecimal.FromString("-752873150058767E+272").ToDouble());
+      }
       if (27.311937f != ExtendedDecimal.FromString("27.311937404").ToSingle()) {
- Assert.Fail("decfrac single 27.311937404\nExpected: 27.311937f\nWas: " + ExtendedDecimal.FromString("27.311937404").ToSingle());
-}
+        Assert.Fail("decfrac single 27.311937404\nExpected: 27.311937f\nWas: " + ExtendedDecimal.FromString("27.311937404").ToSingle());
+      }
       if (27.311937404d != ExtendedDecimal.FromString("27.311937404").ToDouble()) {
- Assert.Fail("decfrac double 27.311937404\nExpected: 27.311937404d\nWas: " + ExtendedDecimal.FromString("27.311937404").ToDouble());
-}
+        Assert.Fail("decfrac double 27.311937404\nExpected: 27.311937404d\nWas: " + ExtendedDecimal.FromString("27.311937404").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("39147083343918E-143").ToSingle()) {
- Assert.Fail("decfrac single 39147083343918E-143\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("39147083343918E-143").ToSingle());
-}
+        Assert.Fail("decfrac single 39147083343918E-143\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("39147083343918E-143").ToSingle());
+      }
       if (3.9147083343918E-130d != ExtendedDecimal.FromString("39147083343918E-143").ToDouble()) {
- Assert.Fail("decfrac double 39147083343918E-143\nExpected: 3.9147083343918E-130d\nWas: " + ExtendedDecimal.FromString("39147083343918E-143").ToDouble());
-}
+        Assert.Fail("decfrac double 39147083343918E-143\nExpected: 3.9147083343918E-130d\nWas: " + ExtendedDecimal.FromString("39147083343918E-143").ToDouble());
+      }
       if (-1.97684019E11f != ExtendedDecimal.FromString("-197684018253").ToSingle()) {
- Assert.Fail("decfrac single -197684018253\nExpected: -1.97684019E11f\nWas: " + ExtendedDecimal.FromString("-197684018253").ToSingle());
-}
+        Assert.Fail("decfrac single -197684018253\nExpected: -1.97684019E11f\nWas: " + ExtendedDecimal.FromString("-197684018253").ToSingle());
+      }
       if (-1.97684018253E11d != ExtendedDecimal.FromString("-197684018253").ToDouble()) {
- Assert.Fail("decfrac double -197684018253\nExpected: -1.97684018253E11d\nWas: " + ExtendedDecimal.FromString("-197684018253").ToDouble());
-}
+        Assert.Fail("decfrac double -197684018253\nExpected: -1.97684018253E11d\nWas: " + ExtendedDecimal.FromString("-197684018253").ToDouble());
+      }
       if (6.400822E14f != ExtendedDecimal.FromString("640082188903507").ToSingle()) {
- Assert.Fail("decfrac single 640082188903507\nExpected: 6.400822E14f\nWas: " + ExtendedDecimal.FromString("640082188903507").ToSingle());
-}
+        Assert.Fail("decfrac single 640082188903507\nExpected: 6.400822E14f\nWas: " + ExtendedDecimal.FromString("640082188903507").ToSingle());
+      }
       if (6.40082188903507E14d != ExtendedDecimal.FromString("640082188903507").ToDouble()) {
- Assert.Fail("decfrac double 640082188903507\nExpected: 6.40082188903507E14d\nWas: " + ExtendedDecimal.FromString("640082188903507").ToDouble());
-}
+        Assert.Fail("decfrac double 640082188903507\nExpected: 6.40082188903507E14d\nWas: " + ExtendedDecimal.FromString("640082188903507").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-913144352720144E-312").ToSingle()) {
- Assert.Fail("decfrac single -913144352720144E-312\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-913144352720144E-312").ToSingle());
-}
+        Assert.Fail("decfrac single -913144352720144E-312\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-913144352720144E-312").ToSingle());
+      }
       if (-9.13144352720144E-298d != ExtendedDecimal.FromString("-913144352720144E-312").ToDouble()) {
- Assert.Fail("decfrac double -913144352720144E-312\nExpected: -9.13144352720144E-298d\nWas: " + ExtendedDecimal.FromString("-913144352720144E-312").ToDouble());
-}
+        Assert.Fail("decfrac double -913144352720144E-312\nExpected: -9.13144352720144E-298d\nWas: " + ExtendedDecimal.FromString("-913144352720144E-312").ToDouble());
+      }
       if (-3.68781005E15f != ExtendedDecimal.FromString("-3687809947210631").ToSingle()) {
- Assert.Fail("decfrac single -3687809947210631\nExpected: -3.68781005E15f\nWas: " + ExtendedDecimal.FromString("-3687809947210631").ToSingle());
-}
+        Assert.Fail("decfrac single -3687809947210631\nExpected: -3.68781005E15f\nWas: " + ExtendedDecimal.FromString("-3687809947210631").ToSingle());
+      }
       if (-3.687809947210631E15d != ExtendedDecimal.FromString("-3687809947210631").ToDouble()) {
- Assert.Fail("decfrac double -3687809947210631\nExpected: -3.687809947210631E15d\nWas: " + ExtendedDecimal.FromString("-3687809947210631").ToDouble());
-}
+        Assert.Fail("decfrac double -3687809947210631\nExpected: -3.687809947210631E15d\nWas: " + ExtendedDecimal.FromString("-3687809947210631").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToSingle()) {
- Assert.Fail("decfrac single 53083788630724917310.06236692262351E+169\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToSingle());
-}
+        Assert.Fail("decfrac single 53083788630724917310.06236692262351E+169\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToSingle());
+      }
       if (5.3083788630724916E188d != ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToDouble()) {
- Assert.Fail("decfrac double 53083788630724917310.06236692262351E+169\nExpected: 5.3083788630724916E188d\nWas: " + ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToDouble());
-}
+        Assert.Fail("decfrac double 53083788630724917310.06236692262351E+169\nExpected: 5.3083788630724916E188d\nWas: " + ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToDouble());
+      }
       if (-7.0943446E19f != ExtendedDecimal.FromString("-70943446332471357958").ToSingle()) {
- Assert.Fail("decfrac single -70943446332471357958\nExpected: -7.0943446E19f\nWas: " + ExtendedDecimal.FromString("-70943446332471357958").ToSingle());
-}
+        Assert.Fail("decfrac single -70943446332471357958\nExpected: -7.0943446E19f\nWas: " + ExtendedDecimal.FromString("-70943446332471357958").ToSingle());
+      }
       if (-7.094344633247136E19d != ExtendedDecimal.FromString("-70943446332471357958").ToDouble()) {
- Assert.Fail("decfrac double -70943446332471357958\nExpected: -7.094344633247136E19d\nWas: " + ExtendedDecimal.FromString("-70943446332471357958").ToDouble());
-}
+        Assert.Fail("decfrac double -70943446332471357958\nExpected: -7.094344633247136E19d\nWas: " + ExtendedDecimal.FromString("-70943446332471357958").ToDouble());
+      }
       if (63367.23f != ExtendedDecimal.FromString("63367.23157744207").ToSingle()) {
- Assert.Fail("decfrac single 63367.23157744207\nExpected: 63367.23f\nWas: " + ExtendedDecimal.FromString("63367.23157744207").ToSingle());
-}
+        Assert.Fail("decfrac single 63367.23157744207\nExpected: 63367.23f\nWas: " + ExtendedDecimal.FromString("63367.23157744207").ToSingle());
+      }
       if (63367.23157744207d != ExtendedDecimal.FromString("63367.23157744207").ToDouble()) {
- Assert.Fail("decfrac double 63367.23157744207\nExpected: 63367.23157744207d\nWas: " + ExtendedDecimal.FromString("63367.23157744207").ToDouble());
-}
+        Assert.Fail("decfrac double 63367.23157744207\nExpected: 63367.23157744207d\nWas: " + ExtendedDecimal.FromString("63367.23157744207").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("2100535E+120").ToSingle()) {
- Assert.Fail("decfrac single 2100535E+120\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("2100535E+120").ToSingle());
-}
+        Assert.Fail("decfrac single 2100535E+120\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("2100535E+120").ToSingle());
+      }
       if (2.100535E126d != ExtendedDecimal.FromString("2100535E+120").ToDouble()) {
- Assert.Fail("decfrac double 2100535E+120\nExpected: 2.100535E126d\nWas: " + ExtendedDecimal.FromString("2100535E+120").ToDouble());
-}
+        Assert.Fail("decfrac double 2100535E+120\nExpected: 2.100535E126d\nWas: " + ExtendedDecimal.FromString("2100535E+120").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("914534543212037911E-174").ToSingle()) {
- Assert.Fail("decfrac single 914534543212037911E-174\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("914534543212037911E-174").ToSingle());
-}
+        Assert.Fail("decfrac single 914534543212037911E-174\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("914534543212037911E-174").ToSingle());
+      }
       if (9.14534543212038E-157d != ExtendedDecimal.FromString("914534543212037911E-174").ToDouble()) {
- Assert.Fail("decfrac double 914534543212037911E-174\nExpected: 9.14534543212038E-157d\nWas: " + ExtendedDecimal.FromString("914534543212037911E-174").ToDouble());
-}
+        Assert.Fail("decfrac double 914534543212037911E-174\nExpected: 9.14534543212038E-157d\nWas: " + ExtendedDecimal.FromString("914534543212037911E-174").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-12437185743660570E-180").ToSingle()) {
- Assert.Fail("decfrac single -12437185743660570E-180\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-12437185743660570E-180").ToSingle());
-}
+        Assert.Fail("decfrac single -12437185743660570E-180\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-12437185743660570E-180").ToSingle());
+      }
       if (-1.243718574366057E-164d != ExtendedDecimal.FromString("-12437185743660570E-180").ToDouble()) {
- Assert.Fail("decfrac double -12437185743660570E-180\nExpected: -1.243718574366057E-164d\nWas: " + ExtendedDecimal.FromString("-12437185743660570E-180").ToDouble());
-}
+        Assert.Fail("decfrac double -12437185743660570E-180\nExpected: -1.243718574366057E-164d\nWas: " + ExtendedDecimal.FromString("-12437185743660570E-180").ToDouble());
+      }
       if (-3.3723915E19f != ExtendedDecimal.FromString("-33723915695913879E+3").ToSingle()) {
- Assert.Fail("decfrac single -33723915695913879E+3\nExpected: -3.3723915E19f\nWas: " + ExtendedDecimal.FromString("-33723915695913879E+3").ToSingle());
-}
+        Assert.Fail("decfrac single -33723915695913879E+3\nExpected: -3.3723915E19f\nWas: " + ExtendedDecimal.FromString("-33723915695913879E+3").ToSingle());
+      }
       if (-3.3723915695913878E19d != ExtendedDecimal.FromString("-33723915695913879E+3").ToDouble()) {
- Assert.Fail("decfrac double -33723915695913879E+3\nExpected: -3.3723915695913878E19d\nWas: " + ExtendedDecimal.FromString("-33723915695913879E+3").ToDouble());
-}
+        Assert.Fail("decfrac double -33723915695913879E+3\nExpected: -3.3723915695913878E19d\nWas: " + ExtendedDecimal.FromString("-33723915695913879E+3").ToDouble());
+      }
       if (6.3664833E10f != ExtendedDecimal.FromString("63664831787").ToSingle()) {
- Assert.Fail("decfrac single 63664831787\nExpected: 6.3664833E10f\nWas: " + ExtendedDecimal.FromString("63664831787").ToSingle());
-}
+        Assert.Fail("decfrac single 63664831787\nExpected: 6.3664833E10f\nWas: " + ExtendedDecimal.FromString("63664831787").ToSingle());
+      }
       if (6.3664831787E10d != ExtendedDecimal.FromString("63664831787").ToDouble()) {
- Assert.Fail("decfrac double 63664831787\nExpected: 6.3664831787E10d\nWas: " + ExtendedDecimal.FromString("63664831787").ToDouble());
-}
+        Assert.Fail("decfrac double 63664831787\nExpected: 6.3664831787E10d\nWas: " + ExtendedDecimal.FromString("63664831787").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToSingle()) {
- Assert.Fail("decfrac single 432187105445201137.3321724908E+97\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToSingle());
-}
+        Assert.Fail("decfrac single 432187105445201137.3321724908E+97\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToSingle());
+      }
       if (4.321871054452011E114d != ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToDouble()) {
- Assert.Fail("decfrac double 432187105445201137.3321724908E+97\nExpected: 4.321871054452011E114d\nWas: " + ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToDouble());
-}
+        Assert.Fail("decfrac double 432187105445201137.3321724908E+97\nExpected: 4.321871054452011E114d\nWas: " + ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToDouble());
+      }
       if (-5.1953271E13f != ExtendedDecimal.FromString("-51953270775979").ToSingle()) {
- Assert.Fail("decfrac single -51953270775979\nExpected: -5.1953271E13f\nWas: " + ExtendedDecimal.FromString("-51953270775979").ToSingle());
-}
+        Assert.Fail("decfrac single -51953270775979\nExpected: -5.1953271E13f\nWas: " + ExtendedDecimal.FromString("-51953270775979").ToSingle());
+      }
       if (-5.1953270775979E13d != ExtendedDecimal.FromString("-51953270775979").ToDouble()) {
- Assert.Fail("decfrac double -51953270775979\nExpected: -5.1953270775979E13d\nWas: " + ExtendedDecimal.FromString("-51953270775979").ToDouble());
-}
+        Assert.Fail("decfrac double -51953270775979\nExpected: -5.1953270775979E13d\nWas: " + ExtendedDecimal.FromString("-51953270775979").ToDouble());
+      }
       if (2.14953088E9f != ExtendedDecimal.FromString("2149530805").ToSingle()) {
- Assert.Fail("decfrac single 2149530805\nExpected: 2.14953088E9f\nWas: " + ExtendedDecimal.FromString("2149530805").ToSingle());
-}
+        Assert.Fail("decfrac single 2149530805\nExpected: 2.14953088E9f\nWas: " + ExtendedDecimal.FromString("2149530805").ToSingle());
+      }
       if (2.149530805E9d != ExtendedDecimal.FromString("2149530805").ToDouble()) {
- Assert.Fail("decfrac double 2149530805\nExpected: 2.149530805E9d\nWas: " + ExtendedDecimal.FromString("2149530805").ToDouble());
-}
+        Assert.Fail("decfrac double 2149530805\nExpected: 2.149530805E9d\nWas: " + ExtendedDecimal.FromString("2149530805").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-4672759140.6362E-223").ToSingle()) {
- Assert.Fail("decfrac single -4672759140.6362E-223\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-4672759140.6362E-223").ToSingle());
-}
+        Assert.Fail("decfrac single -4672759140.6362E-223\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-4672759140.6362E-223").ToSingle());
+      }
       if (-4.6727591406362E-214d != ExtendedDecimal.FromString("-4672759140.6362E-223").ToDouble()) {
- Assert.Fail("decfrac double -4672759140.6362E-223\nExpected: -4.6727591406362E-214d\nWas: " + ExtendedDecimal.FromString("-4672759140.6362E-223").ToDouble());
-}
+        Assert.Fail("decfrac double -4672759140.6362E-223\nExpected: -4.6727591406362E-214d\nWas: " + ExtendedDecimal.FromString("-4672759140.6362E-223").ToDouble());
+      }
       if (-9.0f != ExtendedDecimal.FromString("-9").ToSingle()) {
- Assert.Fail("decfrac single -9\nExpected: -9.0f\nWas: " + ExtendedDecimal.FromString("-9").ToSingle());
-}
+        Assert.Fail("decfrac single -9\nExpected: -9.0f\nWas: " + ExtendedDecimal.FromString("-9").ToSingle());
+      }
       if (-9.0d != ExtendedDecimal.FromString("-9").ToDouble()) {
- Assert.Fail("decfrac double -9\nExpected: -9.0d\nWas: " + ExtendedDecimal.FromString("-9").ToDouble());
-}
+        Assert.Fail("decfrac double -9\nExpected: -9.0d\nWas: " + ExtendedDecimal.FromString("-9").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-1903960322936E+304").ToSingle()) {
- Assert.Fail("decfrac single -1903960322936E+304\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-1903960322936E+304").ToSingle());
-}
+        Assert.Fail("decfrac single -1903960322936E+304\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-1903960322936E+304").ToSingle());
+      }
       if (Double.NegativeInfinity != ExtendedDecimal.FromString("-1903960322936E+304").ToDouble()) {
- Assert.Fail("decfrac double -1903960322936E+304\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-1903960322936E+304").ToDouble());
-}
+        Assert.Fail("decfrac double -1903960322936E+304\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-1903960322936E+304").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("405766405417980707E+316").ToSingle()) {
- Assert.Fail("decfrac single 405766405417980707E+316\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("405766405417980707E+316").ToSingle());
-}
+        Assert.Fail("decfrac single 405766405417980707E+316\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("405766405417980707E+316").ToSingle());
+      }
       if (Double.PositiveInfinity != ExtendedDecimal.FromString("405766405417980707E+316").ToDouble()) {
- Assert.Fail("decfrac double 405766405417980707E+316\nExpected: Double.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("405766405417980707E+316").ToDouble());
-}
+        Assert.Fail("decfrac double 405766405417980707E+316\nExpected: Double.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("405766405417980707E+316").ToDouble());
+      }
       if (-166174.94f != ExtendedDecimal.FromString("-1661749343992047E-10").ToSingle()) {
- Assert.Fail("decfrac single -1661749343992047E-10\nExpected: -166174.94f\nWas: " + ExtendedDecimal.FromString("-1661749343992047E-10").ToSingle());
-}
+        Assert.Fail("decfrac single -1661749343992047E-10\nExpected: -166174.94f\nWas: " + ExtendedDecimal.FromString("-1661749343992047E-10").ToSingle());
+      }
       if (-166174.9343992047d != ExtendedDecimal.FromString("-1661749343992047E-10").ToDouble()) {
- Assert.Fail("decfrac double -1661749343992047E-10\nExpected: -166174.9343992047d\nWas: " + ExtendedDecimal.FromString("-1661749343992047E-10").ToDouble());
-}
+        Assert.Fail("decfrac double -1661749343992047E-10\nExpected: -166174.9343992047d\nWas: " + ExtendedDecimal.FromString("-1661749343992047E-10").ToDouble());
+      }
       if (5893094.0f != ExtendedDecimal.FromString("5893094.099969899224047667").ToSingle()) {
- Assert.Fail("decfrac single 5893094.099969899224047667\nExpected: 5893094.0f\nWas: " + ExtendedDecimal.FromString("5893094.099969899224047667").ToSingle());
-}
+        Assert.Fail("decfrac single 5893094.099969899224047667\nExpected: 5893094.0f\nWas: " + ExtendedDecimal.FromString("5893094.099969899224047667").ToSingle());
+      }
       if (5893094.099969899d != ExtendedDecimal.FromString("5893094.099969899224047667").ToDouble()) {
- Assert.Fail("decfrac double 5893094.099969899224047667\nExpected: 5893094.099969899d\nWas: " + ExtendedDecimal.FromString("5893094.099969899224047667").ToDouble());
-}
+        Assert.Fail("decfrac double 5893094.099969899224047667\nExpected: 5893094.099969899d\nWas: " + ExtendedDecimal.FromString("5893094.099969899224047667").ToDouble());
+      }
       if (-3.4023195E17f != ExtendedDecimal.FromString("-340231946762317122").ToSingle()) {
- Assert.Fail("decfrac single -340231946762317122\nExpected: -3.4023195E17f\nWas: " + ExtendedDecimal.FromString("-340231946762317122").ToSingle());
-}
+        Assert.Fail("decfrac single -340231946762317122\nExpected: -3.4023195E17f\nWas: " + ExtendedDecimal.FromString("-340231946762317122").ToSingle());
+      }
       if (-3.4023194676231712E17d != ExtendedDecimal.FromString("-340231946762317122").ToDouble()) {
- Assert.Fail("decfrac double -340231946762317122\nExpected: -3.4023194676231712E17d\nWas: " + ExtendedDecimal.FromString("-340231946762317122").ToDouble());
-}
+        Assert.Fail("decfrac double -340231946762317122\nExpected: -3.4023194676231712E17d\nWas: " + ExtendedDecimal.FromString("-340231946762317122").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("3.10041643978E+236").ToSingle()) {
- Assert.Fail("decfrac single 3.10041643978E+236\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("3.10041643978E+236").ToSingle());
-}
+        Assert.Fail("decfrac single 3.10041643978E+236\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("3.10041643978E+236").ToSingle());
+      }
       if (3.10041643978E236d != ExtendedDecimal.FromString("3.10041643978E+236").ToDouble()) {
- Assert.Fail("decfrac double 3.10041643978E+236\nExpected: 3.10041643978E236d\nWas: " + ExtendedDecimal.FromString("3.10041643978E+236").ToDouble());
-}
+        Assert.Fail("decfrac double 3.10041643978E+236\nExpected: 3.10041643978E236d\nWas: " + ExtendedDecimal.FromString("3.10041643978E+236").ToDouble());
+      }
       if (1.43429217E13f != ExtendedDecimal.FromString("14342921940186").ToSingle()) {
- Assert.Fail("decfrac single 14342921940186\nExpected: 1.43429217E13f\nWas: " + ExtendedDecimal.FromString("14342921940186").ToSingle());
-}
+        Assert.Fail("decfrac single 14342921940186\nExpected: 1.43429217E13f\nWas: " + ExtendedDecimal.FromString("14342921940186").ToSingle());
+      }
       if (1.4342921940186E13d != ExtendedDecimal.FromString("14342921940186").ToDouble()) {
- Assert.Fail("decfrac double 14342921940186\nExpected: 1.4342921940186E13d\nWas: " + ExtendedDecimal.FromString("14342921940186").ToDouble());
-}
+        Assert.Fail("decfrac double 14342921940186\nExpected: 1.4342921940186E13d\nWas: " + ExtendedDecimal.FromString("14342921940186").ToDouble());
+      }
       if (1.97766234E9f != ExtendedDecimal.FromString("1977662368").ToSingle()) {
- Assert.Fail("decfrac single 1977662368\nExpected: 1.97766234E9f\nWas: " + ExtendedDecimal.FromString("1977662368").ToSingle());
-}
+        Assert.Fail("decfrac single 1977662368\nExpected: 1.97766234E9f\nWas: " + ExtendedDecimal.FromString("1977662368").ToSingle());
+      }
       if (1.977662368E9d != ExtendedDecimal.FromString("1977662368").ToDouble()) {
- Assert.Fail("decfrac double 1977662368\nExpected: 1.977662368E9d\nWas: " + ExtendedDecimal.FromString("1977662368").ToDouble());
-}
+        Assert.Fail("decfrac double 1977662368\nExpected: 1.977662368E9d\nWas: " + ExtendedDecimal.FromString("1977662368").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("891.32009975058011674E-268").ToSingle()) {
- Assert.Fail("decfrac single 891.32009975058011674E-268\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("891.32009975058011674E-268").ToSingle());
-}
+        Assert.Fail("decfrac single 891.32009975058011674E-268\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("891.32009975058011674E-268").ToSingle());
+      }
       if (8.913200997505801E-266d != ExtendedDecimal.FromString("891.32009975058011674E-268").ToDouble()) {
- Assert.Fail("decfrac double 891.32009975058011674E-268\nExpected: 8.913200997505801E-266d\nWas: " + ExtendedDecimal.FromString("891.32009975058011674E-268").ToDouble());
-}
+        Assert.Fail("decfrac double 891.32009975058011674E-268\nExpected: 8.913200997505801E-266d\nWas: " + ExtendedDecimal.FromString("891.32009975058011674E-268").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToSingle()) {
- Assert.Fail("decfrac single -895468936291.471679344983419E+316\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToSingle());
-}
+        Assert.Fail("decfrac single -895468936291.471679344983419E+316\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToSingle());
+      }
       if (Double.NegativeInfinity != ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToDouble()) {
- Assert.Fail("decfrac double -895468936291.471679344983419E+316\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToDouble());
-}
+        Assert.Fail("decfrac double -895468936291.471679344983419E+316\nExpected: Double.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("61308E-104").ToSingle()) {
- Assert.Fail("decfrac single 61308E-104\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("61308E-104").ToSingle());
-}
+        Assert.Fail("decfrac single 61308E-104\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("61308E-104").ToSingle());
+      }
       if (6.1308E-100d != ExtendedDecimal.FromString("61308E-104").ToDouble()) {
- Assert.Fail("decfrac double 61308E-104\nExpected: 6.1308E-100d\nWas: " + ExtendedDecimal.FromString("61308E-104").ToDouble());
-}
+        Assert.Fail("decfrac double 61308E-104\nExpected: 6.1308E-100d\nWas: " + ExtendedDecimal.FromString("61308E-104").ToDouble());
+      }
       if (-5362.791f != ExtendedDecimal.FromString("-5362.79122778669072").ToSingle()) {
- Assert.Fail("decfrac single -5362.79122778669072\nExpected: -5362.791f\nWas: " + ExtendedDecimal.FromString("-5362.79122778669072").ToSingle());
-}
+        Assert.Fail("decfrac single -5362.79122778669072\nExpected: -5362.791f\nWas: " + ExtendedDecimal.FromString("-5362.79122778669072").ToSingle());
+      }
       if (-5362.791227786691d != ExtendedDecimal.FromString("-5362.79122778669072").ToDouble()) {
- Assert.Fail("decfrac double -5362.79122778669072\nExpected: -5362.791227786691d\nWas: " + ExtendedDecimal.FromString("-5362.79122778669072").ToDouble());
-}
+        Assert.Fail("decfrac double -5362.79122778669072\nExpected: -5362.791227786691d\nWas: " + ExtendedDecimal.FromString("-5362.79122778669072").ToDouble());
+      }
       if (0.0f != ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToSingle()) {
- Assert.Fail("decfrac single 861664379590901308.23330613776542261919E-101\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToSingle());
-}
+        Assert.Fail("decfrac single 861664379590901308.23330613776542261919E-101\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToSingle());
+      }
       if (8.616643795909013E-84d != ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToDouble()) {
- Assert.Fail("decfrac double 861664379590901308.23330613776542261919E-101\nExpected: 8.616643795909013E-84d\nWas: " + ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToDouble());
-}
+        Assert.Fail("decfrac double 861664379590901308.23330613776542261919E-101\nExpected: 8.616643795909013E-84d\nWas: " + ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToSingle()) {
- Assert.Fail("decfrac single -1884773180.50192918329237967651E+204\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToSingle());
-}
+        Assert.Fail("decfrac single -1884773180.50192918329237967651E+204\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToSingle());
+      }
       if (-1.884773180501929E213d != ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToDouble()) {
- Assert.Fail("decfrac double -1884773180.50192918329237967651E+204\nExpected: -1.884773180501929E213d\nWas: " + ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToDouble());
-}
+        Assert.Fail("decfrac double -1884773180.50192918329237967651E+204\nExpected: -1.884773180501929E213d\nWas: " + ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToDouble());
+      }
       if (1.89187207E13f != ExtendedDecimal.FromString("18918720095123.6152").ToSingle()) {
- Assert.Fail("decfrac single 18918720095123.6152\nExpected: 1.89187207E13f\nWas: " + ExtendedDecimal.FromString("18918720095123.6152").ToSingle());
-}
+        Assert.Fail("decfrac single 18918720095123.6152\nExpected: 1.89187207E13f\nWas: " + ExtendedDecimal.FromString("18918720095123.6152").ToSingle());
+      }
       if (1.8918720095123613E13d != ExtendedDecimal.FromString("18918720095123.6152").ToDouble()) {
- Assert.Fail("decfrac double 18918720095123.6152\nExpected: 1.8918720095123613E13d\nWas: " + ExtendedDecimal.FromString("18918720095123.6152").ToDouble());
-}
+        Assert.Fail("decfrac double 18918720095123.6152\nExpected: 1.8918720095123613E13d\nWas: " + ExtendedDecimal.FromString("18918720095123.6152").ToDouble());
+      }
       if (94667.95f != ExtendedDecimal.FromString("94667.95264211741602").ToSingle()) {
- Assert.Fail("decfrac single 94667.95264211741602\nExpected: 94667.95f\nWas: " + ExtendedDecimal.FromString("94667.95264211741602").ToSingle());
-}
+        Assert.Fail("decfrac single 94667.95264211741602\nExpected: 94667.95f\nWas: " + ExtendedDecimal.FromString("94667.95264211741602").ToSingle());
+      }
       if (94667.95264211742d != ExtendedDecimal.FromString("94667.95264211741602").ToDouble()) {
- Assert.Fail("decfrac double 94667.95264211741602\nExpected: 94667.95264211742d\nWas: " + ExtendedDecimal.FromString("94667.95264211741602").ToDouble());
-}
+        Assert.Fail("decfrac double 94667.95264211741602\nExpected: 94667.95264211742d\nWas: " + ExtendedDecimal.FromString("94667.95264211741602").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("1230618521424E+134").ToSingle()) {
- Assert.Fail("decfrac single 1230618521424E+134\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("1230618521424E+134").ToSingle());
-}
+        Assert.Fail("decfrac single 1230618521424E+134\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("1230618521424E+134").ToSingle());
+      }
       if (1.230618521424E146d != ExtendedDecimal.FromString("1230618521424E+134").ToDouble()) {
- Assert.Fail("decfrac double 1230618521424E+134\nExpected: 1.230618521424E146d\nWas: " + ExtendedDecimal.FromString("1230618521424E+134").ToDouble());
-}
+        Assert.Fail("decfrac double 1230618521424E+134\nExpected: 1.230618521424E146d\nWas: " + ExtendedDecimal.FromString("1230618521424E+134").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("3022403935588782E+85").ToSingle()) {
- Assert.Fail("decfrac single 3022403935588782E+85\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("3022403935588782E+85").ToSingle());
-}
+        Assert.Fail("decfrac single 3022403935588782E+85\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("3022403935588782E+85").ToSingle());
+      }
       if (3.022403935588782E100d != ExtendedDecimal.FromString("3022403935588782E+85").ToDouble()) {
- Assert.Fail("decfrac double 3022403935588782E+85\nExpected: 3.022403935588782E100d\nWas: " + ExtendedDecimal.FromString("3022403935588782E+85").ToDouble());
-}
+        Assert.Fail("decfrac double 3022403935588782E+85\nExpected: 3.022403935588782E100d\nWas: " + ExtendedDecimal.FromString("3022403935588782E+85").ToDouble());
+      }
       if (Single.PositiveInfinity != ExtendedDecimal.FromString("64543E+274").ToSingle()) {
- Assert.Fail("decfrac single 64543E+274\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("64543E+274").ToSingle());
-}
+        Assert.Fail("decfrac single 64543E+274\nExpected: Single.PositiveInfinity\nWas: " + ExtendedDecimal.FromString("64543E+274").ToSingle());
+      }
       if (6.4543E278d != ExtendedDecimal.FromString("64543E+274").ToDouble()) {
- Assert.Fail("decfrac double 64543E+274\nExpected: 6.4543E278d\nWas: " + ExtendedDecimal.FromString("64543E+274").ToDouble());
-}
+        Assert.Fail("decfrac double 64543E+274\nExpected: 6.4543E278d\nWas: " + ExtendedDecimal.FromString("64543E+274").ToDouble());
+      }
       if (6.7181355E10f != ExtendedDecimal.FromString("67181356837.903551518080873954").ToSingle()) {
- Assert.Fail("decfrac single 67181356837.903551518080873954\nExpected: 6.7181355E10f\nWas: " + ExtendedDecimal.FromString("67181356837.903551518080873954").ToSingle());
-}
+        Assert.Fail("decfrac single 67181356837.903551518080873954\nExpected: 6.7181355E10f\nWas: " + ExtendedDecimal.FromString("67181356837.903551518080873954").ToSingle());
+      }
       if (6.718135683790355E10d != ExtendedDecimal.FromString("67181356837.903551518080873954").ToDouble()) {
- Assert.Fail("decfrac double 67181356837.903551518080873954\nExpected: 6.718135683790355E10d\nWas: " + ExtendedDecimal.FromString("67181356837.903551518080873954").ToDouble());
-}
+        Assert.Fail("decfrac double 67181356837.903551518080873954\nExpected: 6.718135683790355E10d\nWas: " + ExtendedDecimal.FromString("67181356837.903551518080873954").ToDouble());
+      }
       if (-0.0f != ExtendedDecimal.FromString("-4508016E-321").ToSingle()) {
- Assert.Fail("decfrac single -4508016E-321\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-4508016E-321").ToSingle());
-}
+        Assert.Fail("decfrac single -4508016E-321\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-4508016E-321").ToSingle());
+      }
       if (-4.508016E-315d != ExtendedDecimal.FromString("-4508016E-321").ToDouble()) {
- Assert.Fail("decfrac double -4508016E-321\nExpected: -4.508016E-315d\nWas: " + ExtendedDecimal.FromString("-4508016E-321").ToDouble());
-}
+        Assert.Fail("decfrac double -4508016E-321\nExpected: -4.508016E-315d\nWas: " + ExtendedDecimal.FromString("-4508016E-321").ToDouble());
+      }
       if (Single.NegativeInfinity != ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToSingle()) {
- Assert.Fail("decfrac single -62855032520.512452348497E+39\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToSingle());
-}
+        Assert.Fail("decfrac single -62855032520.512452348497E+39\nExpected: Single.NegativeInfinity\nWas: " + ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToSingle());
+      }
       if (-6.285503252051245E49d != ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToDouble()) {
- Assert.Fail("decfrac double -62855032520.512452348497E+39\nExpected: -6.285503252051245E49d\nWas: " + ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToDouble());
-}
+        Assert.Fail("decfrac double -62855032520.512452348497E+39\nExpected: -6.285503252051245E49d\nWas: " + ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToDouble());
+      }
       if (3177.2236f != ExtendedDecimal.FromString("3177.2237286").ToSingle()) {
- Assert.Fail("decfrac single 3177.2237286\nExpected: 3177.2236f\nWas: " + ExtendedDecimal.FromString("3177.2237286").ToSingle());
-}
+        Assert.Fail("decfrac single 3177.2237286\nExpected: 3177.2236f\nWas: " + ExtendedDecimal.FromString("3177.2237286").ToSingle());
+      }
       if (3177.2237286d != ExtendedDecimal.FromString("3177.2237286").ToDouble()) {
- Assert.Fail("decfrac double 3177.2237286\nExpected: 3177.2237286d\nWas: " + ExtendedDecimal.FromString("3177.2237286").ToDouble());
-}
+        Assert.Fail("decfrac double 3177.2237286\nExpected: 3177.2237286d\nWas: " + ExtendedDecimal.FromString("3177.2237286").ToDouble());
+      }
       if (-7.950583E8f != ExtendedDecimal.FromString("-795058316.9186492185346968").ToSingle()) {
- Assert.Fail("decfrac single -795058316.9186492185346968\nExpected: -7.950583E8f\nWas: " + ExtendedDecimal.FromString("-795058316.9186492185346968").ToSingle());
-}
+        Assert.Fail("decfrac single -795058316.9186492185346968\nExpected: -7.950583E8f\nWas: " + ExtendedDecimal.FromString("-795058316.9186492185346968").ToSingle());
+      }
       if (-7.950583169186492E8d != ExtendedDecimal.FromString("-795058316.9186492185346968").ToDouble()) {
- Assert.Fail("decfrac double -795058316.9186492185346968\nExpected: -7.950583169186492E8d\nWas: " + ExtendedDecimal.FromString("-795058316.9186492185346968").ToDouble());
-}
+        Assert.Fail("decfrac double -795058316.9186492185346968\nExpected: -7.950583169186492E8d\nWas: " + ExtendedDecimal.FromString("-795058316.9186492185346968").ToDouble());
+      }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestDecFracIntegersToSingleDouble() {
       if (-5.7703064E7f != ExtendedDecimal.FromString("-57703066").ToSingle()) {
- Assert.Fail("decfrac single -57703066\nExpected: -5.7703064E7f\nWas: " + ExtendedDecimal.FromString("-57703066").ToSingle());
-}
+        Assert.Fail("decfrac single -57703066\nExpected: -5.7703064E7f\nWas: " + ExtendedDecimal.FromString("-57703066").ToSingle());
+      }
       if (-5.7703066E7d != ExtendedDecimal.FromString("-57703066").ToDouble()) {
- Assert.Fail("decfrac double -57703066\nExpected: -5.7703066E7d\nWas: " + ExtendedDecimal.FromString("-57703066").ToDouble());
-}
+        Assert.Fail("decfrac double -57703066\nExpected: -5.7703066E7d\nWas: " + ExtendedDecimal.FromString("-57703066").ToDouble());
+      }
       if (1590432.0f != ExtendedDecimal.FromString("1590432").ToSingle()) {
- Assert.Fail("decfrac single 1590432\nExpected: 1590432.0f\nWas: " + ExtendedDecimal.FromString("1590432").ToSingle());
-}
+        Assert.Fail("decfrac single 1590432\nExpected: 1590432.0f\nWas: " + ExtendedDecimal.FromString("1590432").ToSingle());
+      }
       if (1590432.0d != ExtendedDecimal.FromString("1590432").ToDouble()) {
- Assert.Fail("decfrac double 1590432\nExpected: 1590432.0d\nWas: " + ExtendedDecimal.FromString("1590432").ToDouble());
-}
+        Assert.Fail("decfrac double 1590432\nExpected: 1590432.0d\nWas: " + ExtendedDecimal.FromString("1590432").ToDouble());
+      }
       if (9.5464253E9f != ExtendedDecimal.FromString("9546425267").ToSingle()) {
- Assert.Fail("decfrac single 9546425267\nExpected: 9.5464253E9f\nWas: " + ExtendedDecimal.FromString("9546425267").ToSingle());
-}
+        Assert.Fail("decfrac single 9546425267\nExpected: 9.5464253E9f\nWas: " + ExtendedDecimal.FromString("9546425267").ToSingle());
+      }
       if (9.546425267E9d != ExtendedDecimal.FromString("9546425267").ToDouble()) {
- Assert.Fail("decfrac double 9546425267\nExpected: 9.546425267E9d\nWas: " + ExtendedDecimal.FromString("9546425267").ToDouble());
-}
+        Assert.Fail("decfrac double 9546425267\nExpected: 9.546425267E9d\nWas: " + ExtendedDecimal.FromString("9546425267").ToDouble());
+      }
       if (7.3227311E16f != ExtendedDecimal.FromString("73227309698439247").ToSingle()) {
- Assert.Fail("decfrac single 73227309698439247\nExpected: 7.3227311E16f\nWas: " + ExtendedDecimal.FromString("73227309698439247").ToSingle());
-}
+        Assert.Fail("decfrac single 73227309698439247\nExpected: 7.3227311E16f\nWas: " + ExtendedDecimal.FromString("73227309698439247").ToSingle());
+      }
       if (7.3227309698439248E16d != ExtendedDecimal.FromString("73227309698439247").ToDouble()) {
- Assert.Fail("decfrac double 73227309698439247\nExpected: 7.3227309698439248E16d\nWas: " + ExtendedDecimal.FromString("73227309698439247").ToDouble());
-}
+        Assert.Fail("decfrac double 73227309698439247\nExpected: 7.3227309698439248E16d\nWas: " + ExtendedDecimal.FromString("73227309698439247").ToDouble());
+      }
       if (75114.0f != ExtendedDecimal.FromString("75114").ToSingle()) {
- Assert.Fail("decfrac single 75114\nExpected: 75114.0f\nWas: " + ExtendedDecimal.FromString("75114").ToSingle());
-}
+        Assert.Fail("decfrac single 75114\nExpected: 75114.0f\nWas: " + ExtendedDecimal.FromString("75114").ToSingle());
+      }
       if (75114.0d != ExtendedDecimal.FromString("75114").ToDouble()) {
- Assert.Fail("decfrac double 75114\nExpected: 75114.0d\nWas: " + ExtendedDecimal.FromString("75114").ToDouble());
-}
+        Assert.Fail("decfrac double 75114\nExpected: 75114.0d\nWas: " + ExtendedDecimal.FromString("75114").ToDouble());
+      }
       if (64.0f != ExtendedDecimal.FromString("64").ToSingle()) {
- Assert.Fail("decfrac single 64\nExpected: 64.0f\nWas: " + ExtendedDecimal.FromString("64").ToSingle());
-}
+        Assert.Fail("decfrac single 64\nExpected: 64.0f\nWas: " + ExtendedDecimal.FromString("64").ToSingle());
+      }
       if (64.0d != ExtendedDecimal.FromString("64").ToDouble()) {
- Assert.Fail("decfrac double 64\nExpected: 64.0d\nWas: " + ExtendedDecimal.FromString("64").ToDouble());
-}
+        Assert.Fail("decfrac double 64\nExpected: 64.0d\nWas: " + ExtendedDecimal.FromString("64").ToDouble());
+      }
       if (8.6352293E15f != ExtendedDecimal.FromString("8635229353951207").ToSingle()) {
- Assert.Fail("decfrac single 8635229353951207\nExpected: 8.6352293E15f\nWas: " + ExtendedDecimal.FromString("8635229353951207").ToSingle());
-}
+        Assert.Fail("decfrac single 8635229353951207\nExpected: 8.6352293E15f\nWas: " + ExtendedDecimal.FromString("8635229353951207").ToSingle());
+      }
       if (8.635229353951207E15d != ExtendedDecimal.FromString("8635229353951207").ToDouble()) {
- Assert.Fail("decfrac double 8635229353951207\nExpected: 8.635229353951207E15d\nWas: " + ExtendedDecimal.FromString("8635229353951207").ToDouble());
-}
+        Assert.Fail("decfrac double 8635229353951207\nExpected: 8.635229353951207E15d\nWas: " + ExtendedDecimal.FromString("8635229353951207").ToDouble());
+      }
       if (-8.056573E19f != ExtendedDecimal.FromString("-80565729661447979457").ToSingle()) {
- Assert.Fail("decfrac single -80565729661447979457\nExpected: -8.056573E19f\nWas: " + ExtendedDecimal.FromString("-80565729661447979457").ToSingle());
-}
+        Assert.Fail("decfrac single -80565729661447979457\nExpected: -8.056573E19f\nWas: " + ExtendedDecimal.FromString("-80565729661447979457").ToSingle());
+      }
       if (-8.056572966144798E19d != ExtendedDecimal.FromString("-80565729661447979457").ToDouble()) {
- Assert.Fail("decfrac double -80565729661447979457\nExpected: -8.056572966144798E19d\nWas: " + ExtendedDecimal.FromString("-80565729661447979457").ToDouble());
-}
+        Assert.Fail("decfrac double -80565729661447979457\nExpected: -8.056572966144798E19d\nWas: " + ExtendedDecimal.FromString("-80565729661447979457").ToDouble());
+      }
       if (8.1540558E14f != ExtendedDecimal.FromString("815405565228754").ToSingle()) {
- Assert.Fail("decfrac single 815405565228754\nExpected: 8.1540558E14f\nWas: " + ExtendedDecimal.FromString("815405565228754").ToSingle());
-}
+        Assert.Fail("decfrac single 815405565228754\nExpected: 8.1540558E14f\nWas: " + ExtendedDecimal.FromString("815405565228754").ToSingle());
+      }
       if (8.15405565228754E14d != ExtendedDecimal.FromString("815405565228754").ToDouble()) {
- Assert.Fail("decfrac double 815405565228754\nExpected: 8.15405565228754E14d\nWas: " + ExtendedDecimal.FromString("815405565228754").ToDouble());
-}
+        Assert.Fail("decfrac double 815405565228754\nExpected: 8.15405565228754E14d\nWas: " + ExtendedDecimal.FromString("815405565228754").ToDouble());
+      }
       if (-6.1008438E16f != ExtendedDecimal.FromString("-61008438357089231").ToSingle()) {
- Assert.Fail("decfrac single -61008438357089231\nExpected: -6.1008438E16f\nWas: " + ExtendedDecimal.FromString("-61008438357089231").ToSingle());
-}
+        Assert.Fail("decfrac single -61008438357089231\nExpected: -6.1008438E16f\nWas: " + ExtendedDecimal.FromString("-61008438357089231").ToSingle());
+      }
       if (-6.1008438357089232E16d != ExtendedDecimal.FromString("-61008438357089231").ToDouble()) {
- Assert.Fail("decfrac double -61008438357089231\nExpected: -6.1008438357089232E16d\nWas: " + ExtendedDecimal.FromString("-61008438357089231").ToDouble());
-}
+        Assert.Fail("decfrac double -61008438357089231\nExpected: -6.1008438357089232E16d\nWas: " + ExtendedDecimal.FromString("-61008438357089231").ToDouble());
+      }
       if (-46526.0f != ExtendedDecimal.FromString("-46526").ToSingle()) {
- Assert.Fail("decfrac single -46526\nExpected: -46526.0f\nWas: " + ExtendedDecimal.FromString("-46526").ToSingle());
-}
+        Assert.Fail("decfrac single -46526\nExpected: -46526.0f\nWas: " + ExtendedDecimal.FromString("-46526").ToSingle());
+      }
       if (-46526.0d != ExtendedDecimal.FromString("-46526").ToDouble()) {
- Assert.Fail("decfrac double -46526\nExpected: -46526.0d\nWas: " + ExtendedDecimal.FromString("-46526").ToDouble());
-}
+        Assert.Fail("decfrac double -46526\nExpected: -46526.0d\nWas: " + ExtendedDecimal.FromString("-46526").ToDouble());
+      }
       if (5.1199847E18f != ExtendedDecimal.FromString("5119984668352258853").ToSingle()) {
- Assert.Fail("decfrac single 5119984668352258853\nExpected: 5.1199847E18f\nWas: " + ExtendedDecimal.FromString("5119984668352258853").ToSingle());
-}
+        Assert.Fail("decfrac single 5119984668352258853\nExpected: 5.1199847E18f\nWas: " + ExtendedDecimal.FromString("5119984668352258853").ToSingle());
+      }
       if (5.1199846683522591E18d != ExtendedDecimal.FromString("5119984668352258853").ToDouble()) {
- Assert.Fail("decfrac double 5119984668352258853\nExpected: 5.1199846683522591E18d\nWas: " + ExtendedDecimal.FromString("5119984668352258853").ToDouble());
-}
+        Assert.Fail("decfrac double 5119984668352258853\nExpected: 5.1199846683522591E18d\nWas: " + ExtendedDecimal.FromString("5119984668352258853").ToDouble());
+      }
       if (1851.0f != ExtendedDecimal.FromString("1851").ToSingle()) {
- Assert.Fail("decfrac single 1851\nExpected: 1851.0f\nWas: " + ExtendedDecimal.FromString("1851").ToSingle());
-}
+        Assert.Fail("decfrac single 1851\nExpected: 1851.0f\nWas: " + ExtendedDecimal.FromString("1851").ToSingle());
+      }
       if (1851.0d != ExtendedDecimal.FromString("1851").ToDouble()) {
- Assert.Fail("decfrac double 1851\nExpected: 1851.0d\nWas: " + ExtendedDecimal.FromString("1851").ToDouble());
-}
+        Assert.Fail("decfrac double 1851\nExpected: 1851.0d\nWas: " + ExtendedDecimal.FromString("1851").ToDouble());
+      }
       if (8.7587332E15f != ExtendedDecimal.FromString("8758733009763848").ToSingle()) {
- Assert.Fail("decfrac single 8758733009763848\nExpected: 8.7587332E15f\nWas: " + ExtendedDecimal.FromString("8758733009763848").ToSingle());
-}
+        Assert.Fail("decfrac single 8758733009763848\nExpected: 8.7587332E15f\nWas: " + ExtendedDecimal.FromString("8758733009763848").ToSingle());
+      }
       if (8.758733009763848E15d != ExtendedDecimal.FromString("8758733009763848").ToDouble()) {
- Assert.Fail("decfrac double 8758733009763848\nExpected: 8.758733009763848E15d\nWas: " + ExtendedDecimal.FromString("8758733009763848").ToDouble());
-}
+        Assert.Fail("decfrac double 8758733009763848\nExpected: 8.758733009763848E15d\nWas: " + ExtendedDecimal.FromString("8758733009763848").ToDouble());
+      }
       if (51.0f != ExtendedDecimal.FromString("51").ToSingle()) {
- Assert.Fail("decfrac single 51\nExpected: 51.0f\nWas: " + ExtendedDecimal.FromString("51").ToSingle());
-}
+        Assert.Fail("decfrac single 51\nExpected: 51.0f\nWas: " + ExtendedDecimal.FromString("51").ToSingle());
+      }
       if (51.0d != ExtendedDecimal.FromString("51").ToDouble()) {
- Assert.Fail("decfrac double 51\nExpected: 51.0d\nWas: " + ExtendedDecimal.FromString("51").ToDouble());
-}
+        Assert.Fail("decfrac double 51\nExpected: 51.0d\nWas: " + ExtendedDecimal.FromString("51").ToDouble());
+      }
       if (9.4281774E11f != ExtendedDecimal.FromString("942817726107").ToSingle()) {
- Assert.Fail("decfrac single 942817726107\nExpected: 9.4281774E11f\nWas: " + ExtendedDecimal.FromString("942817726107").ToSingle());
-}
+        Assert.Fail("decfrac single 942817726107\nExpected: 9.4281774E11f\nWas: " + ExtendedDecimal.FromString("942817726107").ToSingle());
+      }
       if (9.42817726107E11d != ExtendedDecimal.FromString("942817726107").ToDouble()) {
- Assert.Fail("decfrac double 942817726107\nExpected: 9.42817726107E11d\nWas: " + ExtendedDecimal.FromString("942817726107").ToDouble());
-}
+        Assert.Fail("decfrac double 942817726107\nExpected: 9.42817726107E11d\nWas: " + ExtendedDecimal.FromString("942817726107").ToDouble());
+      }
       if (186575.0f != ExtendedDecimal.FromString("186575").ToSingle()) {
- Assert.Fail("decfrac single 186575\nExpected: 186575.0f\nWas: " + ExtendedDecimal.FromString("186575").ToSingle());
-}
+        Assert.Fail("decfrac single 186575\nExpected: 186575.0f\nWas: " + ExtendedDecimal.FromString("186575").ToSingle());
+      }
       if (186575.0d != ExtendedDecimal.FromString("186575").ToDouble()) {
- Assert.Fail("decfrac double 186575\nExpected: 186575.0d\nWas: " + ExtendedDecimal.FromString("186575").ToDouble());
-}
+        Assert.Fail("decfrac double 186575\nExpected: 186575.0d\nWas: " + ExtendedDecimal.FromString("186575").ToDouble());
+      }
       if (-3.47313997E9f != ExtendedDecimal.FromString("-3473140020").ToSingle()) {
- Assert.Fail("decfrac single -3473140020\nExpected: -3.47313997E9f\nWas: " + ExtendedDecimal.FromString("-3473140020").ToSingle());
-}
+        Assert.Fail("decfrac single -3473140020\nExpected: -3.47313997E9f\nWas: " + ExtendedDecimal.FromString("-3473140020").ToSingle());
+      }
       if (-3.47314002E9d != ExtendedDecimal.FromString("-3473140020").ToDouble()) {
- Assert.Fail("decfrac double -3473140020\nExpected: -3.47314002E9d\nWas: " + ExtendedDecimal.FromString("-3473140020").ToDouble());
-}
+        Assert.Fail("decfrac double -3473140020\nExpected: -3.47314002E9d\nWas: " + ExtendedDecimal.FromString("-3473140020").ToDouble());
+      }
       if (2.66134912E8f != ExtendedDecimal.FromString("266134912").ToSingle()) {
- Assert.Fail("decfrac single 266134912\nExpected: 2.66134912E8f\nWas: " + ExtendedDecimal.FromString("266134912").ToSingle());
-}
+        Assert.Fail("decfrac single 266134912\nExpected: 2.66134912E8f\nWas: " + ExtendedDecimal.FromString("266134912").ToSingle());
+      }
       if (2.66134912E8d != ExtendedDecimal.FromString("266134912").ToDouble()) {
- Assert.Fail("decfrac double 266134912\nExpected: 2.66134912E8d\nWas: " + ExtendedDecimal.FromString("266134912").ToDouble());
-}
+        Assert.Fail("decfrac double 266134912\nExpected: 2.66134912E8d\nWas: " + ExtendedDecimal.FromString("266134912").ToDouble());
+      }
       if (5209.0f != ExtendedDecimal.FromString("5209").ToSingle()) {
- Assert.Fail("decfrac single 5209\nExpected: 5209.0f\nWas: " + ExtendedDecimal.FromString("5209").ToSingle());
-}
+        Assert.Fail("decfrac single 5209\nExpected: 5209.0f\nWas: " + ExtendedDecimal.FromString("5209").ToSingle());
+      }
       if (5209.0d != ExtendedDecimal.FromString("5209").ToDouble()) {
- Assert.Fail("decfrac double 5209\nExpected: 5209.0d\nWas: " + ExtendedDecimal.FromString("5209").ToDouble());
-}
+        Assert.Fail("decfrac double 5209\nExpected: 5209.0d\nWas: " + ExtendedDecimal.FromString("5209").ToDouble());
+      }
       if (70489.0f != ExtendedDecimal.FromString("70489").ToSingle()) {
- Assert.Fail("decfrac single 70489\nExpected: 70489.0f\nWas: " + ExtendedDecimal.FromString("70489").ToSingle());
-}
+        Assert.Fail("decfrac single 70489\nExpected: 70489.0f\nWas: " + ExtendedDecimal.FromString("70489").ToSingle());
+      }
       if (70489.0d != ExtendedDecimal.FromString("70489").ToDouble()) {
- Assert.Fail("decfrac double 70489\nExpected: 70489.0d\nWas: " + ExtendedDecimal.FromString("70489").ToDouble());
-}
+        Assert.Fail("decfrac double 70489\nExpected: 70489.0d\nWas: " + ExtendedDecimal.FromString("70489").ToDouble());
+      }
       if (-6.1383652E14f != ExtendedDecimal.FromString("-613836517344428").ToSingle()) {
- Assert.Fail("decfrac single -613836517344428\nExpected: -6.1383652E14f\nWas: " + ExtendedDecimal.FromString("-613836517344428").ToSingle());
-}
+        Assert.Fail("decfrac single -613836517344428\nExpected: -6.1383652E14f\nWas: " + ExtendedDecimal.FromString("-613836517344428").ToSingle());
+      }
       if (-6.13836517344428E14d != ExtendedDecimal.FromString("-613836517344428").ToDouble()) {
- Assert.Fail("decfrac double -613836517344428\nExpected: -6.13836517344428E14d\nWas: " + ExtendedDecimal.FromString("-613836517344428").ToDouble());
-}
+        Assert.Fail("decfrac double -613836517344428\nExpected: -6.13836517344428E14d\nWas: " + ExtendedDecimal.FromString("-613836517344428").ToDouble());
+      }
       if (-3.47896388E16f != ExtendedDecimal.FromString("-34789639317051875E0").ToSingle()) {
- Assert.Fail("decfrac single -34789639317051875E0\nExpected: -3.47896388E16f\nWas: " + ExtendedDecimal.FromString("-34789639317051875E0").ToSingle());
-}
+        Assert.Fail("decfrac single -34789639317051875E0\nExpected: -3.47896388E16f\nWas: " + ExtendedDecimal.FromString("-34789639317051875E0").ToSingle());
+      }
       if (-3.4789639317051876E16d != ExtendedDecimal.FromString("-34789639317051875E0").ToDouble()) {
- Assert.Fail("decfrac double -34789639317051875E0\nExpected: -3.4789639317051876E16d\nWas: " + ExtendedDecimal.FromString("-34789639317051875E0").ToDouble());
-}
+        Assert.Fail("decfrac double -34789639317051875E0\nExpected: -3.4789639317051876E16d\nWas: " + ExtendedDecimal.FromString("-34789639317051875E0").ToDouble());
+      }
       if (-8.4833942E13f != ExtendedDecimal.FromString("-84833938642058").ToSingle()) {
- Assert.Fail("decfrac single -84833938642058\nExpected: -8.4833942E13f\nWas: " + ExtendedDecimal.FromString("-84833938642058").ToSingle());
-}
+        Assert.Fail("decfrac single -84833938642058\nExpected: -8.4833942E13f\nWas: " + ExtendedDecimal.FromString("-84833938642058").ToSingle());
+      }
       if (-8.4833938642058E13d != ExtendedDecimal.FromString("-84833938642058").ToDouble()) {
- Assert.Fail("decfrac double -84833938642058\nExpected: -8.4833938642058E13d\nWas: " + ExtendedDecimal.FromString("-84833938642058").ToDouble());
-}
+        Assert.Fail("decfrac double -84833938642058\nExpected: -8.4833938642058E13d\nWas: " + ExtendedDecimal.FromString("-84833938642058").ToDouble());
+      }
       if (-359.0f != ExtendedDecimal.FromString("-359").ToSingle()) {
- Assert.Fail("decfrac single -359\nExpected: -359.0f\nWas: " + ExtendedDecimal.FromString("-359").ToSingle());
-}
+        Assert.Fail("decfrac single -359\nExpected: -359.0f\nWas: " + ExtendedDecimal.FromString("-359").ToSingle());
+      }
       if (-359.0d != ExtendedDecimal.FromString("-359").ToDouble()) {
- Assert.Fail("decfrac double -359\nExpected: -359.0d\nWas: " + ExtendedDecimal.FromString("-359").ToDouble());
-}
+        Assert.Fail("decfrac double -359\nExpected: -359.0d\nWas: " + ExtendedDecimal.FromString("-359").ToDouble());
+      }
       if (365981.0f != ExtendedDecimal.FromString("365981").ToSingle()) {
- Assert.Fail("decfrac single 365981\nExpected: 365981.0f\nWas: " + ExtendedDecimal.FromString("365981").ToSingle());
-}
+        Assert.Fail("decfrac single 365981\nExpected: 365981.0f\nWas: " + ExtendedDecimal.FromString("365981").ToSingle());
+      }
       if (365981.0d != ExtendedDecimal.FromString("365981").ToDouble()) {
- Assert.Fail("decfrac double 365981\nExpected: 365981.0d\nWas: " + ExtendedDecimal.FromString("365981").ToDouble());
-}
+        Assert.Fail("decfrac double 365981\nExpected: 365981.0d\nWas: " + ExtendedDecimal.FromString("365981").ToDouble());
+      }
       if (9103.0f != ExtendedDecimal.FromString("9103").ToSingle()) {
- Assert.Fail("decfrac single 9103\nExpected: 9103.0f\nWas: " + ExtendedDecimal.FromString("9103").ToSingle());
-}
+        Assert.Fail("decfrac single 9103\nExpected: 9103.0f\nWas: " + ExtendedDecimal.FromString("9103").ToSingle());
+      }
       if (9103.0d != ExtendedDecimal.FromString("9103").ToDouble()) {
- Assert.Fail("decfrac double 9103\nExpected: 9103.0d\nWas: " + ExtendedDecimal.FromString("9103").ToDouble());
-}
+        Assert.Fail("decfrac double 9103\nExpected: 9103.0d\nWas: " + ExtendedDecimal.FromString("9103").ToDouble());
+      }
       if (9.822906E11f != ExtendedDecimal.FromString("982290625898").ToSingle()) {
- Assert.Fail("decfrac single 982290625898\nExpected: 9.822906E11f\nWas: " + ExtendedDecimal.FromString("982290625898").ToSingle());
-}
+        Assert.Fail("decfrac single 982290625898\nExpected: 9.822906E11f\nWas: " + ExtendedDecimal.FromString("982290625898").ToSingle());
+      }
       if (9.82290625898E11d != ExtendedDecimal.FromString("982290625898").ToDouble()) {
- Assert.Fail("decfrac double 982290625898\nExpected: 9.82290625898E11d\nWas: " + ExtendedDecimal.FromString("982290625898").ToDouble());
-}
+        Assert.Fail("decfrac double 982290625898\nExpected: 9.82290625898E11d\nWas: " + ExtendedDecimal.FromString("982290625898").ToDouble());
+      }
       if (11.0f != ExtendedDecimal.FromString("11").ToSingle()) {
- Assert.Fail("decfrac single 11\nExpected: 11.0f\nWas: " + ExtendedDecimal.FromString("11").ToSingle());
-}
+        Assert.Fail("decfrac single 11\nExpected: 11.0f\nWas: " + ExtendedDecimal.FromString("11").ToSingle());
+      }
       if (11.0d != ExtendedDecimal.FromString("11").ToDouble()) {
- Assert.Fail("decfrac double 11\nExpected: 11.0d\nWas: " + ExtendedDecimal.FromString("11").ToDouble());
-}
+        Assert.Fail("decfrac double 11\nExpected: 11.0d\nWas: " + ExtendedDecimal.FromString("11").ToDouble());
+      }
       if (-2823.0f != ExtendedDecimal.FromString("-2823").ToSingle()) {
- Assert.Fail("decfrac single -2823\nExpected: -2823.0f\nWas: " + ExtendedDecimal.FromString("-2823").ToSingle());
-}
+        Assert.Fail("decfrac single -2823\nExpected: -2823.0f\nWas: " + ExtendedDecimal.FromString("-2823").ToSingle());
+      }
       if (-2823.0d != ExtendedDecimal.FromString("-2823").ToDouble()) {
- Assert.Fail("decfrac double -2823\nExpected: -2823.0d\nWas: " + ExtendedDecimal.FromString("-2823").ToDouble());
-}
+        Assert.Fail("decfrac double -2823\nExpected: -2823.0d\nWas: " + ExtendedDecimal.FromString("-2823").ToDouble());
+      }
       if (1.5945044E10f != ExtendedDecimal.FromString("15945044029").ToSingle()) {
- Assert.Fail("decfrac single 15945044029\nExpected: 1.5945044E10f\nWas: " + ExtendedDecimal.FromString("15945044029").ToSingle());
-}
+        Assert.Fail("decfrac single 15945044029\nExpected: 1.5945044E10f\nWas: " + ExtendedDecimal.FromString("15945044029").ToSingle());
+      }
       if (1.5945044029E10d != ExtendedDecimal.FromString("15945044029").ToDouble()) {
- Assert.Fail("decfrac double 15945044029\nExpected: 1.5945044029E10d\nWas: " + ExtendedDecimal.FromString("15945044029").ToDouble());
-}
+        Assert.Fail("decfrac double 15945044029\nExpected: 1.5945044029E10d\nWas: " + ExtendedDecimal.FromString("15945044029").ToDouble());
+      }
       if (-1.69193578E18f != ExtendedDecimal.FromString("-1691935711084975329").ToSingle()) {
- Assert.Fail("decfrac single -1691935711084975329\nExpected: -1.69193578E18f\nWas: " + ExtendedDecimal.FromString("-1691935711084975329").ToSingle());
-}
+        Assert.Fail("decfrac single -1691935711084975329\nExpected: -1.69193578E18f\nWas: " + ExtendedDecimal.FromString("-1691935711084975329").ToSingle());
+      }
       if (-1.69193571108497536E18d != ExtendedDecimal.FromString("-1691935711084975329").ToDouble()) {
- Assert.Fail("decfrac double -1691935711084975329\nExpected: -1.69193571108497536E18d\nWas: " + ExtendedDecimal.FromString("-1691935711084975329").ToDouble());
-}
+        Assert.Fail("decfrac double -1691935711084975329\nExpected: -1.69193571108497536E18d\nWas: " + ExtendedDecimal.FromString("-1691935711084975329").ToDouble());
+      }
       if (611.0f != ExtendedDecimal.FromString("611").ToSingle()) {
- Assert.Fail("decfrac single 611\nExpected: 611.0f\nWas: " + ExtendedDecimal.FromString("611").ToSingle());
-}
+        Assert.Fail("decfrac single 611\nExpected: 611.0f\nWas: " + ExtendedDecimal.FromString("611").ToSingle());
+      }
       if (611.0d != ExtendedDecimal.FromString("611").ToDouble()) {
- Assert.Fail("decfrac double 611\nExpected: 611.0d\nWas: " + ExtendedDecimal.FromString("611").ToDouble());
-}
+        Assert.Fail("decfrac double 611\nExpected: 611.0d\nWas: " + ExtendedDecimal.FromString("611").ToDouble());
+      }
       if (8.1338793E9f != ExtendedDecimal.FromString("8133879260").ToSingle()) {
- Assert.Fail("decfrac single 8133879260\nExpected: 8.1338793E9f\nWas: " + ExtendedDecimal.FromString("8133879260").ToSingle());
-}
+        Assert.Fail("decfrac single 8133879260\nExpected: 8.1338793E9f\nWas: " + ExtendedDecimal.FromString("8133879260").ToSingle());
+      }
       if (8.13387926E9d != ExtendedDecimal.FromString("8133879260").ToDouble()) {
- Assert.Fail("decfrac double 8133879260\nExpected: 8.13387926E9d\nWas: " + ExtendedDecimal.FromString("8133879260").ToDouble());
-}
+        Assert.Fail("decfrac double 8133879260\nExpected: 8.13387926E9d\nWas: " + ExtendedDecimal.FromString("8133879260").ToDouble());
+      }
       if (7.8632614E13f != ExtendedDecimal.FromString("78632613962905").ToSingle()) {
- Assert.Fail("decfrac single 78632613962905\nExpected: 7.8632614E13f\nWas: " + ExtendedDecimal.FromString("78632613962905").ToSingle());
-}
+        Assert.Fail("decfrac single 78632613962905\nExpected: 7.8632614E13f\nWas: " + ExtendedDecimal.FromString("78632613962905").ToSingle());
+      }
       if (7.8632613962905E13d != ExtendedDecimal.FromString("78632613962905").ToDouble()) {
- Assert.Fail("decfrac double 78632613962905\nExpected: 7.8632613962905E13d\nWas: " + ExtendedDecimal.FromString("78632613962905").ToDouble());
-}
+        Assert.Fail("decfrac double 78632613962905\nExpected: 7.8632613962905E13d\nWas: " + ExtendedDecimal.FromString("78632613962905").ToDouble());
+      }
       if (8.686342E19f != ExtendedDecimal.FromString("86863421212032782386").ToSingle()) {
- Assert.Fail("decfrac single 86863421212032782386\nExpected: 8.686342E19f\nWas: " + ExtendedDecimal.FromString("86863421212032782386").ToSingle());
-}
+        Assert.Fail("decfrac single 86863421212032782386\nExpected: 8.686342E19f\nWas: " + ExtendedDecimal.FromString("86863421212032782386").ToSingle());
+      }
       if (8.686342121203278E19d != ExtendedDecimal.FromString("86863421212032782386").ToDouble()) {
- Assert.Fail("decfrac double 86863421212032782386\nExpected: 8.686342121203278E19d\nWas: " + ExtendedDecimal.FromString("86863421212032782386").ToDouble());
-}
+        Assert.Fail("decfrac double 86863421212032782386\nExpected: 8.686342121203278E19d\nWas: " + ExtendedDecimal.FromString("86863421212032782386").ToDouble());
+      }
       if (2.46595376E8f != ExtendedDecimal.FromString("246595381").ToSingle()) {
- Assert.Fail("decfrac single 246595381\nExpected: 2.46595376E8f\nWas: " + ExtendedDecimal.FromString("246595381").ToSingle());
-}
+        Assert.Fail("decfrac single 246595381\nExpected: 2.46595376E8f\nWas: " + ExtendedDecimal.FromString("246595381").ToSingle());
+      }
       if (2.46595381E8d != ExtendedDecimal.FromString("246595381").ToDouble()) {
- Assert.Fail("decfrac double 246595381\nExpected: 2.46595381E8d\nWas: " + ExtendedDecimal.FromString("246595381").ToDouble());
-}
+        Assert.Fail("decfrac double 246595381\nExpected: 2.46595381E8d\nWas: " + ExtendedDecimal.FromString("246595381").ToDouble());
+      }
       if (5.128928E16f != ExtendedDecimal.FromString("51289277641921518E0").ToSingle()) {
- Assert.Fail("decfrac single 51289277641921518E0\nExpected: 5.128928E16f\nWas: " + ExtendedDecimal.FromString("51289277641921518E0").ToSingle());
-}
+        Assert.Fail("decfrac single 51289277641921518E0\nExpected: 5.128928E16f\nWas: " + ExtendedDecimal.FromString("51289277641921518E0").ToSingle());
+      }
       if (5.128927764192152E16d != ExtendedDecimal.FromString("51289277641921518E0").ToDouble()) {
- Assert.Fail("decfrac double 51289277641921518E0\nExpected: 5.128927764192152E16d\nWas: " + ExtendedDecimal.FromString("51289277641921518E0").ToDouble());
-}
+        Assert.Fail("decfrac double 51289277641921518E0\nExpected: 5.128927764192152E16d\nWas: " + ExtendedDecimal.FromString("51289277641921518E0").ToDouble());
+      }
       if (41105.0f != ExtendedDecimal.FromString("41105").ToSingle()) {
- Assert.Fail("decfrac single 41105\nExpected: 41105.0f\nWas: " + ExtendedDecimal.FromString("41105").ToSingle());
-}
+        Assert.Fail("decfrac single 41105\nExpected: 41105.0f\nWas: " + ExtendedDecimal.FromString("41105").ToSingle());
+      }
       if (41105.0d != ExtendedDecimal.FromString("41105").ToDouble()) {
- Assert.Fail("decfrac double 41105\nExpected: 41105.0d\nWas: " + ExtendedDecimal.FromString("41105").ToDouble());
-}
+        Assert.Fail("decfrac double 41105\nExpected: 41105.0d\nWas: " + ExtendedDecimal.FromString("41105").ToDouble());
+      }
       if (4.5854699E16f != ExtendedDecimal.FromString("45854697039925162E0").ToSingle()) {
- Assert.Fail("decfrac single 45854697039925162E0\nExpected: 4.5854699E16f\nWas: " + ExtendedDecimal.FromString("45854697039925162E0").ToSingle());
-}
+        Assert.Fail("decfrac single 45854697039925162E0\nExpected: 4.5854699E16f\nWas: " + ExtendedDecimal.FromString("45854697039925162E0").ToSingle());
+      }
       if (4.585469703992516E16d != ExtendedDecimal.FromString("45854697039925162E0").ToDouble()) {
- Assert.Fail("decfrac double 45854697039925162E0\nExpected: 4.585469703992516E16d\nWas: " + ExtendedDecimal.FromString("45854697039925162E0").ToDouble());
-}
+        Assert.Fail("decfrac double 45854697039925162E0\nExpected: 4.585469703992516E16d\nWas: " + ExtendedDecimal.FromString("45854697039925162E0").ToDouble());
+      }
       if (357.0f != ExtendedDecimal.FromString("357").ToSingle()) {
- Assert.Fail("decfrac single 357\nExpected: 357.0f\nWas: " + ExtendedDecimal.FromString("357").ToSingle());
-}
+        Assert.Fail("decfrac single 357\nExpected: 357.0f\nWas: " + ExtendedDecimal.FromString("357").ToSingle());
+      }
       if (357.0d != ExtendedDecimal.FromString("357").ToDouble()) {
- Assert.Fail("decfrac double 357\nExpected: 357.0d\nWas: " + ExtendedDecimal.FromString("357").ToDouble());
-}
+        Assert.Fail("decfrac double 357\nExpected: 357.0d\nWas: " + ExtendedDecimal.FromString("357").ToDouble());
+      }
       if (4055.0f != ExtendedDecimal.FromString("4055").ToSingle()) {
- Assert.Fail("decfrac single 4055\nExpected: 4055.0f\nWas: " + ExtendedDecimal.FromString("4055").ToSingle());
-}
+        Assert.Fail("decfrac single 4055\nExpected: 4055.0f\nWas: " + ExtendedDecimal.FromString("4055").ToSingle());
+      }
       if (4055.0d != ExtendedDecimal.FromString("4055").ToDouble()) {
- Assert.Fail("decfrac double 4055\nExpected: 4055.0d\nWas: " + ExtendedDecimal.FromString("4055").ToDouble());
-}
+        Assert.Fail("decfrac double 4055\nExpected: 4055.0d\nWas: " + ExtendedDecimal.FromString("4055").ToDouble());
+      }
       if (-75211.0f != ExtendedDecimal.FromString("-75211").ToSingle()) {
- Assert.Fail("decfrac single -75211\nExpected: -75211.0f\nWas: " + ExtendedDecimal.FromString("-75211").ToSingle());
-}
+        Assert.Fail("decfrac single -75211\nExpected: -75211.0f\nWas: " + ExtendedDecimal.FromString("-75211").ToSingle());
+      }
       if (-75211.0d != ExtendedDecimal.FromString("-75211").ToDouble()) {
- Assert.Fail("decfrac double -75211\nExpected: -75211.0d\nWas: " + ExtendedDecimal.FromString("-75211").ToDouble());
-}
+        Assert.Fail("decfrac double -75211\nExpected: -75211.0d\nWas: " + ExtendedDecimal.FromString("-75211").ToDouble());
+      }
       if (-8.718763E19f != ExtendedDecimal.FromString("-87187631416675804676").ToSingle()) {
- Assert.Fail("decfrac single -87187631416675804676\nExpected: -8.718763E19f\nWas: " + ExtendedDecimal.FromString("-87187631416675804676").ToSingle());
-}
+        Assert.Fail("decfrac single -87187631416675804676\nExpected: -8.718763E19f\nWas: " + ExtendedDecimal.FromString("-87187631416675804676").ToSingle());
+      }
       if (-8.718763141667581E19d != ExtendedDecimal.FromString("-87187631416675804676").ToDouble()) {
- Assert.Fail("decfrac double -87187631416675804676\nExpected: -8.718763141667581E19d\nWas: " + ExtendedDecimal.FromString("-87187631416675804676").ToDouble());
-}
+        Assert.Fail("decfrac double -87187631416675804676\nExpected: -8.718763141667581E19d\nWas: " + ExtendedDecimal.FromString("-87187631416675804676").ToDouble());
+      }
       if (-5.6423271E13f != ExtendedDecimal.FromString("-56423269820314").ToSingle()) {
- Assert.Fail("decfrac single -56423269820314\nExpected: -5.6423271E13f\nWas: " + ExtendedDecimal.FromString("-56423269820314").ToSingle());
-}
+        Assert.Fail("decfrac single -56423269820314\nExpected: -5.6423271E13f\nWas: " + ExtendedDecimal.FromString("-56423269820314").ToSingle());
+      }
       if (-5.6423269820314E13d != ExtendedDecimal.FromString("-56423269820314").ToDouble()) {
- Assert.Fail("decfrac double -56423269820314\nExpected: -5.6423269820314E13d\nWas: " + ExtendedDecimal.FromString("-56423269820314").ToDouble());
-}
+        Assert.Fail("decfrac double -56423269820314\nExpected: -5.6423269820314E13d\nWas: " + ExtendedDecimal.FromString("-56423269820314").ToDouble());
+      }
       if (-884958.0f != ExtendedDecimal.FromString("-884958").ToSingle()) {
- Assert.Fail("decfrac single -884958\nExpected: -884958.0f\nWas: " + ExtendedDecimal.FromString("-884958").ToSingle());
-}
+        Assert.Fail("decfrac single -884958\nExpected: -884958.0f\nWas: " + ExtendedDecimal.FromString("-884958").ToSingle());
+      }
       if (-884958.0d != ExtendedDecimal.FromString("-884958").ToDouble()) {
- Assert.Fail("decfrac double -884958\nExpected: -884958.0d\nWas: " + ExtendedDecimal.FromString("-884958").ToDouble());
-}
+        Assert.Fail("decfrac double -884958\nExpected: -884958.0d\nWas: " + ExtendedDecimal.FromString("-884958").ToDouble());
+      }
       if (-9.5231607E11f != ExtendedDecimal.FromString("-952316071356").ToSingle()) {
- Assert.Fail("decfrac single -952316071356\nExpected: -9.5231607E11f\nWas: " + ExtendedDecimal.FromString("-952316071356").ToSingle());
-}
+        Assert.Fail("decfrac single -952316071356\nExpected: -9.5231607E11f\nWas: " + ExtendedDecimal.FromString("-952316071356").ToSingle());
+      }
       if (-9.52316071356E11d != ExtendedDecimal.FromString("-952316071356").ToDouble()) {
- Assert.Fail("decfrac double -952316071356\nExpected: -9.52316071356E11d\nWas: " + ExtendedDecimal.FromString("-952316071356").ToDouble());
-}
+        Assert.Fail("decfrac double -952316071356\nExpected: -9.52316071356E11d\nWas: " + ExtendedDecimal.FromString("-952316071356").ToDouble());
+      }
       if (1.07800844E17f != ExtendedDecimal.FromString("107800846902684870").ToSingle()) {
- Assert.Fail("decfrac single 107800846902684870\nExpected: 1.07800844E17f\nWas: " + ExtendedDecimal.FromString("107800846902684870").ToSingle());
-}
+        Assert.Fail("decfrac single 107800846902684870\nExpected: 1.07800844E17f\nWas: " + ExtendedDecimal.FromString("107800846902684870").ToSingle());
+      }
       if (1.07800846902684864E17d != ExtendedDecimal.FromString("107800846902684870").ToDouble()) {
- Assert.Fail("decfrac double 107800846902684870\nExpected: 1.07800846902684864E17d\nWas: " + ExtendedDecimal.FromString("107800846902684870").ToDouble());
-}
+        Assert.Fail("decfrac double 107800846902684870\nExpected: 1.07800846902684864E17d\nWas: " + ExtendedDecimal.FromString("107800846902684870").ToDouble());
+      }
       if (-8.1588551E18f != ExtendedDecimal.FromString("-8158855313340166027").ToSingle()) {
- Assert.Fail("decfrac single -8158855313340166027\nExpected: -8.1588551E18f\nWas: " + ExtendedDecimal.FromString("-8158855313340166027").ToSingle());
-}
+        Assert.Fail("decfrac single -8158855313340166027\nExpected: -8.1588551E18f\nWas: " + ExtendedDecimal.FromString("-8158855313340166027").ToSingle());
+      }
       if (-8.1588553133401661E18d != ExtendedDecimal.FromString("-8158855313340166027").ToDouble()) {
- Assert.Fail("decfrac double -8158855313340166027\nExpected: -8.1588553133401661E18d\nWas: " + ExtendedDecimal.FromString("-8158855313340166027").ToDouble());
-}
+        Assert.Fail("decfrac double -8158855313340166027\nExpected: -8.1588553133401661E18d\nWas: " + ExtendedDecimal.FromString("-8158855313340166027").ToDouble());
+      }
       if (1.52743454E18f != ExtendedDecimal.FromString("1527434477600178421").ToSingle()) {
- Assert.Fail("decfrac single 1527434477600178421\nExpected: 1.52743454E18f\nWas: " + ExtendedDecimal.FromString("1527434477600178421").ToSingle());
-}
+        Assert.Fail("decfrac single 1527434477600178421\nExpected: 1.52743454E18f\nWas: " + ExtendedDecimal.FromString("1527434477600178421").ToSingle());
+      }
       if (1.52743447760017843E18d != ExtendedDecimal.FromString("1527434477600178421").ToDouble()) {
- Assert.Fail("decfrac double 1527434477600178421\nExpected: 1.52743447760017843E18d\nWas: " + ExtendedDecimal.FromString("1527434477600178421").ToDouble());
-}
+        Assert.Fail("decfrac double 1527434477600178421\nExpected: 1.52743447760017843E18d\nWas: " + ExtendedDecimal.FromString("1527434477600178421").ToDouble());
+      }
       if (-1.25374015E15f != ExtendedDecimal.FromString("-1253740164504924").ToSingle()) {
- Assert.Fail("decfrac single -1253740164504924\nExpected: -1.25374015E15f\nWas: " + ExtendedDecimal.FromString("-1253740164504924").ToSingle());
-}
+        Assert.Fail("decfrac single -1253740164504924\nExpected: -1.25374015E15f\nWas: " + ExtendedDecimal.FromString("-1253740164504924").ToSingle());
+      }
       if (-1.253740164504924E15d != ExtendedDecimal.FromString("-1253740164504924").ToDouble()) {
- Assert.Fail("decfrac double -1253740164504924\nExpected: -1.253740164504924E15d\nWas: " + ExtendedDecimal.FromString("-1253740164504924").ToDouble());
-}
+        Assert.Fail("decfrac double -1253740164504924\nExpected: -1.253740164504924E15d\nWas: " + ExtendedDecimal.FromString("-1253740164504924").ToDouble());
+      }
       if (9.333153E10f != ExtendedDecimal.FromString("93331529453").ToSingle()) {
- Assert.Fail("decfrac single 93331529453\nExpected: 9.333153E10f\nWas: " + ExtendedDecimal.FromString("93331529453").ToSingle());
-}
+        Assert.Fail("decfrac single 93331529453\nExpected: 9.333153E10f\nWas: " + ExtendedDecimal.FromString("93331529453").ToSingle());
+      }
       if (9.3331529453E10d != ExtendedDecimal.FromString("93331529453").ToDouble()) {
- Assert.Fail("decfrac double 93331529453\nExpected: 9.3331529453E10d\nWas: " + ExtendedDecimal.FromString("93331529453").ToDouble());
-}
+        Assert.Fail("decfrac double 93331529453\nExpected: 9.3331529453E10d\nWas: " + ExtendedDecimal.FromString("93331529453").ToDouble());
+      }
       if (-26195.0f != ExtendedDecimal.FromString("-26195").ToSingle()) {
- Assert.Fail("decfrac single -26195\nExpected: -26195.0f\nWas: " + ExtendedDecimal.FromString("-26195").ToSingle());
-}
+        Assert.Fail("decfrac single -26195\nExpected: -26195.0f\nWas: " + ExtendedDecimal.FromString("-26195").ToSingle());
+      }
       if (-26195.0d != ExtendedDecimal.FromString("-26195").ToDouble()) {
- Assert.Fail("decfrac double -26195\nExpected: -26195.0d\nWas: " + ExtendedDecimal.FromString("-26195").ToDouble());
-}
+        Assert.Fail("decfrac double -26195\nExpected: -26195.0d\nWas: " + ExtendedDecimal.FromString("-26195").ToDouble());
+      }
       if (-369.0f != ExtendedDecimal.FromString("-369").ToSingle()) {
- Assert.Fail("decfrac single -369\nExpected: -369.0f\nWas: " + ExtendedDecimal.FromString("-369").ToSingle());
-}
+        Assert.Fail("decfrac single -369\nExpected: -369.0f\nWas: " + ExtendedDecimal.FromString("-369").ToSingle());
+      }
       if (-369.0d != ExtendedDecimal.FromString("-369").ToDouble()) {
- Assert.Fail("decfrac double -369\nExpected: -369.0d\nWas: " + ExtendedDecimal.FromString("-369").ToDouble());
-}
+        Assert.Fail("decfrac double -369\nExpected: -369.0d\nWas: " + ExtendedDecimal.FromString("-369").ToDouble());
+      }
       if (-831.0f != ExtendedDecimal.FromString("-831").ToSingle()) {
- Assert.Fail("decfrac single -831\nExpected: -831.0f\nWas: " + ExtendedDecimal.FromString("-831").ToSingle());
-}
+        Assert.Fail("decfrac single -831\nExpected: -831.0f\nWas: " + ExtendedDecimal.FromString("-831").ToSingle());
+      }
       if (-831.0d != ExtendedDecimal.FromString("-831").ToDouble()) {
- Assert.Fail("decfrac double -831\nExpected: -831.0d\nWas: " + ExtendedDecimal.FromString("-831").ToDouble());
-}
+        Assert.Fail("decfrac double -831\nExpected: -831.0d\nWas: " + ExtendedDecimal.FromString("-831").ToDouble());
+      }
       if (4.11190218E12f != ExtendedDecimal.FromString("4111902130704").ToSingle()) {
- Assert.Fail("decfrac single 4111902130704\nExpected: 4.11190218E12f\nWas: " + ExtendedDecimal.FromString("4111902130704").ToSingle());
-}
+        Assert.Fail("decfrac single 4111902130704\nExpected: 4.11190218E12f\nWas: " + ExtendedDecimal.FromString("4111902130704").ToSingle());
+      }
       if (4.111902130704E12d != ExtendedDecimal.FromString("4111902130704").ToDouble()) {
- Assert.Fail("decfrac double 4111902130704\nExpected: 4.111902130704E12d\nWas: " + ExtendedDecimal.FromString("4111902130704").ToDouble());
-}
+        Assert.Fail("decfrac double 4111902130704\nExpected: 4.111902130704E12d\nWas: " + ExtendedDecimal.FromString("4111902130704").ToDouble());
+      }
       if (-7.419975E34f != ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToSingle()) {
- Assert.Fail("decfrac single -7419975014712636689.1578027201500774E+16\nExpected: -7.419975E34f\nWas: " + ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToSingle());
-}
+        Assert.Fail("decfrac single -7419975014712636689.1578027201500774E+16\nExpected: -7.419975E34f\nWas: " + ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToSingle());
+      }
       if (-7.419975014712636E34d != ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToDouble()) {
- Assert.Fail("decfrac double -7419975014712636689.1578027201500774E+16\nExpected: -7.419975014712636E34d\nWas: " + ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToDouble());
-}
+        Assert.Fail("decfrac double -7419975014712636689.1578027201500774E+16\nExpected: -7.419975014712636E34d\nWas: " + ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToDouble());
+      }
       if (-1.7915818E7f != ExtendedDecimal.FromString("-17915818").ToSingle()) {
- Assert.Fail("decfrac single -17915818\nExpected: -1.7915818E7f\nWas: " + ExtendedDecimal.FromString("-17915818").ToSingle());
-}
+        Assert.Fail("decfrac single -17915818\nExpected: -1.7915818E7f\nWas: " + ExtendedDecimal.FromString("-17915818").ToSingle());
+      }
       if (-1.7915818E7d != ExtendedDecimal.FromString("-17915818").ToDouble()) {
- Assert.Fail("decfrac double -17915818\nExpected: -1.7915818E7d\nWas: " + ExtendedDecimal.FromString("-17915818").ToDouble());
-}
+        Assert.Fail("decfrac double -17915818\nExpected: -1.7915818E7d\nWas: " + ExtendedDecimal.FromString("-17915818").ToDouble());
+      }
       if (-122.0f != ExtendedDecimal.FromString("-122").ToSingle()) {
- Assert.Fail("decfrac single -122\nExpected: -122.0f\nWas: " + ExtendedDecimal.FromString("-122").ToSingle());
-}
+        Assert.Fail("decfrac single -122\nExpected: -122.0f\nWas: " + ExtendedDecimal.FromString("-122").ToSingle());
+      }
       if (-122.0d != ExtendedDecimal.FromString("-122").ToDouble()) {
- Assert.Fail("decfrac double -122\nExpected: -122.0d\nWas: " + ExtendedDecimal.FromString("-122").ToDouble());
-}
+        Assert.Fail("decfrac double -122\nExpected: -122.0d\nWas: " + ExtendedDecimal.FromString("-122").ToDouble());
+      }
       if (-363975.0f != ExtendedDecimal.FromString("-363975").ToSingle()) {
- Assert.Fail("decfrac single -363975\nExpected: -363975.0f\nWas: " + ExtendedDecimal.FromString("-363975").ToSingle());
-}
+        Assert.Fail("decfrac single -363975\nExpected: -363975.0f\nWas: " + ExtendedDecimal.FromString("-363975").ToSingle());
+      }
       if (-363975.0d != ExtendedDecimal.FromString("-363975").ToDouble()) {
- Assert.Fail("decfrac double -363975\nExpected: -363975.0d\nWas: " + ExtendedDecimal.FromString("-363975").ToDouble());
-}
+        Assert.Fail("decfrac double -363975\nExpected: -363975.0d\nWas: " + ExtendedDecimal.FromString("-363975").ToDouble());
+      }
       if (3.22466716E12f != ExtendedDecimal.FromString("3224667065103").ToSingle()) {
- Assert.Fail("decfrac single 3224667065103\nExpected: 3.22466716E12f\nWas: " + ExtendedDecimal.FromString("3224667065103").ToSingle());
-}
+        Assert.Fail("decfrac single 3224667065103\nExpected: 3.22466716E12f\nWas: " + ExtendedDecimal.FromString("3224667065103").ToSingle());
+      }
       if (3.224667065103E12d != ExtendedDecimal.FromString("3224667065103").ToDouble()) {
- Assert.Fail("decfrac double 3224667065103\nExpected: 3.224667065103E12d\nWas: " + ExtendedDecimal.FromString("3224667065103").ToDouble());
-}
+        Assert.Fail("decfrac double 3224667065103\nExpected: 3.224667065103E12d\nWas: " + ExtendedDecimal.FromString("3224667065103").ToDouble());
+      }
       if (-9.6666224E7f != ExtendedDecimal.FromString("-96666228").ToSingle()) {
- Assert.Fail("decfrac single -96666228\nExpected: -9.6666224E7f\nWas: " + ExtendedDecimal.FromString("-96666228").ToSingle());
-}
+        Assert.Fail("decfrac single -96666228\nExpected: -9.6666224E7f\nWas: " + ExtendedDecimal.FromString("-96666228").ToSingle());
+      }
       if (-9.6666228E7d != ExtendedDecimal.FromString("-96666228").ToDouble()) {
- Assert.Fail("decfrac double -96666228\nExpected: -9.6666228E7d\nWas: " + ExtendedDecimal.FromString("-96666228").ToDouble());
-}
+        Assert.Fail("decfrac double -96666228\nExpected: -9.6666228E7d\nWas: " + ExtendedDecimal.FromString("-96666228").ToDouble());
+      }
       if (-6.3737765E19f != ExtendedDecimal.FromString("-63737764614634686933").ToSingle()) {
- Assert.Fail("decfrac single -63737764614634686933\nExpected: -6.3737765E19f\nWas: " + ExtendedDecimal.FromString("-63737764614634686933").ToSingle());
-}
+        Assert.Fail("decfrac single -63737764614634686933\nExpected: -6.3737765E19f\nWas: " + ExtendedDecimal.FromString("-63737764614634686933").ToSingle());
+      }
       if (-6.3737764614634684E19d != ExtendedDecimal.FromString("-63737764614634686933").ToDouble()) {
- Assert.Fail("decfrac double -63737764614634686933\nExpected: -6.3737764614634684E19d\nWas: " + ExtendedDecimal.FromString("-63737764614634686933").ToDouble());
-}
+        Assert.Fail("decfrac double -63737764614634686933\nExpected: -6.3737764614634684E19d\nWas: " + ExtendedDecimal.FromString("-63737764614634686933").ToDouble());
+      }
       if (-45065.0f != ExtendedDecimal.FromString("-45065").ToSingle()) {
- Assert.Fail("decfrac single -45065\nExpected: -45065.0f\nWas: " + ExtendedDecimal.FromString("-45065").ToSingle());
-}
+        Assert.Fail("decfrac single -45065\nExpected: -45065.0f\nWas: " + ExtendedDecimal.FromString("-45065").ToSingle());
+      }
       if (-45065.0d != ExtendedDecimal.FromString("-45065").ToDouble()) {
- Assert.Fail("decfrac double -45065\nExpected: -45065.0d\nWas: " + ExtendedDecimal.FromString("-45065").ToDouble());
-}
+        Assert.Fail("decfrac double -45065\nExpected: -45065.0d\nWas: " + ExtendedDecimal.FromString("-45065").ToDouble());
+      }
       if (18463.0f != ExtendedDecimal.FromString("18463").ToSingle()) {
- Assert.Fail("decfrac single 18463\nExpected: 18463.0f\nWas: " + ExtendedDecimal.FromString("18463").ToSingle());
-}
+        Assert.Fail("decfrac single 18463\nExpected: 18463.0f\nWas: " + ExtendedDecimal.FromString("18463").ToSingle());
+      }
       if (18463.0d != ExtendedDecimal.FromString("18463").ToDouble()) {
- Assert.Fail("decfrac double 18463\nExpected: 18463.0d\nWas: " + ExtendedDecimal.FromString("18463").ToDouble());
-}
+        Assert.Fail("decfrac double 18463\nExpected: 18463.0d\nWas: " + ExtendedDecimal.FromString("18463").ToDouble());
+      }
       if (-5.2669409E15f != ExtendedDecimal.FromString("-5266940927335870").ToSingle()) {
- Assert.Fail("decfrac single -5266940927335870\nExpected: -5.2669409E15f\nWas: " + ExtendedDecimal.FromString("-5266940927335870").ToSingle());
-}
+        Assert.Fail("decfrac single -5266940927335870\nExpected: -5.2669409E15f\nWas: " + ExtendedDecimal.FromString("-5266940927335870").ToSingle());
+      }
       if (-5.26694092733587E15d != ExtendedDecimal.FromString("-5266940927335870").ToDouble()) {
- Assert.Fail("decfrac double -5266940927335870\nExpected: -5.26694092733587E15d\nWas: " + ExtendedDecimal.FromString("-5266940927335870").ToDouble());
-}
+        Assert.Fail("decfrac double -5266940927335870\nExpected: -5.26694092733587E15d\nWas: " + ExtendedDecimal.FromString("-5266940927335870").ToDouble());
+      }
       if (-3.61275925E15f != ExtendedDecimal.FromString("-3612759343074710").ToSingle()) {
- Assert.Fail("decfrac single -3612759343074710\nExpected: -3.61275925E15f\nWas: " + ExtendedDecimal.FromString("-3612759343074710").ToSingle());
-}
+        Assert.Fail("decfrac single -3612759343074710\nExpected: -3.61275925E15f\nWas: " + ExtendedDecimal.FromString("-3612759343074710").ToSingle());
+      }
       if (-3.61275934307471E15d != ExtendedDecimal.FromString("-3612759343074710").ToDouble()) {
- Assert.Fail("decfrac double -3612759343074710\nExpected: -3.61275934307471E15d\nWas: " + ExtendedDecimal.FromString("-3612759343074710").ToDouble());
-}
+        Assert.Fail("decfrac double -3612759343074710\nExpected: -3.61275934307471E15d\nWas: " + ExtendedDecimal.FromString("-3612759343074710").ToDouble());
+      }
       if (-1.49784412E11f != ExtendedDecimal.FromString("-149784410976").ToSingle()) {
- Assert.Fail("decfrac single -149784410976\nExpected: -1.49784412E11f\nWas: " + ExtendedDecimal.FromString("-149784410976").ToSingle());
-}
+        Assert.Fail("decfrac single -149784410976\nExpected: -1.49784412E11f\nWas: " + ExtendedDecimal.FromString("-149784410976").ToSingle());
+      }
       if (-1.49784410976E11d != ExtendedDecimal.FromString("-149784410976").ToDouble()) {
- Assert.Fail("decfrac double -149784410976\nExpected: -1.49784410976E11d\nWas: " + ExtendedDecimal.FromString("-149784410976").ToDouble());
-}
+        Assert.Fail("decfrac double -149784410976\nExpected: -1.49784410976E11d\nWas: " + ExtendedDecimal.FromString("-149784410976").ToDouble());
+      }
       if (-1.01285276E17f != ExtendedDecimal.FromString("-101285275020696035").ToSingle()) {
- Assert.Fail("decfrac single -101285275020696035\nExpected: -1.01285276E17f\nWas: " + ExtendedDecimal.FromString("-101285275020696035").ToSingle());
-}
+        Assert.Fail("decfrac single -101285275020696035\nExpected: -1.01285276E17f\nWas: " + ExtendedDecimal.FromString("-101285275020696035").ToSingle());
+      }
       if (-1.01285275020696032E17d != ExtendedDecimal.FromString("-101285275020696035").ToDouble()) {
- Assert.Fail("decfrac double -101285275020696035\nExpected: -1.01285275020696032E17d\nWas: " + ExtendedDecimal.FromString("-101285275020696035").ToDouble());
-}
+        Assert.Fail("decfrac double -101285275020696035\nExpected: -1.01285275020696032E17d\nWas: " + ExtendedDecimal.FromString("-101285275020696035").ToDouble());
+      }
       if (-34.0f != ExtendedDecimal.FromString("-34").ToSingle()) {
- Assert.Fail("decfrac single -34\nExpected: -34.0f\nWas: " + ExtendedDecimal.FromString("-34").ToSingle());
-}
+        Assert.Fail("decfrac single -34\nExpected: -34.0f\nWas: " + ExtendedDecimal.FromString("-34").ToSingle());
+      }
       if (-34.0d != ExtendedDecimal.FromString("-34").ToDouble()) {
- Assert.Fail("decfrac double -34\nExpected: -34.0d\nWas: " + ExtendedDecimal.FromString("-34").ToDouble());
-}
+        Assert.Fail("decfrac double -34\nExpected: -34.0d\nWas: " + ExtendedDecimal.FromString("-34").ToDouble());
+      }
       if (-6.9963739E17f != ExtendedDecimal.FromString("-699637360432542026").ToSingle()) {
- Assert.Fail("decfrac single -699637360432542026\nExpected: -6.9963739E17f\nWas: " + ExtendedDecimal.FromString("-699637360432542026").ToSingle());
-}
+        Assert.Fail("decfrac single -699637360432542026\nExpected: -6.9963739E17f\nWas: " + ExtendedDecimal.FromString("-699637360432542026").ToSingle());
+      }
       if (-6.9963736043254208E17d != ExtendedDecimal.FromString("-699637360432542026").ToDouble()) {
- Assert.Fail("decfrac double -699637360432542026\nExpected: -6.9963736043254208E17d\nWas: " + ExtendedDecimal.FromString("-699637360432542026").ToDouble());
-}
+        Assert.Fail("decfrac double -699637360432542026\nExpected: -6.9963736043254208E17d\nWas: " + ExtendedDecimal.FromString("-699637360432542026").ToDouble());
+      }
       if (-8131.0f != ExtendedDecimal.FromString("-8131").ToSingle()) {
- Assert.Fail("decfrac single -8131\nExpected: -8131.0f\nWas: " + ExtendedDecimal.FromString("-8131").ToSingle());
-}
+        Assert.Fail("decfrac single -8131\nExpected: -8131.0f\nWas: " + ExtendedDecimal.FromString("-8131").ToSingle());
+      }
       if (-8131.0d != ExtendedDecimal.FromString("-8131").ToDouble()) {
- Assert.Fail("decfrac double -8131\nExpected: -8131.0d\nWas: " + ExtendedDecimal.FromString("-8131").ToDouble());
-}
+        Assert.Fail("decfrac double -8131\nExpected: -8131.0d\nWas: " + ExtendedDecimal.FromString("-8131").ToDouble());
+      }
       if (6.1692147E8f != ExtendedDecimal.FromString("616921472").ToSingle()) {
- Assert.Fail("decfrac single 616921472\nExpected: 6.1692147E8f\nWas: " + ExtendedDecimal.FromString("616921472").ToSingle());
-}
+        Assert.Fail("decfrac single 616921472\nExpected: 6.1692147E8f\nWas: " + ExtendedDecimal.FromString("616921472").ToSingle());
+      }
       if (6.16921472E8d != ExtendedDecimal.FromString("616921472").ToDouble()) {
- Assert.Fail("decfrac double 616921472\nExpected: 6.16921472E8d\nWas: " + ExtendedDecimal.FromString("616921472").ToDouble());
-}
+        Assert.Fail("decfrac double 616921472\nExpected: 6.16921472E8d\nWas: " + ExtendedDecimal.FromString("616921472").ToDouble());
+      }
       if (447272.0f != ExtendedDecimal.FromString("447272").ToSingle()) {
- Assert.Fail("decfrac single 447272\nExpected: 447272.0f\nWas: " + ExtendedDecimal.FromString("447272").ToSingle());
-}
+        Assert.Fail("decfrac single 447272\nExpected: 447272.0f\nWas: " + ExtendedDecimal.FromString("447272").ToSingle());
+      }
       if (447272.0d != ExtendedDecimal.FromString("447272").ToDouble()) {
- Assert.Fail("decfrac double 447272\nExpected: 447272.0d\nWas: " + ExtendedDecimal.FromString("447272").ToDouble());
-}
+        Assert.Fail("decfrac double 447272\nExpected: 447272.0d\nWas: " + ExtendedDecimal.FromString("447272").ToDouble());
+      }
       if (9.719524E17f != ExtendedDecimal.FromString("971952376640924713").ToSingle()) {
- Assert.Fail("decfrac single 971952376640924713\nExpected: 9.719524E17f\nWas: " + ExtendedDecimal.FromString("971952376640924713").ToSingle());
-}
+        Assert.Fail("decfrac single 971952376640924713\nExpected: 9.719524E17f\nWas: " + ExtendedDecimal.FromString("971952376640924713").ToSingle());
+      }
       if (9.7195237664092467E17d != ExtendedDecimal.FromString("971952376640924713").ToDouble()) {
- Assert.Fail("decfrac double 971952376640924713\nExpected: 9.7195237664092467E17d\nWas: " + ExtendedDecimal.FromString("971952376640924713").ToDouble());
-}
+        Assert.Fail("decfrac double 971952376640924713\nExpected: 9.7195237664092467E17d\nWas: " + ExtendedDecimal.FromString("971952376640924713").ToDouble());
+      }
       if (-8622.0f != ExtendedDecimal.FromString("-8622").ToSingle()) {
- Assert.Fail("decfrac single -8622\nExpected: -8622.0f\nWas: " + ExtendedDecimal.FromString("-8622").ToSingle());
-}
+        Assert.Fail("decfrac single -8622\nExpected: -8622.0f\nWas: " + ExtendedDecimal.FromString("-8622").ToSingle());
+      }
       if (-8622.0d != ExtendedDecimal.FromString("-8622").ToDouble()) {
- Assert.Fail("decfrac double -8622\nExpected: -8622.0d\nWas: " + ExtendedDecimal.FromString("-8622").ToDouble());
-}
+        Assert.Fail("decfrac double -8622\nExpected: -8622.0d\nWas: " + ExtendedDecimal.FromString("-8622").ToDouble());
+      }
       if (-9.8425534E13f != ExtendedDecimal.FromString("-98425536547570").ToSingle()) {
- Assert.Fail("decfrac single -98425536547570\nExpected: -9.8425534E13f\nWas: " + ExtendedDecimal.FromString("-98425536547570").ToSingle());
-}
+        Assert.Fail("decfrac single -98425536547570\nExpected: -9.8425534E13f\nWas: " + ExtendedDecimal.FromString("-98425536547570").ToSingle());
+      }
       if (-9.842553654757E13d != ExtendedDecimal.FromString("-98425536547570").ToDouble()) {
- Assert.Fail("decfrac double -98425536547570\nExpected: -9.842553654757E13d\nWas: " + ExtendedDecimal.FromString("-98425536547570").ToDouble());
-}
+        Assert.Fail("decfrac double -98425536547570\nExpected: -9.842553654757E13d\nWas: " + ExtendedDecimal.FromString("-98425536547570").ToDouble());
+      }
       if (-1.3578545E14f != ExtendedDecimal.FromString("-135785450228746").ToSingle()) {
- Assert.Fail("decfrac single -135785450228746\nExpected: -1.3578545E14f\nWas: " + ExtendedDecimal.FromString("-135785450228746").ToSingle());
-}
+        Assert.Fail("decfrac single -135785450228746\nExpected: -1.3578545E14f\nWas: " + ExtendedDecimal.FromString("-135785450228746").ToSingle());
+      }
       if (-1.35785450228746E14d != ExtendedDecimal.FromString("-135785450228746").ToDouble()) {
- Assert.Fail("decfrac double -135785450228746\nExpected: -1.35785450228746E14d\nWas: " + ExtendedDecimal.FromString("-135785450228746").ToDouble());
-}
+        Assert.Fail("decfrac double -135785450228746\nExpected: -1.35785450228746E14d\nWas: " + ExtendedDecimal.FromString("-135785450228746").ToDouble());
+      }
       if (935.0f != ExtendedDecimal.FromString("935").ToSingle()) {
- Assert.Fail("decfrac single 935\nExpected: 935.0f\nWas: " + ExtendedDecimal.FromString("935").ToSingle());
-}
+        Assert.Fail("decfrac single 935\nExpected: 935.0f\nWas: " + ExtendedDecimal.FromString("935").ToSingle());
+      }
       if (935.0d != ExtendedDecimal.FromString("935").ToDouble()) {
- Assert.Fail("decfrac double 935\nExpected: 935.0d\nWas: " + ExtendedDecimal.FromString("935").ToDouble());
-}
+        Assert.Fail("decfrac double 935\nExpected: 935.0d\nWas: " + ExtendedDecimal.FromString("935").ToDouble());
+      }
       if (-7890.0f != ExtendedDecimal.FromString("-7890E0").ToSingle()) {
- Assert.Fail("decfrac single -7890E0\nExpected: -7890.0f\nWas: " + ExtendedDecimal.FromString("-7890E0").ToSingle());
-}
+        Assert.Fail("decfrac single -7890E0\nExpected: -7890.0f\nWas: " + ExtendedDecimal.FromString("-7890E0").ToSingle());
+      }
       if (-7890.0d != ExtendedDecimal.FromString("-7890E0").ToDouble()) {
- Assert.Fail("decfrac double -7890E0\nExpected: -7890.0d\nWas: " + ExtendedDecimal.FromString("-7890E0").ToDouble());
-}
+        Assert.Fail("decfrac double -7890E0\nExpected: -7890.0d\nWas: " + ExtendedDecimal.FromString("-7890E0").ToDouble());
+      }
       if (4.5492643E12f != ExtendedDecimal.FromString("45.49264316782E+11").ToSingle()) {
- Assert.Fail("decfrac single 45.49264316782E+11\nExpected: 4.5492643E12f\nWas: " + ExtendedDecimal.FromString("45.49264316782E+11").ToSingle());
-}
+        Assert.Fail("decfrac single 45.49264316782E+11\nExpected: 4.5492643E12f\nWas: " + ExtendedDecimal.FromString("45.49264316782E+11").ToSingle());
+      }
       if (4.549264316782E12d != ExtendedDecimal.FromString("45.49264316782E+11").ToDouble()) {
- Assert.Fail("decfrac double 45.49264316782E+11\nExpected: 4.549264316782E12d\nWas: " + ExtendedDecimal.FromString("45.49264316782E+11").ToDouble());
-}
+        Assert.Fail("decfrac double 45.49264316782E+11\nExpected: 4.549264316782E12d\nWas: " + ExtendedDecimal.FromString("45.49264316782E+11").ToDouble());
+      }
       if (-7684.0f != ExtendedDecimal.FromString("-7684").ToSingle()) {
- Assert.Fail("decfrac single -7684\nExpected: -7684.0f\nWas: " + ExtendedDecimal.FromString("-7684").ToSingle());
-}
+        Assert.Fail("decfrac single -7684\nExpected: -7684.0f\nWas: " + ExtendedDecimal.FromString("-7684").ToSingle());
+      }
       if (-7684.0d != ExtendedDecimal.FromString("-7684").ToDouble()) {
- Assert.Fail("decfrac double -7684\nExpected: -7684.0d\nWas: " + ExtendedDecimal.FromString("-7684").ToDouble());
-}
+        Assert.Fail("decfrac double -7684\nExpected: -7684.0d\nWas: " + ExtendedDecimal.FromString("-7684").ToDouble());
+      }
       if (734069.0f != ExtendedDecimal.FromString("734069").ToSingle()) {
- Assert.Fail("decfrac single 734069\nExpected: 734069.0f\nWas: " + ExtendedDecimal.FromString("734069").ToSingle());
-}
+        Assert.Fail("decfrac single 734069\nExpected: 734069.0f\nWas: " + ExtendedDecimal.FromString("734069").ToSingle());
+      }
       if (734069.0d != ExtendedDecimal.FromString("734069").ToDouble()) {
- Assert.Fail("decfrac double 734069\nExpected: 734069.0d\nWas: " + ExtendedDecimal.FromString("734069").ToDouble());
-}
+        Assert.Fail("decfrac double 734069\nExpected: 734069.0d\nWas: " + ExtendedDecimal.FromString("734069").ToDouble());
+      }
       if (-3.51801573E12f != ExtendedDecimal.FromString("-3518015796477").ToSingle()) {
- Assert.Fail("decfrac single -3518015796477\nExpected: -3.51801573E12f\nWas: " + ExtendedDecimal.FromString("-3518015796477").ToSingle());
-}
+        Assert.Fail("decfrac single -3518015796477\nExpected: -3.51801573E12f\nWas: " + ExtendedDecimal.FromString("-3518015796477").ToSingle());
+      }
       if (-3.518015796477E12d != ExtendedDecimal.FromString("-3518015796477").ToDouble()) {
- Assert.Fail("decfrac double -3518015796477\nExpected: -3.518015796477E12d\nWas: " + ExtendedDecimal.FromString("-3518015796477").ToDouble());
-}
+        Assert.Fail("decfrac double -3518015796477\nExpected: -3.518015796477E12d\nWas: " + ExtendedDecimal.FromString("-3518015796477").ToDouble());
+      }
       if (-411720.0f != ExtendedDecimal.FromString("-411720").ToSingle()) {
- Assert.Fail("decfrac single -411720\nExpected: -411720.0f\nWas: " + ExtendedDecimal.FromString("-411720").ToSingle());
-}
+        Assert.Fail("decfrac single -411720\nExpected: -411720.0f\nWas: " + ExtendedDecimal.FromString("-411720").ToSingle());
+      }
       if (-411720.0d != ExtendedDecimal.FromString("-411720").ToDouble()) {
- Assert.Fail("decfrac double -411720\nExpected: -411720.0d\nWas: " + ExtendedDecimal.FromString("-411720").ToDouble());
-}
+        Assert.Fail("decfrac double -411720\nExpected: -411720.0d\nWas: " + ExtendedDecimal.FromString("-411720").ToDouble());
+      }
       if (5.14432512E8f != ExtendedDecimal.FromString("514432504").ToSingle()) {
- Assert.Fail("decfrac single 514432504\nExpected: 5.14432512E8f\nWas: " + ExtendedDecimal.FromString("514432504").ToSingle());
-}
+        Assert.Fail("decfrac single 514432504\nExpected: 5.14432512E8f\nWas: " + ExtendedDecimal.FromString("514432504").ToSingle());
+      }
       if (5.14432504E8d != ExtendedDecimal.FromString("514432504").ToDouble()) {
- Assert.Fail("decfrac double 514432504\nExpected: 5.14432504E8d\nWas: " + ExtendedDecimal.FromString("514432504").ToDouble());
-}
+        Assert.Fail("decfrac double 514432504\nExpected: 5.14432504E8d\nWas: " + ExtendedDecimal.FromString("514432504").ToDouble());
+      }
       if (3970.0f != ExtendedDecimal.FromString("3970").ToSingle()) {
- Assert.Fail("decfrac single 3970\nExpected: 3970.0f\nWas: " + ExtendedDecimal.FromString("3970").ToSingle());
-}
+        Assert.Fail("decfrac single 3970\nExpected: 3970.0f\nWas: " + ExtendedDecimal.FromString("3970").ToSingle());
+      }
       if (3970.0d != ExtendedDecimal.FromString("3970").ToDouble()) {
- Assert.Fail("decfrac double 3970\nExpected: 3970.0d\nWas: " + ExtendedDecimal.FromString("3970").ToDouble());
-}
+        Assert.Fail("decfrac double 3970\nExpected: 3970.0d\nWas: " + ExtendedDecimal.FromString("3970").ToDouble());
+      }
       if (-1.89642527E10f != ExtendedDecimal.FromString("-18964252847").ToSingle()) {
- Assert.Fail("decfrac single -18964252847\nExpected: -1.89642527E10f\nWas: " + ExtendedDecimal.FromString("-18964252847").ToSingle());
-}
+        Assert.Fail("decfrac single -18964252847\nExpected: -1.89642527E10f\nWas: " + ExtendedDecimal.FromString("-18964252847").ToSingle());
+      }
       if (-1.8964252847E10d != ExtendedDecimal.FromString("-18964252847").ToDouble()) {
- Assert.Fail("decfrac double -18964252847\nExpected: -1.8964252847E10d\nWas: " + ExtendedDecimal.FromString("-18964252847").ToDouble());
-}
+        Assert.Fail("decfrac double -18964252847\nExpected: -1.8964252847E10d\nWas: " + ExtendedDecimal.FromString("-18964252847").ToDouble());
+      }
       if (-9.5766118E10f != ExtendedDecimal.FromString("-95766116842").ToSingle()) {
- Assert.Fail("decfrac single -95766116842\nExpected: -9.5766118E10f\nWas: " + ExtendedDecimal.FromString("-95766116842").ToSingle());
-}
+        Assert.Fail("decfrac single -95766116842\nExpected: -9.5766118E10f\nWas: " + ExtendedDecimal.FromString("-95766116842").ToSingle());
+      }
       if (-9.5766116842E10d != ExtendedDecimal.FromString("-95766116842").ToDouble()) {
- Assert.Fail("decfrac double -95766116842\nExpected: -9.5766116842E10d\nWas: " + ExtendedDecimal.FromString("-95766116842").ToDouble());
-}
+        Assert.Fail("decfrac double -95766116842\nExpected: -9.5766116842E10d\nWas: " + ExtendedDecimal.FromString("-95766116842").ToDouble());
+      }
       if (-4.5759559E15f != ExtendedDecimal.FromString("-4575956051893063").ToSingle()) {
- Assert.Fail("decfrac single -4575956051893063\nExpected: -4.5759559E15f\nWas: " + ExtendedDecimal.FromString("-4575956051893063").ToSingle());
-}
+        Assert.Fail("decfrac single -4575956051893063\nExpected: -4.5759559E15f\nWas: " + ExtendedDecimal.FromString("-4575956051893063").ToSingle());
+      }
       if (-4.575956051893063E15d != ExtendedDecimal.FromString("-4575956051893063").ToDouble()) {
- Assert.Fail("decfrac double -4575956051893063\nExpected: -4.575956051893063E15d\nWas: " + ExtendedDecimal.FromString("-4575956051893063").ToDouble());
-}
+        Assert.Fail("decfrac double -4575956051893063\nExpected: -4.575956051893063E15d\nWas: " + ExtendedDecimal.FromString("-4575956051893063").ToDouble());
+      }
       if (5.2050934E9f != ExtendedDecimal.FromString("5205093392").ToSingle()) {
- Assert.Fail("decfrac single 5205093392\nExpected: 5.2050934E9f\nWas: " + ExtendedDecimal.FromString("5205093392").ToSingle());
-}
+        Assert.Fail("decfrac single 5205093392\nExpected: 5.2050934E9f\nWas: " + ExtendedDecimal.FromString("5205093392").ToSingle());
+      }
       if (5.205093392E9d != ExtendedDecimal.FromString("5205093392").ToDouble()) {
- Assert.Fail("decfrac double 5205093392\nExpected: 5.205093392E9d\nWas: " + ExtendedDecimal.FromString("5205093392").ToDouble());
-}
+        Assert.Fail("decfrac double 5205093392\nExpected: 5.205093392E9d\nWas: " + ExtendedDecimal.FromString("5205093392").ToDouble());
+      }
       if (-7.0079627E12f != ExtendedDecimal.FromString("-7007962583042").ToSingle()) {
- Assert.Fail("decfrac single -7007962583042\nExpected: -7.0079627E12f\nWas: " + ExtendedDecimal.FromString("-7007962583042").ToSingle());
-}
+        Assert.Fail("decfrac single -7007962583042\nExpected: -7.0079627E12f\nWas: " + ExtendedDecimal.FromString("-7007962583042").ToSingle());
+      }
       if (-7.007962583042E12d != ExtendedDecimal.FromString("-7007962583042").ToDouble()) {
- Assert.Fail("decfrac double -7007962583042\nExpected: -7.007962583042E12d\nWas: " + ExtendedDecimal.FromString("-7007962583042").ToDouble());
-}
+        Assert.Fail("decfrac double -7007962583042\nExpected: -7.007962583042E12d\nWas: " + ExtendedDecimal.FromString("-7007962583042").ToDouble());
+      }
       if (59.0f != ExtendedDecimal.FromString("59").ToSingle()) {
- Assert.Fail("decfrac single 59\nExpected: 59.0f\nWas: " + ExtendedDecimal.FromString("59").ToSingle());
-}
+        Assert.Fail("decfrac single 59\nExpected: 59.0f\nWas: " + ExtendedDecimal.FromString("59").ToSingle());
+      }
       if (59.0d != ExtendedDecimal.FromString("59").ToDouble()) {
- Assert.Fail("decfrac double 59\nExpected: 59.0d\nWas: " + ExtendedDecimal.FromString("59").ToDouble());
-}
+        Assert.Fail("decfrac double 59\nExpected: 59.0d\nWas: " + ExtendedDecimal.FromString("59").ToDouble());
+      }
       if (-5.5095849E16f != ExtendedDecimal.FromString("-55095850956259910").ToSingle()) {
- Assert.Fail("decfrac single -55095850956259910\nExpected: -5.5095849E16f\nWas: " + ExtendedDecimal.FromString("-55095850956259910").ToSingle());
-}
+        Assert.Fail("decfrac single -55095850956259910\nExpected: -5.5095849E16f\nWas: " + ExtendedDecimal.FromString("-55095850956259910").ToSingle());
+      }
       if (-5.5095850956259912E16d != ExtendedDecimal.FromString("-55095850956259910").ToDouble()) {
- Assert.Fail("decfrac double -55095850956259910\nExpected: -5.5095850956259912E16d\nWas: " + ExtendedDecimal.FromString("-55095850956259910").ToDouble());
-}
+        Assert.Fail("decfrac double -55095850956259910\nExpected: -5.5095850956259912E16d\nWas: " + ExtendedDecimal.FromString("-55095850956259910").ToDouble());
+      }
       if (1.0f != ExtendedDecimal.FromString("1").ToSingle()) {
- Assert.Fail("decfrac single 1\nExpected: 1.0f\nWas: " + ExtendedDecimal.FromString("1").ToSingle());
-}
+        Assert.Fail("decfrac single 1\nExpected: 1.0f\nWas: " + ExtendedDecimal.FromString("1").ToSingle());
+      }
       if (1.0d != ExtendedDecimal.FromString("1").ToDouble()) {
- Assert.Fail("decfrac double 1\nExpected: 1.0d\nWas: " + ExtendedDecimal.FromString("1").ToDouble());
-}
+        Assert.Fail("decfrac double 1\nExpected: 1.0d\nWas: " + ExtendedDecimal.FromString("1").ToDouble());
+      }
       if (598.0f != ExtendedDecimal.FromString("598").ToSingle()) {
- Assert.Fail("decfrac single 598\nExpected: 598.0f\nWas: " + ExtendedDecimal.FromString("598").ToSingle());
-}
+        Assert.Fail("decfrac single 598\nExpected: 598.0f\nWas: " + ExtendedDecimal.FromString("598").ToSingle());
+      }
       if (598.0d != ExtendedDecimal.FromString("598").ToDouble()) {
- Assert.Fail("decfrac double 598\nExpected: 598.0d\nWas: " + ExtendedDecimal.FromString("598").ToDouble());
-}
+        Assert.Fail("decfrac double 598\nExpected: 598.0d\nWas: " + ExtendedDecimal.FromString("598").ToDouble());
+      }
       if (957.0f != ExtendedDecimal.FromString("957").ToSingle()) {
- Assert.Fail("decfrac single 957\nExpected: 957.0f\nWas: " + ExtendedDecimal.FromString("957").ToSingle());
-}
+        Assert.Fail("decfrac single 957\nExpected: 957.0f\nWas: " + ExtendedDecimal.FromString("957").ToSingle());
+      }
       if (957.0d != ExtendedDecimal.FromString("957").ToDouble()) {
- Assert.Fail("decfrac double 957\nExpected: 957.0d\nWas: " + ExtendedDecimal.FromString("957").ToDouble());
-}
+        Assert.Fail("decfrac double 957\nExpected: 957.0d\nWas: " + ExtendedDecimal.FromString("957").ToDouble());
+      }
       if (-1.4772274E7f != ExtendedDecimal.FromString("-14772274").ToSingle()) {
- Assert.Fail("decfrac single -14772274\nExpected: -1.4772274E7f\nWas: " + ExtendedDecimal.FromString("-14772274").ToSingle());
-}
+        Assert.Fail("decfrac single -14772274\nExpected: -1.4772274E7f\nWas: " + ExtendedDecimal.FromString("-14772274").ToSingle());
+      }
       if (-1.4772274E7d != ExtendedDecimal.FromString("-14772274").ToDouble()) {
- Assert.Fail("decfrac double -14772274\nExpected: -1.4772274E7d\nWas: " + ExtendedDecimal.FromString("-14772274").ToDouble());
-}
+        Assert.Fail("decfrac double -14772274\nExpected: -1.4772274E7d\nWas: " + ExtendedDecimal.FromString("-14772274").ToDouble());
+      }
       if (-3006.0f != ExtendedDecimal.FromString("-3006").ToSingle()) {
- Assert.Fail("decfrac single -3006\nExpected: -3006.0f\nWas: " + ExtendedDecimal.FromString("-3006").ToSingle());
-}
+        Assert.Fail("decfrac single -3006\nExpected: -3006.0f\nWas: " + ExtendedDecimal.FromString("-3006").ToSingle());
+      }
       if (-3006.0d != ExtendedDecimal.FromString("-3006").ToDouble()) {
- Assert.Fail("decfrac double -3006\nExpected: -3006.0d\nWas: " + ExtendedDecimal.FromString("-3006").ToDouble());
-}
+        Assert.Fail("decfrac double -3006\nExpected: -3006.0d\nWas: " + ExtendedDecimal.FromString("-3006").ToDouble());
+      }
       if (3.07120343E18f != ExtendedDecimal.FromString("3071203450148698328").ToSingle()) {
- Assert.Fail("decfrac single 3071203450148698328\nExpected: 3.07120343E18f\nWas: " + ExtendedDecimal.FromString("3071203450148698328").ToSingle());
-}
+        Assert.Fail("decfrac single 3071203450148698328\nExpected: 3.07120343E18f\nWas: " + ExtendedDecimal.FromString("3071203450148698328").ToSingle());
+      }
       if (3.0712034501486981E18d != ExtendedDecimal.FromString("3071203450148698328").ToDouble()) {
- Assert.Fail("decfrac double 3071203450148698328\nExpected: 3.0712034501486981E18d\nWas: " + ExtendedDecimal.FromString("3071203450148698328").ToDouble());
-}
+        Assert.Fail("decfrac double 3071203450148698328\nExpected: 3.0712034501486981E18d\nWas: " + ExtendedDecimal.FromString("3071203450148698328").ToDouble());
+      }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestDecFracToSingleDouble() {
       if (-4348.0f != ExtendedDecimal.FromString("-4348").ToSingle()) {
- Assert.Fail("decfrac single -4348\nExpected: -4348.0f\nWas: " + ExtendedDecimal.FromString("-4348").ToSingle());
-}
+        Assert.Fail("decfrac single -4348\nExpected: -4348.0f\nWas: " + ExtendedDecimal.FromString("-4348").ToSingle());
+      }
       if (-4348.0d != ExtendedDecimal.FromString("-4348").ToDouble()) {
- Assert.Fail("decfrac double -4348\nExpected: -4348.0d\nWas: " + ExtendedDecimal.FromString("-4348").ToDouble());
-}
+        Assert.Fail("decfrac double -4348\nExpected: -4348.0d\nWas: " + ExtendedDecimal.FromString("-4348").ToDouble());
+      }
       if (-9.85323f != ExtendedDecimal.FromString("-9.85323086293411065").ToSingle()) {
- Assert.Fail("decfrac single -9.85323086293411065\nExpected: -9.85323f\nWas: " + ExtendedDecimal.FromString("-9.85323086293411065").ToSingle());
-}
+        Assert.Fail("decfrac single -9.85323086293411065\nExpected: -9.85323f\nWas: " + ExtendedDecimal.FromString("-9.85323086293411065").ToSingle());
+      }
       if (-9.85323086293411d != ExtendedDecimal.FromString("-9.85323086293411065").ToDouble()) {
- Assert.Fail("decfrac double -9.85323086293411065\nExpected: -9.85323086293411d\nWas: " + ExtendedDecimal.FromString("-9.85323086293411065").ToDouble());
-}
+        Assert.Fail("decfrac double -9.85323086293411065\nExpected: -9.85323086293411d\nWas: " + ExtendedDecimal.FromString("-9.85323086293411065").ToDouble());
+      }
       if (-5.2317E9f != ExtendedDecimal.FromString("-5231.7E+6").ToSingle()) {
- Assert.Fail("decfrac single -5231.7E+6\nExpected: -5.2317E9f\nWas: " + ExtendedDecimal.FromString("-5231.7E+6").ToSingle());
-}
+        Assert.Fail("decfrac single -5231.7E+6\nExpected: -5.2317E9f\nWas: " + ExtendedDecimal.FromString("-5231.7E+6").ToSingle());
+      }
       if (-5.2317E9d != ExtendedDecimal.FromString("-5231.7E+6").ToDouble()) {
- Assert.Fail("decfrac double -5231.7E+6\nExpected: -5.2317E9d\nWas: " + ExtendedDecimal.FromString("-5231.7E+6").ToDouble());
-}
+        Assert.Fail("decfrac double -5231.7E+6\nExpected: -5.2317E9d\nWas: " + ExtendedDecimal.FromString("-5231.7E+6").ToDouble());
+      }
       if (5.7991604E7f != ExtendedDecimal.FromString("579916024.449917729730457E-1").ToSingle()) {
- Assert.Fail("decfrac single 579916024.449917729730457E-1\nExpected: 5.7991604E7f\nWas: " + ExtendedDecimal.FromString("579916024.449917729730457E-1").ToSingle());
-}
+        Assert.Fail("decfrac single 579916024.449917729730457E-1\nExpected: 5.7991604E7f\nWas: " + ExtendedDecimal.FromString("579916024.449917729730457E-1").ToSingle());
+      }
       if (5.7991602444991775E7d != ExtendedDecimal.FromString("579916024.449917729730457E-1").ToDouble()) {
- Assert.Fail("decfrac double 579916024.449917729730457E-1\nExpected: 5.7991602444991775E7d\nWas: " + ExtendedDecimal.FromString("579916024.449917729730457E-1").ToDouble());
-}
+        Assert.Fail("decfrac double 579916024.449917729730457E-1\nExpected: 5.7991602444991775E7d\nWas: " + ExtendedDecimal.FromString("579916024.449917729730457E-1").ToDouble());
+      }
       if (-515.02563f != ExtendedDecimal.FromString("-515025607547098618E-15").ToSingle()) {
- Assert.Fail("decfrac single -515025607547098618E-15\nExpected: -515.02563f\nWas: " + ExtendedDecimal.FromString("-515025607547098618E-15").ToSingle());
-}
+        Assert.Fail("decfrac single -515025607547098618E-15\nExpected: -515.02563f\nWas: " + ExtendedDecimal.FromString("-515025607547098618E-15").ToSingle());
+      }
       if (-515.0256075470986d != ExtendedDecimal.FromString("-515025607547098618E-15").ToDouble()) {
- Assert.Fail("decfrac double -515025607547098618E-15\nExpected: -515.0256075470986d\nWas: " + ExtendedDecimal.FromString("-515025607547098618E-15").ToDouble());
-}
+        Assert.Fail("decfrac double -515025607547098618E-15\nExpected: -515.0256075470986d\nWas: " + ExtendedDecimal.FromString("-515025607547098618E-15").ToDouble());
+      }
       if (-9.3541843E10f != ExtendedDecimal.FromString("-93541840706").ToSingle()) {
- Assert.Fail("decfrac single -93541840706\nExpected: -9.3541843E10f\nWas: " + ExtendedDecimal.FromString("-93541840706").ToSingle());
-}
+        Assert.Fail("decfrac single -93541840706\nExpected: -9.3541843E10f\nWas: " + ExtendedDecimal.FromString("-93541840706").ToSingle());
+      }
       if (-9.3541840706E10d != ExtendedDecimal.FromString("-93541840706").ToDouble()) {
- Assert.Fail("decfrac double -93541840706\nExpected: -9.3541840706E10d\nWas: " + ExtendedDecimal.FromString("-93541840706").ToDouble());
-}
+        Assert.Fail("decfrac double -93541840706\nExpected: -9.3541840706E10d\nWas: " + ExtendedDecimal.FromString("-93541840706").ToDouble());
+      }
       if (3.8568078E23f != ExtendedDecimal.FromString("38568076767380659.6E+7").ToSingle()) {
- Assert.Fail("decfrac single 38568076767380659.6E+7\nExpected: 3.8568078E23f\nWas: " + ExtendedDecimal.FromString("38568076767380659.6E+7").ToSingle());
-}
+        Assert.Fail("decfrac single 38568076767380659.6E+7\nExpected: 3.8568078E23f\nWas: " + ExtendedDecimal.FromString("38568076767380659.6E+7").ToSingle());
+      }
       if (3.8568076767380657E23d != ExtendedDecimal.FromString("38568076767380659.6E+7").ToDouble()) {
- Assert.Fail("decfrac double 38568076767380659.6E+7\nExpected: 3.8568076767380657E23d\nWas: " + ExtendedDecimal.FromString("38568076767380659.6E+7").ToDouble());
-}
+        Assert.Fail("decfrac double 38568076767380659.6E+7\nExpected: 3.8568076767380657E23d\nWas: " + ExtendedDecimal.FromString("38568076767380659.6E+7").ToDouble());
+      }
       if (4682.1987f != ExtendedDecimal.FromString("468219867826E-8").ToSingle()) {
- Assert.Fail("decfrac single 468219867826E-8\nExpected: 4682.1987f\nWas: " + ExtendedDecimal.FromString("468219867826E-8").ToSingle());
-}
+        Assert.Fail("decfrac single 468219867826E-8\nExpected: 4682.1987f\nWas: " + ExtendedDecimal.FromString("468219867826E-8").ToSingle());
+      }
       if (4682.19867826d != ExtendedDecimal.FromString("468219867826E-8").ToDouble()) {
- Assert.Fail("decfrac double 468219867826E-8\nExpected: 4682.19867826d\nWas: " + ExtendedDecimal.FromString("468219867826E-8").ToDouble());
-}
+        Assert.Fail("decfrac double 468219867826E-8\nExpected: 4682.19867826d\nWas: " + ExtendedDecimal.FromString("468219867826E-8").ToDouble());
+      }
       if (7.3869363E-4f != ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToSingle()) {
- Assert.Fail("decfrac single 73869365.3859328709200790828E-11\nExpected: 7.3869363E-4f\nWas: " + ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToSingle());
-}
+        Assert.Fail("decfrac single 73869365.3859328709200790828E-11\nExpected: 7.3869363E-4f\nWas: " + ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToSingle());
+      }
       if (7.386936538593287E-4d != ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToDouble()) {
- Assert.Fail("decfrac double 73869365.3859328709200790828E-11\nExpected: 7.386936538593287E-4d\nWas: " + ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToDouble());
-}
+        Assert.Fail("decfrac double 73869365.3859328709200790828E-11\nExpected: 7.386936538593287E-4d\nWas: " + ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToDouble());
+      }
       if (2.3f != ExtendedDecimal.FromString("2.3E0").ToSingle()) {
- Assert.Fail("decfrac single 2.3E0\nExpected: 2.3f\nWas: " + ExtendedDecimal.FromString("2.3E0").ToSingle());
-}
+        Assert.Fail("decfrac single 2.3E0\nExpected: 2.3f\nWas: " + ExtendedDecimal.FromString("2.3E0").ToSingle());
+      }
       if (2.3d != ExtendedDecimal.FromString("2.3E0").ToDouble()) {
- Assert.Fail("decfrac double 2.3E0\nExpected: 2.3d\nWas: " + ExtendedDecimal.FromString("2.3E0").ToDouble());
-}
+        Assert.Fail("decfrac double 2.3E0\nExpected: 2.3d\nWas: " + ExtendedDecimal.FromString("2.3E0").ToDouble());
+      }
       if (3.3713182E15f != ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToSingle()) {
- Assert.Fail("decfrac single 3371318258253373.59498533176159560\nExpected: 3.3713182E15f\nWas: " + ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToSingle());
-}
+        Assert.Fail("decfrac single 3371318258253373.59498533176159560\nExpected: 3.3713182E15f\nWas: " + ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToSingle());
+      }
       if (3.3713182582533735E15d != ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToDouble()) {
- Assert.Fail("decfrac double 3371318258253373.59498533176159560\nExpected: 3.3713182582533735E15d\nWas: " + ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToDouble());
-}
+        Assert.Fail("decfrac double 3371318258253373.59498533176159560\nExpected: 3.3713182582533735E15d\nWas: " + ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToDouble());
+      }
       if (0.08044683f != ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToSingle()) {
- Assert.Fail("decfrac single 804468350612974.6118902086132089233E-16\nExpected: 0.08044683f\nWas: " + ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToSingle());
-}
+        Assert.Fail("decfrac single 804468350612974.6118902086132089233E-16\nExpected: 0.08044683f\nWas: " + ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToSingle());
+      }
       if (0.08044683506129746d != ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToDouble()) {
- Assert.Fail("decfrac double 804468350612974.6118902086132089233E-16\nExpected: 0.08044683506129746d\nWas: " + ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToDouble());
-}
+        Assert.Fail("decfrac double 804468350612974.6118902086132089233E-16\nExpected: 0.08044683506129746d\nWas: " + ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToDouble());
+      }
       if (-7.222071E19f != ExtendedDecimal.FromString("-72220708347127407337.28").ToSingle()) {
- Assert.Fail("decfrac single -72220708347127407337.28\nExpected: -7.222071E19f\nWas: " + ExtendedDecimal.FromString("-72220708347127407337.28").ToSingle());
-}
+        Assert.Fail("decfrac single -72220708347127407337.28\nExpected: -7.222071E19f\nWas: " + ExtendedDecimal.FromString("-72220708347127407337.28").ToSingle());
+      }
       if (-7.222070834712741E19d != ExtendedDecimal.FromString("-72220708347127407337.28").ToDouble()) {
- Assert.Fail("decfrac double -72220708347127407337.28\nExpected: -7.222070834712741E19d\nWas: " + ExtendedDecimal.FromString("-72220708347127407337.28").ToDouble());
-}
+        Assert.Fail("decfrac double -72220708347127407337.28\nExpected: -7.222070834712741E19d\nWas: " + ExtendedDecimal.FromString("-72220708347127407337.28").ToDouble());
+      }
       if (9715796.0f != ExtendedDecimal.FromString("9715796.4299331966870989").ToSingle()) {
- Assert.Fail("decfrac single 9715796.4299331966870989\nExpected: 9715796.0f\nWas: " + ExtendedDecimal.FromString("9715796.4299331966870989").ToSingle());
-}
+        Assert.Fail("decfrac single 9715796.4299331966870989\nExpected: 9715796.0f\nWas: " + ExtendedDecimal.FromString("9715796.4299331966870989").ToSingle());
+      }
       if (9715796.429933196d != ExtendedDecimal.FromString("9715796.4299331966870989").ToDouble()) {
- Assert.Fail("decfrac double 9715796.4299331966870989\nExpected: 9715796.429933196d\nWas: " + ExtendedDecimal.FromString("9715796.4299331966870989").ToDouble());
-}
+        Assert.Fail("decfrac double 9715796.4299331966870989\nExpected: 9715796.429933196d\nWas: " + ExtendedDecimal.FromString("9715796.4299331966870989").ToDouble());
+      }
       if (9.3596612E14f != ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToSingle()) {
- Assert.Fail("decfrac single 93596609961883873.8463754373628236E-2\nExpected: 9.3596612E14f\nWas: " + ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToSingle());
-}
+        Assert.Fail("decfrac single 93596609961883873.8463754373628236E-2\nExpected: 9.3596612E14f\nWas: " + ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToSingle());
+      }
       if (9.359660996188388E14d != ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToDouble()) {
- Assert.Fail("decfrac double 93596609961883873.8463754373628236E-2\nExpected: 9.359660996188388E14d\nWas: " + ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToDouble());
-}
+        Assert.Fail("decfrac double 93596609961883873.8463754373628236E-2\nExpected: 9.359660996188388E14d\nWas: " + ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToDouble());
+      }
       if (4.82799354E14f != ExtendedDecimal.FromString("482799357899450").ToSingle()) {
- Assert.Fail("decfrac single 482799357899450\nExpected: 4.82799354E14f\nWas: " + ExtendedDecimal.FromString("482799357899450").ToSingle());
-}
+        Assert.Fail("decfrac single 482799357899450\nExpected: 4.82799354E14f\nWas: " + ExtendedDecimal.FromString("482799357899450").ToSingle());
+      }
       if (4.8279935789945E14d != ExtendedDecimal.FromString("482799357899450").ToDouble()) {
- Assert.Fail("decfrac double 482799357899450\nExpected: 4.8279935789945E14d\nWas: " + ExtendedDecimal.FromString("482799357899450").ToDouble());
-}
+        Assert.Fail("decfrac double 482799357899450\nExpected: 4.8279935789945E14d\nWas: " + ExtendedDecimal.FromString("482799357899450").ToDouble());
+      }
       if (3.8193924E25f != ExtendedDecimal.FromString("381939236989E+14").ToSingle()) {
- Assert.Fail("decfrac single 381939236989E+14\nExpected: 3.8193924E25f\nWas: " + ExtendedDecimal.FromString("381939236989E+14").ToSingle());
-}
+        Assert.Fail("decfrac single 381939236989E+14\nExpected: 3.8193924E25f\nWas: " + ExtendedDecimal.FromString("381939236989E+14").ToSingle());
+      }
       if (3.81939236989E25d != ExtendedDecimal.FromString("381939236989E+14").ToDouble()) {
- Assert.Fail("decfrac double 381939236989E+14\nExpected: 3.81939236989E25d\nWas: " + ExtendedDecimal.FromString("381939236989E+14").ToDouble());
-}
+        Assert.Fail("decfrac double 381939236989E+14\nExpected: 3.81939236989E25d\nWas: " + ExtendedDecimal.FromString("381939236989E+14").ToDouble());
+      }
       if (-3.1092332E27f != ExtendedDecimal.FromString("-3109233371824024E+12").ToSingle()) {
- Assert.Fail("decfrac single -3109233371824024E+12\nExpected: -3.1092332E27f\nWas: " + ExtendedDecimal.FromString("-3109233371824024E+12").ToSingle());
-}
+        Assert.Fail("decfrac single -3109233371824024E+12\nExpected: -3.1092332E27f\nWas: " + ExtendedDecimal.FromString("-3109233371824024E+12").ToSingle());
+      }
       if (-3.109233371824024E27d != ExtendedDecimal.FromString("-3109233371824024E+12").ToDouble()) {
- Assert.Fail("decfrac double -3109233371824024E+12\nExpected: -3.109233371824024E27d\nWas: " + ExtendedDecimal.FromString("-3109233371824024E+12").ToDouble());
-}
+        Assert.Fail("decfrac double -3109233371824024E+12\nExpected: -3.109233371824024E27d\nWas: " + ExtendedDecimal.FromString("-3109233371824024E+12").ToDouble());
+      }
       if (-0.006658507f != ExtendedDecimal.FromString("-66585.07E-7").ToSingle()) {
- Assert.Fail("decfrac single -66585.07E-7\nExpected: -0.006658507f\nWas: " + ExtendedDecimal.FromString("-66585.07E-7").ToSingle());
-}
+        Assert.Fail("decfrac single -66585.07E-7\nExpected: -0.006658507f\nWas: " + ExtendedDecimal.FromString("-66585.07E-7").ToSingle());
+      }
       if (-0.006658507d != ExtendedDecimal.FromString("-66585.07E-7").ToDouble()) {
- Assert.Fail("decfrac double -66585.07E-7\nExpected: -0.006658507d\nWas: " + ExtendedDecimal.FromString("-66585.07E-7").ToDouble());
-}
+        Assert.Fail("decfrac double -66585.07E-7\nExpected: -0.006658507d\nWas: " + ExtendedDecimal.FromString("-66585.07E-7").ToDouble());
+      }
       if (17.276796f != ExtendedDecimal.FromString("17.276795549708").ToSingle()) {
- Assert.Fail("decfrac single 17.276795549708\nExpected: 17.276796f\nWas: " + ExtendedDecimal.FromString("17.276795549708").ToSingle());
-}
+        Assert.Fail("decfrac single 17.276795549708\nExpected: 17.276796f\nWas: " + ExtendedDecimal.FromString("17.276795549708").ToSingle());
+      }
       if (17.276795549708d != ExtendedDecimal.FromString("17.276795549708").ToDouble()) {
- Assert.Fail("decfrac double 17.276795549708\nExpected: 17.276795549708d\nWas: " + ExtendedDecimal.FromString("17.276795549708").ToDouble());
-}
+        Assert.Fail("decfrac double 17.276795549708\nExpected: 17.276795549708d\nWas: " + ExtendedDecimal.FromString("17.276795549708").ToDouble());
+      }
       if (-3210939.5f != ExtendedDecimal.FromString("-321093943510192.3307E-8").ToSingle()) {
- Assert.Fail("decfrac single -321093943510192.3307E-8\nExpected: -3210939.5f\nWas: " + ExtendedDecimal.FromString("-321093943510192.3307E-8").ToSingle());
-}
+        Assert.Fail("decfrac single -321093943510192.3307E-8\nExpected: -3210939.5f\nWas: " + ExtendedDecimal.FromString("-321093943510192.3307E-8").ToSingle());
+      }
       if (-3210939.4351019235d != ExtendedDecimal.FromString("-321093943510192.3307E-8").ToDouble()) {
- Assert.Fail("decfrac double -321093943510192.3307E-8\nExpected: -3210939.4351019235d\nWas: " + ExtendedDecimal.FromString("-321093943510192.3307E-8").ToDouble());
-}
+        Assert.Fail("decfrac double -321093943510192.3307E-8\nExpected: -3210939.4351019235d\nWas: " + ExtendedDecimal.FromString("-321093943510192.3307E-8").ToDouble());
+      }
       if (-976.9676f != ExtendedDecimal.FromString("-976.967597776185553735").ToSingle()) {
- Assert.Fail("decfrac single -976.967597776185553735\nExpected: -976.9676f\nWas: " + ExtendedDecimal.FromString("-976.967597776185553735").ToSingle());
-}
+        Assert.Fail("decfrac single -976.967597776185553735\nExpected: -976.9676f\nWas: " + ExtendedDecimal.FromString("-976.967597776185553735").ToSingle());
+      }
       if (-976.9675977761856d != ExtendedDecimal.FromString("-976.967597776185553735").ToDouble()) {
- Assert.Fail("decfrac double -976.967597776185553735\nExpected: -976.9675977761856d\nWas: " + ExtendedDecimal.FromString("-976.967597776185553735").ToDouble());
-}
+        Assert.Fail("decfrac double -976.967597776185553735\nExpected: -976.9675977761856d\nWas: " + ExtendedDecimal.FromString("-976.967597776185553735").ToDouble());
+      }
       if (-3.49712614E9f != ExtendedDecimal.FromString("-3497126138").ToSingle()) {
- Assert.Fail("decfrac single -3497126138\nExpected: -3.49712614E9f\nWas: " + ExtendedDecimal.FromString("-3497126138").ToSingle());
-}
+        Assert.Fail("decfrac single -3497126138\nExpected: -3.49712614E9f\nWas: " + ExtendedDecimal.FromString("-3497126138").ToSingle());
+      }
       if (-3.497126138E9d != ExtendedDecimal.FromString("-3497126138").ToDouble()) {
- Assert.Fail("decfrac double -3497126138\nExpected: -3.497126138E9d\nWas: " + ExtendedDecimal.FromString("-3497126138").ToDouble());
-}
+        Assert.Fail("decfrac double -3497126138\nExpected: -3.497126138E9d\nWas: " + ExtendedDecimal.FromString("-3497126138").ToDouble());
+      }
       if (-2.63418028E14f != ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToSingle()) {
- Assert.Fail("decfrac single -2634180.2455697965376217503E+8\nExpected: -2.63418028E14f\nWas: " + ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToSingle());
-}
+        Assert.Fail("decfrac single -2634180.2455697965376217503E+8\nExpected: -2.63418028E14f\nWas: " + ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToSingle());
+      }
       if (-2.6341802455697966E14d != ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToDouble()) {
- Assert.Fail("decfrac double -2634180.2455697965376217503E+8\nExpected: -2.6341802455697966E14d\nWas: " + ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToDouble());
-}
+        Assert.Fail("decfrac double -2634180.2455697965376217503E+8\nExpected: -2.6341802455697966E14d\nWas: " + ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToDouble());
+      }
       if (3.25314253E10f != ExtendedDecimal.FromString("32531426161").ToSingle()) {
- Assert.Fail("decfrac single 32531426161\nExpected: 3.25314253E10f\nWas: " + ExtendedDecimal.FromString("32531426161").ToSingle());
-}
+        Assert.Fail("decfrac single 32531426161\nExpected: 3.25314253E10f\nWas: " + ExtendedDecimal.FromString("32531426161").ToSingle());
+      }
       if (3.2531426161E10d != ExtendedDecimal.FromString("32531426161").ToDouble()) {
- Assert.Fail("decfrac double 32531426161\nExpected: 3.2531426161E10d\nWas: " + ExtendedDecimal.FromString("32531426161").ToDouble());
-}
+        Assert.Fail("decfrac double 32531426161\nExpected: 3.2531426161E10d\nWas: " + ExtendedDecimal.FromString("32531426161").ToDouble());
+      }
       if (-83825.7f != ExtendedDecimal.FromString("-83825.7").ToSingle()) {
- Assert.Fail("decfrac single -83825.7\nExpected: -83825.7f\nWas: " + ExtendedDecimal.FromString("-83825.7").ToSingle());
-}
+        Assert.Fail("decfrac single -83825.7\nExpected: -83825.7f\nWas: " + ExtendedDecimal.FromString("-83825.7").ToSingle());
+      }
       if (-83825.7d != ExtendedDecimal.FromString("-83825.7").ToDouble()) {
- Assert.Fail("decfrac double -83825.7\nExpected: -83825.7d\nWas: " + ExtendedDecimal.FromString("-83825.7").ToDouble());
-}
+        Assert.Fail("decfrac double -83825.7\nExpected: -83825.7d\nWas: " + ExtendedDecimal.FromString("-83825.7").ToDouble());
+      }
       if (9347.0f != ExtendedDecimal.FromString("9347").ToSingle()) {
- Assert.Fail("decfrac single 9347\nExpected: 9347.0f\nWas: " + ExtendedDecimal.FromString("9347").ToSingle());
-}
+        Assert.Fail("decfrac single 9347\nExpected: 9347.0f\nWas: " + ExtendedDecimal.FromString("9347").ToSingle());
+      }
       if (9347.0d != ExtendedDecimal.FromString("9347").ToDouble()) {
- Assert.Fail("decfrac double 9347\nExpected: 9347.0d\nWas: " + ExtendedDecimal.FromString("9347").ToDouble());
-}
+        Assert.Fail("decfrac double 9347\nExpected: 9347.0d\nWas: " + ExtendedDecimal.FromString("9347").ToDouble());
+      }
       if (4039.426f != ExtendedDecimal.FromString("403942604431E-8").ToSingle()) {
- Assert.Fail("decfrac single 403942604431E-8\nExpected: 4039.426f\nWas: " + ExtendedDecimal.FromString("403942604431E-8").ToSingle());
-}
+        Assert.Fail("decfrac single 403942604431E-8\nExpected: 4039.426f\nWas: " + ExtendedDecimal.FromString("403942604431E-8").ToSingle());
+      }
       if (4039.42604431d != ExtendedDecimal.FromString("403942604431E-8").ToDouble()) {
- Assert.Fail("decfrac double 403942604431E-8\nExpected: 4039.42604431d\nWas: " + ExtendedDecimal.FromString("403942604431E-8").ToDouble());
-}
+        Assert.Fail("decfrac double 403942604431E-8\nExpected: 4039.42604431d\nWas: " + ExtendedDecimal.FromString("403942604431E-8").ToDouble());
+      }
       if (9.821772E-8f != ExtendedDecimal.FromString("9821771729.481512E-17").ToSingle()) {
- Assert.Fail("decfrac single 9821771729.481512E-17\nExpected: 9.821772E-8f\nWas: " + ExtendedDecimal.FromString("9821771729.481512E-17").ToSingle());
-}
+        Assert.Fail("decfrac single 9821771729.481512E-17\nExpected: 9.821772E-8f\nWas: " + ExtendedDecimal.FromString("9821771729.481512E-17").ToSingle());
+      }
       if (9.821771729481512E-8d != ExtendedDecimal.FromString("9821771729.481512E-17").ToDouble()) {
- Assert.Fail("decfrac double 9821771729.481512E-17\nExpected: 9.821771729481512E-8d\nWas: " + ExtendedDecimal.FromString("9821771729.481512E-17").ToDouble());
-}
+        Assert.Fail("decfrac double 9821771729.481512E-17\nExpected: 9.821771729481512E-8d\nWas: " + ExtendedDecimal.FromString("9821771729.481512E-17").ToDouble());
+      }
       if (1.47027E24f != ExtendedDecimal.FromString("1470270E+18").ToSingle()) {
- Assert.Fail("decfrac single 1470270E+18\nExpected: 1.47027E24f\nWas: " + ExtendedDecimal.FromString("1470270E+18").ToSingle());
-}
+        Assert.Fail("decfrac single 1470270E+18\nExpected: 1.47027E24f\nWas: " + ExtendedDecimal.FromString("1470270E+18").ToSingle());
+      }
       if (1.47027E24d != ExtendedDecimal.FromString("1470270E+18").ToDouble()) {
- Assert.Fail("decfrac double 1470270E+18\nExpected: 1.47027E24d\nWas: " + ExtendedDecimal.FromString("1470270E+18").ToDouble());
-}
+        Assert.Fail("decfrac double 1470270E+18\nExpected: 1.47027E24d\nWas: " + ExtendedDecimal.FromString("1470270E+18").ToDouble());
+      }
       if (504.07468f != ExtendedDecimal.FromString("504.074687047275").ToSingle()) {
- Assert.Fail("decfrac single 504.074687047275\nExpected: 504.07468f\nWas: " + ExtendedDecimal.FromString("504.074687047275").ToSingle());
-}
+        Assert.Fail("decfrac single 504.074687047275\nExpected: 504.07468f\nWas: " + ExtendedDecimal.FromString("504.074687047275").ToSingle());
+      }
       if (504.074687047275d != ExtendedDecimal.FromString("504.074687047275").ToDouble()) {
- Assert.Fail("decfrac double 504.074687047275\nExpected: 504.074687047275d\nWas: " + ExtendedDecimal.FromString("504.074687047275").ToDouble());
-}
+        Assert.Fail("decfrac double 504.074687047275\nExpected: 504.074687047275d\nWas: " + ExtendedDecimal.FromString("504.074687047275").ToDouble());
+      }
       if (8.051101E-11f != ExtendedDecimal.FromString("8051.10083245768396604E-14").ToSingle()) {
- Assert.Fail("decfrac single 8051.10083245768396604E-14\nExpected: 8.051101E-11f\nWas: " + ExtendedDecimal.FromString("8051.10083245768396604E-14").ToSingle());
-}
+        Assert.Fail("decfrac single 8051.10083245768396604E-14\nExpected: 8.051101E-11f\nWas: " + ExtendedDecimal.FromString("8051.10083245768396604E-14").ToSingle());
+      }
       if (8.051100832457683E-11d != ExtendedDecimal.FromString("8051.10083245768396604E-14").ToDouble()) {
- Assert.Fail("decfrac double 8051.10083245768396604E-14\nExpected: 8.051100832457683E-11d\nWas: " + ExtendedDecimal.FromString("8051.10083245768396604E-14").ToDouble());
-}
+        Assert.Fail("decfrac double 8051.10083245768396604E-14\nExpected: 8.051100832457683E-11d\nWas: " + ExtendedDecimal.FromString("8051.10083245768396604E-14").ToDouble());
+      }
       if (-9789.0f != ExtendedDecimal.FromString("-9789").ToSingle()) {
- Assert.Fail("decfrac single -9789\nExpected: -9789.0f\nWas: " + ExtendedDecimal.FromString("-9789").ToSingle());
-}
+        Assert.Fail("decfrac single -9789\nExpected: -9789.0f\nWas: " + ExtendedDecimal.FromString("-9789").ToSingle());
+      }
       if (-9789.0d != ExtendedDecimal.FromString("-9789").ToDouble()) {
- Assert.Fail("decfrac double -9789\nExpected: -9789.0d\nWas: " + ExtendedDecimal.FromString("-9789").ToDouble());
-}
+        Assert.Fail("decfrac double -9789\nExpected: -9789.0d\nWas: " + ExtendedDecimal.FromString("-9789").ToDouble());
+      }
       if (-2.95046595E10f != ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToSingle()) {
- Assert.Fail("decfrac single -295046585154199748.8456E-7\nExpected: -2.95046595E10f\nWas: " + ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToSingle());
-}
+        Assert.Fail("decfrac single -295046585154199748.8456E-7\nExpected: -2.95046595E10f\nWas: " + ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToSingle());
+      }
       if (-2.9504658515419975E10d != ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToDouble()) {
- Assert.Fail("decfrac double -295046585154199748.8456E-7\nExpected: -2.9504658515419975E10d\nWas: " + ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToDouble());
-}
+        Assert.Fail("decfrac double -295046585154199748.8456E-7\nExpected: -2.9504658515419975E10d\nWas: " + ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToDouble());
+      }
       if (5.8642877E23f != ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToSingle()) {
- Assert.Fail("decfrac single 58642877210005207.915393764393974811E+7\nExpected: 5.8642877E23f\nWas: " + ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToSingle());
-}
+        Assert.Fail("decfrac single 58642877210005207.915393764393974811E+7\nExpected: 5.8642877E23f\nWas: " + ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToSingle());
+      }
       if (5.864287721000521E23d != ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToDouble()) {
- Assert.Fail("decfrac double 58642877210005207.915393764393974811E+7\nExpected: 5.864287721000521E23d\nWas: " + ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToDouble());
-}
+        Assert.Fail("decfrac double 58642877210005207.915393764393974811E+7\nExpected: 5.864287721000521E23d\nWas: " + ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToDouble());
+      }
       if (-5.13554645E11f != ExtendedDecimal.FromString("-513554652569").ToSingle()) {
- Assert.Fail("decfrac single -513554652569\nExpected: -5.13554645E11f\nWas: " + ExtendedDecimal.FromString("-513554652569").ToSingle());
-}
+        Assert.Fail("decfrac single -513554652569\nExpected: -5.13554645E11f\nWas: " + ExtendedDecimal.FromString("-513554652569").ToSingle());
+      }
       if (-5.13554652569E11d != ExtendedDecimal.FromString("-513554652569").ToDouble()) {
- Assert.Fail("decfrac double -513554652569\nExpected: -5.13554652569E11d\nWas: " + ExtendedDecimal.FromString("-513554652569").ToDouble());
-}
+        Assert.Fail("decfrac double -513554652569\nExpected: -5.13554652569E11d\nWas: " + ExtendedDecimal.FromString("-513554652569").ToDouble());
+      }
       if (-1.66059725E10f != ExtendedDecimal.FromString("-166059726561900E-4").ToSingle()) {
- Assert.Fail("decfrac single -166059726561900E-4\nExpected: -1.66059725E10f\nWas: " + ExtendedDecimal.FromString("-166059726561900E-4").ToSingle());
-}
+        Assert.Fail("decfrac single -166059726561900E-4\nExpected: -1.66059725E10f\nWas: " + ExtendedDecimal.FromString("-166059726561900E-4").ToSingle());
+      }
       if (-1.660597265619E10d != ExtendedDecimal.FromString("-166059726561900E-4").ToDouble()) {
- Assert.Fail("decfrac double -166059726561900E-4\nExpected: -1.660597265619E10d\nWas: " + ExtendedDecimal.FromString("-166059726561900E-4").ToDouble());
-}
+        Assert.Fail("decfrac double -166059726561900E-4\nExpected: -1.660597265619E10d\nWas: " + ExtendedDecimal.FromString("-166059726561900E-4").ToDouble());
+      }
       if (-3.66681318E9f != ExtendedDecimal.FromString("-3666813090").ToSingle()) {
- Assert.Fail("decfrac single -3666813090\nExpected: -3.66681318E9f\nWas: " + ExtendedDecimal.FromString("-3666813090").ToSingle());
-}
+        Assert.Fail("decfrac single -3666813090\nExpected: -3.66681318E9f\nWas: " + ExtendedDecimal.FromString("-3666813090").ToSingle());
+      }
       if (-3.66681309E9d != ExtendedDecimal.FromString("-3666813090").ToDouble()) {
- Assert.Fail("decfrac double -3666813090\nExpected: -3.66681309E9d\nWas: " + ExtendedDecimal.FromString("-3666813090").ToDouble());
-}
+        Assert.Fail("decfrac double -3666813090\nExpected: -3.66681309E9d\nWas: " + ExtendedDecimal.FromString("-3666813090").ToDouble());
+      }
       if (-741.0616f != ExtendedDecimal.FromString("-741.061579731811").ToSingle()) {
- Assert.Fail("decfrac single -741.061579731811\nExpected: -741.0616f\nWas: " + ExtendedDecimal.FromString("-741.061579731811").ToSingle());
-}
+        Assert.Fail("decfrac single -741.061579731811\nExpected: -741.0616f\nWas: " + ExtendedDecimal.FromString("-741.061579731811").ToSingle());
+      }
       if (-741.061579731811d != ExtendedDecimal.FromString("-741.061579731811").ToDouble()) {
- Assert.Fail("decfrac double -741.061579731811\nExpected: -741.061579731811d\nWas: " + ExtendedDecimal.FromString("-741.061579731811").ToDouble());
-}
+        Assert.Fail("decfrac double -741.061579731811\nExpected: -741.061579731811d\nWas: " + ExtendedDecimal.FromString("-741.061579731811").ToDouble());
+      }
       if (-2264.0f != ExtendedDecimal.FromString("-2264").ToSingle()) {
- Assert.Fail("decfrac single -2264\nExpected: -2264.0f\nWas: " + ExtendedDecimal.FromString("-2264").ToSingle());
-}
+        Assert.Fail("decfrac single -2264\nExpected: -2264.0f\nWas: " + ExtendedDecimal.FromString("-2264").ToSingle());
+      }
       if (-2264.0d != ExtendedDecimal.FromString("-2264").ToDouble()) {
- Assert.Fail("decfrac double -2264\nExpected: -2264.0d\nWas: " + ExtendedDecimal.FromString("-2264").ToDouble());
-}
+        Assert.Fail("decfrac double -2264\nExpected: -2264.0d\nWas: " + ExtendedDecimal.FromString("-2264").ToDouble());
+      }
       if (9.2388336E10f != ExtendedDecimal.FromString("92388332924").ToSingle()) {
- Assert.Fail("decfrac single 92388332924\nExpected: 9.2388336E10f\nWas: " + ExtendedDecimal.FromString("92388332924").ToSingle());
-}
+        Assert.Fail("decfrac single 92388332924\nExpected: 9.2388336E10f\nWas: " + ExtendedDecimal.FromString("92388332924").ToSingle());
+      }
       if (9.2388332924E10d != ExtendedDecimal.FromString("92388332924").ToDouble()) {
- Assert.Fail("decfrac double 92388332924\nExpected: 9.2388332924E10d\nWas: " + ExtendedDecimal.FromString("92388332924").ToDouble());
-}
+        Assert.Fail("decfrac double 92388332924\nExpected: 9.2388332924E10d\nWas: " + ExtendedDecimal.FromString("92388332924").ToDouble());
+      }
       if (4991.7646f != ExtendedDecimal.FromString("4991.764823290772791").ToSingle()) {
- Assert.Fail("decfrac single 4991.764823290772791\nExpected: 4991.7646f\nWas: " + ExtendedDecimal.FromString("4991.764823290772791").ToSingle());
-}
+        Assert.Fail("decfrac single 4991.764823290772791\nExpected: 4991.7646f\nWas: " + ExtendedDecimal.FromString("4991.764823290772791").ToSingle());
+      }
       if (4991.764823290773d != ExtendedDecimal.FromString("4991.764823290772791").ToDouble()) {
- Assert.Fail("decfrac double 4991.764823290772791\nExpected: 4991.764823290773d\nWas: " + ExtendedDecimal.FromString("4991.764823290772791").ToDouble());
-}
+        Assert.Fail("decfrac double 4991.764823290772791\nExpected: 4991.764823290773d\nWas: " + ExtendedDecimal.FromString("4991.764823290772791").ToDouble());
+      }
       if (-31529.82f != ExtendedDecimal.FromString("-3152982E-2").ToSingle()) {
- Assert.Fail("decfrac single -3152982E-2\nExpected: -31529.82f\nWas: " + ExtendedDecimal.FromString("-3152982E-2").ToSingle());
-}
+        Assert.Fail("decfrac single -3152982E-2\nExpected: -31529.82f\nWas: " + ExtendedDecimal.FromString("-3152982E-2").ToSingle());
+      }
       if (-31529.82d != ExtendedDecimal.FromString("-3152982E-2").ToDouble()) {
- Assert.Fail("decfrac double -3152982E-2\nExpected: -31529.82d\nWas: " + ExtendedDecimal.FromString("-3152982E-2").ToDouble());
-}
+        Assert.Fail("decfrac double -3152982E-2\nExpected: -31529.82d\nWas: " + ExtendedDecimal.FromString("-3152982E-2").ToDouble());
+      }
       if (-2.96352045E15f != ExtendedDecimal.FromString("-2963520450661169.515038656").ToSingle()) {
- Assert.Fail("decfrac single -2963520450661169.515038656\nExpected: -2.96352045E15f\nWas: " + ExtendedDecimal.FromString("-2963520450661169.515038656").ToSingle());
-}
+        Assert.Fail("decfrac single -2963520450661169.515038656\nExpected: -2.96352045E15f\nWas: " + ExtendedDecimal.FromString("-2963520450661169.515038656").ToSingle());
+      }
       if (-2.9635204506611695E15d != ExtendedDecimal.FromString("-2963520450661169.515038656").ToDouble()) {
- Assert.Fail("decfrac double -2963520450661169.515038656\nExpected: -2.9635204506611695E15d\nWas: " + ExtendedDecimal.FromString("-2963520450661169.515038656").ToDouble());
-}
+        Assert.Fail("decfrac double -2963520450661169.515038656\nExpected: -2.9635204506611695E15d\nWas: " + ExtendedDecimal.FromString("-2963520450661169.515038656").ToDouble());
+      }
       if (-9.0629749E13f != ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToSingle()) {
- Assert.Fail("decfrac single -9062974752750092585.8070204683471E-5\nExpected: -9.0629749E13f\nWas: " + ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToSingle());
-}
+        Assert.Fail("decfrac single -9062974752750092585.8070204683471E-5\nExpected: -9.0629749E13f\nWas: " + ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToSingle());
+      }
       if (-9.062974752750092E13d != ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToDouble()) {
- Assert.Fail("decfrac double -9062974752750092585.8070204683471E-5\nExpected: -9.062974752750092E13d\nWas: " + ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToDouble());
-}
+        Assert.Fail("decfrac double -9062974752750092585.8070204683471E-5\nExpected: -9.062974752750092E13d\nWas: " + ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToDouble());
+      }
       if (1.32708426E11f != ExtendedDecimal.FromString("1327.08423724267788662E+8").ToSingle()) {
- Assert.Fail("decfrac single 1327.08423724267788662E+8\nExpected: 1.32708426E11f\nWas: " + ExtendedDecimal.FromString("1327.08423724267788662E+8").ToSingle());
-}
+        Assert.Fail("decfrac single 1327.08423724267788662E+8\nExpected: 1.32708426E11f\nWas: " + ExtendedDecimal.FromString("1327.08423724267788662E+8").ToSingle());
+      }
       if (1.3270842372426779E11d != ExtendedDecimal.FromString("1327.08423724267788662E+8").ToDouble()) {
- Assert.Fail("decfrac double 1327.08423724267788662E+8\nExpected: 1.3270842372426779E11d\nWas: " + ExtendedDecimal.FromString("1327.08423724267788662E+8").ToDouble());
-}
+        Assert.Fail("decfrac double 1327.08423724267788662E+8\nExpected: 1.3270842372426779E11d\nWas: " + ExtendedDecimal.FromString("1327.08423724267788662E+8").ToDouble());
+      }
       if (3.03766274E11f != ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToSingle()) {
- Assert.Fail("decfrac single 3037662626861314743.2222785E-7\nExpected: 3.03766274E11f\nWas: " + ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToSingle());
-}
+        Assert.Fail("decfrac single 3037662626861314743.2222785E-7\nExpected: 3.03766274E11f\nWas: " + ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToSingle());
+      }
       if (3.037662626861315E11d != ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToDouble()) {
- Assert.Fail("decfrac double 3037662626861314743.2222785E-7\nExpected: 3.037662626861315E11d\nWas: " + ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToDouble());
-}
+        Assert.Fail("decfrac double 3037662626861314743.2222785E-7\nExpected: 3.037662626861315E11d\nWas: " + ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToDouble());
+      }
       if (5.3666539E12f != ExtendedDecimal.FromString("5366653818787.5E0").ToSingle()) {
- Assert.Fail("decfrac single 5366653818787.5E0\nExpected: 5.3666539E12f\nWas: " + ExtendedDecimal.FromString("5366653818787.5E0").ToSingle());
-}
+        Assert.Fail("decfrac single 5366653818787.5E0\nExpected: 5.3666539E12f\nWas: " + ExtendedDecimal.FromString("5366653818787.5E0").ToSingle());
+      }
       if (5.3666538187875E12d != ExtendedDecimal.FromString("5366653818787.5E0").ToDouble()) {
- Assert.Fail("decfrac double 5366653818787.5E0\nExpected: 5.3666538187875E12d\nWas: " + ExtendedDecimal.FromString("5366653818787.5E0").ToDouble());
-}
+        Assert.Fail("decfrac double 5366653818787.5E0\nExpected: 5.3666538187875E12d\nWas: " + ExtendedDecimal.FromString("5366653818787.5E0").ToDouble());
+      }
       if (-0.09572517f != ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToSingle()) {
- Assert.Fail("decfrac single -957251.70125291697919424260E-7\nExpected: -0.09572517f\nWas: " + ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToSingle());
-}
+        Assert.Fail("decfrac single -957251.70125291697919424260E-7\nExpected: -0.09572517f\nWas: " + ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToSingle());
+      }
       if (-0.09572517012529169d != ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToDouble()) {
- Assert.Fail("decfrac double -957251.70125291697919424260E-7\nExpected: -0.09572517012529169d\nWas: " + ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToDouble());
-}
+        Assert.Fail("decfrac double -957251.70125291697919424260E-7\nExpected: -0.09572517012529169d\nWas: " + ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToDouble());
+      }
       if (8.4375632E7f != ExtendedDecimal.FromString("8437563497492.8514E-5").ToSingle()) {
- Assert.Fail("decfrac single 8437563497492.8514E-5\nExpected: 8.4375632E7f\nWas: " + ExtendedDecimal.FromString("8437563497492.8514E-5").ToSingle());
-}
+        Assert.Fail("decfrac single 8437563497492.8514E-5\nExpected: 8.4375632E7f\nWas: " + ExtendedDecimal.FromString("8437563497492.8514E-5").ToSingle());
+      }
       if (8.437563497492851E7d != ExtendedDecimal.FromString("8437563497492.8514E-5").ToDouble()) {
- Assert.Fail("decfrac double 8437563497492.8514E-5\nExpected: 8.437563497492851E7d\nWas: " + ExtendedDecimal.FromString("8437563497492.8514E-5").ToDouble());
-}
+        Assert.Fail("decfrac double 8437563497492.8514E-5\nExpected: 8.437563497492851E7d\nWas: " + ExtendedDecimal.FromString("8437563497492.8514E-5").ToDouble());
+      }
       if (7.7747428E15f != ExtendedDecimal.FromString("7774742890322348.749566199224594").ToSingle()) {
- Assert.Fail("decfrac single 7774742890322348.749566199224594\nExpected: 7.7747428E15f\nWas: " + ExtendedDecimal.FromString("7774742890322348.749566199224594").ToSingle());
-}
+        Assert.Fail("decfrac single 7774742890322348.749566199224594\nExpected: 7.7747428E15f\nWas: " + ExtendedDecimal.FromString("7774742890322348.749566199224594").ToSingle());
+      }
       if (7.774742890322349E15d != ExtendedDecimal.FromString("7774742890322348.749566199224594").ToDouble()) {
- Assert.Fail("decfrac double 7774742890322348.749566199224594\nExpected: 7.774742890322349E15d\nWas: " + ExtendedDecimal.FromString("7774742890322348.749566199224594").ToDouble());
-}
+        Assert.Fail("decfrac double 7774742890322348.749566199224594\nExpected: 7.774742890322349E15d\nWas: " + ExtendedDecimal.FromString("7774742890322348.749566199224594").ToDouble());
+      }
       if (-6.3523806E18f != ExtendedDecimal.FromString("-6352380631468114E+3").ToSingle()) {
- Assert.Fail("decfrac single -6352380631468114E+3\nExpected: -6.3523806E18f\nWas: " + ExtendedDecimal.FromString("-6352380631468114E+3").ToSingle());
-}
+        Assert.Fail("decfrac single -6352380631468114E+3\nExpected: -6.3523806E18f\nWas: " + ExtendedDecimal.FromString("-6352380631468114E+3").ToSingle());
+      }
       if (-6.3523806314681139E18d != ExtendedDecimal.FromString("-6352380631468114E+3").ToDouble()) {
- Assert.Fail("decfrac double -6352380631468114E+3\nExpected: -6.3523806314681139E18d\nWas: " + ExtendedDecimal.FromString("-6352380631468114E+3").ToDouble());
-}
+        Assert.Fail("decfrac double -6352380631468114E+3\nExpected: -6.3523806314681139E18d\nWas: " + ExtendedDecimal.FromString("-6352380631468114E+3").ToDouble());
+      }
       if (-8.1199685E23f != ExtendedDecimal.FromString("-8119968851439E+11").ToSingle()) {
- Assert.Fail("decfrac single -8119968851439E+11\nExpected: -8.1199685E23f\nWas: " + ExtendedDecimal.FromString("-8119968851439E+11").ToSingle());
-}
+        Assert.Fail("decfrac single -8119968851439E+11\nExpected: -8.1199685E23f\nWas: " + ExtendedDecimal.FromString("-8119968851439E+11").ToSingle());
+      }
       if (-8.119968851439E23d != ExtendedDecimal.FromString("-8119968851439E+11").ToDouble()) {
- Assert.Fail("decfrac double -8119968851439E+11\nExpected: -8.119968851439E23d\nWas: " + ExtendedDecimal.FromString("-8119968851439E+11").ToDouble());
-}
+        Assert.Fail("decfrac double -8119968851439E+11\nExpected: -8.119968851439E23d\nWas: " + ExtendedDecimal.FromString("-8119968851439E+11").ToDouble());
+      }
       if (-3.201959E23f != ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToSingle()) {
- Assert.Fail("decfrac single -3201959209367.08531737604446E+11\nExpected: -3.201959E23f\nWas: " + ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToSingle());
-}
+        Assert.Fail("decfrac single -3201959209367.08531737604446E+11\nExpected: -3.201959E23f\nWas: " + ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToSingle());
+      }
       if (-3.201959209367085E23d != ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToDouble()) {
- Assert.Fail("decfrac double -3201959209367.08531737604446E+11\nExpected: -3.201959209367085E23d\nWas: " + ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToDouble());
-}
+        Assert.Fail("decfrac double -3201959209367.08531737604446E+11\nExpected: -3.201959209367085E23d\nWas: " + ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToDouble());
+      }
       if (-6.0171188E7f != ExtendedDecimal.FromString("-60171187").ToSingle()) {
- Assert.Fail("decfrac single -60171187\nExpected: -6.0171188E7f\nWas: " + ExtendedDecimal.FromString("-60171187").ToSingle());
-}
+        Assert.Fail("decfrac single -60171187\nExpected: -6.0171188E7f\nWas: " + ExtendedDecimal.FromString("-60171187").ToSingle());
+      }
       if (-6.0171187E7d != ExtendedDecimal.FromString("-60171187").ToDouble()) {
- Assert.Fail("decfrac double -60171187\nExpected: -6.0171187E7d\nWas: " + ExtendedDecimal.FromString("-60171187").ToDouble());
-}
+        Assert.Fail("decfrac double -60171187\nExpected: -6.0171187E7d\nWas: " + ExtendedDecimal.FromString("-60171187").ToDouble());
+      }
       if (-6.6884155E-7f != ExtendedDecimal.FromString("-66.884154716131E-8").ToSingle()) {
- Assert.Fail("decfrac single -66.884154716131E-8\nExpected: -6.6884155E-7f\nWas: " + ExtendedDecimal.FromString("-66.884154716131E-8").ToSingle());
-}
+        Assert.Fail("decfrac single -66.884154716131E-8\nExpected: -6.6884155E-7f\nWas: " + ExtendedDecimal.FromString("-66.884154716131E-8").ToSingle());
+      }
       if (-6.6884154716131E-7d != ExtendedDecimal.FromString("-66.884154716131E-8").ToDouble()) {
- Assert.Fail("decfrac double -66.884154716131E-8\nExpected: -6.6884154716131E-7d\nWas: " + ExtendedDecimal.FromString("-66.884154716131E-8").ToDouble());
-}
+        Assert.Fail("decfrac double -66.884154716131E-8\nExpected: -6.6884154716131E-7d\nWas: " + ExtendedDecimal.FromString("-66.884154716131E-8").ToDouble());
+      }
       if (923595.4f != ExtendedDecimal.FromString("923595.376427445").ToSingle()) {
- Assert.Fail("decfrac single 923595.376427445\nExpected: 923595.4f\nWas: " + ExtendedDecimal.FromString("923595.376427445").ToSingle());
-}
+        Assert.Fail("decfrac single 923595.376427445\nExpected: 923595.4f\nWas: " + ExtendedDecimal.FromString("923595.376427445").ToSingle());
+      }
       if (923595.376427445d != ExtendedDecimal.FromString("923595.376427445").ToDouble()) {
- Assert.Fail("decfrac double 923595.376427445\nExpected: 923595.376427445d\nWas: " + ExtendedDecimal.FromString("923595.376427445").ToDouble());
-}
+        Assert.Fail("decfrac double 923595.376427445\nExpected: 923595.376427445d\nWas: " + ExtendedDecimal.FromString("923595.376427445").ToDouble());
+      }
       if (-5.0f != ExtendedDecimal.FromString("-5").ToSingle()) {
- Assert.Fail("decfrac single -5\nExpected: -5.0f\nWas: " + ExtendedDecimal.FromString("-5").ToSingle());
-}
+        Assert.Fail("decfrac single -5\nExpected: -5.0f\nWas: " + ExtendedDecimal.FromString("-5").ToSingle());
+      }
       if (-5.0d != ExtendedDecimal.FromString("-5").ToDouble()) {
- Assert.Fail("decfrac double -5\nExpected: -5.0d\nWas: " + ExtendedDecimal.FromString("-5").ToDouble());
-}
+        Assert.Fail("decfrac double -5\nExpected: -5.0d\nWas: " + ExtendedDecimal.FromString("-5").ToDouble());
+      }
       if (4.7380017E10f != ExtendedDecimal.FromString("47380017776.35").ToSingle()) {
- Assert.Fail("decfrac single 47380017776.35\nExpected: 4.7380017E10f\nWas: " + ExtendedDecimal.FromString("47380017776.35").ToSingle());
-}
+        Assert.Fail("decfrac single 47380017776.35\nExpected: 4.7380017E10f\nWas: " + ExtendedDecimal.FromString("47380017776.35").ToSingle());
+      }
       if (4.738001777635E10d != ExtendedDecimal.FromString("47380017776.35").ToDouble()) {
- Assert.Fail("decfrac double 47380017776.35\nExpected: 4.738001777635E10d\nWas: " + ExtendedDecimal.FromString("47380017776.35").ToDouble());
-}
+        Assert.Fail("decfrac double 47380017776.35\nExpected: 4.738001777635E10d\nWas: " + ExtendedDecimal.FromString("47380017776.35").ToDouble());
+      }
       if (8139584.0f != ExtendedDecimal.FromString("8139584.242987").ToSingle()) {
- Assert.Fail("decfrac single 8139584.242987\nExpected: 8139584.0f\nWas: " + ExtendedDecimal.FromString("8139584.242987").ToSingle());
-}
+        Assert.Fail("decfrac single 8139584.242987\nExpected: 8139584.0f\nWas: " + ExtendedDecimal.FromString("8139584.242987").ToSingle());
+      }
       if (8139584.242987d != ExtendedDecimal.FromString("8139584.242987").ToDouble()) {
- Assert.Fail("decfrac double 8139584.242987\nExpected: 8139584.242987d\nWas: " + ExtendedDecimal.FromString("8139584.242987").ToDouble());
-}
+        Assert.Fail("decfrac double 8139584.242987\nExpected: 8139584.242987d\nWas: " + ExtendedDecimal.FromString("8139584.242987").ToDouble());
+      }
       if (5.0f != ExtendedDecimal.FromString("5").ToSingle()) {
- Assert.Fail("decfrac single 5\nExpected: 5.0f\nWas: " + ExtendedDecimal.FromString("5").ToSingle());
-}
+        Assert.Fail("decfrac single 5\nExpected: 5.0f\nWas: " + ExtendedDecimal.FromString("5").ToSingle());
+      }
       if (5.0d != ExtendedDecimal.FromString("5").ToDouble()) {
- Assert.Fail("decfrac double 5\nExpected: 5.0d\nWas: " + ExtendedDecimal.FromString("5").ToDouble());
-}
+        Assert.Fail("decfrac double 5\nExpected: 5.0d\nWas: " + ExtendedDecimal.FromString("5").ToDouble());
+      }
       if (-3.6578223E27f != ExtendedDecimal.FromString("-365782224812843E+13").ToSingle()) {
- Assert.Fail("decfrac single -365782224812843E+13\nExpected: -3.6578223E27f\nWas: " + ExtendedDecimal.FromString("-365782224812843E+13").ToSingle());
-}
+        Assert.Fail("decfrac single -365782224812843E+13\nExpected: -3.6578223E27f\nWas: " + ExtendedDecimal.FromString("-365782224812843E+13").ToSingle());
+      }
       if (-3.65782224812843E27d != ExtendedDecimal.FromString("-365782224812843E+13").ToDouble()) {
- Assert.Fail("decfrac double -365782224812843E+13\nExpected: -3.65782224812843E27d\nWas: " + ExtendedDecimal.FromString("-365782224812843E+13").ToDouble());
-}
+        Assert.Fail("decfrac double -365782224812843E+13\nExpected: -3.65782224812843E27d\nWas: " + ExtendedDecimal.FromString("-365782224812843E+13").ToDouble());
+      }
       if (6.263606E23f != ExtendedDecimal.FromString("626360584867890223E+6").ToSingle()) {
- Assert.Fail("decfrac single 626360584867890223E+6\nExpected: 6.263606E23f\nWas: " + ExtendedDecimal.FromString("626360584867890223E+6").ToSingle());
-}
+        Assert.Fail("decfrac single 626360584867890223E+6\nExpected: 6.263606E23f\nWas: " + ExtendedDecimal.FromString("626360584867890223E+6").ToSingle());
+      }
       if (6.263605848678903E23d != ExtendedDecimal.FromString("626360584867890223E+6").ToDouble()) {
- Assert.Fail("decfrac double 626360584867890223E+6\nExpected: 6.263605848678903E23d\nWas: " + ExtendedDecimal.FromString("626360584867890223E+6").ToDouble());
-}
+        Assert.Fail("decfrac double 626360584867890223E+6\nExpected: 6.263605848678903E23d\nWas: " + ExtendedDecimal.FromString("626360584867890223E+6").ToDouble());
+      }
       if (-1.26830412E18f != ExtendedDecimal.FromString("-12683040859E+8").ToSingle()) {
- Assert.Fail("decfrac single -12683040859E+8\nExpected: -1.26830412E18f\nWas: " + ExtendedDecimal.FromString("-12683040859E+8").ToSingle());
-}
+        Assert.Fail("decfrac single -12683040859E+8\nExpected: -1.26830412E18f\nWas: " + ExtendedDecimal.FromString("-12683040859E+8").ToSingle());
+      }
       if (-1.2683040859E18d != ExtendedDecimal.FromString("-12683040859E+8").ToDouble()) {
- Assert.Fail("decfrac double -12683040859E+8\nExpected: -1.2683040859E18d\nWas: " + ExtendedDecimal.FromString("-12683040859E+8").ToDouble());
-}
+        Assert.Fail("decfrac double -12683040859E+8\nExpected: -1.2683040859E18d\nWas: " + ExtendedDecimal.FromString("-12683040859E+8").ToDouble());
+      }
       if (8.9906433E13f != ExtendedDecimal.FromString("89906433733052.14691421345561385").ToSingle()) {
- Assert.Fail("decfrac single 89906433733052.14691421345561385\nExpected: 8.9906433E13f\nWas: " + ExtendedDecimal.FromString("89906433733052.14691421345561385").ToSingle());
-}
+        Assert.Fail("decfrac single 89906433733052.14691421345561385\nExpected: 8.9906433E13f\nWas: " + ExtendedDecimal.FromString("89906433733052.14691421345561385").ToSingle());
+      }
       if (8.990643373305214E13d != ExtendedDecimal.FromString("89906433733052.14691421345561385").ToDouble()) {
- Assert.Fail("decfrac double 89906433733052.14691421345561385\nExpected: 8.990643373305214E13d\nWas: " + ExtendedDecimal.FromString("89906433733052.14691421345561385").ToDouble());
-}
+        Assert.Fail("decfrac double 89906433733052.14691421345561385\nExpected: 8.990643373305214E13d\nWas: " + ExtendedDecimal.FromString("89906433733052.14691421345561385").ToDouble());
+      }
       if (82.0f != ExtendedDecimal.FromString("82").ToSingle()) {
- Assert.Fail("decfrac single 82\nExpected: 82.0f\nWas: " + ExtendedDecimal.FromString("82").ToSingle());
-}
+        Assert.Fail("decfrac single 82\nExpected: 82.0f\nWas: " + ExtendedDecimal.FromString("82").ToSingle());
+      }
       if (82.0d != ExtendedDecimal.FromString("82").ToDouble()) {
- Assert.Fail("decfrac double 82\nExpected: 82.0d\nWas: " + ExtendedDecimal.FromString("82").ToDouble());
-}
+        Assert.Fail("decfrac double 82\nExpected: 82.0d\nWas: " + ExtendedDecimal.FromString("82").ToDouble());
+      }
       if (9.5523543E16f != ExtendedDecimal.FromString("95523541216159667").ToSingle()) {
- Assert.Fail("decfrac single 95523541216159667\nExpected: 9.5523543E16f\nWas: " + ExtendedDecimal.FromString("95523541216159667").ToSingle());
-}
+        Assert.Fail("decfrac single 95523541216159667\nExpected: 9.5523543E16f\nWas: " + ExtendedDecimal.FromString("95523541216159667").ToSingle());
+      }
       if (9.5523541216159664E16d != ExtendedDecimal.FromString("95523541216159667").ToDouble()) {
- Assert.Fail("decfrac double 95523541216159667\nExpected: 9.5523541216159664E16d\nWas: " + ExtendedDecimal.FromString("95523541216159667").ToDouble());
-}
+        Assert.Fail("decfrac double 95523541216159667\nExpected: 9.5523541216159664E16d\nWas: " + ExtendedDecimal.FromString("95523541216159667").ToDouble());
+      }
       if (-0.040098447f != ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToSingle()) {
- Assert.Fail("decfrac single -400984.46498769274346390686E-7\nExpected: -0.040098447f\nWas: " + ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToSingle());
-}
+        Assert.Fail("decfrac single -400984.46498769274346390686E-7\nExpected: -0.040098447f\nWas: " + ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToSingle());
+      }
       if (-0.04009844649876927d != ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToDouble()) {
- Assert.Fail("decfrac double -400984.46498769274346390686E-7\nExpected: -0.04009844649876927d\nWas: " + ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToDouble());
-}
+        Assert.Fail("decfrac double -400984.46498769274346390686E-7\nExpected: -0.04009844649876927d\nWas: " + ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToDouble());
+      }
       if (9.9082332E14f != ExtendedDecimal.FromString("990823307532E+3").ToSingle()) {
- Assert.Fail("decfrac single 990823307532E+3\nExpected: 9.9082332E14f\nWas: " + ExtendedDecimal.FromString("990823307532E+3").ToSingle());
-}
+        Assert.Fail("decfrac single 990823307532E+3\nExpected: 9.9082332E14f\nWas: " + ExtendedDecimal.FromString("990823307532E+3").ToSingle());
+      }
       if (9.90823307532E14d != ExtendedDecimal.FromString("990823307532E+3").ToDouble()) {
- Assert.Fail("decfrac double 990823307532E+3\nExpected: 9.90823307532E14d\nWas: " + ExtendedDecimal.FromString("990823307532E+3").ToDouble());
-}
+        Assert.Fail("decfrac double 990823307532E+3\nExpected: 9.90823307532E14d\nWas: " + ExtendedDecimal.FromString("990823307532E+3").ToDouble());
+      }
       if (-8.969879E8f != ExtendedDecimal.FromString("-896987890").ToSingle()) {
- Assert.Fail("decfrac single -896987890\nExpected: -8.969879E8f\nWas: " + ExtendedDecimal.FromString("-896987890").ToSingle());
-}
+        Assert.Fail("decfrac single -896987890\nExpected: -8.969879E8f\nWas: " + ExtendedDecimal.FromString("-896987890").ToSingle());
+      }
       if (-8.9698789E8d != ExtendedDecimal.FromString("-896987890").ToDouble()) {
- Assert.Fail("decfrac double -896987890\nExpected: -8.9698789E8d\nWas: " + ExtendedDecimal.FromString("-896987890").ToDouble());
-}
+        Assert.Fail("decfrac double -896987890\nExpected: -8.9698789E8d\nWas: " + ExtendedDecimal.FromString("-896987890").ToDouble());
+      }
       if (-5.1842734E9f != ExtendedDecimal.FromString("-5184273642.760").ToSingle()) {
- Assert.Fail("decfrac single -5184273642.760\nExpected: -5.1842734E9f\nWas: " + ExtendedDecimal.FromString("-5184273642.760").ToSingle());
-}
+        Assert.Fail("decfrac single -5184273642.760\nExpected: -5.1842734E9f\nWas: " + ExtendedDecimal.FromString("-5184273642.760").ToSingle());
+      }
       if (-5.18427364276E9d != ExtendedDecimal.FromString("-5184273642.760").ToDouble()) {
- Assert.Fail("decfrac double -5184273642.760\nExpected: -5.18427364276E9d\nWas: " + ExtendedDecimal.FromString("-5184273642.760").ToDouble());
-}
+        Assert.Fail("decfrac double -5184273642.760\nExpected: -5.18427364276E9d\nWas: " + ExtendedDecimal.FromString("-5184273642.760").ToDouble());
+      }
       if (5.03393772E17f != ExtendedDecimal.FromString("503393788336283974").ToSingle()) {
- Assert.Fail("decfrac single 503393788336283974\nExpected: 5.03393772E17f\nWas: " + ExtendedDecimal.FromString("503393788336283974").ToSingle());
-}
+        Assert.Fail("decfrac single 503393788336283974\nExpected: 5.03393772E17f\nWas: " + ExtendedDecimal.FromString("503393788336283974").ToSingle());
+      }
       if (5.0339378833628397E17d != ExtendedDecimal.FromString("503393788336283974").ToDouble()) {
- Assert.Fail("decfrac double 503393788336283974\nExpected: 5.0339378833628397E17d\nWas: " + ExtendedDecimal.FromString("503393788336283974").ToDouble());
-}
+        Assert.Fail("decfrac double 503393788336283974\nExpected: 5.0339378833628397E17d\nWas: " + ExtendedDecimal.FromString("503393788336283974").ToDouble());
+      }
       if (-5.50587E15f != ExtendedDecimal.FromString("-550587E+10").ToSingle()) {
- Assert.Fail("decfrac single -550587E+10\nExpected: -5.50587E15f\nWas: " + ExtendedDecimal.FromString("-550587E+10").ToSingle());
-}
+        Assert.Fail("decfrac single -550587E+10\nExpected: -5.50587E15f\nWas: " + ExtendedDecimal.FromString("-550587E+10").ToSingle());
+      }
       if (-5.50587E15d != ExtendedDecimal.FromString("-550587E+10").ToDouble()) {
- Assert.Fail("decfrac double -550587E+10\nExpected: -5.50587E15d\nWas: " + ExtendedDecimal.FromString("-550587E+10").ToDouble());
-}
+        Assert.Fail("decfrac double -550587E+10\nExpected: -5.50587E15d\nWas: " + ExtendedDecimal.FromString("-550587E+10").ToDouble());
+      }
       if (-4.0559753E-5f != ExtendedDecimal.FromString("-405597523930.814E-16").ToSingle()) {
- Assert.Fail("decfrac single -405597523930.814E-16\nExpected: -4.0559753E-5f\nWas: " + ExtendedDecimal.FromString("-405597523930.814E-16").ToSingle());
-}
+        Assert.Fail("decfrac single -405597523930.814E-16\nExpected: -4.0559753E-5f\nWas: " + ExtendedDecimal.FromString("-405597523930.814E-16").ToSingle());
+      }
       if (-4.05597523930814E-5d != ExtendedDecimal.FromString("-405597523930.814E-16").ToDouble()) {
- Assert.Fail("decfrac double -405597523930.814E-16\nExpected: -4.05597523930814E-5d\nWas: " + ExtendedDecimal.FromString("-405597523930.814E-16").ToDouble());
-}
+        Assert.Fail("decfrac double -405597523930.814E-16\nExpected: -4.05597523930814E-5d\nWas: " + ExtendedDecimal.FromString("-405597523930.814E-16").ToDouble());
+      }
       if (-5.326398E9f != ExtendedDecimal.FromString("-5326397977").ToSingle()) {
- Assert.Fail("decfrac single -5326397977\nExpected: -5.326398E9f\nWas: " + ExtendedDecimal.FromString("-5326397977").ToSingle());
-}
+        Assert.Fail("decfrac single -5326397977\nExpected: -5.326398E9f\nWas: " + ExtendedDecimal.FromString("-5326397977").ToSingle());
+      }
       if (-5.326397977E9d != ExtendedDecimal.FromString("-5326397977").ToDouble()) {
- Assert.Fail("decfrac double -5326397977\nExpected: -5.326397977E9d\nWas: " + ExtendedDecimal.FromString("-5326397977").ToDouble());
-}
+        Assert.Fail("decfrac double -5326397977\nExpected: -5.326397977E9d\nWas: " + ExtendedDecimal.FromString("-5326397977").ToDouble());
+      }
       if (-9997.447f != ExtendedDecimal.FromString("-9997.44701170").ToSingle()) {
- Assert.Fail("decfrac single -9997.44701170\nExpected: -9997.447f\nWas: " + ExtendedDecimal.FromString("-9997.44701170").ToSingle());
-}
+        Assert.Fail("decfrac single -9997.44701170\nExpected: -9997.447f\nWas: " + ExtendedDecimal.FromString("-9997.44701170").ToSingle());
+      }
       if (-9997.4470117d != ExtendedDecimal.FromString("-9997.44701170").ToDouble()) {
- Assert.Fail("decfrac double -9997.44701170\nExpected: -9997.4470117d\nWas: " + ExtendedDecimal.FromString("-9997.44701170").ToDouble());
-}
+        Assert.Fail("decfrac double -9997.44701170\nExpected: -9997.4470117d\nWas: " + ExtendedDecimal.FromString("-9997.44701170").ToDouble());
+      }
       if (7.3258664E7f != ExtendedDecimal.FromString("73258664.23970751611061").ToSingle()) {
- Assert.Fail("decfrac single 73258664.23970751611061\nExpected: 7.3258664E7f\nWas: " + ExtendedDecimal.FromString("73258664.23970751611061").ToSingle());
-}
+        Assert.Fail("decfrac single 73258664.23970751611061\nExpected: 7.3258664E7f\nWas: " + ExtendedDecimal.FromString("73258664.23970751611061").ToSingle());
+      }
       if (7.325866423970751E7d != ExtendedDecimal.FromString("73258664.23970751611061").ToDouble()) {
- Assert.Fail("decfrac double 73258664.23970751611061\nExpected: 7.325866423970751E7d\nWas: " + ExtendedDecimal.FromString("73258664.23970751611061").ToDouble());
-}
+        Assert.Fail("decfrac double 73258664.23970751611061\nExpected: 7.325866423970751E7d\nWas: " + ExtendedDecimal.FromString("73258664.23970751611061").ToDouble());
+      }
       if (-7.9944785E13f != ExtendedDecimal.FromString("-79944788804361.667255656660").ToSingle()) {
- Assert.Fail("decfrac single -79944788804361.667255656660\nExpected: -7.9944785E13f\nWas: " + ExtendedDecimal.FromString("-79944788804361.667255656660").ToSingle());
-}
+        Assert.Fail("decfrac single -79944788804361.667255656660\nExpected: -7.9944785E13f\nWas: " + ExtendedDecimal.FromString("-79944788804361.667255656660").ToSingle());
+      }
       if (-7.994478880436167E13d != ExtendedDecimal.FromString("-79944788804361.667255656660").ToDouble()) {
- Assert.Fail("decfrac double -79944788804361.667255656660\nExpected: -7.994478880436167E13d\nWas: " + ExtendedDecimal.FromString("-79944788804361.667255656660").ToDouble());
-}
+        Assert.Fail("decfrac double -79944788804361.667255656660\nExpected: -7.994478880436167E13d\nWas: " + ExtendedDecimal.FromString("-79944788804361.667255656660").ToDouble());
+      }
       if (9.852337E19f != ExtendedDecimal.FromString("98523363000987953313E0").ToSingle()) {
- Assert.Fail("decfrac single 98523363000987953313E0\nExpected: 9.852337E19f\nWas: " + ExtendedDecimal.FromString("98523363000987953313E0").ToSingle());
-}
+        Assert.Fail("decfrac single 98523363000987953313E0\nExpected: 9.852337E19f\nWas: " + ExtendedDecimal.FromString("98523363000987953313E0").ToSingle());
+      }
       if (9.852336300098796E19d != ExtendedDecimal.FromString("98523363000987953313E0").ToDouble()) {
- Assert.Fail("decfrac double 98523363000987953313E0\nExpected: 9.852336300098796E19d\nWas: " + ExtendedDecimal.FromString("98523363000987953313E0").ToDouble());
-}
+        Assert.Fail("decfrac double 98523363000987953313E0\nExpected: 9.852336300098796E19d\nWas: " + ExtendedDecimal.FromString("98523363000987953313E0").ToDouble());
+      }
       if (5.981638E15f != ExtendedDecimal.FromString("5981637941716431.55749471240993").ToSingle()) {
- Assert.Fail("decfrac single 5981637941716431.55749471240993\nExpected: 5.981638E15f\nWas: " + ExtendedDecimal.FromString("5981637941716431.55749471240993").ToSingle());
-}
+        Assert.Fail("decfrac single 5981637941716431.55749471240993\nExpected: 5.981638E15f\nWas: " + ExtendedDecimal.FromString("5981637941716431.55749471240993").ToSingle());
+      }
       if (5.981637941716432E15d != ExtendedDecimal.FromString("5981637941716431.55749471240993").ToDouble()) {
- Assert.Fail("decfrac double 5981637941716431.55749471240993\nExpected: 5.981637941716432E15d\nWas: " + ExtendedDecimal.FromString("5981637941716431.55749471240993").ToDouble());
-}
+        Assert.Fail("decfrac double 5981637941716431.55749471240993\nExpected: 5.981637941716432E15d\nWas: " + ExtendedDecimal.FromString("5981637941716431.55749471240993").ToDouble());
+      }
       if (-1.995E-9f != ExtendedDecimal.FromString("-1995E-12").ToSingle()) {
- Assert.Fail("decfrac single -1995E-12\nExpected: -1.995E-9f\nWas: " + ExtendedDecimal.FromString("-1995E-12").ToSingle());
-}
+        Assert.Fail("decfrac single -1995E-12\nExpected: -1.995E-9f\nWas: " + ExtendedDecimal.FromString("-1995E-12").ToSingle());
+      }
       if (-1.995E-9d != ExtendedDecimal.FromString("-1995E-12").ToDouble()) {
- Assert.Fail("decfrac double -1995E-12\nExpected: -1.995E-9d\nWas: " + ExtendedDecimal.FromString("-1995E-12").ToDouble());
-}
+        Assert.Fail("decfrac double -1995E-12\nExpected: -1.995E-9d\nWas: " + ExtendedDecimal.FromString("-1995E-12").ToDouble());
+      }
       if (2.59017677E9f != ExtendedDecimal.FromString("2590176810").ToSingle()) {
- Assert.Fail("decfrac single 2590176810\nExpected: 2.59017677E9f\nWas: " + ExtendedDecimal.FromString("2590176810").ToSingle());
-}
+        Assert.Fail("decfrac single 2590176810\nExpected: 2.59017677E9f\nWas: " + ExtendedDecimal.FromString("2590176810").ToSingle());
+      }
       if (2.59017681E9d != ExtendedDecimal.FromString("2590176810").ToDouble()) {
- Assert.Fail("decfrac double 2590176810\nExpected: 2.59017681E9d\nWas: " + ExtendedDecimal.FromString("2590176810").ToDouble());
-}
+        Assert.Fail("decfrac double 2590176810\nExpected: 2.59017681E9d\nWas: " + ExtendedDecimal.FromString("2590176810").ToDouble());
+      }
       if (2.9604614f != ExtendedDecimal.FromString("2.960461297").ToSingle()) {
- Assert.Fail("decfrac single 2.960461297\nExpected: 2.9604614f\nWas: " + ExtendedDecimal.FromString("2.960461297").ToSingle());
-}
+        Assert.Fail("decfrac single 2.960461297\nExpected: 2.9604614f\nWas: " + ExtendedDecimal.FromString("2.960461297").ToSingle());
+      }
       if (2.960461297d != ExtendedDecimal.FromString("2.960461297").ToDouble()) {
- Assert.Fail("decfrac double 2.960461297\nExpected: 2.960461297d\nWas: " + ExtendedDecimal.FromString("2.960461297").ToDouble());
-}
+        Assert.Fail("decfrac double 2.960461297\nExpected: 2.960461297d\nWas: " + ExtendedDecimal.FromString("2.960461297").ToDouble());
+      }
       if (768802.0f != ExtendedDecimal.FromString("768802").ToSingle()) {
- Assert.Fail("decfrac single 768802\nExpected: 768802.0f\nWas: " + ExtendedDecimal.FromString("768802").ToSingle());
-}
+        Assert.Fail("decfrac single 768802\nExpected: 768802.0f\nWas: " + ExtendedDecimal.FromString("768802").ToSingle());
+      }
       if (768802.0d != ExtendedDecimal.FromString("768802").ToDouble()) {
- Assert.Fail("decfrac double 768802\nExpected: 768802.0d\nWas: " + ExtendedDecimal.FromString("768802").ToDouble());
-}
+        Assert.Fail("decfrac double 768802\nExpected: 768802.0d\nWas: " + ExtendedDecimal.FromString("768802").ToDouble());
+      }
       if (145417.38f != ExtendedDecimal.FromString("145417.373").ToSingle()) {
- Assert.Fail("decfrac single 145417.373\nExpected: 145417.38f\nWas: " + ExtendedDecimal.FromString("145417.373").ToSingle());
-}
+        Assert.Fail("decfrac single 145417.373\nExpected: 145417.38f\nWas: " + ExtendedDecimal.FromString("145417.373").ToSingle());
+      }
       if (145417.373d != ExtendedDecimal.FromString("145417.373").ToDouble()) {
- Assert.Fail("decfrac double 145417.373\nExpected: 145417.373d\nWas: " + ExtendedDecimal.FromString("145417.373").ToDouble());
-}
+        Assert.Fail("decfrac double 145417.373\nExpected: 145417.373d\nWas: " + ExtendedDecimal.FromString("145417.373").ToDouble());
+      }
       if (540905.0f != ExtendedDecimal.FromString("540905").ToSingle()) {
- Assert.Fail("decfrac single 540905\nExpected: 540905.0f\nWas: " + ExtendedDecimal.FromString("540905").ToSingle());
-}
+        Assert.Fail("decfrac single 540905\nExpected: 540905.0f\nWas: " + ExtendedDecimal.FromString("540905").ToSingle());
+      }
       if (540905.0d != ExtendedDecimal.FromString("540905").ToDouble()) {
- Assert.Fail("decfrac double 540905\nExpected: 540905.0d\nWas: " + ExtendedDecimal.FromString("540905").ToDouble());
-}
+        Assert.Fail("decfrac double 540905\nExpected: 540905.0d\nWas: " + ExtendedDecimal.FromString("540905").ToDouble());
+      }
       if (-6.811958E20f != ExtendedDecimal.FromString("-681.1958019894E+18").ToSingle()) {
- Assert.Fail("decfrac single -681.1958019894E+18\nExpected: -6.811958E20f\nWas: " + ExtendedDecimal.FromString("-681.1958019894E+18").ToSingle());
-}
+        Assert.Fail("decfrac single -681.1958019894E+18\nExpected: -6.811958E20f\nWas: " + ExtendedDecimal.FromString("-681.1958019894E+18").ToSingle());
+      }
       if (-6.811958019894E20d != ExtendedDecimal.FromString("-681.1958019894E+18").ToDouble()) {
- Assert.Fail("decfrac double -681.1958019894E+18\nExpected: -6.811958019894E20d\nWas: " + ExtendedDecimal.FromString("-681.1958019894E+18").ToDouble());
-}
+        Assert.Fail("decfrac double -681.1958019894E+18\nExpected: -6.811958019894E20d\nWas: " + ExtendedDecimal.FromString("-681.1958019894E+18").ToDouble());
+      }
       if (54846.0f != ExtendedDecimal.FromString("54846.0").ToSingle()) {
- Assert.Fail("decfrac single 54846.0\nExpected: 54846.0f\nWas: " + ExtendedDecimal.FromString("54846.0").ToSingle());
-}
+        Assert.Fail("decfrac single 54846.0\nExpected: 54846.0f\nWas: " + ExtendedDecimal.FromString("54846.0").ToSingle());
+      }
       if (54846.0d != ExtendedDecimal.FromString("54846.0").ToDouble()) {
- Assert.Fail("decfrac double 54846.0\nExpected: 54846.0d\nWas: " + ExtendedDecimal.FromString("54846.0").ToDouble());
-}
+        Assert.Fail("decfrac double 54846.0\nExpected: 54846.0d\nWas: " + ExtendedDecimal.FromString("54846.0").ToDouble());
+      }
       if (9.7245E9f != ExtendedDecimal.FromString("97245E+5").ToSingle()) {
- Assert.Fail("decfrac single 97245E+5\nExpected: 9.7245E9f\nWas: " + ExtendedDecimal.FromString("97245E+5").ToSingle());
-}
+        Assert.Fail("decfrac single 97245E+5\nExpected: 9.7245E9f\nWas: " + ExtendedDecimal.FromString("97245E+5").ToSingle());
+      }
       if (9.7245E9d != ExtendedDecimal.FromString("97245E+5").ToDouble()) {
- Assert.Fail("decfrac double 97245E+5\nExpected: 9.7245E9d\nWas: " + ExtendedDecimal.FromString("97245E+5").ToDouble());
-}
+        Assert.Fail("decfrac double 97245E+5\nExpected: 9.7245E9d\nWas: " + ExtendedDecimal.FromString("97245E+5").ToDouble());
+      }
       if (-26.0f != ExtendedDecimal.FromString("-26").ToSingle()) {
- Assert.Fail("decfrac single -26\nExpected: -26.0f\nWas: " + ExtendedDecimal.FromString("-26").ToSingle());
-}
+        Assert.Fail("decfrac single -26\nExpected: -26.0f\nWas: " + ExtendedDecimal.FromString("-26").ToSingle());
+      }
       if (-26.0d != ExtendedDecimal.FromString("-26").ToDouble()) {
- Assert.Fail("decfrac double -26\nExpected: -26.0d\nWas: " + ExtendedDecimal.FromString("-26").ToDouble());
-}
+        Assert.Fail("decfrac double -26\nExpected: -26.0d\nWas: " + ExtendedDecimal.FromString("-26").ToDouble());
+      }
       if (4.15749164E12f != ExtendedDecimal.FromString("4157491532482.05").ToSingle()) {
- Assert.Fail("decfrac single 4157491532482.05\nExpected: 4.15749164E12f\nWas: " + ExtendedDecimal.FromString("4157491532482.05").ToSingle());
-}
+        Assert.Fail("decfrac single 4157491532482.05\nExpected: 4.15749164E12f\nWas: " + ExtendedDecimal.FromString("4157491532482.05").ToSingle());
+      }
       if (4.15749153248205E12d != ExtendedDecimal.FromString("4157491532482.05").ToDouble()) {
- Assert.Fail("decfrac double 4157491532482.05\nExpected: 4.15749153248205E12d\nWas: " + ExtendedDecimal.FromString("4157491532482.05").ToDouble());
-}
+        Assert.Fail("decfrac double 4157491532482.05\nExpected: 4.15749153248205E12d\nWas: " + ExtendedDecimal.FromString("4157491532482.05").ToDouble());
+      }
       if (4.7747967E15f != ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToSingle()) {
- Assert.Fail("decfrac single 4774796769101.23808389660855287E+3\nExpected: 4.7747967E15f\nWas: " + ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToSingle());
-}
+        Assert.Fail("decfrac single 4774796769101.23808389660855287E+3\nExpected: 4.7747967E15f\nWas: " + ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToSingle());
+      }
       if (4.774796769101238E15d != ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToDouble()) {
- Assert.Fail("decfrac double 4774796769101.23808389660855287E+3\nExpected: 4.774796769101238E15d\nWas: " + ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToDouble());
-}
+        Assert.Fail("decfrac double 4774796769101.23808389660855287E+3\nExpected: 4.774796769101238E15d\nWas: " + ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToDouble());
+      }
       if (-9.8263879E14f != ExtendedDecimal.FromString("-982638781021905").ToSingle()) {
- Assert.Fail("decfrac single -982638781021905\nExpected: -9.8263879E14f\nWas: " + ExtendedDecimal.FromString("-982638781021905").ToSingle());
-}
+        Assert.Fail("decfrac single -982638781021905\nExpected: -9.8263879E14f\nWas: " + ExtendedDecimal.FromString("-982638781021905").ToSingle());
+      }
       if (-9.82638781021905E14d != ExtendedDecimal.FromString("-982638781021905").ToDouble()) {
- Assert.Fail("decfrac double -982638781021905\nExpected: -9.82638781021905E14d\nWas: " + ExtendedDecimal.FromString("-982638781021905").ToDouble());
-}
+        Assert.Fail("decfrac double -982638781021905\nExpected: -9.82638781021905E14d\nWas: " + ExtendedDecimal.FromString("-982638781021905").ToDouble());
+      }
       if (8.8043432E18f != ExtendedDecimal.FromString("8804343287262864743").ToSingle()) {
- Assert.Fail("decfrac single 8804343287262864743\nExpected: 8.8043432E18f\nWas: " + ExtendedDecimal.FromString("8804343287262864743").ToSingle());
-}
+        Assert.Fail("decfrac single 8804343287262864743\nExpected: 8.8043432E18f\nWas: " + ExtendedDecimal.FromString("8804343287262864743").ToSingle());
+      }
       if (8.8043432872628644E18d != ExtendedDecimal.FromString("8804343287262864743").ToDouble()) {
- Assert.Fail("decfrac double 8804343287262864743\nExpected: 8.8043432872628644E18d\nWas: " + ExtendedDecimal.FromString("8804343287262864743").ToDouble());
-}
+        Assert.Fail("decfrac double 8804343287262864743\nExpected: 8.8043432872628644E18d\nWas: " + ExtendedDecimal.FromString("8804343287262864743").ToDouble());
+      }
       if (-6.5138669E13f != ExtendedDecimal.FromString("-65138668135711").ToSingle()) {
- Assert.Fail("decfrac single -65138668135711\nExpected: -6.5138669E13f\nWas: " + ExtendedDecimal.FromString("-65138668135711").ToSingle());
-}
+        Assert.Fail("decfrac single -65138668135711\nExpected: -6.5138669E13f\nWas: " + ExtendedDecimal.FromString("-65138668135711").ToSingle());
+      }
       if (-6.5138668135711E13d != ExtendedDecimal.FromString("-65138668135711").ToDouble()) {
- Assert.Fail("decfrac double -65138668135711\nExpected: -6.5138668135711E13d\nWas: " + ExtendedDecimal.FromString("-65138668135711").ToDouble());
-}
+        Assert.Fail("decfrac double -65138668135711\nExpected: -6.5138668135711E13d\nWas: " + ExtendedDecimal.FromString("-65138668135711").ToDouble());
+      }
       if (-5.9235733E15f != ExtendedDecimal.FromString("-5923573055061163").ToSingle()) {
- Assert.Fail("decfrac single -5923573055061163\nExpected: -5.9235733E15f\nWas: " + ExtendedDecimal.FromString("-5923573055061163").ToSingle());
-}
+        Assert.Fail("decfrac single -5923573055061163\nExpected: -5.9235733E15f\nWas: " + ExtendedDecimal.FromString("-5923573055061163").ToSingle());
+      }
       if (-5.923573055061163E15d != ExtendedDecimal.FromString("-5923573055061163").ToDouble()) {
- Assert.Fail("decfrac double -5923573055061163\nExpected: -5.923573055061163E15d\nWas: " + ExtendedDecimal.FromString("-5923573055061163").ToDouble());
-}
+        Assert.Fail("decfrac double -5923573055061163\nExpected: -5.923573055061163E15d\nWas: " + ExtendedDecimal.FromString("-5923573055061163").ToDouble());
+      }
       if (-8.6853E-8f != ExtendedDecimal.FromString("-8.6853E-8").ToSingle()) {
- Assert.Fail("decfrac single -8.6853E-8\nExpected: -8.6853E-8f\nWas: " + ExtendedDecimal.FromString("-8.6853E-8").ToSingle());
-}
+        Assert.Fail("decfrac single -8.6853E-8\nExpected: -8.6853E-8f\nWas: " + ExtendedDecimal.FromString("-8.6853E-8").ToSingle());
+      }
       if (-8.6853E-8d != ExtendedDecimal.FromString("-8.6853E-8").ToDouble()) {
- Assert.Fail("decfrac double -8.6853E-8\nExpected: -8.6853E-8d\nWas: " + ExtendedDecimal.FromString("-8.6853E-8").ToDouble());
-}
+        Assert.Fail("decfrac double -8.6853E-8\nExpected: -8.6853E-8d\nWas: " + ExtendedDecimal.FromString("-8.6853E-8").ToDouble());
+      }
       if (19707.0f != ExtendedDecimal.FromString("19707").ToSingle()) {
- Assert.Fail("decfrac single 19707\nExpected: 19707.0f\nWas: " + ExtendedDecimal.FromString("19707").ToSingle());
-}
+        Assert.Fail("decfrac single 19707\nExpected: 19707.0f\nWas: " + ExtendedDecimal.FromString("19707").ToSingle());
+      }
       if (19707.0d != ExtendedDecimal.FromString("19707").ToDouble()) {
- Assert.Fail("decfrac double 19707\nExpected: 19707.0d\nWas: " + ExtendedDecimal.FromString("19707").ToDouble());
-}
+        Assert.Fail("decfrac double 19707\nExpected: 19707.0d\nWas: " + ExtendedDecimal.FromString("19707").ToDouble());
+      }
       if (-8.8478554E14f != ExtendedDecimal.FromString("-884785536200446.1859332080").ToSingle()) {
- Assert.Fail("decfrac single -884785536200446.1859332080\nExpected: -8.8478554E14f\nWas: " + ExtendedDecimal.FromString("-884785536200446.1859332080").ToSingle());
-}
+        Assert.Fail("decfrac single -884785536200446.1859332080\nExpected: -8.8478554E14f\nWas: " + ExtendedDecimal.FromString("-884785536200446.1859332080").ToSingle());
+      }
       if (-8.847855362004461E14d != ExtendedDecimal.FromString("-884785536200446.1859332080").ToDouble()) {
- Assert.Fail("decfrac double -884785536200446.1859332080\nExpected: -8.847855362004461E14d\nWas: " + ExtendedDecimal.FromString("-884785536200446.1859332080").ToDouble());
-}
+        Assert.Fail("decfrac double -884785536200446.1859332080\nExpected: -8.847855362004461E14d\nWas: " + ExtendedDecimal.FromString("-884785536200446.1859332080").ToDouble());
+      }
       if (-1.0f != ExtendedDecimal.FromString("-1").ToSingle()) {
- Assert.Fail("decfrac single -1\nExpected: -1.0f\nWas: " + ExtendedDecimal.FromString("-1").ToSingle());
-}
+        Assert.Fail("decfrac single -1\nExpected: -1.0f\nWas: " + ExtendedDecimal.FromString("-1").ToSingle());
+      }
       if (-1.0d != ExtendedDecimal.FromString("-1").ToDouble()) {
- Assert.Fail("decfrac double -1\nExpected: -1.0d\nWas: " + ExtendedDecimal.FromString("-1").ToDouble());
-}
+        Assert.Fail("decfrac double -1\nExpected: -1.0d\nWas: " + ExtendedDecimal.FromString("-1").ToDouble());
+      }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestDecimalFrac() {
       TestCommon.FromBytesTestAB(
@@ -4080,32 +6090,68 @@ namespace Test {
         4 });
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
       CBORObject dbl2 = CBORObject.FromObject((double)Int32.MaxValue);
-      try { dbl1.AsInt16(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { dbl1.AsByte(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { dbl1.AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { dbl1.AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { dbl1.AsBigInteger(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { dbl2.AsInt16(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { dbl2.AsByte(); Assert.Fail("Should have failed"); } catch (OverflowException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { dbl2.AsInt32(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { dbl2.AsInt64(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { dbl2.AsBigInteger(); } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try {
+        dbl1.AsInt16(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dbl1.AsByte(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dbl1.AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dbl1.AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dbl1.AsBigInteger();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dbl2.AsInt16(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dbl2.AsByte(); Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dbl2.AsInt32();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dbl2.AsInt64();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dbl2.AsBigInteger();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestBigTag() {
       CBORObject.FromObjectAndTag(CBORObject.Null, (BigInteger.One << 64) - BigInteger.One);
@@ -4121,11 +6167,7 @@ namespace Test {
         1 });
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = TestCommon.FromBytesTestAB(
@@ -4135,15 +6177,12 @@ namespace Test {
         0xc2,
         0x41,
         1 });
-      Assert.AreEqual(ExtendedDecimal.Create(BigInteger.One, (BigInteger)(3)),
+      Assert.AreEqual(
+        ExtendedDecimal.Create(BigInteger.One, (BigInteger)3),
         o.AsExtendedDecimal());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestShort() {
       for (int i = Int16.MinValue; i <= Int16.MaxValue; ++i) {
@@ -4153,11 +6192,7 @@ namespace Test {
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestByteArray() {
       TestCommon.AssertSer(
@@ -4165,11 +6200,7 @@ namespace Test {
         "h'2078'");
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestBigNumBytes() {
       CBORObject o = null;
@@ -4183,11 +6214,7 @@ namespace Test {
       Assert.AreEqual((BigInteger)0x88776655443322L, o.AsBigInteger());
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestTaggedUntagged() {
       for (int i = 200; i < 1000; ++i) {
@@ -4254,13 +6281,14 @@ namespace Test {
     public void AssertBigIntString(string s, BigInteger bi) {
       Assert.AreEqual(s, bi.ToString());
     }
+
     public void AssertAdd(BigInteger bi, BigInteger bi2, string s) {
-      AssertBigIntString(s, bi + (BigInteger)bi2);
-      AssertBigIntString(s, bi2 + (BigInteger)bi);
-      BigInteger negbi = BigInteger.Zero-(BigInteger)bi;
-      BigInteger negbi2 = BigInteger.Zero-(BigInteger)bi2;
-      AssertBigIntString(s, bi - (BigInteger)negbi2);
-      AssertBigIntString(s, bi2 - (BigInteger)negbi);
+      this.AssertBigIntString(s, bi + (BigInteger)bi2);
+      this.AssertBigIntString(s, bi2 + (BigInteger)bi);
+      BigInteger negbi = BigInteger.Zero - (BigInteger)bi;
+      BigInteger negbi2 = BigInteger.Zero - (BigInteger)bi2;
+      this.AssertBigIntString(s, bi - (BigInteger)negbi2);
+      this.AssertBigIntString(s, bi2 - (BigInteger)negbi);
     }
 
     [Test]
@@ -4269,33 +6297,29 @@ namespace Test {
       BigInteger negSmall = -(BigInteger)5;
       BigInteger posLarge = (BigInteger)5555555;
       BigInteger negLarge = -(BigInteger)5555555;
-      AssertAdd(posSmall, posSmall, "10");
-      AssertAdd(posSmall, negSmall, "0");
-      AssertAdd(posSmall, posLarge, "5555560");
-      AssertAdd(posSmall, negLarge, "-5555550");
-      AssertAdd(negSmall, negSmall, "-10");
-      AssertAdd(negSmall, posLarge, "5555550");
-      AssertAdd(negSmall, negLarge, "-5555560");
-      AssertAdd(posLarge, posLarge, "11111110");
-      AssertAdd(posLarge, negLarge, "0");
-      AssertAdd(negLarge, negLarge, "-11111110");
+      this.AssertAdd(posSmall, posSmall, "10");
+      this.AssertAdd(posSmall, negSmall, "0");
+      this.AssertAdd(posSmall, posLarge, "5555560");
+      this.AssertAdd(posSmall, negLarge, "-5555550");
+      this.AssertAdd(negSmall, negSmall, "-10");
+      this.AssertAdd(negSmall, posLarge, "5555550");
+      this.AssertAdd(negSmall, negLarge, "-5555560");
+      this.AssertAdd(posLarge, posLarge, "11111110");
+      this.AssertAdd(posLarge, negLarge, "0");
+      this.AssertAdd(negLarge, negLarge, "-11111110");
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestBigInteger() {
       BigInteger bi = (BigInteger)3;
-      AssertBigIntString("3", bi);
+      this.AssertBigIntString("3", bi);
       BigInteger negseven = (BigInteger)(-7);
-      AssertBigIntString("-7", negseven);
+      this.AssertBigIntString("-7", negseven);
       BigInteger other = (BigInteger)(-898989);
-      AssertBigIntString("-898989", other);
+      this.AssertBigIntString("-898989", other);
       other = (BigInteger)898989;
-      AssertBigIntString("898989", other);
+      this.AssertBigIntString("898989", other);
       for (int i = 0; i < 500; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),
@@ -4303,14 +6327,14 @@ namespace Test {
         bi *= (BigInteger)negseven;
       }
       BigInteger[] ranges = new BigInteger[] {
-        (BigInteger)Int64.MinValue-(BigInteger)512,
-        (BigInteger)Int64.MinValue+(BigInteger)512,
-        BigInteger.Zero-(BigInteger)512,
-        BigInteger.Zero+(BigInteger)512,
-        (BigInteger)Int64.MaxValue-(BigInteger)512,
-        (BigInteger)Int64.MaxValue+(BigInteger)512,
-        ((BigInteger.One << 64)-BigInteger.One)-(BigInteger)512,
-        ((BigInteger.One << 64)-BigInteger.One)+(BigInteger)512,
+        (BigInteger)Int64.MinValue - (BigInteger)512,
+        (BigInteger)Int64.MinValue + (BigInteger)512,
+        BigInteger.Zero - (BigInteger)512,
+        BigInteger.Zero + (BigInteger)512,
+        (BigInteger)Int64.MaxValue - (BigInteger)512,
+        (BigInteger)Int64.MaxValue + (BigInteger)512,
+        ((BigInteger.One << 64) - BigInteger.One) - (BigInteger)512,
+        ((BigInteger.One << 64) - BigInteger.One) + (BigInteger)512,
       };
       for (int i = 0; i < ranges.Length; i += 2) {
         BigInteger bigintTemp = ranges[i];
@@ -4319,24 +6343,20 @@ namespace Test {
             CBORObject.FromObject(bigintTemp),
             String.Format(CultureInfo.InvariantCulture, "{0}", bigintTemp));
           if (bigintTemp.Equals(ranges[i + 1])) {
- break;
-}
+            break;
+          }
           bigintTemp = bigintTemp + BigInteger.One;
         }
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestLong() {
       long[] ranges = new long[] {
         -65539, 65539,
         0xFFFFF000L, 0x100000400L,
-        Int64.MaxValue-1000, Int64.MaxValue,
+        Int64.MaxValue - 1000, Int64.MaxValue,
         Int64.MinValue, Int64.MinValue + 1000
       };
       for (int i = 0; i < ranges.Length; i += 2) {
@@ -4350,29 +6370,29 @@ namespace Test {
             CBORObject.FromObject((BigInteger)j));
           CBORObject obj = CBORObject.FromJSONString(
             String.Format(CultureInfo.InvariantCulture, "[{0}]", j));
-          TestCommon.AssertSer(obj,
-                               String.Format(CultureInfo.InvariantCulture, "[{0}]", j));
+          TestCommon.AssertSer(
+            obj,
+            String.Format(CultureInfo.InvariantCulture, "[{0}]", j));
           if (j == ranges[i + 1]) {
- break;
-}
+            break;
+          }
           j++;
         }
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestFloat() {
-      TestCommon.AssertSer(CBORObject.FromObject(Single.PositiveInfinity),
-                           "Infinity");
-      TestCommon.AssertSer(CBORObject.FromObject(Single.NegativeInfinity),
-                           "-Infinity");
-      TestCommon.AssertSer(CBORObject.FromObject(Single.NaN),
-                           "NaN");
+      TestCommon.AssertSer(
+        CBORObject.FromObject(Single.PositiveInfinity),
+        "Infinity");
+      TestCommon.AssertSer(
+        CBORObject.FromObject(Single.NegativeInfinity),
+        "-Infinity");
+      TestCommon.AssertSer(
+        CBORObject.FromObject(Single.NaN),
+        "NaN");
       for (int i = -65539; i <= 65539; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((float)i),
@@ -4380,11 +6400,7 @@ namespace Test {
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestCodePointCompare() {
       Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
@@ -4394,30 +6410,35 @@ namespace Test {
       Assert.AreEqual(1, Math.Sign(DataUtilities.CodePointCompare("\uf000", "\ud800")));
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestSimpleValues() {
-      TestCommon.AssertSer(CBORObject.FromObject(true),
-                           "true");
-      TestCommon.AssertSer(CBORObject.FromObject(false),
-                           "false");
-      TestCommon.AssertSer(CBORObject.FromObject((object)null),
-                           "null");
+      TestCommon.AssertSer(
+        CBORObject.FromObject(true),
+        "true");
+      TestCommon.AssertSer(
+        CBORObject.FromObject(false),
+        "false");
+      TestCommon.AssertSer(
+        CBORObject.FromObject((object)null),
+        "null");
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestGetUtf8Length() {
-      try { DataUtilities.GetUtf8Length(null, true); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
-      try { DataUtilities.GetUtf8Length(null, false); } catch (ArgumentNullException) { } catch (Exception ex) { Assert.Fail(ex.ToString()); throw new InvalidOperationException("",ex); }
+      try {
+        DataUtilities.GetUtf8Length(null, true);
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Length(null, false);
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
       Assert.AreEqual(3, DataUtilities.GetUtf8Length("abc", true));
       Assert.AreEqual(4, DataUtilities.GetUtf8Length("\u0300\u0300", true));
       Assert.AreEqual(6, DataUtilities.GetUtf8Length("\u3000\u3000", true));
@@ -4425,27 +6446,27 @@ namespace Test {
       Assert.AreEqual(-1, DataUtilities.GetUtf8Length("\ud800\ud800", false));
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestDouble() {
       if (!CBORObject.FromObject(Double.PositiveInfinity).IsPositiveInfinity()) {
- Assert.Fail("Not positive infinity");
-}
-      TestCommon.AssertSer(CBORObject.FromObject(Double.PositiveInfinity),
-                           "Infinity");
-      TestCommon.AssertSer(CBORObject.FromObject(Double.NegativeInfinity),
-                           "-Infinity");
-      TestCommon.AssertSer(CBORObject.FromObject(Double.NaN),
-                           "NaN");
+        Assert.Fail("Not positive infinity");
+      }
+      TestCommon.AssertSer(
+        CBORObject.FromObject(Double.PositiveInfinity),
+        "Infinity");
+      TestCommon.AssertSer(
+        CBORObject.FromObject(Double.NegativeInfinity),
+        "-Infinity");
+      TestCommon.AssertSer(
+        CBORObject.FromObject(Double.NaN),
+        "NaN");
       CBORObject oldobj = null;
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = CBORObject.FromObject((double)i);
-        TestCommon.AssertSer(o,
-                             String.Format(CultureInfo.InvariantCulture, "{0}", i));
+        TestCommon.AssertSer(
+          o,
+          String.Format(CultureInfo.InvariantCulture, "{0}", i));
         if (oldobj != null) {
           CompareTestLess(oldobj, o);
         }
@@ -4453,22 +6474,18 @@ namespace Test {
       }
     }
 
-    /// <summary>
-    /// </summary>
-    /// <returns>
-    /// </returns>
-    ///
+    /// <summary>Not documented yet.</summary>
     [Test]
     public void TestTags() {
-      BigInteger maxuint = ((BigInteger.One << 64) - BigInteger.One);
+      BigInteger maxuint = (BigInteger.One << 64) - BigInteger.One;
       BigInteger[] ranges = new BigInteger[] {
         (BigInteger)6,
         (BigInteger)65539,
-        (BigInteger)Int32.MaxValue-(BigInteger)500,
-        (BigInteger)Int32.MaxValue+(BigInteger)500,
-        (BigInteger)Int64.MaxValue-(BigInteger)500,
-        (BigInteger)Int64.MaxValue+(BigInteger)500,
-        ((BigInteger.One << 64)-BigInteger.One)-(BigInteger)500,
+        (BigInteger)Int32.MaxValue - (BigInteger)500,
+        (BigInteger)Int32.MaxValue + (BigInteger)500,
+        (BigInteger)Int64.MaxValue - (BigInteger)500,
+        (BigInteger)Int64.MaxValue + (BigInteger)500,
+        ((BigInteger.One << 64) - BigInteger.One) - (BigInteger)500,
         maxuint,
       };
       for (int i = 0; i < ranges.Length; i += 2) {
@@ -4479,45 +6496,58 @@ namespace Test {
           BigInteger[] tags = obj.GetTags();
           Assert.AreEqual(1, tags.Length);
           Assert.AreEqual(bigintTemp, tags[0]);
-          if (!obj.InnermostTag.Equals(bigintTemp))
-            Assert.AreEqual(bigintTemp, obj.InnermostTag,
-                            String.Format(CultureInfo.InvariantCulture,
-                                          "obj tag doesn't match: {0}", obj));
+          if (!obj.InnermostTag.Equals(bigintTemp)) {
+            Assert.AreEqual(
+              bigintTemp,
+              obj.InnermostTag,
+              String.Format(CultureInfo.InvariantCulture, "obj tag doesn't match: {0}", obj));
+          }
           TestCommon.AssertSer(
             obj,
             String.Format(CultureInfo.InvariantCulture, "{0}(0)", bigintTemp));
-          if (!(bigintTemp.Equals(maxuint))) {
+          if (!bigintTemp.Equals(maxuint)) {
             // Test multiple tags
             CBORObject obj2 = CBORObject.FromObjectAndTag(obj, bigintTemp + BigInteger.One);
             BigInteger[] bi = obj2.GetTags();
-            if (bi.Length != 2)
-              Assert.AreEqual(2, bi.Length,
-                              String.Format(CultureInfo.InvariantCulture,
-                                            "Expected 2 tags: {0}", obj2));
-            if (!bi[0].Equals((BigInteger)bigintTemp + BigInteger.One))
-              Assert.AreEqual(bigintTemp + BigInteger.One, bi[0],
-                              String.Format(CultureInfo.InvariantCulture,
-                                            "Outer tag doesn't match: {0}", obj2));
-            if (!(bi[1].Equals((BigInteger)bigintTemp)))
-              Assert.AreEqual(bigintTemp, bi[1],
-                              String.Format(CultureInfo.InvariantCulture,
-                                            "Inner tag doesn't match: {0}", obj2));
-            if (!(obj2.InnermostTag.Equals((BigInteger)bigintTemp)))
-              Assert.AreEqual(bigintTemp, obj2.InnermostTag,
-                              String.Format(CultureInfo.InvariantCulture,
-                                            "Innermost tag doesn't match: {0}", obj2));
+            if (bi.Length != 2) {
+              Assert.AreEqual(
+                2,
+                bi.Length,
+                String.Format(CultureInfo.InvariantCulture, "Expected 2 tags: {0}", obj2));
+            }
+            if (!bi[0].Equals((BigInteger)bigintTemp + BigInteger.One)) {
+              Assert.AreEqual(
+                bigintTemp + BigInteger.One,
+                bi[0],
+                String.Format(CultureInfo.InvariantCulture, "Outer tag doesn't match: {0}", obj2));
+            }
+            if (!bi[1].Equals((BigInteger)bigintTemp))
+            {
+              Assert.AreEqual(
+                bigintTemp,
+                bi[1],
+                String.Format(CultureInfo.InvariantCulture, "Inner tag doesn't match: {0}", obj2));
+            }
+            if (!obj2.InnermostTag.Equals((BigInteger)bigintTemp)) {
+              Assert.AreEqual(
+                bigintTemp,
+                obj2.InnermostTag,
+                String.Format(CultureInfo.InvariantCulture, "Innermost tag doesn't match: {0}", obj2));
+            }
+            String str = String.Format(
+                CultureInfo.InvariantCulture,
+                "{0}({1}(0))",
+                bigintTemp + BigInteger.One,
+                bigintTemp);
             TestCommon.AssertSer(
-              obj2,
-              String.Format(CultureInfo.InvariantCulture, "{0}({1}(0))",
-                            bigintTemp + BigInteger.One, bigintTemp));
+              obj2, str);
           }
           if (bigintTemp.Equals(ranges[i + 1])) {
- break;
-}
+            break;
+          }
           bigintTemp = bigintTemp + BigInteger.One;
         }
       }
     }
   }
 }
-

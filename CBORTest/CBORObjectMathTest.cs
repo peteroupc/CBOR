@@ -11,9 +11,7 @@ using NUnit.Framework;
 using PeterO;
 
 namespace Test {
-    /// <summary>
-    /// </summary>
-    ///
+    /// <summary>Tests for math functions in CBORObject.</summary>
 [TestFixture]
   public class CBORObjectMathTest {
     [Test]
@@ -721,4 +719,3 @@ namespace Test {
     }
   }
 }
-
