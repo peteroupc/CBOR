@@ -86,7 +86,7 @@ ms=new ByteArrayOutputStream();
           return ms.toByteArray();
 }
 finally {
-try { if(ms!=null)ms.close(); } catch(IOException ex){}
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
 }
       } catch (IOException ex) {
         throw new IllegalArgumentException("I/O error occurred", ex);

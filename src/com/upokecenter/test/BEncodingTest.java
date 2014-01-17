@@ -1,8 +1,9 @@
 package com.upokecenter.test;
-import org.junit.Assert;
-import org.junit.Test;
 
 import java.io.*;
+
+import org.junit.Assert;
+import org.junit.Test;
 import com.upokecenter.util.*;
 
     /**
@@ -19,12 +20,13 @@ s=new ByteArrayInputStream(b);
           return BEncoding.Read(s);
 }
 finally {
-try { if(s!=null)s.close(); } catch(IOException ex){}
+try { if(s!=null)s.close(); } catch (IOException ex){}
 }
       } catch (IOException ex) {
         throw new CBORException("", ex);
       }
     }
+
     private static byte[] EncodingToBytes(CBORObject b) {
       try {
         java.io.ByteArrayOutputStream s=null;
@@ -35,7 +37,7 @@ s=new ByteArrayOutputStream();
           return s.toByteArray();
 }
 finally {
-try { if(s!=null)s.close(); } catch(IOException ex){}
+try { if(s!=null)s.close(); } catch (IOException ex){}
 }
       } catch (IOException ex) {
         throw new CBORException("", ex);
@@ -43,7 +45,7 @@ try { if(s!=null)s.close(); } catch(IOException ex){}
     }
 
     /**
-     *
+     * Not documented yet.
      * @param value A 64-bit signed integer.
      */
 public void doTestLong(long value) {
@@ -55,7 +57,7 @@ public void doTestLong(long value) {
     }
 
     /**
-     *
+     * Not documented yet.
      * @param value A string object.
      */
 public void doTestString(String value) {
@@ -67,20 +69,20 @@ public void doTestString(String value) {
     }
 
     /**
-     *
+     * Not documented yet.
      */
 @Test
     public void testLong() {
-      doTestLong(0);
-      doTestLong(-1);
-      doTestLong(Integer.MIN_VALUE);
-      doTestLong(Integer.MAX_VALUE);
-      doTestLong(Long.MIN_VALUE);
-      doTestLong(Long.MAX_VALUE);
+      this.doTestLong(0);
+      this.doTestLong(-1);
+      this.doTestLong(Integer.MIN_VALUE);
+      this.doTestLong(Integer.MAX_VALUE);
+      this.doTestLong(Long.MIN_VALUE);
+      this.doTestLong(Long.MAX_VALUE);
     }
 
     /**
-     *
+     * Not documented yet.
      */
 @Test
     public void testList() {
@@ -104,7 +106,7 @@ public void doTestString(String value) {
     }
 
     /**
-     *
+     * Not documented yet.
      */
 @Test
     public void testDictionary() {
@@ -128,26 +130,26 @@ public void doTestString(String value) {
     }
 
     /**
-     *
+     * Not documented yet.
      */
 @Test
     public void testString() {
-      doTestString("");
-      doTestString(" ");
-      doTestString("test");
-      doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods");
-      doTestString("te\u007fst");
-      doTestString("te\u0080st");
-      doTestString("te\u3000st");
-      doTestString("te\u07ffst");
-      doTestString("te\u0800st");
-      doTestString("te\uffffst");
-      doTestString("te\ud7ffst");
-      doTestString("te\ue000st");
-      doTestString("te\ud800\udc00st");
-      doTestString("te\udbff\udc00st");
-      doTestString("te\ud800\udfffst");
-      doTestString("te\udbff\udfffst");
+      this.doTestString("");
+      this.doTestString(" ");
+      this.doTestString("test");
+      this.doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods");
+      this.doTestString("te\u007fst");
+      this.doTestString("te\u0080st");
+      this.doTestString("te\u3000st");
+      this.doTestString("te\u07ffst");
+      this.doTestString("te\u0800st");
+      this.doTestString("te\uffffst");
+      this.doTestString("te\ud7ffst");
+      this.doTestString("te\ue000st");
+      this.doTestString("te\ud800\udc00st");
+      this.doTestString("te\udbff\udc00st");
+      this.doTestString("te\ud800\udfffst");
+      this.doTestString("te\udbff\udfffst");
     }
   }
 
