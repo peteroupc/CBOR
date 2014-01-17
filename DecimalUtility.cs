@@ -43,8 +43,8 @@ namespace PeterO
 
     internal static int CountTrailingZeros(int numberValue) {
       if (numberValue == 0) {
- return 32;
-}
+        return 32;
+      }
       int i = 0;
       unchecked {
         if ((numberValue << 16) == 0) {
@@ -101,8 +101,8 @@ namespace PeterO
         }
 
         if ((numberValue >> 31) == 0) {
- --i;
-}
+          --i;
+        }
       }
       return i;
     }
@@ -112,8 +112,8 @@ namespace PeterO
       int a1 = arr[1];
       int tz = CountTrailingZeros(a0);
       if (tz == 0) {
- return 0;
-}
+        return 0;
+      }
       unchecked {
         if (tz < 32) {
           int carry = a1 << (32 - tz);
@@ -156,7 +156,7 @@ namespace PeterO
       public BigInteger[] FindCachedPowerOrSmaller(BigInteger bi) {
         BigInteger[] ret = null;
         BigInteger minValue = null;
-         lock (this.outputs) {
+        lock (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputs[i].CompareTo(bi) <= 0 && (minValue == null || this.inputs[i].CompareTo(minValue) >= 0)) {
               // Console.WriteLine("Have cached power ({0}, {1})",inputs[i],bi);
@@ -172,7 +172,7 @@ namespace PeterO
     /// <param name='bi'>A BigInteger object. (2).</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger GetCachedPower(BigInteger bi) {
-         lock (this.outputs) {
+        lock (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (bi.Equals(this.inputs[i])) {
               if (i != 0) {
@@ -198,8 +198,8 @@ namespace PeterO
     /// <summary>Not documented yet.</summary>
     /// <param name='bi'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
-public BigInteger GetCachedPowerInt(int bi) {
-         lock (this.outputs) {
+      public BigInteger GetCachedPowerInt(int bi) {
+        lock (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputsInts[i] >= 0 && this.inputsInts[i] == bi) {
               if (i != 0) {
@@ -226,7 +226,7 @@ public BigInteger GetCachedPowerInt(int bi) {
     /// <param name='input'>A BigInteger object.</param>
     /// <param name='output'>A BigInteger object. (2).</param>
       public void AddPower(BigInteger input, BigInteger output) {
-         lock (this.outputs) {
+        lock (this.outputs) {
           if (this.size < MaxSize) {
             // Shift newer entries down
             for (int i = this.size; i > 0; --i) {
@@ -259,11 +259,11 @@ public BigInteger GetCachedPowerInt(int bi) {
     internal static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
       int sign = diff.Sign;
       if (sign < 0) {
- return BigInteger.Zero;
-}
+        return BigInteger.Zero;
+      }
       if (sign == 0) {
- return BigInteger.One;
-}
+        return BigInteger.One;
+      }
       FastInteger intcurexp = FastInteger.FromBig(diff);
       if (intcurexp.CompareToInt(54) <= 0) {
         return FindPowerOfFive(intcurexp.AsInt32());
@@ -273,8 +273,8 @@ public BigInteger GetCachedPowerInt(int bi) {
       BigInteger origdiff = diff;
       bigpow = powerOfFiveCache.GetCachedPower(origdiff);
       if (bigpow != null) {
- return bigpow;
-}
+        return bigpow;
+      }
       BigInteger[] otherPower = powerOfFiveCache.FindCachedPowerOrSmaller(origdiff);
       if (otherPower != null) {
         intcurexp.SubtractBig(otherPower[0]);
@@ -294,8 +294,8 @@ public BigInteger GetCachedPowerInt(int bi) {
           break;
         } else {
           if (bigpow.IsZero) {
- bigpow = BigInteger.Pow(FindPowerOfFive(1), 9999999);
-}
+            bigpow = BigInteger.Pow(FindPowerOfFive(1), 9999999);
+          }
           mantissa *= bigpow;
           intcurexp.AddInt(-9999999);
         }
@@ -309,11 +309,11 @@ public BigInteger GetCachedPowerInt(int bi) {
     internal static BigInteger FindPowerOfTenFromBig(BigInteger bigintExponent) {
       int sign = bigintExponent.Sign;
       if (sign < 0) {
- return BigInteger.Zero;
-}
+        return BigInteger.Zero;
+      }
       if (sign == 0) {
- return BigInteger.One;
-}
+        return BigInteger.One;
+      }
       if (bigintExponent.CompareTo(valueBigInt36) <= 0) {
         return FindPowerOfTen((int)bigintExponent);
       }
@@ -347,24 +347,24 @@ public BigInteger GetCachedPowerInt(int bi) {
 
     internal static BigInteger FindPowerOfFive(int precision) {
       if (precision < 0) {
- return BigInteger.Zero;
-}
+        return BigInteger.Zero;
+      }
       if (precision == 0) {
- return BigInteger.One;
-}
+        return BigInteger.One;
+      }
       BigInteger bigpow;
       BigInteger ret;
       if (precision <= 27) {
- return valueBigIntPowersOfFive[(int)precision];
-}
+        return valueBigIntPowersOfFive[(int)precision];
+      }
       if (precision == 40) {
- return valueFivePower40;
-}
+        return valueFivePower40;
+      }
       int startPrecision = precision;
       bigpow = powerOfFiveCache.GetCachedPowerInt(precision);
       if (bigpow != null) {
- return bigpow;
-}
+        return bigpow;
+      }
       BigInteger origPrecision = (BigInteger)precision;
       if (precision <= 54) {
         if ((precision & 1) == 0) {
@@ -397,8 +397,8 @@ public BigInteger GetCachedPowerInt(int bi) {
           BigInteger otherPower1 = otherPower[1];
           precision -= (int)otherPower0;
           if (first) {
- bigpow = otherPower[1];
-  } else {
+            bigpow = otherPower[1];
+          } else {
             bigpow *= (BigInteger)otherPower1;
           }
           first = false;
@@ -411,10 +411,10 @@ public BigInteger GetCachedPowerInt(int bi) {
         if (precision <= 27) {
           bigpow = valueBigIntPowersOfFive[(int)precision];
           if (first) {
- ret = bigpow;
-  } else {
- ret *= (BigInteger)bigpow;
-}
+            ret = bigpow;
+          } else {
+            ret *= (BigInteger)bigpow;
+          }
           first = false;
           break;
         } else if (precision <= 9999999) {
@@ -425,21 +425,21 @@ public BigInteger GetCachedPowerInt(int bi) {
             powerOfFiveCache.AddPower(bigprec, bigpow);
           }
           if (first) {
- ret = bigpow;
-  } else {
- ret *= (BigInteger)bigpow;
-}
+            ret = bigpow;
+          } else {
+            ret *= (BigInteger)bigpow;
+          }
           first = false;
           break;
         } else {
           if (bigpow.IsZero) {
- bigpow = FindPowerOfFive(9999999);
-}
+            bigpow = FindPowerOfFive(9999999);
+          }
           if (first) {
- ret = bigpow;
-  } else {
- ret *= (BigInteger)bigpow;
-}
+            ret = bigpow;
+          } else {
+            ret *= (BigInteger)bigpow;
+          }
           first = false;
           precision -= 9999999;
         }
@@ -450,21 +450,21 @@ public BigInteger GetCachedPowerInt(int bi) {
 
     internal static BigInteger FindPowerOfTen(int precision) {
       if (precision < 0) {
- return BigInteger.Zero;
-}
+        return BigInteger.Zero;
+      }
       if (precision == 0) {
- return BigInteger.One;
-}
+        return BigInteger.One;
+      }
       BigInteger bigpow;
       BigInteger ret;
       if (precision <= 18) {
- return valueBigIntPowersOfTen[(int)precision];
-}
+        return valueBigIntPowersOfTen[(int)precision];
+      }
       int startPrecision = precision;
       bigpow = powerOfTenCache.GetCachedPowerInt(precision);
       if (bigpow != null) {
- return bigpow;
-}
+        return bigpow;
+      }
       BigInteger origPrecision = (BigInteger)precision;
       if (precision <= 27) {
         int prec = (int)precision;
@@ -497,8 +497,8 @@ public BigInteger GetCachedPowerInt(int bi) {
           BigInteger otherPower1 = otherPower[1];
           precision -= (int)otherPower0;
           if (first) {
- bigpow = otherPower[1];
-  } else {
+            bigpow = otherPower[1];
+          } else {
             bigpow *= (BigInteger)otherPower1;
           }
           first = false;
@@ -511,10 +511,10 @@ public BigInteger GetCachedPowerInt(int bi) {
         if (precision <= 18) {
           bigpow = valueBigIntPowersOfTen[(int)precision];
           if (first) {
- ret = bigpow;
-  } else {
- ret *= (BigInteger)bigpow;
-}
+            ret = bigpow;
+          } else {
+            ret *= (BigInteger)bigpow;
+          }
           first = false;
           break;
         } else if (precision <= 9999999) {
@@ -526,21 +526,21 @@ public BigInteger GetCachedPowerInt(int bi) {
             powerOfTenCache.AddPower(bigprec, bigpow);
           }
           if (first) {
- ret = bigpow;
-  } else {
- ret *= (BigInteger)bigpow;
-}
+            ret = bigpow;
+          } else {
+            ret *= (BigInteger)bigpow;
+          }
           first = false;
           break;
         } else {
           if (bigpow.IsZero) {
- bigpow = FindPowerOfTen(9999999);
-}
+            bigpow = FindPowerOfTen(9999999);
+          }
           if (first) {
- ret = bigpow;
-  } else {
- ret *= (BigInteger)bigpow;
-}
+            ret = bigpow;
+          } else {
+            ret *= (BigInteger)bigpow;
+          }
           first = false;
           precision -= 9999999;
         }

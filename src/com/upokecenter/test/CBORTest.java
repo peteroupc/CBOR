@@ -847,7 +847,12 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
-        new byte[] {  0x7F, 0x61, 0x20, 0x61, 0x20, (byte)0xFF  });
+        new byte[] {  0x7F,
+        0x61,
+        0x20,
+        0x61,
+        0x20,
+        (byte)0xFF  });
       Assert.assertEquals("  ", cbor.AsString());
       // Test streaming of long strings
       String longString = Repeat('x', 200000);
@@ -875,12 +880,25 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test(expected=CBORException.class)
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x7F, 0x61, 0x20, (byte)0xC0, 0x61, 0x20, (byte)0xFF  });
+        new byte[] {  0x7F,
+        0x61,
+        0x20,
+        (byte)0xC0,
+        0x61,
+        0x20,
+        (byte)0xFF  });
     }
     @Test(expected=CBORException.class)
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x7F, 0x61, 0x20, 0x7F, 0x61, 0x20, (byte)0xFF, (byte)0xFF  });
+        new byte[] {  0x7F,
+        0x61,
+        0x20,
+        0x7F,
+        0x61,
+        0x20,
+        (byte)0xFF,
+        (byte)0xFF  });
     }
 
     /**
@@ -889,12 +907,23 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x5F, 0x41, 0x20, 0x41, 0x20, (byte)0xFF  });
+        new byte[] {  0x5F,
+        0x41,
+        0x20,
+        0x41,
+        0x20,
+        (byte)0xFF  });
     }
     @Test(expected=CBORException.class)
     public void TestByteStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x5F, 0x41, 0x20, (byte)0xC2, 0x41, 0x20, (byte)0xFF  });
+        new byte[] {  0x5F,
+        0x41,
+        0x20,
+        (byte)0xC2,
+        0x41,
+        0x20,
+        (byte)0xFF  });
     }
     public static void AssertDecimalsEquivalent(String a, String b) {
       CBORObject ca = CBORDataUtilities.ParseJSONNumber(a);
@@ -2094,7 +2123,14 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test(expected=CBORException.class)
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x5F, 0x41, 0x20, 0x5F, 0x41, 0x20, (byte)0xFF, (byte)0xFF  });
+        new byte[] {  0x5F,
+        0x41,
+        0x20,
+        0x5F,
+        0x41,
+        0x20,
+        (byte)0xFF,
+        (byte)0xFF  });
     }
 
     /**
@@ -3943,12 +3979,28 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test
     public void TestDecimalFrac() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  (byte)0xc4, (byte)0x82, 0x3, 0x1a, 1, 2, 3, 4  });
+        new byte[] {  (byte)0xc4,
+        (byte)0x82,
+        0x3,
+        0x1a,
+        1,
+        2,
+        3,
+        4  });
     }
     @Test(expected=CBORException.class)
     public void TestDecimalFracExponentMustNotBeBignum() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  (byte)0xc4, (byte)0x82, (byte)0xc2, 0x41, 1, 0x1a, 1, 2, 3, 4  });
+        new byte[] {  (byte)0xc4,
+        (byte)0x82,
+        (byte)0xc2,
+        0x41,
+        1,
+        0x1a,
+        1,
+        2,
+        3,
+        4  });
     }
 
     /**
@@ -3993,7 +4045,12 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     @Test
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = TestCommon.FromBytesTestAB(
-        new byte[] {  (byte)0xc4, (byte)0x82, 0x3, (byte)0xc2, 0x41, 1  });
+        new byte[] {  (byte)0xc4,
+        (byte)0x82,
+        0x3,
+        (byte)0xc2,
+        0x41,
+        1  });
       Assert.assertEquals(ExtendedDecimal.Create(BigInteger.ONE, BigInteger.valueOf(3)),
         o.AsExtendedDecimal());
     }

@@ -36,9 +36,7 @@ namespace PeterO {
       }
     }
     #region Equals and GetHashCode implementation
-    /// <summary>Determines whether this object&apos;s mantissa and exponent
-    /// are equal to those of another object.</summary>
-    /// <param name='other'> A BigFloat object.</param>
+
     private bool EqualsInternal(BigFloat other) {
       BigFloat otherValue = other as BigFloat;
       if (otherValue == null) {
@@ -56,7 +54,8 @@ namespace PeterO {
     }
 
     /// <summary>Determines whether this object&apos;s mantissa and exponent
-    /// are equal to those of another object and that object is a Bigfloat.</summary>
+    /// are equal to those of another object and that object has the same type
+    /// as this one.</summary>
     /// <returns>True if the objects are equal; false otherwise.</returns>
     /// <param name='obj'>An arbitrary object.</param>
     public override bool Equals(object obj) {
@@ -64,7 +63,7 @@ namespace PeterO {
     }
 
     /// <summary>Calculates this object&apos;s hash code.</summary>
-    /// <returns>This object&apos;s hash code.</returns>
+    /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
       int hashCode = 0;
       unchecked {
@@ -74,8 +73,8 @@ namespace PeterO {
       return hashCode;
     }
     #endregion
-    /// <summary>Creates a binary floating-point number with the value
-    /// exponent*2^mantissa.</summary>
+    /// <summary>Initializes a new instance of the BigFloat class. Creates
+    /// a binary floating-point number with the value exponent*2^mantissa.</summary>
     /// <param name='mantissa'>The un-scaled value.</param>
     /// <param name='exponent'>The binary exponent.</param>
     public BigFloat(BigInteger mantissa, BigInteger exponent) {
@@ -142,7 +141,8 @@ namespace PeterO {
     /// <summary>Creates a binary floating-point number from a 32-bit floating-point
     /// number.</summary>
     /// <param name='flt'>A 32-bit floating-point number.</param>
-    /// <returns>A big floating-point number with the same value as &quot; flt&quot; .</returns>
+    /// <returns>A big floating-point number with the same value as <paramref
+    /// name='flt'/>.</returns>
     /// <exception cref='OverflowException'>The parameter <paramref
     /// name='flt'/> is infinity or not-a-number.</exception>
     public static BigFloat FromSingle(float flt) {
@@ -152,7 +152,8 @@ namespace PeterO {
     /// <summary>Creates a binary floating-point number from a 64-bit floating-point
     /// number.</summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
-    /// <returns>A big floating-point number with the same value as <paramref name='dbl'/> .</returns>
+    /// <returns>A big floating-point number with the same value as <paramref
+    /// name='dbl'/>.</returns>
     /// <exception cref='OverflowException'>The parameter <paramref
     /// name='dbl'/> is infinity or not-a-number.</exception>
     public static BigFloat FromDouble(double dbl) {
@@ -361,7 +362,6 @@ namespace PeterO {
       }
     }
 
-    //----------------------------
     /// <summary>Gets this value&apos;s sign: -1 if negative; 1 if positive;
     /// 0 if zero.</summary>
     /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
@@ -638,9 +638,9 @@ namespace PeterO {
     /// scale will be the sum of the scales of the two binary floating-point
     /// numbers.</summary>
     /// <param name='decfrac'>Another big floating-point number.</param>
-    /// <returns>The product of the two big floating-point numbers. If a precision context
-    /// is given, returns null if the result of the rounding overflowed the
-    /// exponent range.</returns>
+    /// <returns>The product of the two big floating-point numbers. If a
+    /// precision context is given, returns null if the result of the rounding
+    /// overflowed the exponent range.</returns>
     public BigFloat Multiply(BigFloat decfrac) {
       if (decfrac == null) {
         throw new ArgumentNullException("decfrac");
@@ -740,7 +740,7 @@ namespace PeterO {
     /// if the quotient, rounded down, is even, and the result's absolute
     /// value is half of the divisor's absolute value.</item>
     /// </list>
-    /// This function is also known as the "IEEE Remainder" function. </summary>
+    /// This function is also known as the "IEEE Remainder" function.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision.
     /// The rounding and exponent range settings of this context are ignored
@@ -764,8 +764,8 @@ namespace PeterO {
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the largest value that&apos;s less than the given
-    /// value. Returns null if the result is negative infinity.</returns>
+    /// <returns>Returns the largest value that's less than the given value.
+    /// Returns null if the result is negative infinity.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
@@ -781,8 +781,8 @@ namespace PeterO {
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the smallest value that&apos;s greater than the
-    /// given value. Returns null if the result is positive infinity.</returns>
+    /// <returns>Returns the smallest value that's greater than the given
+    /// value. Returns null if the result is positive infinity.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
@@ -799,9 +799,8 @@ namespace PeterO {
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the next value that is closer to the other object&apos;
-    /// s value than this object&apos;s value. Returns null if the result
-    /// is infinity.</returns>
+    /// <returns>Returns the next value that is closer to the other object'
+    /// s value than this object's value. Returns null if the result is infinity.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
@@ -882,12 +881,12 @@ namespace PeterO {
 
     /// <summary>Compares the mathematical values of this object and another
     /// object.<para> This method is not consistent with the Equals method
-    /// because two different big floating-point numbers with the same mathematical value,
-    /// but different exponents, will compare as equal.</para>
+    /// because two different big floating-point numbers with the same mathematical
+    /// value, but different exponents, will compare as equal.</para>
     /// </summary>
-    /// <returns>Less than 0 if this object&apos;s value is less than the
-    /// other value, or greater than 0 if this object&apos;s value is greater
-    /// than the other value or if &quot; other&quot; is null, or 0 if both values
+    /// <returns>Less than 0 if this object's value is less than the other
+    /// value, or greater than 0 if this object's value is greater than the
+    /// other value or if <paramref name='other'/> is null, or 0 if both values
     /// are equal.</returns>
     /// <param name='other'>A BigFloat object.</param>
     public int CompareTo(
@@ -939,8 +938,8 @@ namespace PeterO {
     /// store the flags resulting from the operation (the flags are in addition
     /// to the pre-existing flags). Can be null, in which case the default
     /// rounding mode is HalfEven.</param>
-    /// <returns>A big floating-point number with the same value as this object but with the
-    /// exponent changed.</returns>
+    /// <returns>A big floating-point number with the same value as this
+    /// object but with the exponent changed.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
     /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The exponent is
@@ -954,8 +953,8 @@ namespace PeterO {
 
     /// <summary>Returns a binary floating-point number with the same value
     /// but a new exponent.</summary>
-    /// <returns>A big floating-point number with the same value as this object but with the
-    /// exponent changed.</returns>
+    /// <returns>A big floating-point number with the same value as this
+    /// object but with the exponent changed.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
     /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The exponent is
@@ -972,15 +971,15 @@ namespace PeterO {
     /// <summary>Returns a binary floating-point number with the same value
     /// as this object but with the same exponent as another binary floating-point
     /// number.</summary>
-    /// <param name='otherValue'>A big floating-point number containing the desired exponent
-    /// of the result. The mantissa is ignored.</param>
+    /// <param name='otherValue'>A big floating-point number containing
+    /// the desired exponent of the result. The mantissa is ignored.</param>
     /// <param name='ctx'>A precision context to control precision and
     /// rounding of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition
     /// to the pre-existing flags). Can be null, in which case the default
     /// rounding mode is HalfEven.</param>
-    /// <returns>A big floating-point number with the same value as this object but with the
-    /// exponent changed.</returns>
+    /// <returns>A big floating-point number with the same value as this
+    /// object but with the exponent changed.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
     /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The new exponent
@@ -999,8 +998,8 @@ namespace PeterO {
     /// store the flags resulting from the operation (the flags are in addition
     /// to the pre-existing flags). Can be null, in which case the default
     /// rounding mode is HalfEven.</param>
-    /// <returns>A big floating-point number with the same value as this object but rounded
-    /// to an integer.</returns>
+    /// <returns>A big floating-point number with the same value as this
+    /// object but rounded to an integer.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
     /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The new exponent
@@ -1021,8 +1020,8 @@ namespace PeterO {
     /// add the FlagRounded and FlagInexact flags (the only difference between
     /// this and RoundToExponentExact). Can be null, in which case the default
     /// rounding mode is HalfEven.</param>
-    /// <returns>A big floating-point number with the same value as this object but rounded
-    /// to an integer.</returns>
+    /// <returns>A big floating-point number with the same value as this
+    /// object but rounded to an integer.</returns>
     /// <exception cref='ArithmeticException'>An overflow error occurred,
     /// or the result can't fit the given precision without rounding.</exception>
     /// <exception cref='System.ArgumentException'>The new exponent
@@ -1073,11 +1072,11 @@ namespace PeterO {
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null, in which case
     /// the default rounding mode is HalfEven.</param>
-    /// <returns>A big floating-point number rounded to the closest value representable
-    /// in the given precision, meaning if the result can&apos;t fit the precision,
-    /// additional digits are discarded to make it fit. If a precision context
-    /// is given, returns null if the result of the rounding overflowed the
-    /// exponent range.</returns>
+    /// <returns>A big floating-point number rounded to the closest value
+    /// representable in the given precision, meaning if the result can't
+    /// fit the precision, additional digits are discarded to make it fit.
+    /// If a precision context is given, returns null if the result of the rounding
+    /// overflowed the exponent range.</returns>
     /// <exception cref='System.ArgumentException'>The new exponent
     /// must be changed when rounding and the new exponent is outside of the
     /// valid range of the precision context, if it defines an exponent range.</exception>
@@ -1095,9 +1094,9 @@ namespace PeterO {
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns>The product of the two big floating-point numbers. If a precision context
-    /// is given, returns null if the result of the rounding overflowed the
-    /// exponent range.</returns>
+    /// <returns>The product of the two big floating-point numbers. If a
+    /// precision context is given, returns null if the result of the rounding
+    /// overflowed the exponent range.</returns>
     public BigFloat Multiply(
       BigFloat op,
       PrecisionContext ctx) {
@@ -1125,11 +1124,11 @@ namespace PeterO {
     /// using the given rounding mode and range of exponent.</summary>
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. Can be null.</param>
-    /// <returns>The closest value to this object&apos;s value, rounded
-    /// to the specified precision. Returns the same value as this object
-    /// if &quot; context&quot; is null or the precision and exponent range
-    /// are unlimited. If a precision context is given, returns null if the
-    /// result of the rounding overflowed the exponent range.</returns>
+    /// <returns>The closest value to this object's value, rounded to the
+    /// specified precision. Returns the same value as this object if " context"
+    /// is null or the precision and exponent range are unlimited. If a precision
+    /// context is given, returns null if the result of the rounding overflowed
+    /// the exponent range.</returns>
     public BigFloat RoundToPrecision(
       PrecisionContext ctx) {
       return math.RoundToPrecision(this, ctx);
@@ -1140,11 +1139,10 @@ namespace PeterO {
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. The precision is interpreted as the maximum
     /// bit length of the mantissa. Can be null.</param>
-    /// <returns>The closest value to this object&apos;s value, rounded
-    /// to the specified precision. Returns the same value as this object
-    /// if &quot; context&quot; is null or the precision and exponent range
-    /// are unlimited. Returns null if the result of the rounding overflowed
-    /// the exponent range.</returns>
+    /// <returns>The closest value to this object's value, rounded to the
+    /// specified precision. Returns the same value as this object if " context"
+    /// is null or the precision and exponent range are unlimited. Returns
+    /// null if the result of the rounding overflowed the exponent range.</returns>
     public BigFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);

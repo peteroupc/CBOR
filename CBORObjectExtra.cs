@@ -193,7 +193,9 @@ namespace PeterO {
       } else if (this.ItemType == CBORObjectTypeBigInteger) {
         if (((BigInteger)this.ThisItem).CompareTo(valueUInt64MaxValue) > 0 ||
             ((BigInteger)this.ThisItem).Sign < 0)
+        {
           throw new OverflowException("This object's value is out of range");
+        }
         return (ulong)BigIntegerToDecimal((BigInteger)this.ThisItem);
       } else if (this.ItemType == CBORObjectTypeSingle) {
         float fltItem = (float)this.ThisItem;

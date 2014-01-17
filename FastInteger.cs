@@ -86,12 +86,12 @@ namespace PeterO {
         if (this.wordCount == 1 && (this.data[0] >> 31) == 0) {
           return (BigInteger)((int)this.data[0]);
         }
-        byte[] bytes = new byte[this.wordCount * 4 + 1];
+        byte[] bytes = new byte[(this.wordCount * 4) + 1];
         for (int i = 0; i < this.wordCount; ++i) {
           bytes[i * 4] = (byte)(this.data[i] & 0xFF);
-          bytes[i * 4 + 1] = (byte)((this.data[i] >> 8) & 0xFF);
-          bytes[i * 4 + 2] = (byte)((this.data[i] >> 16) & 0xFF);
-          bytes[i * 4 + 3] = (byte)((this.data[i] >> 24) & 0xFF);
+          bytes[(i * 4) + 1] = (byte)((this.data[i] >> 8) & 0xFF);
+          bytes[(i * 4) + 2] = (byte)((this.data[i] >> 16) & 0xFF);
+          bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xFF);
         }
         bytes[bytes.Length - 1] = (byte)0;
         return new BigInteger((byte[])bytes);
@@ -299,8 +299,8 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets a value indicating whether this value is even.</summary>
+    /// <value>Whether this value is even.</value>
       public bool IsEvenNumber {
         get {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
@@ -355,9 +355,9 @@ namespace PeterO {
             if (borrow != 0) {
               for (int i = 1; i < this.wordCount; ++i) {
                 u = this.data[i] - borrow;
-                borrow = ((((this.data[i] >> 31) == (u >> 31)) ?
-                           ((this.data[i] & Int32.MaxValue) < (u & Int32.MaxValue)) :
-                           ((this.data[i] >> 31) == 0))) ? 1 : 0;
+                borrow = (((this.data[i] >> 31) == (u >> 31)) ?
+                          ((this.data[i] & Int32.MaxValue) < (u & Int32.MaxValue)) :
+                          ((this.data[i] >> 31) == 0)) ? 1 : 0;
                 this.data[i] = (int)u;
               }
             }
@@ -437,9 +437,9 @@ namespace PeterO {
         return 0;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='augend'> A 32-bit signed integer.</param>
-    /// <returns></returns>
+    /// <summary>Adds a 32-bit signed integer to this instance.</summary>
+    /// <param name='augend'>A 32-bit signed integer.</param>
+    /// <returns>This instance.</returns>
       public MutableNumber Add(int augend) {
         if (augend < 0) {
           throw new ArgumentException("Only positive augends are supported");
@@ -577,12 +577,12 @@ namespace PeterO {
       if (wordCount == 1 && (words[0] >> 31) == 0) {
         return (BigInteger)((int)words[0]);
       }
-      byte[] bytes = new byte[wordCount * 4 + 1];
+      byte[] bytes = new byte[(wordCount * 4) + 1];
       for (int i = 0; i < wordCount; ++i) {
-        bytes[i * 4 + 0] = (byte)(words[i] & 0xFF);
-        bytes[i * 4 + 1] = (byte)((words[i] >> 8) & 0xFF);
-        bytes[i * 4 + 2] = (byte)((words[i] >> 16) & 0xFF);
-        bytes[i * 4 + 3] = (byte)((words[i] >> 24) & 0xFF);
+        bytes[(i * 4) + 0] = (byte)(words[i] & 0xFF);
+        bytes[(i * 4) + 1] = (byte)((words[i] >> 8) & 0xFF);
+        bytes[(i * 4) + 2] = (byte)((words[i] >> 16) & 0xFF);
+        bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xFF);
       }
       bytes[bytes.Length - 1] = (byte)0;
       return new BigInteger((byte[])bytes);

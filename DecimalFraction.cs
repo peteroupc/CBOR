@@ -66,7 +66,7 @@ namespace PeterO {
     }
 
     /// <summary>Calculates this object&apos;s hash code.</summary>
-    /// <returns>This object&apos;s hash code.</returns>
+    /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
       int hashCode = 0;
       unchecked {
@@ -76,7 +76,8 @@ namespace PeterO {
       return hashCode;
     }
     #endregion
-    /// <summary>Creates a decimal fraction with the value exponent*10^mantissa.</summary>
+    /// <summary>Initializes a new instance of the DecimalFraction class.
+    /// Creates a decimal fraction with the value exponent*10^mantissa.</summary>
     /// <param name='mantissa'>The un-scaled value.</param>
     /// <param name='exponent'>The decimal exponent.</param>
     public DecimalFraction(BigInteger mantissa, BigInteger exponent) {
@@ -293,8 +294,7 @@ namespace PeterO {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
-    /// <returns>A decimal fraction with the same value as &quot; flt&quot;
-    /// .</returns>
+    /// <returns>A decimal fraction with the same value as <paramref name='flt'/>.</returns>
     /// <exception cref='OverflowException'>The parameter <paramref
     /// name='flt'/> is infinity or not-a-number.</exception>
     /// <param name='flt'>A 32-bit floating-point number.</param>
@@ -317,8 +317,7 @@ namespace PeterO {
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
-    /// <returns>A decimal fraction with the same value as <paramref name='dbl'/>
-    /// .</returns>
+    /// <returns>A decimal fraction with the same value as <paramref name='dbl'/>.</returns>
     /// <exception cref='OverflowException'>The parameter <paramref
     /// name='dbl'/> is infinity or not-a-number.</exception>
     public static DecimalFraction FromDouble(double dbl) {
@@ -328,7 +327,7 @@ namespace PeterO {
 
     /// <summary>Creates a decimal fraction from an arbitrary-precision
     /// binary floating-point number.</summary>
-    /// <param name='bigfloat'>A bigfloat.</param>
+    /// <param name='bigfloat'>A big floating-point number.</param>
     /// <returns>A DecimalFraction object.</returns>
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
       ExtendedDecimal ed = ExtendedDecimal.FromExtendedFloat(
@@ -766,7 +765,7 @@ namespace PeterO {
     /// if the quotient, rounded down, is even, and the result's absolute
     /// value is half of the divisor's absolute value.</item>
     /// </list>
-    /// This function is also known as the "IEEE Remainder" function. </summary>
+    /// This function is also known as the "IEEE Remainder" function.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision.
     /// The rounding and exponent range settings of this context are ignored
@@ -790,8 +789,8 @@ namespace PeterO {
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the largest value that&apos;s less than the given
-    /// value. Returns null if the result is negative infinity.</returns>
+    /// <returns>Returns the largest value that's less than the given value.
+    /// Returns null if the result is negative infinity.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
@@ -807,8 +806,8 @@ namespace PeterO {
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the smallest value that&apos;s greater than the
-    /// given value. Returns null if the result is positive infinity.</returns>
+    /// <returns>Returns the smallest value that's greater than the given
+    /// value. Returns null if the result is positive infinity.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
@@ -825,9 +824,8 @@ namespace PeterO {
     /// and exponent range of the result. The rounding mode from this context
     /// is ignored. No flags will be set from this operation even if HasFlags
     /// of the context is true.</param>
-    /// <returns>Returns the next value that is closer to the other object&apos;
-    /// s value than this object&apos;s value. Returns null if the result
-    /// is infinity.</returns>
+    /// <returns>Returns the next value that is closer to the other object'
+    /// s value than this object's value. Returns null if the result is infinity.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
@@ -909,9 +907,9 @@ namespace PeterO {
     /// because two different decimal fractions with the same mathematical
     /// value, but different exponents, will compare as equal.</para>
     /// </summary>
-    /// <returns>Less than 0 if this object&apos;s value is less than the
-    /// other value, or greater than 0 if this object&apos;s value is greater
-    /// than the other value or if &quot; other&quot; is null, or 0 if both values
+    /// <returns>Less than 0 if this object's value is less than the other
+    /// value, or greater than 0 if this object's value is greater than the
+    /// other value or if <paramref name='other'/> is null, or 0 if both values
     /// are equal.</returns>
     /// <param name='other'>A DecimalFraction object.</param>
     public int CompareTo(
@@ -1096,7 +1094,7 @@ namespace PeterO {
     /// are in addition to the pre-existing flags). Can be null, in which case
     /// the default rounding mode is HalfEven.</param>
     /// <returns>A decimal fraction rounded to the closest value representable
-    /// in the given precision, meaning if the result can&apos;t fit the precision,
+    /// in the given precision, meaning if the result can't fit the precision,
     /// additional digits are discarded to make it fit. If a precision context
     /// is given, returns null if the result of the rounding overflowed the
     /// exponent range.</returns>
@@ -1146,11 +1144,11 @@ namespace PeterO {
     /// using the given rounding mode and range of exponent.</summary>
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. Can be null.</param>
-    /// <returns>The closest value to this object&apos;s value, rounded
-    /// to the specified precision. Returns the same value as this object
-    /// if &quot; context&quot; is null or the precision and exponent range
-    /// are unlimited. If a precision context is given, returns null if the
-    /// result of the rounding overflowed the exponent range.</returns>
+    /// <returns>The closest value to this object's value, rounded to the
+    /// specified precision. Returns the same value as this object if " context"
+    /// is null or the precision and exponent range are unlimited. If a precision
+    /// context is given, returns null if the result of the rounding overflowed
+    /// the exponent range.</returns>
     public DecimalFraction RoundToPrecision(
       PrecisionContext ctx) {
       return math.RoundToPrecision(this, ctx);
@@ -1161,11 +1159,10 @@ namespace PeterO {
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. The precision is interpreted as the maximum
     /// bit length of the mantissa. Can be null.</param>
-    /// <returns>The closest value to this object&apos;s value, rounded
-    /// to the specified precision. Returns the same value as this object
-    /// if &quot; context&quot; is null or the precision and exponent range
-    /// are unlimited. Returns null if the result of the rounding overflowed
-    /// the exponent range.</returns>
+    /// <returns>The closest value to this object's value, rounded to the
+    /// specified precision. Returns the same value as this object if " context"
+    /// is null or the precision and exponent range are unlimited. Returns
+    /// null if the result of the rounding overflowed the exponent range.</returns>
     public DecimalFraction RoundToBinaryPrecision(
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);

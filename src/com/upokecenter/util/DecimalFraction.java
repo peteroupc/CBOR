@@ -71,7 +71,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Calculates this object&apos;s hash code.
-     * @return This object&apos;s hash code.
+     * @return This object's hash code.
      */
     @Override public int hashCode() {
       int hashCode_ = 0;
@@ -83,7 +83,8 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Creates a decimal fraction with the value exponent*10^mantissa.
+     * Initializes a new instance of the DecimalFraction class. Creates
+     * a decimal fraction with the value exponent*10^mantissa.
      * @param mantissa The un-scaled value.
      * @param exponent The decimal exponent.
      */
@@ -334,8 +335,7 @@ bigrem=divrem[1]; }
      * not an approximation, as is often the case by converting the number
      * to a string.
      * @param flt A 32-bit floating-point number.
-     * @return A decimal fraction with the same value as &quot; flt&quot;
-     * .
+     * @return A decimal fraction with the same value as "flt".
      * @throws ArithmeticException The parameter "flt" is infinity or not-a-number.
      */
     public static DecimalFraction FromSingle(float flt) {
@@ -358,8 +358,7 @@ bigrem=divrem[1]; }
      * not an approximation, as is often the case by converting the number
      * to a string.
      * @param dbl A 64-bit floating-point number.
-     * @return A decimal fraction with the same value as &quot; dbl&quot;
-     * .
+     * @return A decimal fraction with the same value as "dbl".
      * @throws ArithmeticException The parameter "dbl" is infinity or not-a-number.
      */
     public static DecimalFraction FromDouble(double dbl) {
@@ -370,7 +369,7 @@ bigrem=divrem[1]; }
     /**
      * Creates a decimal fraction from an arbitrary-precision binary floating-point
      * number.
-     * @param bigfloat A bigfloat.
+     * @param bigfloat A big floating-point number.
      * @return A DecimalFraction object.
      */
     public static DecimalFraction FromBigFloat(BigFloat bigfloat) {
@@ -538,7 +537,7 @@ bigrem=divrem[1]; }
       DecimalFraction divisor,
       PrecisionContext ctx) {
       return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null) .Multiply(divisor, null),
+        this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null),
         ctx);
     }
 
@@ -844,8 +843,8 @@ bigrem=divrem[1]; }
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the largest value that&apos;s less than the given
-     * value. Returns null if the result is negative infinity.
+     * @return Returns the largest value that's less than the given value.
+     * Returns null if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
      * the precision is 0, or "ctx" has an unlimited exponent range.
      */
@@ -860,8 +859,8 @@ bigrem=divrem[1]; }
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the smallest value that&apos;s greater than the
-     * given value. Returns null if the result is positive infinity.
+     * @return Returns the smallest value that's greater than the given
+     * value. Returns null if the result is positive infinity.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
      * the precision is 0, or "ctx" has an unlimited exponent range.
      */
@@ -878,9 +877,8 @@ bigrem=divrem[1]; }
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the next value that is closer to the other object&apos;
-     * s value than this object&apos;s value. Returns null if the result
-     * is infinity.
+     * @return Returns the next value that is closer to the other object'
+     * s value than this object's value. Returns null if the result is infinity.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
      * the precision is 0, or "ctx" has an unlimited exponent range.
      */
@@ -970,10 +968,9 @@ bigrem=divrem[1]; }
      * decimal fractions with the same mathematical value, but different
      * exponents, will compare as equal.</p>
      * @param other A DecimalFraction object.
-     * @return Less than 0 if this object&apos;s value is less than the other
-     * value, or greater than 0 if this object&apos;s value is greater than
-     * the other value or if &quot; other&quot; is null, or 0 if both values
-     * are equal.
+     * @return Less than 0 if this object's value is less than the other value,
+     * or greater than 0 if this object's value is greater than the other value
+     * or if "other" is null, or 0 if both values are equal.
      */
     public int compareTo(
       DecimalFraction other) {
@@ -1171,7 +1168,7 @@ bigrem=divrem[1]; }
      * addition to the pre-existing flags). Can be null, in which case the
      * default rounding mode is HalfEven.
      * @return A decimal fraction rounded to the closest value representable
-     * in the given precision, meaning if the result can&apos;t fit the precision,
+     * in the given precision, meaning if the result can't fit the precision,
      * additional digits are discarded to make it fit. If a precision context
      * is given, returns null if the result of the rounding overflowed the
      * exponent range.
@@ -1227,11 +1224,11 @@ bigrem=divrem[1]; }
      * rounding mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
-     * @return The closest value to this object&apos;s value, rounded to
-     * the specified precision. Returns the same value as this object if
-     * &quot; context&quot; is null or the precision and exponent range
-     * are unlimited. If a precision context is given, returns null if the
-     * result of the rounding overflowed the exponent range.
+     * @return The closest value to this object's value, rounded to the specified
+     * precision. Returns the same value as this object if " context" is null
+     * or the precision and exponent range are unlimited. If a precision
+     * context is given, returns null if the result of the rounding overflowed
+     * the exponent range.
      */
     public DecimalFraction RoundToPrecision(
       PrecisionContext ctx) {
@@ -1244,11 +1241,10 @@ bigrem=divrem[1]; }
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. The precision is interpreted as the maximum bit
      * length of the mantissa. Can be null.
-     * @return The closest value to this object&apos;s value, rounded to
-     * the specified precision. Returns the same value as this object if
-     * &quot; context&quot; is null or the precision and exponent range
-     * are unlimited. Returns null if the result of the rounding overflowed
-     * the exponent range.
+     * @return The closest value to this object's value, rounded to the specified
+     * precision. Returns the same value as this object if " context" is null
+     * or the precision and exponent range are unlimited. Returns null if
+     * the result of the rounding overflowed the exponent range.
      */
     public DecimalFraction RoundToBinaryPrecision(
       PrecisionContext ctx) {

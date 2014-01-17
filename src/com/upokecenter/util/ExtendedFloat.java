@@ -44,7 +44,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * Gets the absolute value of this object&apos;s unscaled value.
+     * Gets the absolute value of this object&apos;s un-scaled value.
      */
     public BigInteger getUnsignedMantissa() {
         return this.unsignedMantissa;
@@ -94,14 +94,14 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Calculates this object&apos;s hash code.
-     * @return This object&apos;s hash code.
+     * @return This object's hash code.
      */
     @Override public int hashCode() {
       int hashCode_ = 0;
       {
-        hashCode_ = hashCode_ + 1000000007 * this.exponent.hashCode();
-        hashCode_ = hashCode_ + 1000000009 * this.unsignedMantissa.hashCode();
-        hashCode_ = hashCode_ + 1000000009 * this.flags;
+        hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
+        hashCode_ = hashCode_ + (1000000009 * this.unsignedMantissa.hashCode());
+        hashCode_ = hashCode_ + (1000000009 * this.flags);
       }
       return hashCode_;
     }
@@ -150,7 +150,7 @@ at: http://peteroupc.github.io/CBOR/
      * decimal point after the first digit and before the last digit.</li>
      * <li> Optionally, E+ (positive exponent) or E- (negative exponent)
      * plus one or more digits specifying the exponent.</li> </ul> </p>
-     * <p>The string can also be "-INF", "-Infinity", "Infinity", "Inf",
+     * <p>The string can also be "-INF", "-Infinity", "Infinity", "INF",
      * quiet NaN ("qNaN") followed by any number of digits, or signaling
      * NaN ("sNaN") followed by any number of digits, all in any combination
      * of upper and lower case.</p> <p> The format generally follows the
@@ -550,8 +550,7 @@ at: http://peteroupc.github.io/CBOR/
         }
         if (this.IsQuietNaN()) {
           nan[1] |= 0x80000;
-        }  // the quiet bit for X86 at least
-        else {
+  } else {
           // not really the signaling bit, but done to keep
           // the mantissa from being zero
           nan[1] |= 0x40000;
@@ -667,22 +666,22 @@ at: http://peteroupc.github.io/CBOR/
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param flt A 32-bit floating-point number.
-     * @return A binary float with the same value as &quot; flt&quot; .
+     * @return A binary float with the same value as "flt".
      */
     public static ExtendedFloat FromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
       boolean neg = (value >> 31) != 0;
       int floatExponent = (int)((value >> 23) & 0xFF);
-      int fpMantissa = value & 0x7FFFFF;
+      int valueFpMantissa = value & 0x7FFFFF;
       BigInteger bigmant;
       if (floatExponent == 255) {
-        if (fpMantissa == 0) {
+        if (valueFpMantissa == 0) {
           return neg ? NegativeInfinity : PositiveInfinity;
         }
         // Treat high bit of mantissa as quiet/signaling bit
-        boolean quiet = (fpMantissa & 0x400000) != 0;
-        fpMantissa &= 0x1FFFFF;
-        bigmant = BigInteger.valueOf(fpMantissa);
+        boolean quiet = (valueFpMantissa & 0x400000) != 0;
+        valueFpMantissa &= 0x1FFFFF;
+        bigmant = BigInteger.valueOf(valueFpMantissa);
         bigmant=bigmant.subtract(BigInteger.ONE);
         if (bigmant.signum()==0) {
           return quiet ? NaN : SignalingNaN;
@@ -696,19 +695,19 @@ at: http://peteroupc.github.io/CBOR/
       if (floatExponent == 0) {
         floatExponent++;
       } else {
-        fpMantissa |= 1 << 23;
+        valueFpMantissa |= 1 << 23;
       }
-      if (fpMantissa == 0) {
+      if (valueFpMantissa == 0) {
         return neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
       }
-      while ((fpMantissa & 1) == 0) {
+      while ((valueFpMantissa & 1) == 0) {
         floatExponent++;
-        fpMantissa >>= 1;
+        valueFpMantissa >>= 1;
       }
       if (neg) {
-        fpMantissa = -fpMantissa;
+        valueFpMantissa = -valueFpMantissa;
       }
-      bigmant = BigInteger.valueOf(fpMantissa);
+      bigmant = BigInteger.valueOf(valueFpMantissa);
       return ExtendedFloat.Create(
         bigmant,
         BigInteger.valueOf(floatExponent - 150));
@@ -729,7 +728,7 @@ at: http://peteroupc.github.io/CBOR/
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param dbl A 64-bit floating-point number.
-     * @return A binary float with the same value as &quot; dbl&quot; .
+     * @return A binary float with the same value as "dbl".
      */
     public static ExtendedFloat FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
@@ -1041,7 +1040,7 @@ at: http://peteroupc.github.io/CBOR/
       ExtendedFloat divisor,
       PrecisionContext ctx) {
       return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null) .Multiply(divisor, null),
+        this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null),
         ctx);
     }
 
@@ -1301,7 +1300,7 @@ at: http://peteroupc.github.io/CBOR/
      * will be set to 0. Signals FlagDivideByZero and returns infinity if
      * the divisor is 0 and the dividend is nonzero. Signals FlagInvalid
      * and returns NaN if the divisor and the dividend are 0, or if the result
-     * doesn&apos;t fit the given precision.
+     * doesn't fit the given precision.
      */
     public ExtendedFloat DivideToIntegerZeroScale(
       ExtendedFloat divisor,
@@ -1347,8 +1346,7 @@ at: http://peteroupc.github.io/CBOR/
      * flags). Can be null.
      * @return The distance of the closest multiple. Signals FlagInvalidOperation
      * and returns NaN if the divisor is 0, or either the result of integer
-     * division (the quotient) or the remainder wouldn&apos;t fit the given
-     * precision.
+     * division (the quotient) or the remainder wouldn't fit the given precision.
      */
     public ExtendedFloat RemainderNear(
       ExtendedFloat divisor,
@@ -1363,8 +1361,8 @@ at: http://peteroupc.github.io/CBOR/
      * is ignored. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags).
-     * @return Returns the largest value that&apos;s less than the given
-     * value. Returns negative infinity if the result is negative infinity.
+     * @return Returns the largest value that's less than the given value.
+     * Returns negative infinity if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
      * the precision is 0, or "ctx" has an unlimited exponent range.
      */
@@ -1380,8 +1378,8 @@ at: http://peteroupc.github.io/CBOR/
      * is ignored. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags).
-     * @return Returns the smallest value that&apos;s greater than the
-     * given value.
+     * @return Returns the smallest value that's greater than the given
+     * value.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
      * the precision is 0, or "ctx" has an unlimited exponent range.
      */
@@ -1399,8 +1397,8 @@ at: http://peteroupc.github.io/CBOR/
      * is ignored. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags).
-     * @return Returns the next value that is closer to the other object&apos;
-     * s value than this object&apos;s value.
+     * @return Returns the next value that is closer to the other object'
+     * s value than this object's value.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
      * the precision is 0, or "ctx" has an unlimited exponent range.
      */
@@ -1541,10 +1539,9 @@ at: http://peteroupc.github.io/CBOR/
      * than any other number, including infinity. Two different NaN values
      * will be considered equal.</p>
      * @param other An ExtendedFloat object.
-     * @return Less than 0 if this object&apos;s value is less than the other
-     * value, or greater than 0 if this object&apos;s value is greater than
-     * the other value or if &quot; other&quot; is null, or 0 if both values
-     * are equal.
+     * @return Less than 0 if this object's value is less than the other value,
+     * or greater than 0 if this object's value is greater than the other value
+     * or if "other" is null, or 0 if both values are equal.
      */
     public int compareTo(
       ExtendedFloat other) {
@@ -1615,7 +1612,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A PrecisionContext object.
      * @return A binary float with the same value as this object but with the
      * exponent changed. Signals FlagInvalid and returns NaN if an overflow
-     * error occurred, or the rounded result can&apos;t fit the given precision,
+     * error occurred, or the rounded result can't fit the given precision,
      * or if the context defines an exponent range and the given exponent
      * is outside that range.
      */
@@ -1631,7 +1628,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A PrecisionContext object.
      * @return A binary float with the same value as this object but with the
      * exponent changed. Signals FlagInvalid and returns NaN if an overflow
-     * error occurred, or the rounded result can&apos;t fit the given precision,
+     * error occurred, or the rounded result can't fit the given precision,
      * or if the context defines an exponent range and the given exponent
      * is outside that range.
      */
@@ -1658,10 +1655,10 @@ at: http://peteroupc.github.io/CBOR/
      * mode is HalfEven.
      * @return A binary float with the same value as this object but with the
      * exponent changed. Signals FlagInvalid and returns NaN if an overflow
-     * error occurred, or the result can&apos;t fit the given precision
-     * without rounding. Signals FlagInvalid and returns NaN if the new
-     * exponent is outside of the valid range of the precision context, if
-     * it defines an exponent range.
+     * error occurred, or the result can't fit the given precision without
+     * rounding. Signals FlagInvalid and returns NaN if the new exponent
+     * is outside of the valid range of the precision context, if it defines
+     * an exponent range.
      */
     public ExtendedFloat Quantize(
       ExtendedFloat otherValue,
@@ -1679,10 +1676,10 @@ at: http://peteroupc.github.io/CBOR/
      * mode is HalfEven.
      * @return A binary float with the same value as this object but rounded
      * to an integer. Signals FlagInvalid and returns NaN if an overflow
-     * error occurred, or the result can&apos;t fit the given precision
-     * without rounding. Signals FlagInvalid and returns NaN if the new
-     * exponent must be changed to 0 when rounding and 0 is outside of the valid
-     * range of the precision context, if it defines an exponent range.
+     * error occurred, or the result can't fit the given precision without
+     * rounding. Signals FlagInvalid and returns NaN if the new exponent
+     * must be changed to 0 when rounding and 0 is outside of the valid range
+     * of the precision context, if it defines an exponent range.
      */
     public ExtendedFloat RoundToIntegralExact(
       PrecisionContext ctx) {
@@ -1701,10 +1698,10 @@ at: http://peteroupc.github.io/CBOR/
      * rounding mode is HalfEven.
      * @return A binary float with the same value as this object but rounded
      * to an integer. Signals FlagInvalid and returns NaN if an overflow
-     * error occurred, or the result can&apos;t fit the given precision
-     * without rounding. Signals FlagInvalid and returns NaN if the new
-     * exponent must be changed to 0 when rounding and 0 is outside of the valid
-     * range of the precision context, if it defines an exponent range.
+     * error occurred, or the result can't fit the given precision without
+     * rounding. Signals FlagInvalid and returns NaN if the new exponent
+     * must be changed to 0 when rounding and 0 is outside of the valid range
+     * of the precision context, if it defines an exponent range.
      */
     public ExtendedFloat RoundToIntegralNoRoundedFlag(
       PrecisionContext ctx) {
@@ -1718,10 +1715,10 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A PrecisionContext object.
      * @return A binary float with the same value as this object but rounded
      * to an integer. Signals FlagInvalid and returns NaN if an overflow
-     * error occurred, or the result can&apos;t fit the given precision
-     * without rounding. Signals FlagInvalid and returns NaN if the new
-     * exponent is outside of the valid range of the precision context, if
-     * it defines an exponent range.
+     * error occurred, or the result can't fit the given precision without
+     * rounding. Signals FlagInvalid and returns NaN if the new exponent
+     * is outside of the valid range of the precision context, if it defines
+     * an exponent range.
      */
     public ExtendedFloat RoundToExponentExact(
       BigInteger exponent,
@@ -1744,7 +1741,7 @@ at: http://peteroupc.github.io/CBOR/
      * addition to the pre-existing flags). Can be null, in which case the
      * default rounding mode is HalfEven.
      * @return A binary float rounded to the closest value representable
-     * in the given precision, meaning if the result can&apos;t fit the precision,
+     * in the given precision, meaning if the result can't fit the precision,
      * additional digits are discarded to make it fit. Signals FlagInvalid
      * and returns NaN if the new exponent must be changed when rounding and
      * the new exponent is outside of the valid range of the precision context,
@@ -1821,10 +1818,9 @@ at: http://peteroupc.github.io/CBOR/
      * rounding mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
-     * @return The closest value to this object&apos;s value, rounded to
-     * the specified precision. Returns the same value as this object if
-     * &quot; context&quot; is null or the precision and exponent range
-     * are unlimited.
+     * @return The closest value to this object's value, rounded to the specified
+     * precision. Returns the same value as this object if "ctx" is null or
+     * the precision and exponent range are unlimited.
      */
     public ExtendedFloat RoundToPrecision(
       PrecisionContext ctx) {
@@ -1837,10 +1833,9 @@ at: http://peteroupc.github.io/CBOR/
      * to positive zero.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
-     * @return The closest value to this object&apos;s value, rounded to
-     * the specified precision. Returns the same value as this object if
-     * &quot; context&quot; is null or the precision and exponent range
-     * are unlimited.
+     * @return The closest value to this object's value, rounded to the specified
+     * precision. Returns the same value as this object if "ctx" is null or
+     * the precision and exponent range are unlimited.
      */
     public ExtendedFloat Plus(
       PrecisionContext ctx) {
@@ -1853,10 +1848,9 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. The precision is interpreted as the maximum bit
      * length of the mantissa. Can be null.
-     * @return The closest value to this object&apos;s value, rounded to
-     * the specified precision. Returns the same value as this object if
-     * &quot; context&quot; is null or the precision and exponent range
-     * are unlimited.
+     * @return The closest value to this object's value, rounded to the specified
+     * precision. Returns the same value as this object if "ctx" is null or
+     * the precision and exponent range are unlimited.
      */
     public ExtendedFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
@@ -1873,7 +1867,7 @@ at: http://peteroupc.github.io/CBOR/
      * exact for many inputs.--.
      * @return The square root. Signals the flag FlagInvalid and returns
      * NaN if this object is less than 0 (the result would be a complex number
-     * with a real part of 0 and an imaginary part of this object&apos;s absolute
+     * with a real part of 0 and an imaginary part of this object's absolute
      * value, but the return value is still NaN).
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
      * the precision range is unlimited.
@@ -1889,9 +1883,10 @@ at: http://peteroupc.github.io/CBOR/
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). --This parameter cannot be
-     * null, as the exp function&apos;s results are generally not exact.--.
-     * @return Exp(this object). If this object&apos;s value is 1, returns
-     * an approximation to &quot; e&quot; within the given precision.
+     * null, as the exponential function&apos;s results are generally
+     * not exact.--.
+     * @return Exponential of this object. If this object's value is 1, returns
+     * an approximation to " e" within the given precision.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
      * the precision range is unlimited.
      */
@@ -1910,8 +1905,8 @@ at: http://peteroupc.github.io/CBOR/
      * null, as the ln function&apos;s results are generally not exact.--.
      * @return Ln(this object). Signals the flag FlagInvalid and returns
      * NaN if this object is less than 0 (the result would be a complex number
-     * with a real part equal to Ln of this object&apos;s absolute value and
-     * an imaginary part equal to pi, but the return value is still NaN.).
+     * with a real part equal to Ln of this object's absolute value and an imaginary
+     * part equal to pi, but the return value is still NaN.).
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
      * the precision range is unlimited.
      */

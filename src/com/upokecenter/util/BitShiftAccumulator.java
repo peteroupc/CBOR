@@ -10,6 +10,8 @@ at: http://peteroupc.github.io/CBOR/
 // import java.math.*;
 
   final class BitShiftAccumulator implements IShiftAccumulator {
+    private static final int SmallBitLength = 32;
+
     private int bitLeftmost;
 
     /**
@@ -20,7 +22,6 @@ at: http://peteroupc.github.io/CBOR/
 }
 
     private int bitsAfterLeftmost;
-    private static final int SmallBitLength = 32;
 
     /**
      * Gets a value indicating whether any of the discarded bits to the right
@@ -95,7 +96,7 @@ at: http://peteroupc.github.io/CBOR/
     private FastInteger discardedBitCount;
 
     /**
-     * Not documented yet.
+     * Gets the number of digits discarded.
      */
     public FastInteger getDiscardedDigitCount() {
  return this.discardedBitCount;
@@ -271,13 +272,11 @@ int olderDiscarded) {
       }
     }
 
-    /**
-     * Shifts a number until it reaches the given number of bits, gathering
-     * information on whether the last bit discarded is set and whether the
-     * discarded bits to the right of that bit are set. Assumes that the big
-     * integer being shifted is positive.
-     */
     private void ShiftBigToBits(int bits) {
+    // Shifts a number until it reaches the given number of bits,
+    // gathering information on whether the last bit discarded is set and
+    // whether the discarded bits to the right of that bit are set. Assumes
+    // that the big integer being shifted is positive.
       byte[] bytes = this.shiftedBigInt.toByteArray(true);
       this.knownBitLength = ByteArrayBitLength(bytes);
       // Shift by the difference in bit length

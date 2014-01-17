@@ -50,7 +50,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets the absolute value of this object&apos;s unscaled
+    /// <summary>Gets the absolute value of this object&apos;s un-scaled
     /// value.</summary>
     /// <value>The absolute value of this object&apos;s un-scaled value.</value>
     public BigInteger UnsignedMantissa {
@@ -98,13 +98,13 @@ namespace PeterO {
     }
 
     /// <summary>Calculates this object&apos;s hash code.</summary>
-    /// <returns>This object&apos;s hash code.</returns>
+    /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
       int hashCode = 0;
       unchecked {
-        hashCode = hashCode + 1000000007 * this.exponent.GetHashCode();
-        hashCode = hashCode + 1000000009 * this.unsignedMantissa.GetHashCode();
-        hashCode = hashCode + 1000000009 * this.flags;
+        hashCode = hashCode + (1000000007 * this.exponent.GetHashCode());
+        hashCode = hashCode + (1000000009 * this.unsignedMantissa.GetHashCode());
+        hashCode = hashCode + (1000000009 * this.flags);
       }
       return hashCode;
     }
@@ -154,7 +154,7 @@ namespace PeterO {
     /// plus one or more digits specifying the exponent.</item>
     /// </list>
     /// </para>
-    /// <para>The string can also be "-INF", "-Infinity", "Infinity", "Inf",
+    /// <para>The string can also be "-INF", "-Infinity", "Infinity", "INF",
     /// quiet NaN ("qNaN") followed by any number of digits, or signaling
     /// NaN ("sNaN") followed by any number of digits, all in any combination
     /// of upper and lower case.</para>
@@ -527,8 +527,7 @@ namespace PeterO {
         }
         if (this.IsQuietNaN()) {
           nan[1] |= 0x80000;
-        }
-        else {
+  } else {
           // not really the signaling bit, but done to keep
           // the mantissa from being zero
           nan[1] |= 0x40000;
@@ -642,22 +641,22 @@ namespace PeterO {
     /// This method computes the exact value of the floating point number,
     /// not an approximation, as is often the case by converting the number
     /// to a string.</summary>
-    /// <returns>A binary float with the same value as &quot; flt&quot; .</returns>
+    /// <returns>A binary float with the same value as <paramref name='flt'/>.</returns>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     public static ExtendedFloat FromSingle(float flt) {
       int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
       bool neg = (value >> 31) != 0;
       int floatExponent = (int)((value >> 23) & 0xFF);
-      int fpMantissa = value & 0x7FFFFF;
+      int valueFpMantissa = value & 0x7FFFFF;
       BigInteger bigmant;
       if (floatExponent == 255) {
-        if (fpMantissa == 0) {
+        if (valueFpMantissa == 0) {
           return neg ? NegativeInfinity : PositiveInfinity;
         }
         // Treat high bit of mantissa as quiet/signaling bit
-        bool quiet = (fpMantissa & 0x400000) != 0;
-        fpMantissa &= 0x1FFFFF;
-        bigmant = (BigInteger)fpMantissa;
+        bool quiet = (valueFpMantissa & 0x400000) != 0;
+        valueFpMantissa &= 0x1FFFFF;
+        bigmant = (BigInteger)valueFpMantissa;
         bigmant -= BigInteger.One;
         if (bigmant.IsZero) {
           return quiet ? NaN : SignalingNaN;
@@ -671,19 +670,19 @@ namespace PeterO {
       if (floatExponent == 0) {
         floatExponent++;
       } else {
-        fpMantissa |= 1 << 23;
+        valueFpMantissa |= 1 << 23;
       }
-      if (fpMantissa == 0) {
+      if (valueFpMantissa == 0) {
         return neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
       }
-      while ((fpMantissa & 1) == 0) {
+      while ((valueFpMantissa & 1) == 0) {
         floatExponent++;
-        fpMantissa >>= 1;
+        valueFpMantissa >>= 1;
       }
       if (neg) {
-        fpMantissa = -fpMantissa;
+        valueFpMantissa = -valueFpMantissa;
       }
-      bigmant = (BigInteger)fpMantissa;
+      bigmant = (BigInteger)valueFpMantissa;
       return ExtendedFloat.Create(
         bigmant,
         (BigInteger)(floatExponent - 150));
@@ -703,7 +702,7 @@ namespace PeterO {
     /// not an approximation, as is often the case by converting the number
     /// to a string.</summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
-    /// <returns>A binary float with the same value as <paramref name='dbl'/> .</returns>
+    /// <returns>A binary float with the same value as <paramref name='dbl'/>.</returns>
     public static ExtendedFloat FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
       int floatExponent = (int)((value[1] >> 20) & 0x7ff);
@@ -1237,7 +1236,7 @@ namespace PeterO {
     /// exponent will be set to 0. Signals FlagDivideByZero and returns infinity
     /// if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid
     /// and returns NaN if the divisor and the dividend are 0, or if the result
-    /// doesn&apos;t fit the given precision.</returns>
+    /// doesn't fit the given precision.</returns>
     public ExtendedFloat DivideToIntegerZeroScale(
       ExtendedFloat divisor,
       PrecisionContext ctx) {
@@ -1271,7 +1270,7 @@ namespace PeterO {
     /// if the quotient, rounded down, is even, and the result's absolute
     /// value is half of the divisor's absolute value.</item>
     /// </list>
-    /// This function is also known as the "IEEE Remainder" function. </summary>
+    /// This function is also known as the "IEEE Remainder" function.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision.
     /// The rounding and exponent range settings of this context are ignored
@@ -1280,8 +1279,7 @@ namespace PeterO {
     /// (the flags are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The distance of the closest multiple. Signals FlagInvalidOperation
     /// and returns NaN if the divisor is 0, or either the result of integer
-    /// division (the quotient) or the remainder wouldn&apos;t fit the given
-    /// precision.</returns>
+    /// division (the quotient) or the remainder wouldn't fit the given precision.</returns>
     public ExtendedFloat RemainderNear(
       ExtendedFloat divisor,
       PrecisionContext ctx) {
@@ -1295,8 +1293,8 @@ namespace PeterO {
     /// is ignored. If HasFlags of the context is true, will also store the
     /// flags resulting from the operation (the flags are in addition to the
     /// pre-existing flags).</param>
-    /// <returns>Returns the largest value that&apos;s less than the given
-    /// value. Returns negative infinity if the result is negative infinity.</returns>
+    /// <returns>Returns the largest value that's less than the given value.
+    /// Returns negative infinity if the result is negative infinity.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
@@ -1313,8 +1311,8 @@ namespace PeterO {
     /// is ignored. If HasFlags of the context is true, will also store the
     /// flags resulting from the operation (the flags are in addition to the
     /// pre-existing flags).</param>
-    /// <returns>Returns the smallest value that&apos;s greater than the
-    /// given value.</returns>
+    /// <returns>Returns the smallest value that's greater than the given
+    /// value.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
@@ -1332,8 +1330,8 @@ namespace PeterO {
     /// is ignored. If HasFlags of the context is true, will also store the
     /// flags resulting from the operation (the flags are in addition to the
     /// pre-existing flags).</param>
-    /// <returns>Returns the next value that is closer to the other object&apos;
-    /// s value than this object&apos;s value.</returns>
+    /// <returns>Returns the next value that is closer to the other object'
+    /// s value than this object's value.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
@@ -1459,9 +1457,9 @@ namespace PeterO {
     /// greater than any other number, including infinity. Two different
     /// NaN values will be considered equal.</para>
     /// </summary>
-    /// <returns>Less than 0 if this object&apos;s value is less than the
-    /// other value, or greater than 0 if this object&apos;s value is greater
-    /// than the other value or if &quot; other&quot; is null, or 0 if both values
+    /// <returns>Less than 0 if this object's value is less than the other
+    /// value, or greater than 0 if this object's value is greater than the
+    /// other value or if <paramref name='other'/> is null, or 0 if both values
     /// are equal.</returns>
     /// <param name='other'>An ExtendedFloat object.</param>
     public int CompareTo(
@@ -1528,7 +1526,7 @@ namespace PeterO {
     /// <summary>Returns a binary float with the same value but a new exponent.</summary>
     /// <returns>A binary float with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the rounded result can&apos;t fit the given precision,
+    /// error occurred, or the rounded result can't fit the given precision,
     /// or if the context defines an exponent range and the given exponent
     /// is outside that range.</returns>
     /// <param name='desiredExponent'>A BigInteger object.</param>
@@ -1542,7 +1540,7 @@ namespace PeterO {
     /// <summary>Returns a binary float with the same value but a new exponent.</summary>
     /// <returns>A binary float with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the rounded result can&apos;t fit the given precision,
+    /// error occurred, or the rounded result can't fit the given precision,
     /// or if the context defines an exponent range and the given exponent
     /// is outside that range.</returns>
     /// <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
@@ -1569,10 +1567,10 @@ namespace PeterO {
     /// rounding mode is HalfEven.</param>
     /// <returns>A binary float with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the result can&apos;t fit the given precision
-    /// without rounding. Signals FlagInvalid and returns NaN if the new
-    /// exponent is outside of the valid range of the precision context, if
-    /// it defines an exponent range.</returns>
+    /// error occurred, or the result can't fit the given precision without
+    /// rounding. Signals FlagInvalid and returns NaN if the new exponent
+    /// is outside of the valid range of the precision context, if it defines
+    /// an exponent range.</returns>
     public ExtendedFloat Quantize(
       ExtendedFloat otherValue,
       PrecisionContext ctx) {
@@ -1588,10 +1586,10 @@ namespace PeterO {
     /// rounding mode is HalfEven.</param>
     /// <returns>A binary float with the same value as this object but rounded
     /// to an integer. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the result can&apos;t fit the given precision
-    /// without rounding. Signals FlagInvalid and returns NaN if the new
-    /// exponent must be changed to 0 when rounding and 0 is outside of the valid
-    /// range of the precision context, if it defines an exponent range.</returns>
+    /// error occurred, or the result can't fit the given precision without
+    /// rounding. Signals FlagInvalid and returns NaN if the new exponent
+    /// must be changed to 0 when rounding and 0 is outside of the valid range
+    /// of the precision context, if it defines an exponent range.</returns>
     public ExtendedFloat RoundToIntegralExact(
       PrecisionContext ctx) {
       return math.RoundToExponentExact(this, BigInteger.Zero, ctx);
@@ -1609,10 +1607,10 @@ namespace PeterO {
     /// rounding mode is HalfEven.</param>
     /// <returns>A binary float with the same value as this object but rounded
     /// to an integer. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the result can&apos;t fit the given precision
-    /// without rounding. Signals FlagInvalid and returns NaN if the new
-    /// exponent must be changed to 0 when rounding and 0 is outside of the valid
-    /// range of the precision context, if it defines an exponent range.</returns>
+    /// error occurred, or the result can't fit the given precision without
+    /// rounding. Signals FlagInvalid and returns NaN if the new exponent
+    /// must be changed to 0 when rounding and 0 is outside of the valid range
+    /// of the precision context, if it defines an exponent range.</returns>
     public ExtendedFloat RoundToIntegralNoRoundedFlag(
       PrecisionContext ctx) {
       return math.RoundToExponentNoRoundedFlag(this, BigInteger.Zero, ctx);
@@ -1622,10 +1620,10 @@ namespace PeterO {
     /// but rounded to an integer.</summary>
     /// <returns>A binary float with the same value as this object but rounded
     /// to an integer. Signals FlagInvalid and returns NaN if an overflow
-    /// error occurred, or the result can&apos;t fit the given precision
-    /// without rounding. Signals FlagInvalid and returns NaN if the new
-    /// exponent is outside of the valid range of the precision context, if
-    /// it defines an exponent range.</returns>
+    /// error occurred, or the result can't fit the given precision without
+    /// rounding. Signals FlagInvalid and returns NaN if the new exponent
+    /// is outside of the valid range of the precision context, if it defines
+    /// an exponent range.</returns>
     /// <param name='exponent'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedFloat RoundToExponentExact(
@@ -1648,7 +1646,7 @@ namespace PeterO {
     /// are in addition to the pre-existing flags). Can be null, in which case
     /// the default rounding mode is HalfEven.</param>
     /// <returns>A binary float rounded to the closest value representable
-    /// in the given precision, meaning if the result can&apos;t fit the precision,
+    /// in the given precision, meaning if the result can't fit the precision,
     /// additional digits are discarded to make it fit. Signals FlagInvalid
     /// and returns NaN if the new exponent must be changed when rounding and
     /// the new exponent is outside of the valid range of the precision context,
@@ -1717,10 +1715,9 @@ namespace PeterO {
     /// using the given rounding mode and range of exponent.</summary>
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. Can be null.</param>
-    /// <returns>The closest value to this object&apos;s value, rounded
-    /// to the specified precision. Returns the same value as this object
-    /// if &quot; context&quot; is null or the precision and exponent range
-    /// are unlimited.</returns>
+    /// <returns>The closest value to this object's value, rounded to the
+    /// specified precision. Returns the same value as this object if <paramref
+    /// name='ctx'/> is null or the precision and exponent range are unlimited.</returns>
     public ExtendedFloat RoundToPrecision(
       PrecisionContext ctx) {
       return math.RoundToPrecision(this, ctx);
@@ -1731,10 +1728,9 @@ namespace PeterO {
     /// negative zero to positive zero.</summary>
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. Can be null.</param>
-    /// <returns>The closest value to this object&apos;s value, rounded
-    /// to the specified precision. Returns the same value as this object
-    /// if &quot; context&quot; is null or the precision and exponent range
-    /// are unlimited.</returns>
+    /// <returns>The closest value to this object's value, rounded to the
+    /// specified precision. Returns the same value as this object if <paramref
+    /// name='ctx'/> is null or the precision and exponent range are unlimited.</returns>
     public ExtendedFloat Plus(
       PrecisionContext ctx) {
       return math.Plus(this, ctx);
@@ -1745,10 +1741,9 @@ namespace PeterO {
     /// <param name='ctx'>A context for controlling the precision, rounding
     /// mode, and exponent range. The precision is interpreted as the maximum
     /// bit length of the mantissa. Can be null.</param>
-    /// <returns>The closest value to this object&apos;s value, rounded
-    /// to the specified precision. Returns the same value as this object
-    /// if &quot; context&quot; is null or the precision and exponent range
-    /// are unlimited.</returns>
+    /// <returns>The closest value to this object's value, rounded to the
+    /// specified precision. Returns the same value as this object if <paramref
+    /// name='ctx'/> is null or the precision and exponent range are unlimited.</returns>
     public ExtendedFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
       return math.RoundToBinaryPrecision(this, ctx);
@@ -1763,7 +1758,7 @@ namespace PeterO {
     /// not exact for many inputs.--.</param>
     /// <returns>The square root. Signals the flag FlagInvalid and returns
     /// NaN if this object is less than 0 (the result would be a complex number
-    /// with a real part of 0 and an imaginary part of this object&apos;s absolute
+    /// with a real part of 0 and an imaginary part of this object's absolute
     /// value, but the return value is still NaN).</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null or the precision range is unlimited.</exception>
@@ -1777,9 +1772,10 @@ namespace PeterO {
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). --This parameter cannot
-    /// be null, as the exp function&apos;s results are generally not exact.--.</param>
-    /// <returns>Exp(this object). If this object&apos;s value is 1, returns
-    /// an approximation to &quot; e&quot; within the given precision.</returns>
+    /// be null, as the exponential function&apos;s results are generally
+    /// not exact.--.</param>
+    /// <returns>Exponential of this object. If this object's value is 1,
+    /// returns an approximation to " e" within the given precision.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public ExtendedFloat Exp(PrecisionContext ctx) {
@@ -1796,8 +1792,8 @@ namespace PeterO {
     /// be null, as the ln function&apos;s results are generally not exact.--.</param>
     /// <returns>Ln(this object). Signals the flag FlagInvalid and returns
     /// NaN if this object is less than 0 (the result would be a complex number
-    /// with a real part equal to Ln of this object&apos;s absolute value and
-    /// an imaginary part equal to pi, but the return value is still NaN.).</returns>
+    /// with a real part equal to Ln of this object's absolute value and an imaginary
+    /// part equal to pi, but the return value is still NaN.).</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null or the precision range is unlimited.</exception>
     public ExtendedFloat Log(PrecisionContext ctx) {

@@ -43,8 +43,8 @@ private DecimalUtility(){}
 
     static int CountTrailingZeros(int numberValue) {
       if (numberValue == 0) {
- return 32;
-}
+        return 32;
+      }
       int i = 0;
       {
         if ((numberValue << 16) == 0) {
@@ -101,8 +101,8 @@ private DecimalUtility(){}
         }
 
         if ((numberValue >> 31) == 0) {
- --i;
-}
+          --i;
+        }
       }
       return i;
     }
@@ -112,8 +112,8 @@ private DecimalUtility(){}
       int a1 = arr[1];
       int tz = CountTrailingZeros(a0);
       if (tz == 0) {
- return 0;
-}
+        return 0;
+      }
       {
         if (tz < 32) {
           int carry = a1 << (32 - tz);
@@ -156,11 +156,11 @@ private DecimalUtility(){}
       public BigInteger[] FindCachedPowerOrSmaller(BigInteger bi) {
         BigInteger[] ret = null;
         BigInteger minValue = null;
-         synchronized(this.outputs) {
+        synchronized(this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputs[i].compareTo(bi) <= 0 && (minValue == null || this.inputs[i].compareTo(minValue) >= 0)) {
               // System.out.println("Have cached power ({0}, {1})",inputs[i],bi);
-              ret = new BigInteger[] { this.inputs[i], this.outputs[i]};
+              ret = new BigInteger[] { this.inputs[i], this.outputs[i] };
               minValue = this.inputs[i];
             }
           }
@@ -174,7 +174,7 @@ private DecimalUtility(){}
      * @return A BigInteger object.
      */
       public BigInteger GetCachedPower(BigInteger bi) {
-         synchronized(this.outputs) {
+        synchronized(this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (bi.equals(this.inputs[i])) {
               if (i != 0) {
@@ -202,8 +202,8 @@ private DecimalUtility(){}
      * @param bi A 32-bit signed integer.
      * @return A BigInteger object.
      */
-public BigInteger GetCachedPowerInt(int bi) {
-         synchronized(this.outputs) {
+      public BigInteger GetCachedPowerInt(int bi) {
+        synchronized(this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputsInts[i] >= 0 && this.inputsInts[i] == bi) {
               if (i != 0) {
@@ -232,7 +232,7 @@ public BigInteger GetCachedPowerInt(int bi) {
      * @param output A BigInteger object. (2).
      */
       public void AddPower(BigInteger input, BigInteger output) {
-         synchronized(this.outputs) {
+        synchronized(this.outputs) {
           if (this.size < MaxSize) {
             // Shift newer entries down
             for (int i = this.size; i > 0; --i) {
@@ -265,11 +265,11 @@ public BigInteger GetCachedPowerInt(int bi) {
     static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
       int sign = diff.signum();
       if (sign < 0) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       if (sign == 0) {
- return BigInteger.ONE;
-}
+        return BigInteger.ONE;
+      }
       FastInteger intcurexp = FastInteger.FromBig(diff);
       if (intcurexp.CompareToInt(54) <= 0) {
         return FindPowerOfFive(intcurexp.AsInt32());
@@ -279,8 +279,8 @@ public BigInteger GetCachedPowerInt(int bi) {
       BigInteger origdiff = diff;
       bigpow = powerOfFiveCache.GetCachedPower(origdiff);
       if (bigpow != null) {
- return bigpow;
-}
+        return bigpow;
+      }
       BigInteger[] otherPower = powerOfFiveCache.FindCachedPowerOrSmaller(origdiff);
       if (otherPower != null) {
         intcurexp.SubtractBig(otherPower[0]);
@@ -300,8 +300,8 @@ public BigInteger GetCachedPowerInt(int bi) {
           break;
         } else {
           if (bigpow.signum()==0) {
- bigpow = (FindPowerOfFive(1)).pow(9999999);
-}
+            bigpow = (FindPowerOfFive(1)).pow(9999999);
+          }
           mantissa=mantissa.multiply(bigpow);
           intcurexp.AddInt(-9999999);
         }
@@ -315,11 +315,11 @@ public BigInteger GetCachedPowerInt(int bi) {
     static BigInteger FindPowerOfTenFromBig(BigInteger bigintExponent) {
       int sign = bigintExponent.signum();
       if (sign < 0) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       if (sign == 0) {
- return BigInteger.ONE;
-}
+        return BigInteger.ONE;
+      }
       if (bigintExponent.compareTo(valueBigInt36) <= 0) {
         return FindPowerOfTen(bigintExponent.intValue());
       }
@@ -353,24 +353,24 @@ public BigInteger GetCachedPowerInt(int bi) {
 
     static BigInteger FindPowerOfFive(int precision) {
       if (precision < 0) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       if (precision == 0) {
- return BigInteger.ONE;
-}
+        return BigInteger.ONE;
+      }
       BigInteger bigpow;
       BigInteger ret;
       if (precision <= 27) {
- return valueBigIntPowersOfFive[(int)precision];
-}
+        return valueBigIntPowersOfFive[(int)precision];
+      }
       if (precision == 40) {
- return valueFivePower40;
-}
+        return valueFivePower40;
+      }
       int startPrecision = precision;
       bigpow = powerOfFiveCache.GetCachedPowerInt(precision);
       if (bigpow != null) {
- return bigpow;
-}
+        return bigpow;
+      }
       BigInteger origPrecision = BigInteger.valueOf(precision);
       if (precision <= 54) {
         if ((precision & 1) == 0) {
@@ -403,8 +403,8 @@ public BigInteger GetCachedPowerInt(int bi) {
           BigInteger otherPower1 = otherPower[1];
           precision -= otherPower0.intValue();
           if (first) {
- bigpow = otherPower[1];
-  } else {
+            bigpow = otherPower[1];
+          } else {
             bigpow=bigpow.multiply(otherPower1);
           }
           first = false;
@@ -412,15 +412,15 @@ public BigInteger GetCachedPowerInt(int bi) {
           break;
         }
       }
-      ret = !first ? bigpow : BigInteger.ONE ;
+      ret = !first ? bigpow : BigInteger.ONE;
       while (precision > 0) {
         if (precision <= 27) {
           bigpow = valueBigIntPowersOfFive[(int)precision];
           if (first) {
- ret = bigpow;
-  } else {
- ret=ret.multiply(bigpow);
-}
+            ret = bigpow;
+          } else {
+            ret=ret.multiply(bigpow);
+          }
           first = false;
           break;
         } else if (precision <= 9999999) {
@@ -431,21 +431,21 @@ public BigInteger GetCachedPowerInt(int bi) {
             powerOfFiveCache.AddPower(bigprec, bigpow);
           }
           if (first) {
- ret = bigpow;
-  } else {
- ret=ret.multiply(bigpow);
-}
+            ret = bigpow;
+          } else {
+            ret=ret.multiply(bigpow);
+          }
           first = false;
           break;
         } else {
           if (bigpow.signum()==0) {
- bigpow = FindPowerOfFive(9999999);
-}
+            bigpow = FindPowerOfFive(9999999);
+          }
           if (first) {
- ret = bigpow;
-  } else {
- ret=ret.multiply(bigpow);
-}
+            ret = bigpow;
+          } else {
+            ret=ret.multiply(bigpow);
+          }
           first = false;
           precision -= 9999999;
         }
@@ -456,21 +456,21 @@ public BigInteger GetCachedPowerInt(int bi) {
 
     static BigInteger FindPowerOfTen(int precision) {
       if (precision < 0) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       if (precision == 0) {
- return BigInteger.ONE;
-}
+        return BigInteger.ONE;
+      }
       BigInteger bigpow;
       BigInteger ret;
       if (precision <= 18) {
- return valueBigIntPowersOfTen[(int)precision];
-}
+        return valueBigIntPowersOfTen[(int)precision];
+      }
       int startPrecision = precision;
       bigpow = powerOfTenCache.GetCachedPowerInt(precision);
       if (bigpow != null) {
- return bigpow;
-}
+        return bigpow;
+      }
       BigInteger origPrecision = BigInteger.valueOf(precision);
       if (precision <= 27) {
         int prec = (int)precision;
@@ -503,8 +503,8 @@ public BigInteger GetCachedPowerInt(int bi) {
           BigInteger otherPower1 = otherPower[1];
           precision -= otherPower0.intValue();
           if (first) {
- bigpow = otherPower[1];
-  } else {
+            bigpow = otherPower[1];
+          } else {
             bigpow=bigpow.multiply(otherPower1);
           }
           first = false;
@@ -512,15 +512,15 @@ public BigInteger GetCachedPowerInt(int bi) {
           break;
         }
       }
-      ret = !first ? bigpow : BigInteger.ONE ;
+      ret = !first ? bigpow : BigInteger.ONE;
       while (precision > 0) {
         if (precision <= 18) {
           bigpow = valueBigIntPowersOfTen[(int)precision];
           if (first) {
- ret = bigpow;
-  } else {
- ret=ret.multiply(bigpow);
-}
+            ret = bigpow;
+          } else {
+            ret=ret.multiply(bigpow);
+          }
           first = false;
           break;
         } else if (precision <= 9999999) {
@@ -532,21 +532,21 @@ public BigInteger GetCachedPowerInt(int bi) {
             powerOfTenCache.AddPower(bigprec, bigpow);
           }
           if (first) {
- ret = bigpow;
-  } else {
- ret=ret.multiply(bigpow);
-}
+            ret = bigpow;
+          } else {
+            ret=ret.multiply(bigpow);
+          }
           first = false;
           break;
         } else {
           if (bigpow.signum()==0) {
- bigpow = FindPowerOfTen(9999999);
-}
+            bigpow = FindPowerOfTen(9999999);
+          }
           if (first) {
- ret = bigpow;
-  } else {
- ret=ret.multiply(bigpow);
-}
+            ret = bigpow;
+          } else {
+            ret=ret.multiply(bigpow);
+          }
           first = false;
           precision -= 9999999;
         }

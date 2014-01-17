@@ -17,27 +17,33 @@ at: http://peteroupc.github.io/CBOR/
      * Not-a-Number is also included in the Number type.
      */
     Number,
+
     /**
      * The simple values true and false.
      */
     Boolean,
+
     /**
      * A &quot;simple value&quot; other than floating point values, true,
      * and false.
      */
     SimpleValue,
+
     /**
      * An array of bytes.
      */
     ByteString,
+
     /**
      * A text string.
      */
     TextString,
+
     /**
      * An array of CBOR objects.
      */
     Array,
+
     /**
      * A map of CBOR objects.
      */

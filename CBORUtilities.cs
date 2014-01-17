@@ -89,9 +89,9 @@ namespace PeterO {
 }
       int ret = 19;
       unchecked {
-        ret = ret * 31 + a.Length;
+        ret = (ret * 31) + a.Length;
         for (int i = 0; i < a.Length; ++i) {
-          ret = ret * 31 + a[i];
+          ret = (ret * 31) + a[i];
         }
       }
       return ret;
