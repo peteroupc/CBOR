@@ -27,8 +27,8 @@ namespace PeterO {
     /// be 0.</value>
     public BigInteger EMax {
       get {
- return this.hasExponentRange ? this.exponentMax : BigInteger.Zero;
-}
+        return this.hasExponentRange ? this.exponentMax : BigInteger.Zero;
+      }
     }
 
     private BigInteger exponentMin;
@@ -42,8 +42,8 @@ namespace PeterO {
     /// If false, converted exponents can have any exponent.</value>
     public bool HasExponentRange {
       get {
- return this.hasExponentRange;
-}
+        return this.hasExponentRange;
+      }
     }
 
     /// <summary>Gets the lowest exponent possible when a converted number
@@ -60,8 +60,8 @@ namespace PeterO {
     /// be 0.</value>
     public BigInteger EMin {
       get {
- return this.hasExponentRange ? this.exponentMin : BigInteger.Zero;
-}
+        return this.hasExponentRange ? this.exponentMin : BigInteger.Zero;
+      }
     }
 
     private BigInteger bigintPrecision;
@@ -76,20 +76,20 @@ namespace PeterO {
     /// long). If 0, converted numbers can have any precision.</value>
     public BigInteger Precision {
       get {
- return this.bigintPrecision;
-}
+        return this.bigintPrecision;
+      }
     }
 
     private Rounding rounding;
 
     private bool clampNormalExponents;
 
-    /// <summary>If true, a converted number&apos;s Exponent property
-    /// will not be higher than EMax + 1 - Precision. If a number&apos;s exponent
-    /// is higher than that value, but not high enough to cause overflow, the
-    /// exponent is clamped to that value and enough zeros are added to the
-    /// number&apos;s mantissa to account for the adjustment. If HasExponentRange
-    /// is false, this value is always false.</summary>
+    /// <summary>Gets a value indicating whether a converted number&apos;s
+    /// Exponent property will not be higher than EMax + 1 - Precision. If a
+    /// number&apos;s exponent is higher than that value, but not high enough
+    /// to cause overflow, the exponent is clamped to that value and enough
+    /// zeros are added to the number&apos;s mantissa to account for the adjustment.
+    /// If HasExponentRange is false, this value is always false.</summary>
     /// <value>If true, a converted number&apos;s Exponent property will
     /// not be higher than EMax + 1 - Precision. If a number&apos;s exponent
     /// is higher than that value, but not high enough to cause overflow, the
@@ -98,8 +98,8 @@ namespace PeterO {
     /// is false, this value is always false.</value>
     public bool ClampNormalExponents {
       get {
- return this.hasExponentRange ? this.clampNormalExponents : false;
-}
+        return this.hasExponentRange ? this.clampNormalExponents : false;
+      }
     }
 
     /// <summary>Gets the desired rounding mode when converting numbers
@@ -109,8 +109,8 @@ namespace PeterO {
     /// be represented in the given precision and exponent range.</value>
     public Rounding Rounding {
       get {
- return this.rounding;
-}
+        return this.rounding;
+      }
     }
 
     private int flags;
@@ -121,8 +121,8 @@ namespace PeterO {
     /// <value>Whether this context has a mutable Flags field.</value>
     public bool HasFlags {
       get {
- return this.hasFlags;
-}
+        return this.hasFlags;
+      }
     }
 
     /// <summary>Signals that the result was rounded to a different mathematical
@@ -157,24 +157,24 @@ namespace PeterO {
     /// <summary>Signals a division of a nonzero number by zero.</summary>
     public const int FlagDivideByZero = 128;
 
-    /// <summary>Gets the flags that are set from converting numbers according
-    /// to this precision context. If HasFlags is false, this value will be
-    /// 0.</summary>
+    /// <summary>Gets or sets the flags that are set from converting numbers
+    /// according to this precision context. If HasFlags is false, this value
+    /// will be 0.</summary>
     /// <value>The flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be
     /// 0.</value>
     public int Flags {
       get {
- return this.flags;
-}
+        return this.flags;
+      }
 
     /// <summary>Sets the flags that occur from converting numbers according
     /// to this precision context.</summary>
     /// <exception cref='InvalidOperationException'>HasFlags is false.</exception>
       set {
         if (!this.HasFlags) {
- throw new InvalidOperationException("Can't set flags");
-}
+          throw new InvalidOperationException("Can't set flags");
+        }
         this.flags = value;
       }
     }
@@ -184,11 +184,11 @@ namespace PeterO {
     /// <returns>A Boolean object.</returns>
     public bool ExponentWithinRange(BigInteger exponent) {
       if (exponent == null) {
- throw new ArgumentNullException("exponent");
-}
+        throw new ArgumentNullException("exponent");
+      }
       if (!this.HasExponentRange) {
- return true;
-}
+        return true;
+      }
       if (this.bigintPrecision.IsZero) {
         // Only check EMax, since with an unlimited
         // precision, any exponent less than EMin will exceed EMin if
@@ -199,11 +199,11 @@ namespace PeterO {
         bigint += (BigInteger)this.bigintPrecision;
         bigint -= BigInteger.One;
         if (bigint.CompareTo(this.EMin) < 0) {
- return false;
-}
+          return false;
+        }
         if (exponent.CompareTo(this.EMax) > 0) {
- return false;
-}
+          return false;
+        }
         return true;
       }
     }
@@ -245,11 +245,11 @@ namespace PeterO {
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if (exponentMin == null) {
- throw new ArgumentNullException("exponentMin");
-}
+        throw new ArgumentNullException("exponentMin");
+      }
       if (exponentMin.CompareTo(exponentMax) > 0) {
- throw new ArgumentException("exponentMin greater than exponentMax");
-}
+        throw new ArgumentException("exponentMin greater than exponentMax");
+      }
       PrecisionContext pc = this.Copy();
       pc.hasExponentRange = true;
       pc.exponentMin = exponentMin;
@@ -283,8 +283,8 @@ namespace PeterO {
     /// precision.</param>
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
- throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
+        throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = (BigInteger)precision;
       return pc;
@@ -295,11 +295,11 @@ namespace PeterO {
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
       if (bigintPrecision == null) {
- throw new ArgumentNullException("bigintPrecision");
+        throw new ArgumentNullException("bigintPrecision");
+      }
+      if (bigintPrecision.Sign < 0) {
+ throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + bigintPrecision + ")");
 }
-      if (bigintPrecision.Sign < 0) throw new ArgumentException(
-        "precision" + " not greater or equal to " + "0" + " (" +
-        bigintPrecision + ")");
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
       return pc;
@@ -310,11 +310,11 @@ namespace PeterO {
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext Copy() {
       PrecisionContext pcnew = new PrecisionContext(
-0,
-this.rounding,
-0,
-0,
-this.clampNormalExponents);
+        0,
+        this.rounding,
+        0,
+        0,
+        this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
@@ -338,20 +338,20 @@ this.clampNormalExponents);
       return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
     }
 
-    /// <summary>Initializes a new PrecisionContext. HasFlags will be
-    /// set to false.</summary>
-    public PrecisionContext(
-int precision,
-Rounding rounding,
-int exponentMinSmall,
-int exponentMaxSmall,
-bool clampNormalExponents) {
+    /// <summary>Initializes a new instance of the PrecisionContext class.
+    /// HasFlags will be set to false.</summary>
+    /// <param name='precision'>A 32-bit signed integer.</param>
+    /// <param name='rounding'>A Rounding object.</param>
+    /// <param name='exponentMinSmall'>A 32-bit signed integer. (2).</param>
+    /// <param name='exponentMaxSmall'>A 32-bit signed integer. (3).</param>
+    /// <param name='clampNormalExponents'>A Boolean object.</param>
+    public PrecisionContext(int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall, bool clampNormalExponents) {
       if (precision < 0) {
- throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
+        throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
       if (exponentMinSmall > exponentMaxSmall) {
- throw new ArgumentException("exponentMinSmall" + " not less or equal to " + Convert.ToString(exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
+        throw new ArgumentException("exponentMinSmall" + " not less or equal to " + Convert.ToString(exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
       this.bigintPrecision = precision == 0 ? BigInteger.Zero : (BigInteger)precision;
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;

@@ -90,12 +90,12 @@ at: http://peteroupc.github.io/CBOR/
         if (this.wordCount == 1 && (this.data[0] >> 31) == 0) {
           return BigInteger.valueOf((int)this.data[0]);
         }
-        byte[] bytes = new byte[this.wordCount * 4 + 1];
+        byte[] bytes = new byte[(this.wordCount * 4) + 1];
         for (int i = 0; i < this.wordCount; ++i) {
           bytes[i * 4] = (byte)(this.data[i] & 0xFF);
-          bytes[i * 4 + 1] = (byte)((this.data[i] >> 8) & 0xFF);
-          bytes[i * 4 + 2] = (byte)((this.data[i] >> 16) & 0xFF);
-          bytes[i * 4 + 3] = (byte)((this.data[i] >> 24) & 0xFF);
+          bytes[(i * 4) + 1] = (byte)((this.data[i] >> 8) & 0xFF);
+          bytes[(i * 4) + 2] = (byte)((this.data[i] >> 16) & 0xFF);
+          bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xFF);
         }
         bytes[bytes.length - 1] = (byte)0;
         return BigInteger.fromByteArray((byte[])bytes,true);
@@ -312,7 +312,7 @@ at: http://peteroupc.github.io/CBOR/
         }
 
     /**
-     * Gets a value not documented yet.
+     * Gets a value indicating whether this value is even.
      */
       public boolean isEvenNumber() {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
@@ -369,9 +369,9 @@ at: http://peteroupc.github.io/CBOR/
             if (borrow != 0) {
               for (int i = 1; i < this.wordCount; ++i) {
                 u = this.data[i] - borrow;
-                borrow = ((((this.data[i] >> 31) == (u >> 31)) ?
-                           ((this.data[i] & Integer.MAX_VALUE) < (u & Integer.MAX_VALUE)) :
-                           ((this.data[i] >> 31) == 0))) ? 1 : 0;
+                borrow = (((this.data[i] >> 31) == (u >> 31)) ?
+                          ((this.data[i] & Integer.MAX_VALUE) < (u & Integer.MAX_VALUE)) :
+                          ((this.data[i] >> 31) == 0)) ? 1 : 0;
                 this.data[i] = (int)u;
               }
             }
@@ -455,8 +455,9 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * Not documented yet.
+     * Adds a 32-bit signed integer to this instance.
      * @param augend A 32-bit signed integer.
+     * @return This instance.
      */
       public MutableNumber Add(int augend) {
         if (augend < 0) {
@@ -564,7 +565,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public int compareTo(FastInteger val) {
       switch ((this.integerMode << 2) | val.integerMode) {
-          case (0 << 2) | 0:{
+          case (0 << 2) | 0: {
             int vsv = val.smallValue;
             return (this.smallValue == vsv) ? 0 :
               (this.smallValue < vsv ? -1 : 1);
@@ -601,12 +602,12 @@ at: http://peteroupc.github.io/CBOR/
       if (wordCount == 1 && (words[0] >> 31) == 0) {
         return BigInteger.valueOf((int)words[0]);
       }
-      byte[] bytes = new byte[wordCount * 4 + 1];
+      byte[] bytes = new byte[(wordCount * 4) + 1];
       for (int i = 0; i < wordCount; ++i) {
-        bytes[i * 4 + 0] = (byte)(words[i] & 0xFF);
-        bytes[i * 4 + 1] = (byte)((words[i] >> 8) & 0xFF);
-        bytes[i * 4 + 2] = (byte)((words[i] >> 16) & 0xFF);
-        bytes[i * 4 + 3] = (byte)((words[i] >> 24) & 0xFF);
+        bytes[(i * 4) + 0] = (byte)(words[i] & 0xFF);
+        bytes[(i * 4) + 1] = (byte)((words[i] >> 8) & 0xFF);
+        bytes[(i * 4) + 2] = (byte)((words[i] >> 16) & 0xFF);
+        bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xFF);
       }
       bytes[bytes.length - 1] = (byte)0;
       return BigInteger.fromByteArray((byte[])bytes,true);
@@ -853,7 +854,7 @@ bigrem=divrem[1]; }
      */
     public FastInteger AddBig(BigInteger bigintVal) {
       switch (this.integerMode) {
-          case 0:{
+          case 0: {
             if (bigintVal.canFitInInt()) {
               return this.AddInt(bigintVal.intValue());
             }
@@ -1137,7 +1138,7 @@ bigrem=divrem[1]; }
           return true;
         case 1:
           return this.mnum.CanFitInInt32();
-          case 2:{
+          case 2: {
             return this.largeValue.canFitInInt();
           }
         default:

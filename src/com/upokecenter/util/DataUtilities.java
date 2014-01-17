@@ -98,9 +98,8 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * @param str A string object.
      * @param replace A Boolean object.
      * @return The number of bytes needed to encode the given string in UTF-8,
-     * or -1 if the string contains an unpaired surrogate code point and &quot;
-     * replace&quot; is false.
-     * @throws java.lang.NullPointerException "S" is null.
+     * or -1 if the string contains an unpaired surrogate code point and.
+     * @throws java.lang.NullPointerException The parameter "str" is null.
      */
     public static long GetUtf8Length(String str, boolean replace) {
       if (str == null) {
@@ -139,17 +138,16 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
     }
 
     /**
-     * Compares two strings in Unicode code point order. Unpairedsurrogates
+     * Compares two strings in Unicode code point order. Unpaired surrogates
      * are treated as individual code points.
      * @param strA The first string.
      * @param strB The second string.
-     * @return A value indicating which string is &quot; less&quot; or &quot;
-     * greater&quot; . 0: Both strings are equal or null. Less than 0: a is
-     * null and b isn&apos;t; or the first code point that&apos;s different
-     * is less in A than in B; or b starts with a and is longer than a. Greater
-     * than 0: b is null and a isn&apos;t; or the first code point that&apos;
-     * s different is greater in A than in B; or a starts with b and is longer
-     * than b.
+     * @return A value indicating which string is " less" or " greater" . 0:
+     * Both strings are equal or null. Less than 0: a is null and b isn't; or
+     * the first code point that's different is less in A than in B; or b starts
+     * with a and is longer than a. Greater than 0: b is null and a isn't; or the
+     * first code point that' s different is greater in A than in B; or a starts
+     * with b and is longer than b.
      */
     public static int CodePointCompare(String strA, String strB) {
       if (strA == null) {
@@ -170,11 +168,11 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           }
           boolean incindex = false;
           if (i + 1 < strA.length() && strA.charAt(i + 1) >= 0xDC00 && strA.charAt(i + 1) <= 0xDFFF) {
-            ca = 0x10000 + (ca - 0xD800) * 0x400 + (strA.charAt(i + 1) - 0xDC00);
+            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA.charAt(i + 1) - 0xDC00);
             incindex = true;
           }
           if (i + 1 < strB.length() && strB.charAt(i + 1) >= 0xDC00 && strB.charAt(i + 1) <= 0xDFFF) {
-            cb = 0x10000 + (cb - 0xD800) * 0x400 + (strB.charAt(i + 1) - 0xDC00);
+            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB.charAt(i + 1) - 0xDC00);
             incindex = true;
           }
           if (ca != cb) {
@@ -185,15 +183,15 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           }
         } else {
           if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800) {
- return ca - cb;
-}
+            return ca - cb;
+          }
           if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.length() &&
               strA.charAt(i + 1) >= 0xDC00 && strA.charAt(i + 1) <= 0xDFFF) {
-            ca = 0x10000 + (ca - 0xD800) * 0x400 + (strA.charAt(i + 1) - 0xDC00);
+            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA.charAt(i + 1) - 0xDC00);
           }
           if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.length() &&
               strB.charAt(i + 1) >= 0xDC00 && strB.charAt(i + 1) <= 0xDFFF) {
-            cb = 0x10000 + (cb - 0xD800) * 0x400 + (strB.charAt(i + 1) - 0xDC00);
+            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB.charAt(i + 1) - 0xDC00);
           }
           return ca - cb;
         }
@@ -215,8 +213,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * with the replacement character (U + FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
      * @return 0 if the entire string portion was written; or -1 if the string
-     * portion contains an unpaired surrogate code point and &quot; replace&quot;
-     * is false.
+     * portion contains an unpaired surrogate code point and.
      * @throws java.lang.NullPointerException The parameter "str" is null
      * or "stream" is null.
      * @throws java.lang.IllegalArgumentException The parameter "offset" is less
@@ -243,7 +240,9 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
       if (length > str.length()) {
         throw new IllegalArgumentException("length" + " not less or equal to "+str.length()+" ("+length+")");
       }
-      if ((str.length() - offset) < length) throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to "+length+" ("+str.length() - offset+")");
+      if ((str.length() - offset) < length) {
+        throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to "+length+" ("+str.length() - offset+")");
+      }
       byte[] bytes;
       int retval = 0;
       bytes = new byte[valueStreamedStringBufferLength];
@@ -270,7 +269,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
           if (c >= 0xD800 && c <= 0xDBFF && index + 1 < endIndex &&
               str.charAt(index + 1) >= 0xDC00 && str.charAt(index + 1) <= 0xDFFF) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + (c - 0xD800) * 0x400 + (str.charAt(index + 1) - 0xDC00);
+            c = 0x10000 + ((c - 0xD800) * 0x400) + (str.charAt(index + 1) - 0xDC00);
             index++;
           } else if (c >= 0xD800 && c <= 0xDFFF) {
             // unpaired surrogate
@@ -314,7 +313,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * with the replacement character (U + FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
      * @return 0 if the entire string was written; or -1 if the string contains
-     * an unpaired surrogate code point and &quot; replace&quot; is false.
+     * an unpaired surrogate code point and.
      * @throws java.lang.NullPointerException The parameter "str" is null
      * or "stream" is null.
      * @throws java.io.IOException An I/O error occurred.
@@ -337,7 +336,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * character (U + FFFD). If false, stops processing when invalid UTF-8
      * is seen.
      * @return 0 if the entire string was read without errors, or -1 if the
-     * string is not valid UTF-8 and &quot; replace&quot; is false.
+     * string is not valid UTF-8 and.
      * @throws java.lang.NullPointerException The parameter "data" is
      * null or "builder" is null.
      * @throws java.lang.IllegalArgumentException The parameter "offset" is less
@@ -432,7 +431,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             builder.append((char)ret);
           } else {
             int ch = ret - 0x10000;
-            int lead = ch / 0x400 + 0xd800;
+            int lead = (ch / 0x400) + 0xd800;
             int trail = (ch & 0x3FF) + 0xdc00;
             builder.append((char)lead);
             builder.append((char)trail);
@@ -460,9 +459,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
      * character (U + FFFD). If false, stops processing when an unpaired
      * surrogate code point is seen.
      * @return 0 if the entire string was read without errors, -1 if the string
-     * is not valid UTF-8 and &quot; replace&quot; is false (even if the end
-     * of the stream is reached), or -2 if the end of the stream was reached
-     * before the entire string was read.
+     * is not valid UTF-8 and.
      * @throws java.io.IOException An I/O error occurred.
      * @throws java.lang.NullPointerException The parameter "stream"
      * is null or "builder" is null.
@@ -576,7 +573,7 @@ try { if(ms!=null)ms.close(); } catch(IOException ex){}
             builder.append((char)ret);
           } else {
             int ch = ret - 0x10000;
-            int lead = ch / 0x400 + 0xd800;
+            int lead = (ch / 0x400) + 0xd800;
             int trail = (ch & 0x3FF) + 0xdc00;
             builder.append((char)lead);
             builder.append((char)trail);

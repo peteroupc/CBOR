@@ -35,11 +35,6 @@ at: http://peteroupc.github.io/CBOR/
         return this.mantissa;
       }
 
-    /**
-     * Determines whether this object&apos;s mantissa and exponent are
-     * equal to those of another object.
-     * @param other A BigFloat object.
-     */
     private boolean EqualsInternal(BigFloat other) {
       BigFloat otherValue = ((other instanceof BigFloat) ? (BigFloat)other : null);
       if (otherValue == null) {
@@ -60,7 +55,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Determines whether this object&apos;s mantissa and exponent are
-     * equal to those of another object and that object is a Bigfloat.
+     * equal to those of another object and that object has the same type as
+     * this one.
      * @param obj An arbitrary object.
      * @return True if the objects are equal; false otherwise.
      */
@@ -70,7 +66,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Calculates this object&apos;s hash code.
-     * @return This object&apos;s hash code.
+     * @return This object's hash code.
      */
     @Override public int hashCode() {
       int hashCode_ = 0;
@@ -82,7 +78,8 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Creates a binary floating-point number with the value exponent*2^mantissa.
+     * Initializes a new instance of the BigFloat class. Creates a binary
+     * floating-point number with the value exponent*2^mantissa.
      * @param mantissa The un-scaled value.
      * @param exponent The binary exponent.
      */
@@ -157,7 +154,7 @@ at: http://peteroupc.github.io/CBOR/
      * Creates a binary floating-point number from a 32-bit floating-point
      * number.
      * @param flt A 32-bit floating-point number.
-     * @return A bigfloat with the same value as &quot; flt&quot; .
+     * @return A big floating-point number with the same value as "flt".
      * @throws ArithmeticException The parameter "flt" is infinity or not-a-number.
      */
     public static BigFloat FromSingle(float flt) {
@@ -168,7 +165,7 @@ at: http://peteroupc.github.io/CBOR/
      * Creates a binary floating-point number from a 64-bit floating-point
      * number.
      * @param dbl A 64-bit floating-point number.
-     * @return A bigfloat with the same value as &quot; dbl&quot; .
+     * @return A big floating-point number with the same value as "dbl".
      * @throws ArithmeticException The parameter "dbl" is infinity or not-a-number.
      */
     public static BigFloat FromDouble(double dbl) {
@@ -398,7 +395,6 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    //----------------------------
     /**
      * Gets this value&apos;s sign: -1 if negative; 1 if positive; 0 if zero.
      */
@@ -509,7 +505,7 @@ at: http://peteroupc.github.io/CBOR/
       BigFloat divisor,
       PrecisionContext ctx) {
       return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null) .Multiply(divisor, null),
+        this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null),
         ctx);
     }
 
@@ -685,10 +681,10 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Multiplies two binary floating-point numbers. The resulting scale
      * will be the sum of the scales of the two binary floating-point numbers.
-     * @param decfrac Another bigfloat.
-     * @return The product of the two bigfloats. If a precision context is
-     * given, returns null if the result of the rounding overflowed the exponent
-     * range.
+     * @param decfrac Another big floating-point number.
+     * @return The product of the two big floating-point numbers. If a precision
+     * context is given, returns null if the result of the rounding overflowed
+     * the exponent range.
      */
     public BigFloat Multiply(BigFloat decfrac) {
       if (decfrac == null) {
@@ -815,8 +811,8 @@ at: http://peteroupc.github.io/CBOR/
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the largest value that&apos;s less than the given
-     * value. Returns null if the result is negative infinity.
+     * @return Returns the largest value that's less than the given value.
+     * Returns null if the result is negative infinity.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
      * the precision is 0, or "ctx" has an unlimited exponent range.
      */
@@ -831,8 +827,8 @@ at: http://peteroupc.github.io/CBOR/
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the smallest value that&apos;s greater than the
-     * given value. Returns null if the result is positive infinity.
+     * @return Returns the smallest value that's greater than the given
+     * value. Returns null if the result is positive infinity.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
      * the precision is 0, or "ctx" has an unlimited exponent range.
      */
@@ -849,9 +845,8 @@ at: http://peteroupc.github.io/CBOR/
      * exponent range of the result. The rounding mode from this context
      * is ignored. No flags will be set from this operation even if HasFlags
      * of the context is true.
-     * @return Returns the next value that is closer to the other object&apos;
-     * s value than this object&apos;s value. Returns null if the result
-     * is infinity.
+     * @return Returns the next value that is closer to the other object'
+     * s value than this object's value. Returns null if the result is infinity.
      * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
      * the precision is 0, or "ctx" has an unlimited exponent range.
      */
@@ -938,13 +933,12 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Compares the mathematical values of this object and another object.<p>
      * This method is not consistent with the Equals method because two different
-     * bigfloats with the same mathematical value, but different exponents,
-     * will compare as equal.</p>
+     * big floating-point numbers with the same mathematical value, but
+     * different exponents, will compare as equal.</p>
      * @param other A BigFloat object.
-     * @return Less than 0 if this object&apos;s value is less than the other
-     * value, or greater than 0 if this object&apos;s value is greater than
-     * the other value or if &quot; other&quot; is null, or 0 if both values
-     * are equal.
+     * @return Less than 0 if this object's value is less than the other value,
+     * or greater than 0 if this object's value is greater than the other value
+     * or if "other" is null, or 0 if both values are equal.
      */
     public int compareTo(
       BigFloat other) {
@@ -1002,8 +996,8 @@ at: http://peteroupc.github.io/CBOR/
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
-     * @return A bigfloat with the same value as this object but with the exponent
-     * changed.
+     * @return A big floating-point number with the same value as this object
+     * but with the exponent changed.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The exponent is outside of the
@@ -1020,8 +1014,8 @@ at: http://peteroupc.github.io/CBOR/
      * exponent.
      * @param desiredExponentSmall A 32-bit signed integer.
      * @param ctx A PrecisionContext object.
-     * @return A bigfloat with the same value as this object but with the exponent
-     * changed.
+     * @return A big floating-point number with the same value as this object
+     * but with the exponent changed.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The exponent is outside of the
@@ -1037,15 +1031,15 @@ at: http://peteroupc.github.io/CBOR/
      * Returns a binary floating-point number with the same value as this
      * object but with the same exponent as another binary floating-point
      * number.
-     * @param otherValue A bigfloat containing the desired exponent of
-     * the result. The mantissa is ignored.
+     * @param otherValue A big floating-point number containing the desired
+     * exponent of the result. The mantissa is ignored.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
-     * @return A bigfloat with the same value as this object but with the exponent
-     * changed.
+     * @return A big floating-point number with the same value as this object
+     * but with the exponent changed.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent is outside of
@@ -1066,8 +1060,8 @@ at: http://peteroupc.github.io/CBOR/
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
-     * @return A bigfloat with the same value as this object but rounded to
-     * an integer.
+     * @return A big floating-point number with the same value as this object
+     * but rounded to an integer.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
@@ -1090,8 +1084,8 @@ at: http://peteroupc.github.io/CBOR/
      * FlagRounded and FlagInexact flags (the only difference between
      * this and RoundToExponentExact). Can be null, in which case the default
      * rounding mode is HalfEven.
-     * @return A bigfloat with the same value as this object but rounded to
-     * an integer.
+     * @return A big floating-point number with the same value as this object
+     * but rounded to an integer.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
@@ -1117,7 +1111,7 @@ at: http://peteroupc.github.io/CBOR/
      * flags resulting from the operation (the flags are in addition to the
      * pre-existing flags). Can be null, in which case the default rounding
      * mode is HalfEven.
-     * @return A bigfloat rounded to the given exponent.
+     * @return A big floating-point number rounded to the given exponent.
      * @throws ArithmeticException An overflow error occurred, or the
      * result can't fit the given precision without rounding.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
@@ -1145,11 +1139,11 @@ at: http://peteroupc.github.io/CBOR/
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null, in which case the
      * default rounding mode is HalfEven.
-     * @return A bigfloat rounded to the closest value representable in
-     * the given precision, meaning if the result can&apos;t fit the precision,
-     * additional digits are discarded to make it fit. If a precision context
-     * is given, returns null if the result of the rounding overflowed the
-     * exponent range.
+     * @return A big floating-point number rounded to the closest value
+     * representable in the given precision, meaning if the result can't
+     * fit the precision, additional digits are discarded to make it fit.
+     * If a precision context is given, returns null if the result of the rounding
+     * overflowed the exponent range.
      * @throws java.lang.IllegalArgumentException The new exponent must be changed
      * when rounding and the new exponent is outside of the valid range of
      * the precision context, if it defines an exponent range.
@@ -1163,14 +1157,14 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Multiplies two binary floating-point numbers. The resulting scale
      * will be the sum of the scales of the two binary floating-point numbers.
-     * @param op Another bigfloat.
+     * @param op Another big floating-point number.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
-     * @return The product of the two bigfloats. If a precision context is
-     * given, returns null if the result of the rounding overflowed the exponent
-     * range.
+     * @return The product of the two big floating-point numbers. If a precision
+     * context is given, returns null if the result of the rounding overflowed
+     * the exponent range.
      */
     public BigFloat Multiply(
       BigFloat op,
@@ -1202,11 +1196,11 @@ at: http://peteroupc.github.io/CBOR/
      * rounding mode and range of exponent.
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
-     * @return The closest value to this object&apos;s value, rounded to
-     * the specified precision. Returns the same value as this object if
-     * &quot; context&quot; is null or the precision and exponent range
-     * are unlimited. If a precision context is given, returns null if the
-     * result of the rounding overflowed the exponent range.
+     * @return The closest value to this object's value, rounded to the specified
+     * precision. Returns the same value as this object if " context" is null
+     * or the precision and exponent range are unlimited. If a precision
+     * context is given, returns null if the result of the rounding overflowed
+     * the exponent range.
      */
     public BigFloat RoundToPrecision(
       PrecisionContext ctx) {
@@ -1219,11 +1213,10 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. The precision is interpreted as the maximum bit
      * length of the mantissa. Can be null.
-     * @return The closest value to this object&apos;s value, rounded to
-     * the specified precision. Returns the same value as this object if
-     * &quot; context&quot; is null or the precision and exponent range
-     * are unlimited. Returns null if the result of the rounding overflowed
-     * the exponent range.
+     * @return The closest value to this object's value, rounded to the specified
+     * precision. Returns the same value as this object if " context" is null
+     * or the precision and exponent range are unlimited. Returns null if
+     * the result of the rounding overflowed the exponent range.
      */
     public BigFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {

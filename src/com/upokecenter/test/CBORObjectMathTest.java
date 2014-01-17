@@ -16,7 +16,7 @@ import com.upokecenter.util.*;
      *
      */
 
-  public class CBORObjectMathTest{
+  public class CBORObjectMathTest {
     @Test
     public void CBORMultiplyTest() {
       {

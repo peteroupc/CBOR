@@ -98,6 +98,7 @@ namespace PeterO {
     private FastInteger discardedBitCount;
 
     /// <summary>Gets the number of digits discarded.</summary>
+    /// <value>The number of digits discarded.</value>
     public FastInteger DiscardedDigitCount {
       get {
  return this.discardedBitCount;

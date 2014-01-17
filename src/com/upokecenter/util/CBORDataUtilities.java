@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-// import java.math.*;
-
     /**
      * Contains methods useful for reading and writing data, with a focus
      * on CBOR.
@@ -20,7 +18,7 @@ private CBORDataUtilities(){}
 
     /**
      * Parses a number whose format follows the JSON specification. See
-     * #ParseJSONNumber(str, integersOnly, parseOnly) for more information.
+     * #ParseJSONNumber(string, integersOnly, parseOnly) for more information.
      * @param str A string to parse.
      * @return A CBOR object that represents the parsed number. This function
      * will return a CBOR object representing positive or negative infinity
@@ -51,27 +49,27 @@ private CBORDataUtilities(){}
      * @return A CBOR object that represents the parsed number.
      */
     public static CBORObject ParseJSONNumber(
-String str,
-boolean integersOnly,
-boolean positiveOnly,
-boolean failOnExponentOverflow) {
+      String str,
+      boolean integersOnly,
+      boolean positiveOnly,
+      boolean failOnExponentOverflow) {
       if (((str)==null || (str).length()==0)) {
- return null;
-}
+        return null;
+      }
       char c = str.charAt(0);
       boolean negative = false;
       int index = 0;
       if (index >= str.length()) {
- return null;
-}
+        return null;
+      }
       c = str.charAt(index);
       if (c == '-' && !positiveOnly) {
         negative = true;
         index++;
       }
       if (index >= str.length()) {
- return null;
-}
+        return null;
+      }
       c = str.charAt(index);
       index++;
       boolean negExp = false;
@@ -98,8 +96,8 @@ boolean failOnExponentOverflow) {
           // Fraction
           index++;
           if (index >= str.length()) {
- return null;
-}
+            return null;
+          }
           c = str.charAt(index);
           index++;
           if (c >= '0' && c <= '9') {
@@ -130,19 +128,19 @@ boolean failOnExponentOverflow) {
           // Exponent
           index++;
           if (index >= str.length()) {
- return null;
-}
+            return null;
+          }
           c = str.charAt(index);
           if (c == '-') {
             negExp = true;
             index++;
           }
           if (c == '+') {
- index++;
-}
+            index++;
+          }
           if (index >= str.length()) {
- return null;
-}
+            return null;
+          }
           c = str.charAt(index);
           index++;
           if (c >= '0' && c <= '9') {
@@ -164,11 +162,11 @@ boolean failOnExponentOverflow) {
         }
       }
       if (negExp) {
- fastExponent.Negate();
-}
+        fastExponent.Negate();
+      }
       if (negative) {
- fastNumber.Negate();
-}
+        fastNumber.Negate();
+      }
       fastExponent.Add(exponentAdjust);
       if (index != str.length()) {
         // End of the String wasn't reached, so isn't a number
@@ -177,10 +175,10 @@ boolean failOnExponentOverflow) {
       // No fractional part
       if (fastExponent.signum() == 0) {
         if (fastNumber.CanFitInInt32()) {
- return CBORObject.FromObject(fastNumber.AsInt32());
-  } else {
- return CBORObject.FromObject(fastNumber.AsBigInteger());
-}
+          return CBORObject.FromObject(fastNumber.AsInt32());
+        } else {
+          return CBORObject.FromObject(fastNumber.AsBigInteger());
+        }
       } else {
         if (fastNumber.signum() == 0) {
           return CBORObject.FromObject(0);
@@ -196,21 +194,21 @@ boolean failOnExponentOverflow) {
               // Exponent is higher than the highest representable
               // integer of major type 0
               if (failOnExponentOverflow) {
- return null;
-}
-              else
+                return null;
+              } else {
                 return (fastExponent.signum() < 0) ?
                   CBORObject.FromObject(Double.NEGATIVE_INFINITY) :
                   CBORObject.FromObject(Double.POSITIVE_INFINITY);
+              }
             }
             if (bigintExponent.compareTo(valueLowestMajorType1) < 0) {
               // Exponent is lower than the lowest representable
               // integer of major type 1
               if (failOnExponentOverflow) {
- return null;
-  } else {
- return CBORObject.FromObject(0);
-}
+                return null;
+              } else {
+                return CBORObject.FromObject(0);
+              }
             }
           }
           return CBORObject.FromObject(ExtendedDecimal.Create(

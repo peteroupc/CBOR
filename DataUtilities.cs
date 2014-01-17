@@ -85,8 +85,9 @@ namespace PeterO {
     /// in UTF-8.</summary>
     /// <returns>The number of bytes needed to encode the given string in
     /// UTF-8, or -1 if the string contains an unpaired surrogate code point
-    /// and &quot; replace&quot; is false.</returns>
-    /// <exception cref='System.ArgumentNullException'>"S" is null.</exception>
+    /// and.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
     /// <param name='str'>A String object.</param>
     /// <param name='replace'>A Boolean object.</param>
     public static long GetUtf8Length(String str, bool replace) {
@@ -125,15 +126,14 @@ namespace PeterO {
       return size;
     }
 
-    /// <summary>Compares two strings in Unicode code point order. Unpairedsurrogates
-    /// are treated as individual code points.</summary>
-    /// <returns>A value indicating which string is &quot; less&quot; or
-    /// &quot; greater&quot; . 0: Both strings are equal or null. Less than
-    /// 0: a is null and b isn&apos;t; or the first code point that&apos;s different
-    /// is less in A than in B; or b starts with a and is longer than a. Greater
-    /// than 0: b is null and a isn&apos;t; or the first code point that&apos;
-    /// s different is greater in A than in B; or a starts with b and is longer
-    /// than b.</returns>
+    /// <summary>Compares two strings in Unicode code point order. Unpaired
+    /// surrogates are treated as individual code points.</summary>
+    /// <returns>A value indicating which string is " less" or " greater"
+    /// . 0: Both strings are equal or null. Less than 0: a is null and b isn't;
+    /// or the first code point that's different is less in A than in B; or b starts
+    /// with a and is longer than a. Greater than 0: b is null and a isn't; or the
+    /// first code point that' s different is greater in A than in B; or a starts
+    /// with b and is longer than b.</returns>
     /// <param name='strA'>The first string.</param>
     /// <param name='strB'>The second string.</param>
     public static int CodePointCompare(String strA, String strB) {
@@ -155,11 +155,11 @@ namespace PeterO {
           }
           bool incindex = false;
           if (i + 1 < strA.Length && strA[i + 1] >= 0xDC00 && strA[i + 1] <= 0xDFFF) {
-            ca = 0x10000 + (ca - 0xD800) * 0x400 + (strA[i + 1] - 0xDC00);
+            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA[i + 1] - 0xDC00);
             incindex = true;
           }
           if (i + 1 < strB.Length && strB[i + 1] >= 0xDC00 && strB[i + 1] <= 0xDFFF) {
-            cb = 0x10000 + (cb - 0xD800) * 0x400 + (strB[i + 1] - 0xDC00);
+            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB[i + 1] - 0xDC00);
             incindex = true;
           }
           if (ca != cb) {
@@ -170,15 +170,15 @@ namespace PeterO {
           }
         } else {
           if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800) {
- return ca - cb;
-}
+            return ca - cb;
+          }
           if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.Length &&
               strA[i + 1] >= 0xDC00 && strA[i + 1] <= 0xDFFF) {
-            ca = 0x10000 + (ca - 0xD800) * 0x400 + (strA[i + 1] - 0xDC00);
+            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA[i + 1] - 0xDC00);
           }
           if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.Length &&
               strB[i + 1] >= 0xDC00 && strB[i + 1] <= 0xDFFF) {
-            cb = 0x10000 + (cb - 0xD800) * 0x400 + (strB[i + 1] - 0xDC00);
+            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB[i + 1] - 0xDC00);
           }
           return ca - cb;
         }
@@ -199,8 +199,7 @@ namespace PeterO {
     /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string portion was written; or -1 if the string
-    /// portion contains an unpaired surrogate code point and &quot; replace&quot;
-    /// is false.</returns>
+    /// portion contains an unpaired surrogate code point and.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null or <paramref name='stream'/> is
     /// null.</exception>
@@ -228,8 +227,10 @@ namespace PeterO {
       if (length > str.Length) {
         throw new ArgumentException("length" + " not less or equal to " + Convert.ToString(str.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(length, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
-      if ((str.Length - offset) < length) throw new ArgumentException("str's length minus " + offset + " not greater or equal to " + Convert.ToString(length, System.Globalization.CultureInfo.InvariantCulture) + " (" +
-                                                                      Convert.ToString(str.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if ((str.Length - offset) < length) {
+        throw new ArgumentException("str's length minus " + offset + " not greater or equal to " + Convert.ToString(length, System.Globalization.CultureInfo.InvariantCulture) + " (" +
+                                    Convert.ToString(str.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
       byte[] bytes;
       int retval = 0;
       bytes = new byte[valueStreamedStringBufferLength];
@@ -256,7 +257,7 @@ namespace PeterO {
           if (c >= 0xD800 && c <= 0xDBFF && index + 1 < endIndex &&
               str[index + 1] >= 0xDC00 && str[index + 1] <= 0xDFFF) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + (c - 0xD800) * 0x400 + (str[index + 1] - 0xDC00);
+            c = 0x10000 + ((c - 0xD800) * 0x400) + (str[index + 1] - 0xDC00);
             index++;
           } else if (c >= 0xD800 && c <= 0xDFFF) {
             // unpaired surrogate
@@ -299,7 +300,7 @@ namespace PeterO {
     /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string was written; or -1 if the string contains
-    /// an unpaired surrogate code point and &quot; replace&quot; is false.</returns>
+    /// an unpaired surrogate code point and.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null or <paramref name='stream'/> is
     /// null.</exception>
@@ -321,7 +322,7 @@ namespace PeterO {
     /// the replacement character (U + FFFD). If false, stops processing
     /// when invalid UTF-8 is seen.</param>
     /// <returns>0 if the entire string was read without errors, or -1 if the
-    /// string is not valid UTF-8 and &quot; replace&quot; is false.</returns>
+    /// string is not valid UTF-8 and.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='data'/> is null or <paramref name='builder'/>
     /// is null.</exception>
@@ -417,7 +418,7 @@ namespace PeterO {
             builder.Append((char)ret);
           } else {
             int ch = ret - 0x10000;
-            int lead = ch / 0x400 + 0xd800;
+            int lead = (ch / 0x400) + 0xd800;
             int trail = (ch & 0x3FF) + 0xdc00;
             builder.Append((char)lead);
             builder.Append((char)trail);
@@ -444,9 +445,7 @@ namespace PeterO {
     /// the replacement character (U + FFFD). If false, stops processing
     /// when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string was read without errors, -1 if the
-    /// string is not valid UTF-8 and &quot; replace&quot; is false (even
-    /// if the end of the stream is reached), or -2 if the end of the stream was
-    /// reached before the entire string was read.</returns>
+    /// string is not valid UTF-8 and.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null or <paramref name='builder'/>
@@ -560,7 +559,7 @@ namespace PeterO {
             builder.Append((char)ret);
           } else {
             int ch = ret - 0x10000;
-            int lead = ch / 0x400 + 0xd800;
+            int lead = (ch / 0x400) + 0xd800;
             int trail = (ch & 0x3FF) + 0xdc00;
             builder.Append((char)lead);
             builder.Append((char)trail);

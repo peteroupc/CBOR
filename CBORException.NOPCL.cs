@@ -7,10 +7,10 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 using System.Runtime.Serialization;
 namespace PeterO {
-    /// <summary></summary>
+    /// <summary/>
 [Serializable]
     public partial class CBORException : ISerializable {
-    /// <summary></summary>
+    /// <summary>Initializes a new instance of the CBORException class.</summary>
     /// <param name='info'>A SerializationInfo object.</param>
     /// <param name='context'>A StreamingContext object.</param>
     protected CBORException(SerializationInfo info, StreamingContext context)

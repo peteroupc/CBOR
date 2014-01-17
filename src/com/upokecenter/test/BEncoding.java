@@ -13,7 +13,7 @@ import java.io.*;
     /**
      * Contains methods for reading and writing objects represented in
      * BEncode, a serialization format used in the BitTorrent protocol.
-     * For more information, see: https://wiki.theory.org/BitTorrentSpecification#bencoding
+     * For more information, see: http://wiki.theory.org/BitTorrentSpecification#bencoding
      * This class accepts BEncoded strings in UTF-8, and outputs BEncoded
      * strings in UTF-8. This class also demonstrates how CBORObject supports
      * predefined serialization formats.
@@ -71,8 +71,8 @@ private BEncoding(){}
       while (true) {
         CBORObject o = readObject(stream, true);
         if (o == null) {
- break;
-}// 'e' was read
+ break;  // 'e' was read
+}
         obj.Add(o);
       }
       return obj;

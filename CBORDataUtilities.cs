@@ -10,14 +10,15 @@ using System.Globalization;
 using System.Text;
 
 namespace PeterO {
-  /// <summary>Contains methods useful for reading and writing data,
-  /// with a focus on CBOR.</summary>
+    /// <summary>Contains methods useful for reading and writing data,
+    /// with a focus on CBOR.</summary>
   public static class CBORDataUtilities {
     private static BigInteger valueLowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
     private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     /// <summary>Parses a number whose format follows the JSON specification.
-    /// See #ParseJSONNumber(str, integersOnly, parseOnly) for more information.</summary>
+    /// See #ParseJSONNumber(String, integersOnly, parseOnly) for more
+    /// information.</summary>
     /// <param name='str'>A string to parse.</param>
     /// <returns>A CBOR object that represents the parsed number. This function
     /// will return a CBOR object representing positive or negative infinity

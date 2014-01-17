@@ -13,7 +13,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-  /// <summary>An arbitrary-precision integer.</summary>
+    /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -76,8 +76,9 @@ namespace PeterO {
     private static void ShiftWordsLeftByWords(short[] r, int rstart, int n, int shiftWords) {
       shiftWords = Math.Min(shiftWords, n);
       if (shiftWords != 0) {
-        for (int i = n - 1; i >= shiftWords; --i)
+        for (int i = n - 1; i >= shiftWords; --i) {
           r[rstart + i] = r[rstart + i - shiftWords];
+        }
         Array.Clear((short[])r, rstart, shiftWords);
       }
     }
@@ -85,8 +86,9 @@ namespace PeterO {
     private static void ShiftWordsRightByWords(short[] r, int rstart, int n, int shiftWords) {
       shiftWords = Math.Min(shiftWords, n);
       if (shiftWords != 0) {
-        for (int i = 0; i + shiftWords < n; ++i)
+        for (int i = 0; i + shiftWords < n; ++i) {
           r[rstart + i] = r[rstart + i + shiftWords];
+        }
         rstart = rstart + n - shiftWords;
         Array.Clear((short[])r, rstart, shiftWords);
       }
@@ -127,7 +129,9 @@ namespace PeterO {
         short tmp = words1[words1Start];
         words1[words1Start] = (short)(tmp + words2);
         if ((((int)words1[words1Start]) & 0xFFFF) >= (((int)tmp) & 0xFFFF))
+        {
           return 0;
+        }
         for (int i = 1; i < n; ++i) {
           words1[words1Start + i]++;
           if (words1[words1Start + i] != 0) {
@@ -165,9 +169,13 @@ namespace PeterO {
     }
 
     private static int Add(
-      short[] c, int cstart,
-      short[] words1, int astart,
-      short[] words2, int bstart, int n) {
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int n) {
       // DebugAssert.IsTrue(n%2 == 0,"{0} line {1}: n%2 == 0","integer.cpp",799);
       unchecked {
         int u;
@@ -183,9 +191,13 @@ namespace PeterO {
     }
 
     private static int Subtract(
-      short[] c, int cstart,
-      short[] words1, int astart,
-      short[] words2, int bstart, int n) {
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int n) {
       // DebugAssert.IsTrue(n%2 == 0,"{0} line {1}: n%2 == 0","integer.cpp",799);
       unchecked {
         int u;
@@ -205,8 +217,12 @@ namespace PeterO {
     }
 
     private static short LinearMultiply(
-      short[] productArr, int cstart,
-      short[] words1, int astart, short words2, int n) {
+      short[] productArr,
+      int cstart,
+      short[] words1,
+      int astart,
+      short words2,
+      int n) {
       unchecked {
         short carry = 0;
         int bint = ((int)words2) & 0xFFFF;
@@ -249,9 +265,9 @@ namespace PeterO {
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4] = c;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 2 * 4 - 3] = c;
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + (2 * 4) - 3] = c;
         p = (((int)words1[astart + 4 - 1]) & 0xFFFF) * (((int)words1[astart + 4 - 1]) & 0xFFFF);
-        p += e; result[rstart + 2 * 4 - 2] = (short)p; result[rstart + 2 * 4 - 1] = (short)(p >> 16);
+        p += e; result[rstart + 6] = (short)p; result[rstart + 7] = (short)(p >> 16);
       }
     }
 
@@ -313,9 +329,9 @@ namespace PeterO {
         p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
         p = p + (((int)c) & 0xFFFF); c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 12] = c;
-        p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 2 * 8 - 3] = c;
+        p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 13] = c;
         p = (((int)words1[astart + 8 - 1]) & 0xFFFF) * (((int)words1[astart + 8 - 1]) & 0xFFFF);
-        p += e; result[rstart + 2 * 8 - 2] = (short)p; result[rstart + 2 * 8 - 1] = (short)(p >> 16);
+        p += e; result[rstart + 14] = (short)p; result[rstart + 15] = (short)(p >> 16);
       }
     }
     #endregion
@@ -525,8 +541,10 @@ namespace PeterO {
       int resultStart,
       short[] tempArr,  // size 2*n
       int tempStart,
-      short[] words1, int words1Start,  // size n
-      short[] words2, int words2Start,  // size n
+      short[] words1,
+      int words1Start,  // size n
+      short[] words2,
+      int words2Start,  // size n
       int count) {
       if (count <= RecursionLimit) {
         count >>= 2;
@@ -601,7 +619,10 @@ namespace PeterO {
       short[] resultArr,
       int resultStart,
       short[] tempArr,
-      int tempStart, short[] words1, int words1Start, int n) {
+      int tempStart,
+      short[] words1,
+      int words1Start,
+      int n) {
       if (n <= RecursionLimit) {
         n >>= 2;
         switch (n) {
@@ -623,8 +644,15 @@ namespace PeterO {
         RecursiveSquare(resultArr, resultStart, tempArr, (int)(tempStart + n), words1, words1Start, count2);
         RecursiveSquare(resultArr, (int)(resultStart + n), tempArr, (int)(tempStart + n), words1, (int)(words1Start + count2), count2);
         RecursiveMultiply(
-          tempArr, tempStart, tempArr, (int)(tempStart + n),
-          words1, words1Start, words1, (int)(words1Start + count2), count2);
+          tempArr,
+          tempStart,
+          tempArr,
+          tempStart + n,
+          words1,
+          words1Start,
+          words1,
+          words1Start + count2,
+          count2);
 
         int carry = Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
         carry += Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
@@ -634,8 +662,14 @@ namespace PeterO {
     }
 
     private static void SchoolbookMultiply(
-      short[] resultArr, int resultStart,
-      short[] words1, int words1Start, int words1Count, short[] words2, int words2Start, int words2Count) {
+      short[] resultArr,
+      int resultStart,
+      short[] words1,
+      int words1Start,
+      int words1Count,
+      short[] words2,
+      int words2Start,
+      int words2Count) {
       // Method assumes that resultArr was already zeroed
       int cstart;
       if (words1Count < words2Count) {
@@ -685,7 +719,13 @@ namespace PeterO {
       short[] resultArr,
       int resultStart,
       short[] tempArr,
-      int tempStart, short[] words1, int words1Start, int words1Count, short[] words2, int words2Start, int words2Count) {
+      int tempStart,
+      short[] words1,
+      int words1Start,
+      int words1Count,
+      short[] words2,
+      int words2Start,
+      int words2Count) {
       if (words1Count == words2Count) {
         if (words1Start == words2Start && words1 == words2) {
           RecursiveSquare(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1Count);
@@ -747,7 +787,9 @@ namespace PeterO {
           }
         }
         if (Add(resultArr, (int)(resultStart + words1Count), resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), words2Count - words1Count) != 0)
+        {
           Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
+        }
       }
     }
 
@@ -846,10 +888,9 @@ namespace PeterO {
           }
         }
       }
-      return (returnRemainder ?
+      return returnRemainder ?
               unchecked((short)(((int)dividendHigh) & 0xFFFF)) :
-              unchecked((short)(((int)dividendLow) & 0xFFFF))
-);
+              unchecked((short)(((int)dividendLow) & 0xFFFF));
     }
 
     private static short DivideUnsigned(int x, short y) {
@@ -913,8 +954,13 @@ namespace PeterO {
     }
 
     private static void AtomicDivide(
-      short[] quotient, int quotientStart, short[] words1, int words1Start,
-      short word2A, short word2B, short[] temp) {
+      short[] quotient,
+      int quotientStart,
+      short[] words1,
+      int words1Start,
+      short word2A,
+      short word2B,
+      short[] temp) {
       if (word2A == 0 && word2B == 0) {
         quotient[quotientStart] = words1[words1Start];
         quotient[quotientStart + 1] = words1[words1Start + 3];
@@ -1084,12 +1130,18 @@ namespace PeterO {
     }
 
     private static void Divide(
-      short[] resultArr, int resultStart,  // remainder
-      short[] valueQarr, int valueQstart,  // quotient
-      short[] valueTA, int tempStart,  // scratch space
-      short[] words1, int words1Start, int valueNAint,  // dividend
-      short[] words2, int words2Start, int valueNBint  // divisor
-) {
+      short[] resultArr,
+      int resultStart,  // remainder
+      short[] valueQarr,
+      int valueQstart,  // quotient
+      short[] valueTA,
+      int tempStart,  // scratch space
+      short[] words1,
+      int words1Start,
+      int valueNAint,  // dividend
+      short[] words2,
+      int words2Start,
+      int valueNBint) {
       // set up temporary work space
       int valueNA = (int)valueNAint;
       int valueNB = (int)valueNBint;
@@ -1154,11 +1206,14 @@ namespace PeterO {
               valueTBarr,
               valueTBstart,
               valueNB) >= 0) {
-            valueTA[valueNA] -= (
-              short)Subtract(
-              valueTA, (int)(tempStart + valueNA - valueNB),
-              valueTA, (int)(tempStart + valueNA - valueNB),
-              valueTBarr, valueTBstart, valueNB);
+            valueTA[valueNA] -= (short)Subtract(
+              valueTA,
+              tempStart + valueNA - valueNB,
+              valueTA,
+              tempStart + valueNA - valueNB,
+              valueTBarr,
+              valueTBstart,
+              valueNB);
             if (valueQarr != null) {
               valueQarr[valueQstart + valueNA - valueNB] += (short)1;
             }
@@ -1234,7 +1289,6 @@ namespace PeterO {
     private int wordCount = -1;
     private short[] reg;
 
-    /// <summary>Initializes a BigInteger object set to zero.</summary>
     private BigInteger() {
     }
 
@@ -1262,8 +1316,8 @@ namespace PeterO {
           roundupSizeTable[wordLength] :
           RoundupSize(wordLength);
         this.reg = new short[wordLength];
-        int jIndex = littleEndian ? len - 1 : 0;
-        bool negative = (bytes[jIndex] & 0x80) != 0;
+        int valueJIndex = littleEndian ? len - 1 : 0;
+        bool negative = (bytes[valueJIndex] & 0x80) != 0;
         this.negative = negative;
         int j = 0;
         if (!negative) {
@@ -1622,8 +1676,8 @@ namespace PeterO {
         return false;
       }
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
-        return (this.negative && this.reg[1] == unchecked((short)0x8000) &&
-                this.reg[0] == 0);
+        return this.negative && this.reg[1] == unchecked((short)0x8000) &&
+                this.reg[0] == 0;
       }
       return true;
     }
@@ -1634,10 +1688,10 @@ namespace PeterO {
         return false;
       }
       if (c == 4 && (this.reg[3] & 0x8000) != 0) {
-        return (this.negative && this.reg[3] == unchecked((short)0x8000) &&
+        return this.negative && this.reg[3] == unchecked((short)0x8000) &&
                 this.reg[2] == 0 &&
                 this.reg[1] == 0 &&
-                this.reg[0] == 0);
+                this.reg[0] == 0;
       }
       return true;
     }
@@ -1703,8 +1757,7 @@ namespace PeterO {
       BigInteger thisVar = this;
       if (sign == 0) {
         return BigInteger.One;
-      }
-      else if (power.Equals(BigInteger.One)) {
+  } else if (power.Equals(BigInteger.One)) {
         return this;
       } else if (power.wordCount == 1 && power.reg[0] == 2) {
         return thisVar * (BigInteger)thisVar;
@@ -1790,9 +1843,8 @@ namespace PeterO {
 
     /// <summary>Finds the minimum number of bits needed to represent this
     /// object&apos;s absolute value.</summary>
-    /// <returns>The number of bits in this object&apos;s value. Returns
-    /// 0 if this object&apos;s value is 0, and returns 1 if the value is negative
-    /// 1.</returns>
+    /// <returns>The number of bits in this object's value. Returns 0 if this
+    /// object's value is 0, and returns 1 if the value is negative 1.</returns>
     public int getUnsignedBitLength() {
       int wc = this.wordCount;
       if (wc != 0) {
@@ -1825,10 +1877,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='reg'>A short[] object.</param>
-    /// <param name='wordCount'>A 32-bit signed integer.</param>
-    /// <returns>A 32-bit signed integer.</returns>
     private static int getUnsignedBitLengthEx(int numberValue, int wordCount) {
       int wc = wordCount;
       if (wc != 0) {
@@ -1863,8 +1911,8 @@ namespace PeterO {
     /// <summary>Finds the minimum number of bits needed to represent this
     /// object&apos;s value, except for its sign. If the value is negative,
     /// finds the number of bits in (its absolute value minus 1).</summary>
-    /// <returns>The number of bits in this object&apos;s value. Returns
-    /// 0 if this object&apos;s value is 0 or negative 1.</returns>
+    /// <returns>The number of bits in this object's value. Returns 0 if this
+    /// object's value is 0 or negative 1.</returns>
     public int bitLength() {
       int wc = this.wordCount;
       if (wc != 0) {
@@ -1963,7 +2011,7 @@ namespace PeterO {
     }
 
     /// <summary>Finds the number of decimal digits this number has.</summary>
-    /// <returns>The number of decimal digits. Returns 1 if this object&apos;
+    /// <returns>The number of decimal digits. Returns 1 if this object'
     /// s value is 0.</returns>
     public int getDigitCount() {
       if (this.IsZero) {
@@ -2632,22 +2680,26 @@ namespace PeterO {
         } else if (addendCount > augendCount) {
           // Addend is bigger
           carry = Add(
-            sum.reg, 0,
-            this.reg, 0,
-            bigintAugend.reg, 0,
-            (int)augendCount);
+            sum.reg,
+            0,
+            this.reg,
+            0,
+            bigintAugend.reg,
+            0,
+            augendCount);
           Array.Copy(
             this.reg,
             augendCount,
             sum.reg,
             augendCount,
             addendCount - augendCount);
-          if (carry != 0)
+          if (carry != 0) {
             carry = Increment(
               sum.reg,
               augendCount,
-              (int)(addendCount - augendCount),
+              addendCount - augendCount,
               (short)carry);
+          }
         } else {
           // Augend is bigger
           carry = Add(
@@ -2664,12 +2716,13 @@ namespace PeterO {
             sum.reg,
             addendCount,
             augendCount - addendCount);
-          if (carry != 0)
+          if (carry != 0) {
             carry = Increment(
               sum.reg,
               addendCount,
               (int)(augendCount - addendCount),
               (short)carry);
+          }
         }
         bool needShorten = true;
         if (carry != 0) {
@@ -2764,9 +2817,14 @@ namespace PeterO {
         product.negative = false;
         product.wordCount = product.reg.Length;
         SchoolbookMultiply(
-          product.reg, 0,
-          this.reg, 0, this.wordCount,
-          bigintMult.reg, 0, bigintMult.wordCount);
+          product.reg,
+          0,
+          this.reg,
+          0,
+          this.wordCount,
+          bigintMult.reg,
+          0,
+          bigintMult.wordCount);
         needShorten = false;
       } else if (this.Equals(bigintMult)) {
         int words1Size = RoundupSize(this.wordCount);
@@ -2775,9 +2833,13 @@ namespace PeterO {
         product.negative = false;
         short[] workspace = new short[words1Size + words1Size];
         RecursiveSquare(
-          product.reg, 0,
-          workspace, 0,
-          this.reg, 0, words1Size);
+          product.reg,
+          0,
+          workspace,
+          0,
+          this.reg,
+          0,
+          words1Size);
       } else {
         int words1Size = this.wordCount;
         int words2Size = bigintMult.wordCount;
@@ -2788,10 +2850,16 @@ namespace PeterO {
         short[] workspace = new short[words1Size + words2Size];
         product.wordCount = product.reg.Length;
         AsymmetricMultiply(
-          product.reg, 0,
-          workspace, 0,
-          this.reg, 0, words1Size,
-          bigintMult.reg, 0, words2Size);
+          product.reg,
+          0,
+          workspace,
+          0,
+          this.reg,
+          0,
+          words1Size,
+          bigintMult.reg,
+          0,
+          words2Size);
       }
       // Recalculate word count
       while (product.wordCount != 0 && product.reg[product.wordCount - 1] == 0) {
@@ -2893,10 +2961,10 @@ namespace PeterO {
         return BigInteger.Zero;
       }
       if (words1Size <= 2 && words2Size <= 2 && this.canFitInInt() && bigintDivisor.canFitInInt()) {
-        int aSmall = this.intValue();
-        int bSmall = bigintDivisor.intValue();
-        if (aSmall != Int32.MinValue || bSmall != -1) {
-          int result = aSmall / bSmall;
+        int valueASmall = this.intValue();
+        int valueBSmall = bigintDivisor.intValue();
+        if (valueASmall != Int32.MinValue || valueBSmall != -1) {
+          int result = valueASmall / valueBSmall;
           return new BigInteger().InitializeInt(result);
         }
       }
@@ -2926,11 +2994,18 @@ namespace PeterO {
       quotient.negative = false;
       short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];
       Divide(
-        null, 0,
-        quotient.reg, 0,
-        tempbuf, 0,
-        this.reg, 0, words1Size,
-        bigintDivisor.reg, 0, words2Size);
+        null,
+        0,
+        quotient.reg,
+        0,
+        tempbuf,
+        0,
+        this.reg,
+        0,
+        words1Size,
+        bigintDivisor.reg,
+        0,
+        words2Size);
       quotient.wordCount = quotient.CalcWordCount();
       quotient.ShortenArray();
       if ((this.Sign < 0) ^ (bigintDivisor.Sign < 0)) {
@@ -2964,11 +3039,11 @@ namespace PeterO {
         quotient.reg = new short[this.reg.Length];
         quotient.wordCount = this.wordCount;
         quotient.negative = this.negative;
-        int smallRemainder = (((int)FastDivideAndRemainderEx(
+        int smallRemainder = ((int)FastDivideAndRemainderEx(
           quotient.reg,
           this.reg,
           words1Size,
-          divisor.reg[0])) & 0xFFFF);
+          divisor.reg[0])) & 0xFFFF;
         while (quotient.wordCount != 0 &&
                quotient.reg[quotient.wordCount - 1] == 0) {
           quotient.wordCount--;
@@ -3011,13 +3086,20 @@ namespace PeterO {
       remainder.negative = false;
       quotient.reg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
       quotient.negative = false;
-      short[] tempbuf = new short[words1Size + 3 * (words2Size + 2)];
+      short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];
       Divide(
-        remainder.reg, 0,
-        quotient.reg, 0,
-        tempbuf, 0,
-        this.reg, 0, words1Size,
-        divisor.reg, 0, words2Size);
+        remainder.reg,
+        0,
+        quotient.reg,
+        0,
+        tempbuf,
+        0,
+        this.reg,
+        0,
+        words1Size,
+        divisor.reg,
+        0,
+        words2Size);
       remainder.wordCount = remainder.CalcWordCount();
       quotient.wordCount = quotient.CalcWordCount();
       // Console.WriteLine("Divd={0} divs={1} quo={2} rem={3}",this.wordCount,
@@ -3093,13 +3175,20 @@ namespace PeterO {
       words2Size += words2Size % 2;
       remainder.reg = new short[RoundupSize((int)words2Size)];
       remainder.negative = false;
-      short[] tempbuf = new short[words1Size + 3 * (words2Size + 2)];
+      short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];
       Divide(
-        remainder.reg, 0,
-        null, 0,
-        tempbuf, 0,
-        this.reg, 0, words1Size,
-        divisor.reg, 0, words2Size);
+        remainder.reg,
+        0,
+        null,
+        0,
+        tempbuf,
+        0,
+        this.reg,
+        0,
+        words1Size,
+        divisor.reg,
+        0,
+        words2Size);
       remainder.wordCount = remainder.CalcWordCount();
       remainder.ShortenArray();
       if (this.Sign < 0 && !remainder.IsZero) {
@@ -3176,8 +3265,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets whether this value is 0.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets a value indicating whether this value is 0.</summary>
+    /// <value>Whether this value is 0.</value>
     public bool IsZero {
       get {
         return this.wordCount == 0;
@@ -3186,8 +3275,8 @@ namespace PeterO {
 
     /// <summary>Finds the square root of this instance&apos;s value, rounded
     /// down.</summary>
-    /// <returns>The square root of this object&apos;s value. Returns 0
-    /// if this value is 0 or less.</returns>
+    /// <returns>The square root of this object's value. Returns 0 if this
+    /// value is 0 or less.</returns>
     public BigInteger sqrt() {
       if (this.Sign <= 0) {
         return BigInteger.Zero;
@@ -3223,7 +3312,7 @@ namespace PeterO {
     }
 
     /// <summary>Gets a value indicating whether this value is even.</summary>
-    /// <value>Whetherthis value is even.</value>
+    /// <value>Whether this value is even.</value>
     public bool IsEven {
       get {
         return !this.GetUnsignedBit(0);

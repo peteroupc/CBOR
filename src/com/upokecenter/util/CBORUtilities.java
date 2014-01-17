@@ -94,9 +94,9 @@ private CBORUtilities(){}
 }
       int ret = 19;
       {
-        ret = ret * 31 + a.length;
+        ret = (ret * 31) + a.length;
         for (int i = 0; i < a.length; ++i) {
-          ret = ret * 31 + a[i];
+          ret = (ret * 31) + a[i];
         }
       }
       return ret;

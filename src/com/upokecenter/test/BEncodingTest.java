@@ -9,7 +9,7 @@ import com.upokecenter.util.*;
      *
      */
 
-  public class BEncodingTest{
+  public class BEncodingTest {
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {
         java.io.ByteArrayInputStream s=null;

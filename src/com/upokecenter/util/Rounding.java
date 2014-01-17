@@ -19,42 +19,50 @@ at: http://peteroupc.github.io/CBOR/
      * representable number away from zero.
      */
     Up,
+
     /**
      * The fractional part is discarded (the number is truncated).
      */
     Down,
+
     /**
      * If there is a fractional part, the number is rounded to the highest
      * representable number that&apos;s closest to it.
      */
     Ceiling,
+
     /**
      * If there is a fractional part, the number is rounded to the lowest representable
      * number that&apos;s closest to it.
      */
     Floor,
+
     /**
      * Rounded to the nearest number; if the fractional part is exactly half,
      * the number is rounded to the closest representable number away from
      * zero. This is the most familiar rounding mode for many people.
      */
     HalfUp,
+
     /**
      * Rounded to the nearest number; if the fractional part is exactly half,
      * it is discarded.
      */
     HalfDown,
+
     /**
      * Rounded to the nearest number; if the fractional part is exactly half,
      * the number is rounded to the closest representable number that is
      * even. This is sometimes also known as &quot;banker&apos;s rounding&quot;.
      */
     HalfEven,
+
     /**
      * Indicates that rounding will not be used. If rounding is required,
      * the rounding operation will report an error.
      */
     Unnecessary,
+
     /**
      * If there is a fractional part and if the last digit before rounding
      * is 0 or half the radix, the number is rounded to the closest representable
