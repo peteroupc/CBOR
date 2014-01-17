@@ -809,9 +809,9 @@ o.ToJSONString());
           0x20,
           0x20 },
         0,
-        " ",
+        "   ",
         0,
-        " ");
+        "   ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
           0xc2,
@@ -844,7 +844,7 @@ o.ToJSONString());
           0x20,
           0x20 },
         0,
-        " \ufffd ",
+        " \ufffd  ",
         -1,
         null);
       this.DoTestReadUtf8(
@@ -1069,7 +1069,7 @@ o.ToJSONString());
         0x61,
         0x20,
         0xFF });
-      Assert.AreEqual(" ", cbor.AsString());
+      Assert.AreEqual("  ", cbor.AsString());
       // Test streaming of long strings
       string longString = Repeat('x', 200000);
       CBORObject cbor2;
