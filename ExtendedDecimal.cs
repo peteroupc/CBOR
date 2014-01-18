@@ -930,7 +930,8 @@ namespace PeterO {
       } else if (bigintExp.Sign > 0) {
         // Scaled integer
         BigInteger bigmantissa = bigintMant;
-        bigmantissa *= (BigInteger)DecimalUtility.FindPowerOfTenFromBig(bigintExp);
+        bigintExp=DecimalUtility.FindPowerOfTenFromBig(bigintExp);
+        bigmantissa *= (BigInteger)bigintExp;
         return ExtendedFloat.FromBigInteger(bigmantissa);
       } else {
         // Fractional number
@@ -1174,7 +1175,8 @@ namespace PeterO {
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = (BigInteger)valueFpMantissaBig;
-        bigmantissa *= (BigInteger)DecimalUtility.FindPowerOfFive(-floatExponent);
+        BigInteger exp=DecimalUtility.FindPowerOfFive(-floatExponent);
+        bigmantissa *= (BigInteger)exp;
         if (neg) {
           bigmantissa = -(BigInteger)bigmantissa;
         }

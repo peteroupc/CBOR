@@ -1190,7 +1190,7 @@ public boolean equals(CBORObject other) {
               int low = ((int)((uadditional) & 0xFFFFFFFFL));
               int high = ((int)((uadditional >> 32) & 0xFFFFFFFFL));
               BigInteger bigintAdditional = LowHighToBigInteger(low, high);
-              bigintAdditional = .subtract(BigInteger.ONE);
+              bigintAdditional =(BigInteger.ONE).negate();
               bigintAdditional=bigintAdditional.subtract(bigintAdditional);
               return FromObject(bigintAdditional);
             }
@@ -1655,8 +1655,8 @@ public void set(String key, CBORObject value) {
      * given key from the map.
      * @param obj The item or key to remove.
      * @return True if the item was removed; otherwise, false.
-     * @throws java.lang.NullPointerException The parameter "obj" is null
-     * (as opposed to CBORObject.Null).
+     * @throws java.lang.NullPointerException The parameter {@code obj}
+     * is null (as opposed to CBORObject.Null).
      * @throws java.lang.IllegalStateException The object is not an array
      * or map.
      */
@@ -2026,7 +2026,7 @@ public void set(String key, CBORObject value) {
      * Reads an object in CBOR format from a data stream.
      * @param stream A readable data stream.
      * @return A CBOR object that was read.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws CBORException There was an error in reading or parsing the
      * data.
@@ -2322,7 +2322,7 @@ public void set(String key, CBORObject value) {
      * Writes a big integer in CBOR format to a data stream.
      * @param bigint Big integer to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2397,7 +2397,7 @@ public void set(String key, CBORObject value) {
     /**
      * Writes this CBOR object to a data stream.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2451,7 +2451,7 @@ public void set(String key, CBORObject value) {
      * Writes a 64-bit unsigned integer in CBOR format to a data stream.
      * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2472,7 +2472,7 @@ public void set(String key, CBORObject value) {
      * Writes a 32-bit signed integer in CBOR format to a data stream.
      * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2484,7 +2484,7 @@ public void set(String key, CBORObject value) {
      * Writes a 16-bit signed integer in CBOR format to a data stream.
      * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2496,7 +2496,7 @@ public void set(String key, CBORObject value) {
      * Writes a Unicode character as a string in CBOR format to a data stream.
      * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.lang.IllegalArgumentException "S" is a surrogate code point.
      * @throws java.io.IOException An I/O error occurred.
@@ -2512,7 +2512,7 @@ public void set(String key, CBORObject value) {
      * Writes a Boolean value in CBOR format to a data stream.
      * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2527,7 +2527,7 @@ public void set(String key, CBORObject value) {
      * Writes a byte (0 to 255) in CBOR format to a data stream.
      * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2547,7 +2547,8 @@ public void set(String key, CBORObject value) {
      * Writes a 32-bit floating-point number in CBOR format to a data stream.
      * @param value The value to write.
      * @param s A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "s" is null.
+     * @throws java.lang.NullPointerException The parameter {@code s}
+     * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(float value, OutputStream s) throws IOException {
@@ -2567,7 +2568,7 @@ public void set(String key, CBORObject value) {
      * Writes a 64-bit floating-point number in CBOR format to a data stream.
      * @param value The value to write.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
@@ -2806,7 +2807,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * (JSON) format. This function only accepts maps and arrays.
      * @param str A string in JSON format.
      * @return A CBORObject object.
-     * @throws java.lang.NullPointerException The parameter "str" is null.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
      * @throws CBORException The string is not in JSON format.
      */
     public static CBORObject FromJSONString(String str) {
@@ -2824,7 +2826,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * and arrays.
      * @param stream A readable data stream.
      * @return A CBORObject object.
-     * @throws java.lang.NullPointerException The parameter "stream"
+     * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
      * @throws CBORException The data stream contains invalid UTF-8 or
@@ -3490,8 +3492,8 @@ public static CBORObject FromObject(Object obj) {
      * @param o An arbitrary object.
      * @param bigintTag A big integer that specifies a tag number.
      * @return A CBOR object where the object.
-     * @throws java.lang.IllegalArgumentException The parameter "bigintTag" is
-     * less than 0 or greater than 2^64-1, or "o"'s type is unsupported.
+     * @throws java.lang.IllegalArgumentException The parameter {@code bigintTag}
+     * is less than 0 or greater than 2^64-1, or {@code o}'s type is unsupported.
      */
     public static CBORObject FromObjectAndTag(Object o, BigInteger bigintTag) {
       if (bigintTag == null) {
@@ -3499,11 +3501,11 @@ public static CBORObject FromObject(Object obj) {
       }
       if (bigintTag.signum() < 0)
       {
-        throw new IllegalArgumentException("tag not greater or equal to 0 ("+bigintTag+")");
+        throw new IllegalArgumentException("tag not greater or equal to 0 ("+(bigintTag)+")");
       }
       if (bigintTag.compareTo(valueUInt64MaxValue) > 0)
       {
-        throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 ("+bigintTag+")");
+        throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 ("+(bigintTag)+")");
       }
       CBORObject c = FromObject(o);
       if (bigintTag.compareTo(valueBigInt65536) < 0) {
@@ -3540,8 +3542,8 @@ public static CBORObject FromObject(Object obj) {
      * @param smallTag A 32-bit integer that specifies a tag number.
      * @return A CBOR object where the object " value" is converted to a CBOR
      * object and given the tag.
-     * @throws java.lang.IllegalArgumentException The parameter "smallTag" is
-     * less than 0 or "valueObValue" 's type is unsupported.
+     * @throws java.lang.IllegalArgumentException The parameter {@code smallTag}
+     * is less than 0 or {@code valueObValue} 's type is unsupported.
      */
     public static CBORObject FromObjectAndTag(Object valueObValue, int smallTag) {
       if (smallTag < 0) {

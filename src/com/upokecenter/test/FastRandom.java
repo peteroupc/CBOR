@@ -43,9 +43,9 @@ package com.upokecenter.test;
      * @return A 32-bit signed integer.
      */
     public int NextValue(int v) {
-      if ((v)<=0) {
- throw new IllegalArgumentException("v"+" not less than "+"0"+" ("+Long.toString((long)(v))+")");
-}
+      if (v <= 0) {
+        throw new IllegalArgumentException("v" + " not less than " + "0" + " (" + Long.toString((long)v) + ")");
+      }
       if (v <= 1) {
         return 0;
       }

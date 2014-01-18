@@ -14,7 +14,8 @@ import org.junit.Assert;
 import com.upokecenter.util.*;
 
   final class TestCommon {
-private TestCommon(){}
+private TestCommon() {
+}
     public static void AssertBigIntegersEqual(String a, BigInteger b) {
       Assert.assertEquals(a, b.toString());
       BigInteger a2 = BigInteger.fromString(a);
@@ -112,7 +113,7 @@ rembi=divrem[1]; }
       }
       if (output != null && !d3.toString().equals(output)) {
         ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
-        Assert.assertEquals(name + ": expected: [" + d4.UnsignedMantissa.toString() +" " + d4.Exponent.toString() +"]\\n" + "but was: [" + d3.UnsignedMantissa.toString() +" " + d3.Exponent.toString() +"]",output,d3.toString());
+        Assert.assertEquals(name + ": expected: [" + d4.getUnsignedMantissa().toString() + " " + d4.getExponent().toString() + "]\\n" + "but was: [" + d3.getUnsignedMantissa().toString() + " " + d3.getExponent().toString() + "]",output,d3.toString());
       }
     }
 
@@ -150,8 +151,8 @@ finally {
 try { if(ms!=null)ms.close(); } catch (IOException ex){}
 }
     }
-        // Tests the equivalence of the FromBytes and Read methods.
-        public static CBORObject FromBytesTestAB(byte[] b) {
+    // Tests the equivalence of the FromBytes and Read methods.
+    public static CBORObject FromBytesTestAB(byte[] b) {
       CBORObject oa = FromBytesA(b);
       CBORObject ob = FromBytesB(b);
       if (!oa.equals(ob)) {
@@ -179,11 +180,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               o2));
         }
       } else {
-        if (o2.equals(o))
+        if (o2.equals(o)) {
           Assert.fail(
             String.format(java.util.Locale.US,"%s does not equal %s but not vice versa",
               o,
               o2));
+        }
       }
     }
 
@@ -261,8 +263,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         // Skip because key order may be different
       } else {
         if (!o.toString().equals(o2.toString())) {
- Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
-}
+          Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
+        }
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

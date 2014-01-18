@@ -14,7 +14,8 @@ import java.io.*;
      * to have no dependencies other than the basic runtime class library.
      */
   public final class DataUtilities {
-private DataUtilities(){}
+private DataUtilities() {
+}
     private static int valueStreamedStringBufferLength = 4096;
 
     /**
@@ -24,10 +25,10 @@ private DataUtilities(){}
      * character (U + FFFD). If false, stops processing when invalid UTF-8
      * is seen.
      * @return A string represented by the UTF-8 byte array.
-     * @throws java.lang.NullPointerException The parameter "bytes" is
-     * null.
+     * @throws java.lang.NullPointerException The parameter {@code bytes}
+     * is null.
      * @throws java.lang.IllegalArgumentException The string is not valid UTF-8
-     * and "replace" is false.
+     * and {@code replace} is false.
      */
     public static String GetUtf8String(byte[] bytes, boolean replace) {
       if (bytes == null) {
@@ -49,10 +50,10 @@ private DataUtilities(){}
      * character (U + FFFD). If false, stops processing when invalid UTF-8
      * is seen.
      * @return A string represented by the UTF-8 byte array.
-     * @throws java.lang.NullPointerException The parameter "bytes" is
-     * null.
+     * @throws java.lang.NullPointerException The parameter {@code bytes}
+     * is null.
      * @throws java.lang.IllegalArgumentException The portion of the byte array
-     * is not valid UTF-8 and "replace" is false.
+     * is not valid UTF-8 and {@code replace} is false.
      */
     public static String GetUtf8String(byte[] bytes, int offset, int bytesCount, boolean replace) {
       StringBuilder b = new StringBuilder();
@@ -69,10 +70,11 @@ private DataUtilities(){}
      * with the replacement character (U + FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
      * @return The string encoded in UTF-8.
-     * @throws java.lang.NullPointerException The parameter "str" is null.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
      * @throws java.lang.IllegalArgumentException The string contains an unpaired
-     * surrogate code point and "replace" is false, or an internal error
-     * occurred.
+     * surrogate code point and {@code replace} is false, or an internal
+     * error occurred.
      */
     public static byte[] GetUtf8Bytes(String str, boolean replace) {
       try {
@@ -98,8 +100,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * @param str A string object.
      * @param replace A Boolean object.
      * @return The number of bytes needed to encode the given string in UTF-8,
-     * or -1 if the string contains an unpaired surrogate code point and.
-     * @throws java.lang.NullPointerException The parameter "str" is null.
+     * or -1 if the string contains an unpaired surrogate code point and {@code
+     * replace} is false.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
      */
     public static long GetUtf8Length(String str, boolean replace) {
       if (str == null) {
@@ -213,12 +217,13 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * with the replacement character (U + FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
      * @return 0 if the entire string portion was written; or -1 if the string
-     * portion contains an unpaired surrogate code point and.
-     * @throws java.lang.NullPointerException The parameter "str" is null
-     * or "stream" is null.
-     * @throws java.lang.IllegalArgumentException The parameter "offset" is less
-     * than 0, "length" is less than 0, or "offset" plus "length" is greater
-     * than the string's length.
+     * portion contains an unpaired surrogate code point and {@code replace}
+     * is false.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null or {@code stream} is null.
+     * @throws java.lang.IllegalArgumentException The parameter {@code offset}
+     * is less than 0, {@code length} is less than 0, or {@code offset} plus
+     * {@code length} is greater than the string's length.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
@@ -229,19 +234,19 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new NullPointerException("str");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " ("+offset+")");
+        throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " ("+(offset)+")");
       }
       if (offset > str.length()) {
-        throw new IllegalArgumentException("offset" + " not less or equal to "+str.length()+" ("+offset+")");
+        throw new IllegalArgumentException("offset" + " not less or equal to "+(str.length())+" ("+(offset)+")");
       }
       if (length < 0) {
-        throw new IllegalArgumentException("length" + " not greater or equal to " + "0" + " ("+length+")");
+        throw new IllegalArgumentException("length" + " not greater or equal to " + "0" + " ("+(length)+")");
       }
       if (length > str.length()) {
-        throw new IllegalArgumentException("length" + " not less or equal to "+str.length()+" ("+length+")");
+        throw new IllegalArgumentException("length" + " not less or equal to "+(str.length())+" ("+(length)+")");
       }
       if ((str.length() - offset) < length) {
-        throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to "+length+" ("+str.length() - offset+")");
+        throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to "+(length)+" ("+(str.length() - offset)+")");
       }
       byte[] bytes;
       int retval = 0;
@@ -313,9 +318,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * with the replacement character (U + FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
      * @return 0 if the entire string was written; or -1 if the string contains
-     * an unpaired surrogate code point and.
-     * @throws java.lang.NullPointerException The parameter "str" is null
-     * or "stream" is null.
+     * an unpaired surrogate code point and {@code replace} is false.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null or {@code stream} is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(String str, OutputStream stream, boolean replace) throws IOException {
@@ -336,12 +341,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * character (U + FFFD). If false, stops processing when invalid UTF-8
      * is seen.
      * @return 0 if the entire string was read without errors, or -1 if the
-     * string is not valid UTF-8 and.
-     * @throws java.lang.NullPointerException The parameter "data" is
-     * null or "builder" is null.
-     * @throws java.lang.IllegalArgumentException The parameter "offset" is less
-     * than 0, "bytesCount" is less than 0, or offset plus bytesCount is greater
-     * than the length of "data" .
+     * string is not valid UTF-8 and {@code replace} is false.
+     * @throws java.lang.NullPointerException The parameter {@code data}
+     * is null or {@code builder} is null.
+     * @throws java.lang.IllegalArgumentException The parameter {@code offset}
+     * is less than 0, {@code bytesCount} is less than 0, or offset plus bytesCount
+     * is greater than the length of {@code data} .
      */
     public static int ReadUtf8FromBytes(
       byte[] data,
@@ -353,19 +358,19 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new NullPointerException("data");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " ("+offset+")");
+        throw new IllegalArgumentException("offset" + " not greater or equal to " + "0" + " ("+(offset)+")");
       }
       if (offset > data.length) {
-        throw new IllegalArgumentException("offset" + " not less or equal to "+data.length+" ("+offset+")");
+        throw new IllegalArgumentException("offset" + " not less or equal to "+(data.length)+" ("+(offset)+")");
       }
       if (bytesCount < 0) {
-        throw new IllegalArgumentException("bytesCount" + " not greater or equal to " + "0" + " ("+bytesCount+")");
+        throw new IllegalArgumentException("bytesCount" + " not greater or equal to " + "0" + " ("+(bytesCount)+")");
       }
       if (bytesCount > data.length) {
-        throw new IllegalArgumentException("bytesCount" + " not less or equal to "+data.length+" ("+bytesCount+")");
+        throw new IllegalArgumentException("bytesCount" + " not less or equal to "+(data.length)+" ("+(bytesCount)+")");
       }
       if ((data.length - offset) < bytesCount) {
-        throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to "+bytesCount+" ("+data.length - offset+")");
+        throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to "+(bytesCount)+" ("+(data.length - offset)+")");
       }
       if (builder == null) {
         throw new NullPointerException("builder");
@@ -459,10 +464,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * character (U + FFFD). If false, stops processing when an unpaired
      * surrogate code point is seen.
      * @return 0 if the entire string was read without errors, -1 if the string
-     * is not valid UTF-8 and.
+     * is not valid UTF-8 and {@code replace} is false.
      * @throws java.io.IOException An I/O error occurred.
-     * @throws java.lang.NullPointerException The parameter "stream"
-     * is null or "builder" is null.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null or {@code builder} is null.
      */
     public static int ReadUtf8(
       InputStream stream,

@@ -1347,7 +1347,7 @@ at: http://peteroupc.github.io/CBOR/
     private static short[] CleanGrow(short[] a, int size) {
       if (size > a.length) {
         short[] newa = new short[size];
-        System.arraycopy(a, newa, a.length);
+        System.arraycopy(a,0,newa,0,a.length);
         return newa;
       }
       return a;
@@ -1455,7 +1455,7 @@ at: http://peteroupc.github.io/CBOR/
         return bytes;
       } else {
         short[] regdata = new short[this.reg.length];
-        System.arraycopy(this.reg, regdata, this.reg.length);
+        System.arraycopy(this.reg,0,regdata,0,this.reg.length);
         TwosComplement(regdata, 0, (int)regdata.length);
         int byteCount = regdata.length * 2;
         for (int i = regdata.length - 1; i >= 0; --i) {
@@ -1520,14 +1520,14 @@ at: http://peteroupc.github.io/CBOR/
       if (!neg) {
         ret.negative = false;
         ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
-        System.arraycopy(this.reg, ret.reg, numWords);
+        System.arraycopy(this.reg,0,ret.reg,0,numWords);
         ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
         ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
         ret.wordCount = ret.CalcWordCount();
       } else {
         ret.negative = true;
         ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
-        System.arraycopy(this.reg, ret.reg, numWords);
+        System.arraycopy(this.reg,0,ret.reg,0,numWords);
         TwosComplement(ret.reg, 0, (int)ret.reg.length);
         ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
         ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
@@ -1558,7 +1558,7 @@ at: http://peteroupc.github.io/CBOR/
       int shiftBits = (int)(numberBits & 15);
       ret.negative = this.negative;
       ret.reg = new short[RoundupSize(numWords)];
-      System.arraycopy(this.reg, ret.reg, numWords);
+      System.arraycopy(this.reg,0,ret.reg,0,numWords);
       if (this.signum() < 0) {
         TwosComplement(ret.reg, 0, (int)ret.reg.length);
         ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
@@ -2200,7 +2200,7 @@ at: http://peteroupc.github.io/CBOR/
             if (tempReg == null) {
               if (quo != 0) {
                 tempReg = new short[this.wordCount];
-                System.arraycopy(this.reg, tempReg, tempReg.length);
+                System.arraycopy(this.reg,0,tempReg,0,tempReg.length);
                 // Use the calculated word count during division;
                 // zeros that may have occurred in division
                 // are not incorporated in the tempReg
@@ -2235,7 +2235,7 @@ at: http://peteroupc.github.io/CBOR/
         return this.SmallValueToString();
       }
       short[] tempReg = new short[this.wordCount];
-      System.arraycopy(this.reg, tempReg, tempReg.length);
+      System.arraycopy(this.reg,0,tempReg,0,tempReg.length);
       int wordCount = tempReg.length;
       while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
         wordCount--;
@@ -2785,7 +2785,7 @@ at: http://peteroupc.github.io/CBOR/
           // Reallocate the array if the rounded length
           // is much smaller than the current length
           short[] newreg = new short[newLength];
-          System.arraycopy(this.reg, newreg, Math.min(newLength, this.reg.length));
+          System.arraycopy(this.reg,0,newreg,0,Math.min(newLength, this.reg.length));
           this.reg = newreg;
         }
       }

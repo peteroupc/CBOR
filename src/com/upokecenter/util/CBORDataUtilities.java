@@ -12,7 +12,8 @@ at: http://peteroupc.github.io/CBOR/
      * on CBOR.
      */
   public final class CBORDataUtilities {
-private CBORDataUtilities(){}
+private CBORDataUtilities() {
+}
     private static BigInteger valueLowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
     private static BigInteger valueUInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 

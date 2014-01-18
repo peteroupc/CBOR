@@ -127,70 +127,6 @@ namespace PeterO {
         return mbi;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='digit'>A 32-bit signed integer.</param>
-    /// <returns>A MutableNumber object.</returns>
-      public MutableNumber MultiplyByTenAndAdd(int digit) {
-        if (digit < 0 || digit >= 10) {
-          throw new ArgumentException("Only digits 0 to 9 are supported");
-        }
-        int s;
-        int d;
-        digit &= 0xFFFF;
-        int carry = 0;
-        if (this.wordCount == 0) {
-          if (this.data.Length == 0) {
-            this.data = new int[4];
-          }
-          this.data[0] = 0;
-          this.wordCount = 1;
-        }
-        unchecked {
-          for (int i = 0; i < this.wordCount; ++i) {
-            int valueB0 = this.data[i];
-            int valueB1 = valueB0;
-            valueB0 &= 65535;
-            valueB1 = (valueB1 >> 16) & 65535;
-            if (valueB0 > valueB1) {
-              s = ((int)valueB0 - valueB1) & 0xFFFF;
-              d = 0xFFF6 * s;
-            } else {
-              s = 0;
-              d = 10 * (((int)valueB1 - valueB0) & 0xFFFF);
-            }
-            int valueA0B0 = 10 * valueB0;
-            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
-            int tempInt;
-            tempInt = valueA0B0 + carry;
-            if (i == 0) {
-              tempInt += digit;
-            }
-            int result0 = tempInt & 0xFFFF;
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) +
-              (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
-            int result1 = tempInt & 0xFFFF;
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) +
-              a0b0high + (((int)(d >> 16)) & 0xFFFF) - s;
-            this.data[i] = unchecked((int)(result0 | (result1 << 16)));
-            carry = tempInt & 0xffff;
-          }
-        }
-        if (carry != 0) {
-          if (this.wordCount >= this.data.Length) {
-            int[] newdata = new int[this.wordCount + 20];
-            Array.Copy(this.data, 0, newdata, 0, this.data.Length);
-            this.data = newdata;
-          }
-          this.data[this.wordCount] = carry;
-          this.wordCount++;
-        }
-        // Calculate the correct data length
-        while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-          this.wordCount--;
-        }
-        return this;
-      }
-
     /// <summary>Multiplies this instance by the value of a 32-bit signed
     /// integer.</summary>
     /// <param name='multiplicand'>A 32-bit signed integer.</param>
@@ -917,12 +853,12 @@ namespace PeterO {
             break;
           case 1:
             this.largeValue = this.mnum.ToBigInteger();
-            this.largeValue = this.largeValue % (BigInteger)divisor;
+            this.largeValue %= (BigInteger)divisor;
             this.smallValue = (int)this.largeValue;
             this.integerMode = 0;
             break;
           case 2:
-            this.largeValue = this.largeValue % (BigInteger)divisor;
+            this.largeValue %= (BigInteger)divisor;
             this.smallValue = (int)this.largeValue;
             this.integerMode = 0;
             break;
