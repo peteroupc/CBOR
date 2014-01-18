@@ -7,12 +7,11 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-// import java.math.*;
 import java.io.*;
 
-import com.upokecenter.util.*;
 import org.junit.Assert;
 import org.junit.Test;
+import com.upokecenter.util.*;
 
     /**
      * Contains CBOR tests.
@@ -278,7 +277,7 @@ import org.junit.Test;
       o1 = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFB, (byte)0x8B, 0x44, (byte)0xF2, (byte)0xA9, 0x0C, 0x27, 0x42, 0x28  });
       o2 = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xC5, (byte)0x82, 0x38, (byte)0xA4, (byte)0xC3, 0x50, 0x02, (byte)0x98,
                                         (byte)0xC5, (byte)0xA8, 0x02, (byte)0xC1, (byte)0xF6, (byte)0xC0, 0x1A, (byte)0xBE, 0x08,
-                                        0x04, (byte)0x86, (byte)0x99, 0x3E, (byte)0xF1 });
+                                        0x04, (byte)0x86, (byte)0x99, 0x3E, (byte)0xF1  });
       AddSubCompare(o1, o2);
     }
 
@@ -545,8 +544,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         "[\"\\r\\n\\u0006\\\\\\\"\"]");
       Assert.assertEquals(1, o.size());
       Assert.assertEquals("\r\n\u0006\\\"", o.get(0).AsString());
-      Assert.assertEquals("[\"\\r\\n\\u0006\\\\\\\"\"]",
-                      o.ToJSONString());
+      Assert.assertEquals(
+"[\"\\r\\n\\u0006\\\\\\\"\"]",
+o.ToJSONString());
       TestCommon.AssertRoundTrip(o);
     }
 
@@ -847,9 +847,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           0x20,
           0x20  },
         0,
-        " ",
+        "   ",
         0,
-        " ");
+        "   ");
       this.DoTestReadUtf8(
         new byte[] {  0x20,
           (byte)0xc2,
@@ -882,7 +882,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           0x20,
           0x20  },
         0,
-        " \ufffd ",
+        " \ufffd  ",
         -1,
         null);
       this.DoTestReadUtf8(
@@ -1113,7 +1113,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         0x61,
         0x20,
         (byte)0xFF  });
-      Assert.assertEquals(" ", cbor.AsString());
+      Assert.assertEquals("  ", cbor.AsString());
       // Test streaming of long strings
       String longString = Repeat('x', 200000);
       CBORObject cbor2;
@@ -6586,8 +6586,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           BigInteger[] tags = obj.GetTags();
           Assert.assertEquals(1, tags.length);
           Assert.assertEquals(bigintTemp, tags[0]);
-          if (!obj.getInnermostTag().equals(bigintTemp))
+          if (!obj.getInnermostTag().equals(bigintTemp)) {
             Assert.assertEquals(String.format(java.util.Locale.US,"obj tag doesn't match: %s", obj),bigintTemp,obj.getInnermostTag());
+          }
           TestCommon.AssertSer(
             obj,
             String.format(java.util.Locale.US,"%s(0)", bigintTemp));
@@ -6595,10 +6596,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             // Test multiple tags
             CBORObject obj2 = CBORObject.FromObjectAndTag(obj, bigintTemp .add(BigInteger.ONE));
             BigInteger[] bi = obj2.GetTags();
-            if (bi.length != 2)
+            if (bi.length != 2) {
               Assert.assertEquals(String.format(java.util.Locale.US,"Expected 2 tags: %s", obj2),2,bi.length);
-            if (!bi[0].equals((BigInteger)bigintTemp .add(BigInteger.ONE)))
+            }
+            if (!bi[0].equals((BigInteger)bigintTemp .add(BigInteger.ONE))) {
               Assert.assertEquals(String.format(java.util.Locale.US,"Outer tag doesn't match: %s", obj2),bigintTemp .add(BigInteger.ONE),bi[0]);
+            }
             if (!bi[1].equals(bigintTemp))
             {
               Assert.assertEquals(String.format(java.util.Locale.US,"Inner tag doesn't match: %s", obj2),bigintTemp,bi[1]);
@@ -6606,11 +6609,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             if (!obj2.getInnermostTag().equals(bigintTemp)) {
               Assert.assertEquals(String.format(java.util.Locale.US,"Innermost tag doesn't match: %s", obj2),bigintTemp,obj2.getInnermostTag());
             }
-            TestCommon.AssertSer(
-              obj2,
-              String.format(java.util.Locale.US,"%s(%s(0))",
+            String str = String.format(java.util.Locale.US,"%s(%s(0))",
                 bigintTemp .add(BigInteger.ONE),
-                bigintTemp));
+                bigintTemp);
+            TestCommon.AssertSer(
+              obj2, str);
           }
           if (bigintTemp.equals(ranges[i + 1])) {
             break;

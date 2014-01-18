@@ -6,10 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import com.upokecenter.util.*;
 
-    /**
-     *
-     */
-
   public class BEncodingTest {
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {

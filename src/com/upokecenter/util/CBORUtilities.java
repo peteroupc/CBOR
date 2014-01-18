@@ -14,7 +14,8 @@ at: http://peteroupc.github.io/CBOR/
      * class.
      */
   final class CBORUtilities {
-private CBORUtilities(){}
+private CBORUtilities() {
+}
     private static final String Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private static final String Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 

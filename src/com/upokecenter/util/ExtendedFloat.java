@@ -666,7 +666,7 @@ at: http://peteroupc.github.io/CBOR/
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param flt A 32-bit floating-point number.
-     * @return A binary float with the same value as "flt".
+     * @return A binary float with the same value as {@code flt}.
      */
     public static ExtendedFloat FromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
@@ -728,7 +728,7 @@ at: http://peteroupc.github.io/CBOR/
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param dbl A 64-bit floating-point number.
-     * @return A binary float with the same value as "dbl".
+     * @return A binary float with the same value as {@code dbl}.
      */
     public static ExtendedFloat FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
@@ -1085,10 +1085,10 @@ at: http://peteroupc.github.io/CBOR/
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException Either "ctx" is null or "ctx"'s precision
-     * is 0, and the result would have a nonterminating binary expansion;
-     * or, the rounding mode is Rounding.Unnecessary and the result is not
-     * exact.
+     * @throws ArithmeticException Either {@code ctx} is null or {@code
+     * ctx}'s precision is 0, and the result would have a nonterminating
+     * binary expansion; or, the rounding mode is Rounding.Unnecessary
+     * and the result is not exact.
      */
     public ExtendedFloat Divide(
       ExtendedFloat divisor,
@@ -1363,8 +1363,9 @@ at: http://peteroupc.github.io/CBOR/
      * pre-existing flags).
      * @return Returns the largest value that's less than the given value.
      * Returns negative infinity if the result is negative infinity.
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
-     * the precision is 0, or "ctx" has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null, the precision is 0, or {@code ctx} has an unlimited exponent
+     * range.
      */
     public ExtendedFloat NextMinus(
       PrecisionContext ctx) {
@@ -1380,8 +1381,9 @@ at: http://peteroupc.github.io/CBOR/
      * pre-existing flags).
      * @return Returns the smallest value that's greater than the given
      * value.
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
-     * the precision is 0, or "ctx" has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null, the precision is 0, or {@code ctx} has an unlimited exponent
+     * range.
      */
     public ExtendedFloat NextPlus(
       PrecisionContext ctx) {
@@ -1399,8 +1401,9 @@ at: http://peteroupc.github.io/CBOR/
      * pre-existing flags).
      * @return Returns the next value that is closer to the other object'
      * s value than this object's value.
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
-     * the precision is 0, or "ctx" has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null, the precision is 0, or {@code ctx} has an unlimited exponent
+     * range.
      */
     public ExtendedFloat NextToward(
       ExtendedFloat otherValue,
@@ -1541,7 +1544,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param other An ExtendedFloat object.
      * @return Less than 0 if this object's value is less than the other value,
      * or greater than 0 if this object's value is greater than the other value
-     * or if "other" is null, or 0 if both values are equal.
+     * or if {@code other} is null, or 0 if both values are equal.
      */
     public int compareTo(
       ExtendedFloat other) {
@@ -1819,8 +1822,8 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
      * @return The closest value to this object's value, rounded to the specified
-     * precision. Returns the same value as this object if "ctx" is null or
-     * the precision and exponent range are unlimited.
+     * precision. Returns the same value as this object if {@code ctx} is
+     * null or the precision and exponent range are unlimited.
      */
     public ExtendedFloat RoundToPrecision(
       PrecisionContext ctx) {
@@ -1834,8 +1837,8 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A context for controlling the precision, rounding mode,
      * and exponent range. Can be null.
      * @return The closest value to this object's value, rounded to the specified
-     * precision. Returns the same value as this object if "ctx" is null or
-     * the precision and exponent range are unlimited.
+     * precision. Returns the same value as this object if {@code ctx} is
+     * null or the precision and exponent range are unlimited.
      */
     public ExtendedFloat Plus(
       PrecisionContext ctx) {
@@ -1849,8 +1852,8 @@ at: http://peteroupc.github.io/CBOR/
      * and exponent range. The precision is interpreted as the maximum bit
      * length of the mantissa. Can be null.
      * @return The closest value to this object's value, rounded to the specified
-     * precision. Returns the same value as this object if "ctx" is null or
-     * the precision and exponent range are unlimited.
+     * precision. Returns the same value as this object if {@code ctx} is
+     * null or the precision and exponent range are unlimited.
      */
     public ExtendedFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
@@ -1869,8 +1872,8 @@ at: http://peteroupc.github.io/CBOR/
      * NaN if this object is less than 0 (the result would be a complex number
      * with a real part of 0 and an imaginary part of this object's absolute
      * value, but the return value is still NaN).
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
-     * the precision range is unlimited.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null or the precision range is unlimited.
      */
     public ExtendedFloat SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this, ctx);
@@ -1887,8 +1890,8 @@ at: http://peteroupc.github.io/CBOR/
      * not exact.--.
      * @return Exponential of this object. If this object's value is 1, returns
      * an approximation to " e" within the given precision.
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
-     * the precision range is unlimited.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null or the precision range is unlimited.
      */
     public ExtendedFloat Exp(PrecisionContext ctx) {
       return math.Exp(this, ctx);
@@ -1907,8 +1910,8 @@ at: http://peteroupc.github.io/CBOR/
      * NaN if this object is less than 0 (the result would be a complex number
      * with a real part equal to Ln of this object's absolute value and an imaginary
      * part equal to pi, but the return value is still NaN.).
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
-     * the precision range is unlimited.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null or the precision range is unlimited.
      */
     public ExtendedFloat Log(PrecisionContext ctx) {
       return math.Ln(this, ctx);
@@ -1932,8 +1935,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return This^exponent. Signals the flag FlagInvalid and returns
      * NaN if this object and exponent are both 0; or if this value is less than
      * 0 and the exponent either has a fractional part or is infinity.
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
-     * the precision range is unlimited, and the exponent has a fractional
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null or the precision range is unlimited, and the exponent has a fractional
      * part.
      */
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
@@ -1948,8 +1951,8 @@ at: http://peteroupc.github.io/CBOR/
      * addition to the pre-existing flags). --This parameter cannot be
      * null, as pi can never be represented exactly.--.
      * @return Pi rounded to the given precision.
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null or
-     * the precision range is unlimited.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null or the precision range is unlimited.
      */
     public static ExtendedFloat PI(PrecisionContext ctx) {
       return math.Pi(ctx);

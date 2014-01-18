@@ -609,9 +609,10 @@ namespace PeterO {
           desiredScale.Negate();
           BigInteger bigmantissa = BigInteger.Abs(this.helper.GetMantissa(ret));
           bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, desiredScale);
+          BigInteger exponentDivisor=this.helper.GetExponent(divisor);
           ret = this.helper.CreateNewWithFlags(
             bigmantissa,
-            this.helper.GetExponent(thisValue) - (BigInteger)this.helper.GetExponent(divisor),
+            this.helper.GetExponent(thisValue) - (BigInteger)exponentDivisor,
             this.helper.GetFlags(ret));
         } else if (desiredScale.Sign > 0) {
           // Desired scale is positive, shift away zeros
@@ -1694,11 +1695,12 @@ namespace PeterO {
       }
       BigInteger[] sr = mantissa.sqrtWithRemainder();
       digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();
+      BigInteger squareRootRemainder=sr[1];
       // Console.WriteLine("I {0} -> {1} [target={2}], (zero={3})",
       // mantissa, sr[0], targetPrecision,
-      // sr[1].IsZero);
+      // squareRootRemainder.IsZero);
       mantissa = sr[0];
-      if (!sr[1].IsZero) {
+      if (!squareRootRemainder.IsZero) {
         rounded = true;
         inexact = true;
       }
@@ -2308,12 +2310,12 @@ namespace PeterO {
               null,
               false);
             if ((ctxcopy.Flags & PrecisionContext.FlagInexact) != 0) {
-              if (ctx != null && ctx.HasFlags) {
+              if (ctx.HasFlags) {
                 ctx.Flags |= ctxcopy.Flags;
               }
               return retval2;
             } else {
-              if (ctx != null && ctx.HasFlags) {
+              if (ctx.HasFlags) {
                 ctx.Flags |= ctxcopy.Flags;
                 ctx.Flags &= ~PrecisionContext.FlagRounded;
               }
@@ -2633,9 +2635,10 @@ namespace PeterO {
       }
       BigInteger bigintOp2 = this.helper.GetExponent(other);
       BigInteger newexp = this.helper.GetExponent(thisValue) + (BigInteger)bigintOp2;
+      BigInteger mantissaOp2 = this.helper.GetMantissa(other);
       thisFlags = (thisFlags & BigNumberFlags.FlagNegative) ^ (otherFlags & BigNumberFlags.FlagNegative);
       T ret = this.helper.CreateNewWithFlags(
-        this.helper.GetMantissa(thisValue) * (BigInteger)this.helper.GetMantissa(other),
+        this.helper.GetMantissa(thisValue) * (BigInteger)mantissaOp2,
         newexp,
         thisFlags);
       if (ctx != null) {

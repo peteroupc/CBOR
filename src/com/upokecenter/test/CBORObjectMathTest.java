@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.upokecenter.util.*;
 
     /**
-     *
+     * Tests for math functions in CBORObject.
      */
 
   public class CBORObjectMathTest {

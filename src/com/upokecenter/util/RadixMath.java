@@ -389,7 +389,7 @@ at: http://peteroupc.github.io/CBOR/
       if (pc != null && pc.getHasFlags()) {
         pc.setFlags(pc.getFlags()|(PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
       }
-      if (pc != null && pc.Precision.signum()!=0 &&
+      if (pc != null && pc.getPrecision().signum()!=0 &&
           pc.getHasExponentRange() &&
           (pc.getRounding() == Rounding.Down ||
            pc.getRounding() == Rounding.ZeroFiveUp ||
@@ -517,7 +517,7 @@ at: http://peteroupc.github.io/CBOR/
           if (radix == 2) {
             incremented = true;
           } else {
-            BigInteger bigdigit = bigval % BigInteger.valueOf(radix);
+            BigInteger bigdigit = bigval.remainder(BigInteger.valueOf(radix));
             int lastDigit = bigdigit.intValue();
             if (lastDigit == 0 || lastDigit == (radix / 2)) {
               incremented = true;
@@ -611,9 +611,10 @@ at: http://peteroupc.github.io/CBOR/
           desiredScale.Negate();
           BigInteger bigmantissa = (this.helper.GetMantissa(ret)).abs();
           bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, desiredScale);
+          BigInteger exponentDivisor=this.helper.GetExponent(divisor);
           ret = this.helper.CreateNewWithFlags(
             bigmantissa,
-            this.helper.GetExponent(thisValue).subtract(BigInteger.valueOf(this.helper)).GetExponent(divisor),
+            this.helper.GetExponent(thisValue).subtract(exponentDivisor),
             this.helper.GetFlags(ret));
         } else if (desiredScale.signum() > 0) {
           // Desired scale is positive, shift away zeros
@@ -1718,11 +1719,12 @@ bigrem=divrem[1]; }
       }
       BigInteger[] sr = mantissa.sqrtWithRemainder();
       digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();
+      BigInteger squareRootRemainder=sr[1];
       // System.out.println("I {0} -> {1} [target={2}], (zero={3})",
       // mantissa, sr[0], targetPrecision,
-      // sr[1].signum()==0);
+      // squareRootRemainder.signum()==0);
       mantissa = sr[0];
-      if (!sr[1].signum()==0) {
+      if (squareRootRemainder.signum()!=0) {
         rounded = true;
         inexact = true;
       }
@@ -1800,7 +1802,7 @@ bigrem=divrem[1]; }
         throw new NullPointerException("ctx");
       }
       if (ctx.getPrecision().signum() <= 0) {
-        throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+ctx.getPrecision()+")");
+        throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+(ctx.getPrecision())+")");
       }
       if (!ctx.getHasExponentRange()) {
         throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()");
@@ -1858,7 +1860,7 @@ bigrem=divrem[1]; }
         throw new NullPointerException("ctx");
       }
       if (ctx.getPrecision().signum() <= 0) {
-        throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+ctx.getPrecision()+")");
+        throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+(ctx.getPrecision())+")");
       }
       if (!ctx.getHasExponentRange()) {
         throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()");
@@ -1953,7 +1955,7 @@ bigrem=divrem[1]; }
         throw new NullPointerException("ctx");
       }
       if (ctx.getPrecision().signum() <= 0) {
-        throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+ctx.getPrecision()+")");
+        throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+(ctx.getPrecision())+")");
       }
       if (!ctx.getHasExponentRange()) {
         throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()");
@@ -2058,7 +2060,7 @@ bigrem=divrem[1]; }
         if (rounding == Rounding.HalfDown ||
             rounding == Rounding.HalfUp ||
             rounding == Rounding.HalfEven) {
-          BigInteger halfDivisor = divisor >> 1;
+          BigInteger halfDivisor = divisor.shiftRight(1);
           int cmpHalf = remainder.compareTo(halfDivisor);
           if ((cmpHalf == 0) && divisor.testBit(0)==false) {
             // remainder is exactly half
@@ -2101,7 +2103,7 @@ bigrem=divrem[1]; }
         if (rounding == Rounding.HalfDown ||
             rounding == Rounding.HalfUp ||
             rounding == Rounding.HalfEven) {
-          BigInteger halfDivisor = divisor >> 1;
+          BigInteger halfDivisor = divisor.shiftRight(1);
           int cmpHalf = remainder.compareTo(halfDivisor);
           if ((cmpHalf == 0) && divisor.testBit(0)==false) {
             // remainder is exactly half
@@ -2150,7 +2152,7 @@ bigrem=divrem[1]; }
           olderDiscarded);
         accum.ShiftRight(shift);
         newmantissa = accum.getShiftedInt();
-        if (accum.DiscardedDigitCount.signum() != 0 ||
+        if (accum.getDiscardedDigitCount().signum() != 0 ||
             (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
           if (mantissa.signum()!=0) {
             flags |= PrecisionContext.FlagRounded;
@@ -2277,8 +2279,8 @@ rem=divrem[1]; }
           BigInteger quo = null;
           // System.out.println("div={0} divs={1}",mantissaDividend.getUnsignedBitLength(),
           // mantissaDivisor.getUnsignedBitLength());
-          if ((mantissaDividend % mantissaDivisor).signum()==0) {
-            quo = mantissaDividend / mantissaDivisor;
+          if ((mantissaDividend.remainder(mantissaDivisor)).signum()==0) {
+            quo = mantissaDividend.divide(mantissaDivisor);
             quo = this.RoundToScale(quo, BigInteger.ZERO, mantissaDivisor, new FastInteger(0), resultNeg, ctx);
             return this.RoundToPrecision(
               this.helper.CreateNewWithFlags(quo, naturalExponent.AsBigInteger(), resultNeg ? BigNumberFlags.FlagNegative : 0),
@@ -2340,12 +2342,12 @@ rem=divrem[1]; }
               null,
               false);
             if ((ctxcopy.getFlags() & PrecisionContext.FlagInexact) != 0) {
-              if (ctx != null && ctx.getHasFlags()) {
+              if (ctx.getHasFlags()) {
                 ctx.setFlags(ctx.getFlags()|(ctxcopy.getFlags()));
               }
               return retval2;
             } else {
-              if (ctx != null && ctx.getHasFlags()) {
+              if (ctx.getHasFlags()) {
                 ctx.setFlags(ctx.getFlags()|(ctxcopy.getFlags()));
                 ctx.setFlags(ctx.getFlags()&~(PrecisionContext.FlagRounded));
               }
@@ -2468,7 +2470,7 @@ rem=divrem[1]; }
           if (rounding == Rounding.HalfDown ||
               rounding == Rounding.HalfEven ||
               rounding == Rounding.HalfUp) {
-            BigInteger halfDivisor = mantissaDivisor >> 1;
+            BigInteger halfDivisor = mantissaDivisor.shiftRight(1);
             int cmpHalf = mantissaDividend.compareTo(halfDivisor);
             if ((cmpHalf == 0) && mantissaDivisor.testBit(0)==false) {
               // remainder is exactly half
@@ -2675,9 +2677,10 @@ rem=divrem[1]; }
       }
       BigInteger bigintOp2 = this.helper.GetExponent(other);
       BigInteger newexp = this.helper.GetExponent(thisValue).add(bigintOp2);
+      BigInteger mantissaOp2 = this.helper.GetMantissa(other);
       thisFlags = (thisFlags & BigNumberFlags.FlagNegative) ^ (otherFlags & BigNumberFlags.FlagNegative);
       T ret = this.helper.CreateNewWithFlags(
-        this.helper.GetMantissa(thisValue).multiply(BigInteger.valueOf(this.helper)).GetMantissa(other),
+        this.helper.GetMantissa(thisValue).multiply(mantissaOp2),
         newexp,
         thisFlags);
       if (ctx != null) {
@@ -3065,9 +3068,9 @@ bigrem=divrem[1]; }
       FastInteger fastEMax = null;
       // get the exponent range
       if (ctx != null && ctx.getHasExponentRange()) {
-        fastEMax = ctx.EMax.canFitInInt() ? new FastInteger(ctx.EMax.intValue()) :
+        fastEMax = ctx.getEMax().canFitInInt() ? new FastInteger(ctx.getEMax().intValue()) :
           FastInteger.FromBig(ctx.getEMax());
-        fastEMin = ctx.EMin.canFitInInt() ? new FastInteger(ctx.EMin.intValue()) :
+        fastEMin = ctx.getEMin().canFitInInt() ? new FastInteger(ctx.getEMin().intValue()) :
           FastInteger.FromBig(ctx.getEMin());
       }
       Rounding rounding = (ctx == null) ? Rounding.HalfEven : ctx.getRounding();
@@ -3197,7 +3200,7 @@ bigrem=divrem[1]; }
         fastPrecision = accum.GetDigitLength();
       }
       if (binaryPrec) {
-        while (accum.ShiftedInt.compareTo(maxMantissa) > 0) {
+        while (accum.getShiftedInt().compareTo(maxMantissa) > 0) {
           accum.ShiftRightInt(1);
         }
       }
@@ -3326,7 +3329,7 @@ bigrem=divrem[1]; }
               throw new ArithmeticException("Rounding was required");
             }
           }
-          if (accum.DiscardedDigitCount.signum() != 0 ||
+          if (accum.getDiscardedDigitCount().signum() != 0 ||
               (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
             if (ctx.getHasFlags()) {
               if (!mantissaWasZero) {
@@ -3378,7 +3381,7 @@ bigrem=divrem[1]; }
         }
       }
       boolean recheckOverflow = false;
-      if (accum.DiscardedDigitCount.signum() != 0 ||
+      if (accum.getDiscardedDigitCount().signum() != 0 ||
           (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
         if (bigmantissa.signum()!=0) {
           flags |= PrecisionContext.FlagRounded;
@@ -3407,11 +3410,11 @@ bigrem=divrem[1]; }
               FastInteger neededShift = FastInteger.Copy(newDigitLength).Subtract(fastPrecision);
               accum.ShiftRight(neededShift);
               if (binaryPrec) {
-                while (accum.ShiftedInt.compareTo(maxMantissa) > 0) {
+                while (accum.getShiftedInt().compareTo(maxMantissa) > 0) {
                   accum.ShiftRightInt(1);
                 }
               }
-              if (accum.DiscardedDigitCount.signum() != 0) {
+              if (accum.getDiscardedDigitCount().signum() != 0) {
                 exp.Add(accum.getDiscardedDigitCount());
                 discardedBits.Add(accum.getDiscardedDigitCount());
                 bigmantissa = accum.getShiftedInt();

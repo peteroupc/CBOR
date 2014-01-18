@@ -154,8 +154,10 @@ at: http://peteroupc.github.io/CBOR/
      * Creates a binary floating-point number from a 32-bit floating-point
      * number.
      * @param flt A 32-bit floating-point number.
-     * @return A big floating-point number with the same value as "flt".
-     * @throws ArithmeticException The parameter "flt" is infinity or not-a-number.
+     * @return A big floating-point number with the same value as {@code
+     * flt}.
+     * @throws ArithmeticException The parameter {@code flt} is infinity
+     * or not-a-number.
      */
     public static BigFloat FromSingle(float flt) {
       return BigFloat.FromExtendedFloat(ExtendedFloat.FromSingle(flt));
@@ -165,8 +167,10 @@ at: http://peteroupc.github.io/CBOR/
      * Creates a binary floating-point number from a 64-bit floating-point
      * number.
      * @param dbl A 64-bit floating-point number.
-     * @return A big floating-point number with the same value as "dbl".
-     * @throws ArithmeticException The parameter "dbl" is infinity or not-a-number.
+     * @return A big floating-point number with the same value as {@code
+     * dbl}.
+     * @throws ArithmeticException The parameter {@code dbl} is infinity
+     * or not-a-number.
      */
     public static BigFloat FromDouble(double dbl) {
       return BigFloat.FromExtendedFloat(ExtendedFloat.FromDouble(dbl));
@@ -813,8 +817,9 @@ at: http://peteroupc.github.io/CBOR/
      * of the context is true.
      * @return Returns the largest value that's less than the given value.
      * Returns null if the result is negative infinity.
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
-     * the precision is 0, or "ctx" has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null, the precision is 0, or {@code ctx} has an unlimited exponent
+     * range.
      */
     public BigFloat NextMinus(
       PrecisionContext ctx) {
@@ -829,8 +834,9 @@ at: http://peteroupc.github.io/CBOR/
      * of the context is true.
      * @return Returns the smallest value that's greater than the given
      * value. Returns null if the result is positive infinity.
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
-     * the precision is 0, or "ctx" has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null, the precision is 0, or {@code ctx} has an unlimited exponent
+     * range.
      */
     public BigFloat NextPlus(
       PrecisionContext ctx) {
@@ -847,8 +853,9 @@ at: http://peteroupc.github.io/CBOR/
      * of the context is true.
      * @return Returns the next value that is closer to the other object'
      * s value than this object's value. Returns null if the result is infinity.
-     * @throws java.lang.IllegalArgumentException The parameter "ctx" is null,
-     * the precision is 0, or "ctx" has an unlimited exponent range.
+     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
+     * null, the precision is 0, or {@code ctx} has an unlimited exponent
+     * range.
      */
     public BigFloat NextToward(
       BigFloat otherValue,
@@ -938,7 +945,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param other A BigFloat object.
      * @return Less than 0 if this object's value is less than the other value,
      * or greater than 0 if this object's value is greater than the other value
-     * or if "other" is null, or 0 if both values are equal.
+     * or if {@code other} is null, or 0 if both values are equal.
      */
     public int compareTo(
       BigFloat other) {

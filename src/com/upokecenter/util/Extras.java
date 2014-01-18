@@ -8,7 +8,8 @@ at: http://peteroupc.github.io/CBOR/
  */
 
   final class Extras {
-private Extras(){}
+private Extras() {
+}
     public static int[] DoubleToIntegers(double dbl) {
       long value = Double.doubleToRawLongBits(dbl);
       return new int[] {

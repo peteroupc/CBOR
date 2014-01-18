@@ -85,7 +85,7 @@ namespace PeterO {
     /// in UTF-8.</summary>
     /// <returns>The number of bytes needed to encode the given string in
     /// UTF-8, or -1 if the string contains an unpaired surrogate code point
-    /// and.</returns>
+    /// and <paramref name='replace'/> is false.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
     /// <param name='str'>A String object.</param>
@@ -199,7 +199,8 @@ namespace PeterO {
     /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string portion was written; or -1 if the string
-    /// portion contains an unpaired surrogate code point and.</returns>
+    /// portion contains an unpaired surrogate code point and <paramref
+    /// name='replace'/> is false.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null or <paramref name='stream'/> is
     /// null.</exception>
@@ -300,7 +301,8 @@ namespace PeterO {
     /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string was written; or -1 if the string contains
-    /// an unpaired surrogate code point and.</returns>
+    /// an unpaired surrogate code point and <paramref name='replace'/>
+    /// is false.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null or <paramref name='stream'/> is
     /// null.</exception>
@@ -322,7 +324,7 @@ namespace PeterO {
     /// the replacement character (U + FFFD). If false, stops processing
     /// when invalid UTF-8 is seen.</param>
     /// <returns>0 if the entire string was read without errors, or -1 if the
-    /// string is not valid UTF-8 and.</returns>
+    /// string is not valid UTF-8 and <paramref name='replace'/> is false.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='data'/> is null or <paramref name='builder'/>
     /// is null.</exception>
@@ -445,7 +447,7 @@ namespace PeterO {
     /// the replacement character (U + FFFD). If false, stops processing
     /// when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string was read without errors, -1 if the
-    /// string is not valid UTF-8 and.</returns>
+    /// string is not valid UTF-8 and <paramref name='replace'/> is false.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null or <paramref name='builder'/>

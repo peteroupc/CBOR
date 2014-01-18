@@ -14,7 +14,7 @@ using PeterO;
 
 namespace Test
 {
-  /// <summary>Description of DecTest.</summary>
+    /// <summary>Description of DecTest.</summary>
   [TestFixture]
   public class DecimalTest
   {

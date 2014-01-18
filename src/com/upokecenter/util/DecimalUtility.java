@@ -11,7 +11,8 @@ at: http://peteroupc.github.io/CBOR/
      * Description of DecimalUtility.
      */
   final class DecimalUtility {
-private DecimalUtility(){}
+private DecimalUtility() {
+}
     private static BigInteger[] valueBigIntPowersOfTen = new BigInteger[] {
       BigInteger.ONE, BigInteger.TEN, BigInteger.valueOf(100), BigInteger.valueOf(1000), BigInteger.valueOf(10000), BigInteger.valueOf(100000), BigInteger.valueOf(1000000), BigInteger.valueOf(10000000), BigInteger.valueOf(100000000), BigInteger.valueOf(1000000000),
       BigInteger.valueOf(10000000000L), BigInteger.valueOf(100000000000L), BigInteger.valueOf(1000000000000L), BigInteger.valueOf(10000000000000L),

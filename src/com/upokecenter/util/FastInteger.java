@@ -103,7 +103,7 @@ at: http://peteroupc.github.io/CBOR/
 
       int[] GetLastWordsInternal(int numWords32Bit) {
         int[] ret = new int[numWords32Bit];
-        System.arraycopy(this.data, ret, Math.min(numWords32Bit, this.wordCount));
+        System.arraycopy(this.data,0,ret,0,Math.min(numWords32Bit, this.wordCount));
         return ret;
       }
 
@@ -132,75 +132,9 @@ at: http://peteroupc.github.io/CBOR/
         if (this.wordCount > mbi.data.length) {
           mbi.data = new int[this.wordCount];
         }
-        System.arraycopy(this.data, mbi.data, this.wordCount);
+        System.arraycopy(this.data,0,mbi.data,0,this.wordCount);
         mbi.wordCount = this.wordCount;
         return mbi;
-      }
-
-    /**
-     * Not documented yet.
-     * @param digit A 32-bit signed integer.
-     * @return A MutableNumber object.
-     */
-      public MutableNumber MultiplyByTenAndAdd(int digit) {
-        if (digit < 0 || digit >= 10) {
-          throw new IllegalArgumentException("Only digits 0 to 9 are supported");
-        }
-        int s;
-        int d;
-        digit &= 0xFFFF;
-        int carry = 0;
-        if (this.wordCount == 0) {
-          if (this.data.length == 0) {
-            this.data = new int[4];
-          }
-          this.data[0] = 0;
-          this.wordCount = 1;
-        }
-        {
-          for (int i = 0; i < this.wordCount; ++i) {
-            int valueB0 = this.data[i];
-            int valueB1 = valueB0;
-            valueB0 &= 65535;
-            valueB1 = (valueB1 >> 16) & 65535;
-            if (valueB0 > valueB1) {
-              s = ((int)valueB0 - valueB1) & 0xFFFF;
-              d = 0xFFF6 * s;
-            } else {
-              s = 0;
-              d = 10 * (((int)valueB1 - valueB0) & 0xFFFF);
-            }
-            int valueA0B0 = 10 * valueB0;
-            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
-            int tempInt;
-            tempInt = valueA0B0 + carry;
-            if (i == 0) {
-              tempInt += digit;
-            }
-            int result0 = tempInt & 0xFFFF;
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) +
-              (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF);
-            int result1 = tempInt & 0xFFFF;
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) +
-              a0b0high + (((int)(d >> 16)) & 0xFFFF) - s;
-            this.data[i] = ((int)(result0 | (result1 << 16)));
-            carry = tempInt & 0xffff;
-          }
-        }
-        if (carry != 0) {
-          if (this.wordCount >= this.data.length) {
-            int[] newdata = new int[this.wordCount + 20];
-            System.arraycopy(this.data, 0, newdata, 0, this.data.length);
-            this.data = newdata;
-          }
-          this.data[this.wordCount] = carry;
-          this.wordCount++;
-        }
-        // Calculate the correct data length
-        while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-          this.wordCount--;
-        }
-        return this;
       }
 
     /**
@@ -758,10 +692,10 @@ bigrem=divrem[1]; }
         case 1:
           this.integerMode = 2;
           this.largeValue = this.mnum.ToBigInteger();
-          this.largeValue = -(BigInteger)this.largeValue;
+          this.largeValue=(this.largeValue).negate();
           break;
         case 2:
-          this.largeValue = -(BigInteger)this.largeValue;
+          this.largeValue=(this.largeValue).negate();
           break;
         default:
           throw new IllegalStateException();
@@ -813,7 +747,7 @@ bigrem=divrem[1]; }
           break;
         case 2:
           valValue = val.AsBigInteger();
-          this.largeValue -= valValue;
+          this.largeValue=this.largeValue.subtract(valValue);
           break;
         default:
           throw new IllegalStateException();
@@ -882,7 +816,7 @@ bigrem=divrem[1]; }
      */
     public FastInteger SubtractBig(BigInteger bigintVal) {
       if (this.integerMode == 2) {
-        this.largeValue -= bigintVal;
+        this.largeValue=this.largeValue.subtract(bigintVal);
         return this;
       } else {
         int sign = bigintVal.signum();
@@ -922,7 +856,7 @@ bigrem=divrem[1]; }
               } else {
                 this.integerMode = 2;
                 this.largeValue = BigInteger.valueOf(this.smallValue);
-                this.largeValue=this.largeValue.add(BigInteger.valueOf(val)).smallValue;
+                this.largeValue=this.largeValue.add(BigInteger.valueOf(val.smallValue));
               }
             } else {
               this.smallValue += val.smallValue;
@@ -946,7 +880,7 @@ bigrem=divrem[1]; }
           break;
         case 2:
           valValue = val.AsBigInteger();
-          this.largeValue += valValue;
+          this.largeValue=this.largeValue.add(valValue);
           break;
         default:
           throw new IllegalStateException();
@@ -970,12 +904,12 @@ bigrem=divrem[1]; }
             break;
           case 1:
             this.largeValue = this.mnum.ToBigInteger();
-            this.largeValue = this.largeValue % BigInteger.valueOf(divisor);
+            this.largeValue=this.largeValue.remainder(BigInteger.valueOf(divisor));
             this.smallValue = this.largeValue.intValue();
             this.integerMode = 0;
             break;
           case 2:
-            this.largeValue = this.largeValue % BigInteger.valueOf(divisor);
+            this.largeValue=this.largeValue.remainder(BigInteger.valueOf(divisor));
             this.smallValue = this.largeValue.intValue();
             this.integerMode = 0;
             break;
@@ -1045,14 +979,14 @@ bigrem=divrem[1]; }
           case 1:
             this.integerMode = 2;
             this.largeValue = this.mnum.ToBigInteger();
-            this.largeValue /= BigInteger.valueOf(divisor);
+            this.largeValue=this.largeValue.divide(BigInteger.valueOf(divisor));
             if (this.largeValue.signum()==0) {
               this.integerMode = 0;
               this.smallValue = 0;
             }
             break;
           case 2:
-            this.largeValue /= BigInteger.valueOf(divisor);
+            this.largeValue=this.largeValue.divide(BigInteger.valueOf(divisor));
             if (this.largeValue.signum()==0) {
               this.integerMode = 0;
               this.smallValue = 0;
@@ -1120,7 +1054,7 @@ bigrem=divrem[1]; }
           break;
         case 2:
           valValue = BigInteger.valueOf(val);
-          this.largeValue += valValue;
+          this.largeValue=this.largeValue.add(valValue);
           break;
         default:
           throw new IllegalStateException();
