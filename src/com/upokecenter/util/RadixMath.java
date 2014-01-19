@@ -15,6 +15,7 @@ at: http://peteroupc.github.io/CBOR/
      */
   class RadixMath<T> implements IRadixMath<T>
   {
+  // TODO: Throw something other than IllegalArgumentException where possible
     private static final int IntegerModeFixedScale = 1;
     private static final int IntegerModeRegular = 0;
 
@@ -1824,12 +1825,14 @@ bigrem=divrem[1]; }
       };
     }
 
-    // Assumes mantissa is nonnegative
-    // Assumes value is nonnegative
-    // Assumes value is nonnegative
-    // Number of digits to shift right
-    // Whether return value should be negated
-    private BigInteger RoundToScale(BigInteger mantissa, BigInteger remainder, BigInteger divisor, FastInteger shift, boolean neg, PrecisionContext ctx) {
+    private T RoundToScale(
+      BigInteger mantissa,
+      BigInteger remainder,
+      BigInteger divisor,
+      BigInteger desiredExponent,
+      FastInteger shift,
+      boolean neg,
+      PrecisionContext ctx) {
 
       IShiftAccumulator accum;
       Rounding rounding = (ctx == null) ? Rounding.HalfEven : ctx.getRounding();
@@ -1856,7 +1859,7 @@ bigrem=divrem[1]; }
           // Rounding mode doesn't care about
           // whether remainder is exactly half
           if (rounding == Rounding.Unnecessary) {
-            return SignalInvalidWithMessage(ctx,"Rounding was required");
+            return this.SignalInvalidWithMessage(ctx, "Rounding was required");
           }
           lastDiscarded = 1;
           olderDiscarded = 1;
@@ -1868,7 +1871,7 @@ bigrem=divrem[1]; }
         if ((lastDiscarded | olderDiscarded) != 0) {
           flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
           if (rounding == Rounding.Unnecessary) {
-            return SignalInvalidWithMessage(ctx,"Rounding was required");
+            return this.SignalInvalidWithMessage(ctx, "Rounding was required");
           }
           if (this.RoundGivenDigits(lastDiscarded, olderDiscarded, rounding, neg, newmantissa)) {
             newmantissa=newmantissa.add(BigInteger.ONE);
@@ -1885,7 +1888,7 @@ bigrem=divrem[1]; }
           if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
             flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
             if (rounding == Rounding.Unnecessary) {
-              return SignalInvalidWithMessage(ctx,"Rounding was required");
+              return this.SignalInvalidWithMessage(ctx, "Rounding was required");
             }
           }
           if (this.RoundGivenBigInt(accum, rounding, neg, newmantissa)) {
@@ -1896,10 +1899,10 @@ bigrem=divrem[1]; }
       if (ctx.getHasFlags()) {
         ctx.setFlags(ctx.getFlags()|(flags));
       }
-      if (neg) {
-        newmantissa=newmantissa.negate();
-      }
-      return newmantissa;
+      return this.helper.CreateNewWithFlags(
+ newmantissa,
+ desiredExponent,
+ neg ? BigNumberFlags.FlagNegative : 0);
     }
 
     private T DivideInternal(T thisValue, T divisor, PrecisionContext ctx, int integerMode, BigInteger desiredExponent) {
@@ -1959,8 +1962,7 @@ bigrem=divrem[1]; }
 BigInteger[] divrem=(mantissaDividend).divideAndRemainder(mantissaDivisor);
 quo=divrem[0];
 rem=divrem[1]; }
-            quo = this.RoundToScale(quo, rem, mantissaDivisor, shift, resultNeg, ctx);
-            return this.helper.CreateNewWithFlags(quo, desiredExponent, resultNeg ? BigNumberFlags.FlagNegative : 0);
+            return this.RoundToScale(quo, rem, mantissaDivisor, desiredExponent, shift, resultNeg, ctx);
           } else if (ctx != null && ctx.getPrecision().signum() != 0 && FastInteger.Copy(expdiff).SubtractInt(8).compareTo(fastPrecision) > 0) {
             // NOTE: 8 guard digits
             // Result would require a too-high precision since
@@ -1974,8 +1976,14 @@ rem=divrem[1]; }
 BigInteger[] divrem=(mantissaDividend).divideAndRemainder(mantissaDivisor);
 quo=divrem[0];
 rem=divrem[1]; }
-            quo = this.RoundToScale(quo, rem, mantissaDivisor, new FastInteger(0), resultNeg, ctx);
-            return this.helper.CreateNewWithFlags(quo, desiredExponent, resultNeg ? BigNumberFlags.FlagNegative : 0);
+            return this.RoundToScale(
+              quo,
+              rem,
+              mantissaDivisor,
+              desiredExponent,
+              new FastInteger(0),
+              resultNeg,
+              ctx);
           }
         }
         if (integerMode == IntegerModeRegular) {
@@ -1984,8 +1992,11 @@ rem=divrem[1]; }
           // System.out.println("div={0} divs={1}",mantissaDividend.getUnsignedBitLength(),
           // mantissaDivisor.getUnsignedBitLength());
           if ((mantissaDividend.remainder(mantissaDivisor)).signum()==0) {
+            // Dividend is divisible by divisor
             quo = mantissaDividend.divide(mantissaDivisor);
-            quo = this.RoundToScale(quo, BigInteger.ZERO, mantissaDivisor, new FastInteger(0), resultNeg, ctx);
+            if (resultNeg) {
+              quo=quo.negate();
+            }
             return this.RoundToPrecision(this.helper.CreateNewWithFlags(quo, naturalExponent.AsBigInteger(), resultNeg ? BigNumberFlags.FlagNegative : 0), ctx);
           }
           if (hasPrecision) {
@@ -2022,8 +2033,8 @@ quo=divrem[0];
 rem=divrem[1]; }
             }
             int[] digitStatus = this.RoundToScaleStatus(rem, mantissaDivisor, ctx);
-            if(digitStatus==null){
-              return SignalInvalidWithMessage(ctx, "Rounding was required");
+             if (digitStatus == null) {
+              return this.SignalInvalidWithMessage(ctx, "Rounding was required");
             }
             FastInteger natexp = FastInteger.Copy(naturalExponent).Subtract(shift);
             PrecisionContext ctxcopy = ctx.WithBlankFlags();
@@ -2095,7 +2106,7 @@ rem=divrem[1]; }
         } else {
           {
             if (!this.helper.HasTerminatingRadixExpansion(mantissaDividend, mantissaDivisor)) {
-              return SignalInvalidWithMessage(ctx,"Result would have a nonterminating expansion");
+              return this.SignalInvalidWithMessage(ctx, "Result would have a nonterminating expansion");
             }
             FastInteger divs = FastInteger.FromBig(mantissaDivisor);
             FastInteger divd = FastInteger.FromBig(mantissaDividend);
@@ -2159,7 +2170,7 @@ rem=divrem[1]; }
             }
           } else {
             if (rounding == Rounding.Unnecessary) {
-              return SignalInvalidWithMessage(ctx,"Rounding was required");
+              return this.SignalInvalidWithMessage(ctx, "Rounding was required");
             }
             lastDiscarded = 1;
             olderDiscarded = 1;
@@ -2804,7 +2815,7 @@ bigrem=divrem[1]; }
           // Overflow
           flags |= PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
           if (rounding == Rounding.Unnecessary) {
-            return SignalInvalidWithMessage(ctx,"Rounding was required");
+            return this.SignalInvalidWithMessage(ctx, "Rounding was required");
           }
           if (!unlimitedPrec && (rounding == Rounding.Down || rounding == Rounding.ZeroFiveUp || (rounding == Rounding.Ceiling && neg) || (rounding == Rounding.Floor && !neg))) {
             // Set to the highest possible value for
@@ -2849,7 +2860,7 @@ bigrem=divrem[1]; }
           FastInteger newmantissa = accum.getShiftedIntFast();
           if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
             if (rounding == Rounding.Unnecessary) {
-              return SignalInvalidWithMessage(ctx,"Rounding was required");
+              return this.SignalInvalidWithMessage(ctx, "Rounding was required");
             }
           }
           if (accum.getDiscardedDigitCount().signum() != 0 || (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
@@ -2905,7 +2916,7 @@ bigrem=divrem[1]; }
         if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
           flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
           if (rounding == Rounding.Unnecessary) {
-            return SignalInvalidWithMessage(ctx,"Rounding was required");
+            return this.SignalInvalidWithMessage(ctx, "Rounding was required");
           }
         }
         if (this.RoundGivenBigInt(accum, rounding, neg, bigmantissa)) {

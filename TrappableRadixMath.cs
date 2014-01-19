@@ -1,64 +1,63 @@
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 1/19/2014
- * Time: 7:47 AM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written in 2014 by Peter O.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://peteroupc.github.io/CBOR/
  */
 using System;
 
 namespace PeterO
 {
     /// <summary>Description of TrappableRadixMath.</summary>
-  /// <typeparam name='T'>Data type for a numeric value in a particular
-  /// radix.</typeparam>
+    /// <typeparam name='T'>Data type for a numeric value in a particular
+    /// radix.</typeparam>
   internal class TrappableRadixMath<T> : IRadixMath<T>
   {
     private static PrecisionContext GetTrappableContext(PrecisionContext ctx) {
       if (ctx == null) {
- return null;
-}
+        return null;
+      }
       if (ctx.Traps == 0) {
- return ctx;
-}
+        return ctx;
+      }
       return ctx.WithBlankFlags();
     }
 
-    private static T TriggerTraps(T result, PrecisionContext src, PrecisionContext dst) {
-       if (src == null || src.Flags == 0) {
+    private T TriggerTraps(T result, PrecisionContext src, PrecisionContext dst) {
+      if (src == null || src.Flags == 0) {
         return result;
       }
-       if (dst != null && dst.HasFlags) {
+      if (dst != null && dst.HasFlags) {
         dst.Flags |= src.Flags;
       }
       int traps = dst.Traps;
       traps &= src.Flags;
-       if (traps == 0) {
+      if (traps == 0) {
         return result;
       }
       int mutexConditions = traps & (~(
         PrecisionContext.FlagClamped | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded | PrecisionContext.FlagSubnormal));
-       if (mutexConditions != 0) {
-         for (int i = 0; i < 32; ++i) {
+      if (mutexConditions != 0) {
+        for (int i = 0; i < 32; ++i) {
           int flag = mutexConditions & (i << 1);
-           if (flag != 0) {
+          if (flag != 0) {
             throw new TrapException(flag, dst, result);
           }
         }
       }
       if ((traps & PrecisionContext.FlagSubnormal) != 0) {
- throw new TrapException(traps & PrecisionContext.FlagSubnormal, dst, result);
-}
+        throw new TrapException(traps & PrecisionContext.FlagSubnormal, dst, result);
+      }
       if ((traps & PrecisionContext.FlagInexact) != 0) {
- throw new TrapException(traps & PrecisionContext.FlagInexact, dst, result);
-}
+        throw new TrapException(traps & PrecisionContext.FlagInexact, dst, result);
+      }
       if ((traps & PrecisionContext.FlagRounded) != 0) {
- throw new TrapException(traps & PrecisionContext.FlagRounded, dst, result);
-}
+        throw new TrapException(traps & PrecisionContext.FlagRounded, dst, result);
+      }
       if ((traps & PrecisionContext.FlagClamped) != 0) {
- throw new TrapException(traps & PrecisionContext.FlagClamped, dst, result);
-}
+        throw new TrapException(traps & PrecisionContext.FlagClamped, dst, result);
+      }
       return result;
     }
 
@@ -74,7 +73,7 @@ namespace PeterO
     /// <param name='divisor'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx)
+    public T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.DivideToIntegerNaturalScale(thisValue, divisor, tctx);
@@ -86,7 +85,7 @@ public T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ct
     /// <param name='divisor'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx)
+    public T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.DivideToIntegerZeroScale(thisValue, divisor, tctx);
@@ -97,7 +96,7 @@ public T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx)
     /// <param name='value'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Abs(T value, PrecisionContext ctx)
+    public T Abs(T value, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Abs(value, tctx);
@@ -108,7 +107,7 @@ public T Abs(T value, PrecisionContext ctx)
     /// <param name='value'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Negate(T value, PrecisionContext ctx)
+    public T Negate(T value, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Negate(value, tctx);
@@ -120,7 +119,7 @@ public T Negate(T value, PrecisionContext ctx)
     /// <param name='divisor'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The remainder of the two objects.</returns>
-public T Remainder(T thisValue, T divisor, PrecisionContext ctx)
+    public T Remainder(T thisValue, T divisor, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Remainder(thisValue, divisor, tctx);
@@ -132,7 +131,7 @@ public T Remainder(T thisValue, T divisor, PrecisionContext ctx)
     /// <param name='divisor'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T RemainderNear(T thisValue, T divisor, PrecisionContext ctx)
+    public T RemainderNear(T thisValue, T divisor, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RemainderNear(thisValue, divisor, tctx);
@@ -142,7 +141,7 @@ public T RemainderNear(T thisValue, T divisor, PrecisionContext ctx)
     /// <summary>Not documented yet.</summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Pi(PrecisionContext ctx)
+    public T Pi(PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Pi(tctx);
@@ -154,7 +153,7 @@ public T Pi(PrecisionContext ctx)
     /// <param name='pow'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Power(T thisValue, T pow, PrecisionContext ctx)
+    public T Power(T thisValue, T pow, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Power(thisValue, pow, tctx);
@@ -165,7 +164,7 @@ public T Power(T thisValue, T pow, PrecisionContext ctx)
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Log10(T thisValue, PrecisionContext ctx)
+    public T Log10(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Log10(thisValue, tctx);
@@ -176,7 +175,7 @@ public T Log10(T thisValue, PrecisionContext ctx)
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Ln(T thisValue, PrecisionContext ctx)
+    public T Ln(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Ln(thisValue, tctx);
@@ -187,7 +186,7 @@ public T Ln(T thisValue, PrecisionContext ctx)
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Exp(T thisValue, PrecisionContext ctx)
+    public T Exp(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Exp(thisValue, tctx);
@@ -198,7 +197,7 @@ public T Exp(T thisValue, PrecisionContext ctx)
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T SquareRoot(T thisValue, PrecisionContext ctx)
+    public T SquareRoot(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.SquareRoot(thisValue, tctx);
@@ -209,7 +208,7 @@ public T SquareRoot(T thisValue, PrecisionContext ctx)
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T NextMinus(T thisValue, PrecisionContext ctx)
+    public T NextMinus(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.NextMinus(thisValue, tctx);
@@ -221,7 +220,7 @@ public T NextMinus(T thisValue, PrecisionContext ctx)
     /// <param name='otherValue'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T NextToward(T thisValue, T otherValue, PrecisionContext ctx)
+    public T NextToward(T thisValue, T otherValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.NextToward(thisValue, otherValue, tctx);
@@ -232,7 +231,7 @@ public T NextToward(T thisValue, T otherValue, PrecisionContext ctx)
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T NextPlus(T thisValue, PrecisionContext ctx)
+    public T NextPlus(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.NextPlus(thisValue, tctx);
@@ -245,7 +244,7 @@ public T NextPlus(T thisValue, PrecisionContext ctx)
     /// <param name='desiredExponent'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx)
+    public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.DivideToExponent(thisValue, divisor, desiredExponent, tctx);
@@ -257,7 +256,7 @@ public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, Pr
     /// <param name='divisor'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The quotient of the two objects.</returns>
-public T Divide(T thisValue, T divisor, PrecisionContext ctx)
+    public T Divide(T thisValue, T divisor, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Divide(thisValue, divisor, tctx);
@@ -269,7 +268,7 @@ public T Divide(T thisValue, T divisor, PrecisionContext ctx)
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T MinMagnitude(T a, T b, PrecisionContext ctx)
+    public T MinMagnitude(T a, T b, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.MinMagnitude(a, b, tctx);
@@ -281,7 +280,7 @@ public T MinMagnitude(T a, T b, PrecisionContext ctx)
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T MaxMagnitude(T a, T b, PrecisionContext ctx)
+    public T MaxMagnitude(T a, T b, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.MaxMagnitude(a, b, tctx);
@@ -293,7 +292,7 @@ public T MaxMagnitude(T a, T b, PrecisionContext ctx)
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Max(T a, T b, PrecisionContext ctx)
+    public T Max(T a, T b, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Max(a, b, tctx);
@@ -305,7 +304,7 @@ public T Max(T a, T b, PrecisionContext ctx)
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Min(T a, T b, PrecisionContext ctx)
+    public T Min(T a, T b, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Min(a, b, tctx);
@@ -317,7 +316,7 @@ public T Min(T a, T b, PrecisionContext ctx)
     /// <param name='other'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The product of the two objects.</returns>
-public T Multiply(T thisValue, T other, PrecisionContext ctx)
+    public T Multiply(T thisValue, T other, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Multiply(thisValue, other, tctx);
@@ -330,7 +329,7 @@ public T Multiply(T thisValue, T other, PrecisionContext ctx)
     /// <param name='augend'>A T object. (4).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx)
+    public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.MultiplyAndAdd(thisValue, multiplicand, augend, tctx);
@@ -341,7 +340,7 @@ public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext 
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx)
+    public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToBinaryPrecision(thisValue, tctx);
@@ -352,7 +351,7 @@ public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx)
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Plus(T thisValue, PrecisionContext ctx)
+    public T Plus(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Plus(thisValue, tctx);
@@ -363,7 +362,7 @@ public T Plus(T thisValue, PrecisionContext ctx)
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T RoundToPrecision(T thisValue, PrecisionContext ctx)
+    public T RoundToPrecision(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToPrecision(thisValue, tctx);
@@ -375,7 +374,7 @@ public T RoundToPrecision(T thisValue, PrecisionContext ctx)
     /// <param name='otherValue'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Quantize(T thisValue, T otherValue, PrecisionContext ctx)
+    public T Quantize(T thisValue, T otherValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Quantize(thisValue, otherValue, tctx);
@@ -387,7 +386,7 @@ public T Quantize(T thisValue, T otherValue, PrecisionContext ctx)
     /// <param name='expOther'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext ctx)
+    public T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToExponentExact(thisValue, expOther, tctx);
@@ -399,7 +398,7 @@ public T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext
     /// <param name='expOther'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContext ctx)
+    public T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToExponentSimple(thisValue, expOther, ctx);
@@ -411,7 +410,7 @@ public T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContex
     /// <param name='exponent'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx)
+    public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
@@ -422,7 +421,7 @@ public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, Precisio
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Reduce(T thisValue, PrecisionContext ctx)
+    public T Reduce(T thisValue, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Reduce(thisValue, ctx);
@@ -434,7 +433,7 @@ public T Reduce(T thisValue, PrecisionContext ctx)
     /// <param name='other'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Add(T thisValue, T other, PrecisionContext ctx)
+    public T Add(T thisValue, T other, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Add(thisValue, other, tctx);
@@ -448,14 +447,14 @@ public T Add(T thisValue, T other, PrecisionContext ctx)
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-public T CompareToWithContext(T thisValue, T numberObject, bool treatQuietNansAsSignaling, PrecisionContext ctx)
+    public T CompareToWithContext(T thisValue, T numberObject, bool treatQuietNansAsSignaling, PrecisionContext ctx)
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.CompareToWithContext(
- thisValue,
- numberObject,
- treatQuietNansAsSignaling,
- tctx);
+        thisValue,
+        numberObject,
+        treatQuietNansAsSignaling,
+        tctx);
       return TriggerTraps(result, tctx, ctx);
     }
 
@@ -464,7 +463,7 @@ public T CompareToWithContext(T thisValue, T numberObject, bool treatQuietNansAs
     /// <param name='numberObject'>A T object. (2).</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-public int CompareTo(T thisValue, T numberObject)
+    public int CompareTo(T thisValue, T numberObject)
     {
       return this.math.CompareTo(thisValue, numberObject);
     }

@@ -1,5 +1,5 @@
 /*
-Written in 2013 by Peter O.
+Written in 2014 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-  /// <summary>Exception thrown for arithmetic trap errors.</summary>
+    /// <summary>Exception thrown for arithmetic trap errors.</summary>
   public partial class TrapException : ArithmeticException {
     private Object result;
     private PrecisionContext ctx;
@@ -76,23 +76,17 @@ namespace PeterO
       this.ctx = (ctx == null) ? null : ctx.Copy();
       this.result = result;
     }
-
-    /// <summary>Initializes a new instance of the TrapException class.</summary>
+/*
     public TrapException() {
     }
 
-    /// <summary>Initializes a new instance of the TrapException class.</summary>
-    /// <param name='message'>A string object.</param>
     public TrapException(string message)
       : base(message) {
     }
 
-    /// <summary>Initializes a new instance of the TrapException class.
-    /// Not documented yet.</summary>
-    /// <param name='message'>A string object.</param>
-    /// <param name='innerException'>An Exception object.</param>
     public TrapException(string message, Exception innerException)
       : base(message, innerException) {
     }
+  */
   }
 }
