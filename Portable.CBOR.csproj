@@ -60,7 +60,6 @@
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BigFloat.cs" />
     <Compile Include="BigInteger.cs" />
     <Compile Include="BigIntegerExtra.cs" />
     <Compile Include="BigNumberFlags.cs" />
@@ -73,7 +72,6 @@
     <Compile Include="CBORType.cs" />
     <Compile Include="CBORUtilities.cs" />
     <Compile Include="DataUtilities.cs" />
-    <Compile Include="DecimalFraction.cs" />
     <Compile Include="DecimalUtility.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
     <Compile Include="ExtendedDecimal.cs" />
@@ -113,7 +111,7 @@
     <Content Include="ProfilingSessions\Session20140110_093339.sdps" />
     <Content Include="ProfilingSessions\Session20140110_103357.sdps" />
     <Content Include="ProfilingSessions\Session20140110_220041.sdps" />
-  </ItemGroup> 
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
