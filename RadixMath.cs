@@ -609,7 +609,7 @@ namespace PeterO {
           desiredScale.Negate();
           BigInteger bigmantissa = BigInteger.Abs(this.helper.GetMantissa(ret));
           bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, desiredScale);
-          BigInteger exponentDivisor=this.helper.GetExponent(divisor);
+          BigInteger exponentDivisor = this.helper.GetExponent(divisor);
           ret = this.helper.CreateNewWithFlags(
             bigmantissa,
             this.helper.GetExponent(thisValue) - (BigInteger)exponentDivisor,
@@ -849,7 +849,7 @@ namespace PeterO {
       }
       // Gauss-Legendre algorithm
       T a = this.helper.ValueOf(1);
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)10)
         .WithRounding(Rounding.ZeroFiveUp);
       T two = this.helper.ValueOf(2);
       T b = this.Divide(a, this.SquareRoot(two, ctxdiv), ctxdiv);
@@ -909,7 +909,7 @@ namespace PeterO {
       bool more = true;
       int lastCompare = 0;
       int vacillations = 0;
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.Precision)+(BigInteger)6)
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)6)
         .WithRounding(Rounding.ZeroFiveUp);
       T z = this.Add(this.NegateRaw(thisValue), this.helper.ValueOf(1), null);
       T zpow = this.Multiply(z, z, ctxdiv);
@@ -949,7 +949,7 @@ namespace PeterO {
       bool more = true;
       int lastCompare = 0;
       int vacillations = 0;
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)10)
         .WithRounding(Rounding.ZeroFiveUp);
       T z = Add(thisValue, helper.ValueOf(-1), null);
       T zpow = Multiply(z, z, ctxdiv);
@@ -991,7 +991,7 @@ namespace PeterO {
 
     private T ExpInternal(T thisValue, PrecisionContext ctx) {
       T one = this.helper.ValueOf(1);
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.Precision)+(BigInteger)6)
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)6)
         .WithRounding(Rounding.ZeroFiveUp);
       BigInteger bigintN = (BigInteger)2;
       BigInteger facto = BigInteger.One;
@@ -1054,7 +1054,7 @@ namespace PeterO {
       error.AddInt(6);
       BigInteger bigError = error.AsBigInteger();
       PrecisionContext ctxdiv = ctx.WithBigPrecision(
-        (ctx.Precision)+bigError)
+        ctx.Precision + (BigInteger)bigError)
         .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
       if (sign < 0) {
         // Use the reciprocal for negative powers
@@ -1295,7 +1295,7 @@ namespace PeterO {
       }
       #endif
 
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)10).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult = this.Ln(thisValue, ctxdiv);
       lnresult = this.Multiply(lnresult, pow, null);
       ctxdiv = ctx.WithBlankFlags();
@@ -1379,7 +1379,7 @@ namespace PeterO {
               this.helper.CreateNewWithFlags(expTmp.AsBigInteger(), BigInteger.Zero, expTmp.Sign < 0 ? BigNumberFlags.FlagNegative : 0),
               ctxCopy);
           } else {
-            PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
+            PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)10)
               .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
             T ten = this.helper.CreateNewWithFlags(
               (BigInteger)10,
@@ -1471,7 +1471,7 @@ namespace PeterO {
           error.AddInt(6);
           BigInteger bigError = error.AsBigInteger();
           ctxdiv = ctx.WithBigPrecision(
-            (ctx.Precision)+bigError)
+            ctx.Precision + bigError)
             .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
           T quarter = this.Divide(one, this.helper.ValueOf(4), ctxCopy);
           if (this.CompareTo(thisValue, quarter) <= 0) {
@@ -1506,7 +1506,7 @@ namespace PeterO {
           error.AddInt(6);
           BigInteger bigError = error.AsBigInteger();
           ctxdiv = ctx.WithBigPrecision(
-            (ctx.Precision)+bigError)
+            ctx.Precision + bigError)
             .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
           T two = this.helper.ValueOf(2);
           if (this.CompareTo(thisValue, two) >= 0) {
@@ -1581,7 +1581,7 @@ namespace PeterO {
       }
       int sign = this.helper.GetSign(thisValue);
       T one = this.helper.ValueOf(1);
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.Precision)+(BigInteger)10)
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)10)
         .WithRounding(Rounding.ZeroFiveUp)
         .WithBlankFlags();
       if (sign == 0) {
@@ -1695,7 +1695,7 @@ namespace PeterO {
       }
       BigInteger[] sr = mantissa.sqrtWithRemainder();
       digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();
-      BigInteger squareRootRemainder=sr[1];
+      BigInteger squareRootRemainder = sr[1];
       // Console.WriteLine("I {0} -> {1} [target={2}], (zero={3})",
       // mantissa, sr[0], targetPrecision,
       // squareRootRemainder.IsZero);

@@ -930,7 +930,7 @@ namespace PeterO {
       } else if (bigintExp.Sign > 0) {
         // Scaled integer
         BigInteger bigmantissa = bigintMant;
-        bigintExp=DecimalUtility.FindPowerOfTenFromBig(bigintExp);
+        bigintExp = DecimalUtility.FindPowerOfTenFromBig(bigintExp);
         bigmantissa *= (BigInteger)bigintExp;
         return ExtendedFloat.FromBigInteger(bigmantissa);
       } else {
@@ -1175,7 +1175,7 @@ namespace PeterO {
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = (BigInteger)valueFpMantissaBig;
-        BigInteger exp=DecimalUtility.FindPowerOfFive(-floatExponent);
+        BigInteger exp = DecimalUtility.FindPowerOfFive(-floatExponent);
         bigmantissa *= (BigInteger)exp;
         if (neg) {
           bigmantissa = -(BigInteger)bigmantissa;
@@ -1682,7 +1682,8 @@ namespace PeterO {
     /// decimal number.</summary>
     /// <param name='multiplicand'>The value to multiply.</param>
     /// <param name='augend'>The value to add.</param>
-    /// <returns>The result this * multiplicand + augend.</returns>
+    /// <returns>The result this * <paramref name='multiplicand'/> + <paramref
+    /// name='augend'/>.</returns>
     public ExtendedDecimal MultiplyAndAdd(
       ExtendedDecimal multiplicand,
       ExtendedDecimal augend) {

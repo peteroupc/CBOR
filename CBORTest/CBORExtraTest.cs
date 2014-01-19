@@ -4219,11 +4219,11 @@ namespace Test {
           long dxrem = dx/dy;
           ulong udxrem=(ulong)dxrem;
           Console.WriteLine(
-            "result=new ILong("+((uint)x)+","+((uint)(x>>32))+").divideUnsigned("+y+");\n"+
-            "if (result.lo!="+((uint)dxrem)+" || result.hi!="+((uint)(dxrem>>32))+")\n"+
+            "result=new ILong("+((uint)x) + ","+((uint)(x>>32)) + ").divideUnsigned("+y+");\n"+
+            "if (result.lo!="+((uint)dxrem) + " || result.hi!="+((uint)(dxrem>>32)) + ")\n"+
             "console.log(\""+dx+"/"+dy+", expected: "+
-            ((uint)dxrem)+", "+(dxrem>>32)+", was \"+[result.lo,result.hi]+\","+
-            " remainder="+((ulong)(dx%dy))+"\");");
+            ((uint)dxrem) + ", "+(dxrem>>32) + ", was \"+[result.lo,result.hi]+\","+
+            " remainder="+((ulong)(dx%dy)) + "\");");
         }
          */
       }

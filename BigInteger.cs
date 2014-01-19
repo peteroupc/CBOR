@@ -1443,7 +1443,7 @@ namespace PeterO {
           this.reg[1] = (short)0x8000;
           this.wordCount = 2;
         } else {
-          iut = unchecked((numberValue < 0) ? (int)-numberValue : (int)numberValue);
+          iut = unchecked((numberValue < 0) ? -numberValue : numberValue);
           this.reg = new short[2];
           this.reg[0] = (short)iut;
           this.reg[1] = (short)(iut >> 16);
