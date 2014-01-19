@@ -31,6 +31,29 @@ namespace PeterO {
       }
     }
 
+    private int traps;
+
+    /// <summary>Gets the traps that are set for each flag in the context.
+    /// Whenever a flag is signaled, even if HasFlags is false, and the flag's
+    /// trap is enabled, the operation will throw a TrapException. <para>For
+    /// example, if Traps is equal to FlagInexact and FlagSubnormal, a TrapException
+    /// will be thrown if an operation's return value is not the same as the
+    /// exact result (FlagInexact) or if the return value's exponent is lower
+    /// than the lowest allowed (FlagSubnormal).</para>
+    /// </summary>
+    /// <value>The traps that are set for each flag in the context. Whenever
+    /// a flag is signaled, even if HasFlags is false, and the flag&apos;s
+    /// trap is enabled, the operation will throw a TrapException. &lt;para&gt;For
+    /// example, if Traps is equal to FlagInexact and FlagSubnormal, a TrapException
+    /// will be thrown if an operation&apos;s return value is not the same
+    /// as the exact result (FlagInexact) or if the return value&apos;s exponent
+    /// is lower than the lowest allowed (FlagSubnormal).&lt;/para&gt;.</value>
+    public int Traps {
+      get {
+ return this.traps;
+}
+    }
+
     private BigInteger exponentMin;
 
     private bool hasExponentRange;
@@ -228,6 +251,18 @@ namespace PeterO {
       return pc;
     }
 
+    /// <summary>Copies this PrecisionContext with HasFlags set to true
+    /// and a Flags value of 0.</summary>
+    /// <param name="traps">Flags representing the traps to enable.
+    /// See the property "Traps".</param>
+    /// <returns>A PrecisionContext object.</returns>
+    public PrecisionContext WithTraps(int traps) {
+      PrecisionContext pc = this.Copy();
+      pc.hasFlags = true;
+      pc.traps = traps;
+      return pc;
+    }
+
     /// <summary>Copies this precision context and sets the copy&apos;s
     /// &quot;ClampNormalExponents&quot; flag to the given value.</summary>
     /// <param name='clamp'>A Boolean object.</param>
@@ -298,8 +333,8 @@ namespace PeterO {
         throw new ArgumentNullException("bigintPrecision");
       }
       if (bigintPrecision.Sign < 0) {
- throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + bigintPrecision + ")");
-}
+        throw new ArgumentException("precision" + " not greater or equal to " + "0" + " (" + bigintPrecision + ")");
+      }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
       return pc;

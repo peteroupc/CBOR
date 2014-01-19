@@ -1198,40 +1198,40 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Adds this object and another binary float and returns the result.
-     * @param decfrac An ExtendedFloat object.
+     * @param numberObject An ExtendedFloat object.
      * @return The sum of the two objects.
      */
-    public ExtendedFloat Add(ExtendedFloat decfrac) {
-      return this.Add(decfrac, PrecisionContext.Unlimited);
+    public ExtendedFloat Add(ExtendedFloat numberObject) {
+      return this.Add(numberObject, PrecisionContext.Unlimited);
     }
 
     /**
      * Subtracts a ExtendedFloat object from this instance and returns
      * the result..
-     * @param decfrac An ExtendedFloat object.
+     * @param numberObject An ExtendedFloat object.
      * @return The difference of the two objects.
      */
-    public ExtendedFloat Subtract(ExtendedFloat decfrac) {
-      return this.Subtract(decfrac, null);
+    public ExtendedFloat Subtract(ExtendedFloat numberObject) {
+      return this.Subtract(numberObject, null);
     }
 
     /**
      * Subtracts a ExtendedFloat object from this instance.
-     * @param decfrac An ExtendedFloat object.
+     * @param numberObject An ExtendedFloat object.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The difference of the two objects.
      */
-    public ExtendedFloat Subtract(ExtendedFloat decfrac, PrecisionContext ctx) {
-      if (decfrac == null) {
-        throw new NullPointerException("decfrac");
+    public ExtendedFloat Subtract(ExtendedFloat numberObject, PrecisionContext ctx) {
+      if (numberObject == null) {
+        throw new NullPointerException("numberObject");
       }
-      ExtendedFloat negated = decfrac;
-      if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
-        int newflags = decfrac.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(decfrac.unsignedMantissa, decfrac.exponent, newflags);
+      ExtendedFloat negated = numberObject;
+      if ((numberObject.flags & BigNumberFlags.FlagNaN) == 0) {
+        int newflags = numberObject.flags ^ BigNumberFlags.FlagNegative;
+        negated = CreateWithFlags(numberObject.unsignedMantissa, numberObject.exponent, newflags);
       }
       return this.Add(negated, ctx);
     }
@@ -1239,11 +1239,11 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Multiplies two binary floats. The resulting exponent will be the
      * sum of the exponents of the two binary floats.
-     * @param decfrac Another binary float.
+     * @param numberObject Another binary float.
      * @return The product of the two binary floats.
      */
-    public ExtendedFloat Multiply(ExtendedFloat decfrac) {
-      return this.Multiply(decfrac, PrecisionContext.Unlimited);
+    public ExtendedFloat Multiply(ExtendedFloat numberObject) {
+      return this.Multiply(numberObject, PrecisionContext.Unlimited);
     }
 
     /**
@@ -1258,8 +1258,8 @@ at: http://peteroupc.github.io/CBOR/
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static RadixMath<ExtendedFloat> math = new RadixMath<ExtendedFloat>(
-      new BinaryMathHelper());
+    private static IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
+      new RadixMath<ExtendedFloat>(new BinaryMathHelper()));
 
     /**
      * Divides this object by another object, and returns the integer part
@@ -1596,7 +1596,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Finds the sum of this object and another object. The result&apos;s
      * exponent is set to the lower of the exponents of the two operands.
-     * @param decfrac The number to add to.
+     * @param numberObject The number to add to.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -1604,9 +1604,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return The sum of thisValue and the other object.
      */
     public ExtendedFloat Add(
-      ExtendedFloat decfrac,
+      ExtendedFloat numberObject,
       PrecisionContext ctx) {
-      return math.Add(this, decfrac, ctx);
+      return math.Add(this, numberObject, ctx);
     }
 
     /**
@@ -1806,7 +1806,7 @@ at: http://peteroupc.github.io/CBOR/
       ExtendedFloat subtrahend,
       PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new NullPointerException("decfrac");
+        throw new NullPointerException("numberObject");
       }
       ExtendedFloat negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
