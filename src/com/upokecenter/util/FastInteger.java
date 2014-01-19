@@ -103,7 +103,7 @@ at: http://peteroupc.github.io/CBOR/
 
       int[] GetLastWordsInternal(int numWords32Bit) {
         int[] ret = new int[numWords32Bit];
-        System.arraycopy(this.data,0,ret,0,Math.min(numWords32Bit, this.wordCount));
+        System.arraycopy(this.data, 0, ret, 0, Math.min(numWords32Bit, this.wordCount));
         return ret;
       }
 
@@ -132,7 +132,7 @@ at: http://peteroupc.github.io/CBOR/
         if (this.wordCount > mbi.data.length) {
           mbi.data = new int[this.wordCount];
         }
-        System.arraycopy(this.data,0,mbi.data,0,this.wordCount);
+        System.arraycopy(this.data, 0, mbi.data, 0, this.wordCount);
         mbi.wordCount = this.wordCount;
         return mbi;
       }

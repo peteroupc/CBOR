@@ -6613,7 +6613,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
                 bigintTemp .add(BigInteger.ONE),
                 bigintTemp);
             TestCommon.AssertSer(
-              obj2, str);
+              obj2,
+              str);
           }
           if (bigintTemp.equals(ranges[i + 1])) {
             break;

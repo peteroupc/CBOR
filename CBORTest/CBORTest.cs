@@ -6540,7 +6540,8 @@ o.ToJSONString());
                 bigintTemp + BigInteger.One,
                 bigintTemp);
             TestCommon.AssertSer(
-              obj2, str);
+              obj2,
+              str);
           }
           if (bigintTemp.Equals(ranges[i + 1])) {
             break;

@@ -955,7 +955,7 @@ bigrem=divrem[1]; }
       } else if (bigintExp.signum() > 0) {
         // Scaled integer
         BigInteger bigmantissa = bigintMant;
-        bigintExp=DecimalUtility.FindPowerOfTenFromBig(bigintExp);
+        bigintExp = DecimalUtility.FindPowerOfTenFromBig(bigintExp);
         bigmantissa=bigmantissa.multiply(bigintExp);
         return ExtendedFloat.FromBigInteger(bigmantissa);
       } else {
@@ -1210,7 +1210,7 @@ remainder=divrem[1]; }
       } else {
         // Value has a fractional part
         BigInteger bigmantissa = valueFpMantissaBig;
-        BigInteger exp=DecimalUtility.FindPowerOfFive(-floatExponent);
+        BigInteger exp = DecimalUtility.FindPowerOfFive(-floatExponent);
         bigmantissa=bigmantissa.multiply(exp);
         if (neg) {
           bigmantissa=(bigmantissa).negate();
@@ -1750,7 +1750,7 @@ remainder=divrem[1]; }
      * Multiplies by one decimal number, and then adds another decimal number.
      * @param multiplicand The value to multiply.
      * @param augend The value to add.
-     * @return The result this * multiplicand + augend.
+     * @return The result this * {@code multiplicand} + {@code augend}.
      */
     public ExtendedDecimal MultiplyAndAdd(
       ExtendedDecimal multiplicand,

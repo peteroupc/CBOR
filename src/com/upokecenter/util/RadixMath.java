@@ -611,7 +611,7 @@ at: http://peteroupc.github.io/CBOR/
           desiredScale.Negate();
           BigInteger bigmantissa = (this.helper.GetMantissa(ret)).abs();
           bigmantissa = this.helper.MultiplyByRadixPower(bigmantissa, desiredScale);
-          BigInteger exponentDivisor=this.helper.GetExponent(divisor);
+          BigInteger exponentDivisor = this.helper.GetExponent(divisor);
           ret = this.helper.CreateNewWithFlags(
             bigmantissa,
             this.helper.GetExponent(thisValue).subtract(exponentDivisor),
@@ -864,7 +864,7 @@ bigrem=divrem[1]; }
       }
       // Gauss-Legendre algorithm
       T a = this.helper.ValueOf(1);
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN))
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN))
         .WithRounding(Rounding.ZeroFiveUp);
       T two = this.helper.ValueOf(2);
       T b = this.Divide(a, this.SquareRoot(two, ctxdiv), ctxdiv);
@@ -924,7 +924,7 @@ bigrem=divrem[1]; }
       boolean more = true;
       int lastCompare = 0;
       int vacillations = 0;
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.valueOf(6)))
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.valueOf(6)))
         .WithRounding(Rounding.ZeroFiveUp);
       T z = this.Add(this.NegateRaw(thisValue), this.helper.ValueOf(1), null);
       T zpow = this.Multiply(z, z, ctxdiv);
@@ -964,7 +964,7 @@ bigrem=divrem[1]; }
       boolean more = true;
       int lastCompare = 0;
       int vacillations = 0;
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN))
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN))
         .WithRounding(Rounding.ZeroFiveUp);
       T z = Add(thisValue, helper.ValueOf(-1), null);
       T zpow = Multiply(z, z, ctxdiv);
@@ -1006,7 +1006,7 @@ bigrem=divrem[1]; }
 
     private T ExpInternal(T thisValue, PrecisionContext ctx) {
       T one = this.helper.ValueOf(1);
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.valueOf(6)))
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.valueOf(6)))
         .WithRounding(Rounding.ZeroFiveUp);
       BigInteger bigintN = BigInteger.valueOf(2);
       BigInteger facto = BigInteger.ONE;
@@ -1069,7 +1069,7 @@ bigrem=divrem[1]; }
       error.AddInt(6);
       BigInteger bigError = error.AsBigInteger();
       PrecisionContext ctxdiv = ctx.WithBigPrecision(
-        (ctx.getPrecision()).add(bigError))
+        ctx.getPrecision().add(bigError))
         .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
       if (sign < 0) {
         // Use the reciprocal for negative powers
@@ -1307,7 +1307,7 @@ bigrem=divrem[1]; }
         return this.ExtendPrecision(this.helper.ValueOf(1), ctx);
       }
 
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN)).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult = this.Ln(thisValue, ctxdiv);
       lnresult = this.Multiply(lnresult, pow, null);
       ctxdiv = ctx.WithBlankFlags();
@@ -1397,7 +1397,7 @@ bigrem=divrem[1]; }
               this.helper.CreateNewWithFlags(expTmp.AsBigInteger(), BigInteger.ZERO, expTmp.signum() < 0 ? BigNumberFlags.FlagNegative : 0),
               ctxCopy);
           } else {
-            PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN))
+            PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN))
               .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
             T ten = this.helper.CreateNewWithFlags(
               BigInteger.TEN,
@@ -1491,7 +1491,7 @@ bigrem=divrem[1]; }
           error.AddInt(6);
           BigInteger bigError = error.AsBigInteger();
           ctxdiv = ctx.WithBigPrecision(
-            (ctx.getPrecision()).add(bigError))
+            ctx.getPrecision().add(bigError))
             .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
           T quarter = this.Divide(one, this.helper.ValueOf(4), ctxCopy);
           if (this.compareTo(thisValue, quarter) <= 0) {
@@ -1526,7 +1526,7 @@ bigrem=divrem[1]; }
           error.AddInt(6);
           BigInteger bigError = error.AsBigInteger();
           ctxdiv = ctx.WithBigPrecision(
-            (ctx.getPrecision()).add(bigError))
+            ctx.getPrecision().add(bigError))
             .WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
           T two = this.helper.ValueOf(2);
           if (this.compareTo(thisValue, two) >= 0) {
@@ -1603,7 +1603,7 @@ bigrem=divrem[1]; }
       }
       int sign = this.helper.GetSign(thisValue);
       T one = this.helper.ValueOf(1);
-      PrecisionContext ctxdiv = ctx.WithBigPrecision((ctx.getPrecision()).add(BigInteger.TEN))
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN))
         .WithRounding(Rounding.ZeroFiveUp)
         .WithBlankFlags();
       if (sign == 0) {
@@ -1719,7 +1719,7 @@ bigrem=divrem[1]; }
       }
       BigInteger[] sr = mantissa.sqrtWithRemainder();
       digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();
-      BigInteger squareRootRemainder=sr[1];
+      BigInteger squareRootRemainder = sr[1];
       // System.out.println("I {0} -> {1} [target={2}], (zero={3})",
       // mantissa, sr[0], targetPrecision,
       // squareRootRemainder.signum()==0);
