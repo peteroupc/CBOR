@@ -30,6 +30,7 @@ at: http://peteroupc.github.io/CBOR/
      * value.</li> </ul>
      */
   public final class ExtendedDecimal implements Comparable<ExtendedDecimal> {
+      // TODO: Document that ArithmeticException is no longer thrown
     private static final int MaxSafeInt = 214748363;
 
     private BigInteger exponent;
@@ -1698,40 +1699,40 @@ remainder=divrem[1]; }
 
     /**
      * Adds this object and another decimal number and returns the result.
-     * @param decfrac An ExtendedDecimal object.
+     * @param numberObject An ExtendedDecimal object.
      * @return The sum of the two objects.
      */
-    public ExtendedDecimal Add(ExtendedDecimal decfrac) {
-      return this.Add(decfrac, PrecisionContext.Unlimited);
+    public ExtendedDecimal Add(ExtendedDecimal numberObject) {
+      return this.Add(numberObject, PrecisionContext.Unlimited);
     }
 
     /**
      * Subtracts a ExtendedDecimal object from this instance and returns
      * the result..
-     * @param decfrac An ExtendedDecimal object.
+     * @param numberObject An ExtendedDecimal object.
      * @return The difference of the two objects.
      */
-    public ExtendedDecimal Subtract(ExtendedDecimal decfrac) {
-      return this.Subtract(decfrac, null);
+    public ExtendedDecimal Subtract(ExtendedDecimal numberObject) {
+      return this.Subtract(numberObject, null);
     }
 
     /**
      * Subtracts a ExtendedDecimal object from this instance.
-     * @param decfrac An ExtendedDecimal object.
+     * @param numberObject An ExtendedDecimal object.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The difference of the two objects.
      */
-    public ExtendedDecimal Subtract(ExtendedDecimal decfrac, PrecisionContext ctx) {
-      if (decfrac == null) {
-        throw new NullPointerException("decfrac");
+    public ExtendedDecimal Subtract(ExtendedDecimal numberObject, PrecisionContext ctx) {
+      if (numberObject == null) {
+        throw new NullPointerException("numberObject");
       }
-      ExtendedDecimal negated = decfrac;
-      if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
-        int newflags = decfrac.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(decfrac.unsignedMantissa, decfrac.exponent, newflags);
+      ExtendedDecimal negated = numberObject;
+      if ((numberObject.flags & BigNumberFlags.FlagNaN) == 0) {
+        int newflags = numberObject.flags ^ BigNumberFlags.FlagNegative;
+        negated = CreateWithFlags(numberObject.unsignedMantissa, numberObject.exponent, newflags);
       }
       return this.Add(negated, ctx);
     }
@@ -1739,11 +1740,11 @@ remainder=divrem[1]; }
     /**
      * Multiplies two decimal numbers. The resulting exponent will be the
      * sum of the exponents of the two decimal numbers.
-     * @param decfrac Another decimal number.
+     * @param numberObject Another decimal number.
      * @return The product of the two decimal numbers.
      */
-    public ExtendedDecimal Multiply(ExtendedDecimal decfrac) {
-      return this.Multiply(decfrac, PrecisionContext.Unlimited);
+    public ExtendedDecimal Multiply(ExtendedDecimal numberObject) {
+      return this.Multiply(numberObject, PrecisionContext.Unlimited);
     }
 
     /**
@@ -1758,8 +1759,8 @@ remainder=divrem[1]; }
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static RadixMath<ExtendedDecimal> math = new RadixMath<ExtendedDecimal>(
-      new DecimalMathHelper());
+    private static IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(
+      new RadixMath<ExtendedDecimal>(new DecimalMathHelper()));
 
     /**
      * Divides this object by another object, and returns the integer part
@@ -2096,7 +2097,7 @@ remainder=divrem[1]; }
     /**
      * Finds the sum of this object and another object. The result&apos;s
      * exponent is set to the lower of the exponents of the two operands.
-     * @param decfrac The number to add to.
+     * @param numberObject The number to add to.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -2104,9 +2105,9 @@ remainder=divrem[1]; }
      * @return The sum of thisValue and the other object.
      */
     public ExtendedDecimal Add(
-      ExtendedDecimal decfrac,
+      ExtendedDecimal numberObject,
       PrecisionContext ctx) {
-      return math.Add(this, decfrac, ctx);
+      return math.Add(this, numberObject, ctx);
     }
 
     /**
@@ -2306,7 +2307,7 @@ remainder=divrem[1]; }
       ExtendedDecimal subtrahend,
       PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new NullPointerException("decfrac");
+        throw new NullPointerException("numberObject");
       }
       ExtendedDecimal negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {

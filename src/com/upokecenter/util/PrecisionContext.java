@@ -28,6 +28,21 @@ at: http://peteroupc.github.io/CBOR/
         return this.hasExponentRange ? this.exponentMax : BigInteger.ZERO;
       }
 
+    private int traps;
+
+    /**
+     * Gets the traps that are set for each flag in the context. Whenever a
+     * flag is signaled, even if HasFlags is false, and the flag's trap is
+     * enabled, the operation will throw a TrapException. <p>For example,
+     * if Traps is equal to FlagInexact and FlagSubnormal, a TrapException
+     * will be thrown if an operation's return value is not the same as the
+     * exact result (FlagInexact) or if the return value's exponent is lower
+     * than the lowest allowed (FlagSubnormal).</p>
+     */
+    public int getTraps() {
+ return traps;
+}
+
     private BigInteger exponentMin;
 
     private boolean hasExponentRange;
@@ -298,8 +313,8 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("bigintPrecision");
       }
       if (bigintPrecision.signum() < 0) {
- throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + bigintPrecision + ")");
-}
+        throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + bigintPrecision + ")");
+      }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
       return pc;

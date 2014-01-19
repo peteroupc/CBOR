@@ -3138,25 +3138,25 @@ namespace PeterO {
     }
 
     /// <summary>Generates a CBOR object from a decimal fraction.</summary>
-    /// <param name='decfrac'>An arbitrary-precision decimal number.</param>
+    /// <param name='numberObject'>An arbitrary-precision decimal number.</param>
     /// <returns>A CBOR number object.</returns>
     /// <exception cref='System.ArgumentException'>The value's exponent
     /// is less than -(2^64) or greater than (2^64-1).</exception>
-    public static CBORObject FromObject(ExtendedDecimal decfrac) {
-      if ((object)decfrac == (object)null) {
+    public static CBORObject FromObject(ExtendedDecimal numberObject) {
+      if ((object)numberObject == (object)null) {
         return CBORObject.Null;
       }
-      if (decfrac.IsNaN() || decfrac.IsInfinity()) {
-        return new CBORObject(CBORObjectTypeExtendedDecimal, decfrac);
+      if (numberObject.IsNaN() || numberObject.IsInfinity()) {
+        return new CBORObject(CBORObjectTypeExtendedDecimal, numberObject);
       }
-      BigInteger bigintExponent = decfrac.Exponent;
-      if (bigintExponent.IsZero && !(decfrac.IsZero && decfrac.IsNegative)) {
-        return FromObject(decfrac.Mantissa);
+      BigInteger bigintExponent = numberObject.Exponent;
+      if (bigintExponent.IsZero && !(numberObject.IsZero && numberObject.IsNegative)) {
+        return FromObject(numberObject.Mantissa);
       } else {
         if (!BigIntFits(bigintExponent)) {
           throw new ArgumentException("Exponent is too low or too high");
         }
-        return new CBORObject(CBORObjectTypeExtendedDecimal, decfrac);
+        return new CBORObject(CBORObjectTypeExtendedDecimal, numberObject);
       }
     }
 

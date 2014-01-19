@@ -124,8 +124,8 @@ namespace PeterO {
       return bigint;
     }
 
-    private static decimal ExtendedDecimalToDecimal(ExtendedDecimal decfrac) {
-      ExtendedDecimal newDecimal = decfrac.RoundToBinaryPrecision(
+    private static decimal ExtendedDecimalToDecimal(ExtendedDecimal numberObject) {
+      ExtendedDecimal newDecimal = numberObject.RoundToBinaryPrecision(
         PrecisionContext.CliDecimal);
       if (newDecimal == null) {
         throw new OverflowException("This object's value is out of range");
