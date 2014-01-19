@@ -10,11 +10,12 @@ using System.Text;
 // using System.Numerics;
 namespace PeterO
 {
-  /// <summary>Encapsulates radix-independent arithmetic.</summary>
-  /// <typeparam name='T'>Data type for a numeric value in a particular
-  /// radix.</typeparam>
+    /// <summary>Encapsulates radix-independent arithmetic.</summary>
+    /// <typeparam name='T'>Data type for a numeric value in a particular
+    /// radix.</typeparam>
   internal class RadixMath<T> : IRadixMath<T>
   {
+  // TODO: Throw something other than ArgumentException where possible
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;
 
@@ -2012,12 +2013,12 @@ namespace PeterO
             mantissaDividend = this.helper.MultiplyByRadixPower(mantissaDividend, shift);
             BigInteger quo = BigInteger.DivRem(mantissaDividend, mantissaDivisor, out rem);
             return this.RoundToScale(
-              quo, 
-              rem, 
-              mantissaDivisor, 
+              quo,
+              rem,
+              mantissaDivisor,
               desiredExponent,
-              new FastInteger(0), 
-              resultNeg, 
+              new FastInteger(0),
+              resultNeg,
               ctx);
           }
         }

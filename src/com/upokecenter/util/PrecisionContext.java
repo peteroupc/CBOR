@@ -40,7 +40,7 @@ at: http://peteroupc.github.io/CBOR/
      * than the lowest allowed (FlagSubnormal).</p>
      */
     public int getTraps() {
- return traps;
+ return this.traps;
 }
 
     private BigInteger exponentMin;
@@ -230,6 +230,20 @@ at: http://peteroupc.github.io/CBOR/
       PrecisionContext pc = this.Copy();
       pc.hasFlags = true;
       pc.flags = 0;
+      return pc;
+    }
+
+    /**
+     * Copies this PrecisionContext with HasFlags set to true and a Flags
+     * value of 0.
+     * @param traps Flags representing the traps to enable. See the property
+     * &quot;Traps&quot;.
+     * @return A PrecisionContext object.
+     */
+    public PrecisionContext WithTraps(int traps) {
+      PrecisionContext pc = this.Copy();
+      pc.hasFlags = true;
+      pc.traps = traps;
       return pc;
     }
 

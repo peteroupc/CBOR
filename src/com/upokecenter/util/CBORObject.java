@@ -86,8 +86,8 @@ import java.io.*;
     private CBORObject() {
     }
 
-    private CBORObject(CBORObject obj, int tagLow, int tagHigh){
- this(CBORObjectTypeTagged, obj);
+    private CBORObject(CBORObject obj, int tagLow, int tagHigh) :
+      this(CBORObjectTypeTagged, obj) {
       this.tagLow = tagLow;
       this.tagHigh = tagHigh;
     }
