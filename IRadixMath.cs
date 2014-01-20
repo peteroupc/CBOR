@@ -7,7 +7,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 using System.Text;
-// using System.Numerics;
+
 namespace PeterO
 {
   internal interface IRadixMath<T>

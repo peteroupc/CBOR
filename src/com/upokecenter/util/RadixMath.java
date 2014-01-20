@@ -7,15 +7,11 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-// import java.math.*;
-
     /**
      * Encapsulates radix-independent arithmetic.
      * @param <T> Data type for a numeric value in a particular radix.
      */
-  class RadixMath<T> implements IRadixMath<T>
-  {
-  // TODO: Throw something other than IllegalArgumentException where possible
+  class RadixMath<T> implements IRadixMath<T> {
     private static final int IntegerModeFixedScale = 1;
     private static final int IntegerModeRegular = 0;
 
@@ -737,8 +733,11 @@ bigrem=divrem[1]; }
      * @return A T object.
      */
     public T Pi(PrecisionContext ctx) {
-      if (ctx == null || ctx.getPrecision().signum()==0) {
-        throw new IllegalArgumentException("ctx is null or has unlimited precision");
+      if (ctx == null) {
+        return this.SignalInvalidWithMessage(ctx, "ctx is null");
+      }
+      if (ctx.getPrecision().signum()==0) {
+        return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
       }
       // Gauss-Legendre algorithm
       T a = this.helper.ValueOf(1);
@@ -1098,7 +1097,7 @@ bigrem=divrem[1]; }
         return thisValue;
       }
       if ((!isPowIntegral || powSign < 0) && (ctx == null || ctx.getPrecision().signum()==0)) {
-        throw new IllegalArgumentException("ctx is null or has unlimited precision, and pow's exponent is not an integer or is negative");
+        return this.SignalInvalidWithMessage(ctx, "ctx is null or has unlimited precision, and pow's exponent is not an integer or is negative");
       }
       if (thisSign < 0 && !isPowIntegral) {
         return this.SignalInvalid(ctx);
@@ -1168,8 +1167,11 @@ bigrem=divrem[1]; }
      * @return A T object.
      */
     public T Log10(T thisValue, PrecisionContext ctx) {
-      if (ctx == null || ctx.getPrecision().signum()==0) {
-        throw new IllegalArgumentException("ctx is null or has unlimited precision");
+      if (ctx == null) {
+        return this.SignalInvalidWithMessage(ctx, "ctx is null");
+      }
+      if (ctx.getPrecision().signum()==0) {
+        return this.SignalInvalidWithMessage(ctx, "ctx is null or has unlimited precision");
       }
       int flags = this.helper.GetFlags(thisValue);
       if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -1271,8 +1273,11 @@ bigrem=divrem[1]; }
      * @return A T object.
      */
     public T Ln(T thisValue, PrecisionContext ctx) {
-      if (ctx == null || ctx.getPrecision().signum()==0) {
-        throw new IllegalArgumentException("ctx is null or has unlimited precision");
+      if (ctx == null) {
+        return this.SignalInvalidWithMessage(ctx, "ctx is null");
+      }
+      if (ctx.getPrecision().signum()==0) {
+        return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
       }
       int flags = this.helper.GetFlags(thisValue);
       if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -1380,8 +1385,11 @@ bigrem=divrem[1]; }
      * @return A T object.
      */
     public T Exp(T thisValue, PrecisionContext ctx) {
-      if (ctx == null || ctx.getPrecision().signum()==0) {
-        throw new IllegalArgumentException("ctx is null or has unlimited precision");
+      if (ctx == null) {
+        return this.SignalInvalidWithMessage(ctx, "ctx is null");
+      }
+      if (ctx.getPrecision().signum()==0) {
+        return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
       }
       int flags = this.helper.GetFlags(thisValue);
       if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -1466,8 +1474,11 @@ bigrem=divrem[1]; }
      * @return A T object.
      */
     public T SquareRoot(T thisValue, PrecisionContext ctx) {
-      if (ctx == null || ctx.getPrecision().signum()==0) {
-        throw new IllegalArgumentException("ctx is null or has unlimited precision");
+      if (ctx == null) {
+        return this.SignalInvalidWithMessage(ctx, "ctx is null");
+      }
+      if (ctx.getPrecision().signum()==0) {
+        return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
       }
       T ret = this.SquareRootHandleSpecial(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -1584,13 +1595,13 @@ bigrem=divrem[1]; }
      */
     public T NextMinus(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
-        throw new NullPointerException("ctx");
+        return this.SignalInvalidWithMessage(ctx, "ctx is null");
       }
-      if (ctx.getPrecision().signum() <= 0) {
-        throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+(ctx.getPrecision())+")");
+      if (ctx.getPrecision().signum()==0) {
+        return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
       }
       if (!ctx.getHasExponentRange()) {
-        throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()");
+        return this.SignalInvalidWithMessage(ctx, "doesn't satisfy ctx.getHasExponentRange()");
       }
       int flags = this.helper.GetFlags(thisValue);
       if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -1634,13 +1645,13 @@ bigrem=divrem[1]; }
      */
     public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
       if (ctx == null) {
-        throw new NullPointerException("ctx");
+        return this.SignalInvalidWithMessage(ctx, "ctx is null");
       }
-      if (ctx.getPrecision().signum() <= 0) {
-        throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+(ctx.getPrecision())+")");
+      if (ctx.getPrecision().signum()==0) {
+        return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
       }
       if (!ctx.getHasExponentRange()) {
-        throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()");
+        return this.SignalInvalidWithMessage(ctx, "doesn't satisfy ctx.getHasExponentRange()");
       }
       int thisFlags = this.helper.GetFlags(thisValue);
       int otherFlags = this.helper.GetFlags(otherValue);
@@ -1714,13 +1725,13 @@ bigrem=divrem[1]; }
      */
     public T NextPlus(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
-        throw new NullPointerException("ctx");
+        return this.SignalInvalidWithMessage(ctx, "ctx is null");
       }
-      if (ctx.getPrecision().signum() <= 0) {
-        throw new IllegalArgumentException("ctx.getPrecision()" + " not less than " + "0" + " ("+(ctx.getPrecision())+")");
+      if (ctx.getPrecision().signum()==0) {
+        return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
       }
       if (!ctx.getHasExponentRange()) {
-        throw new IllegalArgumentException("doesn't satisfy ctx.getHasExponentRange()");
+        return this.SignalInvalidWithMessage(ctx, "doesn't satisfy ctx.getHasExponentRange()");
       }
       int flags = this.helper.GetFlags(thisValue);
       if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -2033,7 +2044,7 @@ quo=divrem[0];
 rem=divrem[1]; }
             }
             int[] digitStatus = this.RoundToScaleStatus(rem, mantissaDivisor, ctx);
-             if (digitStatus == null) {
+            if (digitStatus == null) {
               return this.SignalInvalidWithMessage(ctx, "Rounding was required");
             }
             FastInteger natexp = FastInteger.Copy(naturalExponent).Subtract(shift);
@@ -2641,7 +2652,7 @@ bigrem=divrem[1]; }
       // get the precision
       FastInteger fastPrecision = ctx.getPrecision().canFitInInt() ? new FastInteger(ctx.getPrecision().intValue()) : FastInteger.FromBig(ctx.getPrecision());
       if (fastPrecision.signum() < 0) {
-        throw new IllegalArgumentException("precision" + " not greater or equal to " + "0" + " (" + fastPrecision + ")");
+        return this.SignalInvalidWithMessage(ctx, "precision" + " not greater or equal to " + "0" + " (" + fastPrecision + ")");
       }
       if (this.thisRadix == 2 || fastPrecision.isValueZero()) {
         // "binaryPrec" will have no special effect here

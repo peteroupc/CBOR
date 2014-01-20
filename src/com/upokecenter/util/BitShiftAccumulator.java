@@ -18,8 +18,8 @@ at: http://peteroupc.github.io/CBOR/
      * Gets a value indicating whether the last discarded bit was set.
      */
     public int getLastDiscardedDigit() {
- return this.bitLeftmost;
-}
+        return this.bitLeftmost;
+      }
 
     private int bitsAfterLeftmost;
 
@@ -28,8 +28,8 @@ at: http://peteroupc.github.io/CBOR/
      * of the last one was set.
      */
     public int getOlderDiscardedDigits() {
- return this.bitsAfterLeftmost;
-}
+        return this.bitsAfterLeftmost;
+      }
 
     private BigInteger shiftedBigInt;
     private FastInteger knownBitLength;
@@ -51,8 +51,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public void ShiftToDigits(FastInteger bits) {
       if (bits.signum() < 0) {
- throw new IllegalArgumentException("bits is negative");
-}
+        throw new IllegalArgumentException("bits is negative");
+      }
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
       } else {
@@ -76,10 +76,10 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger getShiftedInt() {
         if (this.isSmall) {
- return BigInteger.valueOf(this.shiftedSmall);
-  } else {
- return this.shiftedBigInt;
-}
+          return BigInteger.valueOf(this.shiftedSmall);
+        } else {
+          return this.shiftedBigInt;
+        }
       }
 
     /**
@@ -99,16 +99,16 @@ at: http://peteroupc.github.io/CBOR/
      * Gets the number of digits discarded.
      */
     public FastInteger getDiscardedDigitCount() {
- return this.discardedBitCount;
-}
+        return this.discardedBitCount;
+      }
 
     public BitShiftAccumulator (
-BigInteger bigint,
-int lastDiscarded,
-int olderDiscarded) {
+      BigInteger bigint,
+      int lastDiscarded,
+      int olderDiscarded) {
       if (bigint.signum() < 0) {
- throw new IllegalArgumentException("bigint is negative");
-}
+        throw new IllegalArgumentException("bigint is negative");
+      }
       this.shiftedBigInt = bigint;
       this.discardedBitCount = new FastInteger(0);
       this.bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
@@ -117,8 +117,8 @@ int olderDiscarded) {
 
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0) {
- throw new IllegalArgumentException("longInt is negative");
-}
+        throw new IllegalArgumentException("longInt is negative");
+      }
       BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.ZERO, 0, 0);
       bsa.shiftedSmall = smallNumber;
       bsa.discardedBitCount = new FastInteger(0);
@@ -132,8 +132,8 @@ int olderDiscarded) {
      */
     public void ShiftRight(FastInteger fastint) {
       if (fastint.signum() <= 0) {
- return;
-}
+        return;
+      }
       if (fastint.CanFitInInt32()) {
         this.ShiftRightInt(fastint.AsInt32());
       } else {
@@ -154,8 +154,8 @@ int olderDiscarded) {
 
     private void ShiftRightBig(int bits) {
       if (bits <= 0) {
- return;
-}
+        return;
+      }
       if (this.shiftedBigInt.signum()==0) {
         this.discardedBitCount.AddInt(bits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -217,36 +217,36 @@ int olderDiscarded) {
         int b = (int)bytes[i];
         if (b != 0) {
           if ((b & 0x80) != 0) {
- break;
-}
+            break;
+          }
           if ((b & 0x40) != 0) {
-  { fastKB.Decrement();
-} break; }
+            { fastKB.Decrement();
+            } break; }
           if ((b & 0x20) != 0) {
-  { fastKB.SubtractInt(2);
-} break; }
+            { fastKB.SubtractInt(2);
+            } break; }
           if ((b & 0x10) != 0) {
-  { fastKB.SubtractInt(3);
-} break; }
+            { fastKB.SubtractInt(3);
+            } break; }
           if ((b & 0x08) != 0) {
-  { fastKB.SubtractInt(4);
-} break; }
+            { fastKB.SubtractInt(4);
+            } break; }
           if ((b & 0x04) != 0) {
-  { fastKB.SubtractInt(5);
-} break; }
+            { fastKB.SubtractInt(5);
+            } break; }
           if ((b & 0x02) != 0) {
-  { fastKB.SubtractInt(6);
-} break; }
+            { fastKB.SubtractInt(6);
+            } break; }
           if ((b & 0x01) != 0) {
-  { fastKB.SubtractInt(7);
-} break; }
+            { fastKB.SubtractInt(7);
+            } break; }
         }
         fastKB.SubtractInt(8);
       }
       // Make sure bit length is 1 if value is 0
       if (fastKB.signum() == 0) {
- fastKB.Increment();
-}
+        fastKB.Increment();
+      }
       return fastKB;
     }
 
@@ -262,8 +262,8 @@ int olderDiscarded) {
         }
         // Make sure bit length is 1 if value is 0
         if (kb == 0) {
- kb++;
-}
+          kb++;
+        }
         return new FastInteger(kb);
       } else {
         byte[] bytes = this.shiftedBigInt.toByteArray(true);
@@ -273,10 +273,10 @@ int olderDiscarded) {
     }
 
     private void ShiftBigToBits(int bits) {
-    // Shifts a number until it reaches the given number of bits,
-    // gathering information on whether the last bit discarded is set and
-    // whether the discarded bits to the right of that bit are set. Assumes
-    // that the big integer being shifted is positive.
+      // Shifts a number until it reaches the given number of bits,
+      // gathering information on whether the last bit discarded is set and
+      // whether the discarded bits to the right of that bit are set. Assumes
+      // that the big integer being shifted is positive.
       byte[] bytes = this.shiftedBigInt.toByteArray(true);
       this.knownBitLength = ByteArrayBitLength(bytes);
       // Shift by the difference in bit length
@@ -324,16 +324,16 @@ int olderDiscarded) {
      */
     public void ShiftRightInt(int bits) {
       if (this.isSmall) {
- this.ShiftRightSmall(bits);
-  } else {
- this.ShiftRightBig(bits);
-}
+        this.ShiftRightSmall(bits);
+      } else {
+        this.ShiftRightBig(bits);
+      }
     }
 
     private void ShiftRightSmall(int bits) {
       if (bits <= 0) {
- return;
-}
+        return;
+      }
       if (this.shiftedSmall == 0) {
         this.discardedBitCount.AddInt(bits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -377,13 +377,13 @@ int olderDiscarded) {
      */
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
- throw new IllegalArgumentException("bits is negative");
-}
+        throw new IllegalArgumentException("bits is negative");
+      }
       if (this.isSmall) {
- this.ShiftSmallToBits(bits);
-  } else {
- this.ShiftBigToBits(bits);
-}
+        this.ShiftSmallToBits(bits);
+      } else {
+        this.ShiftBigToBits(bits);
+      }
     }
 
     private void ShiftSmallToBits(int bits) {
@@ -396,8 +396,8 @@ int olderDiscarded) {
         }
       }
       if (kbl == 0) {
- kbl++;
-}
+        kbl++;
+      }
       // Shift by the difference in bit length
       if (kbl > bits) {
         int bitShift = kbl - (int)bits;
