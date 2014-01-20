@@ -35,6 +35,7 @@ namespace PeterO {
     /// </list>
     /// </summary>
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>, IEquatable<ExtendedDecimal> {
+      // TODO: Document that ArithmeticException is no longer thrown
     private const int MaxSafeInt = 214748363;
 
     private BigInteger exponent;
@@ -1637,45 +1638,45 @@ namespace PeterO {
 
     /// <summary>Adds this object and another decimal number and returns
     /// the result.</summary>
-    /// <param name='decfrac'>An ExtendedDecimal object.</param>
+    /// <param name='numberObject'>An ExtendedDecimal object.</param>
     /// <returns>The sum of the two objects.</returns>
-    public ExtendedDecimal Add(ExtendedDecimal decfrac) {
-      return this.Add(decfrac, PrecisionContext.Unlimited);
+    public ExtendedDecimal Add(ExtendedDecimal numberObject) {
+      return this.Add(numberObject, PrecisionContext.Unlimited);
     }
 
     /// <summary>Subtracts a ExtendedDecimal object from this instance
     /// and returns the result..</summary>
-    /// <param name='decfrac'>An ExtendedDecimal object.</param>
+    /// <param name='numberObject'>An ExtendedDecimal object.</param>
     /// <returns>The difference of the two objects.</returns>
-    public ExtendedDecimal Subtract(ExtendedDecimal decfrac) {
-      return this.Subtract(decfrac, null);
+    public ExtendedDecimal Subtract(ExtendedDecimal numberObject) {
+      return this.Subtract(numberObject, null);
     }
 
     /// <summary>Subtracts a ExtendedDecimal object from this instance.</summary>
-    /// <param name='decfrac'>An ExtendedDecimal object.</param>
+    /// <param name='numberObject'>An ExtendedDecimal object.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The difference of the two objects.</returns>
-    public ExtendedDecimal Subtract(ExtendedDecimal decfrac, PrecisionContext ctx) {
-      if (decfrac == null) {
-        throw new ArgumentNullException("decfrac");
+    public ExtendedDecimal Subtract(ExtendedDecimal numberObject, PrecisionContext ctx) {
+      if (numberObject == null) {
+        throw new ArgumentNullException("numberObject");
       }
-      ExtendedDecimal negated = decfrac;
-      if ((decfrac.flags & BigNumberFlags.FlagNaN) == 0) {
-        int newflags = decfrac.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(decfrac.unsignedMantissa, decfrac.exponent, newflags);
+      ExtendedDecimal negated = numberObject;
+      if ((numberObject.flags & BigNumberFlags.FlagNaN) == 0) {
+        int newflags = numberObject.flags ^ BigNumberFlags.FlagNegative;
+        negated = CreateWithFlags(numberObject.unsignedMantissa, numberObject.exponent, newflags);
       }
       return this.Add(negated, ctx);
     }
 
     /// <summary>Multiplies two decimal numbers. The resulting exponent
     /// will be the sum of the exponents of the two decimal numbers.</summary>
-    /// <param name='decfrac'>Another decimal number.</param>
+    /// <param name='numberObject'>Another decimal number.</param>
     /// <returns>The product of the two decimal numbers.</returns>
-    public ExtendedDecimal Multiply(ExtendedDecimal decfrac) {
-      return this.Multiply(decfrac, PrecisionContext.Unlimited);
+    public ExtendedDecimal Multiply(ExtendedDecimal numberObject) {
+      return this.Multiply(numberObject, PrecisionContext.Unlimited);
     }
 
     /// <summary>Multiplies by one decimal number, and then adds another
@@ -1690,8 +1691,8 @@ namespace PeterO {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static RadixMath<ExtendedDecimal> math = new RadixMath<ExtendedDecimal>(
-      new DecimalMathHelper());
+    private static IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(
+      new RadixMath<ExtendedDecimal>(new DecimalMathHelper()));
 
     /// <summary>Divides this object by another object, and returns the
     /// integer part of the result, with the preferred exponent set to this
@@ -2004,16 +2005,16 @@ namespace PeterO {
 
     /// <summary>Finds the sum of this object and another object. The result&apos;s
     /// exponent is set to the lower of the exponents of the two operands.</summary>
-    /// <param name='decfrac'>The number to add to.</param>
+    /// <param name='numberObject'>The number to add to.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The sum of thisValue and the other object.</returns>
     public ExtendedDecimal Add(
-      ExtendedDecimal decfrac,
+      ExtendedDecimal numberObject,
       PrecisionContext ctx) {
-      return math.Add(this, decfrac, ctx);
+      return math.Add(this, numberObject, ctx);
     }
 
     /// <summary>Returns a decimal number with the same value but a new exponent.</summary>
@@ -2194,7 +2195,7 @@ namespace PeterO {
       ExtendedDecimal subtrahend,
       PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new ArgumentNullException("decfrac");
+        throw new ArgumentNullException("numberObject");
       }
       ExtendedDecimal negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {

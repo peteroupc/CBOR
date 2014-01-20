@@ -86,8 +86,8 @@ import java.io.*;
     private CBORObject() {
     }
 
-    private CBORObject(CBORObject obj, int tagLow, int tagHigh){
- this(CBORObjectTypeTagged, obj);
+    private CBORObject(CBORObject obj, int tagLow, int tagHigh) :
+      this(CBORObjectTypeTagged, obj) {
       this.tagLow = tagLow;
       this.tagHigh = tagHigh;
     }
@@ -3189,26 +3189,26 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a decimal fraction.
-     * @param decfrac An arbitrary-precision decimal number.
+     * @param numberObject An arbitrary-precision decimal number.
      * @return A CBOR number object.
      * @throws java.lang.IllegalArgumentException The value's exponent is less
      * than -(2^64) or greater than (2^64-1).
      */
-    public static CBORObject FromObject(ExtendedDecimal decfrac) {
-      if ((Object)decfrac == (Object)null) {
+    public static CBORObject FromObject(ExtendedDecimal numberObject) {
+      if ((Object)numberObject == (Object)null) {
         return CBORObject.Null;
       }
-      if (decfrac.IsNaN() || decfrac.IsInfinity()) {
-        return new CBORObject(CBORObjectTypeExtendedDecimal, decfrac);
+      if (numberObject.IsNaN() || numberObject.IsInfinity()) {
+        return new CBORObject(CBORObjectTypeExtendedDecimal, numberObject);
       }
-      BigInteger bigintExponent = decfrac.getExponent();
-      if (bigintExponent.signum()==0 && !(decfrac.signum()==0 && decfrac.isNegative())) {
-        return FromObject(decfrac.getMantissa());
+      BigInteger bigintExponent = numberObject.getExponent();
+      if (bigintExponent.signum()==0 && !(numberObject.signum()==0 && numberObject.isNegative())) {
+        return FromObject(numberObject.getMantissa());
       } else {
         if (!BigIntFits(bigintExponent)) {
           throw new IllegalArgumentException("Exponent is too low or too high");
         }
-        return new CBORObject(CBORObjectTypeExtendedDecimal, decfrac);
+        return new CBORObject(CBORObjectTypeExtendedDecimal, numberObject);
       }
     }
 
