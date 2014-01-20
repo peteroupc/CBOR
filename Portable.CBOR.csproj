@@ -60,7 +60,6 @@
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BigFloat.cs" />
     <Compile Include="BigInteger.cs" />
     <Compile Include="BigIntegerExtra.cs" />
     <Compile Include="BigNumberFlags.cs" />
@@ -73,13 +72,13 @@
     <Compile Include="CBORType.cs" />
     <Compile Include="CBORUtilities.cs" />
     <Compile Include="DataUtilities.cs" />
-    <Compile Include="DecimalFraction.cs" />
     <Compile Include="DecimalUtility.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
     <Compile Include="ExtendedDecimal.cs" />
     <Compile Include="ExtendedFloat.cs" />
     <Compile Include="FastInteger.cs" />
     <Compile Include="Extras.cs" />
+    <Compile Include="IRadixMath.cs" />
     <Compile Include="IRadixMathHelper.cs" />
     <Compile Include="IShiftAccumulator.cs" />
     <Compile Include="JSONTokener.cs" />
@@ -87,6 +86,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadixMath.cs" />
     <Compile Include="Rounding.cs" />
+    <Compile Include="TrapException.cs" />
+    <Compile Include="TrappableRadixMath.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -113,7 +114,7 @@
     <Content Include="ProfilingSessions\Session20140110_093339.sdps" />
     <Content Include="ProfilingSessions\Session20140110_103357.sdps" />
     <Content Include="ProfilingSessions\Session20140110_220041.sdps" />
-  </ItemGroup> 
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
