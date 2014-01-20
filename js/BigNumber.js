@@ -6077,6 +6077,7 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
     constructor['Decimal32'] = constructor.Decimal32 = new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
     constructor['Decimal64'] = constructor.Decimal64 = new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
     constructor['Decimal128'] = constructor.Decimal128 = new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
+    constructor['Basic'] = constructor.Basic = PrecisionContext.ForPrecisionAndRounding(9, Rounding.HalfUp);
     constructor['CliDecimal'] = constructor.CliDecimal = new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
 })(PrecisionContext,PrecisionContext.prototype);
 
@@ -6096,8 +6097,7 @@ var BigNumberFlags = function(){};
     constructor.X3Dot274 = 2;
 })(BigNumberFlags,BigNumberFlags.prototype);
 
-var RadixMath =
-function(helper) {
+var RadixMath = function(helper) {
 
     this.helper = helper;
     this.support = helper.GetArithmeticSupport();
@@ -6737,8 +6737,11 @@ function(helper) {
     };
 
     prototype.Pi = function(ctx) {
-        if (ctx == null || ctx.getPrecision().signum() == 0) {
-            throw new Error("ctx is null or has unlimited precision");
+        if (ctx == null) {
+            return this.SignalInvalidWithMessage(ctx, "ctx is null");
+        }
+        if (ctx.getPrecision().signum() == 0) {
+            return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
         }
 
         var a = this.helper.ValueOf(1);
@@ -7033,7 +7036,7 @@ function(helper) {
             return thisValue;
         }
         if ((!isPowIntegral || powSign < 0) && (ctx == null || ctx.getPrecision().signum() == 0)) {
-            throw new Error("ctx is null or has unlimited precision, and pow's exponent is not an integer or is negative");
+            return this.SignalInvalidWithMessage(ctx, "ctx is null or has unlimited precision, and pow's exponent is not an integer or is negative");
         }
         if (thisSign < 0 && !isPowIntegral) {
             return this.SignalInvalid(ctx);
@@ -7096,8 +7099,11 @@ function(helper) {
     };
 
     prototype.Log10 = function(thisValue, ctx) {
-        if (ctx == null || ctx.getPrecision().signum() == 0) {
-            throw new Error("ctx is null or has unlimited precision");
+        if (ctx == null) {
+            return this.SignalInvalidWithMessage(ctx, "ctx is null");
+        }
+        if (ctx.getPrecision().signum() == 0) {
+            return this.SignalInvalidWithMessage(ctx, "ctx is null or has unlimited precision");
         }
         var flags = this.helper.GetFlags(thisValue);
         if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -7191,8 +7197,11 @@ function(helper) {
     };
 
     prototype.Ln = function(thisValue, ctx) {
-        if (ctx == null || ctx.getPrecision().signum() == 0) {
-            throw new Error("ctx is null or has unlimited precision");
+        if (ctx == null) {
+            return this.SignalInvalidWithMessage(ctx, "ctx is null");
+        }
+        if (ctx.getPrecision().signum() == 0) {
+            return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
         }
         var flags = this.helper.GetFlags(thisValue);
         if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -7288,8 +7297,11 @@ function(helper) {
     };
 
     prototype.Exp = function(thisValue, ctx) {
-        if (ctx == null || ctx.getPrecision().signum() == 0) {
-            throw new Error("ctx is null or has unlimited precision");
+        if (ctx == null) {
+            return this.SignalInvalidWithMessage(ctx, "ctx is null");
+        }
+        if (ctx.getPrecision().signum() == 0) {
+            return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
         }
         var flags = this.helper.GetFlags(thisValue);
         if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -7366,8 +7378,11 @@ function(helper) {
     };
 
     prototype.SquareRoot = function(thisValue, ctx) {
-        if (ctx == null || ctx.getPrecision().signum() == 0) {
-            throw new Error("ctx is null or has unlimited precision");
+        if (ctx == null) {
+            return this.SignalInvalidWithMessage(ctx, "ctx is null");
+        }
+        if (ctx.getPrecision().signum() == 0) {
+            return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
         }
         var ret = this.SquareRootHandleSpecial(thisValue, ctx);
         if (ret != null) {
@@ -7473,13 +7488,13 @@ function(helper) {
 
     prototype.NextMinus = function(thisValue, ctx) {
         if (ctx == null) {
-            throw new Error("ctx");
+            return this.SignalInvalidWithMessage(ctx, "ctx is null");
         }
-        if (ctx.getPrecision().signum() <= 0) {
-            throw new Error("ctx.getPrecision()" + " not less than " + "0" + " (" + (ctx.getPrecision()) + ")");
+        if (ctx.getPrecision().signum() == 0) {
+            return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
         }
         if (!ctx.getHasExponentRange()) {
-            throw new Error("doesn't satisfy ctx.getHasExponentRange()");
+            return this.SignalInvalidWithMessage(ctx, "doesn't satisfy ctx.getHasExponentRange()");
         }
         var flags = this.helper.GetFlags(thisValue);
         if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -7515,13 +7530,13 @@ function(helper) {
 
     prototype.NextToward = function(thisValue, otherValue, ctx) {
         if (ctx == null) {
-            throw new Error("ctx");
+            return this.SignalInvalidWithMessage(ctx, "ctx is null");
         }
-        if (ctx.getPrecision().signum() <= 0) {
-            throw new Error("ctx.getPrecision()" + " not less than " + "0" + " (" + (ctx.getPrecision()) + ")");
+        if (ctx.getPrecision().signum() == 0) {
+            return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
         }
         if (!ctx.getHasExponentRange()) {
-            throw new Error("doesn't satisfy ctx.getHasExponentRange()");
+            return this.SignalInvalidWithMessage(ctx, "doesn't satisfy ctx.getHasExponentRange()");
         }
         var thisFlags = this.helper.GetFlags(thisValue);
         var otherFlags = this.helper.GetFlags(otherValue);
@@ -7584,13 +7599,13 @@ function(helper) {
 
     prototype.NextPlus = function(thisValue, ctx) {
         if (ctx == null) {
-            throw new Error("ctx");
+            return this.SignalInvalidWithMessage(ctx, "ctx is null");
         }
-        if (ctx.getPrecision().signum() <= 0) {
-            throw new Error("ctx.getPrecision()" + " not less than " + "0" + " (" + (ctx.getPrecision()) + ")");
+        if (ctx.getPrecision().signum() == 0) {
+            return this.SignalInvalidWithMessage(ctx, "ctx has unlimited precision");
         }
         if (!ctx.getHasExponentRange()) {
-            throw new Error("doesn't satisfy ctx.getHasExponentRange()");
+            return this.SignalInvalidWithMessage(ctx, "doesn't satisfy ctx.getHasExponentRange()");
         }
         var flags = this.helper.GetFlags(thisValue);
         if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -8353,7 +8368,7 @@ function(helper) {
 
         var fastPrecision = ctx.getPrecision().canFitInInt() ? new FastInteger(ctx.getPrecision().intValue()) : FastInteger.FromBig(ctx.getPrecision());
         if (fastPrecision.signum() < 0) {
-            throw new Error("precision" + " not greater or equal to " + "0" + " (" + fastPrecision + ")");
+            return this.SignalInvalidWithMessage(ctx, "precision" + " not greater or equal to " + "0" + " (" + fastPrecision + ")");
         }
         if (this.thisRadix == 2 || fastPrecision.isValueZero()) {
 
@@ -10202,9 +10217,11 @@ function() {
             return ExtendedDecimal.Create(bigmantissa, BigInteger.valueOf(floatExponent));
         }
     };
+
     constructor['FromBigInteger'] = constructor.FromBigInteger = function(bigint) {
         return ExtendedDecimal.Create(bigint, BigInteger.ZERO);
     };
+
     constructor['FromInt64'] = constructor.FromInt64 = function(valueSmall_obj) {
         var valueSmall = JSInteropFactory.createLong(valueSmall_obj);
         var bigint = BigInteger.valueOf(valueSmall);

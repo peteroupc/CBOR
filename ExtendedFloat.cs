@@ -22,7 +22,8 @@ namespace PeterO {
     /// to any method here will throw an exception.</para>
     /// <para>When an arithmetic operation signals the flag FlagInvalid,
     /// FlagOverflow, or FlagDivideByZero, it will not throw an exception
-    /// too.</para>
+    /// too, unless the operation's trap is enabled in the precision context
+    /// (see PrecisionContext's Traps property).</para>
     /// <para>An ExtendedFloat value can be serialized in one of the following
     /// ways:</para>
     /// <list> <item>By calling the toString() method, which will always
@@ -1277,7 +1278,7 @@ namespace PeterO {
     /// (the rounding mode is always treated as HalfEven). If HasFlags of
     /// the context is true, will also store the flags resulting from the operation
     /// (the flags are in addition to the pre-existing flags). Can be null.</param>
-    /// <returns>The distance of the closest multiple. Signals FlagInvalidOperation
+    /// <returns>The distance of the closest multiple. Signals FlagInvalid
     /// and returns NaN if the divisor is 0, or either the result of integer
     /// division (the quotient) or the remainder wouldn't fit the given precision.</returns>
     public ExtendedFloat RemainderNear(
@@ -1761,7 +1762,8 @@ namespace PeterO {
     /// with a real part of 0 and an imaginary part of this object's absolute
     /// value, but the return value is still NaN).</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
-    /// name='ctx'/> is null or the precision range is unlimited.</exception>
+    /// name='ctx'/> is null or the precision is unlimited (the context's
+    /// Precision property is 0).</exception>
     public ExtendedFloat SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this, ctx);
     }
@@ -1777,7 +1779,8 @@ namespace PeterO {
     /// <returns>Exponential of this object. If this object's value is 1,
     /// returns an approximation to " e" within the given precision.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
-    /// name='ctx'/> is null or the precision range is unlimited.</exception>
+    /// name='ctx'/> is null or the precision is unlimited (the context's
+    /// Precision property is 0).</exception>
     public ExtendedFloat Exp(PrecisionContext ctx) {
       return math.Exp(this, ctx);
     }
@@ -1795,7 +1798,8 @@ namespace PeterO {
     /// with a real part equal to Ln of this object's absolute value and an imaginary
     /// part equal to pi, but the return value is still NaN.).</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
-    /// name='ctx'/> is null or the precision range is unlimited.</exception>
+    /// name='ctx'/> is null or the precision is unlimited (the context's
+    /// Precision property is 0).</exception>
     public ExtendedFloat Log(PrecisionContext ctx) {
       return math.Ln(this, ctx);
     }
@@ -1814,8 +1818,8 @@ namespace PeterO {
     /// NaN if this object and exponent are both 0; or if this value is less than
     /// 0 and the exponent either has a fractional part or is infinity.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
-    /// name='ctx'/> is null or the precision range is unlimited, and the
-    /// exponent has a fractional part.</exception>
+    /// name='ctx'/> is null or the precision is unlimited (the context's
+    /// Precision property is 0), and the exponent has a fractional part.</exception>
     /// <param name='exponent'>An ExtendedFloat object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
@@ -1830,7 +1834,8 @@ namespace PeterO {
     /// be null, as pi can never be represented exactly.--.</param>
     /// <returns>Pi rounded to the given precision.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
-    /// name='ctx'/> is null or the precision range is unlimited.</exception>
+    /// name='ctx'/> is null or the precision is unlimited (the context's
+    /// Precision property is 0).</exception>
     public static ExtendedFloat PI(PrecisionContext ctx) {
       return math.Pi(ctx);
     }
