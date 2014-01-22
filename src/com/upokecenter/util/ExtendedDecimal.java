@@ -12,7 +12,7 @@ at: http://peteroupc.github.io/CBOR/
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
      * The value of the number is equal to mantissa * 10^exponent. <p>The
      * mantissa is the value of the digits that make up a number, ignoring
-     * the decimal point and exponent. For example, in the number 2, 356.78,
+     * the decimal point and exponent. For example, in the number 2356.78,
      * the mantissa is 235678. The exponent is where the "floating" decimal
      * point of the number is located. A positive exponent means "move it
      * to the right", and a negative exponent means "move it to the left."
@@ -34,13 +34,14 @@ at: http://peteroupc.github.io/CBOR/
      * to signal errors. </p> <p>This class implements the <a href='http://speleotrove.com/decimal/decarith.html'>General
      * Decimal Arithmetic Specification</a> version 1.70.</p> <p>Passing
      * a signaling NaN to any arithmetic operation shown here will signal
-     * the flag FlagInvalid and return a quiet NaN, unless noted otherwise.</p>
-     * <p>Passing a quiet NaN to any arithmetic operation shown here will
-     * return a quiet NaN, unless noted otherwise. Invalid operations will
-     * also return a quiet NaN, as stated in the individual methods.</p>
-     * <p>Unless noted otherwise, passing a null ExtendedDecimal argument
-     * to any method here will throw an exception.</p> <p>When an arithmetic
-     * operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
+     * the flag FlagInvalid and return a quiet NaN, even if another operand
+     * to that operation is a quiet NaN, unless noted otherwise.</p> <p>Passing
+     * a quiet NaN to any arithmetic operation shown here will return a quiet
+     * NaN, unless noted otherwise. Invalid operations will also return
+     * a quiet NaN, as stated in the individual methods.</p> <p>Unless noted
+     * otherwise, passing a null ExtendedDecimal argument to any method
+     * here will throw an exception.</p> <p>When an arithmetic operation
+     * signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
      * it will not throw an exception too, unless the flag's trap is enabled
      * in the precision context (see PrecisionContext's Traps property).</p>
      * <p>An ExtendedDecimal value can be serialized in one of the following
@@ -453,7 +454,8 @@ at: http://peteroupc.github.io/CBOR/
                   expBuffer = thisdigit;
                   expBufferMult = 10;
                 } else {
-                  expBufferMult *= 10;
+                  // multiply expBufferMult and expBuffer each by 10
+                  expBufferMult = (expBufferMult << 3) + (expBufferMult << 1);
                   expBuffer = (expBuffer << 3) + (expBuffer << 1);
                   expBuffer += thisdigit;
                 }

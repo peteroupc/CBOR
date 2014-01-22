@@ -14,11 +14,12 @@ at: http://peteroupc.github.io/CBOR/
      * also supports values for negative zero, not-a-number (NaN) values,
      * and infinity.<p>Passing a signaling NaN to any arithmetic operation
      * shown here will signal the flag FlagInvalid and return a quiet NaN,
-     * unless noted otherwise.</p> <p>Passing a quiet NaN to any arithmetic
-     * operation shown here will return a quiet NaN, unless noted otherwise.</p>
-     * <p>Unless noted otherwise, passing a null ExtendedFloat argument
-     * to any method here will throw an exception.</p> <p>When an arithmetic
-     * operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
+     * even if another operand to that operation is a quiet NaN, unless noted
+     * otherwise.</p> <p>Passing a quiet NaN to any arithmetic operation
+     * shown here will return a quiet NaN, unless noted otherwise.</p> <p>Unless
+     * noted otherwise, passing a null ExtendedFloat argument to any method
+     * here will throw an exception.</p> <p>When an arithmetic operation
+     * signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
      * it will not throw an exception too, unless the operation's trap is
      * enabled in the precision context (see PrecisionContext's Traps
      * property).</p> <p>An ExtendedFloat value can be serialized in one
@@ -177,8 +178,8 @@ at: http://peteroupc.github.io/CBOR/
 
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
       if (val.signum()==0) {
- return val;
-}
+        return val;
+      }
       while (bigShift.compareTo(valueBigShiftIteration) > 0) {
         val=val.shiftLeft(1000000);
         bigShift=bigShift.subtract(valueBigShiftIteration);
@@ -190,8 +191,8 @@ at: http://peteroupc.github.io/CBOR/
 
     private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
       if (val.signum()==0) {
- return val;
-}
+        return val;
+      }
       while (shift > valueShiftIteration) {
         val=val.shiftLeft(1000000);
         shift -= valueShiftIteration;
@@ -225,7 +226,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
       public BigInteger GetMantissa(ExtendedFloat value) {
-        return value.unsignedMantissa;
+        return value.getMantissa();
       }
 
     /**
@@ -285,7 +286,7 @@ at: http://peteroupc.github.io/CBOR/
         if (power.signum() <= 0) {
           return bigint;
         }
-         if (bigint.signum() < 0) {
+        if (bigint.signum() < 0) {
           bigint=bigint.negate();
           if (power.CanFitInInt32()) {
             bigint = ShiftLeftInt(bigint, power.AsInt32());
@@ -310,7 +311,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
       public int GetFlags(ExtendedFloat value) {
-        return value.unsignedMantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
+        return value.flags;
       }
 
     /**
@@ -321,11 +322,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedFloat object.
      */
       public ExtendedFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
-        boolean neg = (flags & BigNumberFlags.FlagNegative) != 0;
-        if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0)) {
- mantissa=mantissa.negate();
-}
-        return ExtendedFloat.Create(mantissa, exponent);
+        return ExtendedFloat.CreateWithFlags(mantissa, exponent, flags);
       }
 
     /**
@@ -333,7 +330,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
-        return BigNumberFlags.FiniteOnly;
+        return BigNumberFlags.FiniteAndNonFinite;
       }
 
     /**
@@ -551,7 +548,7 @@ at: http://peteroupc.github.io/CBOR/
         }
         if (this.IsQuietNaN()) {
           nan[1] |= 0x80000;
-  } else {
+        } else {
           // not really the signaling bit, but done to keep
           // the mantissa from being zero
           nan[1] |= 0x40000;

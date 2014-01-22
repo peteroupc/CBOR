@@ -1238,11 +1238,12 @@ public boolean equals(CBORObject other) {
 
     /**
      * Generates a CBOR object from an array of CBOR-encoded bytes.
-     * @param data A byte[] object.
+     * @param data A byte array.
      * @return A CBOR object corresponding to the data.
      * @throws java.lang.IllegalArgumentException Data is null or empty.
      * @throws CBORException There was an error in reading or parsing the
-     * data.
+     * data. This includes cases where not all of the byte array represents
+     * a CBOR object.
      */
     public static CBORObject DecodeFromBytes(byte[] data) {
       if (data == null) {
