@@ -574,7 +574,7 @@ o.ToJSONString());
     @Test
     public void TestJSON() {
       CBORObject o;
-      o = CBORObject.FromJSONString("[1,2,3]");
+      o = CBORObject.FromJSONString("[1,2,null,true,false]");
       try {
         CBORObject.FromJSONString("[\"\\d800\"]"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
@@ -593,10 +593,12 @@ o.ToJSONString());
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
-      Assert.assertEquals(3, o.size());
+      Assert.assertEquals(5, o.size());
       Assert.assertEquals(1, o.get(0).AsInt32());
       Assert.assertEquals(2, o.get(1).AsInt32());
-      Assert.assertEquals(3, o.get(2).AsInt32());
+      Assert.assertEquals(CBORObject.Null, o.get(2));
+      Assert.assertEquals(CBORObject.True, o.get(3));
+      Assert.assertEquals(CBORObject.False, o.get(4));
       o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
       double actual = o.get(0).AsDouble();
       Assert.assertEquals((double)1.5,actual,0);

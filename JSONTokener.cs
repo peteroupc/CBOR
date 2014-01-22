@@ -465,7 +465,7 @@ namespace PeterO {
           throw this.SyntaxError("Value can't be parsed.");
         }
         nextChar[0] = this.NextClean();
-        return CBORObject.False;
+        return CBORObject.Null;
       } else if (c == '-' || (c >= '0' && c <= '9')) {
         // Parse a number
         StringBuilder sb = new StringBuilder();
