@@ -14,7 +14,7 @@ namespace PeterO {
     /// both arbitrary-precision. The value of the number is equal to mantissa
     /// * 10^exponent. <para>The mantissa is the value of the digits that
     /// make up a number, ignoring the decimal point and exponent. For example,
-    /// in the number 2, 356.78, the mantissa is 235678. The exponent is where
+    /// in the number 2356.78, the mantissa is 235678. The exponent is where
     /// the "floating" decimal point of the number is located. A positive
     /// exponent means "move it to the right", and a negative exponent means
     /// "move it to the left." In the example 2,356.78, the exponent is -2,
@@ -39,8 +39,8 @@ namespace PeterO {
     /// Decimal Arithmetic Specification</a>
     /// version 1.70.</para>
     /// <para>Passing a signaling NaN to any arithmetic operation shown
-    /// here will signal the flag FlagInvalid and return a quiet NaN, unless
-    /// noted otherwise.</para>
+    /// here will signal the flag FlagInvalid and return a quiet NaN, even
+    /// if another operand to that operation is a quiet NaN, unless noted otherwise.</para>
     /// <para>Passing a quiet NaN to any arithmetic operation shown here
     /// will return a quiet NaN, unless noted otherwise. Invalid operations
     /// will also return a quiet NaN, as stated in the individual methods.</para>
@@ -462,7 +462,8 @@ namespace PeterO {
                   expBuffer = thisdigit;
                   expBufferMult = 10;
                 } else {
-                  expBufferMult *= 10;
+                  // multiply expBufferMult and expBuffer each by 10
+                  expBufferMult = (expBufferMult << 3) + (expBufferMult << 1);
                   expBuffer = (expBuffer << 3) + (expBuffer << 1);
                   expBuffer += thisdigit;
                 }

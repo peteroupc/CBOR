@@ -8141,6 +8141,7 @@ var RadixMath = function(helper) {
         var bigintOp2 = this.helper.GetExponent(other);
         var newexp = this.helper.GetExponent(thisValue).add(bigintOp2);
         var mantissaOp2 = this.helper.GetMantissa(other);
+
         thisFlags = (thisFlags & BigNumberFlags.FlagNegative) ^ (otherFlags & BigNumberFlags.FlagNegative);
         var ret = this.helper.CreateNewWithFlags(this.helper.GetMantissa(thisValue).multiply(mantissaOp2), newexp, thisFlags);
         if (ctx != null) {
@@ -8731,6 +8732,7 @@ var RadixMath = function(helper) {
         var neg1 = (flags1 & BigNumberFlags.FlagNegative) != 0;
         var neg2 = (flags2 & BigNumberFlags.FlagNegative) != 0;
         var negResult = false;
+
         if (neg1 != neg2) {
 
             mant1 = mant1.subtract(mant2);
@@ -8747,6 +8749,7 @@ var RadixMath = function(helper) {
                 negResult = false;
             }
         }
+
         return this.helper.CreateNewWithFlags(mant1, exponent, negResult ? BigNumberFlags.FlagNegative : 0);
     };
 
@@ -8898,10 +8901,12 @@ var RadixMath = function(helper) {
                 }
             }
             if (expcmp > 0) {
+
                 op1MantAbs = this.RescaleByExponentDiff(op1MantAbs, op1Exponent, op2Exponent);
 
                 retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
             } else {
+
                 op2MantAbs = this.RescaleByExponentDiff(op2MantAbs, op1Exponent, op2Exponent);
 
                 retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
@@ -9639,7 +9644,8 @@ function() {
                                 expBuffer = thisdigit;
                                 expBufferMult = 10;
                             } else {
-                                expBufferMult *= 10;
+
+                                expBufferMult = (expBufferMult << 3) + (expBufferMult << 1);
                                 expBuffer = (expBuffer << 3) + (expBuffer << 1);
                                 expBuffer = expBuffer + (thisdigit);
                             }
@@ -10669,7 +10675,7 @@ function() {
         };
 
         prototype['GetMantissa'] = prototype.GetMantissa = function(value) {
-            return value.unsignedMantissa;
+            return value.getMantissa();
         };
 
         prototype['GetExponent'] = prototype.GetExponent = function(value) {
@@ -10720,19 +10726,15 @@ function() {
         };
 
         prototype['GetFlags'] = prototype.GetFlags = function(value) {
-            return value.unsignedMantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
+            return value.flags;
         };
 
         prototype['CreateNewWithFlags'] = prototype.CreateNewWithFlags = function(mantissa, exponent, flags) {
-            var neg = (flags & BigNumberFlags.FlagNegative) != 0;
-            if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0)) {
-                mantissa = mantissa.negate();
-            }
-            return ExtendedFloat.Create(mantissa, exponent);
+            return ExtendedFloat.CreateWithFlags(mantissa, exponent, flags);
         };
 
         prototype['GetArithmeticSupport'] = prototype.GetArithmeticSupport = function() {
-            return BigNumberFlags.FiniteOnly;
+            return BigNumberFlags.FiniteAndNonFinite;
         };
 
         prototype['ValueOf'] = prototype.ValueOf = function(val) {

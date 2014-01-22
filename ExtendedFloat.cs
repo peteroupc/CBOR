@@ -15,7 +15,8 @@ namespace PeterO {
     /// * 2^exponent. This class also supports values for negative zero,
     /// not-a-number (NaN) values, and infinity.<para>Passing a signaling
     /// NaN to any arithmetic operation shown here will signal the flag FlagInvalid
-    /// and return a quiet NaN, unless noted otherwise.</para>
+    /// and return a quiet NaN, even if another operand to that operation is
+    /// a quiet NaN, unless noted otherwise.</para>
     /// <para>Passing a quiet NaN to any arithmetic operation shown here
     /// will return a quiet NaN, unless noted otherwise.</para>
     /// <para>Unless noted otherwise, passing a null ExtendedFloat argument
@@ -181,8 +182,8 @@ namespace PeterO {
 
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
       if (val.IsZero) {
- return val;
-}
+        return val;
+      }
       while (bigShift.CompareTo(valueBigShiftIteration) > 0) {
         val <<= 1000000;
         bigShift -= (BigInteger)valueBigShiftIteration;
@@ -194,8 +195,8 @@ namespace PeterO {
 
     private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
       if (val.IsZero) {
- return val;
-}
+        return val;
+      }
       while (shift > valueShiftIteration) {
         val <<= 1000000;
         shift -= valueShiftIteration;
@@ -223,7 +224,7 @@ namespace PeterO {
     /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger GetMantissa(ExtendedFloat value) {
-        return value.unsignedMantissa;
+        return value.Mantissa;
       }
 
     /// <summary>Not documented yet.</summary>
@@ -273,7 +274,7 @@ namespace PeterO {
         if (power.Sign <= 0) {
           return bigint;
         }
-         if (bigint.Sign < 0) {
+        if (bigint.Sign < 0) {
           bigint = -bigint;
           if (power.CanFitInInt32()) {
             bigint = ShiftLeftInt(bigint, power.AsInt32());
@@ -296,7 +297,7 @@ namespace PeterO {
     /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(ExtendedFloat value) {
-        return value.unsignedMantissa.Sign < 0 ? BigNumberFlags.FlagNegative : 0;
+        return value.flags;
       }
 
     /// <summary>Not documented yet.</summary>
@@ -305,17 +306,13 @@ namespace PeterO {
     /// <param name='flags'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedFloat object.</returns>
       public ExtendedFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
-        bool neg = (flags & BigNumberFlags.FlagNegative) != 0;
-        if ((neg && mantissa.Sign > 0) || (!neg && mantissa.Sign < 0)) {
- mantissa = -mantissa;
-}
-        return ExtendedFloat.Create(mantissa, exponent);
+        return ExtendedFloat.CreateWithFlags(mantissa, exponent, flags);
       }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport() {
-        return BigNumberFlags.FiniteOnly;
+        return BigNumberFlags.FiniteAndNonFinite;
       }
 
     /// <summary>Not documented yet.</summary>
@@ -528,7 +525,7 @@ namespace PeterO {
         }
         if (this.IsQuietNaN()) {
           nan[1] |= 0x80000;
-  } else {
+        } else {
           // not really the signaling bit, but done to keep
           // the mantissa from being zero
           nan[1] |= 0x40000;

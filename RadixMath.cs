@@ -257,17 +257,17 @@ namespace PeterO {
       int otherFlags = this.helper.GetFlags(other);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         // Assumes that neither operand is NaN
-#if DEBUG
+        #if DEBUG
         if (!((thisFlags & BigNumberFlags.FlagNaN) == 0)) {
           throw new ArgumentException("doesn't satisfy (thisFlags & BigNumberFlags.FlagNaN)==0");
         }
-#endif
+        #endif
 
-#if DEBUG
+        #if DEBUG
         if (!((otherFlags & BigNumberFlags.FlagNaN) == 0)) {
           throw new ArgumentException("doesn't satisfy (otherFlags & BigNumberFlags.FlagNaN)==0");
         }
-#endif
+        #endif
 
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           // thisValue is infinity
@@ -1132,11 +1132,11 @@ namespace PeterO {
         }
         return this.ExtendPrecision(this.helper.ValueOf(1), ctx);
       }
-#if DEBUG
+      #if DEBUG
       if (ctx == null) {
         throw new ArgumentNullException("ctx");
       }
-#endif
+      #endif
 
       PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)10).WithRounding(Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult = this.Ln(thisValue, ctxdiv);
@@ -1819,23 +1819,23 @@ namespace PeterO {
       FastInteger shift,
       bool neg,
       PrecisionContext ctx) {
-#if DEBUG
+      #if DEBUG
       if (!(mantissa.Sign >= 0)) {
         throw new ArgumentException("doesn't satisfy mantissa.Sign>= 0");
       }
-#endif
+      #endif
 
-#if DEBUG
+      #if DEBUG
       if (!(remainder.Sign >= 0)) {
         throw new ArgumentException("doesn't satisfy remainder.Sign>= 0");
       }
-#endif
+      #endif
 
-#if DEBUG
+      #if DEBUG
       if (!(divisor.Sign >= 0)) {
         throw new ArgumentException("doesn't satisfy divisor.Sign>= 0");
       }
-#endif
+      #endif
 
       IShiftAccumulator accum;
       Rounding rounding = (ctx == null) ? Rounding.HalfEven : ctx.Rounding;
@@ -1903,9 +1903,9 @@ namespace PeterO {
         ctx.Flags |= flags;
       }
       return this.helper.CreateNewWithFlags(
- newmantissa,
- desiredExponent,
- neg ? BigNumberFlags.FlagNegative : 0);
+        newmantissa,
+        desiredExponent,
+        neg ? BigNumberFlags.FlagNegative : 0);
     }
 
     private T DivideInternal(T thisValue, T divisor, PrecisionContext ctx, int integerMode, BigInteger desiredExponent) {
@@ -1995,11 +1995,11 @@ namespace PeterO {
             return this.RoundToPrecision(this.helper.CreateNewWithFlags(quo, naturalExponent.AsBigInteger(), resultNeg ? BigNumberFlags.FlagNegative : 0), ctx);
           }
           if (hasPrecision) {
-#if DEBUG
+            #if DEBUG
             if (ctx == null) {
               throw new ArgumentNullException("ctx");
             }
-#endif
+            #endif
 
             BigInteger divid = mantissaDividend;
             FastInteger shift = FastInteger.FromBig(ctx.Precision);
@@ -2330,6 +2330,7 @@ namespace PeterO {
       BigInteger bigintOp2 = this.helper.GetExponent(other);
       BigInteger newexp = this.helper.GetExponent(thisValue) + (BigInteger)bigintOp2;
       BigInteger mantissaOp2 = this.helper.GetMantissa(other);
+      // Console.WriteLine("{0},{1} -> {2},{3}", this.helper.GetMantissa(thisValue), this.helper.GetExponent(thisValue),mantissaOp2,bigintOp2);
       thisFlags = (thisFlags & BigNumberFlags.FlagNegative) ^ (otherFlags & BigNumberFlags.FlagNegative);
       T ret = this.helper.CreateNewWithFlags(this.helper.GetMantissa(thisValue) * (BigInteger)mantissaOp2, newexp, thisFlags);
       if (ctx != null) {
@@ -2738,7 +2739,9 @@ namespace PeterO {
           adjExponent.Increment();
         }
       }
-      // Console.WriteLine("{0} adj={1} emin={2}",thisValue,adjExponent,fastEMin);
+// Console.WriteLine("{0},{1} adj={2} emin={3}",this.helper.GetMantissa(
+// thisValue),
+  // this.helper.GetExponent(thisValue), adjExponent, fastEMin);
       if (ctx.HasFlags && fastEMin != null && !unlimitedPrec && adjExponent.CompareTo(fastEMin) < 0) {
         earlyRounded = accum.ShiftedInt;
         if (this.RoundGivenBigInt(accum, rounding, neg, earlyRounded)) {
@@ -2979,17 +2982,18 @@ namespace PeterO {
 
     // mant1 and mant2 are assumed to be nonnegative
     private T AddCore(BigInteger mant1, BigInteger mant2, BigInteger exponent, int flags1, int flags2, PrecisionContext ctx) {
-#if DEBUG
+      #if DEBUG
       if (mant1.Sign < 0) {
         throw new InvalidOperationException();
       }
       if (mant2.Sign < 0) {
         throw new InvalidOperationException();
       }
-#endif
+      #endif
       bool neg1 = (flags1 & BigNumberFlags.FlagNegative) != 0;
       bool neg2 = (flags2 & BigNumberFlags.FlagNegative) != 0;
       bool negResult = false;
+      // Console.WriteLine("neg1={0} neg2={1}",neg1,neg2);
       if (neg1 != neg2) {
         // Signs are different, treat as a subtraction
         mant1 -= (BigInteger)mant2;
@@ -3006,6 +3010,7 @@ namespace PeterO {
           negResult = false;
         }
       }
+      // Console.WriteLine("mant1={0} exp={1} neg={2}",mant1, exponent, negResult);
       return this.helper.CreateNewWithFlags(mant1, exponent, negResult ? BigNumberFlags.FlagNegative : 0);
     }
 
@@ -3177,12 +3182,14 @@ namespace PeterO {
           }
         }
         if (expcmp > 0) {
+// Console.WriteLine("{0} {1}", op1MantAbs, op2MantAbs);
           op1MantAbs = this.RescaleByExponentDiff(op1MantAbs, op1Exponent, op2Exponent);
-          // Console.WriteLine("{0} {1} -> {2}",op1MantAbs,op2MantAbs,op2MantAbs-op1MantAbs);
+// Console.WriteLine("{0} {1} -> {2} [op1 exp greater]", op1MantAbs, op2MantAbs,op2Exponent-op1Exponent);
           retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
         } else {
+// Console.WriteLine("{0} {1}", op1MantAbs, op2MantAbs);
           op2MantAbs = this.RescaleByExponentDiff(op2MantAbs, op1Exponent, op2Exponent);
-          // Console.WriteLine("{0} {1} -> {2}",op1MantAbs,op2MantAbs,op2MantAbs-op1MantAbs);
+// Console.WriteLine("{0}e {3} {1}e {4} -> {2} [op2 exp greater]", op1MantAbs, op2MantAbs,op2Exponent-op1Exponent,op1Exponent,op2Exponent);
           retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
         }
       }

@@ -1266,11 +1266,12 @@ namespace PeterO {
     }
 
     /// <summary>Generates a CBOR object from an array of CBOR-encoded bytes.</summary>
-    /// <param name='data'>A byte[] object.</param>
+    /// <param name='data'>A byte array.</param>
     /// <returns>A CBOR object corresponding to the data.</returns>
     /// <exception cref='System.ArgumentException'>Data is null or empty.</exception>
     /// <exception cref='CBORException'>There was an error in reading
-    /// or parsing the data.</exception>
+    /// or parsing the data. This includes cases where not all of the byte array
+    /// represents a CBOR object.</exception>
     public static CBORObject DecodeFromBytes(byte[] data) {
       if (data == null) {
         throw new ArgumentNullException("data");

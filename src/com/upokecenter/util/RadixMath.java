@@ -1911,9 +1911,9 @@ bigrem=divrem[1]; }
         ctx.setFlags(ctx.getFlags()|(flags));
       }
       return this.helper.CreateNewWithFlags(
- newmantissa,
- desiredExponent,
- neg ? BigNumberFlags.FlagNegative : 0);
+        newmantissa,
+        desiredExponent,
+        neg ? BigNumberFlags.FlagNegative : 0);
     }
 
     private T DivideInternal(T thisValue, T divisor, PrecisionContext ctx, int integerMode, BigInteger desiredExponent) {
@@ -2354,6 +2354,7 @@ rem=divrem[1]; }
       BigInteger bigintOp2 = this.helper.GetExponent(other);
       BigInteger newexp = this.helper.GetExponent(thisValue).add(bigintOp2);
       BigInteger mantissaOp2 = this.helper.GetMantissa(other);
+      // System.out.println("{0},{1} -> {2},{3}", this.helper.GetMantissa(thisValue), this.helper.GetExponent(thisValue),mantissaOp2,bigintOp2);
       thisFlags = (thisFlags & BigNumberFlags.FlagNegative) ^ (otherFlags & BigNumberFlags.FlagNegative);
       T ret = this.helper.CreateNewWithFlags(this.helper.GetMantissa(thisValue).multiply(mantissaOp2), newexp, thisFlags);
       if (ctx != null) {
@@ -2786,7 +2787,9 @@ bigrem=divrem[1]; }
           adjExponent.Increment();
         }
       }
-      // System.out.println("{0} adj={1} emin={2}",thisValue,adjExponent,fastEMin);
+// System.out.println("{0},{1} adj={2} emin={3}",this.helper.GetMantissa(
+// thisValue),
+  // this.helper.GetExponent(thisValue), adjExponent, fastEMin);
       if (ctx.getHasFlags() && fastEMin != null && !unlimitedPrec && adjExponent.compareTo(fastEMin) < 0) {
         earlyRounded = accum.getShiftedInt();
         if (this.RoundGivenBigInt(accum, rounding, neg, earlyRounded)) {
@@ -3031,6 +3034,7 @@ bigrem=divrem[1]; }
       boolean neg1 = (flags1 & BigNumberFlags.FlagNegative) != 0;
       boolean neg2 = (flags2 & BigNumberFlags.FlagNegative) != 0;
       boolean negResult = false;
+      // System.out.println("neg1={0} neg2={1}",neg1,neg2);
       if (neg1 != neg2) {
         // Signs are different, treat as a subtraction
         mant1=mant1.subtract(mant2);
@@ -3047,6 +3051,7 @@ bigrem=divrem[1]; }
           negResult = false;
         }
       }
+      // System.out.println("mant1={0} exp={1} neg={2}",mant1, exponent, negResult);
       return this.helper.CreateNewWithFlags(mant1, exponent, negResult ? BigNumberFlags.FlagNegative : 0);
     }
 
@@ -3220,12 +3225,14 @@ bigrem=divrem[1]; }
           }
         }
         if (expcmp > 0) {
+// System.out.println("{0} {1}", op1MantAbs, op2MantAbs);
           op1MantAbs = this.RescaleByExponentDiff(op1MantAbs, op1Exponent, op2Exponent);
-          // System.out.println("{0} {1} -> {2}",op1MantAbs,op2MantAbs,op2MantAbs-op1MantAbs);
+// System.out.println("{0} {1} -> {2} [op1 exp greater]", op1MantAbs, op2MantAbs,op2Exponent-op1Exponent);
           retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
         } else {
+// System.out.println("{0} {1}", op1MantAbs, op2MantAbs);
           op2MantAbs = this.RescaleByExponentDiff(op2MantAbs, op1Exponent, op2Exponent);
-          // System.out.println("{0} {1} -> {2}",op1MantAbs,op2MantAbs,op2MantAbs-op1MantAbs);
+// System.out.println("{0}e {3} {1}e {4} -> {2} [op2 exp greater]", op1MantAbs, op2MantAbs,op2Exponent-op1Exponent,op1Exponent,op2Exponent);
           retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
         }
       }
