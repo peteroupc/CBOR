@@ -78,8 +78,7 @@ namespace PeterO {
     public DigitShiftAccumulator(
       BigInteger bigint,
       int lastDiscarded,
-      int olderDiscarded)
-    {
+      int olderDiscarded) {
       if (bigint.canFitInInt()) {
         this.shiftedSmall = (int)bigint;
         if (this.shiftedSmall < 0) {

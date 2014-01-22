@@ -281,8 +281,7 @@ at: http://peteroupc.github.io/CBOR/
         int other) {
         if (other < 0) {
           throw new IllegalArgumentException("Only positive values are supported");
-        } else if (other != 0)
-        {
+        } else if (other != 0) {
           {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
@@ -396,8 +395,7 @@ at: http://peteroupc.github.io/CBOR/
       public MutableNumber Add(int augend) {
         if (augend < 0) {
           throw new IllegalArgumentException("Only positive augends are supported");
-        } else if (augend != 0)
-        {
+        } else if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {

@@ -6607,8 +6607,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             if (!bi[0].equals((BigInteger)bigintTemp .add(BigInteger.ONE))) {
               Assert.assertEquals(String.format(java.util.Locale.US,"Outer tag doesn't match: %s", obj2),bigintTemp .add(BigInteger.ONE),bi[0]);
             }
-            if (!bi[1].equals(bigintTemp))
-            {
+            if (!bi[1].equals(bigintTemp)) {
               Assert.assertEquals(String.format(java.util.Locale.US,"Inner tag doesn't match: %s", obj2),bigintTemp,bi[1]);
             }
             if (!obj2.getInnermostTag().equals(bigintTemp)) {

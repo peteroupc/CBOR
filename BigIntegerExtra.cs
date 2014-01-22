@@ -24,8 +24,7 @@ namespace PeterO
     /// <param name='bthis'>A BigInteger object.</param>
     /// <returns>The sum of the two objects.</returns>
     /// <param name='augend'>A BigInteger object. (2).</param>
-    public static BigInteger operator +(BigInteger bthis, BigInteger augend)
-    {
+    public static BigInteger operator +(BigInteger bthis, BigInteger augend) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
@@ -36,8 +35,7 @@ namespace PeterO
     /// <param name='bthis'>A BigInteger value.</param>
     /// <returns>The difference of the two objects.</returns>
     /// <param name='subtrahend'>A BigInteger object.</param>
-    public static BigInteger operator -(BigInteger bthis, BigInteger subtrahend)
-    {
+    public static BigInteger operator -(BigInteger bthis, BigInteger subtrahend) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
@@ -84,8 +82,7 @@ namespace PeterO
     /// <param name='bthis'>A BigInteger object. (2).</param>
     /// <returns>A BigInteger object.</returns>
     /// <param name='numBits'>A 32-bit signed integer.</param>
-    public static BigInteger operator <<(BigInteger bthis, int numBits)
-    {
+    public static BigInteger operator <<(BigInteger bthis, int numBits) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
@@ -115,8 +112,7 @@ namespace PeterO
     /// <remarks>For this operation, the BigInteger is treated as a two's
     /// complement representation. Thus, for negative values, the BigInteger
     /// is sign-extended.</remarks>
-    public static BigInteger operator >>(BigInteger bthis, int n)
-    {
+    public static BigInteger operator >>(BigInteger bthis, int n) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
@@ -254,8 +250,7 @@ namespace PeterO
     /// <param name='index'>A 32-bit signed integer.</param>
     /// <returns>A 64-bit signed integer.</returns>
     /// <param name='numberBits'>A 32-bit signed integer. (2).</param>
-    public long GetBits(int index, int numberBits)
-    {
+    public long GetBits(int index, int numberBits) {
       if (numberBits < 0 || numberBits > 64) {
         throw new ArgumentOutOfRangeException("numberBits");
       }
@@ -272,8 +267,7 @@ namespace PeterO
     /// <param name='divisor'>A BigInteger object. (3).</param>
     /// <param name='remainder'>A BigInteger object. (4).</param>
     /// <returns>A BigInteger object.</returns>
-    public static BigInteger DivRem(BigInteger dividend, BigInteger divisor, out BigInteger remainder)
-    {
+    public static BigInteger DivRem(BigInteger dividend, BigInteger divisor, out BigInteger remainder) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
@@ -340,29 +334,25 @@ namespace PeterO
       return bigValue.pow(power);
     }
 
-    private static void OrWords(short[] r, short[] a, short[] b, int n)
-    {
+    private static void OrWords(short[] r, short[] a, short[] b, int n) {
       for (int i = 0; i < n; ++i) {
         r[i] = unchecked((short)(a[i] | b[i]));
       }
     }
 
-    private static void XorWords(short[] r, short[] a, short[] b, int n)
-    {
+    private static void XorWords(short[] r, short[] a, short[] b, int n) {
       for (int i = 0; i < n; ++i) {
         r[i] = unchecked((short)(a[i] ^ b[i]));
       }
     }
 
-    private static void NotWords(short[] r, int n)
-    {
+    private static void NotWords(short[] r, int n) {
       for (int i = 0; i < n; ++i) {
         r[i] = unchecked((short)(~r[i]));
       }
     }
 
-    private static void AndWords(short[] r, short[] a, short[] b, int n)
-    {
+    private static void AndWords(short[] r, short[] a, short[] b, int n) {
       for (int i = 0; i < n; ++i) {
         r[i] = unchecked((short)(a[i] & b[i]));
       }

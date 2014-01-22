@@ -131,8 +131,7 @@ namespace CBOR
       }
 
       #region Equals and GetHashCode implementation
-      public override bool Equals(object obj)
-      {
+      public override bool Equals(object obj) {
         ExtensiveTest.DecimalNumber other = obj as ExtensiveTest.DecimalNumber;
         if (other == null) {
           return false;
@@ -140,8 +139,7 @@ namespace CBOR
         return object.Equals(this.ed, other.ed);
       }
 
-      public override int GetHashCode()
-      {
+      public override int GetHashCode() {
         int hashCode = 0;
         unchecked {
           if (this.ed != null) {
@@ -152,8 +150,7 @@ namespace CBOR
       }
       #endregion
 
-      public override string ToString()
-      {
+      public override string ToString() {
         return this.ed.ToString();
       }
 
@@ -167,48 +164,39 @@ namespace CBOR
         return (ExtendedDecimal)en.Value;
       }
 
-      public ExtensiveTest.IExtendedNumber Add(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber Add(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
         return Create(this.ed.Add(ToValue(b), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber Subtract(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber Subtract(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
         return Create(this.ed.Subtract(ToValue(b), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber Multiply(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber Multiply(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
         return Create(this.ed.Multiply(ToValue(b), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber Divide(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber Divide(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
         return Create(this.ed.Divide(ToValue(b), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber SquareRoot(PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber SquareRoot(PrecisionContext ctx) {
         return Create(this.ed.SquareRoot(ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber MultiplyAndAdd(ExtensiveTest.IExtendedNumber b, ExtensiveTest.IExtendedNumber c, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber MultiplyAndAdd(ExtensiveTest.IExtendedNumber b, ExtensiveTest.IExtendedNumber c, PrecisionContext ctx) {
         return Create(this.ed.MultiplyAndAdd(ToValue(b), ToValue(c), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber MultiplyAndSubtract(ExtensiveTest.IExtendedNumber b, ExtensiveTest.IExtendedNumber c, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber MultiplyAndSubtract(ExtensiveTest.IExtendedNumber b, ExtensiveTest.IExtendedNumber c, PrecisionContext ctx) {
         return Create(this.ed.MultiplyAndSubtract(ToValue(b), ToValue(c), ctx));
       }
 
-      public bool IsQuietNaN()
-      {
+      public bool IsQuietNaN() {
         return this.ed != null && ToValue(this).IsQuietNaN();
       }
 
-      public bool IsSignalingNaN()
-      {
+      public bool IsSignalingNaN() {
         return this.ed != null && ToValue(this).IsSignalingNaN();
       }
     }
@@ -389,9 +377,8 @@ namespace CBOR
           throw new FormatException(str);
         }
         // Console.WriteLine("val={0}",Create(ExtendedFloat.Create(
-        // (BigInteger)mantissa,
-        // (BigInteger)exponent
-        // )));
+        // (BigInteger)mantissa,  // (BigInteger)exponent
+        //)));
         //      Console.WriteLine("mant={0} exp={1}", mantissa,exponent);
         return Create(ExtendedFloat.Create(
           (BigInteger)mantissa,
@@ -399,8 +386,7 @@ namespace CBOR
       }
 
       #region Equals and GetHashCode implementation
-      public override bool Equals(object obj)
-      {
+      public override bool Equals(object obj) {
         ExtensiveTest.BinaryNumber other = obj as ExtensiveTest.BinaryNumber;
         if (other == null) {
           return false;
@@ -408,8 +394,7 @@ namespace CBOR
         return this.ef.CompareTo(other.ef) == 0;
       }
 
-      public override int GetHashCode()
-      {
+      public override int GetHashCode() {
         int hashCode = 0;
         unchecked {
           if (this.ef != null) {
@@ -420,8 +405,7 @@ namespace CBOR
       }
       #endregion
 
-      public override string ToString()
-      {
+      public override string ToString() {
         return this.ef.ToString();
       }
 
@@ -435,48 +419,39 @@ namespace CBOR
         return (ExtendedFloat)en.Value;
       }
 
-      public ExtensiveTest.IExtendedNumber Add(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber Add(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
         return Create(this.ef.Add(ToValue(b), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber Subtract(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber Subtract(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
         return Create(this.ef.Subtract(ToValue(b), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber Multiply(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber Multiply(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
         return Create(this.ef.Multiply(ToValue(b), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber Divide(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber Divide(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
         return Create(this.ef.Divide(ToValue(b), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber SquareRoot(PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber SquareRoot(PrecisionContext ctx) {
         return Create(this.ef.SquareRoot(ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber MultiplyAndAdd(ExtensiveTest.IExtendedNumber b, ExtensiveTest.IExtendedNumber c, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber MultiplyAndAdd(ExtensiveTest.IExtendedNumber b, ExtensiveTest.IExtendedNumber c, PrecisionContext ctx) {
         return Create(this.ef.MultiplyAndAdd(ToValue(b), ToValue(c), ctx));
       }
 
-      public ExtensiveTest.IExtendedNumber MultiplyAndSubtract(ExtensiveTest.IExtendedNumber b, ExtensiveTest.IExtendedNumber c, PrecisionContext ctx)
-      {
+      public ExtensiveTest.IExtendedNumber MultiplyAndSubtract(ExtensiveTest.IExtendedNumber b, ExtensiveTest.IExtendedNumber c, PrecisionContext ctx) {
         return Create(this.ef.MultiplyAndSubtract(ToValue(b), ToValue(c), ctx));
       }
 
-      public bool IsQuietNaN()
-      {
+      public bool IsQuietNaN() {
         return this.ef != null && ToValue(this).IsQuietNaN();
       }
 
-      public bool IsSignalingNaN()
-      {
+      public bool IsSignalingNaN() {
         return this.ef != null && ToValue(this).IsSignalingNaN();
       }
     }
