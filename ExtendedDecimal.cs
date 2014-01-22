@@ -191,7 +191,10 @@ namespace PeterO {
     /// </summary>
     /// <param name='str'>A string that represents a number.</param>
     /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). Can be null.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
     /// <exception cref='FormatException'>The parameter <paramref name='str'/>

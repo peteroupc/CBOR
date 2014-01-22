@@ -181,7 +181,10 @@ at: http://peteroupc.github.io/CBOR/
      * The format generally follows the definition in java.math.BigDecimal(),
      * except that the digits must be ASCII digits ('0' through '9').</p>
      * @param str A string that represents a number.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null.
      * @return An ExtendedDecimal object.
      * @throws java.lang.NullPointerException The parameter {@code str}
      * is null.
