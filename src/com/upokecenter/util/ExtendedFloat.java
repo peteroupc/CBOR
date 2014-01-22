@@ -14,21 +14,23 @@ at: http://peteroupc.github.io/CBOR/
      * also supports values for negative zero, not-a-number (NaN) values,
      * and infinity.<p>Passing a signaling NaN to any arithmetic operation
      * shown here will signal the flag FlagInvalid and return a quiet NaN,
-     * unless noted otherwise.</p> <p>Passing a quiet NaN to any arithmetic
-     * operation shown here will return a quiet NaN, unless noted otherwise.</p>
-     * <p>Unless noted otherwise, passing a null ExtendedFloat argument
-     * to any method here will throw an exception.</p> <p>When an arithmetic
-     * operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
-     * it will not throw an exception too.</p> <p>An ExtendedFloat value
-     * can be serialized in one of the following ways:</p> <ul> <li>By calling
-     * the toString() method, which will always return distinct strings
-     * for distinct ExtendedFloat values. However, not all strings can
-     * be converted back to an ExtendedFloat without loss, especially if
-     * the string has a fractional part.</li> <li>By calling the UnsignedMantissa,
-     * Exponent, and IsNegative properties, and calling the IsInfinity,
-     * IsQuietNaN, and IsSignalingNaN methods. The return values combined
-     * will uniquely identify a particular ExtendedFloat value.</li>
-     * </ul>
+     * even if another operand to that operation is a quiet NaN, unless noted
+     * otherwise.</p> <p>Passing a quiet NaN to any arithmetic operation
+     * shown here will return a quiet NaN, unless noted otherwise.</p> <p>Unless
+     * noted otherwise, passing a null ExtendedFloat argument to any method
+     * here will throw an exception.</p> <p>When an arithmetic operation
+     * signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
+     * it will not throw an exception too, unless the operation's trap is
+     * enabled in the precision context (see PrecisionContext's Traps
+     * property).</p> <p>An ExtendedFloat value can be serialized in one
+     * of the following ways:</p> <ul> <li>By calling the toString() method,
+     * which will always return distinct strings for distinct ExtendedFloat
+     * values. However, not all strings can be converted back to an ExtendedFloat
+     * without loss, especially if the string has a fractional part.</li>
+     * <li>By calling the UnsignedMantissa, Exponent, and IsNegative
+     * properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
+     * methods. The return values combined will uniquely identify a particular
+     * ExtendedFloat value.</li> </ul>
      */
   public final class ExtendedFloat implements Comparable<ExtendedFloat> {
     private BigInteger exponent;
@@ -176,8 +178,8 @@ at: http://peteroupc.github.io/CBOR/
 
     private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
       if (val.signum()==0) {
- return val;
-}
+        return val;
+      }
       while (bigShift.compareTo(valueBigShiftIteration) > 0) {
         val=val.shiftLeft(1000000);
         bigShift=bigShift.subtract(valueBigShiftIteration);
@@ -189,8 +191,8 @@ at: http://peteroupc.github.io/CBOR/
 
     private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
       if (val.signum()==0) {
- return val;
-}
+        return val;
+      }
       while (shift > valueShiftIteration) {
         val=val.shiftLeft(1000000);
         shift -= valueShiftIteration;
@@ -224,7 +226,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
       public BigInteger GetMantissa(ExtendedFloat value) {
-        return value.unsignedMantissa;
+        return value.getMantissa();
       }
 
     /**
@@ -284,7 +286,7 @@ at: http://peteroupc.github.io/CBOR/
         if (power.signum() <= 0) {
           return bigint;
         }
-         if (bigint.signum() < 0) {
+        if (bigint.signum() < 0) {
           bigint=bigint.negate();
           if (power.CanFitInInt32()) {
             bigint = ShiftLeftInt(bigint, power.AsInt32());
@@ -309,7 +311,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
       public int GetFlags(ExtendedFloat value) {
-        return value.unsignedMantissa.signum() < 0 ? BigNumberFlags.FlagNegative : 0;
+        return value.flags;
       }
 
     /**
@@ -320,11 +322,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedFloat object.
      */
       public ExtendedFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
-        boolean neg = (flags & BigNumberFlags.FlagNegative) != 0;
-        if ((neg && mantissa.signum() > 0) || (!neg && mantissa.signum() < 0)) {
- mantissa=mantissa.negate();
-}
-        return ExtendedFloat.Create(mantissa, exponent);
+        return ExtendedFloat.CreateWithFlags(mantissa, exponent, flags);
       }
 
     /**
@@ -332,7 +330,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
-        return BigNumberFlags.FiniteOnly;
+        return BigNumberFlags.FiniteAndNonFinite;
       }
 
     /**
@@ -550,7 +548,7 @@ at: http://peteroupc.github.io/CBOR/
         }
         if (this.IsQuietNaN()) {
           nan[1] |= 0x80000;
-  } else {
+        } else {
           // not really the signaling bit, but done to keep
           // the mantissa from being zero
           nan[1] |= 0x40000;
@@ -1344,7 +1342,7 @@ at: http://peteroupc.github.io/CBOR/
      * : null)). If HasFlags of the context is true, will also store the flags
      * resulting from the operation (the flags are in addition to the pre-existing
      * flags). Can be null.
-     * @return The distance of the closest multiple. Signals FlagInvalidOperation
+     * @return The distance of the closest multiple. Signals FlagInvalid
      * and returns NaN if the divisor is 0, or either the result of integer
      * division (the quotient) or the remainder wouldn't fit the given precision.
      */
@@ -1873,7 +1871,8 @@ at: http://peteroupc.github.io/CBOR/
      * with a real part of 0 and an imaginary part of this object's absolute
      * value, but the return value is still NaN).
      * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision range is unlimited.
+     * null or the precision is unlimited (the context's Precision property
+     * is 0).
      */
     public ExtendedFloat SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this, ctx);
@@ -1891,7 +1890,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return Exponential of this object. If this object's value is 1, returns
      * an approximation to " e" within the given precision.
      * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision range is unlimited.
+     * null or the precision is unlimited (the context's Precision property
+     * is 0).
      */
     public ExtendedFloat Exp(PrecisionContext ctx) {
       return math.Exp(this, ctx);
@@ -1911,7 +1911,8 @@ at: http://peteroupc.github.io/CBOR/
      * with a real part equal to Ln of this object's absolute value and an imaginary
      * part equal to pi, but the return value is still NaN.).
      * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision range is unlimited.
+     * null or the precision is unlimited (the context's Precision property
+     * is 0).
      */
     public ExtendedFloat Log(PrecisionContext ctx) {
       return math.Ln(this, ctx);
@@ -1936,8 +1937,8 @@ at: http://peteroupc.github.io/CBOR/
      * NaN if this object and exponent are both 0; or if this value is less than
      * 0 and the exponent either has a fractional part or is infinity.
      * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision range is unlimited, and the exponent has a fractional
-     * part.
+     * null or the precision is unlimited (the context's Precision property
+     * is 0), and the exponent has a fractional part.
      */
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
       return math.Power(this, exponent, ctx);
@@ -1952,7 +1953,8 @@ at: http://peteroupc.github.io/CBOR/
      * null, as pi can never be represented exactly.--.
      * @return Pi rounded to the given precision.
      * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision range is unlimited.
+     * null or the precision is unlimited (the context's Precision property
+     * is 0).
      */
     public static ExtendedFloat PI(PrecisionContext ctx) {
       return math.Pi(ctx);

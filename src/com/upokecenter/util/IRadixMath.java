@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-// import java.math.*;
-
   interface IRadixMath<T>
   {
     T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx);

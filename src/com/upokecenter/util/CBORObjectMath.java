@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-// import java.math.*;
-
     /**
      * Implements arithmetic operations with CBOR objects.
      * @param a A CBORObject object. (2).
