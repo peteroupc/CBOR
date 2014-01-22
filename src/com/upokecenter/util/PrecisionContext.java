@@ -161,7 +161,11 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets the flags that are set from converting numbers according to this
-     * precision context. If HasFlags is false, this value will be 0.
+     * precision context. If HasFlags is false, this value will be 0. This
+     * value is a combination of bit fields. To retrieve a particular flag,
+     * use the AND operation on the return value of this method. For example:
+     * <code>(this.getFlags() &amp; PrecisionContext.FlagInexact)
+     * != 0</code> returns TRUE if the Inexact flag is set.
      */
     public int getFlags() {
         return this.flags;
@@ -234,8 +238,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Copies this PrecisionContext with HasFlags set to true and a Flags
-     * value of 0.
+     * Copies this PrecisionContext with Traps set to the given value.
      * @param traps Flags representing the traps to enable. See the property
      * &quot;Traps&quot;.
      * @return A PrecisionContext object.
@@ -318,9 +321,12 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Not documented yet.
+     * Copies this PrecisionContext and gives it a particular precision
+     * value.
      * @param bigintPrecision A BigInteger object.
      * @return A PrecisionContext object.
+     * @throws java.lang.NullPointerException The parameter {@code bigintPrecision}
+     * is null.
      */
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
       if (bigintPrecision == null) {
@@ -418,6 +424,13 @@ at: http://peteroupc.github.io/CBOR/
 
     public static final PrecisionContext Decimal128 =
       new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
+
+    /**
+     * Basic precision context, 9 digits precision, rounding mode half-up,
+     * unlimited exponent range.
+     */
+    public static final PrecisionContext Basic =
+      PrecisionContext.ForPrecisionAndRounding(9, Rounding.HalfUp);
 
     /**
      * Precision context for the Common Language Infrastructure (.NET

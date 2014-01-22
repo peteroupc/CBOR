@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 using System;
-// using System.Numerics;
+
 namespace PeterO {
     /// <summary>Implements arithmetic operations with CBOR objects.</summary>
     /// <returns>A CBORObject object.</returns>

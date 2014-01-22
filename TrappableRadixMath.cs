@@ -77,7 +77,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.DivideToIntegerNaturalScale(thisValue, divisor, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -89,7 +89,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.DivideToIntegerZeroScale(thisValue, divisor, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -100,7 +100,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Abs(value, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -111,7 +111,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Negate(value, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
@@ -123,7 +123,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Remainder(thisValue, divisor, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -135,7 +135,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RemainderNear(thisValue, divisor, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -145,7 +145,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Pi(tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -157,7 +157,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Power(thisValue, pow, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -168,7 +168,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Log10(thisValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -179,7 +179,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Ln(thisValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -190,7 +190,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Exp(thisValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -201,7 +201,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.SquareRoot(thisValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -212,7 +212,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.NextMinus(thisValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -224,7 +224,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.NextToward(thisValue, otherValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -235,7 +235,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.NextPlus(thisValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -248,7 +248,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.DivideToExponent(thisValue, divisor, desiredExponent, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Divides two T objects.</summary>
@@ -260,7 +260,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Divide(thisValue, divisor, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -272,7 +272,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.MinMagnitude(a, b, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -284,7 +284,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.MaxMagnitude(a, b, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -296,7 +296,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Max(a, b, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -308,7 +308,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Min(a, b, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Multiplies two T objects.</summary>
@@ -320,7 +320,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Multiply(thisValue, other, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -333,7 +333,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.MultiplyAndAdd(thisValue, multiplicand, augend, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -344,7 +344,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToBinaryPrecision(thisValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -355,7 +355,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Plus(thisValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -366,7 +366,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToPrecision(thisValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -378,7 +378,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Quantize(thisValue, otherValue, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -390,7 +390,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToExponentExact(thisValue, expOther, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -402,7 +402,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToExponentSimple(thisValue, expOther, ctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -414,7 +414,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -425,7 +425,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Reduce(thisValue, ctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -437,7 +437,7 @@ namespace PeterO
     {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Add(thisValue, other, tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Compares a T object with this instance.</summary>
@@ -455,7 +455,7 @@ namespace PeterO
         numberObject,
         treatQuietNansAsSignaling,
         tctx);
-      return TriggerTraps(result, tctx, ctx);
+      return this.TriggerTraps(result, tctx, ctx);
     }
 
     /// <summary>Compares a T object with this instance.</summary>

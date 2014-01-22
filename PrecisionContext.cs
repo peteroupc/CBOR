@@ -41,13 +41,7 @@ namespace PeterO {
     /// exact result (FlagInexact) or if the return value's exponent is lower
     /// than the lowest allowed (FlagSubnormal).</para>
     /// </summary>
-    /// <value>The traps that are set for each flag in the context. Whenever
-    /// a flag is signaled, even if HasFlags is false, and the flag&apos;s
-    /// trap is enabled, the operation will throw a TrapException. &lt;para&gt;For
-    /// example, if Traps is equal to FlagInexact and FlagSubnormal, a TrapException
-    /// will be thrown if an operation&apos;s return value is not the same
-    /// as the exact result (FlagInexact) or if the return value&apos;s exponent
-    /// is lower than the lowest allowed (FlagSubnormal).&lt;/para&gt;.</value>
+    /// <value>The traps that are set for each flag in the context.</value>
     public int Traps {
       get {
  return this.traps;
@@ -61,8 +55,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether this context defines a
     /// minimum and maximum exponent. If false, converted exponents can
     /// have any exponent.</summary>
-    /// <value>Whether this context defines a minimum and maximum exponent.
-    /// If false, converted exponents can have any exponent.</value>
+    /// <value>Whether this context defines a minimum and maximum exponent.</value>
     public bool HasExponentRange {
       get {
         return this.hasExponentRange;
@@ -76,11 +69,7 @@ namespace PeterO {
     /// lowest possible Exponent property.) If HasExponentRange is false,
     /// this value will be 0.</summary>
     /// <value>The lowest exponent possible when a converted number is expressed
-    /// in scientific notation with one digit before the decimal point. For
-    /// example, with a precision of 3 and an EMin of -100, the next value that
-    /// comes after 0 is 0.001E-100. (This is not the same as the lowest possible
-    /// Exponent property.) If HasExponentRange is false, this value will
-    /// be 0.</value>
+    /// in scientific notation with one digit before the decimal point.</value>
     public BigInteger EMin {
       get {
         return this.hasExponentRange ? this.exponentMin : BigInteger.Zero;
@@ -94,9 +83,7 @@ namespace PeterO {
     /// is 3, a converted number&apos;s mantissa can range from 0 to 999 (up
     /// to three digits long). If 0, converted numbers can have any precision.</summary>
     /// <value>The maximum length of a converted number in digits, ignoring
-    /// the decimal point and exponent. For example, if precision is 3, a converted
-    /// number&apos;s mantissa can range from 0 to 999 (up to three digits
-    /// long). If 0, converted numbers can have any precision.</value>
+    /// the decimal point and exponent.</value>
     public BigInteger Precision {
       get {
         return this.bigintPrecision;
@@ -114,11 +101,7 @@ namespace PeterO {
     /// zeros are added to the number&apos;s mantissa to account for the adjustment.
     /// If HasExponentRange is false, this value is always false.</summary>
     /// <value>If true, a converted number&apos;s Exponent property will
-    /// not be higher than EMax + 1 - Precision. If a number&apos;s exponent
-    /// is higher than that value, but not high enough to cause overflow, the
-    /// exponent is clamped to that value and enough zeros are added to the
-    /// number&apos;s mantissa to account for the adjustment. If HasExponentRange
-    /// is false, this value is always false.</value>
+    /// not be higher than EMax + 1 - Precision.</value>
     public bool ClampNormalExponents {
       get {
         return this.hasExponentRange ? this.clampNormalExponents : false;
@@ -182,7 +165,11 @@ namespace PeterO {
 
     /// <summary>Gets or sets the flags that are set from converting numbers
     /// according to this precision context. If HasFlags is false, this value
-    /// will be 0.</summary>
+    /// will be 0. This value is a combination of bit fields. To retrieve a particular
+    /// flag, use the AND operation on the return value of this method. For
+    /// example: <code>(this.Flags &amp; PrecisionContext.FlagInexact)
+    /// != 0</code>
+    /// returns TRUE if the Inexact flag is set.</summary>
     /// <value>The flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be
     /// 0.</value>
@@ -251,8 +238,8 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary>Copies this PrecisionContext with HasFlags set to true
-    /// and a Flags value of 0.</summary>
+    /// <summary>Copies this PrecisionContext with Traps set to the given
+    /// value.</summary>
     /// <param name='traps'>Flags representing the traps to enable. See
     /// the property &quot;Traps&quot;.</param>
     /// <returns>A PrecisionContext object.</returns>
@@ -325,9 +312,12 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bigintPrecision'>A BigInteger object.</param>
+    /// <summary>Copies this PrecisionContext and gives it a particular
+    /// precision value.</summary>
     /// <returns>A PrecisionContext object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigintPrecision'/> is null.</exception>
+    /// <param name='bigintPrecision'>A BigInteger object.</param>
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
       if (bigintPrecision == null) {
         throw new ArgumentNullException("bigintPrecision");
@@ -437,6 +427,11 @@ namespace PeterO {
 
     public static readonly PrecisionContext Decimal128 =
       new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
+
+    /// <summary>Basic precision context, 9 digits precision, rounding
+    /// mode half-up, unlimited exponent range.</summary>
+    public static readonly PrecisionContext Basic =
+      PrecisionContext.ForPrecisionAndRounding(9, Rounding.HalfUp);
 
     /// <summary>Precision context for the Common Language Infrastructure
     /// (.NET Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
