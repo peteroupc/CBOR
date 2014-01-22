@@ -265,12 +265,10 @@ namespace PeterO {
     /// <param name='other'>A 32-bit signed integer.</param>
     /// <returns>The difference of the two objects.</returns>
       public MutableNumber SubtractInt(
-        int other)
-      {
+        int other) {
         if (other < 0) {
           throw new ArgumentException("Only positive values are supported");
-        } else if (other != 0)
-        {
+        } else if (other != 0) {
           unchecked {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
@@ -310,8 +308,7 @@ namespace PeterO {
     /// <param name='other'>A MutableNumber object.</param>
     /// <returns>The difference of the two objects.</returns>
       public MutableNumber Subtract(
-        MutableNumber other)
-      {
+        MutableNumber other) {
         unchecked {
           {
             // Console.WriteLine("{0} {1}",this.data.Length,other.data.Length);
@@ -379,8 +376,7 @@ namespace PeterO {
       public MutableNumber Add(int augend) {
         if (augend < 0) {
           throw new ArgumentException("Only positive augends are supported");
-        } else if (augend != 0)
-        {
+        } else if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {

@@ -362,8 +362,7 @@ namespace PeterO {
         } else if ((c & 0x1FFC00) == 0xDC00) {
           throw this.SyntaxError("Unpaired surrogate code point");
         }
-        if (c == quote && !escaped)
-        {
+        if (c == quote && !escaped) {
            // End quote reached
           return sb.ToString();
         }

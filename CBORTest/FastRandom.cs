@@ -23,8 +23,7 @@ namespace Test
     private int w = 521288629;
     private int z = 362436069;
 
-    public FastRandom()
-    {
+    public FastRandom() {
       this.rand = new System.Random();
       this.count = ReseedCount;
     }

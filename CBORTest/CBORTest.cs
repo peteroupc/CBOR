@@ -6526,8 +6526,7 @@ o.ToJSONString());
                 bi[0],
                 String.Format(CultureInfo.InvariantCulture, "Outer tag doesn't match: {0}", obj2));
             }
-            if (!bi[1].Equals((BigInteger)bigintTemp))
-            {
+            if (!bi[1].Equals((BigInteger)bigintTemp)) {
               Assert.AreEqual(
                 bigintTemp,
                 bi[1],

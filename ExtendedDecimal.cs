@@ -1483,8 +1483,7 @@ namespace PeterO {
     /// dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor
     /// and the dividend are 0.</returns>
     public ExtendedDecimal DivideToIntegerNaturalScale(
-      ExtendedDecimal divisor)
-    {
+      ExtendedDecimal divisor) {
       return this.DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
 
@@ -1506,8 +1505,7 @@ namespace PeterO {
     /// <param name='divisor'>An ExtendedDecimal object. (2).</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal RemainderNaturalScale(
-      ExtendedDecimal divisor)
-    {
+      ExtendedDecimal divisor) {
       return this.RemainderNaturalScale(divisor, null);
     }
 
@@ -1517,8 +1515,7 @@ namespace PeterO {
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal RemainderNaturalScale(
       ExtendedDecimal divisor,
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return this.Subtract(
         this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null),
         ctx);
@@ -1547,8 +1544,7 @@ namespace PeterO {
     public ExtendedDecimal DivideToExponent(
       ExtendedDecimal divisor,
       long desiredExponentSmall,
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, ctx);
     }
 
@@ -1569,8 +1565,7 @@ namespace PeterO {
     /// result is not exact.</returns>
     public ExtendedDecimal Divide(
       ExtendedDecimal divisor,
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return math.Divide(this, divisor, ctx);
     }
 
@@ -1591,8 +1586,7 @@ namespace PeterO {
     public ExtendedDecimal DivideToExponent(
       ExtendedDecimal divisor,
       long desiredExponentSmall,
-      Rounding rounding)
-    {
+      Rounding rounding) {
       return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, PrecisionContext.ForRounding(rounding));
     }
 
@@ -1639,8 +1633,7 @@ namespace PeterO {
     public ExtendedDecimal DivideToExponent(
       ExtendedDecimal divisor,
       BigInteger desiredExponent,
-      Rounding rounding)
-    {
+      Rounding rounding) {
       return this.DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
 
@@ -1821,8 +1814,7 @@ namespace PeterO {
     /// is null, the precision is 0, or <paramref name='ctx'/> has an unlimited
     /// exponent range.</returns>
     public ExtendedDecimal NextMinus(
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return math.NextMinus(this, ctx);
     }
 
@@ -1838,8 +1830,7 @@ namespace PeterO {
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</returns>
     public ExtendedDecimal NextPlus(
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return math.NextPlus(this, ctx);
     }
 
@@ -1857,8 +1848,7 @@ namespace PeterO {
     /// is 0, or <paramref name='ctx'/> has an unlimited exponent range.</returns>
     public ExtendedDecimal NextToward(
       ExtendedDecimal otherValue,
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return math.NextToward(this, otherValue, ctx);
     }
 

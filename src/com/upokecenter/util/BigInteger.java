@@ -93,14 +93,12 @@ at: http://peteroupc.github.io/CBOR/
     private static void ShiftWordsRightByWordsSignExtend(short[] r, int rstart, int n, int shiftWords) {
       shiftWords = Math.min(shiftWords, n);
       if (shiftWords != 0) {
-        for (int i = 0; i + shiftWords < n; ++i)
-        {
+        for (int i = 0; i + shiftWords < n; ++i) {
           r[rstart + i] = r[rstart + i + shiftWords];
         }
         rstart = rstart + n - shiftWords;
         // Sign extend
-        for (int i = 0; i < shiftWords; ++i)
-        {
+        for (int i = 0; i < shiftWords; ++i) {
           r[rstart + i] = ((short)0xFFFF);
         }
       }
@@ -124,8 +122,7 @@ at: http://peteroupc.github.io/CBOR/
         // Debugif(!(n!=0))Assert.fail("{0} line {1}: n","integer.cpp",63);
         short tmp = words1[words1Start];
         words1[words1Start] = (short)(tmp + words2);
-        if ((((int)words1[words1Start]) & 0xFFFF) >= (((int)tmp) & 0xFFFF))
-        {
+        if ((((int)words1[words1Start]) & 0xFFFF) >= (((int)tmp) & 0xFFFF)) {
           return 0;
         }
         for (int i = 1; i < n; ++i) {
@@ -779,8 +776,7 @@ at: http://peteroupc.github.io/CBOR/
             RecursiveMultiply(tempArr, (int)(tempStart + words1Count + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
           }
         }
-        if (Add(resultArr, (int)(resultStart + words1Count), resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), words2Count - words1Count) != 0)
-        {
+        if (Add(resultArr, (int)(resultStart + words1Count), resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), words2Count - words1Count) != 0) {
           Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
         }
       }
@@ -981,8 +977,7 @@ at: http://peteroupc.github.io/CBOR/
             int valueB0 = ((int)words2[words2Start + i]) & 0xFFFF;
             int valueB1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
             int csi = valueCstart + i;
-            if (valueB0 >= valueB1)
-            {
+            if (valueB0 >= valueB1) {
               s = (short)0;
               d = first1MinusFirst0 * (((int)valueB0 - valueB1) & 0xFFFF);
             } else {
@@ -1050,8 +1045,7 @@ at: http://peteroupc.github.io/CBOR/
             int b0 = ((int)words2[words2Start + i]) & 0xFFFF;
             int b1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
             int csi = valueCstart + i;
-            if (b0 >= b1)
-            {
+            if (b0 >= b1) {
               s = (short)0;
               d = first1MinusFirst0 * (((int)b0 - b1) & 0xFFFF);
             } else {

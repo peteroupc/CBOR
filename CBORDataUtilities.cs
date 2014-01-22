@@ -49,8 +49,7 @@ namespace PeterO {
       string str,
       bool integersOnly,
       bool positiveOnly,
-      bool failOnExponentOverflow)
-    {
+      bool failOnExponentOverflow) {
       if (String.IsNullOrEmpty(str)) {
         return null;
       }

@@ -955,8 +955,7 @@ namespace PeterO {
     /// dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor
     /// and the dividend are 0.</returns>
     public ExtendedFloat DivideToIntegerNaturalScale(
-      ExtendedFloat divisor)
-    {
+      ExtendedFloat divisor) {
       return this.DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
 
@@ -978,8 +977,7 @@ namespace PeterO {
     /// <param name='divisor'>An ExtendedFloat object. (2).</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat RemainderNaturalScale(
-      ExtendedFloat divisor)
-    {
+      ExtendedFloat divisor) {
       return this.RemainderNaturalScale(divisor, null);
     }
 
@@ -989,8 +987,7 @@ namespace PeterO {
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat RemainderNaturalScale(
       ExtendedFloat divisor,
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return this.Subtract(
         this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null),
         ctx);
@@ -1019,8 +1016,7 @@ namespace PeterO {
     public ExtendedFloat DivideToExponent(
       ExtendedFloat divisor,
       long desiredExponentSmall,
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, ctx);
     }
 
@@ -1042,8 +1038,7 @@ namespace PeterO {
     /// is Rounding.Unnecessary and the result is not exact.</exception>
     public ExtendedFloat Divide(
       ExtendedFloat divisor,
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return math.Divide(this, divisor, ctx);
     }
 
@@ -1065,8 +1060,7 @@ namespace PeterO {
     public ExtendedFloat DivideToExponent(
       ExtendedFloat divisor,
       long desiredExponentSmall,
-      Rounding rounding)
-    {
+      Rounding rounding) {
       return this.DivideToExponent(divisor, (BigInteger)desiredExponentSmall, PrecisionContext.ForRounding(rounding));
     }
 
@@ -1114,8 +1108,7 @@ namespace PeterO {
     public ExtendedFloat DivideToExponent(
       ExtendedFloat divisor,
       BigInteger desiredExponent,
-      Rounding rounding)
-    {
+      Rounding rounding) {
       return this.DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
 
@@ -1297,8 +1290,7 @@ namespace PeterO {
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
     public ExtendedFloat NextMinus(
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return math.NextMinus(this, ctx);
     }
 
@@ -1315,8 +1307,7 @@ namespace PeterO {
     /// name='ctx'/> is null, the precision is 0, or <paramref name='ctx'/>
     /// has an unlimited exponent range.</exception>
     public ExtendedFloat NextPlus(
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return math.NextPlus(this, ctx);
     }
 
@@ -1335,8 +1326,7 @@ namespace PeterO {
     /// has an unlimited exponent range.</exception>
     public ExtendedFloat NextToward(
       ExtendedFloat otherValue,
-      PrecisionContext ctx)
-    {
+      PrecisionContext ctx) {
       return math.NextToward(this, otherValue, ctx);
     }
 

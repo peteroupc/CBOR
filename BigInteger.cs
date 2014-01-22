@@ -97,14 +97,12 @@ namespace PeterO {
     private static void ShiftWordsRightByWordsSignExtend(short[] r, int rstart, int n, int shiftWords) {
       shiftWords = Math.Min(shiftWords, n);
       if (shiftWords != 0) {
-        for (int i = 0; i + shiftWords < n; ++i)
-        {
+        for (int i = 0; i + shiftWords < n; ++i) {
           r[rstart + i] = r[rstart + i + shiftWords];
         }
         rstart = rstart + n - shiftWords;
         // Sign extend
-        for (int i = 0; i < shiftWords; ++i)
-        {
+        for (int i = 0; i < shiftWords; ++i) {
           r[rstart + i] = unchecked((short)0xFFFF);
         }
       }
@@ -128,8 +126,7 @@ namespace PeterO {
         // DebugAssert.IsTrue(n!=0,"{0} line {1}: n","integer.cpp",63);
         short tmp = words1[words1Start];
         words1[words1Start] = (short)(tmp + words2);
-        if ((((int)words1[words1Start]) & 0xFFFF) >= (((int)tmp) & 0xFFFF))
-        {
+        if ((((int)words1[words1Start]) & 0xFFFF) >= (((int)tmp) & 0xFFFF)) {
           return 0;
         }
         for (int i = 1; i < n; ++i) {
@@ -786,8 +783,7 @@ namespace PeterO {
             RecursiveMultiply(tempArr, (int)(tempStart + words1Count + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
           }
         }
-        if (Add(resultArr, (int)(resultStart + words1Count), resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), words2Count - words1Count) != 0)
-        {
+        if (Add(resultArr, (int)(resultStart + words1Count), resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), words2Count - words1Count) != 0) {
           Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
         }
       }
@@ -976,8 +972,7 @@ namespace PeterO {
       }
     }
 
-    private static void AtomicMultiplyOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend)
-    {
+    private static void AtomicMultiplyOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend) {
       short s;
       int d;
       int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xFFFF;
@@ -989,8 +984,7 @@ namespace PeterO {
             int valueB0 = ((int)words2[words2Start + i]) & 0xFFFF;
             int valueB1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
             int csi = valueCstart + i;
-            if (valueB0 >= valueB1)
-            {
+            if (valueB0 >= valueB1) {
               s = (short)0;
               d = first1MinusFirst0 * (((int)valueB0 - valueB1) & 0xFFFF);
             } else {
@@ -1046,8 +1040,7 @@ namespace PeterO {
       }
     }
 
-    private static void AtomicMultiplyAddOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend)
-    {
+    private static void AtomicMultiplyAddOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend) {
       short s;
       int d;
       int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xFFFF;
@@ -1059,8 +1052,7 @@ namespace PeterO {
             int b0 = ((int)words2[words2Start + i]) & 0xFFFF;
             int b1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
             int csi = valueCstart + i;
-            if (b0 >= b1)
-            {
+            if (b0 >= b1) {
               s = (short)0;
               d = first1MinusFirst0 * (((int)b0 - b1) & 0xFFFF);
             } else {
