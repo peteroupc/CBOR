@@ -75,8 +75,8 @@ namespace PeterO {
       }
       int d = scale << 16;
       if (neg) {
- d |= 1 << 31;
-}
+        d |= 1 << 31;
+      }
       return new Decimal(new int[] { a, b, c, d });
     }
 
@@ -125,15 +125,16 @@ namespace PeterO {
     }
 
     private static decimal ExtendedDecimalToDecimal(ExtendedDecimal numberObject) {
-      ExtendedDecimal newDecimal = numberObject.RoundToBinaryPrecision(
-        PrecisionContext.CliDecimal);
-      if (newDecimal == null) {
-        throw new OverflowException("This object's value is out of range");
+      try {
+        ExtendedDecimal newDecimal = numberObject.RoundToBinaryPrecision(
+          PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
+        return EncodeDecimal(
+          BigInteger.Abs(newDecimal.Mantissa),
+          -((int)newDecimal.Exponent),
+          newDecimal.Mantissa.Sign < 0);
+      } catch (TrapException ex) {
+        throw new OverflowException("This object's value is out of range", ex);
       }
-      return EncodeDecimal(
-        BigInteger.Abs(newDecimal.Mantissa),
-        -((int)newDecimal.Exponent),
-        newDecimal.Mantissa.Sign < 0);
     }
 
     /// <summary>Converts this object to a .NET decimal.</summary>
@@ -249,8 +250,8 @@ namespace PeterO {
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
       if (stream == null) {
- throw new ArgumentNullException("stream");
-}
+        throw new ArgumentNullException("stream");
+      }
       if (value <= Int64.MaxValue) {
         Write((long)value, stream);
       } else {
@@ -299,8 +300,8 @@ namespace PeterO {
         bool negative = (bits[3] >> 31) != 0;
         int scale = (bits[3] >> 16) & 0xFF;
         if (negative) {
- mantissa = -mantissa;
-}
+          mantissa = -mantissa;
+        }
         return FromObjectAndTag(
           new CBORObject[] { FromObject(-scale),
           FromObject(mantissa) },
@@ -421,8 +422,8 @@ namespace PeterO {
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(DateTime bi, Stream stream) {
       if (stream == null) {
- throw new ArgumentNullException("stream");
-}
+        throw new ArgumentNullException("stream");
+      }
       stream.WriteByte(0xC0);
       Write(DateTimeToString(bi), stream);
     }

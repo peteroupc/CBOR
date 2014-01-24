@@ -177,7 +177,8 @@ namespace Test {
           Assert.Fail(
             String.Format(
               CultureInfo.InvariantCulture,
-              "{0} equals {1}, but not vice versa",
+              "{0} equals {1},
+              but not vice versa",
               o,
               o2));
         }
