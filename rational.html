@@ -28,7 +28,7 @@ Some programming languages have built-in support for rational numbers or support
 Detailed Semantics
 </h2>
 <p>
-A rational number in CBOR has the tag 30 and consists of an array with a length of 2.  The first element is the numerator, and the second is the denominator.  The numerator must be a positive integer (major type 0), a negative integer (major type 1), or a bignum (major type 6, tag 2 or 3).  The denominator must be a positive integer, a negative integer, or a bignum, and must not equal 0.  The rational number need not be in lowest terms.
+A rational number in CBOR has the tag 30 and consists of an array with a length of 2.  The first element is the numerator, and the second is the denominator.  The numerator must be an unsigned integer (major type 0), a negative integer (major type 1), or a bignum (major type 6, tag 2 or 3).  The denominator must be an unsigned integer (major type 0) or an unsigned bignum (major type 6, tag 2), and must not equal 0.  The rational number need not be in lowest terms.
 </p><p>
 
 A CBOR decoder can treat data items with tag 30 that don't meet the criteria above as an error, but this specification doesn't define how a CBOR implementation ought to behave in this case.  Section 3.4 of RFC 7049 (ref. 1) details this kind of error-handling behavior.
