@@ -377,9 +377,9 @@ namespace CBOR
           throw new FormatException(str);
         }
         // Console.WriteLine("val={0}",Create(ExtendedFloat.Create(
-        // (BigInteger)mantissa,  // (BigInteger)exponent
-        //)));
-        //      Console.WriteLine("mant={0} exp={1}", mantissa,exponent);
+        // (BigInteger)mantissa, // (BigInteger)exponent
+        // )));
+        // Console.WriteLine("mant={0} exp={1}", mantissa,exponent);
         return Create(ExtendedFloat.Create(
           (BigInteger)mantissa,
           (BigInteger)exponent));

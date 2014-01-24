@@ -165,8 +165,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       if (o.equals(o2)) {
         if (!o2.equals(o)) {
           Assert.fail(
-            String.format(java.util.Locale.US,"%s equals %s,
-              but not vice versa",
+            String.format(java.util.Locale.US,"%s equals %s but not vice versa",
               o,
               o2));
         }
