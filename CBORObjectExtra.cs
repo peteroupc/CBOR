@@ -125,6 +125,9 @@ namespace PeterO {
     }
 
     private static decimal ExtendedDecimalToDecimal(ExtendedDecimal numberObject) {
+      if (numberObject.IsInfinity() || numberObject.IsNaN()) {
+        throw new OverflowException("This object's value is out of range");
+      }
       try {
         ExtendedDecimal newDecimal = numberObject.RoundToBinaryPrecision(
           PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));

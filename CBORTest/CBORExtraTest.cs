@@ -87,6 +87,54 @@ namespace Test {
           Assert.AreEqual(d, obj.AsDecimal());
         }
       }
+      try {
+  CBORObject.FromObject(ExtendedDecimal.NaN).AsDecimal(); Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromObject(ExtendedDecimal.SignalingNaN).AsDecimal(); Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromObject(ExtendedDecimal.PositiveInfinity).AsDecimal(); Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromObject(ExtendedDecimal.NegativeInfinity).AsDecimal(); Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromObject(ExtendedFloat.NaN).AsDecimal(); Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromObject(ExtendedFloat.SignalingNaN).AsDecimal(); Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromObject(ExtendedFloat.PositiveInfinity).AsDecimal(); Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromObject(ExtendedFloat.NegativeInfinity).AsDecimal(); Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
     }
 
     /// <summary>Not documented yet.</summary>
