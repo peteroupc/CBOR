@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile1</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC};{786C830F-07A1-408B-BD7F-6EE04809D6DB}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <NoWin32Manifest>False</NoWin32Manifest>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
@@ -88,30 +88,9 @@
     <Compile Include="TrapException.cs" />
     <Compile Include="TrappableRadixMath.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="ProfilingSessions\Session20140107_195510.sdps" />
-    <Content Include="ProfilingSessions\Session20140107_202658.sdps" />
-    <Content Include="ProfilingSessions\Session20140107_211434.sdps" />
-    <Content Include="ProfilingSessions\Session20140108_032153.sdps" />
-    <Content Include="ProfilingSessions\Session20140109_072608.sdps" />
-    <Content Include="ProfilingSessions\Session20140109_073608.sdps" />
-    <Content Include="ProfilingSessions\Session20140109_120039.sdps" />
-    <Content Include="ProfilingSessions\Session20140109_160852.sdps" />
-    <Content Include="ProfilingSessions\Session20140109_161924.sdps" />
-    <Content Include="ProfilingSessions\Session20140109_183418.sdps" />
-    <Content Include="ProfilingSessions\Session20140109_194157.sdps" />
-    <Content Include="ProfilingSessions\Session20140109_194523.sdps" />
-    <Content Include="ProfilingSessions\Session20140109_200226.sdps" />
-    <Content Include="ProfilingSessions\Session20140110_003021.sdps" />
-    <Content Include="ProfilingSessions\Session20140110_022725.sdps" />
-    <Content Include="ProfilingSessions\Session20140110_023616.sdps" />
-    <Content Include="ProfilingSessions\Session20140110_093339.sdps" />
-    <Content Include="ProfilingSessions\Session20140110_103357.sdps" />
-    <Content Include="ProfilingSessions\Session20140110_220041.sdps" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Portable\v4.0\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
