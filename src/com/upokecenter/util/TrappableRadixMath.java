@@ -30,7 +30,7 @@ at: http://peteroupc.github.io/CBOR/
       if (dst != null && dst.getHasFlags()) {
         dst.setFlags(dst.getFlags()|(src.getFlags()));
       }
-      int traps = dst.getTraps();
+      int traps = (dst != null) ? dst.getTraps() : 0;
       traps &= src.getFlags();
       if (traps == 0) {
         return result;

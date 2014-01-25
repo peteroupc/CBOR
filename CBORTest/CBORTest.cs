@@ -112,7 +112,7 @@ namespace Test {
        for (int i = 0; i < count; ++i) {
         bytes[i] = (byte)((int)r.NextValue(256));
       }
-      return new BigInteger(bytes);
+      return new BigInteger((byte[])bytes);
     }
 
     public static ExtendedFloat RandomExtendedFloat(FastRandom r) {

@@ -2330,10 +2330,10 @@ BigInteger[] divrem=(bigintC).divideAndRemainder(bigintB);
 bigintD=divrem[0];
 bigintRem=divrem[1]; }
            if (!bigintD.equals(bigintA)) {
-            Assert.assertEquals(bigintA, bigintD, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintA,bigintD);
           }
            if (bigintRem.signum()!=0) {
-            Assert.assertEquals(BigInteger.ZERO, bigintRem, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,BigInteger.ZERO,bigintRem);
           }
         }
          if (bigintA.signum()!=0) {
@@ -2342,10 +2342,10 @@ BigInteger[] divrem=(bigintC).divideAndRemainder(bigintA);
 bigintD=divrem[0];
 bigintRem=divrem[1]; }
            if (!bigintD.equals(bigintB)) {
-            Assert.assertEquals(bigintB, bigintD, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintB,bigintD);
           }
            if (bigintRem.signum()!=0) {
-            Assert.assertEquals(BigInteger.ZERO, bigintRem, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,BigInteger.ZERO,bigintRem);
           }
         }
          if (bigintB.signum()!=0) {
@@ -2356,7 +2356,7 @@ bigintRem=divrem[1]; }
           bigintD = bigintB.multiply(bigintC);
           bigintD=bigintD.add(bigintRem);
            if (!bigintD.equals(bigintA)) {
-            Assert.assertEquals(bigintA, bigintD, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintA,bigintD);
           }
         }
       }
@@ -2371,16 +2371,16 @@ bigintRem=divrem[1]; }
         BigInteger bigintC = bigintA.add(bigintB);
         BigInteger bigintD = bigintC.subtract(bigintB);
          if (!bigintD.equals(bigintA)) {
-          Assert.assertEquals(bigintA, bigintD, "TestAddSubtract " + bigintA + ", " + bigintB);
+          Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintA,bigintD);
         }
         bigintD = bigintC.subtract(bigintA);
          if (!bigintD.equals(bigintB)) {
-          Assert.assertEquals(bigintB, bigintD, "TestAddSubtract " + bigintA + ", " + bigintB);
+          Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintB,bigintD);
         }
         bigintC = bigintA.subtract(bigintB);
         bigintD = bigintC.add(bigintB);
          if (!bigintD.equals(bigintA)) {
-          Assert.assertEquals(bigintA, bigintD, "TestAddSubtract " + bigintA + ", " + bigintB);
+          Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintA,bigintD);
         }
       }
     }

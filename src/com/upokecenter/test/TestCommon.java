@@ -58,6 +58,7 @@ private TestCommon() {
 BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
 quo=divrem[0];
 rembi=divrem[1]; }
+          Assert.assertNotNull((Object)quo);
           Assert.fail("Expected divide by 0 error");
         } catch (Exception ex) {
         }

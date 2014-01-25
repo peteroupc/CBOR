@@ -52,6 +52,7 @@ namespace Test {
       if (bigintB.IsZero) {
         try {
           BigInteger quo = BigInteger.DivRem(bigintA, bigintB, out rembi);
+          Assert.NotNull((object)quo);
           Assert.Fail("Expected divide by 0 error");
         } catch (Exception) {
         }

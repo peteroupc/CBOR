@@ -114,7 +114,7 @@ import com.upokecenter.util.*;
        for (int i = 0; i < count; ++i) {
         bytes[i] = (byte)((int)r.NextValue(256));
       }
-      return new BigInteger(bytes);
+      return BigInteger.fromByteArray((byte[])bytes,true);
     }
 
     public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
