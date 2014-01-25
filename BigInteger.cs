@@ -1285,7 +1285,7 @@ namespace PeterO {
     }
 
     /// <summary>Initializes a BigInteger object from an array of bytes.</summary>
-    /// <param name='bytes'>A byte[] object.</param>
+    /// <param name='bytes'>A byte array.</param>
     /// <returns>A BigInteger object.</returns>
     /// <param name='littleEndian'>A Boolean object.</param>
     public static BigInteger fromByteArray(byte[] bytes, bool littleEndian) {
