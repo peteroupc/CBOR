@@ -22,7 +22,7 @@ private CBORUtilities() {
     /**
      * Not documented yet.
      * @param str A StringBuilder object.
-     * @param data A byte[] object.
+     * @param data A byte array.
      * @param padding A Boolean object.
      */
     public static void ToBase64(StringBuilder str, byte[] data, boolean padding) {
@@ -50,13 +50,13 @@ private CBORUtilities() {
           str.append(alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 63)));
           str.append(alphabet.charAt((data[i + 1] & 15) << 2));
           if (padding) {
- str.append("=");
-}
+            str.append("=");
+          }
         } else {
           str.append(alphabet.charAt((data[i] & 3) << 4));
           if (padding) {
- str.append("==");
-}
+            str.append("==");
+          }
         }
       }
     }
@@ -73,26 +73,26 @@ private CBORUtilities() {
 
     public static boolean ByteArrayEquals(byte[] a, byte[] b) {
       if (a == null) {
- return b == null;
-}
+        return b == null;
+      }
       if (b == null) {
- return false;
-}
+        return false;
+      }
       if (a.length != b.length) {
- return false;
-}
+        return false;
+      }
       for (int i = 0; i < a.length; ++i) {
         if (a[i] != b[i]) {
- return false;
-}
+          return false;
+        }
       }
       return true;
     }
 
     public static int ByteArrayHashCode(byte[] a) {
       if (a == null) {
- return 0;
-}
+        return 0;
+      }
       int ret = 19;
       {
         ret = (ret * 31) + a.length;
@@ -105,20 +105,20 @@ private CBORUtilities() {
 
     public static int ByteArrayCompare(byte[] a, byte[] b) {
       if (a == null) {
- return (b == null) ? 0 : -1;
-}
+        return (b == null) ? 0 : -1;
+      }
       if (b == null) {
- return 1;
-}
+        return 1;
+      }
       int c = Math.min(a.length, b.length);
       for (int i = 0; i < c; ++i) {
         if (a[i] != b[i]) {
- return (a[i] < b[i]) ? -1 : 1;
-}
+          return (a[i] < b[i]) ? -1 : 1;
+        }
       }
       if (a.length != b.length) {
- return (a.length < b.length) ? -1 : 1;
-}
+        return (a.length < b.length) ? -1 : 1;
+      }
       return 0;
     }
 
@@ -126,17 +126,17 @@ private CBORUtilities() {
       int value = Float.floatToRawIntBits(flt);
       int fpexponent = (int)((value >> 23) & 0xFF);
       if (fpexponent == 255) {
- throw new ArithmeticException("Value is infinity or NaN");
-}
+        throw new ArithmeticException("Value is infinity or NaN");
+      }
       int mantissa = value & 0x7FFFFF;
       if (fpexponent == 0) {
- fpexponent++;
-  } else {
- mantissa |= 1 << 23;
-}
+        fpexponent++;
+      } else {
+        mantissa |= 1 << 23;
+      }
       if (mantissa == 0) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       fpexponent -= 150;
       while ((mantissa & 1) == 0) {
         fpexponent++;
@@ -145,16 +145,16 @@ private CBORUtilities() {
       boolean neg = (value >> 31) != 0;
       if (fpexponent == 0) {
         if (neg) {
- mantissa = -mantissa;
-}
+          mantissa = -mantissa;
+        }
         return BigInteger.valueOf(mantissa);
       } else if (fpexponent > 0) {
         // Value is an integer
         BigInteger bigmantissa = BigInteger.valueOf(mantissa);
         bigmantissa=bigmantissa.shiftLeft(fpexponent);
         if (neg) {
- bigmantissa=(bigmantissa).negate();
-}
+          bigmantissa=(bigmantissa).negate();
+        }
         return bigmantissa;
       } else {
         // Value has a fractional part
@@ -175,14 +175,14 @@ private CBORUtilities() {
       int floatExponent = (int)((value[1] >> 20) & 0x7ff);
       boolean neg = (value[1] >> 31) != 0;
       if (floatExponent == 2047) {
- throw new ArithmeticException("Value is infinity or NaN");
-}
+        throw new ArithmeticException("Value is infinity or NaN");
+      }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
       if (floatExponent == 0) {
- floatExponent++;
-  } else {
- value[1] |= 0x100000;
-}
+        floatExponent++;
+      } else {
+        value[1] |= 0x100000;
+      }
       if ((value[1] | value[0]) != 0) {
         floatExponent += DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
       }
@@ -190,23 +190,23 @@ private CBORUtilities() {
       BigInteger bigmantissa = FastInteger.WordsToBigInteger(value);
       if (floatExponent == 0) {
         if (neg) {
- bigmantissa=bigmantissa.negate();
-}
+          bigmantissa=bigmantissa.negate();
+        }
         return bigmantissa;
       } else if (floatExponent > 0) {
         // Value is an integer
         bigmantissa=bigmantissa.shiftLeft(floatExponent);
         if (neg) {
- bigmantissa=(bigmantissa).negate();
-}
+          bigmantissa=(bigmantissa).negate();
+        }
         return bigmantissa;
       } else {
         // Value has a fractional part
         int exp = -floatExponent;
         bigmantissa=bigmantissa.shiftRight(exp);
         if (neg) {
- bigmantissa=(bigmantissa).negate();
-}
+          bigmantissa=(bigmantissa).negate();
+        }
         return bigmantissa;
       }
     }

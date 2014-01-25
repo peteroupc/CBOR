@@ -15,13 +15,29 @@ import java.io.*;
     /**
      * Represents an object in Concise Binary Object Representation (CBOR)
      * and contains methods for reading and writing CBOR data. CBOR is defined
-     * in RFC 7049.<p> Thread Safety: CBOR objects that are numbers, "simple
-     * values", and text strings are immutable (their values can't be changed),
-     * so they are inherently safe for use by multiple threads. CBOR objects
-     * that are arrays, maps, and byte strings are mutable, but this class
-     * doesn't attempt to synchronize reads and writes to those objects
-     * by multiple threads, so those objects are not thread safe without
-     * such synchronization. </p>
+     * in RFC 7049. <p>There are many ways to get a CBOR object, including
+     * from bytes, objects, streams and JSON, as described below.</p> <p>
+     * <b>To and from byte arrays:</b> The CBORObject.DecodeToBytes method
+     * converts a byte array to a CBOR object. The EncodeToBytes method converts
+     * a CBOR object to its corresponding byte array. </p> <p> <b>To and from
+     * data streams:</b> The CBORObject.Write methods write many kinds
+     * of objects to a data stream, including numbers, CBOR objects, strings,
+     * and arrays of numbers and strings. The CBORObject.Read method reads
+     * a CBOR object from a data stream. </p> <p> <b>To and from other objects:</b>
+     * The CBORObject.FromObject methods converts many kinds of objects
+     * to a CBOR object, including numbers, strings, and arrays and maps
+     * of numbers and strings. Methods like AsInt32, AsDouble, and AsString
+     * convert a CBOR object to different types of object. </p> <p> <b>To
+     * and from JSON:</b> This class also doubles as a reader and writer of
+     * JavaScript Object Notation (JSON). The CBORObject.FromJSONString
+     * method converts JSON to a CBOR object, and the ToJSONString method
+     * converts a CBOR object to a JSON string. </p> <p> Thread Safety: CBOR
+     * objects that are numbers, "simple values", and text strings are immutable
+     * (their values can't be changed), so they are inherently safe for use
+     * by multiple threads. CBOR objects that are arrays, maps, and byte
+     * strings are mutable, but this class doesn't attempt to synchronize
+     * reads and writes to those objects by multiple threads, so those objects
+     * are not thread safe without such synchronization. </p>
      */
   public final class CBORObject implements Comparable<CBORObject> {
     int getItemType(){
@@ -86,8 +102,8 @@ import java.io.*;
     private CBORObject() {
     }
 
-    private CBORObject(CBORObject obj, int tagLow, int tagHigh) :
-      this(CBORObjectTypeTagged, obj) {
+    private CBORObject(CBORObject obj, int tagLow, int tagHigh){
+ this(CBORObjectTypeTagged,obj);
       this.tagLow = tagLow;
       this.tagHigh = tagHigh;
     }
@@ -1310,8 +1326,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       }
 
     /**
-     * Gets the byte array used in this object, if this object is a byte string.
-     * @return A byte[] object.
+     * Gets the byte array used in this object, if this object is a byte string,
+     * without copying the data to a new one.
+     * @return A byte array.
      * @throws IllegalStateException This object is not a byte string.
      */
     public byte[] GetByteString() {
@@ -2496,7 +2513,8 @@ public void set(String key, CBORObject value) {
      * @param stream A writable data stream.
      * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
-     * @throws java.lang.IllegalArgumentException "S" is a surrogate code point.
+     * @throws java.lang.IllegalArgumentException The parameter {@code value}
+     * is a surrogate code point.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(char value, OutputStream stream) throws IOException {
@@ -3537,8 +3555,8 @@ public static CBORObject FromObject(Object obj) {
      * object a tag.
      * @param valueObValue An arbitrary object.
      * @param smallTag A 32-bit integer that specifies a tag number.
-     * @return A CBOR object where the object " value" is converted to a CBOR
-     * object and given the tag.
+     * @return A CBOR object where the object {@code valueObValue} is converted
+     * to a CBOR object and given the tag.
      * @throws java.lang.IllegalArgumentException The parameter {@code smallTag}
      * is less than 0 or {@code valueObValue} 's type is unsupported.
      */

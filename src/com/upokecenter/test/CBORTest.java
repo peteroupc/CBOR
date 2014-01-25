@@ -621,7 +621,7 @@ o.ToJSONString());
 
     /**
      * Not documented yet.
-     * @param bytes A byte[] object.
+     * @param bytes A byte array.
      * @param expectedRet A 32-bit signed integer.
      * @param expectedString A string object.
      * @param noReplaceRet A 32-bit signed integer. (2).
@@ -644,7 +644,7 @@ o.ToJSONString());
 
     /**
      * Not documented yet.
-     * @param bytes A byte[] object.
+     * @param bytes A byte array.
      * @param length A 32-bit signed integer.
      * @param expectedRet A 32-bit signed integer. (2).
      * @param expectedString A string object.

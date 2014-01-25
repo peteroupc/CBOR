@@ -288,7 +288,7 @@ namespace PeterO
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>A byte[] object.</returns>
+    /// <returns>A byte array.</returns>
     [CLSCompliant(false)]
     public byte[] ToByteArray() {
       return this.toByteArray(true);
@@ -359,7 +359,7 @@ namespace PeterO
     }
 
     /// <summary>Initializes a new instance of the BigInteger class.</summary>
-    /// <param name='bytes'>A byte[] object.</param>
+    /// <param name='bytes'>A byte array.</param>
     public BigInteger(byte[] bytes) {
       this.fromByteArrayInternal(bytes, true);
     }

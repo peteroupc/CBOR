@@ -1262,7 +1262,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Initializes a BigInteger object from an array of bytes.
-     * @param bytes A byte[] object.
+     * @param bytes A byte array.
      * @param littleEndian A Boolean object.
      * @return A BigInteger object.
      */

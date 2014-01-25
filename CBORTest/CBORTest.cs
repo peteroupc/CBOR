@@ -602,7 +602,7 @@ o.ToJSONString());
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='bytes'>A byte[] object.</param>
+    /// <param name='bytes'>A byte array.</param>
     /// <param name='expectedRet'>A 32-bit signed integer.</param>
     /// <param name='expectedString'>A string object.</param>
     /// <param name='noReplaceRet'>A 32-bit signed integer. (2).</param>
@@ -623,7 +623,7 @@ o.ToJSONString());
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='bytes'>A byte[] object.</param>
+    /// <param name='bytes'>A byte array.</param>
     /// <param name='length'>A 32-bit signed integer.</param>
     /// <param name='expectedRet'>A 32-bit signed integer. (2).</param>
     /// <param name='expectedString'>A string object.</param>
