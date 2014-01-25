@@ -31,7 +31,7 @@ namespace PeterO
       if (dst != null && dst.HasFlags) {
         dst.Flags |= src.Flags;
       }
-      int traps = dst.Traps;
+      int traps = (dst != null) ? dst.Traps : 0;
       traps &= src.Flags;
       if (traps == 0) {
         return result;

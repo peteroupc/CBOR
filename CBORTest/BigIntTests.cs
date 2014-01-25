@@ -2328,19 +2328,19 @@ namespace Test
          if (!bigintB.IsZero) {
           bigintD = BigInteger.DivRem(bigintC, bigintB, out bigintRem);
            if (!bigintD.Equals(bigintA)) {
-            Assert.AreEqual(bigintA, bigintD, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.AreEqual(bigintA, bigintD, "TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
            if (!bigintRem.IsZero) {
-            Assert.AreEqual(BigInteger.Zero, bigintRem, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.AreEqual(BigInteger.Zero, bigintRem, "TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
         }
          if (!bigintA.IsZero) {
           bigintD = BigInteger.DivRem(bigintC, bigintA, out bigintRem);
            if (!bigintD.Equals(bigintB)) {
-            Assert.AreEqual(bigintB, bigintD, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.AreEqual(bigintB, bigintD, "TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
            if (!bigintRem.IsZero) {
-            Assert.AreEqual(BigInteger.Zero, bigintRem, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.AreEqual(BigInteger.Zero, bigintRem, "TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
         }
          if (!bigintB.IsZero) {
@@ -2348,7 +2348,7 @@ namespace Test
           bigintD = bigintB * (BigInteger)bigintC;
           bigintD += (BigInteger)bigintRem;
            if (!bigintD.Equals(bigintA)) {
-            Assert.AreEqual(bigintA, bigintD, "TestMultiplyDivide " + bigintA + ", " + bigintB);
+            Assert.AreEqual(bigintA, bigintD, "TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
         }
       }
@@ -2363,16 +2363,16 @@ namespace Test
         BigInteger bigintC = bigintA + (BigInteger)bigintB;
         BigInteger bigintD = bigintC - (BigInteger)bigintB;
          if (!bigintD.Equals(bigintA)) {
-          Assert.AreEqual(bigintA, bigintD, "TestAddSubtract " + bigintA + ", " + bigintB);
+          Assert.AreEqual(bigintA, bigintD, "TestAddSubtract " + bigintA + "; " + bigintB);
         }
         bigintD = bigintC - (BigInteger)bigintA;
          if (!bigintD.Equals(bigintB)) {
-          Assert.AreEqual(bigintB, bigintD, "TestAddSubtract " + bigintA + ", " + bigintB);
+          Assert.AreEqual(bigintB, bigintD, "TestAddSubtract " + bigintA + "; " + bigintB);
         }
         bigintC = bigintA - (BigInteger)bigintB;
         bigintD = bigintC + (BigInteger)bigintB;
          if (!bigintD.Equals(bigintA)) {
-          Assert.AreEqual(bigintA, bigintD, "TestAddSubtract " + bigintA + ", " + bigintB);
+          Assert.AreEqual(bigintA, bigintD, "TestAddSubtract " + bigintA + "; " + bigintB);
         }
       }
     }

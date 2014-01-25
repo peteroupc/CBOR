@@ -9114,7 +9114,7 @@ var TrappableRadixMath = function(math) {
         if (dst != null && dst.getHasFlags()) {
             dst.setFlags(dst.getFlags() | (src.getFlags()));
         }
-        var traps = dst.getTraps();
+        var traps = (dst != null) ? dst.getTraps() : 0;
         traps &= src.getFlags();
         if (traps == 0) {
             return result;

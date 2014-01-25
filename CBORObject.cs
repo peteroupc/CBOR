@@ -29,7 +29,7 @@ namespace PeterO {
     /// <para> <b>To and from other objects:</b>
     /// The CBORObject.FromObject methods converts many kinds of objects
     /// to a CBOR object, including numbers, strings, and arrays and maps
-    /// of numbers and strings. Methods like AsInt32, AsDouble, and AsString
+    /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
     /// convert a CBOR object to different types of object. </para>
     /// <para> <b>To and from JSON:</b>
     /// This class also doubles as a reader and writer of JavaScript Object
