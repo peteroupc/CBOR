@@ -124,7 +124,7 @@ namespace PeterO {
       }
       int mantissa = value & 0x7FFFFF;
       if (fpexponent == 0) {
-        fpexponent++;
+        ++fpexponent;
       } else {
         mantissa |= 1 << 23;
       }
@@ -133,7 +133,7 @@ namespace PeterO {
       }
       fpexponent -= 150;
       while ((mantissa & 1) == 0) {
-        fpexponent++;
+        ++fpexponent;
         mantissa >>= 1;
       }
       bool neg = (value >> 31) != 0;
@@ -173,7 +173,7 @@ namespace PeterO {
       }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
       if (floatExponent == 0) {
-        floatExponent++;
+        ++floatExponent;
       } else {
         value[1] |= 0x100000;
       }

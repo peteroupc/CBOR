@@ -58,7 +58,7 @@ namespace Test
           return this.rand.Next(v);
         }
       }
-      this.count += 1;
+      ++this.count;
       int maxExclusive = (Int32.MaxValue / v) * v;
       while (true) {
         int vi = this.NextValueInternal();

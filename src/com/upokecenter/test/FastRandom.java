@@ -60,7 +60,7 @@ package com.upokecenter.test;
           return this.rand.nextInt(v);
         }
       }
-      this.count += 1;
+      ++this.count;
       int maxExclusive = (Integer.MAX_VALUE / v) * v;
       while (true) {
         int vi = this.NextValueInternal();

@@ -4179,7 +4179,7 @@ namespace Test {
           if (j == ranges[i + 1]) {
             break;
           }
-          j++;
+          ++j;
         }
       }
     }
@@ -4198,7 +4198,7 @@ namespace Test {
         if (((t >> 31) != 0) || (t >= intDivisor)) {
           unchecked {
             dividendHigh -= intDivisor;
-            dividendLow += 1;
+            ++dividendLow;
           }
         }
       }
@@ -4297,7 +4297,7 @@ namespace Test {
           if (j == ranges[i + 1]) {
             break;
           }
-          j++;
+          ++j;
         }
       }
     }

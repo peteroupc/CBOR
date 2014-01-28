@@ -66,13 +66,13 @@ private CBORDataUtilities() {
       c = str.charAt(index);
       if (c == '-' && !positiveOnly) {
         negative = true;
-        index++;
+        ++index;
       }
       if (index >= str.length()) {
         return null;
       }
       c = str.charAt(index);
-      index++;
+      ++index;
       boolean negExp = false;
       FastInteger fastNumber = new FastInteger(0);
       FastInteger exponentAdjust = new FastInteger(0);
@@ -82,7 +82,7 @@ private CBORDataUtilities() {
         while (index < str.length()) {
           c = str.charAt(index);
           if (c >= '0' && c <= '9') {
-            index++;
+            ++index;
             fastNumber.Multiply(10);
             fastNumber.AddInt((int)(c - '0'));
           } else {
@@ -95,12 +95,12 @@ private CBORDataUtilities() {
       if (!integersOnly) {
         if (index < str.length() && str.charAt(index) == '.') {
           // Fraction
-          index++;
+          ++index;
           if (index >= str.length()) {
             return null;
           }
           c = str.charAt(index);
-          index++;
+          ++index;
           if (c >= '0' && c <= '9') {
             // Adjust the exponent for this
             // fractional digit
@@ -110,7 +110,7 @@ private CBORDataUtilities() {
             while (index < str.length()) {
               c = str.charAt(index);
               if (c >= '0' && c <= '9') {
-                index++;
+                ++index;
                 // Adjust the exponent for this
                 // fractional digit
                 exponentAdjust.AddInt(-1);
@@ -127,29 +127,29 @@ private CBORDataUtilities() {
         }
         if (index < str.length() && (str.charAt(index) == 'e' || str.charAt(index) == 'E')) {
           // Exponent
-          index++;
+          ++index;
           if (index >= str.length()) {
             return null;
           }
           c = str.charAt(index);
           if (c == '-') {
             negExp = true;
-            index++;
+            ++index;
           }
           if (c == '+') {
-            index++;
+            ++index;
           }
           if (index >= str.length()) {
             return null;
           }
           c = str.charAt(index);
-          index++;
+          ++index;
           if (c >= '0' && c <= '9') {
             fastExponent.AddInt((int)(c - '0'));
             while (index < str.length()) {
               c = str.charAt(index);
               if (c >= '0' && c <= '9') {
-                index++;
+                ++index;
                 fastExponent.Multiply(10);
                 fastExponent.AddInt((int)(c - '0'));
               } else {

@@ -62,13 +62,13 @@ namespace PeterO {
       c = str[index];
       if (c == '-' && !positiveOnly) {
         negative = true;
-        index++;
+        ++index;
       }
       if (index >= str.Length) {
         return null;
       }
       c = str[index];
-      index++;
+      ++index;
       bool negExp = false;
       FastInteger fastNumber = new FastInteger(0);
       FastInteger exponentAdjust = new FastInteger(0);
@@ -78,7 +78,7 @@ namespace PeterO {
         while (index < str.Length) {
           c = str[index];
           if (c >= '0' && c <= '9') {
-            index++;
+            ++index;
             fastNumber.Multiply(10);
             fastNumber.AddInt((int)(c - '0'));
           } else {
@@ -91,12 +91,12 @@ namespace PeterO {
       if (!integersOnly) {
         if (index < str.Length && str[index] == '.') {
           // Fraction
-          index++;
+          ++index;
           if (index >= str.Length) {
             return null;
           }
           c = str[index];
-          index++;
+          ++index;
           if (c >= '0' && c <= '9') {
             // Adjust the exponent for this
             // fractional digit
@@ -106,7 +106,7 @@ namespace PeterO {
             while (index < str.Length) {
               c = str[index];
               if (c >= '0' && c <= '9') {
-                index++;
+                ++index;
                 // Adjust the exponent for this
                 // fractional digit
                 exponentAdjust.AddInt(-1);
@@ -123,29 +123,29 @@ namespace PeterO {
         }
         if (index < str.Length && (str[index] == 'e' || str[index] == 'E')) {
           // Exponent
-          index++;
+          ++index;
           if (index >= str.Length) {
             return null;
           }
           c = str[index];
           if (c == '-') {
             negExp = true;
-            index++;
+            ++index;
           }
           if (c == '+') {
-            index++;
+            ++index;
           }
           if (index >= str.Length) {
             return null;
           }
           c = str[index];
-          index++;
+          ++index;
           if (c >= '0' && c <= '9') {
             fastExponent.AddInt((int)(c - '0'));
             while (index < str.Length) {
               c = str[index];
               if (c >= '0' && c <= '9') {
-                index++;
+                ++index;
                 fastExponent.Multiply(10);
                 fastExponent.AddInt((int)(c - '0'));
               } else {

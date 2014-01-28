@@ -247,7 +247,7 @@ namespace CBOR
         bool negative = false;
         if (str[0] == '+' || str[0] == '-') {
           negative = str[0] == '-';
-          offset++;
+          ++offset;
         }
         int i = offset;
         int beforeDec = 0;
@@ -284,12 +284,12 @@ namespace CBOR
           } else if (str[i] == '.') {
             // Decimal point reached
             haveDec = true;
-            i++;
+            ++i;
             break;
           } else if (str[i] == 'P' || str[i] == 'p') {
             // Binary exponent reached
             haveBinExp = true;
-            i++;
+            ++i;
             break;
           } else {
             throw new FormatException(str);
@@ -329,7 +329,7 @@ namespace CBOR
             } else if (str[i] == 'P' || str[i] == 'p') {
               // Binary exponent reached
               haveBinExp = true;
-              i++;
+              ++i;
               break;
             } else {
               throw new FormatException(str);
@@ -350,7 +350,7 @@ namespace CBOR
           bool negexp = false;
           if (i < str.Length && str[i] == '-') {
             negexp = true;
-            i++;
+            ++i;
           }
           for (; i < str.Length; ++i) {
             if (str[i] >= '0' && str[i] <= '9') {
@@ -507,7 +507,7 @@ namespace CBOR
       string traps = String.Empty;
       if (this.Contains(chunks[2], "x") || chunks[2].Equals("i") || this.StartsWith(chunks[2], "o")) {
         // traps
-        offset += 1;
+        ++offset;
         traps = chunks[2];
       }
       if (this.Contains(traps, "u") || this.Contains(traps, "o")) {
@@ -696,7 +696,7 @@ namespace CBOR
                     Console.WriteLine(ln);
                     Console.WriteLine(ex.Message);
                     Console.WriteLine(ex.StackTrace);
-                    failures++;
+                    ++failures;
                     throw;
                   }
                 }

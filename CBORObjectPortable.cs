@@ -52,7 +52,7 @@ namespace PeterO
             for (int i = 0; i<7 && (!isNowZero || tmp>0); ++i) {
               buffer[bufferindex]=(byte)(tmp & 0xFF);
               tmp>>= 8;
-              bufferindex++;
+              ++bufferindex;
             }
             ms.Write(buffer, 0, bufferindex);
           }
@@ -114,7 +114,7 @@ namespace PeterO
             if (bi.CompareTo((BigInteger)Int32.MaxValue) <= 0) {
               int tmp = (int)bi;
               while (tmp > 0) {
-                kb++;
+                ++kb;
                 tmp /= 10;
               }
               kb=(kb == 0 ? 1 : kb);
@@ -124,7 +124,7 @@ namespace PeterO
             if (q.IsZero) {
               int b=(int)bi;
               while (b>0) {
-                kb++;
+                ++kb;
                 b/=10;
               }
               break;
