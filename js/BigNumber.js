@@ -470,11 +470,11 @@ function() {
             e = e + (c & 65535);
             c = (e|0);
             e = d + ((e|0) >>> 16);
-            result[rstart + 4 - 3] = (c & 65535);
-            p = (words1[astart + 2 - 1] & 65535) * (words1[astart + 2 - 1] & 65535);
+            result[rstart + 1] = (c & 65535);
+            p = (words1[astart + 1] & 65535) * (words1[astart + 1] & 65535);
             p = p + (e);
-            result[rstart + 4 - 2] = (p & 65535);
-            result[rstart + 4 - 1] = (((p >> 16) & 65535));
+            result[rstart + 2] = (p & 65535);
+            result[rstart + 3] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Square4'] = constructor.Baseline_Square4 = function(result, rstart, words1, astart) {
@@ -543,7 +543,7 @@ function() {
             c = (e|0);
             e = d + ((e|0) >>> 16);
             result[rstart + (2 * 4) - 3] = (c & 65535);
-            p = (words1[astart + 4 - 1] & 65535) * (words1[astart + 4 - 1] & 65535);
+            p = (words1[astart + 3] & 65535) * (words1[astart + 3] & 65535);
             p = p + (e);
             result[rstart + 6] = (p & 65535);
             result[rstart + 7] = (((p >> 16) & 65535));
@@ -759,7 +759,7 @@ function() {
             c = (e|0);
             e = d + ((e|0) >>> 16);
             result[rstart + 13] = (c & 65535);
-            p = (words1[astart + 8 - 1] & 65535) * (words1[astart + 8 - 1] & 65535);
+            p = (words1[astart + 7] & 65535) * (words1[astart + 7] & 65535);
             p = p + (e);
             result[rstart + 14] = (p & 65535);
             result[rstart + 15] = (((p >> 16) & 65535));
@@ -791,8 +791,8 @@ function() {
             result[rstart + 1] = (c & 65535);
             p = a1 * b1;
             p = p + (d);
-            result[rstart + 1 + 1] = (p & 65535);
-            result[rstart + 1 + 2] = (((p >> 16) & 65535));
+            result[rstart + 2] = (p & 65535);
+            result[rstart + 3] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Multiply4'] = constructor.Baseline_Multiply4 = function(result, rstart, words1, astart, words2, bstart) {
@@ -880,8 +880,8 @@ function() {
             result[rstart + 5] = (c & 65535);
             p = (((words1[astart + 3])|0) & mask) * (((words2[bstart + 3])|0) & mask);
             p = p + (d);
-            result[rstart + 5 + 1] = (p & 65535);
-            result[rstart + 5 + 2] = (((p >> 16) & 65535));
+            result[rstart + 6] = (p & 65535);
+            result[rstart + 7] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Multiply8'] = constructor.Baseline_Multiply8 = function(result, rstart, words1, astart, words2, bstart) {
@@ -1183,8 +1183,8 @@ function() {
             result[rstart + 13] = (c & 65535);
             p = (((words1[astart + 7])|0) & mask) * (((words2[bstart + 7])|0) & mask);
             p = p + (d);
-            result[rstart + 13 + 1] = (p & 65535);
-            result[rstart + 13 + 2] = (((p >> 16) & 65535));
+            result[rstart + 14] = (p & 65535);
+            result[rstart + 15] = (((p >> 16) & 65535));
         }
     };
     constructor['RecursionLimit'] = constructor.RecursionLimit = 8;

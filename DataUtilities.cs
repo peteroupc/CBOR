@@ -447,7 +447,9 @@ namespace PeterO {
     /// the replacement character (U + FFFD). If false, stops processing
     /// when an unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string was read without errors, -1 if the
-    /// string is not valid UTF-8 and <paramref name='replace'/> is false.</returns>
+    /// string is not valid UTF-8 and <paramref name='replace'/> is false,
+    /// or -2 if the end of the stream was reached before the last character
+    /// was read completely.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null or <paramref name='builder'/>
