@@ -98,17 +98,17 @@ namespace PeterO {
       for (int i = 0; i < str.Length; ++i) {
         int c = str[i];
         if (c <= 0x7F) {
-          size++;
+          ++size;
         } else if (c <= 0x7FF) {
           size += 2;
         } else if (c <= 0xD7FF || c >= 0xE000) {
           size += 3;
         } else if (c <= 0xDBFF) {  // UTF-16 leading surrogate
-          i++;
+          ++i;
           if (i >= str.Length || str[i] < 0xDC00 || str[i] > 0xDFFF) {
             if (replace) {
               size += 3;
-              i--;
+              --i;
             } else {
               return -1;
             }
@@ -166,7 +166,7 @@ namespace PeterO {
             return ca - cb;
           }
           if (incindex) {
-            i++;
+            ++i;
           }
         } else {
           if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800) {
@@ -259,7 +259,7 @@ namespace PeterO {
               str[index + 1] >= 0xDC00 && str[index + 1] <= 0xDFFF) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + ((c - 0xD800) * 0x400) + (str[index + 1] - 0xDC00);
-            index++;
+            ++index;
           } else if (c >= 0xD800 && c <= 0xDFFF) {
             // unpaired surrogate
             if (!replace) {
@@ -368,7 +368,7 @@ namespace PeterO {
       int endpointer = offset + bytesCount;
       while (pointer < endpointer) {
         int b = data[pointer] & (int)0xFF;
-        pointer++;
+        ++pointer;
         if (bytesNeeded == 0) {
           if ((b & 0x7F) == b) {
             builder.Append((char)b);
@@ -398,7 +398,7 @@ namespace PeterO {
           lower = 0x80;
           upper = 0xbf;
           if (replace) {
-            pointer--;
+            --pointer;
             builder.Append((char)0xFFFD);
             continue;
           } else {
@@ -407,7 +407,7 @@ namespace PeterO {
         } else {
           lower = 0x80;
           upper = 0xbf;
-          bytesSeen++;
+          ++bytesSeen;
           cp += (b - 0x80) << (6 * (bytesNeeded - bytesSeen));
           if (bytesSeen != bytesNeeded) {
             continue;
@@ -490,7 +490,7 @@ namespace PeterO {
           }
         }
         if (bytesCount > 0) {
-          pointer++;
+          ++pointer;
         }
         if (bytesNeeded == 0) {
           if ((b & 0x7F) == b) {
@@ -548,7 +548,7 @@ namespace PeterO {
         } else {
           lower = 0x80;
           upper = 0xbf;
-          bytesSeen++;
+          ++bytesSeen;
           cp += (b - 0x80) << (6 * (bytesNeeded - bytesSeen));
           if (bytesSeen != bytesNeeded) {
             continue;

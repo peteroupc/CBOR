@@ -257,12 +257,12 @@ at: http://peteroupc.github.io/CBOR/
           if ((this.shiftedSmall & (1 << i)) != 0) {
             break;
           } else {
-            kb--;
+            --kb;
           }
         }
         // Make sure bit length is 1 if value is 0
         if (kb == 0) {
-          kb++;
+          ++kb;
         }
         return new FastInteger(kb);
       } else {
@@ -346,12 +346,12 @@ at: http://peteroupc.github.io/CBOR/
         if ((this.shiftedSmall & (1 << i)) != 0) {
           break;
         } else {
-          kb--;
+          --kb;
         }
       }
       int shift = (int)Math.min(kb, bits);
       boolean shiftingMoreBits = bits > kb;
-      kb = kb - shift;
+      kb -= shift;
       this.knownBitLength = new FastInteger(kb);
       this.discardedBitCount.AddInt(bits);
       this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -392,11 +392,11 @@ at: http://peteroupc.github.io/CBOR/
         if ((this.shiftedSmall & (1L << i)) != 0) {
           break;
         } else {
-          kbl--;
+          --kbl;
         }
       }
       if (kbl == 0) {
-        kbl++;
+        ++kbl;
       }
       // Shift by the difference in bit length
       if (kbl > bits) {

@@ -65,7 +65,7 @@ package com.upokecenter.util;
             }
             if (bytesNeeded == 0) {
               if ((b & 0x7F) == b) {
-                this.myIndex += 1;
+                ++this.myIndex;
                 return b;
               } else if (b >= 0xc2 && b <= 0xdf) {
                 bytesNeeded = 1;
@@ -95,7 +95,7 @@ package com.upokecenter.util;
             }
             lower = 0x80;
             upper = 0xbf;
-            bytesSeen++;
+            ++bytesSeen;
             cp += (b - 0x80) << (6 * (bytesNeeded - bytesSeen));
             if (bytesSeen != bytesNeeded) {
               continue;
@@ -104,7 +104,7 @@ package com.upokecenter.util;
             cp = 0;
             bytesSeen = 0;
             bytesNeeded = 0;
-            this.myIndex += 1;
+            ++this.myIndex;
             return ret;
           }
         } catch (IOException ex) {
@@ -112,7 +112,16 @@ package com.upokecenter.util;
         }
       } else {
         int c = (this.myIndex < this.mySource.length()) ? this.mySource.charAt(this.myIndex) : -1;
-        this.myIndex += 1;
+        if (c >= 0xD800 && c <= 0xDBFF && this.myIndex + 1 < this.mySource.length() &&
+            this.mySource.charAt(this.myIndex + 1) >= 0xDC00 && this.mySource.charAt(this.myIndex + 1) <= 0xDFFF) {
+          // Get the Unicode code point for the surrogate pair
+          c = 0x10000 + ((c - 0xD800) * 0x400) + (this.mySource.charAt(this.myIndex + 1) - 0xDC00);
+          ++this.myIndex;
+        } else if (c >= 0xD800 && c <= 0xDFFF) {
+          // unpaired surrogate
+          throw this.SyntaxError("Unpaired surrogate code point");
+        }
+        ++this.myIndex;
         return c;
       }
     }
@@ -135,7 +144,7 @@ package com.upokecenter.util;
      * @param lastChar A 32-bit signed integer. (2).
      * @return A 32-bit signed integer.
      */
-    public int NextSyntaxChar2(int lastChar) {
+    private int NextSyntaxChar2(int lastChar) {
       while (true) {
         if (lastChar == '/' || lastChar == '#') {
           throw this.SyntaxError("Comments not allowed");
@@ -258,7 +267,7 @@ package com.upokecenter.util;
     }
 
     CBORException SyntaxError(String message, Throwable innerException) {
-      return new CBORException(message + this.toString() + "(char. " + this.myIndex+")", innerException);
+      return new CBORException(message + this.toString() + "(char. " + this.myIndex + ")", innerException);
     }
 
     private CBORObject NextJSONValue(int firstChar, boolean noDuplicates, int[] nextChar) {

@@ -32,7 +32,7 @@ namespace PeterO {
       if (!mant.IsZero && ctx != null && !ctx.Precision.IsZero) {
         BigInteger limit = this.helper.MultiplyByRadixPower(BigInteger.One, FastInteger.FromBig(ctx.Precision));
         if (mant.CompareTo(limit) >= 0) {
-          mant = mant % (BigInteger)limit;
+          mant %= (BigInteger)limit;
           mantChanged = true;
         }
       }
@@ -634,7 +634,7 @@ namespace PeterO {
           return this.RoundToPrecision(this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags & ~BigNumberFlags.FlagNegative), ctx);
         }
       }
-      flags = flags ^ BigNumberFlags.FlagNegative;
+      flags ^= BigNumberFlags.FlagNegative;
       return this.RoundToPrecision(this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags), ctx);
     }
 
@@ -766,7 +766,7 @@ namespace PeterO {
             more = false;
           } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
             // Guesses are vacillating
-            vacillations++;
+            ++vacillations;
             if (vacillations > 3 && guessCmp > 0) {
               // When guesses are vacillating, choose the lower guess
               // to reduce rounding errors
@@ -806,7 +806,7 @@ namespace PeterO {
             more = false;
           } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
             // Guesses are vacillating
-            vacillations++;
+            ++vacillations;
             if (vacillations > 3 && guessCmp > 0) {
               // When guesses are vacillating, choose the lower guess
               // to reduce rounding errors
@@ -850,7 +850,7 @@ namespace PeterO {
             more = false;
           } else if ((guessCmp>0 && lastCompare<0) || (lastCompare>0 && guessCmp<0)) {
             // Guesses are vacillating
-            vacillations++;
+            ++vacillations;
             if (vacillations>3 && guessCmp>0) {
               // When guesses are vacillating, choose the lower guess
               // to reduce rounding errors
@@ -897,7 +897,7 @@ namespace PeterO {
             more = false;
           } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
             // Guesses are vacillating
-            vacillations++;
+            ++vacillations;
             if (vacillations > 3 && guessCmp > 0) {
               // When guesses are vacillating, choose the lower guess
               // to reduce rounding errors

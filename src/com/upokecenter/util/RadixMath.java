@@ -31,7 +31,7 @@ at: http://peteroupc.github.io/CBOR/
       if (mant.signum()!=0 && ctx != null && ctx.getPrecision().signum()!=0) {
         BigInteger limit = this.helper.MultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
         if (mant.compareTo(limit) >= 0) {
-          mant = mant.remainder(limit);
+          mant=mant.remainder(limit);
           mantChanged = true;
         }
       }
@@ -634,7 +634,7 @@ bigrem=divrem[1]; }
           return this.RoundToPrecision(this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags & ~BigNumberFlags.FlagNegative), ctx);
         }
       }
-      flags = flags ^ BigNumberFlags.FlagNegative;
+      flags ^= BigNumberFlags.FlagNegative;
       return this.RoundToPrecision(this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags), ctx);
     }
 
@@ -772,7 +772,7 @@ bigrem=divrem[1]; }
             more = false;
           } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
             // Guesses are vacillating
-            vacillations++;
+            ++vacillations;
             if (vacillations > 3 && guessCmp > 0) {
               // When guesses are vacillating, choose the lower guess
               // to reduce rounding errors
@@ -812,7 +812,7 @@ bigrem=divrem[1]; }
             more = false;
           } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
             // Guesses are vacillating
-            vacillations++;
+            ++vacillations;
             if (vacillations > 3 && guessCmp > 0) {
               // When guesses are vacillating, choose the lower guess
               // to reduce rounding errors
@@ -856,7 +856,7 @@ bigrem=divrem[1]; }
             more = false;
           } else if ((guessCmp>0 && lastCompare<0) || (lastCompare>0 && guessCmp<0)) {
             // Guesses are vacillating
-            vacillations++;
+            ++vacillations;
             if (vacillations>3 && guessCmp>0) {
               // When guesses are vacillating, choose the lower guess
               // to reduce rounding errors
@@ -903,7 +903,7 @@ bigrem=divrem[1]; }
             more = false;
           } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
             // Guesses are vacillating
-            vacillations++;
+            ++vacillations;
             if (vacillations > 3 && guessCmp > 0) {
               // When guesses are vacillating, choose the lower guess
               // to reduce rounding errors

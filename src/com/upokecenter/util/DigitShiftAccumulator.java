@@ -288,7 +288,7 @@ bigrem=divrem[1]; }
       for (int i = str.length() - 1; i >= 0; --i) {
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)(str.charAt(i) - '0');
-        digitShift--;
+        --digitShift;
         if (digitShift <= 0) {
           break;
         }
@@ -414,7 +414,7 @@ bigrem=divrem[1]; }
         for (int i = str.length() - 1; i >= 0; --i) {
           this.bitsAfterLeftmost |= this.bitLeftmost;
           this.bitLeftmost = (int)(str.charAt(i) - '0');
-          digitShift--;
+          --digitShift;
           if (digitShift <= 0) {
             break;
           }
@@ -462,12 +462,12 @@ bigrem=divrem[1]; }
       int kb = 0;
       int tmp = this.shiftedSmall;
       while (tmp > 0) {
-        kb++;
+        ++kb;
         tmp /= 10;
       }
       // Make sure digit length is 1 if value is 0
       if (kb == 0) {
-        kb++;
+        ++kb;
       }
       this.knownBitLength = new FastInteger(kb);
       if (this.discardedBitCount == null) {
@@ -484,7 +484,7 @@ bigrem=divrem[1]; }
           int digit = (int)(this.shiftedSmall % 10);
           this.bitsAfterLeftmost |= this.bitLeftmost;
           this.bitLeftmost = digit;
-          digits--;
+          --digits;
           this.shiftedSmall /= 10;
           this.knownBitLength.Decrement();
         }

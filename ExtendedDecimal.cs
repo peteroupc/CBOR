@@ -129,9 +129,9 @@ namespace PeterO {
     public override int GetHashCode() {
       int hashCode = 0;
       unchecked {
-        hashCode = hashCode + (1000000007 * this.exponent.GetHashCode());
-        hashCode = hashCode + (1000000009 * this.unsignedMantissa.GetHashCode());
-        hashCode = hashCode + (1000000009 * this.flags);
+        hashCode += 1000000007 * this.exponent.GetHashCode();
+        hashCode += 1000000009 * this.unsignedMantissa.GetHashCode();
+        hashCode += 1000000009 * this.flags;
       }
       return hashCode;
     }
@@ -210,7 +210,7 @@ namespace PeterO {
       bool negative = false;
       if (str[0] == '+' || str[0] == '-') {
         negative = str[0] == '-';
-        offset++;
+        ++offset;
       }
       int mantInt = 0;
       FastInteger mant = null;
@@ -414,7 +414,7 @@ namespace PeterO {
               }
               newScale.AddInt(-1);
             } else {
-              newScaleInt--;
+              --newScaleInt;
             }
           }
         } else if (str[i] == '.') {
@@ -424,7 +424,7 @@ namespace PeterO {
           haveDecimalPoint = true;
         } else if (str[i] == 'E' || str[i] == 'e') {
           haveExponent = true;
-          i++;
+          ++i;
           break;
         } else {
           throw new FormatException();
@@ -448,7 +448,7 @@ namespace PeterO {
           if (str[i] == '-') {
             offset = -1;
           }
-          i++;
+          ++i;
         }
         for (; i < str.Length; ++i) {
           if (str[i] >= '0' && str[i] <= '9') {
@@ -1104,7 +1104,7 @@ namespace PeterO {
         }
       }
       if (floatExponent == 0) {
-        floatExponent++;
+        ++floatExponent;
       } else {
         valueFpMantissa |= 1 << 23;
       }
@@ -1113,7 +1113,7 @@ namespace PeterO {
       }
       floatExponent -= 150;
       while ((valueFpMantissa & 1) == 0) {
-        floatExponent++;
+        ++floatExponent;
         valueFpMantissa >>= 1;
       }
       if (floatExponent == 0) {
@@ -1186,7 +1186,7 @@ namespace PeterO {
       }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
       if (floatExponent == 0) {
-        floatExponent++;
+        ++floatExponent;
       } else {
         value[1] |= 0x100000;
       }

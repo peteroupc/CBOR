@@ -286,7 +286,7 @@ namespace PeterO {
       for (int i = str.Length - 1; i >= 0; --i) {
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)(str[i] - '0');
-        digitShift--;
+        --digitShift;
         if (digitShift <= 0) {
           break;
         }
@@ -402,7 +402,7 @@ namespace PeterO {
         for (int i = str.Length - 1; i >= 0; --i) {
           this.bitsAfterLeftmost |= this.bitLeftmost;
           this.bitLeftmost = (int)(str[i] - '0');
-          digitShift--;
+          --digitShift;
           if (digitShift <= 0) {
             break;
           }
@@ -448,12 +448,12 @@ namespace PeterO {
       int kb = 0;
       int tmp = this.shiftedSmall;
       while (tmp > 0) {
-        kb++;
+        ++kb;
         tmp /= 10;
       }
       // Make sure digit length is 1 if value is 0
       if (kb == 0) {
-        kb++;
+        ++kb;
       }
       this.knownBitLength = new FastInteger(kb);
       if (this.discardedBitCount == null) {
@@ -470,7 +470,7 @@ namespace PeterO {
           int digit = (int)(this.shiftedSmall % 10);
           this.bitsAfterLeftmost |= this.bitLeftmost;
           this.bitLeftmost = digit;
-          digits--;
+          --digits;
           this.shiftedSmall /= 10;
           this.knownBitLength.Decrement();
         }

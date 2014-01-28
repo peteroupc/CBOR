@@ -66,7 +66,7 @@ namespace PeterO {
             }
             if (bytesNeeded == 0) {
               if ((b & 0x7F) == b) {
-                this.myIndex += 1;
+                ++this.myIndex;
                 return b;
               } else if (b >= 0xc2 && b <= 0xdf) {
                 bytesNeeded = 1;
@@ -96,7 +96,7 @@ namespace PeterO {
             }
             lower = 0x80;
             upper = 0xbf;
-            bytesSeen++;
+            ++bytesSeen;
             cp += (b - 0x80) << (6 * (bytesNeeded - bytesSeen));
             if (bytesSeen != bytesNeeded) {
               continue;
@@ -105,7 +105,7 @@ namespace PeterO {
             cp = 0;
             bytesSeen = 0;
             bytesNeeded = 0;
-            this.myIndex += 1;
+            ++this.myIndex;
             return ret;
           }
         } catch (IOException ex) {
@@ -117,12 +117,12 @@ namespace PeterO {
             this.mySource[this.myIndex + 1] >= 0xDC00 && this.mySource[this.myIndex + 1] <= 0xDFFF) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xD800) * 0x400) + (this.mySource[this.myIndex + 1] - 0xDC00);
-          this.myIndex++;
+          ++this.myIndex;
         } else if (c >= 0xD800 && c <= 0xDFFF) {
           // unpaired surrogate
           throw this.SyntaxError("Unpaired surrogate code point");
         }
-        this.myIndex += 1;
+        ++this.myIndex;
         return c;
       }
     }

@@ -212,11 +212,11 @@ namespace PeterO {
               this.data = newdata;
             }
             this.data[this.wordCount] = carry;
-            this.wordCount++;
+            ++this.wordCount;
           }
           // Calculate the correct data length
           while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-            this.wordCount--;
+            --this.wordCount;
           }
         } else {
           if (this.data.Length > 0) {
@@ -297,7 +297,7 @@ namespace PeterO {
             }
             // Calculate the correct data length
             while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-              this.wordCount--;
+              --this.wordCount;
             }
           }
         }
@@ -339,7 +339,7 @@ namespace PeterO {
             }
             // Calculate the correct data length
             while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-              this.wordCount--;
+              --this.wordCount;
             }
             return this;
           }
@@ -405,12 +405,12 @@ namespace PeterO {
               this.data = newdata;
             }
             this.data[this.wordCount] = carry;
-            this.wordCount++;
+            ++this.wordCount;
           }
         }
         // Calculate the correct data length
         while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-          this.wordCount--;
+          --this.wordCount;
         }
         return this;
       }
@@ -542,7 +542,7 @@ namespace PeterO {
         if (divisor.integerMode == 1) {
           while (this.mnum.CompareTo(divisor.mnum) >= 0) {
             this.mnum.Subtract(divisor.mnum);
-            count++;
+            ++count;
           }
           return count;
         } else if (divisor.integerMode == 0 && divisor.smallValue >= 0) {
@@ -554,7 +554,7 @@ namespace PeterO {
             MutableNumber dmnum = new MutableNumber(divisor.smallValue);
             while (this.mnum.CompareTo(dmnum) >= 0) {
               this.mnum.Subtract(dmnum);
-              count++;
+              ++count;
             }
           }
           return count;
@@ -872,7 +872,7 @@ namespace PeterO {
     public FastInteger Increment() {
       if (this.integerMode == 0) {
         if (this.smallValue != Int32.MaxValue) {
-          this.smallValue++;
+          ++this.smallValue;
         } else {
           this.integerMode = 1;
           this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
@@ -888,7 +888,7 @@ namespace PeterO {
     public FastInteger Decrement() {
       if (this.integerMode == 0) {
         if (this.smallValue != Int32.MinValue) {
-          this.smallValue--;
+          --this.smallValue;
         } else {
           this.integerMode = 1;
           this.mnum = MutableNumber.FromBigInteger(valueInt32MinValue);

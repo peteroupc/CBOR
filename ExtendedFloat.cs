@@ -104,9 +104,9 @@ namespace PeterO {
     public override int GetHashCode() {
       int hashCode = 0;
       unchecked {
-        hashCode = hashCode + (1000000007 * this.exponent.GetHashCode());
-        hashCode = hashCode + (1000000009 * this.unsignedMantissa.GetHashCode());
-        hashCode = hashCode + (1000000009 * this.flags);
+        hashCode += 1000000007 * this.exponent.GetHashCode();
+        hashCode += 1000000009 * this.unsignedMantissa.GetHashCode();
+        hashCode += 1000000009 * this.flags;
       }
       return hashCode;
     }
@@ -433,7 +433,7 @@ namespace PeterO {
         int exponentchange = 0;
         while (smallmant < (1 << 23)) {
           smallmant <<= 1;
-          exponentchange++;
+          ++exponentchange;
         }
         bigexponent.SubtractInt(exponentchange);
         fastSmallMant = new FastInteger(smallmant);
@@ -488,7 +488,7 @@ namespace PeterO {
           BitConverter.ToSingle(BitConverter.GetBytes((int)0), 0);
       } else {
         int smallexponent = bigexponent.AsInt32();
-        smallexponent = smallexponent + 150;
+        smallexponent += 150;
         int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7FFFFF;
         if (!subnormal) {
           smallmantissa |= smallexponent << 23;
@@ -666,7 +666,7 @@ namespace PeterO {
         }
       }
       if (floatExponent == 0) {
-        floatExponent++;
+        ++floatExponent;
       } else {
         valueFpMantissa |= 1 << 23;
       }
@@ -674,7 +674,7 @@ namespace PeterO {
         return neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
       }
       while ((valueFpMantissa & 1) == 0) {
-        floatExponent++;
+        ++floatExponent;
         valueFpMantissa >>= 1;
       }
       if (neg) {
@@ -725,7 +725,7 @@ namespace PeterO {
       }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
       if (floatExponent == 0) {
-        floatExponent++;
+        ++floatExponent;
       } else {
         value[1] |= 0x100000;
       }

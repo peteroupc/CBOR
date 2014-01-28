@@ -113,17 +113,17 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       for (int i = 0; i < str.length(); ++i) {
         int c = str.charAt(i);
         if (c <= 0x7F) {
-          size++;
+          ++size;
         } else if (c <= 0x7FF) {
           size += 2;
         } else if (c <= 0xD7FF || c >= 0xE000) {
           size += 3;
         } else if (c <= 0xDBFF) {  // UTF-16 leading surrogate
-          i++;
+          ++i;
           if (i >= str.length() || str.charAt(i) < 0xDC00 || str.charAt(i) > 0xDFFF) {
             if (replace) {
               size += 3;
-              i--;
+              --i;
             } else {
               return -1;
             }
@@ -183,7 +183,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             return ca - cb;
           }
           if (incindex) {
-            i++;
+            ++i;
           }
         } else {
           if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800) {
@@ -275,7 +275,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               str.charAt(index + 1) >= 0xDC00 && str.charAt(index + 1) <= 0xDFFF) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + ((c - 0xD800) * 0x400) + (str.charAt(index + 1) - 0xDC00);
-            index++;
+            ++index;
           } else if (c >= 0xD800 && c <= 0xDFFF) {
             // unpaired surrogate
             if (!replace) {
@@ -384,7 +384,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       int endpointer = offset + bytesCount;
       while (pointer < endpointer) {
         int b = data[pointer] & (int)0xFF;
-        pointer++;
+        ++pointer;
         if (bytesNeeded == 0) {
           if ((b & 0x7F) == b) {
             builder.append((char)b);
@@ -414,7 +414,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           lower = 0x80;
           upper = 0xbf;
           if (replace) {
-            pointer--;
+            --pointer;
             builder.append((char)0xFFFD);
             continue;
           } else {
@@ -423,7 +423,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         } else {
           lower = 0x80;
           upper = 0xbf;
-          bytesSeen++;
+          ++bytesSeen;
           cp += (b - 0x80) << (6 * (bytesNeeded - bytesSeen));
           if (bytesSeen != bytesNeeded) {
             continue;
@@ -507,7 +507,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           }
         }
         if (bytesCount > 0) {
-          pointer++;
+          ++pointer;
         }
         if (bytesNeeded == 0) {
           if ((b & 0x7F) == b) {
@@ -565,7 +565,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         } else {
           lower = 0x80;
           upper = 0xbf;
-          bytesSeen++;
+          ++bytesSeen;
           cp += (b - 0x80) << (6 * (bytesNeeded - bytesSeen));
           if (bytesSeen != bytesNeeded) {
             continue;

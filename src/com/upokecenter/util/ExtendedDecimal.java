@@ -123,9 +123,9 @@ at: http://peteroupc.github.io/CBOR/
     @Override public int hashCode() {
       int hashCode_ = 0;
       {
-        hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
-        hashCode_ = hashCode_ + (1000000009 * this.unsignedMantissa.hashCode());
-        hashCode_ = hashCode_ + (1000000009 * this.flags);
+        hashCode_ += 1000000007 * this.exponent.hashCode();
+        hashCode_ += 1000000009 * this.unsignedMantissa.hashCode();
+        hashCode_ += 1000000009 * this.flags;
       }
       return hashCode_;
     }
@@ -202,7 +202,7 @@ at: http://peteroupc.github.io/CBOR/
       boolean negative = false;
       if (str.charAt(0) == '+' || str.charAt(0) == '-') {
         negative = str.charAt(0) == '-';
-        offset++;
+        ++offset;
       }
       int mantInt = 0;
       FastInteger mant = null;
@@ -406,7 +406,7 @@ at: http://peteroupc.github.io/CBOR/
               }
               newScale.AddInt(-1);
             } else {
-              newScaleInt--;
+              --newScaleInt;
             }
           }
         } else if (str.charAt(i) == '.') {
@@ -416,7 +416,7 @@ at: http://peteroupc.github.io/CBOR/
           haveDecimalPoint = true;
         } else if (str.charAt(i) == 'E' || str.charAt(i) == 'e') {
           haveExponent = true;
-          i++;
+          ++i;
           break;
         } else {
           throw new NumberFormatException();
@@ -440,7 +440,7 @@ at: http://peteroupc.github.io/CBOR/
           if (str.charAt(i) == '-') {
             offset = -1;
           }
-          i++;
+          ++i;
         }
         for (; i < str.length(); ++i) {
           if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
@@ -1135,7 +1135,7 @@ remainder=divrem[1]; }
         }
       }
       if (floatExponent == 0) {
-        floatExponent++;
+        ++floatExponent;
       } else {
         valueFpMantissa |= 1 << 23;
       }
@@ -1144,7 +1144,7 @@ remainder=divrem[1]; }
       }
       floatExponent -= 150;
       while ((valueFpMantissa & 1) == 0) {
-        floatExponent++;
+        ++floatExponent;
         valueFpMantissa >>= 1;
       }
       if (floatExponent == 0) {
@@ -1223,7 +1223,7 @@ remainder=divrem[1]; }
       }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
       if (floatExponent == 0) {
-        floatExponent++;
+        ++floatExponent;
       } else {
         value[1] |= 0x100000;
       }

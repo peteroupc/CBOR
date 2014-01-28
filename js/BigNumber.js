@@ -1465,7 +1465,7 @@ function() {
             if (((tmpInt >> 31) != 0) || (tmpInt >= intDivisor)) {
                 {
                     dividendHigh -= intDivisor;
-                    dividendLow = dividendLow + (1);
+                    dividendLow++;
                 }
             }
         }
@@ -1935,14 +1935,14 @@ function() {
                     byteCount -= 2;
                 } else if ((regdata[i] & 65408) == 65408) {
 
-                    byteCount -= 1;
+                    byteCount--;
                     break;
                 } else if ((regdata[i] & 32768) == 32768) {
 
                     break;
                 } else {
 
-                    byteCount = byteCount + (1);
+                    byteCount++;
                     break;
                 }
             }

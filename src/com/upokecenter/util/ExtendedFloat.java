@@ -101,9 +101,9 @@ at: http://peteroupc.github.io/CBOR/
     @Override public int hashCode() {
       int hashCode_ = 0;
       {
-        hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
-        hashCode_ = hashCode_ + (1000000009 * this.unsignedMantissa.hashCode());
-        hashCode_ = hashCode_ + (1000000009 * this.flags);
+        hashCode_ += 1000000007 * this.exponent.hashCode();
+        hashCode_ += 1000000009 * this.unsignedMantissa.hashCode();
+        hashCode_ += 1000000009 * this.flags;
       }
       return hashCode_;
     }
@@ -455,7 +455,7 @@ at: http://peteroupc.github.io/CBOR/
         int exponentchange = 0;
         while (smallmant < (1 << 23)) {
           smallmant <<= 1;
-          exponentchange++;
+          ++exponentchange;
         }
         bigexponent.SubtractInt(exponentchange);
         fastSmallMant = new FastInteger(smallmant);
@@ -510,7 +510,7 @@ at: http://peteroupc.github.io/CBOR/
           Float.intBitsToFloat(0);
       } else {
         int smallexponent = bigexponent.AsInt32();
-        smallexponent = smallexponent + 150;
+        smallexponent += 150;
         int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7FFFFF;
         if (!subnormal) {
           smallmantissa |= smallexponent << 23;
@@ -691,7 +691,7 @@ at: http://peteroupc.github.io/CBOR/
         }
       }
       if (floatExponent == 0) {
-        floatExponent++;
+        ++floatExponent;
       } else {
         valueFpMantissa |= 1 << 23;
       }
@@ -699,7 +699,7 @@ at: http://peteroupc.github.io/CBOR/
         return neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
       }
       while ((valueFpMantissa & 1) == 0) {
-        floatExponent++;
+        ++floatExponent;
         valueFpMantissa >>= 1;
       }
       if (neg) {
@@ -752,7 +752,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       value[1] &= 0xFFFFF;  // Mask out the exponent and sign
       if (floatExponent == 0) {
-        floatExponent++;
+        ++floatExponent;
       } else {
         value[1] |= 0x100000;
       }

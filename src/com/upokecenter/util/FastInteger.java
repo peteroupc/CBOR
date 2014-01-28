@@ -223,11 +223,11 @@ at: http://peteroupc.github.io/CBOR/
               this.data = newdata;
             }
             this.data[this.wordCount] = carry;
-            this.wordCount++;
+            ++this.wordCount;
           }
           // Calculate the correct data length
           while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-            this.wordCount--;
+            --this.wordCount;
           }
         } else {
           if (this.data.length > 0) {
@@ -310,7 +310,7 @@ at: http://peteroupc.github.io/CBOR/
             }
             // Calculate the correct data length
             while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-              this.wordCount--;
+              --this.wordCount;
             }
           }
         }
@@ -354,7 +354,7 @@ at: http://peteroupc.github.io/CBOR/
             }
             // Calculate the correct data length
             while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-              this.wordCount--;
+              --this.wordCount;
             }
             return this;
           }
@@ -424,12 +424,12 @@ at: http://peteroupc.github.io/CBOR/
               this.data = newdata;
             }
             this.data[this.wordCount] = carry;
-            this.wordCount++;
+            ++this.wordCount;
           }
         }
         // Calculate the correct data length
         while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-          this.wordCount--;
+          --this.wordCount;
         }
         return this;
       }
@@ -571,7 +571,7 @@ at: http://peteroupc.github.io/CBOR/
         if (divisor.integerMode == 1) {
           while (this.mnum.compareTo(divisor.mnum) >= 0) {
             this.mnum.Subtract(divisor.mnum);
-            count++;
+            ++count;
           }
           return count;
         } else if (divisor.integerMode == 0 && divisor.smallValue >= 0) {
@@ -583,7 +583,7 @@ at: http://peteroupc.github.io/CBOR/
             MutableNumber dmnum = new MutableNumber(divisor.smallValue);
             while (this.mnum.compareTo(dmnum) >= 0) {
               this.mnum.Subtract(dmnum);
-              count++;
+              ++count;
             }
           }
           return count;
@@ -927,7 +927,7 @@ bigrem=divrem[1]; }
     public FastInteger Increment() {
       if (this.integerMode == 0) {
         if (this.smallValue != Integer.MAX_VALUE) {
-          this.smallValue++;
+          ++this.smallValue;
         } else {
           this.integerMode = 1;
           this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
@@ -945,7 +945,7 @@ bigrem=divrem[1]; }
     public FastInteger Decrement() {
       if (this.integerMode == 0) {
         if (this.smallValue != Integer.MIN_VALUE) {
-          this.smallValue--;
+          --this.smallValue;
         } else {
           this.integerMode = 1;
           this.mnum = MutableNumber.FromBigInteger(valueInt32MinValue);

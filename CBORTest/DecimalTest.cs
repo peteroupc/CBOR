@@ -286,7 +286,7 @@ namespace Test
                   Console.WriteLine(ln);
                   Console.WriteLine(ex.Message);
                   Console.WriteLine(ex.StackTrace);
-                  failures++;
+                  ++failures;
                   // throw;
                 }
               }

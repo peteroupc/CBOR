@@ -6464,7 +6464,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           if (bigintTemp.equals(ranges[i + 1])) {
             break;
           }
-          bigintTemp = bigintTemp .add(BigInteger.ONE);
+          bigintTemp=bigintTemp.add(BigInteger.ONE);
         }
       }
     }
@@ -6497,7 +6497,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           if (j == ranges[i + 1]) {
             break;
           }
-          j++;
+          ++j;
         }
       }
     }
@@ -6661,7 +6661,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           if (bigintTemp.equals(ranges[i + 1])) {
             break;
           }
-          bigintTemp = bigintTemp .add(BigInteger.ONE);
+          bigintTemp=bigintTemp.add(BigInteger.ONE);
         }
       }
     }

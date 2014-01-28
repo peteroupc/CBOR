@@ -6388,7 +6388,7 @@ o.ToJSONString());
           if (bigintTemp.Equals(ranges[i + 1])) {
             break;
           }
-          bigintTemp = bigintTemp + BigInteger.One;
+          bigintTemp += BigInteger.One;
         }
       }
     }
@@ -6419,7 +6419,7 @@ o.ToJSONString());
           if (j == ranges[i + 1]) {
             break;
           }
-          j++;
+          ++j;
         }
       }
     }
@@ -6588,7 +6588,7 @@ o.ToJSONString());
           if (bigintTemp.Equals(ranges[i + 1])) {
             break;
           }
-          bigintTemp = bigintTemp + BigInteger.One;
+          bigintTemp += BigInteger.One;
         }
       }
     }

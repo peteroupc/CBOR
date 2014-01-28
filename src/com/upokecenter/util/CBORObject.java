@@ -2195,7 +2195,7 @@ public void set(String key, CBORObject value) {
               str.charAt(index + 1) >= 0xDC00 && str.charAt(index + 1) <= 0xDFFF) {
             // Get the Unicode code point for the surrogate pair
             c = 0x10000 + ((c - 0xD800) * 0x400) + (str.charAt(index + 1) - 0xDC00);
-            index++;
+            ++index;
           } else if (c >= 0xD800 && c <= 0xDFFF) {
             // unpaired surrogate, write U + FFFD instead
             c = 0xFFFD;
@@ -2369,7 +2369,7 @@ public void set(String key, CBORObject value) {
         int byteCount = bytes.length;
         while (byteCount > 0 && bytes[byteCount - 1] == 0) {
           // Ignore trailing zero bytes
-          byteCount--;
+          --byteCount;
         }
         if (byteCount == 0) {
           WritePositiveInt64(datatype, 0, stream);
@@ -2477,7 +2477,7 @@ public void set(String key, CBORObject value) {
       if (value >= 0) {
         WritePositiveInt64(0, value, stream);
       } else {
-        value += 1;
+        ++value;
         value = -value;  // Will never overflow
         WritePositiveInt64(1, value, stream);
       }
@@ -2614,16 +2614,16 @@ public void set(String key, CBORObject value) {
         int length = str.length();
         int extra = (length < 24) ? 1 : 2;
         if (tagbyte >= 0) {
-          extra++;
+          ++extra;
         }
         bytes = new byte[length + extra];
         if (tagbyte >= 0) {
           bytes[offset] = (byte)tagbyte;
-          offset++;
+          ++offset;
         }
         if (length < 24) {
           bytes[offset] = (byte)(0x60 + str.length());
-          offset++;
+          ++offset;
         } else {
           bytes[offset] = (byte)0x78;
           bytes[offset + 1] = (byte)str.length();
@@ -2709,7 +2709,7 @@ public void set(String key, CBORObject value) {
           if (value >= 0) {
             intBytes = GetPositiveInt64Bytes(0, value);
           } else {
-            value += 1;
+            ++value;
             value = -value;  // Will never overflow
             intBytes = GetPositiveInt64Bytes(1, value);
           }
@@ -2855,7 +2855,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       JSONTokener tokener = new JSONTokener(stream);
       try {
         CBORObject obj = tokener.ParseJSONObjectOrArray(false);
-        if (tokener.NextClean() != -1) {
+        if (tokener.NextSyntaxChar() != -1) {
           throw tokener.SyntaxError("End of data stream not reached");
         }
         return obj;
@@ -3821,7 +3821,7 @@ public static CBORObject FromObject(Object obj) {
         // if the highest bit is set, to
         // distinguish negative and positive
         // values
-        neededLength += 1;
+        ++neededLength;
         extended = true;
       }
       bytes = new byte[neededLength];
@@ -4201,7 +4201,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               break;
             }
             list.add(o);
-            vtindex++;
+            ++vtindex;
           }
           return new CBORObject(CBORObjectTypeArray, list);
         } else {
@@ -4216,7 +4216,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           }
           for (long i = 0; i < uadditional; ++i) {
             list.add(Read(s, depth + 1, false, -1, validTypeFlags, vtindex));
-            vtindex++;
+            ++vtindex;
           }
           return new CBORObject(CBORObjectTypeArray, list);
         }

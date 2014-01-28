@@ -244,7 +244,7 @@ private DecimalUtility() {
             this.inputs[0] = input;
             this.inputsInts[0] = input.canFitInInt() ? input.intValue() : -1;
             this.outputs[0] = output;
-            this.size++;
+            ++this.size;
           } else {
             // Shift newer entries down
             for (int i = MaxSize - 1; i > 0; --i) {
