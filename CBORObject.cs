@@ -2787,6 +2787,291 @@ namespace PeterO {
       }
     }
 
+    // JSON parsing methods
+    private static int SkipWhitespaceJSON(CharacterReader reader) {
+      while (true) {
+        int c = reader.NextChar();
+        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
+          return c;
+        }
+      }
+    }
+
+    private static string NextJSONString(CharacterReader reader, int quote) {
+      int c;
+      StringBuilder sb = new StringBuilder();
+      bool surrogate = false;
+      bool surrogateEscaped = false;
+      bool escaped = false;
+      while (true) {
+        c = reader.NextChar();
+        if (c == -1 || c < 0x20) {
+          throw reader.NewError("Unterminated string");
+        }
+        switch (c) {
+          case '\\':
+            c = reader.NextChar();
+            escaped = true;
+            switch (c) {
+              case '\\':
+                c = '\\';
+                break;
+              case '/':
+                // Not allowed to be escaped by RFC 4627,
+                // but will be allowed in the revision to RFC 4627
+                c = '/';
+                break;
+              case '\"':
+                c = '\"';
+                break;
+              case 'b':
+                c = '\b';
+                break;
+              case 'f':
+                c = '\f';
+                break;
+              case 'n':
+                c = '\n';
+                break;
+              case 'r':
+                c = '\r';
+                break;
+              case 't':
+                c = '\t';
+                break;
+                case 'u': { // Unicode escape
+                  c = 0;
+                  // Consists of 4 hex digits
+                  for (int i = 0; i < 4; ++i) {
+                    int ch = reader.NextChar();
+                    if (ch >= '0' && ch <= '9') {
+                      c <<= 4;
+                      c |= ch - '0';
+                    } else if (ch >= 'A' && ch <= 'F') {
+                      c <<= 4;
+                      c |= ch + 10 - 'A';
+                    } else if (ch >= 'a' && ch <= 'f') {
+                      c <<= 4;
+                      c |= ch + 10 - 'a';
+                    } else {
+                      throw reader.NewError("Invalid Unicode escaped character");
+                    }
+                  }
+                  break;
+                }
+              default:
+                throw reader.NewError("Invalid escaped character");
+            }
+            break;
+          default:
+            escaped = false;
+            break;
+        }
+        if (surrogate) {
+          if ((c & 0x1FFC00) != 0xDC00) {
+            // Note: this includes the ending quote
+            // and supplementary characters
+            throw reader.NewError("Unpaired surrogate code point");
+          }
+          if (escaped != surrogateEscaped) {
+            throw reader.NewError("Pairing escaped surrogate with unescaped surrogate");
+          }
+          surrogate = false;
+        } else if ((c & 0x1FFC00) == 0xD800) {
+          surrogate = true;
+          surrogateEscaped = escaped;
+        } else if ((c & 0x1FFC00) == 0xDC00) {
+          throw reader.NewError("Unpaired surrogate code point");
+        }
+        if (c == quote && !escaped) {
+          // End quote reached
+          return sb.ToString();
+        }
+        if (c <= 0xFFFF) {
+          sb.Append((char)c);
+        } else if (c <= 0x10FFFF) {
+          sb.Append((char)((((c - 0x10000) >> 10) & 0x3FF) + 0xD800));
+          sb.Append((char)(((c - 0x10000) & 0x3FF) + 0xDC00));
+        }
+      }
+    }
+
+    private static CBORObject NextJSONValue(CharacterReader reader, int firstChar, bool noDuplicates, int[] nextChar) {
+      string str;
+      int c = firstChar;
+      CBORObject obj = null;
+      if (c < 0) {
+        throw reader.NewError("Unexpected end of data");
+      }
+      if (c == '"') {
+        // Parse a string
+        // The tokenizer already checked the string for invalid
+        // surrogate pairs, so just call the CBORObject
+        // constructor directly
+        obj = CBORObject.FromRaw(NextJSONString(reader, c));
+        nextChar[0] = SkipWhitespaceJSON(reader);
+        return obj;
+      } else if (c == '{') {
+        // Parse an object
+        obj = ParseJSONObject(reader, noDuplicates);
+        nextChar[0] = SkipWhitespaceJSON(reader);
+        return obj;
+      } else if (c == '[') {
+        // Parse an array
+        obj = ParseJSONArray(reader, noDuplicates);
+        nextChar[0] = SkipWhitespaceJSON(reader);
+        return obj;
+      } else if (c == 't') {
+        // Parse true
+        if (reader.NextChar() != 'r' ||
+            reader.NextChar() != 'u' ||
+            reader.NextChar() != 'e') {
+          throw reader.NewError("Value can't be parsed.");
+        }
+        nextChar[0] = SkipWhitespaceJSON(reader);
+        return CBORObject.True;
+      } else if (c == 'f') {
+        // Parse false
+        if (reader.NextChar() != 'a' ||
+            reader.NextChar() != 'l' ||
+            reader.NextChar() != 's' ||
+            reader.NextChar() != 'e') {
+          throw reader.NewError("Value can't be parsed.");
+        }
+        nextChar[0] = SkipWhitespaceJSON(reader);
+        return CBORObject.False;
+      } else if (c == 'n') {
+        // Parse null
+        if (reader.NextChar() != 'u' ||
+            reader.NextChar() != 'l' ||
+            reader.NextChar() != 'l') {
+          throw reader.NewError("Value can't be parsed.");
+        }
+        nextChar[0] = SkipWhitespaceJSON(reader);
+        return CBORObject.Null;
+      } else if (c == '-' || (c >= '0' && c <= '9')) {
+        // Parse a number
+        StringBuilder sb = new StringBuilder();
+        while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') || c == 'e' || c == 'E') {
+          sb.Append((char)c);
+          c = reader.NextChar();
+        }
+        str = sb.ToString();
+        obj = CBORDataUtilities.ParseJSONNumber(str);
+        if (obj == null) {
+          throw reader.NewError("JSON number can't be parsed.");
+        }
+        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
+          nextChar[0] = c;
+        } else {
+          nextChar[0] = SkipWhitespaceJSON(reader);
+        }
+        return obj;
+      } else {
+        throw reader.NewError("Value can't be parsed.");
+      }
+    }
+
+    private static CBORObject ParseJSONObjectOrArray(CharacterReader reader, bool noDuplicates) {
+      int c;
+      c = SkipWhitespaceJSON(reader);
+      if (c == '[') {
+        return ParseJSONArray(reader, noDuplicates);
+      }
+      if (c == '{') {
+        return ParseJSONObject(reader, noDuplicates);
+      }
+      throw reader.NewError("A JSON object must begin with '{' or '['");
+    }
+
+    private static CBORObject ParseJSONObject(CharacterReader reader, bool noDuplicates) {
+      // Assumes that the last character read was '{'
+      int c;
+      CBORObject key;
+      CBORObject obj;
+      int[] nextchar = new int[1];
+      bool seenComma = false;
+      var myHashMap = new Dictionary<CBORObject, CBORObject>();
+      while (true) {
+        c = SkipWhitespaceJSON(reader);
+        switch (c) {
+          case -1:
+            throw reader.NewError("A JSONObject must end with '}'");
+          case '}':
+            if (seenComma) {
+              // Situation like '{"0"=>1,}'
+              throw reader.NewError("Trailing comma");
+            }
+            return CBORObject.FromRaw(myHashMap);
+            default: {
+              // Read the next string
+              if (c < 0) {
+                throw reader.NewError("Unexpected end of data");
+              }
+              if (c != '"') {
+                throw reader.NewError("Expected a string as a key");
+              }
+              // Parse a string that represents the object's key
+              // The tokenizer already checked the string for invalid
+              // surrogate pairs, so just call the CBORObject
+              // constructor directly
+              obj = CBORObject.FromRaw(NextJSONString(reader, c));
+              key = obj;
+              if (noDuplicates && myHashMap.ContainsKey(obj)) {
+                throw reader.NewError("Key already exists: " + key);
+              }
+              break;
+            }
+        }
+        if (SkipWhitespaceJSON(reader) != ':') {
+          throw reader.NewError("Expected a ':' after a key");
+        }
+        // NOTE: Will overwrite existing value
+        myHashMap[key] = NextJSONValue(reader, SkipWhitespaceJSON(reader), noDuplicates, nextchar);
+        switch (nextchar[0]) {
+          case ',':
+            seenComma = true;
+            break;
+          case '}':
+            return CBORObject.FromRaw(myHashMap);
+          default:
+            throw reader.NewError("Expected a ',' or '}'");
+        }
+      }
+    }
+
+    private static CBORObject ParseJSONArray(CharacterReader reader, bool noDuplicates) {
+      var myArrayList = new List<CBORObject>();
+      bool seenComma = false;
+      int[] nextchar = new int[1];
+      // This method assumes that the last character read was '['
+      while (true) {
+        int c = SkipWhitespaceJSON(reader);
+        if (c == ']') {
+          if (seenComma) {
+            // Situation like '[0,1,]'
+            throw reader.NewError("Trailing comma");
+          }
+          return CBORObject.FromRaw(myArrayList);
+        } else if (c == ',') {
+          // Situation like '[,0,1,2]' or '[0,,1]'
+          throw reader.NewError("Empty array element");
+        } else {
+          myArrayList.Add(NextJSONValue(reader, c, noDuplicates, nextchar));
+          c = nextchar[0];
+        }
+        switch (c) {
+          case ',':
+            seenComma = true;
+            break;
+          case ']':
+            return CBORObject.FromRaw(myArrayList);
+          default:
+            throw reader.NewError("Expected a ',' or ']'");
+        }
+      }
+    }
+
     /// <summary>Generates a CBOR object from a string in JavaScript Object
     /// Notation (JSON) format. This function only accepts maps and arrays.
     /// <para>If a JSON object has the same key, only the last given value will
@@ -2798,10 +3083,10 @@ namespace PeterO {
     /// <exception cref='CBORException'>The string is not in JSON format.</exception>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromJSONString(string str) {
-      JSONTokener tokener = new JSONTokener(str);
-      CBORObject obj = tokener.ParseJSONObjectOrArray(false);
-      if (tokener.NextSyntaxChar() != -1) {
-        throw tokener.SyntaxError("End of string not reached");
+      CharacterReader reader = new CharacterReader(str);
+      CBORObject obj = ParseJSONObjectOrArray(reader, false);
+      if (SkipWhitespaceJSON(reader) != -1) {
+        throw reader.NewError("End of string not reached");
       }
       return obj;
     }
@@ -2819,11 +3104,11 @@ namespace PeterO {
     /// UTF-8 or is not in JSON format.</exception>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject ReadJSON(Stream stream) {
-      JSONTokener tokener = new JSONTokener(stream);
+      CharacterReader reader = new CharacterReader(stream);
       try {
-        CBORObject obj = tokener.ParseJSONObjectOrArray(false);
-        if (tokener.NextSyntaxChar() != -1) {
-          throw tokener.SyntaxError("End of data stream not reached");
+        CBORObject obj = ParseJSONObjectOrArray(reader, false);
+        if (SkipWhitespaceJSON(reader) != -1) {
+          throw reader.NewError("End of data stream not reached");
         }
         return obj;
       } catch (CBORException ex) {

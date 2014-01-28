@@ -70,6 +70,7 @@
     <Compile Include="CBORObjectMath.cs" />
     <Compile Include="CBORType.cs" />
     <Compile Include="CBORUtilities.cs" />
+    <Compile Include="CharacterReader.cs" />
     <Compile Include="DataUtilities.cs" />
     <Compile Include="DecimalUtility.cs" />
     <Compile Include="DigitShiftAccumulator.cs" />
@@ -80,7 +81,6 @@
     <Compile Include="IRadixMath.cs" />
     <Compile Include="IRadixMathHelper.cs" />
     <Compile Include="IShiftAccumulator.cs" />
-    <Compile Include="JSONTokener.cs" />
     <Compile Include="PrecisionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadixMath.cs" />

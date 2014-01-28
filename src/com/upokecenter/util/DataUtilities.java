@@ -464,7 +464,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * character (U + FFFD). If false, stops processing when an unpaired
      * surrogate code point is seen.
      * @return 0 if the entire string was read without errors, -1 if the string
-     * is not valid UTF-8 and {@code replace} is false.
+     * is not valid UTF-8 and {@code replace} is false, or -2 if the end of the
+     * stream was reached before the last character was read completely.
      * @throws java.io.IOException An I/O error occurred.
      * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null or {@code builder} is null.

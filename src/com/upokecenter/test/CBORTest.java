@@ -891,13 +891,13 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     @Test
     public void TestReadUtf8() {
       this.DoTestReadUtf8(
-        new byte[] {  0x20,
-        0x20,
-        0x20  },
+        new byte[] {  0x21,
+        0x21,
+        0x21  },
         0,
-        "   ",
+        "!!!",
         0,
-        "   ");
+        "!!!");
       this.DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xc2,
@@ -927,10 +927,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       this.DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xc2,
-        0x20,
-        0x20  },
+        0x21,
+        0x21  },
         0,
-        " \ufffd ",
+        " \ufffd!!",
         -1,
         null);
       this.DoTestReadUtf8(
