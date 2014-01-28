@@ -577,6 +577,42 @@ o.ToJSONString());
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
+      try { CBORObject.FromJSONString("{,\"0\"=>0,\"1\"=>1}"); Assert.Fail("Should have failed"); } catch (CBORException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try { CBORObject.FromJSONString("{\"0\"=>0,,\"1\"=>1}"); Assert.Fail("Should have failed"); } catch (CBORException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try { CBORObject.FromJSONString("{\"0\"=>0,\"1\"=>1,}"); Assert.Fail("Should have failed"); } catch (CBORException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromJSONString("[,0,1,2]"); Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromJSONString("[0,,1,2]"); Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromJSONString("[0,1,,2]"); Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+  CBORObject.FromJSONString("[0,1,2,]"); Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+}
       Assert.AreEqual(5, o.Count);
       Assert.AreEqual(1, o[0].AsInt32());
       Assert.AreEqual(2, o[1].AsInt32());
@@ -816,9 +852,9 @@ o.ToJSONString());
         0x20,
         0x20 },
         0,
-        "   ",
+        " ",
         0,
-        "   ");
+        " ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
         0xc2,
@@ -851,7 +887,7 @@ o.ToJSONString());
         0x20,
         0x20 },
         0,
-        " \ufffd  ",
+        " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
@@ -1076,7 +1112,7 @@ o.ToJSONString());
         0x61,
         0x20,
         0xFF });
-      Assert.AreEqual("  ", cbor.AsString());
+      Assert.AreEqual(" ", cbor.AsString());
       // Test streaming of long strings
       string longString = Repeat('x', 200000);
       CBORObject cbor2;

@@ -10,59 +10,13 @@ package com.upokecenter.util;
 // altered by Peter O. to support the CBOR project.
 // Still in the public domain;
 // public domain dedication: http://creativecommons.org/publicdomain/zero/1.0/
-*/
+ */
 
   import java.util.*;
 
   import java.io.*;
 
   class JSONTokener {
-    /**
-     * Trailing commas are allowed in the JSON _string.
-     */
-    public static final int OptionTrailingCommas = 8;
-    /**
-     * Empty array elements are allowed in array notation
-     */
-    public static final int OptionEmptyArrayElements = 16;
-    /**
-     * Allow forward slashes to be escaped in strings.
-     */
-    public static final int OptionEscapedSlashes = 64;
-    /**
-     * No duplicates are allowed in the JSON _string.
-     */
-    public static final int OptionNoDuplicates = 1;
-    /**
-     * Will parse Shell-style comments (beginning with "#").
-     */
-    public static final int OptionShellComments = 2;
-    /**
-     * Single quotes are allowed to delimit strings.
-     */
-    public static final int OptionSingleQuotes = 32;
-    /**
-     * Allows comments in JSON texts.
-     */
-    public static final int OptionAllowComments = 128;
-    /**
-     * Get the hex value of a character (base16).
-     * @param c A character between '0' and '9' or between 'A' and 'F' or
-     * between 'a' and 'f'.
-     * @return An int between 0 and 15, or -1 if c was not a hex digit.
-     */
-    private static int GetHexValue(int c) {
-      if (c >= '0' && c <= '9') {
-        return c - '0';
-      }
-      if (c >= 'A' && c <= 'F') {
-        return c + 10 - 'A';
-      }
-      if (c >= 'a' && c <= 'f') {
-        return c + 10 - 'a';
-      }
-      return -1;
-    }
     /**
      * The index of the next character.
      */
@@ -72,26 +26,23 @@ package com.upokecenter.util;
      */
     private String mySource;
     private InputStream stream;
-    private int options;
     /**
      * Construct a JSONTokener from a String.
      *
      * @param s A source _string.
      */
-    public JSONTokener (String str, int options) {
+    public JSONTokener (String str) {
       if (str == null) {
         throw new NullPointerException("str");
       }
       this.mySource = str;
-      this.options = options;
     }
 
-    public JSONTokener (InputStream stream, int options) {
+    public JSONTokener (InputStream stream) {
       if (stream == null) {
         throw new NullPointerException("stream");
       }
       this.stream = stream;
-      this.options = options;
     }
 
     private int NextChar() {
@@ -170,91 +121,9 @@ package com.upokecenter.util;
      * Not documented yet.
      * @return A 32-bit signed integer.
      */
-    public int GetOptions() {
-      return this.options;
-    }
-
-    private int NextParseComment(int firstChar) {
-      if ((this.options & JSONTokener.OptionAllowComments) == 0) {
-        if (firstChar == -1) {
-          return this.NextChar();
-        }
-        if (firstChar == '/' || firstChar == '#') {
-          throw this.SyntaxError("Comments not allowed");
-        }
-        return firstChar;
-      }
-      boolean first = true;
+    public int NextSyntaxChar() {
       while (true) {
-        int c;
-        if (first && firstChar >= 0) {
-          c = firstChar;
-        } else {
-          c = this.NextChar();
-        }
-        first = false;
-        if (c == '#' && (this.options & JSONTokener.OptionShellComments) != 0) {
-          // Shell-style single-line comment
-          while (true) {
-            c = this.NextChar();
-            if (c != '\n' && c != -1) {
-            } else {
-              break;
-            }
-          }
-        } else if (c == '/') {
-          c = this.NextChar();
-          switch (c) {
-              case '/': { // single-line comment
-                while (true) {
-                  c = this.NextChar();
-                  if (c != '\n' && c != -1) {
-                  } else {
-                    break;
-                  }
-                }
-                break;
-              }
-              case '*': { // multi-line comment
-                while (true) {
-                  c = this.NextChar();
-                  if (c == -1) {
-                    throw this.SyntaxError("Unclosed comment.");
-                  }
-                  // use a while loop to deal with
-                  // the case of multiple "*" followed by "/"
-                  boolean endOfComment = false;
-                  while (c == '*') {
-                    c = this.NextChar();
-                    if (c == '/') {
-                      endOfComment = true;
-                      break;
-                    }
-                  }
-                  if (endOfComment) {
-                    break;
-                  }
-                }
-                break;
-              }
-            default:
-              return c;
-          }
-        } else if (c == -1) {
-          return c;  // reached end of String
-        } else if (c > ' ') {
-          return c;  // reached an ordinary character
-        }
-      }
-    }
-
-    /**
-     * Not documented yet.
-     * @return A 32-bit signed integer.
-     */
-    public int NextClean() {
-      while (true) {
-        int c = this.NextParseComment(-1);
+        int c = this.NextChar();
         if (c == -1 || c > ' ') {
           return c;
         }
@@ -266,9 +135,12 @@ package com.upokecenter.util;
      * @param lastChar A 32-bit signed integer. (2).
      * @return A 32-bit signed integer.
      */
-    public int NextClean(int lastChar) {
+    public int NextSyntaxChar2(int lastChar) {
       while (true) {
-        int c = this.NextParseComment(lastChar);
+        if (lastChar == '/' || lastChar == '#') {
+          throw this.SyntaxError("Comments not allowed");
+        }
+        int c = (lastChar >= 0) ? lastChar : this.NextChar();
         if (c == -1 || c > ' ') {
           return c;
         }
@@ -277,11 +149,8 @@ package com.upokecenter.util;
     }
     /**
      * Return the characters up to the next close quote character.
-     * Backslash processing is done. The formal JSON format does not
-     * allow strings in single quotes, but an implementation is allowed to
-     * accept them.
-     * @param quote The quoting character, either <code>"</code>&#xa0;
-     * <small>(double quote)</small> or <code>'</code>&#xa0;<small>(single quote)</small>.
+     * Backslash processing is done.
+     * @param quote The quoting character.
      * @return A String.
      * @exception NumberFormatException Unterminated _string.
      */
@@ -305,14 +174,9 @@ package com.upokecenter.util;
                 c = '\\';
                 break;
               case '/':
-                if ((this.options & JSONTokener.OptionEscapedSlashes) != 0) {
-                  // For compatibility (some JSON texts
-                  // encode dates with an escaped slash),
-                  // even though this is not allowed by RFC 4627
-                  c = '/';
-                } else {
-                  throw this.SyntaxError("Invalid escaped character");
-                }
+                // Not allowed to be escaped by RFC 4627,
+                // but will be allowed in the revision to RFC 4627
+                c = '/';
                 break;
               case '\"':
                 c = '\"';
@@ -320,27 +184,36 @@ package com.upokecenter.util;
               case 'b':
                 c = '\b';
                 break;
-              case 't':
-                c = '\t';
+              case 'f':
+                c = '\f';
                 break;
               case 'n':
                 c = '\n';
                 break;
-              case 'f':
-                c = '\f';
-                break;
               case 'r':
                 c = '\r';
                 break;
+              case 't':
+                c = '\t';
+                break;
                 case 'u': { // Unicode escape
-                  int c1 = GetHexValue(this.NextChar());
-                  int c2 = GetHexValue(this.NextChar());
-                  int c3 = GetHexValue(this.NextChar());
-                  int c4 = GetHexValue(this.NextChar());
-                  if (c1 < 0 || c2 < 0 || c3 < 0 || c4 < 0) {
-                    throw this.SyntaxError("Invalid Unicode escaped character");
+                  c = 0;
+                  // Consists of 4 hex digits
+                  for (int i = 0; i < 4; ++i) {
+                    int ch = this.NextChar();
+                    if (ch >= '0' && ch <= '9') {
+                      c <<= 4;
+                      c |= ch - '0';
+                    } else if (ch >= 'A' && ch <= 'F') {
+                      c <<= 4;
+                      c |= ch + 10 - 'A';
+                    } else if (ch >= 'a' && ch <= 'f') {
+                      c <<= 4;
+                      c |= ch + 10 - 'a';
+                    } else {
+                      throw this.SyntaxError("Invalid Unicode escaped character");
+                    }
                   }
-                  c = c4 | (c3 << 4) | (c2 << 8) | (c1 << 12);
                   break;
                 }
               default:
@@ -368,12 +241,11 @@ package com.upokecenter.util;
           throw this.SyntaxError("Unpaired surrogate code point");
         }
         if (c == quote && !escaped) {
-           // End quote reached
+          // End quote reached
           return sb.toString();
         }
         if (c <= 0xFFFF) {
-          { sb.append((char)c);
-          }
+          sb.append((char)c);
         } else if (c <= 0x10FFFF) {
           sb.append((char)((((c - 0x10000) >> 10) & 0x3FF) + 0xD800));
           sb.append((char)(((c - 0x10000) & 0x3FF) + 0xDC00));
@@ -382,66 +254,37 @@ package com.upokecenter.util;
     }
 
     CBORException SyntaxError(String message) {
-      return new CBORException(message + this.toString());
+      return new CBORException(message + this.toString() + "(char. " + this.myIndex + ")");
     }
 
     CBORException SyntaxError(String message, Throwable innerException) {
-      return new CBORException(message + this.toString(), innerException);
-    }
-    /**
-     * Make a printable String of this JSONTokener.
-     *
-     * @return " at character [myIndex] of [mySource]"
-     */
-    @Override public String toString() {
-      if (this.mySource == null) {
-        return " at character " + this.myIndex;
-      } else {
-        return " at character " + this.myIndex + " of " + this.mySource;
-      }
+      return new CBORException(message + this.toString() + "(char. " + this.myIndex+")", innerException);
     }
 
-    private CBORObject NextJSONString(int firstChar) {
-      int c = firstChar;
-      if (c < 0) {
-        throw this.SyntaxError("Unexpected end of data");
-      }
-      // Parse a String
-      if (c == '"' || (c == '\'' && ((this.GetOptions() & JSONTokener.OptionSingleQuotes) != 0))) {
-        // The tokenizer already checked the String for invalid
-        // surrogate pairs, so just call the CBORObject
-        // constructor directly
-        return CBORObject.FromRaw(this.NextString(c));
-      }
-      throw this.SyntaxError("Expected a String as a key");
-    }
-
-    // Based on the json.org implementation for JSONTokener,
-    // now mostly rewritten
-    private CBORObject NextJSONValue(int firstChar, int[] nextChar) {
+    private CBORObject NextJSONValue(int firstChar, boolean noDuplicates, int[] nextChar) {
       String str;
       int c = firstChar;
       CBORObject obj = null;
       if (c < 0) {
         throw this.SyntaxError("Unexpected end of data");
       }
-      if (c == '"' || (c == '\'' && ((this.GetOptions() & JSONTokener.OptionSingleQuotes) != 0))) {
+      if (c == '"') {
         // Parse a String
         // The tokenizer already checked the String for invalid
         // surrogate pairs, so just call the CBORObject
         // constructor directly
         obj = CBORObject.FromRaw(this.NextString(c));
-        nextChar[0] = this.NextClean();
+        nextChar[0] = this.NextSyntaxChar();
         return obj;
       } else if (c == '{') {
         // Parse an object
-        obj = this.ParseJSONObject();
-        nextChar[0] = this.NextClean();
+        obj = this.ParseJSONObject(noDuplicates);
+        nextChar[0] = this.NextSyntaxChar();
         return obj;
       } else if (c == '[') {
         // Parse an array
-        obj = this.ParseJSONArray();
-        nextChar[0] = this.NextClean();
+        obj = this.ParseJSONArray(noDuplicates);
+        nextChar[0] = this.NextSyntaxChar();
         return obj;
       } else if (c == 't') {
         // Parse true
@@ -450,7 +293,7 @@ package com.upokecenter.util;
             this.NextChar() != 'e') {
           throw this.SyntaxError("Value can't be parsed.");
         }
-        nextChar[0] = this.NextClean();
+        nextChar[0] = this.NextSyntaxChar();
         return CBORObject.True;
       } else if (c == 'f') {
         // Parse false
@@ -460,7 +303,7 @@ package com.upokecenter.util;
             this.NextChar() != 'e') {
           throw this.SyntaxError("Value can't be parsed.");
         }
-        nextChar[0] = this.NextClean();
+        nextChar[0] = this.NextSyntaxChar();
         return CBORObject.False;
       } else if (c == 'n') {
         // Parse null
@@ -469,7 +312,7 @@ package com.upokecenter.util;
             this.NextChar() != 'l') {
           throw this.SyntaxError("Value can't be parsed.");
         }
-        nextChar[0] = this.NextClean();
+        nextChar[0] = this.NextSyntaxChar();
         return CBORObject.Null;
       } else if (c == '-' || (c >= '0' && c <= '9')) {
         // Parse a number
@@ -483,7 +326,7 @@ package com.upokecenter.util;
         if (obj == null) {
           throw this.SyntaxError("JSON number can't be parsed.");
         }
-        nextChar[0] = this.NextClean(c);
+        nextChar[0] = this.NextSyntaxChar2(c);
         return obj;
       } else {
         throw this.SyntaxError("Value can't be parsed.");
@@ -492,21 +335,22 @@ package com.upokecenter.util;
 
     /**
      * Not documented yet.
+     * @param noDuplicates A Boolean object.
      * @return A CBORObject object.
      */
-    public CBORObject ParseJSONObjectOrArray() {
+    public CBORObject ParseJSONObjectOrArray(boolean noDuplicates) {
       int c;
-      c = this.NextClean();
+      c = this.NextSyntaxChar();
       if (c == '[') {
-        return this.ParseJSONArray();
+        return this.ParseJSONArray(noDuplicates);
       }
       if (c == '{') {
-        return this.ParseJSONObject();
+        return this.ParseJSONObject(noDuplicates);
       }
       throw this.SyntaxError("A JSON Object must begin with '{' or '['");
     }
-    // Based on the json.org implementation for JSONObject
-    private CBORObject ParseJSONObject() {
+
+    private CBORObject ParseJSONObject(boolean noDuplicates) {
       // Assumes that the last character read was '{'
       int c;
       CBORObject key;
@@ -515,31 +359,41 @@ package com.upokecenter.util;
       boolean seenComma = false;
       HashMap<CBORObject, CBORObject> myHashMap=new HashMap<CBORObject, CBORObject>();
       while (true) {
-        c = this.NextClean();
+        c = this.NextSyntaxChar();
         switch (c) {
           case -1:
             throw this.SyntaxError("A JSONObject must end with '}'");
           case '}':
-            if (seenComma &&
-                (this.GetOptions() & JSONTokener.OptionTrailingCommas) == 0) {
-              // 2013-05-24 -- Peter O. Disallow trailing comma.
+            if (seenComma) {
+              // Situation like '{"0"=>1,}'
               throw this.SyntaxError("Trailing comma");
             }
             return CBORObject.FromRaw(myHashMap);
-          default:
-            obj = this.NextJSONString(c);
-            key = obj;
-            if ((this.GetOptions() & JSONTokener.OptionNoDuplicates) != 0 &&
-                myHashMap.containsKey(obj)) {
-              throw this.SyntaxError("Key already exists: " + key);
+            default: {
+              // Read the next String
+              if (c < 0) {
+                throw this.SyntaxError("Unexpected end of data");
+              }
+              if (c != '"') {
+                throw this.SyntaxError("Expected a String as a key");
+              }
+              // Parse a String that represents the Object's key
+              // The tokenizer already checked the String for invalid
+              // surrogate pairs, so just call the CBORObject
+              // constructor directly
+              obj = CBORObject.FromRaw(this.NextString(c));
+              key = obj;
+              if (noDuplicates && myHashMap.containsKey(obj)) {
+                throw this.SyntaxError("Key already exists: " + key);
+              }
+              break;
             }
-            break;
         }
-        if (this.NextClean() != ':') {
+        if (this.NextSyntaxChar() != ':') {
           throw this.SyntaxError("Expected a ':' after a key");
         }
         // NOTE: Will overwrite existing value. --Peter O.
-        myHashMap.put(key,this.NextJSONValue(this.NextClean(), nextchar));
+        myHashMap.put(key,this.NextJSONValue(this.NextSyntaxChar(), noDuplicates, nextchar));
         switch (nextchar[0]) {
           case ',':
             seenComma = true;
@@ -551,28 +405,25 @@ package com.upokecenter.util;
         }
       }
     }
-    // Based on the json.org implementation for JSONArray
-    private CBORObject ParseJSONArray() {
+
+    private CBORObject ParseJSONArray(boolean noDuplicates) {
       ArrayList<CBORObject> myArrayList=new ArrayList<CBORObject>();
       boolean seenComma = false;
       int[] nextchar = new int[1];
       // This method assumes that the last character read was '['
       while (true) {
-        int c = this.NextClean();
+        int c = this.NextSyntaxChar();
         if (c == ',') {
-          if ((this.GetOptions() & JSONTokener.OptionEmptyArrayElements) == 0) {
-            throw this.SyntaxError("Two commas one after the other");
-          }
-          myArrayList.add(CBORObject.Null);
-          c = ',';  // Reuse the comma in the code that follows
+          // Situation like '[,0,1,2]' or '[0,,1]'
+          throw this.SyntaxError("Empty array element");
         } else if (c == ']') {
-          if (seenComma && (this.GetOptions() & JSONTokener.OptionTrailingCommas) == 0) {
-            // 2013-05-24 -- Peter O. Disallow trailing comma.
+          if (seenComma) {
+            // Situation like '[0,1,]'
             throw this.SyntaxError("Trailing comma");
           }
           return CBORObject.FromRaw(myArrayList);
         } else {
-          myArrayList.add(this.NextJSONValue(c, nextchar));
+          myArrayList.add(this.NextJSONValue(c, noDuplicates, nextchar));
           c = nextchar[0];
         }
         switch (c) {
