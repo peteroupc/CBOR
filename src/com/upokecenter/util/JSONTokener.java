@@ -133,7 +133,7 @@ package com.upokecenter.util;
     public int NextSyntaxChar() {
       while (true) {
         int c = this.NextChar();
-        if (c == -1 || c > ' ') {
+        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
           return c;
         }
       }
@@ -150,7 +150,7 @@ package com.upokecenter.util;
           throw this.SyntaxError("Comments not allowed");
         }
         int c = (lastChar >= 0) ? lastChar : this.NextChar();
-        if (c == -1 || c > ' ') {
+        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
           return c;
         }
         lastChar = -1;

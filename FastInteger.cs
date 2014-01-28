@@ -9,16 +9,16 @@ using System;
 using System.Text;
 // using System.Numerics;
 namespace PeterO {
-    /// <summary>A mutable integer class initially backed by a small integer,
-    /// that only uses a big integer when arithmetic operations would overflow
-    /// the small integer.<para> This class is ideal for cases where operations
-    /// should be arbitrary precision, but the need to use a high precision
-    /// is rare.</para>
-    /// <para> Many methods in this class return a reference to the same object
-    /// as used in the call. This allows chaining operations in a single line
-    /// of code. For example:</para>
-    /// <code> fastInt.Add(5).Multiply(10); </code>
-    /// </summary>
+  /// <summary>A mutable integer class initially backed by a small integer,
+  /// that only uses a big integer when arithmetic operations would overflow
+  /// the small integer.<para> This class is ideal for cases where operations
+  /// should be arbitrary precision, but the need to use a high precision
+  /// is rare.</para>
+  /// <para> Many methods in this class return a reference to the same object
+  /// as used in the call. This allows chaining operations in a single line
+  /// of code. For example:</para>
+  /// <code> fastInt.Add(5).Multiply(10); </code>
+  /// </summary>
   internal sealed class FastInteger : IComparable<FastInteger> {
     private sealed class MutableNumber {
       private int[] data;
@@ -68,9 +68,9 @@ namespace PeterO {
         this.data[0] = unchecked((int)(val & 0xFFFFFFFFL));
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns>A MutableNumber object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='val'>A 32-bit signed integer.</param>
+      /// <returns>A MutableNumber object.</returns>
       public MutableNumber SetInt(int val) {
         if (val < 0) {
           throw new ArgumentException("Only positive integers are supported");
@@ -80,8 +80,8 @@ namespace PeterO {
         return this;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger ToBigInteger() {
         if (this.wordCount == 1 && (this.data[0] >> 31) == 0) {
           return (BigInteger)((int)this.data[0]);
@@ -103,20 +103,20 @@ namespace PeterO {
         return ret;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <returns>A Boolean object.</returns>
       public bool CanFitInInt32() {
         return this.wordCount == 0 || (this.wordCount == 1 && (this.data[0] >> 31) == 0);
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <returns>A 32-bit signed integer.</returns>
       public int ToInt32() {
         return this.wordCount == 0 ? 0 : this.data[0];
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A MutableNumber object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <returns>A MutableNumber object.</returns>
       public MutableNumber Copy() {
         MutableNumber mbi = new MutableNumber(0);
         if (this.wordCount > mbi.data.Length) {
@@ -127,10 +127,10 @@ namespace PeterO {
         return mbi;
       }
 
-    /// <summary>Multiplies this instance by the value of a 32-bit signed
-    /// integer.</summary>
-    /// <param name='multiplicand'>A 32-bit signed integer.</param>
-    /// <returns>The product of the two objects.</returns>
+      /// <summary>Multiplies this instance by the value of a 32-bit signed
+      /// integer.</summary>
+      /// <param name='multiplicand'>A 32-bit signed integer.</param>
+      /// <returns>The product of the two objects.</returns>
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
           throw new ArgumentException("Only positive multiplicands are supported");
@@ -156,8 +156,10 @@ namespace PeterO {
               result2 = 0;
               temp = unchecked(x1 * y0);  // b * c
               result2 += (temp >> 16) & 65535; result1 += temp & 65535;
-              result2 += (result1 >> 16) & 65535; result1 = result1 & 65535;
-              result3 = (result2 >> 16) & 65535; result2 = result2 & 65535;
+              result2 += (result1 >> 16) & 65535;
+              result1 &= 65535;
+              result3 = (result2 >> 16) & 65535;
+              result2 &= 65535;
               // Add carry
               x0 = unchecked((int)(result0 | (result1 << 16)));
               x1 = unchecked((int)(result2 | (result3 << 16)));
@@ -184,14 +186,18 @@ namespace PeterO {
               result1 = (temp >> 16) & 65535; result0 = temp & 65535;
               temp = unchecked(x0 * y1);  // a * d
               result2 = (temp >> 16) & 65535; result1 += temp & 65535;
-              result2 += (result1 >> 16) & 65535; result1 = result1 & 65535;
+              result2 += (result1 >> 16) & 65535;
+              result1 &= 65535;
               temp = unchecked(x1 * y0);  // b * c
               result2 += (temp >> 16) & 65535; result1 += temp & 65535;
-              result2 += (result1 >> 16) & 65535; result1 = result1 & 65535;
-              result3 = (result2 >> 16) & 65535; result2 = result2 & 65535;
+              result2 += (result1 >> 16) & 65535;
+              result1 &= 65535;
+              result3 = (result2 >> 16) & 65535;
+              result2 &= 65535;
               temp = unchecked(x1 * y1);  // b * d
               result3 += (temp >> 16) & 65535; result2 += temp & 65535;
-              result3 += (result2 >> 16) & 65535; result2 = result2 & 65535;
+              result3 += (result2 >> 16) & 65535;
+              result2 &= 65535;
               // Add carry
               x0 = unchecked((int)(result0 | (result1 << 16)));
               x1 = unchecked((int)(result2 | (result3 << 16)));
@@ -227,25 +233,25 @@ namespace PeterO {
         return this;
       }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+      /// <summary>Gets a value not documented yet.</summary>
+      /// <value>A value not documented yet.</value>
       public int Sign {
         get {
           return this.wordCount == 0 ? 0 : 1;
         }
       }
 
-    /// <summary>Gets a value indicating whether this value is even.</summary>
-    /// <value>Whether this value is even.</value>
+      /// <summary>Gets a value indicating whether this value is even.</summary>
+      /// <value>Whether this value is even.</value>
       public bool IsEvenNumber {
         get {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
         }
       }
 
-    /// <summary>Compares a 32-bit signed integer with this instance.</summary>
-    /// <param name='val'>A 32-bit signed integer. (2).</param>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary>Compares a 32-bit signed integer with this instance.</summary>
+      /// <param name='val'>A 32-bit signed integer. (2).</param>
+      /// <returns>A 32-bit signed integer.</returns>
       public int CompareToInt(int val) {
         if (val < 0 || this.wordCount > 1) {
           return 1;
@@ -261,9 +267,9 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Subtracts a 32-bit signed integer from this instance.</summary>
-    /// <param name='other'>A 32-bit signed integer.</param>
-    /// <returns>The difference of the two objects.</returns>
+      /// <summary>Subtracts a 32-bit signed integer from this instance.</summary>
+      /// <param name='other'>A 32-bit signed integer.</param>
+      /// <returns>The difference of the two objects.</returns>
       public MutableNumber SubtractInt(
         int other) {
         if (other < 0) {
@@ -304,9 +310,9 @@ namespace PeterO {
         return this;
       }
 
-    /// <summary>Subtracts a MutableNumber object from this instance.</summary>
-    /// <param name='other'>A MutableNumber object.</param>
-    /// <returns>The difference of the two objects.</returns>
+      /// <summary>Subtracts a MutableNumber object from this instance.</summary>
+      /// <param name='other'>A MutableNumber object.</param>
+      /// <returns>The difference of the two objects.</returns>
       public MutableNumber Subtract(
         MutableNumber other) {
         unchecked {
@@ -346,10 +352,10 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Compares a MutableNumber object with this instance.</summary>
-    /// <param name='other'>A MutableNumber object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance
-    /// is less, or a positive number if this instance is greater.</returns>
+      /// <summary>Compares a MutableNumber object with this instance.</summary>
+      /// <param name='other'>A MutableNumber object.</param>
+      /// <returns>Zero if the values are equal; a negative number if this instance
+      /// is less, or a positive number if this instance is greater.</returns>
       public int CompareTo(MutableNumber other) {
         if (this.wordCount != other.wordCount) {
           return (this.wordCount < other.wordCount) ? -1 : 1;
@@ -370,9 +376,9 @@ namespace PeterO {
         return 0;
       }
 
-    /// <summary>Adds a 32-bit signed integer to this instance.</summary>
-    /// <param name='augend'>A 32-bit signed integer.</param>
-    /// <returns>This instance.</returns>
+      /// <summary>Adds a 32-bit signed integer to this instance.</summary>
+      /// <param name='augend'>A 32-bit signed integer.</param>
+      /// <returns>This instance.</returns>
       public MutableNumber Add(int augend) {
         if (augend < 0) {
           throw new ArgumentException("Only positive augends are supported");
