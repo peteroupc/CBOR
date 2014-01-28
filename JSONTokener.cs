@@ -9,7 +9,7 @@
 // altered by Peter O. to support the CBOR project.
 // Still in the public domain;
 // public domain dedication: http://creativecommons.org/publicdomain/zero/1.0/
-*/
+ */
 namespace PeterO {
   using System;
   using System.Collections.Generic;
@@ -19,52 +19,6 @@ namespace PeterO {
 
   internal class JSONTokener {
     /**
-     * Trailing commas are allowed in the JSON _string.
-     */
-    public const int OptionTrailingCommas = 8;
-    /**
-     * Empty array elements are allowed in array notation
-     */
-    public const int OptionEmptyArrayElements = 16;
-    /**
-     * Allow forward slashes to be escaped in strings.
-     */
-    public const int OptionEscapedSlashes = 64;
-    /**
-     * No duplicates are allowed in the JSON _string.
-     */
-    public const int OptionNoDuplicates = 1;
-    /**
-     * Will parse Shell-style comments (beginning with "#").
-     */
-    public const int OptionShellComments = 2;
-    /**
-     * Single quotes are allowed to delimit strings.
-     */
-    public const int OptionSingleQuotes = 32;
-    /**
-     * Allows comments in JSON texts.
-     */
-    public const int OptionAllowComments = 128;
-    /**
-     * Get the hex value of a character (base16).
-     * @param c A character between '0' and '9' or between 'A' and 'F' or
-     * between 'a' and 'f'.
-     * @return An int between 0 and 15, or -1 if c was not a hex digit.
-     */
-    private static int GetHexValue(int c) {
-      if (c >= '0' && c <= '9') {
-        return c - '0';
-      }
-      if (c >= 'A' && c <= 'F') {
-        return c + 10 - 'A';
-      }
-      if (c >= 'a' && c <= 'f') {
-        return c + 10 - 'a';
-      }
-      return -1;
-    }
-    /**
      * The index of the next character.
      */
     private int myIndex;
@@ -73,26 +27,23 @@ namespace PeterO {
      */
     private string mySource;
     private Stream stream;
-    private int options;
     /**
      * Construct a JSONTokener from a string.
      *
      * @param s A source _string.
      */
-    public JSONTokener(string str, int options) {
+    public JSONTokener(string str) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
       this.mySource = str;
-      this.options = options;
     }
 
-    public JSONTokener(Stream stream, int options) {
+    public JSONTokener(Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
       this.stream = stream;
-      this.options = options;
     }
 
     private int NextChar() {
@@ -162,6 +113,15 @@ namespace PeterO {
         }
       } else {
         int c = (this.myIndex < this.mySource.Length) ? this.mySource[this.myIndex] : -1;
+        if (c >= 0xD800 && c <= 0xDBFF && this.myIndex + 1 < this.mySource.Length &&
+            this.mySource[this.myIndex + 1] >= 0xDC00 && this.mySource[this.myIndex + 1] <= 0xDFFF) {
+          // Get the Unicode code point for the surrogate pair
+          c = 0x10000 + ((c - 0xD800) * 0x400) + (this.mySource[this.myIndex + 1] - 0xDC00);
+          this.myIndex++;
+        } else if (c >= 0xD800 && c <= 0xDFFF) {
+          // unpaired surrogate
+          throw this.SyntaxError("Unpaired surrogate code point");
+        }
         this.myIndex += 1;
         return c;
       }
@@ -169,89 +129,9 @@ namespace PeterO {
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>
-    public int GetOptions() {
-      return this.options;
-    }
-
-    private int NextParseComment(int firstChar) {
-      if ((this.options & JSONTokener.OptionAllowComments) == 0) {
-        if (firstChar == -1) {
-          return this.NextChar();
-        }
-        if (firstChar == '/' || firstChar == '#') {
-          throw this.SyntaxError("Comments not allowed");
-        }
-        return firstChar;
-      }
-      bool first = true;
+    public int NextSyntaxChar() {
       while (true) {
-        int c;
-        if (first && firstChar >= 0) {
-          c = firstChar;
-        } else {
-          c = this.NextChar();
-        }
-        first = false;
-        if (c == '#' && (this.options & JSONTokener.OptionShellComments) != 0) {
-          // Shell-style single-line comment
-          while (true) {
-            c = this.NextChar();
-            if (c != '\n' && c != -1) {
-            } else {
-              break;
-            }
-          }
-        } else if (c == '/') {
-          c = this.NextChar();
-          switch (c) {
-              case '/': { // single-line comment
-                while (true) {
-                  c = this.NextChar();
-                  if (c != '\n' && c != -1) {
-                  } else {
-                    break;
-                  }
-                }
-                break;
-              }
-              case '*': { // multi-line comment
-                while (true) {
-                  c = this.NextChar();
-                  if (c == -1) {
-                    throw this.SyntaxError("Unclosed comment.");
-                  }
-                  // use a while loop to deal with
-                  // the case of multiple "*" followed by "/"
-                  bool endOfComment = false;
-                  while (c == '*') {
-                    c = this.NextChar();
-                    if (c == '/') {
-                      endOfComment = true;
-                      break;
-                    }
-                  }
-                  if (endOfComment) {
-                    break;
-                  }
-                }
-                break;
-              }
-            default:
-              return c;
-          }
-        } else if (c == -1) {
-          return c;  // reached end of string
-        } else if (c > ' ') {
-          return c;  // reached an ordinary character
-        }
-      }
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A 32-bit signed integer.</returns>
-    public int NextClean() {
-      while (true) {
-        int c = this.NextParseComment(-1);
+        int c = this.NextChar();
         if (c == -1 || c > ' ') {
           return c;
         }
@@ -261,9 +141,12 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <param name='lastChar'>A 32-bit signed integer. (2).</param>
     /// <returns>A 32-bit signed integer.</returns>
-    public int NextClean(int lastChar) {
+    private int NextSyntaxChar2(int lastChar) {
       while (true) {
-        int c = this.NextParseComment(lastChar);
+        if (lastChar == '/' || lastChar == '#') {
+          throw this.SyntaxError("Comments not allowed");
+        }
+        int c = (lastChar >= 0) ? lastChar : this.NextChar();
         if (c == -1 || c > ' ') {
           return c;
         }
@@ -272,11 +155,8 @@ namespace PeterO {
     }
     /**
      * Return the characters up to the next close quote character.
-     * Backslash processing is done. The formal JSON format does not
-     * allow strings in single quotes, but an implementation is allowed to
-     * accept them.
-     * @param quote The quoting character, either <code>"</code>&#xa0;
-     * <small>(double quote)</small> or <code>'</code>&#xa0;<small>(single quote)</small>.
+     * Backslash processing is done.
+     * @param quote The quoting character.
      * @return A string.
      * @exception FormatException Unterminated _string.
      */
@@ -300,14 +180,9 @@ namespace PeterO {
                 c = '\\';
                 break;
               case '/':
-                if ((this.options & JSONTokener.OptionEscapedSlashes) != 0) {
-                  // For compatibility (some JSON texts
-                  // encode dates with an escaped slash),
-                  // even though this is not allowed by RFC 4627
-                  c = '/';
-                } else {
-                  throw this.SyntaxError("Invalid escaped character");
-                }
+                // Not allowed to be escaped by RFC 4627,
+                // but will be allowed in the revision to RFC 4627
+                c = '/';
                 break;
               case '\"':
                 c = '\"';
@@ -315,27 +190,36 @@ namespace PeterO {
               case 'b':
                 c = '\b';
                 break;
-              case 't':
-                c = '\t';
+              case 'f':
+                c = '\f';
                 break;
               case 'n':
                 c = '\n';
                 break;
-              case 'f':
-                c = '\f';
-                break;
               case 'r':
                 c = '\r';
                 break;
+              case 't':
+                c = '\t';
+                break;
                 case 'u': { // Unicode escape
-                  int c1 = GetHexValue(this.NextChar());
-                  int c2 = GetHexValue(this.NextChar());
-                  int c3 = GetHexValue(this.NextChar());
-                  int c4 = GetHexValue(this.NextChar());
-                  if (c1 < 0 || c2 < 0 || c3 < 0 || c4 < 0) {
-                    throw this.SyntaxError("Invalid Unicode escaped character");
+                  c = 0;
+                  // Consists of 4 hex digits
+                  for (int i = 0; i < 4; ++i) {
+                    int ch = this.NextChar();
+                    if (ch >= '0' && ch <= '9') {
+                      c <<= 4;
+                      c |= ch - '0';
+                    } else if (ch >= 'A' && ch <= 'F') {
+                      c <<= 4;
+                      c |= ch + 10 - 'A';
+                    } else if (ch >= 'a' && ch <= 'f') {
+                      c <<= 4;
+                      c |= ch + 10 - 'a';
+                    } else {
+                      throw this.SyntaxError("Invalid Unicode escaped character");
+                    }
                   }
-                  c = c4 | (c3 << 4) | (c2 << 8) | (c1 << 12);
                   break;
                 }
               default:
@@ -363,12 +247,11 @@ namespace PeterO {
           throw this.SyntaxError("Unpaired surrogate code point");
         }
         if (c == quote && !escaped) {
-           // End quote reached
+          // End quote reached
           return sb.ToString();
         }
         if (c <= 0xFFFF) {
-          { sb.Append((char)c);
-          }
+          sb.Append((char)c);
         } else if (c <= 0x10FFFF) {
           sb.Append((char)((((c - 0x10000) >> 10) & 0x3FF) + 0xD800));
           sb.Append((char)(((c - 0x10000) & 0x3FF) + 0xDC00));
@@ -377,66 +260,37 @@ namespace PeterO {
     }
 
     internal CBORException SyntaxError(string message) {
-      return new CBORException(message + this.ToString());
+      return new CBORException(message + this.ToString() + "(char. " + this.myIndex + ")");
     }
 
     internal CBORException SyntaxError(string message, Exception innerException) {
-      return new CBORException(message + this.ToString(), innerException);
-    }
-    /**
-     * Make a printable string of this JSONTokener.
-     *
-     * @return " at character [myIndex] of [mySource]"
-     */
-    public override string ToString() {
-      if (this.mySource == null) {
-        return " at character " + this.myIndex;
-      } else {
-        return " at character " + this.myIndex + " of " + this.mySource;
-      }
+      return new CBORException(message + this.ToString() + "(char. " + this.myIndex + ")", innerException);
     }
 
-    private CBORObject NextJSONString(int firstChar) {
-      int c = firstChar;
-      if (c < 0) {
-        throw this.SyntaxError("Unexpected end of data");
-      }
-      // Parse a string
-      if (c == '"' || (c == '\'' && ((this.GetOptions() & JSONTokener.OptionSingleQuotes) != 0))) {
-        // The tokenizer already checked the string for invalid
-        // surrogate pairs, so just call the CBORObject
-        // constructor directly
-        return CBORObject.FromRaw(this.NextString(c));
-      }
-      throw this.SyntaxError("Expected a string as a key");
-    }
-
-    // Based on the json.org implementation for JSONTokener,
-    // now mostly rewritten
-    private CBORObject NextJSONValue(int firstChar, int[] nextChar) {
+    private CBORObject NextJSONValue(int firstChar, bool noDuplicates, int[] nextChar) {
       string str;
       int c = firstChar;
       CBORObject obj = null;
       if (c < 0) {
         throw this.SyntaxError("Unexpected end of data");
       }
-      if (c == '"' || (c == '\'' && ((this.GetOptions() & JSONTokener.OptionSingleQuotes) != 0))) {
+      if (c == '"') {
         // Parse a string
         // The tokenizer already checked the string for invalid
         // surrogate pairs, so just call the CBORObject
         // constructor directly
         obj = CBORObject.FromRaw(this.NextString(c));
-        nextChar[0] = this.NextClean();
+        nextChar[0] = this.NextSyntaxChar();
         return obj;
       } else if (c == '{') {
         // Parse an object
-        obj = this.ParseJSONObject();
-        nextChar[0] = this.NextClean();
+        obj = this.ParseJSONObject(noDuplicates);
+        nextChar[0] = this.NextSyntaxChar();
         return obj;
       } else if (c == '[') {
         // Parse an array
-        obj = this.ParseJSONArray();
-        nextChar[0] = this.NextClean();
+        obj = this.ParseJSONArray(noDuplicates);
+        nextChar[0] = this.NextSyntaxChar();
         return obj;
       } else if (c == 't') {
         // Parse true
@@ -445,7 +299,7 @@ namespace PeterO {
             this.NextChar() != 'e') {
           throw this.SyntaxError("Value can't be parsed.");
         }
-        nextChar[0] = this.NextClean();
+        nextChar[0] = this.NextSyntaxChar();
         return CBORObject.True;
       } else if (c == 'f') {
         // Parse false
@@ -455,7 +309,7 @@ namespace PeterO {
             this.NextChar() != 'e') {
           throw this.SyntaxError("Value can't be parsed.");
         }
-        nextChar[0] = this.NextClean();
+        nextChar[0] = this.NextSyntaxChar();
         return CBORObject.False;
       } else if (c == 'n') {
         // Parse null
@@ -464,7 +318,7 @@ namespace PeterO {
             this.NextChar() != 'l') {
           throw this.SyntaxError("Value can't be parsed.");
         }
-        nextChar[0] = this.NextClean();
+        nextChar[0] = this.NextSyntaxChar();
         return CBORObject.Null;
       } else if (c == '-' || (c >= '0' && c <= '9')) {
         // Parse a number
@@ -478,7 +332,7 @@ namespace PeterO {
         if (obj == null) {
           throw this.SyntaxError("JSON number can't be parsed.");
         }
-        nextChar[0] = this.NextClean(c);
+        nextChar[0] = this.NextSyntaxChar2(c);
         return obj;
       } else {
         throw this.SyntaxError("Value can't be parsed.");
@@ -487,19 +341,20 @@ namespace PeterO {
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORObject object.</returns>
-    public CBORObject ParseJSONObjectOrArray() {
+    /// <param name='noDuplicates'>A Boolean object.</param>
+    public CBORObject ParseJSONObjectOrArray(bool noDuplicates) {
       int c;
-      c = this.NextClean();
+      c = this.NextSyntaxChar();
       if (c == '[') {
-        return this.ParseJSONArray();
+        return this.ParseJSONArray(noDuplicates);
       }
       if (c == '{') {
-        return this.ParseJSONObject();
+        return this.ParseJSONObject(noDuplicates);
       }
       throw this.SyntaxError("A JSON object must begin with '{' or '['");
     }
-    // Based on the json.org implementation for JSONObject
-    private CBORObject ParseJSONObject() {
+
+    private CBORObject ParseJSONObject(bool noDuplicates) {
       // Assumes that the last character read was '{'
       int c;
       CBORObject key;
@@ -508,31 +363,41 @@ namespace PeterO {
       bool seenComma = false;
       var myHashMap = new Dictionary<CBORObject, CBORObject>();
       while (true) {
-        c = this.NextClean();
+        c = this.NextSyntaxChar();
         switch (c) {
           case -1:
             throw this.SyntaxError("A JSONObject must end with '}'");
           case '}':
-            if (seenComma &&
-                (this.GetOptions() & JSONTokener.OptionTrailingCommas) == 0) {
-              // 2013-05-24 -- Peter O. Disallow trailing comma.
+            if (seenComma) {
+              // Situation like '{"0"=>1,}'
               throw this.SyntaxError("Trailing comma");
             }
             return CBORObject.FromRaw(myHashMap);
-          default:
-            obj = this.NextJSONString(c);
-            key = obj;
-            if ((this.GetOptions() & JSONTokener.OptionNoDuplicates) != 0 &&
-                myHashMap.ContainsKey(obj)) {
-              throw this.SyntaxError("Key already exists: " + key);
+            default: {
+              // Read the next string
+              if (c < 0) {
+                throw this.SyntaxError("Unexpected end of data");
+              }
+              if (c != '"') {
+                throw this.SyntaxError("Expected a string as a key");
+              }
+              // Parse a string that represents the object's key
+              // The tokenizer already checked the string for invalid
+              // surrogate pairs, so just call the CBORObject
+              // constructor directly
+              obj = CBORObject.FromRaw(this.NextString(c));
+              key = obj;
+              if (noDuplicates && myHashMap.ContainsKey(obj)) {
+                throw this.SyntaxError("Key already exists: " + key);
+              }
+              break;
             }
-            break;
         }
-        if (this.NextClean() != ':') {
+        if (this.NextSyntaxChar() != ':') {
           throw this.SyntaxError("Expected a ':' after a key");
         }
         // NOTE: Will overwrite existing value. --Peter O.
-        myHashMap[key] = this.NextJSONValue(this.NextClean(), nextchar);
+        myHashMap[key] = this.NextJSONValue(this.NextSyntaxChar(), noDuplicates, nextchar);
         switch (nextchar[0]) {
           case ',':
             seenComma = true;
@@ -544,28 +409,25 @@ namespace PeterO {
         }
       }
     }
-    // Based on the json.org implementation for JSONArray
-    private CBORObject ParseJSONArray() {
+
+    private CBORObject ParseJSONArray(bool noDuplicates) {
       var myArrayList = new List<CBORObject>();
       bool seenComma = false;
       int[] nextchar = new int[1];
       // This method assumes that the last character read was '['
       while (true) {
-        int c = this.NextClean();
+        int c = this.NextSyntaxChar();
         if (c == ',') {
-          if ((this.GetOptions() & JSONTokener.OptionEmptyArrayElements) == 0) {
-            throw this.SyntaxError("Two commas one after the other");
-          }
-          myArrayList.Add(CBORObject.Null);
-          c = ',';  // Reuse the comma in the code that follows
+          // Situation like '[,0,1,2]' or '[0,,1]'
+          throw this.SyntaxError("Empty array element");
         } else if (c == ']') {
-          if (seenComma && (this.GetOptions() & JSONTokener.OptionTrailingCommas) == 0) {
-            // 2013-05-24 -- Peter O. Disallow trailing comma.
+          if (seenComma) {
+            // Situation like '[0,1,]'
             throw this.SyntaxError("Trailing comma");
           }
           return CBORObject.FromRaw(myArrayList);
         } else {
-          myArrayList.Add(this.NextJSONValue(c, nextchar));
+          myArrayList.Add(this.NextJSONValue(c, noDuplicates, nextchar));
           c = nextchar[0];
         }
         switch (c) {

@@ -25,7 +25,8 @@ namespace Test {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       if (bigintB.IsZero) {
-        try { bigintA.divide(bigintB); Assert.Fail("Expected divide by 0 error");
+        try {
+          bigintA.divide(bigintB); Assert.Fail("Expected divide by 0 error");
         } catch (Exception) {
         }
       } else {
@@ -37,7 +38,8 @@ namespace Test {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       if (bigintB.IsZero) {
-        try { bigintA.remainder(bigintB); Assert.Fail("Expected divide by 0 error");
+        try {
+          bigintA.remainder(bigintB); Assert.Fail("Expected divide by 0 error");
         } catch (Exception) {
         }
       } else {
@@ -53,8 +55,8 @@ namespace Test {
         try {
           BigInteger quo = BigInteger.DivRem(bigintA, bigintB, out rembi);
           if (((object)quo) == null) {
- Assert.Fail();
-}
+            Assert.Fail();
+          }
           Assert.Fail("Expected divide by 0 error");
         } catch (Exception) {
         }

@@ -21,12 +21,12 @@ namespace PeterO {
     /// since it has 2 decimal places and the decimal point is "moved to the
     /// left by 2." Therefore, in the ExtendedDecimal representation, this
     /// number would be stored as 235678 * 10^-2.</para>
-    /// <para>The mantissa/exponent format preserves trailing zeros in
-    /// the number's value. This may give rise to multiple ways to store the
-    /// same value. For example, 1.00 and 1 would be stored differently, even
-    /// though they have the same value. In the first case, 100 * 10^-2 (100
-    /// with decimal point moved left by 2), and in the second case, 1 * 10^0
-    /// (1 with decimal point moved 0).</para>
+    /// <para>The mantissa and exponent format preserves trailing zeros
+    /// in the number's value. This may give rise to multiple ways to store
+    /// the same value. For example, 1.00 and 1 would be stored differently,
+    /// even though they have the same value. In the first case, 100 * 10^-2
+    /// (100 with decimal point moved left by 2), and in the second case, 1 *
+    /// 10^0 (1 with decimal point moved 0).</para>
     /// <para>This class also supports values for negative zero, not-a-number
     /// (NaN) values, and infinity. <b>Negative zero</b>
     /// is generally used when a negative number is rounded to 0; it has the
@@ -1302,40 +1302,40 @@ namespace PeterO {
     }
 
     /// <summary>Represents the number 1.</summary>
-    #if CODE_ANALYSIS
+#if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification="ExtendedDecimal is immutable")]
-    #endif
+#endif
     public static readonly ExtendedDecimal One = ExtendedDecimal.Create(BigInteger.One, BigInteger.Zero);
 
     /// <summary>Represents the number 0.</summary>
-    #if CODE_ANALYSIS
+#if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification="ExtendedDecimal is immutable")]
-    #endif
+#endif
     public static readonly ExtendedDecimal Zero = ExtendedDecimal.Create(BigInteger.Zero, BigInteger.Zero);
-    #if CODE_ANALYSIS
+#if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification="ExtendedDecimal is immutable")]
-    #endif
+#endif
     public static readonly ExtendedDecimal NegativeZero = CreateWithFlags(
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagNegative);
 
     /// <summary>Represents the number 10.</summary>
-    #if CODE_ANALYSIS
+#if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification="ExtendedDecimal is immutable")]
-    #endif
+#endif
 
     public static readonly ExtendedDecimal Ten = ExtendedDecimal.Create((BigInteger)10, BigInteger.Zero);
 

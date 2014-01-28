@@ -2820,7 +2820,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a string in JavaScript Object Notation
-     * (JSON) format. This function only accepts maps and arrays.
+     * (JSON) format. This function only accepts maps and arrays. <p>If
+     * a JSON object has the same key, only the last given value will be used
+     * for each duplicated key.</p>
      * @param str A string in JSON format.
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The parameter {@code str}
@@ -2828,9 +2830,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @throws CBORException The string is not in JSON format.
      */
     public static CBORObject FromJSONString(String str) {
-      JSONTokener tokener = new JSONTokener(str, 0);
-      CBORObject obj = tokener.ParseJSONObjectOrArray();
-      if (tokener.NextClean() != -1) {
+      JSONTokener tokener = new JSONTokener(str);
+      CBORObject obj = tokener.ParseJSONObjectOrArray(false);
+      if (tokener.NextSyntaxChar() != -1) {
         throw tokener.SyntaxError("End of String not reached");
       }
       return obj;
@@ -2839,7 +2841,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR object from a data stream in JavaScript Object Notation
      * (JSON) format and UTF-8 encoding. This function only accepts maps
-     * and arrays.
+     * and arrays. <p>If a JSON object has the same key, only the last given
+     * value will be used for each duplicated key.</p>
      * @param stream A readable data stream.
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -2849,9 +2852,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * is not in JSON format.
      */
     public static CBORObject ReadJSON(InputStream stream) throws IOException {
-      JSONTokener tokener = new JSONTokener(stream, 0);
+      JSONTokener tokener = new JSONTokener(stream);
       try {
-        CBORObject obj = tokener.ParseJSONObjectOrArray();
+        CBORObject obj = tokener.ParseJSONObjectOrArray(false);
         if (tokener.NextClean() != -1) {
           throw tokener.SyntaxError("End of data stream not reached");
         }
@@ -2962,10 +2965,18 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             return CBORUtilities.BigIntToString((BigInteger)this.getThisItem());
           }
         case CBORObjectTypeExtendedDecimal: {
-            return ((ExtendedDecimal)this.getThisItem()).toString();
+            ExtendedDecimal dec = (ExtendedDecimal)this.getThisItem();
+            if (dec.IsInfinity() || dec.IsNaN()) {
+              return "null";
+            }
+            return dec.toString();
           }
         case CBORObjectTypeExtendedFloat: {
-            return ((ExtendedFloat)this.getThisItem()).toString();
+            ExtendedFloat flo = (ExtendedFloat)this.getThisItem();
+            if (flo.IsInfinity() || flo.IsNaN()) {
+              return "null";
+            }
+            return flo.toString();
           }
         default: {
             StringBuilder sb = new StringBuilder();

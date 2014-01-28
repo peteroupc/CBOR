@@ -27,7 +27,8 @@ private TestCommon() {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       if (bigintB.signum()==0) {
-        try { bigintA.divide(bigintB); Assert.fail("Expected divide by 0 error");
+        try {
+          bigintA.divide(bigintB); Assert.fail("Expected divide by 0 error");
         } catch (Exception ex) {
         }
       } else {
@@ -39,7 +40,8 @@ private TestCommon() {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       if (bigintB.signum()==0) {
-        try { bigintA.remainder(bigintB); Assert.fail("Expected divide by 0 error");
+        try {
+          bigintA.remainder(bigintB); Assert.fail("Expected divide by 0 error");
         } catch (Exception ex) {
         }
       } else {
@@ -59,8 +61,8 @@ BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
 quo=divrem[0];
 rembi=divrem[1]; }
           if (((Object)quo) == null) {
- Assert.fail();
-}
+            Assert.fail();
+          }
           Assert.fail("Expected divide by 0 error");
         } catch (Exception ex) {
         }

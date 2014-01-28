@@ -2788,16 +2788,19 @@ namespace PeterO {
     }
 
     /// <summary>Generates a CBOR object from a string in JavaScript Object
-    /// Notation (JSON) format. This function only accepts maps and arrays.</summary>
+    /// Notation (JSON) format. This function only accepts maps and arrays.
+    /// <para>If a JSON object has the same key, only the last given value will
+    /// be used for each duplicated key.</para>
+    /// </summary>
     /// <param name='str'>A string in JSON format.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
     /// <exception cref='CBORException'>The string is not in JSON format.</exception>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromJSONString(string str) {
-      JSONTokener tokener = new JSONTokener(str, 0);
-      CBORObject obj = tokener.ParseJSONObjectOrArray();
-      if (tokener.NextClean() != -1) {
+      JSONTokener tokener = new JSONTokener(str);
+      CBORObject obj = tokener.ParseJSONObjectOrArray(false);
+      if (tokener.NextSyntaxChar() != -1) {
         throw tokener.SyntaxError("End of string not reached");
       }
       return obj;
@@ -2805,7 +2808,9 @@ namespace PeterO {
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format and UTF-8 encoding. This function
-    /// only accepts maps and arrays.</summary>
+    /// only accepts maps and arrays. <para>If a JSON object has the same key,
+    /// only the last given value will be used for each duplicated key.</para>
+    /// </summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null.</exception>
@@ -2814,10 +2819,10 @@ namespace PeterO {
     /// UTF-8 or is not in JSON format.</exception>
     /// <returns>A CBORObject object.</returns>
     public static CBORObject ReadJSON(Stream stream) {
-      JSONTokener tokener = new JSONTokener(stream, 0);
+      JSONTokener tokener = new JSONTokener(stream);
       try {
-        CBORObject obj = tokener.ParseJSONObjectOrArray();
-        if (tokener.NextClean() != -1) {
+        CBORObject obj = tokener.ParseJSONObjectOrArray(false);
+        if (tokener.NextSyntaxChar() != -1) {
           throw tokener.SyntaxError("End of data stream not reached");
         }
         return obj;
@@ -2930,10 +2935,18 @@ namespace PeterO {
             return CBORUtilities.BigIntToString((BigInteger)this.ThisItem);
           }
         case CBORObjectTypeExtendedDecimal: {
-            return ((ExtendedDecimal)this.ThisItem).ToString();
+            ExtendedDecimal dec = (ExtendedDecimal)this.ThisItem;
+            if (dec.IsInfinity() || dec.IsNaN()) {
+              return "null";
+            }
+            return dec.ToString();
           }
         case CBORObjectTypeExtendedFloat: {
-            return ((ExtendedFloat)this.ThisItem).ToString();
+            ExtendedFloat flo = (ExtendedFloat)this.ThisItem;
+            if (flo.IsInfinity() || flo.IsNaN()) {
+              return "null";
+            }
+            return flo.ToString();
           }
         default: {
             StringBuilder sb = new StringBuilder();

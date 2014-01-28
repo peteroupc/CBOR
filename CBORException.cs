@@ -8,7 +8,7 @@ using System;
 
 namespace PeterO {
     /// <summary>Exception thrown for errors involving CBOR data.</summary>
-    public partial class CBORException : Exception {
+    public class CBORException : Exception {
     /// <summary>Initializes a new instance of the CBORException class.</summary>
     public CBORException() {
     }
