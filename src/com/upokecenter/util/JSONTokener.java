@@ -45,7 +45,12 @@ package com.upokecenter.util;
       this.stream = stream;
     }
 
-    private int NextChar() {
+    /**
+     * Reads the next character from a UTF-8 stream or a string.
+     * @return The next character, or -1 if the end of the string or stream
+     * was reached.
+     */
+    public int NextChar() {
       if (this.stream != null) {
         int cp = 0;
         int bytesSeen = 0;
