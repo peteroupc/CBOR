@@ -13,7 +13,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-  /// <summary>An arbitrary-precision integer.</summary>
+    /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -243,9 +243,9 @@ namespace PeterO {
         int p; short c; int d; int e;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); result[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4 - 3] = c;
-        p = (((int)words1[astart + 2 - 1]) & 0xFFFF) * (((int)words1[astart + 2 - 1]) & 0xFFFF);
-        p += e; result[rstart + 4 - 2] = (short)p; result[rstart + 4 - 1] = (short)(p >> 16);
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 1] = c;
+        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF);
+        p += e; result[rstart + 2] = (short)p; result[rstart + 3] = (short)(p >> 16);
       }
     }
 
@@ -272,7 +272,7 @@ namespace PeterO {
         e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4] = c;
         p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + (2 * 4) - 3] = c;
-        p = (((int)words1[astart + 4 - 1]) & 0xFFFF) * (((int)words1[astart + 4 - 1]) & 0xFFFF);
+        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
         p += e; result[rstart + 6] = (short)p; result[rstart + 7] = (short)(p >> 16);
       }
     }
@@ -370,7 +370,7 @@ namespace PeterO {
         e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 12] = c;
         p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 13] = c;
-        p = (((int)words1[astart + 8 - 1]) & 0xFFFF) * (((int)words1[astart + 8 - 1]) & 0xFFFF);
+        p = (((int)words1[astart + 7]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF);
         p += e; result[rstart + 14] = (short)p; result[rstart + 15] = (short)(p >> 16);
       }
     }
@@ -395,7 +395,7 @@ namespace PeterO {
         p += ((int)c) & 0xFFFF; c = (short)p;
         d += ((int)p >> 16) & 0xFFFF; result[rstart + 1] = c;
         p = a1 * b1;
-        p += d; result[rstart + 1 + 1] = (short)p; result[rstart + 1 + 2] = (short)(p >> 16);
+        p += d; result[rstart + 2] = (short)p; result[rstart + 3] = (short)(p >> 16);
       }
     }
 
@@ -451,7 +451,7 @@ namespace PeterO {
         p += ((int)c) & mask; c = (short)p;
         d += ((int)p >> 16) & mask; result[rstart + 5] = c;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += d; result[rstart + 5 + 1] = (short)p; result[rstart + 5 + 2] = (short)(p >> 16);
+        p += d; result[rstart + 6] = (short)p; result[rstart + 7] = (short)(p >> 16);
       }
     }
 
@@ -647,7 +647,7 @@ namespace PeterO {
         p += ((int)c) & mask; c = (short)p;
         d += ((int)p >> 16) & mask; result[rstart + 13] = c;
         p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 7]) & mask);
-        p += d; result[rstart + 13 + 1] = (short)p; result[rstart + 13 + 2] = (short)(p >> 16);
+        p += d; result[rstart + 14] = (short)p; result[rstart + 15] = (short)(p >> 16);
       }
     }
 

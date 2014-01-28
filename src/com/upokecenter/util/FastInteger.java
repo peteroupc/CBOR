@@ -168,9 +168,9 @@ at: http://peteroupc.github.io/CBOR/
               temp = (x1 * y0);  // b * c
               result2 += (temp >> 16) & 65535; result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
- result1 &= 65535;
+              result1 &= 65535;
               result3 = (result2 >> 16) & 65535;
- result2 &= 65535;
+              result2 &= 65535;
               // Add carry
               x0 = ((int)(result0 | (result1 << 16)));
               x1 = ((int)(result2 | (result3 << 16)));
@@ -198,17 +198,17 @@ at: http://peteroupc.github.io/CBOR/
               temp = (x0 * y1);  // a * d
               result2 = (temp >> 16) & 65535; result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
- result1 &= 65535;
+              result1 &= 65535;
               temp = (x1 * y0);  // b * c
               result2 += (temp >> 16) & 65535; result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
- result1 &= 65535;
+              result1 &= 65535;
               result3 = (result2 >> 16) & 65535;
- result2 &= 65535;
+              result2 &= 65535;
               temp = (x1 * y1);  // b * d
               result3 += (temp >> 16) & 65535; result2 += temp & 65535;
               result3 += (result2 >> 16) & 65535;
- result2 &= 65535;
+              result2 &= 65535;
               // Add carry
               x0 = ((int)(result0 | (result1 << 16)));
               x1 = ((int)(result2 | (result3 << 16)));
