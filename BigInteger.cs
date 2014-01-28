@@ -13,7 +13,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer.</summary>
+  /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -242,7 +242,8 @@ namespace PeterO {
       unchecked {
         int p; short c; int d; int e;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); result[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4 - 3] = c;
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4 - 3] = c;
         p = (((int)words1[astart + 2 - 1]) & 0xFFFF) * (((int)words1[astart + 2 - 1]) & 0xFFFF);
         p += e; result[rstart + 4 - 2] = (short)p; result[rstart + 4 - 1] = (short)(p >> 16);
       }
@@ -252,17 +253,25 @@ namespace PeterO {
       unchecked {
         int p; short c; int d; int e;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); result[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 1] = c;
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 1] = c;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 2] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 2] = c;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 3] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 3] = c;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4] = c;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + (2 * 4) - 3] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4] = c;
+        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + (2 * 4) - 3] = c;
         p = (((int)words1[astart + 4 - 1]) & 0xFFFF) * (((int)words1[astart + 4 - 1]) & 0xFFFF);
         p += e; result[rstart + 6] = (short)p; result[rstart + 7] = (short)(p >> 16);
       }
@@ -272,61 +281,95 @@ namespace PeterO {
       unchecked {
         int p; short c; int d; int e;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); result[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 1] = c;
+        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 1] = c;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 2] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 2] = c;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 3] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 3] = c;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4] = c;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 5] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 5] = c;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 6] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 6] = c;
         p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 7] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 7] = c;
         p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 8] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 8] = c;
         p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 9] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 9] = c;
         p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 10] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 10] = c;
         p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
         p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 11] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 11] = c;
         p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
         p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 12] = c;
-        p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1; e = e + (((int)c) & 0xFFFF); c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 13] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 12] = c;
+        p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 13] = c;
         p = (((int)words1[astart + 8 - 1]) & 0xFFFF) * (((int)words1[astart + 8 - 1]) & 0xFFFF);
         p += e; result[rstart + 14] = (short)p; result[rstart + 15] = (short)(p >> 16);
       }
@@ -346,9 +389,11 @@ namespace PeterO {
         int b1 = ((int)words2[bstart + 1]) & 0xFFFF;
         p = a0 * b0; c = (short)p; d = ((int)p >> 16) & 0xFFFF; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & 0xFFFF;
         p = a0 * b1;
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = a1 * b0;
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF); result[rstart + 1] = c;
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF; result[rstart + 1] = c;
         p = a1 * b1;
         p += d; result[rstart + 1 + 1] = (short)p; result[rstart + 1 + 2] = (short)(p >> 16);
       }
@@ -362,35 +407,49 @@ namespace PeterO {
         int b0 = ((int)words2[bstart]) & mask;
         p = a0 * b0; c = (short)p; d = ((int)p >> 16) & mask; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = a0 * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * b0;
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 1] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 1] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = a0 * (((int)words2[bstart + 2]) & mask);
 
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * b0;
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 2] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 2] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = a0 * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
 
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * b0;
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 3] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 3] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 4] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 4] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 5] = c;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 5] = c;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 3]) & mask);
         p += d; result[rstart + 5 + 1] = (short)p; result[rstart + 5 + 2] = (short)(p >> 16);
       }
@@ -402,129 +461,191 @@ namespace PeterO {
         int p; short c; int d;
         p = (((int)words1[astart]) & mask) * (((int)words2[bstart]) & mask); c = (short)p; d = ((int)p >> 16) & mask; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 1] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 1] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 2] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 2] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 3] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 3] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 4]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 4] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 4] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 5]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 4]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 5] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 5] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 6]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 5]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 4]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 6] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 6] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart]) & mask) * (((int)words2[bstart + 7]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 6]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 5]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 4]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 7] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 7] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart + 1]) & mask) * (((int)words2[bstart + 7]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 6]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 5]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 4]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 1]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 8] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 8] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart + 2]) & mask) * (((int)words2[bstart + 7]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 6]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 5]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 4]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 2]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 9] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 9] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart + 3]) & mask) * (((int)words2[bstart + 7]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 6]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 5]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 4]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 3]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 10] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 10] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart + 4]) & mask) * (((int)words2[bstart + 7]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 6]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 5]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 4]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 11] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 11] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart + 5]) & mask) * (((int)words2[bstart + 7]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 6]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 5]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 12] = c; c = (short)d; d = ((int)d >> 16) & mask;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 12] = c; c = (short)d; d = ((int)d >> 16) & mask;
         p = (((int)words1[astart + 6]) & mask) * (((int)words2[bstart + 7]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask);
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask;
         p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 6]) & mask);
-        p += ((int)c) & mask; c = (short)p; d = d + (((int)p >> 16) & mask); result[rstart + 13] = c;
+        p += ((int)c) & mask; c = (short)p;
+        d += ((int)p >> 16) & mask; result[rstart + 13] = c;
         p = (((int)words1[astart + 7]) & mask) * (((int)words2[bstart + 7]) & mask);
         p += d; result[rstart + 13 + 1] = (short)p; result[rstart + 13 + 2] = (short)(p >> 16);
       }
@@ -885,8 +1006,8 @@ namespace PeterO {
         }
       }
       return returnRemainder ?
-              unchecked((short)(((int)dividendHigh) & 0xFFFF)) :
-              unchecked((short)(((int)dividendLow) & 0xFFFF));
+        unchecked((short)(((int)dividendHigh) & 0xFFFF)) :
+        unchecked((short)(((int)dividendLow) & 0xFFFF));
     }
 
     private static short DivideUnsigned(int x, short y) {
@@ -1669,7 +1790,7 @@ namespace PeterO {
       }
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
         return this.negative && this.reg[1] == unchecked((short)0x8000) &&
-                this.reg[0] == 0;
+          this.reg[0] == 0;
       }
       return true;
     }
@@ -1681,9 +1802,9 @@ namespace PeterO {
       }
       if (c == 4 && (this.reg[3] & 0x8000) != 0) {
         return this.negative && this.reg[3] == unchecked((short)0x8000) &&
-                this.reg[2] == 0 &&
-                this.reg[1] == 0 &&
-                this.reg[0] == 0;
+          this.reg[2] == 0 &&
+          this.reg[1] == 0 &&
+          this.reg[0] == 0;
       }
       return true;
     }
@@ -1749,7 +1870,7 @@ namespace PeterO {
       BigInteger thisVar = this;
       if (sign == 0) {
         return BigInteger.One;
-  } else if (power.Equals(BigInteger.One)) {
+      } else if (power.Equals(BigInteger.One)) {
         return this;
       } else if (power.wordCount == 1 && power.reg[0] == 2) {
         return thisVar * (BigInteger)thisVar;
@@ -1780,7 +1901,7 @@ namespace PeterO {
       if (powerSmall == 0) {
         // however 0 to the power of 0 is undefined
         return BigInteger.One;
-  } else if (powerSmall == 1) {
+      } else if (powerSmall == 1) {
         return this;
       } else if (powerSmall == 2) {
         return thisVar * (BigInteger)thisVar;
@@ -1985,13 +2106,17 @@ namespace PeterO {
         int p; short c; int d;
         p = bitlenLow * 0x84FB; d = ((int)p >> 16) & 0xFFFF; c = (short)d; d = ((int)d >> 16) & 0xFFFF;
         p = bitlenLow * 0x209A;
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = bitlenHigh * 0x84FB;
-        p += ((int)c) & 0xFFFF; d = d + (((int)p >> 16) & 0xFFFF); c = (short)d; d = ((int)d >> 16) & 0xFFFF;
+        p += ((int)c) & 0xFFFF;
+        d += ((int)p >> 16) & 0xFFFF; c = (short)d; d = ((int)d >> 16) & 0xFFFF;
         p = bitlenLow * 0x9A;
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = bitlenHigh * 0x209A;
-        p += ((int)c) & 0xFFFF; c = (short)p; d = d + (((int)p >> 16) & 0xFFFF);
+        p += ((int)c) & 0xFFFF; c = (short)p;
+        d += ((int)p >> 16) & 0xFFFF;
         p = ((int)c) & 0xFFFF; c = (short)p; resultLow = c; c = (short)d; d = ((int)d >> 16) & 0xFFFF;
         p = bitlenHigh * 0x9A;
         p += ((int)c) & 0xFFFF;

@@ -284,7 +284,7 @@ function() {
 (function(constructor,prototype){
     constructor['CountWords'] = constructor.CountWords = function(array, n) {
         while (n != 0 && array[n - 1] == 0) {
-            n--;
+            --n;
         }
         return (n|0);
     };
@@ -342,7 +342,7 @@ function() {
             for (var i = 0; i + shiftWords < n; ++i) {
                 r[rstart + i] = (r[rstart + i + shiftWords] & 65535);
             }
-            rstart = rstart + n - shiftWords;
+            rstart = rstart + (n - shiftWords);
             for (var arrfillI = rstart; arrfillI < (rstart) + (shiftWords); arrfillI++) r[arrfillI] = 0;
         }
     };
@@ -352,7 +352,7 @@ function() {
             for (var i = 0; i + shiftWords < n; ++i) {
                 r[rstart + i] = (r[rstart + i + shiftWords] & 65535);
             }
-            rstart = rstart + n - shiftWords;
+            rstart = rstart + (n - shiftWords);
             for (var i = 0; i < shiftWords; ++i) {
                 r[rstart + i] = (65535 & 65535);
             }
@@ -429,12 +429,12 @@ function() {
             for (var i = 0; i < n; i += 2) {
                 u = (words1[astart] & 65535) - (words2[bstart] & 65535) - ((u >> 31) & 1);
                 c[cstart++] = (u & 65535);
-                astart++;
-                bstart++;
+                ++astart;
+                ++bstart;
                 u = (words1[astart] & 65535) - (words2[bstart] & 65535) - ((u >> 31) & 1);
                 c[cstart++] = (u & 65535);
-                astart++;
-                bstart++;
+                ++astart;
+                ++bstart;
             }
             return ((u >> 31) & 1);
         }
@@ -1208,11 +1208,11 @@ function() {
             var tsn = tempStart + count;
             var countA = count;
             while (countA != 0 && words1[words1Start + countA - 1] == 0) {
-                countA--;
+                --countA;
             }
             var countB = count;
             while (countB != 0 && words2[words2Start + countB - 1] == 0) {
-                countB--;
+                --countB;
             }
             var count2For1 = 0;
             var count2For2 = 0;
@@ -1465,7 +1465,7 @@ function() {
             if (((tmpInt >> 31) != 0) || (tmpInt >= intDivisor)) {
                 {
                     dividendHigh -= intDivisor;
-                    dividendLow++;
+                    ++dividendLow;
                 }
             }
         }
@@ -1516,7 +1516,7 @@ function() {
                 u = (words1[words1Start + 1] & 65535) - valueB1int - ((BigInteger.GetHighHalfAsBorrow(u)) & 65535);
                 words1[words1Start + 1] = (((BigInteger.GetLowHalf(u)) & 65535));
                 words1[words1Start + 2] = (((words1[words1Start + 2] + BigInteger.GetHighHalf(u)) & 65535));
-                valueQ++;
+                ++valueQ;
             }
         }
         return valueQ;
@@ -1809,7 +1809,7 @@ function() {
             }
             this.wordCount = this.reg.length;
             while (this.wordCount != 0 && this.reg[this.wordCount - 1] == 0) {
-                this.wordCount--;
+                --this.wordCount;
             }
         }
     };
@@ -1860,13 +1860,13 @@ function() {
                 return true;
             }
             while (tcindex < wordpos && this.reg[tcindex] == 0) {
-                tcindex++;
+                ++tcindex;
             }
             var tc;
             {
                 tc = this.reg[wordpos];
                 if (tcindex == wordpos) {
-                    tc--;
+                    --tc;
                 }
                 tc = ((~tc)|0);
             }
@@ -1910,7 +1910,7 @@ function() {
             var byteCount = this.ByteCount();
             var byteArrayLength = byteCount;
             if (this.GetUnsignedBit((byteCount * 8) - 1)) {
-                byteArrayLength++;
+                ++byteArrayLength;
             }
             var bytes = [];
             for (var arrfillI = 0; arrfillI < byteArrayLength; arrfillI++) bytes[arrfillI] = 0;
@@ -1935,14 +1935,14 @@ function() {
                     byteCount -= 2;
                 } else if ((regdata[i] & 65408) == 65408) {
 
-                    byteCount--;
+                    --byteCount;
                     break;
                 } else if ((regdata[i] & 32768) == 32768) {
 
                     break;
                 } else {
 
-                    byteCount++;
+                    ++byteCount;
                     break;
                 }
             }
@@ -2327,7 +2327,7 @@ function() {
             wc = wc + (16);
             {
                 if (this.negative) {
-                    numberValue--;
+                    --numberValue;
                     numberValue &= 65535;
                 }
                 if ((numberValue >> 8) == 0) {
@@ -2368,7 +2368,7 @@ function() {
         var count = 0;
         if (neg) {
             chars[0] = '-';
-            count++;
+            ++count;
             value = value.negate();
         }
         while (value.signum() != 0) {
@@ -2535,7 +2535,7 @@ function() {
                 } else if (rest >= 10) {
                     i = i + (2);
                 } else {
-                    i++;
+                    ++i;
                 }
                 break;
             } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 32767) {
@@ -2560,7 +2560,7 @@ function() {
                 } else if (rest >= 10) {
                     i = i + (2);
                 } else {
-                    i++;
+                    ++i;
                 }
                 break;
             } else {
@@ -2613,7 +2613,7 @@ function() {
                 }
 
                 while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
-                    wordCount--;
+                    --wordCount;
                 }
                 i = i + (4);
             }
@@ -2633,7 +2633,7 @@ function() {
         for (var arrfillI = 0; arrfillI < tempReg.length; arrfillI++) tempReg[0 + arrfillI] = this.reg[0 + arrfillI];
         var wordCount = tempReg.length;
         while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
-            wordCount--;
+            --wordCount;
         }
         var i = 0;
         var s = [];
@@ -2672,7 +2672,7 @@ function() {
                 var remainderSmall = remainderShort;
 
                 while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
-                    wordCount--;
+                    --wordCount;
                 }
 
                 var newrest = (remainderSmall * 3277) >> 15;
@@ -2731,7 +2731,7 @@ function() {
         }
         var negative = false;
         if (str.charAt(0) == '-') {
-            index++;
+            ++index;
             negative = true;
         }
         var bigint = new BigInteger().Allocate(4);
@@ -3655,9 +3655,9 @@ function(value) {
                         result2 = result2 + (temp >>> 16);
                         result1 += temp & 65535;
                         result2 = result2 + (result1 >>> 16);
-                        result1 = result1 & 65535;
+                        result1 &= 65535;
                         result3 = (result2 >>> 16);
-                        result2 = result2 & 65535;
+                        result2 &= 65535;
                         x0 = ((result0 | (result1 << 16))|0);
                         x1 = ((result2 | (result3 << 16))|0);
                         var x2 = (x0 + carry);
@@ -3684,19 +3684,19 @@ function(value) {
                         result2 = (temp >>> 16);
                         result1 += temp & 65535;
                         result2 = result2 + (result1 >>> 16);
-                        result1 = result1 & 65535;
+                        result1 &= 65535;
                         temp = (x1 * y0);
                         result2 = result2 + (temp >>> 16);
                         result1 += temp & 65535;
                         result2 = result2 + (result1 >>> 16);
-                        result1 = result1 & 65535;
+                        result1 &= 65535;
                         result3 = (result2 >>> 16);
-                        result2 = result2 & 65535;
+                        result2 &= 65535;
                         temp = (x1 * y1);
                         result3 = result3 + (temp >>> 16);
                         result2 += temp & 65535;
                         result3 = result3 + (result2 >>> 16);
-                        result2 = result2 & 65535;
+                        result2 &= 65535;
                         x0 = ((result0 | (result1 << 16))|0);
                         x1 = ((result2 | (result3 << 16))|0);
                         var x2 = (x0 + carry);
@@ -3715,10 +3715,10 @@ function(value) {
                         this.data = newdata;
                     }
                     this.data[this.wordCount] = carry;
-                    this.wordCount++;
+                    ++this.wordCount;
                 }
                 while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-                    this.wordCount--;
+                    --this.wordCount;
                 }
             } else {
                 if (this.data.length > 0) {
@@ -3772,7 +3772,7 @@ function(value) {
                         }
                     }
                     while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-                        this.wordCount--;
+                        --this.wordCount;
                     }
                 }
             }
@@ -3806,7 +3806,7 @@ function(value) {
                         }
                     }
                     while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-                        this.wordCount--;
+                        --this.wordCount;
                     }
                     return this;
                 }
@@ -3859,11 +3859,11 @@ function(value) {
                         this.data = newdata;
                     }
                     this.data[this.wordCount] = carry;
-                    this.wordCount++;
+                    ++this.wordCount;
                 }
             }
             while (this.wordCount != 0 && this.data[this.wordCount - 1] == 0) {
-                this.wordCount--;
+                --this.wordCount;
             }
             return this;
         };
@@ -3973,7 +3973,7 @@ function(value) {
             if (divisor.integerMode == 1) {
                 while (this.mnum.compareTo(divisor.mnum) >= 0) {
                     this.mnum.Subtract(divisor.mnum);
-                    count++;
+                    ++count;
                 }
                 return count;
             } else if (divisor.integerMode == 0 && divisor.smallValue >= 0) {
@@ -3985,7 +3985,7 @@ function(value) {
                     var dmnum = new FastInteger.MutableNumber(divisor.smallValue);
                     while (this.mnum.compareTo(dmnum) >= 0) {
                         this.mnum.Subtract(dmnum);
-                        count++;
+                        ++count;
                     }
                 }
                 return count;
@@ -4269,7 +4269,7 @@ function(value) {
     prototype.Increment = function() {
         if (this.integerMode == 0) {
             if (this.smallValue != 2147483647) {
-                this.smallValue++;
+                ++this.smallValue;
             } else {
                 this.integerMode = 1;
                 this.mnum = FastInteger.MutableNumber.FromBigInteger(FastInteger.valueNegativeInt32MinValue);
@@ -4283,7 +4283,7 @@ function(value) {
     prototype.Decrement = function() {
         if (this.integerMode == 0) {
             if (this.smallValue != -2147483648) {
-                this.smallValue--;
+                --this.smallValue;
             } else {
                 this.integerMode = 1;
                 this.mnum = FastInteger.MutableNumber.FromBigInteger(FastInteger.valueInt32MinValue);
@@ -4689,12 +4689,12 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 if ((this.shiftedSmall & (1 << i)) != 0) {
                     break;
                 } else {
-                    kb--;
+                    --kb;
                 }
             }
 
             if (kb == 0) {
-                kb++;
+                ++kb;
             }
             return new FastInteger(kb);
         } else {
@@ -4764,12 +4764,12 @@ function(bigint, lastDiscarded, olderDiscarded) {
             if ((this.shiftedSmall & (1 << i)) != 0) {
                 break;
             } else {
-                kb--;
+                --kb;
             }
         }
         var shift = ((kb < bits ? kb : bits)|0);
         var shiftingMoreBits = bits > kb;
-        kb = kb - shift;
+        kb -= shift;
         this.knownBitLength = new FastInteger(kb);
         this.discardedBitCount.AddInt(bits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -4802,11 +4802,11 @@ function(bigint, lastDiscarded, olderDiscarded) {
             if ((this.shiftedSmall & (1 << i)) != 0) {
                 break;
             } else {
-                kbl--;
+                --kbl;
             }
         }
         if (kbl == 0) {
-            kbl++;
+            ++kbl;
         }
 
         if (kbl > bits) {
@@ -5070,7 +5070,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
         for (var i = str.length - 1; i >= 0; --i) {
             this.bitsAfterLeftmost |= this.bitLeftmost;
             this.bitLeftmost = ((str.charCodeAt(i)-48)|0);
-            digitShift--;
+            --digitShift;
             if (digitShift <= 0) {
                 break;
             }
@@ -5195,7 +5195,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
             for (var i = str.length - 1; i >= 0; --i) {
                 this.bitsAfterLeftmost |= this.bitLeftmost;
                 this.bitLeftmost = ((str.charCodeAt(i)-48)|0);
-                digitShift--;
+                --digitShift;
                 if (digitShift <= 0) {
                     break;
                 }
@@ -5234,12 +5234,12 @@ function(bigint, lastDiscarded, olderDiscarded) {
         var kb = 0;
         var tmp = this.shiftedSmall;
         while (tmp > 0) {
-            kb++;
+            ++kb;
             tmp = ((tmp / 10)|0);
         }
 
         if (kb == 0) {
-            kb++;
+            ++kb;
         }
         this.knownBitLength = new FastInteger(kb);
         if (this.discardedBitCount == null) {
@@ -5256,7 +5256,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 var digit = ((this.shiftedSmall % 10)|0);
                 this.bitsAfterLeftmost |= this.bitLeftmost;
                 this.bitLeftmost = digit;
-                digits--;
+                --digits;
                 this.shiftedSmall = ((this.shiftedSmall / 10)|0);
                 this.knownBitLength.Decrement();
             }
@@ -5585,7 +5585,7 @@ var DecimalUtility = function() {
                     this.inputs[0] = input;
                     this.inputsInts[0] = input.canFitInInt() ? input.intValue() : -1;
                     this.outputs[0] = output;
-                    this.size++;
+                    ++this.size;
                 } else {
 
                     for (var i = DecimalUtility.PowerCache.MaxSize - 1; i > 0; --i) {
@@ -6662,7 +6662,7 @@ var RadixMath = function(helper) {
                 return this.RoundToPrecision(this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags & ~BigNumberFlags.FlagNegative), ctx);
             }
         }
-        flags = flags ^ BigNumberFlags.FlagNegative;
+        flags ^= BigNumberFlags.FlagNegative;
         return this.RoundToPrecision(this.helper.CreateNewWithFlags(mant, this.helper.GetExponent(value), flags), ctx);
     };
     prototype.AbsRaw = function(value) {
@@ -6776,7 +6776,7 @@ var RadixMath = function(helper) {
                     more = false;
                 } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
 
-                    vacillations++;
+                    ++vacillations;
                     if (vacillations > 3 && guessCmp > 0) {
 
                         more = false;
@@ -6814,7 +6814,7 @@ var RadixMath = function(helper) {
                     more = false;
                 } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
 
-                    vacillations++;
+                    ++vacillations;
                     if (vacillations > 3 && guessCmp > 0) {
 
                         more = false;
@@ -6856,7 +6856,7 @@ var RadixMath = function(helper) {
                     more = false;
                 } else if ((guessCmp > 0 && lastCompare < 0) || (lastCompare > 0 && guessCmp < 0)) {
 
-                    vacillations++;
+                    ++vacillations;
                     if (vacillations > 3 && guessCmp > 0) {
 
                         more = false;
@@ -9415,7 +9415,7 @@ function() {
         var negative = false;
         if (str.charAt(0) == '+' || str.charAt(0) == '-') {
             negative = str.charAt(0) == '-';
-            offset++;
+            ++offset;
         }
         var mantInt = 0;
         var mant = null;
@@ -9593,7 +9593,7 @@ function() {
                         }
                         newScale.AddInt(-1);
                     } else {
-                        newScaleInt--;
+                        --newScaleInt;
                     }
                 }
             } else if (str.charAt(i) == '.') {
@@ -9603,7 +9603,7 @@ function() {
                 haveDecimalPoint = true;
             } else if (str.charAt(i) == 'E' || str.charAt(i) == 'e') {
                 haveExponent = true;
-                i++;
+                ++i;
                 break;
             } else {
                 throw new Error();
@@ -9627,7 +9627,7 @@ function() {
                 if (str.charAt(i) == '-') {
                     offset = -1;
                 }
-                i++;
+                ++i;
             }
             for (; i < str.length; ++i) {
                 if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
@@ -10187,7 +10187,7 @@ function() {
             }
         }
         if (floatExponent == 0) {
-            floatExponent++;
+            ++floatExponent;
         } else {
             valueFpMantissa |= 1 << 23;
         }
@@ -10196,7 +10196,7 @@ function() {
         }
         floatExponent -= 150;
         while ((valueFpMantissa & 1) == 0) {
-            floatExponent++;
+            ++floatExponent;
             valueFpMantissa >>= 1;
         }
         if (floatExponent == 0) {
@@ -10256,7 +10256,7 @@ function() {
         value[1] = value[1] & 1048575;
 
         if (floatExponent == 0) {
-            floatExponent++;
+            ++floatExponent;
         } else {
             value[1] = value[1] | 1048576;
         }
@@ -10834,7 +10834,7 @@ function() {
             var exponentchange = 0;
             while (smallmant < (1 << 23)) {
                 smallmant <<= 1;
-                exponentchange++;
+                ++exponentchange;
             }
             bigexponent.SubtractInt(exponentchange);
             fastSmallMant = new FastInteger(smallmant);
@@ -10883,7 +10883,7 @@ function() {
             return this.isNegative() ? Float.intBitsToFloat(1 << 31) : Float.intBitsToFloat(0);
         } else {
             var smallexponent = bigexponent.AsInt32();
-            smallexponent = smallexponent + 150;
+            smallexponent = smallexponent + (150);
             var smallmantissa = ((fastSmallMant.AsInt32())|0) & 8388607;
             if (!subnormal) {
                 smallmantissa |= smallexponent << 23;
@@ -11031,7 +11031,7 @@ function() {
             }
         }
         if (floatExponent == 0) {
-            floatExponent++;
+            ++floatExponent;
         } else {
             valueFpMantissa |= 1 << 23;
         }
@@ -11039,7 +11039,7 @@ function() {
             return neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
         }
         while ((valueFpMantissa & 1) == 0) {
-            floatExponent++;
+            ++floatExponent;
             valueFpMantissa >>= 1;
         }
         if (neg) {
@@ -11079,7 +11079,7 @@ function() {
         value[1] = value[1] & 1048575;
 
         if (floatExponent == 0) {
-            floatExponent++;
+            ++floatExponent;
         } else {
             value[1] = value[1] | 1048576;
         }
