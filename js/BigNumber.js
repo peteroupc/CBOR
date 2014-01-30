@@ -1523,7 +1523,7 @@ function() {
     };
     constructor['AtomicDivide'] = constructor.AtomicDivide = function(quotient, quotientStart, words1, words1Start, word2A, word2B, temp) {
         if (word2A == 0 && word2B == 0) {
-            quotient[quotientStart] = (words1[words1Start] & 65535);
+            quotient[quotientStart] = (words1[words1Start + 2] & 65535);
             quotient[quotientStart + 1] = (words1[words1Start + 3] & 65535);
         } else {
             temp[0] = (words1[words1Start] & 65535);

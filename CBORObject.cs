@@ -2244,7 +2244,8 @@ namespace PeterO {
     /// <summary>Writes a string in CBOR format to a data stream.</summary>
     /// <param name='str'>The string to write. Can be null.</param>
     /// <param name='stream'>A writable data stream.</param>
-    /// <exception cref='System.ArgumentNullException'>Stream is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static void Write(string str, Stream stream) {
       if (stream == null) {
@@ -2265,7 +2266,8 @@ namespace PeterO {
 
     /// <summary>Writes a binary floating-point number in CBOR format to
     /// a data stream.</summary>
-    /// <exception cref='System.ArgumentNullException'>Stream is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     /// <exception cref='System.ArgumentException'>The value's exponent
     /// is less than -(2^64) or greater than (2^64-1).</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
@@ -2297,11 +2299,12 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Writes a binary floating-point number in CBOR format to
-    /// a data stream.</summary>
+    /// <summary>Writes a decimal floating-point number in CBOR format
+    /// to a data stream.</summary>
     /// <param name='bignum'>Decimal fraction to write.</param>
     /// <param name='stream'>Stream to write to.</param>
-    /// <exception cref='System.ArgumentNullException'>Stream is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentException'>The value's exponent
     /// is less than -(2^64) or greater than (2^64-1).</exception>
@@ -2765,6 +2768,8 @@ namespace PeterO {
     /// <summary>Writes an arbitrary object to a CBOR data stream.</summary>
     /// <param name='objValue'>The value to write.</param>
     /// <param name='stream'>A writable data stream.</param>
+    /// <exception cref='System.ArgumentException'>The object's type
+    /// is not supported.</exception>
     public static void Write(object objValue, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -3547,7 +3552,7 @@ namespace PeterO {
     /// is copied to a new byte array.</summary>
     /// <param name='bytes'>A byte array. Can be null.</param>
     /// <returns>A CBOR byte string object where each byte of the given byte
-    /// array is copied to a new array, or CBORObject.Null if.</returns>
+    /// array is copied to a new array, or CBORObject.Null if the value is null.</returns>
     public static CBORObject FromObject(byte[] bytes) {
       if (bytes == null) {
         return CBORObject.Null;
@@ -3560,7 +3565,7 @@ namespace PeterO {
     /// <summary>Generates a CBOR object from an array of CBOR objects.</summary>
     /// <param name='array'>An array of CBOR objects.</param>
     /// <returns>A CBOR object where each element of the given array is copied
-    /// to a new array, or CBORObject.Null if.</returns>
+    /// to a new array, or CBORObject.Null if the value is null.</returns>
     public static CBORObject FromObject(CBORObject[] array) {
       if (array == null) {
         return CBORObject.Null;
@@ -3575,7 +3580,7 @@ namespace PeterO {
     /// <summary>Generates a CBOR object from an array of 32-bit integers.</summary>
     /// <param name='array'>An array of 32-bit integers.</param>
     /// <returns>A CBOR array object where each element of the given array
-    /// is copied to a new array, or CBORObject.Null if.</returns>
+    /// is copied to a new array, or CBORObject.Null if the value is null.</returns>
     public static CBORObject FromObject(int[] array) {
       if (array == null) {
         return CBORObject.Null;
@@ -3590,7 +3595,7 @@ namespace PeterO {
     /// <summary>Generates a CBOR object from an array of 64-bit integers.</summary>
     /// <param name='array'>An array of 64-bit integers.</param>
     /// <returns>A CBOR array object where each element of the given array
-    /// is copied to a new array, or CBORObject.Null if.</returns>
+    /// is copied to a new array, or CBORObject.Null if the value is null.</returns>
     public static CBORObject FromObject(long[] array) {
       if (array == null) {
         return CBORObject.Null;
@@ -3605,7 +3610,8 @@ namespace PeterO {
     /// <summary>Generates a CBOR object from an list of objects.</summary>
     /// <param name='value'>An array of CBOR objects.</param>
     /// <returns>A CBOR object where each element of the given array is converted
-    /// to a CBOR object and copied to a new array, or CBORObject.Null if.</returns>
+    /// to a CBOR object and copied to a new array, or CBORObject.Null if the
+    /// value is null.</returns>
     /// <typeparam name='T'>A type convertible to CBORObject.</typeparam>
     public static CBORObject FromObject<T>(IList<T> value) {
       if (value == null) {

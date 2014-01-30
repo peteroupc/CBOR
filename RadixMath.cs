@@ -1984,8 +1984,7 @@ namespace PeterO {
         if (integerMode == IntegerModeRegular) {
           BigInteger rem = null;
           BigInteger quo = null;
-          // Console.WriteLine("div={0} divs={1}",mantissaDividend.getUnsignedBitLength(),
-          // mantissaDivisor.getUnsignedBitLength());
+          // Console.WriteLine("div={0} divs={1}", mantissaDividend.getUnsignedBitLength(), mantissaDivisor.getUnsignedBitLength());
           if ((mantissaDividend % mantissaDivisor).IsZero) {
             // Dividend is divisible by divisor
             quo = mantissaDividend / mantissaDivisor;
@@ -2029,6 +2028,7 @@ namespace PeterO {
               // and remainder
               quo = BigInteger.DivRem(divid, mantissaDivisor, out rem);
             }
+           // Console.WriteLine(String.Format("{0} {1} -> quo={2} rem={3}", divid, mantissaDivisor,quo,rem));
             int[] digitStatus = this.RoundToScaleStatus(rem, mantissaDivisor, ctx);
             if (digitStatus == null) {
               return this.SignalInvalidWithMessage(ctx, "Rounding was required");

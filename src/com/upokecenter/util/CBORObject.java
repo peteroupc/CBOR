@@ -2243,7 +2243,8 @@ public void set(String key, CBORObject value) {
      * Writes a string in CBOR format to a data stream.
      * @param str The string to write. Can be null.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException InputStream is null.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null.
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(String str, OutputStream stream) throws IOException {
@@ -2267,7 +2268,8 @@ public void set(String key, CBORObject value) {
      * Writes a binary floating-point number in CBOR format to a data stream.
      * @param bignum An ExtendedFloat object.
      * @param stream A writable data stream.
-     * @throws java.lang.NullPointerException InputStream is null.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null.
      * @throws java.lang.IllegalArgumentException The value's exponent is less
      * than -(2^64) or greater than (2^64-1).
      * @throws java.io.IOException An I/O error occurred.
@@ -2299,10 +2301,11 @@ public void set(String key, CBORObject value) {
     }
 
     /**
-     * Writes a binary floating-point number in CBOR format to a data stream.
+     * Writes a decimal floating-point number in CBOR format to a data stream.
      * @param bignum Decimal fraction to write.
      * @param stream InputStream to write to.
-     * @throws java.lang.NullPointerException InputStream is null.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null.
      * @throws java.io.IOException An I/O error occurred.
      * @throws java.lang.IllegalArgumentException The value's exponent is less
      * than -(2^64) or greater than (2^64-1).
@@ -2794,6 +2797,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * Writes an arbitrary object to a CBOR data stream.
      * @param objValue The value to write.
      * @param stream A writable data stream.
+     * @throws java.lang.IllegalArgumentException The object's type is not supported.
      */
     @SuppressWarnings("unchecked")
 public static void Write(Object objValue, OutputStream stream) throws IOException {
@@ -3003,11 +3007,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param noDuplicates A Boolean object.
-     * @return A CBORObject object.
-     */
     private static CBORObject ParseJSONObjectOrArray(CharacterReader reader, boolean noDuplicates) {
       int c;
       c = SkipWhitespaceJSON(reader);
@@ -3618,7 +3617,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * to a new byte array.
      * @param bytes A byte array. Can be null.
      * @return A CBOR byte string object where each byte of the given byte
-     * array is copied to a new array, or CBORObject.Null if.
+     * array is copied to a new array, or CBORObject.Null if the value is null.
      */
     public static CBORObject FromObject(byte[] bytes) {
       if (bytes == null) {
@@ -3633,7 +3632,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from an array of CBOR objects.
      * @param array An array of CBOR objects.
      * @return A CBOR object where each element of the given array is copied
-     * to a new array, or CBORObject.Null if.
+     * to a new array, or CBORObject.Null if the value is null.
      */
     public static CBORObject FromObject(CBORObject[] array) {
       if (array == null) {
@@ -3650,7 +3649,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from an array of 32-bit integers.
      * @param array An array of 32-bit integers.
      * @return A CBOR array object where each element of the given array is
-     * copied to a new array, or CBORObject.Null if.
+     * copied to a new array, or CBORObject.Null if the value is null.
      */
     public static CBORObject FromObject(int[] array) {
       if (array == null) {
@@ -3667,7 +3666,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from an array of 64-bit integers.
      * @param array An array of 64-bit integers.
      * @return A CBOR array object where each element of the given array is
-     * copied to a new array, or CBORObject.Null if.
+     * copied to a new array, or CBORObject.Null if the value is null.
      */
     public static CBORObject FromObject(long[] array) {
       if (array == null) {
@@ -3685,7 +3684,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @param value An array of CBOR objects.
      * @param <T> A type convertible to CBORObject.
      * @return A CBOR object where each element of the given array is converted
-     * to a CBOR object and copied to a new array, or CBORObject.Null if.
+     * to a CBOR object and copied to a new array, or CBORObject.Null if the
+     * value is null.
      */
     public static <T> CBORObject FromObject(List<T> value) {
       if (value == null) {

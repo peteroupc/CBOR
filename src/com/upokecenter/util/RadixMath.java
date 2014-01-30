@@ -2000,8 +2000,7 @@ rem=divrem[1]; }
         if (integerMode == IntegerModeRegular) {
           BigInteger rem = null;
           BigInteger quo = null;
-          // System.out.println("div={0} divs={1}",mantissaDividend.getUnsignedBitLength(),
-          // mantissaDivisor.getUnsignedBitLength());
+          // System.out.println("div={0} divs={1}", mantissaDividend.getUnsignedBitLength(), mantissaDivisor.getUnsignedBitLength());
           if ((mantissaDividend.remainder(mantissaDivisor)).signum()==0) {
             // Dividend is divisible by divisor
             quo = mantissaDividend.divide(mantissaDivisor);
@@ -2043,6 +2042,7 @@ BigInteger[] divrem=(divid).divideAndRemainder(mantissaDivisor);
 quo=divrem[0];
 rem=divrem[1]; }
             }
+           // System.out.println(String.Format("{0} {1} -> quo={2} rem={3}", divid, mantissaDivisor,quo,rem));
             int[] digitStatus = this.RoundToScaleStatus(rem, mantissaDivisor, ctx);
             if (digitStatus == null) {
               return this.SignalInvalidWithMessage(ctx, "Rounding was required");
