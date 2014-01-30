@@ -405,6 +405,42 @@ at: http://peteroupc.github.io/CBOR/
     public static final PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
 
     /**
+     * Precision context for the IEEE-754-2008 binary16 format, 11 bits
+     * precision.
+     */
+    public static final PrecisionContext Binary16 =
+      PrecisionContext.ForPrecisionAndRounding(11, Rounding.HalfEven)
+      .WithExponentClamp(true)
+      .WithExponentRange(-14, 15);
+
+    /**
+     * Precision context for the IEEE-754-2008 binary32 format, 24 bits
+     * precision.
+     */
+    public static final PrecisionContext Binary32 =
+      PrecisionContext.ForPrecisionAndRounding(24, Rounding.HalfEven)
+      .WithExponentClamp(true)
+      .WithExponentRange(-126, 127);
+
+    /**
+     * Precision context for the IEEE-754-2008 binary64 format, 53 bits
+     * precision.
+     */
+    public static final PrecisionContext Binary64 =
+      PrecisionContext.ForPrecisionAndRounding(53, Rounding.HalfEven)
+      .WithExponentClamp(true)
+      .WithExponentRange(-1022, 1023);
+
+    /**
+     * Precision context for the IEEE-754-2008 binary128 format, 113 bits
+     * precision.
+     */
+    public static final PrecisionContext Binary128 =
+      PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven)
+      .WithExponentClamp(true)
+      .WithExponentRange(-16382, 16383);
+
+    /**
      * Precision context for the IEEE-754-2008 decimal32 format.
      */
 

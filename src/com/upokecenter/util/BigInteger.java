@@ -1072,7 +1072,7 @@ at: http://peteroupc.github.io/CBOR/
       short word2B,
       short[] temp) {
       if (word2A == 0 && word2B == 0) {
-        quotient[quotientStart] = words1[words1Start];
+        quotient[quotientStart] = words1[words1Start + 2];
         quotient[quotientStart + 1] = words1[words1Start + 3];
       } else {
         temp[0] = words1[words1Start];

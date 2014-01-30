@@ -395,6 +395,34 @@ namespace PeterO {
 
     public static readonly PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
 
+    /// <summary>Precision context for the IEEE-754-2008 binary16 format,
+    /// 11 bits precision.</summary>
+    public static readonly PrecisionContext Binary16 =
+      PrecisionContext.ForPrecisionAndRounding(11, Rounding.HalfEven)
+      .WithExponentClamp(true)
+      .WithExponentRange(-14, 15);
+
+    /// <summary>Precision context for the IEEE-754-2008 binary32 format,
+    /// 24 bits precision.</summary>
+    public static readonly PrecisionContext Binary32 =
+      PrecisionContext.ForPrecisionAndRounding(24, Rounding.HalfEven)
+      .WithExponentClamp(true)
+      .WithExponentRange(-126, 127);
+
+    /// <summary>Precision context for the IEEE-754-2008 binary64 format,
+    /// 53 bits precision.</summary>
+    public static readonly PrecisionContext Binary64 =
+      PrecisionContext.ForPrecisionAndRounding(53, Rounding.HalfEven)
+      .WithExponentClamp(true)
+      .WithExponentRange(-1022, 1023);
+
+    /// <summary>Precision context for the IEEE-754-2008 binary128 format,
+    /// 113 bits precision.</summary>
+    public static readonly PrecisionContext Binary128 =
+      PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven)
+      .WithExponentClamp(true)
+      .WithExponentRange(-16382, 16383);
+
     /// <summary>Precision context for the IEEE-754-2008 decimal32 format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
