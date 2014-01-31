@@ -1742,7 +1742,7 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Subtracts a ExtendedDecimal object from this instance and returns
+     * Subtracts an ExtendedDecimal object from this instance and returns
      * the result..
      * @param numberObject An ExtendedDecimal object.
      * @return The difference of the two objects.
@@ -1752,7 +1752,7 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Subtracts a ExtendedDecimal object from this instance.
+     * Subtracts an ExtendedDecimal object from this instance.
      * @param numberObject An ExtendedDecimal object.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
@@ -2141,7 +2141,12 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Returns a decimal number with the same value but a new exponent.
+     * Returns a decimal number with the same value but a new exponent. <p>Note
+     * that this is not always the same as rounding to a given number of decimal
+     * places, since it can fail if the difference between this value's exponent
+     * and the desired exponent is too big, depending on the maximum precision.
+     * If rounding to a number of decimal places is desired, it's better to
+     * use the RoundToExponent and RoundToIntegral methods instead.</p>
      * @param desiredExponent A BigInteger object.
      * @param ctx A PrecisionContext object.
      * @return A decimal number with the same value as this object but with
@@ -2157,7 +2162,12 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Returns a decimal number with the same value but a new exponent.
+     * Returns a decimal number with the same value but a new exponent.<p>Note
+     * that this is not always the same as rounding to a given number of decimal
+     * places, since it can fail if the difference between this value's exponent
+     * and the desired exponent is too big, depending on the maximum precision.
+     * If rounding to a number of decimal places is desired, it's better to
+     * use the RoundToExponent and RoundToIntegral methods instead.</p>
      * @param desiredExponentSmall A 32-bit signed integer.
      * @param ctx A PrecisionContext object.
      * @return A decimal number with the same value as this object but with
@@ -2442,7 +2452,8 @@ remainder=divrem[1]; }
      * with a real part equal to Ln of this object's absolute value and an imaginary
      * part equal to pi, but the return value is still NaN.). Signals FlagInvalid
      * and returns NaN if the parameter {@code ctx} is null or the precision
-     * is unlimited (the context's Precision property is 0).
+     * is unlimited (the context's Precision property is 0). Signals no
+     * flags and returns negative infinity if this object's value is 0.
      */
     public ExtendedDecimal Log(PrecisionContext ctx) {
       return math.Ln(this, ctx);
@@ -2452,8 +2463,15 @@ remainder=divrem[1]; }
      * Finds the base-10 logarithm of this object, that is, the exponent
      * that the number 10 must be raised to in order to equal this object&apos;s
      * value.
-     * @param ctx A PrecisionContext object.
-     * @return An ExtendedDecimal object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). --This parameter cannot be
+     * null, as the ln function&apos;s results are generally not exact.--.
+     * @return Ln(this object)/Ln(10). Signals the flag FlagInvalid and
+     * returns NaN if this object is less than 0. Signals FlagInvalid and
+     * returns NaN if the parameter {@code ctx} is null or the precision is
+     * unlimited (the context's Precision property is 0).
      */
     public ExtendedDecimal Log10(PrecisionContext ctx) {
       return math.Log10(this, ctx);
