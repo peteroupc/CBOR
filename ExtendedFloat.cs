@@ -1142,15 +1142,15 @@ namespace PeterO {
       return this.Add(numberObject, PrecisionContext.Unlimited);
     }
 
-    /// <summary>Subtracts a ExtendedFloat object from this instance and
-    /// returns the result..</summary>
+    /// <summary>Subtracts an ExtendedFloat object from this instance
+    /// and returns the result..</summary>
     /// <param name='numberObject'>An ExtendedFloat object.</param>
     /// <returns>The difference of the two objects.</returns>
     public ExtendedFloat Subtract(ExtendedFloat numberObject) {
       return this.Subtract(numberObject, null);
     }
 
-    /// <summary>Subtracts a ExtendedFloat object from this instance.</summary>
+    /// <summary>Subtracts an ExtendedFloat object from this instance.</summary>
     /// <param name='numberObject'>An ExtendedFloat object.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,

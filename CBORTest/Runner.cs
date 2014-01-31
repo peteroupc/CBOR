@@ -37,7 +37,7 @@ namespace PeterO {
         param = args[0];
         Console.WriteLine(param);
       }
-      new Test.DecimalTest().TestParser();
+      new CBOR.ExtensiveTest().TestParser();
       if (args.Length == 0) {
  return;
 }

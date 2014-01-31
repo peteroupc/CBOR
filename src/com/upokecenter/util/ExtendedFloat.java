@@ -1204,7 +1204,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Subtracts a ExtendedFloat object from this instance and returns
+     * Subtracts an ExtendedFloat object from this instance and returns
      * the result..
      * @param numberObject An ExtendedFloat object.
      * @return The difference of the two objects.
@@ -1214,7 +1214,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Subtracts a ExtendedFloat object from this instance.
+     * Subtracts an ExtendedFloat object from this instance.
      * @param numberObject An ExtendedFloat object.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will

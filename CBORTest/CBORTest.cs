@@ -362,6 +362,22 @@ namespace Test {
         ExtendedDecimal.FromString("90246605365627217170000000000").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
     }
 
+    [Test]
+    public void TestFloatDecimalRoundTrip(){
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 5000; ++i) {
+        ExtendedFloat ef=RandomExtendedFloat(r);
+        ExtendedDecimal ed=ef.ToExtendedDecimal();
+        ExtendedFloat ef2=ed.ToExtendedFloat();
+        // Tests that values converted from float to decimal and
+        // back have the same numerical value
+        if(ef.CompareTo(ef2)!=0){
+          Assert.AreEqual(0,ef.CompareTo(ef2),
+                          "TestFloatDecimalRoundTrip " + ef + ", " + ef2);
+        }
+      }
+    }
+    
     /// <summary>Not documented yet.</summary>
     [Test]
     public void TestCompare() {

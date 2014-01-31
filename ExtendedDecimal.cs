@@ -1302,40 +1302,40 @@ namespace PeterO {
     }
 
     /// <summary>Represents the number 1.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification="ExtendedDecimal is immutable")]
-#endif
+    #endif
     public static readonly ExtendedDecimal One = ExtendedDecimal.Create(BigInteger.One, BigInteger.Zero);
 
     /// <summary>Represents the number 0.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification="ExtendedDecimal is immutable")]
-#endif
+    #endif
     public static readonly ExtendedDecimal Zero = ExtendedDecimal.Create(BigInteger.Zero, BigInteger.Zero);
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification="ExtendedDecimal is immutable")]
-#endif
+    #endif
     public static readonly ExtendedDecimal NegativeZero = CreateWithFlags(
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagNegative);
 
     /// <summary>Represents the number 10.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification="ExtendedDecimal is immutable")]
-#endif
+    #endif
 
     public static readonly ExtendedDecimal Ten = ExtendedDecimal.Create((BigInteger)10, BigInteger.Zero);
 
@@ -1670,7 +1670,7 @@ namespace PeterO {
       return this.Add(numberObject, PrecisionContext.Unlimited);
     }
 
-    /// <summary>Subtracts a ExtendedDecimal object from this instance
+    /// <summary>Subtracts an ExtendedDecimal object from this instance
     /// and returns the result..</summary>
     /// <param name='numberObject'>An ExtendedDecimal object.</param>
     /// <returns>The difference of the two objects.</returns>
@@ -1678,7 +1678,7 @@ namespace PeterO {
       return this.Subtract(numberObject, null);
     }
 
-    /// <summary>Subtracts a ExtendedDecimal object from this instance.</summary>
+    /// <summary>Subtracts an ExtendedDecimal object from this instance.</summary>
     /// <param name='numberObject'>An ExtendedDecimal object.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
@@ -2036,7 +2036,14 @@ namespace PeterO {
       return math.Add(this, numberObject, ctx);
     }
 
-    /// <summary>Returns a decimal number with the same value but a new exponent.</summary>
+    /// <summary>Returns a decimal number with the same value but a new exponent.
+    /// <para>Note that this is not always the same as rounding to a given number
+    /// of decimal places, since it can fail if the difference between this
+    /// value's exponent and the desired exponent is too big, depending on
+    /// the maximum precision. If rounding to a number of decimal places is
+    /// desired, it's better to use the RoundToExponent and RoundToIntegral
+    /// methods instead.</para>
+    /// </summary>
     /// <returns>A decimal number with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
     /// error occurred, or the rounded result can't fit the given precision,
@@ -2050,7 +2057,13 @@ namespace PeterO {
       return this.Quantize(ExtendedDecimal.Create(BigInteger.One, desiredExponent), ctx);
     }
 
-    /// <summary>Returns a decimal number with the same value but a new exponent.</summary>
+    /// <summary>Returns a decimal number with the same value but a new exponent.<para>Note
+    /// that this is not always the same as rounding to a given number of decimal
+    /// places, since it can fail if the difference between this value's exponent
+    /// and the desired exponent is too big, depending on the maximum precision.
+    /// If rounding to a number of decimal places is desired, it's better to
+    /// use the RoundToExponent and RoundToIntegral methods instead.</para>
+    /// </summary>
     /// <returns>A decimal number with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
     /// error occurred, or the rounded result can't fit the given precision,
@@ -2310,7 +2323,8 @@ namespace PeterO {
     /// part equal to pi, but the return value is still NaN.). Signals FlagInvalid
     /// and returns NaN if the parameter <paramref name='ctx'/> is null or
     /// the precision is unlimited (the context's Precision property is
-    /// 0).</returns>
+    /// 0). Signals no flags and returns negative infinity if this object's
+    /// value is 0.</returns>
     public ExtendedDecimal Log(PrecisionContext ctx) {
       return math.Ln(this, ctx);
     }
@@ -2318,8 +2332,16 @@ namespace PeterO {
     /// <summary>Finds the base-10 logarithm of this object, that is, the
     /// exponent that the number 10 must be raised to in order to equal this
     /// object&apos;s value.</summary>
-    /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). --This parameter cannot
+    /// be null, as the ln function&apos;s results are generally not exact.--.</param>
+    /// <returns>Ln(this object)/Ln(10). Signals the flag FlagInvalid
+    /// and returns NaN if this object is less than 0. Signals FlagInvalid
+    /// and returns NaN if the parameter <paramref name='ctx'/> is null or
+    /// the precision is unlimited (the context's Precision property is
+    /// 0).</returns>
     public ExtendedDecimal Log10(PrecisionContext ctx) {
       return math.Log10(this, ctx);
     }

@@ -2317,45 +2317,46 @@ import com.upokecenter.util.*;
     @Test
     public void TestMultiplyDivide() {
       FastRandom r = new FastRandom();
-       for (int i = 0; i < 1000; ++i) {
+      TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");
+      for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
         // Test that A*B/A = B and A*B/B = A
         BigInteger bigintC = bigintA.multiply(bigintB);
         BigInteger bigintRem;
         BigInteger bigintD;
-         if (bigintB.signum()!=0) {
+        if (bigintB.signum()!=0) {
           {
 BigInteger[] divrem=(bigintC).divideAndRemainder(bigintB);
 bigintD=divrem[0];
 bigintRem=divrem[1]; }
-           if (!bigintD.equals(bigintA)) {
+          if (!bigintD.equals(bigintA)) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintA,bigintD);
           }
-           if (bigintRem.signum()!=0) {
+          if (bigintRem.signum()!=0) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,BigInteger.ZERO,bigintRem);
           }
         }
-         if (bigintA.signum()!=0) {
+        if (bigintA.signum()!=0) {
           {
 BigInteger[] divrem=(bigintC).divideAndRemainder(bigintA);
 bigintD=divrem[0];
 bigintRem=divrem[1]; }
-           if (!bigintD.equals(bigintB)) {
+          if (!bigintD.equals(bigintB)) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintB,bigintD);
           }
-           if (bigintRem.signum()!=0) {
+          if (bigintRem.signum()!=0) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,BigInteger.ZERO,bigintRem);
           }
         }
-         if (bigintB.signum()!=0) {
+        if (bigintB.signum()!=0) {
           {
 BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
 bigintC=divrem[0];
 bigintRem=divrem[1]; }
           bigintD = bigintB.multiply(bigintC);
           bigintD=bigintD.add(bigintRem);
-           if (!bigintD.equals(bigintA)) {
+          if (!bigintD.equals(bigintA)) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintA,bigintD);
           }
         }
@@ -2365,21 +2366,21 @@ bigintRem=divrem[1]; }
     @Test
     public void TestAddSubtract() {
       FastRandom r = new FastRandom();
-       for (int i = 0; i < 1000; ++i) {
+      for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
         BigInteger bigintC = bigintA.add(bigintB);
         BigInteger bigintD = bigintC.subtract(bigintB);
-         if (!bigintD.equals(bigintA)) {
+        if (!bigintD.equals(bigintA)) {
           Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintA,bigintD);
         }
         bigintD = bigintC.subtract(bigintA);
-         if (!bigintD.equals(bigintB)) {
+        if (!bigintD.equals(bigintB)) {
           Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintB,bigintD);
         }
         bigintC = bigintA.subtract(bigintB);
         bigintD = bigintC.add(bigintB);
-         if (!bigintD.equals(bigintA)) {
+        if (!bigintD.equals(bigintA)) {
           Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintA,bigintD);
         }
       }
