@@ -4698,12 +4698,13 @@ function(bigint, lastDiscarded, olderDiscarded) {
             }
             return new FastInteger(kb);
         } else {
-            var bytes = this.shiftedBigInt.toByteArray(true);
-
-            return BitShiftAccumulator.ByteArrayBitLength(bytes);
+            if (this.shiftedBigInt.signum() == 0) {
+                return new FastInteger(1);
+            }
+            return new FastInteger(this.shiftedBigInt.bitLength());
         }
     };
-    prototype.ShiftBigToBits = function(bits) {
+    prototype.ShiftHugeToBits = function(bits) {
 
         var bytes = this.shiftedBigInt.toByteArray(true);
         this.knownBitLength = BitShiftAccumulator.ByteArrayBitLength(bytes);
@@ -4738,6 +4739,65 @@ function(bigint, lastDiscarded, olderDiscarded) {
                 }
             }
             this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+        }
+    };
+    prototype.ShiftBigToBits = function(bits) {
+
+        if (this.knownBitLength != null) {
+            if (this.knownBitLength.CompareToInt(bits) <= 0) {
+                return;
+            }
+        }
+        if (this.knownBitLength == null) {
+            this.knownBitLength = this.GetDigitLength();
+        }
+        if (this.knownBitLength.CompareToInt(bits) <= 0) {
+            return;
+        }
+
+        if (this.knownBitLength.CompareToInt(bits) > 0) {
+            var bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
+            if (bitShift.CanFitInInt32()) {
+                var bs = bitShift.AsInt32() - 1;
+                this.knownBitLength.SetInt(bits);
+                this.discardedBitCount.Add(bitShift);
+                if (bs == 0) {
+                    var odd = !(this.shiftedBigInt.testBit(0) == false);
+                    this.shiftedBigInt = this.shiftedBigInt.shiftRight(1);
+                    this.bitsAfterLeftmost |= this.bitLeftmost;
+                    this.bitLeftmost = (odd) ? 1 : 0;
+                } else {
+                    this.bitsAfterLeftmost |= this.bitLeftmost;
+                    var lowestSetBit = this.shiftedBigInt.getLowestSetBit();
+                    if (lowestSetBit < bs) {
+
+                        this.bitsAfterLeftmost |= 1;
+                        this.bitLeftmost = (this.shiftedBigInt.testBit(bs)) ? 1 : 0;
+                        bs = bs + (1);
+                        this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
+                    } else if (lowestSetBit > bs) {
+
+                        this.bitLeftmost = 0;
+                        bs = bs + (1);
+                        this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
+                    } else {
+
+                        this.bitLeftmost = 1;
+                        bs = bs + (1);
+                        this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
+                    }
+                }
+                if (bits < BitShiftAccumulator.SmallBitLength) {
+
+                    this.isSmall = true;
+                    this.shiftedSmall = this.shiftedBigInt.intValue();
+                }
+                this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+            } else {
+                this.knownBitLength = null;
+                this.ShiftHugeToBits(bits);
+                return;
+            }
         }
     };
 
@@ -7412,14 +7472,7 @@ var RadixMath = function(helper) {
                 ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
             }
 
-            thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxdiv);
-            if ((ctxdiv.getFlags() & PrecisionContext.FlagOverflow) != 0) {
-                if (ctx.getHasFlags()) {
-                    ctx.setFlags(ctx.getFlags() | (ctxdiv.getFlags()));
-                }
-                return this.SignalOverflow2(ctx, this.IsNegative(thisValue));
-            }
-            thisValue = this.RoundToPrecision(thisValue, ctxCopy);
+            thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxCopy);
         }
         if (ctx.getHasFlags()) {
             ctx.setFlags(ctx.getFlags() | (ctxCopy.getFlags()));
@@ -7890,7 +7943,7 @@ var RadixMath = function(helper) {
                 var quo = null;
 
                 {
-                    var divrem = (mantissaDividend).divideAndRemainder(mantissaDividend);
+                    var divrem = (mantissaDividend).divideAndRemainder(mantissaDivisor);
                     quo = divrem[0];
                     rem = divrem[1];
                 }
