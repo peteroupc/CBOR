@@ -2087,8 +2087,7 @@ public void set(String key, CBORObject value) {
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
-        throw new IllegalArgumentException("value" +
-                                    " not greater or equal to 0 (" +
+        throw new IllegalArgumentException("value not greater or equal to 0 (" +
                                     Integer.toString((int)value) + ")");
       }
       if (value < 24) {

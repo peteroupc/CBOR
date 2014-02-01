@@ -80,7 +80,7 @@ namespace Test
           return;
         }
         PrecisionContext ctx = PrecisionContext.ForPrecision(precision)
-          .WithExponentClamp(clamp).WithExponentRange(
+          .WithExponentClamp(clamp).WithBigExponentRange(
             (BigInteger)minexponent,
             (BigInteger)maxexponent);
         string rounding = context["rounding"];

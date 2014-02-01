@@ -1952,6 +1952,11 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Raises this object&apos;s value to the given exponent.
+     * @param exponentSmall A 32-bit signed integer.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags).
      * @return This^exponent. Signals the flag FlagInvalid and returns
      * NaN if this object and exponent are both 0.
      */

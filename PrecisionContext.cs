@@ -269,10 +269,26 @@ namespace PeterO {
 
     /// <summary>Copies this precision context and sets the copy&apos;s
     /// exponent range.</summary>
+    /// <returns>A PrecisionContext object.</returns>
+    /// <param name='exponentMinSmall'>A 32-bit signed integer.</param>
+    /// <param name='exponentMaxSmall'>A 32-bit signed integer. (2).</param>
+    public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
+      if (exponentMinSmall > exponentMaxSmall) {
+        throw new ArgumentException("exponentMin greater than exponentMax");
+      }
+      PrecisionContext pc = this.Copy();
+      pc.hasExponentRange = true;
+      pc.exponentMin = (BigInteger)exponentMinSmall;
+      pc.exponentMax = (BigInteger)exponentMaxSmall;
+      return pc;
+    }
+
+    /// <summary>Copies this precision context and sets the copy&apos;s
+    /// exponent range.</summary>
     /// <param name='exponentMin'>Desired minimum exponent (EMin).</param>
     /// <param name='exponentMax'>Desired maximum exponent.</param>
     /// <returns>A PrecisionContext object.</returns>
-    public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
+    public PrecisionContext WithBigExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if (exponentMin == null) {
         throw new ArgumentNullException("exponentMin");
       }

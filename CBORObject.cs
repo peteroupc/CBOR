@@ -2089,8 +2089,7 @@ namespace PeterO {
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
-        throw new ArgumentException("value" +
-                                    " not greater or equal to 0 (" +
+        throw new ArgumentException("value not greater or equal to 0 (" +
                                     Convert.ToString((int)value, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (value < 24) {
