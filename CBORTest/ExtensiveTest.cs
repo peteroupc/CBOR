@@ -7,6 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
@@ -397,7 +398,7 @@ namespace CBOR
         // Console.WriteLine("val={0}",Create(ExtendedFloat.Create(
         // (BigInteger)mantissa,  // (BigInteger)exponent
         // )));
-        // Console.WriteLine("mant={0} exp={1}", mantissa,exponent);
+        // Console.WriteLine("mant=" + mantissa + " exp=" + (exponent));
         return Create(ExtendedFloat.Create(
           (BigInteger)mantissa,
           (BigInteger)exponent));
@@ -599,8 +600,7 @@ namespace CBOR
       }
 
       public void ComparePrint(IExtendedNumber bn) {
-        Console.WriteLine("{0} man, {1} exp",
-                          ToValue(this).Mantissa, ToValue(bn).Mantissa);
+        Console.WriteLine(String.Empty + ToValue(this).Mantissa + " man, " + ToValue(bn).Mantissa + " exp");
       }
 
       public BinaryNumber RoundToIntegralExact(PrecisionContext ctx) {
@@ -639,7 +639,7 @@ namespace CBOR
         return this.ef != null && ToValue(this).IsZero;
       }
     }
-    
+
     private int ParseLineInput(string ln) {
       string[] chunks = Regex.Split(ln, " +");
       if (chunks.Length < 4) {
@@ -824,14 +824,16 @@ namespace CBOR
         if (!result.Equals(d3)) {
           if (compareOp.Equals("vn")) {
             if (!result.IsNear(d3)) {
+              Console.WriteLine("op1=..." + op1 + " op2=..." + op2 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else if (compareOp.Equals("nb")) {
             if (!result.IsNear(d3)) {
+              Console.WriteLine("op1=..." + op1 + " op2=..." + op2 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else {
-            result.ComparePrint(d3);
+            Console.WriteLine("op1=..." + op1 + " op2=..." + op2 + " result=" + result + " d3=...." + d3);
             Assert.AreEqual(result, d3, ln);
           }
         }
@@ -875,14 +877,16 @@ namespace CBOR
         if (!result.Equals(d3)) {
           if (compareOp.Equals("vn")) {
             if (!result.IsNear(d3)) {
+              Console.WriteLine("op1=..." + op1 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else if (compareOp.Equals("nb")) {
             if (!result.IsNear(d3)) {
+              Console.WriteLine("op1=..." + op1 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else {
-            result.ComparePrint(d3);
+            Console.WriteLine("op1=..." + op1 + " result=" + result + " d3=...." + d3);
             Assert.AreEqual(result, d3, ln);
           }
         }
@@ -913,18 +917,28 @@ namespace CBOR
         if (!result.Equals(d3)) {
           if (compareOp.Equals("vn")) {
             if (!result.IsNear(d3)) {
+              Console.WriteLine("op1=..." + op1 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else if (compareOp.Equals("nb")) {
             if (!result.IsNear(d3)) {
+              Console.WriteLine("op1=..." + op1 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else {
+            Console.WriteLine("op1=..." + op1 + " result=" + result + " d3=...." + d3);
             Assert.AreEqual(result, d3, ln);
           }
         }
+        expectedFlags &= ~PrecisionContext.FlagInexact;
+        ignoredFlags |= PrecisionContext.FlagInexact;
         ctx.Flags &= ~ignoredFlags;
-        AssertFlags(expectedFlags, ctx.Flags, ln);
+        if (!op1.IsZeroValue()) {
+          // ignore flags for zero operand, expects
+          // divide by zero flag where general decimal
+          // spec doesn't set flags in this case
+          AssertFlags(expectedFlags, ctx.Flags, ln);
+        }
       } else if (op.Equals("div")) {
         IExtendedNumber d3 = op1.Divide(op2, ctx);
         if (!result.Equals(d3)) {
@@ -1162,45 +1176,54 @@ namespace CBOR
       return 0;
     }
 
-    private sealed class ConsoleListener : System.Diagnostics.TraceListener {
-      public override void WriteLine(string message) {
-        Console.WriteLine(message);
-      }
-
-      public override void Write(string message) {
-        Console.Write(message);
-      }
-    }
-
     [Test]
     public void TestParser() {
       long failures = 0;
-      System.Diagnostics.Debug.Listeners.Add(new ConsoleListener());
+      List<string> errors = new List<string>();
       System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
       if (!Directory.Exists(valuePath)) {
         return;
       }
       sw.Start();
+      TextWriter nullWriter = TextWriter.Null;
+      TextWriter standardOut = Console.Out;
       for (int i = 0; i < 1; ++i) {
         foreach (var p in Directory.GetDirectories(valuePath)) {
           foreach (var f in Directory.GetFiles(p)) {
-            Console.WriteLine("//" + f);
+            // Console.WriteLine("// " + f);
             bool isinput = f.Contains(".input");
+            // if (!f.Contains("log") || f.Contains("log10")) {
+            // continue;
+            // }
+            if (!isinput) {
+              continue;
+            }
             using (StreamReader w = new StreamReader(f)) {
               while (!w.EndOfStream) {
                 var ln = w.ReadLine();
                 {
                   try {
+                    Console.SetOut(nullWriter);
                     if (isinput) {
                       this.ParseLineInput(ln);
                     } else {
                       this.ParseLine(ln);
                     }
                   } catch (Exception ex) {
-                    Console.WriteLine(ln);
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(ex.StackTrace);
+                    errors.Add(ex.Message);
                     ++failures;
+                    try {
+                      Console.SetOut(standardOut);
+                      if (isinput) {
+                        this.ParseLineInput(ln);
+                      } else {
+                        this.ParseLine(ln);
+                      }
+                    } catch (Exception ex2) {
+                      Console.WriteLine(ln);
+                      Console.SetOut(nullWriter);
+                      Console.WriteLine(ex2.Message);
+                    }
                   }
                 }
               }
@@ -1208,11 +1231,15 @@ namespace CBOR
           }
         }
       }
+      Console.SetOut(standardOut);
+      sw.Stop();
+      Console.WriteLine("Time: " + (sw.ElapsedMilliseconds / 1000.0) + " s");
       if (failures > 0) {
+        foreach (string err in errors) {
+          Console.WriteLine(err);
+        }
         Assert.Fail(failures + " failure(s)");
       }
-      sw.Stop();
-      Console.WriteLine("Time: {0} s", sw.ElapsedMilliseconds / 1000.0);
     }
   }
 }

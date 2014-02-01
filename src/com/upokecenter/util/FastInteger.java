@@ -332,7 +332,7 @@ at: http://peteroupc.github.io/CBOR/
         MutableNumber other) {
         {
           {
-            // System.out.println("{0} {1}",this.data.length,other.data.length);
+            // System.out.println("" + this.data.length + " " + (other.data.length));
             int neededSize = (this.wordCount > other.wordCount) ? this.wordCount : other.wordCount;
             if (this.data.length < neededSize) {
               int[] newdata = new int[neededSize + 20];

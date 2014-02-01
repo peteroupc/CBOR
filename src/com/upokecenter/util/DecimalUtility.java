@@ -160,7 +160,7 @@ private DecimalUtility() {
         synchronized(this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputs[i].compareTo(bi) <= 0 && (minValue == null || this.inputs[i].compareTo(minValue) >= 0)) {
-              // System.out.println("Have cached power ({0}, {1})",inputs[i],bi);
+              // System.out.println("Have cached power (" + inputs[i] + ", " + bi + ")");
               ret = new BigInteger[] { this.inputs[i], this.outputs[i] };
               minValue = this.inputs[i];
             }

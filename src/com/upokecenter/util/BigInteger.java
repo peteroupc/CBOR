@@ -690,7 +690,7 @@ at: http://peteroupc.github.io/CBOR/
           return;
         }
         if (countA <= count2 && countB <= count2) {
-          // System.out.println("Can be smaller: {0},{1},{2}",AN,BN,count2);
+          // System.out.println("Can be smaller: " + AN + "," + BN + "," + (count2));
           java.util.Arrays.fill(resultArr,resultStart + count,(resultStart + count)+(count),(short)0);
           if (count2 == 8) {
             Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
@@ -2443,19 +2443,19 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("str");
       }
       if (index < 0) {
-        throw new IllegalArgumentException("\"str\"" + " not greater or equal to " + "0" + " (" + Long.toString((long)index) + ")");
+        throw new IllegalArgumentException("\"str\" not greater or equal to " + "0" + " (" + Long.toString((long)index) + ")");
       }
       if (index > str.length()) {
-        throw new IllegalArgumentException("\"str\"" + " not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)index) + ")");
+        throw new IllegalArgumentException("\"str\" not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)index) + ")");
       }
       if (endIndex < 0) {
-        throw new IllegalArgumentException("\"index\"" + " not greater or equal to " + "0" + " (" + Long.toString((long)endIndex) + ")");
+        throw new IllegalArgumentException("\"index\" not greater or equal to " + "0" + " (" + Long.toString((long)endIndex) + ")");
       }
       if (endIndex > str.length()) {
-        throw new IllegalArgumentException("\"index\"" + " not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)endIndex) + ")");
+        throw new IllegalArgumentException("\"index\" not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)endIndex) + ")");
       }
       if (endIndex < index) {
-        throw new IllegalArgumentException("\"endIndex\"" + " not greater or equal to " + Long.toString((long)index) + " (" + Long.toString((long)endIndex) + ")");
+        throw new IllegalArgumentException("\"endIndex\" not greater or equal to " + Long.toString((long)index) + " (" + Long.toString((long)endIndex) + ")");
       }
       if (index == endIndex) {
         throw new NumberFormatException("No digits");
@@ -3242,8 +3242,7 @@ at: http://peteroupc.github.io/CBOR/
         words2Size);
       remainder.wordCount = remainder.CalcWordCount();
       quotient.wordCount = quotient.CalcWordCount();
-      // System.out.println("Divd={0} divs={1} quo={2} rem={3}",this.wordCount,
-      // divisor.wordCount, quotient.wordCount, remainder.wordCount);
+      // System.out.println("Divd=" + this.wordCount + " divs=" + divisor.wordCount + " quo=" + quotient.wordCount + " rem=" + (remainder.wordCount));
       remainder.ShortenArray();
       quotient.ShortenArray();
       if (this.signum() < 0) {

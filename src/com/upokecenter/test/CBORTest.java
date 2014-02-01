@@ -354,6 +354,21 @@ import com.upokecenter.util.*;
         ExtendedDecimal.FromString("90246605365627217170000000000").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
     }
 
+    @Test
+    public void TestFloatDecimalRoundTrip() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 5000; ++i) {
+        ExtendedFloat ef = RandomExtendedFloat(r);
+        ExtendedDecimal ed = ef.ToExtendedDecimal();
+        ExtendedFloat ef2 = ed.ToExtendedFloat();
+        // Tests that values converted from float to decimal and
+        // back have the same numerical value
+        if (ef.compareTo(ef2) != 0) {
+          Assert.assertEquals("TestFloatDecimalRoundTrip " + ef + "; " + ef2,0,ef.compareTo(ef2));
+        }
+      }
+    }
+
     /**
      * Not documented yet.
      */
@@ -1161,7 +1176,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         0x61,
         0x20,
         (byte)0xFF  });
-      Assert.assertEquals("  ", cbor.AsString());
+      Assert.assertEquals(" ", cbor.AsString());
       // Test streaming of long strings
       String longString = Repeat('x', 200000);
       CBORObject cbor2;

@@ -98,7 +98,7 @@ namespace PeterO {
       // only the digits '0' through '9'
       if (length > 9) {
         throw new ArgumentException(
-          "length" + " not less or equal to " + "9" + " (" +
+          "length not less or equal to " + "9" + " (" +
           Convert.ToString(length, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       int ret = 0;
@@ -163,7 +163,7 @@ namespace PeterO {
         this.knownBitLength = new FastInteger(1);
         return;
       }
-      // Console.WriteLine("digits={0}",digits);
+      // Console.WriteLine("digits=" + (digits));
       if (digits == 1) {
         BigInteger bigrem;
         BigInteger bigquo = BigInteger.DivRem(
@@ -389,8 +389,7 @@ namespace PeterO {
         int digitShift = digitLength - digits;
         this.knownBitLength.SubtractInt(digitShift);
         int newLength = (int)(digitLength - digitShift);
-        // Console.WriteLine("dlen={0} dshift={1} newlen={2}",digitLength,
-        // digitShift, newLength);
+        // Console.WriteLine("dlen=" + digitLength + " dshift=" + digitShift + " newlen=" + (newLength));
         if (this.discardedBitCount == null) {
           this.discardedBitCount = new FastInteger(0);
         }

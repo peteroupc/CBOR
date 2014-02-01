@@ -94,7 +94,7 @@ at: http://peteroupc.github.io/CBOR/
       // only the digits '0' through '9'
       if (length > 9) {
         throw new IllegalArgumentException(
-          "length" + " not less or equal to " + "9" + " ("+(length)+")");
+          "length not less or equal to " + "9" + " ("+(length)+")");
       }
       int ret = 0;
       for (int i = 0; i < length; ++i) {
@@ -159,7 +159,7 @@ at: http://peteroupc.github.io/CBOR/
         this.knownBitLength = new FastInteger(1);
         return;
       }
-      // System.out.println("digits={0}",digits);
+      // System.out.println("digits=" + (digits));
       if (digits == 1) {
         BigInteger bigrem;
         BigInteger bigquo;
@@ -401,8 +401,7 @@ bigrem=divrem[1]; }
         int digitShift = digitLength - digits;
         this.knownBitLength.SubtractInt(digitShift);
         int newLength = (int)(digitLength - digitShift);
-        // System.out.println("dlen={0} dshift={1} newlen={2}",digitLength,
-        // digitShift, newLength);
+        // System.out.println("dlen=" + digitLength + " dshift=" + digitShift + " newlen=" + (newLength));
         if (this.discardedBitCount == null) {
           this.discardedBitCount = new FastInteger(0);
         }
