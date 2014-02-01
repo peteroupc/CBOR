@@ -242,7 +242,7 @@ namespace Test
     private static string valueTestPath = "..\\..\\..\\.settings";
 
     private static void PrintTime(System.Diagnostics.Stopwatch sw) {
-      Console.WriteLine("Elapsed time: {0} s", sw.ElapsedMilliseconds / 1000.0);
+      Console.WriteLine("Elapsed time: " + (sw.ElapsedMilliseconds / 1000.0) + " s");
     }
 
     [Test]

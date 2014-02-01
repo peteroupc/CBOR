@@ -2118,7 +2118,7 @@ namespace PeterO {
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
-        throw new ArgumentException("value" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("value not greater or equal to " + "0" + " (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5)) };

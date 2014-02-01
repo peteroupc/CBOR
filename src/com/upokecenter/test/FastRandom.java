@@ -44,7 +44,7 @@ package com.upokecenter.test;
      */
     public int NextValue(int v) {
       if (v <= 0) {
-        throw new IllegalArgumentException("v" + " not less than " + "0" + " (" + Long.toString((long)v) + ")");
+        throw new IllegalArgumentException("v not less than " + "0" + " (" + Long.toString((long)v) + ")");
       }
       if (v <= 1) {
         return 0;

@@ -2116,7 +2116,7 @@ public void set(String key, CBORObject value) {
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
-        throw new IllegalArgumentException("value" + " not greater or equal to " + "0" + " (" + Long.toString((long)value) + ")");
+        throw new IllegalArgumentException("value not greater or equal to " + "0" + " (" + Long.toString((long)value) + ")");
       }
       if (value < 24) {
         return new byte[] {  (byte)((byte)value | (byte)(type << 5))  };

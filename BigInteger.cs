@@ -697,7 +697,7 @@ namespace PeterO {
           return;
         }
         if (countA <= count2 && countB <= count2) {
-          // Console.WriteLine("Can be smaller: {0},{1},{2}",AN,BN,count2);
+          // Console.WriteLine("Can be smaller: " + AN + "," + BN + "," + (count2));
           Array.Clear((short[])resultArr, resultStart + count, count);
           if (count2 == 8) {
             Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
@@ -1260,10 +1260,10 @@ namespace PeterO {
       int valueNB = (int)valueNBint;
       #if DEBUG
       if (valueNAint <= 0) {
-        throw new ArgumentException("valueNAint" + " not less than " + "0" + " (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("valueNAint not less than " + "0" + " (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (valueNBint <= 0) {
-        throw new ArgumentException("valueNBint" + " not less than " + "0" + " (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("valueNBint not less than " + "0" + " (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (!(valueNA % 2 == 0 && valueNB % 2 == 0)) {
         throw new ArgumentException("doesn't satisfy valueNA%2==0 && valueNB%2==0");
@@ -1536,7 +1536,7 @@ namespace PeterO {
     private bool GetUnsignedBit(int n) {
       #if DEBUG
       if (n < 0) {
-        throw new ArgumentException("n" + " not greater or equal to " + "0" + " (" + Convert.ToString((int)n, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("n not greater or equal to " + "0" + " (" + Convert.ToString((int)n, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
       if ((n >> 4) >= this.reg.Length) {
@@ -2435,19 +2435,19 @@ namespace PeterO {
         throw new ArgumentNullException("str");
       }
       if (index < 0) {
-        throw new ArgumentException("\"str\"" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("\"str\" not greater or equal to " + "0" + " (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (index > str.Length) {
-        throw new ArgumentException("\"str\"" + " not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("\"str\" not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (endIndex < 0) {
-        throw new ArgumentException("\"index\"" + " not greater or equal to " + "0" + " (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("\"index\" not greater or equal to " + "0" + " (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (endIndex > str.Length) {
-        throw new ArgumentException("\"index\"" + " not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("\"index\" not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (endIndex < index) {
-        throw new ArgumentException("\"endIndex\"" + " not greater or equal to " + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("\"endIndex\" not greater or equal to " + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (index == endIndex) {
         throw new FormatException("No digits");
@@ -3219,8 +3219,7 @@ namespace PeterO {
         words2Size);
       remainder.wordCount = remainder.CalcWordCount();
       quotient.wordCount = quotient.CalcWordCount();
-      // Console.WriteLine("Divd={0} divs={1} quo={2} rem={3}",this.wordCount,
-      // divisor.wordCount, quotient.wordCount, remainder.wordCount);
+      // Console.WriteLine("Divd=" + this.wordCount + " divs=" + divisor.wordCount + " quo=" + quotient.wordCount + " rem=" + (remainder.wordCount));
       remainder.ShortenArray();
       quotient.ShortenArray();
       if (this.Sign < 0) {

@@ -159,7 +159,7 @@ namespace PeterO
         lock (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputs[i].CompareTo(bi) <= 0 && (minValue == null || this.inputs[i].CompareTo(minValue) >= 0)) {
-              // Console.WriteLine("Have cached power ({0}, {1})",inputs[i],bi);
+              // Console.WriteLine("Have cached power (" + inputs[i] + ", " + bi + ")");
               ret = new BigInteger[] { this.inputs[i], this.outputs[i] };
               minValue = this.inputs[i];
             }

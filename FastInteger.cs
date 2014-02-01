@@ -317,7 +317,7 @@ namespace PeterO {
         MutableNumber other) {
         unchecked {
           {
-            // Console.WriteLine("{0} {1}",this.data.Length,other.data.Length);
+            // Console.WriteLine("" + this.data.Length + " " + (other.data.Length));
             int neededSize = (this.wordCount > other.wordCount) ? this.wordCount : other.wordCount;
             if (this.data.Length < neededSize) {
               int[] newdata = new int[neededSize + 20];

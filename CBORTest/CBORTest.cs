@@ -363,21 +363,23 @@ namespace Test {
     }
 
     [Test]
-    public void TestFloatDecimalRoundTrip(){
+    public void TestFloatDecimalRoundTrip() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 5000; ++i) {
-        ExtendedFloat ef=RandomExtendedFloat(r);
-        ExtendedDecimal ed=ef.ToExtendedDecimal();
-        ExtendedFloat ef2=ed.ToExtendedFloat();
+        ExtendedFloat ef = RandomExtendedFloat(r);
+        ExtendedDecimal ed = ef.ToExtendedDecimal();
+        ExtendedFloat ef2 = ed.ToExtendedFloat();
         // Tests that values converted from float to decimal and
         // back have the same numerical value
-        if(ef.CompareTo(ef2)!=0){
-          Assert.AreEqual(0,ef.CompareTo(ef2),
-                          "TestFloatDecimalRoundTrip " + ef + ", " + ef2);
+        if (ef.CompareTo(ef2) != 0) {
+          Assert.AreEqual(
+0,
+ef.CompareTo(ef2),
+"TestFloatDecimalRoundTrip " + ef + "; " + ef2);
         }
       }
     }
-    
+
     /// <summary>Not documented yet.</summary>
     [Test]
     public void TestCompare() {
@@ -1133,7 +1135,7 @@ o.ToJSONString());
         0x61,
         0x20,
         0xFF });
-      Assert.AreEqual("  ", cbor.AsString());
+      Assert.AreEqual(" ", cbor.AsString());
       // Test streaming of long strings
       string longString = Repeat('x', 200000);
       CBORObject cbor2;
