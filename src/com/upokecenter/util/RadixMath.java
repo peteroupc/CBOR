@@ -385,13 +385,8 @@ at: http://peteroupc.github.io/CBOR/
 
     private boolean Round(IShiftAccumulator accum, Rounding rounding, boolean neg, FastInteger fastint) {
       boolean incremented = false;
-      int radix = this.thisRadix;
-      if (rounding == Rounding.HalfUp) {
-        if (accum.getLastDiscardedDigit() >= (radix / 2)) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.HalfEven) {
-        // System.out.println("last=" + accum.getLastDiscardedDigit() + " older=" + accum.getOlderDiscardedDigits() + " even=" + (fastint.isEvenNumber()));
+      if (rounding == Rounding.HalfEven) {
+        int radix = this.thisRadix;
         if (accum.getLastDiscardedDigit() >= (radix / 2)) {
           if (accum.getLastDiscardedDigit() > (radix / 2) || accum.getOlderDiscardedDigits() != 0) {
             incremented = true;
@@ -399,23 +394,8 @@ at: http://peteroupc.github.io/CBOR/
             incremented = true;
           }
         }
-      } else if (rounding == Rounding.Ceiling) {
-        if (!neg && (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.Floor) {
-        if (neg && (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.HalfDown) {
-        if (accum.getLastDiscardedDigit() > (radix / 2) || (accum.getLastDiscardedDigit() == (radix / 2) && accum.getOlderDiscardedDigits() != 0)) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.Up) {
-        if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-          incremented = true;
-        }
       } else if (rounding == Rounding.ZeroFiveUp) {
+        int radix = this.thisRadix;
         if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
           if (radix == 2) {
             incremented = true;
@@ -426,6 +406,13 @@ at: http://peteroupc.github.io/CBOR/
             }
           }
         }
+      } else if (rounding != Rounding.Down) {
+        incremented = this.RoundGivenDigits(
+          accum.getLastDiscardedDigit(),
+          accum.getOlderDiscardedDigits(),
+          rounding,
+          neg,
+          BigInteger.ZERO);
       }
       return incremented;
     }
@@ -2070,13 +2057,19 @@ rem=divrem[1]; }
           BigInteger rem = null;
           BigInteger quo = null;
           // System.out.println("div=" + (mantissaDividend.getUnsignedBitLength()) + " divs=" + (mantissaDivisor.getUnsignedBitLength()));
-          if ((mantissaDividend.remainder(mantissaDivisor)).signum()==0) {
+          {
+BigInteger[] divrem=(mantissaDividend).divideAndRemainder(mantissaDividend);
+quo=divrem[0];
+rem=divrem[1]; }
+          if (rem.signum()==0) {
             // Dividend is divisible by divisor
-            quo = mantissaDividend.divide(mantissaDivisor);
             if (resultNeg) {
               quo=quo.negate();
             }
             return this.RoundToPrecision(this.helper.CreateNewWithFlags(quo, naturalExponent.AsBigInteger(), resultNeg ? BigNumberFlags.FlagNegative : 0), ctx);
+          } else {
+            rem = null;
+            quo = null;
           }
           if (hasPrecision) {
 

@@ -6460,13 +6460,8 @@ var RadixMath = function(helper) {
     };
     prototype.Round = function(accum, rounding, neg, fastint) {
         var incremented = false;
-        var radix = this.thisRadix;
-        if (rounding == Rounding.HalfUp) {
-            if (accum.getLastDiscardedDigit() >= ((radix / 2)|0)) {
-                incremented = true;
-            }
-        } else if (rounding == Rounding.HalfEven) {
-
+        if (rounding == Rounding.HalfEven) {
+            var radix = this.thisRadix;
             if (accum.getLastDiscardedDigit() >= ((radix / 2)|0)) {
                 if (accum.getLastDiscardedDigit() > ((radix / 2)|0) || accum.getOlderDiscardedDigits() != 0) {
                     incremented = true;
@@ -6474,23 +6469,8 @@ var RadixMath = function(helper) {
                     incremented = true;
                 }
             }
-        } else if (rounding == Rounding.Ceiling) {
-            if (!neg && (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                incremented = true;
-            }
-        } else if (rounding == Rounding.Floor) {
-            if (neg && (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                incremented = true;
-            }
-        } else if (rounding == Rounding.HalfDown) {
-            if (accum.getLastDiscardedDigit() > ((radix / 2)|0) || (accum.getLastDiscardedDigit() == ((radix / 2)|0) && accum.getOlderDiscardedDigits() != 0)) {
-                incremented = true;
-            }
-        } else if (rounding == Rounding.Up) {
-            if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
-                incremented = true;
-            }
         } else if (rounding == Rounding.ZeroFiveUp) {
+            var radix = this.thisRadix;
             if ((accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0) {
                 if (radix == 2) {
                     incremented = true;
@@ -6501,6 +6481,8 @@ var RadixMath = function(helper) {
                     }
                 }
             }
+        } else if (rounding != Rounding.Down) {
+            incremented = this.RoundGivenDigits(accum.getLastDiscardedDigit(), accum.getOlderDiscardedDigits(), rounding, neg, BigInteger.ZERO);
         }
         return incremented;
     };
@@ -7907,13 +7889,20 @@ var RadixMath = function(helper) {
                 var rem = null;
                 var quo = null;
 
-                if ((mantissaDividend.remainder(mantissaDivisor)).signum() == 0) {
+                {
+                    var divrem = (mantissaDividend).divideAndRemainder(mantissaDividend);
+                    quo = divrem[0];
+                    rem = divrem[1];
+                }
+                if (rem.signum() == 0) {
 
-                    quo = mantissaDividend.divide(mantissaDivisor);
                     if (resultNeg) {
                         quo = quo.negate();
                     }
                     return this.RoundToPrecision(this.helper.CreateNewWithFlags(quo, naturalExponent.AsBigInteger(), resultNeg ? BigNumberFlags.FlagNegative : 0), ctx);
+                } else {
+                    rem = null;
+                    quo = null;
                 }
                 if (hasPrecision) {
                     var divid = mantissaDividend;
@@ -10315,6 +10304,11 @@ function() {
         return ExtendedDecimal.Create(bigint, BigInteger.ZERO);
     };
 
+    constructor['FromInt32'] = constructor.FromInt32 = function(valueSmaller) {
+        var bigint = BigInteger.valueOf(valueSmaller);
+        return ExtendedDecimal.Create(bigint, BigInteger.ZERO);
+    };
+
     constructor['FromDouble'] = constructor.FromDouble = function(dbl) {
         var value = Extras.DoubleToIntegers(dbl);
         var floatExponent = ((value[1] >> 20) & 2047);
@@ -11135,6 +11129,11 @@ function() {
     constructor['FromInt64'] = constructor.FromInt64 = function(valueSmall_obj) {
         var valueSmall = JSInteropFactory.createLong(valueSmall_obj);
         var bigint = BigInteger.valueOf(valueSmall);
+        return ExtendedFloat.Create(bigint, BigInteger.ZERO);
+    };
+
+    constructor['FromInt32'] = constructor.FromInt32 = function(valueSmaller) {
+        var bigint = BigInteger.valueOf(valueSmaller);
         return ExtendedFloat.Create(bigint, BigInteger.ZERO);
     };
 
