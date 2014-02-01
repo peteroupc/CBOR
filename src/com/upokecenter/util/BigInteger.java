@@ -2443,13 +2443,13 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("str");
       }
       if (index < 0) {
-        throw new IllegalArgumentException("\"str\" not greater or equal to " + "0" + " (" + Long.toString((long)index) + ")");
+        throw new IllegalArgumentException("\"str\" not greater or equal to 0 (" + Long.toString((long)index) + ")");
       }
       if (index > str.length()) {
         throw new IllegalArgumentException("\"str\" not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)index) + ")");
       }
       if (endIndex < 0) {
-        throw new IllegalArgumentException("\"index\" not greater or equal to " + "0" + " (" + Long.toString((long)endIndex) + ")");
+        throw new IllegalArgumentException("\"index\" not greater or equal to 0 (" + Long.toString((long)endIndex) + ")");
       }
       if (endIndex > str.length()) {
         throw new IllegalArgumentException("\"index\" not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)endIndex) + ")");

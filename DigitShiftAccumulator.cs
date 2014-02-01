@@ -98,7 +98,7 @@ namespace PeterO {
       // only the digits '0' through '9'
       if (length > 9) {
         throw new ArgumentException(
-          "length not less or equal to " + "9" + " (" +
+          "length not less or equal to 9 (" +
           Convert.ToString(length, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       int ret = 0;

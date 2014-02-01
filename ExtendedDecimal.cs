@@ -1533,17 +1533,20 @@ namespace PeterO {
     /// point.</param>
     /// <param name='ctx'>A precision context object to control the rounding
     /// mode to use if the result must be scaled down to have the same exponent
-    /// as this value. The precision setting of this context is ignored. If
-    /// HasFlags of the context is true, will also store the flags resulting
-    /// from the operation (the flags are in addition to the pre-existing
-    /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
+    /// as this value. If the precision given in the context is other than 0,
+    /// calls the Quantize method with both arguments equal to the result
+    /// of the operation (and can signal FlagInvalid and return NaN if the
+    /// result doesn&apos;t fit the given precision). If HasFlags of the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the flags are in addition to the pre-existing flags). Can be null,
+    /// in which case the default rounding mode is HalfEven.</param>
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0. Signals FlagInvalid and returns NaN if the context defines
     /// an exponent range and the desired exponent is outside that range.
     /// Signals FlagInvalid and returns NaN if the rounding mode is Rounding.Unnecessary
-    /// and the result is not exact.</returns>
+    /// and the result is not exact. If a precision is given in the context,.</returns>
     public ExtendedDecimal DivideToExponent(
       ExtendedDecimal divisor,
       long desiredExponentSmall,
@@ -1601,10 +1604,13 @@ namespace PeterO {
     /// number places the cutoff point to the left of the usual decimal point.</param>
     /// <param name='ctx'>A precision context object to control the rounding
     /// mode to use if the result must be scaled down to have the same exponent
-    /// as this value. The precision setting of this context is ignored. If
-    /// HasFlags of the context is true, will also store the flags resulting
-    /// from the operation (the flags are in addition to the pre-existing
-    /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
+    /// as this value. If the precision given in the context is other than 0,
+    /// calls the Quantize method with both arguments equal to the result
+    /// of the operation (and can signal FlagInvalid and return NaN if the
+    /// result doesn&apos;t fit the given precision). If HasFlags of the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the flags are in addition to the pre-existing flags). Can be null,
+    /// in which case the default rounding mode is HalfEven.</param>
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
@@ -2354,9 +2360,32 @@ namespace PeterO {
     /// is null or the precision is unlimited (the context's Precision property
     /// is 0), and the exponent has a fractional part.</returns>
     /// <param name='exponent'>An ExtendedDecimal object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags).</param>
     public ExtendedDecimal Pow(ExtendedDecimal exponent, PrecisionContext ctx) {
       return math.Power(this, exponent, ctx);
+    }
+
+    /// <summary>Raises this object&apos;s value to the given exponent.</summary>
+    /// <returns>This^exponent. Signals the flag FlagInvalid and returns
+    /// NaN if this object and exponent are both 0.</returns>
+    /// <param name='exponentSmall'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags).</param>
+    public ExtendedDecimal Pow(int exponentSmall, PrecisionContext ctx) {
+      return this.Pow(ExtendedDecimal.FromInt64(exponentSmall), ctx);
+    }
+
+    /// <summary>Raises this object&apos;s value to the given exponent.</summary>
+    /// <returns>This^exponent. Returns NaN if this object and exponent
+    /// are both 0.</returns>
+    /// <param name='exponentSmall'>A 32-bit signed integer.</param>
+    public ExtendedDecimal Pow(int exponentSmall) {
+      return this.Pow(ExtendedDecimal.FromInt64(exponentSmall), null);
     }
 
     /// <summary>Finds the constant pi.</summary>

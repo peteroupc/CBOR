@@ -312,7 +312,7 @@ namespace PeterO {
     /// precision.</param>
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
-        throw new ArgumentException("precision not greater or equal to " + "0" + " (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("precision not greater or equal to 0 (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = (BigInteger)precision;
@@ -330,7 +330,7 @@ namespace PeterO {
         throw new ArgumentNullException("bigintPrecision");
       }
       if (bigintPrecision.Sign < 0) {
-        throw new ArgumentException("precision not greater or equal to " + "0" + " (" + bigintPrecision + ")");
+        throw new ArgumentException("precision not greater or equal to 0 (" + bigintPrecision + ")");
       }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
@@ -379,7 +379,7 @@ namespace PeterO {
     /// <param name='clampNormalExponents'>A Boolean object.</param>
     public PrecisionContext(int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall, bool clampNormalExponents) {
       if (precision < 0) {
-        throw new ArgumentException("precision not greater or equal to " + "0" + " (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("precision not greater or equal to 0 (" + Convert.ToString(precision, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (exponentMinSmall > exponentMaxSmall) {
         throw new ArgumentException("exponentMinSmall not less or equal to " + Convert.ToString(exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ")");

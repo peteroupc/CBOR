@@ -800,7 +800,7 @@ bigrem=divrem[1]; }
       return this.RoundToPrecision(guess, ctx);
     }
 
-    private T LnSeries1(T thisValue, BigInteger workingPrecision, PrecisionContext ctx) {
+    private T LnInternal(T thisValue, BigInteger workingPrecision, PrecisionContext ctx) {
       boolean more = true;
       int lastCompare = 0;
       int vacillations = 0;
@@ -1325,13 +1325,13 @@ bigrem=divrem[1]; }
               thisValue = this.SquareRoot(thisValue, ctxdiv.WithUnlimitedExponents());
               roots.Increment();
             }
-            thisValue = this.LnSeries1(thisValue, ctxdiv.getPrecision(), ctxdiv);
+            thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxdiv);
             BigInteger bigintRoots = PowerOfTwo(roots);
             // Multiply back 2^X, where X is the number
             // of square root calls
             thisValue = this.Multiply(thisValue, this.helper.CreateNewWithFlags(bigintRoots, BigInteger.ZERO, 0), ctxCopy);
           } else {
-            thisValue = this.LnSeries1(thisValue, ctxdiv.getPrecision(), ctxCopy);
+            thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
           }
           if (ctx.getHasFlags()) {
             ctxCopy.setFlags(ctxCopy.getFlags()|(PrecisionContext.FlagInexact));
@@ -1357,23 +1357,23 @@ bigrem=divrem[1]; }
             }
             // Find -Ln(1/thisValue)
             thisValue = this.Divide(one, thisValue, ctxdiv);
-            thisValue = this.LnSeries1(thisValue, ctxdiv.getPrecision(), ctxdiv);
+            thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxdiv);
             thisValue = this.NegateRaw(thisValue);
             BigInteger bigintRoots = PowerOfTwo(roots);
             // Multiply back 2^X, where X is the number
             // of square root calls
             thisValue = this.Multiply(thisValue, this.helper.CreateNewWithFlags(bigintRoots, BigInteger.ZERO, 0), ctxCopy);
           } else {
-            T quarter = this.Divide(one, this.helper.ValueOf(4), ctxCopy);
-            T oneThreeFourths = this.Add(two, this.NegateRaw(quarter), null);
-            if (this.compareTo(thisValue, oneThreeFourths) >= 0) {
-              // Greater than one and three fourths
+            T smallfrac = this.Divide(one, this.helper.ValueOf(16), ctxdiv);
+            T closeToOne = this.Add(one, smallfrac, null);
+            if (this.compareTo(thisValue, closeToOne) >= 0) {
               // Find -Ln(1/thisValue)
               thisValue = this.Divide(one, thisValue, ctxdiv);
-              thisValue = this.LnSeries1(thisValue, ctxdiv.getPrecision(), ctxCopy);
+              thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
               thisValue = this.NegateRaw(thisValue);
             } else {
-              thisValue = this.LnSeries1(thisValue, ctxdiv.getPrecision(), ctxCopy);
+              // Greater than 1 and close to 1
+              thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
             }
           }
           if (ctx.getHasFlags()) {
@@ -1836,8 +1836,17 @@ bigrem=divrem[1]; }
       if (ctx != null && !ctx.ExponentWithinRange(desiredExponent)) {
         return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + desiredExponent.toString());
       }
-      PrecisionContext ctx2 = (ctx == null) ? PrecisionContext.ForRounding(Rounding.HalfDown) : ctx.WithUnlimitedExponents().WithPrecision(0);
+      PrecisionContext ctx2 = (ctx == null) ? PrecisionContext.ForRounding(Rounding.HalfDown) :
+        ctx.WithUnlimitedExponents().WithPrecision(0);
       T ret = this.DivideInternal(thisValue, divisor, ctx2, IntegerModeFixedScale, desiredExponent);
+      if (ctx2.getPrecision().signum()==0 && this.IsFinite(ret)) {
+        // If a precision is given, call Quantize to ensure
+        // that the value fits the precision
+        ret = this.Quantize(ret, ret, ctx2);
+        if ((ctx2.getFlags() & PrecisionContext.FlagInvalid) != 0) {
+          ctx2.setFlags(PrecisionContext.FlagInvalid);
+        }
+      }
       if (ctx != null && ctx.getHasFlags()) {
         ctx.setFlags(ctx.getFlags()|(ctx2.getFlags()));
       }
@@ -2718,7 +2727,7 @@ bigrem=divrem[1]; }
       // get the precision
       FastInteger fastPrecision = ctx.getPrecision().canFitInInt() ? new FastInteger(ctx.getPrecision().intValue()) : FastInteger.FromBig(ctx.getPrecision());
       if (fastPrecision.signum() < 0) {
-        return this.SignalInvalidWithMessage(ctx, "precision not greater or equal to " + "0" + " (" + fastPrecision + ")");
+        return this.SignalInvalidWithMessage(ctx, "precision not greater or equal to 0 (" + fastPrecision + ")");
       }
       if (this.thisRadix == 2 || fastPrecision.isValueZero()) {
         // "binaryPrec" will have no special effect here
