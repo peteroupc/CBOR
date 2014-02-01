@@ -55,10 +55,10 @@ namespace PeterO {
       int scale,
       bool neg) {
       if (scale < 0) {
-        throw new ArgumentException("scale not greater or equal to " + "0" + " (" + Convert.ToString(scale, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("scale not greater or equal to 0 (" + Convert.ToString(scale, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (scale > 28) {
-        throw new ArgumentException("scale not less or equal to " + "28" + " (" + Convert.ToString(scale, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("scale not less or equal to 28 (" + Convert.ToString(scale, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       byte[] data = bigmant.ToByteArray();
       int a = 0;

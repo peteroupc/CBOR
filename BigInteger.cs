@@ -1260,10 +1260,10 @@ namespace PeterO {
       int valueNB = (int)valueNBint;
       #if DEBUG
       if (valueNAint <= 0) {
-        throw new ArgumentException("valueNAint not less than " + "0" + " (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("valueNAint not less than 0 (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (valueNBint <= 0) {
-        throw new ArgumentException("valueNBint not less than " + "0" + " (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("valueNBint not less than 0 (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (!(valueNA % 2 == 0 && valueNB % 2 == 0)) {
         throw new ArgumentException("doesn't satisfy valueNA%2==0 && valueNB%2==0");
@@ -1536,7 +1536,7 @@ namespace PeterO {
     private bool GetUnsignedBit(int n) {
       #if DEBUG
       if (n < 0) {
-        throw new ArgumentException("n not greater or equal to " + "0" + " (" + Convert.ToString((int)n, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("n not greater or equal to 0 (" + Convert.ToString((int)n, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
       if ((n >> 4) >= this.reg.Length) {
@@ -2435,13 +2435,13 @@ namespace PeterO {
         throw new ArgumentNullException("str");
       }
       if (index < 0) {
-        throw new ArgumentException("\"str\" not greater or equal to " + "0" + " (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("\"str\" not greater or equal to 0 (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (index > str.Length) {
         throw new ArgumentException("\"str\" not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (endIndex < 0) {
-        throw new ArgumentException("\"index\" not greater or equal to " + "0" + " (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("\"index\" not greater or equal to 0 (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (endIndex > str.Length) {
         throw new ArgumentException("\"index\" not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ")");

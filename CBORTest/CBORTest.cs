@@ -1131,11 +1131,11 @@ o.ToJSONString());
       CBORObject cbor = TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
         0x61,
-        0x20,
+        0x2e,
         0x61,
-        0x20,
+        0x2e,
         0xFF });
-      Assert.AreEqual(" ", cbor.AsString());
+      Assert.AreEqual("..", cbor.AsString());
       // Test streaming of long strings
       string longString = Repeat('x', 200000);
       CBORObject cbor2;

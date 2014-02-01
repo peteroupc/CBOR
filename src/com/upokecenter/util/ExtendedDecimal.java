@@ -1592,17 +1592,20 @@ remainder=divrem[1]; }
      * number places the cutoff point to the left of the usual decimal point.
      * @param ctx A precision context object to control the rounding mode
      * to use if the result must be scaled down to have the same exponent as
-     * this value. The precision setting of this context is ignored. If HasFlags
-     * of the context is true, will also store the flags resulting from the
-     * operation (the flags are in addition to the pre-existing flags).
-     * Can be null, in which case the default rounding mode is HalfEven.
+     * this value. If the precision given in the context is other than 0, calls
+     * the Quantize method with both arguments equal to the result of the
+     * operation (and can signal FlagInvalid and return NaN if the result
+     * doesn&apos;t fit the given precision). If HasFlags of the context
+     * is true, will also store the flags resulting from the operation (the
+     * flags are in addition to the pre-existing flags). Can be null, in which
+     * case the default rounding mode is HalfEven.
      * @return The quotient of the two objects. Signals FlagDivideByZero
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0. Signals FlagInvalid and returns NaN if the context defines
      * an exponent range and the desired exponent is outside that range.
      * Signals FlagInvalid and returns NaN if the rounding mode is Rounding.Unnecessary
-     * and the result is not exact.
+     * and the result is not exact. If a precision is given in the context,.
      */
     public ExtendedDecimal DivideToExponent(
       ExtendedDecimal divisor,
@@ -1665,10 +1668,13 @@ remainder=divrem[1]; }
      * places the cutoff point to the left of the usual decimal point.
      * @param ctx A precision context object to control the rounding mode
      * to use if the result must be scaled down to have the same exponent as
-     * this value. The precision setting of this context is ignored. If HasFlags
-     * of the context is true, will also store the flags resulting from the
-     * operation (the flags are in addition to the pre-existing flags).
-     * Can be null, in which case the default rounding mode is HalfEven.
+     * this value. If the precision given in the context is other than 0, calls
+     * the Quantize method with both arguments equal to the result of the
+     * operation (and can signal FlagInvalid and return NaN if the result
+     * doesn&apos;t fit the given precision). If HasFlags of the context
+     * is true, will also store the flags resulting from the operation (the
+     * flags are in addition to the pre-existing flags). Can be null, in which
+     * case the default rounding mode is HalfEven.
      * @return The quotient of the two objects. Signals FlagDivideByZero
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
@@ -2480,7 +2486,10 @@ remainder=divrem[1]; }
     /**
      * Raises this object&apos;s value to the given exponent.
      * @param exponent An ExtendedDecimal object.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags).
      * @return This^exponent. Signals the flag FlagInvalid and returns
      * NaN if this object and exponent are both 0; or if this value is less than
      * 0 and the exponent either has a fractional part or is infinity. Signals
@@ -2490,6 +2499,25 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal Pow(ExtendedDecimal exponent, PrecisionContext ctx) {
       return math.Power(this, exponent, ctx);
+    }
+
+    /**
+     * Raises this object&apos;s value to the given exponent.
+     * @return This^exponent. Signals the flag FlagInvalid and returns
+     * NaN if this object and exponent are both 0.
+     */
+    public ExtendedDecimal Pow(int exponentSmall, PrecisionContext ctx) {
+      return this.Pow(ExtendedDecimal.FromInt64(exponentSmall), ctx);
+    }
+
+    /**
+     * Raises this object&apos;s value to the given exponent.
+     * @param exponentSmall A 32-bit signed integer.
+     * @return This^exponent. Returns NaN if this object and exponent are
+     * both 0.
+     */
+    public ExtendedDecimal Pow(int exponentSmall) {
+      return this.Pow(ExtendedDecimal.FromInt64(exponentSmall), null);
     }
 
     /**

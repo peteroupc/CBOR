@@ -322,7 +322,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
-        throw new IllegalArgumentException("precision not greater or equal to " + "0" + " ("+(precision)+")");
+        throw new IllegalArgumentException("precision not greater or equal to 0 ("+(precision)+")");
       }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = BigInteger.valueOf(precision);
@@ -342,7 +342,7 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("bigintPrecision");
       }
       if (bigintPrecision.signum() < 0) {
-        throw new IllegalArgumentException("precision not greater or equal to " + "0" + " (" + bigintPrecision + ")");
+        throw new IllegalArgumentException("precision not greater or equal to 0 (" + bigintPrecision + ")");
       }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
@@ -394,7 +394,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext (int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall, boolean clampNormalExponents) {
       if (precision < 0) {
-        throw new IllegalArgumentException("precision not greater or equal to " + "0" + " ("+(precision)+")");
+        throw new IllegalArgumentException("precision not greater or equal to 0 ("+(precision)+")");
       }
       if (exponentMinSmall > exponentMaxSmall) {
         throw new IllegalArgumentException("exponentMinSmall not less or equal to "+(exponentMaxSmall)+" ("+(exponentMinSmall)+")");

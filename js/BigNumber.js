@@ -2712,13 +2712,13 @@ function() {
             throw new Error("str");
         }
         if (index < 0) {
-            throw new Error("\"str\" not greater or equal to " + "0" + " (" + (JSInteropFactory.createLong(index)) + ")");
+            throw new Error("\"str\" not greater or equal to 0 (" + (JSInteropFactory.createLong(index)) + ")");
         }
         if (index > str.length) {
             throw new Error("\"str\" not less or equal to " + (JSInteropFactory.createLong(str.length)) + " (" + (JSInteropFactory.createLong(index)) + ")");
         }
         if (endIndex < 0) {
-            throw new Error("\"index\" not greater or equal to " + "0" + " (" + (JSInteropFactory.createLong(endIndex)) + ")");
+            throw new Error("\"index\" not greater or equal to 0 (" + (JSInteropFactory.createLong(endIndex)) + ")");
         }
         if (endIndex > str.length) {
             throw new Error("\"index\" not less or equal to " + (JSInteropFactory.createLong(str.length)) + " (" + (JSInteropFactory.createLong(endIndex)) + ")");
@@ -4881,7 +4881,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     constructor.FastParseLong = function(str, offset, length) {
 
         if (length > 9) {
-            throw new Error("length not less or equal to " + "9" + " (" + (length) + ")");
+            throw new Error("length not less or equal to 9 (" + (length) + ")");
         }
         var ret = 0;
         for (var i = 0; i < length; ++i) {

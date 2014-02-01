@@ -94,7 +94,7 @@ at: http://peteroupc.github.io/CBOR/
       // only the digits '0' through '9'
       if (length > 9) {
         throw new IllegalArgumentException(
-          "length not less or equal to " + "9" + " ("+(length)+")");
+          "length not less or equal to 9 ("+(length)+")");
       }
       int ret = 0;
       for (int i = 0; i < length; ++i) {

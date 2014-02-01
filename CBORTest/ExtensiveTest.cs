@@ -395,9 +395,6 @@ namespace CBOR
         if (i != str.Length) {
           throw new FormatException(str);
         }
-        // Console.WriteLine("val={0}",Create(ExtendedFloat.Create(
-        // (BigInteger)mantissa,  // (BigInteger)exponent
-        // )));
         // Console.WriteLine("mant=" + mantissa + " exp=" + (exponent));
         return Create(ExtendedFloat.Create(
           (BigInteger)mantissa,
@@ -609,6 +606,10 @@ namespace CBOR
 
       public BinaryNumber Log(PrecisionContext ctx) {
         return Create(this.ef.Log(ctx));
+      }
+
+      public BinaryNumber Remainder(IExtendedNumber bn, PrecisionContext ctx) {
+        return Create(this.ef.Remainder(ToValue(bn), ctx));
       }
 
       public BinaryNumber Exp(PrecisionContext ctx) {
@@ -824,16 +825,13 @@ namespace CBOR
         if (!result.Equals(d3)) {
           if (compareOp.Equals("vn")) {
             if (!result.IsNear(d3)) {
-              Console.WriteLine("op1=..." + op1 + " op2=..." + op2 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else if (compareOp.Equals("nb")) {
             if (!result.IsNear(d3)) {
-              Console.WriteLine("op1=..." + op1 + " op2=..." + op2 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else {
-            Console.WriteLine("op1=..." + op1 + " op2=..." + op2 + " result=" + result + " d3=...." + d3);
             Assert.AreEqual(result, d3, ln);
           }
         }
@@ -877,16 +875,13 @@ namespace CBOR
         if (!result.Equals(d3)) {
           if (compareOp.Equals("vn")) {
             if (!result.IsNear(d3)) {
-              Console.WriteLine("op1=..." + op1 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else if (compareOp.Equals("nb")) {
             if (!result.IsNear(d3)) {
-              Console.WriteLine("op1=..." + op1 + " result=" + result + " d3=...." + d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else {
-            Console.WriteLine("op1=..." + op1 + " result=" + result + " d3=...." + d3);
             Assert.AreEqual(result, d3, ln);
           }
         }
@@ -942,6 +937,28 @@ namespace CBOR
       } else if (op.Equals("div")) {
         IExtendedNumber d3 = op1.Divide(op2, ctx);
         if (!result.Equals(d3)) {
+          Assert.AreEqual(result, d3, ln);
+        }
+        if (op1.IsQuietNaN() && op2.IsSignalingNaN()) {
+          // Don't check flags for binary test cases involving quiet
+          // NaN followed by signaling NaN, as the semantics for
+          // the invalid operation flag in those cases are different
+          // than in the General Decimal Arithmetic Specification
+        } else {
+          AssertFlags(expectedFlags, ctx.Flags, ln);
+        }
+      } else if (op.Equals("fmod")) {
+        IExtendedNumber d3 = op1.Remainder(op2, ctx);
+        if ((ctx.Flags & PrecisionContext.FlagInvalid) != 0 &&
+            (expectedFlags & PrecisionContext.FlagInvalid) == 0) {
+          // Skip since the quotient may be too high to fit an integer,
+          // which triggers an invalid operation under the General
+          // Decimal Arithmetic specification
+          return 0;
+        }
+        if (!result.Equals(d3)) {
+          Console.WriteLine("op1=..." + op1 + "\nop2=..." + op2 + "\nresult=" + result +
+                            "\nd3=...." + d3);
           Assert.AreEqual(result, d3, ln);
         }
         if (op1.IsQuietNaN() && op2.IsSignalingNaN()) {
@@ -1192,12 +1209,6 @@ namespace CBOR
           foreach (var f in Directory.GetFiles(p)) {
             // Console.WriteLine("// " + f);
             bool isinput = f.Contains(".input");
-            // if (!f.Contains("log") || f.Contains("log10")) {
-            // continue;
-            // }
-            if (!isinput) {
-              continue;
-            }
             using (StreamReader w = new StreamReader(f)) {
               while (!w.EndOfStream) {
                 var ln = w.ReadLine();

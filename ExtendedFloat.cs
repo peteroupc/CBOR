@@ -1002,10 +1002,13 @@ namespace PeterO {
     /// point.</param>
     /// <param name='ctx'>A precision context object to control the rounding
     /// mode to use if the result must be scaled down to have the same exponent
-    /// as this value. The precision setting of this context is ignored. If
-    /// HasFlags of the context is true, will also store the flags resulting
-    /// from the operation (the flags are in addition to the pre-existing
-    /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
+    /// as this value. If the precision given in the context is other than 0,
+    /// calls the Quantize method with both arguments equal to the result
+    /// of the operation (and can signal FlagInvalid and return NaN if the
+    /// result doesn&apos;t fit the given precision). If HasFlags of the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the flags are in addition to the pre-existing flags). Can be null,
+    /// in which case the default rounding mode is HalfEven.</param>
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
@@ -1072,10 +1075,13 @@ namespace PeterO {
     /// number places the cutoff point to the left of the usual decimal point.</param>
     /// <param name='ctx'>A precision context object to control the rounding
     /// mode to use if the result must be scaled down to have the same exponent
-    /// as this value. The precision setting of this context is ignored. If
-    /// HasFlags of the context is true, will also store the flags resulting
-    /// from the operation (the flags are in addition to the pre-existing
-    /// flags). Can be null, in which case the default rounding mode is HalfEven.</param>
+    /// as this value. If the precision given in the context is other than 0,
+    /// calls the Quantize method with both arguments equal to the result
+    /// of the operation (and can signal FlagInvalid and return NaN if the
+    /// result doesn&apos;t fit the given precision). If HasFlags of the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the flags are in addition to the pre-existing flags). Can be null,
+    /// in which case the default rounding mode is HalfEven.</param>
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
@@ -1811,6 +1817,21 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
       return math.Power(this, exponent, ctx);
+    }
+
+    /// <summary>Raises this object&apos;s value to the given exponent.</summary>
+    /// <returns>This^exponent. Signals the flag FlagInvalid and returns
+    /// NaN if this object and exponent are both 0.</returns>
+    public ExtendedFloat Pow(int exponentSmall, PrecisionContext ctx) {
+      return this.Pow(ExtendedFloat.FromInt64(exponentSmall), ctx);
+    }
+
+    /// <summary>Raises this object&apos;s value to the given exponent.</summary>
+    /// <returns>This^exponent. Returns NaN if this object and exponent
+    /// are both 0.</returns>
+    /// <param name='exponentSmall'>A 32-bit signed integer.</param>
+    public ExtendedFloat Pow(int exponentSmall) {
+      return this.Pow(ExtendedFloat.FromInt64(exponentSmall), null);
     }
 
     /// <summary>Finds the constant pi.</summary>

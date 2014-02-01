@@ -1172,11 +1172,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       CBORObject cbor = TestCommon.FromBytesTestAB(
         new byte[] {  0x7F,
         0x61,
-        0x20,
+        0x2e,
         0x61,
-        0x20,
+        0x2e,
         (byte)0xFF  });
-      Assert.assertEquals(" ", cbor.AsString());
+      Assert.assertEquals("..", cbor.AsString());
       // Test streaming of long strings
       String longString = Repeat('x', 200000);
       CBORObject cbor2;
