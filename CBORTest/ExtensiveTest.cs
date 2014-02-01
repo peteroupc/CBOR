@@ -1209,6 +1209,7 @@ namespace CBOR
           foreach (var f in Directory.GetFiles(p)) {
             // Console.WriteLine("// " + f);
             bool isinput = f.Contains(".input");
+            if(!isinput)continue;
             using (StreamReader w = new StreamReader(f)) {
               while (!w.EndOfStream) {
                 var ln = w.ReadLine();

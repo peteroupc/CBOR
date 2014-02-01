@@ -1182,12 +1182,22 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
+     * Creates a decimal number from a 64-bit signed integer.
      * @param valueSmall A 64-bit signed integer.
      * @return An ExtendedDecimal object.
      */
     public static ExtendedDecimal FromInt64(long valueSmall) {
       BigInteger bigint = BigInteger.valueOf(valueSmall);
+      return ExtendedDecimal.Create(bigint, BigInteger.ZERO);
+    }
+
+    /**
+     * Creates a decimal number from a 32-bit signed integer.
+     * @param valueSmaller A 32-bit signed integer.
+     * @return An ExtendedDecimal object.
+     */
+    public static ExtendedDecimal FromInt32(int valueSmaller) {
+      BigInteger bigint = BigInteger.valueOf(valueSmaller);
       return ExtendedDecimal.Create(bigint, BigInteger.ZERO);
     }
 
@@ -1701,9 +1711,8 @@ remainder=divrem[1]; }
      * down to have the same exponent as this value.
      * @return The quotient of the two objects. Signals FlagDivideByZero
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
-     * Signals FlagInvalid and returns NaN if the divisor and the dividend
-     * are 0. Signals FlagInvalid and returns NaN if the rounding mode is
-     * Rounding.Unnecessary and the result is not exact.
+     * Returns NaN if the divisor and the dividend are 0. Returns NaN if the
+     * rounding mode is Rounding.Unnecessary and the result is not exact.
      */
     public ExtendedDecimal DivideToExponent(
       ExtendedDecimal divisor,
@@ -2154,7 +2163,11 @@ remainder=divrem[1]; }
      * If rounding to a number of decimal places is desired, it's better to
      * use the RoundToExponent and RoundToIntegral methods instead.</p>
      * @param desiredExponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context to control precision and rounding
+     * of the result. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags). Can be null, in which case the default rounding
+     * mode is HalfEven.
      * @return A decimal number with the same value as this object but with
      * the exponent changed. Signals FlagInvalid and returns NaN if an overflow
      * error occurred, or the rounded result can't fit the given precision,
@@ -2168,14 +2181,39 @@ remainder=divrem[1]; }
     }
 
     /**
+     * Returns a decimal number with the same value as this one but a new exponent.
+     * @param desiredExponentSmall A 32-bit signed integer.
+     * @param rounding A Rounding object.
+     * @return A decimal number with the same value as this object but with
+     * the exponent changed. Returns NaN if the rounding mode is Rounding.Unnecessary
+     * and the result is not exact.
+     */
+    public ExtendedDecimal Quantize(
+      int desiredExponentSmall,
+      Rounding rounding) {
+      return this.Quantize(
+        ExtendedDecimal.Create(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)),
+        PrecisionContext.ForRounding(rounding));
+    }
+
+    /**
      * Returns a decimal number with the same value but a new exponent.<p>Note
      * that this is not always the same as rounding to a given number of decimal
      * places, since it can fail if the difference between this value's exponent
      * and the desired exponent is too big, depending on the maximum precision.
      * If rounding to a number of decimal places is desired, it's better to
      * use the RoundToExponent and RoundToIntegral methods instead.</p>
-     * @param desiredExponentSmall A 32-bit signed integer.
-     * @param ctx A PrecisionContext object.
+     * @param desiredExponentSmall The desired exponent for the result.
+     * The exponent is the number of fractional digits in the result, expressed
+     * as a negative number. Can also be positive, which eliminates lower-order
+     * places from the number. For example, -3 means round to the thousandth
+     * (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+     * value of 0 rounds the number to an integer.
+     * @param ctx A precision context to control precision and rounding
+     * of the result. If HasFlags of the context is true, will also store the
+     * flags resulting from the operation (the flags are in addition to the
+     * pre-existing flags). Can be null, in which case the default rounding
+     * mode is HalfEven.
      * @return A decimal number with the same value as this object but with
      * the exponent changed. Signals FlagInvalid and returns NaN if an overflow
      * error occurred, or the rounded result can't fit the given precision,
@@ -2261,7 +2299,12 @@ remainder=divrem[1]; }
     /**
      * Returns a decimal number with the same value as this object but rounded
      * to an integer.
-     * @param exponent A BigInteger object.
+     * @param exponent The minimum exponent the result can have. This is
+     * the maximum number of fractional digits in the result, expressed
+     * as a negative number. Can also be positive, which eliminates lower-order
+     * places from the number. For example, -3 means round to the thousandth
+     * (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+     * value of 0 rounds the number to an integer.
      * @param ctx A PrecisionContext object.
      * @return A decimal number with the same value as this object but rounded
      * to an integer. Signals FlagInvalid and returns NaN if an overflow
@@ -2301,6 +2344,56 @@ remainder=divrem[1]; }
       BigInteger exponent,
       PrecisionContext ctx) {
       return math.RoundToExponentSimple(this, exponent, ctx);
+    }
+
+    /**
+     * Returns a decimal number with the same value as this object but rounded
+     * to an integer.
+     * @param exponentSmall The minimum exponent the result can have. This
+     * is the maximum number of fractional digits in the result, expressed
+     * as a negative number. Can also be positive, which eliminates lower-order
+     * places from the number. For example, -3 means round to the thousandth
+     * (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+     * value of 0 rounds the number to an integer.
+     * @param ctx A PrecisionContext object.
+     * @return A decimal number with the same value as this object but rounded
+     * to an integer. Signals FlagInvalid and returns NaN if an overflow
+     * error occurred, or the result can't fit the given precision without
+     * rounding. Signals FlagInvalid and returns NaN if the new exponent
+     * is outside of the valid range of the precision context, if it defines
+     * an exponent range.
+     */
+    public ExtendedDecimal RoundToExponentExact(
+      int exponentSmall,
+      PrecisionContext ctx) {
+      return this.RoundToExponentExact(BigInteger.valueOf(exponentSmall), ctx);
+    }
+
+    /**
+     * Returns a decimal number with the same value as this object, and rounds
+     * it to a new exponent if necessary.
+     * @param exponentSmall The minimum exponent the result can have. This
+     * is the maximum number of fractional digits in the result, expressed
+     * as a negative number. Can also be positive, which eliminates lower-order
+     * places from the number. For example, -3 means round to the thousandth
+     * (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+     * value of 0 rounds the number to an integer.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null, in which case the
+     * default rounding mode is HalfEven.
+     * @return A decimal number rounded to the closest value representable
+     * in the given precision, meaning if the result can't fit the precision,
+     * additional digits are discarded to make it fit. Signals FlagInvalid
+     * and returns NaN if the new exponent must be changed when rounding and
+     * the new exponent is outside of the valid range of the precision context,
+     * if it defines an exponent range.
+     */
+    public ExtendedDecimal RoundToExponent(
+      int exponentSmall,
+      PrecisionContext ctx) {
+      return this.RoundToExponent(BigInteger.valueOf(exponentSmall), ctx);
     }
 
     /**

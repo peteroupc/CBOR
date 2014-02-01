@@ -9,9 +9,9 @@ using System;
 using System.Text;
 
 namespace PeterO {
-  /// <summary>Encapsulates radix-independent arithmetic.</summary>
-  /// <typeparam name='T'>Data type for a numeric value in a particular
-  /// radix.</typeparam>
+    /// <summary>Encapsulates radix-independent arithmetic.</summary>
+    /// <typeparam name='T'>Data type for a numeric value in a particular
+    /// radix.</typeparam>
   internal class RadixMath<T> : IRadixMath<T> {
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;
@@ -419,8 +419,12 @@ namespace PeterO {
           }
         }
       } else if (rounding != Rounding.Down) {
-        incremented = RoundGivenDigits(accum.LastDiscardedDigit, accum.OlderDiscardedDigits,
-                                       rounding, neg, BigInteger.Zero);
+        incremented = this.RoundGivenDigits(
+          accum.LastDiscardedDigit,
+          accum.OlderDiscardedDigits,
+          rounding,
+          neg,
+          BigInteger.Zero);
       }
       return incremented;
     }
@@ -1484,14 +1488,7 @@ namespace PeterO {
           ctx.Flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
         }
         // Console.WriteLine("intpart " + intpart);
-        thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxdiv);
-        if ((ctxdiv.Flags & PrecisionContext.FlagOverflow) != 0) {
-          if (ctx.HasFlags) {
-            ctx.Flags |= ctxdiv.Flags;
-          }
-          return this.SignalOverflow2(ctx, this.IsNegative(thisValue));
-        }
-        thisValue = this.RoundToPrecision(thisValue, ctxCopy);
+        thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxCopy);
       }
       if (ctx.HasFlags) {
         ctx.Flags |= ctxCopy.Flags;
@@ -2036,13 +2033,16 @@ namespace PeterO {
           BigInteger rem = null;
           BigInteger quo = null;
           // Console.WriteLine("div=" + (mantissaDividend.getUnsignedBitLength()) + " divs=" + (mantissaDivisor.getUnsignedBitLength()));
-          if ((mantissaDividend % mantissaDivisor).IsZero) {
+          quo = BigInteger.DivRem(mantissaDividend, mantissaDivisor, out rem);
+          if (rem.IsZero) {
             // Dividend is divisible by divisor
-            quo = mantissaDividend / mantissaDivisor;
             if (resultNeg) {
               quo = -quo;
             }
             return this.RoundToPrecision(this.helper.CreateNewWithFlags(quo, naturalExponent.AsBigInteger(), resultNeg ? BigNumberFlags.FlagNegative : 0), ctx);
+          } else {
+            rem = null;
+            quo = null;
           }
           if (hasPrecision) {
             #if DEBUG
