@@ -274,11 +274,29 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Copies this precision context and sets the copy&apos;s exponent
      * range.
+     * @param exponentMinSmall A 32-bit signed integer.
+     * @param exponentMaxSmall A 32-bit signed integer. (2).
+     * @return A PrecisionContext object.
+     */
+    public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
+      if (exponentMinSmall > exponentMaxSmall) {
+        throw new IllegalArgumentException("exponentMin greater than exponentMax");
+      }
+      PrecisionContext pc = this.Copy();
+      pc.hasExponentRange = true;
+      pc.exponentMin = BigInteger.valueOf(exponentMinSmall);
+      pc.exponentMax = BigInteger.valueOf(exponentMaxSmall);
+      return pc;
+    }
+
+    /**
+     * Copies this precision context and sets the copy&apos;s exponent
+     * range.
      * @param exponentMin Desired minimum exponent (EMin).
      * @param exponentMax Desired maximum exponent.
      * @return A PrecisionContext object.
      */
-    public PrecisionContext WithExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
+    public PrecisionContext WithBigExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if (exponentMin == null) {
         throw new NullPointerException("exponentMin");
       }

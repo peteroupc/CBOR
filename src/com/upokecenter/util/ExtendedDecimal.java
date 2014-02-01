@@ -1605,7 +1605,7 @@ remainder=divrem[1]; }
      * are 0. Signals FlagInvalid and returns NaN if the context defines
      * an exponent range and the desired exponent is outside that range.
      * Signals FlagInvalid and returns NaN if the rounding mode is Rounding.Unnecessary
-     * and the result is not exact. If a precision is given in the context,.
+     * and the result is not exact.
      */
     public ExtendedDecimal DivideToExponent(
       ExtendedDecimal divisor,
@@ -2503,6 +2503,11 @@ remainder=divrem[1]; }
 
     /**
      * Raises this object&apos;s value to the given exponent.
+     * @param exponentSmall A 32-bit signed integer.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags).
      * @return This^exponent. Signals the flag FlagInvalid and returns
      * NaN if this object and exponent are both 0.
      */

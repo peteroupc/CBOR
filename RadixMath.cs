@@ -9,9 +9,9 @@ using System;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Encapsulates radix-independent arithmetic.</summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+  /// <summary>Encapsulates radix-independent arithmetic.</summary>
+  /// <typeparam name='T'>Data type for a numeric value in a particular
+  /// radix.</typeparam>
   internal class RadixMath<T> : IRadixMath<T> {
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;
@@ -397,13 +397,8 @@ namespace PeterO {
 
     private bool Round(IShiftAccumulator accum, Rounding rounding, bool neg, FastInteger fastint) {
       bool incremented = false;
-      int radix = this.thisRadix;
-      if (rounding == Rounding.HalfUp) {
-        if (accum.LastDiscardedDigit >= (radix / 2)) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.HalfEven) {
-        // Console.WriteLine("last=" + accum.LastDiscardedDigit + " older=" + accum.OlderDiscardedDigits + " even=" + (fastint.IsEvenNumber));
+      if (rounding == Rounding.HalfEven) {
+        int radix = this.thisRadix;
         if (accum.LastDiscardedDigit >= (radix / 2)) {
           if (accum.LastDiscardedDigit > (radix / 2) || accum.OlderDiscardedDigits != 0) {
             incremented = true;
@@ -411,23 +406,8 @@ namespace PeterO {
             incremented = true;
           }
         }
-      } else if (rounding == Rounding.Ceiling) {
-        if (!neg && (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.Floor) {
-        if (neg && (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.HalfDown) {
-        if (accum.LastDiscardedDigit > (radix / 2) || (accum.LastDiscardedDigit == (radix / 2) && accum.OlderDiscardedDigits != 0)) {
-          incremented = true;
-        }
-      } else if (rounding == Rounding.Up) {
-        if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
-          incremented = true;
-        }
       } else if (rounding == Rounding.ZeroFiveUp) {
+        int radix = this.thisRadix;
         if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
           if (radix == 2) {
             incremented = true;
@@ -438,6 +418,9 @@ namespace PeterO {
             }
           }
         }
+      } else if (rounding != Rounding.Down) {
+        incremented = RoundGivenDigits(accum.LastDiscardedDigit, accum.OlderDiscardedDigits,
+                                       rounding, neg, BigInteger.Zero);
       }
       return incremented;
     }
@@ -1116,7 +1099,8 @@ namespace PeterO {
       }
       #endif
       int guardDigitCount = this.thisRadix == 2 ? 32 : 10;
-      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)guardDigitCount)
+      BigInteger guardDigits = (BigInteger)guardDigitCount;
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + guardDigits)
         .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult = this.Ln(thisValue, ctxdiv);
       /*
@@ -1130,7 +1114,7 @@ namespace PeterO {
       // Now use original precision and rounding mode
       ctxdiv = ctx.WithBlankFlags();
       lnresult = this.Exp(lnresult, ctxdiv);
-     /* Console.WriteLine("expOut " + lnresult);
+      /* Console.WriteLine("expOut " + lnresult);
       Console.WriteLine("expOut[m]"+this.NextMinus(lnresult,ctxdiv));
       Console.WriteLine("expOut[n]"+this.NextPlus(lnresult,ctxdiv));*/
       if ((ctxdiv.Flags & (PrecisionContext.FlagClamped | PrecisionContext.FlagOverflow)) != 0) {
@@ -1375,17 +1359,19 @@ namespace PeterO {
       }
       return thisValue;
     }
-
+    /*
     private string BitMantissa(T val) {
       BigInteger mant = this.helper.GetMantissa(val);
       StringBuilder sb = new StringBuilder();
       int len = mant.bitLength();
       for (int i = 0; i < len; ++i) {
-        BigInteger m2 = mant >> (len - 1 - i);
+        int shift = len-1-i;
+        BigInteger m2 = mant >> shift;
         sb.Append(m2.IsEven ? '0' : '1');
       }
       return sb.ToString();
     }
+     */
 
     /// <summary>Not documented yet.</summary>
     /// <param name='thisValue'>A T object. (2).</param>
@@ -1442,7 +1428,7 @@ namespace PeterO {
           newMax = ctx.EMax;
           BigInteger expdiff = newMax - (BigInteger)ctx.EMin;
           newMax += (BigInteger)expdiff;
-          ctxdiv = ctxdiv.WithExponentRange(ctxdiv.EMin, newMax);
+          ctxdiv = ctxdiv.WithBigExponentRange(ctxdiv.EMin, newMax);
           thisValue = this.Exp(this.NegateRaw(thisValue), ctxdiv);
           if ((ctxdiv.Flags & PrecisionContext.FlagOverflow) != 0) {
             // Still overflowed

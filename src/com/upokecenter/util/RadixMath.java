@@ -1120,7 +1120,8 @@ bigrem=divrem[1]; }
       }
 
       int guardDigitCount = this.thisRadix == 2 ? 32 : 10;
-      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision() + BigInteger.valueOf(guardDigitCount))
+      BigInteger guardDigits = BigInteger.valueOf(guardDigitCount);
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(guardDigits))
         .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult = this.Ln(thisValue, ctxdiv);
       /*
@@ -1134,7 +1135,7 @@ bigrem=divrem[1]; }
       // Now use original precision and rounding mode
       ctxdiv = ctx.WithBlankFlags();
       lnresult = this.Exp(lnresult, ctxdiv);
-     /* System.out.println("expOut " + lnresult);
+      /* System.out.println("expOut " + lnresult);
       System.out.println("expOut.get(m)"+this.NextMinus(lnresult,ctxdiv));
       System.out.println("expOut.get(n)"+this.NextPlus(lnresult,ctxdiv));*/
       if ((ctxdiv.getFlags() & (PrecisionContext.FlagClamped | PrecisionContext.FlagOverflow)) != 0) {
@@ -1387,17 +1388,19 @@ bigrem=divrem[1]; }
       }
       return thisValue;
     }
-
+    /*
     private String BitMantissa(T val) {
       BigInteger mant = this.helper.GetMantissa(val);
       StringBuilder sb = new StringBuilder();
       int len = mant.bitLength();
       for (int i = 0; i < len; ++i) {
-        BigInteger m2 = mant >> (len - 1 - i);
+        int shift = len-1-i;
+        BigInteger m2 = mant >> shift;
         sb.append(m2.testBit(0)==false ? '0' : '1');
       }
       return sb.toString();
     }
+     */
 
     /**
      * Not documented yet.
@@ -1456,7 +1459,7 @@ bigrem=divrem[1]; }
           newMax = ctx.getEMax();
           BigInteger expdiff = newMax.subtract(BigInteger.valueOf(ctx.getEMin()));
           newMax=newMax.add(expdiff);
-          ctxdiv = ctxdiv.WithExponentRange(ctxdiv.getEMin(), newMax);
+          ctxdiv = ctxdiv.WithBigExponentRange(ctxdiv.getEMin(), newMax);
           thisValue = this.Exp(this.NegateRaw(thisValue), ctxdiv);
           if ((ctxdiv.getFlags() & PrecisionContext.FlagOverflow) != 0) {
             // Still overflowed

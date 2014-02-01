@@ -1822,6 +1822,11 @@ namespace PeterO {
     /// <summary>Raises this object&apos;s value to the given exponent.</summary>
     /// <returns>This^exponent. Signals the flag FlagInvalid and returns
     /// NaN if this object and exponent are both 0.</returns>
+    /// <param name='exponentSmall'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags).</param>
     public ExtendedFloat Pow(int exponentSmall, PrecisionContext ctx) {
       return this.Pow(ExtendedFloat.FromInt64(exponentSmall), ctx);
     }

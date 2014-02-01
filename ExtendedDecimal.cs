@@ -9,57 +9,57 @@ using System;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Represents an arbitrary-precision decimal floating-point
-    /// number. Consists of an integer mantissa and an integer exponent,
-    /// both arbitrary-precision. The value of the number is equal to mantissa
-    /// * 10^exponent. <para>The mantissa is the value of the digits that
-    /// make up a number, ignoring the decimal point and exponent. For example,
-    /// in the number 2356.78, the mantissa is 235678. The exponent is where
-    /// the "floating" decimal point of the number is located. A positive
-    /// exponent means "move it to the right", and a negative exponent means
-    /// "move it to the left." In the example 2,356.78, the exponent is -2,
-    /// since it has 2 decimal places and the decimal point is "moved to the
-    /// left by 2." Therefore, in the ExtendedDecimal representation, this
-    /// number would be stored as 235678 * 10^-2.</para>
-    /// <para>The mantissa and exponent format preserves trailing zeros
-    /// in the number's value. This may give rise to multiple ways to store
-    /// the same value. For example, 1.00 and 1 would be stored differently,
-    /// even though they have the same value. In the first case, 100 * 10^-2
-    /// (100 with decimal point moved left by 2), and in the second case, 1 *
-    /// 10^0 (1 with decimal point moved 0).</para>
-    /// <para>This class also supports values for negative zero, not-a-number
-    /// (NaN) values, and infinity. <b>Negative zero</b>
-    /// is generally used when a negative number is rounded to 0; it has the
-    /// same mathematical value as positive zero. <b>Infinity</b>
-    /// is generally used when a non-zero number is divided by zero, or when
-    /// a very high number can't be represented in a given exponent range.
-    /// <b>Not-a-number</b>
-    /// is generally used to signal errors. </para>
-    /// <para>This class implements the <a href='http://speleotrove.com/decimal/decarith.html'>General
-    /// Decimal Arithmetic Specification</a>
-    /// version 1.70.</para>
-    /// <para>Passing a signaling NaN to any arithmetic operation shown
-    /// here will signal the flag FlagInvalid and return a quiet NaN, even
-    /// if another operand to that operation is a quiet NaN, unless noted otherwise.</para>
-    /// <para>Passing a quiet NaN to any arithmetic operation shown here
-    /// will return a quiet NaN, unless noted otherwise. Invalid operations
-    /// will also return a quiet NaN, as stated in the individual methods.</para>
-    /// <para>Unless noted otherwise, passing a null ExtendedDecimal argument
-    /// to any method here will throw an exception.</para>
-    /// <para>When an arithmetic operation signals the flag FlagInvalid,
-    /// FlagOverflow, or FlagDivideByZero, it will not throw an exception
-    /// too, unless the flag's trap is enabled in the precision context (see
-    /// PrecisionContext's Traps property).</para>
-    /// <para>An ExtendedDecimal value can be serialized in one of the following
-    /// ways:</para>
-    /// <list> <item>By calling the toString() method, which will always
-    /// return distinct strings for distinct ExtendedDecimal values.</item>
-    /// <item>By calling the UnsignedMantissa, Exponent, and IsNegative
-    /// properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
-    /// methods. The return values combined will uniquely identify a particular
-    /// ExtendedDecimal value.</item>
-    /// </list>
-    /// </summary>
+  /// <summary>Represents an arbitrary-precision decimal floating-point
+  /// number. Consists of an integer mantissa and an integer exponent,
+  /// both arbitrary-precision. The value of the number is equal to mantissa
+  /// * 10^exponent. <para>The mantissa is the value of the digits that
+  /// make up a number, ignoring the decimal point and exponent. For example,
+  /// in the number 2356.78, the mantissa is 235678. The exponent is where
+  /// the "floating" decimal point of the number is located. A positive
+  /// exponent means "move it to the right", and a negative exponent means
+  /// "move it to the left." In the example 2,356.78, the exponent is -2,
+  /// since it has 2 decimal places and the decimal point is "moved to the
+  /// left by 2." Therefore, in the ExtendedDecimal representation, this
+  /// number would be stored as 235678 * 10^-2.</para>
+  /// <para>The mantissa and exponent format preserves trailing zeros
+  /// in the number's value. This may give rise to multiple ways to store
+  /// the same value. For example, 1.00 and 1 would be stored differently,
+  /// even though they have the same value. In the first case, 100 * 10^-2
+  /// (100 with decimal point moved left by 2), and in the second case, 1 *
+  /// 10^0 (1 with decimal point moved 0).</para>
+  /// <para>This class also supports values for negative zero, not-a-number
+  /// (NaN) values, and infinity. <b>Negative zero</b>
+  /// is generally used when a negative number is rounded to 0; it has the
+  /// same mathematical value as positive zero. <b>Infinity</b>
+  /// is generally used when a non-zero number is divided by zero, or when
+  /// a very high number can't be represented in a given exponent range.
+  /// <b>Not-a-number</b>
+  /// is generally used to signal errors. </para>
+  /// <para>This class implements the <a href='http://speleotrove.com/decimal/decarith.html'>General
+  /// Decimal Arithmetic Specification</a>
+  /// version 1.70.</para>
+  /// <para>Passing a signaling NaN to any arithmetic operation shown
+  /// here will signal the flag FlagInvalid and return a quiet NaN, even
+  /// if another operand to that operation is a quiet NaN, unless noted otherwise.</para>
+  /// <para>Passing a quiet NaN to any arithmetic operation shown here
+  /// will return a quiet NaN, unless noted otherwise. Invalid operations
+  /// will also return a quiet NaN, as stated in the individual methods.</para>
+  /// <para>Unless noted otherwise, passing a null ExtendedDecimal argument
+  /// to any method here will throw an exception.</para>
+  /// <para>When an arithmetic operation signals the flag FlagInvalid,
+  /// FlagOverflow, or FlagDivideByZero, it will not throw an exception
+  /// too, unless the flag's trap is enabled in the precision context (see
+  /// PrecisionContext's Traps property).</para>
+  /// <para>An ExtendedDecimal value can be serialized in one of the following
+  /// ways:</para>
+  /// <list> <item>By calling the toString() method, which will always
+  /// return distinct strings for distinct ExtendedDecimal values.</item>
+  /// <item>By calling the UnsignedMantissa, Exponent, and IsNegative
+  /// properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
+  /// methods. The return values combined will uniquely identify a particular
+  /// ExtendedDecimal value.</item>
+  /// </list>
+  /// </summary>
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>, IEquatable<ExtendedDecimal> {
     private const int MaxSafeInt = 214748363;
 
@@ -521,53 +521,53 @@ namespace PeterO {
     }
 
     private sealed class DecimalMathHelper : IRadixMathHelper<ExtendedDecimal> {
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <returns>A 32-bit signed integer.</returns>
       public int GetRadix() {
         return 10;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>An ExtendedDecimal object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='value'>An ExtendedDecimal object.</param>
+      /// <returns>A 32-bit signed integer.</returns>
       public int GetSign(ExtendedDecimal value) {
         return value.Sign;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>An ExtendedDecimal object.</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='value'>An ExtendedDecimal object.</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger GetMantissa(ExtendedDecimal value) {
         return value.unsignedMantissa;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>An ExtendedDecimal object.</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='value'>An ExtendedDecimal object.</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger GetExponent(ExtendedDecimal value) {
         return value.exponent;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>An IShiftAccumulator object.</returns>
-    /// <param name='bigint'>A BigInteger object.</param>
-    /// <param name='lastDigit'>A 32-bit signed integer.</param>
-    /// <param name='olderDigits'>A 32-bit signed integer. (2).</param>
+      /// <summary>Not documented yet.</summary>
+      /// <returns>An IShiftAccumulator object.</returns>
+      /// <param name='bigint'>A BigInteger object.</param>
+      /// <param name='lastDigit'>A 32-bit signed integer.</param>
+      /// <param name='olderDigits'>A 32-bit signed integer. (2).</param>
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
         return new DigitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>An IShiftAccumulator object.</returns>
-    /// <param name='bigint'>A BigInteger object.</param>
+      /// <summary>Not documented yet.</summary>
+      /// <returns>An IShiftAccumulator object.</returns>
+      /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new DigitShiftAccumulator(bigint, 0, 0);
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>A BigInteger object. (2).</param>
-    /// <returns>A Boolean object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='numerator'>A BigInteger object.</param>
+      /// <param name='denominator'>A BigInteger object. (2).</param>
+      /// <returns>A Boolean object.</returns>
       public bool HasTerminatingRadixExpansion(BigInteger numerator, BigInteger denominator) {
         // Simplify denominator based on numerator
         BigInteger gcd = BigInteger.GreatestCommonDivisor(numerator, denominator);
@@ -591,10 +591,10 @@ namespace PeterO {
         return denominator.CompareTo(BigInteger.One) == 0;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bigint'>A BigInteger object. (2).</param>
-    /// <param name='power'>A FastInteger object.</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='bigint'>A BigInteger object. (2).</param>
+      /// <param name='power'>A FastInteger object.</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.Sign <= 0) {
           return bigint;
@@ -621,31 +621,31 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>An ExtendedDecimal object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='value'>An ExtendedDecimal object.</param>
+      /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(ExtendedDecimal value) {
         return value.flags;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='exponent'>A BigInteger object. (2).</param>
-    /// <param name='flags'>A 32-bit signed integer.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='mantissa'>A BigInteger object.</param>
+      /// <param name='exponent'>A BigInteger object. (2).</param>
+      /// <param name='flags'>A 32-bit signed integer.</param>
+      /// <returns>An ExtendedDecimal object.</returns>
       public ExtendedDecimal CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         return CreateWithFlags(mantissa, exponent, flags);
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A 32-bit signed integer.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteAndNonFinite;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='val'>A 32-bit signed integer.</param>
+      /// <returns>An ExtendedDecimal object.</returns>
       public ExtendedDecimal ValueOf(int val) {
         if (val == 0) {
           return Zero;
@@ -1546,7 +1546,7 @@ namespace PeterO {
     /// are 0. Signals FlagInvalid and returns NaN if the context defines
     /// an exponent range and the desired exponent is outside that range.
     /// Signals FlagInvalid and returns NaN if the rounding mode is Rounding.Unnecessary
-    /// and the result is not exact. If a precision is given in the context,.</returns>
+    /// and the result is not exact.</returns>
     public ExtendedDecimal DivideToExponent(
       ExtendedDecimal divisor,
       long desiredExponentSmall,
@@ -2076,7 +2076,11 @@ namespace PeterO {
     /// or if the context defines an exponent range and the given exponent
     /// is outside that range.</returns>
     /// <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context to control precision and
+    /// rounding of the result. If HasFlags of the context is true, will also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
     public ExtendedDecimal Quantize(
       int desiredExponentSmall,
       PrecisionContext ctx) {
@@ -2156,7 +2160,12 @@ namespace PeterO {
     /// rounding. Signals FlagInvalid and returns NaN if the new exponent
     /// is outside of the valid range of the precision context, if it defines
     /// an exponent range.</returns>
-    /// <param name='exponent'>A BigInteger object.</param>
+    /// <param name='exponent'>The minimum exponent the result can have.
+    /// This is the maximum number of fractional digits in the result, expressed
+    /// as a negative number. Can also be positive, which eliminates lower-order
+    /// places from the number. For example, -3 means round to the thousandth
+    /// (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+    /// value of 0 rounds the number to an integer.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedDecimal RoundToExponentExact(
       BigInteger exponent,
@@ -2187,6 +2196,52 @@ namespace PeterO {
       BigInteger exponent,
       PrecisionContext ctx) {
       return math.RoundToExponentSimple(this, exponent, ctx);
+    }
+
+    /// <summary>Returns a decimal number with the same value as this object
+    /// but rounded to an integer.</summary>
+    /// <returns>A decimal number with the same value as this object but rounded
+    /// to an integer. Signals FlagInvalid and returns NaN if an overflow
+    /// error occurred, or the result can't fit the given precision without
+    /// rounding. Signals FlagInvalid and returns NaN if the new exponent
+    /// is outside of the valid range of the precision context, if it defines
+    /// an exponent range.</returns>
+    /// <param name='exponentSmall'>The minimum exponent the result can have.
+    /// This is the maximum number of fractional digits in the result, expressed
+    /// as a negative number. Can also be positive, which eliminates lower-order
+    /// places from the number. For example, -3 means round to the thousandth
+    /// (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+    /// value of 0 rounds the number to an integer.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    public ExtendedDecimal RoundToExponentExact(
+      int exponentSmall,
+      PrecisionContext ctx) {
+      return RoundToExponentExact((BigInteger)exponentSmall, ctx);
+    }
+
+    /// <summary>Returns a decimal number with the same value as this object,
+    /// and rounds it to a new exponent if necessary.</summary>
+    /// <param name='exponentSmall'>The minimum exponent the result can have.
+    /// This is the maximum number of fractional digits in the result, expressed
+    /// as a negative number. Can also be positive, which eliminates lower-order
+    /// places from the number. For example, -3 means round to the thousandth
+    /// (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A
+    /// value of 0 rounds the number to an integer.</param>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). Can be null, in which case
+    /// the default rounding mode is HalfEven.</param>
+    /// <returns>A decimal number rounded to the closest value representable
+    /// in the given precision, meaning if the result can't fit the precision,
+    /// additional digits are discarded to make it fit. Signals FlagInvalid
+    /// and returns NaN if the new exponent must be changed when rounding and
+    /// the new exponent is outside of the valid range of the precision context,
+    /// if it defines an exponent range.</returns>
+    public ExtendedDecimal RoundToExponent(
+      int exponentSmall,
+      PrecisionContext ctx) {
+      return math.RoundToExponentSimple((BigInteger)exponentSmall, ctx);
     }
 
     /// <summary>Multiplies two decimal numbers. The resulting scale will
