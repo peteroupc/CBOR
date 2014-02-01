@@ -1502,14 +1502,7 @@ bigrem=divrem[1]; }
           ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
         }
         // System.out.println("intpart " + intpart);
-        thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxdiv);
-        if ((ctxdiv.getFlags() & PrecisionContext.FlagOverflow) != 0) {
-          if (ctx.getHasFlags()) {
-            ctx.setFlags(ctx.getFlags()|(ctxdiv.getFlags()));
-          }
-          return this.SignalOverflow2(ctx, this.IsNegative(thisValue));
-        }
-        thisValue = this.RoundToPrecision(thisValue, ctxCopy);
+        thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxCopy);
       }
       if (ctx.getHasFlags()) {
         ctx.setFlags(ctx.getFlags()|(ctxCopy.getFlags()));
@@ -2058,7 +2051,7 @@ rem=divrem[1]; }
           BigInteger quo = null;
           // System.out.println("div=" + (mantissaDividend.getUnsignedBitLength()) + " divs=" + (mantissaDivisor.getUnsignedBitLength()));
           {
-BigInteger[] divrem=(mantissaDividend).divideAndRemainder(mantissaDividend);
+BigInteger[] divrem=(mantissaDividend).divideAndRemainder(mantissaDivisor);
 quo=divrem[0];
 rem=divrem[1]; }
           if (rem.signum()==0) {
