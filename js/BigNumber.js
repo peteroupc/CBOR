@@ -7469,7 +7469,8 @@ var RadixMath = function(helper) {
                 var newMax;
                 ctxdiv.setFlags(0);
                 newMax = ctx.getEMax();
-                var expdiff = newMax.subtract(BigInteger.valueOf(ctx.getEMin()));
+                var expdiff = ctx.getEMin();
+                expdiff = newMax.subtract(expdiff);
                 newMax = newMax.add(expdiff);
                 ctxdiv = ctxdiv.WithBigExponentRange(ctxdiv.getEMin(), newMax);
                 thisValue = this.Exp(this.NegateRaw(thisValue), ctxdiv);
@@ -7480,8 +7481,9 @@ var RadixMath = function(helper) {
                         ctx.setFlags(ctx.getFlags() | (newFlags));
                     }
 
+                    var ctxdivPrec = ctxdiv.getPrecision();
                     newMax = ctx.getEMin();
-                    newMax = newMax.subtract(BigInteger.valueOf(ctxdiv.getPrecision()));
+                    newMax = newMax.subtract(ctxdivPrec);
                     newMax = newMax.add(BigInteger.ONE);
                     thisValue = this.helper.CreateNewWithFlags(BigInteger.ZERO, newMax, 0);
                     return this.RoundToPrecisionInternal(thisValue, 0, 1, null, false, false, ctx);

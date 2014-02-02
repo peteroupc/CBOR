@@ -33,8 +33,8 @@ namespace PeterO
 
     /// <summary>Not documented yet.</summary>
     /// <param name='str'>A string object.</param>
-    /// <returns>An Exception object.</returns>
-public Exception NewError(string str) {
+    /// <returns>A CBORException object.</returns>
+public CBORException NewError(string str) {
       return new CBORException(str + " (offset " + this.offset + ")");
     }
 

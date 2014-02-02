@@ -1473,7 +1473,8 @@ namespace PeterO {
           BigInteger newMax;
           ctxdiv.Flags = 0;
           newMax = ctx.EMax;
-          BigInteger expdiff = newMax - (BigInteger)ctx.EMin;
+          BigInteger expdiff = ctx.EMin;
+          expdiff = newMax - (BigInteger)expdiff;
           newMax += (BigInteger)expdiff;
           ctxdiv = ctxdiv.WithBigExponentRange(ctxdiv.EMin, newMax);
           thisValue = this.Exp(this.NegateRaw(thisValue), ctxdiv);
@@ -1486,8 +1487,9 @@ namespace PeterO {
             }
             // Return a "subnormal" zero, with fake extra digits to stimulate
             // rounding
+            BigInteger ctxdivPrec = ctxdiv.Precision;
             newMax = ctx.EMin;
-            newMax -= (BigInteger)ctxdiv.Precision;
+            newMax -= (BigInteger)ctxdivPrec;
             newMax += BigInteger.One;
             thisValue = this.helper.CreateNewWithFlags(BigInteger.Zero, newMax, 0);
             return this.RoundToPrecisionInternal(
