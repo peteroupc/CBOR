@@ -1487,7 +1487,8 @@ bigrem=divrem[1]; }
           BigInteger newMax;
           ctxdiv.setFlags(0);
           newMax = ctx.getEMax();
-          BigInteger expdiff = newMax.subtract(BigInteger.valueOf(ctx.getEMin()));
+          BigInteger expdiff = ctx.getEMin();
+          expdiff = newMax.subtract(expdiff);
           newMax=newMax.add(expdiff);
           ctxdiv = ctxdiv.WithBigExponentRange(ctxdiv.getEMin(), newMax);
           thisValue = this.Exp(this.NegateRaw(thisValue), ctxdiv);
@@ -1500,8 +1501,9 @@ bigrem=divrem[1]; }
             }
             // Return a "subnormal" zero, with fake extra digits to stimulate
             // rounding
+            BigInteger ctxdivPrec = ctxdiv.getPrecision();
             newMax = ctx.getEMin();
-            newMax=newMax.subtract(BigInteger.valueOf(ctxdiv.getPrecision()));
+            newMax=newMax.subtract(ctxdivPrec);
             newMax=newMax.add(BigInteger.ONE);
             thisValue = this.helper.CreateNewWithFlags(BigInteger.ZERO, newMax, 0);
             return this.RoundToPrecisionInternal(
