@@ -7441,7 +7441,7 @@ var RadixMath = function(helper) {
                 if ((ctxdiv.getFlags() & PrecisionContext.FlagOverflow) != 0) {
 
                     if (ctx.getHasFlags()) {
-                        var newFlags = PrecisionContext.FlagInexact | PrecisionContext.FlagSubnormal | PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded | PrecisionContext.FlagClamped;
+                        var newFlags = PrecisionContext.FlagInexact | PrecisionContext.FlagSubnormal | PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
                         ctx.setFlags(ctx.getFlags() | (newFlags));
                     }
 
