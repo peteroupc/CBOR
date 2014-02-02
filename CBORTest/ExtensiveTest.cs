@@ -642,7 +642,9 @@ namespace CBOR
     }
 
     private int ParseLineInput(string ln) {
-      string[] chunks = Regex.Split(ln, " +");
+      string[] chunks = this.Contains(ln, " " + " ") ?
+        Regex.Split(ln, " +") :
+        ln.Split(' ');
       if (chunks.Length < 4) {
         return 0;
       }
@@ -1214,7 +1216,7 @@ namespace CBOR
                 var ln = w.ReadLine();
                 {
                   try {
-                    // Console.SetOut(nullWriter);
+                    Console.SetOut(nullWriter);
                     if (isinput) {
                       this.ParseLineInput(ln);
                     } else {

@@ -1106,6 +1106,28 @@ bigrem=divrem[1]; }
         return this.ExtendPrecision(this.helper.ValueOf(1), ctx);
       }
 
+      // Special case for 0.5
+      if (this.thisRadix == 10 || this.thisRadix == 2) {
+        T half = (this.thisRadix == 10) ?
+          this.helper.CreateNewWithFlags(BigInteger.valueOf(5), BigInteger.ZERO.subtract(BigInteger.ONE), 0) :
+          this.helper.CreateNewWithFlags(BigInteger.ONE, BigInteger.ZERO.subtract(BigInteger.ONE), 0);
+        if (this.compareTo(pow, half) == 0 &&
+           this.IsWithinExponentRangeForPow(pow, ctx) &&
+           this.IsWithinExponentRangeForPow(thisValue, ctx)) {
+          PrecisionContext ctxCopy = ctx.WithBlankFlags();
+          thisValue = this.SquareRoot(thisValue, ctxCopy);
+          ctxCopy.setFlags(ctxCopy.getFlags()|(PrecisionContext.FlagInexact));
+          ctxCopy.setFlags(ctxCopy.getFlags()|(PrecisionContext.FlagRounded));
+          if ((ctxCopy.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
+            ctxCopy.setFlags(ctxCopy.getFlags()|(PrecisionContext.FlagUnderflow));
+          }
+          thisValue = this.ExtendPrecision(thisValue, ctxCopy);
+          if (ctx.getHasFlags()) {
+            ctx.setFlags(ctx.getFlags()|(ctxCopy.getFlags()));
+          }
+          return thisValue;
+        }
+      }
       int guardDigitCount = this.thisRadix == 2 ? 32 : 10;
       BigInteger guardDigits = BigInteger.valueOf(guardDigitCount);
       PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(guardDigits))
@@ -1227,10 +1249,6 @@ bigrem=divrem[1]; }
       return thisValue;
     }
 
-    private void TrialPowerIntegral(T a, BigInteger bi, PrecisionContext ctx) {
-      this.PowerIntegral(a, bi, ctx);
-    }
-
     private static BigInteger PowerOfTwo(FastInteger fi) {
       if (fi.signum() <= 0) {
         return BigInteger.ONE;
@@ -1300,9 +1318,7 @@ bigrem=divrem[1]; }
           thisValue = this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0), ctxCopy);
         } else if (cmpOne < 0) {
           // Less than 1
-          FastInteger error = this.helper.CreateShiftAccumulator(
-            (this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
-          error.AddInt(6);
+          FastInteger error = new FastInteger(10);
           BigInteger bigError = error.AsBigInteger();
           ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
             .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
@@ -1323,7 +1339,18 @@ bigrem=divrem[1]; }
             // of square root calls
             thisValue = this.Multiply(thisValue, this.helper.CreateNewWithFlags(bigintRoots, BigInteger.ZERO, 0), ctxCopy);
           } else {
-            thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
+            T smallfrac = this.Divide(one, this.helper.ValueOf(16), ctxdiv);
+            T closeToOne = this.Add(one, this.NegateRaw(smallfrac), null);
+            if (this.compareTo(thisValue, closeToOne) >= 0) {
+              // This value is close to 1, so use a higher working precision
+              error = this.helper.CreateShiftAccumulator((this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
+              error.AddInt(6);
+              error.AddBig(ctx.getPrecision());
+              bigError = error.AsBigInteger();
+              thisValue = this.LnInternal(thisValue, error.AsBigInteger(), ctxCopy);
+            } else {
+              thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
+            }
           }
           if (ctx.getHasFlags()) {
             ctxCopy.setFlags(ctxCopy.getFlags()|(PrecisionContext.FlagInexact));
@@ -1331,19 +1358,20 @@ bigrem=divrem[1]; }
           }
         } else {
           // Greater than 1
-          FastInteger error;
-          BigInteger bigError;
-          error = this.helper.CreateShiftAccumulator((this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
-          error.AddInt(6);
-          bigError = error.AsBigInteger();
-          ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
-            .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
           T two = this.helper.ValueOf(2);
           if (this.compareTo(thisValue, two) >= 0) {
             FastInteger roots = new FastInteger(0);
+            FastInteger error;
+            BigInteger bigError;
+            error = new FastInteger(10);
+            bigError = error.AsBigInteger();
+            ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
+              .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
+            T smallfrac = this.Divide(one, this.helper.ValueOf(10), ctxdiv);
+            T closeToOne = this.Add(one, smallfrac, null);
             // Take square root until this value
-            // is less than 2
-            while (this.compareTo(thisValue, two) >= 0) {
+            // is close to 1
+            while (this.compareTo(thisValue, closeToOne) >= 0) {
               thisValue = this.SquareRoot(thisValue, ctxdiv.WithUnlimitedExponents());
               roots.Increment();
             }
@@ -1356,6 +1384,12 @@ bigrem=divrem[1]; }
             // of square root calls
             thisValue = this.Multiply(thisValue, this.helper.CreateNewWithFlags(bigintRoots, BigInteger.ZERO, 0), ctxCopy);
           } else {
+            FastInteger error;
+            BigInteger bigError;
+            error = new FastInteger(10);
+            bigError = error.AsBigInteger();
+            ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
+              .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
             T smallfrac = this.Divide(one, this.helper.ValueOf(16), ctxdiv);
             T closeToOne = this.Add(one, smallfrac, null);
             if (this.compareTo(thisValue, closeToOne) >= 0) {
@@ -1364,8 +1398,13 @@ bigrem=divrem[1]; }
               thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
               thisValue = this.NegateRaw(thisValue);
             } else {
-              // Greater than 1 and close to 1
-              thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
+              error = this.helper.CreateShiftAccumulator((this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
+              error.AddInt(6);
+              error.AddBig(ctx.getPrecision());
+              bigError = error.AsBigInteger();
+              // Greater than 1 and close to 1, will require a higher working
+              // precision
+              thisValue = this.LnInternal(thisValue, error.AsBigInteger(), ctxCopy);
             }
           }
           if (ctx.getHasFlags()) {
@@ -1494,7 +1533,7 @@ bigrem=divrem[1]; }
           // Try to check for overflow quickly
           // Do a trial powering using a lower number than e,
           // and a power of 50000
-          this.TrialPowerIntegral(this.helper.ValueOf(2), BigInteger.valueOf(50000), ctxCopy);
+          this.PowerIntegral(this.helper.ValueOf(2), BigInteger.valueOf(50000), ctxCopy);
           if ((ctxCopy.getFlags() & PrecisionContext.FlagOverflow) != 0) {
             // The trial powering caused overflow, so exp will
             // cause overflow as well
@@ -1503,7 +1542,7 @@ bigrem=divrem[1]; }
           ctxCopy.setFlags(0);
           // Now do the same using the integer part of the operand
           // as the power
-          this.TrialPowerIntegral(this.helper.ValueOf(2), this.helper.GetMantissa(intpart), ctxCopy);
+          this.PowerIntegral(this.helper.ValueOf(2), this.helper.GetMantissa(intpart), ctxCopy);
           if ((ctxCopy.getFlags() & PrecisionContext.FlagOverflow) != 0) {
             // The trial powering caused overflow, so exp will
             // cause overflow as well

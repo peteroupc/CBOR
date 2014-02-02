@@ -87,10 +87,17 @@
     <Compile Include='Rounding.cs'/>
     <Compile Include='TrapException.cs'/>
     <Compile Include='TrappableRadixMath.cs'/>
+    
+    
+    
   </ItemGroup>
   <ItemGroup>
     <Content Include='ProfilingSessions\Session20140201_092443.sdps'/>
     <Content Include='ProfilingSessions\Session20140201_104915.sdps'/>
+    <Content Include='ProfilingSessions\Session20140202_032502.sdps'/>
+    <Content Include='ProfilingSessions\Session20140202_034517.sdps'/>
+    <Content Include='ProfilingSessions\Session20140202_035101.sdps'/>
+    <Content Include='ProfilingSessions\Session20140202_043441.sdps'/>
   </ItemGroup>
   <Import Project='$(MSBuildExtensionsPath)\Microsoft\Portable\v4.0\Microsoft.Portable.CSharp.targets'/>
   <Import Project='$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets'/>

@@ -1758,7 +1758,7 @@ remainder=divrem[1]; }
 
     /**
      * Subtracts an ExtendedDecimal object from this instance and returns
-     * the result..
+     * the result.
      * @param numberObject An ExtendedDecimal object.
      * @return The difference of the two objects.
      */
@@ -1959,8 +1959,8 @@ remainder=divrem[1]; }
 
     /**
      * Gets the greater value between two decimal numbers.
-     * @param first An ExtendedDecimal object.
-     * @param second An ExtendedDecimal object. (2).
+     * @param first The first value to compare.
+     * @param second The second value to compare.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -1976,8 +1976,8 @@ remainder=divrem[1]; }
 
     /**
      * Gets the lesser value between two decimal numbers.
-     * @param first An ExtendedDecimal object.
-     * @param second An ExtendedDecimal object. (2).
+     * @param first The first value to compare.
+     * @param second The second value to compare.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -1994,8 +1994,8 @@ remainder=divrem[1]; }
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param first An ExtendedDecimal object. (2).
-     * @param second An ExtendedDecimal object. (3).
+     * @param first The first value to compare.
+     * @param second The second value to compare.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -2041,8 +2041,8 @@ remainder=divrem[1]; }
 
     /**
      * Gets the lesser value between two decimal numbers.
-     * @param first An ExtendedDecimal object.
-     * @param second An ExtendedDecimal object. (2).
+     * @param first The first value to compare.
+     * @param second The second value to compare.
      * @return The smaller value of the two objects.
      */
     public static ExtendedDecimal Min(
@@ -2054,8 +2054,8 @@ remainder=divrem[1]; }
     /**
      * Gets the greater value between two values, ignoring their signs.
      * If the absolute values are equal, has the same effect as Max.
-     * @param first An ExtendedDecimal object. (2).
-     * @param second An ExtendedDecimal object. (3).
+     * @param first The first value to compare.
+     * @param second The second value to compare.
      * @return An ExtendedDecimal object.
      */
     public static ExtendedDecimal MaxMagnitude(
@@ -2067,8 +2067,8 @@ remainder=divrem[1]; }
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param first An ExtendedDecimal object. (2).
-     * @param second An ExtendedDecimal object. (3).
+     * @param first The first value to compare.
+     * @param second The second value to compare.
      * @return An ExtendedDecimal object.
      */
     public static ExtendedDecimal MinMagnitude(
@@ -2298,7 +2298,8 @@ remainder=divrem[1]; }
 
     /**
      * Returns a decimal number with the same value as this object but rounded
-     * to an integer.
+     * to an integer, and signals an invalid operation if the result would
+     * be inexact.
      * @param exponent The minimum exponent the result can have. This is
      * the maximum number of fractional digits in the result, expressed
      * as a negative number. Can also be positive, which eliminates lower-order
@@ -2348,7 +2349,8 @@ remainder=divrem[1]; }
 
     /**
      * Returns a decimal number with the same value as this object but rounded
-     * to an integer.
+     * to an integer, and signals an invalid operation if the result would
+     * be inexact.
      * @param exponentSmall The minimum exponent the result can have. This
      * is the maximum number of fractional digits in the result, expressed
      * as a negative number. Can also be positive, which eliminates lower-order

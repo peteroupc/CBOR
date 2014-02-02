@@ -7151,6 +7151,24 @@ var RadixMath = function(helper) {
             }
             return this.ExtendPrecision(this.helper.ValueOf(1), ctx);
         }
+
+        if (this.thisRadix == 10 || this.thisRadix == 2) {
+            var half = (this.thisRadix == 10) ? this.helper.CreateNewWithFlags(BigInteger.valueOf(5), BigInteger.ZERO.subtract(BigInteger.ONE), 0) : this.helper.CreateNewWithFlags(BigInteger.ONE, BigInteger.ZERO.subtract(BigInteger.ONE), 0);
+            if (this.compareTo(pow, half) == 0 && this.IsWithinExponentRangeForPow(pow, ctx) && this.IsWithinExponentRangeForPow(thisValue, ctx)) {
+                var ctxCopy = ctx.WithBlankFlags();
+                thisValue = this.SquareRoot(thisValue, ctxCopy);
+                ctxCopy.setFlags(ctxCopy.getFlags() | (PrecisionContext.FlagInexact));
+                ctxCopy.setFlags(ctxCopy.getFlags() | (PrecisionContext.FlagRounded));
+                if ((ctxCopy.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
+                    ctxCopy.setFlags(ctxCopy.getFlags() | (PrecisionContext.FlagUnderflow));
+                }
+                thisValue = this.ExtendPrecision(thisValue, ctxCopy);
+                if (ctx.getHasFlags()) {
+                    ctx.setFlags(ctx.getFlags() | (ctxCopy.getFlags()));
+                }
+                return thisValue;
+            }
+        }
         var guardDigitCount = this.thisRadix == 2 ? 32 : 10;
         var guardDigits = BigInteger.valueOf(guardDigitCount);
         var ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(guardDigits)).WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
@@ -7252,9 +7270,6 @@ var RadixMath = function(helper) {
         }
         return thisValue;
     };
-    prototype.TrialPowerIntegral = function(a, bi, ctx) {
-        this.PowerIntegral(a, bi, ctx);
-    };
     constructor.PowerOfTwo = function(fi) {
         if (fi.signum() <= 0) {
             return BigInteger.ONE;
@@ -7316,8 +7331,7 @@ var RadixMath = function(helper) {
                 thisValue = this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0), ctxCopy);
             } else if (cmpOne < 0) {
 
-                var error = this.helper.CreateShiftAccumulator((this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
-                error.AddInt(6);
+                var error = new FastInteger(10);
                 var bigError = error.AsBigInteger();
                 ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError)).WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
                 var quarter = this.Divide(one, this.helper.ValueOf(4), ctxCopy);
@@ -7335,7 +7349,18 @@ var RadixMath = function(helper) {
 
                     thisValue = this.Multiply(thisValue, this.helper.CreateNewWithFlags(bigintRoots, BigInteger.ZERO, 0), ctxCopy);
                 } else {
-                    thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
+                    var smallfrac = this.Divide(one, this.helper.ValueOf(16), ctxdiv);
+                    var closeToOne = this.Add(one, this.NegateRaw(smallfrac), null);
+                    if (this.compareTo(thisValue, closeToOne) >= 0) {
+
+                        error = this.helper.CreateShiftAccumulator((this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
+                        error.AddInt(6);
+                        error.AddBig(ctx.getPrecision());
+                        bigError = error.AsBigInteger();
+                        thisValue = this.LnInternal(thisValue, error.AsBigInteger(), ctxCopy);
+                    } else {
+                        thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
+                    }
                 }
                 if (ctx.getHasFlags()) {
                     ctxCopy.setFlags(ctxCopy.getFlags() | (PrecisionContext.FlagInexact));
@@ -7343,17 +7368,18 @@ var RadixMath = function(helper) {
                 }
             } else {
 
-                var error;
-                var bigError;
-                error = this.helper.CreateShiftAccumulator((this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
-                error.AddInt(6);
-                bigError = error.AsBigInteger();
-                ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError)).WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
                 var two = this.helper.ValueOf(2);
                 if (this.compareTo(thisValue, two) >= 0) {
                     var roots = new FastInteger(0);
+                    var error;
+                    var bigError;
+                    error = new FastInteger(10);
+                    bigError = error.AsBigInteger();
+                    ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError)).WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
+                    var smallfrac = this.Divide(one, this.helper.ValueOf(10), ctxdiv);
+                    var closeToOne = this.Add(one, smallfrac, null);
 
-                    while (this.compareTo(thisValue, two) >= 0) {
+                    while (this.compareTo(thisValue, closeToOne) >= 0) {
                         thisValue = this.SquareRoot(thisValue, ctxdiv.WithUnlimitedExponents());
                         roots.Increment();
                     }
@@ -7365,6 +7391,11 @@ var RadixMath = function(helper) {
 
                     thisValue = this.Multiply(thisValue, this.helper.CreateNewWithFlags(bigintRoots, BigInteger.ZERO, 0), ctxCopy);
                 } else {
+                    var error;
+                    var bigError;
+                    error = new FastInteger(10);
+                    bigError = error.AsBigInteger();
+                    ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError)).WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
                     var smallfrac = this.Divide(one, this.helper.ValueOf(16), ctxdiv);
                     var closeToOne = this.Add(one, smallfrac, null);
                     if (this.compareTo(thisValue, closeToOne) >= 0) {
@@ -7373,8 +7404,12 @@ var RadixMath = function(helper) {
                         thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
                         thisValue = this.NegateRaw(thisValue);
                     } else {
+                        error = this.helper.CreateShiftAccumulator((this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
+                        error.AddInt(6);
+                        error.AddBig(ctx.getPrecision());
+                        bigError = error.AsBigInteger();
 
-                        thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxCopy);
+                        thisValue = this.LnInternal(thisValue, error.AsBigInteger(), ctxCopy);
                     }
                 }
                 if (ctx.getHasFlags()) {
@@ -7464,14 +7499,14 @@ var RadixMath = function(helper) {
             var intpart = this.Quantize(thisValue, one, PrecisionContext.ForRounding(Rounding.Down));
             if (this.compareTo(thisValue, this.helper.ValueOf(50000)) > 0 && ctx.getHasExponentRange()) {
 
-                this.TrialPowerIntegral(this.helper.ValueOf(2), BigInteger.valueOf(50000), ctxCopy);
+                this.PowerIntegral(this.helper.ValueOf(2), BigInteger.valueOf(50000), ctxCopy);
                 if ((ctxCopy.getFlags() & PrecisionContext.FlagOverflow) != 0) {
 
                     return this.SignalOverflow2(ctx, false);
                 }
                 ctxCopy.setFlags(0);
 
-                this.TrialPowerIntegral(this.helper.ValueOf(2), this.helper.GetMantissa(intpart), ctxCopy);
+                this.PowerIntegral(this.helper.ValueOf(2), this.helper.GetMantissa(intpart), ctxCopy);
                 if ((ctxCopy.getFlags() & PrecisionContext.FlagOverflow) != 0) {
 
                     return this.SignalOverflow2(ctx, false);
