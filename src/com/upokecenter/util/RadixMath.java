@@ -1456,8 +1456,7 @@ bigrem=divrem[1]; }
             // Still overflowed
             if (ctx.getHasFlags()) {
               int newFlags = PrecisionContext.FlagInexact | PrecisionContext.FlagSubnormal |
-                PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded |
-                PrecisionContext.FlagClamped;
+                PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
               ctx.setFlags(ctx.getFlags()|(newFlags));
             }
             // Return a "subnormal" zero, with fake extra digits to stimulate
