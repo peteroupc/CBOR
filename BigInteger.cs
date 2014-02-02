@@ -1260,10 +1260,10 @@ namespace PeterO {
       int valueNB = (int)valueNBint;
       #if DEBUG
       if (valueNAint <= 0) {
-        throw new ArgumentException("valueNAint not less than 0 (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("valueNAint not greater than 0 (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (valueNBint <= 0) {
-        throw new ArgumentException("valueNBint not less than 0 (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("valueNBint not greater than 0 (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (!(valueNA % 2 == 0 && valueNB % 2 == 0)) {
         throw new ArgumentException("doesn't satisfy valueNA%2==0 && valueNB%2==0");
@@ -1676,7 +1676,7 @@ namespace PeterO {
     /// <returns>A BigInteger object.</returns>
     /// <param name='numberBits'>A 32-bit signed integer.</param>
     public BigInteger shiftRight(int numberBits) {
-      if (numberBits == 0) {
+      if (numberBits == 0 || this.wordCount == 0) {
         return this;
       }
       if (numberBits < 0) {
@@ -1690,9 +1690,9 @@ namespace PeterO {
       int shiftWords = (int)(numberBits >> 4);
       int shiftBits = (int)(numberBits & 15);
       ret.negative = this.negative;
-      ret.reg = new short[RoundupSize(numWords)];
-      Array.Copy(this.reg, ret.reg, numWords);
-      if (this.Sign < 0) {
+      ret.reg = new short[this.reg.Length];
+      if (this.negative) {
+        Array.Copy(this.reg, ret.reg, numWords);
         TwosComplement(ret.reg, 0, (int)ret.reg.Length);
         ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
         if (numWords > shiftWords) {
@@ -1700,12 +1700,19 @@ namespace PeterO {
         }
         TwosComplement(ret.reg, 0, (int)ret.reg.Length);
       } else {
+        if (shiftWords > numWords) {
+          return BigInteger.Zero;
+        }
+        Array.Copy(this.reg, ret.reg, numWords);
         ShiftWordsRightByWords(ret.reg, 0, numWords, shiftWords);
         if (numWords > shiftWords) {
           ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
         }
       }
       ret.wordCount = ret.CalcWordCount();
+      if (shiftWords > 2) {
+        this.ShortenArray();
+      }
       return ret;
     }
 

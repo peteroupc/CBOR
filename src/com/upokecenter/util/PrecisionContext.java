@@ -49,7 +49,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value indicating whether this context defines a minimum and
-     * maximum exponent. If false, converted exponents can have any exponent.
+     * maximum exponent. If false, converted exponents can have any exponent
+     * and operations can't cause overflow or underflow.
      */
     public boolean getHasExponentRange() {
         return this.hasExponentRange;

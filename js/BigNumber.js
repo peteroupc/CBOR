@@ -2004,7 +2004,7 @@ function() {
     };
 
     prototype['shiftRight'] = prototype.shiftRight = function(numberBits) {
-        if (numberBits == 0) {
+        if (numberBits == 0 || this.wordCount == 0) {
             return this;
         }
         if (numberBits < 0) {
@@ -2019,9 +2019,9 @@ function() {
         var shiftBits = (numberBits & 15);
         ret.negative = this.negative;
         ret.reg = [];
-        for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(numWords); arrfillI++) ret.reg[arrfillI] = 0;
-        for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[0 + arrfillI];
-        if (this.signum() < 0) {
+        for (var arrfillI = 0; arrfillI < this.reg.length; arrfillI++) ret.reg[arrfillI] = 0;
+        if (this.negative) {
+            for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[0 + arrfillI];
             BigInteger.TwosComplement(ret.reg, 0, ((ret.reg.length)|0));
             BigInteger.ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
             if (numWords > shiftWords) {
@@ -2029,12 +2029,19 @@ function() {
             }
             BigInteger.TwosComplement(ret.reg, 0, ((ret.reg.length)|0));
         } else {
+            if (shiftWords > numWords) {
+                return BigInteger.ZERO;
+            }
+            for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[0 + arrfillI];
             BigInteger.ShiftWordsRightByWords(ret.reg, 0, numWords, shiftWords);
             if (numWords > shiftWords) {
                 BigInteger.ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
             }
         }
         ret.wordCount = ret.CalcWordCount();
+        if (shiftWords > 2) {
+            this.ShortenArray();
+        }
         return ret;
     };
 
@@ -4758,34 +4765,29 @@ function(bigint, lastDiscarded, olderDiscarded) {
         if (this.knownBitLength.CompareToInt(bits) > 0) {
             var bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
             if (bitShift.CanFitInInt32()) {
-                var bs = bitShift.AsInt32() - 1;
+                var bs = bitShift.AsInt32();
                 this.knownBitLength.SetInt(bits);
                 this.discardedBitCount.Add(bitShift);
-                if (bs == 0) {
-                    var odd = !(this.shiftedBigInt.testBit(0) == false);
+                if (bs == 1) {
+                    var odd = !this.shiftedBigInt.testBit(0) == false;
                     this.shiftedBigInt = this.shiftedBigInt.shiftRight(1);
                     this.bitsAfterLeftmost |= this.bitLeftmost;
-                    this.bitLeftmost = (odd) ? 1 : 0;
+                    this.bitLeftmost = odd ? 1 : 0;
                 } else {
                     this.bitsAfterLeftmost |= this.bitLeftmost;
                     var lowestSetBit = this.shiftedBigInt.getLowestSetBit();
-                    if (lowestSetBit < bs) {
+                    if (lowestSetBit < bs - 1) {
 
                         this.bitsAfterLeftmost |= 1;
-                        this.bitLeftmost = (this.shiftedBigInt.testBit(bs)) ? 1 : 0;
-                        bs = bs + (1);
-                        this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
-                    } else if (lowestSetBit > bs) {
+                        this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
+                    } else if (lowestSetBit > bs - 1) {
 
                         this.bitLeftmost = 0;
-                        bs = bs + (1);
-                        this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
                     } else {
 
                         this.bitLeftmost = 1;
-                        bs = bs + (1);
-                        this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
                     }
+                    this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
                 }
                 if (bits < BitShiftAccumulator.SmallBitLength) {
 
@@ -7250,6 +7252,9 @@ var RadixMath = function(helper) {
         }
         return thisValue;
     };
+    prototype.TrialPowerIntegral = function(a, bi, ctx) {
+        this.PowerIntegral(a, bi, ctx);
+    };
     constructor.PowerOfTwo = function(fi) {
         if (fi.signum() <= 0) {
             return BigInteger.ONE;
@@ -7457,6 +7462,22 @@ var RadixMath = function(helper) {
             }
         } else {
             var intpart = this.Quantize(thisValue, one, PrecisionContext.ForRounding(Rounding.Down));
+            if (this.compareTo(thisValue, this.helper.ValueOf(50000)) > 0 && ctx.getHasExponentRange()) {
+
+                this.TrialPowerIntegral(this.helper.ValueOf(2), BigInteger.valueOf(50000), ctxCopy);
+                if ((ctxCopy.getFlags() & PrecisionContext.FlagOverflow) != 0) {
+
+                    return this.SignalOverflow2(ctx, false);
+                }
+                ctxCopy.setFlags(0);
+
+                this.TrialPowerIntegral(this.helper.ValueOf(2), this.helper.GetMantissa(intpart), ctxCopy);
+                if ((ctxCopy.getFlags() & PrecisionContext.FlagOverflow) != 0) {
+
+                    return this.SignalOverflow2(ctx, false);
+                }
+                ctxCopy.setFlags(0);
+            }
             var fracpart = this.Add(thisValue, this.NegateRaw(intpart), null);
             fracpart = this.Add(one, this.Divide(fracpart, intpart, ctxdiv), null);
             ctxdiv.setFlags(0);
@@ -7471,7 +7492,6 @@ var RadixMath = function(helper) {
             if (ctx.getHasFlags()) {
                 ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
             }
-
             thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxCopy);
         }
         if (ctx.getHasFlags()) {
