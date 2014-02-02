@@ -1227,6 +1227,10 @@ bigrem=divrem[1]; }
       return thisValue;
     }
 
+    private void TrialPowerIntegral(T a, BigInteger bi, PrecisionContext ctx) {
+      this.PowerIntegral(a, bi, ctx);
+    }
+
     private static BigInteger PowerOfTwo(FastInteger fi) {
       if (fi.signum() <= 0) {
         return BigInteger.ONE;
@@ -1487,6 +1491,27 @@ bigrem=divrem[1]; }
         }
       } else {
         T intpart = this.Quantize(thisValue, one, PrecisionContext.ForRounding(Rounding.Down));
+        if (this.compareTo(thisValue, this.helper.ValueOf(50000)) > 0 && ctx.getHasExponentRange()) {
+          // Try to check for overflow quickly
+          // Do a trial powering using a lower number than e,
+          // and a power of 50000
+          this.TrialPowerIntegral(this.helper.ValueOf(2), BigInteger.valueOf(50000), ctxCopy);
+          if ((ctxCopy.getFlags() & PrecisionContext.FlagOverflow) != 0) {
+            // The trial powering caused overflow, so exp will
+            // cause overflow as well
+            return this.SignalOverflow2(ctx, false);
+          }
+          ctxCopy.setFlags(0);
+          // Now do the same using the integer part of the operand
+          // as the power
+          this.TrialPowerIntegral(this.helper.ValueOf(2), this.helper.GetMantissa(intpart), ctxCopy);
+          if ((ctxCopy.getFlags() & PrecisionContext.FlagOverflow) != 0) {
+            // The trial powering caused overflow, so exp will
+            // cause overflow as well
+            return this.SignalOverflow2(ctx, false);
+          }
+          ctxCopy.setFlags(0);
+        }
         T fracpart = this.Add(thisValue, this.NegateRaw(intpart), null);
         fracpart = this.Add(one, this.Divide(fracpart, intpart, ctxdiv), null);
         ctxdiv.setFlags(0);
@@ -1501,7 +1526,6 @@ bigrem=divrem[1]; }
         if (ctx.getHasFlags()) {
           ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
         }
-        // System.out.println("intpart " + intpart);
         thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxCopy);
       }
       if (ctx.getHasFlags()) {

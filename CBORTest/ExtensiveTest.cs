@@ -1217,7 +1217,7 @@ namespace CBOR
                 var ln = w.ReadLine();
                 {
                   try {
-                    Console.SetOut(nullWriter);
+                    // Console.SetOut(nullWriter);
                     if (isinput) {
                       this.ParseLineInput(ln);
                     } else {

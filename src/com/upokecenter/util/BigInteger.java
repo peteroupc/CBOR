@@ -1658,7 +1658,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public BigInteger shiftRight(int numberBits) {
-      if (numberBits == 0) {
+      if (numberBits == 0 || this.wordCount == 0) {
         return this;
       }
       if (numberBits < 0) {
@@ -1672,9 +1672,9 @@ at: http://peteroupc.github.io/CBOR/
       int shiftWords = (int)(numberBits >> 4);
       int shiftBits = (int)(numberBits & 15);
       ret.negative = this.negative;
-      ret.reg = new short[RoundupSize(numWords)];
-      System.arraycopy(this.reg, 0, ret.reg, 0, numWords);
-      if (this.signum() < 0) {
+      ret.reg = new short[this.reg.length];
+      if (this.negative) {
+        System.arraycopy(this.reg, 0, ret.reg, 0, numWords);
         TwosComplement(ret.reg, 0, (int)ret.reg.length);
         ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
         if (numWords > shiftWords) {
@@ -1682,12 +1682,19 @@ at: http://peteroupc.github.io/CBOR/
         }
         TwosComplement(ret.reg, 0, (int)ret.reg.length);
       } else {
+        if (shiftWords > numWords) {
+          return BigInteger.ZERO;
+        }
+        System.arraycopy(this.reg, 0, ret.reg, 0, numWords);
         ShiftWordsRightByWords(ret.reg, 0, numWords, shiftWords);
         if (numWords > shiftWords) {
           ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
         }
       }
       ret.wordCount = ret.CalcWordCount();
+      if (shiftWords > 2) {
+        this.ShortenArray();
+      }
       return ret;
     }
 

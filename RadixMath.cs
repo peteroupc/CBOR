@@ -1217,6 +1217,10 @@ namespace PeterO {
       return thisValue;
     }
 
+    private void TrialPowerIntegral(T a, BigInteger bi, PrecisionContext ctx) {
+      this.PowerIntegral(a, bi, ctx);
+    }
+
     private static BigInteger PowerOfTwo(FastInteger fi) {
       if (fi.Sign <= 0) {
         return BigInteger.One;
@@ -1473,6 +1477,27 @@ namespace PeterO {
         }
       } else {
         T intpart = this.Quantize(thisValue, one, PrecisionContext.ForRounding(Rounding.Down));
+        if (this.CompareTo(thisValue, this.helper.ValueOf(50000)) > 0 && ctx.HasExponentRange) {
+          // Try to check for overflow quickly
+          // Do a trial powering using a lower number than e,
+          // and a power of 50000
+          this.TrialPowerIntegral(this.helper.ValueOf(2), (BigInteger)50000, ctxCopy);
+          if ((ctxCopy.Flags & PrecisionContext.FlagOverflow) != 0) {
+            // The trial powering caused overflow, so exp will
+            // cause overflow as well
+            return this.SignalOverflow2(ctx, false);
+          }
+          ctxCopy.Flags = 0;
+          // Now do the same using the integer part of the operand
+          // as the power
+          this.TrialPowerIntegral(this.helper.ValueOf(2), this.helper.GetMantissa(intpart), ctxCopy);
+          if ((ctxCopy.Flags & PrecisionContext.FlagOverflow) != 0) {
+            // The trial powering caused overflow, so exp will
+            // cause overflow as well
+            return this.SignalOverflow2(ctx, false);
+          }
+          ctxCopy.Flags = 0;
+        }
         T fracpart = this.Add(thisValue, this.NegateRaw(intpart), null);
         fracpart = this.Add(one, this.Divide(fracpart, intpart, ctxdiv), null);
         ctxdiv.Flags = 0;
@@ -1487,7 +1512,6 @@ namespace PeterO {
         if (ctx.HasFlags) {
           ctx.Flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
         }
-        // Console.WriteLine("intpart " + intpart);
         thisValue = this.PowerIntegral(thisValue, this.helper.GetMantissa(intpart), ctxCopy);
       }
       if (ctx.HasFlags) {

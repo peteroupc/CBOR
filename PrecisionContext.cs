@@ -54,7 +54,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this context defines a
     /// minimum and maximum exponent. If false, converted exponents can
-    /// have any exponent.</summary>
+    /// have any exponent and operations can't cause overflow or underflow.</summary>
     /// <value>Whether this context defines a minimum and maximum exponent.</value>
     public bool HasExponentRange {
       get {

@@ -338,10 +338,15 @@ namespace PeterO {
       if (this.knownBitLength.CompareToInt(bits) > 0) {
         FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
         if (bitShift.CanFitInInt32()) {
-          int bs = bitShift.AsInt32() -1;
+          int bs = bitShift.AsInt32();
+          #if DEBUG
+          if (bs <= 0) {
+            throw new ArgumentException("bs not greater than 0 (" + Convert.ToString((long)bs, System.Globalization.CultureInfo.InvariantCulture) +")");
+          }
+          #endif
           this.knownBitLength.SetInt(bits);
           this.discardedBitCount.Add(bitShift);
-          if (bs == 0) {
+          if (bs == 1) {
             bool odd = !this.shiftedBigInt.IsEven;
             this.shiftedBigInt >>= 1;
             this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -349,24 +354,19 @@ namespace PeterO {
           } else {
             this.bitsAfterLeftmost |= this.bitLeftmost;
             int lowestSetBit = this.shiftedBigInt.getLowestSetBit();
-            if (lowestSetBit < bs) {
+            if (lowestSetBit < bs - 1) {
               // One of the discarded bits after
               // the last one is set
               this.bitsAfterLeftmost |= 1;
-              this.bitLeftmost = this.shiftedBigInt.testBit(bs) ? 1 : 0;
-              bs += 1;
-              this.shiftedBigInt >>= bs;
-            } else if (lowestSetBit > bs) {
+              this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
+            } else if (lowestSetBit > bs - 1) {
               // Means all discarded bits are zero
               this.bitLeftmost = 0;
-              bs += 1;
-              this.shiftedBigInt >>= bs;
             } else {
               // Only the last discarded bit is set
               this.bitLeftmost = 1;
-              bs += 1;
-              this.shiftedBigInt >>= bs;
             }
+            this.shiftedBigInt >>= bs;
           }
           if (bits < SmallBitLength) {
             // Shifting to small number of bits,

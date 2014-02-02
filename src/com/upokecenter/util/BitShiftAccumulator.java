@@ -337,10 +337,11 @@ at: http://peteroupc.github.io/CBOR/
       if (this.knownBitLength.CompareToInt(bits) > 0) {
         FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
         if (bitShift.CanFitInInt32()) {
-          int bs = bitShift.AsInt32() -1;
+          int bs = bitShift.AsInt32();
+
           this.knownBitLength.SetInt(bits);
           this.discardedBitCount.Add(bitShift);
-          if (bs == 0) {
+          if (bs == 1) {
             boolean odd = !this.shiftedBigInt.testBit(0)==false;
             this.shiftedBigInt=shiftedBigInt.shiftRight(1);
             this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -348,24 +349,19 @@ at: http://peteroupc.github.io/CBOR/
           } else {
             this.bitsAfterLeftmost |= this.bitLeftmost;
             int lowestSetBit = this.shiftedBigInt.getLowestSetBit();
-            if (lowestSetBit < bs) {
+            if (lowestSetBit < bs - 1) {
               // One of the discarded bits after
               // the last one is set
               this.bitsAfterLeftmost |= 1;
-              this.bitLeftmost = this.shiftedBigInt.testBit(bs) ? 1 : 0;
-              bs += 1;
-              this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
-            } else if (lowestSetBit > bs) {
+              this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
+            } else if (lowestSetBit > bs - 1) {
               // Means all discarded bits are zero
               this.bitLeftmost = 0;
-              bs += 1;
-              this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
             } else {
               // Only the last discarded bit is set
               this.bitLeftmost = 1;
-              bs += 1;
-              this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
             }
+            this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
           }
           if (bits < SmallBitLength) {
             // Shifting to small number of bits,
