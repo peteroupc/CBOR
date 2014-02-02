@@ -1684,7 +1684,7 @@ namespace PeterO {
     }
 
     /// <summary>Subtracts an ExtendedDecimal object from this instance
-    /// and returns the result..</summary>
+    /// and returns the result.</summary>
     /// <param name='numberObject'>An ExtendedDecimal object.</param>
     /// <returns>The difference of the two objects.</returns>
     public ExtendedDecimal Subtract(ExtendedDecimal numberObject) {
@@ -1870,8 +1870,8 @@ namespace PeterO {
 
     /// <summary>Gets the greater value between two decimal numbers.</summary>
     /// <returns>The larger value of the two objects.</returns>
-    /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object. (2).</param>
+    /// <param name='first'>The first value to compare.</param>
+    /// <param name='second'>The second value to compare.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -1885,8 +1885,8 @@ namespace PeterO {
 
     /// <summary>Gets the lesser value between two decimal numbers.</summary>
     /// <returns>The smaller value of the two objects.</returns>
-    /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object. (2).</param>
+    /// <param name='first'>The first value to compare.</param>
+    /// <param name='second'>The second value to compare.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -1901,8 +1901,8 @@ namespace PeterO {
     /// <summary>Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.</summary>
     /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='first'>An ExtendedDecimal object. (2).</param>
-    /// <param name='second'>An ExtendedDecimal object. (3).</param>
+    /// <param name='first'>The first value to compare.</param>
+    /// <param name='second'>The second value to compare.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -1942,8 +1942,8 @@ namespace PeterO {
 
     /// <summary>Gets the lesser value between two decimal numbers.</summary>
     /// <returns>The smaller value of the two objects.</returns>
-    /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object. (2).</param>
+    /// <param name='first'>The first value to compare.</param>
+    /// <param name='second'>The second value to compare.</param>
     public static ExtendedDecimal Min(
       ExtendedDecimal first,
       ExtendedDecimal second) {
@@ -1953,8 +1953,8 @@ namespace PeterO {
     /// <summary>Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.</summary>
     /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='first'>An ExtendedDecimal object. (2).</param>
-    /// <param name='second'>An ExtendedDecimal object. (3).</param>
+    /// <param name='first'>The first value to compare.</param>
+    /// <param name='second'>The second value to compare.</param>
     public static ExtendedDecimal MaxMagnitude(
       ExtendedDecimal first,
       ExtendedDecimal second) {
@@ -1964,8 +1964,8 @@ namespace PeterO {
     /// <summary>Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.</summary>
     /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='first'>An ExtendedDecimal object. (2).</param>
-    /// <param name='second'>An ExtendedDecimal object. (3).</param>
+    /// <param name='first'>The first value to compare.</param>
+    /// <param name='second'>The second value to compare.</param>
     public static ExtendedDecimal MinMagnitude(
       ExtendedDecimal first,
       ExtendedDecimal second) {
@@ -2184,7 +2184,8 @@ namespace PeterO {
     }
 
     /// <summary>Returns a decimal number with the same value as this object
-    /// but rounded to an integer.</summary>
+    /// but rounded to an integer, and signals an invalid operation if the
+    /// result would be inexact.</summary>
     /// <returns>A decimal number with the same value as this object but rounded
     /// to an integer. Signals FlagInvalid and returns NaN if an overflow
     /// error occurred, or the result can't fit the given precision without
@@ -2230,7 +2231,8 @@ namespace PeterO {
     }
 
     /// <summary>Returns a decimal number with the same value as this object
-    /// but rounded to an integer.</summary>
+    /// but rounded to an integer, and signals an invalid operation if the
+    /// result would be inexact.</summary>
     /// <returns>A decimal number with the same value as this object but rounded
     /// to an integer. Signals FlagInvalid and returns NaN if an overflow
     /// error occurred, or the result can't fit the given precision without
