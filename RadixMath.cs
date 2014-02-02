@@ -1442,8 +1442,7 @@ namespace PeterO {
             // Still overflowed
             if (ctx.HasFlags) {
               int newFlags = PrecisionContext.FlagInexact | PrecisionContext.FlagSubnormal |
-                PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded |
-                PrecisionContext.FlagClamped;
+                PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
               ctx.Flags |= newFlags;
             }
             // Return a "subnormal" zero, with fake extra digits to stimulate
