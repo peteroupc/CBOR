@@ -253,6 +253,11 @@ namespace PeterO {
       short[] wordsSmaller,
       int bstart,
       int bcount) {
+      #if DEBUG
+      if ((acount)<bcount) {
+        throw new ArgumentException("acount not greater or equal to "+Convert.ToString((long)(bcount), System.Globalization.CultureInfo.InvariantCulture)+" ("+Convert.ToString((long)(acount), System.Globalization.CultureInfo.InvariantCulture)+")");
+      }
+      #endif
       unchecked {
         int u;
         u = 0;
@@ -260,7 +265,7 @@ namespace PeterO {
           u = (((int)wordsBigger[astart + i]) & 0xFFFF) + (((int)wordsSmaller[bstart + i]) & 0xFFFF) + (short)(u >> 16);
           c[cstart + i] = (short)u;
         }
-        for (int i =  bcount; i < acount; i += 1) {
+        for (int i = bcount; i < acount; i += 1) {
           u = (((int)wordsBigger[astart + i]) & 0xFFFF) + (short)(u >> 16);
           c[cstart + i] = (short)u;
         }
@@ -790,10 +795,7 @@ namespace PeterO {
           int tsn = tempStart + count;
           offset2For1 = Compare(words1, words1Start, words1, words1Start + count2, count2) > 0 ? 0 : count2;
           // Absolute value of low part minus high part of words1
-          Subtract(
-            resultArr, resultStart,
-            words1, words1Start + offset2For1,
-            words1, (int)(words1Start + (count2 ^ offset2For1)), count2);
+          Subtract(resultArr, resultStart, words1, words1Start + offset2For1, words1, (int)(words1Start + (count2 ^ offset2For1)), count2);
           offset2For2 = Compare(words2, words2Start, words2, (int)(words2Start + count2), count2) > 0 ? 0 : count2;
           // Absolute value of low part minus high part of words2
           Subtract(
@@ -873,10 +875,13 @@ namespace PeterO {
           int c3 = c2;
           c2 += Add(resultArr, countLow, resultArr, countMiddle, resultArr, resultStart, countLow);
           c3 += AddUnevenSize(
-            resultArr, countMiddle, 
-            resultArr, countMiddle, 
+            resultArr,
+            countMiddle,
+            resultArr,
+            countMiddle,
             countLow,
-            resultArr, countMiddle + countLow, 
+            resultArr,
+            countMiddle + countLow,
             countLow - 2);
           if (offset2For1 == offset2For2) {
             c3 -= Subtract(resultArr, countLow, resultArr, countLow, tempArr, tempStart + (countHigh << 1), count);
@@ -909,9 +914,8 @@ namespace PeterO {
         } else {
           SchoolbookMultiply(resultArr, resultStart, words1, words1Start, n, words1, words1Start, n);
         }
-      } else {
+      } else if((n&1)==0){
         int count2 = n >> 1;
-
         RecursiveSquare(resultArr, resultStart, tempArr, (int)(tempStart + n), words1, words1Start, count2);
         RecursiveSquare(resultArr, (int)(resultStart + n), tempArr, (int)(tempStart + n), words1, (int)(words1Start + count2), count2);
         RecursiveMultiply(
@@ -929,6 +933,8 @@ namespace PeterO {
         carry += Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
 
         Increment(resultArr, (int)(resultStart + n + count2), count2, (short)carry);
+      } else {
+        RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1, words1Start, n);
       }
     }
 
@@ -1011,7 +1017,6 @@ namespace PeterO {
 
         return;
       }
-
       if (words1Count > words2Count) {
         // Ensure that words1 is smaller by swapping if necessary
         short[] tmp1 = words1; words1 = words2; words2 = tmp1;
@@ -1019,7 +1024,7 @@ namespace PeterO {
         int tmp2 = words1Count; words1Count = words2Count; words2Count = tmp2;
       }
 
-      if (words1Count == 2 && words1[words1Start + 1] == 0) {
+      if (words1Count==1 || (words1Count == 2 && words1[words1Start + 1] == 0)) {
         switch (words1[words1Start]) {
           case 0:
             // words1 is zero, so result is 0
@@ -1035,7 +1040,7 @@ namespace PeterO {
             resultArr[resultStart + words2Count + 1] = (short)0;
             return;
         }
-      } else if (words1Count == 2) {
+      } else if (words1Count == 2 && (words2Count&1)==0) {
         int a0 = ((int)words1[words1Start]) & 0xFFFF;
         int a1 = ((int)words1[words1Start + 1]) & 0xFFFF;
         resultArr[resultStart + words2Count] = (short)0;
@@ -1043,26 +1048,38 @@ namespace PeterO {
         AtomicMultiplyOpt(resultArr, resultStart, a0, a1, words2, words2Start, 0, words2Count);
         AtomicMultiplyAddOpt(resultArr, resultStart, a0, a1, words2, words2Start, 2, words2Count);
         return;
+      } else if(words1Count<10 && words2Count<10){
+        SchoolbookMultiply(resultArr, resultStart, words1, words1Start, words1Count, words2, words2Start, words2Count);
       } else {
+        int rem=words2Count%words1Count;
         int i;
-        if (((words2Count / words1Count) & 1) == 0) {
-          RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
-          Array.Copy(resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), (int)words1Count);
+        RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
+        Array.Copy(resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), words1Count);
+        if(rem==0){
+          // words2Count is divisible by words1count
           for (i = words1Count << 1; i < words2Count; i += words1Count << 1) {
-            RecursiveMultiply(tempArr, (int)(tempStart + words1Count + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
+            RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
           }
           for (i = words1Count; i < words2Count; i += words1Count << 1) {
-            RecursiveMultiply(resultArr, (int)(resultStart + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
+            RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
           }
         } else {
-          for (i = 0; i < words2Count; i += words1Count << 1) {
-            RecursiveMultiply(resultArr, (int)(resultStart + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
+          // highest part of words2 is short
+          int wc2 = words2Count - rem;
+          for (i = words1Count << 1; i < wc2; i += words1Count << 1) {
+            RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
           }
-          for (i = words1Count; i < words2Count; i += words1Count << 1) {
-            RecursiveMultiply(tempArr, (int)(tempStart + words1Count + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
+          AsymmetricMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart,
+                             words1, words1Start, words1Count,
+                             words2, words2Start + i, rem);
+          for (i = words1Count; i < wc2; i += words1Count << 1) {
+            RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
           }
+          AsymmetricMultiply(resultArr, resultStart + i, tempArr, tempStart,
+                             words1, words1Start, words1Count,
+                             words2, words2Start + i, rem);
         }
-        if (Add(resultArr, (int)(resultStart + words1Count), resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), words2Count - words1Count) != 0) {
+        if (Add(resultArr, resultStart + words1Count, resultArr, resultStart + words1Count, tempArr, tempStart + (words1Count << 1), words2Count - words1Count) != 0) {
           Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
         }
       }
