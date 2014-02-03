@@ -1609,10 +1609,10 @@ public T LnTenConstant(PrecisionContext ctx) {
 
     private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
       if (root <= 0) {
-        throw new IllegalArgumentException("root not greater than 0 (" + Long.toString((long)root) +")");
+        throw new IllegalArgumentException("root not greater than 0 (" + Long.toString((long)root) + ")");
       }
       if (value.signum() < 0) {
-        throw new IllegalArgumentException("value.signum() not greater or equal to 0 (" + Long.toString((long)value.signum()) +")");
+        throw new IllegalArgumentException("value.signum() not greater or equal to 0 (" + Long.toString((long)value.signum()) + ")");
       }
       if (value.signum() == 0) {
         return new BigInteger[] { BigInteger.ZERO, BigInteger.ZERO };

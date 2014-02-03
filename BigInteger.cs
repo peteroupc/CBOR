@@ -275,7 +275,7 @@ namespace PeterO {
       int bcount) {
       #if DEBUG
       if (acount < bcount) {
-        throw new ArgumentException("acount not greater or equal to " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) +" (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) +")");
+        throw new ArgumentException("acount not greater or equal to " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
       unchecked {
@@ -811,7 +811,7 @@ namespace PeterO {
       #endif
 
       #if DEBUG
-      if ((count + count) <0) {
+      if ((count + count) < 0) {
         throw new ArgumentException("count+count not greater or equal to 0 (" + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -823,7 +823,7 @@ namespace PeterO {
       #endif
 
       #if DEBUG
-      if ((resultArr.Length - resultStart) <count + count) {
+      if ((resultArr.Length - resultStart) < count + count) {
         throw new ArgumentException("resultArr's length minus " + resultStart + " not greater or equal to " + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(resultArr.Length - resultStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -847,7 +847,7 @@ namespace PeterO {
       #endif
 
       #if DEBUG
-      if ((count + count) <0) {
+      if ((count + count) < 0) {
         throw new ArgumentException("count+count not greater or equal to 0 (" + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -859,7 +859,7 @@ namespace PeterO {
       #endif
 
       #if DEBUG
-      if ((tempArr.Length - tempStart) <count + count) {
+      if ((tempArr.Length - tempStart) < count + count) {
         throw new ArgumentException("tempArr's length minus " + tempStart + " not greater or equal to " + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(tempArr.Length - tempStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -895,7 +895,7 @@ namespace PeterO {
       #endif
 
       #if DEBUG
-      if ((words1.Length - words1Start) <count) {
+      if ((words1.Length - words1Start) < count) {
         throw new ArgumentException("words1's length minus " + words1Start + " not greater or equal to " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words1.Length - words1Start), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -931,7 +931,7 @@ namespace PeterO {
       #endif
 
       #if DEBUG
-      if ((words2.Length - words2Start) <count) {
+      if ((words2.Length - words2Start) < count) {
         throw new ArgumentException("words2's length minus " + words2Start + " not greater or equal to " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words2.Length - words2Start), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -1209,153 +1209,153 @@ namespace PeterO {
       int bstart,
       int bcount) {
       #if DEBUG
-      if (astart < bstart) {
-        throw new ArgumentException("astart not greater or equal to " + Convert.ToString((long)bstart, System.Globalization.CultureInfo.InvariantCulture) +" (" + Convert.ToString((long)astart, System.Globalization.CultureInfo.InvariantCulture) +")");
+if ((acount)<bcount) {
+ throw new ArgumentException("acount not greater or equal to " + Convert.ToString((long)(bcount), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(acount), System.Globalization.CultureInfo.InvariantCulture) + ")");
+}
+#endif
+      #if DEBUG
+      if (productArr == null) {
+        throw new ArgumentNullException("productArr");
       }
       #endif
-      #if DEBUG
-if (productArr == null) {
- throw new ArgumentNullException("productArr");
-}
-#endif
-
-#if DEBUG
-if (cstart < 0) {
- throw new ArgumentException("cstart not greater or equal to 0 (" + Convert.ToString((long)cstart, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if (cstart > productArr.Length) {
- throw new ArgumentException("cstart not less or equal to " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)cstart, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if ((acount + bcount) <0) {
- throw new ArgumentException("acount + bcount not greater or equal to 0 (" + Convert.ToString((long)(acount + bcount), System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if ((acount + bcount) >productArr.Length) {
- throw new ArgumentException("acount + bcount not less or equal to " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(acount + bcount), System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if ((productArr.Length - cstart) <acount + bcount) {
- throw new ArgumentException("productArr's length minus " + cstart + " not greater or equal to " + Convert.ToString((long)(acount + bcount), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(productArr.Length - cstart), System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
 
       #if DEBUG
-if (tempArr == null) {
- throw new ArgumentNullException("tempArr");
-}
-#endif
-
-#if DEBUG
-if (tempStart < 0) {
- throw new ArgumentException("tempStart not greater or equal to 0 (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if (tempStart > tempArr.Length) {
- throw new ArgumentException("tempStart not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if ((bcount * 4) <0) {
- throw new ArgumentException("bcount * 4 not greater or equal to 0 (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if ((bcount * 4) >tempArr.Length) {
- throw new ArgumentException("bcount * 4 not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if ((tempArr.Length - tempStart) <bcount * 4) {
- throw new ArgumentException("tempArr's length minus " + tempStart + " not greater or equal to " + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(tempArr.Length - tempStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
+      if (cstart < 0) {
+        throw new ArgumentException("cstart not greater or equal to 0 (" + Convert.ToString((long)cstart, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
 
       #if DEBUG
-if (words1 == null) {
- throw new ArgumentNullException("words1");
-}
-#endif
-
-#if DEBUG
-if (astart < 0) {
- throw new ArgumentException("astart not greater or equal to 0 (" + Convert.ToString((long)astart, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if (astart > words1.Length) {
- throw new ArgumentException("astart not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)astart, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if (acount < 0) {
- throw new ArgumentException("acount not greater or equal to 0 (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if (acount > words1.Length) {
- throw new ArgumentException("acount not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
-
-#if DEBUG
-if ((words1.Length - astart) <acount) {
- throw new ArgumentException("words1's length minus " + astart + " not greater or equal to " + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words1.Length - astart), System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
+      if (cstart > productArr.Length) {
+        throw new ArgumentException("cstart not less or equal to " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)cstart, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
 
       #if DEBUG
-if (words2 == null) {
- throw new ArgumentNullException("words2");
-}
-#endif
+      if ((acount + bcount) < 0) {
+        throw new ArgumentException("acount + bcount not greater or equal to 0 (" + Convert.ToString((long)(acount + bcount), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
 
-#if DEBUG
-if (bstart < 0) {
- throw new ArgumentException("bstart not greater or equal to 0 (" + Convert.ToString((long)bstart, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
+      #if DEBUG
+      if ((acount + bcount) >productArr.Length) {
+        throw new ArgumentException("acount + bcount not less or equal to " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(acount + bcount), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
 
-#if DEBUG
-if (bstart > words2.Length) {
- throw new ArgumentException("bstart not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)bstart, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
+      #if DEBUG
+      if ((productArr.Length - cstart) < acount + bcount) {
+        throw new ArgumentException("productArr's length minus " + cstart + " not greater or equal to " + Convert.ToString((long)(acount + bcount), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(productArr.Length - cstart), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
 
-#if DEBUG
-if (bcount < 0) {
- throw new ArgumentException("bcount not greater or equal to 0 (" + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
+      #if DEBUG
+      if (tempArr == null) {
+        throw new ArgumentNullException("tempArr");
+      }
+      #endif
 
-#if DEBUG
-if (bcount > words2.Length) {
- throw new ArgumentException("bcount not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
+      #if DEBUG
+      if (tempStart < 0) {
+        throw new ArgumentException("tempStart not greater or equal to 0 (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
 
-#if DEBUG
-if ((words2.Length - bstart) <bcount) {
- throw new ArgumentException("words2's length minus " + bstart + " not greater or equal to " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words2.Length - bstart), System.Globalization.CultureInfo.InvariantCulture) + ")");
-}
-#endif
+      #if DEBUG
+      if (tempStart > tempArr.Length) {
+        throw new ArgumentException("tempStart not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if ((bcount * 4) < 0) {
+        throw new ArgumentException("bcount * 4 not greater or equal to 0 (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if ((bcount * 4) >tempArr.Length) {
+        throw new ArgumentException("bcount * 4 not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if ((tempArr.Length - tempStart) < bcount * 4) {
+        throw new ArgumentException("tempArr's length minus " + tempStart + " not greater or equal to " + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(tempArr.Length - tempStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if (words1 == null) {
+        throw new ArgumentNullException("words1");
+      }
+      #endif
+
+      #if DEBUG
+      if (astart < 0) {
+        throw new ArgumentException("astart not greater or equal to 0 (" + Convert.ToString((long)astart, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if (astart > words1.Length) {
+        throw new ArgumentException("astart not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)astart, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if (acount < 0) {
+        throw new ArgumentException("acount not greater or equal to 0 (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if (acount > words1.Length) {
+        throw new ArgumentException("acount not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if (words1.Length - astart <acount) {
+        throw new ArgumentException("words1's length minus " + astart + " not greater or equal to " + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words1.Length - astart), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if (words2 == null) {
+        throw new ArgumentNullException("words2");
+      }
+      #endif
+
+      #if DEBUG
+      if (bstart < 0) {
+        throw new ArgumentException("bstart not greater or equal to 0 (" + Convert.ToString((long)bstart, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if (bstart > words2.Length) {
+        throw new ArgumentException("bstart not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)bstart, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if (bcount < 0) {
+        throw new ArgumentException("bcount not greater or equal to 0 (" + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if (bcount > words2.Length) {
+        throw new ArgumentException("bcount not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      #if DEBUG
+      if ((words2.Length - bstart) < bcount) {
+        throw new ArgumentException("words2's length minus " + bstart + " not greater or equal to " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words2.Length - bstart), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
 
       unchecked {
         int carryPos = 0;
@@ -1372,7 +1372,7 @@ if ((words2.Length - bstart) <bcount) {
               words1,
               astart + i,
               words2,
-              bstart + i,
+              bstart,
               bcount);
             // Add carry
             AddUnevenSize(
@@ -1397,7 +1397,7 @@ if ((words2.Length - bstart) <bcount) {
               astart + i,
               diff,
               words2,
-              bstart + i,
+              bstart,
               bcount);
             // Add carry
             AddUnevenSize(
@@ -1446,7 +1446,7 @@ if ((words2.Length - bstart) <bcount) {
       #endif
 
       #if DEBUG
-      if ((words1Count + words2Count) <0) {
+      if ((words1Count + words2Count) < 0) {
         throw new ArgumentException("words1Count+words2Count not greater or equal to 0 (" + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -1458,7 +1458,7 @@ if ((words2.Length - bstart) <bcount) {
       #endif
 
       #if DEBUG
-      if ((resultArr.Length - resultStart) <words1Count + words2Count) {
+      if ((resultArr.Length - resultStart) < words1Count + words2Count) {
         throw new ArgumentException("resultArr's length minus " + resultStart + " not greater or equal to " + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(resultArr.Length - resultStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -1482,7 +1482,7 @@ if ((words2.Length - bstart) <bcount) {
       #endif
 
       #if DEBUG
-      if ((words1Count + words2Count) <0) {
+      if ((words1Count + words2Count) < 0) {
         throw new ArgumentException("words1Count+words2Count not greater or equal to 0 (" + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -1494,7 +1494,7 @@ if ((words2.Length - bstart) <bcount) {
       #endif
 
       #if DEBUG
-      if ((tempArr.Length - tempStart) <words1Count + words2Count) {
+      if ((tempArr.Length - tempStart) < words1Count + words2Count) {
         throw new ArgumentException("tempArr's length minus " + tempStart + " not greater or equal to " + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(tempArr.Length - tempStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -1530,7 +1530,7 @@ if ((words2.Length - bstart) <bcount) {
       #endif
 
       #if DEBUG
-      if ((words1.Length - words1Start) <words1Count) {
+      if ((words1.Length - words1Start) < words1Count) {
         throw new ArgumentException("words1's length minus " + words1Start + " not greater or equal to " + Convert.ToString((long)words1Count, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words1.Length - words1Start), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -1566,16 +1566,16 @@ if ((words2.Length - bstart) <bcount) {
       #endif
 
       #if DEBUG
-      if ((words2.Length - words2Start) <words2Count) {
+      if ((words2.Length - words2Start) < words2Count) {
         throw new ArgumentException("words2's length minus " + words2Start + " not greater or equal to " + Convert.ToString((long)words2Count, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words2.Length - words2Start), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
 
       if (words1Count == words2Count) {
-        if (words1Start == words2Start && words1 == words2) {
+        /*if (words1Start == words2Start && words1 == words2) {
           // Both operands have the same value and the same word count
           RecursiveSquare(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1Count);
-        } else if (words1Count == 2) {
+        } else */if (words1Count == 2) {
           // Both operands have a word count of 2
           Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
         } else {
@@ -1616,7 +1616,7 @@ if ((words2.Length - bstart) <bcount) {
         AtomicMultiplyOpt(resultArr, resultStart, a0, a1, words2, words2Start, 0, words2Count);
         AtomicMultiplyAddOpt(resultArr, resultStart, a0, a1, words2, words2Start, 2, words2Count);
         return;
-      } else if (words1Count < 10 && words2Count < 10) {
+      } else if (words1Count <= 10 && words2Count <= 10) {
         Array.Clear(resultArr, resultStart, words1Count + words2Count);
         SchoolbookMultiply(resultArr, resultStart, words1, words1Start, words1Count, words2, words2Start, words2Count);
       } else {
@@ -1646,35 +1646,6 @@ if ((words2.Length - bstart) <bcount) {
           if (Add(resultArr, resultStart + words1Count, resultArr, resultStart + words1Count, tempArr, tempStart + (words1Count << 1), words2Count - words1Count) != 0) {
             Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
           }
-        } else if ((words1Count << 1) < words2Count) {
-          RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
-          Array.Copy(
-            resultArr,
-            resultStart + words1Count,
-            tempArr,
-            tempStart + words2Count,
-            words1Count);
-          AsymmetricMultiply(
-            resultArr,
-            resultStart + words1Count,
-            tempArr,
-            tempStart,  // uses words2Count words
-            words1,
-            words1Start,
-            words1Count,
-            words2,
-            words2Start + words1Count,
-            words2Count - words1Count);
-          if (Add(
-            resultArr,
-            resultStart + words1Count,
-            resultArr,
-            resultStart + words1Count,
-            tempArr,
-            tempStart + words2Count,
-            words2Count - words1Count) != 0) {
-            Increment(resultArr, resultStart + words2Count, words1Count, (short)1);
-          }
         } else if ((words1Count + words2Count) >= (words1Count << 2)) {
           ChunkedLinearMultiply(
             resultArr,
@@ -1688,50 +1659,18 @@ if ((words2.Length - bstart) <bcount) {
             words1Start,
             words1Count);
         } else {
-          // highest part of words2 is short
-          RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
-          short[] t2 = new short[words1Count];
-          Array.Copy(resultArr, resultStart + words1Count, t2, 0, words1Count);
-          int wc2 = words2Count - wordsRem;
-          for (i = words1Count << 1; i < words2Count; i += words1Count << 1) {
-            int diff = words2Start + i + words1Count;
-            if (diff > words2Count) {
-              AsymmetricMultiply(
-tempArr,
-tempStart + words1Count + i,
-tempArr,
-tempStart,
-words1,
-words1Start,
-words1Count,
-words2,
-words2Start + i,
-words1Count - wordsRem);
-            } else {
-              RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
-            }
-          }
-          for (i = words1Count; i < words2Count; i += words1Count << 1) {
-            int diff = words2Start + i + words1Count;
-            if (diff > words2Count) {
-              AsymmetricMultiply(
-resultArr,
-resultStart + i,
-tempArr,
-tempStart,
-words1,
-words1Start,
-words1Count,
-words2,
-words2Start + i,
-words1Count - wordsRem);
-            } else {
-              RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
-            }
-          }
-          if (Add(resultArr, resultStart + words1Count, resultArr, resultStart + words1Count, tempArr, tempStart + (words1Count << 1), words2Count - words1Count) != 0) {
-            Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
-          }
+          short[] t2 = new short[words1Count << 2];
+          ChunkedLinearMultiply(
+            resultArr,
+            resultStart,
+            t2,
+            0,
+            words2,
+            words2Start,
+            words2Count,
+            words1,
+            words1Start,
+            words1Count);
         }
       }
     }
@@ -2254,9 +2193,7 @@ words1Count - wordsRem);
       } else {
         int len = bytes.Length;
         int wordLength = ((int)len + 1) >> 1;
-        wordLength = (wordLength <= 16) ?
-          roundupSizeTable[wordLength] :
-          RoundupSize(wordLength);
+        wordLength = RoundupSize(wordLength);
         this.reg = new short[wordLength];
         int valueJIndex = littleEndian ? len - 1 : 0;
         bool negative = (bytes[valueJIndex] & 0x80) != 0;
@@ -3770,7 +3707,7 @@ words1Count - wordsRem);
         needShorten = false;
       } else if (this.wordCount <= 10 && bigintMult.wordCount <= 10) {
         int wc = this.wordCount + bigintMult.wordCount;
-        wc = (wc <= 16) ? roundupSizeTable[wc] : RoundupSize(wc);
+        wc = RoundupSize(wc);
         product.reg = new short[wc];
         product.negative = false;
         product.wordCount = product.reg.Length;
@@ -3801,8 +3738,8 @@ words1Count - wordsRem);
       } else {
         int words1Size = this.wordCount;
         int words2Size = bigintMult.wordCount;
-        words1Size = (words1Size <= 16) ? roundupSizeTable[words1Size] : RoundupSize(words1Size);
-        words2Size = (words2Size <= 16) ? roundupSizeTable[words2Size] : RoundupSize(words2Size);
+        words1Size = RoundupSize(words1Size);
+        words2Size = RoundupSize(words2Size);
         product.reg = new short[RoundupSize(words1Size + words2Size)];
         product.negative = false;
         short[] workspace = new short[words1Size + words2Size];

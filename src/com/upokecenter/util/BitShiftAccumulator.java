@@ -293,7 +293,8 @@ at: http://peteroupc.github.io/CBOR/
       if (this.knownBitLength.CompareToInt(bits) > 0) {
         int bs = 0;
         if (this.knownBitLength.CanFitInInt32()) {
-          bs = this.knownBitLength.AsInt32() -bits;
+          bs = this.knownBitLength.AsInt32();
+          bs          -= bits;
         } else {
           FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
           if (!bitShift.CanFitInInt32()) {

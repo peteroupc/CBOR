@@ -1054,6 +1054,8 @@ at: http://peteroupc.github.io/CBOR/
       short[] words2,
       int bstart,
       int bcount) {
+      /*
+ */
 
       {
         int carryPos = 0;
@@ -1171,7 +1173,7 @@ at: http://peteroupc.github.io/CBOR/
         AtomicMultiplyOpt(resultArr, resultStart, a0, a1, words2, words2Start, 0, words2Count);
         AtomicMultiplyAddOpt(resultArr, resultStart, a0, a1, words2, words2Start, 2, words2Count);
         return;
-      } else if (words1Count < 10 && words2Count < 10) {
+      } else if (words1Count <= 10 && words2Count <= 10) {
         java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(words1Count + words2Count),0);
         SchoolbookMultiply(resultArr, resultStart, words1, words1Start, words1Count, words2, words2Start, words2Count);
       } else {
@@ -1201,35 +1203,6 @@ at: http://peteroupc.github.io/CBOR/
           if (Add(resultArr, resultStart + words1Count, resultArr, resultStart + words1Count, tempArr, tempStart + (words1Count << 1), words2Count - words1Count) != 0) {
             Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
           }
-        } else if ((words1Count << 1) < words2Count) {
-          RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
-          System.arraycopy(
-            resultArr,
-            resultStart + words1Count,
-            tempArr,
-            tempStart + words2Count,
-            words1Count);
-          AsymmetricMultiply(
-            resultArr,
-            resultStart + words1Count,
-            tempArr,
-            tempStart,  // uses words2Count words
-            words1,
-            words1Start,
-            words1Count,
-            words2,
-            words2Start + words1Count,
-            words2Count - words1Count);
-          if (Add(
-            resultArr,
-            resultStart + words1Count,
-            resultArr,
-            resultStart + words1Count,
-            tempArr,
-            tempStart + words2Count,
-            words2Count - words1Count) != 0) {
-            Increment(resultArr, resultStart + words2Count, words1Count, (short)1);
-          }
         } else if ((words1Count + words2Count) >= (words1Count << 2)) {
           ChunkedLinearMultiply(
             resultArr,
@@ -1252,16 +1225,16 @@ at: http://peteroupc.github.io/CBOR/
             int diff = words2Start + i + words1Count;
             if (diff > words2Count) {
               AsymmetricMultiply(
-tempArr,
-tempStart + words1Count + i,
-tempArr,
-tempStart,
-words1,
-words1Start,
-words1Count,
-words2,
-words2Start + i,
-words1Count - wordsRem);
+                tempArr,
+                tempStart + words1Count + i,
+                tempArr,
+                tempStart,
+                words1,
+                words1Start,
+                words1Count,
+                words2,
+                words2Start + i,
+                words2Count - i);
             } else {
               RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
             }
@@ -1270,16 +1243,16 @@ words1Count - wordsRem);
             int diff = words2Start + i + words1Count;
             if (diff > words2Count) {
               AsymmetricMultiply(
-resultArr,
-resultStart + i,
-tempArr,
-tempStart,
-words1,
-words1Start,
-words1Count,
-words2,
-words2Start + i,
-words1Count - wordsRem);
+                resultArr,
+                resultStart + i,
+                tempArr,
+                tempStart,
+                words1,
+                words1Start,
+                words1Count,
+                words2,
+                words2Start + i,
+                words2Count - i);
             } else {
               RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
             }
@@ -1794,9 +1767,7 @@ words1Count - wordsRem);
       } else {
         int len = bytes.length;
         int wordLength = ((int)len + 1) >> 1;
-        wordLength = (wordLength <= 16) ?
-          roundupSizeTable[wordLength] :
-          RoundupSize(wordLength);
+        wordLength = RoundupSize(wordLength);
         this.reg = new short[wordLength];
         int valueJIndex = littleEndian ? len - 1 : 0;
         boolean negative = (bytes[valueJIndex] & 0x80) != 0;
@@ -3351,7 +3322,7 @@ words1Count - wordsRem);
         needShorten = false;
       } else if (this.wordCount <= 10 && bigintMult.wordCount <= 10) {
         int wc = this.wordCount + bigintMult.wordCount;
-        wc = (wc <= 16) ? roundupSizeTable[wc] : RoundupSize(wc);
+        wc = RoundupSize(wc);
         product.reg = new short[wc];
         product.negative = false;
         product.wordCount = product.reg.length;
@@ -3382,8 +3353,8 @@ words1Count - wordsRem);
       } else {
         int words1Size = this.wordCount;
         int words2Size = bigintMult.wordCount;
-        words1Size = (words1Size <= 16) ? roundupSizeTable[words1Size] : RoundupSize(words1Size);
-        words2Size = (words2Size <= 16) ? roundupSizeTable[words2Size] : RoundupSize(words2Size);
+        words1Size = RoundupSize(words1Size);
+        words2Size = RoundupSize(words2Size);
         product.reg = new short[RoundupSize(words1Size + words2Size)];
         product.negative = false;
         short[] workspace = new short[words1Size + words2Size];

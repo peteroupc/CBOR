@@ -2314,11 +2314,28 @@ namespace Test
       TestCommon.DoTestDivideAndRemainder("-456498858871851323281", "-1288943723278309364", "354", "-212780831329808425");
       // TestCommon.DoTestPow("-45118",38,"733320652933198396988999998065850508927620206252422516226504491637494301792808371820649896474330118786837483371209081826193461349204347003160686091730902477321647871591735885824");
     }
+    [Test]
+    public void TestMultiply2() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintB = BigInteger.One + (BigInteger)bigintA;
+        BigInteger bigintC = bigintA * (BigInteger)bigintB;
+        if (bigintA.IsZero || bigintB.IsZero) {
+          Assert.AreEqual(BigInteger.Zero, bigintC);
+        }
+        if (bigintA.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintB, bigintC);
+        }
+        if (bigintB.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintA, bigintC);
+        }
+      }      
+    }
 
     [Test]
     public void TestMultiply() {
       FastRandom r = new FastRandom();
-      TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
@@ -2349,7 +2366,7 @@ namespace Test
         if (!bigintB.IsZero) {
           bigintD = BigInteger.DivRem(bigintC, bigintB, out bigintRem);
           if (!bigintD.Equals(bigintA)) {
-            Assert.AreEqual(bigintA, bigintD, "TestMultiplyDivide " + bigintA + "; " + bigintB);
+            Assert.AreEqual(bigintA, bigintD, "TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
           }
           if (!bigintRem.IsZero) {
             Assert.AreEqual(BigInteger.Zero, bigintRem, "TestMultiplyDivide " + bigintA + "; " + bigintB);

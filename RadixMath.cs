@@ -1593,10 +1593,10 @@ public T LnTenConstant(PrecisionContext ctx) {
 
     private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
       if (root <= 0) {
-        throw new ArgumentException("root not greater than 0 (" + Convert.ToString((long)root, System.Globalization.CultureInfo.InvariantCulture) +")");
+        throw new ArgumentException("root not greater than 0 (" + Convert.ToString((long)root, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (value.Sign < 0) {
-        throw new ArgumentException("value.Sign not greater or equal to 0 (" + Convert.ToString((long)value.Sign, System.Globalization.CultureInfo.InvariantCulture) +")");
+        throw new ArgumentException("value.Sign not greater or equal to 0 (" + Convert.ToString((long)value.Sign, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (value.Sign == 0) {
         return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };
@@ -3548,4 +3548,3 @@ public T LnTenConstant(PrecisionContext ctx) {
     }
   }
 }
-
