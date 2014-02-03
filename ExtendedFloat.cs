@@ -870,7 +870,7 @@ namespace PeterO {
     }
 
     /// <summary>Gets a value indicating whether this object is finite (not
-    /// infinity or NaN)</summary>
+    /// infinity or NaN).</summary>
     /// <value>Whether this object is finite (not infinity or NaN).</value>
     public bool IsFinite {
       get {

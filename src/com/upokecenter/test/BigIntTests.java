@@ -2315,6 +2315,26 @@ import com.upokecenter.util.*;
     }
 
     @Test
+    public void TestMultiply() {
+      FastRandom r = new FastRandom();
+      TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");
+      for (int i = 0; i < 1000; ++i) {
+        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintB = CBORTest.RandomBigInteger(r);
+        BigInteger bigintC = bigintA.multiply(bigintB);
+        if (bigintA.signum()==0 || bigintB.signum()==0) {
+          Assert.assertEquals(BigInteger.ZERO, bigintC);
+        }
+        if (bigintA.equals(BigInteger.ONE)) {
+          Assert.assertEquals(bigintB, bigintC);
+        }
+        if (bigintB.equals(BigInteger.ONE)) {
+          Assert.assertEquals(bigintA, bigintC);
+        }
+      }
+    }
+
+    @Test
     public void TestMultiplyDivide() {
       FastRandom r = new FastRandom();
       TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");

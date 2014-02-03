@@ -109,7 +109,7 @@ import com.upokecenter.util.*;
     }
 
     public static BigInteger RandomBigInteger(FastRandom r) {
-      int count = r.NextValue(30) + 1;
+      int count = r.NextValue(60) + 1;
       byte[] bytes = new byte[count];
        for (int i = 0; i < count; ++i) {
         bytes[i] = (byte)((int)r.NextValue(256));

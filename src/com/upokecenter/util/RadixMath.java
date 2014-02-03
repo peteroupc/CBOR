@@ -1609,10 +1609,10 @@ public T LnTenConstant(PrecisionContext ctx) {
 
     private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
       if (root <= 0) {
-        throw new IllegalArgumentException("root not greater than " + "0"+" ("+Long.toString((long)root)+")");
+        throw new IllegalArgumentException("root not greater than 0 (" + Long.toString((long)root) +")");
       }
       if (value.signum() < 0) {
-        throw new IllegalArgumentException("value.signum() not greater or equal to " + "0"+" ("+Long.toString((long)value.signum())+")");
+        throw new IllegalArgumentException("value.signum() not greater or equal to 0 (" + Long.toString((long)value.signum()) +")");
       }
       if (value.signum() == 0) {
         return new BigInteger[] { BigInteger.ZERO, BigInteger.ZERO };
@@ -1646,56 +1646,6 @@ public T LnTenConstant(PrecisionContext ctx) {
         }
         lastGuess = guess;
       }
-    }
-
-    private T NthRoot(T thisValue, int root, PrecisionContext ctx) {
-
-      PrecisionContext ctxtmp = ctx.WithBlankFlags();
-      BigInteger currentExp = this.helper.GetExponent(thisValue);
-      BigInteger origExp = currentExp;
-      if (this.helper.GetSign(thisValue) == 0) {
-        return this.helper.ValueOf(0);
-      }
-      BigInteger mantissa = (this.helper.GetMantissa(thisValue)).abs();
-      IShiftAccumulator accum = this.helper.CreateShiftAccumulator(mantissa);
-      FastInteger digitCount = accum.GetDigitLength();
-      FastInteger targetPrecision = FastInteger.FromBig(ctx.getPrecision());
-      FastInteger precision = FastInteger.Copy(targetPrecision).Multiply(2).AddInt(2);
-      boolean inexact = false;
-      if (digitCount.compareTo(precision) < 0) {
-        FastInteger diff = FastInteger.Copy(precision).Subtract(digitCount);
-        if ((!diff.isEvenNumber()) ^ (origExp.testBit(0))) {
-          diff.Increment();
-        }
-        BigInteger bigdiff = diff.AsBigInteger();
-        currentExp=currentExp.subtract(bigdiff);
-        mantissa = this.helper.MultiplyByRadixPower(mantissa, diff);
-      } else if (digitCount.compareTo(precision) < 0) {
-        FastInteger diff = FastInteger.Copy(digitCount).Subtract(precision);
-        accum.ShiftRight(diff);
-        BigInteger bigdiff = diff.AsBigInteger();
-        currentExp=currentExp.add(bigdiff);
-        mantissa = accum.getShiftedInt();
-        inexact = (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0;
-      }
-      System.out.println("mantStart={0}\nroot={1}", mantissa, root);
-      BigInteger[] sr = NthRootWithRemainder(mantissa, root);
-      System.out.println("mantEnd={0}\nrem={1}", sr[0], sr[1]);
-      digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();
-      BigInteger rootReminder = sr[1];
-      mantissa = sr[0];
-      if (rootReminder.signum()!=0) {
-        inexact = true;
-      }
-      BigInteger oldexp = currentExp;
-      currentExp=currentExp.divide(BigInteger.valueOf(root));
-      if (oldexp.signum() < 0 && oldexp.testBit(0)) {
-        // Round towards negative infinity; BigInteger's
-        // division operation rounds towards zero
-        currentExp=currentExp.subtract(BigInteger.ONE);
-      }
-      T retval = this.helper.CreateNewWithFlags(mantissa, currentExp, 0);
-      return this.RoundToPrecisionInternal(retval, 0, inexact ? 1 : 0, null, false, false, ctxtmp);
     }
 
     /**

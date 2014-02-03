@@ -234,19 +234,19 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new NullPointerException("str");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset not greater or equal to 0 ("+(offset)+")");
+        throw new IllegalArgumentException("offset not greater or equal to 0 (" + (offset) + ")");
       }
       if (offset > str.length()) {
-        throw new IllegalArgumentException("offset not less or equal to "+(str.length())+" ("+(offset)+")");
+        throw new IllegalArgumentException("offset not less or equal to " + (str.length()) + " (" + (offset) + ")");
       }
       if (length < 0) {
-        throw new IllegalArgumentException("length not greater or equal to 0 ("+(length)+")");
+        throw new IllegalArgumentException("length not greater or equal to 0 (" + (length) + ")");
       }
       if (length > str.length()) {
-        throw new IllegalArgumentException("length not less or equal to "+(str.length())+" ("+(length)+")");
+        throw new IllegalArgumentException("length not less or equal to " + (str.length()) + " (" + (length) + ")");
       }
       if ((str.length() - offset) < length) {
-        throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to "+(length)+" ("+(str.length() - offset)+")");
+        throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to " + (length) + " (" + (str.length() - offset) + ")");
       }
       byte[] bytes;
       int retval = 0;
@@ -358,19 +358,19 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new NullPointerException("data");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset not greater or equal to 0 ("+(offset)+")");
+        throw new IllegalArgumentException("offset not greater or equal to 0 (" + (offset) + ")");
       }
       if (offset > data.length) {
-        throw new IllegalArgumentException("offset not less or equal to "+(data.length)+" ("+(offset)+")");
+        throw new IllegalArgumentException("offset not less or equal to " + (data.length) + " (" + (offset) + ")");
       }
       if (bytesCount < 0) {
-        throw new IllegalArgumentException("bytesCount not greater or equal to 0 ("+(bytesCount)+")");
+        throw new IllegalArgumentException("bytesCount not greater or equal to 0 (" + (bytesCount) + ")");
       }
       if (bytesCount > data.length) {
-        throw new IllegalArgumentException("bytesCount not less or equal to "+(data.length)+" ("+(bytesCount)+")");
+        throw new IllegalArgumentException("bytesCount not less or equal to " + (data.length) + " (" + (bytesCount) + ")");
       }
       if ((data.length - offset) < bytesCount) {
-        throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to "+(bytesCount)+" ("+(data.length - offset)+")");
+        throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to " + (bytesCount) + " (" + (data.length - offset) + ")");
       }
       if (builder == null) {
         throw new NullPointerException("builder");

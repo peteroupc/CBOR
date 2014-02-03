@@ -2316,6 +2316,26 @@ namespace Test
     }
 
     [Test]
+    public void TestMultiply() {
+      FastRandom r = new FastRandom();
+      TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");
+      for (int i = 0; i < 1000; ++i) {
+        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintB = CBORTest.RandomBigInteger(r);
+        BigInteger bigintC = bigintA * (BigInteger)bigintB;
+        if (bigintA.IsZero || bigintB.IsZero) {
+          Assert.AreEqual(BigInteger.Zero, bigintC);
+        }
+        if (bigintA.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintB, bigintC);
+        }
+        if (bigintB.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintA, bigintC);
+        }
+      }
+    }
+
+    [Test]
     public void TestMultiplyDivide() {
       FastRandom r = new FastRandom();
       TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");

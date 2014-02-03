@@ -1451,7 +1451,7 @@ remainder=divrem[1]; }
 
     /**
      * Gets a value indicating whether this object is finite (not infinity
-     * or NaN)
+     * or NaN).
      */
     public boolean isFinite() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
