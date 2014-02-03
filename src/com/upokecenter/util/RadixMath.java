@@ -1112,8 +1112,8 @@ bigrem=divrem[1]; }
           this.helper.CreateNewWithFlags(BigInteger.valueOf(5), BigInteger.ZERO.subtract(BigInteger.ONE), 0) :
           this.helper.CreateNewWithFlags(BigInteger.ONE, BigInteger.ZERO.subtract(BigInteger.ONE), 0);
         if (this.compareTo(pow, half) == 0 &&
-           this.IsWithinExponentRangeForPow(pow, ctx) &&
-           this.IsWithinExponentRangeForPow(thisValue, ctx)) {
+            this.IsWithinExponentRangeForPow(pow, ctx) &&
+            this.IsWithinExponentRangeForPow(thisValue, ctx)) {
           PrecisionContext ctxCopy = ctx.WithBlankFlags();
           thisValue = this.SquareRoot(thisValue, ctxCopy);
           ctxCopy.setFlags(ctxCopy.getFlags()|(PrecisionContext.FlagInexact));
@@ -1139,7 +1139,7 @@ bigrem=divrem[1]; }
       System.out.println("lnIn " + thisValue);
       System.out.println("lnOut " + lnresult);
       System.out.println("lnOut.get(n) "+this.NextPlus(lnresult,ctxdiv));*/
-      lnresult = this.Multiply(lnresult, pow, null);
+      lnresult = this.Multiply(lnresult, pow, ctxdiv);
       // System.out.println("expIn " + lnresult);
       // Now use original precision and rounding mode
       ctxdiv = ctx.WithBlankFlags();
@@ -1224,7 +1224,6 @@ bigrem=divrem[1]; }
             mantissa = bigquo;
             expTmp.Increment();
           }
-
           if (mantissa.compareTo(BigInteger.ONE) == 0 &&
               (this.thisRadix == 10 || expTmp.signum() == 0 || exp.signum()==0)) {
             // Value is an integer power of 10
@@ -1232,9 +1231,10 @@ bigrem=divrem[1]; }
           } else {
             PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN))
               .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
-            T ten = this.helper.CreateNewWithFlags(BigInteger.TEN, BigInteger.ZERO, 0);
+            T ten = this.helper.ValueOf(10);
             T logNatural = this.Ln(thisValue, ctxdiv);
-            T logTen = this.Ln(ten, ctxdiv);
+          // T logTen = this.LnTenConstant(ctxdiv);
+           T logTen = this.Ln(ten, ctxdiv);
             thisValue = this.Divide(logNatural, logTen, ctx);
             // Treat result as inexact
             if (ctx.getHasFlags()) {
@@ -1273,6 +1273,39 @@ bigrem=divrem[1]; }
         }
         return bi;
       }
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return A T object.
+     */
+public T LnTenConstant(PrecisionContext ctx) {
+      /* if ((ctx) == null) {
+ throw new NullPointerException("ctx");
+} */
+      T thisValue = this.helper.ValueOf(10);
+      T two = this.helper.ValueOf(2);
+      FastInteger roots = new FastInteger(0);
+      FastInteger error;
+      BigInteger bigError;
+      error = new FastInteger(10);
+      bigError = error.AsBigInteger();
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
+        .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
+          for (int i = 0; i < 9; ++i) {
+              thisValue = this.SquareRoot(thisValue, ctxdiv.WithUnlimitedExponents());
+            }
+      // Find -Ln(1/thisValue)
+      thisValue = this.Divide(this.helper.ValueOf(1), thisValue, ctxdiv);
+      thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxdiv);
+      thisValue = this.NegateRaw(thisValue);
+      thisValue = this.Multiply(thisValue, this.helper.ValueOf(1 << 9), ctx);
+      if (ctx.getHasFlags()) {
+        ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInexact));
+        ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
+      }
+      return thisValue;
     }
 
     /**
@@ -1572,6 +1605,97 @@ bigrem=divrem[1]; }
         ctx.setFlags(ctx.getFlags()|(ctxCopy.getFlags()));
       }
       return thisValue;
+    }
+
+    private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
+      if (root <= 0) {
+        throw new IllegalArgumentException("root not greater than " + "0"+" ("+Long.toString((long)root)+")");
+      }
+      if (value.signum() < 0) {
+        throw new IllegalArgumentException("value.signum() not greater or equal to " + "0"+" ("+Long.toString((long)value.signum())+")");
+      }
+      if (value.signum() == 0) {
+        return new BigInteger[] { BigInteger.ZERO, BigInteger.ZERO };
+      }
+      if (value.equals(BigInteger.ONE)) {
+        return new BigInteger[] { BigInteger.ONE, BigInteger.ZERO };
+      }
+      if (root == 1) {
+        return new BigInteger[] { value, BigInteger.ZERO };
+      }
+      if (root == 2) {
+        return value.sqrtWithRemainder();
+      }
+      int nm1 = root - 1;
+      int bits = value.bitLength();
+      int bitsdn = bits / root;
+      BigInteger guess = BigInteger.ONE.shiftLeft(bitsdn);
+      BigInteger lastGuess = guess;
+      while (true) {
+        BigInteger bigintTmp = value;
+        bigintTmp=bigintTmp.divide(guess).pow(nm1);
+        BigInteger bigintTmp2 = guess * BigInteger.valueOf(nm1);
+        guess = bigintTmp.add(bigintTmp2);
+        guess=guess.divide(BigInteger.valueOf(root));
+        if (guess.equals(lastGuess)) {
+          // Find the remainder, the difference between
+          // value and guess**root
+          lastGuess = (guess).pow(root);
+          lastGuess = value.subtract(lastGuess);
+          return new BigInteger[] { guess, lastGuess };
+        }
+        lastGuess = guess;
+      }
+    }
+
+    private T NthRoot(T thisValue, int root, PrecisionContext ctx) {
+
+      PrecisionContext ctxtmp = ctx.WithBlankFlags();
+      BigInteger currentExp = this.helper.GetExponent(thisValue);
+      BigInteger origExp = currentExp;
+      if (this.helper.GetSign(thisValue) == 0) {
+        return this.helper.ValueOf(0);
+      }
+      BigInteger mantissa = (this.helper.GetMantissa(thisValue)).abs();
+      IShiftAccumulator accum = this.helper.CreateShiftAccumulator(mantissa);
+      FastInteger digitCount = accum.GetDigitLength();
+      FastInteger targetPrecision = FastInteger.FromBig(ctx.getPrecision());
+      FastInteger precision = FastInteger.Copy(targetPrecision).Multiply(2).AddInt(2);
+      boolean inexact = false;
+      if (digitCount.compareTo(precision) < 0) {
+        FastInteger diff = FastInteger.Copy(precision).Subtract(digitCount);
+        if ((!diff.isEvenNumber()) ^ (origExp.testBit(0))) {
+          diff.Increment();
+        }
+        BigInteger bigdiff = diff.AsBigInteger();
+        currentExp=currentExp.subtract(bigdiff);
+        mantissa = this.helper.MultiplyByRadixPower(mantissa, diff);
+      } else if (digitCount.compareTo(precision) < 0) {
+        FastInteger diff = FastInteger.Copy(digitCount).Subtract(precision);
+        accum.ShiftRight(diff);
+        BigInteger bigdiff = diff.AsBigInteger();
+        currentExp=currentExp.add(bigdiff);
+        mantissa = accum.getShiftedInt();
+        inexact = (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0;
+      }
+      System.out.println("mantStart={0}\nroot={1}", mantissa, root);
+      BigInteger[] sr = NthRootWithRemainder(mantissa, root);
+      System.out.println("mantEnd={0}\nrem={1}", sr[0], sr[1]);
+      digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();
+      BigInteger rootReminder = sr[1];
+      mantissa = sr[0];
+      if (rootReminder.signum()!=0) {
+        inexact = true;
+      }
+      BigInteger oldexp = currentExp;
+      currentExp=currentExp.divide(BigInteger.valueOf(root));
+      if (oldexp.signum() < 0 && oldexp.testBit(0)) {
+        // Round towards negative infinity; BigInteger's
+        // division operation rounds towards zero
+        currentExp=currentExp.subtract(BigInteger.ONE);
+      }
+      T retval = this.helper.CreateNewWithFlags(mantissa, currentExp, 0);
+      return this.RoundToPrecisionInternal(retval, 0, inexact ? 1 : 0, null, false, false, ctxtmp);
     }
 
     /**

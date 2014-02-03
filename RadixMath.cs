@@ -1108,8 +1108,8 @@ namespace PeterO {
           this.helper.CreateNewWithFlags((BigInteger)5, BigInteger.Zero - BigInteger.One, 0) :
           this.helper.CreateNewWithFlags(BigInteger.One, BigInteger.Zero - BigInteger.One, 0);
         if (this.CompareTo(pow, half) == 0 &&
-           this.IsWithinExponentRangeForPow(pow, ctx) &&
-           this.IsWithinExponentRangeForPow(thisValue, ctx)) {
+            this.IsWithinExponentRangeForPow(pow, ctx) &&
+            this.IsWithinExponentRangeForPow(thisValue, ctx)) {
           PrecisionContext ctxCopy = ctx.WithBlankFlags();
           thisValue = this.SquareRoot(thisValue, ctxCopy);
           ctxCopy.Flags |= PrecisionContext.FlagInexact;
@@ -1135,7 +1135,7 @@ namespace PeterO {
       Console.WriteLine("lnIn " + thisValue);
       Console.WriteLine("lnOut " + lnresult);
       Console.WriteLine("lnOut[n] "+this.NextPlus(lnresult,ctxdiv));*/
-      lnresult = this.Multiply(lnresult, pow, null);
+      lnresult = this.Multiply(lnresult, pow, ctxdiv);
       // Console.WriteLine("expIn " + lnresult);
       // Now use original precision and rounding mode
       ctxdiv = ctx.WithBlankFlags();
@@ -1214,7 +1214,6 @@ namespace PeterO {
             mantissa = bigquo;
             expTmp.Increment();
           }
-
           if (mantissa.CompareTo(BigInteger.One) == 0 &&
               (this.thisRadix == 10 || expTmp.Sign == 0 || exp.IsZero)) {
             // Value is an integer power of 10
@@ -1222,9 +1221,10 @@ namespace PeterO {
           } else {
             PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)10)
               .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
-            T ten = this.helper.CreateNewWithFlags((BigInteger)10, BigInteger.Zero, 0);
+            T ten = this.helper.ValueOf(10);
             T logNatural = this.Ln(thisValue, ctxdiv);
-            T logTen = this.Ln(ten, ctxdiv);
+          // T logTen = this.LnTenConstant(ctxdiv);
+           T logTen = this.Ln(ten, ctxdiv);
             thisValue = this.Divide(logNatural, logTen, ctx);
             // Treat result as inexact
             if (ctx.HasFlags) {
@@ -1263,6 +1263,37 @@ namespace PeterO {
         }
         return bi;
       }
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+public T LnTenConstant(PrecisionContext ctx) {
+      /* if ((ctx) == null) {
+ throw new ArgumentNullException("ctx");
+} */
+      T thisValue = this.helper.ValueOf(10);
+      T two = this.helper.ValueOf(2);
+      FastInteger roots = new FastInteger(0);
+      FastInteger error;
+      BigInteger bigError;
+      error = new FastInteger(10);
+      bigError = error.AsBigInteger();
+      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + bigError)
+        .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
+          for (int i = 0; i < 9; ++i) {
+              thisValue = this.SquareRoot(thisValue, ctxdiv.WithUnlimitedExponents());
+            }
+      // Find -Ln(1/thisValue)
+      thisValue = this.Divide(this.helper.ValueOf(1), thisValue, ctxdiv);
+      thisValue = this.LnInternal(thisValue, ctxdiv.Precision, ctxdiv);
+      thisValue = this.NegateRaw(thisValue);
+      thisValue = this.Multiply(thisValue, this.helper.ValueOf(1 << 9), ctx);
+      if (ctx.HasFlags) {
+        ctx.Flags |= PrecisionContext.FlagInexact;
+        ctx.Flags |= PrecisionContext.FlagRounded;
+      }
+      return thisValue;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -1558,6 +1589,47 @@ namespace PeterO {
         ctx.Flags |= ctxCopy.Flags;
       }
       return thisValue;
+    }
+
+    private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
+      if (root <= 0) {
+        throw new ArgumentException("root not greater than " + "0"+" ("+Convert.ToString((long)root, System.Globalization.CultureInfo.InvariantCulture)+")");
+      }
+      if (value.Sign < 0) {
+        throw new ArgumentException("value.Sign not greater or equal to " + "0"+" ("+Convert.ToString((long)value.Sign, System.Globalization.CultureInfo.InvariantCulture)+")");
+      }
+      if (value.Sign == 0) {
+        return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };
+      }
+      if (value.Equals(BigInteger.One)) {
+        return new BigInteger[] { BigInteger.One, BigInteger.Zero };
+      }
+      if (root == 1) {
+        return new BigInteger[] { value, BigInteger.Zero };
+      }
+      if (root == 2) {
+        return value.sqrtWithRemainder();
+      }
+      int nm1 = root - 1;
+      int bits = value.bitLength();
+      int bitsdn = bits / root;
+      BigInteger guess = BigInteger.One << bitsdn;
+      BigInteger lastGuess = guess;
+      while (true) {
+        BigInteger bigintTmp = value;
+        bigintTmp /= (BigInteger)BigInteger.Pow(guess, nm1);
+        BigInteger bigintTmp2 = guess * (BigInteger)nm1;
+        guess = bigintTmp + (BigInteger)bigintTmp2;
+        guess /= (BigInteger)root;
+        if (guess.Equals(lastGuess)) {
+          // Find the remainder, the difference between
+          // value and guess**root
+          lastGuess = BigInteger.Pow(guess, root);
+          lastGuess = value - (BigInteger)lastGuess;
+          return new BigInteger[] { guess, lastGuess };
+        }
+        lastGuess = guess;
+      }
     }
 
     /// <summary>Not documented yet.</summary>

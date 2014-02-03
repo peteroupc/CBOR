@@ -1450,6 +1450,14 @@ remainder=divrem[1]; }
     }
 
     /**
+     * Gets a value indicating whether this object is finite (not infinity
+     * or NaN)
+     */
+    public boolean isFinite() {
+        return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
+      }
+
+    /**
      * Gets a value indicating whether this object is negative, including
      * negative zero.
      */

@@ -1402,6 +1402,15 @@ namespace PeterO {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     }
 
+    /// <summary>Gets a value indicating whether this object is finite (not
+    /// infinity or NaN)</summary>
+    /// <value>Whether this object is finite (not infinity or NaN).</value>
+    public bool IsFinite {
+      get {
+        return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
+      }
+    }
+
     /// <summary>Gets a value indicating whether this object is negative,
     /// including negative zero.</summary>
     /// <value>Whether this object is negative, including negative zero.</value>
