@@ -1638,7 +1638,7 @@ function() {
                     c[csi + 1] = ((tempInt & 65535) & 65535);
                     tempInt = valueA1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((valueA1B1 >> 16) & 65535) - (s & 65535);
                     c[csi + 2] = ((tempInt & 65535) & 65535);
-                    c[csi + 3] = ((((tempInt >> 16) & 65535) & 65535));
+                    c[csi + 3] = (((tempInt >> 16) & 65535) & 65535);
                 }
             } else {
                 for (var i = istart; i < iend; i += 4) {
@@ -1661,7 +1661,7 @@ function() {
                     c[csi + 1] = ((tempInt & 65535) & 65535);
                     tempInt = valueA1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((valueA1B1 >> 16) & 65535) - (s & 65535);
                     c[csi + 2] = ((tempInt & 65535) & 65535);
-                    c[csi + 3] = ((((tempInt >> 16) & 65535) & 65535));
+                    c[csi + 3] = (((tempInt >> 16) & 65535) & 65535);
                 }
             }
         }
@@ -11575,5 +11575,6 @@ function() {
 
 if(typeof exports!=="undefined")exports['ExtendedFloat']=ExtendedFloat;
 if(typeof window!=="undefined")window['ExtendedFloat']=ExtendedFloat;
+
 })();
 

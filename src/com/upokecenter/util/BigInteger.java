@@ -190,6 +190,26 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
+    private static int AddOneByOne(
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int n) {
+      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0","integer.cpp",799);
+      {
+        int u;
+        u = 0;
+        for (int i = 0; i < n; i += 1) {
+          u = (((int)words1[astart + i]) & 0xFFFF) + (((int)words2[bstart + i]) & 0xFFFF) + (short)(u >> 16);
+          c[cstart + i] = (short)u;
+        }
+        return ((int)u >> 16) & 0xFFFF;
+      }
+    }
+
     private static int SubtractOneBiggerWords1(
       short[] c,
       int cstart,
@@ -240,6 +260,31 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
+    private static int AddUnevenSize(
+      short[] c,
+      int cstart,
+      short[] wordsBigger,
+      int astart,
+      int acount,
+      short[] wordsSmaller,
+      int bstart,
+      int bcount) {
+
+      {
+        int u;
+        u = 0;
+        for (int i = 0; i < bcount; i += 1) {
+          u = (((int)wordsBigger[astart + i]) & 0xFFFF) + (((int)wordsSmaller[bstart + i]) & 0xFFFF) + (short)(u >> 16);
+          c[cstart + i] = (short)u;
+        }
+        for (int i = bcount; i < acount; i += 1) {
+          u = (((int)wordsBigger[astart + i]) & 0xFFFF) + (short)(u >> 16);
+          c[cstart + i] = (short)u;
+        }
+        return ((int)u >> 16) & 0xFFFF;
+      }
+    }
+
     private static int Subtract(
       short[] c,
       int cstart,
@@ -257,6 +302,28 @@ at: http://peteroupc.github.io/CBOR/
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
+          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+          c[cstart++] = (short)u;
+          ++astart;
+          ++bstart;
+        }
+        return (int)((u >> 31) & 1);
+      }
+    }
+
+    private static int SubtractOneByOne(
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int n) {
+      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0","integer.cpp",799);
+      {
+        int u;
+        u = 0;
+        for (int i = 0; i < n; i += 2) {
           u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
@@ -714,6 +781,7 @@ at: http://peteroupc.github.io/CBOR/
       short[] words2,
       int words2Start,  // size n
       int count) {
+
       if (count <= RecursionLimit) {
         if (count == 2) {
           Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
@@ -759,16 +827,13 @@ at: http://peteroupc.github.io/CBOR/
           int tsn = tempStart + count;
           offset2For1 = Compare(words1, words1Start, words1, words1Start + count2, count2) > 0 ? 0 : count2;
           // Absolute value of low part minus high part of words1
-          Subtract(
-resultArr, resultStart,
-                   words1, (int)(words1Start + offset2For1),
-                   words1, (int)(words1Start + (count2 ^ offset2For1)), count2);
+          SubtractOneByOne(resultArr, resultStart, words1, words1Start + offset2For1, words1, (int)(words1Start + (count2 ^ offset2For1)), count2);
           offset2For2 = Compare(words2, words2Start, words2, (int)(words2Start + count2), count2) > 0 ? 0 : count2;
           // Absolute value of low part minus high part of words2
-          Subtract(
-resultArr, resultMediumLow,
-                   words2, (int)(words2Start + offset2For2),
-                   words2, (int)(words2Start + (count2 ^ offset2For2)), count2);
+          SubtractOneByOne(
+            resultArr, resultMediumLow,
+            words2, words2Start + offset2For2,
+            words2, (int)(words2Start + (count2 ^ offset2For2)), count2);
           //---------
           // HighA * HighB
           RecursiveMultiply(resultArr, resultMediumHigh, tempArr, tsn, words1, (int)(words1Start + count2), words2, (int)(words2Start + count2), count2);
@@ -776,14 +841,14 @@ resultArr, resultMediumLow,
           RecursiveMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (int)resultMediumLow, count2);
           // Low result = LowA * LowB
           RecursiveMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
-          int c2 = Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultMediumLow, count2);
+          int c2 = AddOneByOne(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultMediumLow, count2);
           int c3 = c2;
-          c2 += Add(resultArr, resultMediumLow, resultArr, resultMediumHigh, resultArr, resultStart, count2);
-          c3 += Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultHigh, count2);
+          c2 += AddOneByOne(resultArr, resultMediumLow, resultArr, resultMediumHigh, resultArr, resultStart, count2);
+          c3 += AddOneByOne(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultHigh, count2);
           if (offset2For1 == offset2For2) {
-            c3 -= Subtract(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
+            c3 -= SubtractOneByOne(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
           } else {
-            c3 += Add(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
+            c3 += AddOneByOne(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
           }
           c3 += Increment(resultArr, resultMediumHigh, count2, (short)c2);
           if (c3 != 0) {
@@ -808,49 +873,75 @@ resultArr, resultMediumLow,
             SubtractOneBiggerWords2(tempArr, tempStart, words2, words2Start + countLow, words2, words2Start, countLow);
           }
           // Abs(LowA-HighA) * Abs(LowB-HighB)
+          int shorterOffset = countHigh << 1;
           RecursiveMultiply(
-resultArr, resultStart + (countHigh << 1),
-                            tempArr, tempStart + (countHigh << 1),
-                            resultArr, resultStart,
-                            tempArr, tempStart, countLow);
-          short resultTmp0 = resultArr[resultStart + (countHigh << 1)];
-          short resultTmp1 = resultArr[resultStart + (countHigh << 1) + 1];
+            resultArr,
+            resultStart + shorterOffset,
+            tempArr,
+            tempStart + shorterOffset,
+            resultArr,
+            resultStart,
+            tempArr,
+            tempStart,
+            countLow);
+          short resultTmp0 = resultArr[resultStart + shorterOffset];
+          short resultTmp1 = resultArr[resultStart + shorterOffset + 1];
           // HighA * HighB
           RecursiveMultiply(
-tempArr, tempStart,
-                            tempArr, tempStart + (countHigh << 1),
-                            words1, words1Start + countLow,
-                            words2, words2Start + countLow, countHigh);
+            tempArr,
+            tempStart,
+            tempArr,
+            tempStart + shorterOffset,
+            words1,
+            words1Start + countLow,
+            words2,
+            words2Start + countLow,
+            countHigh);
           // LowA * LowB
           RecursiveMultiply(
-resultArr, resultStart,
-                            tempArr, tempStart + (countHigh << 1),
-                            words1, words1Start,
-                            words2, words2Start, countLow);
+            resultArr,
+            resultStart,
+            tempArr,
+            tempStart + shorterOffset,
+            words1,
+            words1Start,
+            words2,
+            words2Start,
+            countLow);
           System.arraycopy(
-resultArr, resultStart + (countHigh << 1),
-                     tempArr, tempStart + (countHigh << 1),
-                     countLow << 1);
-          tempArr[tempStart + (countHigh << 1)] = resultTmp0;
-          tempArr[tempStart + (countHigh << 1) + 1] = resultTmp1;
+            resultArr, resultStart + shorterOffset,
+            tempArr, tempStart + shorterOffset,
+            countLow << 1);
+          tempArr[tempStart + shorterOffset] = resultTmp0;
+          tempArr[tempStart + shorterOffset + 1] = resultTmp1;
           System.arraycopy(
-tempArr, tempStart,
-                     resultArr, resultStart + (countLow << 1),
-                     countHigh << 1);
-          int c2 = Add(resultArr, countLow << 1, resultArr, countLow << 1, resultArr, countLow, 0);
+            tempArr,
+            tempStart,
+            resultArr,
+            resultStart + (countLow << 1),
+            countHigh << 1);
+          int countMiddle = countLow << 1;
+          int c2 = AddOneByOne(resultArr, countMiddle, resultArr, countMiddle, resultArr, countLow, countLow);
           int c3 = c2;
-          c2 += Add(resultArr, countLow, resultArr, countLow << 1, resultArr, resultStart, 0);
-          c3 += Add(resultArr, countLow << 1, resultArr, countLow << 1, resultArr, (countLow << 1) + countHigh, countHigh);
+          c2 += AddOneByOne(resultArr, countLow, resultArr, countMiddle, resultArr, resultStart, countLow);
+          c3 += AddUnevenSize(
+            resultArr,
+            countMiddle,
+            resultArr,
+            countMiddle,
+            countLow,
+            resultArr,
+            countMiddle + countLow,
+            countLow - 2);
           if (offset2For1 == offset2For2) {
-            c3 -= Subtract(resultArr, countLow, resultArr, countLow, tempArr, tempStart + (countHigh << 1), 0);
+            c3 -= SubtractOneByOne(resultArr, countLow, resultArr, countLow, tempArr, tempStart + shorterOffset, count);
           } else {
-            c3 += Add(resultArr, countLow, resultArr, countLow, tempArr, tempStart + (countHigh << 1), 0);
+            c3 += AddOneByOne(resultArr, countLow, resultArr, countLow, tempArr, tempStart + shorterOffset, count);
           }
-          c3 += Increment(resultArr, countLow << 1, countHigh, (short)c2);
+          c3 += Increment(resultArr, countMiddle, countLow, (short)c2);
           if (c3 != 0) {
-            Increment(resultArr, (countLow << 1) + countHigh, countHigh, (short)c3);
+            Increment(resultArr, countMiddle + countLow, countLow - 2, (short)c3);
           }
-          throw new UnsupportedOperationException();
         }
       }
     }
@@ -871,11 +962,11 @@ tempArr, tempStart,
         } else if (n == 8) {
           Baseline_Square8(resultArr, resultStart, words1, words1Start);
         } else {
+          java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(n << 1),0);
           SchoolbookMultiply(resultArr, resultStart, words1, words1Start, n, words1, words1Start, n);
         }
-      } else {
+      } else if ((n & 1) == 0) {
         int count2 = n >> 1;
-
         RecursiveSquare(resultArr, resultStart, tempArr, (int)(tempStart + n), words1, words1Start, count2);
         RecursiveSquare(resultArr, (int)(resultStart + n), tempArr, (int)(tempStart + n), words1, (int)(words1Start + count2), count2);
         RecursiveMultiply(
@@ -893,6 +984,8 @@ tempArr, tempStart,
         carry += Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
 
         Increment(resultArr, (int)(resultStart + n + count2), count2, (short)carry);
+      } else {
+        RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1, words1Start, n);
       }
     }
 
@@ -950,6 +1043,77 @@ tempArr, tempStart,
       }
     }
 
+    private static void ChunkedLinearMultiply(
+      short[] productArr,
+      int cstart,
+      short[] tempArr,
+      int tempStart,  // uses bcount*4 space
+      short[] words1,
+      int astart,
+      int acount,
+      short[] words2,
+      int bstart,
+      int bcount) {
+
+      {
+        int carryPos = 0;
+        // Set carry to zero
+        java.util.Arrays.fill(productArr,cstart,(cstart)+(bcount),(short)0);
+        for (int i = 0; i < acount; i += bcount) {
+          int diff = acount - i;
+          if (diff > bcount) {
+            RecursiveMultiply(
+              tempArr,
+              tempStart,  // uses bcount*2 space
+              tempArr,
+              tempStart + bcount + bcount,  // uses bcount*2 space
+              words1,
+              astart + i,
+              words2,
+              bstart + i,
+              bcount);
+            // Add carry
+            AddUnevenSize(
+              tempArr,
+              tempStart,
+              tempArr,
+              tempStart,
+              bcount + bcount,
+              productArr,
+              carryPos,
+              bcount);
+            // Copy product and carry
+            System.arraycopy(tempArr, tempStart, productArr, i, bcount + bcount);
+            carryPos += bcount;
+          } else {
+            AsymmetricMultiply(
+              tempArr,
+              tempStart,  // uses bcount*2 space
+              tempArr,
+              tempStart.add(diff) + bcount,  // uses bcount*2 space
+              words1,
+              astart + i,
+              diff,
+              words2,
+              bstart + i,
+              bcount);
+            // Add carry
+            AddUnevenSize(
+              tempArr,
+              tempStart,
+              tempArr,
+              tempStart,
+              diff + bcount,
+              productArr,
+              carryPos,
+              bcount);
+            // Copy product without carry
+            System.arraycopy(tempArr, tempStart, productArr, i, bcount);
+          }
+        }
+      }
+    }
+
     private static void AsymmetricMultiply(
       short[] resultArr,
       int resultStart,
@@ -961,6 +1125,7 @@ tempArr, tempStart,
       short[] words2,
       int words2Start,
       int words2Count) {
+
       if (words1Count == words2Count) {
         if (words1Start == words2Start && words1 == words2) {
           // Both operands have the same value and the same word count
@@ -975,7 +1140,6 @@ tempArr, tempStart,
 
         return;
       }
-
       if (words1Count > words2Count) {
         // Ensure that words1 is smaller by swapping if necessary
         short[] tmp1 = words1; words1 = words2; words2 = tmp1;
@@ -983,7 +1147,7 @@ tempArr, tempStart,
         int tmp2 = words1Count; words1Count = words2Count; words2Count = tmp2;
       }
 
-      if (words1Count == 2 && words1[words1Start + 1] == 0) {
+      if (words1Count == 1 || (words1Count == 2 && words1[words1Start + 1] == 0)) {
         switch (words1[words1Start]) {
           case 0:
             // words1 is zero, so result is 0
@@ -999,7 +1163,7 @@ tempArr, tempStart,
             resultArr[resultStart + words2Count + 1] = (short)0;
             return;
         }
-      } else if (words1Count == 2) {
+      } else if (words1Count == 2 && (words2Count & 1) == 0) {
         int a0 = ((int)words1[words1Start]) & 0xFFFF;
         int a1 = ((int)words1[words1Start + 1]) & 0xFFFF;
         resultArr[resultStart + words2Count] = (short)0;
@@ -1007,27 +1171,122 @@ tempArr, tempStart,
         AtomicMultiplyOpt(resultArr, resultStart, a0, a1, words2, words2Start, 0, words2Count);
         AtomicMultiplyAddOpt(resultArr, resultStart, a0, a1, words2, words2Start, 2, words2Count);
         return;
+      } else if (words1Count < 10 && words2Count < 10) {
+        java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(words1Count + words2Count),0);
+        SchoolbookMultiply(resultArr, resultStart, words1, words1Start, words1Count, words2, words2Start, words2Count);
       } else {
+        int wordsRem = words2Count % words1Count;
+        int evenmult = (words2Count / words1Count) & 1;
         int i;
-        if (((words2Count / words1Count) & 1) == 0) {
+        System.out.println("counts=" + words1Count + "," + words2Count + " res=" + (resultStart + words1Count) + " temp=" + (tempStart + (words1Count << 1)) + " rem=" + wordsRem + " evenwc=" + evenmult);
+        if (wordsRem == 0) {
+          // words2Count is divisible by words1count
+          if (evenmult == 0) {
+            RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
+            System.arraycopy(resultArr, resultStart + words1Count, tempArr, (int)(tempStart + (words1Count << 1)), words1Count);
+            for (i = words1Count << 1; i < words2Count; i += words1Count << 1) {
+              RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+            }
+            for (i = words1Count; i < words2Count; i += words1Count << 1) {
+              RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+            }
+          } else {
+            for (i = 0; i < words2Count; i += words1Count << 1) {
+              RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+            }
+            for (i = words1Count; i < words2Count; i += words1Count << 1) {
+              RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+            }
+          }
+          if (Add(resultArr, resultStart + words1Count, resultArr, resultStart + words1Count, tempArr, tempStart + (words1Count << 1), words2Count - words1Count) != 0) {
+            Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
+          }
+        } else if ((words1Count << 1) < words2Count) {
           RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
-          System.arraycopy(resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), (int)words1Count);
-          for (i = words1Count << 1; i < words2Count; i += words1Count << 1) {
-            RecursiveMultiply(tempArr, (int)(tempStart + words1Count + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
+          System.arraycopy(
+            resultArr,
+            resultStart + words1Count,
+            tempArr,
+            tempStart + words2Count,
+            words1Count);
+          AsymmetricMultiply(
+            resultArr,
+            resultStart + words1Count,
+            tempArr,
+            tempStart,  // uses words2Count words
+            words1,
+            words1Start,
+            words1Count,
+            words2,
+            words2Start + words1Count,
+            words2Count - words1Count);
+          if (Add(
+            resultArr,
+            resultStart + words1Count,
+            resultArr,
+            resultStart + words1Count,
+            tempArr,
+            tempStart + words2Count,
+            words2Count - words1Count) != 0) {
+            Increment(resultArr, resultStart + words2Count, words1Count, (short)1);
           }
-          for (i = words1Count; i < words2Count; i += words1Count << 1) {
-            RecursiveMultiply(resultArr, (int)(resultStart + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
-          }
+        } else if ((words1Count + words2Count) >= (words1Count << 2)) {
+          ChunkedLinearMultiply(
+            resultArr,
+            resultStart,
+            tempArr,
+            tempStart,
+            words2,
+            words2Start,
+            words2Count,
+            words1,
+            words1Start,
+            words1Count);
         } else {
-          for (i = 0; i < words2Count; i += words1Count << 1) {
-            RecursiveMultiply(resultArr, (int)(resultStart + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
+          // highest part of words2 is short
+          RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
+          short[] t2 = new short[words1Count];
+          System.arraycopy(resultArr, resultStart + words1Count, t2, 0, words1Count);
+          int wc2 = words2Count - wordsRem;
+          for (i = words1Count << 1; i < words2Count; i += words1Count << 1) {
+            int diff = words2Start + i + words1Count;
+            if (diff > words2Count) {
+              AsymmetricMultiply(
+tempArr,
+tempStart + words1Count + i,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words1Count,
+words2,
+words2Start + i,
+words1Count - wordsRem);
+            } else {
+              RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+            }
           }
           for (i = words1Count; i < words2Count; i += words1Count << 1) {
-            RecursiveMultiply(tempArr, (int)(tempStart + words1Count + i), tempArr, tempStart, words1, words1Start, words2, (int)(words2Start + i), words1Count);
+            int diff = words2Start + i + words1Count;
+            if (diff > words2Count) {
+              AsymmetricMultiply(
+resultArr,
+resultStart + i,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words1Count,
+words2,
+words2Start + i,
+words1Count - wordsRem);
+            } else {
+              RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+            }
           }
-        }
-        if (Add(resultArr, (int)(resultStart + words1Count), resultArr, (int)(resultStart + words1Count), tempArr, (int)(tempStart + (words1Count << 1)), words2Count - words1Count) != 0) {
-          Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
+          if (Add(resultArr, resultStart + words1Count, resultArr, resultStart + words1Count, tempArr, tempStart + (words1Count << 1), words2Count - words1Count) != 0) {
+            Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
+          }
         }
       }
     }
@@ -1492,6 +1751,7 @@ tempArr, tempStart,
     };
 
     private static int RoundupSize(int n) {
+      /*
       if (n <= 16) {
         return roundupSizeTable[n];
       } else if (n <= 32) {
@@ -1501,6 +1761,8 @@ tempArr, tempStart,
       } else {
         return (int)1 << (int)BitPrecisionInt(n - 1);
       }
+       */
+      return n + (n & 1);
     }
 
     private boolean negative;

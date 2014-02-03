@@ -38,6 +38,7 @@ namespace PeterO {
         Console.WriteLine(param);
       }
       new CBOR.ExtensiveTest().TestParser();
+      return;
       if (args.Length == 0) {
  return;
 }

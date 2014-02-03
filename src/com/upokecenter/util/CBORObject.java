@@ -3817,10 +3817,10 @@ public static CBORObject FromObject(Object obj) {
         throw new NullPointerException("bigintTag");
       }
       if (bigintTag.signum() < 0) {
-        throw new IllegalArgumentException("tag not greater or equal to 0 ("+(bigintTag)+")");
+        throw new IllegalArgumentException("tag not greater or equal to 0 (" + (bigintTag) + ")");
       }
       if (bigintTag.compareTo(valueUInt64MaxValue) > 0) {
-        throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 ("+(bigintTag)+")");
+        throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 (" + (bigintTag) + ")");
       }
       CBORObject c = FromObject(o);
       if (bigintTag.compareTo(valueBigInt65536) < 0) {
