@@ -273,50 +273,6 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private void ShiftHugeToBits(int bits) {
-      // Shifts a number until it reaches the given number of bits,
-      // gathering information on whether the last bit discarded is set and
-      // whether the discarded bits to the right of that bit are set. Assumes
-      // that the big integer being shifted is positive.
-      byte[] bytes = this.shiftedBigInt.toByteArray(true);
-      this.knownBitLength = ByteArrayBitLength(bytes);
-      // Shift by the difference in bit length
-      if (this.knownBitLength.CompareToInt(bits) > 0) {
-        FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
-        FastInteger tmpBitShift = FastInteger.Copy(bitShift);
-        while (tmpBitShift.signum() > 0 && this.shiftedBigInt.signum()!=0) {
-          int bs = tmpBitShift.MinInt32(1000000);
-          this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
-          tmpBitShift.SubtractInt(bs);
-        }
-        this.knownBitLength.SetInt(bits);
-        if (bits < SmallBitLength) {
-          // Shifting to small number of bits,
-          // convert to small integer
-          this.isSmall = true;
-          this.shiftedSmall = this.shiftedBigInt.intValue();
-        }
-        this.bitsAfterLeftmost |= this.bitLeftmost;
-        this.discardedBitCount.Add(bitShift);
-        for (int i = 0; i < bytes.length; ++i) {
-          if (bitShift.CompareToInt(8) > 0) {
-            // Discard all the bits, they come
-            // after the leftmost bit
-            this.bitsAfterLeftmost |= bytes[i];
-            bitShift.SubtractInt(8);
-          } else {
-            // 8 or fewer bits left.
-            // Get the bottommost bitShift minus 1 bits
-            this.bitsAfterLeftmost |= (bytes[i] << (9 - bitShift.AsInt32())) & 0xFF;
-            // Get the bit just above those bits
-            this.bitLeftmost = (bytes[i] >> (bitShift.AsInt32() - 1)) & 0x01;
-            break;
-          }
-        }
-        this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
-      }
-    }
-
     private void ShiftBigToBits(int bits) {
       // Shifts a number until it reaches the given number of bits,
       // gathering information on whether the last bit discarded is set and
@@ -335,46 +291,49 @@ at: http://peteroupc.github.io/CBOR/
       }
       // Shift by the difference in bit length
       if (this.knownBitLength.CompareToInt(bits) > 0) {
-        FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
-        if (bitShift.CanFitInInt32()) {
-          int bs = bitShift.AsInt32();
-
-          this.knownBitLength.SetInt(bits);
-          this.discardedBitCount.Add(bitShift);
-          if (bs == 1) {
-            boolean odd = !this.shiftedBigInt.testBit(0)==false;
-            this.shiftedBigInt=shiftedBigInt.shiftRight(1);
-            this.bitsAfterLeftmost |= this.bitLeftmost;
-            this.bitLeftmost = odd ? 1 : 0;
-          } else {
-            this.bitsAfterLeftmost |= this.bitLeftmost;
-            int lowestSetBit = this.shiftedBigInt.getLowestSetBit();
-            if (lowestSetBit < bs - 1) {
-              // One of the discarded bits after
-              // the last one is set
-              this.bitsAfterLeftmost |= 1;
-              this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-            } else if (lowestSetBit > bs - 1) {
-              // Means all discarded bits are zero
-              this.bitLeftmost = 0;
-            } else {
-              // Only the last discarded bit is set
-              this.bitLeftmost = 1;
-            }
-            this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
-          }
-          if (bits < SmallBitLength) {
-            // Shifting to small number of bits,
-            // convert to small integer
-            this.isSmall = true;
-            this.shiftedSmall = this.shiftedBigInt.intValue();
-          }
-          this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+        int bs = 0;
+        if (this.knownBitLength.CanFitInInt32()) {
+          bs = this.knownBitLength.AsInt32() -bits;
         } else {
-          this.knownBitLength = null;
-          this.ShiftHugeToBits(bits);
-          return;
+          FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
+          if (!bitShift.CanFitInInt32()) {
+            this.ShiftRight(bitShift);
+            return;
+          } else {
+            bs = bitShift.AsInt32();
+          }
         }
+        this.knownBitLength.SetInt(bits);
+        this.discardedBitCount.AddInt(bs);
+        if (bs == 1) {
+          boolean odd = !this.shiftedBigInt.testBit(0)==false;
+          this.shiftedBigInt=shiftedBigInt.shiftRight(1);
+          this.bitsAfterLeftmost |= this.bitLeftmost;
+          this.bitLeftmost = odd ? 1 : 0;
+        } else {
+          this.bitsAfterLeftmost |= this.bitLeftmost;
+          int lowestSetBit = this.shiftedBigInt.getLowestSetBit();
+          if (lowestSetBit < bs - 1) {
+            // One of the discarded bits after
+            // the last one is set
+            this.bitsAfterLeftmost |= 1;
+            this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
+          } else if (lowestSetBit > bs - 1) {
+            // Means all discarded bits are zero
+            this.bitLeftmost = 0;
+          } else {
+            // Only the last discarded bit is set
+            this.bitLeftmost = 1;
+          }
+          this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
+        }
+        if (bits < SmallBitLength) {
+          // Shifting to small number of bits,
+          // convert to small integer
+          this.isSmall = true;
+          this.shiftedSmall = this.shiftedBigInt.intValue();
+        }
+        this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
       }
     }
 

@@ -336,16 +336,6 @@ function() {
             for (var arrfillI = rstart; arrfillI < (rstart) + (shiftWords); arrfillI++) r[arrfillI] = 0;
         }
     };
-    constructor['ShiftWordsRightByWords'] = constructor.ShiftWordsRightByWords = function(r, rstart, n, shiftWords) {
-        shiftWords = (shiftWords < n ? shiftWords : n);
-        if (shiftWords != 0) {
-            for (var i = 0; i + shiftWords < n; ++i) {
-                r[rstart + i] = (r[rstart + i + shiftWords] & 65535);
-            }
-            rstart = rstart + (n - shiftWords);
-            for (var arrfillI = rstart; arrfillI < (rstart) + (shiftWords); arrfillI++) r[arrfillI] = 0;
-        }
-    };
     constructor['ShiftWordsRightByWordsSignExtend'] = constructor.ShiftWordsRightByWordsSignExtend = function(r, rstart, n, shiftWords) {
         shiftWords = (shiftWords < n ? shiftWords : n);
         if (shiftWords != 0) {
@@ -362,6 +352,22 @@ function() {
         while ((n--) != 0) {
             var an = ((words1[astart + n])|0) & 65535;
             var bn = ((words2[bstart + n])|0) & 65535;
+            if (an > bn) {
+                return 1;
+            } else if (an < bn) {
+                return -1;
+            }
+        }
+        return 0;
+    };
+    constructor['CompareWithOneBiggerWords1'] = constructor.CompareWithOneBiggerWords1 = function(words1, astart, words2, bstart, words1Count) {
+        if (words1[words1Count - 1] != 0) {
+            return 1;
+        }
+        words1Count--;
+        while ((words1Count--) != 0) {
+            var an = ((words1[astart + words1Count])|0) & 65535;
+            var bn = ((words2[bstart + words1Count])|0) & 65535;
             if (an > bn) {
                 return 1;
             } else if (an < bn) {
@@ -420,6 +426,38 @@ function() {
                 c[cstart + i + 1] = (u & 65535);
             }
             return ((u|0) >>> 16);
+        }
+    };
+    constructor['SubtractOneBiggerWords1'] = constructor.SubtractOneBiggerWords1 = function(c, cstart, words1, astart, words2, bstart, words1Count) {
+        {
+            var u;
+            u = 0;
+            var cm1 = words1Count - 1;
+            for (var i = 0; i < cm1; i += 1) {
+                u = (words1[astart] & 65535) - (words2[bstart] & 65535) - ((u >> 31) & 1);
+                c[cstart++] = (u & 65535);
+                ++astart;
+                ++bstart;
+            }
+            u = (words1[astart] & 65535) - ((u >> 31) & 1);
+            c[cstart++] = (u & 65535);
+            return ((u >> 31) & 1);
+        }
+    };
+    constructor['SubtractOneBiggerWords2'] = constructor.SubtractOneBiggerWords2 = function(c, cstart, words1, astart, words2, bstart, words1Count) {
+        {
+            var u;
+            u = 0;
+            var cm1 = words1Count - 1;
+            for (var i = 0; i < cm1; i += 1) {
+                u = (words1[astart] & 65535) - (words2[bstart] & 65535) - ((u >> 31) & 1);
+                c[cstart++] = (u & 65535);
+                ++astart;
+                ++bstart;
+            }
+            u = 0 - (words2[bstart] & 65535) - ((u >> 31) & 1);
+            c[cstart++] = (u & 65535);
+            return ((u >> 31) & 1);
         }
     };
     constructor['Subtract'] = constructor.Subtract = function(c, cstart, words1, astart, words2, bstart, n) {
@@ -1190,22 +1228,16 @@ function() {
     constructor['RecursionLimit'] = constructor.RecursionLimit = 8;
     constructor['RecursiveMultiply'] = constructor.RecursiveMultiply = function(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, count) {
         if (count <= BigInteger.RecursionLimit) {
-            count >>= 2;
-            if (count == 0) {
+            if (count == 2) {
                 BigInteger.Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
-            } else if (count == 1) {
+            } else if (count == 4) {
                 BigInteger.Baseline_Multiply4(resultArr, resultStart, words1, words1Start, words2, words2Start);
-            } else if (count == 2) {
+            } else if (count == 8) {
                 BigInteger.Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
             } else {
-                throw new Error();
+                BigInteger.SchoolbookMultiply(resultArr, resultStart, words1, words1Start, count, words2, words2Start, count);
             }
         } else {
-            var count2 = count >> 1;
-            var resultMediumHigh = resultStart + count;
-            var resultHigh = resultMediumHigh + count2;
-            var resultMediumLow = resultStart + count2;
-            var tsn = tempStart + count;
             var countA = count;
             while (countA != 0 && words1[words1Start + countA - 1] == 0) {
                 --countA;
@@ -1214,58 +1246,100 @@ function() {
             while (countB != 0 && words2[words2Start + countB - 1] == 0) {
                 --countB;
             }
-            var count2For1 = 0;
-            var count2For2 = 0;
+            var offset2For1 = 0;
+            var offset2For2 = 0;
             if (countA == 0 || countB == 0) {
                 for (var arrfillI = resultStart; arrfillI < (resultStart) + (count << 1); arrfillI++) resultArr[arrfillI] = 0;
                 return;
             }
-            if (countA <= count2 && countB <= count2) {
-                for (var arrfillI = resultStart + count; arrfillI < (resultStart + count) + (count); arrfillI++) resultArr[arrfillI] = 0;
-                if (count2 == 8) {
-                    BigInteger.Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
-                } else {
-                    BigInteger.RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, count2);
+            if ((count & 1) == 0) {
+                var count2 = count >> 1;
+                if (countA <= count2 && countB <= count2) {
+                    for (var arrfillI = resultStart + count; arrfillI < (resultStart + count) + (count); arrfillI++) resultArr[arrfillI] = 0;
+                    if (count2 == 8) {
+                        BigInteger.Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
+                    } else {
+                        BigInteger.RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, count2);
+                    }
+                    return;
                 }
-                return;
-            }
-            count2For1 = BigInteger.Compare(words1, words1Start, words1, ((words1Start + count2)|0), count2) > 0 ? 0 : count2;
-            BigInteger.Subtract(resultArr, resultStart, words1, ((words1Start + count2For1)|0), words1, ((words1Start + (count2 ^ count2For1))|0), count2);
-            count2For2 = BigInteger.Compare(words2, words2Start, words2, ((words2Start + count2)|0), count2) > 0 ? 0 : count2;
-            BigInteger.Subtract(resultArr, resultMediumLow, words2, ((words2Start + count2For2)|0), words2, ((words2Start + (count2 ^ count2For2))|0), count2);
-            BigInteger.RecursiveMultiply(resultArr, resultMediumHigh, tempArr, tsn, words1, ((words1Start + count2)|0), words2, ((words2Start + count2)|0), count2);
-            BigInteger.RecursiveMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (resultMediumLow|0), count2);
-            BigInteger.RecursiveMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
-            var c2 = BigInteger.Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultMediumLow, count2);
-            var c3 = c2;
-            c2 = c2 + (BigInteger.Add(resultArr, resultMediumLow, resultArr, resultMediumHigh, resultArr, resultStart, count2));
-            c3 = c3 + (BigInteger.Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultHigh, count2));
-            if (count2For1 == count2For2) {
-                c3 -= BigInteger.Subtract(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
+                var resultMediumHigh = resultStart + count;
+                var resultHigh = resultMediumHigh + count2;
+                var resultMediumLow = resultStart + count2;
+                var tsn = tempStart + count;
+                offset2For1 = BigInteger.Compare(words1, words1Start, words1, words1Start + count2, count2) > 0 ? 0 : count2;
+                BigInteger.Subtract(resultArr, resultStart, words1, ((words1Start + offset2For1)|0), words1, ((words1Start + (count2 ^ offset2For1))|0), count2);
+                offset2For2 = BigInteger.Compare(words2, words2Start, words2, ((words2Start + count2)|0), count2) > 0 ? 0 : count2;
+                BigInteger.Subtract(resultArr, resultMediumLow, words2, ((words2Start + offset2For2)|0), words2, ((words2Start + (count2 ^ offset2For2))|0), count2);
+                BigInteger.RecursiveMultiply(resultArr, resultMediumHigh, tempArr, tsn, words1, ((words1Start + count2)|0), words2, ((words2Start + count2)|0), count2);
+                BigInteger.RecursiveMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (resultMediumLow|0), count2);
+                BigInteger.RecursiveMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
+                var c2 = BigInteger.Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultMediumLow, count2);
+                var c3 = c2;
+                c2 = c2 + (BigInteger.Add(resultArr, resultMediumLow, resultArr, resultMediumHigh, resultArr, resultStart, count2));
+                c3 = c3 + (BigInteger.Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultHigh, count2));
+                if (offset2For1 == offset2For2) {
+                    c3 -= BigInteger.Subtract(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
+                } else {
+                    c3 = c3 + (BigInteger.Add(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count));
+                }
+                c3 = c3 + (BigInteger.Increment(resultArr, resultMediumHigh, count2, (c2|0)));
+                if (c3 != 0) {
+                    BigInteger.Increment(resultArr, resultHigh, count2, (c3|0));
+                }
             } else {
-                c3 = c3 + (BigInteger.Add(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count));
-            }
-            c3 = c3 + (BigInteger.Increment(resultArr, resultMediumHigh, count2, (c2|0)));
-            if (c3 != 0) {
-                BigInteger.Increment(resultArr, resultHigh, count2, (c3|0));
+                var countHigh = count >> 1;
+                var countLow = count - countHigh;
+                var resultMediumHigh = resultStart + countLow + countLow;
+                var tsnShorter = countHigh + countHigh;
+                offset2For1 = BigInteger.CompareWithOneBiggerWords1(words1, words1Start, words1, words1Start + countLow, countLow) > 0 ? 0 : countLow;
+                if (offset2For1 == 0) {
+                    BigInteger.SubtractOneBiggerWords1(resultArr, resultStart, words1, words1Start, words1, words1Start + countLow, countLow);
+                } else {
+                    BigInteger.SubtractOneBiggerWords2(resultArr, resultStart, words1, words1Start + countLow, words1, words1Start, countLow);
+                }
+                offset2For2 = BigInteger.CompareWithOneBiggerWords1(words2, words2Start, words2, words2Start + countLow, countLow) > 0 ? 0 : countLow;
+                if (offset2For1 == 0) {
+                    BigInteger.SubtractOneBiggerWords1(tempArr, tempStart, words2, words2Start, words2, words2Start + countLow, countLow);
+                } else {
+                    BigInteger.SubtractOneBiggerWords2(tempArr, tempStart, words2, words2Start + countLow, words2, words2Start, countLow);
+                }
+                BigInteger.RecursiveMultiply(resultArr, resultStart + (countHigh << 1), tempArr, tempStart + (countHigh << 1), resultArr, resultStart, tempArr, tempStart, countLow);
+                var resultTmp0 = resultArr[resultStart + (countHigh << 1)];
+                var resultTmp1 = resultArr[resultStart + (countHigh << 1) + 1];
+                BigInteger.RecursiveMultiply(tempArr, tempStart, tempArr, tempStart + (countHigh << 1), words1, words1Start + countLow, words2, words2Start + countLow, countHigh);
+                BigInteger.RecursiveMultiply(resultArr, resultStart, tempArr, tempStart + (countHigh << 1), words1, words1Start, words2, words2Start, countLow);
+                for (var arrfillI = 0; arrfillI < (countLow << 1); arrfillI++) tempArr[tempStart + (countHigh << 1) + arrfillI] = resultArr[resultStart + (countHigh << 1) + arrfillI];
+                tempArr[tempStart + (countHigh << 1)] = (resultTmp0 & 65535);
+                tempArr[tempStart + (countHigh << 1) + 1] = (resultTmp1 & 65535);
+                for (var arrfillI = 0; arrfillI < (countHigh << 1); arrfillI++) resultArr[resultStart + (countLow << 1) + arrfillI] = tempArr[tempStart + arrfillI];
+                var c2 = BigInteger.Add(resultArr, (countLow << 1), resultArr, (countLow << 1), resultArr, countLow, 0);
+                var c3 = c2;
+                c2 = c2 + (BigInteger.Add(resultArr, countLow, resultArr, (countLow << 1), resultArr, resultStart, 0));
+                c3 = c3 + (BigInteger.Add(resultArr, (countLow << 1), resultArr, (countLow << 1), resultArr, (countLow << 1) + countHigh, countHigh));
+                if (offset2For1 == offset2For2) {
+                    c3 -= BigInteger.Subtract(resultArr, countLow, resultArr, countLow, tempArr, tempStart + (countHigh << 1), 0);
+                } else {
+                    c3 = c3 + (BigInteger.Add(resultArr, countLow, resultArr, countLow, tempArr, tempStart + (countHigh << 1), 0));
+                }
+                c3 = c3 + (BigInteger.Increment(resultArr, (countLow << 1), countHigh, (c2|0)));
+                if (c3 != 0) {
+                    BigInteger.Increment(resultArr, (countLow << 1) + countHigh, countHigh, (c3|0));
+                }
+                throw new Error();
             }
         }
     };
     constructor['RecursiveSquare'] = constructor.RecursiveSquare = function(resultArr, resultStart, tempArr, tempStart, words1, words1Start, n) {
         if (n <= BigInteger.RecursionLimit) {
-            n >>= 2;
-            switch(n) {
-                case 0:
-                    BigInteger.Baseline_Square2(resultArr, resultStart, words1, words1Start);
-                    break;
-                case 1:
-                    BigInteger.Baseline_Square4(resultArr, resultStart, words1, words1Start);
-                    break;
-                case 2:
-                    BigInteger.Baseline_Square8(resultArr, resultStart, words1, words1Start);
-                    break;
-                default:
-                    throw new Error();
+            if (n == 2) {
+                BigInteger.Baseline_Square2(resultArr, resultStart, words1, words1Start);
+            } else if (n == 4) {
+                BigInteger.Baseline_Square4(resultArr, resultStart, words1, words1Start);
+            } else if (n == 8) {
+                BigInteger.Baseline_Square8(resultArr, resultStart, words1, words1Start);
+            } else {
+                BigInteger.SchoolbookMultiply(resultArr, resultStart, words1, words1Start, n, words1, words1Start, n);
             }
         } else {
             var count2 = n >> 1;
@@ -2013,14 +2087,14 @@ function() {
             }
             return this.shiftLeft(-numberBits);
         }
-        var ret = new BigInteger();
+        var ret;
         var numWords = ((this.wordCount)|0);
         var shiftWords = ((numberBits >> 4)|0);
         var shiftBits = (numberBits & 15);
-        ret.negative = this.negative;
-        ret.reg = [];
-        for (var arrfillI = 0; arrfillI < this.reg.length; arrfillI++) ret.reg[arrfillI] = 0;
         if (this.negative) {
+            ret = new BigInteger();
+            ret.reg = [];
+            for (var arrfillI = 0; arrfillI < this.reg.length; arrfillI++) ret.reg[arrfillI] = 0;
             for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[0 + arrfillI];
             BigInteger.TwosComplement(ret.reg, 0, ((ret.reg.length)|0));
             BigInteger.ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
@@ -2028,17 +2102,22 @@ function() {
                 BigInteger.ShiftWordsRightByBitsSignExtend(ret.reg, 0, numWords - shiftWords, shiftBits);
             }
             BigInteger.TwosComplement(ret.reg, 0, ((ret.reg.length)|0));
+            ret.wordCount = ret.reg.length;
         } else {
-            if (shiftWords > numWords) {
+            if (shiftWords >= numWords) {
                 return BigInteger.ZERO;
             }
-            for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[0 + arrfillI];
-            BigInteger.ShiftWordsRightByWords(ret.reg, 0, numWords, shiftWords);
-            if (numWords > shiftWords) {
-                BigInteger.ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
-            }
+            ret = new BigInteger();
+            ret.reg = [];
+            for (var arrfillI = 0; arrfillI < this.reg.length; arrfillI++) ret.reg[arrfillI] = 0;
+            for (var arrfillI = 0; arrfillI < numWords - shiftWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[shiftWords + arrfillI];
+            BigInteger.ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+            ret.wordCount = numWords - shiftWords;
         }
-        ret.wordCount = ret.CalcWordCount();
+        ret.negative = this.negative;
+        while (ret.wordCount != 0 && ret.reg[ret.wordCount - 1] == 0) {
+            ret.wordCount--;
+        }
         if (shiftWords > 2) {
             this.ShortenArray();
         }
@@ -4711,43 +4790,6 @@ function(bigint, lastDiscarded, olderDiscarded) {
             return new FastInteger(this.shiftedBigInt.bitLength());
         }
     };
-    prototype.ShiftHugeToBits = function(bits) {
-
-        var bytes = this.shiftedBigInt.toByteArray(true);
-        this.knownBitLength = BitShiftAccumulator.ByteArrayBitLength(bytes);
-
-        if (this.knownBitLength.CompareToInt(bits) > 0) {
-            var bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
-            var tmpBitShift = FastInteger.Copy(bitShift);
-            while (tmpBitShift.signum() > 0 && this.shiftedBigInt.signum() != 0) {
-                var bs = tmpBitShift.MinInt32(1000000);
-                this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
-                tmpBitShift.SubtractInt(bs);
-            }
-            this.knownBitLength.SetInt(bits);
-            if (bits < BitShiftAccumulator.SmallBitLength) {
-
-                this.isSmall = true;
-                this.shiftedSmall = this.shiftedBigInt.intValue();
-            }
-            this.bitsAfterLeftmost |= this.bitLeftmost;
-            this.discardedBitCount.Add(bitShift);
-            for (var i = 0; i < bytes.length; ++i) {
-                if (bitShift.CompareToInt(8) > 0) {
-
-                    this.bitsAfterLeftmost |= bytes[i];
-                    bitShift.SubtractInt(8);
-                } else {
-
-                    this.bitsAfterLeftmost |= (bytes[i] << (9 - bitShift.AsInt32())) & 255;
-
-                    this.bitLeftmost = (bytes[i] >> (bitShift.AsInt32() - 1)) & 1;
-                    break;
-                }
-            }
-            this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
-        }
-    };
     prototype.ShiftBigToBits = function(bits) {
 
         if (this.knownBitLength != null) {
@@ -4763,43 +4805,47 @@ function(bigint, lastDiscarded, olderDiscarded) {
         }
 
         if (this.knownBitLength.CompareToInt(bits) > 0) {
-            var bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
-            if (bitShift.CanFitInInt32()) {
-                var bs = bitShift.AsInt32();
-                this.knownBitLength.SetInt(bits);
-                this.discardedBitCount.Add(bitShift);
-                if (bs == 1) {
-                    var odd = !this.shiftedBigInt.testBit(0) == false;
-                    this.shiftedBigInt = this.shiftedBigInt.shiftRight(1);
-                    this.bitsAfterLeftmost |= this.bitLeftmost;
-                    this.bitLeftmost = odd ? 1 : 0;
-                } else {
-                    this.bitsAfterLeftmost |= this.bitLeftmost;
-                    var lowestSetBit = this.shiftedBigInt.getLowestSetBit();
-                    if (lowestSetBit < bs - 1) {
-
-                        this.bitsAfterLeftmost |= 1;
-                        this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-                    } else if (lowestSetBit > bs - 1) {
-
-                        this.bitLeftmost = 0;
-                    } else {
-
-                        this.bitLeftmost = 1;
-                    }
-                    this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
-                }
-                if (bits < BitShiftAccumulator.SmallBitLength) {
-
-                    this.isSmall = true;
-                    this.shiftedSmall = this.shiftedBigInt.intValue();
-                }
-                this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+            var bs = 0;
+            if (this.knownBitLength.CanFitInInt32()) {
+                bs = this.knownBitLength.AsInt32() - bits;
             } else {
-                this.knownBitLength = null;
-                this.ShiftHugeToBits(bits);
-                return;
+                var bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
+                if (!bitShift.CanFitInInt32()) {
+                    this.ShiftRight(bitShift);
+                    return;
+                } else {
+                    bs = bitShift.AsInt32();
+                }
             }
+            this.knownBitLength.SetInt(bits);
+            this.discardedBitCount.AddInt(bs);
+            if (bs == 1) {
+                var odd = !this.shiftedBigInt.testBit(0) == false;
+                this.shiftedBigInt = this.shiftedBigInt.shiftRight(1);
+                this.bitsAfterLeftmost |= this.bitLeftmost;
+                this.bitLeftmost = odd ? 1 : 0;
+            } else {
+                this.bitsAfterLeftmost |= this.bitLeftmost;
+                var lowestSetBit = this.shiftedBigInt.getLowestSetBit();
+                if (lowestSetBit < bs - 1) {
+
+                    this.bitsAfterLeftmost |= 1;
+                    this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
+                } else if (lowestSetBit > bs - 1) {
+
+                    this.bitLeftmost = 0;
+                } else {
+
+                    this.bitLeftmost = 1;
+                }
+                this.shiftedBigInt = this.shiftedBigInt.shiftRight(bs);
+            }
+            if (bits < BitShiftAccumulator.SmallBitLength) {
+
+                this.isSmall = true;
+                this.shiftedSmall = this.shiftedBigInt.intValue();
+            }
+            this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
         }
     };
 
@@ -10559,6 +10605,10 @@ function() {
         return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     };
 
+    prototype['isFinite'] = prototype.isFinite = function() {
+        return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
+    };
+
     prototype['isNegative'] = prototype.isNegative = function() {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
     };
@@ -11319,6 +11369,10 @@ function() {
 
     prototype['IsInfinity'] = prototype.IsInfinity = function() {
         return (this.flags & BigNumberFlags.FlagInfinity) != 0;
+    };
+
+    prototype['isFinite'] = prototype.isFinite = function() {
+        return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
     };
 
     prototype['isNegative'] = prototype.isNegative = function() {

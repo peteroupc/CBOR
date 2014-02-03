@@ -13,7 +13,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer.</summary>
+  /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -83,17 +83,6 @@ namespace PeterO {
       }
     }
 
-    private static void ShiftWordsRightByWords(short[] r, int rstart, int n, int shiftWords) {
-      shiftWords = Math.Min(shiftWords, n);
-      if (shiftWords != 0) {
-        for (int i = 0; i + shiftWords < n; ++i) {
-          r[rstart + i] = r[rstart + i + shiftWords];
-        }
-        rstart += n - shiftWords;
-        Array.Clear((short[])r, rstart, shiftWords);
-      }
-    }
-
     private static void ShiftWordsRightByWordsSignExtend(short[] r, int rstart, int n, int shiftWords) {
       shiftWords = Math.Min(shiftWords, n);
       if (shiftWords != 0) {
@@ -112,6 +101,24 @@ namespace PeterO {
       while (unchecked(n--) != 0) {
         int an = ((int)words1[astart + n]) & 0xFFFF;
         int bn = ((int)words2[bstart + n]) & 0xFFFF;
+        if (an > bn) {
+          return 1;
+        } else if (an < bn) {
+          return -1;
+        }
+      }
+      return 0;
+    }
+
+    private static int CompareWithOneBiggerWords1(short[] words1, int astart, short[] words2, int bstart, int words1Count) {
+      // NOTE: Assumes that words2's count is 1 less
+      if (words1[words1Count - 1] != 0) {
+        return 1;
+      }
+      --words1Count;
+      while (unchecked(words1Count--) != 0) {
+        int an = ((int)words1[astart + words1Count]) & 0xFFFF;
+        int bn = ((int)words2[bstart + words1Count]) & 0xFFFF;
         if (an > bn) {
           return 1;
         } else if (an < bn) {
@@ -182,6 +189,80 @@ namespace PeterO {
           c[cstart + i] = (short)u;
           u = (((int)words1[astart + i + 1]) & 0xFFFF) + (((int)words2[bstart + i + 1]) & 0xFFFF) + (short)(u >> 16);
           c[cstart + i + 1] = (short)u;
+        }
+        return ((int)u >> 16) & 0xFFFF;
+      }
+    }
+
+    private static int SubtractOneBiggerWords1(
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int words1Count) {
+      // Assumes that words2's count is 1 less
+      unchecked {
+        int u;
+        u = 0;
+        int cm1 = words1Count - 1;
+        for (int i = 0; i < cm1; i += 1) {
+          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+          c[cstart++] = (short)u;
+          ++astart;
+          ++bstart;
+        }
+        u = (((int)words1[astart]) & 0xFFFF) - (int)((u >> 31) & 1);
+        c[cstart++] = (short)u;
+        return (int)((u >> 31) & 1);
+      }
+    }
+
+    private static int SubtractOneBiggerWords2(
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int words1Count) {
+      // Assumes that words2's count is 1 less
+      unchecked {
+        int u;
+        u = 0;
+        int cm1 = words1Count - 1;
+        for (int i = 0; i < cm1; i += 1) {
+          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+          c[cstart++] = (short)u;
+          ++astart;
+          ++bstart;
+        }
+        u = 0 - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+        c[cstart++] = (short)u;
+        return (int)((u >> 31) & 1);
+      }
+    }
+
+    private static int AddUnevenSize(
+      short[] c,
+      int cstart,
+      short[] wordsBigger,
+      int astart,
+      int acount,
+      short[] wordsSmaller,
+      int bstart,
+      int bcount) {
+      unchecked {
+        int u;
+        u = 0;
+        for (int i = 0; i < bcount; i += 1) {
+          u = (((int)wordsBigger[astart + i]) & 0xFFFF) + (((int)wordsSmaller[bstart + i]) & 0xFFFF) + (short)(u >> 16);
+          c[cstart + i] = (short)u;
+        }
+        for (int i =  bcount; i < acount; i += 1) {
+          u = (((int)wordsBigger[astart + i]) & 0xFFFF) + (short)(u >> 16);
+          c[cstart + i] = (short)u;
         }
         return ((int)u >> 16) & 0xFFFF;
       }
@@ -665,22 +746,16 @@ namespace PeterO {
       int words2Start,  // size n
       int count) {
       if (count <= RecursionLimit) {
-        count >>= 2;
-        if (count == 0) {
+        if (count == 2) {
           Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
-        } else if (count == 1) {
+        } else if (count == 4) {
           Baseline_Multiply4(resultArr, resultStart, words1, words1Start, words2, words2Start);
-        } else if (count == 2) {
+        } else if (count == 8) {
           Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
         } else {
-          throw new InvalidOperationException();
+          SchoolbookMultiply(resultArr, resultStart, words1, words1Start, count, words2, words2Start, count);
         }
       } else {
-        int count2 = count >> 1;
-        int resultMediumHigh = resultStart + count;
-        int resultHigh = resultMediumHigh + count2;
-        int resultMediumLow = resultStart + count2;
-        int tsn = tempStart + count;
         int countA = count;
         while (countA != 0 && words1[words1Start + countA - 1] == 0) {
           --countA;
@@ -689,46 +764,129 @@ namespace PeterO {
         while (countB != 0 && words2[words2Start + countB - 1] == 0) {
           --countB;
         }
-        int count2For1 = 0;
-        int count2For2 = 0;
+        int offset2For1 = 0;
+        int offset2For2 = 0;
         if (countA == 0 || countB == 0) {
           // words1 or words2 is empty, so result is 0
           Array.Clear((short[])resultArr, resultStart, count << 1);
           return;
         }
-        if (countA <= count2 && countB <= count2) {
-          // Console.WriteLine("Can be smaller: " + AN + "," + BN + "," + (count2));
-          Array.Clear((short[])resultArr, resultStart + count, count);
-          if (count2 == 8) {
-            Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
-          } else {
-            RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, count2);
+        // Split words1 and words2 in two parts each
+        if ((count & 1) == 0) {
+          int count2 = count >> 1;
+          if (countA <= count2 && countB <= count2) {
+            // Console.WriteLine("Can be smaller: " + AN + "," + BN + "," + (count2));
+            Array.Clear((short[])resultArr, resultStart + count, count);
+            if (count2 == 8) {
+              Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
+            } else {
+              RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, count2);
+            }
+            return;
           }
-          return;
-        }
-        count2For1 = Compare(words1, words1Start, words1, (int)(words1Start + count2), count2) > 0 ? 0 : count2;
-        Subtract(resultArr, resultStart, words1, (int)(words1Start + count2For1), words1, (int)(words1Start + (count2 ^ count2For1)), count2);
-        count2For2 = Compare(words2, words2Start, words2, (int)(words2Start + count2), count2) > 0 ? 0 : count2;
-        Subtract(resultArr, resultMediumLow, words2, (int)(words2Start + count2For2), words2, (int)(words2Start + (count2 ^ count2For2)), count2);
-        //---------
-        // Medium high result = HighA * HighB
-        RecursiveMultiply(resultArr, resultMediumHigh, tempArr, tsn, words1, (int)(words1Start + count2), words2, (int)(words2Start + count2), count2);
-        // Medium high result = Abs(LowA-HighA) * Abs(LowB-HighB)
-        RecursiveMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (int)resultMediumLow, count2);
-        // Low result = LowA * LowB
-        RecursiveMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
-        int c2 = Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultMediumLow, count2);
-        int c3 = c2;
-        c2 += Add(resultArr, resultMediumLow, resultArr, resultMediumHigh, resultArr, resultStart, count2);
-        c3 += Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultHigh, count2);
-        if (count2For1 == count2For2) {
-          c3 -= Subtract(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
+          int resultMediumHigh = resultStart + count;
+          int resultHigh = resultMediumHigh + count2;
+          int resultMediumLow = resultStart + count2;
+          int tsn = tempStart + count;
+          offset2For1 = Compare(words1, words1Start, words1, words1Start + count2, count2) > 0 ? 0 : count2;
+          // Absolute value of low part minus high part of words1
+          Subtract(
+            resultArr, resultStart,
+            words1, words1Start + offset2For1,
+            words1, (int)(words1Start + (count2 ^ offset2For1)), count2);
+          offset2For2 = Compare(words2, words2Start, words2, (int)(words2Start + count2), count2) > 0 ? 0 : count2;
+          // Absolute value of low part minus high part of words2
+          Subtract(
+            resultArr, resultMediumLow,
+            words2, words2Start + offset2For2,
+            words2, (int)(words2Start + (count2 ^ offset2For2)), count2);
+          //---------
+          // HighA * HighB
+          RecursiveMultiply(resultArr, resultMediumHigh, tempArr, tsn, words1, (int)(words1Start + count2), words2, (int)(words2Start + count2), count2);
+          // Medium high result = Abs(LowA-HighA) * Abs(LowB-HighB)
+          RecursiveMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (int)resultMediumLow, count2);
+          // Low result = LowA * LowB
+          RecursiveMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
+          int c2 = Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultMediumLow, count2);
+          int c3 = c2;
+          c2 += Add(resultArr, resultMediumLow, resultArr, resultMediumHigh, resultArr, resultStart, count2);
+          c3 += Add(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultHigh, count2);
+          if (offset2For1 == offset2For2) {
+            c3 -= Subtract(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
+          } else {
+            c3 += Add(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
+          }
+          c3 += Increment(resultArr, resultMediumHigh, count2, (short)c2);
+          if (c3 != 0) {
+            Increment(resultArr, resultHigh, count2, (short)c3);
+          }
         } else {
-          c3 += Add(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
-        }
-        c3 += Increment(resultArr, resultMediumHigh, count2, (short)c2);
-        if (c3 != 0) {
-          Increment(resultArr, resultHigh, count2, (short)c3);
+          // Count is odd, high part will be 1 shorter
+          int countHigh = count >> 1;  // Shorter part
+          int countLow = count - countHigh;  // Longer part
+          int resultMediumHigh = resultStart + countLow + countLow;
+          int tsnShorter = countHigh + countHigh;
+          offset2For1 = CompareWithOneBiggerWords1(words1, words1Start, words1, words1Start + countLow, countLow) > 0 ? 0 : countLow;
+          if (offset2For1 == 0) {
+            SubtractOneBiggerWords1(resultArr, resultStart, words1, words1Start, words1, words1Start + countLow, countLow);
+          } else {
+            SubtractOneBiggerWords2(resultArr, resultStart, words1, words1Start + countLow, words1, words1Start, countLow);
+          }
+          offset2For2 = CompareWithOneBiggerWords1(words2, words2Start, words2, words2Start + countLow, countLow) > 0 ? 0 : countLow;
+          if (offset2For1 == 0) {
+            SubtractOneBiggerWords1(tempArr, tempStart, words2, words2Start, words2, words2Start + countLow, countLow);
+          } else {
+            SubtractOneBiggerWords2(tempArr, tempStart, words2, words2Start + countLow, words2, words2Start, countLow);
+          }
+          // Abs(LowA-HighA) * Abs(LowB-HighB)
+          RecursiveMultiply(
+            resultArr, resultStart + (countHigh << 1),
+            tempArr, tempStart + (countHigh << 1),
+            resultArr, resultStart,
+            tempArr, tempStart, countLow);
+          short resultTmp0 = resultArr[resultStart + (countHigh << 1)];
+          short resultTmp1 = resultArr[resultStart + (countHigh << 1) + 1];
+          // HighA * HighB
+          RecursiveMultiply(
+            tempArr, tempStart,
+            tempArr, tempStart + (countHigh << 1),
+            words1, words1Start + countLow,
+            words2, words2Start + countLow, countHigh);
+          // LowA * LowB
+          RecursiveMultiply(
+            resultArr, resultStart,
+            tempArr, tempStart + (countHigh << 1),
+            words1, words1Start,
+            words2, words2Start, countLow);
+          Array.Copy(
+            resultArr, resultStart + (countHigh << 1),
+            tempArr, tempStart + (countHigh << 1),
+            countLow << 1);
+          tempArr[tempStart + (countHigh << 1)] = resultTmp0;
+          tempArr[tempStart + (countHigh << 1) + 1] = resultTmp1;
+          Array.Copy(
+            tempArr, tempStart,
+            resultArr, resultStart + (countLow << 1),
+            countHigh << 1);
+          int countMiddle = countLow << 1;
+          int c2 = Add(resultArr, countMiddle, resultArr, countMiddle, resultArr, countLow, countLow);
+          int c3 = c2;
+          c2 += Add(resultArr, countLow, resultArr, countMiddle, resultArr, resultStart, countLow);
+          c3 += AddUnevenSize(
+            resultArr, countMiddle, 
+            resultArr, countMiddle, 
+            countLow,
+            resultArr, countMiddle + countLow, 
+            countLow - 2);
+          if (offset2For1 == offset2For2) {
+            c3 -= Subtract(resultArr, countLow, resultArr, countLow, tempArr, tempStart + (countHigh << 1), count);
+          } else {
+            c3 += Add(resultArr, countLow, resultArr, countLow, tempArr, tempStart + (countHigh << 1), count);
+          }
+          c3 += Increment(resultArr, countMiddle, countLow, (short)c2);
+          if (c3 != 0) {
+            Increment(resultArr, countMiddle + countLow, countLow - 2, (short)c3);
+          }
         }
       }
     }
@@ -742,19 +900,14 @@ namespace PeterO {
       int words1Start,
       int n) {
       if (n <= RecursionLimit) {
-        n >>= 2;
-        switch (n) {
-          case 0:
-            Baseline_Square2(resultArr, resultStart, words1, words1Start);
-            break;
-          case 1:
-            Baseline_Square4(resultArr, resultStart, words1, words1Start);
-            break;
-          case 2:
-            Baseline_Square8(resultArr, resultStart, words1, words1Start);
-            break;
-          default:
-            throw new InvalidOperationException();
+        if (n == 2) {
+          Baseline_Square2(resultArr, resultStart, words1, words1Start);
+        } else if (n == 4) {
+          Baseline_Square4(resultArr, resultStart, words1, words1Start);
+        } else if (n == 8) {
+          Baseline_Square8(resultArr, resultStart, words1, words1Start);
+        } else {
+          SchoolbookMultiply(resultArr, resultStart, words1, words1Start, n, words1, words1Start, n);
         }
       } else {
         int count2 = n >> 1;
@@ -846,10 +999,13 @@ namespace PeterO {
       int words2Count) {
       if (words1Count == words2Count) {
         if (words1Start == words2Start && words1 == words2) {
+          // Both operands have the same value and the same word count
           RecursiveSquare(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1Count);
         } else if (words1Count == 2) {
+          // Both operands have a word count of 2
           Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
         } else {
+          // Other cases where both operands have the same word count
           RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
         }
 
@@ -857,6 +1013,7 @@ namespace PeterO {
       }
 
       if (words1Count > words2Count) {
+        // Ensure that words1 is smaller by swapping if necessary
         short[] tmp1 = words1; words1 = words2; words2 = tmp1;
         int tmp3 = words1Start; words1Start = words2Start; words2Start = tmp3;
         int tmp2 = words1Count; words1Count = words2Count; words2Count = tmp2;
@@ -865,6 +1022,7 @@ namespace PeterO {
       if (words1Count == 2 && words1[words1Start + 1] == 0) {
         switch (words1[words1Start]) {
           case 0:
+            // words1 is zero, so result is 0
             Array.Clear((short[])resultArr, resultStart, words2Count + 2);
             return;
           case 1:
@@ -1685,13 +1843,13 @@ namespace PeterO {
         }
         return this.shiftLeft(-numberBits);
       }
-      BigInteger ret = new BigInteger();
+      BigInteger ret;
       int numWords = (int)this.wordCount;
       int shiftWords = (int)(numberBits >> 4);
       int shiftBits = (int)(numberBits & 15);
-      ret.negative = this.negative;
-      ret.reg = new short[this.reg.Length];
       if (this.negative) {
+        ret = new BigInteger();
+        ret.reg = new short[this.reg.Length];
         Array.Copy(this.reg, ret.reg, numWords);
         TwosComplement(ret.reg, 0, (int)ret.reg.Length);
         ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
@@ -1699,17 +1857,22 @@ namespace PeterO {
           ShiftWordsRightByBitsSignExtend(ret.reg, 0, numWords - shiftWords, shiftBits);
         }
         TwosComplement(ret.reg, 0, (int)ret.reg.Length);
+        ret.wordCount = ret.reg.Length;
       } else {
-        if (shiftWords > numWords) {
+        if (shiftWords >= numWords) {
           return BigInteger.Zero;
         }
-        Array.Copy(this.reg, ret.reg, numWords);
-        ShiftWordsRightByWords(ret.reg, 0, numWords, shiftWords);
-        if (numWords > shiftWords) {
-          ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
-        }
+        ret = new BigInteger();
+        ret.reg = new short[this.reg.Length];
+        Array.Copy(this.reg, shiftWords, ret.reg, 0, numWords - shiftWords);
+        ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+        ret.wordCount = numWords - shiftWords;
       }
-      ret.wordCount = ret.CalcWordCount();
+      ret.negative = this.negative;
+      while (ret.wordCount != 0 &&
+             ret.reg[ret.wordCount - 1] == 0) {
+        ret.wordCount--;
+      }
       if (shiftWords > 2) {
         this.ShortenArray();
       }
