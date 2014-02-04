@@ -112,9 +112,9 @@ namespace PeterO {
       if (bigint.Sign < 0) {
         throw new ArgumentException("bigint is negative");
       }
-      if(bigint.canFitInInt()){
-        this.isSmall=true;
-        this.shiftedSmall=bigint.intValue();
+      if (bigint.canFitInInt()) {
+        this.isSmall = true;
+        this.shiftedSmall = bigint.intValue();
       } else {
         this.shiftedBigInt = bigint;
       }

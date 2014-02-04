@@ -2404,6 +2404,30 @@ bigintRem=divrem[1]; }
     }
 
     @Test
+    public void TestSquareRoot() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        if (bigintA.signum()<0) {
+ bigintA=bigintA.negate();
+}
+        if (bigintA.signum() == 0) {
+ bigintA = BigInteger.ONE;
+}
+        BigInteger sr = bigintA.sqrt();
+        BigInteger srsqr = sr.multiply(sr);
+        sr=sr.add(BigInteger.ONE);
+        BigInteger sronesqr = sr.multiply(sr);
+        if (srsqr.compareTo(bigintA)>0) {
+          Assert.fail(srsqr + " not " + bigintA + " or less (TestSqrt, sqrt=" + sr +")");
+        }
+        if (sronesqr.compareTo(bigintA) <= 0) {
+          Assert.fail(srsqr + " not greater than " + bigintA + " (TestSqrt, sqrt=" + sr +")");
+        }
+      }
+    }
+
+    @Test
     public void TestAddSubtract() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
