@@ -341,6 +341,28 @@ namespace PeterO {
       }
     }
 
+    private static short LinearMultiplyAdd(
+      short[] productArr,
+      int cstart,
+      short[] words1,
+      int astart,
+      short words2,
+      int n) {
+      unchecked {
+        short carry = 0;
+        int bint = ((int)words2) & 0xFFFF;
+        for (int i = 0; i < n; ++i) {
+          int p;
+          p = (((int)words1[astart + i]) & 0xFFFF) * bint;
+          p += ((int)carry) & 0xFFFF;
+          p += ((int)productArr[cstart + i]) & 0xFFFF;
+          productArr[cstart + i] = (short)p;
+          carry = (short)(p >> 16);
+        }
+        return carry;
+      }
+    }
+
     private static short LinearMultiply(
       short[] productArr,
       int cstart,
@@ -782,15 +804,18 @@ namespace PeterO {
     #endregion
     private const int RecursionLimit = 10;
 
-    private static void RecursiveMultiply(
-      short[] resultArr,  // size 2*n
+    // NOTE: Renamed from RecursiveMultiply to better show that
+    // this function only takes operands of the same size, as opposed
+    // to AsymmetricMultiply.
+    private static void SameSizeMultiply(
+      short[] resultArr,  // size 2*count
       int resultStart,
-      short[] tempArr,  // size 2*n
+      short[] tempArr,  // size 2*count
       int tempStart,
       short[] words1,
-      int words1Start,  // size n
+      int words1Start,  // size count
       short[] words2,
-      int words2Start,  // size n
+      int words2Start,  // size count
       int count) {
       // Console.WriteLine("RecursiveMultiply " + count + " " + count + " [r=" + resultStart + " t=" + tempStart + " a=" + words1Start + " b=" + words2Start + "]");
       #if DEBUG
@@ -926,7 +951,7 @@ namespace PeterO {
             if (count2 == 8) {
               Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
             } else {
-              RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, count2);
+              SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, count2);
             }
             return;
           }
@@ -939,17 +964,14 @@ namespace PeterO {
           SubtractOneByOne(resultArr, resultStart, words1, words1Start + offset2For1, words1, (int)(words1Start + (count2 ^ offset2For1)), count2);
           offset2For2 = Compare(words2, words2Start, words2, (int)(words2Start + count2), count2) > 0 ? 0 : count2;
           // Absolute value of low part minus high part of words2
-          SubtractOneByOne(
-            resultArr, resultMediumLow,
-            words2, words2Start + offset2For2,
-            words2, (int)(words2Start + (count2 ^ offset2For2)), count2);
+          SubtractOneByOne(resultArr, resultMediumLow, words2, words2Start + offset2For2, words2, (int)(words2Start + (count2 ^ offset2For2)), count2);
           //---------
           // HighA * HighB
-          RecursiveMultiply(resultArr, resultMediumHigh, tempArr, tsn, words1, (int)(words1Start + count2), words2, (int)(words2Start + count2), count2);
+          SameSizeMultiply(resultArr, resultMediumHigh, tempArr, tsn, words1, (int)(words1Start + count2), words2, (int)(words2Start + count2), count2);
           // Medium high result = Abs(LowA-HighA) * Abs(LowB-HighB)
-          RecursiveMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (int)resultMediumLow, count2);
+          SameSizeMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (int)resultMediumLow, count2);
           // Low result = LowA * LowB
-          RecursiveMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
+          SameSizeMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
           int c2 = AddOneByOne(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultMediumLow, count2);
           int c3 = c2;
           c2 += AddOneByOne(resultArr, resultMediumLow, resultArr, resultMediumHigh, resultArr, resultStart, count2);
@@ -985,53 +1007,43 @@ namespace PeterO {
           // Abs(LowA-HighA) * Abs(LowB-HighB)
           int shorterOffset = countHigh << 1;
           int longerOffset = countLow << 1;
-          RecursiveMultiply(
-            resultArr,
-            resultStart + shorterOffset,
+          SameSizeMultiply(
             tempArr,
             tempStart + shorterOffset,
+            resultArr,
+            resultStart + shorterOffset,
             resultArr,
             resultStart,
             tempArr,
             tempStart,
             countLow);
           // DebugWords(resultArr, resultStart+shorterOffset,countLow << 1,"w1*w2");
-          short resultTmp0 = resultArr[resultStart + shorterOffset];
-          short resultTmp1 = resultArr[resultStart + shorterOffset + 1];
+          short resultTmp0 = tempArr[tempStart + shorterOffset];
+          short resultTmp1 = tempArr[tempStart + shorterOffset + 1];
           // HighA * HighB
-          RecursiveMultiply(
-            tempArr,
-            tempStart,
-            tempArr,
-            tempStart + shorterOffset,
+          SameSizeMultiply(
+            resultArr,
+            resultStart + longerOffset,
+            resultArr,
+            resultStart,
             words1,
             words1Start + countLow,
             words2,
             words2Start + countLow,
             countHigh);
           // LowA * LowB
-          RecursiveMultiply(
+          SameSizeMultiply(
             resultArr,
             resultStart,
             tempArr,
-            tempStart + shorterOffset,
+            tempStart,
             words1,
             words1Start,
             words2,
             words2Start,
             countLow);
-          Array.Copy(
-            resultArr, resultStart + longerOffset,
-            tempArr, tempStart + longerOffset,
-            countHigh << 1);
           tempArr[tempStart + shorterOffset] = resultTmp0;
           tempArr[tempStart + shorterOffset + 1] = resultTmp1;
-          Array.Copy(
-            tempArr,
-            tempStart,
-            resultArr,
-            resultStart + (countLow << 1),
-            countHigh << 1);
           int countMiddle = countLow << 1;
           // DebugWords(resultArr,resultStart,count*2,"q1");
           int c2 = AddOneByOne(resultArr, resultStart + countMiddle, resultArr, resultStart + countMiddle, resultArr, resultStart + countLow, countLow);
@@ -1072,36 +1084,62 @@ namespace PeterO {
       int tempStart,
       short[] words1,
       int words1Start,
-      int n) {
-      if (n <= RecursionLimit) {
-        if (n == 2) {
+      int count) {
+      if (count <= RecursionLimit) {
+        if (count == 2) {
           Baseline_Square2(resultArr, resultStart, words1, words1Start);
-        } else if (n == 4) {
+        } else if (count == 4) {
           Baseline_Square4(resultArr, resultStart, words1, words1Start);
-        } else if (n == 8) {
+        } else if (count == 8) {
           Baseline_Square8(resultArr, resultStart, words1, words1Start);
         } else {
-          SchoolbookSquare(resultArr, resultStart, words1, words1Start, n);
+          SchoolbookSquare(resultArr, resultStart, words1, words1Start, count);
         }
-      } else if ((n & 1) == 0) {
-        int count2 = n >> 1;
-        RecursiveSquare(resultArr, resultStart, tempArr, (int)(tempStart + n), words1, words1Start, count2);
-        RecursiveSquare(resultArr, (int)(resultStart + n), tempArr, (int)(tempStart + n), words1, (int)(words1Start + count2), count2);
-        RecursiveMultiply(
+      } else if ((count & 1) == 0) {
+        int count2 = count >> 1;
+        RecursiveSquare(resultArr, resultStart, tempArr, tempStart + count, words1, words1Start, count2);
+        RecursiveSquare(resultArr, resultStart + count, tempArr, tempStart + count, words1, words1Start + count2, count2);
+        SameSizeMultiply(
           tempArr,
           tempStart,
           tempArr,
-          tempStart + n,
+          tempStart + count,
           words1,
           words1Start,
           words1,
           words1Start + count2,
           count2);
-        int carry = Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
-        carry += Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
-        Increment(resultArr, (int)(resultStart + n + count2), count2, (short)carry);
+        int carry = AddOneByOne(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, count);
+        carry += AddOneByOne(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, count);
+        Increment(resultArr, (int)(resultStart + count + count2), count2, (short)carry);
       } else {
-        RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1, words1Start, n);
+        SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1, words1Start, count);
+        /*
+        int countHigh = count >> 1;
+        int countLow = countHigh + 1;
+        int countMiddle = (countLow << 1);
+        RecursiveSquare(resultArr, resultStart + countMiddle, tempArr, tempStart + countMiddle, words1, words1Start + countLow, countHigh);
+        Array.Copy(tempArr, tempStart + countMiddle, words1, words1Start + countLow, countHigh);
+        tempArr[tempStart + countMiddle + countHigh] = (short)0;
+        RecursiveMultiply(
+          tempArr,
+          tempStart,
+          resultArr,
+          resultStart,
+          words1,
+          words1Start,
+          tempArr,
+          tempStart + countMiddle,
+          countLow);
+        short tmpEnd1 = tempArr[tempStart + countMiddle - 2];
+        short tmpEnd2 = tempArr[tempStart + countMiddle - 1];
+        RecursiveSquare(resultArr, resultStart, tempArr, tempStart + (countHigh << 1), words1, words1Start, countLow);
+        tempArr[tempStart + countMiddle - 2] = tmpEnd1;
+        tempArr[tempStart + countMiddle - 1] = tmpEnd2;
+        int carry = AddOneByOne(resultArr, (int)(resultStart + countLow), resultArr, (int)(resultStart + countLow), tempArr, tempStart, (countLow << 1));
+        carry += AddOneByOne(resultArr, (int)(resultStart + countLow), resultArr, (int)(resultStart + countLow), tempArr, tempStart, (countLow << 1));
+        Increment(resultArr, (int)(resultStart + countMiddle + countLow), countLow - 2, (short)carry);
+        */
       }
     }
 
@@ -1322,7 +1360,7 @@ namespace PeterO {
         for (int i = 0; i < acount; i += bcount) {
           int diff = acount - i;
           if (diff > bcount) {
-            RecursiveMultiply(
+            SameSizeMultiply(
               tempArr,
               tempStart,  // uses bcount*2 space
               tempArr,
@@ -1350,7 +1388,7 @@ namespace PeterO {
               tempArr,
               tempStart,  // uses diff + bcount space
               tempArr,
-              tempStart + diff + bcount,
+              tempStart + diff + bcount,  // uses diff + bcount space
               words1,
               astart + i,
               diff,
@@ -1374,11 +1412,12 @@ namespace PeterO {
       }
     }
 
+    // Multiplies two operands of different sizes
     private static void AsymmetricMultiply(
       short[] resultArr,
-      int resultStart,
+      int resultStart,  // uses words1Count + words2Count space
       short[] tempArr,
-      int tempStart,
+      int tempStart,  // uses words1Count + words2Count space
       short[] words1,
       int words1Start,
       int words1Count,
@@ -1493,7 +1532,7 @@ namespace PeterO {
           Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
         } else {
           // Other cases where both operands have the same word count
-          RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
+          SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
         }
 
         return;
@@ -1539,20 +1578,20 @@ namespace PeterO {
         if (wordsRem == 0) {
           // words2Count is divisible by words1count
           if (evenmult == 0) {
-            RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
+            SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
             Array.Copy(resultArr, resultStart + words1Count, tempArr, (int)(tempStart + (words1Count << 1)), words1Count);
             for (i = words1Count << 1; i < words2Count; i += words1Count << 1) {
-              RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+              SameSizeMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
             }
             for (i = words1Count; i < words2Count; i += words1Count << 1) {
-              RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+              SameSizeMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
             }
           } else {
             for (i = 0; i < words2Count; i += words1Count << 1) {
-              RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+              SameSizeMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
             }
             for (i = words1Count; i < words2Count; i += words1Count << 1) {
-              RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+              SameSizeMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
             }
           }
           if (Add(resultArr, resultStart + words1Count, resultArr, resultStart + words1Count, tempArr, tempStart + (words1Count << 1), words2Count - words1Count) != 0) {
@@ -1571,6 +1610,28 @@ namespace PeterO {
             words1,
             words1Start,
             words1Count);
+        } else if (words1Count + 1 == words2Count) {
+          // Multiply the low parts of each operand
+          SameSizeMultiply(
+resultArr,
+resultStart,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words2,
+words2Start,
+words1Count);
+          // Multiply the high parts
+          // while adding carry from the high part of the product
+          short carry = LinearMultiplyAdd(
+resultArr,
+resultStart + words1Count,
+words1,
+words1Start + words1Count,
+words2[words2Start + words1Count],
+words1Count);
+          resultArr[resultStart + words1Count + words1Count] = carry;
         } else {
           short[] t2 = new short[words1Count << 2];
           // Console.WriteLine("Chunked Linear Multiply Short");
@@ -1749,7 +1810,7 @@ namespace PeterO {
       return valueQ;
     }
 
-    private static void AtomicDivide(
+    private static void DivideFourWordsByTwo(
       short[] quotient,
       int quotientStart,
       short[] words1,
@@ -1758,6 +1819,7 @@ namespace PeterO {
       short word2B,
       short[] temp) {
       if (word2A == 0 && word2B == 0) {
+        // if divisor is 0, we assume divisor==2**32
         quotient[quotientStart] = words1[words1Start + 2];
         quotient[quotientStart + 1] = words1[words1Start + 3];
       } else {
@@ -2021,7 +2083,7 @@ namespace PeterO {
         short[] valueTAtomic = new short[4];
         for (int i = valueNA - 2; i >= valueNB; i -= 2) {
           int qs = (valueQarr == null) ? 0 : valueQstart + i - valueNB;
-          AtomicDivide(quot, qs, valueTA, (int)(tempStart + i - 2), valueBT0, valueBT1, valueTAtomic);
+          DivideFourWordsByTwo(quot, qs, valueTA, (int)(tempStart + i - 2), valueBT0, valueBT1, valueTAtomic);
           // now correct the underestimated quotient
           int valueRstart2 = tempStart + i - valueNB;
           int n = valueNB;
@@ -3621,7 +3683,7 @@ namespace PeterO {
         needShorten = false;
       } else if (this.Equals(bigintMult)) {
         int words1Size = RoundupSize(this.wordCount);
-        product.reg = new short[RoundupSize(words1Size + words1Size)];
+        product.reg = new short[words1Size + words1Size];
         product.wordCount = product.reg.Length;
         product.negative = false;
         short[] workspace = new short[words1Size + words1Size];
@@ -3781,8 +3843,8 @@ namespace PeterO {
         }
       }
       quotient = new BigInteger();
-      words1Size += words1Size % 2;
-      words2Size += words2Size % 2;
+      words1Size += words1Size & 1;
+      words2Size += words2Size & 1;
       quotient.reg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
       quotient.negative = false;
       short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];
@@ -3963,8 +4025,8 @@ namespace PeterO {
         return this;
       }
       BigInteger remainder = new BigInteger();
-      words1Size += words1Size % 2;
-      words2Size += words2Size % 2;
+      words1Size += words1Size & 1;
+      words2Size += words2Size & 1;
       remainder.reg = new short[RoundupSize((int)words2Size)];
       remainder.negative = false;
       short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];

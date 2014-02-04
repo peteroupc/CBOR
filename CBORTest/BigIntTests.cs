@@ -2330,6 +2330,19 @@ namespace Test
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
         BigInteger bigintC = bigintA * (BigInteger)bigintB;
+        // Test near-squaring
+        if (bigintA.IsZero || bigintB.IsZero) {
+          Assert.AreEqual(BigInteger.Zero, bigintC);
+        }
+        if (bigintA.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintB, bigintC);
+        }
+        if (bigintB.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintA, bigintC);
+        }
+        bigintB = bigintA;
+        // Test squaring
+        bigintC = bigintA * (BigInteger)bigintB;
         if (bigintA.IsZero || bigintB.IsZero) {
           Assert.AreEqual(BigInteger.Zero, bigintC);
         }
