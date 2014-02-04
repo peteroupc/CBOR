@@ -323,7 +323,7 @@ at: http://peteroupc.github.io/CBOR/
       {
         int u;
         u = 0;
-        for (int i = 0; i < n; i += 2) {
+        for (int i = 0; i < n; i += 1) {
           u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
@@ -781,6 +781,7 @@ at: http://peteroupc.github.io/CBOR/
       short[] words2,
       int words2Start,  // size n
       int count) {
+      // System.out.println("RecursiveMultiply " + count + " " + count + " [r=" + resultStart + " t=" + tempStart + " a=" + words1Start + " b=" + words2Start + "]");
 
       if (count <= RecursionLimit) {
         if (count == 2) {
@@ -855,6 +856,9 @@ at: http://peteroupc.github.io/CBOR/
             Increment(resultArr, resultHigh, count2, (short)c3);
           }
         } else {
+          SchoolbookMultiply(resultArr, resultStart, words1, words1Start, count, words2, words2Start, count);
+          return;
+          /*
           // Count is odd, high part will be 1 shorter
           int countHigh = count >> 1;  // Shorter part
           int countLow = count - countHigh;  // Longer part
@@ -942,6 +946,7 @@ at: http://peteroupc.github.io/CBOR/
           if (c3 != 0) {
             Increment(resultArr, countMiddle + countLow, countLow - 2, (short)c3);
           }
+          */
         }
       }
     }
@@ -962,8 +967,7 @@ at: http://peteroupc.github.io/CBOR/
         } else if (n == 8) {
           Baseline_Square8(resultArr, resultStart, words1, words1Start);
         } else {
-          java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(n << 1),0);
-          SchoolbookMultiply(resultArr, resultStart, words1, words1Start, n, words1, words1Start, n);
+          SchoolbookSquare(resultArr, resultStart, words1, words1Start, n);
         }
       } else if ((n & 1) == 0) {
         int count2 = n >> 1;
@@ -979,13 +983,40 @@ at: http://peteroupc.github.io/CBOR/
           words1,
           words1Start + count2,
           count2);
-
         int carry = Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
         carry += Add(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, n);
-
         Increment(resultArr, (int)(resultStart + n + count2), count2, (short)carry);
       } else {
         RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1, words1Start, n);
+      }
+    }
+
+    private static void SchoolbookSquare(
+      short[] resultArr,
+      int resultStart,
+      short[] words1,
+      int words1Start,
+      int words1Count) {
+      // Method assumes that resultArr was already zeroed,
+      // if resultArr is the same as words1
+      int cstart;
+      for (int i = 0; i < words1Count; ++i) {
+        cstart = resultStart + i;
+        {
+          short carry = 0;
+          int valueBint = ((int)words1[words1Start + i]) & 0xFFFF;
+          for (int j = 0; j < words1Count; ++j) {
+            int p;
+            p = (((int)words1[words1Start + j]) & 0xFFFF) * valueBint;
+            p += ((int)carry) & 0xFFFF;
+            if (i != 0) {
+              p += ((int)resultArr[cstart + j]) & 0xFFFF;
+            }
+            resultArr[cstart + j] = (short)p;
+            carry = (short)(p >> 16);
+          }
+          resultArr[cstart + words1Count] = carry;
+        }
       }
     }
 
@@ -998,7 +1029,8 @@ at: http://peteroupc.github.io/CBOR/
       short[] words2,
       int words2Start,
       int words2Count) {
-      // Method assumes that resultArr was already zeroed
+      // Method assumes that resultArr was already zeroed,
+      // if resultArr is the same as words1 or words2
       int cstart;
       if (words1Count < words2Count) {
         // words1 is shorter than words2, so put words2 on top
@@ -1043,6 +1075,19 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
+    private static void DebugWords(short[] a, int astart, int count, String msg) {
+      Console.Write("Words(" + msg + "): ");
+      for (int i = 0; i < count; ++i) {
+        Console.Write("{0:X4} ", a[astart + i]);
+      }
+      System.out.println("");
+      BigInteger bi = new BigInteger();
+      bi.reg = new short[count];
+      bi.wordCount = count;
+      System.arraycopy(a, astart, bi.reg, 0, count);
+      System.out.println("Value(" + msg + "): " + bi);
+    }
+
     private static void ChunkedLinearMultiply(
       short[] productArr,
       int cstart,
@@ -1050,12 +1095,10 @@ at: http://peteroupc.github.io/CBOR/
       int tempStart,  // uses bcount*4 space
       short[] words1,
       int astart,
-      int acount,
+      int acount,  // Equal size or longer
       short[] words2,
       int bstart,
       int bcount) {
-      /*
- */
 
       {
         int carryPos = 0;
@@ -1072,7 +1115,7 @@ at: http://peteroupc.github.io/CBOR/
               words1,
               astart + i,
               words2,
-              bstart + i,
+              bstart,
               bcount);
             // Add carry
             AddUnevenSize(
@@ -1082,22 +1125,22 @@ at: http://peteroupc.github.io/CBOR/
               tempStart,
               bcount + bcount,
               productArr,
-              carryPos,
+              cstart + carryPos,
               bcount);
             // Copy product and carry
-            System.arraycopy(tempArr, tempStart, productArr, i, bcount + bcount);
+            System.arraycopy(tempArr, tempStart, productArr, cstart + i, bcount + bcount);
             carryPos += bcount;
           } else {
             AsymmetricMultiply(
               tempArr,
-              tempStart,  // uses bcount*2 space
+              tempStart,  // uses diff + bcount space
               tempArr,
-              tempStart.add(diff) + bcount,  // uses bcount*2 space
+              tempStart.add(diff) + bcount,
               words1,
               astart + i,
               diff,
               words2,
-              bstart + i,
+              bstart,
               bcount);
             // Add carry
             AddUnevenSize(
@@ -1107,10 +1150,10 @@ at: http://peteroupc.github.io/CBOR/
               tempStart,
               diff + bcount,
               productArr,
-              carryPos,
+              cstart + carryPos,
               bcount);
             // Copy product without carry
-            System.arraycopy(tempArr, tempStart, productArr, i, bcount);
+            System.arraycopy(tempArr, tempStart, productArr, cstart + i, diff + bcount);
           }
         }
       }
@@ -1127,6 +1170,7 @@ at: http://peteroupc.github.io/CBOR/
       short[] words2,
       int words2Start,
       int words2Count) {
+      // System.out.println("AsymmetricMultiply " + words1Count + " " + words2Count + " [r=" + resultStart + " t=" + tempStart + " a=" + words1Start + " b=" + words2Start + "]");
 
       if (words1Count == words2Count) {
         if (words1Start == words2Start && words1 == words2) {
@@ -1174,13 +1218,12 @@ at: http://peteroupc.github.io/CBOR/
         AtomicMultiplyAddOpt(resultArr, resultStart, a0, a1, words2, words2Start, 2, words2Count);
         return;
       } else if (words1Count <= 10 && words2Count <= 10) {
-        java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(words1Count + words2Count),0);
         SchoolbookMultiply(resultArr, resultStart, words1, words1Start, words1Count, words2, words2Start, words2Count);
       } else {
         int wordsRem = words2Count % words1Count;
         int evenmult = (words2Count / words1Count) & 1;
         int i;
-        System.out.println("counts=" + words1Count + "," + words2Count + " res=" + (resultStart + words1Count) + " temp=" + (tempStart + (words1Count << 1)) + " rem=" + wordsRem + " evenwc=" + evenmult);
+        // System.out.println("counts=" + words1Count + "," + words2Count + " res=" + (resultStart + words1Count) + " temp=" + (tempStart + (words1Count << 1)) + " rem=" + wordsRem + " evenwc=" + evenmult);
         if (wordsRem == 0) {
           // words2Count is divisible by words1count
           if (evenmult == 0) {
@@ -1204,6 +1247,7 @@ at: http://peteroupc.github.io/CBOR/
             Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
           }
         } else if ((words1Count + words2Count) >= (words1Count << 2)) {
+          // System.out.println("Chunked Linear Multiply Long");
           ChunkedLinearMultiply(
             resultArr,
             resultStart,
@@ -1216,50 +1260,19 @@ at: http://peteroupc.github.io/CBOR/
             words1Start,
             words1Count);
         } else {
-          // highest part of words2 is short
-          RecursiveMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
-          short[] t2 = new short[words1Count];
-          System.arraycopy(resultArr, resultStart + words1Count, t2, 0, words1Count);
-          int wc2 = words2Count - wordsRem;
-          for (i = words1Count << 1; i < words2Count; i += words1Count << 1) {
-            int diff = words2Start + i + words1Count;
-            if (diff > words2Count) {
-              AsymmetricMultiply(
-                tempArr,
-                tempStart + words1Count + i,
-                tempArr,
-                tempStart,
-                words1,
-                words1Start,
-                words1Count,
-                words2,
-                words2Start + i,
-                words2Count - i);
-            } else {
-              RecursiveMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
-            }
-          }
-          for (i = words1Count; i < words2Count; i += words1Count << 1) {
-            int diff = words2Start + i + words1Count;
-            if (diff > words2Count) {
-              AsymmetricMultiply(
-                resultArr,
-                resultStart + i,
-                tempArr,
-                tempStart,
-                words1,
-                words1Start,
-                words1Count,
-                words2,
-                words2Start + i,
-                words2Count - i);
-            } else {
-              RecursiveMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
-            }
-          }
-          if (Add(resultArr, resultStart + words1Count, resultArr, resultStart + words1Count, tempArr, tempStart + (words1Count << 1), words2Count - words1Count) != 0) {
-            Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
-          }
+          short[] t2 = new short[words1Count << 2];
+          // System.out.println("Chunked Linear Multiply Short");
+          ChunkedLinearMultiply(
+            resultArr,
+            resultStart,
+            t2,
+            0,
+            words2,
+            words2Start,
+            words2Count,
+            words1,
+            words1Start,
+            words1Count);
         }
       }
     }
@@ -1718,23 +1731,7 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private static int[] roundupSizeTable = new int[] {
-      2, 2, 2, 4, 4, 8, 8, 8, 8,
-      16, 16, 16, 16, 16, 16, 16, 16
-    };
-
     private static int RoundupSize(int n) {
-      /*
-      if (n <= 16) {
-        return roundupSizeTable[n];
-      } else if (n <= 32) {
-        return 32;
-      } else if (n <= 64) {
-        return 64;
-      } else {
-        return (int)1 << (int)BitPrecisionInt(n - 1);
-      }
-       */
       return n + (n & 1);
     }
 
@@ -3306,7 +3303,7 @@ at: http://peteroupc.github.io/CBOR/
       boolean needShorten = true;
       if (this.wordCount == 1) {
         int wc = bigintMult.wordCount;
-        int regLength = wc == bigintMult.reg.length ? RoundupSize(wc + 1) : bigintMult.reg.length;
+        int regLength = RoundupSize(wc + 1);
         product.reg = new short[regLength];
         product.reg[wc] = LinearMultiply(product.reg, 0, bigintMult.reg, 0, this.reg[0], wc);
         product.negative = false;
@@ -3314,7 +3311,7 @@ at: http://peteroupc.github.io/CBOR/
         needShorten = false;
       } else if (bigintMult.wordCount == 1) {
         int wc = this.wordCount;
-        int regLength = wc == this.reg.length ? RoundupSize(wc + 1) : this.reg.length;
+        int regLength = RoundupSize(wc + 1);
         product.reg = new short[regLength];
         product.reg[wc] = LinearMultiply(product.reg, 0, this.reg, 0, bigintMult.reg[0], wc);
         product.negative = false;

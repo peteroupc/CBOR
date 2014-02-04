@@ -2313,11 +2313,18 @@ import com.upokecenter.util.*;
       TestCommon.DoTestDivideAndRemainder("-456498858871851323281", "-1288943723278309364", "354", "-212780831329808425");
       // TestCommon.DoTestPow("-45118",38,"733320652933198396988999998065850508927620206252422516226504491637494301792808371820649896474330118786837483371209081826193461349204347003160686091730902477321647871591735885824");
     }
+    @Test
+    public void TestMultiply2() {
+      TestCommon.DoTestMultiply("39258416159456516340113264558732499166970244380745050", "39258416159456516340113264558732499166970244380745051","1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550");
+      TestCommon.DoTestMultiply(
+        "5786426269322750882632312999752639738983363095641642905722171221986067189342123124290107105663618428969517616421742429671402859775667602123564",
+        "331378991485809774307751183645559883724387697397707434271522313077548174328632968616330900320595966360728317363190772921",
+        "1917500101435169880779183578665955372346028226046021044867189027856189131730889958057717187493786883422516390996639766012958050987359732634213213442579444095928862861132583117668061032227577386757036981448703231972963300147061503108512300577364845823910107210444");
+    }
 
     @Test
     public void TestMultiply() {
       FastRandom r = new FastRandom();
-      TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
@@ -2339,6 +2346,7 @@ import com.upokecenter.util.*;
       FastRandom r = new FastRandom();
       TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");
       for (int i = 0; i < 1000; ++i) {
+        System.out.println("----");
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
         // Test that A*B/A = B and A*B/B = A
@@ -2351,7 +2359,7 @@ BigInteger[] divrem=(bigintC).divideAndRemainder(bigintB);
 bigintD=divrem[0];
 bigintRem=divrem[1]; }
           if (!bigintD.equals(bigintA)) {
-            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintA,bigintD);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC,bigintA,bigintD);
           }
           if (bigintRem.signum()!=0) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,BigInteger.ZERO,bigintRem);

@@ -261,9 +261,7 @@ namespace PeterO {
         if (!((thisFlags & BigNumberFlags.FlagNaN) == 0)) {
           throw new ArgumentException("doesn't satisfy (thisFlags & BigNumberFlags.FlagNaN)==0");
         }
-        #endif
 
-        #if DEBUG
         if (!((otherFlags & BigNumberFlags.FlagNaN) == 0)) {
           throw new ArgumentException("doesn't satisfy (otherFlags & BigNumberFlags.FlagNaN)==0");
         }
@@ -2007,15 +2005,11 @@ public T LnTenConstant(PrecisionContext ctx) {
       if (!(mantissa.Sign >= 0)) {
         throw new ArgumentException("doesn't satisfy mantissa.Sign>= 0");
       }
-      #endif
 
-      #if DEBUG
       if (!(remainder.Sign >= 0)) {
         throw new ArgumentException("doesn't satisfy remainder.Sign>= 0");
       }
-      #endif
 
-      #if DEBUG
       if (!(divisor.Sign >= 0)) {
         throw new ArgumentException("doesn't satisfy divisor.Sign>= 0");
       }
