@@ -112,7 +112,7 @@ namespace PeterO {
 
     private static int CompareWithOneBiggerWords1(short[] words1, int astart, short[] words2, int bstart, int words1Count) {
       // NOTE: Assumes that words2's count is 1 less
-      if (words1[words1Count - 1] != 0) {
+      if (words1[astart + words1Count - 1] != 0) {
         return 1;
       }
       --words1Count;
@@ -246,12 +246,12 @@ namespace PeterO {
       int astart,
       short[] words2,
       int bstart,
-      int words1Count) {
-      // Assumes that words2's count is 1 less
+      int words2Count) {
+      // Assumes that words1's count is 1 less
       unchecked {
         int u;
         u = 0;
-        int cm1 = words1Count - 1;
+        int cm1 = words2Count - 1;
         for (int i = 0; i < cm1; i += 1) {
           u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
@@ -780,7 +780,7 @@ namespace PeterO {
     }
 
     #endregion
-    private const int RecursionLimit = 8;
+    private const int RecursionLimit = 10;
 
     private static void RecursiveMultiply(
       short[] resultArr,  // size 2*n
@@ -806,15 +806,15 @@ namespace PeterO {
         throw new ArgumentException("resultStart not less or equal to " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((count + count) < 0) {
+      if (count + count < 0) {
         throw new ArgumentException("count+count not greater or equal to 0 (" + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((count + count) >resultArr.Length) {
+      if (count + count > resultArr.Length) {
         throw new ArgumentException("count+count not less or equal to " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((resultArr.Length - resultStart) < count + count) {
+      if (resultArr.Length - resultStart < count + count) {
         throw new ArgumentException("resultArr's length minus " + resultStart + " not greater or equal to " + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(resultArr.Length - resultStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
@@ -830,15 +830,15 @@ namespace PeterO {
         throw new ArgumentException("tempStart not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((count + count) < 0) {
+      if (count + count < 0) {
         throw new ArgumentException("count+count not greater or equal to 0 (" + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((count + count) >tempArr.Length) {
+      if (count + count > tempArr.Length) {
         throw new ArgumentException("count+count not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((tempArr.Length - tempStart) < count + count) {
+      if (tempArr.Length - tempStart < count + count) {
         throw new ArgumentException("tempArr's length minus " + tempStart + " not greater or equal to " + Convert.ToString((long)(count + count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(tempArr.Length - tempStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
@@ -862,7 +862,7 @@ namespace PeterO {
         throw new ArgumentException("count not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((words1.Length - words1Start) < count) {
+      if (words1.Length - words1Start < count) {
         throw new ArgumentException("words1's length minus " + words1Start + " not greater or equal to " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words1.Length - words1Start), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
@@ -886,7 +886,7 @@ namespace PeterO {
         throw new ArgumentException("count not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((words2.Length - words2Start) < count) {
+      if (words2.Length - words2Start < count) {
         throw new ArgumentException("words2's length minus " + words2Start + " not greater or equal to " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words2.Length - words2Start), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -960,17 +960,15 @@ namespace PeterO {
             c3 += AddOneByOne(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
           }
           c3 += Increment(resultArr, resultMediumHigh, count2, (short)c2);
+          // DebugWords(resultArr,resultStart,count*2,"p6");
           if (c3 != 0) {
             Increment(resultArr, resultHigh, count2, (short)c3);
           }
+          // DebugWords(resultArr,resultStart,count*2,"p7");
         } else {
-          SchoolbookMultiply(resultArr, resultStart, words1, words1Start, count, words2, words2Start, count);
-          return;
-          /*
           // Count is odd, high part will be 1 shorter
           int countHigh = count >> 1;  // Shorter part
           int countLow = count - countHigh;  // Longer part
-          int resultMediumHigh = resultStart + countLow + countLow;
           int tsnShorter = countHigh + countHigh;
           offset2For1 = CompareWithOneBiggerWords1(words1, words1Start, words1, words1Start + countLow, countLow) > 0 ? 0 : countLow;
           if (offset2For1 == 0) {
@@ -979,13 +977,14 @@ namespace PeterO {
             SubtractOneBiggerWords2(resultArr, resultStart, words1, words1Start + countLow, words1, words1Start, countLow);
           }
           offset2For2 = CompareWithOneBiggerWords1(words2, words2Start, words2, words2Start + countLow, countLow) > 0 ? 0 : countLow;
-          if (offset2For1 == 0) {
+          if (offset2For2 == 0) {
             SubtractOneBiggerWords1(tempArr, tempStart, words2, words2Start, words2, words2Start + countLow, countLow);
           } else {
             SubtractOneBiggerWords2(tempArr, tempStart, words2, words2Start + countLow, words2, words2Start, countLow);
           }
           // Abs(LowA-HighA) * Abs(LowB-HighB)
           int shorterOffset = countHigh << 1;
+          int longerOffset = countLow << 1;
           RecursiveMultiply(
             resultArr,
             resultStart + shorterOffset,
@@ -996,6 +995,7 @@ namespace PeterO {
             tempArr,
             tempStart,
             countLow);
+          // DebugWords(resultArr, resultStart+shorterOffset,countLow << 1,"w1*w2");
           short resultTmp0 = resultArr[resultStart + shorterOffset];
           short resultTmp1 = resultArr[resultStart + shorterOffset + 1];
           // HighA * HighB
@@ -1021,9 +1021,9 @@ namespace PeterO {
             words2Start,
             countLow);
           Array.Copy(
-            resultArr, resultStart + shorterOffset,
-            tempArr, tempStart + shorterOffset,
-            countLow << 1);
+            resultArr, resultStart + longerOffset,
+            tempArr, tempStart + longerOffset,
+            countHigh << 1);
           tempArr[tempStart + shorterOffset] = resultTmp0;
           tempArr[tempStart + shorterOffset + 1] = resultTmp1;
           Array.Copy(
@@ -1033,28 +1033,34 @@ namespace PeterO {
             resultStart + (countLow << 1),
             countHigh << 1);
           int countMiddle = countLow << 1;
-          int c2 = AddOneByOne(resultArr, countMiddle, resultArr, countMiddle, resultArr, countLow, countLow);
+          // DebugWords(resultArr,resultStart,count*2,"q1");
+          int c2 = AddOneByOne(resultArr, resultStart + countMiddle, resultArr, resultStart + countMiddle, resultArr, resultStart + countLow, countLow);
           int c3 = c2;
-          c2 += AddOneByOne(resultArr, countLow, resultArr, countMiddle, resultArr, resultStart, countLow);
+          // DebugWords(resultArr,resultStart,count*2,"q2");
+          c2 += AddOneByOne(resultArr, resultStart + countLow, resultArr, resultStart + countMiddle, resultArr, resultStart, countLow);
+          // DebugWords(resultArr,resultStart,count*2,"q3");
           c3 += AddUnevenSize(
             resultArr,
-            countMiddle,
+            resultStart + countMiddle,
             resultArr,
-            countMiddle,
+            resultStart + countMiddle,
             countLow,
             resultArr,
-            countMiddle + countLow,
+            resultStart + countMiddle + countLow,
             countLow - 2);
+          // DebugWords(resultArr,resultStart,count*2,"q4");
           if (offset2For1 == offset2For2) {
-            c3 -= SubtractOneByOne(resultArr, countLow, resultArr, countLow, tempArr, tempStart + shorterOffset, count);
+            c3 -= SubtractOneByOne(resultArr, resultStart + countLow, resultArr, resultStart + countLow, tempArr, tempStart + shorterOffset, countLow << 1);
           } else {
-            c3 += AddOneByOne(resultArr, countLow, resultArr, countLow, tempArr, tempStart + shorterOffset, count);
+            c3 += AddOneByOne(resultArr, resultStart + countLow, resultArr, resultStart + countLow, tempArr, tempStart + shorterOffset, countLow << 1);
           }
-          c3 += Increment(resultArr, countMiddle, countLow, (short)c2);
+          // DebugWords(resultArr,resultStart,count*2,"q5");
+          c3 += Increment(resultArr, resultStart + countMiddle, countLow, (short)c2);
+          // DebugWords(resultArr,resultStart,count*2,"q6");
           if (c3 != 0) {
-            Increment(resultArr, countMiddle + countLow, countLow - 2, (short)c3);
+            Increment(resultArr, resultStart + countMiddle + countLow, countLow - 2, (short)c3);
           }
-          */
+          // DebugWords(resultArr,resultStart,count*2,"q7");
         }
       }
     }
@@ -1224,15 +1230,15 @@ namespace PeterO {
         throw new ArgumentException("cstart not less or equal to " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)cstart, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((acount + bcount) < 0) {
+      if (acount + bcount < 0) {
         throw new ArgumentException("acount + bcount not greater or equal to 0 (" + Convert.ToString((long)(acount + bcount), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((acount + bcount) >productArr.Length) {
+      if (acount + bcount > productArr.Length) {
         throw new ArgumentException("acount + bcount not less or equal to " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(acount + bcount), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((productArr.Length - cstart) < acount + bcount) {
+      if (productArr.Length - cstart < acount + bcount) {
         throw new ArgumentException("productArr's length minus " + cstart + " not greater or equal to " + Convert.ToString((long)(acount + bcount), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(productArr.Length - cstart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
@@ -1252,11 +1258,11 @@ namespace PeterO {
         throw new ArgumentException("bcount * 4 not greater or equal to 0 (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((bcount * 4) >tempArr.Length) {
+      if ((bcount * 4) > tempArr.Length) {
         throw new ArgumentException("bcount * 4 not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((tempArr.Length - tempStart) < bcount * 4) {
+      if (tempArr.Length - tempStart < bcount * 4) {
         throw new ArgumentException("tempArr's length minus " + tempStart + " not greater or equal to " + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(tempArr.Length - tempStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
@@ -1280,7 +1286,7 @@ namespace PeterO {
         throw new ArgumentException("acount not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if (words1.Length - astart <acount) {
+      if (words1.Length - astart < acount) {
         throw new ArgumentException("words1's length minus " + astart + " not greater or equal to " + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words1.Length - astart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
@@ -1304,7 +1310,7 @@ namespace PeterO {
         throw new ArgumentException("bcount not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((words2.Length - bstart) < bcount) {
+      if (words2.Length - bstart < bcount) {
         throw new ArgumentException("words2's length minus " + bstart + " not greater or equal to " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words2.Length - bstart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -1393,15 +1399,15 @@ namespace PeterO {
         throw new ArgumentException("resultStart not less or equal to " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((words1Count + words2Count) < 0) {
+      if (words1Count + words2Count < 0) {
         throw new ArgumentException("words1Count+words2Count not greater or equal to 0 (" + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((words1Count + words2Count) >resultArr.Length) {
+      if (words1Count + words2Count > resultArr.Length) {
         throw new ArgumentException("words1Count+words2Count not less or equal to " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((resultArr.Length - resultStart) < words1Count + words2Count) {
+      if (resultArr.Length - resultStart < words1Count + words2Count) {
         throw new ArgumentException("resultArr's length minus " + resultStart + " not greater or equal to " + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(resultArr.Length - resultStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
@@ -1417,15 +1423,15 @@ namespace PeterO {
         throw new ArgumentException("tempStart not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((words1Count + words2Count) < 0) {
+      if (words1Count + words2Count < 0) {
         throw new ArgumentException("words1Count+words2Count not greater or equal to 0 (" + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((words1Count + words2Count) >tempArr.Length) {
+      if (words1Count + words2Count > tempArr.Length) {
         throw new ArgumentException("words1Count+words2Count not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((tempArr.Length - tempStart) < words1Count + words2Count) {
+      if (tempArr.Length - tempStart < words1Count + words2Count) {
         throw new ArgumentException("tempArr's length minus " + tempStart + " not greater or equal to " + Convert.ToString((long)(words1Count + words2Count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(tempArr.Length - tempStart), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
@@ -1449,7 +1455,7 @@ namespace PeterO {
         throw new ArgumentException("words1Count not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)words1Count, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((words1.Length - words1Start) < words1Count) {
+      if (words1.Length - words1Start < words1Count) {
         throw new ArgumentException("words1's length minus " + words1Start + " not greater or equal to " + Convert.ToString((long)words1Count, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words1.Length - words1Start), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
@@ -1473,7 +1479,7 @@ namespace PeterO {
         throw new ArgumentException("words2Count not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)words2Count, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
-      if ((words2.Length - words2Start) < words2Count) {
+      if (words2.Length - words2Start < words2Count) {
         throw new ArgumentException("words2's length minus " + words2Start + " not greater or equal to " + Convert.ToString((long)words2Count, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words2.Length - words2Start), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
@@ -4135,4 +4141,3 @@ namespace PeterO {
     public static readonly BigInteger TEN = new BigInteger().InitializeInt(10);
   }
 }
-

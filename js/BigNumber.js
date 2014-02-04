@@ -11575,6 +11575,4 @@ function() {
 
 if(typeof exports!=="undefined")exports['ExtendedFloat']=ExtendedFloat;
 if(typeof window!=="undefined")window['ExtendedFloat']=ExtendedFloat;
-
 })();
-

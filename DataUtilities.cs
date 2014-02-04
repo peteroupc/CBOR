@@ -228,7 +228,7 @@ namespace PeterO {
       if (length > str.Length) {
         throw new ArgumentException("length not less or equal to " + Convert.ToString(str.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(length, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
-      if ((str.Length - offset) < length) {
+      if (str.Length - offset < length) {
         throw new ArgumentException("str's length minus " + offset + " not greater or equal to " + Convert.ToString(length, System.Globalization.CultureInfo.InvariantCulture) + " (" +
                                     Convert.ToString(str.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
@@ -353,7 +353,7 @@ namespace PeterO {
       if (bytesCount > data.Length) {
         throw new ArgumentException("bytesCount not less or equal to " + Convert.ToString(data.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
-      if ((data.Length - offset) < bytesCount) {
+      if (data.Length - offset < bytesCount) {
         throw new ArgumentException("data's length minus " + offset + " not greater or equal to " + Convert.ToString(bytesCount, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString(data.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (builder == null) {

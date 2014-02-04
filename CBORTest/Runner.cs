@@ -40,20 +40,20 @@ namespace PeterO {
       new CBOR.ExtensiveTest().TestParser();
       return;
       if (args.Length == 0) {
- return;
-}
+        return;
+      }
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
- continue;
-}
+          continue;
+        }
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
         if (param != null && param.Length > 0) {
           if (!type.FullName.Contains(param)) {
- continue;
-}
+            continue;
+          }
         }
         object test = Activator.CreateInstance(type);
         var setup = type.GetMethod("SetUp");
@@ -62,12 +62,12 @@ namespace PeterO {
         }
         foreach (var method in test.GetType().GetMethods()) {
           if (!HasAttribute(method, typeof(TestAttribute))) {
- continue;
-}
+            continue;
+          }
           Console.WriteLine(method.Name);
           if (!method.Name.Contains("TestParser")) {
- continue;
-}
+            continue;
+          }
           Type exctype = null;
           foreach (var a in method.GetCustomAttributes(false)) {
             if (a is ExpectedExceptionAttribute) {
@@ -82,8 +82,8 @@ namespace PeterO {
               Console.WriteLine(e.InnerException.GetType().FullName);
               string message = e.InnerException.Message;
               if (message.Length > 140) {
- message = message.Substring(0, 140);
-}
+                message = message.Substring(0, 140);
+              }
               Console.WriteLine(message);
             }
           }

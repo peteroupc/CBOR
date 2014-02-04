@@ -505,4 +505,3 @@ at: http://peteroupc.github.io/CBOR/
     public static final PrecisionContext CliDecimal =
       new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
   }
-

@@ -556,4 +556,3 @@ private DecimalUtility() {
       return ret;
     }
   }
-

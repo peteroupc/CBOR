@@ -27,4 +27,3 @@ package com.upokecenter.util;
 
     BigInteger MultiplyByRadixPower(BigInteger value, FastInteger power);
   }
-

@@ -500,4 +500,3 @@ at: http://peteroupc.github.io/CBOR/
       return this.math.compareTo(thisValue, numberObject);
     }
   }
-

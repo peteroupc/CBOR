@@ -77,4 +77,3 @@ at: http://peteroupc.github.io/CBOR/
 
     int compareTo(T thisValue, T numberObject);
   }
-
