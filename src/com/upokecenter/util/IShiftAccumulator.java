@@ -25,4 +25,3 @@ package com.upokecenter.util;
 
     void ShiftToDigits(FastInteger bits);
   }
-

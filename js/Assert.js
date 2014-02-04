@@ -22,4 +22,3 @@ Fail:function(x){
 
 if(typeof module!="undefined")
 module.exports=Assert;
-

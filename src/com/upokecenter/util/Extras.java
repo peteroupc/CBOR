@@ -24,4 +24,3 @@ private Extras() {
       return Double.longBitsToDouble(value);
     }
   }
-

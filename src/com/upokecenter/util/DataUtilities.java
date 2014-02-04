@@ -245,7 +245,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       if (length > str.length()) {
         throw new IllegalArgumentException("length not less or equal to " + (str.length()) + " (" + (length) + ")");
       }
-      if ((str.length() - offset) < length) {
+      if (str.length() - offset < length) {
         throw new IllegalArgumentException("str's length minus " + offset + " not greater or equal to " + (length) + " (" + (str.length() - offset) + ")");
       }
       byte[] bytes;
@@ -369,7 +369,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       if (bytesCount > data.length) {
         throw new IllegalArgumentException("bytesCount not less or equal to " + (data.length) + " (" + (bytesCount) + ")");
       }
-      if ((data.length - offset) < bytesCount) {
+      if (data.length - offset < bytesCount) {
         throw new IllegalArgumentException("data's length minus " + offset + " not greater or equal to " + (bytesCount) + " (" + (data.length - offset) + ")");
       }
       if (builder == null) {
@@ -596,4 +596,3 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       return 0;
     }
   }
-

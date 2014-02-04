@@ -148,4 +148,3 @@ public void doTestString(String value) {
       this.doTestString("te\udbff\udfffst");
     }
   }
-

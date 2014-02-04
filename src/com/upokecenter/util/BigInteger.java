@@ -108,7 +108,7 @@ at: http://peteroupc.github.io/CBOR/
 
     private static int CompareWithOneBiggerWords1(short[] words1, int astart, short[] words2, int bstart, int words1Count) {
       // NOTE: Assumes that words2's count is 1 less
-      if (words1[words1Count - 1] != 0) {
+      if (words1[astart + words1Count - 1] != 0) {
         return 1;
       }
       --words1Count;
@@ -242,12 +242,12 @@ at: http://peteroupc.github.io/CBOR/
       int astart,
       short[] words2,
       int bstart,
-      int words1Count) {
-      // Assumes that words2's count is 1 less
+      int words2Count) {
+      // Assumes that words1's count is 1 less
       {
         int u;
         u = 0;
-        int cm1 = words1Count - 1;
+        int cm1 = words2Count - 1;
         for (int i = 0; i < cm1; i += 1) {
           u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
@@ -769,7 +769,7 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
 
-    private static final int RecursionLimit = 8;
+    private static final int RecursionLimit = 10;
 
     private static void RecursiveMultiply(
       short[] resultArr,  // size 2*n
@@ -852,17 +852,15 @@ at: http://peteroupc.github.io/CBOR/
             c3 += AddOneByOne(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
           }
           c3 += Increment(resultArr, resultMediumHigh, count2, (short)c2);
+          // DebugWords(resultArr,resultStart,count*2,"p6");
           if (c3 != 0) {
             Increment(resultArr, resultHigh, count2, (short)c3);
           }
+          // DebugWords(resultArr,resultStart,count*2,"p7");
         } else {
-          SchoolbookMultiply(resultArr, resultStart, words1, words1Start, count, words2, words2Start, count);
-          return;
-          /*
           // Count is odd, high part will be 1 shorter
           int countHigh = count >> 1;  // Shorter part
           int countLow = count - countHigh;  // Longer part
-          int resultMediumHigh = resultStart + countLow + countLow;
           int tsnShorter = countHigh + countHigh;
           offset2For1 = CompareWithOneBiggerWords1(words1, words1Start, words1, words1Start + countLow, countLow) > 0 ? 0 : countLow;
           if (offset2For1 == 0) {
@@ -871,13 +869,14 @@ at: http://peteroupc.github.io/CBOR/
             SubtractOneBiggerWords2(resultArr, resultStart, words1, words1Start + countLow, words1, words1Start, countLow);
           }
           offset2For2 = CompareWithOneBiggerWords1(words2, words2Start, words2, words2Start + countLow, countLow) > 0 ? 0 : countLow;
-          if (offset2For1 == 0) {
+          if (offset2For2 == 0) {
             SubtractOneBiggerWords1(tempArr, tempStart, words2, words2Start, words2, words2Start + countLow, countLow);
           } else {
             SubtractOneBiggerWords2(tempArr, tempStart, words2, words2Start + countLow, words2, words2Start, countLow);
           }
           // Abs(LowA-HighA) * Abs(LowB-HighB)
           int shorterOffset = countHigh << 1;
+          int longerOffset = countLow << 1;
           RecursiveMultiply(
             resultArr,
             resultStart + shorterOffset,
@@ -888,6 +887,7 @@ at: http://peteroupc.github.io/CBOR/
             tempArr,
             tempStart,
             countLow);
+          // DebugWords(resultArr, resultStart+shorterOffset,countLow << 1,"w1*w2");
           short resultTmp0 = resultArr[resultStart + shorterOffset];
           short resultTmp1 = resultArr[resultStart + shorterOffset + 1];
           // HighA * HighB
@@ -913,9 +913,9 @@ at: http://peteroupc.github.io/CBOR/
             words2Start,
             countLow);
           System.arraycopy(
-            resultArr, resultStart + shorterOffset,
-            tempArr, tempStart + shorterOffset,
-            countLow << 1);
+            resultArr, resultStart + longerOffset,
+            tempArr, tempStart + longerOffset,
+            countHigh << 1);
           tempArr[tempStart + shorterOffset] = resultTmp0;
           tempArr[tempStart + shorterOffset + 1] = resultTmp1;
           System.arraycopy(
@@ -925,28 +925,34 @@ at: http://peteroupc.github.io/CBOR/
             resultStart + (countLow << 1),
             countHigh << 1);
           int countMiddle = countLow << 1;
-          int c2 = AddOneByOne(resultArr, countMiddle, resultArr, countMiddle, resultArr, countLow, countLow);
+          // DebugWords(resultArr,resultStart,count*2,"q1");
+          int c2 = AddOneByOne(resultArr, resultStart + countMiddle, resultArr, resultStart + countMiddle, resultArr, resultStart + countLow, countLow);
           int c3 = c2;
-          c2 += AddOneByOne(resultArr, countLow, resultArr, countMiddle, resultArr, resultStart, countLow);
+          // DebugWords(resultArr,resultStart,count*2,"q2");
+          c2 += AddOneByOne(resultArr, resultStart + countLow, resultArr, resultStart + countMiddle, resultArr, resultStart, countLow);
+          // DebugWords(resultArr,resultStart,count*2,"q3");
           c3 += AddUnevenSize(
             resultArr,
-            countMiddle,
+            resultStart + countMiddle,
             resultArr,
-            countMiddle,
+            resultStart + countMiddle,
             countLow,
             resultArr,
-            countMiddle + countLow,
+            resultStart + countMiddle + countLow,
             countLow - 2);
+          // DebugWords(resultArr,resultStart,count*2,"q4");
           if (offset2For1 == offset2For2) {
-            c3 -= SubtractOneByOne(resultArr, countLow, resultArr, countLow, tempArr, tempStart + shorterOffset, count);
+            c3 -= SubtractOneByOne(resultArr, resultStart + countLow, resultArr, resultStart + countLow, tempArr, tempStart + shorterOffset, countLow << 1);
           } else {
-            c3 += AddOneByOne(resultArr, countLow, resultArr, countLow, tempArr, tempStart + shorterOffset, count);
+            c3 += AddOneByOne(resultArr, resultStart + countLow, resultArr, resultStart + countLow, tempArr, tempStart + shorterOffset, countLow << 1);
           }
-          c3 += Increment(resultArr, countMiddle, countLow, (short)c2);
+          // DebugWords(resultArr,resultStart,count*2,"q5");
+          c3 += Increment(resultArr, resultStart + countMiddle, countLow, (short)c2);
+          // DebugWords(resultArr,resultStart,count*2,"q6");
           if (c3 != 0) {
-            Increment(resultArr, countMiddle + countLow, countLow - 2, (short)c3);
+            Increment(resultArr, resultStart + countMiddle + countLow, countLow - 2, (short)c3);
           }
-          */
+          // DebugWords(resultArr,resultStart,count*2,"q7");
         }
       }
     }
@@ -3850,4 +3856,3 @@ at: http://peteroupc.github.io/CBOR/
 
     public static final BigInteger TEN = new BigInteger().InitializeInt(10);
   }
-

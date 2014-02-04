@@ -601,4 +601,3 @@ DecTestUtil.TestOp_tointegral_Invalid=function(name,precision,
    }
 
 module.exports=DecTestUtil;
-

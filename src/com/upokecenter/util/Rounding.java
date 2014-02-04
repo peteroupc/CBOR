@@ -73,4 +73,3 @@ at: http://peteroupc.github.io/CBOR/
      */
     ZeroFiveUp
   }
-
