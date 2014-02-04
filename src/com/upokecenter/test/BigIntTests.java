@@ -2329,6 +2329,19 @@ import com.upokecenter.util.*;
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
         BigInteger bigintC = bigintA.multiply(bigintB);
+        // Test near-squaring
+        if (bigintA.signum()==0 || bigintB.signum()==0) {
+          Assert.assertEquals(BigInteger.ZERO, bigintC);
+        }
+        if (bigintA.equals(BigInteger.ONE)) {
+          Assert.assertEquals(bigintB, bigintC);
+        }
+        if (bigintB.equals(BigInteger.ONE)) {
+          Assert.assertEquals(bigintA, bigintC);
+        }
+        bigintB = bigintA;
+        // Test squaring
+        bigintC = bigintA.multiply(bigintB);
         if (bigintA.signum()==0 || bigintB.signum()==0) {
           Assert.assertEquals(BigInteger.ZERO, bigintC);
         }

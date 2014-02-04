@@ -112,7 +112,12 @@ namespace PeterO {
       if (bigint.Sign < 0) {
         throw new ArgumentException("bigint is negative");
       }
-      this.shiftedBigInt = bigint;
+      if(bigint.canFitInInt()){
+        this.isSmall=true;
+        this.shiftedSmall=bigint.intValue();
+      } else {
+        this.shiftedBigInt = bigint;
+      }
       this.discardedBitCount = new FastInteger(0);
       this.bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
       this.bitLeftmost = (lastDiscarded != 0) ? 1 : 0;
