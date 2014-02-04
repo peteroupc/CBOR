@@ -1139,7 +1139,7 @@ namespace PeterO {
         int carry = AddOneByOne(resultArr, (int)(resultStart + countLow), resultArr, (int)(resultStart + countLow), tempArr, tempStart, (countLow << 1));
         carry += AddOneByOne(resultArr, (int)(resultStart + countLow), resultArr, (int)(resultStart + countLow), tempArr, tempStart, (countLow << 1));
         Increment(resultArr, (int)(resultStart + countMiddle + countLow), countLow - 2, (short)carry);
-        */
+         */
       }
     }
 
@@ -1613,24 +1613,24 @@ namespace PeterO {
         } else if (words1Count + 1 == words2Count) {
           // Multiply the low parts of each operand
           SameSizeMultiply(
-resultArr,
-resultStart,
-tempArr,
-tempStart,
-words1,
-words1Start,
-words2,
-words2Start,
-words1Count);
+            resultArr,
+            resultStart,
+            tempArr,
+            tempStart,
+            words1,
+            words1Start,
+            words2,
+            words2Start,
+            words1Count);
           // Multiply the high parts
           // while adding carry from the high part of the product
           short carry = LinearMultiplyAdd(
-resultArr,
-resultStart + words1Count,
-words1,
-words1Start + words1Count,
-words2[words2Start + words1Count],
-words1Count);
+            resultArr,
+            resultStart + words1Count,
+            words1,
+            words1Start + words1Count,
+            words2[words2Start + words1Count],
+            words1Count);
           resultArr[resultStart + words1Count + words1Count] = carry;
         } else {
           short[] t2 = new short[words1Count << 2];
@@ -1819,7 +1819,7 @@ words1Count);
       short word2B,
       short[] temp) {
       if (word2A == 0 && word2B == 0) {
-        // if divisor is 0, we assume divisor==2**32
+        // if divisor is 0, we assume divisor == 2**32
         quotient[quotientStart] = words1[words1Start + 2];
         quotient[quotientStart + 1] = words1[words1Start + 3];
       } else {
@@ -1984,140 +1984,156 @@ words1Count);
     }
 
     private static void Divide(
-      short[] resultArr,
-      int resultStart,  // remainder
-      short[] valueQarr,
-      int valueQstart,  // quotient
-      short[] valueTA,
+      short[] remainderArr,
+      int remainderStart,  // remainder
+      ,
+      size: words2Count short[] quotientArr,
+      int quotientStart,  // quotient
+      short[] tempArr,
       int tempStart,  // scratch space
       short[] words1,
       int words1Start,
-      int valueNAint,  // dividend
+      int words1Count,  // dividend
       short[] words2,
       int words2Start,
-      int valueNBint) {
+      int words2Count) {
       // set up temporary work space
-      int valueNA = (int)valueNAint;
-      int valueNB = (int)valueNBint;
       #if DEBUG
-      if (valueNAint <= 0) {
-        throw new ArgumentException("valueNAint not greater than 0 (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if (words1Count <= 0) {
+        throw new ArgumentException("valueNA not greater than 0 (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
-      if (valueNBint <= 0) {
-        throw new ArgumentException("valueNBint not greater than 0 (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if (words2Count <= 0) {
+        throw new ArgumentException("valueNB not greater than 0 (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
-      if (!(valueNA % 2 == 0 && valueNB % 2 == 0)) {
+      #endif
+      if (words2Count == 0) {
+        throw new DivideByZeroException("division by zero");
+      }
+      if (words2Count == 1) {
+        if (words2[words2Start]==0) {
+ throw new DivideByZeroException("division by zero");
+}
+        int smallRemainder = ((int)FastDivideAndRemainder(
+          quotientArr,
+          quotientStart,
+          words1,
+          words1Start,
+          words1Count,
+          words2[words2Start])) & 0xFFFF;
+        remainderArr[remainderStart]=(short)smallRemainder;
+        return;
+      }
+      #if DEBUG
+      if (!(words1Count % 2 == 0 && words2Count % 2 == 0)) {
         throw new ArgumentException("doesn't satisfy valueNA%2==0 && valueNB%2==0");
       }
-      if (!(words2[words2Start + valueNB - 1] != 0 ||
-            words2[words2Start + valueNB - 2] != 0)) {
+      if (!(words2[words2Start + words2Count - 1] != 0 ||
+            words2[words2Start + words2Count - 2] != 0)) {
         throw new ArgumentException("doesn't satisfy words2[valueNB-1]!=0 || words2[valueNB-2]!=0");
       }
-      if (!(valueNB <= valueNA)) {
+      if (!(words2Count <= words1Count)) {
         throw new ArgumentException("doesn't satisfy valueNB<= valueNA");
       }
       #endif
-      short[] valueTBarr = valueTA;
-      short[] valueTParr = valueTA;
-      short[] quot = valueQarr;
-      if (valueQarr == null) {
+      short[] quot = quotientArr;
+      if (quotientArr == null) {
         quot = new short[2];
       }
-      int valueTBstart = (int)(tempStart + (valueNA + 2));
-      int valueTPstart = (int)(tempStart + (valueNA + 2 + valueNB));
+      int valueTBstart = (int)(tempStart + (words1Count + 2));
+      int valueTPstart = (int)(tempStart + (words1Count + 2 + words2Count));
       unchecked {
         // copy words2 into TB and normalize it so that TB has highest bit set to 1
-        int shiftWords = (short)(words2[words2Start + valueNB - 1] == 0 ? 1 : 0);
-        valueTBarr[valueTBstart] = (short)0;
-        valueTBarr[valueTBstart + valueNB - 1] = (short)0;
-        Array.Copy(words2, words2Start, valueTBarr, (int)(valueTBstart + shiftWords), valueNB - shiftWords);
-        short shiftBits = (short)((short)16 - BitPrecision(valueTBarr[valueTBstart + valueNB - 1]));
+        int shiftWords = (short)(words2[words2Start + words2Count - 1] == 0 ? 1 : 0);
+        tempArr[valueTBstart] = (short)0;
+        tempArr[valueTBstart + words2Count - 1] = (short)0;
+        Array.Copy(words2, words2Start, tempArr, (int)(valueTBstart + shiftWords), words2Count - shiftWords);
+        short shiftBits = (short)((short)16 - BitPrecision(tempArr[valueTBstart + words2Count - 1]));
         ShiftWordsLeftByBits(
-          valueTBarr,
+          tempArr,
           valueTBstart,
-          valueNB,
+          words2Count,
           shiftBits);
         // copy words1 into valueTA and normalize it
-        valueTA[0] = (short)0;
-        valueTA[valueNA] = (short)0;
-        valueTA[valueNA + 1] = (short)0;
-        Array.Copy(words1, words1Start, valueTA, (int)(tempStart + shiftWords), valueNAint);
+        tempArr[0] = (short)0;
+        tempArr[words1Count] = (short)0;
+        tempArr[words1Count + 1] = (short)0;
+        Array.Copy(words1, words1Start, tempArr, (int)(tempStart + shiftWords), words1Count);
         ShiftWordsLeftByBits(
-          valueTA,
+          tempArr,
           tempStart,
-          valueNA + 2,
+          words1Count + 2,
           shiftBits);
 
-        if (valueTA[tempStart + valueNA + 1] == 0 && (((int)valueTA[tempStart + valueNA]) & 0xFFFF) <= 1) {
-          if (valueQarr != null) {
-            valueQarr[valueQstart + valueNA - valueNB + 1] = (short)0;
-            valueQarr[valueQstart + valueNA - valueNB] = (short)0;
+        if (tempArr[tempStart + words1Count + 1] == 0 && (((int)tempArr[tempStart + words1Count]) & 0xFFFF) <= 1) {
+          if (quotientArr != null) {
+            quotientArr[quotientStart + words1Count - words2Count + 1] = (short)0;
+            quotientArr[quotientStart + words1Count - words2Count] = (short)0;
           }
           while (
-            valueTA[valueNA] != 0 || Compare(
-              valueTA,
-              (int)(tempStart + valueNA - valueNB),
-              valueTBarr,
+            tempArr[words1Count] != 0 || Compare(
+              tempArr,
+              (int)(tempStart + words1Count - words2Count),
+              tempArr,
               valueTBstart,
-              valueNB) >= 0) {
-            valueTA[valueNA] -= (short)Subtract(
-              valueTA,
-              tempStart + valueNA - valueNB,
-              valueTA,
-              tempStart + valueNA - valueNB,
-              valueTBarr,
+              words2Count) >= 0) {
+            tempArr[words1Count] -= (short)Subtract(
+              tempArr,
+              tempStart + words1Count - words2Count,
+              tempArr,
+              tempStart + words1Count - words2Count,
+              tempArr,
               valueTBstart,
-              valueNB);
-            if (valueQarr != null) {
-              valueQarr[valueQstart + valueNA - valueNB] += (short)1;
+              words2Count);
+            if (quotientArr != null) {
+              quotientArr[quotientStart + words1Count - words2Count] += (short)1;
             }
           }
         } else {
-          valueNA += 2;
+          words1Count += 2;
         }
 
-        short valueBT0 = (short)(valueTBarr[valueTBstart + valueNB - 2] + (short)1);
-        short valueBT1 = (short)(valueTBarr[valueTBstart + valueNB - 1] + (short)(valueBT0 == (short)0 ? 1 : 0));
+        short valueBT0 = (short)(tempArr[valueTBstart + words2Count - 2] + (short)1);
+        short valueBT1 = (short)(tempArr[valueTBstart + words2Count - 1] + (short)(valueBT0 == (short)0 ? 1 : 0));
 
         // start reducing valueTA mod TB, 2 words at a time
         short[] valueTAtomic = new short[4];
-        for (int i = valueNA - 2; i >= valueNB; i -= 2) {
-          int qs = (valueQarr == null) ? 0 : valueQstart + i - valueNB;
-          DivideFourWordsByTwo(quot, qs, valueTA, (int)(tempStart + i - 2), valueBT0, valueBT1, valueTAtomic);
+        for (int i = words1Count - 2; i >= words2Count; i -= 2) {
+          int qs = (quotientArr == null) ? 0 : quotientStart + i - words2Count;
+          DivideFourWordsByTwo(quot, qs, tempArr, (int)(tempStart + i - 2), valueBT0, valueBT1, valueTAtomic);
           // now correct the underestimated quotient
-          int valueRstart2 = tempStart + i - valueNB;
-          int n = valueNB;
+          int valueRstart2 = tempStart + i - words2Count;
+          int n = words2Count;
           unchecked {
             int quotient0 = quot[qs];
             int quotient1 = quot[qs + 1];
             if (quotient1 == 0) {
-              short carry = LinearMultiply(valueTParr, valueTPstart, valueTBarr, valueTBstart, (short)quotient0, n);
-              valueTParr[valueTPstart + n] = carry;
-              valueTParr[valueTPstart + n + 1] = 0;
+              short carry = LinearMultiply(tempArr, valueTPstart, tempArr, valueTBstart, (short)quotient0, n);
+              tempArr[valueTPstart + n] = carry;
+              tempArr[valueTPstart + n + 1] = 0;
             } else if (n == 2) {
-              Baseline_Multiply2(valueTParr, valueTPstart, quot, qs, valueTBarr, valueTBstart);
+              Baseline_Multiply2(tempArr, valueTPstart, quot, qs, tempArr, valueTBstart);
             } else {
-              valueTParr[valueTPstart + n] = (short)0;
-              valueTParr[valueTPstart + n + 1] = (short)0;
+              tempArr[valueTPstart + n] = (short)0;
+              tempArr[valueTPstart + n + 1] = (short)0;
               quotient0 &= 0xFFFF;
               quotient1 &= 0xFFFF;
-              AtomicMultiplyOpt(valueTParr, valueTPstart, quotient0, quotient1, valueTBarr, valueTBstart, 0, n);
-              AtomicMultiplyAddOpt(valueTParr, valueTPstart, quotient0, quotient1, valueTBarr, valueTBstart, 2, n);
+              AtomicMultiplyOpt(tempArr, valueTPstart, quotient0, quotient1, tempArr, valueTBstart, 0, n);
+              AtomicMultiplyAddOpt(tempArr, valueTPstart, quotient0, quotient1, tempArr, valueTBstart, 2, n);
             }
-            Subtract(valueTA, valueRstart2, valueTA, valueRstart2, valueTParr, valueTPstart, n + 2);
-            while (valueTA[valueRstart2 + n] != 0 || Compare(valueTA, valueRstart2, valueTBarr, valueTBstart, n) >= 0) {
-              valueTA[valueRstart2 + n] -= (short)Subtract(valueTA, valueRstart2, valueTA, valueRstart2, valueTBarr, valueTBstart, n);
-              if (valueQarr != null) {
-                valueQarr[qs]++;
-                valueQarr[qs + 1] += (short)((valueQarr[qs] == 0) ? 1 : 0);
+            Subtract(tempArr, valueRstart2, tempArr, valueRstart2, tempArr, valueTPstart, n + 2);
+            while (tempArr[valueRstart2 + n] != 0 || Compare(tempArr, valueRstart2, tempArr, valueTBstart, n) >= 0) {
+              tempArr[valueRstart2 + n] -= (short)Subtract(tempArr, valueRstart2, tempArr, valueRstart2, tempArr, valueTBstart, n);
+              if (quotientArr != null) {
+                quotientArr[qs]++;
+                quotientArr[qs + 1] += (short)((quotientArr[qs] == 0) ? 1 : 0);
               }
             }
           }
         }
-        if (resultArr != null) {  // If the remainder is non-null
+        if (remainderArr != null) {  // If the remainder is non-null
           // copy valueTA into result, and denormalize it
-          Array.Copy(valueTA, (int)(tempStart + shiftWords), resultArr, resultStart, valueNB);
-          ShiftWordsRightByBits(resultArr, resultStart, valueNB, shiftBits);
+          Array.Copy(tempArr, (int)(tempStart + shiftWords), remainderArr, remainderStart, words2Count);
+          ShiftWordsRightByBits(remainderArr, remainderStart, words2Count, shiftBits);
         }
       }
     }
@@ -3768,9 +3784,11 @@ words1Count);
       }
     }
 
-    private static short FastDivideAndRemainderEx(
+    private static short FastDivideAndRemainder(
       short[] quotientReg,
+      int quotientStart,
       short[] dividendReg,
+      int dividendStart,
       int count,
       short divisorSmall) {
       int i = count;
@@ -3778,15 +3796,15 @@ words1Count);
       int idivisor = ((int)divisorSmall) & 0xFFFF;
       int quo, rem;
       while ((i--) > 0) {
-        int currentDividend = unchecked((int)((((int)dividendReg[i]) & 0xFFFF) |
+        int currentDividend = unchecked((int)((((int)dividendReg[dividendStart + i]) & 0xFFFF) |
                                               ((int)remainderShort << 16)));
         if ((currentDividend >> 31) == 0) {
           quo = currentDividend / idivisor;
-          quotientReg[i] = unchecked((short)quo);
+          quotientReg[quotientStart + i] = unchecked((short)quo);
           rem = currentDividend - (idivisor * quo);
           remainderShort = unchecked((short)rem);
         } else {
-          quotientReg[i] = DivideUnsigned(currentDividend, divisorSmall);
+          quotientReg[quotientStart + i] = DivideUnsigned(currentDividend, divisorSmall);
           remainderShort = RemainderUnsigned(currentDividend, divisorSmall);
         }
       }
@@ -3807,6 +3825,7 @@ words1Count);
       }
       int words1Size = this.wordCount;
       int words2Size = bigintDivisor.wordCount;
+      // ---- Special cases
       if (words2Size == 0) {
         throw new DivideByZeroException();
       }
@@ -3842,6 +3861,7 @@ words1Count);
           return BigInteger.Zero;
         }
       }
+      // ---- General case
       quotient = new BigInteger();
       words1Size += words1Size & 1;
       words2Size += words2Size & 1;
@@ -3894,9 +3914,11 @@ words1Count);
         quotient.reg = new short[this.reg.Length];
         quotient.wordCount = this.wordCount;
         quotient.negative = this.negative;
-        int smallRemainder = ((int)FastDivideAndRemainderEx(
+        int smallRemainder = ((int)FastDivideAndRemainder(
           quotient.reg,
+          0,
           this.reg,
+          0,
           words1Size,
           divisor.reg[0])) & 0xFFFF;
         while (quotient.wordCount != 0 &&
@@ -4132,37 +4154,126 @@ words1Count);
     /// <returns>The square root of this object's value. Returns 0 if this
     /// value is 0 or less.</returns>
     public BigInteger sqrt() {
-      if (this.Sign <= 0) {
-        return BigInteger.Zero;
+      return sqrtWithRemainder()[0];
+    }
+
+    private BigInteger WordsToBigInt(
+      short[] words,
+      int start,
+      int count) {
+      if (count == 0) {
+ return BigInteger.Zero;
+}
+      if (start == 0) {
+        BigInteger ret = new BigInteger();
+        ret.reg = words;
+        ret.wordCount = count;
+        return ret;
+      } else {
+        short[] newwords = new short[count];
+        Array.Copy(words, start, newwords, 0, count);
+        BigInteger ret = new BigInteger();
+        ret.reg = newwords;
+        ret.wordCount = count;
+        return ret;
       }
-      BigInteger bigintX = null;
-      BigInteger bigintY = Power2((this.getUnsignedBitLength() + 1) / 2);
-      do {
-        bigintX = bigintY;
-        bigintY = this / (BigInteger)bigintX;
-        bigintY += bigintX;
-        bigintY >>= 1;
-      } while (bigintY.CompareTo(bigintX) < 0);
-      return bigintX;
+    }
+
+    private BigInteger[] sqrtWithRemainderRecursive(
+      short[] words,
+      int start,
+      int count) {
+      if (count<4) {
+        BigInteger thisValue = WordsToBigInt(words, start, count);
+        int powerBits=(this.getUnsignedBitLength() + 1) / 2;
+        if (thisValue.canFitInInt()) {
+          int smallValue = this.intValue();
+          int smallintX = 0;
+          int smallintY = 1 << powerBits;
+          do {
+            smallintX = smallintY;
+            smallintY = smallValue / smallintX;
+            smallintY += smallintX;
+            smallintY >>= 1;
+          } while (smallintY < smallintX);
+          smallintY = smallintX * smallintX;
+          smallintY = smallValue - smallintY;
+          return new BigInteger[] {
+            (BigInteger)smallintX, (BigInteger)smallintY
+          };
+        } else {
+          BigInteger bigintX = null;
+          BigInteger bigintY = Power2(powerBits);
+          do {
+            bigintX = bigintY;
+            bigintY = thisValue / (BigInteger)bigintX;
+            bigintY += bigintX;
+            bigintY >>= 1;
+          } while (bigintY.CompareTo(bigintX) < 0);
+          bigintY = bigintX * (BigInteger)bigintX;
+          bigintY = thisValue - (BigInteger)bigintY;
+          return new BigInteger[] {
+            bigintX, bigintY
+          };
+        }
+      }
+      int shift = 0;
+      int chunkSize = checked((count + 3) >> 2);
+      int chunkSizeBits = chunkSize*16;
+      BigInteger[] srrem = null;
+      if ((count & 3) == 0) {
+        // Count is divisible by 4
+        if ((words[count-1]>>14) != 0) {
+          // Already normalized
+          srrem = sqrtWithRemainderRecursive(words, chunkSize << 1, chunkSize << 1);
+        } else {
+          short[] partWords = new short[chunkSize << 1];
+          Array.Copy(words, chunkSize << 1, partWords, 0, chunkSize << 1);
+          int precision = BitPrecision(words[count-1]);
+          shift=((15-precision)+1) >> 1;
+          ShiftWordsLeftByBits(partWords, chunkSize, chunkSize, shift);
+          srrem = sqrtWithRemainderRecursive(partWords, 0, chunkSize << 1);
+        }
+      } else {
+        int rem = 4-(count & 3);
+        short[] partWords = new short[chunkSize << 1];
+        Array.Copy(words, chunkSize << 1, partWords, 0, count-(chunkSize << 1));
+        int precision = BitPrecision(words[count-1]);
+        shift=((15-precision)+1) >> 1;
+        ShiftWordsLeftByWords(partWords, chunkSize, chunkSize, rem);
+        ShiftWordsLeftByBits(partWords, chunkSize, chunkSize, shift);
+        srrem = sqrtWithRemainderRecursive(partWords, 0, chunkSize << 1);
+      }
+      BigInteger mediumLow = WordsToBigInt(words, chunkSize, chunkSize);
+      BigInteger lowChunk = WordsToBigInt(words, 0, chunkSize);
+      shift = chunkSizeBits;
+      srrem[1]<<= shift;
+      srrem[1]+=mediumLow;
+      srrem[0]<<= 1;
+      BigInteger[] divrem = srrem[1].divideAndRemainder(srrem[0]);
+      shift = chunkSizeBits-1;
+      srrem[0]<<= shift;
+      srrem[0]+=(BigInteger)divrem[0];
+      divrem[0]*=(BigInteger)divrem[0];
+      BigInteger remainder = divrem[1];
+      remainder <<= chunkSizeBits;
+      remainder+=(BigInteger)lowChunk;
+      remainder-=(BigInteger)divrem[0];
+      if (remainder.Sign<0) {
+        BigInteger tempRoot = srrem[0]<<1;
+        remainder+=tempRoot;
+        remainder-=BigInteger.One;
+        srrem[0]-=BigInteger.One;
+      }
+      srrem[1]=remainder;
+      return srrem;
     }
 
     public BigInteger[] sqrtWithRemainder() {
       if (this.Sign <= 0) {
         return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };
       }
-      BigInteger bigintX = null;
-      BigInteger bigintY = Power2((this.getUnsignedBitLength() + 1) / 2);
-      do {
-        bigintX = bigintY;
-        bigintY = this / (BigInteger)bigintX;
-        bigintY += bigintX;
-        bigintY >>= 1;
-      } while (bigintY.CompareTo(bigintX) < 0);
-      bigintY = bigintX * (BigInteger)bigintX;
-      bigintY = this - (BigInteger)bigintY;
-      return new BigInteger[] {
-        bigintX, bigintY
-      };
+      return sqrtWithRemainderRecursive(this.reg, 0, this.wordCount);
     }
 
     /// <summary>Gets a value indicating whether this value is even.</summary>
