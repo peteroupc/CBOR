@@ -1611,22 +1611,23 @@ namespace PeterO {
       int nm1 = root - 1;
       int bits = value.bitLength();
       int bitsdn = bits / root;
-      BigInteger guess = BigInteger.One << bitsdn;
-      BigInteger lastGuess = guess;
+      BigInteger bigintGuess = BigInteger.One << bitsdn;
+      BigInteger lastGuess = bigintGuess;
       while (true) {
         BigInteger bigintTmp = value;
-        bigintTmp /= (BigInteger)BigInteger.Pow(guess, nm1);
-        BigInteger bigintTmp2 = guess * (BigInteger)nm1;
-        guess = bigintTmp + (BigInteger)bigintTmp2;
-        guess /= (BigInteger)root;
-        if (guess.Equals(lastGuess)) {
+        bigintTmp /= (BigInteger)BigInteger.Pow(bigintGuess, nm1);
+        BigInteger bigintTmp2 = bigintGuess;
+        bigintGuess *= (BigInteger)nm1;
+        bigintGuess = bigintTmp + (BigInteger)bigintTmp2;
+        bigintGuess /= (BigInteger)root;
+        if (bigintGuess.Equals(lastGuess)) {
           // Find the remainder, the difference between
           // value and guess**root
-          lastGuess = BigInteger.Pow(guess, root);
+          lastGuess = BigInteger.Pow(bigintGuess, root);
           lastGuess = value - (BigInteger)lastGuess;
-          return new BigInteger[] { guess, lastGuess };
+          return new BigInteger[] { bigintGuess, lastGuess };
         }
-        lastGuess = guess;
+        lastGuess = bigintGuess;
       }
     }
 

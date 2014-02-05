@@ -1214,7 +1214,7 @@ at: http://peteroupc.github.io/CBOR/
               tempArr,
               tempStart,  // uses diff + bcount space
               tempArr,
-              tempStart.add(diff) + bcount,  // uses diff + bcount space
+              tempStart + diff + bcount,  // uses diff + bcount space
               words1,
               astart + i,
               diff,
@@ -1966,7 +1966,9 @@ at: http://peteroupc.github.io/CBOR/
       if (index < 0) {
         throw new IllegalArgumentException("index");
       }
-       if (this.wordCount == 0) return false;
+      if (this.wordCount == 0) {
+        return false;
+      }
       if (this.negative) {
         int tcindex = 0;
         int wordpos = index / 16;
@@ -2167,8 +2169,8 @@ at: http://peteroupc.github.io/CBOR/
         ret.reg = new short[this.reg.length];
         System.arraycopy(this.reg, shiftWords, ret.reg, 0, numWords - shiftWords);
         if (shiftBits != 0) {
- ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
-}
+          ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+        }
         ret.wordCount = numWords - shiftWords;
       }
       ret.negative = this.negative;
@@ -3160,7 +3162,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     static void PositiveSubtract(
-      BigInteger diff,
+      BigInteger bigintDiff,
       BigInteger minuend,
       BigInteger subtrahend) {
       int words1Size = minuend.wordCount;
@@ -3170,32 +3172,32 @@ at: http://peteroupc.github.io/CBOR/
       if (words1Size == words2Size) {
         if (Compare(minuend.reg, 0, subtrahend.reg, 0, (int)words1Size) >= 0) {
           // words1 is at least as high as words2
-          Subtract(diff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words1Size);
-          diff.negative = false;  // difference will not be negative at this point
+          Subtract(bigintDiff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words1Size);
+          bigintDiff.negative = false;  // difference will not be negative at this point
         } else {
           // words1 is less than words2
-          Subtract(diff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
-          diff.negative = true;  // difference will be negative
+          Subtract(bigintDiff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
+          bigintDiff.negative = true;  // difference will be negative
         }
       } else if (words1Size > words2Size) {
         // words1 is greater than words2
-        short borrow = (short)Subtract(diff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words2Size);
-        System.arraycopy(minuend.reg, words2Size, diff.reg, words2Size, words1Size - words2Size);
-        borrow = (short)Decrement(diff.reg, words2Size, (int)(words1Size - words2Size), borrow);
+        short borrow = (short)Subtract(bigintDiff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words2Size);
+        System.arraycopy(minuend.reg, words2Size, bigintDiff.reg, words2Size, words1Size - words2Size);
+        borrow = (short)Decrement(bigintDiff.reg, words2Size, (int)(words1Size - words2Size), borrow);
         // Debugif(!(borrow==0))Assert.fail("{0} line {1}: !borrow","integer.cpp",3524);
-        diff.negative = false;
+        bigintDiff.negative = false;
       } else {
         // words1 is less than words2
-        short borrow = (short)Subtract(diff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
-        System.arraycopy(subtrahend.reg, words1Size, diff.reg, words1Size, words2Size - words1Size);
-        borrow = (short)Decrement(diff.reg, words1Size, (int)(words2Size - words1Size), borrow);
+        short borrow = (short)Subtract(bigintDiff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
+        System.arraycopy(subtrahend.reg, words1Size, bigintDiff.reg, words1Size, words2Size - words1Size);
+        borrow = (short)Decrement(bigintDiff.reg, words1Size, (int)(words2Size - words1Size), borrow);
         // Debugif(!(borrow==0))Assert.fail("{0} line {1}: !borrow","integer.cpp",3532);
-        diff.negative = true;
+        bigintDiff.negative = true;
       }
-      diff.wordCount = diff.CalcWordCount();
-      diff.ShortenArray();
-      if (diff.wordCount == 0) {
-        diff.negative = false;
+      bigintDiff.wordCount = bigintDiff.CalcWordCount();
+      bigintDiff.ShortenArray();
+      if (bigintDiff.wordCount == 0) {
+        bigintDiff.negative = false;
       }
     }
 
@@ -3918,7 +3920,8 @@ at: http://peteroupc.github.io/CBOR/
      * is 0 or less.
      */
     public BigInteger sqrt() {
-      return this.sqrtWithRemainder()[0];
+      BigInteger[] srrem = this.sqrtWithRemainder();
+      return srrem[0];
     }
 
     private BigInteger WordsToBigInt(
@@ -3944,7 +3947,8 @@ at: http://peteroupc.github.io/CBOR/
       if (this.equals(BigInteger.ONE)) {
         return new BigInteger[] { BigInteger.ONE, BigInteger.ZERO };
       }
-      BigInteger bigintX, bigintY;
+      BigInteger bigintX;
+      BigInteger bigintY;
       if (this.wordCount < 4) {
         BigInteger thisValue = this;
         int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
@@ -3974,11 +3978,11 @@ at: http://peteroupc.github.io/CBOR/
           do {
             bigintX = bigintY;
             bigintY = thisValue.divide(bigintX);
-            bigintY += bigintX;
-            bigintY >>= 1;
+            bigintY=bigintY.add(bigintX);
+            bigintY=bigintY.shiftRight(1);
           } while (bigintY.compareTo(bigintX) < 0);
           bigintY = bigintX.multiply(bigintX);
-          bigintY = thisValue.subtract(BigInteger.valueOf(bigintY));
+          bigintY = thisValue.subtract(bigintY);
           return new BigInteger[] {
             bigintX, bigintY
           };
@@ -3988,24 +3992,25 @@ at: http://peteroupc.github.io/CBOR/
       int bitSet = this.getUnsignedBitLength();
       --bitSet;
       int lastBit = bitSet >> 1;
-      int count = ((lastBit + 15) >> 4) +1;
+      int count = ((lastBit + 15) >> 4) + 1;
       short[] result = new short[RoundupSize(count)];
-      short[] dataTmp2 = new short[RoundupSize(count * 2 + 2)];
-      short[] dataTmp = new short[RoundupSize(count * 2 + 2)];
-      BigInteger bid = BigInteger.ONE << (lastBit << 1);
+      short[] dataTmp2 = new short[RoundupSize((count * 2) + 2)];
+      short[] dataTmp = new short[RoundupSize((count * 2) + 2)];
+      int lastVshiftBit = lastBit << 1;
+      BigInteger bid = BigInteger.ONE.shiftLeft(lastVshiftBit);
       result[lastBit >> 4] |= ((short)(1 << (lastBit & 15)));
-      int lastVshiftBit = 0;
-      for (int i = lastBit - 1;i >= 0; --i) {
+      lastVshiftBit = 0;
+      for (int i = lastBit - 1; i >= 0; --i) {
         int valueVShift;
-        java.util.Arrays.fill(dataTmp,0,(0)+(dataTmp.length),0);
+        java.util.Arrays.fill(dataTmp,0,(0)+(dataTmp.length),(short)0);
         // Left shift by i + 1
         valueVShift = (i + 1);
         // Note: Copying the result in this way also shifts left, due
         // to the way the number is stored
         System.arraycopy(result, 0, dataTmp, valueVShift >> 4, count);
         if ((valueVShift & 15) != 0) {
- ShiftWordsLeftByBits(dataTmp, 0, dataTmp.length, valueVShift & 15);
-}
+          ShiftWordsLeftByBits(dataTmp, 0, dataTmp.length, valueVShift & 15);
+        }
         // Add bid (do this first since it's often what
         // affects the comparison the most)
         if (dataTmp.length >= bid.wordCount) {
@@ -4013,12 +4018,12 @@ at: http://peteroupc.github.io/CBOR/
         } else {
           AddUnevenSize(dataTmp, 0, bid.reg, 0, bid.wordCount, dataTmp, 0, dataTmp.length);
         }
-        if (CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) >0) {
+        if (CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) > 0) {
           continue;
         }
         // Add 1<<(i << 1)
         valueVShift = (i << 1);
-        if ((((int)dataTmp[valueVShift >> 4]) &(1 << (valueVShift & 15))) == 0) {
+        if ((((int)dataTmp[valueVShift >> 4]) & (1 << (valueVShift & 15))) == 0) {
           // Add bit directly, the augend has just one bit
           dataTmp[valueVShift >> 4] |= ((short)(1 << (valueVShift & 15)));
         } else {
@@ -4036,10 +4041,9 @@ at: http://peteroupc.github.io/CBOR/
       }
       bigintX = new BigInteger();
       bigintX.reg = result;
-      bigintX.wordCount = count;
       bigintX.wordCount = bigintX.CalcWordCount();
       bigintY = bigintX.multiply(bigintX);
-      bigintY = this.subtract(BigInteger.valueOf(bigintY));
+      bigintY = this.subtract(bigintY);
       return new BigInteger[] {
         bigintX, bigintY
       };
