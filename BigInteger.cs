@@ -4331,7 +4331,6 @@ namespace PeterO {
       }
       bigintX = new BigInteger();
       bigintX.reg = result;
-      bigintX.wordCount = count;
       bigintX.wordCount = bigintX.CalcWordCount();
       bigintY = bigintX * (BigInteger)bigintX;
       bigintY = this - (BigInteger)bigintY;
