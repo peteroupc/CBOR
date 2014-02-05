@@ -11,7 +11,7 @@ using System;
 namespace PeterO
 {
     /// <summary>Description of BigNumberFlags.</summary>
-  internal class BigNumberFlags
+  internal static class BigNumberFlags
   {
     internal const int FlagNegative = 1;
     internal const int FlagQuietNaN = 4;

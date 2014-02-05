@@ -3746,13 +3746,13 @@ namespace PeterO {
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
-    /// <param name='o'>An arbitrary object.</param>
-    /// <param name='bigintTag'>A big integer that specifies a tag number.</param>
     /// <returns>A CBOR object where the object.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
-    /// name='bigintTag'/> is less than 0 or greater than 2^64-1, or <paramref
-    /// name='o'/>'s type is unsupported.</exception>
-    public static CBORObject FromObjectAndTag(object o, BigInteger bigintTag) {
+    /// name='bigintTag'/> is less than 0 or greater than 2^64-1, or "o"'s
+    /// type is unsupported.</exception>
+    /// <param name='valueOb'>An arbitrary object.</param>
+    /// <param name='bigintTag'>Tag number.</param>
+    public static CBORObject FromObjectAndTag(object valueOb, BigInteger bigintTag) {
       if (bigintTag == null) {
         throw new ArgumentNullException("bigintTag");
       }
@@ -3762,7 +3762,7 @@ namespace PeterO {
       if (bigintTag.CompareTo(valueUInt64MaxValue) > 0) {
         throw new ArgumentException("tag not less or equal to 18446744073709551615 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
-      CBORObject c = FromObject(o);
+      CBORObject c = FromObject(valueOb);
       if (bigintTag.CompareTo(valueBigInt65536) < 0) {
         // Low-numbered, commonly used tags
         return new CBORObject(c, (int)bigintTag, 0);

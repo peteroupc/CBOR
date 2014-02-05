@@ -1154,15 +1154,6 @@ bigrem=divrem[1]; }
 
     /**
      * Not documented yet.
-     * @param val A 32-bit signed integer. (2).
-     * @return A 32-bit signed integer.
-     */
-    public int MinInt32(int val) {
-      return this.CompareToInt(val) < 0 ? this.AsInt32() : val;
-    }
-
-    /**
-     * Not documented yet.
      * @return A BigInteger object.
      */
     public BigInteger AsBigInteger() {

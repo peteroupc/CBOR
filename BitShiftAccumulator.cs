@@ -220,45 +220,6 @@ namespace PeterO {
       }
     }
 
-    private static FastInteger ByteArrayBitLength(byte[] bytes) {
-      FastInteger fastKB = new FastInteger(bytes.Length).Multiply(8);
-      for (int i = bytes.Length - 1; i >= 0; --i) {
-        int b = (int)bytes[i];
-        if (b != 0) {
-          if ((b & 0x80) != 0) {
-            break;
-          }
-          if ((b & 0x40) != 0) {
-            { fastKB.Decrement();
-            } break; }
-          if ((b & 0x20) != 0) {
-            { fastKB.SubtractInt(2);
-            } break; }
-          if ((b & 0x10) != 0) {
-            { fastKB.SubtractInt(3);
-            } break; }
-          if ((b & 0x08) != 0) {
-            { fastKB.SubtractInt(4);
-            } break; }
-          if ((b & 0x04) != 0) {
-            { fastKB.SubtractInt(5);
-            } break; }
-          if ((b & 0x02) != 0) {
-            { fastKB.SubtractInt(6);
-            } break; }
-          if ((b & 0x01) != 0) {
-            { fastKB.SubtractInt(7);
-            } break; }
-        }
-        fastKB.SubtractInt(8);
-      }
-      // Make sure bit length is 1 if value is 0
-      if (fastKB.Sign == 0) {
-        fastKB.Increment();
-      }
-      return fastKB;
-    }
-
     private FastInteger CalcKnownBitLength() {
       if (this.isSmall) {
         int kb = SmallBitLength;

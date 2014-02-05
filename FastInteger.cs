@@ -1090,13 +1090,6 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='val'>A 32-bit signed integer. (2).</param>
-    /// <returns>A 32-bit signed integer.</returns>
-    public int MinInt32(int val) {
-      return this.CompareToInt(val) < 0 ? this.AsInt32() : val;
-    }
-
-    /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger AsBigInteger() {
       switch (this.integerMode) {

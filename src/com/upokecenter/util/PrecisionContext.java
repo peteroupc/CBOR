@@ -436,6 +436,7 @@ at: http://peteroupc.github.io/CBOR/
      * Precision context for the IEEE-754-2008 binary16 format, 11 bits
      * precision.
      */
+
     public static final PrecisionContext Binary16 =
       PrecisionContext.ForPrecisionAndRounding(11, Rounding.HalfEven)
       .WithExponentClamp(true)
@@ -445,6 +446,7 @@ at: http://peteroupc.github.io/CBOR/
      * Precision context for the IEEE-754-2008 binary32 format, 24 bits
      * precision.
      */
+
     public static final PrecisionContext Binary32 =
       PrecisionContext.ForPrecisionAndRounding(24, Rounding.HalfEven)
       .WithExponentClamp(true)
@@ -454,6 +456,7 @@ at: http://peteroupc.github.io/CBOR/
      * Precision context for the IEEE-754-2008 binary64 format, 53 bits
      * precision.
      */
+
     public static final PrecisionContext Binary64 =
       PrecisionContext.ForPrecisionAndRounding(53, Rounding.HalfEven)
       .WithExponentClamp(true)
@@ -463,6 +466,7 @@ at: http://peteroupc.github.io/CBOR/
      * Precision context for the IEEE-754-2008 binary128 format, 113 bits
      * precision.
      */
+
     public static final PrecisionContext Binary128 =
       PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven)
       .WithExponentClamp(true)
@@ -493,6 +497,7 @@ at: http://peteroupc.github.io/CBOR/
      * Basic precision context, 9 digits precision, rounding mode half-up,
      * unlimited exponent range.
      */
+
     public static final PrecisionContext Basic =
       PrecisionContext.ForPrecisionAndRounding(9, Rounding.HalfUp);
 

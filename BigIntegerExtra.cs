@@ -81,12 +81,12 @@ namespace PeterO
     /// <summary>Not documented yet.</summary>
     /// <param name='bthis'>A BigInteger object. (2).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <param name='numBits'>A 32-bit signed integer.</param>
-    public static BigInteger operator <<(BigInteger bthis, int numBits) {
+    /// <param name='bitCount'>A 32-bit signed integer.</param>
+    public static BigInteger operator <<(BigInteger bthis, int bitCount) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
-      return bthis.shiftLeft(numBits);
+      return bthis.shiftLeft(bitCount);
     }
 
     /// <summary>Calculates the remainder when a BigInteger raised to a
@@ -105,18 +105,16 @@ namespace PeterO
 
     /// <summary>Shifts the bits of a BigInteger instance to the right.</summary>
     /// <param name='bthis'>A BigInteger object. (2).</param>
-    /// <param name='n'>The number of bits to shift to the right. If negative,
-    /// this treated as shifting left the absolute value of this number of
-    /// bits.</param>
     /// <returns>A BigInteger object.</returns>
     /// <remarks>For this operation, the BigInteger is treated as a two's
     /// complement representation. Thus, for negative values, the BigInteger
     /// is sign-extended.</remarks>
-    public static BigInteger operator >>(BigInteger bthis, int n) {
+    /// <param name='bigValue'>A 32-bit signed integer.</param>
+    public static BigInteger operator >>(BigInteger bthis, int bigValue) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
-      return bthis.shiftRight(n);
+      return bthis.shiftRight(bigValue);
     }
 
     /// <summary>Negates a BigInteger object.</summary>
@@ -375,16 +373,16 @@ namespace PeterO
     }
 
     /// <summary>Returns a BigInteger with every bit flipped.</summary>
-    /// <param name='a'>A BigInteger object. (2).</param>
     /// <returns>A BigInteger object.</returns>
-    public static BigInteger Not(BigInteger a) {
-      if (a == null) {
-        throw new ArgumentNullException("a");
+    /// <param name='valueA'>A BigInteger object. (2).</param>
+    public static BigInteger Not(BigInteger valueA) {
+      if (valueA == null) {
+        throw new ArgumentNullException("valueA");
       }
-      BigInteger xa = new BigInteger().Allocate(a.wordCount);
-      Array.Copy(a.reg, xa.reg, xa.reg.Length);
-      xa.negative = a.negative;
-      xa.wordCount = a.wordCount;
+      BigInteger xa = new BigInteger().Allocate(valueA.wordCount);
+      Array.Copy(valueA.reg, xa.reg, xa.reg.Length);
+      xa.negative = valueA.negative;
+      xa.wordCount = valueA.wordCount;
       if (xa.Sign < 0) {
         { TwosComplement(xa.reg, 0, (int)xa.reg.Length);
         } }

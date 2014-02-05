@@ -1267,12 +1267,11 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T LnTenConstant(PrecisionContext ctx) {
-      /* if ((ctx) == null) {
- throw new ArgumentNullException("ctx");
-} */
+      if (ctx == null) {
+        throw new ArgumentNullException("ctx");
+      }
       T thisValue = this.helper.ValueOf(10);
       T two = this.helper.ValueOf(2);
-      FastInteger roots = new FastInteger(0);
       FastInteger error;
       BigInteger bigError;
       error = new FastInteger(10);
