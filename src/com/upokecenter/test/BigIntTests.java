@@ -2418,11 +2418,11 @@ bigintRem=divrem[1]; }
         BigInteger srsqr = sr.multiply(sr);
         sr=sr.add(BigInteger.ONE);
         BigInteger sronesqr = sr.multiply(sr);
-        if (srsqr.compareTo(bigintA) >0) {
-          Assert.fail(srsqr + " not " + bigintA + " or less (TestSqrt, sqrt=" + sr +")");
+        if (srsqr.compareTo(bigintA) > 0) {
+          Assert.fail(srsqr + " not " + bigintA + " or less (TestSqrt, sqrt=" + sr + ")");
         }
         if (sronesqr.compareTo(bigintA) <= 0) {
-          Assert.fail(srsqr + " not greater than " + bigintA + " (TestSqrt, sqrt=" + sr +")");
+          Assert.fail(srsqr + " not greater than " + bigintA + " (TestSqrt, sqrt=" + sr + ")");
         }
       }
     }

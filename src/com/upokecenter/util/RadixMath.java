@@ -1629,22 +1629,23 @@ bigrem=divrem[1]; }
       int nm1 = root - 1;
       int bits = value.bitLength();
       int bitsdn = bits / root;
-      BigInteger guess = BigInteger.ONE.shiftLeft(bitsdn);
-      BigInteger lastGuess = guess;
+      BigInteger bigintGuess = BigInteger.ONE.shiftLeft(bitsdn);
+      BigInteger lastGuess = bigintGuess;
       while (true) {
         BigInteger bigintTmp = value;
-        bigintTmp=bigintTmp.divide(guess).pow(nm1);
-        BigInteger bigintTmp2 = guess * BigInteger.valueOf(nm1);
-        guess = bigintTmp.add(bigintTmp2);
-        guess=guess.divide(BigInteger.valueOf(root));
-        if (guess.equals(lastGuess)) {
+        bigintTmp=bigintTmp.divide(bigintGuess).pow(nm1);
+        BigInteger bigintTmp2 = bigintGuess;
+        bigintGuess=bigintGuess.multiply(BigInteger.valueOf(nm1));
+        bigintGuess = bigintTmp.add(bigintTmp2);
+        bigintGuess=bigintGuess.divide(BigInteger.valueOf(root));
+        if (bigintGuess.equals(lastGuess)) {
           // Find the remainder, the difference between
           // value and guess**root
-          lastGuess = (guess).pow(root);
+          lastGuess = (bigintGuess).pow(root);
           lastGuess = value.subtract(lastGuess);
-          return new BigInteger[] { guess, lastGuess };
+          return new BigInteger[] { bigintGuess, lastGuess };
         }
-        lastGuess = guess;
+        lastGuess = bigintGuess;
       }
     }
 
@@ -2819,7 +2820,7 @@ bigrem=divrem[1]; }
             }
           }
           if (this.thisRadix == 2 && !bitsToShift.isValueZero()) {
-            while (bitsToShift.CompareToInt(1000000) >0) {
+            while (bitsToShift.CompareToInt(1000000) > 0) {
               bigmant=bigmant.shiftRight(1000000);
               bitsToShift.SubtractInt(1000000);
             }

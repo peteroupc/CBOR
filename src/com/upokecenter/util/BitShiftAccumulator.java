@@ -209,7 +209,7 @@ at: http://peteroupc.github.io/CBOR/
           }
           this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
         }
-        if (this.knownBitLength.CompareToInt(SmallBitLength) <0) {
+        if (this.knownBitLength.CompareToInt(SmallBitLength) < 0) {
           // Shifting to small number of bits,
           // convert to small integer
           this.isSmall = true;

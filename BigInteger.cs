@@ -13,7 +13,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-  /// <summary>An arbitrary-precision integer.</summary>
+    /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -3450,7 +3450,7 @@ namespace PeterO {
     }
 
     internal static void PositiveSubtract(
-      BigInteger diff,
+      BigInteger bigintDiff,
       BigInteger minuend,
       BigInteger subtrahend) {
       int words1Size = minuend.wordCount;
@@ -3460,32 +3460,32 @@ namespace PeterO {
       if (words1Size == words2Size) {
         if (Compare(minuend.reg, 0, subtrahend.reg, 0, (int)words1Size) >= 0) {
           // words1 is at least as high as words2
-          Subtract(diff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words1Size);
-          diff.negative = false;  // difference will not be negative at this point
+          Subtract(bigintDiff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words1Size);
+          bigintDiff.negative = false;  // difference will not be negative at this point
         } else {
           // words1 is less than words2
-          Subtract(diff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
-          diff.negative = true;  // difference will be negative
+          Subtract(bigintDiff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
+          bigintDiff.negative = true;  // difference will be negative
         }
       } else if (words1Size > words2Size) {
         // words1 is greater than words2
-        short borrow = (short)Subtract(diff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words2Size);
-        Array.Copy(minuend.reg, words2Size, diff.reg, words2Size, words1Size - words2Size);
-        borrow = (short)Decrement(diff.reg, words2Size, (int)(words1Size - words2Size), borrow);
+        short borrow = (short)Subtract(bigintDiff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words2Size);
+        Array.Copy(minuend.reg, words2Size, bigintDiff.reg, words2Size, words1Size - words2Size);
+        borrow = (short)Decrement(bigintDiff.reg, words2Size, (int)(words1Size - words2Size), borrow);
         // DebugAssert.IsTrue(borrow==0,"{0} line {1}: !borrow","integer.cpp",3524);
-        diff.negative = false;
+        bigintDiff.negative = false;
       } else {
         // words1 is less than words2
-        short borrow = (short)Subtract(diff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
-        Array.Copy(subtrahend.reg, words1Size, diff.reg, words1Size, words2Size - words1Size);
-        borrow = (short)Decrement(diff.reg, words1Size, (int)(words2Size - words1Size), borrow);
+        short borrow = (short)Subtract(bigintDiff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
+        Array.Copy(subtrahend.reg, words1Size, bigintDiff.reg, words1Size, words2Size - words1Size);
+        borrow = (short)Decrement(bigintDiff.reg, words1Size, (int)(words2Size - words1Size), borrow);
         // DebugAssert.IsTrue(borrow==0,"{0} line {1}: !borrow","integer.cpp",3532);
-        diff.negative = true;
+        bigintDiff.negative = true;
       }
-      diff.wordCount = diff.CalcWordCount();
-      diff.ShortenArray();
-      if (diff.wordCount == 0) {
-        diff.negative = false;
+      bigintDiff.wordCount = bigintDiff.CalcWordCount();
+      bigintDiff.ShortenArray();
+      if (bigintDiff.wordCount == 0) {
+        bigintDiff.negative = false;
       }
     }
 
@@ -4193,7 +4193,8 @@ namespace PeterO {
     /// <returns>The square root of this object's value. Returns 0 if this
     /// value is 0 or less.</returns>
     public BigInteger sqrt() {
-      return this.sqrtWithRemainder()[0];
+      BigInteger[] srrem = this.sqrtWithRemainder();
+      return srrem[0];
     }
 
     private BigInteger WordsToBigInt(
@@ -4239,7 +4240,8 @@ namespace PeterO {
       if (this.Equals(BigInteger.One)) {
         return new BigInteger[] { BigInteger.One, BigInteger.Zero };
       }
-      BigInteger bigintX, bigintY;
+      BigInteger bigintX;
+      BigInteger bigintY;
       if (this.wordCount < 4) {
         BigInteger thisValue = this;
         int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
@@ -4287,12 +4289,13 @@ namespace PeterO {
       short[] result = new short[RoundupSize(count)];
       short[] dataTmp2 = new short[RoundupSize((count * 2) + 2)];
       short[] dataTmp = new short[RoundupSize((count * 2) + 2)];
-      BigInteger bid = BigInteger.One << (lastBit << 1);
+      int lastVshiftBit = lastBit << 1;
+      BigInteger bid = BigInteger.One << lastVshiftBit;
       result[lastBit >> 4] |= unchecked((short)(1 << (lastBit & 15)));
-      int lastVshiftBit = 0;
+      lastVshiftBit = 0;
       for (int i = lastBit - 1; i >= 0; --i) {
         int valueVShift;
-        Array.Clear(dataTmp, 0, dataTmp.Length);
+        Array.Clear((short[])dataTmp, 0, dataTmp.Length);
         // Left shift by i + 1
         valueVShift = checked(i + 1);
         // Note: Copying the result in this way also shifts left, due
