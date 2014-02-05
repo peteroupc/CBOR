@@ -2725,6 +2725,8 @@ namespace PeterO {
           int radix = this.thisRadix;
           FastInteger digits = (precision == null) ? null : this.helper.CreateShiftAccumulator(bigmant).GetDigitLength();
           BigInteger bigradix = (BigInteger)radix;
+          int bitToTest = 0;
+          FastInteger bitsToShift = new FastInteger(0);
           while (!bigmant.IsZero) {
             if (precision != null && digits.CompareTo(precision) == 0) {
               break;
@@ -2733,10 +2735,18 @@ namespace PeterO {
               break;
             }
             if (this.thisRadix == 2) {
-              if (!bigmant.IsEven) {
-                break;
+              if (bitToTest < Int32.MaxValue) {
+                if (bigmant.testBit(bitToTest)) {
+                  break;
+                }
+                ++bitToTest;
+                bitsToShift.Increment();
+              } else {
+                if (!bigmant.IsEven) {
+                  break;
+                }
+                bigmant >>= 1;
               }
-              bigmant >>= 1;
             } else {
               BigInteger bigrem;
               BigInteger bigquo = BigInteger.DivRem(bigmant, bigradix, out bigrem);
@@ -2749,6 +2759,14 @@ namespace PeterO {
             if (digits != null) {
               digits.Decrement();
             }
+          }
+          if (this.thisRadix == 2 && !bitsToShift.IsValueZero) {
+            while (bitsToShift.CompareToInt(1000000) > 0) {
+              bigmant >>= 1000000;
+              bitsToShift.SubtractInt(1000000);
+            }
+            int tmpshift = bitsToShift.AsInt32();
+            bigmant >>= tmpshift;
           }
         }
         int flags = this.helper.GetFlags(thisValue);
