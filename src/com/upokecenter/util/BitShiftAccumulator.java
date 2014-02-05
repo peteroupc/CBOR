@@ -258,7 +258,7 @@ at: http://peteroupc.github.io/CBOR/
     private FastInteger CalcKnownBitLength() {
       if (this.isSmall) {
         int kb = SmallBitLength;
-        for (int i = SmallBitLength - 1; i >= 0; ++i) {
+        for (int i = SmallBitLength - 1; i >= 0; --i) {
           if ((this.shiftedSmall & (1 << i)) != 0) {
             break;
           } else {
@@ -269,6 +269,7 @@ at: http://peteroupc.github.io/CBOR/
         if (kb == 0) {
           ++kb;
         }
+        // System.out.println("{0:X8} kbl=" + (kb));
         return new FastInteger(kb);
       } else {
         if (this.shiftedBigInt.signum()==0) {
@@ -299,7 +300,7 @@ at: http://peteroupc.github.io/CBOR/
         int bs = 0;
         if (this.knownBitLength.CanFitInInt32()) {
           bs = this.knownBitLength.AsInt32();
-          bs          -= bits;
+          bs -= bits;
         } else {
           FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
           if (!bitShift.CanFitInInt32()) {
@@ -369,7 +370,7 @@ at: http://peteroupc.github.io/CBOR/
         return;
       }
       int kb = SmallBitLength;
-      for (int i = SmallBitLength - 1; i >= 0; ++i) {
+      for (int i = SmallBitLength - 1; i >= 0; --i) {
         if ((this.shiftedSmall & (1 << i)) != 0) {
           break;
         } else {
@@ -383,7 +384,7 @@ at: http://peteroupc.github.io/CBOR/
       this.discardedBitCount.AddInt(bits);
       this.bitsAfterLeftmost |= this.bitLeftmost;
       // Get the bottommost shift minus 1 bits
-      this.bitsAfterLeftmost |= ((this.shiftedSmall << (SmallBitLength + 1 - shift)) != 0) ? 1 : 0;
+      this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
       // Get the bit just above that bit
       this.bitLeftmost = (int)((this.shiftedSmall >> (shift - 1)) & 0x01);
       this.shiftedSmall >>= shift;
@@ -414,17 +415,18 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private void ShiftSmallToBits(int bits) {
-      int kbl = SmallBitLength;
-      for (int i = SmallBitLength - 1; i >= 0; ++i) {
-        if ((this.shiftedSmall & (1L << i)) != 0) {
-          break;
-        } else {
-          --kbl;
+      if (this.knownBitLength != null) {
+        if (this.knownBitLength.CompareToInt(bits) <= 0) {
+          return;
         }
       }
-      if (kbl == 0) {
-        ++kbl;
+      if (this.knownBitLength == null) {
+        this.knownBitLength = this.GetDigitLength();
       }
+      if (this.knownBitLength.CompareToInt(bits) <= 0) {
+        return;
+      }
+      int kbl = this.knownBitLength.AsInt32();
       // Shift by the difference in bit length
       if (kbl > bits) {
         int bitShift = kbl - (int)bits;
@@ -433,9 +435,9 @@ at: http://peteroupc.github.io/CBOR/
         this.discardedBitCount.AddInt(bitShift);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         // Get the bottommost shift minus 1 bits
-        this.bitsAfterLeftmost |= ((this.shiftedSmall << (SmallBitLength + 1 - shift)) != 0) ? 1 : 0;
+        this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
         // Get the bit just above that bit
-        this.bitLeftmost = (int)((this.shiftedSmall >> (((int)shift) - 1)) & 0x01);
+        this.bitLeftmost = (int)((this.shiftedSmall >> (shift - 1)) & 0x01);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
         this.shiftedSmall >>= shift;
       } else {

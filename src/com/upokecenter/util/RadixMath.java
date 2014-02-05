@@ -1233,8 +1233,8 @@ bigrem=divrem[1]; }
               .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
             T ten = this.helper.ValueOf(10);
             T logNatural = this.Ln(thisValue, ctxdiv);
-           T logTen = this.LnTenConstant(ctxdiv);
-          // T logTen = this.Ln(ten, ctxdiv);
+            T logTen = this.LnTenConstant(ctxdiv);
+            // T logTen = this.Ln(ten, ctxdiv);
             thisValue = this.Divide(logNatural, logTen, ctx);
             // Treat result as inexact
             if (ctx.getHasFlags()) {
@@ -1280,7 +1280,7 @@ bigrem=divrem[1]; }
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-public T LnTenConstant(PrecisionContext ctx) {
+    public T LnTenConstant(PrecisionContext ctx) {
       /* if ((ctx) == null) {
  throw new NullPointerException("ctx");
 } */
@@ -1293,9 +1293,9 @@ public T LnTenConstant(PrecisionContext ctx) {
       bigError = error.AsBigInteger();
       PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
         .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
-          for (int i = 0; i < 9; ++i) {
-              thisValue = this.SquareRoot(thisValue, ctxdiv.WithUnlimitedExponents());
-            }
+      for (int i = 0; i < 9; ++i) {
+        thisValue = this.SquareRoot(thisValue, ctxdiv.WithUnlimitedExponents());
+      }
       // Find -Ln(1/thisValue)
       thisValue = this.Divide(this.helper.ValueOf(1), thisValue, ctxdiv);
       thisValue = this.LnInternal(thisValue, ctxdiv.getPrecision(), ctxdiv);
@@ -2786,16 +2786,23 @@ rem=divrem[1]; }
             if (idealExp != null && exp.compareTo(idealExp) == 0) {
               break;
             }
-            BigInteger bigrem;
-            BigInteger bigquo;
+            if (this.thisRadix == 2) {
+              if (bigmant.testBit(0)) {
+                break;
+              }
+              bigmant=bigmant.shiftRight(1);
+            } else {
+              BigInteger bigrem;
+              BigInteger bigquo;
 {
 BigInteger[] divrem=(bigmant).divideAndRemainder(bigradix);
 bigquo=divrem[0];
 bigrem=divrem[1]; }
-            if (bigrem.signum()!=0) {
-              break;
+              if (bigrem.signum()!=0) {
+                break;
+              }
+              bigmant = bigquo;
             }
-            bigmant = bigquo;
             exp.Increment();
             if (digits != null) {
               digits.Decrement();

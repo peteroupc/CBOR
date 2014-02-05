@@ -13,7 +13,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-  /// <summary>An arbitrary-precision integer.</summary>
+    /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -98,6 +98,41 @@ namespace PeterO {
     }
 
     private static int Compare(short[] words1, int astart, short[] words2, int bstart, int n) {
+      while (unchecked(n--) != 0) {
+        int an = ((int)words1[astart + n]) & 0xFFFF;
+        int bn = ((int)words2[bstart + n]) & 0xFFFF;
+        if (an > bn) {
+          return 1;
+        } else if (an < bn) {
+          return -1;
+        }
+      }
+      return 0;
+    }
+
+    private static int CompareUnevenSize(
+short[] words1,
+int astart,
+int acount,
+short[] words2,
+int bstart,
+int bcount) {
+      int n = acount;
+      if (acount > bcount) {
+        while (unchecked(acount--) != bcount) {
+          if (words1[astart + acount] != 0) {
+ return 1;
+}
+        }
+        n = bcount;
+      } else if (bcount > acount) {
+        while (unchecked(bcount--) != acount) {
+          if (words1[astart + acount] != 0) {
+ return -1;
+}
+        }
+        n = acount;
+      }
       while (unchecked(n--) != 0) {
         int an = ((int)words1[astart + n]) & 0xFFFF;
         int bn = ((int)words2[bstart + n]) & 0xFFFF;
@@ -2009,7 +2044,7 @@ namespace PeterO {
         throw new DivideByZeroException("division by zero");
       }
       if (words2Count == 1) {
-        if (words2[words2Start]==0) {
+        if (words2[words2Start] == 0) {
           throw new DivideByZeroException("division by zero");
         }
         int smallRemainder = ((int)FastDivideAndRemainder(
@@ -2019,7 +2054,7 @@ namespace PeterO {
           words1Start,
           words1Count,
           words2[words2Start])) & 0xFFFF;
-        remainderArr[remainderStart]=(short)smallRemainder;
+        remainderArr[remainderStart] = (short)smallRemainder;
         return;
       }
       #if DEBUG
@@ -4153,7 +4188,7 @@ namespace PeterO {
     /// <returns>The square root of this object's value. Returns 0 if this
     /// value is 0 or less.</returns>
     public BigInteger sqrt() {
-      return sqrtWithRemainder()[0];
+      return this.sqrtWithRemainder()[0];
     }
 
     private BigInteger WordsToBigInt(
@@ -4161,23 +4196,23 @@ namespace PeterO {
       int start,
       int count) {
       #if DEBUG
-      if ((words) == null) {
+      if (words == null) {
         throw new ArgumentNullException("words");
       }
       if (start < 0) {
-        throw new ArgumentException("start not greater or equal to 0 (" + Convert.ToString((long)(start), System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("start not greater or equal to 0 (" + Convert.ToString((long)start, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (start > words.Length) {
-        throw new ArgumentException("start not less or equal to " + Convert.ToString((long)(words.Length), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(start), System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("start not less or equal to " + Convert.ToString((long)words.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)start, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (count < 0) {
-        throw new ArgumentException("count not greater or equal to 0 (" + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("count not greater or equal to 0 (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (count > words.Length) {
-        throw new ArgumentException("count not less or equal to " + Convert.ToString((long)(words.Length), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("count not less or equal to " + Convert.ToString((long)words.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
-      if (words.Length-start < count) {
-        throw new ArgumentException("words's length minus " + start + " not greater or equal to " + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words.Length-start), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      if (words.Length - start < count) {
+        throw new ArgumentException("words's length minus " + start + " not greater or equal to " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words.Length - start), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
 
@@ -4192,30 +4227,17 @@ namespace PeterO {
       return ret;
     }
 
-    private BigInteger refsqrt(){
-      if(this.Sign<=0)return BigInteger.Zero;
-      BigInteger bigintX = null;
-      BigInteger bigintY = Power2((this.getUnsignedBitLength() + 1) / 2);
-      do {
-        bigintX = bigintY;
-        bigintY = this / (BigInteger)bigintX;
-        bigintY += bigintX;
-        bigintY >>= 1;
-      } while (bigintY.CompareTo(bigintX) < 0);
-      return bigintX;
-    }
-    
     public BigInteger[] sqrtWithRemainder() {
       if (this.Sign <= 0) {
         return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };
       }
-      if(this.Equals(BigInteger.One)){
+      if (this.Equals(BigInteger.One)) {
         return new BigInteger[] { BigInteger.One, BigInteger.Zero };
       }
-      BigInteger bigintX,bigintY;
-      if (this.wordCount<4) {
+      BigInteger bigintX, bigintY;
+      if (this.wordCount < 4) {
         BigInteger thisValue = this;
-        int powerBits=(thisValue.getUnsignedBitLength() + 1) / 2;
+        int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
         if (thisValue.canFitInInt()) {
           int smallValue = thisValue.intValue();
           if (smallValue == 0) {
@@ -4251,36 +4273,53 @@ namespace PeterO {
             bigintX, bigintY
           };
         }
-      }      
-      int bitSet=this.getUnsignedBitLength();
-      bitSet-=1;
-      int lastBit=bitSet>>1;
-      int count=((lastBit+15)>>4)+1;
-      short[] data=new short[RoundupSize(count)];
-      data[lastBit>>4]|=unchecked((short)(1<<(lastBit&15)));
-      BigInteger bigintV=BigInteger.One<<lastBit;
-      for(int i=lastBit-1;i>=0;i--){
-        BigInteger bigintUV=bigintV;
-        bigintV>>=1;
-        BigInteger bigintU=WordsToBigInt(data,0,count);
-        bigintUV*=bigintU;
-        bigintUV+=bigintU*(BigInteger)bigintU;
-        bigintUV+=(bigintV<<i);
-        if(bigintUV.CompareTo(this)<=0){
-          data[i>>4]|=unchecked((short)(1<<(i&15)));
-        }
       }
-      bigintX=new BigInteger();
-      bigintX.reg=data;
-      bigintX.wordCount=count;
-      bigintX.wordCount=bigintX.CalcWordCount();
+      int bitSet = this.getUnsignedBitLength();
+      --bitSet;
+      int lastBit = bitSet >> 1;
+      int count = ((lastBit + 15) >> 4) +1;
+      short[] data = new short[RoundupSize(count)];
+      short[] dataTmp2 = new short[RoundupSize(count * 3 + 2)];
+      short[] dataTmp = new short[RoundupSize(count * 3 + 2)];
+      BigInteger bid = BigInteger.One << (lastBit << 1);
+      data[lastBit >> 4] |= unchecked((short)(1 << (lastBit & 15)));
+      int lastVshiftBit = 0;
+      for (int i = lastBit - 1;i >= 0; --i) {
+        int valueVShift;
+        Array.Clear(dataTmp, 0, dataTmp.Length);
+        Array.Copy(data, 0, dataTmp, 0, count);
+        // Left shift by i + 1
+        valueVShift = checked(i + 1);
+        ShiftWordsLeftByWords(dataTmp, 0, dataTmp.Length, valueVShift >> 4);
+        ShiftWordsLeftByBits(dataTmp, 0, dataTmp.Length, valueVShift & 15);
+        // Add 1<<(i << 1)
+        dataTmp2[lastVshiftBit] = (short)0;
+        valueVShift = checked(i << 1);
+        dataTmp2[valueVShift >> 4] |= unchecked((short)(1 << (valueVShift & 15)));
+        lastVshiftBit = valueVShift >> 4;
+        AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.Length);
+        // Add bid
+        if (dataTmp.Length >= bid.wordCount) {
+          AddUnevenSize(dataTmp, 0, dataTmp, 0, dataTmp.Length, bid.reg, 0, bid.wordCount);
+        } else {
+          AddUnevenSize(dataTmp, 0, bid.reg, 0, bid.wordCount, dataTmp, 0, dataTmp.Length);
+        }
+        if (CompareUnevenSize(dataTmp, 0, dataTmp.Length, this.reg, 0, this.wordCount) >0) {
+          continue;
+        }
+        bid = this.WordsToBigInt(dataTmp, 0, dataTmp.Length);
+        data[i >> 4] |= unchecked((short)(1 << (i & 15)));
+      }
+      bigintX = new BigInteger();
+      bigintX.reg = data;
+      bigintX.wordCount = count;
+      bigintX.wordCount = bigintX.CalcWordCount();
       bigintY = bigintX * (BigInteger)bigintX;
       bigintY = this - (BigInteger)bigintY;
       return new BigInteger[] {
         bigintX, bigintY
       };
     }
-
 
     /// <summary>Gets a value indicating whether this value is even.</summary>
     /// <value>Whether this value is even.</value>

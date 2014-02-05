@@ -2400,17 +2400,17 @@ namespace Test
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        if (bigintA.Sign<0) {
-          bigintA=-bigintA;
+        if (bigintA.Sign < 0) {
+          bigintA = -bigintA;
         }
         if (bigintA.Sign == 0) {
           bigintA = BigInteger.One;
         }
         BigInteger sr = bigintA.sqrt();
-        BigInteger srsqr = sr*(BigInteger)sr;
-        sr+=BigInteger.One;
-        BigInteger sronesqr = sr*(BigInteger)sr;
-        if (srsqr.CompareTo(bigintA)>0) {
+        BigInteger srsqr = sr * (BigInteger)sr;
+        sr += BigInteger.One;
+        BigInteger sronesqr = sr * (BigInteger)sr;
+        if (srsqr.CompareTo(bigintA) >0) {
           Assert.Fail(srsqr + " not " + bigintA + " or less (TestSqrt, sqrt=" + sr +")");
         }
         if (sronesqr.CompareTo(bigintA) <= 0) {
