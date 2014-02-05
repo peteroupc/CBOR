@@ -420,6 +420,12 @@ namespace PeterO {
 
     /// <summary>Precision context for the IEEE-754-2008 binary16 format,
     /// 11 bits precision.</summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security",
+      "CA2104",
+      Justification="This PrecisionContext is immutable")]
+    #endif
     public static readonly PrecisionContext Binary16 =
       PrecisionContext.ForPrecisionAndRounding(11, Rounding.HalfEven)
       .WithExponentClamp(true)
@@ -427,6 +433,12 @@ namespace PeterO {
 
     /// <summary>Precision context for the IEEE-754-2008 binary32 format,
     /// 24 bits precision.</summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security",
+      "CA2104",
+      Justification="This PrecisionContext is immutable")]
+    #endif
     public static readonly PrecisionContext Binary32 =
       PrecisionContext.ForPrecisionAndRounding(24, Rounding.HalfEven)
       .WithExponentClamp(true)
@@ -434,6 +446,12 @@ namespace PeterO {
 
     /// <summary>Precision context for the IEEE-754-2008 binary64 format,
     /// 53 bits precision.</summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security",
+      "CA2104",
+      Justification="This PrecisionContext is immutable")]
+    #endif
     public static readonly PrecisionContext Binary64 =
       PrecisionContext.ForPrecisionAndRounding(53, Rounding.HalfEven)
       .WithExponentClamp(true)
@@ -441,6 +459,12 @@ namespace PeterO {
 
     /// <summary>Precision context for the IEEE-754-2008 binary128 format,
     /// 113 bits precision.</summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security",
+      "CA2104",
+      Justification="This PrecisionContext is immutable")]
+    #endif
     public static readonly PrecisionContext Binary128 =
       PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven)
       .WithExponentClamp(true)
@@ -481,6 +505,12 @@ namespace PeterO {
 
     /// <summary>Basic precision context, 9 digits precision, rounding
     /// mode half-up, unlimited exponent range.</summary>
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security",
+      "CA2104",
+      Justification="This PrecisionContext is immutable")]
+    #endif
     public static readonly PrecisionContext Basic =
       PrecisionContext.ForPrecisionAndRounding(9, Rounding.HalfUp);
 

@@ -1423,39 +1423,6 @@ at: http://peteroupc.github.io/CBOR/
       return i;
     }
 
-    private static int BitPrecisionInt(int numberValue) {
-      if (numberValue == 0) {
-        return 0;
-      }
-      int i = 32;
-      {
-        if ((numberValue >> 16) == 0) {
-          numberValue <<= 16;
-          i -= 16;
-        }
-
-        if ((numberValue >> 24) == 0) {
-          numberValue <<= 8;
-          i -= 8;
-        }
-
-        if ((numberValue >> 28) == 0) {
-          numberValue <<= 4;
-          i -= 4;
-        }
-
-        if ((numberValue >> 30) == 0) {
-          numberValue <<= 2;
-          i -= 2;
-        }
-
-        if ((numberValue >> 31) == 0) {
-          --i;
-        }
-      }
-      return i;
-    }
-
     private static short Divide32By16(int dividendLow, short divisorShort, boolean returnRemainder) {
       int tmpInt;
       int dividendHigh = 0;
@@ -3788,6 +3755,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return The remainder of the two objects.
      */
     public BigInteger remainder(BigInteger divisor) {
+      if (divisor == null) {
+ throw new NullPointerException("divisor");
+}
       int words1Size = this.wordCount;
       int words2Size = divisor.wordCount;
       if (words2Size == 0) {
@@ -3924,7 +3894,7 @@ at: http://peteroupc.github.io/CBOR/
       return srrem[0];
     }
 
-    private BigInteger WordsToBigInt(
+    private static BigInteger WordsToBigInt(
       short[] words,
       int start,
       int count) {
@@ -4032,11 +4002,11 @@ at: http://peteroupc.github.io/CBOR/
           lastVshiftBit = valueVShift >> 4;
           AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.length);
         }
-        // System.out.println("3. " + (this.WordsToBigInt(dataTmp, 0, dataTmp.length)) + " cmp " + (this));
+        // System.out.println("3. " + (WordsToBigInt(dataTmp, 0, dataTmp.length)) + " cmp " + (this));
         if (CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) > 0) {
           continue;
         }
-        bid = this.WordsToBigInt(dataTmp, 0, dataTmp.length);
+        bid = WordsToBigInt(dataTmp, 0, dataTmp.length);
         result[i >> 4] |= ((short)(1 << (i & 15)));
       }
       bigintX = new BigInteger();

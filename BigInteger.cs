@@ -13,7 +13,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer.</summary>
+  /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -1723,39 +1723,6 @@ namespace PeterO {
         }
 
         if ((numberValue >> 15) == 0) {
-          --i;
-        }
-      }
-      return i;
-    }
-
-    private static int BitPrecisionInt(int numberValue) {
-      if (numberValue == 0) {
-        return 0;
-      }
-      int i = 32;
-      unchecked {
-        if ((numberValue >> 16) == 0) {
-          numberValue <<= 16;
-          i -= 16;
-        }
-
-        if ((numberValue >> 24) == 0) {
-          numberValue <<= 8;
-          i -= 8;
-        }
-
-        if ((numberValue >> 28) == 0) {
-          numberValue <<= 4;
-          i -= 4;
-        }
-
-        if ((numberValue >> 30) == 0) {
-          numberValue <<= 2;
-          i -= 2;
-        }
-
-        if ((numberValue >> 31) == 0) {
           --i;
         }
       }
@@ -4062,6 +4029,9 @@ namespace PeterO {
     /// <param name='divisor'>A BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
     public BigInteger remainder(BigInteger divisor) {
+      if (divisor == null) {
+        throw new ArgumentNullException("divisor");
+      }
       int words1Size = this.wordCount;
       int words2Size = divisor.wordCount;
       if (words2Size == 0) {
@@ -4197,7 +4167,7 @@ namespace PeterO {
       return srrem[0];
     }
 
-    private BigInteger WordsToBigInt(
+    private static BigInteger WordsToBigInt(
       short[] words,
       int start,
       int count) {
@@ -4242,45 +4212,44 @@ namespace PeterO {
       }
       BigInteger bigintX;
       BigInteger bigintY;
-      if (this.wordCount < 4) {
-        BigInteger thisValue = this;
-        int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
-        if (thisValue.canFitInInt()) {
-          int smallValue = thisValue.intValue();
-          if (smallValue == 0) {
-            return new BigInteger[] {
-              BigInteger.Zero, BigInteger.Zero
-            };
-          }
-          int smallintX = 0;
-          int smallintY = 1 << powerBits;
-          do {
-            smallintX = smallintY;
-            smallintY = smallValue / smallintX;
-            smallintY += smallintX;
-            smallintY >>= 1;
-          } while (smallintY < smallintX);
-          smallintY = smallintX * smallintX;
-          smallintY = smallValue - smallintY;
+      BigInteger thisValue = this;
+      int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
+      if (thisValue.canFitInInt()) {
+        int smallValue = thisValue.intValue();
+        if (smallValue == 0) {
           return new BigInteger[] {
-            (BigInteger)smallintX, (BigInteger)smallintY
-          };
-        } else {
-          bigintX = null;
-          bigintY = Power2(powerBits);
-          do {
-            bigintX = bigintY;
-            bigintY = thisValue / (BigInteger)bigintX;
-            bigintY += bigintX;
-            bigintY >>= 1;
-          } while (bigintY.CompareTo(bigintX) < 0);
-          bigintY = bigintX * (BigInteger)bigintX;
-          bigintY = thisValue - (BigInteger)bigintY;
-          return new BigInteger[] {
-            bigintX, bigintY
+            BigInteger.Zero, BigInteger.Zero
           };
         }
+        int smallintX = 0;
+        int smallintY = 1 << powerBits;
+        do {
+          smallintX = smallintY;
+          smallintY = smallValue / smallintX;
+          smallintY += smallintX;
+          smallintY >>= 1;
+        } while (smallintY < smallintX);
+        smallintY = smallintX * smallintX;
+        smallintY = smallValue - smallintY;
+        return new BigInteger[] {
+          (BigInteger)smallintX, (BigInteger)smallintY
+        };
+      } else {
+        bigintX = null;
+        bigintY = Power2(powerBits);
+        do {
+          bigintX = bigintY;
+          bigintY = thisValue / (BigInteger)bigintX;
+          bigintY += bigintX;
+          bigintY >>= 1;
+        } while (bigintY.CompareTo(bigintX) < 0);
+        bigintY = bigintX * (BigInteger)bigintX;
+        bigintY = thisValue - (BigInteger)bigintY;
+        return new BigInteger[] {
+          bigintX, bigintY
+        };
       }
+      /*
       // Use Johnson's bisection algorithm to find the square root
       int bitSet = this.getUnsignedBitLength();
       --bitSet;
@@ -4325,11 +4294,11 @@ namespace PeterO {
           lastVshiftBit = valueVShift >> 4;
           AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.Length);
         }
-        // Console.WriteLine("3. " + (this.WordsToBigInt(dataTmp, 0, dataTmp.Length)) + " cmp " + (this));
+        // Console.WriteLine("3. " + (WordsToBigInt(dataTmp, 0, dataTmp.Length)) + " cmp " + (this));
         if (CompareUnevenSize(dataTmp, 0, dataTmp.Length, this.reg, 0, this.wordCount) > 0) {
           continue;
         }
-        bid = this.WordsToBigInt(dataTmp, 0, dataTmp.Length);
+        bid = WordsToBigInt(dataTmp, 0, dataTmp.Length);
         result[i >> 4] |= unchecked((short)(1 << (i & 15)));
       }
       bigintX = new BigInteger();
@@ -4340,6 +4309,7 @@ namespace PeterO {
       return new BigInteger[] {
         bigintX, bigintY
       };
+       */
     }
 
     /// <summary>Gets a value indicating whether this value is even.</summary>

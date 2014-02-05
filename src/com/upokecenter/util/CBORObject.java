@@ -3806,13 +3806,11 @@ public static CBORObject FromObject(Object obj) {
     /**
      * Generates a CBOR object from an arbitrary object and gives the resulting
      * object a tag.
-     * @param o An arbitrary object.
-     * @param bigintTag A big integer that specifies a tag number.
      * @return A CBOR object where the object.
      * @throws java.lang.IllegalArgumentException The parameter {@code bigintTag}
-     * is less than 0 or greater than 2^64-1, or {@code o}'s type is unsupported.
+     * is less than 0 or greater than 2^64-1, or "o"'s type is unsupported.
      */
-    public static CBORObject FromObjectAndTag(Object o, BigInteger bigintTag) {
+    public static CBORObject FromObjectAndTag(Object valueOb, BigInteger bigintTag) {
       if (bigintTag == null) {
         throw new NullPointerException("bigintTag");
       }
@@ -3822,7 +3820,7 @@ public static CBORObject FromObject(Object obj) {
       if (bigintTag.compareTo(valueUInt64MaxValue) > 0) {
         throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 (" + (bigintTag) + ")");
       }
-      CBORObject c = FromObject(o);
+      CBORObject c = FromObject(valueOb);
       if (bigintTag.compareTo(valueBigInt65536) < 0) {
         // Low-numbered, commonly used tags
         return new CBORObject(c, bigintTag.intValue(), 0);
