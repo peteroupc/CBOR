@@ -2410,11 +2410,11 @@ namespace Test
         BigInteger srsqr = sr * (BigInteger)sr;
         sr += BigInteger.One;
         BigInteger sronesqr = sr * (BigInteger)sr;
-        if (srsqr.CompareTo(bigintA) >0) {
-          Assert.Fail(srsqr + " not " + bigintA + " or less (TestSqrt, sqrt=" + sr +")");
+        if (srsqr.CompareTo(bigintA) > 0) {
+          Assert.Fail(srsqr + " not " + bigintA + " or less (TestSqrt, sqrt=" + sr + ")");
         }
         if (sronesqr.CompareTo(bigintA) <= 0) {
-          Assert.Fail(srsqr + " not greater than " + bigintA + " (TestSqrt, sqrt=" + sr +")");
+          Assert.Fail(srsqr + " not greater than " + bigintA + " (TestSqrt, sqrt=" + sr + ")");
         }
       }
     }

@@ -166,54 +166,57 @@ namespace PeterO {
         this.discardedBitCount.AddInt(bits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = 0;
+        this.isSmall = true;
+        this.shiftedSmall = 0;
         this.knownBitLength = new FastInteger(1);
         return;
       }
-      byte[] bytes = this.shiftedBigInt.ToByteArray();
-      this.knownBitLength = ByteArrayBitLength(bytes);
-      FastInteger bitDiff = new FastInteger(0);
-      FastInteger bitShift = null;
-      if (this.knownBitLength.CompareToInt(bits) < 0) {
-        bitDiff = new FastInteger(bits).Subtract(this.knownBitLength);
-        bitShift = FastInteger.Copy(this.knownBitLength);
-      } else {
-        bitShift = new FastInteger(bits);
-      }
-      if (this.knownBitLength.CompareToInt(bits) <= 0) {
-        this.isSmall = true;
-        this.shiftedSmall = 0;
-        this.knownBitLength.SetInt(1);
-      } else {
-        FastInteger tmpBitShift = FastInteger.Copy(bitShift);
-        while (tmpBitShift.Sign > 0 && !this.shiftedBigInt.IsZero) {
-          int bs = tmpBitShift.MinInt32(1000000);
-          this.shiftedBigInt >>= bs;
-          tmpBitShift.SubtractInt(bs);
-        }
-        this.knownBitLength.Subtract(bitShift);
+      if (this.knownBitLength == null) {
+        this.knownBitLength = this.GetDigitLength();
       }
       this.discardedBitCount.AddInt(bits);
-      this.bitsAfterLeftmost |= this.bitLeftmost;
-      for (int i = 0; i < bytes.Length; ++i) {
-        if (bitShift.CompareToInt(8) > 0) {
-          // Discard all the bits, they come
-          // after the leftmost bit
-          this.bitsAfterLeftmost |= bytes[i];
-          bitShift.SubtractInt(8);
-        } else {
-          // 8 or fewer bits left.
-          // Get the bottommost bitShift minus 1 bits
-          this.bitsAfterLeftmost |= (bytes[i] << (9 - bitShift.AsInt32())) & 0xFF;
-          // Get the bit just above those bits
-          this.bitLeftmost = (bytes[i] >> (bitShift.AsInt32() - 1)) & 0x01;
-          break;
-        }
-      }
-      this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
-      if (bitDiff.Sign > 0) {
-        // Shifted more bits than the bit length
+      int cmp = this.knownBitLength.CompareToInt(bits);
+      if (cmp < 0) {
+        // too few bits
         this.bitsAfterLeftmost |= this.bitLeftmost;
+        this.bitsAfterLeftmost |= this.shiftedBigInt.IsZero ? 0 : 1;
         this.bitLeftmost = 0;
+        this.isSmall = true;
+        this.shiftedSmall = 0;
+        this.knownBitLength = new FastInteger(1);
+      } else {
+        // enough bits in the current value
+        int bs = bits;
+        this.knownBitLength.SubtractInt(bits);
+        if (bs == 1) {
+          bool odd = !this.shiftedBigInt.IsEven;
+          this.shiftedBigInt >>= 1;
+          this.bitsAfterLeftmost |= this.bitLeftmost;
+          this.bitLeftmost = odd ? 1 : 0;
+        } else {
+          this.bitsAfterLeftmost |= this.bitLeftmost;
+          int lowestSetBit = this.shiftedBigInt.getLowestSetBit();
+          if (lowestSetBit < bs - 1) {
+            // One of the discarded bits after
+            // the last one is set
+            this.bitsAfterLeftmost |= 1;
+            this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
+          } else if (lowestSetBit > bs - 1) {
+            // Means all discarded bits are zero
+            this.bitLeftmost = 0;
+          } else {
+            // Only the last discarded bit is set
+            this.bitLeftmost = 1;
+          }
+          this.shiftedBigInt >>= bs;
+        }
+        if (this.knownBitLength.CompareToInt(SmallBitLength) < 0) {
+          // Shifting to small number of bits,
+          // convert to small integer
+          this.isSmall = true;
+          this.shiftedSmall = (int)this.shiftedBigInt;
+        }
+        this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
       }
     }
 

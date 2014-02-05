@@ -107,25 +107,25 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private static int CompareUnevenSize(
-short[] words1,
-int astart,
-int acount,
-short[] words2,
-int bstart,
-int bcount) {
+      short[] words1,
+      int astart,
+      int acount,
+      short[] words2,
+      int bstart,
+      int bcount) {
       int n = acount;
       if (acount > bcount) {
         while ((acount--) != bcount) {
           if (words1[astart + acount] != 0) {
- return 1;
-}
+            return 1;
+          }
         }
         n = bcount;
       } else if (bcount > acount) {
         while ((bcount--) != acount) {
           if (words1[astart + acount] != 0) {
- return -1;
-}
+            return -1;
+          }
         }
         n = acount;
       }
@@ -1153,7 +1153,7 @@ int bcount) {
         }
       }
     }
-
+    /*
     private static void DebugWords(short[] a, int astart, int count, String msg) {
       Console.Write("Words(" + msg + "): ");
       for (int i = 0; i < count; ++i) {
@@ -1166,7 +1166,7 @@ int bcount) {
       System.arraycopy(a, astart, bi.reg, 0, count);
       System.out.println("Value(" + msg + "): " + bi);
     }
-
+     */
     private static void ChunkedLinearMultiply(
       short[] productArr,
       int cstart,
@@ -1966,7 +1966,8 @@ int bcount) {
       if (index < 0) {
         throw new IllegalArgumentException("index");
       }
-      if (this.signum() < 0) {
+       if (this.wordCount == 0) return false;
+      if (this.negative) {
         int tcindex = 0;
         int wordpos = index / 16;
         if (wordpos >= this.reg.length) {
@@ -2165,7 +2166,9 @@ int bcount) {
         ret = new BigInteger();
         ret.reg = new short[this.reg.length];
         System.arraycopy(this.reg, shiftWords, ret.reg, 0, numWords - shiftWords);
-        ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+        if (shiftBits != 0) {
+ ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+}
         ret.wordCount = numWords - shiftWords;
       }
       ret.negative = this.negative;
@@ -3981,31 +3984,30 @@ int bcount) {
           };
         }
       }
+      // Use Johnson's bisection algorithm to find the square root
       int bitSet = this.getUnsignedBitLength();
       --bitSet;
       int lastBit = bitSet >> 1;
       int count = ((lastBit + 15) >> 4) +1;
-      short[] data = new short[RoundupSize(count)];
-      short[] dataTmp2 = new short[RoundupSize(count * 3 + 2)];
-      short[] dataTmp = new short[RoundupSize(count * 3 + 2)];
+      short[] result = new short[RoundupSize(count)];
+      short[] dataTmp2 = new short[RoundupSize(count * 2 + 2)];
+      short[] dataTmp = new short[RoundupSize(count * 2 + 2)];
       BigInteger bid = BigInteger.ONE << (lastBit << 1);
-      data[lastBit >> 4] |= ((short)(1 << (lastBit & 15)));
+      result[lastBit >> 4] |= ((short)(1 << (lastBit & 15)));
       int lastVshiftBit = 0;
       for (int i = lastBit - 1;i >= 0; --i) {
         int valueVShift;
         java.util.Arrays.fill(dataTmp,0,(0)+(dataTmp.length),0);
-        System.arraycopy(data, 0, dataTmp, 0, count);
         // Left shift by i + 1
         valueVShift = (i + 1);
-        ShiftWordsLeftByWords(dataTmp, 0, dataTmp.length, valueVShift >> 4);
-        ShiftWordsLeftByBits(dataTmp, 0, dataTmp.length, valueVShift & 15);
-        // Add 1<<(i << 1)
-        dataTmp2[lastVshiftBit] = (short)0;
-        valueVShift = (i << 1);
-        dataTmp2[valueVShift >> 4] |= ((short)(1 << (valueVShift & 15)));
-        lastVshiftBit = valueVShift >> 4;
-        AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.length);
-        // Add bid
+        // Note: Copying the result in this way also shifts left, due
+        // to the way the number is stored
+        System.arraycopy(result, 0, dataTmp, valueVShift >> 4, count);
+        if ((valueVShift & 15) != 0) {
+ ShiftWordsLeftByBits(dataTmp, 0, dataTmp.length, valueVShift & 15);
+}
+        // Add bid (do this first since it's often what
+        // affects the comparison the most)
         if (dataTmp.length >= bid.wordCount) {
           AddUnevenSize(dataTmp, 0, dataTmp, 0, dataTmp.length, bid.reg, 0, bid.wordCount);
         } else {
@@ -4014,11 +4016,26 @@ int bcount) {
         if (CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) >0) {
           continue;
         }
+        // Add 1<<(i << 1)
+        valueVShift = (i << 1);
+        if ((((int)dataTmp[valueVShift >> 4]) &(1 << (valueVShift & 15))) == 0) {
+          // Add bit directly, the augend has just one bit
+          dataTmp[valueVShift >> 4] |= ((short)(1 << (valueVShift & 15)));
+        } else {
+          dataTmp2[lastVshiftBit] = (short)0;
+          dataTmp2[valueVShift >> 4] |= ((short)(1 << (valueVShift & 15)));
+          lastVshiftBit = valueVShift >> 4;
+          AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.length);
+        }
+        // System.out.println("3. " + (this.WordsToBigInt(dataTmp, 0, dataTmp.length)) + " cmp " + (this));
+        if (CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) > 0) {
+          continue;
+        }
         bid = this.WordsToBigInt(dataTmp, 0, dataTmp.length);
-        data[i >> 4] |= ((short)(1 << (i & 15)));
+        result[i >> 4] |= ((short)(1 << (i & 15)));
       }
       bigintX = new BigInteger();
-      bigintX.reg = data;
+      bigintX.reg = result;
       bigintX.wordCount = count;
       bigintX.wordCount = bigintX.CalcWordCount();
       bigintY = bigintX.multiply(bigintX);

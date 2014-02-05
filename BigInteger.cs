@@ -13,7 +13,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer.</summary>
+  /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -111,25 +111,25 @@ namespace PeterO {
     }
 
     private static int CompareUnevenSize(
-short[] words1,
-int astart,
-int acount,
-short[] words2,
-int bstart,
-int bcount) {
+      short[] words1,
+      int astart,
+      int acount,
+      short[] words2,
+      int bstart,
+      int bcount) {
       int n = acount;
       if (acount > bcount) {
         while (unchecked(acount--) != bcount) {
           if (words1[astart + acount] != 0) {
- return 1;
-}
+            return 1;
+          }
         }
         n = bcount;
       } else if (bcount > acount) {
         while (unchecked(bcount--) != acount) {
           if (words1[astart + acount] != 0) {
- return -1;
-}
+            return -1;
+          }
         }
         n = acount;
       }
@@ -1261,7 +1261,7 @@ int bcount) {
         }
       }
     }
-
+    /*
     private static void DebugWords(short[] a, int astart, int count, string msg) {
       Console.Write("Words(" + msg + "): ");
       for (int i = 0; i < count; ++i) {
@@ -1274,7 +1274,7 @@ int bcount) {
       Array.Copy(a, astart, bi.reg, 0, count);
       Console.WriteLine("Value(" + msg + "): " + bi);
     }
-
+     */
     private static void ChunkedLinearMultiply(
       short[] productArr,
       int cstart,
@@ -2286,7 +2286,10 @@ int bcount) {
       if (index < 0) {
         throw new ArgumentOutOfRangeException("index");
       }
-      if (this.Sign < 0) {
+      if (this.wordCount == 0) {
+        return false;
+      }
+      if (this.negative) {
         int tcindex = 0;
         int wordpos = index / 16;
         if (wordpos >= this.reg.Length) {
@@ -2483,7 +2486,9 @@ int bcount) {
         ret = new BigInteger();
         ret.reg = new short[this.reg.Length];
         Array.Copy(this.reg, shiftWords, ret.reg, 0, numWords - shiftWords);
-        ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+        if (shiftBits != 0) {
+          ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+        }
         ret.wordCount = numWords - shiftWords;
       }
       ret.negative = this.negative;
@@ -4274,44 +4279,58 @@ int bcount) {
           };
         }
       }
+      // Use Johnson's bisection algorithm to find the square root
       int bitSet = this.getUnsignedBitLength();
       --bitSet;
       int lastBit = bitSet >> 1;
-      int count = ((lastBit + 15) >> 4) +1;
-      short[] data = new short[RoundupSize(count)];
-      short[] dataTmp2 = new short[RoundupSize(count * 3 + 2)];
-      short[] dataTmp = new short[RoundupSize(count * 3 + 2)];
+      int count = ((lastBit + 15) >> 4) + 1;
+      short[] result = new short[RoundupSize(count)];
+      short[] dataTmp2 = new short[RoundupSize((count * 2) + 2)];
+      short[] dataTmp = new short[RoundupSize((count * 2) + 2)];
       BigInteger bid = BigInteger.One << (lastBit << 1);
-      data[lastBit >> 4] |= unchecked((short)(1 << (lastBit & 15)));
+      result[lastBit >> 4] |= unchecked((short)(1 << (lastBit & 15)));
       int lastVshiftBit = 0;
-      for (int i = lastBit - 1;i >= 0; --i) {
+      for (int i = lastBit - 1; i >= 0; --i) {
         int valueVShift;
         Array.Clear(dataTmp, 0, dataTmp.Length);
-        Array.Copy(data, 0, dataTmp, 0, count);
         // Left shift by i + 1
         valueVShift = checked(i + 1);
-        ShiftWordsLeftByWords(dataTmp, 0, dataTmp.Length, valueVShift >> 4);
-        ShiftWordsLeftByBits(dataTmp, 0, dataTmp.Length, valueVShift & 15);
-        // Add 1<<(i << 1)
-        dataTmp2[lastVshiftBit] = (short)0;
-        valueVShift = checked(i << 1);
-        dataTmp2[valueVShift >> 4] |= unchecked((short)(1 << (valueVShift & 15)));
-        lastVshiftBit = valueVShift >> 4;
-        AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.Length);
-        // Add bid
+        // Note: Copying the result in this way also shifts left, due
+        // to the way the number is stored
+        Array.Copy(result, 0, dataTmp, valueVShift >> 4, count);
+        if ((valueVShift & 15) != 0) {
+          ShiftWordsLeftByBits(dataTmp, 0, dataTmp.Length, valueVShift & 15);
+        }
+        // Add bid (do this first since it's often what
+        // affects the comparison the most)
         if (dataTmp.Length >= bid.wordCount) {
           AddUnevenSize(dataTmp, 0, dataTmp, 0, dataTmp.Length, bid.reg, 0, bid.wordCount);
         } else {
           AddUnevenSize(dataTmp, 0, bid.reg, 0, bid.wordCount, dataTmp, 0, dataTmp.Length);
         }
-        if (CompareUnevenSize(dataTmp, 0, dataTmp.Length, this.reg, 0, this.wordCount) >0) {
+        if (CompareUnevenSize(dataTmp, 0, dataTmp.Length, this.reg, 0, this.wordCount) > 0) {
+          continue;
+        }
+        // Add 1<<(i << 1)
+        valueVShift = checked(i << 1);
+        if ((((int)dataTmp[valueVShift >> 4]) & (1 << (valueVShift & 15))) == 0) {
+          // Add bit directly, the augend has just one bit
+          dataTmp[valueVShift >> 4] |= unchecked((short)(1 << (valueVShift & 15)));
+        } else {
+          dataTmp2[lastVshiftBit] = (short)0;
+          dataTmp2[valueVShift >> 4] |= unchecked((short)(1 << (valueVShift & 15)));
+          lastVshiftBit = valueVShift >> 4;
+          AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.Length);
+        }
+        // Console.WriteLine("3. " + (this.WordsToBigInt(dataTmp, 0, dataTmp.Length)) + " cmp " + (this));
+        if (CompareUnevenSize(dataTmp, 0, dataTmp.Length, this.reg, 0, this.wordCount) > 0) {
           continue;
         }
         bid = this.WordsToBigInt(dataTmp, 0, dataTmp.Length);
-        data[i >> 4] |= unchecked((short)(1 << (i & 15)));
+        result[i >> 4] |= unchecked((short)(1 << (i & 15)));
       }
       bigintX = new BigInteger();
-      bigintX.reg = data;
+      bigintX.reg = result;
       bigintX.wordCount = count;
       bigintX.wordCount = bigintX.CalcWordCount();
       bigintY = bigintX * (BigInteger)bigintX;

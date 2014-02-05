@@ -2779,6 +2779,8 @@ rem=divrem[1]; }
           int radix = this.thisRadix;
           FastInteger digits = (precision == null) ? null : this.helper.CreateShiftAccumulator(bigmant).GetDigitLength();
           BigInteger bigradix = BigInteger.valueOf(radix);
+          int bitToTest = 0;
+          FastInteger bitsToShift = new FastInteger(0);
           while (bigmant.signum()!=0) {
             if (precision != null && digits.compareTo(precision) == 0) {
               break;
@@ -2787,10 +2789,18 @@ rem=divrem[1]; }
               break;
             }
             if (this.thisRadix == 2) {
-              if (bigmant.testBit(0)) {
-                break;
+              if (bitToTest < Integer.MAX_VALUE) {
+                if (bigmant.testBit(bitToTest)) {
+                  break;
+                }
+                ++bitToTest;
+                bitsToShift.Increment();
+              } else {
+                if (bigmant.testBit(0)) {
+                  break;
+                }
+                bigmant=bigmant.shiftRight(1);
               }
-              bigmant=bigmant.shiftRight(1);
             } else {
               BigInteger bigrem;
               BigInteger bigquo;
@@ -2807,6 +2817,14 @@ bigrem=divrem[1]; }
             if (digits != null) {
               digits.Decrement();
             }
+          }
+          if (this.thisRadix == 2 && !bitsToShift.isValueZero()) {
+            while (bitsToShift.CompareToInt(1000000) >0) {
+              bigmant=bigmant.shiftRight(1000000);
+              bitsToShift.SubtractInt(1000000);
+            }
+            int tmpshift = bitsToShift.AsInt32();
+            bigmant=bigmant.shiftRight(tmpshift);
           }
         }
         int flags = this.helper.GetFlags(thisValue);

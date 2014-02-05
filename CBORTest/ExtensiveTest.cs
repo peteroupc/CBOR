@@ -1212,7 +1212,7 @@ namespace CBOR
             // Console.WriteLine("// " + f);
             bool isinput = f.Contains(".input");
             if (!isinput) {
-              continue;
+            // continue;
             }
             using (StreamReader w = new StreamReader(f)) {
               while (!w.EndOfStream) {
