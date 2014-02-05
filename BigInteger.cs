@@ -13,7 +13,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer.</summary>
+  /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -1985,9 +1985,8 @@ namespace PeterO {
 
     private static void Divide(
       short[] remainderArr,
-      int remainderStart,  // remainder
-      ,
-      size: words2Count short[] quotientArr,
+      int remainderStart,  // remainder; size: words2Count
+      short[] quotientArr,
       int quotientStart,  // quotient
       short[] tempArr,
       int tempStart,  // scratch space
@@ -2000,10 +1999,10 @@ namespace PeterO {
       // set up temporary work space
       #if DEBUG
       if (words1Count <= 0) {
-        throw new ArgumentException("valueNA not greater than 0 (" + Convert.ToString((int)valueNAint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("valueNA not greater than 0 (" + Convert.ToString((int)words1Count, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       if (words2Count <= 0) {
-        throw new ArgumentException("valueNB not greater than 0 (" + Convert.ToString((int)valueNBint, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("valueNB not greater than 0 (" + Convert.ToString((int)words2Count, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       #endif
       if (words2Count == 0) {
@@ -2011,8 +2010,8 @@ namespace PeterO {
       }
       if (words2Count == 1) {
         if (words2[words2Start]==0) {
- throw new DivideByZeroException("division by zero");
-}
+          throw new DivideByZeroException("division by zero");
+        }
         int smallRemainder = ((int)FastDivideAndRemainder(
           quotientArr,
           quotientStart,
@@ -3543,14 +3542,14 @@ namespace PeterO {
       if ((!this.negative) == (!bigintAugend.negative)) {
         // both nonnegative or both negative
         int carry;
-        int addendCount = this.wordCount + (this.wordCount & 1);
-        int augendCount = bigintAugend.wordCount + (bigintAugend.wordCount & 1);
+        int addendCount = this.wordCount;
+        int augendCount = bigintAugend.wordCount;
         int desiredLength = Math.Max(addendCount, augendCount);
         if (addendCount == augendCount) {
-          carry = Add(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
+          carry = AddOneByOne(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
         } else if (addendCount > augendCount) {
           // Addend is bigger
-          carry = Add(
+          carry = AddOneByOne(
             sum.reg,
             0,
             this.reg,
@@ -3573,7 +3572,7 @@ namespace PeterO {
           }
         } else {
           // Augend is bigger
-          carry = Add(
+          carry = AddOneByOne(
             sum.reg,
             0,
             this.reg,
@@ -4161,33 +4160,69 @@ namespace PeterO {
       short[] words,
       int start,
       int count) {
-      if (count == 0) {
- return BigInteger.Zero;
-}
-      if (start == 0) {
-        BigInteger ret = new BigInteger();
-        ret.reg = words;
-        ret.wordCount = count;
-        return ret;
-      } else {
-        short[] newwords = new short[count];
-        Array.Copy(words, start, newwords, 0, count);
-        BigInteger ret = new BigInteger();
-        ret.reg = newwords;
-        ret.wordCount = count;
-        return ret;
+      #if DEBUG
+      if ((words) == null) {
+        throw new ArgumentNullException("words");
       }
+      if (start < 0) {
+        throw new ArgumentException("start not greater or equal to 0 (" + Convert.ToString((long)(start), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      if (start > words.Length) {
+        throw new ArgumentException("start not less or equal to " + Convert.ToString((long)(words.Length), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(start), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      if (count < 0) {
+        throw new ArgumentException("count not greater or equal to 0 (" + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      if (count > words.Length) {
+        throw new ArgumentException("count not less or equal to " + Convert.ToString((long)(words.Length), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      if (words.Length-start < count) {
+        throw new ArgumentException("words's length minus " + start + " not greater or equal to " + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(words.Length-start), System.Globalization.CultureInfo.InvariantCulture) + ")");
+      }
+      #endif
+
+      if (count == 0) {
+        return BigInteger.Zero;
+      }
+      short[] newwords = new short[RoundupSize(count)];
+      Array.Copy(words, start, newwords, 0, count);
+      BigInteger ret = new BigInteger();
+      ret.reg = newwords;
+      ret.wordCount = count;
+      return ret;
     }
 
-    private BigInteger[] sqrtWithRemainderRecursive(
-      short[] words,
-      int start,
-      int count) {
-      if (count<4) {
-        BigInteger thisValue = WordsToBigInt(words, start, count);
-        int powerBits=(this.getUnsignedBitLength() + 1) / 2;
+    private BigInteger refsqrt(){
+      if(this.Sign<=0)return BigInteger.Zero;
+      BigInteger bigintX = null;
+      BigInteger bigintY = Power2((this.getUnsignedBitLength() + 1) / 2);
+      do {
+        bigintX = bigintY;
+        bigintY = this / (BigInteger)bigintX;
+        bigintY += bigintX;
+        bigintY >>= 1;
+      } while (bigintY.CompareTo(bigintX) < 0);
+      return bigintX;
+    }
+    
+    public BigInteger[] sqrtWithRemainder() {
+      if (this.Sign <= 0) {
+        return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };
+      }
+      if(this.Equals(BigInteger.One)){
+        return new BigInteger[] { BigInteger.One, BigInteger.Zero };
+      }
+      BigInteger bigintX,bigintY;
+      if (this.wordCount<4) {
+        BigInteger thisValue = this;
+        int powerBits=(thisValue.getUnsignedBitLength() + 1) / 2;
         if (thisValue.canFitInInt()) {
-          int smallValue = this.intValue();
+          int smallValue = thisValue.intValue();
+          if (smallValue == 0) {
+            return new BigInteger[] {
+              BigInteger.Zero, BigInteger.Zero
+            };
+          }
           int smallintX = 0;
           int smallintY = 1 << powerBits;
           do {
@@ -4202,8 +4237,8 @@ namespace PeterO {
             (BigInteger)smallintX, (BigInteger)smallintY
           };
         } else {
-          BigInteger bigintX = null;
-          BigInteger bigintY = Power2(powerBits);
+          bigintX = null;
+          bigintY = Power2(powerBits);
           do {
             bigintX = bigintY;
             bigintY = thisValue / (BigInteger)bigintX;
@@ -4216,65 +4251,36 @@ namespace PeterO {
             bigintX, bigintY
           };
         }
-      }
-      int shift = 0;
-      int chunkSize = checked((count + 3) >> 2);
-      int chunkSizeBits = chunkSize*16;
-      BigInteger[] srrem = null;
-      if ((count & 3) == 0) {
-        // Count is divisible by 4
-        if ((words[count-1]>>14) != 0) {
-          // Already normalized
-          srrem = sqrtWithRemainderRecursive(words, chunkSize << 1, chunkSize << 1);
-        } else {
-          short[] partWords = new short[chunkSize << 1];
-          Array.Copy(words, chunkSize << 1, partWords, 0, chunkSize << 1);
-          int precision = BitPrecision(words[count-1]);
-          shift=((15-precision)+1) >> 1;
-          ShiftWordsLeftByBits(partWords, chunkSize, chunkSize, shift);
-          srrem = sqrtWithRemainderRecursive(partWords, 0, chunkSize << 1);
+      }      
+      int bitSet=this.getUnsignedBitLength();
+      bitSet-=1;
+      int lastBit=bitSet>>1;
+      int count=((lastBit+15)>>4)+1;
+      short[] data=new short[RoundupSize(count)];
+      data[lastBit>>4]|=unchecked((short)(1<<(lastBit&15)));
+      BigInteger bigintV=BigInteger.One<<lastBit;
+      for(int i=lastBit-1;i>=0;i--){
+        BigInteger bigintUV=bigintV;
+        bigintV>>=1;
+        BigInteger bigintU=WordsToBigInt(data,0,count);
+        bigintUV*=bigintU;
+        bigintUV+=bigintU*(BigInteger)bigintU;
+        bigintUV+=(bigintV<<i);
+        if(bigintUV.CompareTo(this)<=0){
+          data[i>>4]|=unchecked((short)(1<<(i&15)));
         }
-      } else {
-        int rem = 4-(count & 3);
-        short[] partWords = new short[chunkSize << 1];
-        Array.Copy(words, chunkSize << 1, partWords, 0, count-(chunkSize << 1));
-        int precision = BitPrecision(words[count-1]);
-        shift=((15-precision)+1) >> 1;
-        ShiftWordsLeftByWords(partWords, chunkSize, chunkSize, rem);
-        ShiftWordsLeftByBits(partWords, chunkSize, chunkSize, shift);
-        srrem = sqrtWithRemainderRecursive(partWords, 0, chunkSize << 1);
       }
-      BigInteger mediumLow = WordsToBigInt(words, chunkSize, chunkSize);
-      BigInteger lowChunk = WordsToBigInt(words, 0, chunkSize);
-      shift = chunkSizeBits;
-      srrem[1]<<= shift;
-      srrem[1]+=mediumLow;
-      srrem[0]<<= 1;
-      BigInteger[] divrem = srrem[1].divideAndRemainder(srrem[0]);
-      shift = chunkSizeBits-1;
-      srrem[0]<<= shift;
-      srrem[0]+=(BigInteger)divrem[0];
-      divrem[0]*=(BigInteger)divrem[0];
-      BigInteger remainder = divrem[1];
-      remainder <<= chunkSizeBits;
-      remainder+=(BigInteger)lowChunk;
-      remainder-=(BigInteger)divrem[0];
-      if (remainder.Sign<0) {
-        BigInteger tempRoot = srrem[0]<<1;
-        remainder+=tempRoot;
-        remainder-=BigInteger.One;
-        srrem[0]-=BigInteger.One;
-      }
-      srrem[1]=remainder;
-      return srrem;
+      bigintX=new BigInteger();
+      bigintX.reg=data;
+      bigintX.wordCount=count;
+      bigintX.wordCount=bigintX.CalcWordCount();
+      bigintY = bigintX * (BigInteger)bigintX;
+      bigintY = this - (BigInteger)bigintY;
+      return new BigInteger[] {
+        bigintX, bigintY
+      };
     }
 
-    public BigInteger[] sqrtWithRemainder() {
-      if (this.Sign <= 0) {
-        return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };
-      }
-      return sqrtWithRemainderRecursive(this.reg, 0, this.wordCount);
-    }
 
     /// <summary>Gets a value indicating whether this value is even.</summary>
     /// <value>Whether this value is even.</value>

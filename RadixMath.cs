@@ -1221,7 +1221,7 @@ namespace PeterO {
               .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
             T ten = this.helper.ValueOf(10);
             T logNatural = this.Ln(thisValue, ctxdiv);
-           T logTen = this.LnTenConstant(ctxdiv);
+            T logTen = this.LnTenConstant(ctxdiv);
           // T logTen = this.Ln(ten, ctxdiv);
             thisValue = this.Divide(logNatural, logTen, ctx);
             // Treat result as inexact
