@@ -270,7 +270,7 @@ namespace PeterO {
         if (kb == 0) {
           ++kb;
         }
-        //Console.WriteLine("{0:X8} kbl={1}",this.shiftedSmall,kb);
+        // Console.WriteLine("{0:X8} kbl=" + (kb));
         return new FastInteger(kb);
       } else {
         if (this.shiftedBigInt.IsZero) {
@@ -384,7 +384,7 @@ namespace PeterO {
       this.discardedBitCount.AddInt(bits);
       this.bitsAfterLeftmost |= this.bitLeftmost;
       // Get the bottommost shift minus 1 bits
-      this.bitsAfterLeftmost |= (shift>1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
+      this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
       // Get the bit just above that bit
       this.bitLeftmost = (int)((this.shiftedSmall >> (shift - 1)) & 0x01);
       this.shiftedSmall >>= shift;
@@ -424,7 +424,7 @@ namespace PeterO {
       if (this.knownBitLength.CompareToInt(bits) <= 0) {
         return;
       }
-      int kbl=this.knownBitLength.AsInt32();
+      int kbl = this.knownBitLength.AsInt32();
       // Shift by the difference in bit length
       if (kbl > bits) {
         int bitShift = kbl - (int)bits;
@@ -433,7 +433,7 @@ namespace PeterO {
         this.discardedBitCount.AddInt(bitShift);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         // Get the bottommost shift minus 1 bits
-        this.bitsAfterLeftmost |= (shift>1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
+        this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
         // Get the bit just above that bit
         this.bitLeftmost = (int)((this.shiftedSmall >> (shift - 1)) & 0x01);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;

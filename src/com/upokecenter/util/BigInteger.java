@@ -106,6 +106,41 @@ at: http://peteroupc.github.io/CBOR/
       return 0;
     }
 
+    private static int CompareUnevenSize(
+short[] words1,
+int astart,
+int acount,
+short[] words2,
+int bstart,
+int bcount) {
+      int n = acount;
+      if (acount > bcount) {
+        while ((acount--) != bcount) {
+          if (words1[astart + acount] != 0) {
+ return 1;
+}
+        }
+        n = bcount;
+      } else if (bcount > acount) {
+        while ((bcount--) != acount) {
+          if (words1[astart + acount] != 0) {
+ return -1;
+}
+        }
+        n = acount;
+      }
+      while ((n--) != 0) {
+        int an = ((int)words1[astart + n]) & 0xFFFF;
+        int bn = ((int)words2[bstart + n]) & 0xFFFF;
+        if (an > bn) {
+          return 1;
+        } else if (an < bn) {
+          return -1;
+        }
+      }
+      return 0;
+    }
+
     private static int CompareWithOneBiggerWords1(short[] words1, int astart, short[] words2, int bstart, int words1Count) {
       // NOTE: Assumes that words2's count is 1 less
       if (words1[astart + words1Count - 1] != 0) {
@@ -1679,9 +1714,8 @@ at: http://peteroupc.github.io/CBOR/
 
     private static void Divide(
       short[] remainderArr,
-      int remainderStart,  // remainder
-      ,
-      size: words2Count short[] quotientArr,
+      int remainderStart,  // remainder; size: words2Count
+      short[] quotientArr,
       int quotientStart,  // quotient
       short[] tempArr,
       int tempStart,  // scratch space
@@ -1697,9 +1731,9 @@ at: http://peteroupc.github.io/CBOR/
         throw new ArithmeticException("division by zero");
       }
       if (words2Count == 1) {
-        if (words2[words2Start]==0) {
- throw new ArithmeticException("division by zero");
-}
+        if (words2[words2Start] == 0) {
+          throw new ArithmeticException("division by zero");
+        }
         int smallRemainder = ((int)FastDivideAndRemainder(
           quotientArr,
           quotientStart,
@@ -1707,7 +1741,7 @@ at: http://peteroupc.github.io/CBOR/
           words1Start,
           words1Count,
           words2[words2Start])) & 0xFFFF;
-        remainderArr[remainderStart]=(short)smallRemainder;
+        remainderArr[remainderStart] = (short)smallRemainder;
         return;
       }
 
@@ -3258,14 +3292,14 @@ at: http://peteroupc.github.io/CBOR/
       if ((!this.negative) == (!bigintAugend.negative)) {
         // both nonnegative or both negative
         int carry;
-        int addendCount = this.wordCount + (this.wordCount & 1);
-        int augendCount = bigintAugend.wordCount + (bigintAugend.wordCount & 1);
+        int addendCount = this.wordCount;
+        int augendCount = bigintAugend.wordCount;
         int desiredLength = Math.max(addendCount, augendCount);
         if (addendCount == augendCount) {
-          carry = Add(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
+          carry = AddOneByOne(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
         } else if (addendCount > augendCount) {
           // Addend is bigger
-          carry = Add(
+          carry = AddOneByOne(
             sum.reg,
             0,
             this.reg,
@@ -3288,7 +3322,7 @@ at: http://peteroupc.github.io/CBOR/
           }
         } else {
           // Augend is bigger
-          carry = Add(
+          carry = AddOneByOne(
             sum.reg,
             0,
             this.reg,
@@ -3881,40 +3915,43 @@ at: http://peteroupc.github.io/CBOR/
      * is 0 or less.
      */
     public BigInteger sqrt() {
-      return sqrtWithRemainder()[0];
+      return this.sqrtWithRemainder()[0];
     }
 
     private BigInteger WordsToBigInt(
       short[] words,
       int start,
       int count) {
+
       if (count == 0) {
- return BigInteger.ZERO;
-}
-      if (start == 0) {
-        BigInteger ret = new BigInteger();
-        ret.reg = words;
-        ret.wordCount = count;
-        return ret;
-      } else {
-        short[] newwords = new short[count];
-        System.arraycopy(words, start, newwords, 0, count);
-        BigInteger ret = new BigInteger();
-        ret.reg = newwords;
-        ret.wordCount = count;
-        return ret;
+        return BigInteger.ZERO;
       }
+      short[] newwords = new short[RoundupSize(count)];
+      System.arraycopy(words, start, newwords, 0, count);
+      BigInteger ret = new BigInteger();
+      ret.reg = newwords;
+      ret.wordCount = count;
+      return ret;
     }
 
-    private BigInteger[] sqrtWithRemainderRecursive(
-      short[] words,
-      int start,
-      int count) {
-      if (count<4) {
-        BigInteger thisValue = WordsToBigInt(words, start, count);
-        int powerBits=(this.getUnsignedBitLength() + 1) / 2;
+    public BigInteger[] sqrtWithRemainder() {
+      if (this.signum() <= 0) {
+        return new BigInteger[] { BigInteger.ZERO, BigInteger.ZERO };
+      }
+      if (this.equals(BigInteger.ONE)) {
+        return new BigInteger[] { BigInteger.ONE, BigInteger.ZERO };
+      }
+      BigInteger bigintX, bigintY;
+      if (this.wordCount < 4) {
+        BigInteger thisValue = this;
+        int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
         if (thisValue.canFitInInt()) {
-          int smallValue = this.intValue();
+          int smallValue = thisValue.intValue();
+          if (smallValue == 0) {
+            return new BigInteger[] {
+              BigInteger.ZERO, BigInteger.ZERO
+            };
+          }
           int smallintX = 0;
           int smallintY = 1 << powerBits;
           do {
@@ -3929,78 +3966,66 @@ at: http://peteroupc.github.io/CBOR/
             BigInteger.valueOf(smallintX), BigInteger.valueOf(smallintY)
           };
         } else {
-          BigInteger bigintX = null;
-          BigInteger bigintY = Power2(powerBits);
+          bigintX = null;
+          bigintY = Power2(powerBits);
           do {
             bigintX = bigintY;
             bigintY = thisValue.divide(bigintX);
-            bigintY=bigintY.add(bigintX);
-            bigintY=bigintY.shiftRight(1);
+            bigintY += bigintX;
+            bigintY >>= 1;
           } while (bigintY.compareTo(bigintX) < 0);
           bigintY = bigintX.multiply(bigintX);
-          bigintY = thisValue.subtract(bigintY);
+          bigintY = thisValue.subtract(BigInteger.valueOf(bigintY));
           return new BigInteger[] {
             bigintX, bigintY
           };
         }
       }
-      int shift = 0;
-      int chunkSize = ((count + 3) >> 2);
-      int chunkSizeBits = chunkSize*16;
-      BigInteger[] srrem = null;
-      if ((count & 3) == 0) {
-        // Count is divisible by 4
-        if ((words[count-1]>>14) != 0) {
-          // Already normalized
-          srrem = sqrtWithRemainderRecursive(words, chunkSize << 1, chunkSize << 1);
+      int bitSet = this.getUnsignedBitLength();
+      --bitSet;
+      int lastBit = bitSet >> 1;
+      int count = ((lastBit + 15) >> 4) +1;
+      short[] data = new short[RoundupSize(count)];
+      short[] dataTmp2 = new short[RoundupSize(count * 3 + 2)];
+      short[] dataTmp = new short[RoundupSize(count * 3 + 2)];
+      BigInteger bid = BigInteger.ONE << (lastBit << 1);
+      data[lastBit >> 4] |= ((short)(1 << (lastBit & 15)));
+      int lastVshiftBit = 0;
+      for (int i = lastBit - 1;i >= 0; --i) {
+        int valueVShift;
+        java.util.Arrays.fill(dataTmp,0,(0)+(dataTmp.length),0);
+        System.arraycopy(data, 0, dataTmp, 0, count);
+        // Left shift by i + 1
+        valueVShift = (i + 1);
+        ShiftWordsLeftByWords(dataTmp, 0, dataTmp.length, valueVShift >> 4);
+        ShiftWordsLeftByBits(dataTmp, 0, dataTmp.length, valueVShift & 15);
+        // Add 1<<(i << 1)
+        dataTmp2[lastVshiftBit] = (short)0;
+        valueVShift = (i << 1);
+        dataTmp2[valueVShift >> 4] |= ((short)(1 << (valueVShift & 15)));
+        lastVshiftBit = valueVShift >> 4;
+        AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.length);
+        // Add bid
+        if (dataTmp.length >= bid.wordCount) {
+          AddUnevenSize(dataTmp, 0, dataTmp, 0, dataTmp.length, bid.reg, 0, bid.wordCount);
         } else {
-          short[] partWords = new short[chunkSize << 1];
-          System.arraycopy(words, chunkSize << 1, partWords, 0, chunkSize << 1);
-          int precision = BitPrecision(words[count-1]);
-          shift=((15-precision)+1) >> 1;
-          ShiftWordsLeftByBits(partWords, chunkSize, chunkSize, shift);
-          srrem = sqrtWithRemainderRecursive(partWords, 0, chunkSize << 1);
+          AddUnevenSize(dataTmp, 0, bid.reg, 0, bid.wordCount, dataTmp, 0, dataTmp.length);
         }
-      } else {
-        int rem = 4-(count & 3);
-        short[] partWords = new short[chunkSize << 1];
-        System.arraycopy(words, chunkSize << 1, partWords, 0, count-(chunkSize << 1));
-        int precision = BitPrecision(words[count-1]);
-        shift=((15-precision)+1) >> 1;
-        ShiftWordsLeftByWords(partWords, chunkSize, chunkSize, rem);
-        ShiftWordsLeftByBits(partWords, chunkSize, chunkSize, shift);
-        srrem = sqrtWithRemainderRecursive(partWords, 0, chunkSize << 1);
+        if (CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) >0) {
+          continue;
+        }
+        bid = this.WordsToBigInt(dataTmp, 0, dataTmp.length);
+        data[i >> 4] |= ((short)(1 << (i & 15)));
       }
-      BigInteger mediumLow = WordsToBigInt(words, chunkSize, chunkSize);
-      BigInteger lowChunk = WordsToBigInt(words, 0, chunkSize);
-      shift = chunkSizeBits;
-      srrem[1]<<= shift;
-      srrem[1]+=mediumLow;
-      srrem[0]<<= 1;
-      BigInteger[] divrem = srrem[1].divideAndRemainder(srrem[0]);
-      shift = chunkSizeBits-1;
-      srrem[0]<<= shift;
-      srrem[0]+=BigInteger.valueOf(divrem[0]);
-      divrem[0]*=BigInteger.valueOf(divrem[0]);
-      BigInteger remainder = divrem[1];
-      remainder=remainder.shiftLeft(chunkSizeBits);
-      remainder=remainder.add(lowChunk);
-      remainder=remainder.subtract(BigInteger.valueOf(divrem[0]));
-      if (remainder.signum()<0) {
-        BigInteger tempRoot = srrem[0]<<1;
-        remainder=remainder.add(tempRoot);
-        remainder=remainder.subtract(BigInteger.ONE);
-        srrem[0]-=BigInteger.ONE;
-      }
-      srrem[1]=remainder;
-      return srrem;
-    }
-
-    public BigInteger[] sqrtWithRemainder() {
-      if (this.signum() <= 0) {
-        return new BigInteger[] { BigInteger.ZERO, BigInteger.ZERO };
-      }
-      return sqrtWithRemainderRecursive(this.reg, 0, this.wordCount);
+      bigintX = new BigInteger();
+      bigintX.reg = data;
+      bigintX.wordCount = count;
+      bigintX.wordCount = bigintX.CalcWordCount();
+      bigintY = bigintX.multiply(bigintX);
+      bigintY = this.subtract(BigInteger.valueOf(bigintY));
+      return new BigInteger[] {
+        bigintX, bigintY
+      };
     }
 
     /**
