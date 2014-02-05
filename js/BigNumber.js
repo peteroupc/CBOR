@@ -320,7 +320,7 @@ function() {
             if (shiftBits != 0) {
                 for (var i = n; i > 0; --i) {
                     u = r[rstart + i - 1];
-                    r[rstart + i - 1] = (((((((((u & 65535) >> (shiftBits|0)) | (carry & 65535))|0)) & 65535))|0));
+                    r[rstart + i - 1] = ((((((((((u & 65535) >> (shiftBits|0)) | (carry & 65535)))|0)) & 65535))|0));
                     carry = (((u & 65535) << ((16 - shiftBits)|0))|0);
                 }
             }
@@ -407,7 +407,7 @@ function() {
     constructor['Increment'] = constructor.Increment = function(words1, words1Start, n, words2) {
         {
             var tmp = words1[words1Start];
-            words1[words1Start] = ((tmp + words2) & 65535);
+            words1[words1Start] = (((tmp + words2) & 65535));
             if ((words1[words1Start] & 65535) >= (tmp & 65535)) {
                 return 0;
             }
@@ -423,7 +423,7 @@ function() {
     constructor['Decrement'] = constructor.Decrement = function(words1, words1Start, n, words2) {
         {
             var tmp = words1[words1Start];
-            words1[words1Start] = ((tmp - words2) & 65535);
+            words1[words1Start] = (((tmp - words2) & 65535));
             if ((words1[words1Start] & 65535) <= (tmp & 65535)) {
                 return 0;
             }
@@ -440,7 +440,7 @@ function() {
     constructor['TwosComplement'] = constructor.TwosComplement = function(words1, words1Start, n) {
         BigInteger.Decrement(words1, words1Start, n, 1);
         for (var i = 0; i < n; ++i) {
-            words1[words1Start + i] = ((~words1[words1Start + i]) & 65535);
+            words1[words1Start + i] = (((~words1[words1Start + i]) & 65535));
         }
     };
     constructor['Add'] = constructor.Add = function(c, cstart, words1, astart, words2, bstart, n) {
@@ -594,7 +594,7 @@ function() {
             p = (words1[astart + 1] & 65535) * (words1[astart + 1] & 65535);
             p = p + (e);
             result[rstart + 2] = (p & 65535);
-            result[rstart + 3] = ((p >> 16) & 65535);
+            result[rstart + 3] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Square4'] = constructor.Baseline_Square4 = function(result, rstart, words1, astart) {
@@ -666,7 +666,7 @@ function() {
             p = (words1[astart + 3] & 65535) * (words1[astart + 3] & 65535);
             p = p + (e);
             result[rstart + 6] = (p & 65535);
-            result[rstart + 7] = ((p >> 16) & 65535);
+            result[rstart + 7] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Square8'] = constructor.Baseline_Square8 = function(result, rstart, words1, astart) {
@@ -882,7 +882,7 @@ function() {
             p = (words1[astart + 7] & 65535) * (words1[astart + 7] & 65535);
             p = p + (e);
             result[rstart + 14] = (p & 65535);
-            result[rstart + 15] = ((p >> 16) & 65535);
+            result[rstart + 15] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Multiply2'] = constructor.Baseline_Multiply2 = function(result, rstart, words1, astart, words2, bstart) {
@@ -912,7 +912,7 @@ function() {
             p = a1 * b1;
             p = p + (d);
             result[rstart + 2] = (p & 65535);
-            result[rstart + 3] = ((p >> 16) & 65535);
+            result[rstart + 3] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Multiply4'] = constructor.Baseline_Multiply4 = function(result, rstart, words1, astart, words2, bstart) {
@@ -1001,7 +1001,7 @@ function() {
             p = (((words1[astart + 3])|0) & mask) * (((words2[bstart + 3])|0) & mask);
             p = p + (d);
             result[rstart + 6] = (p & 65535);
-            result[rstart + 7] = ((p >> 16) & 65535);
+            result[rstart + 7] = (((p >> 16) & 65535));
         }
     };
     constructor['Baseline_Multiply8'] = constructor.Baseline_Multiply8 = function(result, rstart, words1, astart, words2, bstart) {
@@ -1304,7 +1304,7 @@ function() {
             p = (((words1[astart + 7])|0) & mask) * (((words2[bstart + 7])|0) & mask);
             p = p + (d);
             result[rstart + 14] = (p & 65535);
-            result[rstart + 15] = ((p >> 16) & 65535);
+            result[rstart + 15] = (((p >> 16) & 65535));
         }
     };
     constructor['RecursionLimit'] = constructor.RecursionLimit = 10;
@@ -1549,7 +1549,7 @@ function() {
                     resultArr[resultStart + words2Count + 1] = 0;
                     return;
                 default:
-                    resultArr[resultStart + words2Count] = ((BigInteger.LinearMultiply(resultArr, resultStart, words2, words2Start, words1[words1Start], words2Count)) & 65535);
+                    resultArr[resultStart + words2Count] = (((BigInteger.LinearMultiply(resultArr, resultStart, words2, words2Start, words1[words1Start], words2Count)) & 65535));
                     resultArr[resultStart + words2Count + 1] = 0;
                     return;
             }
@@ -1637,34 +1637,6 @@ function() {
         }
         return i;
     };
-    constructor['BitPrecisionInt'] = constructor.BitPrecisionInt = function(numberValue) {
-        if (numberValue == 0) {
-            return 0;
-        }
-        var i = 32;
-        {
-            if ((numberValue >> 16) == 0) {
-                numberValue <<= 16;
-                i -= 16;
-            }
-            if ((numberValue >> 24) == 0) {
-                numberValue <<= 8;
-                i -= 8;
-            }
-            if ((numberValue >> 28) == 0) {
-                numberValue <<= 4;
-                i -= 4;
-            }
-            if ((numberValue >> 30) == 0) {
-                numberValue <<= 2;
-                i -= 2;
-            }
-            if ((numberValue >> 31) == 0) {
-                --i;
-            }
-        }
-        return i;
-    };
     constructor['Divide32By16'] = constructor.Divide32By16 = function(dividendLow, divisorShort, returnRemainder) {
         var tmpInt;
         var dividendHigh = 0;
@@ -1672,7 +1644,7 @@ function() {
         for (var i = 0; i < 32; ++i) {
             tmpInt = dividendHigh >> 31;
             dividendHigh <<= 1;
-            dividendHigh = (((dividendHigh | ((dividendLow >> 31) & 1))|0));
+            dividendHigh = ((((dividendHigh | ((dividendLow >> 31) & 1)))|0));
             dividendLow <<= 1;
             tmpInt |= dividendHigh;
             if (((tmpInt >> 31) != 0) || (tmpInt >= intDivisor)) {
@@ -1688,7 +1660,7 @@ function() {
         {
             var iy = (y|0) & 65535;
             if ((x >> 31) == 0) {
-                return (((x|0) / iy) & 65535);
+                return (((((x|0) / iy) & 65535))|0);
             } else {
                 return BigInteger.Divide32By16(x, y, false);
             }
@@ -1719,16 +1691,16 @@ function() {
             var valueB1int = (valueB1|0) & 65535;
             var p = valueB0int * valueQint;
             var u = (words1[words1Start] & 65535) - (p & 65535);
-            words1[words1Start] = ((BigInteger.GetLowHalf(u)) & 65535);
+            words1[words1Start] = (((BigInteger.GetLowHalf(u)) & 65535));
             u = (words1[words1Start + 1] & 65535) - (p >>> 16) - ((BigInteger.GetHighHalfAsBorrow(u)) & 65535) - (valueB1int * valueQint);
-            words1[words1Start + 1] = ((BigInteger.GetLowHalf(u)) & 65535);
-            words1[words1Start + 2] = ((words1[words1Start + 2] + BigInteger.GetHighHalf(u)) & 65535);
+            words1[words1Start + 1] = (((BigInteger.GetLowHalf(u)) & 65535));
+            words1[words1Start + 2] = (((words1[words1Start + 2] + BigInteger.GetHighHalf(u)) & 65535));
             while (words1[words1Start + 2] != 0 || (words1[words1Start + 1] & 65535) > (valueB1 & 65535) || (words1[words1Start + 1] == valueB1 && (words1[words1Start] & 65535) >= (valueB0 & 65535))) {
                 u = (words1[words1Start] & 65535) - valueB0int;
-                words1[words1Start] = ((BigInteger.GetLowHalf(u)) & 65535);
+                words1[words1Start] = (((BigInteger.GetLowHalf(u)) & 65535));
                 u = (words1[words1Start + 1] & 65535) - valueB1int - ((BigInteger.GetHighHalfAsBorrow(u)) & 65535);
-                words1[words1Start + 1] = ((BigInteger.GetLowHalf(u)) & 65535);
-                words1[words1Start + 2] = ((words1[words1Start + 2] + BigInteger.GetHighHalf(u)) & 65535);
+                words1[words1Start + 1] = (((BigInteger.GetLowHalf(u)) & 65535));
+                words1[words1Start + 2] = (((words1[words1Start + 2] + BigInteger.GetHighHalf(u)) & 65535));
                 ++valueQ;
             }
         }
@@ -1769,15 +1741,15 @@ function() {
                         d = (s & 65535) * (((valueB0|0) - valueB1) & 65535);
                     }
                     var valueA0B0 = valueA0 * valueB0;
-                    c[csi] = ((valueA0B0 & 65535) & 65535);
+                    c[csi] = (((((valueA0B0 & 65535) & 65535))|0));
                     var a0b0high = (valueA0B0 >>> 16);
                     var valueA1B1 = valueA1 * valueB1;
                     var tempInt;
                     tempInt = a0b0high + (valueA0B0 & 65535) + (d & 65535) + (valueA1B1 & 65535);
-                    c[csi + 1] = ((tempInt & 65535) & 65535);
+                    c[csi + 1] = (((((tempInt & 65535) & 65535))|0));
                     tempInt = valueA1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((valueA1B1 >> 16) & 65535) - (s & 65535);
-                    c[csi + 2] = ((tempInt & 65535) & 65535);
-                    c[csi + 3] = ((((tempInt >> 16) & 65535) & 65535));
+                    c[csi + 2] = (((((tempInt & 65535) & 65535))|0));
+                    c[csi + 3] = (((((((tempInt >> 16) & 65535)) & 65535))|0));
                 }
             } else {
                 for (var i = istart; i < iend; i += 4) {
@@ -1793,14 +1765,14 @@ function() {
                     }
                     var valueA0B0 = valueA0 * valueB0;
                     var a0b0high = (valueA0B0 >>> 16);
-                    c[csi] = ((valueA0B0 & 65535) & 65535);
+                    c[csi] = (((((valueA0B0 & 65535) & 65535))|0));
                     var valueA1B1 = valueA1 * valueB1;
                     var tempInt;
                     tempInt = a0b0high + (valueA0B0 & 65535) + (d & 65535) + (valueA1B1 & 65535);
-                    c[csi + 1] = ((tempInt & 65535) & 65535);
+                    c[csi + 1] = (((((tempInt & 65535) & 65535))|0));
                     tempInt = valueA1B1 + ((tempInt >> 16) & 65535) + a0b0high + ((d >> 16) & 65535) + ((valueA1B1 >> 16) & 65535) - (s & 65535);
-                    c[csi + 2] = ((tempInt & 65535) & 65535);
-                    c[csi + 3] = ((((tempInt >> 16) & 65535) & 65535));
+                    c[csi + 2] = (((((tempInt & 65535) & 65535))|0));
+                    c[csi + 3] = (((((((tempInt >> 16) & 65535)) & 65535))|0));
                 }
             }
         }
@@ -1828,16 +1800,16 @@ function() {
                     var a0b0high = (valueA0B0 >>> 16);
                     var tempInt;
                     tempInt = valueA0B0 + (c[csi] & 65535);
-                    c[csi] = ((tempInt & 65535) & 65535);
+                    c[csi] = (((((tempInt & 65535) & 65535))|0));
                     var valueA1B1 = valueA1 * b1;
                     var a1b1low = valueA1B1 & 65535;
                     var a1b1high = ((valueA1B1 >> 16)|0) & 65535;
                     tempInt = ((tempInt >> 16) & 65535) + (valueA0B0 & 65535) + (d & 65535) + a1b1low + (c[csi + 1] & 65535);
-                    c[csi + 1] = ((tempInt & 65535) & 65535);
+                    c[csi + 1] = (((((tempInt & 65535) & 65535))|0));
                     tempInt = ((tempInt >> 16) & 65535) + a1b1low + a0b0high + ((d >> 16) & 65535) + a1b1high - (s & 65535) + (c[csi + 2] & 65535);
-                    c[csi + 2] = ((tempInt & 65535) & 65535);
+                    c[csi + 2] = (((((tempInt & 65535) & 65535))|0));
                     tempInt = ((tempInt >> 16) & 65535) + a1b1high + (c[csi + 3] & 65535);
-                    c[csi + 3] = ((tempInt & 65535) & 65535);
+                    c[csi + 3] = (((((tempInt & 65535) & 65535))|0));
                     if ((tempInt >> 16) != 0) {
                         c[csi + 4] = ((c[csi + 4] + 1) & 65535);
                         c[csi + 5] = (((((c[csi + 5] + (((c[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
@@ -1859,16 +1831,16 @@ function() {
                     var a0b0high = (valueA0B0 >>> 16);
                     var tempInt;
                     tempInt = valueA0B0 + (c[csi] & 65535);
-                    c[csi] = ((tempInt & 65535) & 65535);
+                    c[csi] = (((((tempInt & 65535) & 65535))|0));
                     var valueA1B1 = valueA1 * valueB1;
                     var a1b1low = valueA1B1 & 65535;
                     var a1b1high = (valueA1B1 >>> 16);
                     tempInt = ((tempInt >> 16) & 65535) + (valueA0B0 & 65535) + (d & 65535) + a1b1low + (c[csi + 1] & 65535);
-                    c[csi + 1] = ((tempInt & 65535) & 65535);
+                    c[csi + 1] = (((((tempInt & 65535) & 65535))|0));
                     tempInt = ((tempInt >> 16) & 65535) + a1b1low + a0b0high + ((d >> 16) & 65535) + a1b1high - (s & 65535) + (c[csi + 2] & 65535);
-                    c[csi + 2] = ((tempInt & 65535) & 65535);
+                    c[csi + 2] = (((((tempInt & 65535) & 65535))|0));
                     tempInt = ((tempInt >> 16) & 65535) + a1b1high + (c[csi + 3] & 65535);
-                    c[csi + 3] = ((tempInt & 65535) & 65535);
+                    c[csi + 3] = (((((tempInt & 65535) & 65535))|0));
                     if ((tempInt >> 16) != 0) {
                         c[csi + 4] = ((c[csi + 4] + 1) & 65535);
                         c[csi + 5] = (((((c[csi + 5] + (((c[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
@@ -1995,7 +1967,7 @@ function() {
                 for (var i = 0; i < len; i += 2, j++) {
                     var index = littleEndian ? i : len - 1 - i;
                     var index2 = littleEndian ? i + 1 : len - 2 - i;
-                    this.reg[j] = ((bytes[index] & 255) & 65535);
+                    this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
                     if (index2 >= 0 && index2 < len) {
                         this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
                     }
@@ -2004,12 +1976,12 @@ function() {
                 for (var i = 0; i < len; i += 2, j++) {
                     var index = littleEndian ? i : len - 1 - i;
                     var index2 = littleEndian ? i + 1 : len - 2 - i;
-                    this.reg[j] = ((bytes[index] & 255) & 65535);
+                    this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
                     if (index2 >= 0 && index2 < len) {
                         this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
                     } else {
 
-                        this.reg[j] = ((this.reg[j] | (65280)) & 65535);
+                        this.reg[j] = (((this.reg[j] | (65280)) & 65535));
                     }
                 }
                 for (; j < this.reg.length; ++j) {
@@ -2109,7 +2081,7 @@ function() {
                 iut = ((numberValue < 0) ? -numberValue : numberValue);
                 this.reg = [0, 0];
                 this.reg[0] = (iut & 65535);
-                this.reg[1] = ((iut >> 16) & 65535);
+                this.reg[1] = (((iut >> 16) & 65535));
                 this.wordCount = this.reg[1] != 0 ? 2 : (this.reg[0] == 0 ? 0 : 1);
             }
         }
@@ -2289,13 +2261,13 @@ function() {
                 if (ut.signum() < 0) {
                     ut = ut.negate();
                 }
-                ret.reg[0] = ((ut.andInt(65535).shortValue()) & 65535);
+                ret.reg[0] = (((ut.andInt(65535).shortValue()) & 65535));
                 ut = ut.shiftRight(16);
-                ret.reg[1] = ((ut.andInt(65535).shortValue()) & 65535);
+                ret.reg[1] = (((ut.andInt(65535).shortValue()) & 65535));
                 ut = ut.shiftRight(16);
-                ret.reg[2] = ((ut.andInt(65535).shortValue()) & 65535);
+                ret.reg[2] = (((ut.andInt(65535).shortValue()) & 65535));
                 ut = ut.shiftRight(16);
-                ret.reg[3] = ((ut.andInt(65535).shortValue()) & 65535);
+                ret.reg[3] = (((ut.andInt(65535).shortValue()) & 65535));
 
                 ret.wordCount = 4;
                 while (ret.wordCount != 0 && ret.reg[ret.wordCount - 1] == 0) {
@@ -2891,7 +2863,7 @@ function() {
                 var quo, rem;
 
                 while ((wci--) > 0) {
-                    var currentDividend = ((((tempReg[wci] & 65535) | ((remainderShort|0) << 16))|0));
+                    var currentDividend = (((((tempReg[wci] & 65535) | ((remainderShort|0) << 16)))|0));
                     quo = ((currentDividend / 10000)|0);
                     tempReg[wci] = (quo & 65535);
                     rem = currentDividend - (10000 * quo);
@@ -2978,8 +2950,8 @@ function() {
                 smallInt = smallInt + (digit);
             } else {
                 if (haveSmallInt) {
-                    bigint.reg[0] = ((smallInt & 65535) & 65535);
-                    bigint.reg[1] = ((smallInt >>> 16) & 65535);
+                    bigint.reg[0] = (((smallInt & 65535) & 65535));
+                    bigint.reg[1] = (((smallInt >>> 16) & 65535));
                     haveSmallInt = false;
                 }
 
@@ -3001,7 +2973,7 @@ function() {
                 if (digit != 0) {
                     var d = bigint.reg[0] & 65535;
                     if (d <= 65526) {
-                        bigint.reg[0] = ((d + digit) & 65535);
+                        bigint.reg[0] = (((d + digit) & 65535));
                     } else if (BigInteger.Increment(bigint.reg, 0, bigint.reg.length, (digit|0)) != 0) {
                         bigint.reg = BigInteger.GrowForCarry(bigint.reg, 1);
                     }
@@ -3012,8 +2984,8 @@ function() {
             throw new Error("No digits");
         }
         if (haveSmallInt) {
-            bigint.reg[0] = ((smallInt & 65535) & 65535);
-            bigint.reg[1] = ((smallInt >>> 16) & 65535);
+            bigint.reg[0] = (((smallInt & 65535) & 65535));
+            bigint.reg[1] = (((smallInt >>> 16) & 65535));
         }
         bigint.wordCount = bigint.CalcWordCount();
         bigint.negative = bigint.wordCount != 0 && negative;
@@ -3231,7 +3203,7 @@ function() {
                 sum = new BigInteger();
                 sum.reg = [0, 0];
                 sum.reg[0] = (intSum & 65535);
-                sum.reg[1] = ((intSum >> 16) & 65535);
+                sum.reg[1] = (((intSum >> 16) & 65535));
                 sum.wordCount = ((intSum >> 16) == 0) ? 1 : 2;
                 sum.negative = this.negative;
                 return sum;
@@ -3353,7 +3325,7 @@ function() {
             var regLength = BigInteger.RoundupSize(wc + 1);
             product.reg = [];
             for (var arrfillI = 0; arrfillI < regLength; arrfillI++) product.reg[arrfillI] = 0;
-            product.reg[wc] = ((BigInteger.LinearMultiply(product.reg, 0, bigintMult.reg, 0, this.reg[0], wc)) & 65535);
+            product.reg[wc] = (((BigInteger.LinearMultiply(product.reg, 0, bigintMult.reg, 0, this.reg[0], wc)) & 65535));
             product.negative = false;
             product.wordCount = product.reg.length;
             needShorten = false;
@@ -3362,7 +3334,7 @@ function() {
             var regLength = BigInteger.RoundupSize(wc + 1);
             product.reg = [];
             for (var arrfillI = 0; arrfillI < regLength; arrfillI++) product.reg[arrfillI] = 0;
-            product.reg[wc] = ((BigInteger.LinearMultiply(product.reg, 0, this.reg, 0, bigintMult.reg[0], wc)) & 65535);
+            product.reg[wc] = (((BigInteger.LinearMultiply(product.reg, 0, this.reg, 0, bigintMult.reg[0], wc)) & 65535));
             product.negative = false;
             product.wordCount = product.reg.length;
             needShorten = false;
@@ -3426,7 +3398,7 @@ function() {
         var idivisor = (divisorSmall|0) & 65535;
         var quo, rem;
         while ((i--) > 0) {
-            var currentDividend = ((((dividendReg[i] & 65535) | ((remainderShort|0) << 16))|0));
+            var currentDividend = (((((dividendReg[i] & 65535) | ((remainderShort|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
                 quo = ((currentDividend / idivisor)|0);
                 quotientReg[i] = (quo & 65535);
@@ -3435,7 +3407,7 @@ function() {
                     remainderShort = (rem|0);
                 }
             } else {
-                quotientReg[i] = ((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535);
+                quotientReg[i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
                 if (i > 0) {
                     remainderShort = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
                 }
@@ -3448,14 +3420,14 @@ function() {
         var idivisor = (divisorSmall|0) & 65535;
         var quo, rem;
         while ((i--) > 0) {
-            var currentDividend = ((((dividendReg[dividendStart + i] & 65535) | ((remainderShort|0) << 16))|0));
+            var currentDividend = (((((dividendReg[dividendStart + i] & 65535) | ((remainderShort|0) << 16)))|0));
             if ((currentDividend >> 31) == 0) {
                 quo = ((currentDividend / idivisor)|0);
                 quotientReg[quotientStart + i] = (quo & 65535);
                 rem = currentDividend - (idivisor * quo);
                 remainderShort = (rem|0);
             } else {
-                quotientReg[quotientStart + i] = ((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535);
+                quotientReg[quotientStart + i] = (((BigInteger.DivideUnsigned(currentDividend, divisorSmall)) & 65535));
                 remainderShort = BigInteger.RemainderUnsigned(currentDividend, divisorSmall);
             }
         }
@@ -3616,6 +3588,9 @@ function() {
     };
 
     prototype['remainder'] = prototype.remainder = function(divisor) {
+        if (divisor == null) {
+            throw new Error("divisor");
+        }
         var words1Size = this.wordCount;
         var words2Size = divisor.wordCount;
         if (words2Size == 0) {
@@ -3722,7 +3697,7 @@ function() {
         var srrem = this.sqrtWithRemainder();
         return srrem[0];
     };
-    prototype['WordsToBigInt'] = prototype.WordsToBigInt = function(words, start, count) {
+    constructor['WordsToBigInt'] = constructor.WordsToBigInt = function(words, start, count) {
         if (count == 0) {
             return BigInteger.ZERO;
         }
@@ -3743,97 +3718,37 @@ function() {
         }
         var bigintX;
         var bigintY;
-        if (this.wordCount < 4) {
-            var thisValue = this;
-            var powerBits = (((thisValue.getUnsignedBitLength() + 1) / 2)|0);
-            if (thisValue.canFitInInt()) {
-                var smallValue = thisValue.intValue();
-                if (smallValue == 0) {
-                    return [BigInteger.ZERO, BigInteger.ZERO];
-                }
-                var smallintX = 0;
-                var smallintY = 1 << powerBits;
-                do {
-                    smallintX = smallintY;
-                    smallintY = ((smallValue / smallintX)|0);
-                    smallintY = smallintY + (smallintX);
-                    smallintY >>= 1;
-                } while (smallintY < smallintX);
-                smallintY = smallintX * smallintX;
-                smallintY = smallValue - smallintY;
-                return [BigInteger.valueOf(smallintX), BigInteger.valueOf(smallintY)];
-            } else {
-                bigintX = null;
-                bigintY = BigInteger.Power2(powerBits);
-                do {
-                    bigintX = bigintY;
-                    bigintY = thisValue.divide(bigintX);
-                    bigintY = bigintY.add(bigintX);
-                    bigintY = bigintY.shiftRight(1);
-                } while (bigintY.compareTo(bigintX) < 0);
-                bigintY = bigintX.multiply(bigintX);
-                bigintY = thisValue.subtract(bigintY);
-                return [bigintX, bigintY];
+        var thisValue = this;
+        var powerBits = (((thisValue.getUnsignedBitLength() + 1) / 2)|0);
+        if (thisValue.canFitInInt()) {
+            var smallValue = thisValue.intValue();
+            if (smallValue == 0) {
+                return [BigInteger.ZERO, BigInteger.ZERO];
             }
+            var smallintX = 0;
+            var smallintY = 1 << powerBits;
+            do {
+                smallintX = smallintY;
+                smallintY = ((smallValue / smallintX)|0);
+                smallintY = smallintY + (smallintX);
+                smallintY >>= 1;
+            } while (smallintY < smallintX);
+            smallintY = smallintX * smallintX;
+            smallintY = smallValue - smallintY;
+            return [BigInteger.valueOf(smallintX), BigInteger.valueOf(smallintY)];
+        } else {
+            bigintX = null;
+            bigintY = BigInteger.Power2(powerBits);
+            do {
+                bigintX = bigintY;
+                bigintY = thisValue.divide(bigintX);
+                bigintY = bigintY.add(bigintX);
+                bigintY = bigintY.shiftRight(1);
+            } while (bigintY.compareTo(bigintX) < 0);
+            bigintY = bigintX.multiply(bigintX);
+            bigintY = thisValue.subtract(bigintY);
+            return [bigintX, bigintY];
         }
-
-        var bitSet = this.getUnsignedBitLength();
-        --bitSet;
-        var lastBit = bitSet >> 1;
-        var count = ((lastBit + 15) >> 4) + 1;
-        var result = [];
-        for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(count); arrfillI++) result[arrfillI] = 0;
-        var dataTmp2 = [];
-        for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize((count * 2) + 2); arrfillI++) dataTmp2[arrfillI] = 0;
-        var dataTmp = [];
-        for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize((count * 2) + 2); arrfillI++) dataTmp[arrfillI] = 0;
-        var lastVshiftBit = lastBit << 1;
-        var bid = BigInteger.ONE.shiftLeft(lastVshiftBit);
-        result[lastBit >> 4] = (((((result[lastBit >> 4] | ((1 << (lastBit & 15))|0)) & 65535))|0));
-        lastVshiftBit = 0;
-        for (var i = lastBit - 1; i >= 0; --i) {
-            var valueVShift;
-            for (var arrfillI = 0; arrfillI < (0) + (dataTmp.length); arrfillI++) dataTmp[arrfillI] = 0;
-
-            valueVShift = (i + 1);
-
-            for (var arrfillI = 0; arrfillI < count; arrfillI++) dataTmp[valueVShift >> 4 + arrfillI] = result[0 + arrfillI];
-            if ((valueVShift & 15) != 0) {
-                BigInteger.ShiftWordsLeftByBits(dataTmp, 0, dataTmp.length, valueVShift & 15);
-            }
-
-            if (dataTmp.length >= bid.wordCount) {
-                BigInteger.AddUnevenSize(dataTmp, 0, dataTmp, 0, dataTmp.length, bid.reg, 0, bid.wordCount);
-            } else {
-                BigInteger.AddUnevenSize(dataTmp, 0, bid.reg, 0, bid.wordCount, dataTmp, 0, dataTmp.length);
-            }
-            if (BigInteger.CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) > 0) {
-                continue;
-            }
-
-            valueVShift = (i << 1);
-            if ((((dataTmp[valueVShift >> 4])|0) & (1 << (valueVShift & 15))) == 0) {
-
-                dataTmp[valueVShift >> 4] = (((((dataTmp[valueVShift >> 4] | ((1 << (valueVShift & 15))|0)) & 65535))|0));
-            } else {
-                dataTmp2[lastVshiftBit] = 0;
-                dataTmp2[valueVShift >> 4] = (((((dataTmp2[valueVShift >> 4] | ((1 << (valueVShift & 15))|0)) & 65535))|0));
-                lastVshiftBit = valueVShift >> 4;
-                BigInteger.AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.length);
-            }
-
-            if (BigInteger.CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) > 0) {
-                continue;
-            }
-            bid = this.WordsToBigInt(dataTmp, 0, dataTmp.length);
-            result[i >> 4] = (((((result[i >> 4] | ((1 << (i & 15))|0)) & 65535))|0));
-        }
-        bigintX = new BigInteger();
-        bigintX.reg = result;
-        bigintX.wordCount = bigintX.CalcWordCount();
-        bigintY = bigintX.multiply(bigintX);
-        bigintY = this.subtract(bigintY);
-        return [bigintX, bigintY];
     };
 
     prototype['isEven'] = prototype.isEven = function() {
@@ -4768,10 +4683,6 @@ function(value) {
         }
     };
 
-    prototype.MinInt32 = function(val) {
-        return this.CompareToInt(val) < 0 ? this.AsInt32() : val;
-    };
-
     prototype.AsBigInteger = function() {
         switch(this.integerMode) {
             case 0:
@@ -4947,65 +4858,6 @@ function(bigint, lastDiscarded, olderDiscarded) {
             }
             this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
         }
-    };
-    constructor.ByteArrayBitLength = function(bytes) {
-        var fastKB = new FastInteger(bytes.length).Multiply(8);
-        for (var i = bytes.length - 1; i >= 0; --i) {
-            var b = ((bytes[i])|0);
-            if (b != 0) {
-                if ((b & 128) != 0) {
-                    break;
-                }
-                if ((b & 64) != 0) {
-                    {
-                        fastKB.Decrement();
-                    }
-                    break;
-                }
-                if ((b & 32) != 0) {
-                    {
-                        fastKB.SubtractInt(2);
-                    }
-                    break;
-                }
-                if ((b & 16) != 0) {
-                    {
-                        fastKB.SubtractInt(3);
-                    }
-                    break;
-                }
-                if ((b & 8) != 0) {
-                    {
-                        fastKB.SubtractInt(4);
-                    }
-                    break;
-                }
-                if ((b & 4) != 0) {
-                    {
-                        fastKB.SubtractInt(5);
-                    }
-                    break;
-                }
-                if ((b & 2) != 0) {
-                    {
-                        fastKB.SubtractInt(6);
-                    }
-                    break;
-                }
-                if ((b & 1) != 0) {
-                    {
-                        fastKB.SubtractInt(7);
-                    }
-                    break;
-                }
-            }
-            fastKB.SubtractInt(8);
-        }
-
-        if (fastKB.signum() == 0) {
-            fastKB.Increment();
-        }
-        return fastKB;
     };
     prototype.CalcKnownBitLength = function() {
         if (this.isSmall) {
@@ -6451,7 +6303,9 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
 if(typeof exports!=="undefined")exports['PrecisionContext']=PrecisionContext;
 if(typeof window!=="undefined")window['PrecisionContext']=PrecisionContext;
 
-var BigNumberFlags = function(){};
+var BigNumberFlags = function() {
+
+};
 (function(constructor,prototype){
     constructor.FlagNegative = 1;
     constructor.FlagQuietNaN = 4;
@@ -7586,10 +7440,11 @@ var RadixMath = function(helper) {
     };
 
     prototype.LnTenConstant = function(ctx) {
-
+        if (ctx == null) {
+            throw new Error("ctx");
+        }
         var thisValue = this.helper.ValueOf(10);
         var two = this.helper.ValueOf(2);
-        var roots = new FastInteger(0);
         var error;
         var bigError;
         error = new FastInteger(10);

@@ -16,7 +16,7 @@ using Test;
 
 namespace CBOR
 {
-  /// <summary>Description of ExtensiveTest.</summary>
+    /// <summary>Description of ExtensiveTest.</summary>
   [TestFixture]
   public class ExtensiveTest
   {

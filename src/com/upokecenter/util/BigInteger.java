@@ -3756,8 +3756,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger remainder(BigInteger divisor) {
       if (divisor == null) {
- throw new NullPointerException("divisor");
-}
+        throw new NullPointerException("divisor");
+      }
       int words1Size = this.wordCount;
       int words2Size = divisor.wordCount;
       if (words2Size == 0) {
@@ -3919,45 +3919,44 @@ at: http://peteroupc.github.io/CBOR/
       }
       BigInteger bigintX;
       BigInteger bigintY;
-      if (this.wordCount < 4) {
-        BigInteger thisValue = this;
-        int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
-        if (thisValue.canFitInInt()) {
-          int smallValue = thisValue.intValue();
-          if (smallValue == 0) {
-            return new BigInteger[] {
-              BigInteger.ZERO, BigInteger.ZERO
-            };
-          }
-          int smallintX = 0;
-          int smallintY = 1 << powerBits;
-          do {
-            smallintX = smallintY;
-            smallintY = smallValue / smallintX;
-            smallintY += smallintX;
-            smallintY >>= 1;
-          } while (smallintY < smallintX);
-          smallintY = smallintX * smallintX;
-          smallintY = smallValue - smallintY;
+      BigInteger thisValue = this;
+      int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
+      if (thisValue.canFitInInt()) {
+        int smallValue = thisValue.intValue();
+        if (smallValue == 0) {
           return new BigInteger[] {
-            BigInteger.valueOf(smallintX), BigInteger.valueOf(smallintY)
-          };
-        } else {
-          bigintX = null;
-          bigintY = Power2(powerBits);
-          do {
-            bigintX = bigintY;
-            bigintY = thisValue.divide(bigintX);
-            bigintY=bigintY.add(bigintX);
-            bigintY=bigintY.shiftRight(1);
-          } while (bigintY.compareTo(bigintX) < 0);
-          bigintY = bigintX.multiply(bigintX);
-          bigintY = thisValue.subtract(bigintY);
-          return new BigInteger[] {
-            bigintX, bigintY
+            BigInteger.ZERO, BigInteger.ZERO
           };
         }
+        int smallintX = 0;
+        int smallintY = 1 << powerBits;
+        do {
+          smallintX = smallintY;
+          smallintY = smallValue / smallintX;
+          smallintY += smallintX;
+          smallintY >>= 1;
+        } while (smallintY < smallintX);
+        smallintY = smallintX * smallintX;
+        smallintY = smallValue - smallintY;
+        return new BigInteger[] {
+          BigInteger.valueOf(smallintX), BigInteger.valueOf(smallintY)
+        };
+      } else {
+        bigintX = null;
+        bigintY = Power2(powerBits);
+        do {
+          bigintX = bigintY;
+          bigintY = thisValue.divide(bigintX);
+          bigintY=bigintY.add(bigintX);
+          bigintY=bigintY.shiftRight(1);
+        } while (bigintY.compareTo(bigintX) < 0);
+        bigintY = bigintX.multiply(bigintX);
+        bigintY = thisValue.subtract(bigintY);
+        return new BigInteger[] {
+          bigintX, bigintY
+        };
       }
+      /*
       // Use Johnson's bisection algorithm to find the square root
       int bitSet = this.getUnsignedBitLength();
       --bitSet;
@@ -4017,6 +4016,7 @@ at: http://peteroupc.github.io/CBOR/
       return new BigInteger[] {
         bigintX, bigintY
       };
+       */
     }
 
     /**

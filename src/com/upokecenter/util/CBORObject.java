@@ -3806,6 +3806,8 @@ public static CBORObject FromObject(Object obj) {
     /**
      * Generates a CBOR object from an arbitrary object and gives the resulting
      * object a tag.
+     * @param valueOb An arbitrary object.
+     * @param bigintTag Tag number.
      * @return A CBOR object where the object.
      * @throws java.lang.IllegalArgumentException The parameter {@code bigintTag}
      * is less than 0 or greater than 2^64-1, or "o"'s type is unsupported.
