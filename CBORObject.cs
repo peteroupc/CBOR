@@ -2803,7 +2803,7 @@ namespace PeterO {
 
     private static string NextJSONString(CharacterReader reader, int quote) {
       int c;
-      StringBuilder sb = new StringBuilder();
+      StringBuilder sb = null;
       bool surrogate = false;
       bool surrogateEscaped = false;
       bool escaped = false;
@@ -2889,8 +2889,15 @@ namespace PeterO {
         }
         if (c == quote && !escaped) {
           // End quote reached
+          if(sb==null){
+            // No string builder created yet, so this
+            // is an empty string
+            return String.Empty;
+          }
           return sb.ToString();
         }
+        if(sb==null)
+          sb=new StringBuilder();
         if (c <= 0xFFFF) {
           sb.Append((char)c);
         } else if (c <= 0x10FFFF) {

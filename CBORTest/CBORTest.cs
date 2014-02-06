@@ -13,8 +13,8 @@ using NUnit.Framework;
 using PeterO;
 
 namespace Test {
-    /// <summary>Contains CBOR tests.</summary>
-    /// <returns/><param name='r'> A FastRandom object.</param>
+  /// <summary>Contains CBOR tests.</summary>
+  /// <returns/><param name='r'> A FastRandom object.</param>
   [TestFixture]
   public class CBORTest {
     private static void TestExtendedFloatDoubleCore(double d, string s) {
@@ -109,7 +109,7 @@ namespace Test {
     public static BigInteger RandomBigInteger(FastRandom r) {
       int count = r.NextValue(60) + 1;
       byte[] bytes = new byte[count];
-       for (int i = 0; i < count; ++i) {
+      for (int i = 0; i < count; ++i) {
         bytes[i] = (byte)((int)r.NextValue(256));
       }
       return new BigInteger((byte[])bytes);
@@ -373,9 +373,9 @@ namespace Test {
         // back have the same numerical value
         if (ef.CompareTo(ef2) != 0) {
           Assert.AreEqual(
-0,
-ef.CompareTo(ef2),
-"TestFloatDecimalRoundTrip " + ef + "; " + ef2);
+            0,
+            ef.CompareTo(ef2),
+            "TestFloatDecimalRoundTrip " + ef + "; " + ef2);
         }
       }
     }
@@ -519,24 +519,28 @@ ef.CompareTo(ef2),
       }
       try {
         CBORObject.FromJSONString("[\"\ud800\\udc00\"]");
+        Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\ud800\udc00\"]");
+        Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]");
+        Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]");
+        Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
@@ -556,19 +560,19 @@ ef.CompareTo(ef2),
       Assert.AreEqual(1, o.Count);
       Assert.AreEqual("\r\n\u0006\\\"", o[0].AsString());
       Assert.AreEqual(
-"[\"\\r\\n\\u0006\\\\\\\"\"]",
-o.ToJSONString());
+        "[\"\\r\\n\\u0006\\\\\\\"\"]",
+        o.ToJSONString());
       TestCommon.AssertRoundTrip(o);
     }
 
     /// <summary>Not documented yet.</summary>
     [Test]
     public void TestCBORFromArray() {
-      CBORObject o = CBORObject.FromObject(new int[] { 1, 2, 3 });
+      CBORObject o = CBORObject.FromObject(new int[] { 1, 2, String.Empty });
       Assert.AreEqual(3, o.Count);
       Assert.AreEqual(1, o[0].AsInt32());
       Assert.AreEqual(2, o[1].AsInt32());
-      Assert.AreEqual(3, o[2].AsInt32());
+      Assert.AreEqual(String.Empty, o[2].AsString());
       TestCommon.AssertRoundTrip(o);
     }
 
@@ -576,7 +580,7 @@ o.ToJSONString());
     [Test]
     public void TestJSON() {
       CBORObject o;
-      o = CBORObject.FromJSONString("[1,2,null,true,false]");
+      o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       try {
         CBORObject.FromJSONString("[\"\\d800\"]"); Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -599,49 +603,50 @@ o.ToJSONString());
         CBORObject.FromJSONString("{,\"0\"=>0,\"1\"=>1}");
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-} catch (Exception ex) {
-  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-}
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
       try { CBORObject.FromJSONString("{\"0\"=>0,,\"1\"=>1}"); Assert.Fail("Should have failed");
       } catch (CBORException) {
-} catch (Exception ex) {
-  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-}
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
       try { CBORObject.FromJSONString("{\"0\"=>0,\"1\"=>1,}"); Assert.Fail("Should have failed");
       } catch (CBORException) {
-} catch (Exception ex) {
-  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-}
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
-  CBORObject.FromJSONString("[,0,1,2]"); Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
-  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromJSONString("[,0,1,2]"); Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
-  CBORObject.FromJSONString("[0,,1,2]"); Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
-  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromJSONString("[0,,1,2]"); Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
-  CBORObject.FromJSONString("[0,1,,2]"); Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
-  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromJSONString("[0,1,,2]"); Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
-  CBORObject.FromJSONString("[0,1,2,]"); Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
-  Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-}
-      Assert.AreEqual(5, o.Count);
+        CBORObject.FromJSONString("[0,1,2,]"); Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      Assert.AreEqual(6, o.Count);
       Assert.AreEqual(1, o[0].AsInt32());
       Assert.AreEqual(2, o[1].AsInt32());
       Assert.AreEqual(CBORObject.Null, o[2]);
       Assert.AreEqual(CBORObject.True, o[3]);
       Assert.AreEqual(CBORObject.False, o[4]);
+      Assert.AreEqual(String.Empty, o[5]);
       o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
       double actual = o[0].AsDouble();
       Assert.AreEqual((double)1.5, actual);
@@ -872,91 +877,91 @@ o.ToJSONString());
     public void TestReadUtf8() {
       this.DoTestReadUtf8(
         new byte[] { 0x21,
-        0x21,
-        0x21 },
+          0x21,
+          0x21 },
         0,
         "!!!",
         0,
         "!!!");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0x80 },
+          0xc2,
+          0x80 },
         0,
         " \u0080",
         0,
         " \u0080");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0x80,
-        0x20 },
+          0xc2,
+          0x80,
+          0x20 },
         0,
         " \u0080 ",
         0,
         " \u0080 ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0x80,
-        0xc2 },
+          0xc2,
+          0x80,
+          0xc2 },
         0,
         " \u0080\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0x21,
-        0x21 },
+          0xc2,
+          0x21,
+          0x21 },
         0,
         " \ufffd!!",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0xff,
-        0x20 },
+          0xc2,
+          0xff,
+          0x20 },
         0,
         " \ufffd\ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xa0,
-        0x80 },
+          0xe0,
+          0xa0,
+          0x80 },
         0,
         " \u0800",
         0,
         " \u0800");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xa0,
-        0x80,
-        0x20 },
+          0xe0,
+          0xa0,
+          0x80,
+          0x20 },
         0,
         " \u0800 ",
         0,
         " \u0800 ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0x80 },
+          0xf0,
+          0x90,
+          0x80,
+          0x80 },
         0,
         " \ud800\udc00",
         0,
         " \ud800\udc00");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0x80 },
+          0xf0,
+          0x90,
+          0x80,
+          0x80 },
         3,
         0,
         " \ufffd",
@@ -964,8 +969,8 @@ o.ToJSONString());
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90 },
+          0xf0,
+          0x90 },
         5,
         -2,
         null,
@@ -973,8 +978,8 @@ o.ToJSONString());
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0x20,
-        0x20 },
+          0x20,
+          0x20 },
         5,
         -2,
         null,
@@ -982,83 +987,83 @@ o.ToJSONString());
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0x80,
-        0x20 },
+          0xf0,
+          0x90,
+          0x80,
+          0x80,
+          0x20 },
         0,
         " \ud800\udc00 ",
         0,
         " \ud800\udc00 ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0x20 },
+          0xf0,
+          0x90,
+          0x80,
+          0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x20 },
+          0xf0,
+          0x90,
+          0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0xff },
+          0xf0,
+          0x90,
+          0x80,
+          0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0xff },
+          0xf0,
+          0x90,
+          0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xa0,
-        0x20 },
+          0xe0,
+          0xa0,
+          0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0x20 },
+          0xe0,
+          0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xa0,
-        0xff },
+          0xe0,
+          0xa0,
+          0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xff },
+          0xe0,
+          0xff },
         0,
         " \ufffd\ufffd",
         -1,
@@ -1130,11 +1135,11 @@ o.ToJSONString());
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
-        0x61,
-        0x2e,
-        0x61,
-        0x2e,
-        0xFF });
+          0x61,
+          0x2e,
+          0x61,
+          0x2e,
+          0xFF });
       Assert.AreEqual("..", cbor.AsString());
       // Test streaming of long strings
       string longString = Repeat('x', 200000);
@@ -1164,25 +1169,25 @@ o.ToJSONString());
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
-        0x61,
-        0x20,
-        0xC0,
-        0x61,
-        0x20,
-        0xFF });
+          0x61,
+          0x20,
+          0xC0,
+          0x61,
+          0x20,
+          0xFF });
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
-        0x61,
-        0x20,
-        0x7F,
-        0x61,
-        0x20,
-        0xFF,
-        0xFF });
+          0x61,
+          0x20,
+          0x7F,
+          0x61,
+          0x20,
+          0xFF,
+          0xFF });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -1190,23 +1195,23 @@ o.ToJSONString());
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F,
-        0x41,
-        0x20,
-        0x41,
-        0x20,
-        0xFF });
+          0x41,
+          0x20,
+          0x41,
+          0x20,
+          0xFF });
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestByteStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F,
-        0x41,
-        0x20,
-        0xC2,
-        0x41,
-        0x20,
-        0xFF });
+          0x41,
+          0x20,
+          0xC2,
+          0x41,
+          0x20,
+          0xFF });
     }
 
     public static void AssertDecimalsEquivalent(string a, string b) {
@@ -4284,13 +4289,13 @@ o.ToJSONString());
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F,
-        0x41,
-        0x20,
-        0x5F,
-        0x41,
-        0x20,
-        0xFF,
-        0xFF });
+          0x41,
+          0x20,
+          0x5F,
+          0x41,
+          0x20,
+          0xFF,
+          0xFF });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -6132,28 +6137,28 @@ o.ToJSONString());
     public void TestDecimalFrac() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-        0x82,
-        0x3,
-        0x1a,
-        1,
-        2,
-        3,
-        4 });
+          0x82,
+          0x3,
+          0x1a,
+          1,
+          2,
+          3,
+          4 });
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExponentMustNotBeBignum() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-        0x82,
-        0xc2,
-        0x41,
-        1,
-        0x1a,
-        1,
-        2,
-        3,
-        4 });
+          0x82,
+          0xc2,
+          0x41,
+          1,
+          0x1a,
+          1,
+          2,
+          3,
+          4 });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -6227,10 +6232,10 @@ o.ToJSONString());
     public void TestDecimalFracExactlyTwoElements() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-        0x82,
-        0xc2,
-        0x41,
-        1 });
+          0x82,
+          0xc2,
+          0x41,
+          1 });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -6238,11 +6243,11 @@ o.ToJSONString());
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-        0x82,
-        0x3,
-        0xc2,
-        0x41,
-        1 });
+          0x82,
+          0x3,
+          0xc2,
+          0x41,
+          1 });
       Assert.AreEqual(
         ExtendedDecimal.Create(BigInteger.One, (BigInteger)3),
         o.AsExtendedDecimal());
@@ -6600,10 +6605,10 @@ o.ToJSONString());
                 String.Format(CultureInfo.InvariantCulture, "Innermost tag doesn't match: {0}", obj2));
             }
             String str = String.Format(
-                CultureInfo.InvariantCulture,
-                "{0}({1}(0))",
-                bigintTemp + BigInteger.One,
-                bigintTemp);
+              CultureInfo.InvariantCulture,
+              "{0}({1}(0))",
+              bigintTemp + BigInteger.One,
+              bigintTemp);
             TestCommon.AssertSer(
               obj2,
               str);
