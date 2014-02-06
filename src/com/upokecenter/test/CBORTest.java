@@ -583,7 +583,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(3, o.size());
       Assert.assertEquals(1, o.get(0).AsInt32());
       Assert.assertEquals(2, o.get(1).AsInt32());
-      Assert.assertEquals(3, o.get(2).AsString());
+      Assert.assertEquals(3, o.get(2).AsInt32());
       TestCommon.AssertRoundTrip(o);
     }
 
@@ -659,7 +659,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(CBORObject.Null, o.get(2));
       Assert.assertEquals(CBORObject.True, o.get(3));
       Assert.assertEquals(CBORObject.False, o.get(4));
-      Assert.assertEquals("", o.get(5));
+      Assert.assertEquals("", o.get(5).AsString());
       o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
       double actual = o.get(0).AsDouble();
       Assert.assertEquals((double)1.5,actual,0);
