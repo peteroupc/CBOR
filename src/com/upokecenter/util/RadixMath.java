@@ -1231,10 +1231,9 @@ bigrem=divrem[1]; }
           } else {
             PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN))
               .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
-            T ten = this.helper.ValueOf(10);
             T logNatural = this.Ln(thisValue, ctxdiv);
             T logTen = this.LnTenConstant(ctxdiv);
-            // T logTen = this.Ln(ten, ctxdiv);
+            // T logTen = this.Ln(this.helper.ValueOf(10), ctxdiv);
             thisValue = this.Divide(logNatural, logTen, ctx);
             // Treat result as inexact
             if (ctx.getHasFlags()) {
@@ -1285,7 +1284,6 @@ bigrem=divrem[1]; }
         throw new NullPointerException("ctx");
       }
       T thisValue = this.helper.ValueOf(10);
-      T two = this.helper.ValueOf(2);
       FastInteger error;
       BigInteger bigError;
       error = new FastInteger(10);
@@ -1606,6 +1604,7 @@ bigrem=divrem[1]; }
       return thisValue;
     }
 
+    /*
     private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
       if (root <= 0) {
         throw new IllegalArgumentException("root not greater than 0 (" + Long.toString((long)root) + ")");
@@ -1647,6 +1646,7 @@ bigrem=divrem[1]; }
         lastGuess = bigintGuess;
       }
     }
+    */
 
     /**
      * Not documented yet.
