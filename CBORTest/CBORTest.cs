@@ -646,7 +646,7 @@ namespace Test {
       Assert.AreEqual(CBORObject.Null, o[2]);
       Assert.AreEqual(CBORObject.True, o[3]);
       Assert.AreEqual(CBORObject.False, o[4]);
-      Assert.AreEqual(String.Empty, o[5]);
+      Assert.AreEqual(String.Empty, o[5].AsString());
       o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
       double actual = o[0].AsDouble();
       Assert.AreEqual((double)1.5, actual);
