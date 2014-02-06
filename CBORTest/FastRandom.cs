@@ -42,8 +42,8 @@ namespace Test
     /// <returns>A 32-bit signed integer.</returns>
     public int NextValue(int v) {
       if (v <= 0) {
-        throw new ArgumentException("v not greater than 0 (" + Convert.ToString((long)v, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      }
+ throw new ArgumentException("v (" + Convert.ToString((long)v, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
+}
       if (v <= 1) {
         return 0;
       }

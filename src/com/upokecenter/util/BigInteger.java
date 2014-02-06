@@ -2318,8 +2318,8 @@ at: http://peteroupc.github.io/CBOR/
       }
       int sign = power.signum();
       if (sign < 0) {
-        throw new IllegalArgumentException("power is negative");
-      }
+ throw new IllegalArgumentException("sign (" + Long.toString((long)sign) + ") is not greater or equal to " + "0");
+}
       BigInteger thisVar = this;
       if (sign == 0) {
         return BigInteger.ONE;
@@ -2350,8 +2350,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) {
-        throw new IllegalArgumentException("power is negative");
-      }
+ throw new IllegalArgumentException("powerSmall (" + Long.toString((long)powerSmall) + ") is not greater or equal to " + "0");
+}
       BigInteger thisVar = this;
       if (powerSmall == 0) {
         // however 0 to the power of 0 is undefined
@@ -2904,20 +2904,20 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("str");
       }
       if (index < 0) {
-        throw new IllegalArgumentException("\"str\" not greater or equal to 0 (" + Long.toString((long)index) + ")");
-      }
+ throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is not greater or equal to " + "0");
+}
       if (index > str.length()) {
-        throw new IllegalArgumentException("\"str\" not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)index) + ")");
-      }
+ throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is not less or equal to " + Long.toString((long)str.length()));
+}
       if (endIndex < 0) {
-        throw new IllegalArgumentException("\"index\" not greater or equal to 0 (" + Long.toString((long)endIndex) + ")");
-      }
+ throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is not greater or equal to " + "0");
+}
       if (endIndex > str.length()) {
-        throw new IllegalArgumentException("\"index\" not less or equal to " + Long.toString((long)str.length()) + " (" + Long.toString((long)endIndex) + ")");
-      }
+ throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is not less or equal to " + Long.toString((long)str.length()));
+}
       if (endIndex < index) {
-        throw new IllegalArgumentException("\"endIndex\" not greater or equal to " + Long.toString((long)index) + " (" + Long.toString((long)endIndex) + ")");
-      }
+ throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is not greater or equal to " + Long.toString((long)index));
+}
       if (index == endIndex) {
         throw new NumberFormatException("No digits");
       }
@@ -3113,8 +3113,8 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("pow");
       }
       if (pow.signum() < 0) {
-        throw new IllegalArgumentException("pow is negative");
-      }
+ throw new IllegalArgumentException("pow (" + Long.toString((long)pow.signum()) + ") is not greater or equal to " + "0");
+}
       BigInteger r = BigInteger.ONE;
       BigInteger v = this;
       while (pow.signum()!=0) {

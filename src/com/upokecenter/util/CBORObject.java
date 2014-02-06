@@ -2087,9 +2087,8 @@ public void set(String key, CBORObject value) {
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
-        throw new IllegalArgumentException("value not greater or equal to 0 (" +
-                                    Integer.toString((int)value) + ")");
-      }
+ throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is not greater or equal to " + "0");
+}
       if (value < 24) {
         return new byte[] {  (byte)((byte)value | (byte)(type << 5))  };
       } else if (value <= 0xFF) {
@@ -2115,8 +2114,8 @@ public void set(String key, CBORObject value) {
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
-        throw new IllegalArgumentException("value not greater or equal to 0 (" + Long.toString((long)value) + ")");
-      }
+ throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is not greater or equal to " + "0");
+}
       if (value < 24) {
         return new byte[] {  (byte)((byte)value | (byte)(type << 5))  };
       } else if (value <= 0xFF) {
@@ -3826,8 +3825,8 @@ public static CBORObject FromObject(Object obj) {
         throw new NullPointerException("bigintTag");
       }
       if (bigintTag.signum() < 0) {
-        throw new IllegalArgumentException("tag not greater or equal to 0 (" + (bigintTag) + ")");
-      }
+ throw new IllegalArgumentException("bigintTag's sign (" + Long.toString((long)bigintTag.signum()) + ") is not greater or equal to " + "0");
+}
       if (bigintTag.compareTo(valueUInt64MaxValue) > 0) {
         throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 (" + (bigintTag) + ")");
       }
@@ -3873,8 +3872,8 @@ public static CBORObject FromObject(Object obj) {
      */
     public static CBORObject FromObjectAndTag(Object valueObValue, int smallTag) {
       if (smallTag < 0) {
-        throw new IllegalArgumentException("tag not greater or equal to 0 (" + Integer.toString((int)smallTag) + ")");
-      }
+ throw new IllegalArgumentException("smallTag (" + Long.toString((long)smallTag) + ") is not greater or equal to " + "0");
+}
       CBORObject c = FromObject(valueObValue);
       if (smallTag == 2 || smallTag == 3) {
         return ConvertToBigNum(c, smallTag == 3);

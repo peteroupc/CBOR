@@ -51,8 +51,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public void ShiftToDigits(FastInteger bits) {
       if (bits.signum() < 0) {
-        throw new IllegalArgumentException("bits is negative");
-      }
+ throw new IllegalArgumentException("bits's sign (" + Long.toString((long)bits.signum()) + ") is not greater or equal to " + "0");
+}
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
       } else {
@@ -107,8 +107,8 @@ at: http://peteroupc.github.io/CBOR/
       int lastDiscarded,
       int olderDiscarded) {
       if (bigint.signum() < 0) {
-        throw new IllegalArgumentException("bigint is negative");
-      }
+ throw new IllegalArgumentException("bigint's sign (" + Long.toString((long)bigint.signum()) + ") is not greater or equal to " + "0");
+}
       if (bigint.canFitInInt()) {
         this.isSmall = true;
         this.shiftedSmall = bigint.intValue();
@@ -122,8 +122,8 @@ at: http://peteroupc.github.io/CBOR/
 
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0) {
-        throw new IllegalArgumentException("longInt is negative");
-      }
+ throw new IllegalArgumentException("smallNumber (" + Long.toString((long)smallNumber) + ") is not greater or equal to " + "0");
+}
       BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.ZERO, 0, 0);
       bsa.shiftedSmall = smallNumber;
       bsa.discardedBitCount = new FastInteger(0);
@@ -369,8 +369,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
-        throw new IllegalArgumentException("bits is negative");
-      }
+ throw new IllegalArgumentException("bits (" + Long.toString((long)bits) + ") is not greater or equal to " + "0");
+}
       if (this.isSmall) {
         this.ShiftSmallToBits(bits);
       } else {

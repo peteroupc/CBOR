@@ -2344,7 +2344,7 @@ function() {
         }
         var sign = power.signum();
         if (sign < 0) {
-            throw new Error("power is negative");
+            throw new Error("sign (" + (JSInteropFactory.createLong(sign)) + ") is not greater or equal to " + "0");
         }
         var thisVar = this;
         if (sign == 0) {
@@ -2371,7 +2371,7 @@ function() {
 
     prototype['pow'] = prototype.pow = function(powerSmall) {
         if (powerSmall < 0) {
-            throw new Error("power is negative");
+            throw new Error("powerSmall (" + (JSInteropFactory.createLong(powerSmall)) + ") is not greater or equal to " + "0");
         }
         var thisVar = this;
         if (powerSmall == 0) {
@@ -2883,19 +2883,19 @@ function() {
             throw new Error("str");
         }
         if (index < 0) {
-            throw new Error("\"str\" not greater or equal to 0 (" + (JSInteropFactory.createLong(index)) + ")");
+            throw new Error("index (" + (JSInteropFactory.createLong(index)) + ") is not greater or equal to " + "0");
         }
         if (index > str.length) {
-            throw new Error("\"str\" not less or equal to " + (JSInteropFactory.createLong(str.length)) + " (" + (JSInteropFactory.createLong(index)) + ")");
+            throw new Error("index (" + (JSInteropFactory.createLong(index)) + ") is not less or equal to " + (JSInteropFactory.createLong(str.length)));
         }
         if (endIndex < 0) {
-            throw new Error("\"index\" not greater or equal to 0 (" + (JSInteropFactory.createLong(endIndex)) + ")");
+            throw new Error("endIndex (" + (JSInteropFactory.createLong(endIndex)) + ") is not greater or equal to " + "0");
         }
         if (endIndex > str.length) {
-            throw new Error("\"index\" not less or equal to " + (JSInteropFactory.createLong(str.length)) + " (" + (JSInteropFactory.createLong(endIndex)) + ")");
+            throw new Error("endIndex (" + (JSInteropFactory.createLong(endIndex)) + ") is not less or equal to " + (JSInteropFactory.createLong(str.length)));
         }
         if (endIndex < index) {
-            throw new Error("\"endIndex\" not greater or equal to " + (JSInteropFactory.createLong(index)) + " (" + (JSInteropFactory.createLong(endIndex)) + ")");
+            throw new Error("endIndex (" + (JSInteropFactory.createLong(endIndex)) + ") is not greater or equal to " + (JSInteropFactory.createLong(index)));
         }
         if (index == endIndex) {
             throw new Error("No digits");
@@ -3073,7 +3073,7 @@ function() {
             throw new Error("pow");
         }
         if (pow.signum() < 0) {
-            throw new Error("pow is negative");
+            throw new Error("pow (" + (JSInteropFactory.createLong(pow).signum()) + ") is not greater or equal to " + "0");
         }
         var r = BigInteger.ONE;
         var v = this;
@@ -3732,7 +3732,7 @@ function(value) {
     constructor.MutableNumber = function FastInteger$MutableNumber(val) {
 
         if (val < 0) {
-            throw new Error("Only positive integers are supported");
+            throw new Error("val (" + (JSInteropFactory.createLong(val)) + ") is not greater or equal to " + "0");
         }
         this.data = [0, 0, 0, 0];
         this.wordCount = (val == 0) ? 0 : 1;
@@ -3744,7 +3744,7 @@ function(value) {
         constructor.FromBigInteger = function(bigintVal) {
             var mnum = new FastInteger.MutableNumber(0);
             if (bigintVal.signum() < 0) {
-                throw new Error("Only positive integers are supported");
+                throw new Error("bigintVal's sign (" + (JSInteropFactory.createLong(bigintVal).signum()) + ") is not greater or equal to " + "0");
             }
             var bytes = bigintVal.toByteArray(true);
             var len = bytes.length;
@@ -3776,7 +3776,7 @@ function(value) {
         };
         prototype.SetInt = function(val) {
             if (val < 0) {
-                throw new Error("Only positive integers are supported");
+                throw new Error("val (" + (JSInteropFactory.createLong(val)) + ") is not greater or equal to " + "0");
             }
             this.wordCount = (val == 0) ? 0 : 1;
             this.data[0] = ((val & 0xFFFFFFFF)|0);
@@ -3821,7 +3821,7 @@ function(value) {
         };
         prototype.Multiply = function(multiplicand) {
             if (multiplicand < 0) {
-                throw new Error("Only positive multiplicands are supported");
+                throw new Error("multiplicand (" + (JSInteropFactory.createLong(multiplicand)) + ") is not greater or equal to " + "0");
             } else if (multiplicand != 0) {
                 var carry = 0;
                 if (this.wordCount == 0) {
@@ -3940,7 +3940,7 @@ function(value) {
         };
         prototype.SubtractInt = function(other) {
             if (other < 0) {
-                throw new Error("Only positive values are supported");
+                throw new Error("other (" + (JSInteropFactory.createLong(other)) + ") is not greater or equal to " + "0");
             } else if (other != 0) {
                 {
                     if (this.wordCount == 0) {
@@ -4022,7 +4022,7 @@ function(value) {
         };
         prototype.Add = function(augend) {
             if (augend < 0) {
-                throw new Error("Only positive augends are supported");
+                throw new Error("augend (" + (JSInteropFactory.createLong(augend)) + ") is not greater or equal to " + "0");
             } else if (augend != 0) {
                 var carry = 0;
                 if (this.wordCount == 0) {
@@ -4662,7 +4662,7 @@ var BitShiftAccumulator =
 function(bigint, lastDiscarded, olderDiscarded) {
 
     if (bigint.signum() < 0) {
-        throw new Error("bigint is negative");
+        throw new Error("bigint's sign (" + (JSInteropFactory.createLong(bigint).signum()) + ") is not greater or equal to " + "0");
     }
     if (bigint.canFitInInt()) {
         this.isSmall = true;
@@ -4694,7 +4694,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     };
     prototype.ShiftToDigits = function(bits) {
         if (bits.signum() < 0) {
-            throw new Error("bits is negative");
+            throw new Error("bits's sign (" + (JSInteropFactory.createLong(bits).signum()) + ") is not greater or equal to " + "0");
         }
         if (bits.CanFitInInt32()) {
             this.ShiftToDigitsInt(bits.AsInt32());
@@ -4730,7 +4730,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     };
     constructor.FromInt32 = function(smallNumber) {
         if (smallNumber < 0) {
-            throw new Error("longInt is negative");
+            throw new Error("smallNumber (" + (JSInteropFactory.createLong(smallNumber)) + ") is not greater or equal to " + "0");
         }
         var bsa = new BitShiftAccumulator(BigInteger.ZERO, 0, 0);
         bsa.shiftedSmall = smallNumber;
@@ -4949,7 +4949,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
 
     prototype.ShiftToDigitsInt = function(bits) {
         if (bits < 0) {
-            throw new Error("bits is negative");
+            throw new Error("bits (" + (JSInteropFactory.createLong(bits)) + ") is not greater or equal to " + "0");
         }
         if (this.isSmall) {
             this.ShiftSmallToBits(bits);
@@ -4996,7 +4996,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     if (bigint.canFitInInt()) {
         this.shiftedSmall = bigint.intValue();
         if (this.shiftedSmall < 0) {
-            throw new Error("bigint is negative");
+            throw new Error("shiftedSmall (" + (JSInteropFactory.createLong(this.shiftedSmall)) + ") is not greater or equal to " + "0");
         }
         this.isSmall = true;
     } else {
@@ -5043,7 +5043,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     constructor.FastParseLong = function(str, offset, length) {
 
         if (length > 9) {
-            throw new Error("length not less or equal to 9 (" + (length) + ")");
+            throw new Error("length (" + (JSInteropFactory.createLong(length)) + ") is not less or equal to " + "9");
         }
         var ret = 0;
         for (var i = 0; i < length; ++i) {
@@ -5430,12 +5430,12 @@ function(bigint, lastDiscarded, olderDiscarded) {
         if (bits.CanFitInInt32()) {
             var intval = bits.AsInt32();
             if (intval < 0) {
-                throw new Error("bits is negative");
+                throw new Error("intval (" + (JSInteropFactory.createLong(intval)) + ") is not greater or equal to " + "0");
             }
             this.ShiftToDigitsInt(intval);
         } else {
             if (bits.signum() < 0) {
-                throw new Error("bits is negative");
+                throw new Error("bits's sign (" + (JSInteropFactory.createLong(bits).signum()) + ") is not greater or equal to " + "0");
             }
             this.knownBitLength = this.CalcKnownDigitLength();
             var bigintDiff = this.knownBitLength.AsBigInteger();
@@ -6064,10 +6064,10 @@ var PrecisionContext =
 function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExponents) {
 
     if (precision < 0) {
-        throw new Error("precision not greater or equal to 0 (" + (precision) + ")");
+        throw new Error("precision (" + (JSInteropFactory.createLong(precision)) + ") is not greater or equal to " + "0");
     }
     if (exponentMinSmall > exponentMaxSmall) {
-        throw new Error("exponentMinSmall not less or equal to " + (exponentMaxSmall) + " (" + (exponentMinSmall) + ")");
+        throw new Error("exponentMinSmall (" + (JSInteropFactory.createLong(exponentMinSmall)) + ") is not less or equal to " + (JSInteropFactory.createLong(exponentMaxSmall)));
     }
     this.bigintPrecision = precision == 0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
     this.rounding = rounding;
@@ -6176,7 +6176,7 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
     };
     prototype['WithExponentRange'] = prototype.WithExponentRange = function(exponentMinSmall, exponentMaxSmall) {
         if (exponentMinSmall > exponentMaxSmall) {
-            throw new Error("exponentMin greater than exponentMax");
+            throw new Error("exponentMinSmall (" + (JSInteropFactory.createLong(exponentMinSmall)) + ") is not less or equal to " + (JSInteropFactory.createLong(exponentMaxSmall)));
         }
         var pc = this.Copy();
         pc.hasExponentRange = true;
@@ -6210,7 +6210,7 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
     };
     prototype['WithPrecision'] = prototype.WithPrecision = function(precision) {
         if (precision < 0) {
-            throw new Error("precision not greater or equal to 0 (" + (precision) + ")");
+            throw new Error("precision (" + (JSInteropFactory.createLong(precision)) + ") is not greater or equal to " + "0");
         }
         var pc = this.Copy();
         pc.bigintPrecision = BigInteger.valueOf(precision);
@@ -6221,7 +6221,7 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
             throw new Error("bigintPrecision");
         }
         if (bigintPrecision.signum() < 0) {
-            throw new Error("precision not greater or equal to 0 (" + bigintPrecision + ")");
+            throw new Error("bigintPrecision's sign (" + (JSInteropFactory.createLong(bigintPrecision).signum()) + ") is not greater or equal to " + "0");
         }
         var pc = this.Copy();
         pc.bigintPrecision = bigintPrecision;

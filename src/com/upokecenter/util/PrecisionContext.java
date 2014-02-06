@@ -281,8 +281,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
       if (exponentMinSmall > exponentMaxSmall) {
-        throw new IllegalArgumentException("exponentMin greater than exponentMax");
-      }
+ throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is not less or equal to " + Long.toString((long)exponentMaxSmall));
+}
       PrecisionContext pc = this.Copy();
       pc.hasExponentRange = true;
       pc.exponentMin = BigInteger.valueOf(exponentMinSmall);
@@ -341,8 +341,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
-        throw new IllegalArgumentException("precision not greater or equal to 0 (" + (precision) + ")");
-      }
+ throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is not greater or equal to " + "0");
+}
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = BigInteger.valueOf(precision);
       return pc;
@@ -361,8 +361,8 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("bigintPrecision");
       }
       if (bigintPrecision.signum() < 0) {
-        throw new IllegalArgumentException("precision not greater or equal to 0 (" + bigintPrecision + ")");
-      }
+ throw new IllegalArgumentException("bigintPrecision's sign (" + Long.toString((long)bigintPrecision.signum()) + ") is not greater or equal to " + "0");
+}
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
       return pc;
@@ -413,11 +413,11 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext (int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall, boolean clampNormalExponents) {
       if (precision < 0) {
-        throw new IllegalArgumentException("precision not greater or equal to 0 (" + (precision) + ")");
-      }
+ throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is not greater or equal to " + "0");
+}
       if (exponentMinSmall > exponentMaxSmall) {
-        throw new IllegalArgumentException("exponentMinSmall not less or equal to " + (exponentMaxSmall) + " (" + (exponentMinSmall) + ")");
-      }
+ throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is not less or equal to " + Long.toString((long)exponentMaxSmall));
+}
       this.bigintPrecision = precision == 0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;

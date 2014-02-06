@@ -305,8 +305,8 @@ namespace PeterO
         throw new ArgumentNullException("power");
       }
       if (power.Sign < 0) {
-        throw new ArgumentException("power.Sign not greater or equal to 0 (" + Convert.ToString(power.Sign, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      }
+ throw new ArgumentException("power's sign (" + Convert.ToString((long)power.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       BigInteger val = BigInteger.One;
       while (power.Sign > 0) {
         BigInteger p = (power > (BigInteger)5000000) ?
@@ -327,8 +327,8 @@ namespace PeterO
         throw new ArgumentNullException("bigValue");
       }
       if (power < 0) {
-        throw new ArgumentException("power not greater or equal to 0 (" + Convert.ToString(power, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      }
+ throw new ArgumentException("power (" + Convert.ToString((long)power, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       return bigValue.pow(power);
     }
 
