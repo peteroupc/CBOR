@@ -170,7 +170,7 @@ at: http://peteroupc.github.io/CBOR/
           return 0;
         }
         for (int i = 1; i < n; ++i) {
-          words1[words1Start + i]++;
+          ++words1[words1Start + i];
           if (words1[words1Start + i] != 0) {
             return 0;
           }
@@ -189,7 +189,7 @@ at: http://peteroupc.github.io/CBOR/
         }
         for (int i = 1; i < n; ++i) {
           tmp = words1[words1Start + i];
-          words1[words1Start + i]--;
+          --words1[words1Start + i];
           if (tmp != 0) {
             return 0;
           }
@@ -1637,7 +1637,7 @@ at: http://peteroupc.github.io/CBOR/
             tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1high + (((int)c[csi + 3]) & 0xFFFF);
             c[csi + 3] = (short)(((int)tempInt) & 0xFFFF);
             if ((tempInt >> 16) != 0) {
-              c[csi + 4]++;
+              ++c[csi + 4];
               c[csi + 5] += (short)((c[csi + 4] == 0) ? 1 : 0);
             }
           }
@@ -1672,7 +1672,7 @@ at: http://peteroupc.github.io/CBOR/
             tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1high + (((int)c[csi + 3]) & 0xFFFF);
             c[csi + 3] = (short)(((int)tempInt) & 0xFFFF);
             if ((tempInt >> 16) != 0) {
-              c[csi + 4]++;
+              ++c[csi + 4];
               c[csi + 5] += (short)((c[csi + 4] == 0) ? 1 : 0);
             }
           }
@@ -1802,7 +1802,7 @@ at: http://peteroupc.github.io/CBOR/
             while (tempArr[valueRstart2 + n] != 0 || Compare(tempArr, valueRstart2, tempArr, valueTBstart, n) >= 0) {
               tempArr[valueRstart2 + n] -= (short)Subtract(tempArr, valueRstart2, tempArr, valueRstart2, tempArr, valueTBstart, n);
               if (quotientArr != null) {
-                quotientArr[qs]++;
+                ++quotientArr[qs];
                 quotientArr[qs + 1] += (short)((quotientArr[qs] == 0) ? 1 : 0);
               }
             }
@@ -2144,7 +2144,7 @@ at: http://peteroupc.github.io/CBOR/
       ret.negative = this.negative;
       while (ret.wordCount != 0 &&
              ret.reg[ret.wordCount - 1] == 0) {
-        ret.wordCount--;
+        --ret.wordCount;
       }
       if (shiftWords > 2) {
         this.ShortenArray();
@@ -2191,7 +2191,7 @@ at: http://peteroupc.github.io/CBOR/
           ret.wordCount = 4;
           while (ret.wordCount != 0 &&
                  ret.reg[ret.wordCount - 1] == 0) {
-            ret.wordCount--;
+            --ret.wordCount;
           }
         }
       }
@@ -3460,7 +3460,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       // Recalculate word count
       while (product.wordCount != 0 && product.reg[product.wordCount - 1] == 0) {
-        product.wordCount--;
+        --product.wordCount;
       }
       if (needShorten) {
         product.ShortenArray();
@@ -3580,7 +3580,7 @@ at: http://peteroupc.github.io/CBOR/
         FastDivide(quotient.reg, this.reg, words1Size, bigintDivisor.reg[0]);
         while (quotient.wordCount != 0 &&
                quotient.reg[quotient.wordCount - 1] == 0) {
-          quotient.wordCount--;
+          --quotient.wordCount;
         }
         if (quotient.wordCount != 0) {
           quotient.negative = this.negative ^ bigintDivisor.negative;
@@ -3653,7 +3653,7 @@ at: http://peteroupc.github.io/CBOR/
           divisor.reg[0])) & 0xFFFF;
         while (quotient.wordCount != 0 &&
                quotient.reg[quotient.wordCount - 1] == 0) {
-          quotient.wordCount--;
+          --quotient.wordCount;
         }
         quotient.ShortenArray();
         if (quotient.wordCount != 0) {

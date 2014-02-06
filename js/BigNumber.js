@@ -384,7 +384,7 @@ function() {
                 return 0;
             }
             for (var i = 1; i < n; ++i) {
-                words1[words1Start + i] = ((words1[words1Start + i] + 1) & 65535);
+                ++words1[words1Start + i];
                 if (words1[words1Start + i] != 0) {
                     return 0;
                 }
@@ -401,7 +401,7 @@ function() {
             }
             for (var i = 1; i < n; ++i) {
                 tmp = words1[words1Start + i];
-                words1[words1Start + i] = ((words1[words1Start + i] - 1) & 65535);
+                --words1[words1Start + i];
                 if (tmp != 0) {
                     return 0;
                 }
@@ -1782,7 +1782,7 @@ function() {
                     tempInt = ((tempInt >> 16) & 65535) + a1b1high + (c[csi + 3] & 65535);
                     c[csi + 3] = (((((tempInt & 65535) & 65535))|0));
                     if ((tempInt >> 16) != 0) {
-                        c[csi + 4] = ((c[csi + 4] + 1) & 65535);
+                        ++c[csi + 4];
                         c[csi + 5] = (((((c[csi + 5] + (((c[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
                     }
                 }
@@ -1813,7 +1813,7 @@ function() {
                     tempInt = ((tempInt >> 16) & 65535) + a1b1high + (c[csi + 3] & 65535);
                     c[csi + 3] = (((((tempInt & 65535) & 65535))|0));
                     if ((tempInt >> 16) != 0) {
-                        c[csi + 4] = ((c[csi + 4] + 1) & 65535);
+                        ++c[csi + 4];
                         c[csi + 5] = (((((c[csi + 5] + (((c[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
                     }
                 }
@@ -1893,7 +1893,7 @@ function() {
                     while (tempArr[valueRstart2 + n] != 0 || BigInteger.Compare(tempArr, valueRstart2, tempArr, valueTBstart, n) >= 0) {
                         tempArr[valueRstart2 + n] = (((((tempArr[valueRstart2 + n] - ((BigInteger.Subtract(tempArr, valueRstart2, tempArr, valueRstart2, tempArr, valueTBstart, n))|0)) & 65535))|0));
                         if (quotientArr != null) {
-                            quotientArr[qs] = ((quotientArr[qs] + 1) & 65535);
+                            ++quotientArr[qs];
                             quotientArr[qs + 1] = (((((quotientArr[qs + 1] + (((quotientArr[qs] == 0) ? 1 : 0)|0)) & 65535))|0));
                         }
                     }
@@ -2201,7 +2201,7 @@ function() {
         }
         ret.negative = this.negative;
         while (ret.wordCount != 0 && ret.reg[ret.wordCount - 1] == 0) {
-            ret.wordCount--;
+            --ret.wordCount;
         }
         if (shiftWords > 2) {
             this.ShortenArray();
@@ -2242,7 +2242,7 @@ function() {
 
                 ret.wordCount = 4;
                 while (ret.wordCount != 0 && ret.reg[ret.wordCount - 1] == 0) {
-                    ret.wordCount--;
+                    --ret.wordCount;
                 }
             }
         }
@@ -3342,7 +3342,7 @@ function() {
         }
 
         while (product.wordCount != 0 && product.reg[product.wordCount - 1] == 0) {
-            product.wordCount--;
+            --product.wordCount;
         }
         if (needShorten) {
             product.ShortenArray();
@@ -3437,7 +3437,7 @@ function() {
             quotient.negative = this.negative;
             BigInteger.FastDivide(quotient.reg, this.reg, words1Size, bigintDivisor.reg[0]);
             while (quotient.wordCount != 0 && quotient.reg[quotient.wordCount - 1] == 0) {
-                quotient.wordCount--;
+                --quotient.wordCount;
             }
             if (quotient.wordCount != 0) {
                 quotient.negative = this.negative ^ bigintDivisor.negative;
@@ -3487,7 +3487,7 @@ function() {
             quotient.negative = this.negative;
             var smallRemainder = ((BigInteger.FastDivideAndRemainder(quotient.reg, 0, this.reg, 0, words1Size, divisor.reg[0]))|0) & 65535;
             while (quotient.wordCount != 0 && quotient.reg[quotient.wordCount - 1] == 0) {
-                quotient.wordCount--;
+                --quotient.wordCount;
             }
             quotient.ShortenArray();
             if (quotient.wordCount != 0) {
@@ -3770,7 +3770,7 @@ function(value) {
                 }
             }
             while (mnum.wordCount != 0 && mnum.data[mnum.wordCount - 1] == 0) {
-                mnum.wordCount--;
+                --mnum.wordCount;
             }
             return mnum;
         };

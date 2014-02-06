@@ -54,7 +54,7 @@ namespace PeterO {
         }
         // Calculate the correct data length
         while (mnum.wordCount != 0 && mnum.data[mnum.wordCount - 1] == 0) {
-          mnum.wordCount--;
+          --mnum.wordCount;
         }
         return mnum;
       }
