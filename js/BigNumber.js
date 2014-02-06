@@ -384,7 +384,7 @@ function() {
                 return 0;
             }
             for (var i = 1; i < n; ++i) {
-                ++words1[words1Start + i];
+                words1[words1Start + i] = ((words1[words1Start + i] + 1) & 65535);
                 if (words1[words1Start + i] != 0) {
                     return 0;
                 }
@@ -401,7 +401,7 @@ function() {
             }
             for (var i = 1; i < n; ++i) {
                 tmp = words1[words1Start + i];
-                --words1[words1Start + i];
+                words1[words1Start + i] = ((words1[words1Start + i] - 1) & 65535);
                 if (tmp != 0) {
                     return 0;
                 }
@@ -1782,7 +1782,7 @@ function() {
                     tempInt = ((tempInt >> 16) & 65535) + a1b1high + (c[csi + 3] & 65535);
                     c[csi + 3] = (((((tempInt & 65535) & 65535))|0));
                     if ((tempInt >> 16) != 0) {
-                        ++c[csi + 4];
+                        c[csi + 4] = ((c[csi + 4] + 1) & 65535);
                         c[csi + 5] = (((((c[csi + 5] + (((c[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
                     }
                 }
@@ -1813,7 +1813,7 @@ function() {
                     tempInt = ((tempInt >> 16) & 65535) + a1b1high + (c[csi + 3] & 65535);
                     c[csi + 3] = (((((tempInt & 65535) & 65535))|0));
                     if ((tempInt >> 16) != 0) {
-                        ++c[csi + 4];
+                        c[csi + 4] = ((c[csi + 4] + 1) & 65535);
                         c[csi + 5] = (((((c[csi + 5] + (((c[csi + 4] == 0) ? 1 : 0)|0)) & 65535))|0));
                     }
                 }
@@ -1893,7 +1893,7 @@ function() {
                     while (tempArr[valueRstart2 + n] != 0 || BigInteger.Compare(tempArr, valueRstart2, tempArr, valueTBstart, n) >= 0) {
                         tempArr[valueRstart2 + n] = (((((tempArr[valueRstart2 + n] - ((BigInteger.Subtract(tempArr, valueRstart2, tempArr, valueRstart2, tempArr, valueTBstart, n))|0)) & 65535))|0));
                         if (quotientArr != null) {
-                            ++quotientArr[qs];
+                            quotientArr[qs] = ((quotientArr[qs] + 1) & 65535);
                             quotientArr[qs + 1] = (((((quotientArr[qs + 1] + (((quotientArr[qs] == 0) ? 1 : 0)|0)) & 65535))|0));
                         }
                     }
