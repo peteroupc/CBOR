@@ -1219,10 +1219,9 @@ namespace PeterO {
           } else {
             PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)10)
               .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
-            T ten = this.helper.ValueOf(10);
             T logNatural = this.Ln(thisValue, ctxdiv);
             T logTen = this.LnTenConstant(ctxdiv);
-            // T logTen = this.Ln(ten, ctxdiv);
+            // T logTen = this.Ln(this.helper.ValueOf(10), ctxdiv);
             thisValue = this.Divide(logNatural, logTen, ctx);
             // Treat result as inexact
             if (ctx.HasFlags) {
@@ -1271,7 +1270,6 @@ namespace PeterO {
         throw new ArgumentNullException("ctx");
       }
       T thisValue = this.helper.ValueOf(10);
-      T two = this.helper.ValueOf(2);
       FastInteger error;
       BigInteger bigError;
       error = new FastInteger(10);
@@ -1588,6 +1586,7 @@ namespace PeterO {
       return thisValue;
     }
 
+    /*
     private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
       if (root <= 0) {
         throw new ArgumentException("root not greater than 0 (" + Convert.ToString((long)root, System.Globalization.CultureInfo.InvariantCulture) + ")");
@@ -1629,6 +1628,7 @@ namespace PeterO {
         lastGuess = bigintGuess;
       }
     }
+    */
 
     /// <summary>Not documented yet.</summary>
     /// <param name='thisValue'>A T object. (2).</param>

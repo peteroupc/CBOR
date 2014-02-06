@@ -110,6 +110,7 @@ namespace PeterO {
       return 0;
     }
 
+    /*
     private static int CompareUnevenSize(
       short[] words1,
       int astart,
@@ -144,6 +145,7 @@ namespace PeterO {
       }
       return 0;
     }
+    */
 
     private static int CompareWithOneBiggerWords1(short[] words1, int astart, short[] words2, int bstart, int words1Count) {
       // NOTE: Assumes that words2's count is 1 less
@@ -1026,7 +1028,6 @@ namespace PeterO {
           // Count is odd, high part will be 1 shorter
           int countHigh = count >> 1;  // Shorter part
           int countLow = count - countHigh;  // Longer part
-          int tsnShorter = countHigh + countHigh;
           offset2For1 = CompareWithOneBiggerWords1(words1, words1Start, words1, words1Start + countLow, countLow) > 0 ? 0 : countLow;
           if (offset2For1 == 0) {
             SubtractOneBiggerWords1(resultArr, resultStart, words1, words1Start, words1, words1Start + countLow, countLow);
@@ -4167,6 +4168,7 @@ namespace PeterO {
       return srrem[0];
     }
 
+    /*
     private static BigInteger WordsToBigInt(
       short[] words,
       int start,
@@ -4202,7 +4204,7 @@ namespace PeterO {
       ret.wordCount = count;
       return ret;
     }
-
+    */
     public BigInteger[] sqrtWithRemainder() {
       if (this.Sign <= 0) {
         return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };

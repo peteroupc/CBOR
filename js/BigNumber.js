@@ -360,34 +360,6 @@ function() {
         }
         return 0;
     };
-    constructor['CompareUnevenSize'] = constructor.CompareUnevenSize = function(words1, astart, acount, words2, bstart, bcount) {
-        var n = acount;
-        if (acount > bcount) {
-            while ((acount--) != bcount) {
-                if (words1[astart + acount] != 0) {
-                    return 1;
-                }
-            }
-            n = bcount;
-        } else if (bcount > acount) {
-            while ((bcount--) != acount) {
-                if (words1[astart + acount] != 0) {
-                    return -1;
-                }
-            }
-            n = acount;
-        }
-        while ((n--) != 0) {
-            var an = ((words1[astart + n])|0) & 65535;
-            var bn = ((words2[bstart + n])|0) & 65535;
-            if (an > bn) {
-                return 1;
-            } else if (an < bn) {
-                return -1;
-            }
-        }
-        return 0;
-    };
     constructor['CompareWithOneBiggerWords1'] = constructor.CompareWithOneBiggerWords1 = function(words1, astart, words2, bstart, words1Count) {
         if (words1[astart + words1Count - 1] != 0) {
             return 1;
@@ -1372,7 +1344,6 @@ function() {
             } else {
                 var countHigh = count >> 1;
                 var countLow = count - countHigh;
-                var tsnShorter = countHigh + countHigh;
                 offset2For1 = BigInteger.CompareWithOneBiggerWords1(words1, words1Start, words1, words1Start + countLow, countLow) > 0 ? 0 : countLow;
                 if (offset2For1 == 0) {
                     BigInteger.SubtractOneBiggerWords1(resultArr, resultStart, words1, words1Start, words1, words1Start + countLow, countLow);
@@ -3697,18 +3668,7 @@ function() {
         var srrem = this.sqrtWithRemainder();
         return srrem[0];
     };
-    constructor['WordsToBigInt'] = constructor.WordsToBigInt = function(words, start, count) {
-        if (count == 0) {
-            return BigInteger.ZERO;
-        }
-        var newwords = [];
-        for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(count); arrfillI++) newwords[arrfillI] = 0;
-        for (var arrfillI = 0; arrfillI < count; arrfillI++) newwords[0 + arrfillI] = words[start + arrfillI];
-        var ret = new BigInteger();
-        ret.reg = newwords;
-        ret.wordCount = count;
-        return ret;
-    };
+
     prototype['sqrtWithRemainder'] = prototype.sqrtWithRemainder = function() {
         if (this.signum() <= 0) {
             return [BigInteger.ZERO, BigInteger.ZERO];
@@ -7396,7 +7356,6 @@ var RadixMath = function(helper) {
                     thisValue = this.RoundToPrecision(this.helper.CreateNewWithFlags(expTmp.AsBigInteger(), BigInteger.ZERO, expTmp.signum() < 0 ? BigNumberFlags.FlagNegative : 0), ctxCopy);
                 } else {
                     var ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN)).WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
-                    var ten = this.helper.ValueOf(10);
                     var logNatural = this.Ln(thisValue, ctxdiv);
                     var logTen = this.LnTenConstant(ctxdiv);
 
@@ -7444,7 +7403,6 @@ var RadixMath = function(helper) {
             throw new Error("ctx");
         }
         var thisValue = this.helper.ValueOf(10);
-        var two = this.helper.ValueOf(2);
         var error;
         var bigError;
         error = new FastInteger(10);
@@ -7704,46 +7662,6 @@ var RadixMath = function(helper) {
             ctx.setFlags(ctx.getFlags() | (ctxCopy.getFlags()));
         }
         return thisValue;
-    };
-    constructor.NthRootWithRemainder = function(value, root) {
-        if (root <= 0) {
-            throw new Error("root not greater than 0 (" + (JSInteropFactory.createLong(root)) + ")");
-        }
-        if (value.signum() < 0) {
-            throw new Error("value.signum() not greater or equal to 0 (" + (JSInteropFactory.createLong(value).signum()) + ")");
-        }
-        if (value.signum() == 0) {
-            return [BigInteger.ZERO, BigInteger.ZERO];
-        }
-        if (value.equals(BigInteger.ONE)) {
-            return [BigInteger.ONE, BigInteger.ZERO];
-        }
-        if (root == 1) {
-            return [value, BigInteger.ZERO];
-        }
-        if (root == 2) {
-            return value.sqrtWithRemainder();
-        }
-        var nm1 = root - 1;
-        var bits = value.bitLength();
-        var bitsdn = ((bits / root)|0);
-        var bigintGuess = BigInteger.ONE.shiftLeft(bitsdn);
-        var lastGuess = bigintGuess;
-        while (true) {
-            var bigintTmp = value;
-            bigintTmp = bigintTmp.divide(bigintGuess).pow(nm1);
-            var bigintTmp2 = bigintGuess;
-            bigintGuess = bigintGuess.multiply(BigInteger.valueOf(nm1));
-            bigintGuess = bigintTmp.add(bigintTmp2);
-            bigintGuess = bigintGuess.divide(BigInteger.valueOf(root));
-            if (bigintGuess.equals(lastGuess)) {
-
-                lastGuess = (bigintGuess).pow(root);
-                lastGuess = value.subtract(lastGuess);
-                return [bigintGuess, lastGuess];
-            }
-            lastGuess = bigintGuess;
-        }
     };
 
     prototype.SquareRoot = function(thisValue, ctx) {
