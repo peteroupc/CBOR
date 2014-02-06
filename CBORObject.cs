@@ -2089,9 +2089,8 @@ namespace PeterO {
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
-        throw new ArgumentException("value not greater or equal to 0 (" +
-                                    Convert.ToString((int)value, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      }
+ throw new ArgumentException("value (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5)) };
       } else if (value <= 0xFF) {
@@ -2117,8 +2116,8 @@ namespace PeterO {
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
-        throw new ArgumentException("value not greater or equal to 0 (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      }
+ throw new ArgumentException("value (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5)) };
       } else if (value <= 0xFF) {
@@ -3766,8 +3765,8 @@ namespace PeterO {
         throw new ArgumentNullException("bigintTag");
       }
       if (bigintTag.Sign < 0) {
-        throw new ArgumentException("tag not greater or equal to 0 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      }
+ throw new ArgumentException("bigintTag's sign (" + Convert.ToString((long)bigintTag.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       if (bigintTag.CompareTo(valueUInt64MaxValue) > 0) {
         throw new ArgumentException("tag not less or equal to 18446744073709551615 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
@@ -3812,8 +3811,8 @@ namespace PeterO {
     /// 's type is unsupported.</exception>
     public static CBORObject FromObjectAndTag(object valueObValue, int smallTag) {
       if (smallTag < 0) {
-        throw new ArgumentException("tag not greater or equal to 0 (" + Convert.ToString((int)smallTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
-      }
+ throw new ArgumentException("smallTag (" + Convert.ToString((long)smallTag, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       CBORObject c = FromObject(valueObValue);
       if (smallTag == 2 || smallTag == 3) {
         return ConvertToBigNum(c, smallTag == 3);

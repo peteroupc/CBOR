@@ -51,8 +51,8 @@ namespace PeterO {
     /// <param name='bits'>A FastInteger object.</param>
     public void ShiftToDigits(FastInteger bits) {
       if (bits.Sign < 0) {
-        throw new ArgumentException("bits is negative");
-      }
+ throw new ArgumentException("bits's sign (" + Convert.ToString((long)bits.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
       } else {
@@ -110,8 +110,8 @@ namespace PeterO {
       int lastDiscarded,
       int olderDiscarded) {
       if (bigint.Sign < 0) {
-        throw new ArgumentException("bigint is negative");
-      }
+ throw new ArgumentException("bigint's sign (" + Convert.ToString((long)bigint.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       if (bigint.canFitInInt()) {
         this.isSmall = true;
         this.shiftedSmall = (int)bigint;
@@ -125,8 +125,8 @@ namespace PeterO {
 
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0) {
-        throw new ArgumentException("longInt is negative");
-      }
+ throw new ArgumentException("smallNumber (" + Convert.ToString((long)smallNumber, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.Zero, 0, 0);
       bsa.shiftedSmall = smallNumber;
       bsa.discardedBitCount = new FastInteger(0);
@@ -367,8 +367,8 @@ namespace PeterO {
     /// <param name='bits'>A 32-bit signed integer.</param>
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
-        throw new ArgumentException("bits is negative");
-      }
+ throw new ArgumentException("bits (" + Convert.ToString((long)bits, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
       if (this.isSmall) {
         this.ShiftSmallToBits(bits);
       } else {
