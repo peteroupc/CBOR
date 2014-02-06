@@ -111,7 +111,7 @@ import com.upokecenter.util.*;
     public static BigInteger RandomBigInteger(FastRandom r) {
       int count = r.NextValue(60) + 1;
       byte[] bytes = new byte[count];
-       for (int i = 0; i < count; ++i) {
+      for (int i = 0; i < count; ++i) {
         bytes[i] = (byte)((int)r.NextValue(256));
       }
       return BigInteger.fromByteArray((byte[])bytes,true);
@@ -526,24 +526,28 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       }
       try {
         CBORObject.FromJSONString("[\"\ud800\\udc00\"]");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\ud800\udc00\"]");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
@@ -565,8 +569,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(1, o.size());
       Assert.assertEquals("\r\n\u0006\\\"", o.get(0).AsString());
       Assert.assertEquals(
-"[\"\\r\\n\\u0006\\\\\\\"\"]",
-o.ToJSONString());
+        "[\"\\r\\n\\u0006\\\\\\\"\"]",
+        o.ToJSONString());
       TestCommon.AssertRoundTrip(o);
     }
 
@@ -579,7 +583,7 @@ o.ToJSONString());
       Assert.assertEquals(3, o.size());
       Assert.assertEquals(1, o.get(0).AsInt32());
       Assert.assertEquals(2, o.get(1).AsInt32());
-      Assert.assertEquals(3, o.get(2).AsInt32());
+      Assert.assertEquals(3, o.get(2).AsString());
       TestCommon.AssertRoundTrip(o);
     }
 
@@ -589,7 +593,7 @@ o.ToJSONString());
     @Test
     public void TestJSON() {
       CBORObject o;
-      o = CBORObject.FromJSONString("[1,2,null,true,false]");
+      o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       try {
         CBORObject.FromJSONString("[\"\\d800\"]"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
@@ -612,49 +616,50 @@ o.ToJSONString());
         CBORObject.FromJSONString("{,\"0\"=>0,\"1\"=>1}");
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
-} catch (Exception ex) {
-  Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-}
+      } catch (Exception ex) {
+        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+      }
       try { CBORObject.FromJSONString("{\"0\"=>0,,\"1\"=>1}"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
-} catch (Exception ex) {
-  Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-}
+      } catch (Exception ex) {
+        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+      }
       try { CBORObject.FromJSONString("{\"0\"=>0,\"1\"=>1,}"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
-} catch (Exception ex) {
-  Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-}
+      } catch (Exception ex) {
+        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+      }
       try {
-  CBORObject.FromJSONString("[,0,1,2]"); Assert.fail("Should have failed");
-} catch (CBORException ex) {
-} catch (Exception ex) {
-  Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-}
+        CBORObject.FromJSONString("[,0,1,2]"); Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+      }
       try {
-  CBORObject.FromJSONString("[0,,1,2]"); Assert.fail("Should have failed");
-} catch (CBORException ex) {
-} catch (Exception ex) {
-  Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-}
+        CBORObject.FromJSONString("[0,,1,2]"); Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+      }
       try {
-  CBORObject.FromJSONString("[0,1,,2]"); Assert.fail("Should have failed");
-} catch (CBORException ex) {
-} catch (Exception ex) {
-  Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-}
+        CBORObject.FromJSONString("[0,1,,2]"); Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+      }
       try {
-  CBORObject.FromJSONString("[0,1,2,]"); Assert.fail("Should have failed");
-} catch (CBORException ex) {
-} catch (Exception ex) {
-  Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-}
-      Assert.assertEquals(5, o.size());
+        CBORObject.FromJSONString("[0,1,2,]"); Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+      }
+      Assert.assertEquals(6, o.size());
       Assert.assertEquals(1, o.get(0).AsInt32());
       Assert.assertEquals(2, o.get(1).AsInt32());
       Assert.assertEquals(CBORObject.Null, o.get(2));
       Assert.assertEquals(CBORObject.True, o.get(3));
       Assert.assertEquals(CBORObject.False, o.get(4));
+      Assert.assertEquals("", o.get(5));
       o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
       double actual = o.get(0).AsDouble();
       Assert.assertEquals((double)1.5,actual,0);
@@ -6672,8 +6677,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               Assert.assertEquals(String.format(java.util.Locale.US,"Innermost tag doesn't match: %s", obj2),bigintTemp,obj2.getInnermostTag());
             }
             String str = String.format(java.util.Locale.US,"%s(%s(0))",
-                bigintTemp .add(BigInteger.ONE),
-                bigintTemp);
+              bigintTemp .add(BigInteger.ONE),
+              bigintTemp);
             TestCommon.AssertSer(
               obj2,
               str);
