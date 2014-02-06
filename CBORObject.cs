@@ -3759,7 +3759,8 @@ namespace PeterO {
     /// name='bigintTag'/> is less than 0 or greater than 2^64-1, or "o"'s
     /// type is unsupported.</exception>
     /// <param name='valueOb'>An arbitrary object.</param>
-    /// <param name='bigintTag'>Tag number.</param>
+    /// <param name='bigintTag'>Tag number. The tag number 55799 can be
+    /// used to mark a &quot;self-described CBOR&quot; object.</param>
     public static CBORObject FromObjectAndTag(object valueOb, BigInteger bigintTag) {
       if (bigintTag == null) {
         throw new ArgumentNullException("bigintTag");
@@ -3801,7 +3802,9 @@ namespace PeterO {
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
     /// <param name='valueObValue'>An arbitrary object.</param>
-    /// <param name='smallTag'>A 32-bit integer that specifies a tag number.</param>
+    /// <param name='smallTag'>A 32-bit integer that specifies a tag number.
+    /// The tag number 55799 can be used to mark a &quot;self-described CBOR&quot;
+    /// object.</param>
     /// <returns>A CBOR object where the object <paramref name='valueObValue'/>
     /// is converted to a CBOR object and given the tag.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref

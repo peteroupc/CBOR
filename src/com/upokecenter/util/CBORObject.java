@@ -3815,7 +3815,8 @@ public static CBORObject FromObject(Object obj) {
      * Generates a CBOR object from an arbitrary object and gives the resulting
      * object a tag.
      * @param valueOb An arbitrary object.
-     * @param bigintTag Tag number.
+     * @param bigintTag Tag number. The tag number 55799 can be used to mark
+     * a &quot;self-described CBOR&quot; object.
      * @return A CBOR object where the object.
      * @throws java.lang.IllegalArgumentException The parameter {@code bigintTag}
      * is less than 0 or greater than 2^64-1, or "o"'s type is unsupported.
@@ -3862,7 +3863,9 @@ public static CBORObject FromObject(Object obj) {
      * Generates a CBOR object from an arbitrary object and gives the resulting
      * object a tag.
      * @param valueObValue An arbitrary object.
-     * @param smallTag A 32-bit integer that specifies a tag number.
+     * @param smallTag A 32-bit integer that specifies a tag number. The
+     * tag number 55799 can be used to mark a &quot;self-described CBOR&quot;
+     * object.
      * @return A CBOR object where the object {@code valueObValue} is converted
      * to a CBOR object and given the tag.
      * @throws java.lang.IllegalArgumentException The parameter {@code smallTag}
