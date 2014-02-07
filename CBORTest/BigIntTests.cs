@@ -221,6 +221,8 @@ namespace Test
 
     [Test]
     public void TestVarious2() {
+      Assert.AreEqual(1, BigInteger.Zero.getDigitCount());
+
       TestCommon.DoTestAdd("9731846470799281784086", "6611", "9731846470799281790697");
       TestCommon.DoTestSubtract("-72", "957411", "-957483");
       TestCommon.DoTestMultiply("430629184422466", "988633028108014", "425734234587266973533256242524");
@@ -1754,21 +1756,317 @@ namespace Test
     }
 
     [Test]
-    public void TestExceptions(){
-      BigInteger rem;
-      Assert.Throws(typeof(ArithmeticException),()=>BigInteger.One.mod((BigInteger)(-1)));
-      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.add(null));
-      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.subtract(null));
-      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.multiply(null));
-      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.divide(null));
-      Assert.Throws(typeof(DivideByZeroException),()=>BigInteger.One.divide(BigInteger.Zero));
-      Assert.Throws(typeof(DivideByZeroException),()=>BigInteger.One.remainder(BigInteger.Zero));
-      Assert.Throws(typeof(DivideByZeroException),()=>BigInteger.One.mod(BigInteger.Zero));
-      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.remainder(null));
-      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.mod(null));
-      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.DivRem(BigInteger.One,null,out rem));
+    public void TestSmallIntDivide() {
+      int a, b;
+      FastRandom fr = new FastRandom();
+      for (int i = 0; i < 10000; ++i) {
+        a = fr.NextValue(0x1000000);
+        b = fr.NextValue(0x1000000);
+        if (b == 0) {
+ continue;
+}
+        int c = a / b;
+        BigInteger bigintA = (BigInteger)a;
+        BigInteger bigintB = (BigInteger)b;
+        BigInteger bigintC = bigintA / (BigInteger)b;
+        Assert.AreEqual((int)bigintC, c);
+      }
     }
-    
+
+    [Test]
+    public void TestMiscellaneous() {
+      BigInteger minValue = (BigInteger)Int32.MinValue;
+      BigInteger minValueTimes2 = minValue + (BigInteger)minValue;
+      Assert.AreEqual(Int32.MinValue, (int)minValue);
+      try {
+ Console.WriteLine((int)minValueTimes2);
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      BigInteger verybig = BigInteger.One << 80;
+      try {
+ Console.WriteLine((int)verybig);
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ Console.WriteLine((long)verybig);
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.PowBigIntVar(null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.divideAndRemainder(BigInteger.Zero);
+Assert.Fail("Should have failed");
+} catch (DivideByZeroException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.pow(-1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ (BigInteger.Zero - BigInteger.One).PowBigIntVar(null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      Assert.IsFalse(BigInteger.One.Equals(BigInteger.Zero));
+      Assert.IsFalse(verybig.Equals(BigInteger.Zero));
+      Assert.IsFalse(BigInteger.One.Equals(BigInteger.Zero - BigInteger.One));
+      Assert.AreEqual(1, BigInteger.One.CompareTo(null));
+      BigInteger[] tmpsqrt = BigInteger.Zero.sqrtWithRemainder();
+      Assert.AreEqual(BigInteger.Zero, tmpsqrt[0]);
+    }
+
+    [Test]
+    public void TestExceptions() {
+      try {
+        BigInteger.fromString("xyz");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromString(String.Empty);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        BigInteger.fromSubstring(null, 0, 1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromString(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        BigInteger.Zero.testBit(-1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromByteArray(null, false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        BigInteger.fromSubstring("123", -1,2);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 4,2);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 1,-1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 1,4);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 1,0);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 2,1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromString("x11");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromString(".");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromString("..");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromString("e200");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        BigInteger.One.mod((BigInteger)(-1));
+        Assert.Fail("Should have failed");
+      } catch (ArithmeticException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.add(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.subtract(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.multiply(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.divide(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.divide(BigInteger.Zero);
+        Assert.Fail("Should have failed");
+      } catch (DivideByZeroException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.remainder(BigInteger.Zero);
+        Assert.Fail("Should have failed");
+      } catch (DivideByZeroException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.mod(BigInteger.Zero);
+        Assert.Fail("Should have failed");
+      } catch (DivideByZeroException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.remainder(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.mod(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.One.divideAndRemainder(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
     [Test]
     public void TestAddSubtract() {
       FastRandom r = new FastRandom();

@@ -220,6 +220,8 @@ import com.upokecenter.util.*;
 
     @Test
     public void TestVarious2() {
+      Assert.assertEquals(1, BigInteger.ZERO.getDigitCount());
+
       TestCommon.DoTestAdd("9731846470799281784086", "6611", "9731846470799281790697");
       TestCommon.DoTestSubtract("-72", "957411", "-957483");
       TestCommon.DoTestMultiply("430629184422466", "988633028108014", "425734234587266973533256242524");
@@ -1758,6 +1760,318 @@ bigintRem=divrem[1]; }
         if (sronesqr.compareTo(bigintA) <= 0) {
           Assert.fail(srsqr + " not greater than " + bigintA + " (TestSqrt, sqrt=" + sr + ")");
         }
+      }
+    }
+
+    @Test
+    public void TestSmallIntDivide() {
+      int a, b;
+      FastRandom fr = new FastRandom();
+      for (int i = 0; i < 10000; ++i) {
+        a = fr.NextValue(0x1000000);
+        b = fr.NextValue(0x1000000);
+        if (b == 0) {
+ continue;
+}
+        int c = a / b;
+        BigInteger bigintA = BigInteger.valueOf(a);
+        BigInteger bigintB = BigInteger.valueOf(b);
+        BigInteger bigintC = bigintA.divide(BigInteger.valueOf(b));
+        Assert.assertEquals(bigintC.intValue(), c);
+      }
+    }
+
+    @Test
+    public void TestMiscellaneous() {
+      BigInteger minValue = BigInteger.valueOf(Integer.MIN_VALUE);
+      BigInteger minValueTimes2 = minValue.add(minValue);
+      Assert.assertEquals(Integer.MIN_VALUE, minValue.intValue());
+      try {
+ System.out.println(minValueTimes2.intValue());
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      BigInteger verybig = BigInteger.ONE.shiftLeft(80);
+      try {
+ System.out.println(verybig.intValue());
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ System.out.println(verybig.longValue());
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ BigInteger.ONE.PowBigIntVar(null);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ BigInteger.ONE.divideAndRemainder(BigInteger.ZERO);
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ BigInteger.ONE.pow(-1);
+Assert.fail("Should have failed");
+} catch (IllegalArgumentException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ (BigInteger.ZERO.subtract(BigInteger.ONE)).PowBigIntVar(null);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      Assert.IsFalse(BigInteger.ONE.equals(BigInteger.ZERO));
+      Assert.IsFalse(verybig.equals(BigInteger.ZERO));
+      Assert.IsFalse(BigInteger.ONE.equals(BigInteger.ZERO.subtract(BigInteger.ONE)));
+      Assert.assertEquals(1, BigInteger.ONE.compareTo(null));
+      BigInteger[] tmpsqrt = BigInteger.ZERO.sqrtWithRemainder();
+      Assert.assertEquals(BigInteger.ZERO, tmpsqrt[0]);
+    }
+
+    @Test
+    public void TestExceptions() {
+      try {
+        BigInteger.fromString("xyz");
+        Assert.fail("Should have failed");
+      } catch (NumberFormatException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromString("");
+        Assert.fail("Should have failed");
+      } catch (NumberFormatException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        BigInteger.fromSubstring(null, 0, 1);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromString(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        BigInteger.ZERO.testBit(-1);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromByteArray(null, false);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        BigInteger.fromSubstring("123", -1,2);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 4,2);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 1,-1);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 1,4);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 1,0);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromSubstring("123", 2,1);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromString("x11");
+        Assert.fail("Should have failed");
+      } catch (NumberFormatException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromString(".");
+        Assert.fail("Should have failed");
+      } catch (NumberFormatException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromString("..");
+        Assert.fail("Should have failed");
+      } catch (NumberFormatException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.fromString("e200");
+        Assert.fail("Should have failed");
+      } catch (NumberFormatException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        BigInteger.ONE.mod(BigInteger.valueOf(-1));
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.add(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.subtract(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.multiply(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.divide(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.divide(BigInteger.ZERO);
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.remainder(BigInteger.ZERO);
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.mod(BigInteger.ZERO);
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.remainder(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.mod(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        BigInteger.ONE.divideAndRemainder(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
       }
     }
 

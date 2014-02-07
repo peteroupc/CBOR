@@ -429,6 +429,26 @@ namespace Test {
       CompareTestLess(dp, dnan);
     }
 
+    [Test]
+    public void TestParseJSONNumber() {
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(null, false, false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false,false,true));
+      if (CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999",false,false,false)==null) {
+ Assert.Fail();
+}
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(String.Empty, false, false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("xyz", false,false,false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0..1", false,false,false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0xyz", false,false,false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.1xyz", false,false,false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.xyz", false,false,false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5exyz", false,false,false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5q+88", false,false,false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5ee88", false,false,false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false,false,false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false,false,false));
+    }
+
     /// <summary>Not documented yet.</summary>
     [Test]
     public void TestParseDecimalStrings() {
@@ -582,7 +602,7 @@ namespace Test {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       try {
-        CBORObject.FromJSONString("[\"\\d800\"]"); Assert.Fail("Should have failed");
+        CBORObject.FromJSONString("[\"\\ud800\"]"); Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
@@ -4296,6 +4316,253 @@ namespace Test {
         0x20,
         0xFF,
         0xFF });
+    }
+
+    [Test]
+    public void TestExceptions() {
+      try {
+        PrecisionContext.Unlimited.WithBigPrecision(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8String(null, false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes(null, false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.WriteUtf8(null, 0, 1, null, false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.WriteUtf8("xyz", 0,1,null,false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.WriteUtf8(null, null, false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.WriteUtf8("xyz", null,false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\ud800", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\udc00", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\ud800\ud800", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\udc00\udc00", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\udc00\ud800", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8String(null, 0, 1, false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [Test]
+    public void TestExtendedDecimalExceptions() {
+      try {
+        ExtendedDecimal.Min(null, ExtendedDecimal.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.Min(ExtendedDecimal.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        ExtendedDecimal.Max(null, ExtendedDecimal.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.Max(ExtendedDecimal.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        ExtendedDecimal.MinMagnitude(null, ExtendedDecimal.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.MinMagnitude(ExtendedDecimal.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        ExtendedDecimal.MaxMagnitude(null, ExtendedDecimal.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.MaxMagnitude(ExtendedDecimal.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        ExtendedFloat.Min(null, ExtendedFloat.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.Min(ExtendedFloat.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        ExtendedFloat.Max(null, ExtendedFloat.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.Max(ExtendedFloat.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.MinMagnitude(ExtendedFloat.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        ExtendedFloat.MaxMagnitude(null, ExtendedFloat.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.MaxMagnitude(ExtendedFloat.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     /// <summary>Not documented yet.</summary>

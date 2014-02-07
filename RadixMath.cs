@@ -1265,10 +1265,12 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-    public T LnTenConstant(PrecisionContext ctx) {
+    private T LnTenConstant(PrecisionContext ctx) {
+      #if DEBUG
       if (ctx == null) {
         throw new ArgumentNullException("ctx");
       }
+      #endif
       T thisValue = this.helper.ValueOf(10);
       FastInteger error;
       BigInteger bigError;
@@ -1628,7 +1630,7 @@ namespace PeterO {
         lastGuess = bigintGuess;
       }
     }
-    */
+     */
 
     /// <summary>Not documented yet.</summary>
     /// <param name='thisValue'>A T object. (2).</param>
@@ -2587,9 +2589,9 @@ namespace PeterO {
         if (((thisFlags & otherFlags) & BigNumberFlags.FlagInfinity) != 0) {
           return this.RoundToPrecision(thisValue, ctx);
         }
-        if (((thisFlags | otherFlags) & BigNumberFlags.FlagInfinity) != 0) {
-          return this.SignalInvalid(ctx);
-        }
+        // At this point, it's only the case that either value
+        // is infinity
+        return this.SignalInvalid(ctx);
       }
       BigInteger expOther = this.helper.GetExponent(otherValue);
       if (ctx != null && !ctx.ExponentWithinRange(expOther)) {
@@ -3515,11 +3517,8 @@ namespace PeterO {
                 FastInteger tmp = FastInteger.Copy(fastOp2Exp).SubtractInt(8).Subtract(digitLength1).Subtract(maxPrecision);
                 FastInteger newDiff = FastInteger.Copy(tmp).Subtract(fastOp2Exp).Abs();
                 if (newDiff.CompareTo(expdiff) < 0) {
-                  if (s == ds) {
-                    return (s < 0) ? 1 : -1;
-                  } else {
-                    op1Exponent = tmp.AsBigInteger();
-                  }
+                  // At this point, both operands have the same sign
+                  return (s < 0) ? 1 : -1;
                 }
               }
             }
@@ -3539,11 +3538,8 @@ namespace PeterO {
                 FastInteger tmp = FastInteger.Copy(fastOp1Exp).SubtractInt(8).Subtract(digitLength2).Subtract(maxPrecision);
                 FastInteger newDiff = FastInteger.Copy(tmp).Subtract(fastOp1Exp).Abs();
                 if (newDiff.CompareTo(expdiff) < 0) {
-                  if (s == ds) {
-                    return (s < 0) ? -1 : 1;
-                  } else {
-                    op2Exponent = tmp.AsBigInteger();
-                  }
+                  // At this point, both operands have the same sign
+                  return (s < 0) ? -1 : 1;
                 }
               }
             }

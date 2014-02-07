@@ -141,7 +141,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       return 0;
     }
-    */
+     */
 
     private static int CompareWithOneBiggerWords1(short[] words1, int astart, short[] words2, int bstart, int words1Count) {
       // NOTE: Assumes that words2's count is 1 less
@@ -1340,7 +1340,9 @@ at: http://peteroupc.github.io/CBOR/
             words1,
             words1Start,
             words1Count);
-        } else if (words1Count + 1 == words2Count) {
+        } else if (words1Count + 1 == words2Count ||
+                   (words1Count + 2 == words2Count && words2[words2Start + words2Count - 1] == 0)) {
+          java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(words1Count + words2Count),(short)0);
           // Multiply the low parts of each operand
           SameSizeMultiply(
             resultArr,
@@ -1358,7 +1360,7 @@ at: http://peteroupc.github.io/CBOR/
             resultArr,
             resultStart + words1Count,
             words1,
-            words1Start + words1Count,
+            words1Start,
             words2[words2Start + words1Count],
             words1Count);
           resultArr[resultStart + words1Count + words1Count] = carry;
@@ -1834,6 +1836,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public static BigInteger fromByteArray(byte[] bytes, boolean littleEndian) {
+      if (bytes == null) {
+ throw new NullPointerException("bytes");
+}
+      if (bytes.length == 0) {
+ return BigInteger.ZERO;
+}
       BigInteger bigint = new BigInteger();
       bigint.fromByteArrayInternal(bytes, littleEndian);
       return bigint;
@@ -1843,49 +1851,45 @@ at: http://peteroupc.github.io/CBOR/
       if (bytes == null) {
         throw new NullPointerException("bytes");
       }
-      if (bytes.length == 0) {
-        this.reg = new short[] { (short)0, (short)0 };
-        this.wordCount = 0;
+
+      int len = bytes.length;
+      int wordLength = ((int)len + 1) >> 1;
+      wordLength = RoundupSize(wordLength);
+      this.reg = new short[wordLength];
+      int valueJIndex = littleEndian ? len - 1 : 0;
+      boolean negative = (bytes[valueJIndex] & 0x80) != 0;
+      this.negative = negative;
+      int j = 0;
+      if (!negative) {
+        for (int i = 0; i < len; i += 2, j++) {
+          int index = littleEndian ? i : len - 1 - i;
+          int index2 = littleEndian ? i + 1 : len - 2 - i;
+          this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
+          if (index2 >= 0 && index2 < len) {
+            this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
+          }
+        }
       } else {
-        int len = bytes.length;
-        int wordLength = ((int)len + 1) >> 1;
-        wordLength = RoundupSize(wordLength);
-        this.reg = new short[wordLength];
-        int valueJIndex = littleEndian ? len - 1 : 0;
-        boolean negative = (bytes[valueJIndex] & 0x80) != 0;
-        this.negative = negative;
-        int j = 0;
-        if (!negative) {
-          for (int i = 0; i < len; i += 2, j++) {
-            int index = littleEndian ? i : len - 1 - i;
-            int index2 = littleEndian ? i + 1 : len - 2 - i;
-            this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
-            if (index2 >= 0 && index2 < len) {
-              this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
-            }
+        for (int i = 0; i < len; i += 2, j++) {
+          int index = littleEndian ? i : len - 1 - i;
+          int index2 = littleEndian ? i + 1 : len - 2 - i;
+          this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
+          if (index2 >= 0 && index2 < len) {
+            this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
+          } else {
+            // sign extend the last byte
+            this.reg[j] |= ((short)0xFF00);
           }
-        } else {
-          for (int i = 0; i < len; i += 2, j++) {
-            int index = littleEndian ? i : len - 1 - i;
-            int index2 = littleEndian ? i + 1 : len - 2 - i;
-            this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
-            if (index2 >= 0 && index2 < len) {
-              this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
-            } else {
-              // sign extend the last byte
-              this.reg[j] |= ((short)0xFF00);
-            }
-          }
-          for (; j < this.reg.length; ++j) {
-            this.reg[j] = ((short)0xFFFF);  // sign extend remaining words
-          }
-          TwosComplement(this.reg, 0, (int)this.reg.length);
         }
-        this.wordCount = this.reg.length;
-        while (this.wordCount != 0 &&
-               this.reg[this.wordCount - 1] == 0) {
-          --this.wordCount;
+        for (; j < this.reg.length; ++j) {
+          this.reg[j] = ((short)0xFFFF);  // sign extend remaining words
         }
+        TwosComplement(this.reg, 0, (int)this.reg.length);
+      }
+      this.wordCount = this.reg.length;
+      while (this.wordCount != 0 &&
+             this.reg[this.wordCount - 1] == 0) {
+        --this.wordCount;
       }
     }
 
@@ -2318,8 +2322,8 @@ at: http://peteroupc.github.io/CBOR/
       }
       int sign = power.signum();
       if (sign < 0) {
- throw new IllegalArgumentException("sign (" + Long.toString((long)sign) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("sign (" + Long.toString((long)sign) + ") is not greater or equal to " + "0");
+      }
       BigInteger thisVar = this;
       if (sign == 0) {
         return BigInteger.ONE;
@@ -2350,8 +2354,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) {
- throw new IllegalArgumentException("powerSmall (" + Long.toString((long)powerSmall) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("powerSmall (" + Long.toString((long)powerSmall) + ") is not greater or equal to " + "0");
+      }
       BigInteger thisVar = this;
       if (powerSmall == 0) {
         // however 0 to the power of 0 is undefined
@@ -2696,7 +2700,7 @@ at: http://peteroupc.github.io/CBOR/
       int wordCount = this.wordCount;
       int i = 0;
       while (wordCount != 0) {
-        if (wordCount == 1) {
+        if (wordCount == 1 || (wordCount == 2 && tempReg[1] == 0)) {
           int rest = ((int)tempReg[0]) & 0xFFFF;
           if (rest >= 10000) {
             i += 5;
@@ -2904,20 +2908,20 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("str");
       }
       if (index < 0) {
- throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is not greater or equal to " + "0");
+      }
       if (index > str.length()) {
- throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is not less or equal to " + Long.toString((long)str.length()));
-}
+        throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is not less or equal to " + Long.toString((long)str.length()));
+      }
       if (endIndex < 0) {
- throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is not greater or equal to " + "0");
+      }
       if (endIndex > str.length()) {
- throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is not less or equal to " + Long.toString((long)str.length()));
-}
+        throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is not less or equal to " + Long.toString((long)str.length()));
+      }
       if (endIndex < index) {
- throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is not greater or equal to " + Long.toString((long)index));
-}
+        throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is not greater or equal to " + Long.toString((long)index));
+      }
       if (index == endIndex) {
         throw new NumberFormatException("No digits");
       }
@@ -3113,17 +3117,17 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("pow");
       }
       if (pow.signum() < 0) {
- throw new IllegalArgumentException("pow (" + Long.toString((long)pow.signum()) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("pow (" + Long.toString((long)pow.signum()) + ") is not greater or equal to " + "0");
+      }
       BigInteger r = BigInteger.ONE;
       BigInteger v = this;
       while (pow.signum()!=0) {
         if (pow.testBit(0)) {
-          r = (r.multiply(v)).remainder(mod);
+          r = (r.multiply(v)).mod(mod);
         }
         pow=pow.shiftRight(1);
         if (pow.signum()!=0) {
-          v = (v.multiply(v)).remainder(mod);
+          v = (v.multiply(v)).mod(mod);
         }
       }
       return r;
@@ -3407,6 +3411,20 @@ at: http://peteroupc.github.io/CBOR/
         product.negative = false;
         product.wordCount = product.reg.length;
         needShorten = false;
+      } else if (this.equals(bigintMult)) {
+        int words1Size = RoundupSize(this.wordCount);
+        product.reg = new short[words1Size + words1Size];
+        product.wordCount = product.reg.length;
+        product.negative = false;
+        short[] workspace = new short[words1Size + words1Size];
+        RecursiveSquare(
+          product.reg,
+          0,
+          workspace,
+          0,
+          this.reg,
+          0,
+          words1Size);
       } else if (this.wordCount <= 10 && bigintMult.wordCount <= 10) {
         int wc = this.wordCount + bigintMult.wordCount;
         wc = RoundupSize(wc);
@@ -3423,20 +3441,6 @@ at: http://peteroupc.github.io/CBOR/
           0,
           bigintMult.wordCount);
         needShorten = false;
-      } else if (this.equals(bigintMult)) {
-        int words1Size = RoundupSize(this.wordCount);
-        product.reg = new short[words1Size + words1Size];
-        product.wordCount = product.reg.length;
-        product.negative = false;
-        short[] workspace = new short[words1Size + words1Size];
-        RecursiveSquare(
-          product.reg,
-          0,
-          workspace,
-          0,
-          this.reg,
-          0,
-          words1Size);
       } else {
         int words1Size = this.wordCount;
         int words2Size = bigintMult.wordCount;
@@ -3731,6 +3735,7 @@ at: http://peteroupc.github.io/CBOR/
      * divisor minus normal remainder if the normal remainder is negative.
      * @param divisor A divisor greater than 0.
      * @return A BigInteger object.
+     * @throws ArithmeticException The parameter {@code divisor} is negative.
      */
     public BigInteger mod(BigInteger divisor) {
       if (divisor == null) {
@@ -3777,9 +3782,6 @@ at: http://peteroupc.github.io/CBOR/
         return new BigInteger().InitializeInt(smallRemainder);
       }
       if (this.PositiveCompare(divisor) < 0) {
-        if (divisor.signum()==0) {
-          throw new ArithmeticException();
-        }
         return this;
       }
       BigInteger remainder = new BigInteger();
@@ -3911,7 +3913,7 @@ at: http://peteroupc.github.io/CBOR/
       ret.wordCount = count;
       return ret;
     }
-    */
+     */
     public BigInteger[] sqrtWithRemainder() {
       if (this.signum() <= 0) {
         return new BigInteger[] { BigInteger.ZERO, BigInteger.ZERO };

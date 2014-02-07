@@ -1279,10 +1279,8 @@ bigrem=divrem[1]; }
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-    public T LnTenConstant(PrecisionContext ctx) {
-      if (ctx == null) {
-        throw new NullPointerException("ctx");
-      }
+    private T LnTenConstant(PrecisionContext ctx) {
+
       T thisValue = this.helper.ValueOf(10);
       FastInteger error;
       BigInteger bigError;
@@ -1646,7 +1644,7 @@ bigrem=divrem[1]; }
         lastGuess = bigintGuess;
       }
     }
-    */
+     */
 
     /**
      * Not documented yet.
@@ -2633,9 +2631,9 @@ rem=divrem[1]; }
         if (((thisFlags & otherFlags) & BigNumberFlags.FlagInfinity) != 0) {
           return this.RoundToPrecision(thisValue, ctx);
         }
-        if (((thisFlags | otherFlags) & BigNumberFlags.FlagInfinity) != 0) {
-          return this.SignalInvalid(ctx);
-        }
+        // At this point, it's only the case that either value
+        // is infinity
+        return this.SignalInvalid(ctx);
       }
       BigInteger expOther = this.helper.GetExponent(otherValue);
       if (ctx != null && !ctx.ExponentWithinRange(expOther)) {
@@ -3574,11 +3572,8 @@ bigrem=divrem[1]; }
                 FastInteger tmp = FastInteger.Copy(fastOp2Exp).SubtractInt(8).Subtract(digitLength1).Subtract(maxPrecision);
                 FastInteger newDiff = FastInteger.Copy(tmp).Subtract(fastOp2Exp).Abs();
                 if (newDiff.compareTo(expdiff) < 0) {
-                  if (s == ds) {
-                    return (s < 0) ? 1 : -1;
-                  } else {
-                    op1Exponent = tmp.AsBigInteger();
-                  }
+                  // At this point, both operands have the same sign
+                  return (s < 0) ? 1 : -1;
                 }
               }
             }
@@ -3598,11 +3593,8 @@ bigrem=divrem[1]; }
                 FastInteger tmp = FastInteger.Copy(fastOp1Exp).SubtractInt(8).Subtract(digitLength2).Subtract(maxPrecision);
                 FastInteger newDiff = FastInteger.Copy(tmp).Subtract(fastOp1Exp).Abs();
                 if (newDiff.compareTo(expdiff) < 0) {
-                  if (s == ds) {
-                    return (s < 0) ? -1 : 1;
-                  } else {
-                    op2Exponent = tmp.AsBigInteger();
-                  }
+                  // At this point, both operands have the same sign
+                  return (s < 0) ? -1 : 1;
                 }
               }
             }
