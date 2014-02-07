@@ -3925,11 +3925,7 @@ at: http://peteroupc.github.io/CBOR/
       int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
       if (thisValue.canFitInInt()) {
         int smallValue = thisValue.intValue();
-        if (smallValue == 0) {
-          return new BigInteger[] {
-            BigInteger.ZERO, BigInteger.ZERO
-          };
-        }
+        // No need to check for zero; already done above
         int smallintX = 0;
         int smallintY = 1 << powerBits;
         do {

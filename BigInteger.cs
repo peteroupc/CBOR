@@ -1646,7 +1646,8 @@ namespace PeterO {
             words1,
             words1Start,
             words1Count);
-        } else if (words1Count + 1 == words2Count) {
+        } else if (words1Count + 1 == words2Count || (words1Count+2==words2Count && words2[words2Count-1] == 0)) {
+          Array.Clear((short[])resultArr,resultStart,words1Count+words2Count);
           // Multiply the low parts of each operand
           SameSizeMultiply(
             resultArr,
@@ -4008,6 +4009,7 @@ namespace PeterO {
     /// is negative.</summary>
     /// <param name='divisor'>A divisor greater than 0.</param>
     /// <returns>A BigInteger object.</returns>
+    /// <exception cref="ArithmeticException">"divisor" is negative.</exception>
     public BigInteger mod(BigInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");

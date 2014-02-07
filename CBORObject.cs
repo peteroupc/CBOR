@@ -2263,18 +2263,19 @@ namespace PeterO {
     private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     /// <summary>Writes a binary floating-point number in CBOR format to
-    /// a data stream as follows:
-    /// <list type="">
-    /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, converts
-    /// the number to a <code>double</code> and writes that <code>double</code>.
-    /// If negative zero should not be written this way, use the Plus method
+    /// a data stream as follows: <list type=''> <item>If the value is null,
+    /// writes the byte 0xF6.</item>
+    /// <item>If the value is negative zero, infinity, or NaN, converts the
+    /// number to a <code>double</code>
+    /// and writes that <code>double</code>
+    /// . If negative zero should not be written this way, use the Plus method
     /// to convert the value beforehand.</item>
-    /// <item>If the value has an exponent of zero, writes the value
-    /// as a big number, unsigned integer or signed integer, whichever takes
-    /// up the least space.</item>
+    /// <item>If the value has an exponent of zero, writes the value as a big
+    /// number, unsigned integer or signed integer, whichever takes up the
+    /// least space.</item>
     /// <item>In all other cases, writes the value as a big float.</item>
-    /// </list></summary>
+    /// </list>
+    /// </summary>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null.</exception>
     /// <exception cref='System.ArgumentException'>The value's exponent
@@ -2309,19 +2310,20 @@ namespace PeterO {
     }
 
     /// <summary>Writes a decimal floating-point number in CBOR format
-    /// to a data stream, as follows:
-    /// <list type="">
-    /// <item>If the value is null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, converts
-    /// the number to a <code>double</code> and writes that <code>double</code>.
-    /// If negative zero should not be written this way, use the Plus method
+    /// to a data stream, as follows: <list type=''> <item>If the value is
+    /// null, writes the byte 0xF6.</item>
+    /// <item>If the value is negative zero, infinity, or NaN, converts the
+    /// number to a <code>double</code>
+    /// and writes that <code>double</code>
+    /// . If negative zero should not be written this way, use the Plus method
     /// to convert the value beforehand.</item>
-    /// <item>If the value has an exponent of zero, writes the value
-    /// as a big number, unsigned integer or signed integer, whichever takes
-    /// up the least space.</item>
+    /// <item>If the value has an exponent of zero, writes the value as a big
+    /// number, unsigned integer or signed integer, whichever takes up the
+    /// least space.</item>
     /// <item>In all other cases, writes the value as a decimal fraction.</item>
-    /// </list></summary>
-    /// <param name='bignum'>Decimal fraction to write.  Can be null.</param>
+    /// </list>
+    /// </summary>
+    /// <param name='bignum'>Decimal fraction to write. Can be null.</param>
     /// <param name='stream'>Stream to write to.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null.</exception>
@@ -2548,9 +2550,9 @@ namespace PeterO {
       stream.WriteByte(value ? (byte)0xf5 : (byte)0xf4);
     }
 
-    /// <summary>Writes a byte (0 to 255) in CBOR format to a data stream.
-    /// If the value is less than 24, writes that byte.  If the value is 25 to
-    /// 255, writes the byte 24, then this byte's value.</summary>
+    /// <summary>Writes a byte (0 to 255) in CBOR format to a data stream. If
+    /// the value is less than 24, writes that byte. If the value is 25 to 255,
+    /// writes the byte 24, then this byte's value.</summary>
     /// <param name='value'>The value to write.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null.</exception>
@@ -2774,7 +2776,7 @@ namespace PeterO {
     }
 
     /// <summary>Writes a CBOR object to a CBOR data stream.</summary>
-    /// <param name='value'>The value to write.  Can be null.</param>
+    /// <param name='value'>The value to write. Can be null.</param>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(CBORObject value, Stream stream) {
       if (stream == null) {
@@ -2787,14 +2789,14 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Writes an arbitrary object to a CBOR data stream.
-    /// Currently, the following objects are supported:
-    /// <list type="">
-    /// <item>Lists of CBORObject.</item>
+    /// <summary>Writes an arbitrary object to a CBOR data stream. Currently,
+    /// the following objects are supported: <list type=''> <item>Lists
+    /// of CBORObject.</item>
     /// <item>Maps of CBORObject.</item>
     /// <item>Null.</item>
     /// <item>Any object accepted by the FromObject static methods.</item>
-    /// </list></summary>
+    /// </list>
+    /// </summary>
     /// <param name='objValue'>The value to write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='System.ArgumentException'>The object's type
