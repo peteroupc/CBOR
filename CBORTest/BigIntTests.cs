@@ -1635,6 +1635,17 @@ namespace Test
     }
 
     [Test]
+    public void TestToString(){
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        String s=bigintA.ToString();
+        BigInteger big2=BigInteger.fromString(s);
+        Assert.AreEqual(big2.ToString(),s);
+      }
+    }
+    
+    [Test]
     public void TestMultiply() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -1694,6 +1705,9 @@ namespace Test
           if (!bigintRem.Equals(bigintE)) {
             Assert.AreEqual(bigintRem, bigintE, "TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
           }
+          if(bigintE.Sign>0 && !bigintC.mod(bigintB).Equals(bigintE)){
+            Assert.Fail("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
+          }
         }
         if (!bigintA.IsZero) {
           bigintD = BigInteger.DivRem(bigintC, bigintA, out bigintRem);
@@ -1742,7 +1756,7 @@ namespace Test
     [Test]
     public void TestAddSubtract() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (int i = 0; i < 10000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
         BigInteger bigintC = bigintA + (BigInteger)bigintB;
