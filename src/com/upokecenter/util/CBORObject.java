@@ -2263,7 +2263,15 @@ public void set(String key, CBORObject value) {
     private static BigInteger valueUInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
     /**
-     * Writes a binary floating-point number in CBOR format to a data stream.
+     * Writes a binary floating-point number in CBOR format to a data stream
+     * as follows: <ul> <li>If the value is null, writes the byte 0xF6.</li>
+     * <li>If the value is negative zero, infinity, or NaN, converts the
+     * number to a <code>double</code> and writes that <code>double</code>
+     * . If negative zero should not be written this way, use the Plus method
+     * to convert the value beforehand.</li> <li>If the value has an exponent
+     * of zero, writes the value as a big number, unsigned integer or signed
+     * integer, whichever takes up the least space.</li> <li>In all other
+     * cases, writes the value as a big float.</li> </ul>
      * @param bignum An ExtendedFloat object.
      * @param stream A writable data stream.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -2299,8 +2307,16 @@ public void set(String key, CBORObject value) {
     }
 
     /**
-     * Writes a decimal floating-point number in CBOR format to a data stream.
-     * @param bignum Decimal fraction to write.
+     * Writes a decimal floating-point number in CBOR format to a data stream,
+     * as follows: <ul> <li>If the value is null, writes the byte 0xF6.</li>
+     * <li>If the value is negative zero, infinity, or NaN, converts the
+     * number to a <code>double</code> and writes that <code>double</code>
+     * . If negative zero should not be written this way, use the Plus method
+     * to convert the value beforehand.</li> <li>If the value has an exponent
+     * of zero, writes the value as a big number, unsigned integer or signed
+     * integer, whichever takes up the least space.</li> <li>In all other
+     * cases, writes the value as a decimal fraction.</li> </ul>
+     * @param bignum Decimal fraction to write. Can be null.
      * @param stream InputStream to write to.
      * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
@@ -2336,7 +2352,7 @@ public void set(String key, CBORObject value) {
 
     /**
      * Writes a big integer in CBOR format to a data stream.
-     * @param bigint Big integer to write.
+     * @param bigint Big integer to write. Can be null.
      * @param stream A writable data stream.
      * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
@@ -2541,7 +2557,9 @@ public void set(String key, CBORObject value) {
     }
 
     /**
-     * Writes a byte (0 to 255) in CBOR format to a data stream.
+     * Writes a byte (0 to 255) in CBOR format to a data stream. If the value
+     * is less than 24, writes that byte. If the value is 25 to 255, writes the
+     * byte 24, then this byte's value.
      * @param value The value to write.
      * @param stream A writable data stream.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -2777,7 +2795,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     /**
      * Writes a CBOR object to a CBOR data stream.
-     * @param value The value to write.
+     * @param value The value to write. Can be null.
      * @param stream A writable data stream.
      */
     public static void Write(CBORObject value, OutputStream stream) throws IOException {
@@ -2792,7 +2810,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     }
 
     /**
-     * Writes an arbitrary object to a CBOR data stream.
+     * Writes an arbitrary object to a CBOR data stream. Currently, the following
+     * objects are supported: <ul> <li>Lists of CBORObject.</li> <li>Maps
+     * of CBORObject.</li> <li>Null.</li> <li>Any object accepted by
+     * the FromObject static methods.</li> </ul>
      * @param objValue The value to write.
      * @param stream A writable data stream.
      * @throws java.lang.IllegalArgumentException The object's type is not supported.

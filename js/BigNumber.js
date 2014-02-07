@@ -3682,9 +3682,7 @@ function() {
         var powerBits = (((thisValue.getUnsignedBitLength() + 1) / 2)|0);
         if (thisValue.canFitInInt()) {
             var smallValue = thisValue.intValue();
-            if (smallValue == 0) {
-                return [BigInteger.ZERO, BigInteger.ZERO];
-            }
+
             var smallintX = 0;
             var smallintY = 1 << powerBits;
             do {

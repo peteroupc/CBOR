@@ -1634,6 +1634,17 @@ import com.upokecenter.util.*;
     }
 
     @Test
+    public void TestToString() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        String s = bigintA.toString();
+        BigInteger big2 = BigInteger.fromString(s);
+        Assert.assertEquals(big2.toString(), s);
+      }
+    }
+
+    @Test
     public void TestMultiply() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -1696,6 +1707,9 @@ bigintRem=divrem[1]; }
           if (!bigintRem.equals(bigintE)) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC,bigintRem,bigintE);
           }
+          if (bigintE.signum() > 0 && !bigintC.mod(bigintB).equals(bigintE)) {
+            Assert.fail("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
+          }
         }
         if (bigintA.signum()!=0) {
           {
@@ -1750,7 +1764,7 @@ bigintRem=divrem[1]; }
     @Test
     public void TestAddSubtract() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (int i = 0; i < 10000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
         BigInteger bigintC = bigintA.add(bigintB);

@@ -1635,16 +1635,16 @@ namespace Test
     }
 
     [Test]
-    public void TestToString(){
+    public void TestToString() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        String s=bigintA.ToString();
-        BigInteger big2=BigInteger.fromString(s);
-        Assert.AreEqual(big2.ToString(),s);
+        String s = bigintA.ToString();
+        BigInteger big2 = BigInteger.fromString(s);
+        Assert.AreEqual(big2.ToString(), s);
       }
     }
-    
+
     [Test]
     public void TestMultiply() {
       FastRandom r = new FastRandom();
@@ -1705,7 +1705,7 @@ namespace Test
           if (!bigintRem.Equals(bigintE)) {
             Assert.AreEqual(bigintRem, bigintE, "TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
           }
-          if(bigintE.Sign>0 && !bigintC.mod(bigintB).Equals(bigintE)){
+          if (bigintE.Sign > 0 && !bigintC.mod(bigintB).Equals(bigintE)) {
             Assert.Fail("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
           }
         }
@@ -1753,6 +1753,22 @@ namespace Test
       }
     }
 
+    [Test]
+    public void TestExceptions(){
+      BigInteger rem;
+      Assert.Throws(typeof(ArithmeticException),()=>BigInteger.One.mod((BigInteger)(-1)));
+      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.add(null));
+      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.subtract(null));
+      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.multiply(null));
+      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.divide(null));
+      Assert.Throws(typeof(DivideByZeroException),()=>BigInteger.One.divide(BigInteger.Zero));
+      Assert.Throws(typeof(DivideByZeroException),()=>BigInteger.One.remainder(BigInteger.Zero));
+      Assert.Throws(typeof(DivideByZeroException),()=>BigInteger.One.mod(BigInteger.Zero));
+      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.remainder(null));
+      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.One.mod(null));
+      Assert.Throws(typeof(ArgumentNullException),()=>BigInteger.DivRem(BigInteger.One,null,out rem));
+    }
+    
     [Test]
     public void TestAddSubtract() {
       FastRandom r = new FastRandom();
