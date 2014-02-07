@@ -420,6 +420,26 @@ import com.upokecenter.util.*;
       CompareTestLess(dp, dnan);
     }
 
+    @Test
+    public void TestParseJSONNumber() {
+      if((CBORDataUtilities.ParseJSONNumber(null, false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false,false,true))!=null)Assert.fail();
+      if (CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999",false,false,false)==null) {
+ Assert.fail();
+}
+      if((CBORDataUtilities.ParseJSONNumber("", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("xyz", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0..1", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0xyz", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.1xyz", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.xyz", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5exyz", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5q+88", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5ee88", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false,false,false))!=null)Assert.fail();
+    }
+
     /**
      * Not documented yet.
      */
@@ -595,7 +615,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       try {
-        CBORObject.FromJSONString("[\"\\d800\"]"); Assert.fail("Should have failed");
+        CBORObject.FromJSONString("[\"\\ud800\"]"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
@@ -4347,6 +4367,253 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         0x20,
         (byte)0xFF,
         (byte)0xFF  });
+    }
+
+    @Test
+    public void TestExceptions() {
+      try {
+        PrecisionContext.Unlimited.WithBigPrecision(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.GetUtf8String(null, false);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes(null, false);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.WriteUtf8(null, 0, 1, null, false);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.WriteUtf8("xyz", 0,1,null,false);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.WriteUtf8(null, null, false);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.WriteUtf8("xyz", null,false);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\ud800", false);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\udc00", false);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\ud800\ud800", false);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\udc00\udc00", false);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\udc00\ud800", false);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.GetUtf8String(null, 0, 1, false);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+    }
+
+    @Test
+    public void TestExtendedDecimalExceptions() {
+      try {
+        ExtendedDecimal.Min(null, ExtendedDecimal.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedDecimal.Min(ExtendedDecimal.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        ExtendedDecimal.Max(null, ExtendedDecimal.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedDecimal.Max(ExtendedDecimal.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        ExtendedDecimal.MinMagnitude(null, ExtendedDecimal.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedDecimal.MinMagnitude(ExtendedDecimal.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        ExtendedDecimal.MaxMagnitude(null, ExtendedDecimal.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedDecimal.MaxMagnitude(ExtendedDecimal.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        ExtendedFloat.Min(null, ExtendedFloat.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.Min(ExtendedFloat.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        ExtendedFloat.Max(null, ExtendedFloat.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.Max(ExtendedFloat.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.MinMagnitude(ExtendedFloat.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+
+      try {
+        ExtendedFloat.MaxMagnitude(null, ExtendedFloat.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.MaxMagnitude(ExtendedFloat.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
 
     /**

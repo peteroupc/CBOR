@@ -1561,9 +1561,10 @@ function() {
                 }
             } else if ((words1Count + words2Count) >= (words1Count << 2)) {
                 BigInteger.ChunkedLinearMultiply(resultArr, resultStart, tempArr, tempStart, words2, words2Start, words2Count, words1, words1Start, words1Count);
-            } else if (words1Count + 1 == words2Count) {
+            } else if (words1Count + 1 == words2Count || (words1Count + 2 == words2Count && words2[words2Start + words2Count - 1] == 0)) {
+                for (var arrfillI = resultStart; arrfillI < (resultStart) + (words1Count + words2Count); arrfillI++) resultArr[arrfillI] = 0;
                 BigInteger.SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
-                var carry = BigInteger.LinearMultiplyAdd(resultArr, resultStart + words1Count, words1, words1Start + words1Count, words2[words2Start + words1Count], words1Count);
+                var carry = BigInteger.LinearMultiplyAdd(resultArr, resultStart + words1Count, words1, words1Start, words2[words2Start + words1Count], words1Count);
                 resultArr[resultStart + words1Count + words1Count] = (carry & 65535);
             } else {
                 var t2 = [];
@@ -1913,6 +1914,12 @@ function() {
     prototype['reg'] = prototype.reg = null;
 
     constructor['fromByteArray'] = constructor.fromByteArray = function(bytes, littleEndian) {
+        if (bytes == null) {
+            throw new Error("bytes");
+        }
+        if (bytes.length == 0) {
+            return BigInteger.ZERO;
+        }
         var bigint = new BigInteger();
         bigint.fromByteArrayInternal(bytes, littleEndian);
         return bigint;
@@ -1921,50 +1928,45 @@ function() {
         if (bytes == null) {
             throw new Error("bytes");
         }
-        if (bytes.length == 0) {
-            this.reg = [0, 0];
-            this.wordCount = 0;
+        var len = bytes.length;
+        var wordLength = ((len|0) + 1) >> 1;
+        wordLength = BigInteger.RoundupSize(wordLength);
+        this.reg = [];
+        for (var arrfillI = 0; arrfillI < wordLength; arrfillI++) this.reg[arrfillI] = 0;
+        var valueJIndex = littleEndian ? len - 1 : 0;
+        var negative = (bytes[valueJIndex] & 128) != 0;
+        this.negative = negative;
+        var j = 0;
+        if (!negative) {
+            for (var i = 0; i < len; i += 2, j++) {
+                var index = littleEndian ? i : len - 1 - i;
+                var index2 = littleEndian ? i + 1 : len - 2 - i;
+                this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
+                if (index2 >= 0 && index2 < len) {
+                    this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
+                }
+            }
         } else {
-            var len = bytes.length;
-            var wordLength = ((len|0) + 1) >> 1;
-            wordLength = BigInteger.RoundupSize(wordLength);
-            this.reg = [];
-            for (var arrfillI = 0; arrfillI < wordLength; arrfillI++) this.reg[arrfillI] = 0;
-            var valueJIndex = littleEndian ? len - 1 : 0;
-            var negative = (bytes[valueJIndex] & 128) != 0;
-            this.negative = negative;
-            var j = 0;
-            if (!negative) {
-                for (var i = 0; i < len; i += 2, j++) {
-                    var index = littleEndian ? i : len - 1 - i;
-                    var index2 = littleEndian ? i + 1 : len - 2 - i;
-                    this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
-                    if (index2 >= 0 && index2 < len) {
-                        this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
-                    }
-                }
-            } else {
-                for (var i = 0; i < len; i += 2, j++) {
-                    var index = littleEndian ? i : len - 1 - i;
-                    var index2 = littleEndian ? i + 1 : len - 2 - i;
-                    this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
-                    if (index2 >= 0 && index2 < len) {
-                        this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
-                    } else {
+            for (var i = 0; i < len; i += 2, j++) {
+                var index = littleEndian ? i : len - 1 - i;
+                var index2 = littleEndian ? i + 1 : len - 2 - i;
+                this.reg[j] = ((((((bytes[index] & 255)) & 65535))|0));
+                if (index2 >= 0 && index2 < len) {
+                    this.reg[j] = (((((this.reg[j] | (((((bytes[index2])|0) << 8)|0))) & 65535))|0));
+                } else {
 
-                        this.reg[j] = (((this.reg[j] | (65280)) & 65535));
-                    }
+                    this.reg[j] = (((this.reg[j] | (65280)) & 65535));
                 }
-                for (; j < this.reg.length; ++j) {
-                    this.reg[j] = (65535 & 65535);
-                }
+            }
+            for (; j < this.reg.length; ++j) {
+                this.reg[j] = (65535 & 65535);
+            }
 
-                BigInteger.TwosComplement(this.reg, 0, ((this.reg.length)|0));
-            }
-            this.wordCount = this.reg.length;
-            while (this.wordCount != 0 && this.reg[this.wordCount - 1] == 0) {
-                --this.wordCount;
-            }
+            BigInteger.TwosComplement(this.reg, 0, ((this.reg.length)|0));
+        }
+        this.wordCount = this.reg.length;
+        while (this.wordCount != 0 && this.reg[this.wordCount - 1] == 0) {
+            --this.wordCount;
         }
     };
     prototype['Allocate'] = prototype.Allocate = function(length) {
@@ -2695,7 +2697,7 @@ function() {
         var wordCount = this.wordCount;
         var i = 0;
         while (wordCount != 0) {
-            if (wordCount == 1) {
+            if (wordCount == 1 || (wordCount == 2 && tempReg[1] == 0)) {
                 var rest = ((tempReg[0])|0) & 65535;
                 if (rest >= 10000) {
                     i = i + (5);
@@ -3079,11 +3081,11 @@ function() {
         var v = this;
         while (pow.signum() != 0) {
             if (pow.testBit(0)) {
-                r = (r.multiply(v)).remainder(mod);
+                r = (r.multiply(v)).mod(mod);
             }
             pow = pow.shiftRight(1);
             if (pow.signum() != 0) {
-                v = (v.multiply(v)).remainder(mod);
+                v = (v.multiply(v)).mod(mod);
             }
         }
         return r;
@@ -3309,15 +3311,6 @@ function() {
             product.negative = false;
             product.wordCount = product.reg.length;
             needShorten = false;
-        } else if (this.wordCount <= 10 && bigintMult.wordCount <= 10) {
-            var wc = this.wordCount + bigintMult.wordCount;
-            wc = BigInteger.RoundupSize(wc);
-            product.reg = [];
-            for (var arrfillI = 0; arrfillI < wc; arrfillI++) product.reg[arrfillI] = 0;
-            product.negative = false;
-            product.wordCount = product.reg.length;
-            BigInteger.SchoolbookMultiply(product.reg, 0, this.reg, 0, this.wordCount, bigintMult.reg, 0, bigintMult.wordCount);
-            needShorten = false;
         } else if (this.equals(bigintMult)) {
             var words1Size = BigInteger.RoundupSize(this.wordCount);
             product.reg = [];
@@ -3327,6 +3320,15 @@ function() {
             var workspace = [];
             for (var arrfillI = 0; arrfillI < words1Size + words1Size; arrfillI++) workspace[arrfillI] = 0;
             BigInteger.RecursiveSquare(product.reg, 0, workspace, 0, this.reg, 0, words1Size);
+        } else if (this.wordCount <= 10 && bigintMult.wordCount <= 10) {
+            var wc = this.wordCount + bigintMult.wordCount;
+            wc = BigInteger.RoundupSize(wc);
+            product.reg = [];
+            for (var arrfillI = 0; arrfillI < wc; arrfillI++) product.reg[arrfillI] = 0;
+            product.negative = false;
+            product.wordCount = product.reg.length;
+            BigInteger.SchoolbookMultiply(product.reg, 0, this.reg, 0, this.wordCount, bigintMult.reg, 0, bigintMult.wordCount);
+            needShorten = false;
         } else {
             var words1Size = this.wordCount;
             var words2Size = bigintMult.wordCount;
@@ -3580,9 +3582,6 @@ function() {
             return new BigInteger().InitializeInt(smallRemainder);
         }
         if (this.PositiveCompare(divisor) < 0) {
-            if (divisor.signum() == 0) {
-                throw new Error();
-            }
             return this;
         }
         var remainder = new BigInteger();
@@ -7397,9 +7396,6 @@ var RadixMath = function(helper) {
     };
 
     prototype.LnTenConstant = function(ctx) {
-        if (ctx == null) {
-            throw new Error("ctx");
-        }
         var thisValue = this.helper.ValueOf(10);
         var error;
         var bigError;
@@ -8492,9 +8488,8 @@ var RadixMath = function(helper) {
             if (((thisFlags & otherFlags) & BigNumberFlags.FlagInfinity) != 0) {
                 return this.RoundToPrecision(thisValue, ctx);
             }
-            if (((thisFlags | otherFlags) & BigNumberFlags.FlagInfinity) != 0) {
-                return this.SignalInvalid(ctx);
-            }
+
+            return this.SignalInvalid(ctx);
         }
         var expOther = this.helper.GetExponent(otherValue);
         if (ctx != null && !ctx.ExponentWithinRange(expOther)) {
@@ -9331,11 +9326,8 @@ var RadixMath = function(helper) {
                             var tmp = FastInteger.Copy(fastOp2Exp).SubtractInt(8).Subtract(digitLength1).Subtract(maxPrecision);
                             var newDiff = FastInteger.Copy(tmp).Subtract(fastOp2Exp).Abs();
                             if (newDiff.compareTo(expdiff) < 0) {
-                                if (s == ds) {
-                                    return (s < 0) ? 1 : -1;
-                                } else {
-                                    op1Exponent = tmp.AsBigInteger();
-                                }
+
+                                return (s < 0) ? 1 : -1;
                             }
                         }
                     }
@@ -9348,11 +9340,8 @@ var RadixMath = function(helper) {
                             var tmp = FastInteger.Copy(fastOp1Exp).SubtractInt(8).Subtract(digitLength2).Subtract(maxPrecision);
                             var newDiff = FastInteger.Copy(tmp).Subtract(fastOp1Exp).Abs();
                             if (newDiff.compareTo(expdiff) < 0) {
-                                if (s == ds) {
-                                    return (s < 0) ? -1 : 1;
-                                } else {
-                                    op2Exponent = tmp.AsBigInteger();
-                                }
+
+                                return (s < 0) ? -1 : 1;
                             }
                         }
                     }

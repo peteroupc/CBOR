@@ -1206,12 +1206,17 @@ namespace CBOR
       sw.Start();
       TextWriter nullWriter = TextWriter.Null;
       TextWriter standardOut = Console.Out;
+      int x = 0;
       for (int i = 0; i < 1; ++i) {
         foreach (var p in Directory.GetDirectories(valuePath)) {
           foreach (var f in Directory.GetFiles(p)) {
             // Console.WriteLine("// " + f);
             bool isinput = f.Contains(".input");
+            ++x;
             if (!isinput) {
+              if ((x % 50) != 0) {
+ continue;
+}
               // continue;
             }
             using (StreamReader w = new StreamReader(f)) {

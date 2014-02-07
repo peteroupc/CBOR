@@ -98,6 +98,7 @@ rembi=divrem[1]; }
     public static void DoTestPow(String m1, int m2, String result) {
       BigInteger bigintA = BigInteger.fromString(m1);
       AssertBigIntegersEqual(result, bigintA.pow(m2));
+      AssertBigIntegersEqual(result, bigintA.PowBigIntVar(BigInteger.valueOf(m2)));
     }
 
     public static void DoTestShiftLeft(String m1, int m2, String result) {

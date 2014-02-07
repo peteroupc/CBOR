@@ -305,8 +305,8 @@ namespace PeterO
         throw new ArgumentNullException("power");
       }
       if (power.Sign < 0) {
- throw new ArgumentException("power's sign (" + Convert.ToString((long)power.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-}
+        throw new ArgumentException("power's sign (" + Convert.ToString((long)power.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+      }
       BigInteger val = BigInteger.One;
       while (power.Sign > 0) {
         BigInteger p = (power > (BigInteger)5000000) ?
@@ -327,8 +327,8 @@ namespace PeterO
         throw new ArgumentNullException("bigValue");
       }
       if (power < 0) {
- throw new ArgumentException("power (" + Convert.ToString((long)power, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-}
+        throw new ArgumentException("power (" + Convert.ToString((long)power, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+      }
       return bigValue.pow(power);
     }
 
@@ -359,7 +359,14 @@ namespace PeterO
     /// <summary>Initializes a new instance of the BigInteger class.</summary>
     /// <param name='bytes'>A byte array.</param>
     public BigInteger(byte[] bytes) {
-      this.fromByteArrayInternal(bytes, true);
+      if (bytes == null) {
+ throw new ArgumentNullException("bytes");
+}
+      if (bytes.Length == 0) {
+        this.InitializeInt(0);
+      } else {
+        this.fromByteArrayInternal(bytes, true);
+      }
     }
 
     /// <summary>Not documented yet.</summary>

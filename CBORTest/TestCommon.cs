@@ -88,6 +88,7 @@ namespace Test {
     public static void DoTestPow(string m1, int m2, string result) {
       BigInteger bigintA = BigInteger.fromString(m1);
       AssertBigIntegersEqual(result, bigintA.pow(m2));
+      AssertBigIntegersEqual(result, bigintA.PowBigIntVar((BigInteger)m2));
     }
 
     public static void DoTestShiftLeft(string m1, int m2, string result) {
