@@ -149,6 +149,7 @@ import com.upokecenter.util.*;
     private static CBORObject RandomCBORObject(FastRandom rand) {
       return RandomCBORObject(rand, 0);
     }
+
     private static CBORObject RandomCBORObject(FastRandom rand, int depth) {
       int nextval = rand.NextValue(11);
       switch (nextval) {
@@ -520,6 +521,11 @@ import com.upokecenter.util.*;
         CBORObject o2 = RandomNumber(r);
         CompareDecimals(o1, o2);
       }
+      for (int i = 0; i < 500; ++i) {
+        CBORObject o1 = RandomCBORObject(r);
+        CBORObject o2 = RandomCBORObject(r);
+        CompareTestReciprocal(o1, o2);
+      }
       for (int i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Float.NEGATIVE_INFINITY);
         CBORObject o2 = RandomNumber(r);
@@ -613,6 +619,202 @@ import com.upokecenter.util.*;
     }
 
     @Test
+    public void TestCBORMiscellaneous() {
+      if(CBORObject.NewArray().signum()==0)Assert.fail();
+      if(CBORObject.NewMap().signum()==0)Assert.fail();
+      if(CBORObject.True.signum()==0)Assert.fail();
+      if(CBORObject.False.signum()==0)Assert.fail();
+      if(CBORObject.Undefined.signum()==0)Assert.fail();
+      if(CBORObject.FromObject("").signum()==0)Assert.fail();
+    }
+
+    @Test
+    public void TestCBORExceptions() {
+      try {
+ CBORObject.NewArray().AsExtendedDecimal();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.NewMap().AsExtendedDecimal();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(null);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {   });
+Assert.fail("Should have failed");
+} catch (IllegalArgumentException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  0x1C });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.NewArray().Remove(null);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.NewMap().Remove(null);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.NewArray().Add(null);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.NewArray().Add(CBORObject.Null);
+} catch (Exception ex) {
+Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.NewMap().Add(CBORObject.True);
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.True.Remove(CBORObject.True);
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.FromObject(0).Remove(CBORObject.True);
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.FromObject("").Remove(CBORObject.True);
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.True.AsExtendedDecimal();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.False.AsExtendedDecimal();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.Undefined.AsExtendedDecimal();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.FromObject("").AsExtendedDecimal();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.NewArray().AsExtendedFloat();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.NewMap().AsExtendedFloat();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.True.AsExtendedFloat();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.False.AsExtendedFloat();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.Undefined.AsExtendedFloat();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.FromObject("").AsExtendedFloat();
+Assert.fail("Should have failed");
+} catch (IllegalStateException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+    }
+
+    @Test
     public void TestCBORInfinity() {
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
@@ -634,6 +836,35 @@ import com.upokecenter.util.*;
         CBORObject obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
       }
+      // Test slightly modified objects
+      for (int i = 0; i < 200; ++i) {
+        byte[] array = RandomCBORObject(rand).EncodeToBytes();
+        int count = rand.NextValue(10) + 1;
+        for (int j = 0; j < count; ++j) {
+          int index = rand.NextValue(array.length);
+          array[index] = ((byte)rand.NextValue(256));
+        }
+        java.io.ByteArrayInputStream ms=null;
+try {
+ms=new ByteArrayInputStream(array);
+int startingAvailable=ms.available();
+
+          while ((startingAvailable-ms.available()) != startingAvailable) {
+            try {
+              CBORObject o = CBORObject.Read(ms);
+              if (o == null) {
+                Assert.fail("Object read is null");
+              }
+            } catch (CBORException ex) {
+              // Expected exception
+            }
+          }
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
+}
+      }
+      // Test random nonsense data
       for (int i = 0; i < 200; ++i) {
         byte[] array = new byte[rand.NextValue(1000000) + 1];
         for (int j = 0; j < array.length; ++j) {
@@ -862,6 +1093,14 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals("true", CBORObject.True.ToJSONString());
       Assert.assertEquals("false", CBORObject.False.ToJSONString());
       Assert.assertEquals("null", CBORObject.Null.ToJSONString());
+    }
+
+    @Test
+    public void TestBoolean() {
+      TestCommon.AssertSer(CBORObject.True, "true");
+      TestCommon.AssertSer(CBORObject.False, "false");
+      Assert.assertEquals(CBORObject.True, CBORObject.FromObject(true));
+      Assert.assertEquals(CBORObject.False, CBORObject.FromObject(false));
     }
 
     /**
@@ -1347,6 +1586,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         cbor.get(CBORObject.FromObject("b")));
       Assert.assertEquals(2, cbor.get(CBORObject.FromObject("a")).AsInt32());
       Assert.assertEquals(4, cbor.get(CBORObject.FromObject("b")).AsInt32());
+      Assert.assertEquals(0, CBORObject.True.size());
     }
 
     private static String Repeat(char c, int num) {
@@ -7089,6 +7329,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         ((BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE)).subtract(BigInteger.valueOf(500)),
         maxuint,
       };
+      if(CBORObject.True.isTagged())Assert.fail();
+      Assert.assertEquals(BigInteger.ZERO, CBORObject.True.getInnermostTag());
+      BigInteger[] tagstmp = CBORObject.True.GetTags();
+      Assert.assertEquals(0, tagstmp.length);
       for (int i = 0; i < ranges.length; i += 2) {
         BigInteger bigintTemp = ranges[i];
         while (true) {

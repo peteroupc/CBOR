@@ -3559,6 +3559,8 @@ namespace PeterO {
     /// <summary>Generates a CBOR string object from a Unicode character.</summary>
     /// <returns>A CBORObject object.</returns>
     /// <param name='value'>A char object.</param>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='value'/> is a surrogate code point.</exception>
     public static CBORObject FromObject(char value) {
       return FromObject(new String(new char[] { value }));
     }

@@ -3617,6 +3617,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR string object from a Unicode character.
      * @param value A char object.
      * @return A CBORObject object.
+     * @throws java.lang.IllegalArgumentException The parameter {@code value}
+     * is a surrogate code point.
      */
     public static CBORObject FromObject(char value) {
       return FromObject(new String(new char[] { value }));
