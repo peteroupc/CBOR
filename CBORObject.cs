@@ -3168,6 +3168,8 @@ namespace PeterO {
       }
     }
 
+    private const string Hex16 = "0123456789ABCDEF";
+
     private static void StringToJSONStringUnquoted(string str, StringBuilder sb) {
       // Surrogates were already verified when this
       // string was added to the CBOR object; that check
@@ -3199,8 +3201,8 @@ namespace PeterO {
             sb.Append("\\t");
           } else {
             sb.Append("\\u00");
-            sb.Append((char)('0' + (int)(c >> 4)));
-            sb.Append((char)('0' + (int)(c & 15)));
+            sb.Append(Hex16[(int)(c >> 4)]);
+            sb.Append(Hex16[(int)(c & 15)]);
           }
         } else if (!first) {
           sb.Append(c);

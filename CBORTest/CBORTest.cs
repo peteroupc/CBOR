@@ -638,187 +638,187 @@ namespace Test {
     [Test]
     public void TestCBORExceptions() {
       try {
- CBORObject.NewArray().AsExtendedDecimal();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.NewArray().AsExtendedDecimal();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.NewMap().AsExtendedDecimal();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.NewMap().AsExtendedDecimal();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { });
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { });
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0x1C});
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0x1C });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.NewArray().Remove(null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.NewArray().Remove(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.NewMap().Remove(null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.NewMap().Remove(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.NewArray().Add(null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.NewArray().Add(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.NewArray().Add(CBORObject.Null);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.NewArray().Add(CBORObject.Null);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.NewMap().Add(CBORObject.True);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.NewMap().Add(CBORObject.True);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.True.Remove(CBORObject.True);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.True.Remove(CBORObject.True);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.FromObject(0).Remove(CBORObject.True);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromObject(0).Remove(CBORObject.True);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.FromObject(String.Empty).Remove(CBORObject.True);
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromObject(String.Empty).Remove(CBORObject.True);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.True.AsExtendedDecimal();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.True.AsExtendedDecimal();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.False.AsExtendedDecimal();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.False.AsExtendedDecimal();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.Undefined.AsExtendedDecimal();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.Undefined.AsExtendedDecimal();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.FromObject(String.Empty).AsExtendedDecimal();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromObject(String.Empty).AsExtendedDecimal();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.NewArray().AsExtendedFloat();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.NewArray().AsExtendedFloat();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.NewMap().AsExtendedFloat();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.NewMap().AsExtendedFloat();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.True.AsExtendedFloat();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.True.AsExtendedFloat();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.False.AsExtendedFloat();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.False.AsExtendedFloat();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.Undefined.AsExtendedFloat();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.Undefined.AsExtendedFloat();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.FromObject(String.Empty).AsExtendedFloat();
-Assert.Fail("Should have failed");
-} catch (InvalidOperationException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromObject(String.Empty).AsExtendedFloat();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -856,6 +856,22 @@ throw new InvalidOperationException(String.Empty, ex);
               if (o == null) {
                 Assert.Fail("object read is null");
               }
+              try {
+                CBORObject.DecodeFromBytes(o.EncodeToBytes());
+              } catch (Exception ex) {
+                Assert.Fail(ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+              String jsonString = String.Empty;
+              try {
+                if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
+                  jsonString = o.ToJSONString();
+                  CBORObject.FromJSONString(jsonString);
+                }
+              } catch (Exception ex) {
+                Assert.Fail(jsonString + "\n" + ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
             } catch (CBORException) {
               // Expected exception
             }
@@ -882,6 +898,22 @@ throw new InvalidOperationException(String.Empty, ex);
               CBORObject o = CBORObject.Read(ms);
               if (o == null) {
                 Assert.Fail("object read is null");
+              }
+              try {
+                CBORObject.DecodeFromBytes(o.EncodeToBytes());
+              } catch (Exception ex) {
+                Assert.Fail(ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+              String jsonString = String.Empty;
+              try {
+                if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
+                  jsonString = o.ToJSONString();
+                  CBORObject.FromJSONString(jsonString);
+                }
+              } catch (Exception ex) {
+                Assert.Fail(jsonString + "\n" + ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
               }
             } catch (CBORException) {
               // Expected exception
@@ -976,11 +1008,11 @@ throw new InvalidOperationException(String.Empty, ex);
     [Test]
     public void TestJSONEscapedChars() {
       CBORObject o = CBORObject.FromJSONString(
-        "[\"\\r\\n\\u0006\\\\\\\"\"]");
+        "[\"\\r\\n\\u0006\\u000E\\u001A\\\\\\\"\"]");
       Assert.AreEqual(1, o.Count);
-      Assert.AreEqual("\r\n\u0006\\\"", o[0].AsString());
+      Assert.AreEqual("\r\n\u0006\u000E\u001A\\\"", o[0].AsString());
       Assert.AreEqual(
-        "[\"\\r\\n\\u0006\\\\\\\"\"]",
+        "[\"\\r\\n\\u0006\\u000E\\u001A\\\\\\\"\"]",
         o.ToJSONString());
       TestCommon.AssertRoundTrip(o);
     }

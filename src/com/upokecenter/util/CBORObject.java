@@ -3202,6 +3202,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
+    private static final String Hex16 = "0123456789ABCDEF";
+
     private static void StringToJSONStringUnquoted(String str, StringBuilder sb) {
       // Surrogates were already verified when this
       // String was added to the CBOR Object; that check
@@ -3233,8 +3235,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             sb.append("\\t");
           } else {
             sb.append("\\u00");
-            sb.append((char)('0' + (int)(c >> 4)));
-            sb.append((char)('0' + (int)(c & 15)));
+            sb.append(Hex16.charAt((int)(c >> 4)));
+            sb.append(Hex16.charAt((int)(c & 15)));
           }
         } else if (!first) {
           sb.append(c);
