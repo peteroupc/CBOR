@@ -10682,11 +10682,11 @@ function() {
     constructor['PositiveInfinity'] = constructor.PositiveInfinity = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity);
     constructor['NegativeInfinity'] = constructor.NegativeInfinity = ExtendedDecimal.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
-    prototype['IsPositiveInfinity'] = prototype.IsPositiveInfinity = function() {
+    prototype['IsNegativeInfinity'] = prototype.IsNegativeInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     };
 
-    prototype['IsNegativeInfinity'] = prototype.IsNegativeInfinity = function() {
+    prototype['IsPositiveInfinity'] = prototype.IsPositiveInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == BigNumberFlags.FlagInfinity;
     };
 
@@ -11448,11 +11448,11 @@ function() {
     constructor['PositiveInfinity'] = constructor.PositiveInfinity = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity);
     constructor['NegativeInfinity'] = constructor.NegativeInfinity = ExtendedFloat.CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
-    prototype['IsPositiveInfinity'] = prototype.IsPositiveInfinity = function() {
+    prototype['IsNegativeInfinity'] = prototype.IsNegativeInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     };
 
-    prototype['IsNegativeInfinity'] = prototype.IsNegativeInfinity = function() {
+    prototype['IsPositiveInfinity'] = prototype.IsPositiveInfinity = function() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == BigNumberFlags.FlagInfinity;
     };
 

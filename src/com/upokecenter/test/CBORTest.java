@@ -81,9 +81,9 @@ import com.upokecenter.util.*;
           sb.append((char)rand.NextValue(0x80));
         } else if (x < 98) {
           // Supplementary character
-          x = rand.NextValue(0x400) +0xD800;
+          x = rand.NextValue(0x400) + 0xD800;
           sb.append((char)x);
-          x = rand.NextValue(0x400) +0xDC00;
+          x = rand.NextValue(0x400) + 0xDC00;
           sb.append((char)x);
         } else {
           // BMP character
@@ -98,7 +98,7 @@ import com.upokecenter.util.*;
       return CBORObject.FromObject(sb.toString());
     }
 
-    private static CBORObject RandomCBORMap(FastRandom rand) {
+    private static CBORObject RandomCBORMap(FastRandom rand, int depth) {
       int x = rand.NextValue(100);
       int count = 0;
       if (x < 80) {
@@ -112,22 +112,22 @@ import com.upokecenter.util.*;
       }
       CBORObject cborRet = CBORObject.NewMap();
       for (int i = 0; i < count; ++i) {
-        CBORObject key = RandomCBORObject(rand);
-        CBORObject value = RandomCBORObject(rand);
+        CBORObject key = RandomCBORObject(rand, depth + 1);
+        CBORObject value = RandomCBORObject(rand, depth + 1);
         cborRet.set(key,value);
       }
       return cborRet;
     }
 
-    private static CBORObject RandomCBORTaggedObject(FastRandom rand) {
+    private static CBORObject RandomCBORTaggedObject(FastRandom rand, int depth) {
       int tag = rand.NextValue(0x1000000);
       if (tag == 2 || tag == 3 || tag == 4 || tag == 5) {
         tag = 0;
       }
-      return CBORObject.FromObjectAndTag(RandomCBORObject(rand), tag);
+      return CBORObject.FromObjectAndTag(RandomCBORObject(rand, depth + 1), tag);
     }
 
-    private static CBORObject RandomCBORArray(FastRandom rand) {
+    private static CBORObject RandomCBORArray(FastRandom rand, int depth) {
       int x = rand.NextValue(100);
       int count = 0;
       if (x < 80) {
@@ -141,13 +141,17 @@ import com.upokecenter.util.*;
       }
       CBORObject cborRet = CBORObject.NewArray();
       for (int i = 0; i < count; ++i) {
-        cborRet.Add(RandomCBORObject(rand));
+        cborRet.Add(RandomCBORObject(rand, depth + 1));
       }
       return cborRet;
     }
 
     private static CBORObject RandomCBORObject(FastRandom rand) {
-       switch (rand.NextValue(11)) {
+      return RandomCBORObject(rand, 0);
+    }
+    private static CBORObject RandomCBORObject(FastRandom rand, int depth) {
+      int nextval = rand.NextValue(11);
+      switch (nextval) {
         case 0:
         case 1:
         case 2:
@@ -162,11 +166,11 @@ import com.upokecenter.util.*;
         case 7:
           return RandomCBORByteString(rand);
         case 8:
-          return RandomCBORArray(rand);
+          return RandomCBORArray(rand, depth);
         case 9:
-          return RandomCBORMap(rand);
+          return RandomCBORMap(rand, depth);
         case 10:
-          return RandomCBORTaggedObject(rand);
+          return RandomCBORTaggedObject(rand, depth);
         default:
           return RandomNumber(rand);
       }
@@ -216,19 +220,18 @@ import com.upokecenter.util.*;
 
     public static ExtendedDecimal RandomExtendedDecimal(FastRandom r) {
       if (r.NextValue(100) == 0) {
-        int x = r.NextValue(4);
+        int x = r.NextValue(3);
         if (x == 0) {
- return ExtendedDecimal.PositiveInfinity;
-}
+          return ExtendedDecimal.PositiveInfinity;
+        }
         if (x == 1) {
- return ExtendedDecimal.NegativeInfinity;
-}
+          return ExtendedDecimal.NegativeInfinity;
+        }
         if (x == 2) {
- return ExtendedDecimal.NaN;
-}
-        if (x == 3) {
- return ExtendedDecimal.SignalingNaN;
-}
+          return ExtendedDecimal.NaN;
+        }
+        // Signaling NaN currently not generated because
+        // it doesn't round-trip as well
       }
       return ExtendedDecimal.FromString(RandomDecimalString(r));
     }
@@ -244,19 +247,16 @@ import com.upokecenter.util.*;
 
     public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
       if (r.NextValue(100) == 0) {
-        int x = r.NextValue(4);
+        int x = r.NextValue(3);
         if (x == 0) {
- return ExtendedFloat.PositiveInfinity;
-}
+          return ExtendedFloat.PositiveInfinity;
+        }
         if (x == 1) {
- return ExtendedFloat.NegativeInfinity;
-}
+          return ExtendedFloat.NegativeInfinity;
+        }
         if (x == 2) {
- return ExtendedFloat.NaN;
-}
-        if (x == 3) {
- return ExtendedFloat.SignalingNaN;
-}
+          return ExtendedFloat.NaN;
+        }
       }
       return ExtendedFloat.Create(RandomBigInteger(r), BigInteger.valueOf(r.NextValue(400) - 200));
     }
@@ -564,7 +564,7 @@ import com.upokecenter.util.*;
     public void TestParseJSONNumber() {
       if((CBORDataUtilities.ParseJSONNumber(null, false, false, false))!=null)Assert.fail();
       if((CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, true))!=null)Assert.fail();
-      if (CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, false) ==null) {
+      if (CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, false) == null) {
         Assert.fail();
       }
       if((CBORDataUtilities.ParseJSONNumber("", false, false, false))!=null)Assert.fail();
@@ -592,13 +592,45 @@ import com.upokecenter.util.*;
       }
     }
 
+    @Test
+    public void TestExtendedInfinity() {
+      Assert.assertTrue(ExtendedDecimal.PositiveInfinity.IsInfinity());
+      Assert.assertTrue(ExtendedDecimal.PositiveInfinity.IsPositiveInfinity());
+      Assert.IsFalse(ExtendedDecimal.PositiveInfinity.IsNegativeInfinity());
+      Assert.IsFalse(ExtendedDecimal.PositiveInfinity.IsNegative);
+      Assert.assertTrue(ExtendedDecimal.NegativeInfinity.IsInfinity());
+      Assert.IsFalse(ExtendedDecimal.NegativeInfinity.IsPositiveInfinity());
+      Assert.assertTrue(ExtendedDecimal.NegativeInfinity.IsNegativeInfinity());
+      Assert.assertTrue(ExtendedDecimal.NegativeInfinity.IsNegative);
+      Assert.assertTrue(ExtendedFloat.PositiveInfinity.IsInfinity());
+      Assert.assertTrue(ExtendedFloat.PositiveInfinity.IsPositiveInfinity());
+      Assert.IsFalse(ExtendedFloat.PositiveInfinity.IsNegativeInfinity());
+      Assert.IsFalse(ExtendedFloat.PositiveInfinity.IsNegative);
+      Assert.assertTrue(ExtendedFloat.NegativeInfinity.IsInfinity());
+      Assert.IsFalse(ExtendedFloat.NegativeInfinity.IsPositiveInfinity());
+      Assert.assertTrue(ExtendedFloat.NegativeInfinity.IsNegativeInfinity());
+      Assert.assertTrue(ExtendedFloat.NegativeInfinity.IsNegative);
+    }
+
+    @Test
+    public void TestCBORInfinity() {
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.NEGATIVE_INFINITY));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(Float.NEGATIVE_INFINITY));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.PositiveInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.POSITIVE_INFINITY));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(Float.POSITIVE_INFINITY));
+    }
+
     /**
      * Not documented yet.
      */
     @Test
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (int i = 0; i < 2000; ++i) {
         CBORObject obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
       }

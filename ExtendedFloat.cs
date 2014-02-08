@@ -844,14 +844,14 @@ namespace PeterO {
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
-    public bool IsPositiveInfinity() {
+    public bool IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
-    public bool IsNegativeInfinity() {
+    public bool IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
         BigNumberFlags.FlagInfinity;
     }
