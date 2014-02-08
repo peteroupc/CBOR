@@ -1128,7 +1128,6 @@ remainder=divrem[1]; }
         boolean quiet = (valueFpMantissa & 0x400000) != 0;
         valueFpMantissa &= 0x1FFFFF;
         BigInteger info = BigInteger.valueOf(valueFpMantissa);
-        info=info.subtract(BigInteger.ONE);
         if (info.signum()==0) {
           return quiet ? NaN : SignalingNaN;
         } else {
@@ -1225,7 +1224,6 @@ remainder=divrem[1]; }
         boolean quiet = (value[1] & 0x80000) != 0;
         value[1] &= 0x3FFFF;
         BigInteger info = FastInteger.WordsToBigInteger(value);
-        info=info.subtract(BigInteger.ONE);
         if (info.signum()==0) {
           return quiet ? NaN : SignalingNaN;
         } else {

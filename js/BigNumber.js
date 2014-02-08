@@ -10498,7 +10498,6 @@ function() {
             var quiet = (valueFpMantissa & 4194304) != 0;
             valueFpMantissa &= 2097151;
             var info = BigInteger.valueOf(valueFpMantissa);
-            info = info.subtract(BigInteger.ONE);
             if (info.signum() == 0) {
                 return quiet ? ExtendedDecimal.NaN : ExtendedDecimal.SignalingNaN;
             } else {
@@ -10570,7 +10569,6 @@ function() {
             var quiet = (value[1] & 524288) != 0;
             value[1] = value[1] & 262143;
             var info = FastInteger.WordsToBigInteger(value);
-            info = info.subtract(BigInteger.ONE);
             if (info.signum() == 0) {
                 return quiet ? ExtendedDecimal.NaN : ExtendedDecimal.SignalingNaN;
             } else {
@@ -11127,7 +11125,7 @@ function() {
             return Number.NEGATIVE_INFINITY;
         }
         if (this.IsNaN()) {
-            var nan = 2139095041;
+            var nan = 2139095040;
             if (this.isNegative()) {
                 nan |= ((1 << 31)|0);
             }
@@ -11231,7 +11229,7 @@ function() {
             return Number.NEGATIVE_INFINITY;
         }
         if (this.IsNaN()) {
-            var nan = [1, 2146435072];
+            var nan = [0, 2146435072];
             if (this.isNegative()) {
                 nan[1] = nan[1] | ((1 << 31)|0);
             }
@@ -11351,7 +11349,6 @@ function() {
             var quiet = (valueFpMantissa & 4194304) != 0;
             valueFpMantissa &= 2097151;
             bigmant = BigInteger.valueOf(valueFpMantissa);
-            bigmant = bigmant.subtract(BigInteger.ONE);
             if (bigmant.signum() == 0) {
                 return quiet ? ExtendedFloat.NaN : ExtendedFloat.SignalingNaN;
             } else {
@@ -11402,7 +11399,6 @@ function() {
             var quiet = (value[1] & 524288) != 0;
             value[1] = value[1] & 262143;
             var info = FastInteger.WordsToBigInteger(value);
-            info = info.subtract(BigInteger.ONE);
             if (info.signum() == 0) {
                 return quiet ? ExtendedFloat.NaN : ExtendedFloat.SignalingNaN;
             } else {
