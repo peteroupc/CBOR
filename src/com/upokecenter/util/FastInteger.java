@@ -246,6 +246,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value not documented yet.
+     * @return A value not documented yet.
      */
       public int signum() {
           return this.wordCount == 0 ? 0 : 1;
@@ -253,6 +254,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value indicating whether this value is even.
+     * @return Whether this value is even.
      */
       public boolean isEvenNumber() {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
@@ -1007,6 +1009,7 @@ bigrem=divrem[1]; }
 
     /**
      * Gets a value indicating whether this object&apos;s value is even.
+     * @return Whether this object's value is even.
      */
     public boolean isEvenNumber() {
         switch (this.integerMode) {
@@ -1103,6 +1106,7 @@ bigrem=divrem[1]; }
 
     /**
      * Gets the sign of this object&apos;s value.
+     * @return 1 if positive, -1 if negative, 0 if zero.
      */
     public int signum() {
         switch (this.integerMode) {
@@ -1119,6 +1123,7 @@ bigrem=divrem[1]; }
 
     /**
      * Gets a value indicating whether this value is zero.
+     * @return Whether this value is zero.
      */
     public boolean isValueZero() {
         switch (this.integerMode) {

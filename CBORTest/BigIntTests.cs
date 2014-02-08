@@ -1897,7 +1897,7 @@ throw new InvalidOperationException(String.Empty, ex);
       }
 
       try {
-        BigInteger.fromSubstring("123", -1,2);
+        BigInteger.fromSubstring("123", -1, 2);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -1905,7 +1905,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        BigInteger.fromSubstring("123", 4,2);
+        BigInteger.fromSubstring("123", 4, 2);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -1913,7 +1913,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        BigInteger.fromSubstring("123", 1,-1);
+        BigInteger.fromSubstring("123", 1, -1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -1921,7 +1921,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        BigInteger.fromSubstring("123", 1,4);
+        BigInteger.fromSubstring("123", 1, 4);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -1929,7 +1929,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        BigInteger.fromSubstring("123", 1,0);
+        BigInteger.fromSubstring("123", 1, 0);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -1937,7 +1937,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        BigInteger.fromSubstring("123", 2,1);
+        BigInteger.fromSubstring("123", 2, 1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {

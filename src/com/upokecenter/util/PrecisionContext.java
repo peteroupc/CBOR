@@ -23,6 +23,12 @@ at: http://peteroupc.github.io/CBOR/
      * possible is 9.99E + 100. (This is not the same as the highest possible
      * Exponent property.) If HasExponentRange is false, this value will
      * be 0.
+     * @return The highest exponent possible when a converted number is
+     * expressed in scientific notation with one digit before the decimal
+     * point. For example, with a precision of 3 and an EMax of 100, the maximum
+     * value possible is 9.99E + 100. (This is not the same as the highest possible
+     * Exponent property.) If HasExponentRange is false, this value will
+     * be 0.
      */
     public BigInteger getEMax() {
         return this.hasExponentRange ? this.exponentMax : BigInteger.ZERO;
@@ -38,6 +44,7 @@ at: http://peteroupc.github.io/CBOR/
      * will be thrown if an operation's return value is not the same as the
      * exact result (FlagInexact) or if the return value's exponent is lower
      * than the lowest allowed (FlagSubnormal).</p>
+     * @return The traps that are set for each flag in the context.
      */
     public int getTraps() {
         return this.traps;
@@ -51,6 +58,7 @@ at: http://peteroupc.github.io/CBOR/
      * Gets a value indicating whether this context defines a minimum and
      * maximum exponent. If false, converted exponents can have any exponent
      * and operations can't cause overflow or underflow.
+     * @return Whether this context defines a minimum and maximum exponent.
      */
     public boolean getHasExponentRange() {
         return this.hasExponentRange;
@@ -63,6 +71,8 @@ at: http://peteroupc.github.io/CBOR/
      * comes after 0 is 0.001E-100. (This is not the same as the lowest possible
      * Exponent property.) If HasExponentRange is false, this value will
      * be 0.
+     * @return The lowest exponent possible when a converted number is expressed
+     * in scientific notation with one digit before the decimal point.
      */
     public BigInteger getEMin() {
         return this.hasExponentRange ? this.exponentMin : BigInteger.ZERO;
@@ -75,6 +85,8 @@ at: http://peteroupc.github.io/CBOR/
      * the decimal point and exponent. For example, if precision is 3, a converted
      * number&apos;s mantissa can range from 0 to 999 (up to three digits
      * long). If 0, converted numbers can have any precision.
+     * @return The maximum length of a converted number in digits, ignoring
+     * the decimal point and exponent.
      */
     public BigInteger getPrecision() {
         return this.bigintPrecision;
@@ -91,6 +103,8 @@ at: http://peteroupc.github.io/CBOR/
      * the exponent is clamped to that value and enough zeros are added to
      * the number&apos;s mantissa to account for the adjustment. If HasExponentRange
      * is false, this value is always false.
+     * @return If true, a converted number's Exponent property will not
+     * be higher than EMax + 1 - Precision.
      */
     public boolean getClampNormalExponents() {
         return this.hasExponentRange ? this.clampNormalExponents : false;
@@ -98,6 +112,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets the desired rounding mode when converting numbers that can&apos;t
+     * be represented in the given precision and exponent range.
+     * @return The desired rounding mode when converting numbers that can't
      * be represented in the given precision and exponent range.
      */
     public Rounding getRounding() {
@@ -109,6 +125,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value indicating whether this context has a mutable Flags field.
+     * @return Whether this context has a mutable Flags field.
      */
     public boolean getHasFlags() {
         return this.hasFlags;
@@ -167,6 +184,9 @@ at: http://peteroupc.github.io/CBOR/
      * use the AND operation on the return value of this method. For example:
      * <code>(this.getFlags() &amp; PrecisionContext.FlagInexact)
      * != 0</code> returns TRUE if the Inexact flag is set.
+     * @return The flags that are set from converting numbers according
+     * to this precision context. If HasFlags is false, this value will be
+     * 0.
      */
     public int getFlags() {
         return this.flags;

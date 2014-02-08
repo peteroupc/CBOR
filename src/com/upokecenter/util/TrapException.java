@@ -18,6 +18,8 @@ private static final long serialVersionUID=1L;
     /**
      * Gets the precision context used during the operation that triggered
      * the trap. May be null.
+     * @return The precision context used during the operation that triggered
+     * the trap. May be null.
      */
     public PrecisionContext getContext() {
         return this.ctx;
@@ -27,6 +29,7 @@ private static final long serialVersionUID=1L;
 
     /**
      * Gets the defined result of the operation that caused the trap.
+     * @return The defined result of the operation that caused the trap.
      */
     public Object getResult() {
         return this.result;
@@ -34,6 +37,8 @@ private static final long serialVersionUID=1L;
 
     /**
      * Gets the flag that specifies the kind of error (PrecisionContext.FlagXXX).
+     * This will only be one flag, such as FlagInexact or FlagSubnormal.
+     * @return The flag that specifies the kind of error (PrecisionContext.FlagXXX).
      * This will only be one flag, such as FlagInexact or FlagSubnormal.
      */
     public int getError() {

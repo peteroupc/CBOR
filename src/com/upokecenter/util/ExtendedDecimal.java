@@ -62,6 +62,8 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Gets this object&apos;s exponent. This object&apos;s value will
      * be an integer if the exponent is positive or zero.
+     * @return This object's exponent. This object's value will be an integer
+     * if the exponent is positive or zero.
      */
     public BigInteger getExponent() {
         return this.exponent;
@@ -69,6 +71,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets the absolute value of this object&apos;s un-scaled value.
+     * @return The absolute value of this object's un-scaled value.
      */
     public BigInteger getUnsignedMantissa() {
         return this.unsignedMantissa;
@@ -76,6 +79,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets this object&apos;s un-scaled value.
+     * @return This object's un-scaled value.
      */
     public BigInteger getMantissa() {
         return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
@@ -1452,6 +1456,7 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object is finite (not infinity
      * or NaN).
+     * @return Whether this object is finite (not infinity or NaN).
      */
     public boolean isFinite() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
@@ -1460,6 +1465,7 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object is negative, including
      * negative zero.
+     * @return Whether this object is negative, including negative zero.
      */
     public boolean isNegative() {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
@@ -1485,6 +1491,7 @@ remainder=divrem[1]; }
 
     /**
      * Gets this value&apos;s sign: -1 if negative; 1 if positive; 0 if zero.
+     * @return This value's sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
         return (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
@@ -1495,6 +1502,7 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object&apos;s value equals
      * 0.
+     * @return Whether this object's value equals 0.
      */
     public boolean isZero() {
         return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0;

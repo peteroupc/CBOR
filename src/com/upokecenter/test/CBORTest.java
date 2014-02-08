@@ -62,6 +62,116 @@ import com.upokecenter.util.*;
       }
     }
 
+    private static CBORObject RandomCBORByteString(FastRandom rand) {
+      int x = rand.NextValue(0x2000);
+      byte[] bytes = new byte[x];
+      for (int i = 0; i < x; ++i) {
+        bytes[i] = ((byte)rand.NextValue(256));
+      }
+      return CBORObject.FromObject(bytes);
+    }
+
+    private static CBORObject RandomCBORTextString(FastRandom rand) {
+      int length = rand.NextValue(0x2000);
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < length; ++i) {
+        int x = rand.NextValue(100);
+        if (x < 95) {
+          // ASCII
+          sb.append((char)rand.NextValue(0x80));
+        } else if (x < 98) {
+          // Supplementary character
+          x = rand.NextValue(0x400) +0xD800;
+          sb.append((char)x);
+          x = rand.NextValue(0x400) +0xDC00;
+          sb.append((char)x);
+        } else {
+          // BMP character
+          x = rand.NextValue(0x10000);
+          if (x >= 0xD800 && x < 0xE000) {
+            // surrogate code unit, generate ASCII instead
+            x = rand.NextValue(0x80);
+          }
+          sb.append((char)x);
+        }
+      }
+      return CBORObject.FromObject(sb.toString());
+    }
+
+    private static CBORObject RandomCBORMap(FastRandom rand) {
+      int x = rand.NextValue(100);
+      int count = 0;
+      if (x < 80) {
+        count = 2;
+      } else if (x < 93) {
+        count = 1;
+      } else if (x < 98) {
+        count = 0;
+      } else {
+        count = 10;
+      }
+      CBORObject cborRet = CBORObject.NewMap();
+      for (int i = 0; i < count; ++i) {
+        CBORObject key = RandomCBORObject(rand);
+        CBORObject value = RandomCBORObject(rand);
+        cborRet.set(key,value);
+      }
+      return cborRet;
+    }
+
+    private static CBORObject RandomCBORTaggedObject(FastRandom rand) {
+      int tag = rand.NextValue(0x1000000);
+      if (tag == 2 || tag == 3 || tag == 4 || tag == 5) {
+        tag = 0;
+      }
+      return CBORObject.FromObjectAndTag(RandomCBORObject(rand), tag);
+    }
+
+    private static CBORObject RandomCBORArray(FastRandom rand) {
+      int x = rand.NextValue(100);
+      int count = 0;
+      if (x < 80) {
+        count = 2;
+      } else if (x < 93) {
+        count = 1;
+      } else if (x < 98) {
+        count = 0;
+      } else {
+        count = 10;
+      }
+      CBORObject cborRet = CBORObject.NewArray();
+      for (int i = 0; i < count; ++i) {
+        cborRet.Add(RandomCBORObject(rand));
+      }
+      return cborRet;
+    }
+
+    private static CBORObject RandomCBORObject(FastRandom rand) {
+       switch (rand.NextValue(11)) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+          return RandomNumber(rand);
+        case 4:
+          return rand.NextValue(2) == 0 ? CBORObject.True : CBORObject.False;
+        case 5:
+          return rand.NextValue(2) == 0 ? CBORObject.Null : CBORObject.Undefined;
+        case 6:
+          return RandomCBORTextString(rand);
+        case 7:
+          return RandomCBORByteString(rand);
+        case 8:
+          return RandomCBORArray(rand);
+        case 9:
+          return RandomCBORMap(rand);
+        case 10:
+          return RandomCBORTaggedObject(rand);
+        default:
+          return RandomNumber(rand);
+      }
+    }
+
     private static long RandomInt64(FastRandom rand) {
       long r = rand.NextValue(0x10000);
       r |= ((long)rand.NextValue(0x10000)) << 16;
@@ -105,6 +215,21 @@ import com.upokecenter.util.*;
     }
 
     public static ExtendedDecimal RandomExtendedDecimal(FastRandom r) {
+      if (r.NextValue(100) == 0) {
+        int x = r.NextValue(4);
+        if (x == 0) {
+ return ExtendedDecimal.PositiveInfinity;
+}
+        if (x == 1) {
+ return ExtendedDecimal.NegativeInfinity;
+}
+        if (x == 2) {
+ return ExtendedDecimal.NaN;
+}
+        if (x == 3) {
+ return ExtendedDecimal.SignalingNaN;
+}
+      }
       return ExtendedDecimal.FromString(RandomDecimalString(r));
     }
 
@@ -118,6 +243,21 @@ import com.upokecenter.util.*;
     }
 
     public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
+      if (r.NextValue(100) == 0) {
+        int x = r.NextValue(4);
+        if (x == 0) {
+ return ExtendedFloat.PositiveInfinity;
+}
+        if (x == 1) {
+ return ExtendedFloat.NegativeInfinity;
+}
+        if (x == 2) {
+ return ExtendedFloat.NaN;
+}
+        if (x == 3) {
+ return ExtendedFloat.SignalingNaN;
+}
+      }
       return ExtendedFloat.Create(RandomBigInteger(r), BigInteger.valueOf(r.NextValue(400) - 200));
     }
 
@@ -423,21 +563,21 @@ import com.upokecenter.util.*;
     @Test
     public void TestParseJSONNumber() {
       if((CBORDataUtilities.ParseJSONNumber(null, false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false,false,true))!=null)Assert.fail();
-      if (CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999",false,false,false)==null) {
- Assert.fail();
-}
+      if((CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, true))!=null)Assert.fail();
+      if (CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, false) ==null) {
+        Assert.fail();
+      }
       if((CBORDataUtilities.ParseJSONNumber("", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("xyz", false,false,false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0..1", false,false,false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0xyz", false,false,false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.1xyz", false,false,false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.xyz", false,false,false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5exyz", false,false,false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5q+88", false,false,false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5ee88", false,false,false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false,false,false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false,false,false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("xyz", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0..1", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0xyz", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.xyz", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5exyz", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5q+88", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false, false, false))!=null)Assert.fail();
     }
 
     /**
@@ -458,6 +598,10 @@ import com.upokecenter.util.*;
     @Test
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        CBORObject obj = RandomCBORObject(rand);
+        TestCommon.AssertRoundTrip(obj);
+      }
       for (int i = 0; i < 200; ++i) {
         byte[] array = new byte[rand.NextValue(1000000) + 1];
         for (int j = 0; j < array.length; ++j) {
@@ -4404,7 +4548,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.WriteUtf8("xyz", 0,1,null,false);
+        DataUtilities.WriteUtf8("xyz", 0, 1, null, false);
         Assert.fail("Should have failed");
       } catch (NullPointerException ex) {
       } catch (Exception ex) {
@@ -4420,7 +4564,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.WriteUtf8("xyz", null,false);
+        DataUtilities.WriteUtf8("xyz", null, false);
         Assert.fail("Should have failed");
       } catch (NullPointerException ex) {
       } catch (Exception ex) {

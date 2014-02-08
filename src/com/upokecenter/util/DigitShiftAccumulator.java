@@ -14,6 +14,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value indicating whether the last discarded digit was set.
+     * @return Whether the last discarded digit was set.
      */
     public int getLastDiscardedDigit() {
         return this.bitLeftmost;
@@ -24,6 +25,8 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Gets a value indicating whether any of the discarded digits to the
      * right of the last one was set.
+     * @return Whether any of the discarded digits to the right of the last
+     * one was set.
      */
     public int getOlderDiscardedDigits() {
         return this.bitsAfterLeftmost;
@@ -50,6 +53,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value not documented yet.
+     * @return A value not documented yet.
      */
     public FastInteger getDiscardedDigitCount() {
         if (this.discardedBitCount == null) {
@@ -62,6 +66,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets the current integer after shifting.
+     * @return The current integer after shifting.
      */
     public BigInteger getShiftedInt() {
         if (this.isSmall) {
@@ -106,6 +111,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value not documented yet.
+     * @return A value not documented yet.
      */
     public FastInteger getShiftedIntFast() {
         if (this.isSmall) {
