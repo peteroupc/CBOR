@@ -594,22 +594,22 @@ import com.upokecenter.util.*;
 
     @Test
     public void TestExtendedInfinity() {
-      Assert.assertTrue(ExtendedDecimal.PositiveInfinity.IsInfinity());
-      Assert.assertTrue(ExtendedDecimal.PositiveInfinity.IsPositiveInfinity());
-      Assert.IsFalse(ExtendedDecimal.PositiveInfinity.IsNegativeInfinity());
-      Assert.IsFalse(ExtendedDecimal.PositiveInfinity.IsNegative);
-      Assert.assertTrue(ExtendedDecimal.NegativeInfinity.IsInfinity());
-      Assert.IsFalse(ExtendedDecimal.NegativeInfinity.IsPositiveInfinity());
-      Assert.assertTrue(ExtendedDecimal.NegativeInfinity.IsNegativeInfinity());
-      Assert.assertTrue(ExtendedDecimal.NegativeInfinity.IsNegative);
-      Assert.assertTrue(ExtendedFloat.PositiveInfinity.IsInfinity());
-      Assert.assertTrue(ExtendedFloat.PositiveInfinity.IsPositiveInfinity());
-      Assert.IsFalse(ExtendedFloat.PositiveInfinity.IsNegativeInfinity());
-      Assert.IsFalse(ExtendedFloat.PositiveInfinity.IsNegative);
-      Assert.assertTrue(ExtendedFloat.NegativeInfinity.IsInfinity());
-      Assert.IsFalse(ExtendedFloat.NegativeInfinity.IsPositiveInfinity());
-      Assert.assertTrue(ExtendedFloat.NegativeInfinity.IsNegativeInfinity());
-      Assert.assertTrue(ExtendedFloat.NegativeInfinity.IsNegative);
+      if(!(ExtendedDecimal.PositiveInfinity.IsInfinity()))Assert.fail();
+      if(!(ExtendedDecimal.PositiveInfinity.IsPositiveInfinity()))Assert.fail();
+      if(ExtendedDecimal.PositiveInfinity.IsNegativeInfinity())Assert.fail();
+      if(ExtendedDecimal.PositiveInfinity.IsNegative)Assert.fail();
+      if(!(ExtendedDecimal.NegativeInfinity.IsInfinity()))Assert.fail();
+      if(ExtendedDecimal.NegativeInfinity.IsPositiveInfinity())Assert.fail();
+      if(!(ExtendedDecimal.NegativeInfinity.IsNegativeInfinity()))Assert.fail();
+      if(!(ExtendedDecimal.NegativeInfinity.IsNegative))Assert.fail();
+      if(!(ExtendedFloat.PositiveInfinity.IsInfinity()))Assert.fail();
+      if(!(ExtendedFloat.PositiveInfinity.IsPositiveInfinity()))Assert.fail();
+      if(ExtendedFloat.PositiveInfinity.IsNegativeInfinity())Assert.fail();
+      if(ExtendedFloat.PositiveInfinity.IsNegative)Assert.fail();
+      if(!(ExtendedFloat.NegativeInfinity.IsInfinity()))Assert.fail();
+      if(ExtendedFloat.NegativeInfinity.IsPositiveInfinity())Assert.fail();
+      if(!(ExtendedFloat.NegativeInfinity.IsNegativeInfinity()))Assert.fail();
+      if(!(ExtendedFloat.NegativeInfinity.IsNegative))Assert.fail();
     }
 
     @Test
@@ -964,10 +964,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     public void TestDecFracOverflow() {
       Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal());
       Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedDecimal());
-      Assert.assertTrue(CBORObject.FromObject(Float.NaN).AsExtendedDecimal().IsNaN());
+      if(!(CBORObject.FromObject(Float.NaN).AsExtendedDecimal().IsNaN()))Assert.fail();
       Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal());
       Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
-      Assert.assertTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
+      if(!(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN()))Assert.fail();
     }
 
     /**

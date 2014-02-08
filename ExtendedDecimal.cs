@@ -1093,7 +1093,6 @@ namespace PeterO {
         bool quiet = (valueFpMantissa & 0x400000) != 0;
         valueFpMantissa &= 0x1FFFFF;
         BigInteger info = (BigInteger)valueFpMantissa;
-        info -= BigInteger.One;
         if (info.IsZero) {
           return quiet ? NaN : SignalingNaN;
         } else {
@@ -1182,7 +1181,6 @@ namespace PeterO {
         bool quiet = (value[1] & 0x80000) != 0;
         value[1] &= 0x3FFFF;
         BigInteger info = FastInteger.WordsToBigInteger(value);
-        info -= BigInteger.One;
         if (info.IsZero) {
           return quiet ? NaN : SignalingNaN;
         } else {

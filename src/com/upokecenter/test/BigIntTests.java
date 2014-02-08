@@ -1843,9 +1843,9 @@ Assert.fail("Should have failed");
  Assert.fail(ex.toString());
 throw new IllegalStateException("", ex);
 }
-      Assert.IsFalse(BigInteger.ONE.equals(BigInteger.ZERO));
-      Assert.IsFalse(verybig.equals(BigInteger.ZERO));
-      Assert.IsFalse(BigInteger.ONE.equals(BigInteger.ZERO.subtract(BigInteger.ONE)));
+      if(BigInteger.ONE.equals(BigInteger.ZERO))Assert.fail();
+      if(verybig.equals(BigInteger.ZERO))Assert.fail();
+      if(BigInteger.ONE.equals(BigInteger.ZERO.subtract(BigInteger.ONE)))Assert.fail();
       Assert.assertEquals(1, BigInteger.ONE.compareTo(null));
       BigInteger[] tmpsqrt = BigInteger.ZERO.sqrtWithRemainder();
       Assert.assertEquals(BigInteger.ZERO, tmpsqrt[0]);

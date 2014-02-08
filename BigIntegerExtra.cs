@@ -473,16 +473,16 @@ namespace PeterO
       xa.reg = CleanGrow(xa.reg, Math.Max(xa.reg.Length, xb.reg.Length));
       xb.reg = CleanGrow(xb.reg, Math.Max(xa.reg.Length, xb.reg.Length));
       if (xa.Sign < 0) {
-        { TwosComplement(xa.reg, 0, (int)xa.reg.Length);
-        } }
+        TwosComplement(xa.reg, 0, (int)xa.reg.Length);
+      }
       if (xb.Sign < 0) {
-        { TwosComplement(xb.reg, 0, (int)xb.reg.Length);
-        } }
+        TwosComplement(xb.reg, 0, (int)xb.reg.Length);
+      }
       xa.negative |= xb.Sign < 0;
       OrWords(xa.reg, xa.reg, xb.reg, (int)xa.reg.Length);
       if (xa.Sign < 0) {
-        { TwosComplement(xa.reg, 0, (int)xa.reg.Length);
-        } }
+        TwosComplement(xa.reg, 0, (int)xa.reg.Length);
+      }
       xa.wordCount = xa.CalcWordCount();
       if (xa.wordCount == 0) {
         xa.negative = false;

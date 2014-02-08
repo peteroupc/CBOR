@@ -423,7 +423,7 @@ at: http://peteroupc.github.io/CBOR/
         return Float.NEGATIVE_INFINITY;
       }
       if (this.IsNaN()) {
-        int nan = 0x7F800001;
+        int nan = 0x7F800000;
         if (this.isNegative()) {
           nan |= ((int)(1 << 31));
         }
@@ -546,7 +546,7 @@ at: http://peteroupc.github.io/CBOR/
         return Double.NEGATIVE_INFINITY;
       }
       if (this.IsNaN()) {
-        int[] nan = new int[] { 1, 0x7FF00000 };
+        int[] nan = new int[] { 0, 0x7FF00000 };
         if (this.isNegative()) {
           nan[1] |= ((int)(1 << 31));
         }
@@ -684,7 +684,6 @@ at: http://peteroupc.github.io/CBOR/
         boolean quiet = (valueFpMantissa & 0x400000) != 0;
         valueFpMantissa &= 0x1FFFFF;
         bigmant = BigInteger.valueOf(valueFpMantissa);
-        bigmant=bigmant.subtract(BigInteger.ONE);
         if (bigmant.signum()==0) {
           return quiet ? NaN : SignalingNaN;
         } else {
@@ -754,7 +753,6 @@ at: http://peteroupc.github.io/CBOR/
         boolean quiet = (value[1] & 0x80000) != 0;
         value[1] &= 0x3FFFF;
         BigInteger info = FastInteger.WordsToBigInteger(value);
-        info=info.subtract(BigInteger.ONE);
         if (info.signum()==0) {
           return quiet ? NaN : SignalingNaN;
         } else {
