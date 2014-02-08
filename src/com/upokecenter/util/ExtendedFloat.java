@@ -879,7 +879,7 @@ at: http://peteroupc.github.io/CBOR/
      * Not documented yet.
      * @return A Boolean object.
      */
-    public boolean IsPositiveInfinity() {
+    public boolean IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
@@ -888,7 +888,7 @@ at: http://peteroupc.github.io/CBOR/
      * Not documented yet.
      * @return A Boolean object.
      */
-    public boolean IsNegativeInfinity() {
+    public boolean IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
         BigNumberFlags.FlagInfinity;
     }

@@ -4096,9 +4096,15 @@ public static CBORObject FromObject(Object obj) {
           sb.append('\"');
         }
       } else if (type == CBORObjectTypeExtendedDecimal) {
-        return this.ToJSONString();
+        if (sb == null) {
+          return ((ExtendedDecimal)this.getThisItem()).toString();
+        }
+        sb.append(((ExtendedDecimal)this.getThisItem()).toString());
       } else if (type == CBORObjectTypeExtendedFloat) {
-        return this.ToJSONString();
+        if (sb == null) {
+          return ((ExtendedFloat)this.getThisItem()).toString();
+        }
+        sb.append(((ExtendedFloat)this.getThisItem()).toString());
       } else if (type == CBORObjectTypeArray) {
         if (sb == null) {
           sb = new StringBuilder();
