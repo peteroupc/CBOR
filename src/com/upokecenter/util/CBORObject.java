@@ -18,18 +18,18 @@ import java.io.*;
      * in RFC 7049. <p>There are many ways to get a CBOR object, including
      * from bytes, objects, streams and JSON, as described below.</p> <p>
      * <b>To and from byte arrays:</b> The CBORObject.DecodeToBytes method
-     * converts a byte array to a CBOR object. The EncodeToBytes method converts
-     * a CBOR object to its corresponding byte array. </p> <p> <b>To and from
-     * data streams:</b> The CBORObject.Write methods write many kinds
-     * of objects to a data stream, including numbers, CBOR objects, strings,
-     * and arrays of numbers and strings. The CBORObject.Read method reads
-     * a CBOR object from a data stream. </p> <p> <b>To and from other objects:</b>
-     * The CBORObject.FromObject methods converts many kinds of objects
-     * to a CBOR object, including numbers, strings, and arrays and maps
-     * of numbers and strings. Methods like AsDouble, AsByte, and AsString
-     * convert a CBOR object to different types of object. </p> <p> <b>To
-     * and from JSON:</b> This class also doubles as a reader and writer of
-     * JavaScript Object Notation (JSON). The CBORObject.FromJSONString
+     * converts a byte array in CBOR format to a CBOR object. The EncodeToBytes
+     * method converts a CBOR object to its corresponding byte array in CBOR
+     * format. </p> <p> <b>To and from data streams:</b> The CBORObject.Write
+     * methods write many kinds of objects to a data stream, including numbers,
+     * CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read
+     * method reads a CBOR object from a data stream. </p> <p> <b>To and from
+     * other objects:</b> The CBORObject.FromObject methods converts
+     * many kinds of objects to a CBOR object, including numbers, strings,
+     * and arrays and maps of numbers and strings. Methods like AsDouble,
+     * AsByte, and AsString convert a CBOR object to different types of object.
+     * </p> <p> <b>To and from JSON:</b> This class also doubles as a reader
+     * and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString
      * method converts JSON to a CBOR object, and the ToJSONString method
      * converts a CBOR object to a JSON string. </p> <p> Thread Safety: CBOR
      * objects that are numbers, "simple values", and text strings are immutable
@@ -116,6 +116,7 @@ import java.io.*;
 
     /**
      * Gets the general data type of this CBOR object.
+     * @return The general data type of this CBOR object.
      */
     public CBORType getType() {
         switch (this.getItemType()) {
@@ -146,6 +147,7 @@ import java.io.*;
 
     /**
      * Gets a value indicating whether this value is a CBOR true value.
+     * @return Whether this value is a CBOR true value.
      */
     public boolean isTrue() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 21;
@@ -153,6 +155,7 @@ import java.io.*;
 
     /**
      * Gets a value indicating whether this value is a CBOR false value.
+     * @return Whether this value is a CBOR false value.
      */
     public boolean isFalse() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 20;
@@ -160,6 +163,7 @@ import java.io.*;
 
     /**
      * Gets a value indicating whether this value is a CBOR null value.
+     * @return Whether this value is a CBOR null value.
      */
     public boolean isNull() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 22;
@@ -167,6 +171,7 @@ import java.io.*;
 
     /**
      * Gets a value indicating whether this value is a CBOR undefined value.
+     * @return Whether this value is a CBOR undefined value.
      */
     public boolean isUndefined() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 23;
@@ -175,6 +180,7 @@ import java.io.*;
     /**
      * Gets a value indicating whether this object&apos;s value equals
      * 0.
+     * @return Whether this object's value equals 0.
      */
     public boolean isZero() {
         switch (this.getItemType()) {
@@ -271,6 +277,7 @@ import java.io.*;
 
     /**
      * Gets this value&apos;s sign: -1 if negative; 1 if positive; 0 if zero.
+     * @return This value's sign: -1 if negative; 1 if positive; 0 if zero.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type, including the special not-a-number value (NaN).
      */
@@ -303,7 +310,7 @@ import java.io.*;
     }
 
     /**
-     * Not documented yet.
+     * Gets a value indicating whether this CBOR object represents infinity.
      * @return A Boolean object.
      */
     public boolean IsInfinity() {
@@ -366,10 +373,11 @@ import java.io.*;
      * the other and the other array begins with that array (for the purposes
      * of comparison), the shorter array is considered less than the longer
      * array.</li> <li> If both objects are strings, compares each string
-     * code-point by code-point.</li> <li> If both objects are maps, returns
-     * 0.</li> <li> If each object is a different type, then they are sorted
-     * by their type number, in the order given for the CBORType enumeration.</li>
-     * <p> This method is not consistent with the Equals method.</p> </ul>
+     * code-point by code-point, as though by the DataUtilities.CodePointCompare
+     * method.</li> <li> If both objects are maps, returns 0.</li> <li>
+     * If each object is a different type, then they are sorted by their type
+     * number, in the order given for the CBORType enumeration.</li> <p>
+     * This method is not consistent with the Equals method.</p> </ul>
      * @param other A value to compare with.
      * @return Less than 0, if this value is less than the other object; or
      * 0, if both values are equal; or greater than 0, if this value is less
@@ -1307,6 +1315,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     /**
      * Gets the number of keys in this map, or the number of items in this array,
      * or 0 if this item is neither an array nor a map.
+     * @return The number of keys in this map, or the number of items in this
+     * array, or 0 if this item is neither an array nor a map.
      */
     public int size() {
         if (this.getItemType() == CBORObjectTypeArray) {
@@ -1320,6 +1330,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     /**
      * Gets a value indicating whether this data item has at least one tag.
+     * @return Whether this data item has at least one tag.
      */
     public boolean isTagged() {
         return this.itemtypeValue == CBORObjectTypeTagged;
@@ -1327,7 +1338,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     /**
      * Gets the byte array used in this object, if this object is a byte string,
-     * without copying the data to a new one.
+     * without copying the data to a new one. This method's return value can
+     * be used to modify the array's contents. Note, though, that the array's
+     * length can't be changed.
      * @return A byte array.
      * @throws IllegalStateException This object is not a byte string.
      */
@@ -1404,6 +1417,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     /**
      * Gets the last defined tag for this CBOR data item, or 0 if the item is
      * untagged.
+     * @return The last defined tag for this CBOR data item, or 0 if the item
+     * is untagged.
      */
     public BigInteger getInnermostTag() {
         if (!this.isTagged()) {
@@ -1472,6 +1487,7 @@ public void set(int index, CBORObject value) {
 
     /**
      * Gets a collection of the keys of this CBOR object.
+     * @return A collection of the keys of this CBOR object.
      * @throws java.lang.IllegalStateException This object is not a map.
      */
     public Collection<CBORObject> getKeys() {
@@ -1569,6 +1585,8 @@ public void set(String key, CBORObject value) {
     /**
      * Gets the simple value ID of this object, or -1 if this object is not a
      * simple value (including if the value is a floating-point number).
+     * @return The simple value ID of this object, or -1 if this object is not
+     * a simple value (including if the value is a floating-point number).
      */
     public int getSimpleValue() {
         if (this.getItemType() == CBORObjectTypeSimpleValue) {
@@ -1609,9 +1627,10 @@ public void set(String key, CBORObject value) {
      * Adds a new object to this map.
      * @param key A string representing the key.
      * @param value A CBOR object representing the value.
-     * @throws java.lang.NullPointerException Key or value is null (as opposed
-     * to CBORObject.Null).
-     * @throws java.lang.IllegalArgumentException Key already exists in this map.
+     * @throws java.lang.NullPointerException The parameter {@code key}
+     * or {@code value} is null (as opposed to CBORObject.Null).
+     * @throws java.lang.IllegalArgumentException The parameter {@code key} already
+     * exists in this map.
      * @throws IllegalStateException This object is not a map.
      */
     public void Add(String key, CBORObject value) {
@@ -1649,8 +1668,8 @@ public void set(String key, CBORObject value) {
      * @param obj A CBOR object.
      * @throws java.lang.IllegalStateException This object is not an
      * array.
-     * @throws java.lang.NullPointerException Obj is null (as opposed to
-     * CBORObject.Null).
+     * @throws java.lang.NullPointerException The parameter {@code obj}
+     * is null (as opposed to CBORObject.Null).
      */
     public void Add(CBORObject obj) {
       if (obj == null) {
@@ -2087,8 +2106,8 @@ public void set(String key, CBORObject value) {
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
- throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is not greater or equal to " + "0");
+      }
       if (value < 24) {
         return new byte[] {  (byte)((byte)value | (byte)(type << 5))  };
       } else if (value <= 0xFF) {
@@ -2114,8 +2133,8 @@ public void set(String key, CBORObject value) {
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
- throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is not greater or equal to " + "0");
+      }
       if (value < 24) {
         return new byte[] {  (byte)((byte)value | (byte)(type << 5))  };
       } else if (value <= 0xFF) {
@@ -3733,7 +3752,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @param <TValue> A type convertible to CBORObject; the type of the
      * values.
      * @return A CBOR object where each key and value of the given map is converted
-     * to a CBOR object and copied to a new map, or CBORObject.Null if.
+     * to a CBOR object and copied to a new map, or CBORObject.Null if {@code
+     * dic} is null.
      */
     public static <TKey, TValue> CBORObject FromObject(Map<TKey, TValue> dic) {
       if (dic == null) {
@@ -3837,17 +3857,19 @@ public static CBORObject FromObject(Object obj) {
      * @param valueOb An arbitrary object.
      * @param bigintTag Tag number. The tag number 55799 can be used to mark
      * a &quot;self-described CBOR&quot; object.
-     * @return A CBOR object where the object.
+     * @return A CBOR object where the object {@code valueOb} is converted
+     * to a CBOR object and given the tag {@code bigintTag}.
      * @throws java.lang.IllegalArgumentException The parameter {@code bigintTag}
-     * is less than 0 or greater than 2^64-1, or "o"'s type is unsupported.
+     * is less than 0 or greater than 2^64-1, or {@code valueOb}'s type is
+     * unsupported.
      */
     public static CBORObject FromObjectAndTag(Object valueOb, BigInteger bigintTag) {
       if (bigintTag == null) {
         throw new NullPointerException("bigintTag");
       }
       if (bigintTag.signum() < 0) {
- throw new IllegalArgumentException("bigintTag's sign (" + Long.toString((long)bigintTag.signum()) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("bigintTag's sign (" + Long.toString((long)bigintTag.signum()) + ") is not greater or equal to " + "0");
+      }
       if (bigintTag.compareTo(valueUInt64MaxValue) > 0) {
         throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 (" + (bigintTag) + ")");
       }
@@ -3887,14 +3909,14 @@ public static CBORObject FromObject(Object obj) {
      * tag number 55799 can be used to mark a &quot;self-described CBOR&quot;
      * object.
      * @return A CBOR object where the object {@code valueObValue} is converted
-     * to a CBOR object and given the tag.
+     * to a CBOR object and given the tag {@code smallTag}.
      * @throws java.lang.IllegalArgumentException The parameter {@code smallTag}
      * is less than 0 or {@code valueObValue} 's type is unsupported.
      */
     public static CBORObject FromObjectAndTag(Object valueObValue, int smallTag) {
       if (smallTag < 0) {
- throw new IllegalArgumentException("smallTag (" + Long.toString((long)smallTag) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("smallTag (" + Long.toString((long)smallTag) + ") is not greater or equal to " + "0");
+      }
       CBORObject c = FromObject(valueObValue);
       if (smallTag == 2 || smallTag == 3) {
         return ConvertToBigNum(c, smallTag == 3);

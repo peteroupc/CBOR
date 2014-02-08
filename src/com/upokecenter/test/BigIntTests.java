@@ -1905,7 +1905,7 @@ throw new IllegalStateException("", ex);
       }
 
       try {
-        BigInteger.fromSubstring("123", -1,2);
+        BigInteger.fromSubstring("123", -1, 2);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -1913,7 +1913,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        BigInteger.fromSubstring("123", 4,2);
+        BigInteger.fromSubstring("123", 4, 2);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -1921,7 +1921,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        BigInteger.fromSubstring("123", 1,-1);
+        BigInteger.fromSubstring("123", 1, -1);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -1929,7 +1929,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        BigInteger.fromSubstring("123", 1,4);
+        BigInteger.fromSubstring("123", 1, 4);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -1937,7 +1937,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        BigInteger.fromSubstring("123", 1,0);
+        BigInteger.fromSubstring("123", 1, 0);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -1945,7 +1945,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        BigInteger.fromSubstring("123", 2,1);
+        BigInteger.fromSubstring("123", 2, 1);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {

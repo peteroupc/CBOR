@@ -3872,6 +3872,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value not documented yet.
+     * @return A value not documented yet.
      */
     public int signum() {
         if (this.wordCount == 0) {
@@ -3882,6 +3883,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value indicating whether this value is 0.
+     * @return Whether this value is 0.
      */
     public boolean isZero() {
         return this.wordCount == 0;
@@ -4021,6 +4023,7 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets a value indicating whether this value is even.
+     * @return Whether this value is even.
      */
     public boolean isEven() {
         return !this.GetUnsignedBit(0);
