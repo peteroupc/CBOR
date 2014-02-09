@@ -4336,7 +4336,7 @@ namespace Test {
 
     /// <summary>Not documented yet.</summary>
     [Test]
-    public void TestDoubleToOtherII() {
+    public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
       CBORObject dbl2 = CBORObject.FromObject((double)Int32.MaxValue);
       try {
