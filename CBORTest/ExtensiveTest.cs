@@ -1214,9 +1214,6 @@ namespace CBOR
             bool isinput = f.Contains(".input");
             ++x;
             if (!isinput) {
-              if ((x % 50) != 0) {
- continue;
-}
               // continue;
             }
             using (StreamReader w = new StreamReader(f)) {
