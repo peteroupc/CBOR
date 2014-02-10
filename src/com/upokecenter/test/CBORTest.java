@@ -862,7 +862,7 @@ int startingAvailable=ms.available();
               }
               byte[] encodedBytes = o.EncodeToBytes();
               try {
-                CBORObject.DecodeFromBytes(o.EncodeToBytes());
+                CBORObject.DecodeFromBytes(encodedBytes);
               } catch (Exception ex) {
                 Assert.fail(ex.toString());
                 throw new IllegalStateException("", ex);
@@ -7075,6 +7075,21 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(BigInteger.valueOf(0x88776655443322L), o.AsBigInteger());
     }
 
+    @Test
+    public void TestMapInMap() {
+      CBORObject oo = CBORObject.NewArray();
+      oo.Add(CBORObject.FromObject(0));
+      CBORObject oo2 = CBORObject.NewMap();
+      oo2.Add(CBORObject.FromObject(1), CBORObject.FromObject(1368));
+      CBORObject oo3 = CBORObject.NewMap();
+      oo3.Add(CBORObject.FromObject(2), CBORObject.FromObject(1625));
+      CBORObject oo4 = CBORObject.NewMap();
+      oo4.Add(oo2, CBORObject.True);
+      oo4.Add(oo3, CBORObject.True);
+      oo.Add(oo4);
+      TestCommon.AssertRoundTrip(oo);
+    }
+
     /**
      * Not documented yet.
      */
@@ -7147,7 +7162,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     @Test
     public void TestCBORBigInteger() {
-      CBORObject o = CBORObject.DecodeFromBytes(new byte[] {  0x3B, (byte)0xCE, (byte)0xE2, 0x5A, 0x57, (byte)0xD8, 0x21, (byte)0xB9, (byte)0xA7 })
+      CBORObject o = CBORObject.DecodeFromBytes(new byte[] {  0x3B, (byte)0xCE, (byte)0xE2, 0x5A, 0x57, (byte)0xD8, 0x21, (byte)0xB9, (byte)0xA7 });
       Assert.assertEquals(BigInteger.fromString("-14907577049884506536"),o.AsBigInteger());
     }
 
