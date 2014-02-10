@@ -1651,7 +1651,7 @@ import com.upokecenter.util.*;
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        BigInteger bigintB = CBORTest.RandomBigInteger(r);
+        BigInteger bigintB = bigintA .add(BigInteger.ONE);
         BigInteger bigintC = bigintA.multiply(bigintB);
         // Test near-squaring
         if (bigintA.signum()==0 || bigintB.signum()==0) {
@@ -1776,7 +1776,7 @@ bigintRem=divrem[1]; }
         int c = a / b;
         BigInteger bigintA = BigInteger.valueOf(a);
         BigInteger bigintB = BigInteger.valueOf(b);
-        BigInteger bigintC = bigintA.divide(BigInteger.valueOf(b));
+        BigInteger bigintC = bigintA.divide(bigintB);
         Assert.assertEquals(bigintC.intValue(), c);
       }
     }
@@ -1898,7 +1898,7 @@ throw new IllegalStateException("", ex);
       try {
         BigInteger.fromByteArray(null, false);
         Assert.fail("Should have failed");
-      } catch (IllegalArgumentException ex) {
+      } catch (NullPointerException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);

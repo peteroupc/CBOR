@@ -410,7 +410,8 @@ namespace PeterO {
     /// <item> If both objects are strings, compares each string code-point
     /// by code-point, as though by the DataUtilities.CodePointCompare
     /// method.</item>
-    /// <item> If both objects are maps, returns 0.</item>
+    /// <item> If both objects are maps, compares each map as though each were
+    /// an array with the sorted keys of that map as the array's elements. </item>
     /// <item> If each object is a different type, then they are sorted by their
     /// type number, in the order given for the CBORType enumeration.</item>
     /// <para> This method is not consistent with the Equals method.</para>
@@ -423,6 +424,9 @@ namespace PeterO {
     public int CompareTo(CBORObject other) {
       if (other == null) {
         return 1;
+      }
+      if (this == other) {
+        return 0;
       }
       int typeA = this.ItemType;
       int typeB = other.ItemType;
@@ -519,7 +523,9 @@ namespace PeterO {
                 (List<CBORObject>)objB);
             }
             case CBORObjectTypeMap: {
-              return 0;
+              return MapCompare(
+                (IDictionary<CBORObject, CBORObject>)objA,
+                (IDictionary<CBORObject, CBORObject>)objB);
             }
             case CBORObjectTypeSimpleValue: {
               int valueA = (int)objA;
@@ -943,6 +949,82 @@ namespace PeterO {
       return 0;
     }
 
+    /// <summary>Gets an object with the same value as this one but without
+    /// the tags it has, if any. If this object is an array, map, or byte string,
+    /// the data will not be copied to the returned object, so changes to the
+    /// returned object will be reflected in this one.</summary>
+    /// <returns>A CBORObject object.</returns>
+    public CBORObject Untag() {
+        CBORObject curobject = this;
+        while (curobject.itemtypeValue == CBORObjectTypeTagged) {
+          curobject = (CBORObject)curobject.itemValue;
+        }
+        return curobject;
+    }
+
+    /// <summary>Gets an object with the same value as this one but without
+    /// this object's outermost tag, if any. If this object is an array, map,
+    /// or byte string, the data will not be copied to the returned object,
+    /// so changes to the returned object will be reflected in this one.</summary>
+    /// <returns>A CBORObject object.</returns>
+    public CBORObject UntagOne() {
+        if (this.itemtypeValue == CBORObjectTypeTagged) {
+          return (CBORObject)this.itemValue;
+        }
+        return this;
+    }
+
+    private static int MapCompare(
+      IDictionary<CBORObject,
+      CBORObject> mapA,
+      IDictionary<CBORObject,
+      CBORObject> mapB) {
+      if (mapA == null) {
+        return (mapB == null) ? 0 : -1;
+      }
+      if (mapB == null) {
+        return 1;
+      }
+      if (mapA == mapB) {
+        return 0;
+      }
+      int listACount = mapA.Count;
+      int listBCount = mapB.Count;
+      if (listACount == 0 && listBCount == 0) {
+        return 0;
+      }
+      if (listACount == 0) {
+        return -1;
+      }
+      if (listBCount == 0) {
+        return 1;
+      }
+      IDictionary<CBORObject, CBORObject> sortedA =
+        new SortedDictionary<CBORObject, CBORObject>(mapA);
+      IDictionary<CBORObject, CBORObject> sortedB =
+        new SortedDictionary<CBORObject, CBORObject>(mapB);
+      IList<CBORObject> sortedASet = new List<CBORObject>(sortedA.Keys);
+      IList<CBORObject> sortedBSet = new List<CBORObject>(sortedB.Keys);
+      listACount = sortedASet.Count;
+      listBCount = sortedBSet.Count;
+      int minCount = Math.Min(listACount, listBCount);
+      for (int i = 0; i < minCount; ++i) {
+        CBORObject itemA = sortedASet[i];
+        CBORObject itemB = sortedBSet[i];
+        if (itemA == null) {
+          return -1;
+        }
+        int cmp = itemA.CompareTo(itemB);
+        if (cmp != 0) {
+          return 0;
+        }
+      }
+      if (listACount == listBCount) {
+ return 0;
+}
+      return (listACount>listBCount) ? 1 : 0;
+    }
+
     private static bool CBORArrayEquals(
       IList<CBORObject> listA,
       IList<CBORObject> listB) {
@@ -1032,6 +1114,9 @@ namespace PeterO {
       CBORObject otherValue = other as CBORObject;
       if (otherValue == null) {
         return false;
+      }
+      if (this == otherValue) {
+        return true;
       }
       switch (this.itemtypeValue) {
         case CBORObjectTypeByteString:
@@ -1242,8 +1327,8 @@ namespace PeterO {
               int low = unchecked((int)((uadditional) & 0xFFFFFFFFL));
               int high = unchecked((int)((uadditional >> 32) & 0xFFFFFFFFL));
               BigInteger bigintAdditional = LowHighToBigInteger(low, high);
-              bigintAdditional = -BigInteger.One;
-              bigintAdditional -= (BigInteger)bigintAdditional;
+              BigInteger minusOne = -BigInteger.One;
+              bigintAdditional = minusOne - (BigInteger)bigintAdditional;
               return FromObject(bigintAdditional);
             }
           case 7:
@@ -2403,7 +2488,7 @@ namespace PeterO {
         }
         int half = byteCount >> 1;
         int right = byteCount - 1;
-        for (int i = 0; i < half; i++, right--) {
+        for (int i = 0; i < half; ++i, --right) {
           byte value = bytes[i];
           bytes[i] = bytes[right];
           bytes[right] = value;
@@ -2413,15 +2498,38 @@ namespace PeterO {
             WritePositiveInt(datatype, ((int)bytes[0]) & 0xFF, stream);
             break;
           case 2:
-            stream.WriteByte((byte)((datatype << 5) | 24));
+            stream.WriteByte((byte)((datatype << 5) | 25));
             stream.Write(bytes, 0, byteCount);
             break;
           case 3:
-            stream.WriteByte((byte)((datatype << 5) | 24));
+            stream.WriteByte((byte)((datatype << 5) | 26));
+            stream.WriteByte((byte)0);
             stream.Write(bytes, 0, byteCount);
             break;
           case 4:
-            stream.WriteByte((byte)((datatype << 5) | 24));
+            stream.WriteByte((byte)((datatype << 5) | 26));
+            stream.Write(bytes, 0, byteCount);
+            break;
+          case 5:
+            stream.WriteByte((byte)((datatype << 5) | 27));
+            stream.WriteByte((byte)0);
+            stream.WriteByte((byte)0);
+            stream.WriteByte((byte)0);
+            stream.Write(bytes, 0, byteCount);
+            break;
+          case 6:
+            stream.WriteByte((byte)((datatype << 5) | 27));
+            stream.WriteByte((byte)0);
+            stream.WriteByte((byte)0);
+            stream.Write(bytes, 0, byteCount);
+            break;
+          case 7:
+            stream.WriteByte((byte)((datatype << 5) | 27));
+            stream.WriteByte((byte)0);
+            stream.Write(bytes, 0, byteCount);
+            break;
+          case 8:
+            stream.WriteByte((byte)((datatype << 5) | 27));
             stream.Write(bytes, 0, byteCount);
             break;
           default:
@@ -2465,8 +2573,8 @@ namespace PeterO {
         ExtendedDecimal dec = (ExtendedDecimal)this.ThisItem;
         Write(dec, stream);
       } else if (type == CBORObjectTypeExtendedFloat) {
-        ExtendedFloat dec = (ExtendedFloat)this.ThisItem;
-        Write(dec, stream);
+        ExtendedFloat flo = (ExtendedFloat)this.ThisItem;
+        Write(flo, stream);
       } else if (type == CBORObjectTypeMap) {
         WriteObjectMap(this.AsMap(), stream);
       } else if (type == CBORObjectTypeSimpleValue) {
@@ -3339,6 +3447,10 @@ namespace PeterO {
             bool first = true;
             bool hasNonStringKeys = false;
             IDictionary<CBORObject, CBORObject> objMap = this.AsMap();
+            // Sort the items by key for consistent results
+            if (objMap.Count >= 2) {
+            objMap = new SortedDictionary<CBORObject, CBORObject>(objMap);
+            }
             sb.Append('{');
             int oldLength = sb.Length;
             foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
@@ -3360,7 +3472,7 @@ namespace PeterO {
             }
             if (hasNonStringKeys) {
               sb.Remove(oldLength, sb.Length - oldLength);
-              var stringMap = new Dictionary<String, CBORObject>();
+              IDictionary<string, CBORObject> stringMap = new Dictionary<String, CBORObject>();
               // Copy to a map with String keys, since
               // some keys could be duplicates
               // when serialized to strings
@@ -3370,6 +3482,9 @@ namespace PeterO {
                 string str = (key.ItemType == CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 stringMap[str] = value;
+              }
+              if (stringMap.Count >= 2) {
+               stringMap = new SortedDictionary<string, CBORObject>(stringMap);
               }
               first = true;
               foreach (KeyValuePair<string, CBORObject> entry in stringMap) {
@@ -4063,6 +4178,9 @@ namespace PeterO {
         bool first = true;
         sb.Append("{");
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
+        if (map.Count >= 2) {
+         map = new SortedDictionary<CBORObject, CBORObject>(map);
+        }
         foreach (KeyValuePair<CBORObject, CBORObject> entry in map) {
           CBORObject key = entry.Key;
           CBORObject value = entry.Value;
