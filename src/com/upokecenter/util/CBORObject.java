@@ -37,7 +37,15 @@ import java.io.*;
      * by multiple threads. CBOR objects that are arrays, maps, and byte
      * strings are mutable, but this class doesn't attempt to synchronize
      * reads and writes to those objects by multiple threads, so those objects
-     * are not thread safe without such synchronization. </p>
+     * are not thread safe without such synchronization. </p> <p> One kind
+     * of CBOR object is called a map, or a list of key-value pairs. Keys can
+     * be any kind of CBOR object, including numbers, strings, arrays, and
+     * maps. However, since byte strings, arrays, and maps are mutable,
+     * it is not advisable to use these three kinds of ((object instanceof
+     * keys) ? (keys)object : null); they are much better ((used instanceof
+     * map values instead) ? (map values instead)used : null), keeping in
+     * mind that they are not thread safe without synchronizing reads and
+     * writes to them. </p>
      */
   public final class CBORObject implements Comparable<CBORObject> {
     int getItemType(){
@@ -403,8 +411,8 @@ public int compareTo(CBORObject other) {
       int typeB = other.getItemType();
       Object objA = this.getThisItem();
       Object objB = other.getThisItem();
-      int simpleValueA=-1;
-      int simpleValueB=-1;
+      int simpleValueA = -1;
+      int simpleValueB = -1;
       if (typeA == CBORObjectTypeSimpleValue) {
         if (((Integer)objA).intValue() == 20) {  // false
           simpleValueA = 2;
@@ -429,15 +437,15 @@ public int compareTo(CBORObject other) {
       }
       int cmp = 0;
       if (simpleValueA >= 0 || simpleValueB >= 0) {
-        if (simpleValueB<0) {
+        if (simpleValueB < 0) {
           return -1;  // B is not true, false, null, or undefined, so A is less
-        } else if (simpleValueA<0) {
+        } else if (simpleValueA < 0) {
           return 1;
         }
         if (simpleValueA == simpleValueB) {
           cmp = 0;
         } else {
-          cmp=(simpleValueA<simpleValueB) ? -1 : 1;
+          cmp = (simpleValueA < simpleValueB) ? -1 : 1;
         }
       } else if (typeA == typeB) {
         switch (typeA) {
@@ -458,7 +466,7 @@ public int compareTo(CBORObject other) {
               if (Float.isNaN(a)) {
                 cmp = Float.isNaN(b) ? 0 : 1;
               } else if (Float.isNaN(b)) {
-                cmp=-1;
+                cmp = -1;
               } else if (a == b) {
                 cmp = 0;
               } else {
@@ -479,7 +487,7 @@ public int compareTo(CBORObject other) {
               if (Double.isNaN(a)) {
                 cmp = Double.isNaN(b) ? 0 : 1;
               } else if (Double.isNaN(b)) {
-                cmp=-1;
+                cmp = -1;
               } else if (a == b) {
                 cmp = 0;
               } else {
@@ -488,12 +496,12 @@ public int compareTo(CBORObject other) {
               break;
             }
             case CBORObjectTypeExtendedDecimal: {
-              cmp=((ExtendedDecimal)objA).compareTo(
+              cmp = ((ExtendedDecimal)objA).compareTo(
                 (ExtendedDecimal)objB);
               break;
             }
             case CBORObjectTypeExtendedFloat: {
-              cmp=((ExtendedFloat)objA).compareTo(
+              cmp = ((ExtendedFloat)objA).compareTo(
                 (ExtendedFloat)objB);
               break;
             }
@@ -525,7 +533,7 @@ public int compareTo(CBORObject other) {
               if (valueA == valueB) {
                 cmp = 0;
               } else {
-                cmp=(valueA < valueB) ? -1 : 1;
+                cmp = (valueA < valueB) ? -1 : 1;
               }
               break;
             }
@@ -669,11 +677,11 @@ public int compareTo(CBORObject other) {
               if (Double.isNaN(a)) {
                 cmp = Double.isNaN(b) ? 0 : 1;
               } else if (Double.isNaN(b)) {
-                cmp= -1;
+                cmp = -1;
               } else if (a == b) {
                 cmp = 0;
               } else {
-                cmp=(a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -736,11 +744,11 @@ public int compareTo(CBORObject other) {
               if (Double.isNaN(a)) {
                 cmp = Double.isNaN(b) ? 0 : 1;
               } else if (Double.isNaN(b)) {
-                cmp=-1;
+                cmp = -1;
               } else if (a == b) {
                 cmp = 0;
               } else {
-                cmp=(a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -1085,7 +1093,7 @@ public int compareTo(CBORObject other) {
         }
         return 0;
       }
-      return (listACount>listBCount) ? 1 : -1;
+      return (listACount > listBCount) ? 1 : -1;
     }
 
     private static boolean CBORArrayEquals(

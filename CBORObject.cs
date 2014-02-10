@@ -43,6 +43,13 @@ namespace PeterO {
     /// doesn't attempt to synchronize reads and writes to those objects
     /// by multiple threads, so those objects are not thread safe without
     /// such synchronization. </para>
+    /// <para> One kind of CBOR object is called a map, or a list of key-value
+    /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
+    /// arrays, and maps. However, since byte strings, arrays, and maps are
+    /// mutable, it is not advisable to use these three kinds of object as keys;
+    /// they are much better used as map values instead, keeping in mind that
+    /// they are not thread safe without synchronizing reads and writes to
+    /// them. </para>
     /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject> {
     internal int ItemType {
@@ -441,8 +448,8 @@ namespace PeterO {
       int typeB = other.ItemType;
       object objA = this.ThisItem;
       object objB = other.ThisItem;
-      int simpleValueA=-1;
-      int simpleValueB=-1;
+      int simpleValueA = -1;
+      int simpleValueB = -1;
       if (typeA == CBORObjectTypeSimpleValue) {
         if ((int)objA == 20) {  // false
           simpleValueA = 2;
@@ -467,15 +474,15 @@ namespace PeterO {
       }
       int cmp = 0;
       if (simpleValueA >= 0 || simpleValueB >= 0) {
-        if (simpleValueB<0) {
+        if (simpleValueB < 0) {
           return -1;  // B is not true, false, null, or undefined, so A is less
-        } else if (simpleValueA<0) {
+        } else if (simpleValueA < 0) {
           return 1;
         }
         if (simpleValueA == simpleValueB) {
           cmp = 0;
         } else {
-          cmp=(simpleValueA<simpleValueB) ? -1 : 1;
+          cmp = (simpleValueA < simpleValueB) ? -1 : 1;
         }
       } else if (typeA == typeB) {
         switch (typeA) {
@@ -496,7 +503,7 @@ namespace PeterO {
               if (Single.IsNaN(a)) {
                 cmp = Single.IsNaN(b) ? 0 : 1;
               } else if (Single.IsNaN(b)) {
-                cmp=-1;
+                cmp = -1;
               } else if (a == b) {
                 cmp = 0;
               } else {
@@ -517,7 +524,7 @@ namespace PeterO {
               if (Double.IsNaN(a)) {
                 cmp = Double.IsNaN(b) ? 0 : 1;
               } else if (Double.IsNaN(b)) {
-                cmp=-1;
+                cmp = -1;
               } else if (a == b) {
                 cmp = 0;
               } else {
@@ -526,12 +533,12 @@ namespace PeterO {
               break;
             }
             case CBORObjectTypeExtendedDecimal: {
-              cmp=((ExtendedDecimal)objA).CompareTo(
+              cmp = ((ExtendedDecimal)objA).CompareTo(
                 (ExtendedDecimal)objB);
               break;
             }
             case CBORObjectTypeExtendedFloat: {
-              cmp=((ExtendedFloat)objA).CompareTo(
+              cmp = ((ExtendedFloat)objA).CompareTo(
                 (ExtendedFloat)objB);
               break;
             }
@@ -563,7 +570,7 @@ namespace PeterO {
               if (valueA == valueB) {
                 cmp = 0;
               } else {
-                cmp=(valueA < valueB) ? -1 : 1;
+                cmp = (valueA < valueB) ? -1 : 1;
               }
               break;
             }
@@ -707,11 +714,11 @@ namespace PeterO {
               if (Double.IsNaN(a)) {
                 cmp = Double.IsNaN(b) ? 0 : 1;
               } else if (Double.IsNaN(b)) {
-                cmp= -1;
+                cmp = -1;
               } else if (a == b) {
                 cmp = 0;
               } else {
-                cmp=(a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -774,11 +781,11 @@ namespace PeterO {
               if (Double.IsNaN(a)) {
                 cmp = Double.IsNaN(b) ? 0 : 1;
               } else if (Double.IsNaN(b)) {
-                cmp=-1;
+                cmp = -1;
               } else if (a == b) {
                 cmp = 0;
               } else {
-                cmp=(a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -1089,9 +1096,9 @@ namespace PeterO {
         return 1;
       }
       IDictionary<CBORObject, CBORObject> sortedA =
-        new SortedDictionary<CBORObject, CBORObject>(mapA);
+        new SortedMap<CBORObject, CBORObject>(mapA);
       IDictionary<CBORObject, CBORObject> sortedB =
-        new SortedDictionary<CBORObject, CBORObject>(mapB);
+        new SortedMap<CBORObject, CBORObject>(mapB);
       IList<CBORObject> sortedASet = new List<CBORObject>(sortedA.Keys);
       IList<CBORObject> sortedBSet = new List<CBORObject>(sortedB.Keys);
       listACount = sortedASet.Count;
@@ -1120,7 +1127,7 @@ namespace PeterO {
         }
         return 0;
       }
-      return (listACount>listBCount) ? 1 : -1;
+      return (listACount > listBCount) ? 1 : -1;
     }
 
     private static bool CBORArrayEquals(
@@ -3563,7 +3570,7 @@ namespace PeterO {
             IDictionary<CBORObject, CBORObject> objMap = this.AsMap();
             // Sort the items by key for consistent results
             if (objMap.Count >= 2) {
-            objMap = new SortedDictionary<CBORObject, CBORObject>(objMap);
+            objMap = new SortedMap<CBORObject, CBORObject>(objMap);
             }
             sb.Append('{');
             int oldLength = sb.Length;
@@ -3598,7 +3605,7 @@ namespace PeterO {
                 stringMap[str] = value;
               }
               if (stringMap.Count >= 2) {
-               stringMap = new SortedDictionary<string, CBORObject>(stringMap);
+               stringMap = new SortedMap<string, CBORObject>(stringMap);
               }
               first = true;
               foreach (KeyValuePair<string, CBORObject> entry in stringMap) {
@@ -4293,7 +4300,7 @@ namespace PeterO {
         sb.Append("{");
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         if (map.Count >= 2) {
-         map = new SortedDictionary<CBORObject, CBORObject>(map);
+         map = new SortedMap<CBORObject, CBORObject>(map);
         }
         foreach (KeyValuePair<CBORObject, CBORObject> entry in map) {
           CBORObject key = entry.Key;
