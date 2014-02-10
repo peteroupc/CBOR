@@ -32,7 +32,7 @@ namespace PeterO {
       int i = 0;
       for (i = 0; i < (length - 2); i += 3) {
         str.Append(alphabet[(data[i] >> 2) & 63]);
-        str.Append(alphabet[((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 63)]);
+        str.Append(alphabet[((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 15)]);
         str.Append(alphabet[((data[i + 1] & 15) << 2) + ((data[i + 2] >> 6) & 3)]);
         str.Append(alphabet[data[i + 2] & 63]);
       }
@@ -41,7 +41,7 @@ namespace PeterO {
         i = length - lenmod3;
         str.Append(alphabet[(data[i] >> 2) & 63]);
         if (lenmod3 == 2) {
-          str.Append(alphabet[((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 63)]);
+          str.Append(alphabet[((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 15)]);
           str.Append(alphabet[(data[i + 1] & 15) << 2]);
           if (padding) {
             str.Append("=");

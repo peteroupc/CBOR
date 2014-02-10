@@ -374,10 +374,11 @@ import java.io.*;
      * of comparison), the shorter array is considered less than the longer
      * array.</li> <li> If both objects are strings, compares each string
      * code-point by code-point, as though by the DataUtilities.CodePointCompare
-     * method.</li> <li> If both objects are maps, returns 0.</li> <li>
-     * If each object is a different type, then they are sorted by their type
-     * number, in the order given for the CBORType enumeration.</li> <p>
-     * This method is not consistent with the Equals method.</p> </ul>
+     * method.</li> <li> If both objects are maps, compares each map as though
+     * each were an array with the sorted keys of that map as the array's elements.
+     * </li> <li> If each object is a different type, then they are sorted
+     * by their type number, in the order given for the CBORType enumeration.</li>
+     * <p> This method is not consistent with the Equals method.</p> </ul>
      * @param other A value to compare with.
      * @return Less than 0, if this value is less than the other object; or
      * 0, if both values are equal; or greater than 0, if this value is less
@@ -387,6 +388,9 @@ import java.io.*;
 public int compareTo(CBORObject other) {
       if (other == null) {
         return 1;
+      }
+      if (this == other) {
+        return 0;
       }
       int typeA = this.getItemType();
       int typeB = other.getItemType();
@@ -483,7 +487,9 @@ public int compareTo(CBORObject other) {
                 (ArrayList<CBORObject>)objB);
             }
             case CBORObjectTypeMap: {
-              return 0;
+              return MapCompare(
+                (Map<CBORObject, CBORObject>)objA,
+                (Map<CBORObject, CBORObject>)objB);
             }
             case CBORObjectTypeSimpleValue: {
               int valueA = ((Integer)objA).intValue();
@@ -907,6 +913,86 @@ public int compareTo(CBORObject other) {
       return 0;
     }
 
+    /**
+     * Gets an object with the same value as this one but without the tags it
+     * has, if any. If this object is an array, map, or byte string, the data
+     * will not be copied to the returned object, so changes to the returned
+     * object will be reflected in this one.
+     * @return A CBORObject object.
+     */
+    public CBORObject Untag() {
+        CBORObject curobject = this;
+        while (curobject.itemtypeValue == CBORObjectTypeTagged) {
+          curobject = (CBORObject)curobject.itemValue;
+        }
+        return curobject;
+    }
+
+    /**
+     * Gets an object with the same value as this one but without this object's
+     * outermost tag, if any. If this object is an array, map, or byte string,
+     * the data will not be copied to the returned object, so changes to the
+     * returned object will be reflected in this one.
+     * @return A CBORObject object.
+     */
+    public CBORObject UntagOne() {
+        if (this.itemtypeValue == CBORObjectTypeTagged) {
+          return (CBORObject)this.itemValue;
+        }
+        return this;
+    }
+
+    private static int MapCompare(
+      Map<CBORObject,
+      CBORObject> mapA,
+      Map<CBORObject,
+      CBORObject> mapB) {
+      if (mapA == null) {
+        return (mapB == null) ? 0 : -1;
+      }
+      if (mapB == null) {
+        return 1;
+      }
+      if (mapA == mapB) {
+        return 0;
+      }
+      int listACount = mapA.size();
+      int listBCount = mapB.size();
+      if (listACount == 0 && listBCount == 0) {
+        return 0;
+      }
+      if (listACount == 0) {
+        return -1;
+      }
+      if (listBCount == 0) {
+        return 1;
+      }
+      Map<CBORObject, CBORObject> sortedA =
+        new TreeMap<CBORObject, CBORObject>(mapA);
+      Map<CBORObject, CBORObject> sortedB =
+        new TreeMap<CBORObject, CBORObject>(mapB);
+      List<CBORObject> sortedASet = new ArrayList<CBORObject>(sortedA.keySet());
+      List<CBORObject> sortedBSet = new ArrayList<CBORObject>(sortedB.keySet());
+      listACount = sortedASet.size();
+      listBCount = sortedBSet.size();
+      int minCount = Math.min(listACount, listBCount);
+      for (int i = 0; i < minCount; ++i) {
+        CBORObject itemA = sortedASet.get(i);
+        CBORObject itemB = sortedBSet.get(i);
+        if (itemA == null) {
+          return -1;
+        }
+        int cmp = itemA.compareTo(itemB);
+        if (cmp != 0) {
+          return 0;
+        }
+      }
+      if (listACount == listBCount) {
+ return 0;
+}
+      return (listACount>listBCount) ? 1 : 0;
+    }
+
     private static boolean CBORArrayEquals(
       List<CBORObject> listA,
       List<CBORObject> listB) {
@@ -1002,6 +1088,9 @@ public boolean equals(CBORObject other) {
       CBORObject otherValue = ((other instanceof CBORObject) ? (CBORObject)other : null);
       if (otherValue == null) {
         return false;
+      }
+      if (this == otherValue) {
+        return true;
       }
       switch (this.itemtypeValue) {
         case CBORObjectTypeByteString:
@@ -1214,8 +1303,8 @@ public boolean equals(CBORObject other) {
               int low = ((int)((uadditional) & 0xFFFFFFFFL));
               int high = ((int)((uadditional >> 32) & 0xFFFFFFFFL));
               BigInteger bigintAdditional = LowHighToBigInteger(low, high);
-              bigintAdditional =(BigInteger.ONE).negate();
-              bigintAdditional=bigintAdditional.subtract(bigintAdditional);
+              BigInteger minusOne =(BigInteger.ONE).negate();
+              bigintAdditional = minusOne.subtract(bigintAdditional);
               return FromObject(bigintAdditional);
             }
           case 7:
@@ -2413,7 +2502,7 @@ public void set(String key, CBORObject value) {
         }
         int half = byteCount >> 1;
         int right = byteCount - 1;
-        for (int i = 0; i < half; i++, right--) {
+        for (int i = 0; i < half; ++i, --right) {
           byte value = bytes[i];
           bytes[i] = bytes[right];
           bytes[right] = value;
@@ -2423,15 +2512,38 @@ public void set(String key, CBORObject value) {
             WritePositiveInt(datatype, ((int)bytes[0]) & 0xFF, stream);
             break;
           case 2:
-            stream.write((byte)((datatype << 5) | 24));
+            stream.write((byte)((datatype << 5) | 25));
             stream.write(bytes,0,byteCount);
             break;
           case 3:
-            stream.write((byte)((datatype << 5) | 24));
+            stream.write((byte)((datatype << 5) | 26));
+            stream.write((byte)0);
             stream.write(bytes,0,byteCount);
             break;
           case 4:
-            stream.write((byte)((datatype << 5) | 24));
+            stream.write((byte)((datatype << 5) | 26));
+            stream.write(bytes,0,byteCount);
+            break;
+          case 5:
+            stream.write((byte)((datatype << 5) | 27));
+            stream.write((byte)0);
+            stream.write((byte)0);
+            stream.write((byte)0);
+            stream.write(bytes,0,byteCount);
+            break;
+          case 6:
+            stream.write((byte)((datatype << 5) | 27));
+            stream.write((byte)0);
+            stream.write((byte)0);
+            stream.write(bytes,0,byteCount);
+            break;
+          case 7:
+            stream.write((byte)((datatype << 5) | 27));
+            stream.write((byte)0);
+            stream.write(bytes,0,byteCount);
+            break;
+          case 8:
+            stream.write((byte)((datatype << 5) | 27));
             stream.write(bytes,0,byteCount);
             break;
           default:
@@ -2477,8 +2589,8 @@ public void set(String key, CBORObject value) {
         ExtendedDecimal dec = (ExtendedDecimal)this.getThisItem();
         Write(dec, stream);
       } else if (type == CBORObjectTypeExtendedFloat) {
-        ExtendedFloat dec = (ExtendedFloat)this.getThisItem();
-        Write(dec, stream);
+        ExtendedFloat flo = (ExtendedFloat)this.getThisItem();
+        Write(flo, stream);
       } else if (type == CBORObjectTypeMap) {
         WriteObjectMap(this.AsMap(), stream);
       } else if (type == CBORObjectTypeSimpleValue) {
@@ -3370,6 +3482,10 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             boolean first = true;
             boolean hasNonStringKeys = false;
             Map<CBORObject, CBORObject> objMap = this.AsMap();
+            // Sort the items by key for consistent results
+            if (objMap.size() >= 2) {
+            objMap = new TreeMap<CBORObject, CBORObject>(objMap);
+            }
             sb.append('{');
             int oldLength = sb.length();
             for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
@@ -3391,7 +3507,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             }
             if (hasNonStringKeys) {
               sb.delete(oldLength,(oldLength)+(sb.length() - oldLength));
-              HashMap<String, CBORObject> stringMap=new HashMap<String, CBORObject>();
+              Map<String, CBORObject> stringMap = new HashMap<String, CBORObject>();
               // Copy to a map with String keys, since
               // some keys could be duplicates
               // when serialized to strings
@@ -3401,6 +3517,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
                 String str = (key.getItemType() == CBORObjectTypeTextString) ?
                   ((String)key.getThisItem()) : key.ToJSONString();
                 stringMap.put(str,value);
+              }
+              if (stringMap.size() >= 2) {
+               stringMap = new TreeMap<String, CBORObject>(stringMap);
               }
               first = true;
               for(Map.Entry<String, CBORObject> entry : stringMap.entrySet()) {
@@ -4130,6 +4249,9 @@ public static CBORObject FromObject(Object obj) {
         boolean first = true;
         sb.append("{");
         Map<CBORObject, CBORObject> map = this.AsMap();
+        if (map.size() >= 2) {
+         map = new TreeMap<CBORObject, CBORObject>(map);
+        }
         for(Map.Entry<CBORObject, CBORObject> entry : map.entrySet()) {
           CBORObject key = entry.getKey();
           CBORObject value = entry.getValue();

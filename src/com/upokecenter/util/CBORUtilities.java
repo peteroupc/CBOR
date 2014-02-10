@@ -38,7 +38,7 @@ private CBORUtilities() {
       int i = 0;
       for (i = 0; i < (length - 2); i += 3) {
         str.append(alphabet.charAt((data[i] >> 2) & 63));
-        str.append(alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 63)));
+        str.append(alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 15)));
         str.append(alphabet.charAt(((data[i + 1] & 15) << 2) + ((data[i + 2] >> 6) & 3)));
         str.append(alphabet.charAt(data[i + 2] & 63));
       }
@@ -47,7 +47,7 @@ private CBORUtilities() {
         i = length - lenmod3;
         str.append(alphabet.charAt((data[i] >> 2) & 63));
         if (lenmod3 == 2) {
-          str.append(alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 63)));
+          str.append(alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 15)));
           str.append(alphabet.charAt((data[i + 1] & 15) << 2));
           if (padding) {
             str.append("=");

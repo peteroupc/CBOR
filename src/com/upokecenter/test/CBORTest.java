@@ -78,7 +78,7 @@ import com.upokecenter.util.*;
         int x = rand.NextValue(100);
         if (x < 95) {
           // ASCII
-          sb.append((char)rand.NextValue(0x80));
+          sb.append((char)(rand.NextValue(0x60)+0x20));
         } else if (x < 98) {
           // Supplementary character
           x = rand.NextValue(0x400) + 0xD800;
@@ -87,10 +87,10 @@ import com.upokecenter.util.*;
           sb.append((char)x);
         } else {
           // BMP character
-          x = rand.NextValue(0x10000);
+          x = rand.NextValue(0xFFE0)+0x20;
           if (x >= 0xD800 && x < 0xE000) {
             // surrogate code unit, generate ASCII instead
-            x = rand.NextValue(0x80);
+            x = rand.NextValue(0x60)+0x20;
           }
           sb.append((char)x);
         }
@@ -603,29 +603,34 @@ import com.upokecenter.util.*;
       if(!(ExtendedDecimal.PositiveInfinity.IsInfinity()))Assert.fail();
       if(!(ExtendedDecimal.PositiveInfinity.IsPositiveInfinity()))Assert.fail();
       if(ExtendedDecimal.PositiveInfinity.IsNegativeInfinity())Assert.fail();
-      if(ExtendedDecimal.PositiveInfinity.IsNegative)Assert.fail();
+      if(ExtendedDecimal.PositiveInfinity.isNegative())Assert.fail();
       if(!(ExtendedDecimal.NegativeInfinity.IsInfinity()))Assert.fail();
       if(ExtendedDecimal.NegativeInfinity.IsPositiveInfinity())Assert.fail();
       if(!(ExtendedDecimal.NegativeInfinity.IsNegativeInfinity()))Assert.fail();
-      if(!(ExtendedDecimal.NegativeInfinity.IsNegative))Assert.fail();
+      if(!(ExtendedDecimal.NegativeInfinity.isNegative()))Assert.fail();
       if(!(ExtendedFloat.PositiveInfinity.IsInfinity()))Assert.fail();
       if(!(ExtendedFloat.PositiveInfinity.IsPositiveInfinity()))Assert.fail();
       if(ExtendedFloat.PositiveInfinity.IsNegativeInfinity())Assert.fail();
-      if(ExtendedFloat.PositiveInfinity.IsNegative)Assert.fail();
+      if(ExtendedFloat.PositiveInfinity.isNegative())Assert.fail();
       if(!(ExtendedFloat.NegativeInfinity.IsInfinity()))Assert.fail();
       if(ExtendedFloat.NegativeInfinity.IsPositiveInfinity())Assert.fail();
       if(!(ExtendedFloat.NegativeInfinity.IsNegativeInfinity()))Assert.fail();
-      if(!(ExtendedFloat.NegativeInfinity.IsNegative))Assert.fail();
+      if(!(ExtendedFloat.NegativeInfinity.isNegative()))Assert.fail();
     }
 
     @Test
-    public void TestCBORMiscellaneous() {
-      if(CBORObject.NewArray().signum()==0)Assert.fail();
-      if(CBORObject.NewMap().signum()==0)Assert.fail();
-      if(CBORObject.True.signum()==0)Assert.fail();
-      if(CBORObject.False.signum()==0)Assert.fail();
-      if(CBORObject.Undefined.signum()==0)Assert.fail();
-      if(CBORObject.FromObject("").signum()==0)Assert.fail();
+    public void TestJSONBase64() {
+      CBORObject o;
+      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8 }, 22);
+      Assert.assertEquals("\"mtbw6A\"",o.ToJSONString());
+      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8 });
+      Assert.assertEquals("\"mtbw6A\"",o.ToJSONString());
+      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8 }, 23);
+      Assert.assertEquals("\"9AD6F0E8\"",o.ToJSONString());
+      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8 });
+      Assert.assertEquals("\"mtb_6A\"",o.ToJSONString());  // Encode with Base64URL by default
+      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8 }, 22);
+      Assert.assertEquals("\"mtb/6A\"",o.ToJSONString());  // Encode with Base64
     }
 
     @Test
@@ -855,6 +860,7 @@ int startingAvailable=ms.available();
               if (o == null) {
                 Assert.fail("Object read is null");
               }
+              byte[] encodedBytes = o.EncodeToBytes();
               try {
                 CBORObject.DecodeFromBytes(o.EncodeToBytes());
               } catch (Exception ex) {
@@ -7139,6 +7145,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(s, bi.toString());
     }
 
+    @Test
+    public void TestCBORBigInteger() {
+      CBORObject o = CBORObject.DecodeFromBytes(new byte[] {  0x3B, (byte)0xCE, (byte)0xE2, 0x5A, 0x57, (byte)0xD8, 0x21, (byte)0xB9, (byte)0xA7 })
+      Assert.assertEquals(BigInteger.fromString("-14907577049884506536"),o.AsBigInteger());
+    }
+
     public void AssertAdd(BigInteger bi, BigInteger bi2, String s) {
       this.AssertBigIntString(s, bi.add(bi2));
       this.AssertBigIntString(s, bi2.add(bi));
@@ -7183,6 +7195,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),
           String.format(java.util.Locale.US,"%s", bi));
+        TestCommon.AssertRoundTrip(CBORObject.FromObject(bi));
+        TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.Create(bi, BigInteger.ONE)));
         bi=bi.multiply(negseven);
       }
       BigInteger[] ranges = new BigInteger[] {

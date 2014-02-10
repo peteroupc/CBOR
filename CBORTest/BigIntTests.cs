@@ -1652,7 +1652,7 @@ namespace Test
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        BigInteger bigintB = CBORTest.RandomBigInteger(r);
+        BigInteger bigintB = bigintA + BigInteger.One;
         BigInteger bigintC = bigintA * (BigInteger)bigintB;
         // Test near-squaring
         if (bigintA.IsZero || bigintB.IsZero) {
@@ -1768,7 +1768,7 @@ namespace Test
         int c = a / b;
         BigInteger bigintA = (BigInteger)a;
         BigInteger bigintB = (BigInteger)b;
-        BigInteger bigintC = bigintA / (BigInteger)b;
+        BigInteger bigintC = bigintA / (BigInteger)bigintB;
         Assert.AreEqual((int)bigintC, c);
       }
     }
@@ -1890,7 +1890,7 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
         BigInteger.fromByteArray(null, false);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
+      } catch (ArgumentNullException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
