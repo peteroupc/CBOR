@@ -403,6 +403,9 @@ namespace PeterO {
     /// <item> If both objects are numbers, their mathematical values are
     /// compared. Here, NaN (not-a-number) is considered greater than any
     /// number.</item>
+    /// <item> If both objects are simple values other than true, false, null,
+    /// and undefined, the objects are compared according to their ordinal
+    /// numbers.</item>
     /// <item> If both objects are arrays, each element is compared. If one
     /// array is shorter than the other and the other array begins with that
     /// array (for the purposes of comparison), the shorter array is considered
@@ -411,11 +414,17 @@ namespace PeterO {
     /// by code-point, as though by the DataUtilities.CodePointCompare
     /// method.</item>
     /// <item> If both objects are maps, compares each map as though each were
-    /// an array with the sorted keys of that map as the array's elements. </item>
+    /// an array with the sorted keys of that map as the array's elements. If
+    /// both maps have the same keys, their values are compared in the order
+    /// of the sorted keys.</item>
     /// <item> If each object is a different type, then they are sorted by their
     /// type number, in the order given for the CBORType enumeration.</item>
-    /// <para> This method is not consistent with the Equals method.</para>
+    /// <item> If each object has different tags and both objects are otherwise
+    /// equal under this method, each element is compared as though each were
+    /// an array with that object's tags listed in order from outermost to
+    /// innermost. </item>
     /// </list>
+    /// <para> This method is not consistent with the Equals method.</para>
     /// </summary>
     /// <param name='other'>A value to compare with.</param>
     /// <returns>Less than 0, if this value is less than the other object;
@@ -432,108 +441,131 @@ namespace PeterO {
       int typeB = other.ItemType;
       object objA = this.ThisItem;
       object objB = other.ThisItem;
+      int simpleValueA=-1;
+      int simpleValueB=-1;
       if (typeA == CBORObjectTypeSimpleValue) {
-        if ((int)objA == 20 || (int)objA == 22 || (int)objA == 23) {
-          // Treat false, null, and undefined
-          // as the number 0
-          objA = (long)0;
-          typeA = CBORObjectTypeInteger;
-        } else if ((int)objA == 21) {
-          // Treat true as the number 1
-          objA = (long)1;
-          typeA = CBORObjectTypeInteger;
+        if ((int)objA == 20) {  // false
+          simpleValueA = 2;
+        } else if ((int)objA == 21) {  // true
+          simpleValueA = 3;
+        } else if ((int)objA == 22) {  // null
+          simpleValueA = 1;
+        } else if ((int)objA == 23) {  // undefined
+          simpleValueA = 0;
         }
       }
       if (typeB == CBORObjectTypeSimpleValue) {
-        if ((int)objB == 20 || (int)objB == 22 || (int)objB == 23) {
-          // Treat false, null, and undefined
-          // as the number 0
-          objB = (long)0;
-          typeB = CBORObjectTypeInteger;
-        } else if ((int)objB == 21) {
-          // Treat true as the number 1
-          objB = (long)1;
-          typeB = CBORObjectTypeInteger;
+        if ((int)objB == 20) {  // false
+          simpleValueB = 2;
+        } else if ((int)objB == 21) {  // true
+          simpleValueB = 3;
+        } else if ((int)objB == 22) {  // null
+          simpleValueB = 1;
+        } else if ((int)objB == 23) {  // undefined
+          simpleValueB = 0;
         }
       }
-      if (typeA == typeB) {
+      int cmp = 0;
+      if (simpleValueA >= 0 || simpleValueB >= 0) {
+        if (simpleValueB<0) {
+          return -1;  // B is not true, false, null, or undefined, so A is less
+        } else if (simpleValueA<0) {
+          return 1;
+        }
+        if (simpleValueA == simpleValueB) {
+          cmp = 0;
+        } else {
+          cmp=(simpleValueA<simpleValueB) ? -1 : 1;
+        }
+      } else if (typeA == typeB) {
         switch (typeA) {
             case CBORObjectTypeInteger: {
               long a = (long)objA;
               long b = (long)objB;
               if (a == b) {
-                return 0;
+                cmp = 0;
+              } else {
+               cmp = (a < b) ? -1 : 1;
               }
-              return (a < b) ? -1 : 1;
+              break;
             }
             case CBORObjectTypeSingle: {
               float a = (float)objA;
               float b = (float)objB;
               // Treat NaN as greater than all other numbers
               if (Single.IsNaN(a)) {
-                return Single.IsNaN(b) ? 0 : 1;
+                cmp = Single.IsNaN(b) ? 0 : 1;
+              } else if (Single.IsNaN(b)) {
+                cmp=-1;
+              } else if (a == b) {
+                cmp = 0;
+              } else {
+               cmp = (a < b) ? -1 : 1;
               }
-              if (Single.IsNaN(b)) {
-                return -1;
-              }
-              if (a == b) {
-                return 0;
-              }
-              return (a < b) ? -1 : 1;
+              break;
             }
             case CBORObjectTypeBigInteger: {
               BigInteger bigintA = (BigInteger)objA;
               BigInteger bigintB = (BigInteger)objB;
-              return bigintA.CompareTo(bigintB);
-            }
+              cmp = bigintA.CompareTo(bigintB);
+              break;
+           }
             case CBORObjectTypeDouble: {
               double a = (double)objA;
               double b = (double)objB;
               // Treat NaN as greater than all other numbers
               if (Double.IsNaN(a)) {
-                return Double.IsNaN(b) ? 0 : 1;
+                cmp = Double.IsNaN(b) ? 0 : 1;
+              } else if (Double.IsNaN(b)) {
+                cmp=-1;
+              } else if (a == b) {
+                cmp = 0;
+              } else {
+               cmp = (a < b) ? -1 : 1;
               }
-              if (Double.IsNaN(b)) {
-                return -1;
-              }
-              if (a == b) {
-                return 0;
-              }
-              return (a < b) ? -1 : 1;
+              break;
             }
             case CBORObjectTypeExtendedDecimal: {
-              return ((ExtendedDecimal)objA).CompareTo(
+              cmp=((ExtendedDecimal)objA).CompareTo(
                 (ExtendedDecimal)objB);
+              break;
             }
             case CBORObjectTypeExtendedFloat: {
-              return ((ExtendedFloat)objA).CompareTo(
+              cmp=((ExtendedFloat)objA).CompareTo(
                 (ExtendedFloat)objB);
+              break;
             }
             case CBORObjectTypeByteString: {
-              return CBORUtilities.ByteArrayCompare((byte[])objA, (byte[])objB);
+              cmp = CBORUtilities.ByteArrayCompare((byte[])objA, (byte[])objB);
+              break;
             }
             case CBORObjectTypeTextString: {
-              return DataUtilities.CodePointCompare(
+              cmp = DataUtilities.CodePointCompare(
                 (string)objA,
                 (string)objB);
+              break;
             }
             case CBORObjectTypeArray: {
-              return ListCompare(
+              cmp = ListCompare(
                 (List<CBORObject>)objA,
                 (List<CBORObject>)objB);
+              break;
             }
             case CBORObjectTypeMap: {
-              return MapCompare(
+              cmp = MapCompare(
                 (IDictionary<CBORObject, CBORObject>)objA,
                 (IDictionary<CBORObject, CBORObject>)objB);
+              break;
             }
             case CBORObjectTypeSimpleValue: {
               int valueA = (int)objA;
               int valueB = (int)objB;
               if (valueA == valueB) {
-                return 0;
+                cmp = 0;
+              } else {
+                cmp=(valueA < valueB) ? -1 : 1;
               }
-              return (valueA < valueB) ? -1 : 1;
+              break;
             }
           default:
             throw new ArgumentException("Unexpected data type");
@@ -557,7 +589,8 @@ namespace PeterO {
             case (CBORObjectTypeInteger << 4) | CBORObjectTypeBigInteger: {
               bigintXa = (BigInteger)(long)objA;
               bigintXb = (BigInteger)objB;
-              return bigintXa.CompareTo(bigintXb);
+              cmp = bigintXa.CompareTo(bigintXb);
+              break;
             }
             case (CBORObjectTypeInteger << 4) | CBORObjectTypeSingle: {
               float sf = (float)objB;
@@ -569,7 +602,8 @@ namespace PeterO {
               }
               bigfloatXa = ExtendedFloat.FromInt64((long)objA);
               bigfloatXb = ExtendedFloat.FromSingle(sf);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeInteger << 4) | CBORObjectTypeDouble: {
               double sf = (double)objB;
@@ -581,22 +615,26 @@ namespace PeterO {
               }
               bigfloatXa = ExtendedFloat.FromInt64((long)objA);
               bigfloatXb = ExtendedFloat.FromDouble(sf);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeInteger << 4) | CBORObjectTypeExtendedDecimal: {
               decfracXa = ExtendedDecimal.FromInt64((long)objA);
               decfracXb = (ExtendedDecimal)objB;
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
             case (CBORObjectTypeInteger << 4) | CBORObjectTypeExtendedFloat: {
               bigfloatXa = ExtendedFloat.FromInt64((long)objA);
               bigfloatXb = (ExtendedFloat)objB;
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeInteger: {
               bigintXa = (BigInteger)objA;
               bigintXb = (BigInteger)(long)objB;
-              return bigintXa.CompareTo(bigintXb);
+              cmp = bigintXa.CompareTo(bigintXb);
+              break;
             }
             case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeSingle: {
               float sf = (float)objB;
@@ -608,7 +646,8 @@ namespace PeterO {
               }
               bigfloatXa = ExtendedFloat.FromBigInteger((BigInteger)objA);
               bigfloatXb = ExtendedFloat.FromSingle(sf);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeDouble: {
               double sf = (double)objB;
@@ -620,30 +659,33 @@ namespace PeterO {
               }
               bigfloatXa = ExtendedFloat.FromBigInteger((BigInteger)objA);
               bigfloatXb = ExtendedFloat.FromDouble(sf);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeExtendedDecimal: {
               decfracXa = ExtendedDecimal.FromBigInteger((BigInteger)objA);
               decfracXb = (ExtendedDecimal)objB;
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
             case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeExtendedFloat: {
               bigfloatXa = ExtendedFloat.FromBigInteger((BigInteger)objA);
               bigfloatXb = (ExtendedFloat)objB;
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeSingle << 4) | CBORObjectTypeInteger: {
               float sf = (float)objA;
               if (Single.IsInfinity(sf)) {
                 return sf < 0 ? -1 : 1;
               }
-
               if (Single.IsNaN(sf)) {
                 return 1;
               }
               bigfloatXa = ExtendedFloat.FromSingle(sf);
               bigfloatXb = ExtendedFloat.FromInt64((long)objB);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeSingle << 4) | CBORObjectTypeBigInteger: {
               float sf = (float)objA;
@@ -655,22 +697,23 @@ namespace PeterO {
               }
               bigfloatXa = ExtendedFloat.FromSingle(sf);
               bigfloatXb = ExtendedFloat.FromBigInteger((BigInteger)objB);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeSingle << 4) | CBORObjectTypeDouble: {
               double a = (double)(float)objA;
               double b = (double)objB;
               // Treat NaN as greater than all other numbers
               if (Double.IsNaN(a)) {
-                return Double.IsNaN(b) ? 0 : 1;
+                cmp = Double.IsNaN(b) ? 0 : 1;
+              } else if (Double.IsNaN(b)) {
+                cmp= -1;
+              } else if (a == b) {
+                cmp = 0;
+              } else {
+                cmp=(a < b) ? -1 : 1;
               }
-              if (Double.IsNaN(b)) {
-                return -1;
-              }
-              if (a == b) {
-                return 0;
-              }
-              return (a < b) ? -1 : 1;
+              break;
             }
             case (CBORObjectTypeSingle << 4) | CBORObjectTypeExtendedDecimal: {
               float sf = (float)objA;
@@ -682,7 +725,8 @@ namespace PeterO {
               }
               decfracXa = ExtendedDecimal.FromSingle(sf);
               decfracXb = (ExtendedDecimal)objB;
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
             case (CBORObjectTypeSingle << 4) | CBORObjectTypeExtendedFloat: {
               float sf = (float)objA;
@@ -694,7 +738,8 @@ namespace PeterO {
               }
               bigfloatXa = ExtendedFloat.FromSingle(sf);
               bigfloatXb = (ExtendedFloat)objB;
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeDouble << 4) | CBORObjectTypeInteger: {
               double sf = (double)objA;
@@ -706,7 +751,8 @@ namespace PeterO {
               }
               bigfloatXa = ExtendedFloat.FromDouble(sf);
               bigfloatXb = ExtendedFloat.FromInt64((long)objB);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeDouble << 4) | CBORObjectTypeBigInteger: {
               double sf = (double)objA;
@@ -718,22 +764,23 @@ namespace PeterO {
               }
               bigfloatXa = ExtendedFloat.FromDouble(sf);
               bigfloatXb = ExtendedFloat.FromBigInteger((BigInteger)objB);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeDouble << 4) | CBORObjectTypeSingle: {
               double a = (double)objA;
               double b = (double)(float)objB;
               // Treat NaN as greater than all other numbers
               if (Double.IsNaN(a)) {
-                return Double.IsNaN(b) ? 0 : 1;
+                cmp = Double.IsNaN(b) ? 0 : 1;
+              } else if (Double.IsNaN(b)) {
+                cmp=-1;
+              } else if (a == b) {
+                cmp = 0;
+              } else {
+                cmp=(a < b) ? -1 : 1;
               }
-              if (Double.IsNaN(b)) {
-                return -1;
-              }
-              if (a == b) {
-                return 0;
-              }
-              return (a < b) ? -1 : 1;
+              break;
             }
             case (CBORObjectTypeDouble << 4) | CBORObjectTypeExtendedDecimal: {
               double sf = (double)objA;
@@ -745,7 +792,8 @@ namespace PeterO {
               }
               decfracXa = ExtendedDecimal.FromDouble(sf);
               decfracXb = (ExtendedDecimal)objB;
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
             case (CBORObjectTypeDouble << 4) | CBORObjectTypeExtendedFloat: {
               double sf = (double)objA;
@@ -757,17 +805,20 @@ namespace PeterO {
               }
               bigfloatXa = ExtendedFloat.FromDouble(sf);
               bigfloatXb = (ExtendedFloat)objB;
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeInteger: {
               decfracXa = (ExtendedDecimal)objA;
               decfracXb = ExtendedDecimal.FromInt64((long)objB);
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
             case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeBigInteger: {
               decfracXa = (ExtendedDecimal)objA;
               decfracXb = ExtendedDecimal.FromBigInteger((BigInteger)objB);
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
             case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeSingle: {
               float sf = (float)objB;
@@ -779,7 +830,8 @@ namespace PeterO {
               }
               decfracXa = (ExtendedDecimal)objA;
               decfracXb = ExtendedDecimal.FromSingle(sf);
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
             case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeDouble: {
               double sf = (double)objB;
@@ -791,22 +843,26 @@ namespace PeterO {
               }
               decfracXa = (ExtendedDecimal)objA;
               decfracXb = ExtendedDecimal.FromDouble(sf);
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
             case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeExtendedFloat: {
               decfracXa = (ExtendedDecimal)objA;
               decfracXb = ExtendedDecimal.FromExtendedFloat((ExtendedFloat)objB);
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
             case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeInteger: {
               bigfloatXa = (ExtendedFloat)objA;
               bigfloatXb = ExtendedFloat.FromInt64((long)objB);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeBigInteger: {
               bigfloatXa = (ExtendedFloat)objA;
               bigfloatXb = ExtendedFloat.FromBigInteger((BigInteger)objB);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeSingle: {
               float sf = (float)objB;
@@ -818,7 +874,8 @@ namespace PeterO {
               }
               bigfloatXa = (ExtendedFloat)objA;
               bigfloatXb = ExtendedFloat.FromSingle(sf);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeDouble: {
               double sf = (double)objB;
@@ -830,12 +887,14 @@ namespace PeterO {
               }
               bigfloatXa = (ExtendedFloat)objA;
               bigfloatXb = ExtendedFloat.FromDouble(sf);
-              return bigfloatXa.CompareTo(bigfloatXb);
+              cmp = bigfloatXa.CompareTo(bigfloatXb);
+              break;
             }
             case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeExtendedDecimal: {
               decfracXa = ExtendedDecimal.FromExtendedFloat((ExtendedFloat)objA);
               decfracXb = (ExtendedDecimal)objB;
-              return decfracXa.CompareTo(decfracXb);
+              cmp = decfracXa.CompareTo(decfracXb);
+              break;
             }
           case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeSimpleValue:
           case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeByteString:
@@ -925,8 +984,38 @@ namespace PeterO {
             throw new ArgumentException("Unexpected data type");
         }
       }
+      if (cmp == 0) {
+        if (!this.IsTagged && !other.IsTagged) {
+          return 0;
+        }
+        return TagsCompare(this.GetTags(), other.GetTags());
+      }
+      return cmp;
     }
+
     #region Equals and GetHashCode implementation
+    private static int TagsCompare(BigInteger[] tagsA, BigInteger[] tagsB) {
+      if (tagsA == null) {
+        return (tagsB == null) ? 0 : -1;
+      }
+      if (tagsB == null) {
+        return 1;
+      }
+      int listACount = tagsA.Length;
+      int listBCount = tagsB.Length;
+      int c = Math.Min(listACount, listBCount);
+      for (int i = 0; i < c; ++i) {
+        int cmp = tagsA[i].CompareTo(tagsB[i]);
+        if (cmp != 0) {
+          return cmp;
+        }
+      }
+      if (listACount != listBCount) {
+        return (listACount < listBCount) ? -1 : 1;
+      }
+      return 0;
+    }
+
     private static int ListCompare(List<CBORObject> listA, List<CBORObject> listB) {
       if (listA == null) {
         return (listB == null) ? 0 : -1;
@@ -1008,6 +1097,7 @@ namespace PeterO {
       listACount = sortedASet.Count;
       listBCount = sortedBSet.Count;
       int minCount = Math.Min(listACount, listBCount);
+      // Compare the keys
       for (int i = 0; i < minCount; ++i) {
         CBORObject itemA = sortedASet[i];
         CBORObject itemB = sortedBSet[i];
@@ -1016,13 +1106,21 @@ namespace PeterO {
         }
         int cmp = itemA.CompareTo(itemB);
         if (cmp != 0) {
-          return 0;
+          return cmp;
         }
       }
       if (listACount == listBCount) {
- return 0;
-}
-      return (listACount>listBCount) ? 1 : 0;
+        // Both maps have the same keys, so compare their values
+        for (int i = 0; i < minCount; ++i) {
+          CBORObject key = sortedASet[i];
+          int cmp = mapA[key].CompareTo(mapB[key]);
+          if (cmp != 0) {
+            return cmp;
+          }
+        }
+        return 0;
+      }
+      return (listACount>listBCount) ? 1 : -1;
     }
 
     private static bool CBORArrayEquals(
@@ -1706,7 +1804,8 @@ namespace PeterO {
     /// in this map.</exception>
     /// <exception cref='InvalidOperationException'>This object is
     /// not a map.</exception>
-    public void Add(CBORObject key, CBORObject value) {
+    /// <returns>This object.</returns>
+    public CBORObject Add(CBORObject key, CBORObject value) {
       if (key == null) {
         throw new ArgumentNullException("key");
       }
@@ -1722,26 +1821,21 @@ namespace PeterO {
       } else {
         throw new InvalidOperationException("Not a map");
       }
+      return this;
     }
 
-    /// <summary>Adds a new object to this map.</summary>
+    /// <summary>Converts an object to a CBOR object and adds it to this map.</summary>
     /// <param name='key'>A string representing the key.</param>
-    /// <param name='value'>A CBOR object representing the value.</param>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='key'/> or <paramref name='value'/> is null (as
-    /// opposed to CBORObject.Null).</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='key'/> or "value" has an unsupported type.</exception>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='key'/> already exists in this map.</exception>
     /// <exception cref='InvalidOperationException'>This object is
     /// not a map.</exception>
-    public void Add(string key, CBORObject value) {
-      if (key == null) {
-        throw new ArgumentNullException("key");
-      }
-      if (value == null) {
-        throw new ArgumentNullException("value");
-      }
-      this.Add(CBORObject.FromObject(key), value);
+    /// <returns>This object.</returns>
+    /// <param name='valueOb'>An arbitrary object.</param>
+    public CBORObject Add(object key, object valueOb) {
+      return this.Add(CBORObject.FromObject(key), CBORObject.FromObject(valueOb));
     }
 
     /// <summary>Determines whether a value of the given key exists in this
@@ -1769,13 +1863,33 @@ namespace PeterO {
     /// is not an array.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='obj'/> is null (as opposed to CBORObject.Null).</exception>
-    public void Add(CBORObject obj) {
+    /// <returns>This object.</returns>
+    public CBORObject Add(CBORObject obj) {
       if (obj == null) {
         throw new ArgumentNullException("obj");
       }
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();
         list.Add(obj);
+        return this;
+      } else {
+        throw new InvalidOperationException("Not an array");
+      }
+    }
+
+    /// <summary>Converts an object to a CBOR object and adds it to the end
+    /// of this array.</summary>
+    /// <param name='obj'>A CBOR object.</param>
+    /// <exception cref='System.InvalidOperationException'>This object
+    /// is not an array.</exception>
+    /// <exception cref='System.ArgumentException'>The object's type
+    /// is not supported.</exception>
+    /// <returns>This object.</returns>
+    public CBORObject Add(object obj) {
+      if (this.ItemType == CBORObjectTypeArray) {
+        IList<CBORObject> list = this.AsList();
+        list.Add(CBORObject.FromObject(obj));
+        return this;
       } else {
         throw new InvalidOperationException("Not an array");
       }
@@ -2210,14 +2324,14 @@ namespace PeterO {
       }
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5)) };
-      } else if (value <= 0xFF) {
+      } else if (value <= 0xFFL) {
         return new byte[] { (byte)(24 | (type << 5)),
           (byte)(value & 0xFF) };
-      } else if (value <= 0xFFFF) {
+      } else if (value <= 0xFFFFL) {
         return new byte[] { (byte)(25 | (type << 5)),
           (byte)((value >> 8) & 0xFF),
           (byte)(value & 0xFF) };
-      } else if (value <= 0xFFFFFFFF) {
+      } else if (value <= 0xFFFFFFFFL) {
         return new byte[] { (byte)(26 | (type << 5)),
           (byte)((value >> 24) & 0xFF),
           (byte)((value >> 16) & 0xFF),
