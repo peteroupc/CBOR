@@ -41,11 +41,10 @@ import java.io.*;
      * of CBOR object is called a map, or a list of key-value pairs. Keys can
      * be any kind of CBOR object, including numbers, strings, arrays, and
      * maps. However, since byte strings, arrays, and maps are mutable,
-     * it is not advisable to use these three kinds of ((object instanceof
-     * keys) ? (keys)object : null); they are much better ((used instanceof
-     * map values instead) ? (map values instead)used : null), keeping in
-     * mind that they are not thread safe without synchronizing reads and
-     * writes to them. </p>
+     * it is not advisable to use these three kinds of object as keys; they
+     * are much better used as map values instead, keeping in mind that they
+     * are not thread safe without synchronizing reads and writes to them.
+     * </p>
      */
   public final class CBORObject implements Comparable<CBORObject> {
     int getItemType(){
@@ -455,7 +454,7 @@ public int compareTo(CBORObject other) {
               if (a == b) {
                 cmp = 0;
               } else {
-               cmp = (a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -470,7 +469,7 @@ public int compareTo(CBORObject other) {
               } else if (a == b) {
                 cmp = 0;
               } else {
-               cmp = (a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -479,7 +478,7 @@ public int compareTo(CBORObject other) {
               BigInteger bigintB = (BigInteger)objB;
               cmp = bigintA.compareTo(bigintB);
               break;
-           }
+            }
             case CBORObjectTypeDouble: {
               double a = ((Double)objA).doubleValue();
               double b = ((Double)objB).doubleValue();
@@ -491,7 +490,7 @@ public int compareTo(CBORObject other) {
               } else if (a == b) {
                 cmp = 0;
               } else {
-               cmp = (a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -1015,11 +1014,11 @@ public int compareTo(CBORObject other) {
      * @return A CBORObject object.
      */
     public CBORObject Untag() {
-        CBORObject curobject = this;
-        while (curobject.itemtypeValue == CBORObjectTypeTagged) {
-          curobject = (CBORObject)curobject.itemValue;
-        }
-        return curobject;
+      CBORObject curobject = this;
+      while (curobject.itemtypeValue == CBORObjectTypeTagged) {
+        curobject = (CBORObject)curobject.itemValue;
+      }
+      return curobject;
     }
 
     /**
@@ -1030,17 +1029,13 @@ public int compareTo(CBORObject other) {
      * @return A CBORObject object.
      */
     public CBORObject UntagOne() {
-        if (this.itemtypeValue == CBORObjectTypeTagged) {
-          return (CBORObject)this.itemValue;
-        }
-        return this;
+      if (this.itemtypeValue == CBORObjectTypeTagged) {
+        return (CBORObject)this.itemValue;
+      }
+      return this;
     }
 
-    private static int MapCompare(
-      Map<CBORObject,
-      CBORObject> mapA,
-      Map<CBORObject,
-      CBORObject> mapB) {
+    private static int MapCompare(Map<CBORObject, CBORObject> mapA, Map<CBORObject, CBORObject> mapB) {
       if (mapA == null) {
         return (mapB == null) ? 0 : -1;
       }
@@ -2497,9 +2492,9 @@ public void set(String key, CBORObject value) {
      * number to a <code>double</code> and writes that <code>double</code>
      * . If negative zero should not be written this way, use the Plus method
      * to convert the value beforehand.</li> <li>If the value has an exponent
-     * of zero, writes the value as a big number, unsigned integer or signed
-     * integer, whichever takes up the least space.</li> <li>In all other
-     * cases, writes the value as a big float.</li> </ul>
+     * of zero, writes the value as an unsigned integer or signed integer
+     * if the number can fit either type or as a big integer otherwise.</li>
+     * <li>In all other cases, writes the value as a big float.</li> </ul>
      * @param bignum An ExtendedFloat object.
      * @param stream A writable data stream.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -2541,9 +2536,10 @@ public void set(String key, CBORObject value) {
      * number to a <code>double</code> and writes that <code>double</code>
      * . If negative zero should not be written this way, use the Plus method
      * to convert the value beforehand.</li> <li>If the value has an exponent
-     * of zero, writes the value as a big number, unsigned integer or signed
-     * integer, whichever takes up the least space.</li> <li>In all other
-     * cases, writes the value as a decimal fraction.</li> </ul>
+     * of zero, writes the value as an unsigned integer or signed integer
+     * if the number can fit either type or as a big integer otherwise.</li>
+     * <li>In all other cases, writes the value as a decimal fraction.</li>
+     * </ul>
      * @param bignum Decimal fraction to write. Can be null.
      * @param stream InputStream to write to.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -2616,18 +2612,19 @@ public void set(String key, CBORObject value) {
           // Ignore trailing zero bytes
           --byteCount;
         }
-        if (byteCount == 0) {
-          WritePositiveInt64(datatype, 0, stream);
-          return;
-        }
-        int half = byteCount >> 1;
-        int right = byteCount - 1;
-        for (int i = 0; i < half; ++i, --right) {
-          byte value = bytes[i];
-          bytes[i] = bytes[right];
-          bytes[right] = value;
+        if (byteCount != 0) {
+          int half = byteCount >> 1;
+          int right = byteCount - 1;
+          for (int i = 0; i < half; ++i, --right) {
+            byte value = bytes[i];
+            bytes[i] = bytes[right];
+            bytes[right] = value;
+          }
         }
         switch (byteCount) {
+          case 0:
+            stream.write((byte)(datatype << 5));
+            return;
           case 1:
             WritePositiveInt(datatype, ((int)bytes[0]) & 0xFF, stream);
             break;
@@ -3604,7 +3601,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             Map<CBORObject, CBORObject> objMap = this.AsMap();
             // Sort the items by key for consistent results
             if (objMap.size() >= 2) {
-            objMap = new TreeMap<CBORObject, CBORObject>(objMap);
+              objMap = new TreeMap<CBORObject, CBORObject>(objMap);
             }
             sb.append('{');
             int oldLength = sb.length();
@@ -3639,7 +3636,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
                 stringMap.put(str,value);
               }
               if (stringMap.size() >= 2) {
-               stringMap = new TreeMap<String, CBORObject>(stringMap);
+                stringMap = new TreeMap<String, CBORObject>(stringMap);
               }
               first = true;
               for(Map.Entry<String, CBORObject> entry : stringMap.entrySet()) {
@@ -4097,7 +4094,12 @@ public static CBORObject FromObject(Object obj) {
     /**
      * Generates a CBOR object from an arbitrary object and gives the resulting
      * object a tag.
-     * @param valueOb An arbitrary object.
+     * @param valueOb An arbitrary object. If the tag number is 2 or 3, this
+     * must be a byte string whose bytes represent an integer in little-endian
+     * byte order, and the value of the number is 1 minus the integer&apos;s
+     * value for tag 3. If the tag number is 4 or 5, this must be an array with
+     * two elements: the first must be an integer representing the exponent,
+     * and the second must be an integer representing a mantissa.
      * @param bigintTag Tag number. The tag number 55799 can be used to mark
      * a &quot;self-described CBOR&quot; object.
      * @return A CBOR object where the object {@code valueOb} is converted
@@ -4147,7 +4149,12 @@ public static CBORObject FromObject(Object obj) {
     /**
      * Generates a CBOR object from an arbitrary object and gives the resulting
      * object a tag.
-     * @param valueObValue An arbitrary object.
+     * @param valueObValue An arbitrary object. If the tag number is 2 or
+     * 3, this must be a byte string whose bytes represent an integer in little-endian
+     * byte order, and the value of the number is 1 minus the integer&apos;s
+     * value for tag 3. If the tag number is 4 or 5, this must be an array with
+     * two elements: the first must be an integer representing the exponent,
+     * and the second must be an integer representing a mantissa.
      * @param smallTag A 32-bit integer that specifies a tag number. The
      * tag number 55799 can be used to mark a &quot;self-described CBOR&quot;
      * object.
@@ -4370,7 +4377,7 @@ public static CBORObject FromObject(Object obj) {
         sb.append("{");
         Map<CBORObject, CBORObject> map = this.AsMap();
         if (map.size() >= 2) {
-         map = new TreeMap<CBORObject, CBORObject>(map);
+          map = new TreeMap<CBORObject, CBORObject>(map);
         }
         for(Map.Entry<CBORObject, CBORObject> entry : map.entrySet()) {
           CBORObject key = entry.getKey();
