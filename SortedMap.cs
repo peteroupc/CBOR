@@ -15,9 +15,9 @@ namespace PeterO {
     /// <typeparam name='T1'>The type of each key.</typeparam>
     /// <typeparam name='T2'>The type of each value.</typeparam>
   internal class SortedMap<T1, T2> : IDictionary<T1, T2> {
-    private RedBlackTree<KeyValuePair<T1, T2 >> tree;
+    private RedBlackTree<KeyValuePair<T1, T2>> tree;
 
-    private static IComparer<KeyValuePair<T1, T2 >> comp = new KeyComparer();
+    private static IComparer<KeyValuePair<T1, T2>> comp = new KeyComparer();
 
     private sealed class KeyComparer : IComparer<KeyValuePair<T1, T2>> {
       private static IComparer<T1> keyComp = Comparer<T1>.Default;
@@ -37,21 +37,22 @@ namespace PeterO {
     /// <summary>Adds two T1 objects.</summary>
     /// <param name='key'>A T1 object.</param>
     /// <param name='value'>A T2 object.</param>
-public void Add(T1 key, T2 value) {
+    public void Add(T1 key, T2 value) {
       if (!this.tree.AddIfMissing(new KeyValuePair<T1, T2>(key, value))) {
- throw new InvalidOperationException("Key already exists");
-}
+        throw new InvalidOperationException("Key already exists");
+      }
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='key'>A T1 object.</param>
     /// <returns>A Boolean object.</returns>
-public bool ContainsKey(T1 key) {
+    public bool ContainsKey(T1 key) {
       return this.tree.Contains(new KeyValuePair<T1, T2>(key, default(T2)));
     }
 
-    /// <summary/><value></value>
-public ICollection<T1> Keys {
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+    public ICollection<T1> Keys {
       get {
         var list = new List<T1>();
         foreach (var item in this.tree) {
@@ -64,7 +65,7 @@ public ICollection<T1> Keys {
     /// <summary>Not documented yet.</summary>
     /// <param name='key'>A T1 object.</param>
     /// <returns>A Boolean object.</returns>
-public bool Remove(T1 key) {
+    public bool Remove(T1 key) {
       return this.tree.Remove(new KeyValuePair<T1, T2>(key, default(T2)));
     }
 
@@ -72,7 +73,7 @@ public bool Remove(T1 key) {
     /// <param name='key'>A T1 object.</param>
     /// <param name='value'>A T2 object.</param>
     /// <returns>A Boolean object.</returns>
-public bool TryGetValue(T1 key, out T2 value) {
+    public bool TryGetValue(T1 key, out T2 value) {
       KeyValuePair<T1, T2> kvp;
       if (this.tree.Find(new KeyValuePair<T1, T2>(key, default(T2)), out kvp)) {
         value = kvp.Value;
@@ -83,10 +84,10 @@ public bool TryGetValue(T1 key, out T2 value) {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Gets a value not documented yet.</summary>
     /// <returns>A T2 object.</returns>
     /// <param name='key'>A T1 object.</param>
-public ICollection<T2> Values {
+    public ICollection<T2> Values {
       get {
         var list = new List<T2>();
         foreach (var item in this.tree) {
@@ -113,51 +114,53 @@ public ICollection<T2> Values {
 
     /// <summary>Not documented yet.</summary>
     /// <param name='item'>A KeyValuePair object.</param>
-public void Add(KeyValuePair<T1, T2> item) {
+    public void Add(KeyValuePair<T1, T2> item) {
       this.tree.Add(item);
     }
 
     /// <summary>Not documented yet.</summary>
-public void Clear() {
+    public void Clear() {
       this.tree.Clear();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='item'>A KeyValuePair object.</param>
     /// <returns>A Boolean object.</returns>
-public bool Contains(KeyValuePair<T1, T2> item) {
+    public bool Contains(KeyValuePair<T1, T2> item) {
       return this.tree.Contains(item);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='array'>A KeyValuePair[] object.</param>
     /// <param name='arrayIndex'>A 32-bit signed integer.</param>
-public void CopyTo(KeyValuePair<T1, T2>[] array, int arrayIndex) {
+    public void CopyTo(KeyValuePair<T1, T2>[] array, int arrayIndex) {
       this.tree.CopyTo(array, arrayIndex);
     }
 
-    /// <summary/><value></value>
-public int Count {
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+    public int Count {
       get {
- return this.tree.Count;
-}
+        return this.tree.Count;
+      }
     }
 
-    /// <summary/><value></value>
-public bool IsReadOnly {
+    /// <summary>Gets a value indicating whether this map is read-only.</summary>
+    /// <value>Always false.</value>
+    public bool IsReadOnly {
       get {
- return false;
-}
+        return false;
+      }
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='item'>A KeyValuePair object.</param>
     /// <returns>A Boolean object.</returns>
-public bool Remove(KeyValuePair<T1, T2> item) {
+    public bool Remove(KeyValuePair<T1, T2> item) {
       return this.tree.Remove(item);
     }
 
-    public IEnumerator<KeyValuePair<T1, T2 >> GetEnumerator() {
+    public IEnumerator<KeyValuePair<T1, T2>> GetEnumerator() {
       return this.tree.GetEnumerator();
     }
 

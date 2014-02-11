@@ -78,7 +78,7 @@ import com.upokecenter.util.*;
         int x = rand.NextValue(100);
         if (x < 95) {
           // ASCII
-          sb.append((char)(rand.NextValue(0x60) +0x20));
+          sb.append((char)(0x20 + rand.NextValue(0x60)));
         } else if (x < 98) {
           // Supplementary character
           x = rand.NextValue(0x400) + 0xD800;
@@ -87,10 +87,10 @@ import com.upokecenter.util.*;
           sb.append((char)x);
         } else {
           // BMP character
-          x = rand.NextValue(0xFFE0) +0x20;
+          x = 0x20 + rand.NextValue(0xFFE0);
           if (x >= 0xD800 && x < 0xE000) {
             // surrogate code unit, generate ASCII instead
-            x = rand.NextValue(0x60) +0x20;
+            x = 0x20 + rand.NextValue(0x60);
           }
           sb.append((char)x);
         }
@@ -621,15 +621,15 @@ import com.upokecenter.util.*;
     @Test
     public void TestJSONBase64() {
       CBORObject o;
-      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8 }, 22);
+      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  }, 22);
       Assert.assertEquals("\"mtbw6A\"", o.ToJSONString());
-      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8 });
+      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  });
       Assert.assertEquals("\"mtbw6A\"", o.ToJSONString());
-      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8 }, 23);
+      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  }, 23);
       Assert.assertEquals("\"9AD6F0E8\"", o.ToJSONString());
-      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8 });
+      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8  });
       Assert.assertEquals("\"mtb_6A\"", o.ToJSONString());  // Encode with Base64URL by default
-      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8 }, 22);
+      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8  }, 22);
       Assert.assertEquals("\"mtb/6A\"", o.ToJSONString());  // Encode with Base64
     }
 
@@ -7162,7 +7162,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     @Test
     public void TestCBORBigInteger() {
-      CBORObject o = CBORObject.DecodeFromBytes(new byte[] {  0x3B, (byte)0xCE, (byte)0xE2, 0x5A, 0x57, (byte)0xD8, 0x21, (byte)0xB9, (byte)0xA7 });
+      CBORObject o = CBORObject.DecodeFromBytes(new byte[] {  0x3B, (byte)0xCE, (byte)0xE2, 0x5A, 0x57, (byte)0xD8, 0x21, (byte)0xB9, (byte)0xA7  });
       Assert.assertEquals(BigInteger.fromString("-14907577049884506536"), o.AsBigInteger());
     }
 

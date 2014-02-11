@@ -492,7 +492,7 @@ namespace PeterO {
               if (a == b) {
                 cmp = 0;
               } else {
-               cmp = (a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -507,7 +507,7 @@ namespace PeterO {
               } else if (a == b) {
                 cmp = 0;
               } else {
-               cmp = (a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -516,7 +516,7 @@ namespace PeterO {
               BigInteger bigintB = (BigInteger)objB;
               cmp = bigintA.CompareTo(bigintB);
               break;
-           }
+            }
             case CBORObjectTypeDouble: {
               double a = (double)objA;
               double b = (double)objB;
@@ -528,7 +528,7 @@ namespace PeterO {
               } else if (a == b) {
                 cmp = 0;
               } else {
-               cmp = (a < b) ? -1 : 1;
+                cmp = (a < b) ? -1 : 1;
               }
               break;
             }
@@ -1051,11 +1051,11 @@ namespace PeterO {
     /// returned object will be reflected in this one.</summary>
     /// <returns>A CBORObject object.</returns>
     public CBORObject Untag() {
-        CBORObject curobject = this;
-        while (curobject.itemtypeValue == CBORObjectTypeTagged) {
-          curobject = (CBORObject)curobject.itemValue;
-        }
-        return curobject;
+      CBORObject curobject = this;
+      while (curobject.itemtypeValue == CBORObjectTypeTagged) {
+        curobject = (CBORObject)curobject.itemValue;
+      }
+      return curobject;
     }
 
     /// <summary>Gets an object with the same value as this one but without
@@ -1064,17 +1064,13 @@ namespace PeterO {
     /// so changes to the returned object will be reflected in this one.</summary>
     /// <returns>A CBORObject object.</returns>
     public CBORObject UntagOne() {
-        if (this.itemtypeValue == CBORObjectTypeTagged) {
-          return (CBORObject)this.itemValue;
-        }
-        return this;
+      if (this.itemtypeValue == CBORObjectTypeTagged) {
+        return (CBORObject)this.itemValue;
+      }
+      return this;
     }
 
-    private static int MapCompare(
-      IDictionary<CBORObject,
-      CBORObject> mapA,
-      IDictionary<CBORObject,
-      CBORObject> mapB) {
+    private static int MapCompare(IDictionary<CBORObject, CBORObject> mapA, IDictionary<CBORObject, CBORObject> mapB) {
       if (mapA == null) {
         return (mapB == null) ? 0 : -1;
       }
@@ -2481,9 +2477,9 @@ namespace PeterO {
     /// and writes that <code>double</code>
     /// . If negative zero should not be written this way, use the Plus method
     /// to convert the value beforehand.</item>
-    /// <item>If the value has an exponent of zero, writes the value as a big
-    /// number, unsigned integer or signed integer, whichever takes up the
-    /// least space.</item>
+    /// <item>If the value has an exponent of zero, writes the value as an unsigned
+    /// integer or signed integer if the number can fit either type or as a big
+    /// integer otherwise.</item>
     /// <item>In all other cases, writes the value as a big float.</item>
     /// </list>
     /// </summary>
@@ -2528,9 +2524,9 @@ namespace PeterO {
     /// and writes that <code>double</code>
     /// . If negative zero should not be written this way, use the Plus method
     /// to convert the value beforehand.</item>
-    /// <item>If the value has an exponent of zero, writes the value as a big
-    /// number, unsigned integer or signed integer, whichever takes up the
-    /// least space.</item>
+    /// <item>If the value has an exponent of zero, writes the value as an unsigned
+    /// integer or signed integer if the number can fit either type or as a big
+    /// integer otherwise.</item>
     /// <item>In all other cases, writes the value as a decimal fraction.</item>
     /// </list>
     /// </summary>
@@ -2603,18 +2599,19 @@ namespace PeterO {
           // Ignore trailing zero bytes
           --byteCount;
         }
-        if (byteCount == 0) {
-          WritePositiveInt64(datatype, 0, stream);
-          return;
-        }
-        int half = byteCount >> 1;
-        int right = byteCount - 1;
-        for (int i = 0; i < half; ++i, --right) {
-          byte value = bytes[i];
-          bytes[i] = bytes[right];
-          bytes[right] = value;
+        if (byteCount != 0) {
+          int half = byteCount >> 1;
+          int right = byteCount - 1;
+          for (int i = 0; i < half; ++i, --right) {
+            byte value = bytes[i];
+            bytes[i] = bytes[right];
+            bytes[right] = value;
+          }
         }
         switch (byteCount) {
+          case 0:
+            stream.WriteByte((byte)(datatype << 5));
+            return;
           case 1:
             WritePositiveInt(datatype, ((int)bytes[0]) & 0xFF, stream);
             break;
@@ -3570,7 +3567,7 @@ namespace PeterO {
             IDictionary<CBORObject, CBORObject> objMap = this.AsMap();
             // Sort the items by key for consistent results
             if (objMap.Count >= 2) {
-            objMap = new SortedMap<CBORObject, CBORObject>(objMap);
+              objMap = new SortedMap<CBORObject, CBORObject>(objMap);
             }
             sb.Append('{');
             int oldLength = sb.Length;
@@ -3605,7 +3602,7 @@ namespace PeterO {
                 stringMap[str] = value;
               }
               if (stringMap.Count >= 2) {
-               stringMap = new SortedMap<string, CBORObject>(stringMap);
+                stringMap = new SortedMap<string, CBORObject>(stringMap);
               }
               first = true;
               foreach (KeyValuePair<string, CBORObject> entry in stringMap) {
@@ -4036,7 +4033,12 @@ namespace PeterO {
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='bigintTag'/> is less than 0 or greater than 2^64-1, or <paramref
     /// name='valueOb'/>'s type is unsupported.</exception>
-    /// <param name='valueOb'>An arbitrary object.</param>
+    /// <param name='valueOb'>An arbitrary object. If the tag number is
+    /// 2 or 3, this must be a byte string whose bytes represent an integer in
+    /// little-endian byte order, and the value of the number is 1 minus the
+    /// integer&apos;s value for tag 3. If the tag number is 4 or 5, this must
+    /// be an array with two elements: the first must be an integer representing
+    /// the exponent, and the second must be an integer representing a mantissa.</param>
     /// <param name='bigintTag'>Tag number. The tag number 55799 can be
     /// used to mark a &quot;self-described CBOR&quot; object.</param>
     public static CBORObject FromObjectAndTag(object valueOb, BigInteger bigintTag) {
@@ -4079,7 +4081,12 @@ namespace PeterO {
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
-    /// <param name='valueObValue'>An arbitrary object.</param>
+    /// <param name='valueObValue'>An arbitrary object. If the tag number
+    /// is 2 or 3, this must be a byte string whose bytes represent an integer
+    /// in little-endian byte order, and the value of the number is 1 minus
+    /// the integer&apos;s value for tag 3. If the tag number is 4 or 5, this
+    /// must be an array with two elements: the first must be an integer representing
+    /// the exponent, and the second must be an integer representing a mantissa.</param>
     /// <param name='smallTag'>A 32-bit integer that specifies a tag number.
     /// The tag number 55799 can be used to mark a &quot;self-described CBOR&quot;
     /// object.</param>
@@ -4300,7 +4307,7 @@ namespace PeterO {
         sb.Append("{");
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         if (map.Count >= 2) {
-         map = new SortedMap<CBORObject, CBORObject>(map);
+          map = new SortedMap<CBORObject, CBORObject>(map);
         }
         foreach (KeyValuePair<CBORObject, CBORObject> entry in map) {
           CBORObject key = entry.Key;

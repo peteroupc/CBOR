@@ -76,7 +76,7 @@ namespace Test {
         int x = rand.NextValue(100);
         if (x < 95) {
           // ASCII
-          sb.Append((char)(rand.NextValue(0x60) +0x20));
+          sb.Append((char)(0x20 + rand.NextValue(0x60)));
         } else if (x < 98) {
           // Supplementary character
           x = rand.NextValue(0x400) + 0xD800;
@@ -85,10 +85,10 @@ namespace Test {
           sb.Append((char)x);
         } else {
           // BMP character
-          x = rand.NextValue(0xFFE0) +0x20;
+          x = 0x20 + rand.NextValue(0xFFE0);
           if (x >= 0xD800 && x < 0xE000) {
             // surrogate code unit, generate ASCII instead
-            x = rand.NextValue(0x60) +0x20;
+            x = 0x20 + rand.NextValue(0x60);
           }
           sb.Append((char)x);
         }
@@ -628,15 +628,15 @@ namespace Test {
     [Test]
     public void TestJSONBase64() {
       CBORObject o;
-      o = CBORObject.FromObjectAndTag(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8}, 22);
+      o = CBORObject.FromObjectAndTag(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 }, 22);
       Assert.AreEqual("\"mtbw6A\"", o.ToJSONString());
-      o = CBORObject.FromObject(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8});
+      o = CBORObject.FromObject(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 });
       Assert.AreEqual("\"mtbw6A\"", o.ToJSONString());
-      o = CBORObject.FromObjectAndTag(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8}, 23);
+      o = CBORObject.FromObjectAndTag(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 }, 23);
       Assert.AreEqual("\"9AD6F0E8\"", o.ToJSONString());
-      o = CBORObject.FromObject(new byte[] { 0x9a, 0xd6, 0xff, 0xe8});
+      o = CBORObject.FromObject(new byte[] { 0x9a, 0xd6, 0xff, 0xe8 });
       Assert.AreEqual("\"mtb_6A\"", o.ToJSONString());  // Encode with Base64URL by default
-      o = CBORObject.FromObjectAndTag(new byte[] { 0x9a, 0xd6, 0xff, 0xe8}, 22);
+      o = CBORObject.FromObjectAndTag(new byte[] { 0x9a, 0xd6, 0xff, 0xe8 }, 22);
       Assert.AreEqual("\"mtb/6A\"", o.ToJSONString());  // Encode with Base64
     }
 
@@ -7084,7 +7084,7 @@ namespace Test {
 
     [Test]
     public void TestCBORBigInteger() {
-      CBORObject o = CBORObject.DecodeFromBytes(new byte[] { 0x3B, (byte)0xCE, (byte)0xE2, 0x5A, 0x57, (byte)0xD8, 0x21, (byte)0xB9, (byte)0xA7});
+      CBORObject o = CBORObject.DecodeFromBytes(new byte[] { 0x3B, (byte)0xCE, (byte)0xE2, 0x5A, 0x57, (byte)0xD8, 0x21, (byte)0xB9, (byte)0xA7 });
       Assert.AreEqual(BigInteger.fromString("-14907577049884506536"), o.AsBigInteger());
     }
 
