@@ -113,11 +113,11 @@ namespace PeterO {
     #endregion
 
     /// <summary>Creates a number with the value exponent*2^mantissa.</summary>
-    /// <param name='mantissa'>The un-scaled value.</param>
-    /// <param name='exponent'>The binary exponent.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
-    public static ExtendedFloat Create(int mantissa, int exponent) {
-      return Create((BigInteger)mantissa, (BigInteger)exponent);
+    /// <param name='mantissaSmall'>The un-scaled value.</param>
+    /// <param name='exponentSmall'>The binary exponent.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public static ExtendedFloat Create(int mantissaSmall, int exponentSmall) {
+      return Create((BigInteger)mantissaSmall, (BigInteger)exponentSmall);
     }
 
     /// <summary>Creates a number with the value exponent*2^mantissa.</summary>

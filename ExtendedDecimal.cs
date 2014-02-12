@@ -138,11 +138,11 @@ namespace PeterO {
     #endregion
 
     /// <summary>Creates a decimal number with the value exponent*10^mantissa.</summary>
-    /// <param name='mantissa'>The un-scaled value.</param>
-    /// <param name='exponent'>The decimal exponent.</param>
+    /// <param name='mantissaSmall'>The un-scaled value.</param>
+    /// <param name='exponentSmall'>The decimal exponent.</param>
     /// <returns>An ExtendedDecimal object.</returns>
-    public static ExtendedDecimal Create(int mantissa, int exponent) {
-      return Create((BigInteger)mantissa, (BigInteger)exponent);
+    public static ExtendedDecimal Create(int mantissaSmall, int exponentSmall) {
+      return Create((BigInteger)mantissaSmall, (BigInteger)exponentSmall);
     }
 
     /// <summary>Creates a decimal number with the value exponent*10^mantissa.</summary>

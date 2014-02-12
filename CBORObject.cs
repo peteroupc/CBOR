@@ -1446,6 +1446,9 @@ namespace PeterO {
                 CBORObjectTypeDouble,
                 BitConverter.ToDouble(BitConverter.GetBytes((long)uadditional), 0));
             } else if (firstbyte == 0xf8) {
+              if ((int)uadditional < 32) {
+                throw new CBORException("Invalid overlong simple value");
+              }
               return new CBORObject(
                 CBORObjectTypeSimpleValue,
                 (int)uadditional);
@@ -2700,6 +2703,12 @@ namespace PeterO {
         if (value < 24) {
           stream.WriteByte((byte)(0xE0 + value));
         } else {
+          #if DEBUG
+          if (value < 32) {
+            throw new ArgumentException("value (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "32");
+          }
+          #endif
+
           stream.WriteByte(0xF8);
           stream.WriteByte((byte)value);
         }
@@ -3679,6 +3688,29 @@ namespace PeterO {
     /// <returns>A new CBOR map.</returns>
     public static CBORObject NewMap() {
       return FromObject(new Dictionary<CBORObject, CBORObject>());
+    }
+
+    /// <summary>Creates a CBOR object from a simple value number.</summary>
+    /// <param name='simpleValue'>A 32-bit signed integer.</param>
+    /// <returns>A CBORObject object.</returns>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='simpleValue'/> is less than 0, greater than 255, or from 24
+    /// through 31.</exception>
+    public static CBORObject FromSimpleValue(int simpleValue) {
+      if (simpleValue < 0) {
+        throw new ArgumentException("simpleValue (" + Convert.ToString((long)simpleValue, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+      }
+      if (simpleValue > 255) {
+        throw new ArgumentException("simpleValue (" + Convert.ToString((long)simpleValue, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + "255");
+      }
+      if (simpleValue >= 24 && simpleValue < 32) {
+        throw new ArgumentException("Simple value is from 24 to 31: " + simpleValue);
+      }
+      if (simpleValue < 32) {
+        return GetFixedLengthObject(0xE0 + simpleValue, new byte[] { });
+      } else {
+        return GetFixedLengthObject(0xF8, new byte[] { (byte)simpleValue });
+      }
     }
 
     /// <summary>Generates a CBOR object from a 64-bit signed integer.</summary>

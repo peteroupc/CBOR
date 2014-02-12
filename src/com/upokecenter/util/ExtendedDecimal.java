@@ -127,7 +127,7 @@ at: http://peteroupc.github.io/CBOR/
     @Override public int hashCode() {
       int hashCode_ = 0;
       {
-        hashCode_ += 1000000007 * this.exponent;
+        hashCode_ += 1000000007 * this.exponent.hashCode();
         hashCode_ += 1000000009 * this.unsignedMantissa.hashCode();
         hashCode_ += 1000000009 * this.flags;
       }
@@ -136,12 +136,12 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Creates a decimal number with the value exponent*10^mantissa.
-     * @param mantissa The un-scaled value.
-     * @param exponent The decimal exponent.
+     * @param mantissaSmall The un-scaled value.
+     * @param exponentSmall The decimal exponent.
      * @return An ExtendedDecimal object.
      */
-    public static ExtendedDecimal Create(int mantissa, int exponent) {
-      return Create(BigInteger.valueOf(mantissa), BigInteger.valueOf(exponent));
+    public static ExtendedDecimal Create(int mantissaSmall, int exponentSmall) {
+      return Create(BigInteger.valueOf(mantissaSmall), BigInteger.valueOf(exponentSmall));
     }
 
     /**
@@ -160,7 +160,7 @@ at: http://peteroupc.github.io/CBOR/
       ExtendedDecimal ex = new ExtendedDecimal();
       ex.exponent = exponent;
       int sign = mantissa == null ? 0 : mantissa.signum();
-      ex.unsignedMantissa = sign < 0 ? (BigInteger.valueOf(mantissa).negate()) : mantissa;
+      ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
       ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
       return ex;
     }

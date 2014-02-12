@@ -105,7 +105,7 @@ at: http://peteroupc.github.io/CBOR/
     @Override public int hashCode() {
       int hashCode_ = 0;
       {
-        hashCode_ += 1000000007 * this.exponent;
+        hashCode_ += 1000000007 * this.exponent.hashCode();
         hashCode_ += 1000000009 * this.unsignedMantissa.hashCode();
         hashCode_ += 1000000009 * this.flags;
       }
@@ -114,12 +114,12 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Creates a number with the value exponent*2^mantissa.
-     * @param mantissa The un-scaled value.
-     * @param exponent The binary exponent.
-     * @return An ExtendedDecimal object.
+     * @param mantissaSmall The un-scaled value.
+     * @param exponentSmall The binary exponent.
+     * @return An ExtendedFloat object.
      */
-    public static ExtendedFloat Create(int mantissa, int exponent) {
-      return Create(BigInteger.valueOf(mantissa), BigInteger.valueOf(exponent));
+    public static ExtendedFloat Create(int mantissaSmall, int exponentSmall) {
+      return Create(BigInteger.valueOf(mantissaSmall), BigInteger.valueOf(exponentSmall));
     }
 
     /**
@@ -138,7 +138,7 @@ at: http://peteroupc.github.io/CBOR/
       ExtendedFloat ex = new ExtendedFloat();
       ex.exponent = exponent;
       int sign = mantissa == null ? 0 : mantissa.signum();
-      ex.unsignedMantissa = sign < 0 ? (BigInteger.valueOf(mantissa).negate()) : mantissa;
+      ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
       ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
       return ex;
     }

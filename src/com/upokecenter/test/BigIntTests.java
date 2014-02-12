@@ -2219,8 +2219,8 @@ bigintRem=divrem[1]; }
         BigInteger bigprime=BigInteger.valueOf(prime);
         BigInteger ba = CBORTest.RandomBigInteger(rand);
         if (ba.signum()==0) {
- continue;
-}
+          continue;
+        }
         ba=ba.multiply(bigprime);
         Assert.assertEquals(bigprime, bigprime.gcd(ba));
       }
