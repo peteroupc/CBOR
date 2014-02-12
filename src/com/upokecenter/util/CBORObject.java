@@ -1419,6 +1419,9 @@ public boolean equals(CBORObject other) {
                 CBORObjectTypeDouble,
                 Double.longBitsToDouble(uadditional));
             } else if (firstbyte == 0xf8) {
+              if ((int)uadditional < 32) {
+                throw new CBORException("Invalid overlong simple value");
+              }
               return new CBORObject(
                 CBORObjectTypeSimpleValue,
                 (int)uadditional);
@@ -2715,6 +2718,7 @@ public void set(String key, CBORObject value) {
         if (value < 24) {
           stream.write((byte)(0xE0 + value));
         } else {
+
           stream.write(0xF8);
           stream.write((byte)value);
         }
@@ -3723,6 +3727,30 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject NewMap() {
       return FromObject(new HashMap<CBORObject, CBORObject>());
+    }
+
+    /**
+     * Creates a CBOR object from a simple value number.
+     * @param simpleValue A 32-bit signed integer.
+     * @return A CBORObject object.
+     * @throws java.lang.IllegalArgumentException The parameter {@code simpleValue}
+     * is less than 0, greater than 255, or from 24 through 31.
+     */
+    public static CBORObject FromSimpleValue(int simpleValue) {
+      if (simpleValue < 0) {
+        throw new IllegalArgumentException("simpleValue (" + Long.toString((long)simpleValue) + ") is not greater or equal to " + "0");
+      }
+      if (simpleValue > 255) {
+        throw new IllegalArgumentException("simpleValue (" + Long.toString((long)simpleValue) + ") is not less or equal to " + "255");
+      }
+      if (simpleValue >= 24 && simpleValue < 32) {
+        throw new IllegalArgumentException("Simple value is from 24 to 31: " + simpleValue);
+      }
+      if (simpleValue < 32) {
+        return GetFixedLengthObject(0xE0 + simpleValue, new byte[] {   });
+      } else {
+        return GetFixedLengthObject(0xF8, new byte[] {  (byte)simpleValue  });
+      }
     }
 
     /**

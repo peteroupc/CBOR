@@ -483,6 +483,47 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     }
 
     /**
+     * Reads a string in UTF-8 encoding from a data stream in full and returns
+     * that string. Replaces invalid encoding with the replacement character
+     * (U + FFFD).
+     * @param stream A readable data stream.
+     * @return The string read.
+     * @throws java.io.IOException An I/O error occurred.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null or "builder" is null.
+     */
+    public static String ReadUtf8ToString(
+      InputStream stream) throws IOException {
+        return ReadUtf8(stream, -1, true);
+      }
+
+    /**
+     * Reads a string in UTF-8 encoding from a data stream and returns that
+     * string.
+     * @param stream A readable data stream.
+     * @param bytesCount The length, in bytes, of the string. If this is less
+     * than 0, this function will read until the end of the stream.
+     * @param replace If true, replaces invalid encoding with the replacement
+     * character (U + FFFD). If false, throws an error if an unpaired surrogate
+     * code point is seen.
+     * @return The string read.
+     * @throws java.io.IOException An I/O error occurred; or, the string
+     * is not valid UTF-8 and {@code replace} is false.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null or "builder" is null.
+     */
+    public static String ReadUtf8ToString(
+      InputStream stream,
+      int bytesCount,
+      boolean replace) throws IOException {
+     StringBuilder builder = new StringBuilder();
+        int retval = DataUtilities.ReadUtf8(stream, bytesCount, replace);
+        if (retval==-1) {
+          throw new IOException("Unpaired surrogate code point found.", new java.nio.charset.MalformedInputException(1));
+        }
+      }
+
+    /**
      * Reads a string in UTF-8 encoding from a data stream.
      * @param stream A readable data stream.
      * @param bytesCount The length, in bytes, of the string. If this is less
@@ -494,7 +535,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * surrogate code point is seen.
      * @return 0 if the entire string was read without errors, -1 if the string
      * is not valid UTF-8 and {@code replace} is false, or -2 if the end of the
-     * stream was reached before the last character was read completely.
+     * stream was reached before the last character was read completely
+     * (which is only the case if {@code bytesCount} is 0 or greater).
      * @throws java.io.IOException An I/O error occurred.
      * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null or {@code builder} is null.

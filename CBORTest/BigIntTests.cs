@@ -2211,8 +2211,8 @@ namespace Test
         BigInteger bigprime=(BigInteger)prime;
         BigInteger ba = CBORTest.RandomBigInteger(rand);
         if (ba.IsZero) {
- continue;
-}
+          continue;
+        }
         ba*=(BigInteger)bigprime;
         Assert.AreEqual(bigprime, BigInteger.GreatestCommonDivisor(bigprime, ba));
       }

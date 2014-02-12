@@ -9700,7 +9700,7 @@ function() {
     prototype['hashCode'] = prototype.hashCode = function() {
         var hashCode_ = 0;
         {
-            hashCode_ = hashCode_ + (1000000007 * this.exponent);
+            hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
             hashCode_ = hashCode_ + (1000000009 * this.unsignedMantissa.hashCode());
             hashCode_ = hashCode_ + (1000000009 * this.flags);
         }
@@ -9716,7 +9716,7 @@ function() {
         var ex = new ExtendedDecimal();
         ex.exponent = exponent;
         var sign = mantissa == null ? 0 : mantissa.signum();
-        ex.unsignedMantissa = sign < 0 ? (BigInteger.valueOf(mantissa).negate()) : mantissa;
+        ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
         ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
         return ex;
     };
@@ -10934,7 +10934,7 @@ function() {
     prototype['hashCode'] = prototype.hashCode = function() {
         var hashCode_ = 0;
         {
-            hashCode_ = hashCode_ + (1000000007 * this.exponent);
+            hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
             hashCode_ = hashCode_ + (1000000009 * this.unsignedMantissa.hashCode());
             hashCode_ = hashCode_ + (1000000009 * this.flags);
         }
@@ -10950,7 +10950,7 @@ function() {
         var ex = new ExtendedFloat();
         ex.exponent = exponent;
         var sign = mantissa == null ? 0 : mantissa.signum();
-        ex.unsignedMantissa = sign < 0 ? (BigInteger.valueOf(mantissa).negate()) : mantissa;
+        ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
         ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
         return ex;
     };

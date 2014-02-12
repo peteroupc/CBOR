@@ -466,6 +466,44 @@ namespace PeterO {
       return 0;
     }
 
+    /// <summary>Reads a string in UTF-8 encoding from a data stream in full
+    /// and returns that string. Replaces invalid encoding with the replacement
+    /// character (U + FFFD).</summary>
+    /// <returns>The string read.</returns>
+    /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null or "builder" is null.</exception>
+    /// <param name='stream'>A readable data stream.</param>
+    public static string ReadUtf8ToString(
+      Stream stream) {
+        return ReadUtf8(stream, -1, true);
+      }
+
+    /// <summary>Reads a string in UTF-8 encoding from a data stream and returns
+    /// that string.</summary>
+    /// <param name='stream'>A readable data stream.</param>
+    /// <param name='bytesCount'>The length, in bytes, of the string. If
+    /// this is less than 0, this function will read until the end of the stream.</param>
+    /// <param name='replace'>If true, replaces invalid encoding with
+    /// the replacement character (U + FFFD). If false, throws an error if
+    /// an unpaired surrogate code point is seen.</param>
+    /// <returns>The string read.</returns>
+    /// <exception cref='System.IO.IOException'>An I/O error occurred;
+    /// or, the string is not valid UTF-8 and <paramref name='replace'/>
+    /// is false.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null or "builder" is null.</exception>
+    public static string ReadUtf8ToString(
+      Stream stream,
+      int bytesCount,
+      bool replace) {
+     StringBuilder builder = new StringBuilder();
+        int retval = DataUtilities.ReadUtf8(stream, bytesCount, replace);
+        if (retval==-1) {
+          throw new IOException("Unpaired surrogate code point found.", new DecoderFallbackException());
+        }
+      }
+
     /// <summary>Reads a string in UTF-8 encoding from a data stream.</summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <param name='bytesCount'>The length, in bytes, of the string. If
@@ -478,7 +516,8 @@ namespace PeterO {
     /// <returns>0 if the entire string was read without errors, -1 if the
     /// string is not valid UTF-8 and <paramref name='replace'/> is false,
     /// or -2 if the end of the stream was reached before the last character
-    /// was read completely.</returns>
+    /// was read completely (which is only the case if <paramref name='bytesCount'/>
+    /// is 0 or greater).</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null or <paramref name='builder'/>
