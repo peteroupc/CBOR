@@ -1296,7 +1296,7 @@ namespace Test {
       Assert.AreEqual(-(BigInteger)13, ExtendedDecimal.FromString("0e-13").Exponent);
       Assert.AreEqual(-(BigInteger)43, ExtendedDecimal.FromString("0.49495052535648555757515648e-17").Exponent);
       Assert.AreEqual((BigInteger)7, ExtendedDecimal.FromString("0.485654575150e+19").Exponent);
-      Assert.AreEqual(-(BigInteger)0, ExtendedDecimal.FromString("0.48515648e+8").Exponent);
+      Assert.AreEqual(BigInteger.Zero, ExtendedDecimal.FromString("0.48515648e+8").Exponent);
       Assert.AreEqual(-(BigInteger)45, ExtendedDecimal.FromString("0.49485251485649535552535451544956e-13").Exponent);
       Assert.AreEqual(-(BigInteger)6, ExtendedDecimal.FromString("0.565754515152575448505257e+18").Exponent);
       Assert.AreEqual((BigInteger)16, ExtendedDecimal.FromString("0e+16").Exponent);
@@ -1328,7 +1328,7 @@ namespace Test {
       Assert.AreEqual(-(BigInteger)38, ExtendedDecimal.FromString("0.5048485057535249555455e-16").Exponent);
       Assert.AreEqual(-(BigInteger)16, ExtendedDecimal.FromString("0e-16").Exponent);
       Assert.AreEqual((BigInteger)5, ExtendedDecimal.FromString("0.5354e+9").Exponent);
-      Assert.AreEqual((BigInteger)1, ExtendedDecimal.FromString("0.54e+3").Exponent);
+      Assert.AreEqual(BigInteger.One, ExtendedDecimal.FromString("0.54e+3").Exponent);
       Assert.AreEqual(-(BigInteger)38, ExtendedDecimal.FromString("0.4849525755545751574853494948e-10").Exponent);
       Assert.AreEqual(-(BigInteger)33, ExtendedDecimal.FromString("0.52514853565252565251565548e-7").Exponent);
       Assert.AreEqual(-(BigInteger)13, ExtendedDecimal.FromString("0.575151545652e-1").Exponent);

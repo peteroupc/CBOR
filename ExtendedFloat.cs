@@ -115,6 +115,14 @@ namespace PeterO {
     /// <summary>Creates a number with the value exponent*2^mantissa.</summary>
     /// <param name='mantissa'>The un-scaled value.</param>
     /// <param name='exponent'>The binary exponent.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public static ExtendedFloat Create(int mantissa, int exponent) {
+      return Create((BigInteger)mantissa, (BigInteger)exponent);
+    }
+
+    /// <summary>Creates a number with the value exponent*2^mantissa.</summary>
+    /// <param name='mantissa'>The un-scaled value.</param>
+    /// <param name='exponent'>The binary exponent.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat Create(BigInteger mantissa, BigInteger exponent) {
       if (mantissa == null) {
@@ -1766,9 +1774,9 @@ namespace PeterO {
     /// be null, as the square root function&apos;s results are generally
     /// not exact for many inputs.--.</param>
     /// <returns>The square root. Signals the flag FlagInvalid and returns
-    /// NaN if this object is less than 0 (the result would be a complex number
-    /// with a real part of 0 and an imaginary part of this object's absolute
-    /// value, but the return value is still NaN).</returns>
+    /// NaN if this object is less than 0 (the principal square root would be
+    /// a complex number with a real part of 0 and an imaginary part of this object's
+    /// absolute value, but the return value is still NaN).</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null or the precision is unlimited (the context's
     /// Precision property is 0).</exception>
@@ -1794,8 +1802,8 @@ namespace PeterO {
     }
 
     /// <summary>Finds the natural logarithm of this object, that is, the
-    /// exponent that e (the base of natural logarithms) must be raised to
-    /// in order to equal this object&apos;s value.</summary>
+    /// power (exponent) that e (the base of natural logarithms) must be raised
+    /// to in order to equal this object&apos;s value.</summary>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -1813,10 +1821,18 @@ namespace PeterO {
     }
 
     /// <summary>Finds the base-10 logarithm of this object, that is, the
-    /// exponent that the number 10 must be raised to in order to equal this
-    /// object&apos;s value.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// power (exponent) that the number 10 must be raised to in order to equal
+    /// this object&apos;s value.</summary>
+    /// <param name='ctx'>A precision context to control precision, rounding,
+    /// and exponent range of the result. If HasFlags of the context is true,
+    /// will also store the flags resulting from the operation (the flags
+    /// are in addition to the pre-existing flags). --This parameter cannot
+    /// be null, as the ln function&apos;s results are generally not exact.--.</param>
+    /// <returns>Ln(this object)/Ln(10). Signals the flag FlagInvalid
+    /// and returns NaN if this object is less than 0. Signals FlagInvalid
+    /// and returns NaN if the parameter <paramref name='ctx'/> is null or
+    /// the precision is unlimited (the context's Precision property is
+    /// 0).</returns>
     public ExtendedFloat Log10(PrecisionContext ctx) {
       return math.Log10(this, ctx);
     }

@@ -105,11 +105,21 @@ at: http://peteroupc.github.io/CBOR/
     @Override public int hashCode() {
       int hashCode_ = 0;
       {
-        hashCode_ += 1000000007 * this.exponent.hashCode();
+        hashCode_ += 1000000007 * this.exponent;
         hashCode_ += 1000000009 * this.unsignedMantissa.hashCode();
         hashCode_ += 1000000009 * this.flags;
       }
       return hashCode_;
+    }
+
+    /**
+     * Creates a number with the value exponent*2^mantissa.
+     * @param mantissa The un-scaled value.
+     * @param exponent The binary exponent.
+     * @return An ExtendedDecimal object.
+     */
+    public static ExtendedFloat Create(int mantissa, int exponent) {
+      return Create(BigInteger.valueOf(mantissa), BigInteger.valueOf(exponent));
     }
 
     /**
@@ -128,7 +138,7 @@ at: http://peteroupc.github.io/CBOR/
       ExtendedFloat ex = new ExtendedFloat();
       ex.exponent = exponent;
       int sign = mantissa == null ? 0 : mantissa.signum();
-      ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+      ex.unsignedMantissa = sign < 0 ? (BigInteger.valueOf(mantissa).negate()) : mantissa;
       ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
       return ex;
     }
@@ -1897,9 +1907,9 @@ at: http://peteroupc.github.io/CBOR/
      * null, as the square root function&apos;s results are generally not
      * exact for many inputs.--.
      * @return The square root. Signals the flag FlagInvalid and returns
-     * NaN if this object is less than 0 (the result would be a complex number
-     * with a real part of 0 and an imaginary part of this object's absolute
-     * value, but the return value is still NaN).
+     * NaN if this object is less than 0 (the principal square root would be
+     * a complex number with a real part of 0 and an imaginary part of this object's
+     * absolute value, but the return value is still NaN).
      * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
      * null or the precision is unlimited (the context's Precision property
      * is 0).
@@ -1928,7 +1938,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Finds the natural logarithm of this object, that is, the exponent
+     * Finds the natural logarithm of this object, that is, the power (exponent)
      * that e (the base of natural logarithms) must be raised to in order to
      * equal this object&apos;s value.
      * @param ctx A precision context to control precision, rounding, and
@@ -1949,11 +1959,18 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Finds the base-10 logarithm of this object, that is, the exponent
+     * Finds the base-10 logarithm of this object, that is, the power (exponent)
      * that the number 10 must be raised to in order to equal this object&apos;s
      * value.
-     * @param ctx A PrecisionContext object.
-     * @return An ExtendedFloat object.
+     * @param ctx A precision context to control precision, rounding, and
+     * exponent range of the result. If HasFlags of the context is true, will
+     * also store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). --This parameter cannot be
+     * null, as the ln function&apos;s results are generally not exact.--.
+     * @return Ln(this object)/Ln(10). Signals the flag FlagInvalid and
+     * returns NaN if this object is less than 0. Signals FlagInvalid and
+     * returns NaN if the parameter {@code ctx} is null or the precision is
+     * unlimited (the context's Precision property is 0).
      */
     public ExtendedFloat Log10(PrecisionContext ctx) {
       return math.Log10(this, ctx);

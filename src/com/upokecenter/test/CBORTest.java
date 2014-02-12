@@ -1336,7 +1336,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals((BigInteger.valueOf(13)).negate(), ExtendedDecimal.FromString("0e-13").getExponent());
       Assert.assertEquals((BigInteger.valueOf(43)).negate(), ExtendedDecimal.FromString("0.49495052535648555757515648e-17").getExponent());
       Assert.assertEquals(BigInteger.valueOf(7), ExtendedDecimal.FromString("0.485654575150e+19").getExponent());
-      Assert.assertEquals((BigInteger.ZERO).negate(), ExtendedDecimal.FromString("0.48515648e+8").getExponent());
+      Assert.assertEquals(BigInteger.ZERO, ExtendedDecimal.FromString("0.48515648e+8").getExponent());
       Assert.assertEquals((BigInteger.valueOf(45)).negate(), ExtendedDecimal.FromString("0.49485251485649535552535451544956e-13").getExponent());
       Assert.assertEquals((BigInteger.valueOf(6)).negate(), ExtendedDecimal.FromString("0.565754515152575448505257e+18").getExponent());
       Assert.assertEquals(BigInteger.valueOf(16), ExtendedDecimal.FromString("0e+16").getExponent());
