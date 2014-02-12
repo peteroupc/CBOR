@@ -3075,7 +3075,10 @@ function() {
             throw new Error("pow");
         }
         if (pow.signum() < 0) {
-            throw new Error("pow (" + (JSInteropFactory.createLong(pow).signum()) + ") is not greater or equal to " + "0");
+            throw new Error("pow (" + pow + ") is not greater or equal to 0");
+        }
+        if (mod.signum() <= 0) {
+            throw new Error("mod (" + mod + ") is not greater than 0");
         }
         var r = BigInteger.ONE;
         var v = this;
@@ -3555,7 +3558,7 @@ function() {
         }
         var rem = this.remainder(divisor);
         if (rem.signum() < 0) {
-            rem = divisor.subtract(rem);
+            rem = divisor.add(rem);
         }
         return rem;
     };
@@ -9697,7 +9700,7 @@ function() {
     prototype['hashCode'] = prototype.hashCode = function() {
         var hashCode_ = 0;
         {
-            hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
+            hashCode_ = hashCode_ + (1000000007 * this.exponent);
             hashCode_ = hashCode_ + (1000000009 * this.unsignedMantissa.hashCode());
             hashCode_ = hashCode_ + (1000000009 * this.flags);
         }
@@ -9713,7 +9716,7 @@ function() {
         var ex = new ExtendedDecimal();
         ex.exponent = exponent;
         var sign = mantissa == null ? 0 : mantissa.signum();
-        ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+        ex.unsignedMantissa = sign < 0 ? (BigInteger.valueOf(mantissa).negate()) : mantissa;
         ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
         return ex;
     };
@@ -10931,7 +10934,7 @@ function() {
     prototype['hashCode'] = prototype.hashCode = function() {
         var hashCode_ = 0;
         {
-            hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
+            hashCode_ = hashCode_ + (1000000007 * this.exponent);
             hashCode_ = hashCode_ + (1000000009 * this.unsignedMantissa.hashCode());
             hashCode_ = hashCode_ + (1000000009 * this.flags);
         }
@@ -10947,7 +10950,7 @@ function() {
         var ex = new ExtendedFloat();
         ex.exponent = exponent;
         var sign = mantissa == null ? 0 : mantissa.signum();
-        ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
+        ex.unsignedMantissa = sign < 0 ? (BigInteger.valueOf(mantissa).negate()) : mantissa;
         ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
         return ex;
     };

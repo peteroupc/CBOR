@@ -3117,7 +3117,10 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("pow");
       }
       if (pow.signum() < 0) {
-        throw new IllegalArgumentException("pow (" + Long.toString((long)pow.signum()) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("pow (" + pow + ") is not greater or equal to 0");
+      }
+      if (mod.signum() <= 0) {
+        throw new IllegalArgumentException("mod (" + mod + ") is not greater than 0");
       }
       BigInteger r = BigInteger.ONE;
       BigInteger v = this;
@@ -3732,8 +3735,8 @@ at: http://peteroupc.github.io/CBOR/
      * Finds the modulus remainder that results when this instance is divided
      * by the value of a BigInteger object. The modulus remainder is the same
      * as the normal remainder if the normal remainder is positive, and equals
-     * divisor minus normal remainder if the normal remainder is negative.
-     * @param divisor A divisor greater than 0.
+     * divisor plus normal remainder if the normal remainder is negative.
+     * @param divisor A divisor greater than 0 (the modulus).
      * @return A BigInteger object.
      * @throws ArithmeticException The parameter {@code divisor} is negative.
      */
@@ -3746,7 +3749,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       BigInteger rem = this.remainder(divisor);
       if (rem.signum() < 0) {
-        rem = divisor.subtract(rem);
+        rem = divisor.add(rem);
       }
       return rem;
     }

@@ -3410,7 +3410,10 @@ if (bytes.Length <= 0) {
         throw new ArgumentNullException("pow");
       }
       if (pow.Sign < 0) {
-        throw new ArgumentException("pow (" + Convert.ToString((long)pow.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("pow (" + pow + ") is not greater or equal to 0");
+      }
+      if (mod.Sign <= 0) {
+        throw new ArgumentException("mod (" + mod + ") is not greater than 0");
       }
       BigInteger r = BigInteger.One;
       BigInteger v = this;
@@ -4013,9 +4016,9 @@ if (bytes.Length <= 0) {
     /// <summary>Finds the modulus remainder that results when this instance
     /// is divided by the value of a BigInteger object. The modulus remainder
     /// is the same as the normal remainder if the normal remainder is positive,
-    /// and equals divisor minus normal remainder if the normal remainder
+    /// and equals divisor plus normal remainder if the normal remainder
     /// is negative.</summary>
-    /// <param name='divisor'>A divisor greater than 0.</param>
+    /// <param name='divisor'>A divisor greater than 0 (the modulus).</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArithmeticException'>The parameter <paramref
     /// name='divisor'/> is negative.</exception>
@@ -4028,7 +4031,7 @@ if (bytes.Length <= 0) {
       }
       BigInteger rem = this.remainder(divisor);
       if (rem.Sign < 0) {
-        rem = divisor.subtract(rem);
+        rem = divisor.add(rem);
       }
       return rem;
     }
