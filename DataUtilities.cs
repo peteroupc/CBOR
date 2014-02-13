@@ -476,8 +476,8 @@ namespace PeterO {
     /// <param name='stream'>A readable data stream.</param>
     public static string ReadUtf8ToString(
       Stream stream) {
-        return ReadUtf8(stream, -1, true);
-      }
+      return ReadUtf8ToString(stream, -1, true);
+    }
 
     /// <summary>Reads a string in UTF-8 encoding from a data stream and returns
     /// that string.</summary>
@@ -497,12 +497,13 @@ namespace PeterO {
       Stream stream,
       int bytesCount,
       bool replace) {
-     StringBuilder builder = new StringBuilder();
-        int retval = DataUtilities.ReadUtf8(stream, bytesCount, replace);
-        if (retval==-1) {
-          throw new IOException("Unpaired surrogate code point found.", new DecoderFallbackException());
-        }
+      StringBuilder builder = new StringBuilder();
+      int retval = DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
+      if (retval == -1) {
+        throw new IOException("Unpaired surrogate code point found.", new DecoderFallbackException());
       }
+      return builder.ToString();
+    }
 
     /// <summary>Reads a string in UTF-8 encoding from a data stream.</summary>
     /// <param name='stream'>A readable data stream.</param>
