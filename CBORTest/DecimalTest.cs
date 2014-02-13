@@ -121,8 +121,8 @@ namespace Test
         ExtendedDecimal d3 = null;
         if (op.Equals("multiply")) {
           d3 = d1.Multiply(d2, ctx);
-        } else if (op.Equals("toSci")) { /* handled below */
-        } else if (op.Equals("toEng")) { /* handled below */
+        } else if (op.Equals("toSci")) { // handled below
+        } else if (op.Equals("toEng")) { // handled below
         } else if (op.Equals("fma")) {
           d3 = d1.MultiplyAndAdd(d2, d2a, ctx);
         } else if (op.Equals("min")) {
