@@ -2154,11 +2154,11 @@ bigintRem=divrem[1]; }
       int v = x;
       while (pow != 0) {
         if ((pow & 1) != 0) {
-          r=(int)(((long)r*(long)v)%mod);
+          r=(int)(((long)r*(long)v) % mod);
         }
         pow>>= 1;
         if (pow != 0) {
-          v=(int)(((long)v*(long)v)%mod);
+          v=(int)(((long)v*(long)v) % mod);
         }
       }
       return r;

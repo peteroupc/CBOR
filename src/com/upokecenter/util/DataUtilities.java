@@ -494,8 +494,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      */
     public static String ReadUtf8ToString(
       InputStream stream) throws IOException {
-        return ReadUtf8(stream, -1, true);
-      }
+      return ReadUtf8ToString(stream, -1, true);
+    }
 
     /**
      * Reads a string in UTF-8 encoding from a data stream and returns that
@@ -516,12 +516,13 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       InputStream stream,
       int bytesCount,
       boolean replace) throws IOException {
-     StringBuilder builder = new StringBuilder();
-        int retval = DataUtilities.ReadUtf8(stream, bytesCount, replace);
-        if (retval==-1) {
-          throw new IOException("Unpaired surrogate code point found.", new java.nio.charset.MalformedInputException(1));
-        }
+      StringBuilder builder = new StringBuilder();
+      int retval = DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
+      if (retval == -1) {
+        throw new IOException("Unpaired surrogate code point found.", new java.nio.charset.MalformedInputException(1));
       }
+      return builder.toString();
+    }
 
     /**
      * Reads a string in UTF-8 encoding from a data stream.
