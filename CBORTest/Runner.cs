@@ -33,14 +33,6 @@ namespace PeterO {
 
     public static void Main(string[] args) {
       String param = null;
-      if (args.Length > 0) {
-        param = args[0];
-        Console.WriteLine(param);
-      }
-      new CBOR.ExtensiveTest().TestParser();
-      if (args.Length == 0) {
-        return;
-      }
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
@@ -51,7 +43,7 @@ namespace PeterO {
         Console.WriteLine("-------");
         if (param != null && param.Length > 0) {
           if (!type.FullName.Contains(param)) {
-            continue;
+            // continue;
           }
         }
         object test = Activator.CreateInstance(type);
@@ -64,9 +56,6 @@ namespace PeterO {
             continue;
           }
           Console.WriteLine(method.Name);
-          if (!method.Name.Contains("TestParser")) {
-            continue;
-          }
           Type exctype = null;
           foreach (var a in method.GetCustomAttributes(false)) {
             if (a is ExpectedExceptionAttribute) {

@@ -1203,7 +1203,7 @@ namespace CBOR
       TextWriter standardOut = Console.Out;
       int x = 0;
       foreach (var f in Directory.GetFiles(".")) {
-        Console.WriteLine("// " + f);
+        Console.WriteLine(f);
         bool isinput = f.Contains(".input");
         ++x;
         using (StreamReader w = new StreamReader(f)) {
@@ -1211,7 +1211,7 @@ namespace CBOR
             var ln = w.ReadLine();
             {
               try {
-                Console.SetOut(nullWriter);
+                // Console.SetOut(nullWriter);
                 if (isinput) {
                   this.ParseLineInput(ln);
                 } else {
