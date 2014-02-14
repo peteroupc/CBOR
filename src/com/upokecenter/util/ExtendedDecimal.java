@@ -1773,40 +1773,40 @@ remainder=divrem[1]; }
 
     /**
      * Adds this object and another decimal number and returns the result.
-     * @param numberObject An ExtendedDecimal object.
+     * @param otherValue An ExtendedDecimal object.
      * @return The sum of the two objects.
      */
-    public ExtendedDecimal Add(ExtendedDecimal numberObject) {
-      return this.Add(numberObject, PrecisionContext.Unlimited);
+    public ExtendedDecimal Add(ExtendedDecimal otherValue) {
+      return this.Add(otherValue, PrecisionContext.Unlimited);
     }
 
     /**
      * Subtracts an ExtendedDecimal object from this instance and returns
      * the result.
-     * @param numberObject An ExtendedDecimal object.
+     * @param otherValue An ExtendedDecimal object.
      * @return The difference of the two objects.
      */
-    public ExtendedDecimal Subtract(ExtendedDecimal numberObject) {
-      return this.Subtract(numberObject, null);
+    public ExtendedDecimal Subtract(ExtendedDecimal otherValue) {
+      return this.Subtract(otherValue, null);
     }
 
     /**
      * Subtracts an ExtendedDecimal object from this instance.
-     * @param numberObject An ExtendedDecimal object.
+     * @param otherValue An ExtendedDecimal object.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The difference of the two objects.
      */
-    public ExtendedDecimal Subtract(ExtendedDecimal numberObject, PrecisionContext ctx) {
-      if (numberObject == null) {
-        throw new NullPointerException("numberObject");
+    public ExtendedDecimal Subtract(ExtendedDecimal otherValue, PrecisionContext ctx) {
+      if (otherValue == null) {
+        throw new NullPointerException("otherValue");
       }
-      ExtendedDecimal negated = numberObject;
-      if ((numberObject.flags & BigNumberFlags.FlagNaN) == 0) {
-        int newflags = numberObject.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(numberObject.unsignedMantissa, numberObject.exponent, newflags);
+      ExtendedDecimal negated = otherValue;
+      if ((otherValue.flags & BigNumberFlags.FlagNaN) == 0) {
+        int newflags = otherValue.flags ^ BigNumberFlags.FlagNegative;
+        negated = CreateWithFlags(otherValue.unsignedMantissa, otherValue.exponent, newflags);
       }
       return this.Add(negated, ctx);
     }
@@ -1814,11 +1814,11 @@ remainder=divrem[1]; }
     /**
      * Multiplies two decimal numbers. The resulting exponent will be the
      * sum of the exponents of the two decimal numbers.
-     * @param numberObject Another decimal number.
+     * @param otherValue Another decimal number.
      * @return The product of the two decimal numbers.
      */
-    public ExtendedDecimal Multiply(ExtendedDecimal numberObject) {
-      return this.Multiply(numberObject, PrecisionContext.Unlimited);
+    public ExtendedDecimal Multiply(ExtendedDecimal otherValue) {
+      return this.Multiply(otherValue, PrecisionContext.Unlimited);
     }
 
     /**
@@ -2166,7 +2166,7 @@ remainder=divrem[1]; }
     /**
      * Finds the sum of this object and another object. The result&apos;s
      * exponent is set to the lower of the exponents of the two operands.
-     * @param numberObject The number to add to.
+     * @param otherValue The number to add to.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -2174,9 +2174,9 @@ remainder=divrem[1]; }
      * @return The sum of thisValue and the other object.
      */
     public ExtendedDecimal Add(
-      ExtendedDecimal numberObject,
+      ExtendedDecimal otherValue,
       PrecisionContext ctx) {
-      return math.Add(this, numberObject, ctx);
+      return math.Add(this, otherValue, ctx);
     }
 
     /**
@@ -2472,7 +2472,7 @@ remainder=divrem[1]; }
       ExtendedDecimal subtrahend,
       PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new NullPointerException("numberObject");
+        throw new NullPointerException("otherValue");
       }
       ExtendedDecimal negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {

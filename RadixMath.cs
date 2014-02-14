@@ -3415,32 +3415,32 @@ namespace PeterO {
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='numberObject'>A T object. (3).</param>
+    /// <param name='otherValue'>A T object. (3).</param>
     /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-    public T CompareToWithContext(T thisValue, T numberObject, bool treatQuietNansAsSignaling, PrecisionContext ctx) {
-      if (numberObject == null) {
+    public T CompareToWithContext(T thisValue, T otherValue, bool treatQuietNansAsSignaling, PrecisionContext ctx) {
+      if (otherValue == null) {
         return this.SignalInvalid(ctx);
       }
-      T result = this.CompareToHandleSpecial(thisValue, numberObject, treatQuietNansAsSignaling, ctx);
+      T result = this.CompareToHandleSpecial(thisValue, otherValue, treatQuietNansAsSignaling, ctx);
       if ((object)result != (object)default(T)) {
         return result;
       }
-      return this.ValueOf(this.CompareTo(thisValue, numberObject), null);
+      return this.ValueOf(this.CompareTo(thisValue, otherValue), null);
     }
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
-    /// <param name='numberObject'>A T object. (2).</param>
+    /// <param name='otherValue'>A T object. (2).</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    public int CompareTo(T thisValue, T numberObject) {
-      if (numberObject == null) {
+    public int CompareTo(T thisValue, T otherValue) {
+      if (otherValue == null) {
         return 1;
       }
       int flagsThis = this.helper.GetFlags(thisValue);
-      int flagsOther = this.helper.GetFlags(numberObject);
+      int flagsOther = this.helper.GetFlags(otherValue);
       if ((flagsThis & BigNumberFlags.FlagNaN) != 0) {
         if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
           return 0;
@@ -3452,12 +3452,12 @@ namespace PeterO {
         return -1;
         // Treat as less than NaN
       }
-      int s = this.CompareToHandleSpecialReturnInt(thisValue, numberObject);
+      int s = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);
       if (s <= 1) {
         return s;
       }
       s = this.helper.GetSign(thisValue);
-      int ds = this.helper.GetSign(numberObject);
+      int ds = this.helper.GetSign(otherValue);
       if (s != ds) {
         return (s < ds) ? -1 : 1;
       }
@@ -3465,10 +3465,10 @@ namespace PeterO {
         // Special case: Either operand is zero
         return 0;
       }
-      int expcmp = this.helper.GetExponent(thisValue).CompareTo((BigInteger)this.helper.GetExponent(numberObject));
+      int expcmp = this.helper.GetExponent(thisValue).CompareTo((BigInteger)this.helper.GetExponent(otherValue));
       // At this point, the signs are equal so we can compare
       // their absolute values instead
-      int mantcmp = BigInteger.Abs(this.helper.GetMantissa(thisValue)).CompareTo(BigInteger.Abs(this.helper.GetMantissa(numberObject)));
+      int mantcmp = BigInteger.Abs(this.helper.GetMantissa(thisValue)).CompareTo(BigInteger.Abs(this.helper.GetMantissa(otherValue)));
       if (s < 0) {
         mantcmp = -mantcmp;
       }
@@ -3480,7 +3480,7 @@ namespace PeterO {
         return mantcmp;
       }
       BigInteger op1Exponent = this.helper.GetExponent(thisValue);
-      BigInteger op2Exponent = this.helper.GetExponent(numberObject);
+      BigInteger op2Exponent = this.helper.GetExponent(otherValue);
       FastInteger fastOp1Exp = FastInteger.FromBig(op1Exponent);
       FastInteger fastOp2Exp = FastInteger.FromBig(op2Exponent);
       FastInteger expdiff = FastInteger.Copy(fastOp1Exp).Subtract(fastOp2Exp).Abs();
@@ -3488,7 +3488,7 @@ namespace PeterO {
       // radix-power calculation to work quickly
       if (expdiff.CompareToInt(100) >= 0) {
         BigInteger op1MantAbs = BigInteger.Abs(this.helper.GetMantissa(thisValue));
-        BigInteger op2MantAbs = BigInteger.Abs(this.helper.GetMantissa(numberObject));
+        BigInteger op2MantAbs = BigInteger.Abs(this.helper.GetMantissa(otherValue));
         FastInteger precision1 = this.helper.CreateShiftAccumulator(op1MantAbs).GetDigitLength();
         FastInteger precision2 = this.helper.CreateShiftAccumulator(op2MantAbs).GetDigitLength();
         FastInteger maxPrecision = null;
@@ -3549,17 +3549,23 @@ namespace PeterO {
       }
       if (expcmp > 0) {
         BigInteger newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(thisValue), op1Exponent, op2Exponent);
-        BigInteger othermant = BigInteger.Abs(this.helper.GetMantissa(numberObject));
+        BigInteger othermant = BigInteger.Abs(this.helper.GetMantissa(otherValue));
         newmant = BigInteger.Abs(newmant);
         mantcmp = newmant.CompareTo(othermant);
         return (s < 0) ? -mantcmp : mantcmp;
       } else {
-        BigInteger newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(numberObject), op1Exponent, op2Exponent);
+        BigInteger newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(otherValue), op1Exponent, op2Exponent);
         BigInteger othermant = BigInteger.Abs(this.helper.GetMantissa(thisValue));
         newmant = BigInteger.Abs(newmant);
         mantcmp = othermant.CompareTo(newmant);
         return (s < 0) ? -mantcmp : mantcmp;
       }
     }
+
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An IRadixMathHelper(T) object.</returns>
+public IRadixMathHelper<T> GetHelper() {
+    return this.helper;
+  }
   }
 }

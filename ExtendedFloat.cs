@@ -1165,45 +1165,45 @@ namespace PeterO {
 
     /// <summary>Adds this object and another binary float and returns the
     /// result.</summary>
-    /// <param name='numberObject'>An ExtendedFloat object.</param>
+    /// <param name='otherValue'>An ExtendedFloat object.</param>
     /// <returns>The sum of the two objects.</returns>
-    public ExtendedFloat Add(ExtendedFloat numberObject) {
-      return this.Add(numberObject, PrecisionContext.Unlimited);
+    public ExtendedFloat Add(ExtendedFloat otherValue) {
+      return this.Add(otherValue, PrecisionContext.Unlimited);
     }
 
     /// <summary>Subtracts an ExtendedFloat object from this instance
     /// and returns the result..</summary>
-    /// <param name='numberObject'>An ExtendedFloat object.</param>
+    /// <param name='otherValue'>An ExtendedFloat object.</param>
     /// <returns>The difference of the two objects.</returns>
-    public ExtendedFloat Subtract(ExtendedFloat numberObject) {
-      return this.Subtract(numberObject, null);
+    public ExtendedFloat Subtract(ExtendedFloat otherValue) {
+      return this.Subtract(otherValue, null);
     }
 
     /// <summary>Subtracts an ExtendedFloat object from this instance.</summary>
-    /// <param name='numberObject'>An ExtendedFloat object.</param>
+    /// <param name='otherValue'>An ExtendedFloat object.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The difference of the two objects.</returns>
-    public ExtendedFloat Subtract(ExtendedFloat numberObject, PrecisionContext ctx) {
-      if (numberObject == null) {
-        throw new ArgumentNullException("numberObject");
+    public ExtendedFloat Subtract(ExtendedFloat otherValue, PrecisionContext ctx) {
+      if (otherValue == null) {
+        throw new ArgumentNullException("otherValue");
       }
-      ExtendedFloat negated = numberObject;
-      if ((numberObject.flags & BigNumberFlags.FlagNaN) == 0) {
-        int newflags = numberObject.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(numberObject.unsignedMantissa, numberObject.exponent, newflags);
+      ExtendedFloat negated = otherValue;
+      if ((otherValue.flags & BigNumberFlags.FlagNaN) == 0) {
+        int newflags = otherValue.flags ^ BigNumberFlags.FlagNegative;
+        negated = CreateWithFlags(otherValue.unsignedMantissa, otherValue.exponent, newflags);
       }
       return this.Add(negated, ctx);
     }
 
     /// <summary>Multiplies two binary floats. The resulting exponent
     /// will be the sum of the exponents of the two binary floats.</summary>
-    /// <param name='numberObject'>Another binary float.</param>
+    /// <param name='otherValue'>Another binary float.</param>
     /// <returns>The product of the two binary floats.</returns>
-    public ExtendedFloat Multiply(ExtendedFloat numberObject) {
-      return this.Multiply(numberObject, PrecisionContext.Unlimited);
+    public ExtendedFloat Multiply(ExtendedFloat otherValue) {
+      return this.Multiply(otherValue, PrecisionContext.Unlimited);
     }
 
     /// <summary>Multiplies by one binary float, and then adds another binary
@@ -1528,16 +1528,16 @@ namespace PeterO {
 
     /// <summary>Finds the sum of this object and another object. The result&apos;s
     /// exponent is set to the lower of the exponents of the two operands.</summary>
-    /// <param name='numberObject'>The number to add to.</param>
+    /// <param name='otherValue'>The number to add to.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The sum of thisValue and the other object.</returns>
     public ExtendedFloat Add(
-      ExtendedFloat numberObject,
+      ExtendedFloat otherValue,
       PrecisionContext ctx) {
-      return math.Add(this, numberObject, ctx);
+      return math.Add(this, otherValue, ctx);
     }
 
     /// <summary>Returns a binary float with the same value but a new exponent.</summary>
@@ -1718,7 +1718,7 @@ namespace PeterO {
       ExtendedFloat subtrahend,
       PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new ArgumentNullException("numberObject");
+        throw new ArgumentNullException("otherValue");
       }
       ExtendedFloat negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {

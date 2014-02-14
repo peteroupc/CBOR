@@ -3467,35 +3467,35 @@ bigrem=divrem[1]; }
     /**
      * Compares a T object with this instance.
      * @param thisValue A T object. (2).
-     * @param numberObject A T object. (3).
+     * @param otherValue A T object. (3).
      * @param treatQuietNansAsSignaling A Boolean object.
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-    public T CompareToWithContext(T thisValue, T numberObject, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
-      if (numberObject == null) {
+    public T CompareToWithContext(T thisValue, T otherValue, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
+      if (otherValue == null) {
         return this.SignalInvalid(ctx);
       }
-      T result = this.CompareToHandleSpecial(thisValue, numberObject, treatQuietNansAsSignaling, ctx);
+      T result = this.CompareToHandleSpecial(thisValue, otherValue, treatQuietNansAsSignaling, ctx);
       if ((Object)result != (Object)null) {
         return result;
       }
-      return this.ValueOf(this.compareTo(thisValue, numberObject), null);
+      return this.ValueOf(this.compareTo(thisValue, otherValue), null);
     }
 
     /**
      * Compares a T object with this instance.
      * @param thisValue A T object.
-     * @param numberObject A T object. (2).
+     * @param otherValue A T object. (2).
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
-    public int compareTo(T thisValue, T numberObject) {
-      if (numberObject == null) {
+    public int compareTo(T thisValue, T otherValue) {
+      if (otherValue == null) {
         return 1;
       }
       int flagsThis = this.helper.GetFlags(thisValue);
-      int flagsOther = this.helper.GetFlags(numberObject);
+      int flagsOther = this.helper.GetFlags(otherValue);
       if ((flagsThis & BigNumberFlags.FlagNaN) != 0) {
         if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
           return 0;
@@ -3507,12 +3507,12 @@ bigrem=divrem[1]; }
         return -1;
         // Treat as less than NaN
       }
-      int s = this.CompareToHandleSpecialReturnInt(thisValue, numberObject);
+      int s = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);
       if (s <= 1) {
         return s;
       }
       s = this.helper.GetSign(thisValue);
-      int ds = this.helper.GetSign(numberObject);
+      int ds = this.helper.GetSign(otherValue);
       if (s != ds) {
         return (s < ds) ? -1 : 1;
       }
@@ -3520,10 +3520,10 @@ bigrem=divrem[1]; }
         // Special case: Either operand is zero
         return 0;
       }
-      int expcmp = this.helper.GetExponent(thisValue).compareTo((BigInteger)this.helper.GetExponent(numberObject));
+      int expcmp = this.helper.GetExponent(thisValue).compareTo((BigInteger)this.helper.GetExponent(otherValue));
       // At this point, the signs are equal so we can compare
       // their absolute values instead
-      int mantcmp = (this.helper.GetMantissa(thisValue)).abs().compareTo((this.helper.GetMantissa(numberObject)).abs());
+      int mantcmp = (this.helper.GetMantissa(thisValue)).abs().compareTo((this.helper.GetMantissa(otherValue)).abs());
       if (s < 0) {
         mantcmp = -mantcmp;
       }
@@ -3535,7 +3535,7 @@ bigrem=divrem[1]; }
         return mantcmp;
       }
       BigInteger op1Exponent = this.helper.GetExponent(thisValue);
-      BigInteger op2Exponent = this.helper.GetExponent(numberObject);
+      BigInteger op2Exponent = this.helper.GetExponent(otherValue);
       FastInteger fastOp1Exp = FastInteger.FromBig(op1Exponent);
       FastInteger fastOp2Exp = FastInteger.FromBig(op2Exponent);
       FastInteger expdiff = FastInteger.Copy(fastOp1Exp).Subtract(fastOp2Exp).Abs();
@@ -3543,7 +3543,7 @@ bigrem=divrem[1]; }
       // radix-power calculation to work quickly
       if (expdiff.CompareToInt(100) >= 0) {
         BigInteger op1MantAbs = (this.helper.GetMantissa(thisValue)).abs();
-        BigInteger op2MantAbs = (this.helper.GetMantissa(numberObject)).abs();
+        BigInteger op2MantAbs = (this.helper.GetMantissa(otherValue)).abs();
         FastInteger precision1 = this.helper.CreateShiftAccumulator(op1MantAbs).GetDigitLength();
         FastInteger precision2 = this.helper.CreateShiftAccumulator(op2MantAbs).GetDigitLength();
         FastInteger maxPrecision = null;
@@ -3604,16 +3604,24 @@ bigrem=divrem[1]; }
       }
       if (expcmp > 0) {
         BigInteger newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(thisValue), op1Exponent, op2Exponent);
-        BigInteger othermant = (this.helper.GetMantissa(numberObject)).abs();
+        BigInteger othermant = (this.helper.GetMantissa(otherValue)).abs();
         newmant = (newmant).abs();
         mantcmp = newmant.compareTo(othermant);
         return (s < 0) ? -mantcmp : mantcmp;
       } else {
-        BigInteger newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(numberObject), op1Exponent, op2Exponent);
+        BigInteger newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(otherValue), op1Exponent, op2Exponent);
         BigInteger othermant = (this.helper.GetMantissa(thisValue)).abs();
         newmant = (newmant).abs();
         mantcmp = othermant.compareTo(newmant);
         return (s < 0) ? -mantcmp : mantcmp;
       }
     }
+
+    /**
+     * Not documented yet.
+     * @return An IRadixMathHelper(T) object.
+     */
+public IRadixMathHelper<T> GetHelper() {
+    return this.helper;
+  }
   }

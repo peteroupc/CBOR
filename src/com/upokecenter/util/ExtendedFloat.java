@@ -1236,40 +1236,40 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Adds this object and another binary float and returns the result.
-     * @param numberObject An ExtendedFloat object.
+     * @param otherValue An ExtendedFloat object.
      * @return The sum of the two objects.
      */
-    public ExtendedFloat Add(ExtendedFloat numberObject) {
-      return this.Add(numberObject, PrecisionContext.Unlimited);
+    public ExtendedFloat Add(ExtendedFloat otherValue) {
+      return this.Add(otherValue, PrecisionContext.Unlimited);
     }
 
     /**
      * Subtracts an ExtendedFloat object from this instance and returns
      * the result..
-     * @param numberObject An ExtendedFloat object.
+     * @param otherValue An ExtendedFloat object.
      * @return The difference of the two objects.
      */
-    public ExtendedFloat Subtract(ExtendedFloat numberObject) {
-      return this.Subtract(numberObject, null);
+    public ExtendedFloat Subtract(ExtendedFloat otherValue) {
+      return this.Subtract(otherValue, null);
     }
 
     /**
      * Subtracts an ExtendedFloat object from this instance.
-     * @param numberObject An ExtendedFloat object.
+     * @param otherValue An ExtendedFloat object.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The difference of the two objects.
      */
-    public ExtendedFloat Subtract(ExtendedFloat numberObject, PrecisionContext ctx) {
-      if (numberObject == null) {
-        throw new NullPointerException("numberObject");
+    public ExtendedFloat Subtract(ExtendedFloat otherValue, PrecisionContext ctx) {
+      if (otherValue == null) {
+        throw new NullPointerException("otherValue");
       }
-      ExtendedFloat negated = numberObject;
-      if ((numberObject.flags & BigNumberFlags.FlagNaN) == 0) {
-        int newflags = numberObject.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(numberObject.unsignedMantissa, numberObject.exponent, newflags);
+      ExtendedFloat negated = otherValue;
+      if ((otherValue.flags & BigNumberFlags.FlagNaN) == 0) {
+        int newflags = otherValue.flags ^ BigNumberFlags.FlagNegative;
+        negated = CreateWithFlags(otherValue.unsignedMantissa, otherValue.exponent, newflags);
       }
       return this.Add(negated, ctx);
     }
@@ -1277,11 +1277,11 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Multiplies two binary floats. The resulting exponent will be the
      * sum of the exponents of the two binary floats.
-     * @param numberObject Another binary float.
+     * @param otherValue Another binary float.
      * @return The product of the two binary floats.
      */
-    public ExtendedFloat Multiply(ExtendedFloat numberObject) {
-      return this.Multiply(numberObject, PrecisionContext.Unlimited);
+    public ExtendedFloat Multiply(ExtendedFloat otherValue) {
+      return this.Multiply(otherValue, PrecisionContext.Unlimited);
     }
 
     /**
@@ -1634,7 +1634,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Finds the sum of this object and another object. The result&apos;s
      * exponent is set to the lower of the exponents of the two operands.
-     * @param numberObject The number to add to.
+     * @param otherValue The number to add to.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -1642,9 +1642,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return The sum of thisValue and the other object.
      */
     public ExtendedFloat Add(
-      ExtendedFloat numberObject,
+      ExtendedFloat otherValue,
       PrecisionContext ctx) {
-      return math.Add(this, numberObject, ctx);
+      return math.Add(this, otherValue, ctx);
     }
 
     /**
@@ -1844,7 +1844,7 @@ at: http://peteroupc.github.io/CBOR/
       ExtendedFloat subtrahend,
       PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new NullPointerException("numberObject");
+        throw new NullPointerException("otherValue");
       }
       ExtendedFloat negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {

@@ -63,6 +63,7 @@ at: http://peteroupc.github.io/CBOR/
     private IRadixMath<T> math;
 
     public TrappableRadixMath (IRadixMath<T> math) {
+
       this.math = math;
     }
 
@@ -127,6 +128,14 @@ at: http://peteroupc.github.io/CBOR/
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Remainder(thisValue, divisor, tctx);
       return this.TriggerTraps(result, tctx, ctx);
+    }
+
+    /**
+     * Not documented yet.
+     * @return An IRadixMathHelper(T) object.
+     */
+public IRadixMathHelper<T> GetHelper() {
+      return this.math.GetHelper();
     }
 
     /**
@@ -473,17 +482,17 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Compares a T object with this instance.
      * @param thisValue A T object.
-     * @param numberObject A T object. (2).
+     * @param otherValue A T object. (2).
      * @param treatQuietNansAsSignaling A Boolean object.
      * @param ctx A PrecisionContext object.
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
-    public T CompareToWithContext(T thisValue, T numberObject, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
+    public T CompareToWithContext(T thisValue, T otherValue, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.CompareToWithContext(
         thisValue,
-        numberObject,
+        otherValue,
         treatQuietNansAsSignaling,
         tctx);
       return this.TriggerTraps(result, tctx, ctx);
@@ -492,11 +501,11 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Compares a T object with this instance.
      * @param thisValue A T object.
-     * @param numberObject A T object. (2).
+     * @param otherValue A T object. (2).
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
-    public int compareTo(T thisValue, T numberObject) {
-      return this.math.compareTo(thisValue, numberObject);
+    public int compareTo(T thisValue, T otherValue) {
+      return this.math.compareTo(thisValue, otherValue);
     }
   }

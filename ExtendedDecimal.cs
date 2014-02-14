@@ -1692,45 +1692,45 @@ namespace PeterO {
 
     /// <summary>Adds this object and another decimal number and returns
     /// the result.</summary>
-    /// <param name='numberObject'>An ExtendedDecimal object.</param>
+    /// <param name='otherValue'>An ExtendedDecimal object.</param>
     /// <returns>The sum of the two objects.</returns>
-    public ExtendedDecimal Add(ExtendedDecimal numberObject) {
-      return this.Add(numberObject, PrecisionContext.Unlimited);
+    public ExtendedDecimal Add(ExtendedDecimal otherValue) {
+      return this.Add(otherValue, PrecisionContext.Unlimited);
     }
 
     /// <summary>Subtracts an ExtendedDecimal object from this instance
     /// and returns the result.</summary>
-    /// <param name='numberObject'>An ExtendedDecimal object.</param>
+    /// <param name='otherValue'>An ExtendedDecimal object.</param>
     /// <returns>The difference of the two objects.</returns>
-    public ExtendedDecimal Subtract(ExtendedDecimal numberObject) {
-      return this.Subtract(numberObject, null);
+    public ExtendedDecimal Subtract(ExtendedDecimal otherValue) {
+      return this.Subtract(otherValue, null);
     }
 
     /// <summary>Subtracts an ExtendedDecimal object from this instance.</summary>
-    /// <param name='numberObject'>An ExtendedDecimal object.</param>
+    /// <param name='otherValue'>An ExtendedDecimal object.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The difference of the two objects.</returns>
-    public ExtendedDecimal Subtract(ExtendedDecimal numberObject, PrecisionContext ctx) {
-      if (numberObject == null) {
-        throw new ArgumentNullException("numberObject");
+    public ExtendedDecimal Subtract(ExtendedDecimal otherValue, PrecisionContext ctx) {
+      if (otherValue == null) {
+        throw new ArgumentNullException("otherValue");
       }
-      ExtendedDecimal negated = numberObject;
-      if ((numberObject.flags & BigNumberFlags.FlagNaN) == 0) {
-        int newflags = numberObject.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(numberObject.unsignedMantissa, numberObject.exponent, newflags);
+      ExtendedDecimal negated = otherValue;
+      if ((otherValue.flags & BigNumberFlags.FlagNaN) == 0) {
+        int newflags = otherValue.flags ^ BigNumberFlags.FlagNegative;
+        negated = CreateWithFlags(otherValue.unsignedMantissa, otherValue.exponent, newflags);
       }
       return this.Add(negated, ctx);
     }
 
     /// <summary>Multiplies two decimal numbers. The resulting exponent
     /// will be the sum of the exponents of the two decimal numbers.</summary>
-    /// <param name='numberObject'>Another decimal number.</param>
+    /// <param name='otherValue'>Another decimal number.</param>
     /// <returns>The product of the two decimal numbers.</returns>
-    public ExtendedDecimal Multiply(ExtendedDecimal numberObject) {
-      return this.Multiply(numberObject, PrecisionContext.Unlimited);
+    public ExtendedDecimal Multiply(ExtendedDecimal otherValue) {
+      return this.Multiply(otherValue, PrecisionContext.Unlimited);
     }
 
     /// <summary>Multiplies by one decimal number, and then adds another
@@ -2052,16 +2052,16 @@ namespace PeterO {
 
     /// <summary>Finds the sum of this object and another object. The result&apos;s
     /// exponent is set to the lower of the exponents of the two operands.</summary>
-    /// <param name='numberObject'>The number to add to.</param>
+    /// <param name='otherValue'>The number to add to.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The sum of thisValue and the other object.</returns>
     public ExtendedDecimal Add(
-      ExtendedDecimal numberObject,
+      ExtendedDecimal otherValue,
       PrecisionContext ctx) {
-      return math.Add(this, numberObject, ctx);
+      return math.Add(this, otherValue, ctx);
     }
 
     /// <summary>Returns a decimal number with the same value but a new exponent.
@@ -2336,7 +2336,7 @@ namespace PeterO {
       ExtendedDecimal subtrahend,
       PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new ArgumentNullException("numberObject");
+        throw new ArgumentNullException("otherValue");
       }
       ExtendedDecimal negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
