@@ -2392,11 +2392,10 @@ namespace PeterO {
     /// be null, as the square root function&apos;s results are generally
     /// not exact for many inputs.--.</param>
     /// <returns>The square root. Signals the flag FlagInvalid and returns
-    /// NaN if this object is less than 0 (the square root would be
-    /// a complex number, but the return value is still NaN). Signals FlagInvalid
-    /// and returns NaN if the parameter <paramref name='ctx'/> is null or
-    /// the precision is unlimited (the context's Precision property is
-    /// 0).</returns>
+    /// NaN if this object is less than 0 (the square root would be a complex
+    /// number, but the return value is still NaN). Signals FlagInvalid and
+    /// returns NaN if the parameter <paramref name='ctx'/> is null or the
+    /// precision is unlimited (the context's Precision property is 0).</returns>
     public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this, ctx);
     }

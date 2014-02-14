@@ -239,8 +239,6 @@ namespace Test
       }
     }
 
-    private static string valueTestPath = "..\\..\\..\\.settings";
-
     private static void PrintTime(System.Diagnostics.Stopwatch sw) {
       Console.WriteLine("Elapsed time: " + (sw.ElapsedMilliseconds / 1000.0) + " s");
     }
@@ -257,11 +255,10 @@ namespace Test
     [Test]
     public void TestParser() {
       long failures = 0;
-      if (!Directory.Exists(valueTestPath)) {
-        return;
-      }
       for (int i = 0; i < 1; ++i) {
-        foreach (var f in Directory.GetFiles(valueTestPath)) {
+        // Reads decimal test files described in:
+        // <http://speleotrove.com/decimal/dectest.html>
+        foreach (var f in Directory.GetFiles(".")) {
           if (!Path.GetFileName(f).Contains(".decTest")) {
             continue;
           }
