@@ -252,7 +252,7 @@ import com.upokecenter.util.*;
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        String str = bigintA.toString();
+        String str = (bigintA).abs().toString();
         Assert.assertEquals(str.length(), bigintA.getDigitCount());
       }
     }

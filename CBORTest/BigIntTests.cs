@@ -253,7 +253,7 @@ namespace Test
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        String str = bigintA.ToString();
+        String str = BigInteger.Abs(bigintA).ToString();
         Assert.AreEqual(str.Length, bigintA.getDigitCount());
       }
     }
