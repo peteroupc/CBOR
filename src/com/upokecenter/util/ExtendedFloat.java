@@ -1907,9 +1907,8 @@ at: http://peteroupc.github.io/CBOR/
      * null, as the square root function&apos;s results are generally not
      * exact for many inputs.--.
      * @return The square root. Signals the flag FlagInvalid and returns
-     * NaN if this object is less than 0 (the principal square root would be
-     * a complex number with a real part of 0 and an imaginary part of this object's
-     * absolute value, but the return value is still NaN).
+     * NaN if this object is less than 0 (the square root would be a complex
+     * number, but the return value is still NaN).
      * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
      * null or the precision is unlimited (the context's Precision property
      * is 0).

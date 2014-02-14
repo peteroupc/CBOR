@@ -20,8 +20,6 @@ namespace CBOR
   [TestFixture]
   public class ExtensiveTest
   {
-    private static string valuePath = "..\\..\\..\\.settings\\test";
-
     public static void AssertFlags(int expected, int actual, string str) {
       actual &= PrecisionContext.FlagInexact |
         PrecisionContext.FlagUnderflow |
@@ -1200,49 +1198,39 @@ namespace CBOR
       long failures = 0;
       List<string> errors = new List<string>();
       System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-      if (!Directory.Exists(valuePath)) {
-        return;
-      }
       sw.Start();
       TextWriter nullWriter = TextWriter.Null;
       TextWriter standardOut = Console.Out;
       int x = 0;
-      for (int i = 0; i < 1; ++i) {
-        foreach (var p in Directory.GetDirectories(valuePath)) {
-          foreach (var f in Directory.GetFiles(p)) {
-            // Console.WriteLine("// " + f);
-            bool isinput = f.Contains(".input");
-            ++x;
-            if (!isinput) {
-              // continue;
-            }
-            using (StreamReader w = new StreamReader(f)) {
-              while (!w.EndOfStream) {
-                var ln = w.ReadLine();
-                {
-                  try {
-                    Console.SetOut(nullWriter);
-                    if (isinput) {
-                      this.ParseLineInput(ln);
-                    } else {
-                      this.ParseLine(ln);
-                    }
-                  } catch (Exception ex) {
-                    errors.Add(ex.Message);
-                    ++failures;
-                    try {
-                      Console.SetOut(standardOut);
-                      if (isinput) {
-                        this.ParseLineInput(ln);
-                      } else {
-                        this.ParseLine(ln);
-                      }
-                    } catch (Exception ex2) {
-                      Console.WriteLine(ln);
-                      Console.SetOut(nullWriter);
-                      Console.WriteLine(ex2.Message);
-                    }
+      foreach (var f in Directory.GetFiles(".")) {
+        Console.WriteLine("// " + f);
+        bool isinput = f.Contains(".input");
+        ++x;
+        using (StreamReader w = new StreamReader(f)) {
+          while (!w.EndOfStream) {
+            var ln = w.ReadLine();
+            {
+              try {
+                Console.SetOut(nullWriter);
+                if (isinput) {
+                  this.ParseLineInput(ln);
+                } else {
+                  this.ParseLine(ln);
+                }
+              } catch (Exception ex) {
+                errors.Add(ex.Message);
+                ++failures;
+                try {
+                  Console.SetOut(standardOut);
+                  if (isinput) {
+                    this.ParseLineInput(ln);
+                  } else {
+                    this.ParseLine(ln);
                   }
+                } catch (Exception ex2) {
+                  Console.WriteLine(ln);
+                  Console.SetOut(nullWriter);
+                  Console.WriteLine(ex2.Message);
                 }
               }
             }
