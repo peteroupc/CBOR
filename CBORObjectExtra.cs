@@ -124,12 +124,12 @@ namespace PeterO {
       return bigint;
     }
 
-    private static decimal ExtendedDecimalToDecimal(ExtendedDecimal numberObject) {
-      if (numberObject.IsInfinity() || numberObject.IsNaN()) {
+    private static decimal ExtendedDecimalToDecimal(ExtendedDecimal extendedNumber) {
+      if (extendedNumber.IsInfinity() || extendedNumber.IsNaN()) {
         throw new OverflowException("This object's value is out of range");
       }
       try {
-        ExtendedDecimal newDecimal = numberObject.RoundToBinaryPrecision(
+        ExtendedDecimal newDecimal = extendedNumber.RoundToBinaryPrecision(
           PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
         return EncodeDecimal(
           BigInteger.Abs(newDecimal.Mantissa),

@@ -9,6 +9,8 @@ at: http://peteroupc.github.io/CBOR/
 
   interface IRadixMath<T>
   {
+    IRadixMathHelper<T> GetHelper();
+
     T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx);
 
     T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx);
@@ -73,7 +75,7 @@ at: http://peteroupc.github.io/CBOR/
 
     T Add(T thisValue, T other, PrecisionContext ctx);
 
-    T CompareToWithContext(T thisValue, T numberObject, boolean treatQuietNansAsSignaling, PrecisionContext ctx);
+    T CompareToWithContext(T thisValue, T otherValue, boolean treatQuietNansAsSignaling, PrecisionContext ctx);
 
-    int compareTo(T thisValue, T numberObject);
+    int compareTo(T thisValue, T otherValue);
   }

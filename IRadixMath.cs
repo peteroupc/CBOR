@@ -12,6 +12,8 @@ namespace PeterO
 {
   internal interface IRadixMath<T>
   {
+    IRadixMathHelper<T> GetHelper();
+
     T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx);
 
     T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx);
@@ -76,8 +78,8 @@ namespace PeterO
 
     T Add(T thisValue, T other, PrecisionContext ctx);
 
-    T CompareToWithContext(T thisValue, T numberObject, bool treatQuietNansAsSignaling, PrecisionContext ctx);
+    T CompareToWithContext(T thisValue, T otherValue, bool treatQuietNansAsSignaling, PrecisionContext ctx);
 
-    int CompareTo(T thisValue, T numberObject);
+    int CompareTo(T thisValue, T otherValue);
   }
 }

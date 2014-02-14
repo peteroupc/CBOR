@@ -3820,26 +3820,26 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a decimal fraction.
-     * @param numberObject An arbitrary-precision decimal number.
+     * @param otherValue An arbitrary-precision decimal number.
      * @return A CBOR number object.
      * @throws java.lang.IllegalArgumentException The value's exponent is less
      * than -(2^64) or greater than (2^64-1).
      */
-    public static CBORObject FromObject(ExtendedDecimal numberObject) {
-      if ((Object)numberObject == (Object)null) {
+    public static CBORObject FromObject(ExtendedDecimal otherValue) {
+      if ((Object)otherValue == (Object)null) {
         return CBORObject.Null;
       }
-      if (numberObject.IsNaN() || numberObject.IsInfinity()) {
-        return new CBORObject(CBORObjectTypeExtendedDecimal, numberObject);
+      if (otherValue.IsNaN() || otherValue.IsInfinity()) {
+        return new CBORObject(CBORObjectTypeExtendedDecimal, otherValue);
       }
-      BigInteger bigintExponent = numberObject.getExponent();
-      if (bigintExponent.signum()==0 && !(numberObject.signum()==0 && numberObject.isNegative())) {
-        return FromObject(numberObject.getMantissa());
+      BigInteger bigintExponent = otherValue.getExponent();
+      if (bigintExponent.signum()==0 && !(otherValue.signum()==0 && otherValue.isNegative())) {
+        return FromObject(otherValue.getMantissa());
       } else {
         if (!BigIntFits(bigintExponent)) {
           throw new IllegalArgumentException("Exponent is too low or too high");
         }
-        return new CBORObject(CBORObjectTypeExtendedDecimal, numberObject);
+        return new CBORObject(CBORObjectTypeExtendedDecimal, otherValue);
       }
     }
 

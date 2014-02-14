@@ -163,6 +163,10 @@ namespace PeterO {
     /// <summary>Signals a division of a nonzero number by zero.</summary>
     public const int FlagDivideByZero = 128;
 
+    /// <summary>Signals that an operand was rounded to a different mathematical
+    /// value before an operation.</summary>
+    public const int FlagLostDigits = 256;
+
     /// <summary>Gets or sets the flags that are set from converting numbers
     /// according to this precision context. If HasFlags is false, this value
     /// will be 0. This value is a combination of bit fields. To retrieve a particular

@@ -64,6 +64,12 @@ namespace PeterO
     private IRadixMath<T> math;
 
     public TrappableRadixMath(IRadixMath<T> math) {
+      #if DEBUG
+if (math == null) {
+ throw new ArgumentNullException("math");
+}
+#endif
+
       this.math = math;
     }
 
@@ -118,6 +124,12 @@ namespace PeterO
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Remainder(thisValue, divisor, tctx);
       return this.TriggerTraps(result, tctx, ctx);
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An IRadixMathHelper(T) object.</returns>
+public IRadixMathHelper<T> GetHelper() {
+      return this.math.GetHelper();
     }
 
     /// <summary>Not documented yet.</summary>
@@ -409,16 +421,16 @@ namespace PeterO
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
-    /// <param name='numberObject'>A T object. (2).</param>
+    /// <param name='otherValue'>A T object. (2).</param>
     /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    public T CompareToWithContext(T thisValue, T numberObject, bool treatQuietNansAsSignaling, PrecisionContext ctx) {
+    public T CompareToWithContext(T thisValue, T otherValue, bool treatQuietNansAsSignaling, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.CompareToWithContext(
         thisValue,
-        numberObject,
+        otherValue,
         treatQuietNansAsSignaling,
         tctx);
       return this.TriggerTraps(result, tctx, ctx);
@@ -426,11 +438,11 @@ namespace PeterO
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
-    /// <param name='numberObject'>A T object. (2).</param>
+    /// <param name='otherValue'>A T object. (2).</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    public int CompareTo(T thisValue, T numberObject) {
-      return this.math.CompareTo(thisValue, numberObject);
+    public int CompareTo(T thisValue, T otherValue) {
+      return this.math.CompareTo(thisValue, otherValue);
     }
   }
 }

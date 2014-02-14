@@ -6118,6 +6118,7 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
     constructor['FlagClamped'] = constructor.FlagClamped = 32;
     constructor['FlagInvalid'] = constructor.FlagInvalid = 64;
     constructor['FlagDivideByZero'] = constructor.FlagDivideByZero = 128;
+    constructor['FlagLostDigits'] = constructor.FlagLostDigits = 256;
     prototype['getFlags'] = prototype.getFlags = function() {
         return this.flags;
     };
@@ -9246,23 +9247,23 @@ var RadixMath = function(helper) {
         return retval;
     };
 
-    prototype.CompareToWithContext = function(thisValue, numberObject, treatQuietNansAsSignaling, ctx) {
-        if (numberObject == null) {
+    prototype.CompareToWithContext = function(thisValue, otherValue, treatQuietNansAsSignaling, ctx) {
+        if (otherValue == null) {
             return this.SignalInvalid(ctx);
         }
-        var result = this.CompareToHandleSpecial(thisValue, numberObject, treatQuietNansAsSignaling, ctx);
+        var result = this.CompareToHandleSpecial(thisValue, otherValue, treatQuietNansAsSignaling, ctx);
         if (result != null) {
             return result;
         }
-        return this.ValueOf(this.compareTo(thisValue, numberObject), null);
+        return this.ValueOf(this.compareTo(thisValue, otherValue), null);
     };
 
-    prototype.compareTo = function(thisValue, numberObject) {
-        if (numberObject == null) {
+    prototype.compareTo = function(thisValue, otherValue) {
+        if (otherValue == null) {
             return 1;
         }
         var flagsThis = this.helper.GetFlags(thisValue);
-        var flagsOther = this.helper.GetFlags(numberObject);
+        var flagsOther = this.helper.GetFlags(otherValue);
         if ((flagsThis & BigNumberFlags.FlagNaN) != 0) {
             if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
                 return 0;
@@ -9274,12 +9275,12 @@ var RadixMath = function(helper) {
             return -1;
         }
 
-        var s = this.CompareToHandleSpecialReturnInt(thisValue, numberObject);
+        var s = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);
         if (s <= 1) {
             return s;
         }
         s = this.helper.GetSign(thisValue);
-        var ds = this.helper.GetSign(numberObject);
+        var ds = this.helper.GetSign(otherValue);
         if (s != ds) {
             return (s < ds) ? -1 : 1;
         }
@@ -9287,9 +9288,9 @@ var RadixMath = function(helper) {
 
             return 0;
         }
-        var expcmp = this.helper.GetExponent(thisValue).compareTo(this.helper.GetExponent(numberObject));
+        var expcmp = this.helper.GetExponent(thisValue).compareTo(this.helper.GetExponent(otherValue));
 
-        var mantcmp = (this.helper.GetMantissa(thisValue)).abs().compareTo((this.helper.GetMantissa(numberObject)).abs());
+        var mantcmp = (this.helper.GetMantissa(thisValue)).abs().compareTo((this.helper.GetMantissa(otherValue)).abs());
         if (s < 0) {
             mantcmp = -mantcmp;
         }
@@ -9301,14 +9302,14 @@ var RadixMath = function(helper) {
             return mantcmp;
         }
         var op1Exponent = this.helper.GetExponent(thisValue);
-        var op2Exponent = this.helper.GetExponent(numberObject);
+        var op2Exponent = this.helper.GetExponent(otherValue);
         var fastOp1Exp = FastInteger.FromBig(op1Exponent);
         var fastOp2Exp = FastInteger.FromBig(op2Exponent);
         var expdiff = FastInteger.Copy(fastOp1Exp).Subtract(fastOp2Exp).Abs();
 
         if (expdiff.CompareToInt(100) >= 0) {
             var op1MantAbs = (this.helper.GetMantissa(thisValue)).abs();
-            var op2MantAbs = (this.helper.GetMantissa(numberObject)).abs();
+            var op2MantAbs = (this.helper.GetMantissa(otherValue)).abs();
             var precision1 = this.helper.CreateShiftAccumulator(op1MantAbs).GetDigitLength();
             var precision2 = this.helper.CreateShiftAccumulator(op2MantAbs).GetDigitLength();
             var maxPrecision = null;
@@ -9354,17 +9355,21 @@ var RadixMath = function(helper) {
         }
         if (expcmp > 0) {
             var newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(thisValue), op1Exponent, op2Exponent);
-            var othermant = (this.helper.GetMantissa(numberObject)).abs();
+            var othermant = (this.helper.GetMantissa(otherValue)).abs();
             newmant = (newmant).abs();
             mantcmp = newmant.compareTo(othermant);
             return (s < 0) ? -mantcmp : mantcmp;
         } else {
-            var newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(numberObject), op1Exponent, op2Exponent);
+            var newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(otherValue), op1Exponent, op2Exponent);
             var othermant = (this.helper.GetMantissa(thisValue)).abs();
             newmant = (newmant).abs();
             mantcmp = othermant.compareTo(newmant);
             return (s < 0) ? -mantcmp : mantcmp;
         }
+    };
+
+    prototype.GetHelper = function() {
+        return this.helper;
     };
 })(RadixMath,RadixMath.prototype);
 
@@ -9494,6 +9499,10 @@ var TrappableRadixMath = function(math) {
         var tctx = TrappableRadixMath.GetTrappableContext(ctx);
         var result = this.math.Remainder(thisValue, divisor, tctx);
         return this.TriggerTraps(result, tctx, ctx);
+    };
+
+    prototype.GetHelper = function() {
+        return this.math.GetHelper();
     };
 
     prototype.RemainderNear = function(thisValue, divisor, ctx) {
@@ -9658,14 +9667,14 @@ var TrappableRadixMath = function(math) {
         return this.TriggerTraps(result, tctx, ctx);
     };
 
-    prototype.CompareToWithContext = function(thisValue, numberObject, treatQuietNansAsSignaling, ctx) {
+    prototype.CompareToWithContext = function(thisValue, otherValue, treatQuietNansAsSignaling, ctx) {
         var tctx = TrappableRadixMath.GetTrappableContext(ctx);
-        var result = this.math.CompareToWithContext(thisValue, numberObject, treatQuietNansAsSignaling, tctx);
+        var result = this.math.CompareToWithContext(thisValue, otherValue, treatQuietNansAsSignaling, tctx);
         return this.TriggerTraps(result, tctx, ctx);
     };
 
-    prototype.compareTo = function(thisValue, numberObject) {
-        return this.math.compareTo(thisValue, numberObject);
+    prototype.compareTo = function(thisValue, otherValue) {
+        return this.math.compareTo(thisValue, otherValue);
     };
 })(TrappableRadixMath,TrappableRadixMath.prototype);
 
@@ -10751,14 +10760,14 @@ function() {
         return ExtendedDecimal.math.Negate(this, context);
     };
 
-    prototype['Subtract'] = prototype.Subtract = function(numberObject, ctx) {
-        if (numberObject == null) {
-            throw new Error("numberObject");
+    prototype['Subtract'] = prototype.Subtract = function(otherValue, ctx) {
+        if (otherValue == null) {
+            throw new Error("otherValue");
         }
-        var negated = numberObject;
-        if ((numberObject.flags & BigNumberFlags.FlagNaN) == 0) {
-            var newflags = numberObject.flags ^ BigNumberFlags.FlagNegative;
-            negated = ExtendedDecimal.CreateWithFlags(numberObject.unsignedMantissa, numberObject.exponent, newflags);
+        var negated = otherValue;
+        if ((otherValue.flags & BigNumberFlags.FlagNaN) == 0) {
+            var newflags = otherValue.flags ^ BigNumberFlags.FlagNegative;
+            negated = ExtendedDecimal.CreateWithFlags(otherValue.unsignedMantissa, otherValue.exponent, newflags);
         }
         return this.Add(negated, ctx);
     };
@@ -10820,8 +10829,8 @@ function() {
         return ExtendedDecimal.math.CompareToWithContext(this, other, true, ctx);
     };
 
-    prototype['Add'] = prototype.Add = function(numberObject, ctx) {
-        return ExtendedDecimal.math.Add(this, numberObject, ctx);
+    prototype['Add'] = prototype.Add = function(otherValue, ctx) {
+        return ExtendedDecimal.math.Add(this, otherValue, ctx);
     };
 
     prototype['Quantize'] = prototype.Quantize = function(otherValue, ctx) {
@@ -10854,7 +10863,7 @@ function() {
 
     prototype['MultiplyAndSubtract'] = prototype.MultiplyAndSubtract = function(op, subtrahend, ctx) {
         if (subtrahend == null) {
-            throw new Error("numberObject");
+            throw new Error("otherValue");
         }
         var negated = subtrahend;
         if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
@@ -11515,14 +11524,14 @@ function() {
         return ExtendedFloat.math.Negate(this, context);
     };
 
-    prototype['Subtract'] = prototype.Subtract = function(numberObject, ctx) {
-        if (numberObject == null) {
-            throw new Error("numberObject");
+    prototype['Subtract'] = prototype.Subtract = function(otherValue, ctx) {
+        if (otherValue == null) {
+            throw new Error("otherValue");
         }
-        var negated = numberObject;
-        if ((numberObject.flags & BigNumberFlags.FlagNaN) == 0) {
-            var newflags = numberObject.flags ^ BigNumberFlags.FlagNegative;
-            negated = ExtendedFloat.CreateWithFlags(numberObject.unsignedMantissa, numberObject.exponent, newflags);
+        var negated = otherValue;
+        if ((otherValue.flags & BigNumberFlags.FlagNaN) == 0) {
+            var newflags = otherValue.flags ^ BigNumberFlags.FlagNegative;
+            negated = ExtendedFloat.CreateWithFlags(otherValue.unsignedMantissa, otherValue.exponent, newflags);
         }
         return this.Add(negated, ctx);
     };
@@ -11584,8 +11593,8 @@ function() {
         return ExtendedFloat.math.CompareToWithContext(this, other, true, ctx);
     };
 
-    prototype['Add'] = prototype.Add = function(numberObject, ctx) {
-        return ExtendedFloat.math.Add(this, numberObject, ctx);
+    prototype['Add'] = prototype.Add = function(otherValue, ctx) {
+        return ExtendedFloat.math.Add(this, otherValue, ctx);
     };
 
     prototype['Quantize'] = prototype.Quantize = function(otherValue, ctx) {
@@ -11618,7 +11627,7 @@ function() {
 
     prototype['MultiplyAndSubtract'] = prototype.MultiplyAndSubtract = function(op, subtrahend, ctx) {
         if (subtrahend == null) {
-            throw new Error("numberObject");
+            throw new Error("otherValue");
         }
         var negated = subtrahend;
         if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {

@@ -86,6 +86,7 @@
     <Compile Include="RadixMath.cs" />
     <Compile Include="RedBlackTree.cs" />
     <Compile Include="Rounding.cs" />
+    <Compile Include="SimpleRadixMath.cs" />
     <Compile Include="SortedMap.cs" />
     <Compile Include="TrapException.cs" />
     <Compile Include="TrappableRadixMath.cs" />
