@@ -62,6 +62,15 @@ namespace PeterO {
       }
     }
 
+    /// <summary>Gets a value indicating whether this context defines a
+    /// maximum precision.</summary>
+    /// <value>Whether this context defines a maximum precision.</value>
+    public bool HasMaxPrecision {
+      get {
+        return !this.bigintPrecision.IsZero;
+      }
+    }
+
     /// <summary>Gets the lowest exponent possible when a converted number
     /// is expressed in scientific notation with one digit before the decimal
     /// point. For example, with a precision of 3 and an EMin of -100, the next

@@ -65,6 +65,14 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
+     * Gets a value indicating whether this context defines a maximum precision.
+     * @return Whether this context defines a maximum precision.
+     */
+    public boolean getHasMaxPrecision() {
+        return this.bigintPrecision.signum()!=0;
+      }
+
+    /**
      * Gets the lowest exponent possible when a converted number is expressed
      * in scientific notation with one digit before the decimal point. For
      * example, with a precision of 3 and an EMin of -100, the next value that

@@ -61,7 +61,7 @@ namespace Test
         input2 = valueQuotes.Replace(input2, String.Empty);
         input3 = valueQuotes.Replace(input3, String.Empty);
         output = valueQuotes.Replace(output, String.Empty);
-        if (GetKeyOrDefault(context, "extended", "1").Equals("0")) {
+        if (GetKeyOrDefault(context, "extended", "1").Equals("1")) {
           return;
         }
         bool clamp = GetKeyOrDefault(context, "clamp", "0").Equals("1");
@@ -74,6 +74,9 @@ namespace Test
             input2.Contains("#") ||
             input3.Contains("#") ||
             output.Contains("#")) {
+          return;
+        }
+        if (input1.Contains("?")) {
           return;
         }
         if (flags.Contains("Invalid_context")) {
@@ -209,6 +212,9 @@ namespace Test
         if (flags.Contains("Clamped")) {
           expectedFlags |= PrecisionContext.FlagClamped;
         }
+        if (flags.Contains("Lost_digits")) {
+          expectedFlags |= PrecisionContext.FlagLostDigits;
+        }
         bool conversionError = flags.Contains("Conversion_syntax");
         if (invalid) {
           expectedFlags |= PrecisionContext.FlagInvalid;
@@ -220,7 +226,10 @@ namespace Test
           try {
             d1 = ExtendedDecimal.FromString(input1, ctx);
             Assert.IsTrue(!conversionError, "Expected no conversion error");
-            Assert.AreEqual(output, d1.ToString(), input1);
+            String converted = d1.ToString();
+            if (!output.Equals("?")) {
+ Assert.AreEqual(output, converted, input1);
+}
           } catch (FormatException) {
             Assert.IsTrue(conversionError, "Expected conversion error");
           }
@@ -228,12 +237,17 @@ namespace Test
           try {
             d1 = ExtendedDecimal.FromString(input1, ctx);
             Assert.IsTrue(!conversionError, "Expected no conversion error");
-            Assert.AreEqual(output, d1.ToEngineeringString(), input1);
+            String converted = d1.ToEngineeringString();
+            if (!output.Equals("?")) {
+ Assert.AreEqual(output, converted, input1);
+}
           } catch (FormatException) {
             Assert.IsTrue(conversionError, "Expected conversion error");
           }
         } else {
-          TestCommon.AssertDecFrac(d3, output, name);
+          if (!output.Equals("?")) {
+ TestCommon.AssertDecFrac(d3, output, name);
+}
         }
         TestCommon.AssertFlags(expectedFlags, ctx.Flags, name);
       }
@@ -262,6 +276,9 @@ namespace Test
           if (!Path.GetFileName(f).Contains(".decTest")) {
             continue;
           }
+          // if (Path.GetFileName(f).Contains("random")) {
+            // continue;
+          // }
           Console.WriteLine("//" + f);
           IDictionary<string, string> context = new Dictionary<string, string>();
           using (StreamReader w = new StreamReader(f)) {
@@ -271,7 +288,7 @@ namespace Test
                 try {
                   TextWriter oldOut = Console.Out;
                   try {
-                    // Console.SetOut(TextWriter.Null);
+                    Console.SetOut(TextWriter.Null);
                     this.ParseDecTest(ln, context);
                   } catch (Exception) {
                     Console.SetOut(oldOut);
