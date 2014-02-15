@@ -444,5 +444,15 @@ public IRadixMathHelper<T> GetHelper() {
     public int CompareTo(T thisValue, T otherValue) {
       return this.math.CompareTo(thisValue, otherValue);
     }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='thisValue'>A T object. (2).</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+      PrecisionContext tctx = GetTrappableContext(ctx);
+      T result = this.math.RoundToPrecisionRaw(thisValue, tctx);
+      return this.TriggerTraps(result, tctx, ctx);
+    }
   }
 }

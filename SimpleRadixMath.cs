@@ -17,23 +17,47 @@ namespace PeterO {
 
     private PrecisionContext GetContextWithFlags(PrecisionContext ctx) {
       if (ctx == null) {
- return ctx;
-}
+        return ctx;
+      }
       return ctx.WithBlankFlags();
     }
 
+    private T SignalInvalid(PrecisionContext ctx) {
+      if (this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly) {
+        throw new ArithmeticException("Invalid operation");
+      }
+      if (ctx != null && ctx.HasFlags) {
+        ctx.Flags |= PrecisionContext.FlagInvalid;
+      }
+      return this.GetHelper().CreateNewWithFlags(BigInteger.Zero, BigInteger.Zero, BigNumberFlags.FlagQuietNaN);
+    }
+
     private T PostProcess(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc) {
+      return PostProcessEx(thisValue, ctxDest, ctxSrc, false);
+    }
+    private T PostProcessAfterDivision(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc) {
+      return PostProcessEx(thisValue, ctxDest, ctxSrc, true);
+    }
+
+    private T PostProcessEx(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc, bool afterDivision) {
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       if (ctxDest != null && ctxSrc != null) {
         if (ctxDest.HasFlags) {
+          if ((ctxSrc.Flags & PrecisionContext.FlagUnderflow) != 0) {
+            ctxSrc.Flags &=~PrecisionContext.FlagClamped;
+          }
           ctxDest.Flags |= ctxSrc.Flags;
           if ((ctxSrc.Flags & PrecisionContext.FlagSubnormal) != 0) {
-            ctxDest.Flags |= (PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact|
-                            PrecisionContext.FlagRounded);
+            // Treat subnormal numbers as underflows
+            ctxDest.Flags |= (PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |
+                              PrecisionContext.FlagRounded);
           }
         }
       }
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
+        if (ctxDest.Flags == 0) {
+          return SignalInvalid(ctxDest);
+        }
         return thisValue;
       }
       BigInteger mant = BigInteger.Abs(this.GetHelper().GetMantissa(thisValue));
@@ -57,7 +81,14 @@ namespace PeterO {
           mant = this.GetHelper().MultiplyByRadixPower(mant, fastExp);
           return this.GetHelper().CreateNewWithFlags(mant, BigInteger.Zero, thisFlags);
         }
-        return thisValue;
+        if (afterDivision) {
+          mant = DecimalUtility.ReduceTrailingZeros(mant, fastExp, this.GetHelper().GetRadix(), null, null, null);
+          thisValue = this.GetHelper().CreateNewWithFlags(mant, fastExp.AsBigInteger(), thisFlags);
+        }
+      } else if (afterDivision && exp.Sign<0) {
+        FastInteger fastExp = FastInteger.FromBig(exp);
+        mant = DecimalUtility.ReduceTrailingZeros(mant, fastExp, this.GetHelper().GetRadix(), null, null, new FastInteger(0));
+        thisValue = this.GetHelper().CreateNewWithFlags(mant, fastExp.AsBigInteger(), thisFlags);
       }
       return thisValue;
     }
@@ -137,7 +168,13 @@ namespace PeterO {
 
       if ((ctx2.Flags & PrecisionContext.FlagInexact) != 0) {
         if (ctx.HasFlags) {
-          ctx.Flags |= PrecisionContext.FlagLostDigits;
+          ctx.Flags |= PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact |
+            PrecisionContext.FlagRounded;
+        }
+      }
+      if ((ctx2.Flags & PrecisionContext.FlagRounded) != 0) {
+        if (ctx.HasFlags) {
+          ctx.Flags |= PrecisionContext.FlagRounded;
         }
       }
       return val;
@@ -157,7 +194,7 @@ namespace PeterO {
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToIntegerNaturalScale(thisValue, divisor, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -174,7 +211,7 @@ namespace PeterO {
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToIntegerZeroScale(thisValue, divisor, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -262,7 +299,7 @@ namespace PeterO {
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       pow = this.RoundBeforeOp(pow, ctx2);
       thisValue = this.wrapper.Power(thisValue, pow, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -385,7 +422,7 @@ namespace PeterO {
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToExponent(thisValue, divisor, desiredExponent, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
     /// <summary>Divides two T objects.</summary>
@@ -402,7 +439,7 @@ namespace PeterO {
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.Divide(thisValue, divisor, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -499,7 +536,7 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx) {
-      throw new NotImplementedException();
+      return SignalInvalid(ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -661,10 +698,17 @@ namespace PeterO {
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
     public T CompareToWithContext(T thisValue, T otherValue, bool treatQuietNansAsSignaling, PrecisionContext ctx) {
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
-      thisValue = this.RoundBeforeOp(thisValue, ctx2);
-      otherValue = this.RoundBeforeOp(otherValue, ctx2);
-      return this.wrapper.CompareToWithContext(thisValue, otherValue, treatQuietNansAsSignaling, ctx);
+      T ret = this.CheckNotANumber2(thisValue, other, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      thisValue = this.RoundBeforeOp(thisValue, ctx);
+      otherValue = this.RoundBeforeOp(otherValue, ctx);
+      return this.wrapper.CompareToWithContext(
+        thisValue,
+        otherValue,
+        treatQuietNansAsSignaling,
+        ctx);
     }
 
     /// <summary>Compares a T object with this instance.</summary>
@@ -674,6 +718,15 @@ namespace PeterO {
     /// is less, or a positive number if this instance is greater.</returns>
     public int CompareTo(T thisValue, T otherValue) {
       return this.wrapper.CompareTo(thisValue, otherValue);
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='thisValue'>A T object. (2).</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+      Console.WriteLine("toprecraw " + thisValue);
+      return this.wrapper.RoundToPrecisionRaw(thisValue, ctx);
     }
   }
 }

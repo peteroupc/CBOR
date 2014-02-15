@@ -2721,55 +2721,12 @@ namespace PeterO {
       if (ret != null && (this.helper.GetFlags(ret) & BigNumberFlags.FlagSpecial) == 0) {
         BigInteger bigmant = BigInteger.Abs(this.helper.GetMantissa(ret));
         FastInteger exp = FastInteger.FromBig(this.helper.GetExponent(ret));
+        int radix = this.thisRadix;
         if (bigmant.IsZero) {
           exp = new FastInteger(0);
         } else {
-          int radix = this.thisRadix;
           FastInteger digits = (precision == null) ? null : this.helper.CreateShiftAccumulator(bigmant).GetDigitLength();
-          BigInteger bigradix = (BigInteger)radix;
-          int bitToTest = 0;
-          FastInteger bitsToShift = new FastInteger(0);
-          while (!bigmant.IsZero) {
-            if (precision != null && digits.CompareTo(precision) == 0) {
-              break;
-            }
-            if (idealExp != null && exp.CompareTo(idealExp) == 0) {
-              break;
-            }
-            if (this.thisRadix == 2) {
-              if (bitToTest < Int32.MaxValue) {
-                if (bigmant.testBit(bitToTest)) {
-                  break;
-                }
-                ++bitToTest;
-                bitsToShift.Increment();
-              } else {
-                if (!bigmant.IsEven) {
-                  break;
-                }
-                bigmant >>= 1;
-              }
-            } else {
-              BigInteger bigrem;
-              BigInteger bigquo = BigInteger.DivRem(bigmant, bigradix, out bigrem);
-              if (!bigrem.IsZero) {
-                break;
-              }
-              bigmant = bigquo;
-            }
-            exp.Increment();
-            if (digits != null) {
-              digits.Decrement();
-            }
-          }
-          if (this.thisRadix == 2 && !bitsToShift.IsValueZero) {
-            while (bitsToShift.CompareToInt(1000000) > 0) {
-              bigmant >>= 1000000;
-              bitsToShift.SubtractInt(1000000);
-            }
-            int tmpshift = bitsToShift.AsInt32();
-            bigmant >>= tmpshift;
-          }
+          bigmant = DecimalUtility.ReduceTrailingZeros(bigmant, exp, radix, digits, precision, idealExp);
         }
         int flags = this.helper.GetFlags(thisValue);
         ret = this.helper.CreateNewWithFlags(bigmant, exp.AsBigInteger(), flags);
@@ -3316,7 +3273,7 @@ namespace PeterO {
                       if (oneOpIsZero && ctx != null && ctx.HasFlags) {
                         ctx.Flags |= PrecisionContext.FlagRounded;
                       }
-          // Console.WriteLine("Second op's prec too short: op2MantAbs=" + op2MantAbs + " precdiff=" + (precisionDiff));
+                      // Console.WriteLine("Second op's prec too short: op2MantAbs=" + op2MantAbs + " precdiff=" + (precisionDiff));
                       return this.RoundToPrecisionWithShift(other, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                     } else {
                       if (!oneOpIsZero && !sameSign) {
@@ -3325,14 +3282,14 @@ namespace PeterO {
                         op2MantAbs -= BigInteger.One;
                         other = this.helper.CreateNewWithFlags(op2MantAbs, op2Exponent, this.helper.GetFlags(other));
                         FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-          // Console.WriteLine("line3325");
+                        // Console.WriteLine("line3325");
                         return this.RoundToPrecisionWithShift(other, ctx, 0, 0, shift, false);
                       } else {
                         FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                         if (!sameSign && ctx != null && ctx.HasFlags) {
                           ctx.Flags |= PrecisionContext.FlagRounded;
                         }
-          // Console.WriteLine("line3332");
+                        // Console.WriteLine("line3332");
                         return this.RoundToPrecisionWithShift(other, ctx, 0, sameSign ? 1 : 0, shift2, false);
                       }
                     }
@@ -3376,7 +3333,7 @@ namespace PeterO {
                       if (oneOpIsZero && ctx != null && ctx.HasFlags) {
                         ctx.Flags |= PrecisionContext.FlagRounded;
                       }
-          // Console.WriteLine("line3375");
+                      // Console.WriteLine("line3375");
                       return this.RoundToPrecisionWithShift(thisValue, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                     } else {
                       if (!oneOpIsZero && !sameSign) {
@@ -3385,14 +3342,14 @@ namespace PeterO {
                         op1MantAbs -= BigInteger.One;
                         thisValue = this.helper.CreateNewWithFlags(op1MantAbs, op1Exponent, this.helper.GetFlags(thisValue));
                         FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-          // Console.WriteLine("line3386");
+                        // Console.WriteLine("line3386");
                         return this.RoundToPrecisionWithShift(thisValue, ctx, 0, 0, shift, false);
                       } else {
                         FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                         if (!sameSign && ctx != null && ctx.HasFlags) {
                           ctx.Flags |= PrecisionContext.FlagRounded;
                         }
-          // Console.WriteLine("line3393");
+                        // Console.WriteLine("line3393");
                         return this.RoundToPrecisionWithShift(thisValue, ctx, 0, sameSign ? 1 : 0, shift2, false);
                       }
                     }
@@ -3590,6 +3547,15 @@ namespace PeterO {
     /// <returns>An IRadixMathHelper(T) object.</returns>
     public IRadixMathHelper<T> GetHelper() {
       return this.helper;
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='thisValue'>A T object. (2).</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+      Console.WriteLine("RM RoundToPrecisionRaw");
+      return this.RoundToPrecision(thisValue, ctx);
     }
   }
 }

@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-    /// <summary>Description of DecimalUtility.</summary>
+  /// <summary>Description of DecimalUtility.</summary>
   internal static class DecimalUtility
   {
     private static BigInteger[] valueBigIntPowersOfTen = new BigInteger[] {
@@ -168,9 +168,9 @@ namespace PeterO
         return ret;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bi'>A BigInteger object. (2).</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='bi'>A BigInteger object. (2).</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger GetCachedPower(BigInteger bi) {
         lock (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
@@ -195,9 +195,9 @@ namespace PeterO
         return null;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bi'>A 32-bit signed integer.</param>
-    /// <returns>A BigInteger object.</returns>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='bi'>A 32-bit signed integer.</param>
+      /// <returns>A BigInteger object.</returns>
       public BigInteger GetCachedPowerInt(int bi) {
         lock (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
@@ -222,9 +222,9 @@ namespace PeterO
         return null;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='input'>A BigInteger object.</param>
-    /// <param name='output'>A BigInteger object. (2).</param>
+      /// <summary>Not documented yet.</summary>
+      /// <param name='input'>A BigInteger object.</param>
+      /// <param name='output'>A BigInteger object. (2).</param>
       public void AddPower(BigInteger input, BigInteger output) {
         lock (this.outputs) {
           if (this.size < MaxSize) {
@@ -547,6 +547,69 @@ namespace PeterO
       }
       powerOfTenCache.AddPower(origPrecision, ret);
       return ret;
+    }
+
+    public static BigInteger ReduceTrailingZeros(
+      BigInteger bigmant,
+      FastInteger exponentMutable,
+      int radix,
+      FastInteger digits,
+      FastInteger precision,
+      FastInteger idealExp) {
+      #if DEBUG
+      if (precision != null && digits == null) {
+        throw new ArgumentException("doesn't satisfy precision==null || digits!=null");
+      }
+      #endif
+      if (bigmant.IsZero) {
+        exponentMutable.SetInt(0);
+        return bigmant;
+      }
+      BigInteger bigradix = (BigInteger)radix;
+      int bitToTest = 0;
+      FastInteger bitsToShift = new FastInteger(0);
+      while (!bigmant.IsZero) {
+        if (precision != null && digits.CompareTo(precision) == 0) {
+          break;
+        }
+        if (idealExp != null && exponentMutable.CompareTo(idealExp) == 0) {
+          break;
+        }
+        if (radix == 2) {
+          if (bitToTest < Int32.MaxValue) {
+            if (bigmant.testBit(bitToTest)) {
+              break;
+            }
+            ++bitToTest;
+            bitsToShift.Increment();
+          } else {
+            if (!bigmant.IsEven) {
+              break;
+            }
+            bigmant >>= 1;
+          }
+        } else {
+          BigInteger bigrem;
+          BigInteger bigquo = BigInteger.DivRem(bigmant, bigradix, out bigrem);
+          if (!bigrem.IsZero) {
+            break;
+          }
+          bigmant = bigquo;
+        }
+        exponentMutable.Increment();
+        if (digits != null) {
+          digits.Decrement();
+        }
+      }
+      if (radix == 2 && !bitsToShift.IsValueZero) {
+        while (bitsToShift.CompareToInt(1000000) > 0) {
+          bigmant >>= 1000000;
+          bitsToShift.SubtractInt(1000000);
+        }
+        int tmpshift = bitsToShift.AsInt32();
+        bigmant >>= tmpshift;
+      }
+      return bigmant;
     }
   }
 }

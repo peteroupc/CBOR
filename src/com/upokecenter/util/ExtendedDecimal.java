@@ -521,7 +521,7 @@ at: http://peteroupc.github.io/CBOR/
       ret.exponent = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
       ret.flags = negative ? BigNumberFlags.FlagNegative : 0;
       if (ctx != null) {
-        ret = ret.RoundToPrecision(ctx);
+        ret = math.RoundToPrecisionRaw(ret, ctx);
       }
       return ret;
     }
