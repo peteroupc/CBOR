@@ -15,26 +15,42 @@ namespace PeterO {
       this.wrapper = wrapper;
     }
 
-    private T PostProcess(T thisValue, PrecisionContext ctx) {
+    private PrecisionContext GetContextWithFlags(PrecisionContext ctx) {
+      if (ctx == null) {
+ return ctx;
+}
+      return ctx.WithBlankFlags();
+    }
+
+    private T PostProcess(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc) {
       int thisFlags = this.GetHelper().GetFlags(thisValue);
+      if (ctxDest != null && ctxSrc != null) {
+        if (ctxDest.HasFlags) {
+          ctxDest.Flags |= ctxSrc.Flags;
+          if ((ctxSrc.Flags & PrecisionContext.FlagSubnormal) != 0) {
+            ctxDest.Flags |= (PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact|
+                            PrecisionContext.FlagRounded);
+          }
+        }
+      }
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         return thisValue;
       }
       BigInteger mant = BigInteger.Abs(this.GetHelper().GetMantissa(thisValue));
       if (mant.IsZero) {
- return this.GetHelper().ValueOf(0);
-}
+        return this.GetHelper().ValueOf(0);
+      }
       BigInteger exp = this.GetHelper().GetExponent(thisValue);
       if (exp.Sign > 0) {
         FastInteger fastExp = FastInteger.FromBig(exp);
-        if (ctx == null || ctx.Precision.IsZero) {
+        if (ctxDest == null || !ctxDest.HasMaxPrecision) {
           mant = this.GetHelper().MultiplyByRadixPower(mant, fastExp);
           return this.GetHelper().CreateNewWithFlags(mant, BigInteger.Zero, thisFlags);
         }
-        if (!ctx.ExponentWithinRange(exp)) {
- return thisValue;
-}
-        FastInteger prec = FastInteger.FromBig(ctx.Precision);
+        if (!ctxDest.ExponentWithinRange(exp)) {
+          return thisValue;
+        }
+        FastInteger prec = FastInteger.FromBig(ctxDest.Precision);
         FastInteger digits = this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
         prec.Subtract(digits);
         if (prec.Sign > 0 && prec.CompareTo(fastExp) >= 0) {
@@ -49,7 +65,7 @@ namespace PeterO {
     private T ReturnQuietNaN(T thisValue, PrecisionContext ctx) {
       BigInteger mant = BigInteger.Abs(this.GetHelper().GetMantissa(thisValue));
       bool mantChanged = false;
-      if (!mant.IsZero && ctx != null && !ctx.Precision.IsZero) {
+      if (!mant.IsZero && ctx != null && ctx.HasMaxPrecision) {
         BigInteger limit = this.GetHelper().MultiplyByRadixPower(BigInteger.One, FastInteger.FromBig(ctx.Precision));
         if (mant.CompareTo(limit) >= 0) {
           mant %= (BigInteger)limit;
@@ -105,7 +121,7 @@ namespace PeterO {
     }
 
     private T RoundBeforeOp(T val, PrecisionContext ctx) {
-      if (ctx == null || ctx.Precision.IsZero) {
+      if (ctx == null || !ctx.HasMaxPrecision) {
         return val;
       }
       PrecisionContext ctx2 = ctx.WithUnlimitedExponents().WithBlankFlags().WithTraps(0);
@@ -137,9 +153,11 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      divisor = this.RoundBeforeOp(divisor, ctx);
-      throw new NotImplementedException();
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      divisor = this.RoundBeforeOp(divisor, ctx2);
+      thisValue = this.wrapper.DivideToIntegerNaturalScale(thisValue, divisor, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -152,10 +170,11 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      divisor = this.RoundBeforeOp(divisor, ctx);
-      thisValue = this.wrapper.DivideToIntegerZeroScale(thisValue, divisor, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      divisor = this.RoundBeforeOp(divisor, ctx2);
+      thisValue = this.wrapper.DivideToIntegerZeroScale(thisValue, divisor, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -167,9 +186,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      value = this.RoundBeforeOp(value, ctx);
-      value = this.wrapper.Abs(value, ctx);
-      return this.PostProcess(value, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      value = this.RoundBeforeOp(value, ctx2);
+      value = this.wrapper.Abs(value, ctx2);
+      return this.PostProcess(value, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -181,9 +201,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      value = this.Negate(value, ctx);
-      value = this.wrapper.Negate(value, ctx);
-      return this.PostProcess(value, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      value = this.RoundBeforeOp(value, ctx2);
+      value = this.wrapper.Negate(value, ctx2);
+      return this.PostProcess(value, ctx, ctx2);
     }
 
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
@@ -196,10 +217,11 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      divisor = this.RoundBeforeOp(divisor, ctx);
-      thisValue = this.wrapper.Remainder(thisValue, divisor, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      divisor = this.RoundBeforeOp(divisor, ctx2);
+      thisValue = this.wrapper.Remainder(thisValue, divisor, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -212,10 +234,11 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      divisor = this.RoundBeforeOp(divisor, ctx);
-      thisValue = this.wrapper.RemainderNear(thisValue, divisor, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      divisor = this.RoundBeforeOp(divisor, ctx2);
+      thisValue = this.wrapper.RemainderNear(thisValue, divisor, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -235,10 +258,11 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      pow = this.RoundBeforeOp(pow, ctx);
-      thisValue = this.wrapper.Power(thisValue, pow, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      pow = this.RoundBeforeOp(pow, ctx2);
+      thisValue = this.wrapper.Power(thisValue, pow, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -250,9 +274,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.Log10(thisValue, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.Log10(thisValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -264,9 +289,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.Ln(thisValue, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.Ln(thisValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -284,9 +310,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.Exp(thisValue, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.Exp(thisValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -298,9 +325,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.SquareRoot(thisValue, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.SquareRoot(thisValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -312,9 +340,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.NextMinus(thisValue, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.NextMinus(thisValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -335,9 +364,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.NextPlus(thisValue, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.NextPlus(thisValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -351,10 +381,11 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      divisor = this.RoundBeforeOp(divisor, ctx);
-      thisValue = this.DivideToExponent(thisValue, divisor, desiredExponent, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      divisor = this.RoundBeforeOp(divisor, ctx2);
+      thisValue = this.wrapper.DivideToExponent(thisValue, divisor, desiredExponent, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Divides two T objects.</summary>
@@ -367,10 +398,11 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      divisor = this.RoundBeforeOp(divisor, ctx);
-      thisValue = this.Divide(thisValue, divisor, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      divisor = this.RoundBeforeOp(divisor, ctx2);
+      thisValue = this.wrapper.Divide(thisValue, divisor, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -379,7 +411,15 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
-      throw new NotImplementedException();
+      T ret = this.CheckNotANumber2(a, b, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      a = this.RoundBeforeOp(a, ctx2);
+      b = this.RoundBeforeOp(b, ctx2);
+      a = this.wrapper.MinMagnitude(a, b, ctx2);
+      return this.PostProcess(a, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -388,7 +428,15 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
-      throw new NotImplementedException();
+      T ret = this.CheckNotANumber2(a, b, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      a = this.RoundBeforeOp(a, ctx2);
+      b = this.RoundBeforeOp(b, ctx2);
+      a = this.wrapper.MaxMagnitude(a, b, ctx2);
+      return this.PostProcess(a, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -397,7 +445,16 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Max(T a, T b, PrecisionContext ctx) {
-      throw new NotImplementedException();
+      T ret = this.CheckNotANumber2(a, b, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      a = this.RoundBeforeOp(a, ctx2);
+      b = this.RoundBeforeOp(b, ctx2);
+      // choose the left operand if both are equal
+      a = (this.CompareTo(a, b) >= 0) ? a : b;
+      return this.PostProcess(a, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -406,7 +463,16 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Min(T a, T b, PrecisionContext ctx) {
-      throw new NotImplementedException();
+      T ret = this.CheckNotANumber2(a, b, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      a = this.RoundBeforeOp(a, ctx2);
+      b = this.RoundBeforeOp(b, ctx2);
+      // choose the left operand if both are equal
+      a = (this.CompareTo(a, b) <= 0) ? a : b;
+      return this.PostProcess(a, ctx, ctx2);
     }
 
     /// <summary>Multiplies two T objects.</summary>
@@ -419,7 +485,11 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      throw new NotImplementedException();
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      other = this.RoundBeforeOp(other, ctx2);
+      thisValue = this.wrapper.Multiply(thisValue, other, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -437,7 +507,14 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx) {
-      throw new NotImplementedException();
+      T ret = this.CheckNotANumber1(thisValue, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.RoundToBinaryPrecision(thisValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -449,9 +526,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.Plus(thisValue, ctx);
-      throw new NotImplementedException();
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.Plus(thisValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -463,9 +541,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.RoundToPrecision(thisValue, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.RoundToPrecision(thisValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -478,9 +557,11 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      otherValue = this.RoundBeforeOp(otherValue, ctx2);
+      thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -493,9 +574,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentExact(thisValue, expOther, ctx);
-      return this.PostProcess(thisValue, ctx);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -508,9 +590,10 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      thisValue = this.wrapper.RoundToExponentSimple(thisValue, expOther, ctx);
-      return this.PostProcess(thisValue, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.RoundToExponentSimple(thisValue, expOther, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -519,7 +602,14 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx) {
-      throw new NotImplementedException();
+      T ret = this.CheckNotANumber1(thisValue, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -527,7 +617,14 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Reduce(T thisValue, PrecisionContext ctx) {
-      throw new NotImplementedException();
+      T ret = this.CheckNotANumber1(thisValue, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      thisValue = this.wrapper.Reduce(thisValue, ctx);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -536,9 +633,24 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Add(T thisValue, T other, PrecisionContext ctx) {
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      other = this.RoundBeforeOp(other, ctx);
-      throw new NotImplementedException();
+      T ret = this.CheckNotANumber2(thisValue, other, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      other = this.RoundBeforeOp(other, ctx2);
+      bool zeroA = this.GetHelper().GetSign(thisValue) == 0;
+      bool zeroB = this.GetHelper().GetSign(other) == 0;
+      if (zeroA) {
+        thisValue = zeroB ? this.GetHelper().ValueOf(0) : other;
+        thisValue = this.RoundToPrecision(thisValue, ctx2);
+      } else if (!zeroB) {
+        thisValue = this.wrapper.Add(thisValue, other, ctx2);
+      } else {
+        thisValue = this.RoundToPrecision(thisValue, ctx2);
+      }
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Compares a T object with this instance.</summary>
@@ -549,9 +661,10 @@ namespace PeterO {
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
     public T CompareToWithContext(T thisValue, T otherValue, bool treatQuietNansAsSignaling, PrecisionContext ctx) {
-      thisValue = this.RoundBeforeOp(thisValue, ctx);
-      otherValue = this.RoundBeforeOp(otherValue, ctx);
-      return this.CompareToWithContext(thisValue, otherValue, treatQuietNansAsSignaling, ctx);
+      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      otherValue = this.RoundBeforeOp(otherValue, ctx2);
+      return this.wrapper.CompareToWithContext(thisValue, otherValue, treatQuietNansAsSignaling, ctx);
     }
 
     /// <summary>Compares a T object with this instance.</summary>

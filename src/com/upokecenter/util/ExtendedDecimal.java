@@ -267,7 +267,7 @@ at: http://peteroupc.github.io/CBOR/
           FastInteger digitCount = new FastInteger(0);
           FastInteger maxDigits = null;
           haveDigits = false;
-          if (ctx != null && ctx.getPrecision().signum()!=0) {
+          if (ctx != null && ctx.getHasMaxPrecision()) {
             maxDigits = FastInteger.FromBig(ctx.getPrecision());
             if (ctx.getClampNormalExponents()) {
               maxDigits.Decrement();
@@ -337,7 +337,7 @@ at: http://peteroupc.github.io/CBOR/
           FastInteger digitCount = new FastInteger(0);
           FastInteger maxDigits = null;
           haveDigits = false;
-          if (ctx != null && ctx.getPrecision().signum()!=0) {
+          if (ctx != null && ctx.getHasMaxPrecision()) {
             maxDigits = FastInteger.FromBig(ctx.getPrecision());
             if (ctx.getClampNormalExponents()) {
               maxDigits.Decrement();
@@ -1833,8 +1833,10 @@ remainder=divrem[1]; }
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(
-      new RadixMath<ExtendedDecimal>(new DecimalMathHelper()));
+    private static IRadixMath<ExtendedDecimal> math =
+      new TrappableRadixMath<ExtendedDecimal>(
+      new SimpleRadixMath<ExtendedDecimal>(
+          new RadixMath<ExtendedDecimal>(new DecimalMathHelper())));
 
     /**
      * Divides this object by another object, and returns the integer part

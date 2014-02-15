@@ -269,7 +269,7 @@ namespace PeterO {
           FastInteger digitCount = new FastInteger(0);
           FastInteger maxDigits = null;
           haveDigits = false;
-          if (ctx != null && !ctx.Precision.IsZero) {
+          if (ctx != null && ctx.HasMaxPrecision) {
             maxDigits = FastInteger.FromBig(ctx.Precision);
             if (ctx.ClampNormalExponents) {
               maxDigits.Decrement();
@@ -339,7 +339,7 @@ namespace PeterO {
           FastInteger digitCount = new FastInteger(0);
           FastInteger maxDigits = null;
           haveDigits = false;
-          if (ctx != null && !ctx.Precision.IsZero) {
+          if (ctx != null && ctx.HasMaxPrecision) {
             maxDigits = FastInteger.FromBig(ctx.Precision);
             if (ctx.ClampNormalExponents) {
               maxDigits.Decrement();
@@ -1745,8 +1745,10 @@ namespace PeterO {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(
-      new RadixMath<ExtendedDecimal>(new DecimalMathHelper()));
+    private static IRadixMath<ExtendedDecimal> math =
+      new TrappableRadixMath<ExtendedDecimal>(
+      new SimpleRadixMath<ExtendedDecimal>(
+          new RadixMath<ExtendedDecimal>(new DecimalMathHelper())));
 
     /// <summary>Divides this object by another object, and returns the
     /// integer part of the result, with the preferred exponent set to this
