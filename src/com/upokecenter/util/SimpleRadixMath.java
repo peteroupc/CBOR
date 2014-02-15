@@ -16,23 +16,48 @@ at: http://peteroupc.github.io/CBOR/
 
     private PrecisionContext GetContextWithFlags(PrecisionContext ctx) {
       if (ctx == null) {
- return ctx;
-}
+        return ctx;
+      }
       return ctx.WithBlankFlags();
     }
 
+    private T SignalInvalid(PrecisionContext ctx) {
+      if (this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly) {
+        throw new ArithmeticException("Invalid operation");
+      }
+      if (ctx != null && ctx.getHasFlags()) {
+        ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInvalid));
+      }
+      return this.GetHelper().CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
+    }
+
     private T PostProcess(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc) {
+      return PostProcessEx(thisValue, ctxDest, ctxSrc, false);
+    }
+    private T PostProcessAfterDivision(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc) {
+      return PostProcessEx(thisValue, ctxDest, ctxSrc, true);
+    }
+
+    private T PostProcessEx(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc, boolean afterDivision) {
+      // TODO: Eliminate redundancy with PostProcess
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       if (ctxDest != null && ctxSrc != null) {
         if (ctxDest.getHasFlags()) {
+          if ((ctxSrc.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
+            ctxSrc.setFlags(ctxSrc.getFlags()&~(PrecisionContext.FlagClamped));
+          }
           ctxDest.setFlags(ctxDest.getFlags()|(ctxSrc.getFlags()));
           if ((ctxSrc.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
-            ctxDest.setFlags(ctxDest.getFlags()|((PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact|))
-                            PrecisionContext.FlagRounded);
+            // Treat subnormal numbers as underflows
+            ctxDest.setFlags(ctxDest.getFlags()|((PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |))
+                              PrecisionContext.FlagRounded);
           }
         }
       }
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
+        if (ctxDest.getFlags() == 0) {
+          return SignalInvalid(ctxDest);
+        }
         return thisValue;
       }
       BigInteger mant = (this.GetHelper().GetMantissa(thisValue)).abs();
@@ -56,7 +81,14 @@ at: http://peteroupc.github.io/CBOR/
           mant = this.GetHelper().MultiplyByRadixPower(mant, fastExp);
           return this.GetHelper().CreateNewWithFlags(mant, BigInteger.ZERO, thisFlags);
         }
-        return thisValue;
+        if (afterDivision) {
+          mant = DecimalUtility.ReduceTrailingZeros(mant, fastExp, this.GetHelper().GetRadix(), null, null, null);
+          thisValue = this.GetHelper().CreateNewWithFlags(mant, fastExp.AsBigInteger(), thisFlags);
+        }
+      } else if (afterDivision && exp.signum()<0) {
+        FastInteger fastExp = FastInteger.FromBig(exp);
+        mant = DecimalUtility.ReduceTrailingZeros(mant, fastExp, this.GetHelper().GetRadix(), null, null, new FastInteger(0));
+        thisValue = this.GetHelper().CreateNewWithFlags(mant, fastExp.AsBigInteger(), thisFlags);
       }
       return thisValue;
     }
@@ -131,7 +163,13 @@ at: http://peteroupc.github.io/CBOR/
 
       if ((ctx2.getFlags() & PrecisionContext.FlagInexact) != 0) {
         if (ctx.getHasFlags()) {
-          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagLostDigits));
+          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact |))
+            PrecisionContext.FlagRounded;
+        }
+      }
+      if ((ctx2.getFlags() & PrecisionContext.FlagRounded) != 0) {
+        if (ctx.getHasFlags()) {
+          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
         }
       }
       return val;
@@ -153,7 +191,7 @@ at: http://peteroupc.github.io/CBOR/
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToIntegerNaturalScale(thisValue, divisor, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
     /**
@@ -172,7 +210,7 @@ at: http://peteroupc.github.io/CBOR/
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToIntegerZeroScale(thisValue, divisor, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
     /**
@@ -413,7 +451,7 @@ at: http://peteroupc.github.io/CBOR/
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToExponent(thisValue, divisor, desiredExponent, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
     /**
@@ -432,7 +470,7 @@ at: http://peteroupc.github.io/CBOR/
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.Divide(thisValue, divisor, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
     /**
@@ -723,10 +761,17 @@ at: http://peteroupc.github.io/CBOR/
      * is less, or a positive number if this instance is greater.
      */
     public T CompareToWithContext(T thisValue, T otherValue, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
-      thisValue = this.RoundBeforeOp(thisValue, ctx2);
-      otherValue = this.RoundBeforeOp(otherValue, ctx2);
-      return this.wrapper.CompareToWithContext(thisValue, otherValue, treatQuietNansAsSignaling, ctx);
+      T ret = this.CheckNotANumber2(thisValue, other, ctx);
+      if ((Object)ret != (Object)null) {
+        return ret;
+      }
+      thisValue = this.RoundBeforeOp(thisValue, ctx);
+      otherValue = this.RoundBeforeOp(otherValue, ctx);
+      return this.wrapper.CompareToWithContext(
+        thisValue,
+        otherValue,
+        treatQuietNansAsSignaling,
+        ctx);
     }
 
     /**
@@ -738,5 +783,16 @@ at: http://peteroupc.github.io/CBOR/
      */
     public int compareTo(T thisValue, T otherValue) {
       return this.wrapper.compareTo(thisValue, otherValue);
+    }
+
+    /**
+     * Not documented yet.
+     * @param thisValue A T object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return A T object.
+     */
+    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+      System.out.println("toprecraw " + thisValue);
+      return this.wrapper.RoundToPrecisionRaw(thisValue, ctx);
     }
   }

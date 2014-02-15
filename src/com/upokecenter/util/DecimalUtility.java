@@ -7,9 +7,9 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-    /**
-     * Description of DecimalUtility.
-     */
+  /**
+   * Description of DecimalUtility.
+   */
   final class DecimalUtility {
 private DecimalUtility() {
 }
@@ -169,11 +169,11 @@ private DecimalUtility() {
         return ret;
       }
 
-    /**
-     * Not documented yet.
-     * @param bi A BigInteger object. (2).
-     * @return A BigInteger object.
-     */
+      /**
+       * Not documented yet.
+       * @param bi A BigInteger object. (2).
+       * @return A BigInteger object.
+       */
       public BigInteger GetCachedPower(BigInteger bi) {
         synchronized(this.outputs) {
           for (int i = 0; i < this.size; ++i) {
@@ -198,11 +198,11 @@ private DecimalUtility() {
         return null;
       }
 
-    /**
-     * Not documented yet.
-     * @param bi A 32-bit signed integer.
-     * @return A BigInteger object.
-     */
+      /**
+       * Not documented yet.
+       * @param bi A 32-bit signed integer.
+       * @return A BigInteger object.
+       */
       public BigInteger GetCachedPowerInt(int bi) {
         synchronized(this.outputs) {
           for (int i = 0; i < this.size; ++i) {
@@ -227,11 +227,11 @@ private DecimalUtility() {
         return null;
       }
 
-    /**
-     * Not documented yet.
-     * @param input A BigInteger object.
-     * @param output A BigInteger object. (2).
-     */
+      /**
+       * Not documented yet.
+       * @param input A BigInteger object.
+       * @param output A BigInteger object. (2).
+       */
       public void AddPower(BigInteger input, BigInteger output) {
         synchronized(this.outputs) {
           if (this.size < MaxSize) {
@@ -554,5 +554,72 @@ private DecimalUtility() {
       }
       powerOfTenCache.AddPower(origPrecision, ret);
       return ret;
+    }
+
+    public static BigInteger ReduceTrailingZeros(
+      BigInteger bigmant,
+      FastInteger exponentMutable,
+      int radix,
+      FastInteger digits,
+      FastInteger precision,
+      FastInteger idealExp) {
+      #ifdef DEBUG
+      if (precision != null && digits == null) {
+        throw new IllegalArgumentException("doesn't satisfy precision==null || digits!=null");
+      }
+
+      if (bigmant.signum()==0) {
+        exponentMutable.SetInt(0);
+        return bigmant;
+      }
+      BigInteger bigradix = BigInteger.valueOf(radix);
+      int bitToTest = 0;
+      FastInteger bitsToShift = new FastInteger(0);
+      while (bigmant.signum()!=0) {
+        if (precision != null && digits.compareTo(precision) == 0) {
+          break;
+        }
+        if (idealExp != null && exponentMutable.compareTo(idealExp) == 0) {
+          break;
+        }
+        if (radix == 2) {
+          if (bitToTest < Integer.MAX_VALUE) {
+            if (bigmant.testBit(bitToTest)) {
+              break;
+            }
+            ++bitToTest;
+            bitsToShift.Increment();
+          } else {
+            if (bigmant.testBit(0)) {
+              break;
+            }
+            bigmant=bigmant.shiftRight(1);
+          }
+        } else {
+          BigInteger bigrem;
+          BigInteger bigquo;
+{
+BigInteger[] divrem=(bigmant).divideAndRemainder(bigradix);
+bigquo=divrem[0];
+bigrem=divrem[1]; }
+          if (bigrem.signum()!=0) {
+            break;
+          }
+          bigmant = bigquo;
+        }
+        exponentMutable.Increment();
+        if (digits != null) {
+          digits.Decrement();
+        }
+      }
+      if (radix == 2 && !bitsToShift.isValueZero()) {
+        while (bitsToShift.CompareToInt(1000000) > 0) {
+          bigmant=bigmant.shiftRight(1000000);
+          bitsToShift.SubtractInt(1000000);
+        }
+        int tmpshift = bitsToShift.AsInt32();
+        bigmant=bigmant.shiftRight(tmpshift);
+      }
+      return bigmant;
     }
   }

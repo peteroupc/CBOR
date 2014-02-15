@@ -228,8 +228,8 @@ namespace Test
             Assert.IsTrue(!conversionError, "Expected no conversion error");
             String converted = d1.ToString();
             if (!output.Equals("?")) {
- Assert.AreEqual(output, converted, input1);
-}
+              Assert.AreEqual(output, converted, input1);
+            }
           } catch (FormatException) {
             Assert.IsTrue(conversionError, "Expected conversion error");
           }
@@ -239,15 +239,15 @@ namespace Test
             Assert.IsTrue(!conversionError, "Expected no conversion error");
             String converted = d1.ToEngineeringString();
             if (!output.Equals("?")) {
- Assert.AreEqual(output, converted, input1);
-}
+              Assert.AreEqual(output, converted, input1);
+            }
           } catch (FormatException) {
             Assert.IsTrue(conversionError, "Expected conversion error");
           }
         } else {
           if (!output.Equals("?")) {
- TestCommon.AssertDecFrac(d3, output, name);
-}
+            TestCommon.AssertDecFrac(d3, output, name);
+          }
         }
         TestCommon.AssertFlags(expectedFlags, ctx.Flags, name);
       }
@@ -276,9 +276,12 @@ namespace Test
           if (!Path.GetFileName(f).Contains(".decTest")) {
             continue;
           }
-          // if (Path.GetFileName(f).Contains("random")) {
-            // continue;
-          // }
+          if (Path.GetFileName(f).Contains("base")) {
+            continue;
+          }
+          if (!Path.GetFileName(f).Contains("divide")) {
+          //  continue;
+          }
           Console.WriteLine("//" + f);
           IDictionary<string, string> context = new Dictionary<string, string>();
           using (StreamReader w = new StreamReader(f)) {

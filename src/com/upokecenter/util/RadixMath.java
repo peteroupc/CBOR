@@ -2771,59 +2771,12 @@ rem=divrem[1]; }
       if (ret != null && (this.helper.GetFlags(ret) & BigNumberFlags.FlagSpecial) == 0) {
         BigInteger bigmant = (this.helper.GetMantissa(ret)).abs();
         FastInteger exp = FastInteger.FromBig(this.helper.GetExponent(ret));
+        int radix = this.thisRadix;
         if (bigmant.signum()==0) {
           exp = new FastInteger(0);
         } else {
-          int radix = this.thisRadix;
           FastInteger digits = (precision == null) ? null : this.helper.CreateShiftAccumulator(bigmant).GetDigitLength();
-          BigInteger bigradix = BigInteger.valueOf(radix);
-          int bitToTest = 0;
-          FastInteger bitsToShift = new FastInteger(0);
-          while (bigmant.signum()!=0) {
-            if (precision != null && digits.compareTo(precision) == 0) {
-              break;
-            }
-            if (idealExp != null && exp.compareTo(idealExp) == 0) {
-              break;
-            }
-            if (this.thisRadix == 2) {
-              if (bitToTest < Integer.MAX_VALUE) {
-                if (bigmant.testBit(bitToTest)) {
-                  break;
-                }
-                ++bitToTest;
-                bitsToShift.Increment();
-              } else {
-                if (bigmant.testBit(0)) {
-                  break;
-                }
-                bigmant=bigmant.shiftRight(1);
-              }
-            } else {
-              BigInteger bigrem;
-              BigInteger bigquo;
-{
-BigInteger[] divrem=(bigmant).divideAndRemainder(bigradix);
-bigquo=divrem[0];
-bigrem=divrem[1]; }
-              if (bigrem.signum()!=0) {
-                break;
-              }
-              bigmant = bigquo;
-            }
-            exp.Increment();
-            if (digits != null) {
-              digits.Decrement();
-            }
-          }
-          if (this.thisRadix == 2 && !bitsToShift.isValueZero()) {
-            while (bitsToShift.CompareToInt(1000000) > 0) {
-              bigmant=bigmant.shiftRight(1000000);
-              bitsToShift.SubtractInt(1000000);
-            }
-            int tmpshift = bitsToShift.AsInt32();
-            bigmant=bigmant.shiftRight(tmpshift);
-          }
+          bigmant = DecimalUtility.ReduceTrailingZeros(bigmant, exp, radix, digits, precision, idealExp);
         }
         int flags = this.helper.GetFlags(thisValue);
         ret = this.helper.CreateNewWithFlags(bigmant, exp.AsBigInteger(), flags);
@@ -3367,7 +3320,7 @@ bigrem=divrem[1]; }
                       if (oneOpIsZero && ctx != null && ctx.getHasFlags()) {
                         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
                       }
-          // System.out.println("Second op's prec too short: op2MantAbs=" + op2MantAbs + " precdiff=" + (precisionDiff));
+                      // System.out.println("Second op's prec too short: op2MantAbs=" + op2MantAbs + " precdiff=" + (precisionDiff));
                       return this.RoundToPrecisionWithShift(other, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                     } else {
                       if (!oneOpIsZero && !sameSign) {
@@ -3376,14 +3329,14 @@ bigrem=divrem[1]; }
                         op2MantAbs=op2MantAbs.subtract(BigInteger.ONE);
                         other = this.helper.CreateNewWithFlags(op2MantAbs, op2Exponent, this.helper.GetFlags(other));
                         FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-          // System.out.println("line3325");
+                        // System.out.println("line3325");
                         return this.RoundToPrecisionWithShift(other, ctx, 0, 0, shift, false);
                       } else {
                         FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                         if (!sameSign && ctx != null && ctx.getHasFlags()) {
                           ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
                         }
-          // System.out.println("line3332");
+                        // System.out.println("line3332");
                         return this.RoundToPrecisionWithShift(other, ctx, 0, sameSign ? 1 : 0, shift2, false);
                       }
                     }
@@ -3427,7 +3380,7 @@ bigrem=divrem[1]; }
                       if (oneOpIsZero && ctx != null && ctx.getHasFlags()) {
                         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
                       }
-          // System.out.println("line3375");
+                      // System.out.println("line3375");
                       return this.RoundToPrecisionWithShift(thisValue, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                     } else {
                       if (!oneOpIsZero && !sameSign) {
@@ -3436,14 +3389,14 @@ bigrem=divrem[1]; }
                         op1MantAbs=op1MantAbs.subtract(BigInteger.ONE);
                         thisValue = this.helper.CreateNewWithFlags(op1MantAbs, op1Exponent, this.helper.GetFlags(thisValue));
                         FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-          // System.out.println("line3386");
+                        // System.out.println("line3386");
                         return this.RoundToPrecisionWithShift(thisValue, ctx, 0, 0, shift, false);
                       } else {
                         FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                         if (!sameSign && ctx != null && ctx.getHasFlags()) {
                           ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
                         }
-          // System.out.println("line3393");
+                        // System.out.println("line3393");
                         return this.RoundToPrecisionWithShift(thisValue, ctx, 0, sameSign ? 1 : 0, shift2, false);
                       }
                     }
@@ -3647,5 +3600,16 @@ bigrem=divrem[1]; }
      */
     public IRadixMathHelper<T> GetHelper() {
       return this.helper;
+    }
+
+    /**
+     * Not documented yet.
+     * @param thisValue A T object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return A T object.
+     */
+    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+      System.out.println("RM RoundToPrecisionRaw");
+      return this.RoundToPrecision(thisValue, ctx);
     }
   }
