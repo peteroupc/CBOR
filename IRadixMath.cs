@@ -80,6 +80,8 @@ namespace PeterO
 
     T Add(T thisValue, T other, PrecisionContext ctx);
 
+    T AddEx(T thisValue, T other, PrecisionContext ctx, bool roundToOperandPrecision);
+
     T CompareToWithContext(T thisValue, T otherValue, bool treatQuietNansAsSignaling, PrecisionContext ctx);
 
     int CompareTo(T thisValue, T otherValue);

@@ -134,7 +134,7 @@ at: http://peteroupc.github.io/CBOR/
      * Not documented yet.
      * @return An IRadixMathHelper(T) object.
      */
-public IRadixMathHelper<T> GetHelper() {
+    public IRadixMathHelper<T> GetHelper() {
       return this.math.GetHelper();
     }
 
@@ -515,9 +515,23 @@ public IRadixMathHelper<T> GetHelper() {
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToPrecisionRaw(thisValue, tctx);
+      return this.TriggerTraps(result, tctx, ctx);
+    }
+
+    /**
+     * Not documented yet.
+     * @param thisValue A T object. (2).
+     * @param other A T object. (3).
+     * @param ctx A PrecisionContext object.
+     * @param roundToOperandPrecision A Boolean object.
+     * @return A T object.
+     */
+public T AddEx(T thisValue, T other, PrecisionContext ctx, boolean roundToOperandPrecision) {
+      PrecisionContext tctx = GetTrappableContext(ctx);
+      T result = this.math.AddEx(thisValue, other, ctx, roundToOperandPrecision);
       return this.TriggerTraps(result, tctx, ctx);
     }
   }

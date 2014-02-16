@@ -135,6 +135,7 @@ rembi=divrem[1]; }
       Assert.assertEquals(name + ": Clamped",(expected & PrecisionContext.FlagClamped) != 0,(actual & PrecisionContext.FlagClamped) != 0);
       Assert.assertEquals(name + ": Invalid",(expected & PrecisionContext.FlagInvalid) != 0,(actual & PrecisionContext.FlagInvalid) != 0);
       Assert.assertEquals(name + ": DivideByZero",(expected & PrecisionContext.FlagDivideByZero) != 0,(actual & PrecisionContext.FlagDivideByZero) != 0);
+      Assert.assertEquals(name + ": LostDigits",(expected & PrecisionContext.FlagLostDigits) != 0,(actual & PrecisionContext.FlagLostDigits) != 0);
     }
 
     private static CBORObject FromBytesA(byte[] b) {

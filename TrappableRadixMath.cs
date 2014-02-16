@@ -65,10 +65,10 @@ namespace PeterO
 
     public TrappableRadixMath(IRadixMath<T> math) {
       #if DEBUG
-if (math == null) {
- throw new ArgumentNullException("math");
-}
-#endif
+      if (math == null) {
+        throw new ArgumentNullException("math");
+      }
+      #endif
 
       this.math = math;
     }
@@ -128,7 +128,7 @@ if (math == null) {
 
     /// <summary>Not documented yet.</summary>
     /// <returns>An IRadixMathHelper(T) object.</returns>
-public IRadixMathHelper<T> GetHelper() {
+    public IRadixMathHelper<T> GetHelper() {
       return this.math.GetHelper();
     }
 
@@ -449,9 +449,21 @@ public IRadixMathHelper<T> GetHelper() {
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToPrecisionRaw(thisValue, tctx);
+      return this.TriggerTraps(result, tctx, ctx);
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='thisValue'>A T object. (2).</param>
+    /// <param name='other'>A T object. (3).</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='roundToOperandPrecision'>A Boolean object.</param>
+    /// <returns>A T object.</returns>
+public T AddEx(T thisValue, T other, PrecisionContext ctx, bool roundToOperandPrecision) {
+      PrecisionContext tctx = GetTrappableContext(ctx);
+      T result = this.math.AddEx(thisValue, other, ctx, roundToOperandPrecision);
       return this.TriggerTraps(result, tctx, ctx);
     }
   }

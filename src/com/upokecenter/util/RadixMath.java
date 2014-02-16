@@ -892,7 +892,8 @@ bigrem=divrem[1]; }
         return this.Multiply(thisValue, this.Multiply(thisValue, thisValue, null), ctx);
       }
       boolean retvalNeg = this.IsNegative(thisValue) && powIntBig.testBit(0);
-      FastInteger error = this.helper.CreateShiftAccumulator((powIntBig).abs()).GetDigitLength();
+      FastInteger error = this.helper.CreateShiftAccumulator(
+        (powIntBig).abs()).GetDigitLength();
       error.AddInt(6);
       BigInteger bigError = error.AsBigInteger();
       PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
@@ -3237,7 +3238,19 @@ rem=divrem[1]; }
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-    public T Add(T thisValue, T other, PrecisionContext ctx) {
+public T Add(T thisValue, T other, PrecisionContext ctx) {
+      return this.AddEx(thisValue, other, ctx, false);
+    }
+
+    /**
+     * Not documented yet.
+     * @param thisValue A T object. (2).
+     * @param other A T object. (3).
+     * @param ctx A PrecisionContext object.
+     * @param roundToOperandPrecision A Boolean object.
+     * @return A T object.
+     */
+    public T AddEx(T thisValue, T other, PrecisionContext ctx, boolean roundToOperandPrecision) {
       int thisFlags = this.helper.GetFlags(thisValue);
       int otherFlags = this.helper.GetFlags(other);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
@@ -3420,9 +3433,7 @@ rem=divrem[1]; }
           retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
           // System.out.println("" + op1MantAbs + " " + op2MantAbs + " -> " + (op2Exponent-op1Exponent) + " [op2 exp greater]");
         }
-        if (
-          // helper.GetArithmeticSupport() == BigNumberFlags.X3Dot274 &&
-          ctx != null && ctx.getHasMaxPrecision()) {
+        if (roundToOperandPrecision && ctx != null && ctx.getHasMaxPrecision()) {
           FastInteger digitLength1 = this.helper.CreateShiftAccumulator((op1MantAbs).abs()).GetDigitLength();
           FastInteger digitLength2 = this.helper.CreateShiftAccumulator((op2MantAbs).abs()).GetDigitLength();
           FastInteger maxDigitLength = (digitLength1.compareTo(digitLength2) >0) ? digitLength1 : digitLength2;

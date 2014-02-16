@@ -6052,6 +6052,62 @@ var DecimalUtility = function() {
         DecimalUtility.powerOfTenCache.AddPower(origPrecision, ret);
         return ret;
     };
+    constructor.ReduceTrailingZeros = function(bigmant, exponentMutable, radix, digits, precision, idealExp) {
+        if (bigmant.signum() == 0) {
+            exponentMutable.SetInt(0);
+            return bigmant;
+        }
+        var bigradix = BigInteger.valueOf(radix);
+        var bitToTest = 0;
+        var bitsToShift = new FastInteger(0);
+        while (bigmant.signum() != 0) {
+            if (precision != null && digits.compareTo(precision) == 0) {
+                break;
+            }
+            if (idealExp != null && exponentMutable.compareTo(idealExp) == 0) {
+                break;
+            }
+            if (radix == 2) {
+                if (bitToTest < 2147483647) {
+                    if (bigmant.testBit(bitToTest)) {
+                        break;
+                    }
+                    ++bitToTest;
+                    bitsToShift.Increment();
+                } else {
+                    if (bigmant.testBit(0)) {
+                        break;
+                    }
+                    bigmant = bigmant.shiftRight(1);
+                }
+            } else {
+                var bigrem;
+                var bigquo;
+                {
+                    var divrem = (bigmant).divideAndRemainder(bigradix);
+                    bigquo = divrem[0];
+                    bigrem = divrem[1];
+                }
+                if (bigrem.signum() != 0) {
+                    break;
+                }
+                bigmant = bigquo;
+            }
+            exponentMutable.Increment();
+            if (digits != null) {
+                digits.Decrement();
+            }
+        }
+        if (radix == 2 && !bitsToShift.isValueZero()) {
+            while (bitsToShift.CompareToInt(1000000) > 0) {
+                bigmant = bigmant.shiftRight(1000000);
+                bitsToShift.SubtractInt(1000000);
+            }
+            var tmpshift = bitsToShift.AsInt32();
+            bigmant = bigmant.shiftRight(tmpshift);
+        }
+        return bigmant;
+    };
 })(DecimalUtility,DecimalUtility.prototype);
 
 var Rounding={};Rounding.Up=0;Rounding['Up']=0;Rounding.Down=1;Rounding['Down']=1;Rounding.Ceiling=2;Rounding['Ceiling']=2;Rounding.Floor=3;Rounding['Floor']=3;Rounding.HalfUp=4;Rounding['HalfUp']=4;Rounding.HalfDown=5;Rounding['HalfDown']=5;Rounding.HalfEven=6;Rounding['HalfEven']=6;Rounding.Unnecessary=7;Rounding['Unnecessary']=7;Rounding.ZeroFiveUp=8;Rounding['ZeroFiveUp']=8;
