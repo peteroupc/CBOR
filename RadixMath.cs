@@ -884,7 +884,8 @@ namespace PeterO {
         return this.Multiply(thisValue, this.Multiply(thisValue, thisValue, null), ctx);
       }
       bool retvalNeg = this.IsNegative(thisValue) && !powIntBig.IsEven;
-      FastInteger error = this.helper.CreateShiftAccumulator(BigInteger.Abs(powIntBig)).GetDigitLength();
+      FastInteger error = this.helper.CreateShiftAccumulator(
+        BigInteger.Abs(powIntBig)).GetDigitLength();
       error.AddInt(6);
       BigInteger bigError = error.AsBigInteger();
       PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.Precision + (BigInteger)bigError)
@@ -3186,11 +3187,21 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
+    /// <param name='thisValue'>A T object. (2).</param>
+    /// <param name='other'>A T object. (3).</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+public T Add(T thisValue, T other, PrecisionContext ctx) {
+      return this.AddEx(thisValue, other, ctx, false);
+    }
+
+    /// <summary>Not documented yet.</summary>
     /// <returns>A T object.</returns>
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='other'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    public T Add(T thisValue, T other, PrecisionContext ctx) {
+    /// <param name='roundToOperandPrecision'>A Boolean object.</param>
+    public T AddEx(T thisValue, T other, PrecisionContext ctx, bool roundToOperandPrecision) {
       int thisFlags = this.helper.GetFlags(thisValue);
       int otherFlags = this.helper.GetFlags(other);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
@@ -3373,9 +3384,7 @@ namespace PeterO {
           retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
           // Console.WriteLine("" + op1MantAbs + " " + op2MantAbs + " -> " + (op2Exponent-op1Exponent) + " [op2 exp greater]");
         }
-        if (
-          // helper.GetArithmeticSupport() == BigNumberFlags.X3Dot274 &&
-          ctx != null && ctx.HasMaxPrecision) {
+        if (roundToOperandPrecision && ctx != null && ctx.HasMaxPrecision) {
           FastInteger digitLength1 = this.helper.CreateShiftAccumulator(BigInteger.Abs(op1MantAbs)).GetDigitLength();
           FastInteger digitLength2 = this.helper.CreateShiftAccumulator(BigInteger.Abs(op2MantAbs)).GetDigitLength();
           FastInteger maxDigitLength = (digitLength1.CompareTo(digitLength2) >0) ? digitLength1 : digitLength2;

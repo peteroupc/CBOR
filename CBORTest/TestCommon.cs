@@ -152,6 +152,10 @@ namespace Test {
         (expected & PrecisionContext.FlagDivideByZero) != 0,
         (actual & PrecisionContext.FlagDivideByZero) != 0,
         name + ": DivideByZero");
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagLostDigits) != 0,
+        (actual & PrecisionContext.FlagLostDigits) != 0,
+        name + ": LostDigits");
     }
 
     private static CBORObject FromBytesA(byte[] b) {

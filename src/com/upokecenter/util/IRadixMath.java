@@ -77,6 +77,8 @@ at: http://peteroupc.github.io/CBOR/
 
     T Add(T thisValue, T other, PrecisionContext ctx);
 
+    T AddEx(T thisValue, T other, PrecisionContext ctx, boolean roundToOperandPrecision);
+
     T CompareToWithContext(T thisValue, T otherValue, boolean treatQuietNansAsSignaling, PrecisionContext ctx);
 
     int compareTo(T thisValue, T otherValue);
