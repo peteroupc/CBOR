@@ -3436,7 +3436,7 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
         if (roundToOperandPrecision && ctx != null && ctx.getHasMaxPrecision()) {
           FastInteger digitLength1 = this.helper.CreateShiftAccumulator((op1MantAbs).abs()).GetDigitLength();
           FastInteger digitLength2 = this.helper.CreateShiftAccumulator((op2MantAbs).abs()).GetDigitLength();
-          FastInteger maxDigitLength = (digitLength1.compareTo(digitLength2) >0) ? digitLength1 : digitLength2;
+          FastInteger maxDigitLength = (digitLength1.compareTo(digitLength2) > 0) ? digitLength1 : digitLength2;
           maxDigitLength.SubtractBig(ctx.getPrecision());
           // System.out.println("retval=" + retval + " maxdl=" + maxDigitLength + " prec=" + (ctx.getPrecision()));
           if (maxDigitLength.signum() > 0) {
@@ -3620,7 +3620,7 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
      * @return A T object.
      */
     public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
-      System.out.println("RM RoundToPrecisionRaw");
+      // System.out.println("RM RoundToPrecisionRaw");
       return this.RoundToPrecision(thisValue, ctx);
     }
   }

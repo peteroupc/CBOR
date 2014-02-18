@@ -3718,7 +3718,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @return A new CBOR array.
      */
     public static CBORObject NewArray() {
-      return FromObject(new ArrayList<CBORObject>());
+      return new CBORObject(CBORObjectTypeArray, new ArrayList<CBORObject>());
     }
 
     /**
@@ -3988,13 +3988,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
       List<CBORObject> list = new ArrayList<CBORObject>();
       for(long i : array) {
+        // System.out.println(i);
         list.add(FromObject(i));
       }
       return new CBORObject(CBORObjectTypeArray, list);
     }
 
     /**
-     * Generates a CBOR object from an list of objects.
+     * Generates a CBOR object from a list of objects.
      * @param value An array of CBOR objects.
      * @param <T> A type convertible to CBORObject.
      * @return A CBOR object where each element of the given array is converted
@@ -4005,12 +4006,35 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (value == null) {
         return CBORObject.Null;
       }
-      List<CBORObject> list = new ArrayList<CBORObject>();
-      for(T i : (List<T>)value) {
-        CBORObject obj = FromObject(i);
-        list.add(obj);
+      if (value.size() == 0) {
+        return new CBORObject(CBORObjectTypeArray, new ArrayList<T>());
       }
-      return new CBORObject(CBORObjectTypeArray, list);
+      CBORObject retCbor = CBORObject.NewArray();
+      for(T i : (List<T>)value) {
+        retCbor.Add(CBORObject.FromObject(i));
+      }
+      return retCbor;
+    }
+
+    /**
+     * Generates a CBOR object from an enumerable set of objects.
+     * @param value An object that implements the Iterable interface. In
+     * the .NET version, this can be the return value of an iterator or the
+     * result of a LINQ query.
+     * @param <T> A type convertible to CBORObject.
+     * @return A CBOR object where each element of the given enumerable object
+     * is converted to a CBOR object and copied to a new array, or CBORObject.Null
+     * if the value is null.
+     */
+    public static <T> CBORObject FromObject(Iterable<T> value) {
+      if (value == null) {
+        return CBORObject.Null;
+      }
+      CBORObject retCbor = CBORObject.NewArray();
+      for(T i : (Iterable<T>)value) {
+        retCbor.Add(CBORObject.FromObject(i));
+      }
+      return retCbor;
     }
 
     /**
@@ -4037,8 +4061,18 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
-     * Generates a CBORObject from an arbitrary object.
-     * @param obj An arbitrary object.
+     * Generates a CBORObject from an arbitrary object. The following types
+     * are specially handled by this method: <code>null</code> , primitive
+     * types, strings, <code>CBORObject</code> , <code>ExtendedDecimal</code>
+     * , <code>ExtendedFloat</code> , the custom <code>BigInteger</code>
+     * , lists, <code>byte</code> arrays, <code>int</code> arrays, <code>long</code>
+     * arrays, <code>CBORObject</code> arrays, <code>string</code>
+     * maps to <code>CBORObject</code> , and <code>CBORObject</code>
+     * maps to <code>CBORObject</code>
+     * @param obj An arbitrary object. In the .NET version, if this is a type
+     * not specially handled by this method, returns a CBOR map with the values
+     * of each of its read/write properties (or all properties in the case
+     * of an anonymous type).
      * @return A CBOR object corresponding to the given object. Returns
      * CBORObject.Null if the object is null.
      * @throws java.lang.IllegalArgumentException The object's type is not supported.
@@ -4047,6 +4081,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 public static CBORObject FromObject(Object obj) {
       if (obj == null) {
         return CBORObject.Null;
+      }
+      if(obj instanceof String) {
+        return FromObject((String)obj);
+      }
+      if(obj instanceof Integer) {
+        return FromObject(((Integer)obj).intValue());
       }
       if(obj instanceof Long) {
         return FromObject((((Long)obj).longValue()));
@@ -4064,12 +4104,6 @@ public static CBORObject FromObject(Object obj) {
       ExtendedFloat bf = ((obj instanceof ExtendedFloat) ? (ExtendedFloat)obj : null);
       if (bf != null) {
         return FromObject(bf);
-      }
-      if(obj instanceof String) {
-        return FromObject((String)obj);
-      }
-      if(obj instanceof Integer) {
-        return FromObject(((Integer)obj).intValue());
       }
       if(obj instanceof Short) {
         return FromObject(((Short)obj).shortValue());
@@ -4097,6 +4131,23 @@ public static CBORObject FromObject(Object obj) {
       if (bytearr != null) {
         return FromObject(bytearr);
       }
+      CBORObject objret;
+      if(obj instanceof System.Collections.Map) {
+        // Map appears first because Map includes Iterable
+        objret = CBORObject.NewMap();
+        System.Collections.Map objdic = (System.Collections.Map)obj;
+        for(Object key : objdic) {
+          objret.set(CBORObject.FromObject(key),CBORObject.FromObject(objdic.get(key)));
+        }
+        return objret;
+      }
+      if(obj instanceof System.Collections.Iterable) {
+        objret = CBORObject.NewArray();
+        for(Object element : (System.Collections.Iterable)obj) {
+          objret.Add(CBORObject.FromObject(element));
+        }
+        return objret;
+      }
       int[] intarr = ((obj instanceof int[]) ? (int[])obj : null);
       if (intarr != null) {
         return FromObject(intarr);
@@ -4108,13 +4159,11 @@ public static CBORObject FromObject(Object obj) {
       if(obj instanceof CBORObject[]) {
         return FromObject((CBORObject[])obj);
       }
-      if(obj instanceof Map<?,?>) {
-        return FromObject((Map<CBORObject, CBORObject>)obj);
+      objret = CBORObject.NewMap();
+      foreach (Map.Entry<String, Object> key in PropertyMap.GetProperties(obj)) {
+        objret.set(key.getKey(),CBORObject.FromObject(key.getValue()));
       }
-      if(obj instanceof Map<?,?>) {
-        return FromObject((Map<String, CBORObject>)obj);
-      }
-      throw new IllegalArgumentException("Unsupported Object type.");
+      return objret;
     }
 
     private static BigInteger valueBigInt65536 = BigInteger.valueOf(65536);
@@ -4607,7 +4656,7 @@ public static CBORObject FromObject(Object obj) {
           throw new CBORException("Expected major type " +
                                   Integer.toString((int)allowOnlyType) +
                                   ", instead got type " +
-                                  Integer.toString(((Integer)type).intValue()));
+                                  Integer.toString((int)type));
         }
         if (additional == 31) {
           throw new CBORException("Indefinite-length data not allowed here");

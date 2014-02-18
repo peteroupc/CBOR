@@ -8,6 +8,8 @@
  */
 using System;
 // using System.Numerics;
+using System.Collections.Generic;
+using System.Linq;
 using System.Globalization;
 using NUnit.Framework;
 using PeterO;
@@ -145,6 +147,45 @@ namespace Test {
           CBORObject.FromObject((sbyte)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
+    }
+
+    private static IEnumerable<int> RangeExclusive(int min, int maxExclusive) {
+      for (int i = min; i < maxExclusive; ++i) {
+        yield return i;
+      }
+    }
+
+    [Test]
+    public void TestAnonymousTypes() {
+      CBORObject obj = CBORObject.FromObject(new { A = "a", B = "b" });
+      Assert.AreEqual("a", obj["A"].AsString());
+      Assert.AreEqual("b", obj["B"].AsString());
+      TestCommon.AssertRoundTrip(obj);
+      obj = CBORObject.FromObject(new { A = "c", B = "b" });
+      Assert.AreEqual("c", obj["A"].AsString());
+      Assert.AreEqual("b", obj["B"].AsString());
+      TestCommon.AssertRoundTrip(obj);
+      obj = CBORObject.FromObject(RangeExclusive(0, 10));
+      Assert.AreEqual(10, obj.Count);
+      Assert.AreEqual(0, obj[0].AsInt32());
+      Assert.AreEqual(1, obj[1].AsInt32());
+      obj = CBORObject.FromObject((object)RangeExclusive(0, 10));
+      Assert.AreEqual(10, obj.Count);
+      Assert.AreEqual(0, obj[0].AsInt32());
+      Assert.AreEqual(1, obj[1].AsInt32());
+      TestCommon.AssertRoundTrip(obj);
+      // Select all even numbers
+      obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i % 2 == 0 select i);
+      Assert.AreEqual(5, obj.Count);
+      Assert.AreEqual(0, obj[0].AsInt32());
+      Assert.AreEqual(2, obj[1].AsInt32());
+      TestCommon.AssertRoundTrip(obj);
+      // Select all even numbers
+      obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i % 2 == 0 select new { A = i, B = i + 1 });
+      Assert.AreEqual(5, obj.Count);
+      Assert.AreEqual(0, obj[0]["A"].AsInt32());
+      Assert.AreEqual(3, obj[1]["B"].AsInt32());
+      TestCommon.AssertRoundTrip(obj);
     }
 
     private static string DateTimeToString(DateTime bi) {
