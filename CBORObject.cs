@@ -3681,7 +3681,7 @@ namespace PeterO {
     /// <summary>Creates a new empty CBOR array.</summary>
     /// <returns>A new CBOR array.</returns>
     public static CBORObject NewArray() {
-      return FromObject(new List<CBORObject>());
+      return new CBORObject(CBORObjectTypeArray, new List<CBORObject>());
     }
 
     /// <summary>Creates a new empty CBOR map.</summary>
@@ -3915,12 +3915,13 @@ namespace PeterO {
       }
       IList<CBORObject> list = new List<CBORObject>();
       foreach (long i in array) {
+        // Console.WriteLine(i);
         list.Add(FromObject(i));
       }
       return new CBORObject(CBORObjectTypeArray, list);
     }
 
-    /// <summary>Generates a CBOR object from an list of objects.</summary>
+    /// <summary>Generates a CBOR object from a list of objects.</summary>
     /// <param name='value'>An array of CBOR objects.</param>
     /// <returns>A CBOR object where each element of the given array is converted
     /// to a CBOR object and copied to a new array, or CBORObject.Null if the
@@ -3930,12 +3931,33 @@ namespace PeterO {
       if (value == null) {
         return CBORObject.Null;
       }
-      IList<CBORObject> list = new List<CBORObject>();
-      foreach (T i in (IList<T>)value) {
-        CBORObject obj = FromObject(i);
-        list.Add(obj);
+      if (value.Count == 0) {
+        return new CBORObject(CBORObjectTypeArray, new List<T>());
       }
-      return new CBORObject(CBORObjectTypeArray, list);
+      CBORObject retCbor = CBORObject.NewArray();
+      foreach (T i in (IList<T>)value) {
+        retCbor.Add(CBORObject.FromObject(i));
+      }
+      return retCbor;
+    }
+
+    /// <summary>Generates a CBOR object from an enumerable set of objects.</summary>
+    /// <param name='value'>An object that implements the IEnumerable
+    /// interface. In the .NET version, this can be the return value of an iterator
+    /// or the result of a LINQ query.</param>
+    /// <returns>A CBOR object where each element of the given enumerable
+    /// object is converted to a CBOR object and copied to a new array, or CBORObject.Null
+    /// if the value is null.</returns>
+    /// <typeparam name='T'>A type convertible to CBORObject.</typeparam>
+    public static CBORObject FromObject<T>(IEnumerable<T> value) {
+      if (value == null) {
+        return CBORObject.Null;
+      }
+      CBORObject retCbor = CBORObject.NewArray();
+      foreach (T i in (IEnumerable<T>)value) {
+        retCbor.Add(CBORObject.FromObject(i));
+      }
+      return retCbor;
     }
 
     /// <summary>Generates a CBOR object from a map of objects.</summary>
@@ -3960,8 +3982,25 @@ namespace PeterO {
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
-    /// <summary>Generates a CBORObject from an arbitrary object.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
+    /// <summary>Generates a CBORObject from an arbitrary object. The following
+    /// types are specially handled by this method: <code>null</code>
+    /// , primitive types, strings, <code>CBORObject</code>
+    /// , <code>ExtendedDecimal</code>
+    /// , <code>ExtendedFloat</code>
+    /// , the custom <code>BigInteger</code>
+    /// , lists, <code>byte</code>
+    /// arrays, <code>int</code>
+    /// arrays, <code>long</code>
+    /// arrays, <code>CBORObject</code>
+    /// arrays, <code>string</code>
+    /// maps to <code>CBORObject</code>
+    /// , and <code>CBORObject</code>
+    /// maps to <code>CBORObject</code>
+    /// </summary>
+    /// <param name='obj'>An arbitrary object. In the .NET version, if this
+    /// is a type not specially handled by this method, returns a CBOR map with
+    /// the values of each of its read/write properties (or all properties
+    /// in the case of an anonymous type).</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
     /// CBORObject.Null if the object is null.</returns>
     /// <exception cref='System.ArgumentException'>The object's type
@@ -3969,6 +4008,12 @@ namespace PeterO {
     public static CBORObject FromObject(object obj) {
       if (obj == null) {
         return CBORObject.Null;
+      }
+      if (obj is string) {
+        return FromObject((string)obj);
+      }
+      if (obj is int) {
+        return FromObject((int)obj);
       }
       if (obj is long) {
         return FromObject((long)obj);
@@ -3986,12 +4031,6 @@ namespace PeterO {
       ExtendedFloat bf = obj as ExtendedFloat;
       if (bf != null) {
         return FromObject(bf);
-      }
-      if (obj is string) {
-        return FromObject((string)obj);
-      }
-      if (obj is int) {
-        return FromObject((int)obj);
       }
       if (obj is short) {
         return FromObject((short)obj);
@@ -4036,6 +4075,23 @@ namespace PeterO {
       if (bytearr != null) {
         return FromObject(bytearr);
       }
+      CBORObject objret;
+      if (obj is System.Collections.IDictionary) {
+        // IDictionary appears first because IDictionary includes IEnumerable
+        objret = CBORObject.NewMap();
+        System.Collections.IDictionary objdic = (System.Collections.IDictionary)obj;
+        foreach (object key in objdic) {
+          objret[CBORObject.FromObject(key)] = CBORObject.FromObject(objdic[key]);
+        }
+        return objret;
+      }
+      if (obj is System.Collections.IEnumerable) {
+        objret = CBORObject.NewArray();
+        foreach (object element in (System.Collections.IEnumerable)obj) {
+          objret.Add(CBORObject.FromObject(element));
+        }
+        return objret;
+      }
       int[] intarr = obj as int[];
       if (intarr != null) {
         return FromObject(intarr);
@@ -4047,13 +4103,11 @@ namespace PeterO {
       if (obj is CBORObject[]) {
         return FromObject((CBORObject[])obj);
       }
-      if (obj is IDictionary<CBORObject, CBORObject>) {
-        return FromObject((IDictionary<CBORObject, CBORObject>)obj);
+      objret = CBORObject.NewMap();
+      foreach (KeyValuePair<string, object> key in PropertyMap.GetProperties(obj)) {
+        objret[key.Key] = CBORObject.FromObject(key.Value);
       }
-      if (obj is IDictionary<string, CBORObject>) {
-        return FromObject((IDictionary<string, CBORObject>)obj);
-      }
-      throw new ArgumentException("Unsupported object type.");
+      return objret;
     }
 
     private static BigInteger valueBigInt65536 = (BigInteger)65536;

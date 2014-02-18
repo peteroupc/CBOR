@@ -3387,7 +3387,7 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
         if (roundToOperandPrecision && ctx != null && ctx.HasMaxPrecision) {
           FastInteger digitLength1 = this.helper.CreateShiftAccumulator(BigInteger.Abs(op1MantAbs)).GetDigitLength();
           FastInteger digitLength2 = this.helper.CreateShiftAccumulator(BigInteger.Abs(op2MantAbs)).GetDigitLength();
-          FastInteger maxDigitLength = (digitLength1.CompareTo(digitLength2) >0) ? digitLength1 : digitLength2;
+          FastInteger maxDigitLength = (digitLength1.CompareTo(digitLength2) > 0) ? digitLength1 : digitLength2;
           maxDigitLength.SubtractBig(ctx.Precision);
           // Console.WriteLine("retval=" + retval + " maxdl=" + maxDigitLength + " prec=" + (ctx.Precision));
           if (maxDigitLength.Sign > 0) {
@@ -3563,7 +3563,7 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
-      Console.WriteLine("RM RoundToPrecisionRaw");
+      // Console.WriteLine("RM RoundToPrecisionRaw");
       return this.RoundToPrecision(thisValue, ctx);
     }
   }

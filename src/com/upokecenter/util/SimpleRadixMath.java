@@ -7,11 +7,11 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-  /**
-   * Implements the simplified arithmetic in Appendix A of the General
-   * Decimal Arithmetic Specification.
-   * @param <T> Data type for a numeric value in a particular radix.
-   */
+    /**
+     * Implements the simplified arithmetic in Appendix A of the General
+     * Decimal Arithmetic Specification.
+     * @param <T> Data type for a numeric value in a particular radix.
+     */
   final class SimpleRadixMath<T> implements IRadixMath<T> {
     private IRadixMath<T> wrapper;
 
@@ -58,8 +58,8 @@ at: http://peteroupc.github.io/CBOR/
           ctxDest.setFlags(ctxDest.getFlags()|(ctxSrc.getFlags()));
           if ((ctxSrc.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
-            ctxDest.setFlags(ctxDest.getFlags()|((PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |))
-                              PrecisionContext.FlagRounded);
+            ctxDest.setFlags(ctxDest.getFlags()|(PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |))
+                              PrecisionContext.FlagRounded;
           }
         }
       }
@@ -322,8 +322,8 @@ at: http://peteroupc.github.io/CBOR/
       } else if (powIntBig.equals(BigInteger.ONE)) {
         return this.wrapper.RoundToPrecision(thisValue, ctx);
       }
-      boolean retvalNeg = (this.GetHelper().GetFlags(thisValue) &BigNumberFlags.FlagNegative) != 0 &&
-        powIntBig.testBit(0);
+      boolean retvalNeg = (this.GetHelper().GetFlags(thisValue) &
+                        BigNumberFlags.FlagNegative) != 0 && powIntBig.testBit(0);
       FastInteger error = this.GetHelper().CreateShiftAccumulator(
         (powIntBig).abs()).GetDigitLength();
       error.AddInt(6);
@@ -341,7 +341,7 @@ at: http://peteroupc.github.io/CBOR/
       int b = powIntBig.bitLength();
       boolean inexact = false;
       // System.out.println("starting pow prec=" + ctxdiv.getPrecision());
-      for (int i = b - 1;i >= 0; --i) {
+      for (int i = b - 1; i >= 0; --i) {
         boolean bit = powIntBig.testBit(i);
         if (bit) {
           ctxdiv.setFlags(0);
@@ -380,12 +380,12 @@ at: http://peteroupc.github.io/CBOR/
         // Use the reciprocal for negative powers
         ctxdiv.setFlags(0);
         r = this.wrapper.Divide(one, r, ctx);
-        System.out.println("Flags=" + ctxdiv.getFlags());
+        // System.out.println("Flags=" + ctxdiv.getFlags());
         if ((ctxdiv.getFlags() & PrecisionContext.FlagOverflow) != 0) {
           return this.SignalOverflow2(ctx, retvalNeg);
         }
-        System.out.println("Exp=" + this.GetHelper().GetExponent(r) + " Prec=" + ctx.getPrecision() + " Digits=" + (this.GetHelper().CreateShiftAccumulator(
-          (powIntBig).abs()).GetDigitLength()));
+        // System.out.println("Exp=" + this.GetHelper().GetExponent(r) + " Prec=" + ctx.getPrecision() + " Digits=" + (this.GetHelper().CreateShiftAccumulator(
+        //  (powIntBig).abs()).GetDigitLength()));
         if (ctx != null && ctx.getHasFlags()) {
           if (inexact) {
             ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
@@ -450,23 +450,16 @@ at: http://peteroupc.github.io/CBOR/
       if (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0) {
         thisValue = this.GetHelper().ValueOf(1);
       } else {
-        System.out.println("was " + thisValue);
+        // System.out.println("was " + thisValue);
         BigInteger powExponent = this.GetHelper().GetExponent(pow);
         BigInteger powInteger = (this.GetHelper().GetMantissa(pow)).abs();
-        if (powExponent.signum() >= 0 && powSign < 0 &&
-            ctx != null && (ctx.getHasFlags() || ctx.getTraps() == 0)) {
-          if (powSign < 0) {
-            powInteger=powInteger.negate();
-          }
-          powInteger = this.GetHelper().MultiplyByRadixPower(powInteger, FastInteger.FromBig(powExponent));
-          thisValue = this.PowerIntegral(thisValue, powInteger, ctx2);
-        } else {
+        {
           thisValue = this.wrapper.Power(thisValue, pow, ctx2);
         }
       }
-      System.out.println("was " + thisValue);
+      // System.out.println("was " + thisValue);
       thisValue = this.PostProcessAfterDivision(thisValue, ctx, ctx2);
-      System.out.println("now " + thisValue);
+      // System.out.println("now " + thisValue);
       return thisValue;
     }
 
@@ -499,8 +492,11 @@ at: http://peteroupc.github.io/CBOR/
         return ret;
       }
       PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      // System.out.println("was: " + thisValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      // System.out.println("now: " + thisValue);
       thisValue = this.wrapper.Ln(thisValue, ctx2);
+      // System.out.println("result: " + thisValue);
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
@@ -962,7 +958,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A T object.
      */
     public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
-      System.out.println("toprecraw " + thisValue);
+      // System.out.println("toprecraw " + thisValue);
       return this.wrapper.RoundToPrecisionRaw(thisValue, ctx);
     }
   }
