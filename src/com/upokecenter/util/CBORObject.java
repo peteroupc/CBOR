@@ -1952,8 +1952,8 @@ public void set(String key, CBORObject value) {
     }
 
     /**
-     * Converts this object to a decimal fraction.
-     * @return A decimal fraction for this object's value.
+     * Converts this object to a decimal number.
+     * @return A decimal number for this object's value.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
      */
@@ -1982,8 +1982,8 @@ public void set(String key, CBORObject value) {
      * Converts this object to an arbitrary-precision binary floating
      * point number.
      * @return An arbitrary-precision binary floating point number for
-     * this object's value. Note that if this object is a decimal fraction
-     * with a fractional part, the conversion may lose information depending
+     * this object's value. Note that if this object is a decimal number with
+     * a fractional part, the conversion may lose information depending
      * on the number.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
@@ -2171,6 +2171,367 @@ public void set(String key, CBORObject value) {
           throw new IllegalStateException("Not a number type");
       }
     }
+
+    /**
+     * Returns whether this object's value can be converted to a 32-bit floating
+     * point number without loss of its numerical value.
+     * @return A Boolean value. Returns true if this is a not-a-number value,
+     * even if the value's diagnostic information can't fit in a 32-bit floating
+     * point number.
+     */
+    public boolean CanFitInSingle() {
+      Object thisItem = this.getThisItem();
+      int type = this.getItemType();
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            long intItem = (((Long)thisItem).longValue());
+            if (intItem == Long.MIN_VALUE) {
+              return true;
+            }
+            intItem = Math.abs(intItem);
+            while (intItem >= (1L << 24) && (intItem & 1) == 0) {
+              intItem >>= 1;
+            }
+            return intItem < (1L << 24);
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)thisItem;
+            ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
+            ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
+            return ef.compareTo(ef2) == 0;
+          }
+          case CBORObjectTypeSingle: {
+            return true;
+          }
+          case CBORObjectTypeDouble: {
+            double fltItem = ((Double)thisItem).doubleValue();
+            if (Double.isNaN(fltItem)) {
+              return true;
+            }
+            float sing = (float)fltItem;
+            return (double)sing == fltItem;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (this.IsNaN()) {
+              return true;
+            }
+            if (this.IsInfinity()) {
+              return true;
+            }
+            ExtendedDecimal ed = (ExtendedDecimal)this.getThisItem();
+            ExtendedDecimal ed2 = ExtendedDecimal.FromSingle(ed.ToSingle());
+            return ed.compareTo(ed2) == 0;
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (this.IsNaN()) {
+              return true;
+            }
+            if (this.IsInfinity()) {
+              return true;
+            }
+            ExtendedFloat ef = (ExtendedFloat)this.getThisItem();
+            ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
+            return ef.compareTo(ef2) == 0;
+          }
+        default:
+          return false;
+      }
+    }
+
+    /**
+     * Returns whether this object's value can be converted to a 64-bit floating
+     * point number without loss of its numerical value.
+     * @return A Boolean value. Returns true if this is a not-a-number value,
+     * even if the value's diagnostic information can't fit in a 64-bit floating
+     * point number.
+     */
+    public boolean CanFitInDouble() {
+      Object thisItem = this.getThisItem();
+      int type = this.getItemType();
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            long intItem = (((Long)thisItem).longValue());
+            if (intItem == Long.MIN_VALUE || intItem == 0) {
+              return true;
+            }
+            intItem = Math.abs(intItem);
+            while (intItem >= (1L << 53) && (intItem & 1) == 0) {
+              intItem >>= 1;
+            }
+            return intItem < (1L << 53);
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)thisItem;
+            ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
+            ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
+            return ef.compareTo(ef2) == 0;
+          }
+          case CBORObjectTypeSingle:
+          case CBORObjectTypeDouble: {
+            return true;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (this.IsNaN()) {
+              return true;
+            }
+            if (this.IsInfinity()) {
+              return true;
+            }
+            ExtendedDecimal ed = (ExtendedDecimal)this.getThisItem();
+            ExtendedDecimal ed2 = ExtendedDecimal.FromDouble(ed.ToDouble());
+            return ed.compareTo(ed2) == 0;
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (this.IsNaN()) {
+              return true;
+            }
+            if (this.IsInfinity()) {
+              return true;
+            }
+            ExtendedFloat ef = (ExtendedFloat)this.getThisItem();
+            ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
+            return ef.compareTo(ef2) == 0;
+          }
+        default:
+          return false;
+      }
+    }
+
+    /**
+     * Returns whether this object's value is an integral value, is -(2^32)
+     * or greater, and is less than 2^32.
+     * @return A Boolean object.
+     */
+    public boolean CanFitInInt32() {
+      if (!this.CanFitInInt64()) {
+        return false;
+      }
+      long v = this.AsInt64();
+      return v >= Integer.MIN_VALUE && v <= Integer.MAX_VALUE;
+    }
+
+    /**
+     * Returns whether this object's value is an integral value, is -(2^63)
+     * or greater, and is less than 2^63.
+     * @return A Boolean object.
+     */
+    public boolean CanFitInInt64() {
+      Object thisItem = this.getThisItem();
+      int type = this.getItemType();
+      long minValue = Long.MIN_VALUE;
+      long maxValue = Long.MAX_VALUE;
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            return true;
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)thisItem;
+            return bigintItem.compareTo(Int64MaxValue) <= 0 &&
+                    bigintItem.compareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeSingle: {
+            float fltItem = ((Float)thisItem).floatValue();
+            if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
+              return false;
+            }
+            float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
+            return fltItem2 == fltItem && fltItem2 >= minValue && fltItem2 <= maxValue;
+          }
+          case CBORObjectTypeDouble: {
+            double fltItem = ((Double)thisItem).doubleValue();
+            if (Double.isNaN(fltItem)) {
+              return false;
+            }
+            double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+            return fltItem2 == fltItem && fltItem >= minValue && fltItem <= maxValue;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (!this.isIntegral()) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
+            return bi.compareTo(Int64MaxValue) <= 0 &&
+                    bi.compareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (!this.isIntegral()) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
+            return bi.compareTo(Int64MaxValue) <= 0 &&
+                    bi.compareTo(Int64MinValue) >= 0;
+          }
+        default:
+          return false;
+      }
+    }
+
+    /**
+     * Returns whether this object's value, truncated to an integer, would
+     * be -(2^63) or greater, and less than 2^63.
+     * @return A Boolean object.
+     */
+    public boolean CanTruncatedIntFitInInt64() {
+      int type = this.getItemType();
+      Object thisItem = this.getThisItem();
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            return true;
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)this.getThisItem();
+            return bigintItem.compareTo(Int64MaxValue) <= 0 &&
+                    bigintItem.compareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeSingle: {
+            float fltItem = ((Float)this.getThisItem()).floatValue();
+            if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
+              return false;
+            }
+            fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
+            return fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE;
+          }
+          case CBORObjectTypeDouble: {
+            double fltItem = ((Double)this.getThisItem()).doubleValue();
+            if (Double.isNaN(fltItem)) {
+              return false;
+            }
+            fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+            return fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (!((ExtendedDecimal)thisItem).isFinite()) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
+            return bi.compareTo(Int64MaxValue) <= 0 &&
+                    bi.compareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (!((ExtendedFloat)thisItem).isFinite()) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
+            return bi.compareTo(Int64MaxValue) <= 0 &&
+                    bi.compareTo(Int64MinValue) >= 0;
+          }
+        default:
+          return false;
+      }
+    }
+
+    /**
+     * Returns whether this object's value, truncated to an integer, would
+     * be -(2^31) or greater, and less than 2^31.
+     * @return A Boolean object.
+     */
+    public boolean CanTruncatedIntFitInInt32() {
+      Object thisItem = this.getThisItem();
+      int type = this.getItemType();
+      int minValue = Integer.MIN_VALUE;
+      int maxValue = Integer.MAX_VALUE;
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            long longItem = (((Long)thisItem).longValue());
+            return longItem <= maxValue && longItem >= minValue;
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)thisItem;
+            return (bigintItem.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
+                    bigintItem.compareTo(BigInteger.valueOf(minValue)) >= 0);
+          }
+          case CBORObjectTypeSingle: {
+            float fltItem = ((Float)thisItem).floatValue();
+            if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
+              return false;
+            }
+            fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
+            return fltItem >= minValue && fltItem <= maxValue;
+          }
+          case CBORObjectTypeDouble: {
+            double fltItem = ((Double)thisItem).doubleValue();
+            if (Double.isNaN(fltItem)) {
+              return false;
+            }
+            fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+            return fltItem >= minValue && fltItem <= maxValue;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (!((ExtendedDecimal)thisItem).isFinite()) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
+            return (bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
+                    bi.compareTo(BigInteger.valueOf(minValue)) >= 0);
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (!((ExtendedFloat)thisItem).isFinite()) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedFloat)this.getThisItem()).ToBigInteger();
+            return (bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
+                    bi.compareTo(BigInteger.valueOf(minValue)) >= 0);
+          }
+        default:
+          return false;
+      }
+    }
+
+    /**
+     * Gets a value indicating whether this object represents an integral
+     * number, that is, a number without a fractional part. Infinity and
+     * not-a-number are not considered integral.
+     * @return Whether this object represents an integral number, that
+     * is, a number without a fractional part.
+     */
+    public boolean isIntegral() {
+        Object thisItem = this.getThisItem();
+        int type = this.getItemType();
+        switch (type) {
+          case CBORObjectTypeInteger:
+            case CBORObjectTypeBigInteger: {
+              return true;
+            }
+            case CBORObjectTypeSingle: {
+              float fltItem = ((Float)thisItem).floatValue();
+              if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
+                return false;
+              }
+              return Math.floor(fltItem) == fltItem;
+            }
+            case CBORObjectTypeDouble: {
+              double fltItem = ((Double)thisItem).doubleValue();
+              if (Double.isNaN(fltItem) || ((Double)(fltItem)).isInfinite()) {
+                return false;
+              }
+              return Math.floor(fltItem) == fltItem;
+            }
+            case CBORObjectTypeExtendedDecimal: {
+              ExtendedDecimal ed = (ExtendedDecimal)this.getThisItem();
+              if (!ed.isFinite()) {
+                return false;
+              }
+              if (ed.getExponent().signum() >= 0) {
+                return true;
+              }
+              ExtendedDecimal ed2 = ExtendedDecimal.FromBigInteger(ed.ToBigInteger());
+              return ed2.compareTo(ed) == 0;
+            }
+            case CBORObjectTypeExtendedFloat: {
+              ExtendedFloat ef = (ExtendedFloat)this.getThisItem();
+              if (!ef.isFinite()) {
+                return false;
+              }
+              if (ef.getExponent().signum() >= 0) {
+                return true;
+              }
+              ExtendedFloat ef2 = ExtendedFloat.FromBigInteger(ef.ToBigInteger());
+              return ef2.compareTo(ef) == 0;
+            }
+          default:
+            return false;
+        }
+      }
 
     private int AsInt32(int minValue, int maxValue) {
       Object thisItem = this.getThisItem();
@@ -2541,7 +2902,7 @@ public void set(String key, CBORObject value) {
      * to convert the value beforehand.</li> <li>If the value has an exponent
      * of zero, writes the value as an unsigned integer or signed integer
      * if the number can fit either type or as a big integer otherwise.</li>
-     * <li>In all other cases, writes the value as a decimal fraction.</li>
+     * <li>In all other cases, writes the value as a decimal number.</li>
      * </ul>
      * @param bignum Decimal fraction to write. Can be null.
      * @param stream InputStream to write to.
@@ -3819,7 +4180,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
-     * Generates a CBOR object from a decimal fraction.
+     * Generates a CBOR object from a decimal number.
      * @param otherValue An arbitrary-precision decimal number.
      * @return A CBOR number object.
      * @throws java.lang.IllegalArgumentException The value's exponent is less
@@ -4124,26 +4485,23 @@ public static CBORObject FromObject(Object obj) {
       if(obj instanceof Double) {
         return FromObject(((Double)obj).doubleValue());
       }
-      if(obj instanceof List<?>) {
-        return FromObject((List<CBORObject>)obj);
-      }
       byte[] bytearr = ((obj instanceof byte[]) ? (byte[])obj : null);
       if (bytearr != null) {
         return FromObject(bytearr);
       }
       CBORObject objret;
-      if(obj instanceof System.Collections.Map) {
+      if(obj instanceof Map<?,?>) {
         // Map appears first because Map includes Iterable
         objret = CBORObject.NewMap();
-        System.Collections.Map objdic = (System.Collections.Map)obj;
-        for(Object key : objdic) {
+        Map<?,?> objdic = (Map<?,?>)obj;
+        for(Object key : objdic.keySet()) {
           objret.set(CBORObject.FromObject(key),CBORObject.FromObject(objdic.get(key)));
         }
         return objret;
       }
-      if(obj instanceof System.Collections.Iterable) {
+      if(obj instanceof Iterable<?>) {
         objret = CBORObject.NewArray();
-        for(Object element : (System.Collections.Iterable)obj) {
+        for(Object element : (Iterable<?>)obj) {
           objret.Add(CBORObject.FromObject(element));
         }
         return objret;
@@ -4160,7 +4518,7 @@ public static CBORObject FromObject(Object obj) {
         return FromObject((CBORObject[])obj);
       }
       objret = CBORObject.NewMap();
-      foreach (Map.Entry<String, Object> key in PropertyMap.GetProperties(obj)) {
+      for(Map.Entry<String, Object> key : PropertyMap.GetProperties(obj)) {
         objret.set(key.getKey(),CBORObject.FromObject(key.getValue()));
       }
       return objret;
