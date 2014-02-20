@@ -17,7 +17,9 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
-    <SourceAnalysisOverrideSettingsFile>C:\Users\Peter\AppData\Roaming\ICSharpCode/SharpDevelop4\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <SourceAnalysisOverrideSettingsFile>Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -34,6 +36,8 @@
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <StartAction>Project</StartAction>
+    <StartArguments>Test.</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -43,6 +47,17 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug Dotnet' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <StartAction>Project</StartAction>
+    <StartArguments>Test.</StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework" />
@@ -58,41 +73,42 @@
     <Compile Include="CBORExtraTest.cs" />
     <Compile Include="CBORObjectMathTest.cs" />
     <Compile Include="CBORTest.cs" />
+    <Compile Include="DecimalTest.cs" />
+    <Compile Include="ExtensiveTest.cs" />
     <Compile Include="FastRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner.cs" />
+    <Compile Include="SmileEncoding.cs" />
     <Compile Include="TestCommon.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CBOR.csproj">
-      <Project>{3A85B4B0-5FF0-47F3-8D3E-8DC5F398041F}</Project>
-      <Name>CBOR</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ProfilingSessions\Session20131117_073438.sdps" />
-    <Content Include="ProfilingSessions\Session20131117_075920.sdps" />
-    <Content Include="ProfilingSessions\Session20131117_080050.sdps" />
-    <Content Include="ProfilingSessions\Session20131117_191704.sdps" />
-    <Content Include="ProfilingSessions\Session20131117_215523.sdps" />
-    <Content Include="ProfilingSessions\Session20131121_204124.sdps" />
-    <Content Include="ProfilingSessions\Session20131124_160442.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_012223.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_042235.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_044329.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_052858.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_125031.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_142716.sdps" />
-    <Content Include="ProfilingSessions\Session20131201_144654.sdps" />
-    <Content Include="ProfilingSessions\Session20131202_013819.sdps" />
-    <Content Include="ProfilingSessions\Session20131202_015101.sdps" />
-    <Content Include="ProfilingSessions\Session20131203_150657.sdps" />
-    <Content Include="ProfilingSessions\Session20131203_150841.sdps" />
-    <Content Include="ProfilingSessions\Session20131203_160449.sdps" />
-    <Content Include="ProfilingSessions\Session20131203_161532.sdps" />
+    <ProjectReference Include="..\Portable.CBOR.csproj">
+      <Project>{23A1B70C-F064-47B6-8B7E-E2042CDAD8C7}</Project>
+      <Name>Portable.CBOR</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ProfilingSessions\Session20140107_153658.sdps" />
+    <Content Include="ProfilingSessions\Session20140108_050705.sdps" />
+    <Content Include="ProfilingSessions\Session20140108_051758.sdps" />
+    <Content Include="ProfilingSessions\Session20140110_220325.sdps" />
+    <Content Include="ProfilingSessions\Session20140114_150647.sdps" />
+    <Content Include="ProfilingSessions\Session20140130_083113.sdps" />
+    <Content Include="ProfilingSessions\Session20140201_085001.sdps" />
+    <Content Include="ProfilingSessions\Session20140201_101308.sdps" />
+    <Content Include="ProfilingSessions\Session20140201_103020.sdps" />
+    <Content Include="ProfilingSessions\Session20140202_144455.sdps" />
+    <Content Include="ProfilingSessions\Session20140202_172907.sdps" />
+    <Content Include="ProfilingSessions\Session20140202_175543.sdps" />
+    <Content Include="ProfilingSessions\Session20140204_130123.sdps" />
+    <Content Include="ProfilingSessions\Session20140204_204731.sdps" />
+    <Content Include="ProfilingSessions\Session20140205_131343.sdps" />
+    <Content Include="ProfilingSessions\Session20140205_131805.sdps" />
+    <Content Include="ProfilingSessions\Session20140205_161255.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />
 </Project>

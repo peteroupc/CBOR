@@ -1,4 +1,14 @@
 * text=auto
+*.cs eol=lf
+*.java eol=lf
+*.js eol=lf
+*.rb eol=lf
+*.py eol=lf
+*.php eol=lf
+*.c eol=lf
+*.h eol=lf
+*.cc eol=lf
+*.cpp eol=lf
 *.cs     diff=csharp
 *.sln    merge=union
 *.csproj merge=union
