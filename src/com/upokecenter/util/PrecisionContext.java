@@ -538,7 +538,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Precision context for the Common Language Infrastructure (.NET
      * Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
-     * to round a decimal fraction to this format.
+     * to round a decimal number to this format.
      */
 
     public static final PrecisionContext CliDecimal =

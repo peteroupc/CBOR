@@ -13,8 +13,8 @@ at: http://peteroupc.github.io/CBOR/
   public enum CBORType {
     /**
      * A number of any kind, including integers, big integers, floating
-     * point numbers, and decimal fractions. The floating-point value
-     * Not-a-Number is also included in the Number type.
+     * point numbers, and decimal numbers. The floating-point value Not-a-Number
+     * is also included in the Number type.
      */
     Number,
 

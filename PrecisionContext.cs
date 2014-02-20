@@ -529,7 +529,7 @@ namespace PeterO {
 
     /// <summary>Precision context for the Common Language Infrastructure
     /// (.NET Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
-    /// to round a decimal fraction to this format.</summary>
+    /// to round a decimal number to this format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",

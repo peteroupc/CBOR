@@ -19,7 +19,7 @@ namespace PeterO {
       this.wrapper = wrapper;
     }
 
-    private PrecisionContext GetContextWithFlags(PrecisionContext ctx) {
+    private static PrecisionContext GetContextWithFlags(PrecisionContext ctx) {
       if (ctx == null) {
         return ctx;
       }
@@ -58,8 +58,9 @@ namespace PeterO {
           ctxDest.Flags |= ctxSrc.Flags;
           if ((ctxSrc.Flags & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
-            ctxDest.Flags |= PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |
+            int newflags = PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |
                               PrecisionContext.FlagRounded;
+            ctxDest.Flags |= newflags;
           }
         }
       }
@@ -162,10 +163,6 @@ namespace PeterO {
       return this.HandleNotANumber(val, val2, ctx);
     }
 
-    private T CheckNotANumber3(T val, T val2, T val3, PrecisionContext ctx) {
-      throw new NotImplementedException();
-    }
-
     private T RoundBeforeOp(T val, PrecisionContext ctx) {
       if (ctx == null || !ctx.HasMaxPrecision) {
         return val;
@@ -182,8 +179,9 @@ namespace PeterO {
       #endif
       if ((ctx2.Flags & PrecisionContext.FlagInexact) != 0) {
         if (ctx.HasFlags) {
-          ctx.Flags |= PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact |
+          int newflags = PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact |
             PrecisionContext.FlagRounded;
+          ctx.Flags |= newflags;
         }
       }
       if ((ctx2.Flags & PrecisionContext.FlagRounded) != 0) {
@@ -204,7 +202,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToIntegerNaturalScale(thisValue, divisor, ctx2);
@@ -221,7 +219,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToIntegerZeroScale(thisValue, divisor, ctx2);
@@ -237,7 +235,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       value = this.RoundBeforeOp(value, ctx2);
       value = this.wrapper.Abs(value, ctx2);
       return this.PostProcess(value, ctx, ctx2);
@@ -252,7 +250,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       value = this.RoundBeforeOp(value, ctx2);
       value = this.wrapper.Negate(value, ctx2);
       return this.PostProcess(value, ctx, ctx2);
@@ -268,7 +266,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.Remainder(thisValue, divisor, ctx2);
@@ -285,7 +283,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.RemainderNear(thisValue, divisor, ctx2);
@@ -299,6 +297,7 @@ namespace PeterO {
       return this.wrapper.Pi(ctx);
     }
 
+    /*
     private T PowerIntegral(
       T thisValue,
       BigInteger powIntBig,
@@ -375,7 +374,7 @@ namespace PeterO {
           return this.SignalOverflow2(ctx, retvalNeg);
         }
         // Console.WriteLine("Exp=" + this.GetHelper().GetExponent(r) + " Prec=" + ctx.Precision + " Digits=" + (this.GetHelper().CreateShiftAccumulator(
-        //  BigInteger.Abs(powIntBig)).GetDigitLength()));
+        // BigInteger.Abs(powIntBig)).GetDigitLength()));
         if (ctx != null && ctx.HasFlags) {
           if (inexact) {
             ctx.Flags |= PrecisionContext.FlagRounded;
@@ -386,7 +385,8 @@ namespace PeterO {
         return this.wrapper.RoundToPrecision(r, ctx);
       }
     }
-
+*/
+ /*
     private T SignalOverflow2(PrecisionContext pc, bool neg) {
       if (pc != null) {
         Rounding roundingOnOverflow = pc.Rounding;
@@ -409,6 +409,8 @@ namespace PeterO {
       return this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly ?
         default(T) : this.GetHelper().CreateNewWithFlags(BigInteger.Zero, BigInteger.Zero, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
+    */
+    /*
 
     private T NegateRaw(T val) {
       if (val == null) {
@@ -420,6 +422,7 @@ namespace PeterO {
         this.GetHelper().GetExponent(val),
         sign == 0 ? BigNumberFlags.FlagNegative : 0);
     }
+*/
 
     /// <summary>Not documented yet.</summary>
     /// <param name='thisValue'>A T object. (2).</param>
@@ -431,7 +434,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       pow = this.RoundBeforeOp(pow, ctx2);
       int powSign = this.GetHelper().GetSign(pow);
@@ -439,8 +442,8 @@ namespace PeterO {
         thisValue = this.GetHelper().ValueOf(1);
       } else {
         // Console.WriteLine("was " + thisValue);
-        BigInteger powExponent = this.GetHelper().GetExponent(pow);
-        BigInteger powInteger = BigInteger.Abs(this.GetHelper().GetMantissa(pow));
+        // BigInteger powExponent = this.GetHelper().GetExponent(pow);
+        // BigInteger powInteger = BigInteger.Abs(this.GetHelper().GetMantissa(pow));
         {
           thisValue = this.wrapper.Power(thisValue, pow, ctx2);
         }
@@ -460,7 +463,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.Log10(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -475,7 +478,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       // Console.WriteLine("was: " + thisValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       // Console.WriteLine("now: " + thisValue);
@@ -499,7 +502,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.Exp(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -514,7 +517,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.SquareRoot(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -529,7 +532,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.NextMinus(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -553,7 +556,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.NextPlus(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -570,7 +573,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToExponent(thisValue, divisor, desiredExponent, ctx2);
@@ -587,7 +590,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.Divide(thisValue, divisor, ctx2);
@@ -604,7 +607,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       a = this.RoundBeforeOp(a, ctx2);
       b = this.RoundBeforeOp(b, ctx2);
       a = this.wrapper.MinMagnitude(a, b, ctx2);
@@ -621,7 +624,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       a = this.RoundBeforeOp(a, ctx2);
       b = this.RoundBeforeOp(b, ctx2);
       a = this.wrapper.MaxMagnitude(a, b, ctx2);
@@ -638,7 +641,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       a = this.RoundBeforeOp(a, ctx2);
       b = this.RoundBeforeOp(b, ctx2);
       // choose the left operand if both are equal
@@ -656,7 +659,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       a = this.RoundBeforeOp(a, ctx2);
       b = this.RoundBeforeOp(b, ctx2);
       // choose the left operand if both are equal
@@ -674,7 +677,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       other = this.RoundBeforeOp(other, ctx2);
       thisValue = this.wrapper.Multiply(thisValue, other, ctx2);
@@ -700,7 +703,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToBinaryPrecision(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -715,7 +718,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.Plus(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -730,7 +733,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToPrecision(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -746,7 +749,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       otherValue = this.RoundBeforeOp(otherValue, ctx2);
       thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);
@@ -763,7 +766,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentExact(thisValue, expOther, ctx);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -779,7 +782,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentSimple(thisValue, expOther, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -795,7 +798,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -810,7 +813,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.Reduce(thisValue, ctx);
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
@@ -826,7 +829,7 @@ namespace PeterO {
       if ((object)ret != (object)default(T)) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       other = this.RoundBeforeOp(other, ctx2);
       bool zeroA = this.GetHelper().GetSign(thisValue) == 0;
