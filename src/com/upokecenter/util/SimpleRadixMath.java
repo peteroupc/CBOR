@@ -19,7 +19,7 @@ at: http://peteroupc.github.io/CBOR/
       this.wrapper = wrapper;
     }
 
-    private PrecisionContext GetContextWithFlags(PrecisionContext ctx) {
+    private static PrecisionContext GetContextWithFlags(PrecisionContext ctx) {
       if (ctx == null) {
         return ctx;
       }
@@ -58,8 +58,9 @@ at: http://peteroupc.github.io/CBOR/
           ctxDest.setFlags(ctxDest.getFlags()|(ctxSrc.getFlags()));
           if ((ctxSrc.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
-            ctxDest.setFlags(ctxDest.getFlags()|(PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |))
+            int newflags = PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |
                               PrecisionContext.FlagRounded;
+            ctxDest.setFlags(ctxDest.getFlags()|(newflags));
           }
         }
       }
@@ -162,10 +163,6 @@ at: http://peteroupc.github.io/CBOR/
       return this.HandleNotANumber(val, val2, ctx);
     }
 
-    private T CheckNotANumber3(T val, T val2, T val3, PrecisionContext ctx) {
-      throw new UnsupportedOperationException();
-    }
-
     private T RoundBeforeOp(T val, PrecisionContext ctx) {
       if (ctx == null || !ctx.getHasMaxPrecision()) {
         return val;
@@ -178,8 +175,9 @@ at: http://peteroupc.github.io/CBOR/
 
       if ((ctx2.getFlags() & PrecisionContext.FlagInexact) != 0) {
         if (ctx.getHasFlags()) {
-          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact |))
+          int newflags = PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact |
             PrecisionContext.FlagRounded;
+          ctx.setFlags(ctx.getFlags()|(newflags));
         }
       }
       if ((ctx2.getFlags() & PrecisionContext.FlagRounded) != 0) {
@@ -202,7 +200,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToIntegerNaturalScale(thisValue, divisor, ctx2);
@@ -221,7 +219,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToIntegerZeroScale(thisValue, divisor, ctx2);
@@ -239,7 +237,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       value = this.RoundBeforeOp(value, ctx2);
       value = this.wrapper.Abs(value, ctx2);
       return this.PostProcess(value, ctx, ctx2);
@@ -256,7 +254,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       value = this.RoundBeforeOp(value, ctx2);
       value = this.wrapper.Negate(value, ctx2);
       return this.PostProcess(value, ctx, ctx2);
@@ -274,7 +272,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.Remainder(thisValue, divisor, ctx2);
@@ -293,7 +291,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.RemainderNear(thisValue, divisor, ctx2);
@@ -309,6 +307,7 @@ at: http://peteroupc.github.io/CBOR/
       return this.wrapper.Pi(ctx);
     }
 
+    /*
     private T PowerIntegral(
       T thisValue,
       BigInteger powIntBig,
@@ -385,7 +384,7 @@ at: http://peteroupc.github.io/CBOR/
           return this.SignalOverflow2(ctx, retvalNeg);
         }
         // System.out.println("Exp=" + this.GetHelper().GetExponent(r) + " Prec=" + ctx.getPrecision() + " Digits=" + (this.GetHelper().CreateShiftAccumulator(
-        //  (powIntBig).abs()).GetDigitLength()));
+        // (powIntBig).abs()).GetDigitLength()));
         if (ctx != null && ctx.getHasFlags()) {
           if (inexact) {
             ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
@@ -396,7 +395,8 @@ at: http://peteroupc.github.io/CBOR/
         return this.wrapper.RoundToPrecision(r, ctx);
       }
     }
-
+*/
+ /*
     private T SignalOverflow2(PrecisionContext pc, boolean neg) {
       if (pc != null) {
         Rounding roundingOnOverflow = pc.getRounding();
@@ -419,6 +419,8 @@ at: http://peteroupc.github.io/CBOR/
       return this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly ?
         null : this.GetHelper().CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
+    */
+    /*
 
     private T NegateRaw(T val) {
       if (val == null) {
@@ -430,6 +432,7 @@ at: http://peteroupc.github.io/CBOR/
         this.GetHelper().GetExponent(val),
         sign == 0 ? BigNumberFlags.FlagNegative : 0);
     }
+*/
 
     /**
      * Not documented yet.
@@ -443,7 +446,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       pow = this.RoundBeforeOp(pow, ctx2);
       int powSign = this.GetHelper().GetSign(pow);
@@ -451,8 +454,8 @@ at: http://peteroupc.github.io/CBOR/
         thisValue = this.GetHelper().ValueOf(1);
       } else {
         // System.out.println("was " + thisValue);
-        BigInteger powExponent = this.GetHelper().GetExponent(pow);
-        BigInteger powInteger = (this.GetHelper().GetMantissa(pow)).abs();
+        // BigInteger powExponent = this.GetHelper().GetExponent(pow);
+        // BigInteger powInteger = (this.GetHelper().GetMantissa(pow)).abs();
         {
           thisValue = this.wrapper.Power(thisValue, pow, ctx2);
         }
@@ -474,7 +477,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.Log10(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -491,7 +494,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       // System.out.println("was: " + thisValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       // System.out.println("now: " + thisValue);
@@ -519,7 +522,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.Exp(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -536,7 +539,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.SquareRoot(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -553,7 +556,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.NextMinus(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -581,7 +584,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.NextPlus(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -600,7 +603,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.DivideToExponent(thisValue, divisor, desiredExponent, ctx2);
@@ -619,7 +622,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
       thisValue = this.wrapper.Divide(thisValue, divisor, ctx2);
@@ -638,7 +641,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       a = this.RoundBeforeOp(a, ctx2);
       b = this.RoundBeforeOp(b, ctx2);
       a = this.wrapper.MinMagnitude(a, b, ctx2);
@@ -657,7 +660,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       a = this.RoundBeforeOp(a, ctx2);
       b = this.RoundBeforeOp(b, ctx2);
       a = this.wrapper.MaxMagnitude(a, b, ctx2);
@@ -676,7 +679,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       a = this.RoundBeforeOp(a, ctx2);
       b = this.RoundBeforeOp(b, ctx2);
       // choose the left operand if both are equal
@@ -696,7 +699,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       a = this.RoundBeforeOp(a, ctx2);
       b = this.RoundBeforeOp(b, ctx2);
       // choose the left operand if both are equal
@@ -716,7 +719,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       other = this.RoundBeforeOp(other, ctx2);
       thisValue = this.wrapper.Multiply(thisValue, other, ctx2);
@@ -746,7 +749,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToBinaryPrecision(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -763,7 +766,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.Plus(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -780,7 +783,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToPrecision(thisValue, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -798,7 +801,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       otherValue = this.RoundBeforeOp(otherValue, ctx2);
       thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);
@@ -817,7 +820,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentExact(thisValue, expOther, ctx);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -835,7 +838,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentSimple(thisValue, expOther, ctx2);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -853,7 +856,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
       return this.PostProcess(thisValue, ctx, ctx2);
@@ -870,7 +873,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.Reduce(thisValue, ctx);
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
@@ -888,7 +891,7 @@ at: http://peteroupc.github.io/CBOR/
       if ((Object)ret != (Object)null) {
         return ret;
       }
-      PrecisionContext ctx2 = this.GetContextWithFlags(ctx);
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       other = this.RoundBeforeOp(other, ctx2);
       boolean zeroA = this.GetHelper().GetSign(thisValue) == 0;

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{8FE63143-541E-448D-8337-A98D1FA51541}</ProjectGuid>
@@ -60,7 +60,7 @@
     <StartArguments>Test.</StartArguments>
   </PropertyGroup>
   <ItemGroup>
-            <Reference Include="nunit.framework" />
+    <Reference Include="nunit.framework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -78,6 +78,7 @@
     <Compile Include="FastRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner.cs" />
+    <Compile Include="SmileEncoding.cs" />
     <Compile Include="TestCommon.cs" />
   </ItemGroup>
   <ItemGroup>
