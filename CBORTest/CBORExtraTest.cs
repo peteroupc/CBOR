@@ -7,10 +7,9 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-// using System.Numerics;
 using System.Collections.Generic;
-using System.Linq;
 using System.Globalization;
+using System.Linq;
 using NUnit.Framework;
 using PeterO;
 
@@ -155,15 +154,34 @@ namespace Test {
       }
     }
 
+    private enum AByte : byte {
+      A = 254,
+      B
+    }
+
+    private enum AInt : int {
+      A = 256,
+      B
+    }
+
+    private enum AULong : ulong {
+      A = 999999,
+      B
+    }
+
     [Test]
-    public void TestAnonymousTypes() {
-      CBORObject obj = CBORObject.FromObject(new { A = "a", B = "b" });
-      Assert.AreEqual("a", obj["A"].AsString());
-      Assert.AreEqual("b", obj["B"].AsString());
+    public void TestArbitraryTypes() {
+      CBORObject obj = CBORObject.FromObject(new { A = AByte.A, B = AInt.A, C = AULong.A });
+      Assert.AreEqual(254, obj["a"].AsInt32());
+      Assert.AreEqual(256, obj["b"].AsInt32());
+      Assert.AreEqual(999999, obj["c"].AsInt32());
+      obj = CBORObject.FromObject(new { A = "a", B = "b" });
+      Assert.AreEqual("a", obj["a"].AsString());
+      Assert.AreEqual("b", obj["b"].AsString());
       TestCommon.AssertRoundTrip(obj);
       obj = CBORObject.FromObject(new { A = "c", B = "b" });
-      Assert.AreEqual("c", obj["A"].AsString());
-      Assert.AreEqual("b", obj["B"].AsString());
+      Assert.AreEqual("c", obj["a"].AsString());
+      Assert.AreEqual("b", obj["b"].AsString());
       TestCommon.AssertRoundTrip(obj);
       obj = CBORObject.FromObject(RangeExclusive(0, 10));
       Assert.AreEqual(10, obj.Count);
@@ -183,9 +201,11 @@ namespace Test {
       // Select all even numbers
       obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i % 2 == 0 select new { A = i, B = i + 1 });
       Assert.AreEqual(5, obj.Count);
-      Assert.AreEqual(0, obj[0]["A"].AsInt32());
-      Assert.AreEqual(3, obj[1]["B"].AsInt32());
+      Assert.AreEqual(0, obj[0]["a"].AsInt32());
+      Assert.AreEqual(3, obj[1]["b"].AsInt32());
       TestCommon.AssertRoundTrip(obj);
+      obj = CBORObject.FromObject(new String[] { "a", "b", "c","d","e"});
+      obj = CBORObject.FromObject(new String[2, 3, 4]);
     }
 
     private static string DateTimeToString(DateTime bi) {

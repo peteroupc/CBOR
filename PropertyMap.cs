@@ -11,14 +11,35 @@ using System.Reflection;
 
 namespace PeterO
 {
-  /// <summary>Description of PropertyMap.</summary>
+    /// <summary>Description of PropertyMap.</summary>
   internal class PropertyMap
   {
     private sealed class PropertyData {
-      public string name;
-      public PropertyInfo prop;
+      private string name;
+
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+public string Name {
+        get {
+ return this.name;
+}
+
+        set { this.name = value; }
+      }
+
+      private PropertyInfo prop;
+
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+public PropertyInfo Prop {
+        get {
+ return this.prop;
+}
+
+        set { this.prop = value; }
+      }
     }
-    
+
     private static IDictionary<Type, IList<PropertyData>> propertyLists =
       new Dictionary<Type, IList<PropertyData>>();
 
@@ -32,22 +53,22 @@ namespace PeterO
         bool anonymous = t.Name.Contains("__AnonymousType");
         foreach (PropertyInfo pi in t.GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
           if (pi.CanRead && (pi.CanWrite || anonymous) && pi.GetIndexParameters().Length == 0) {
-            PropertyData pd=new PropertyMap.PropertyData();
-            pd.name=pi.Name;
+            PropertyData pd = new PropertyMap.PropertyData();
+            pd.Name = pi.Name;
             // Convert 'IsXYZ' to 'XYZ'
-            if(pd.name.Length>=3 &&
-               pd.name[0]=='I' && pd.name[1]=='s' &&
-               pd.name[2]>='A' && pd.name[2]=='Z'){
-              pd.name=pd.name.Substring(2);
+            if (pd.Name.Length >= 3 &&
+                pd.Name[0] == 'I' && pd.Name[1] == 's' &&
+                pd.Name[2] >= 'A' && pd.Name[2] == 'Z') {
+              pd.Name = pd.Name.Substring(2);
             }
             // Convert to camel case
-            if(pd.name[0]>='A' && pd.name[0]<='Z'){
-              StringBuilder sb=new System.Text.StringBuilder();
-              sb.Append((char)(pd.name.charAt(0)+0x20));
-              sb.Append(pd.name.Substring(1));
-              pd.name=pd.toString();
+            if (pd.Name[0] >= 'A' && pd.Name[0] <= 'Z') {
+              System.Text.StringBuilder sb = new System.Text.StringBuilder();
+              sb.Append((char)(pd.Name[0] + 0x20));
+              sb.Append(pd.Name.Substring(1));
+              pd.Name = sb.ToString();
             }
-            pd.prop=pi;
+            pd.Prop = pi;
             ret.Add(pd);
           }
         }
@@ -56,9 +77,77 @@ namespace PeterO
       }
     }
 
+    private static void FromArrayRecursive(
+      Array arr,
+      int[] index,
+      int dimension,
+      CBORObject obj) {
+      int dimLength = arr.GetLength(dimension);
+      int rank = index.Length;
+      for (int i = 0; i < dimLength; ++i) {
+        if (dimension + 1 == rank) {
+          index[dimension] = i;
+          obj.Add(CBORObject.FromObject(arr.GetValue(index)));
+        } else {
+          CBORObject child = CBORObject.NewArray();
+          for (int j = dimension + 1; j < dimLength; ++j) {
+            index[j] = 0;
+          }
+          FromArrayRecursive(arr, index, dimension + 1, child);
+          obj.Add(child);
+        }
+      }
+    }
+
+    public static CBORObject FromArray(Object arrObj) {
+      Array arr = (Array)arrObj;
+      int rank = arr.Rank;
+      if (rank == 0) {
+ return CBORObject.NewArray();
+}
+      CBORObject obj = null;
+      if (rank == 1) {
+        // Most common case: the array is one-dimensional
+        obj = CBORObject.NewArray();
+        int len = arr.GetLength(0);
+        for (int i = 0; i < len; ++i) {
+          obj.Add(CBORObject.FromObject(arr.GetValue(i)));
+        }
+        return obj;
+      }
+      int[] index = new int[rank];
+      obj = CBORObject.NewArray();
+      FromArrayRecursive(arr, index, 0, obj);
+      return obj;
+    }
+
+    public static object EnumToObject(Enum value) {
+      Type t = Enum.GetUnderlyingType(value.GetType());
+      if (t.Equals(typeof(ulong))) {
+        byte[] data = new byte[13];
+        ulong uvalue = Convert.ToUInt64(value);
+        data[0] = (byte)(uvalue & 0xFF);
+        data[1] = (byte)((uvalue >> 8) & 0xFF);
+        data[2] = (byte)((uvalue >> 16) & 0xFF);
+        data[3] = (byte)((uvalue >> 24) & 0xFF);
+        data[4] = (byte)((uvalue >> 32) & 0xFF);
+        data[5] = (byte)((uvalue >> 40) & 0xFF);
+        data[6] = (byte)((uvalue >> 48) & 0xFF);
+        data[7] = (byte)((uvalue >> 56) & 0xFF);
+        data[8] = (byte)0;
+        return BigInteger.fromByteArray(data, true);
+      } else if (t.Equals(typeof(long))) {
+        return Convert.ToInt64(value);
+      } else if (t.Equals(typeof(uint))) {
+        return Convert.ToInt64(value);
+      } else {
+        return Convert.ToInt32(value);
+      }
+    }
+
     public static IEnumerable<KeyValuePair<string, object>> GetProperties(Object o) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
-        yield return new KeyValuePair<string, object>(key.name, key.prop.GetValue(o, null));
+        yield return new KeyValuePair<string, object>(key.Name, key.Prop.GetValue(o, null));
       }
     }
   }
