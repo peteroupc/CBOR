@@ -4,337 +4,366 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
 
-
-//import java.math.*;
+// import java.math.*;
 
   final class BitShiftAccumulator implements IShiftAccumulator {
-    int bitLeftmost;
+    private static final int SmallBitLength = 32;
+
+    private int bitLeftmost;
 
     /**
-     * Gets whether the last discarded bit was set.
+     * Gets a value indicating whether the last discarded bit was set.
+     * @return Whether the last discarded bit was set.
      */
-    public int getLastDiscardedDigit() { return bitLeftmost; }
-    int bitsAfterLeftmost;
-
-    /**
-     * Gets whether any of the discarded bits to the right of the last one was
-     * set.
-     */
-    public int getOlderDiscardedDigits() { return bitsAfterLeftmost; }
-    BigInteger shiftedBigInt;
-    long knownBitLength;
-
-
-    /**
-     * Gets the length of the shifted value in bits.
-     */
-    public long getDigitLength() {
-        if (knownBitLength < 0) {
-          knownBitLength = CalcKnownBitLength();
-        }
-        return knownBitLength;
+    public int getLastDiscardedDigit() {
+        return this.bitLeftmost;
       }
-    long shiftedLong;
-    boolean isSmall;
+
+    private int bitsAfterLeftmost;
 
     /**
-     * 
+     * Gets a value indicating whether any of the discarded bits to the right
+     * of the last one was set.
+     * @return Whether any of the discarded bits to the right of the last one
+     * was set.
+     */
+    public int getOlderDiscardedDigits() {
+        return this.bitsAfterLeftmost;
+      }
+
+    private BigInteger shiftedBigInt;
+    private FastInteger knownBitLength;
+
+    /**
+     * Not documented yet.
+     * @return A FastInteger object.
+     */
+    public FastInteger GetDigitLength() {
+      if (this.knownBitLength == null) {
+        this.knownBitLength = this.CalcKnownBitLength();
+      }
+      return FastInteger.Copy(this.knownBitLength);
+    }
+
+    /**
+     * Not documented yet.
+     * @param bits A FastInteger object.
+     */
+    public void ShiftToDigits(FastInteger bits) {
+      if (bits.signum() < 0) {
+ throw new IllegalArgumentException("bits's sign (" + Long.toString((long)bits.signum()) + ") is not greater or equal to " + "0");
+}
+      if (bits.CanFitInInt32()) {
+        this.ShiftToDigitsInt(bits.AsInt32());
+      } else {
+        this.knownBitLength = this.CalcKnownBitLength();
+        BigInteger bigintDiff = this.knownBitLength.AsBigInteger();
+        BigInteger bitsBig = bits.AsBigInteger();
+        bigintDiff=bigintDiff.subtract(bitsBig);
+        if (bigintDiff.signum() > 0) {
+          // current length is greater than the
+          // desired bit length
+          this.ShiftRight(FastInteger.FromBig(bigintDiff));
+        }
+      }
+    }
+
+    private int shiftedSmall;
+    private boolean isSmall;
+
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
      */
     public BigInteger getShiftedInt() {
-        if (isSmall)
-          return BigInteger.valueOf(shiftedLong);
-        else
-          return shiftedBigInt;
+        if (this.isSmall) {
+          return BigInteger.valueOf(this.shiftedSmall);
+        } else {
+          return this.shiftedBigInt;
+        }
       }
-    /**
-     * 
-     */
-    public long getShiftedIntSmall() {
-        if (isSmall)
-          return shiftedLong;
-        else
-          return shiftedBigInt.longValue();
-      }
-    FastInteger discardedBitCount;
 
     /**
-     * 
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
      */
-    public FastInteger getDiscardedDigitCount() { return discardedBitCount; }
+    public FastInteger getShiftedIntFast() {
+        if (this.isSmall) {
+          return new FastInteger(this.shiftedSmall);
+        } else {
+          return FastInteger.FromBig(this.shiftedBigInt);
+        }
+      }
 
-        public BitShiftAccumulator(BigInteger bigint,
+    private FastInteger discardedBitCount;
+
+    /**
+     * Gets the number of digits discarded.
+     * @return The number of digits discarded.
+     */
+    public FastInteger getDiscardedDigitCount() {
+        return this.discardedBitCount;
+      }
+
+    public BitShiftAccumulator (
+      BigInteger bigint,
       int lastDiscarded,
-      int olderDiscarded
-      ){
- this(bigint);
-        bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
-        bitLeftmost = (lastDiscarded != 0) ? 1 : 0;
+      int olderDiscarded) {
+      if (bigint.signum() < 0) {
+ throw new IllegalArgumentException("bigint's sign (" + Long.toString((long)bigint.signum()) + ") is not greater or equal to " + "0");
+}
+      if (bigint.canFitInInt()) {
+        this.isSmall = true;
+        this.shiftedSmall = bigint.intValue();
+      } else {
+        this.shiftedBigInt = bigint;
+      }
+      this.discardedBitCount = new FastInteger(0);
+      this.bitsAfterLeftmost = (olderDiscarded != 0) ? 1 : 0;
+      this.bitLeftmost = (lastDiscarded != 0) ? 1 : 0;
     }
-    public BitShiftAccumulator(BigInteger bigint) {
-      if (bigint.signum() < 0)
-        throw new IllegalArgumentException("bigint is negative");
-      shiftedBigInt = bigint;
-      discardedBitCount = new FastInteger();
-      knownBitLength = -1;
+
+    public static BitShiftAccumulator FromInt32(int smallNumber) {
+      if (smallNumber < 0) {
+ throw new IllegalArgumentException("smallNumber (" + Long.toString((long)smallNumber) + ") is not greater or equal to " + "0");
+}
+      BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.ZERO, 0, 0);
+      bsa.shiftedSmall = smallNumber;
+      bsa.discardedBitCount = new FastInteger(0);
+      bsa.isSmall = true;
+      return bsa;
     }
-    public BitShiftAccumulator(long longInt) {
-      if (longInt < 0)
-        throw new IllegalArgumentException("longInt is negative");
-      shiftedLong = longInt;
-      discardedBitCount = new FastInteger();
-      isSmall = true;
-      knownBitLength = -1;
-    }
+
     /**
-     * 
+     * Not documented yet.
      * @param fastint A FastInteger object.
      */
     public void ShiftRight(FastInteger fastint) {
-      if (fastint.signum() <= 0) return;
-      if (fastint.CanFitInInt64()) {
-        ShiftRight(fastint.AsInt64());
+      if (fastint.signum() <= 0) {
+        return;
+      }
+      if (fastint.CanFitInInt32()) {
+        this.ShiftRightInt(fastint.AsInt32());
       } else {
         BigInteger bi = fastint.AsBigInteger();
         while (bi.signum() > 0) {
-          long count = 1000000;
+          int count = 1000000;
           if (bi.compareTo(BigInteger.valueOf(1000000)) < 0) {
-            count = bi.longValue();
+            count = bi.intValue();
           }
-          ShiftRight(count);
+          this.ShiftRightInt(count);
           bi=bi.subtract(BigInteger.valueOf(count));
+          if (this.isSmall ? this.shiftedSmall == 0 : this.shiftedBigInt.signum()==0) {
+            break;
+          }
         }
       }
     }
-    private static byte[] ReverseBytes(byte[] bytes) {
-      if ((bytes) == null) throw new NullPointerException("bytes");
-      int half = bytes.length >> 1;
-      int right = bytes.length - 1;
-      for (int i = 0; i < half; i++, right--) {
-        byte value = bytes[i];
-        bytes[i] = bytes[right];
-        bytes[right] = value;
-      }
-      return bytes;
-    }
 
-    private void ShiftRightBig(long bits) {
-      if (bits <= 0) return;
-      if (shiftedBigInt.signum()==0) {
-        discardedBitCount.Add(bits);
-        bitsAfterLeftmost |= bitLeftmost;
-        bitLeftmost = 0;
-        knownBitLength = 1;
+    private void ShiftRightBig(int bits) {
+      if (bits <= 0) {
         return;
       }
-      byte[] bytes = ReverseBytes(shiftedBigInt.toByteArray());
-      knownBitLength = ((long)bytes.length) << 3;
-      // Find the last bit set
-      for (int i = bytes.length - 1; i >= 0; i--) {
-        int b = (int)bytes[i];
-        if (b != 0) {
-          if ((b & 0x80) != 0) { knownBitLength -= 0; break; }
-          if ((b & 0x40) != 0) { knownBitLength -= 1; break; }
-          if ((b & 0x20) != 0) { knownBitLength -= 2; break; }
-          if ((b & 0x10) != 0) { knownBitLength -= 3; break; }
-          if ((b & 0x08) != 0) { knownBitLength -= 4; break; }
-          if ((b & 0x04) != 0) { knownBitLength -= 5; break; }
-          if ((b & 0x02) != 0) { knownBitLength -= 6; break; }
-          if ((b & 0x01) != 0) { knownBitLength -= 7; break; }
-        }
-        knownBitLength -= 8;
+      if (this.shiftedBigInt.signum()==0) {
+        this.discardedBitCount.AddInt(bits);
+        this.bitsAfterLeftmost |= this.bitLeftmost;
+        this.bitLeftmost = 0;
+        this.isSmall = true;
+        this.shiftedSmall = 0;
+        this.knownBitLength = new FastInteger(1);
+        return;
       }
-      long bitDiff = 0;
-      if (bits > knownBitLength) {
-        bitDiff = bits - knownBitLength;
+      if (this.knownBitLength == null) {
+        this.knownBitLength = this.GetDigitLength();
       }
-      long bitShift = Math.min(knownBitLength, bits);
-      if (bits >= knownBitLength) {
-        isSmall = true;
-        shiftedLong = 0;
-        knownBitLength = 1;
+      this.discardedBitCount.AddInt(bits);
+      int cmp = this.knownBitLength.CompareToInt(bits);
+      if (cmp < 0) {
+        // too few bits
+        this.bitsAfterLeftmost |= this.bitLeftmost;
+        this.bitsAfterLeftmost |= this.shiftedBigInt.signum()==0 ? 0 : 1;
+        this.bitLeftmost = 0;
+        this.isSmall = true;
+        this.shiftedSmall = 0;
+        this.knownBitLength = new FastInteger(1);
       } else {
-        long tmpBitShift = bitShift;
-        while (tmpBitShift > 0 && shiftedBigInt.signum()!=0) {
-          int bs = (int)Math.min(1000000, tmpBitShift);
-          shiftedBigInt=shiftedBigInt.shiftRight(bs);
-          tmpBitShift -= bs;
-        }
-        knownBitLength = knownBitLength - bitShift;
-      }
-      discardedBitCount.Add(bits);
-      bitsAfterLeftmost |= bitLeftmost;
-      for (int i = 0; i < bytes.length; i++) {
-        if (bitShift > 8) {
-          // Discard all the bits, they come
-          // after the leftmost bit
-          bitsAfterLeftmost |= bytes[i];
-          bitShift -= 8;
+        // enough bits in the current value
+        int bs = bits;
+        this.knownBitLength.SubtractInt(bits);
+        if (bs == 1) {
+          boolean odd = !this.shiftedBigInt.testBit(0)==false;
+          this.shiftedBigInt=shiftedBigInt.shiftRight(1);
+          this.bitsAfterLeftmost |= this.bitLeftmost;
+          this.bitLeftmost = odd ? 1 : 0;
         } else {
-          // 8 or fewer bits left.
-          // Get the bottommost bitShift minus 1 bits
-          bitsAfterLeftmost |= ((bytes[i] << (9 - (int)bitShift)) & 0xFF);
-          // Get the bit just above those bits
-          bitLeftmost = (bytes[i] >> (((int)bitShift) - 1)) & 0x01;
-          break;
-        }
-      }
-      bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
-      if (bitDiff > 0) {
-        // Shifted more bits than the bit length
-        bitsAfterLeftmost |= bitLeftmost;
-        bitLeftmost = 0;
-      }
-    }
-
-    private long CalcKnownBitLength() {
-      if (isSmall) {
-        int kb = 64;
-        for (int i = 63; i >= 0; i++) {
-          if ((shiftedLong & (1L << i)) != 0) {
-            break;
+          this.bitsAfterLeftmost |= this.bitLeftmost;
+          int lowestSetBit = this.shiftedBigInt.getLowestSetBit();
+          if (lowestSetBit < bs - 1) {
+            // One of the discarded bits after
+            // the last one is set
+            this.bitsAfterLeftmost |= 1;
+            this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
+          } else if (lowestSetBit > bs - 1) {
+            // Means all discarded bits are zero
+            this.bitLeftmost = 0;
           } else {
-            kb--;
+            // Only the last discarded bit is set
+            this.bitLeftmost = 1;
           }
+          this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
         }
-        // Make sure bit length is 1 if value is 0
-        if (kb == 0) knownBitLength++;
-        return kb;
-      } else {
-        byte[] bytes = ReverseBytes(shiftedBigInt.toByteArray());
-        long kb = ((long)bytes.length) << 3;
-        // Find the last bit set
-        for (int i = bytes.length - 1; i >= 0; i--) {
-          int b = (int)bytes[i];
-          if (b != 0) {
-            if ((b & 0x80) != 0) { kb -= 0; break; }
-            if ((b & 0x40) != 0) { kb -= 1; break; }
-            if ((b & 0x20) != 0) { kb -= 2; break; }
-            if ((b & 0x10) != 0) { kb -= 3; break; }
-            if ((b & 0x08) != 0) { kb -= 4; break; }
-            if ((b & 0x04) != 0) { kb -= 5; break; }
-            if ((b & 0x02) != 0) { kb -= 6; break; }
-            if ((b & 0x01) != 0) { kb -= 7; break; }
-          }
-          kb -= 8;
-        }
-        // Make sure bit length is 1 if value is 0
-        if (kb == 0) knownBitLength++;
-        return kb;
-      }
-    }
-
-    /**
-     * Shifts a number until it reaches the given number of bits, gathering
-     * information on whether the last bit discarded is set and whether the
-     * discarded bits to the right of that bit are set. Assumes that the big
-     * integer being shifted is positive.
-     */
-    private void ShiftToBitsBig(long bits) {
-      byte[] bytes = ReverseBytes(shiftedBigInt.toByteArray());
-      knownBitLength = ((long)bytes.length) << 3;
-      // Find the last bit set
-      for (int i = bytes.length - 1; i >= 0; i--) {
-        int b = (int)bytes[i];
-        if (b != 0) {
-          if ((b & 0x80) != 0) { knownBitLength -= 0; break; }
-          if ((b & 0x40) != 0) { knownBitLength -= 1; break; }
-          if ((b & 0x20) != 0) { knownBitLength -= 2; break; }
-          if ((b & 0x10) != 0) { knownBitLength -= 3; break; }
-          if ((b & 0x08) != 0) { knownBitLength -= 4; break; }
-          if ((b & 0x04) != 0) { knownBitLength -= 5; break; }
-          if ((b & 0x02) != 0) { knownBitLength -= 6; break; }
-          if ((b & 0x01) != 0) { knownBitLength -= 7; break; }
-        }
-        knownBitLength -= 8;
-      }
-      // Make sure bit length is 1 if value is 0
-      if (knownBitLength == 0) knownBitLength++;
-      // Shift by the difference in bit length
-      if (knownBitLength > bits) {
-        long bitShift = knownBitLength - bits;
-        long tmpBitShift = bitShift;
-        while (tmpBitShift > 0 && shiftedBigInt.signum()!=0) {
-          int bs = (int)Math.min(1000000, tmpBitShift);
-          shiftedBigInt=shiftedBigInt.shiftRight(bs);
-          tmpBitShift -= bs;
-        }
-        knownBitLength = bits;
-        if (bits <= 63) {
-          // Shifting to 63 bits or fewer,
+        if (this.knownBitLength.CompareToInt(SmallBitLength) < 0) {
+          // Shifting to small number of bits,
           // convert to small integer
-          isSmall = true;
-          shiftedLong = shiftedBigInt.longValue();
+          this.isSmall = true;
+          this.shiftedSmall = this.shiftedBigInt.intValue();
         }
-        bitsAfterLeftmost |= bitLeftmost;
-        discardedBitCount.Add(bitShift);
-        for (int i = 0; i < bytes.length; i++) {
-          if (bitShift > 8) {
-            // Discard all the bits, they come
-            // after the leftmost bit
-            bitsAfterLeftmost |= bytes[i];
-            bitShift -= 8;
-          } else {
-            // 8 or fewer bits left.
-            // Get the bottommost bitShift minus 1 bits
-            bitsAfterLeftmost |= ((bytes[i] << (9 - (int)bitShift)) & 0xFF);
-            // Get the bit just above those bits
-            bitLeftmost = (bytes[i] >> (((int)bitShift) - 1)) & 0x01;
-            break;
-          }
-        }
-        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+        this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
       }
     }
 
+    private FastInteger CalcKnownBitLength() {
+      if (this.isSmall) {
+        int kb = SmallBitLength;
+        for (int i = SmallBitLength - 1; i >= 0; --i) {
+          if ((this.shiftedSmall & (1 << i)) != 0) {
+            break;
+          } else {
+            --kb;
+          }
+        }
+        // Make sure bit length is 1 if value is 0
+        if (kb == 0) {
+          ++kb;
+        }
+        // System.out.println("{0:X8} kbl=" + (kb));
+        return new FastInteger(kb);
+      } else {
+        if (this.shiftedBigInt.signum()==0) {
+          return new FastInteger(1);
+        }
+        return new FastInteger(this.shiftedBigInt.bitLength());
+      }
+    }
+
+    private void ShiftBigToBits(int bits) {
+      // Shifts a number until it reaches the given number of bits,
+      // gathering information on whether the last bit discarded is set and
+      // whether the discarded bits to the right of that bit are set. Assumes
+      // that the big integer being shifted is positive.
+      if (this.knownBitLength != null) {
+        if (this.knownBitLength.CompareToInt(bits) <= 0) {
+          return;
+        }
+      }
+      if (this.knownBitLength == null) {
+        this.knownBitLength = this.GetDigitLength();
+      }
+      if (this.knownBitLength.CompareToInt(bits) <= 0) {
+        return;
+      }
+      // Shift by the difference in bit length
+      if (this.knownBitLength.CompareToInt(bits) > 0) {
+        int bs = 0;
+        if (this.knownBitLength.CanFitInInt32()) {
+          bs = this.knownBitLength.AsInt32();
+          bs -= bits;
+        } else {
+          FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
+          if (!bitShift.CanFitInInt32()) {
+            this.ShiftRight(bitShift);
+            return;
+          } else {
+            bs = bitShift.AsInt32();
+          }
+        }
+        this.knownBitLength.SetInt(bits);
+        this.discardedBitCount.AddInt(bs);
+        if (bs == 1) {
+          boolean odd = !this.shiftedBigInt.testBit(0)==false;
+          this.shiftedBigInt=shiftedBigInt.shiftRight(1);
+          this.bitsAfterLeftmost |= this.bitLeftmost;
+          this.bitLeftmost = odd ? 1 : 0;
+        } else {
+          this.bitsAfterLeftmost |= this.bitLeftmost;
+          int lowestSetBit = this.shiftedBigInt.getLowestSetBit();
+          if (lowestSetBit < bs - 1) {
+            // One of the discarded bits after
+            // the last one is set
+            this.bitsAfterLeftmost |= 1;
+            this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
+          } else if (lowestSetBit > bs - 1) {
+            // Means all discarded bits are zero
+            this.bitLeftmost = 0;
+          } else {
+            // Only the last discarded bit is set
+            this.bitLeftmost = 1;
+          }
+          this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
+        }
+        if (bits < SmallBitLength) {
+          // Shifting to small number of bits,
+          // convert to small integer
+          this.isSmall = true;
+          this.shiftedSmall = this.shiftedBigInt.intValue();
+        }
+        this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+      }
+    }
 
     /**
      * Shifts a number to the right, gathering information on whether the
      * last bit discarded is set and whether the discarded bits to the right
      * of that bit are set. Assumes that the big integer being shifted is positive.
-     * @param bits A 64-bit signed integer.
+     * @param bits A 32-bit signed integer.
      */
-    public void ShiftRight(long bits) {
-      if (isSmall)
-        ShiftRightSmall(bits);
-      else
-        ShiftRightBig(bits);
+    public void ShiftRightInt(int bits) {
+      if (this.isSmall) {
+        this.ShiftRightSmall(bits);
+      } else {
+        this.ShiftRightBig(bits);
+      }
     }
-    private void ShiftRightSmall(long bits) {
-      if (bits <= 0) return;
-      if (shiftedLong == 0) {
-        discardedBitCount.Add(bits);
-        bitsAfterLeftmost |= bitLeftmost;
-        bitLeftmost = 0;
-        knownBitLength = 1;
+
+    private void ShiftRightSmall(int bits) {
+      if (bits <= 0) {
         return;
       }
-      knownBitLength = 64;
-      for (int i = 63; i >= 0; i++) {
-        if ((shiftedLong & (1L << i)) != 0) {
+      if (this.shiftedSmall == 0) {
+        this.discardedBitCount.AddInt(bits);
+        this.bitsAfterLeftmost |= this.bitLeftmost;
+        this.bitLeftmost = 0;
+        this.knownBitLength = new FastInteger(1);
+        return;
+      }
+      int kb = SmallBitLength;
+      for (int i = SmallBitLength - 1; i >= 0; --i) {
+        if ((this.shiftedSmall & (1 << i)) != 0) {
           break;
         } else {
-          knownBitLength--;
+          --kb;
         }
       }
-      int shift = (int)Math.min(knownBitLength, bits);
-      boolean shiftingMoreBits = (bits > knownBitLength);
-      knownBitLength = knownBitLength - shift;
-      discardedBitCount.Add(bits);
-      bitsAfterLeftmost |= bitLeftmost;
+      int shift = (int)Math.min(kb, bits);
+      boolean shiftingMoreBits = bits > kb;
+      kb -= shift;
+      this.knownBitLength = new FastInteger(kb);
+      this.discardedBitCount.AddInt(bits);
+      this.bitsAfterLeftmost |= this.bitLeftmost;
       // Get the bottommost shift minus 1 bits
-      bitsAfterLeftmost |= (((shiftedLong << (65 - shift)) != 0) ? 1 : 0);
+      this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
       // Get the bit just above that bit
-      bitLeftmost = (int)((shiftedLong >> (((int)shift) - 1)) & 0x01);
-      shiftedLong >>= shift;
+      this.bitLeftmost = (int)((this.shiftedSmall >> (shift - 1)) & 0x01);
+      this.shiftedSmall >>= shift;
       if (shiftingMoreBits) {
         // Shifted more bits than the bit length
-        bitsAfterLeftmost |= bitLeftmost;
-        bitLeftmost = 0;
+        this.bitsAfterLeftmost |= this.bitLeftmost;
+        this.bitLeftmost = 0;
       }
-      bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
+      this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
     }
 
     /**
@@ -342,38 +371,47 @@ at: http://upokecenter.com/d/
      * information on whether the last bit discarded is set and whether the
      * discarded bits to the right of that bit are set. Assumes that the big
      * integer being shifted is positive.
-     * @param bits A 64-bit signed integer.
+     * @param bits A 32-bit signed integer.
      */
-    public void ShiftToDigits(long bits) {
-      if (isSmall)
-        ShiftToBitsSmall(bits);
-      else
-        ShiftToBitsBig(bits);
+    public void ShiftToDigitsInt(int bits) {
+      if (bits < 0) {
+ throw new IllegalArgumentException("bits (" + Long.toString((long)bits) + ") is not greater or equal to " + "0");
+}
+      if (this.isSmall) {
+        this.ShiftSmallToBits(bits);
+      } else {
+        this.ShiftBigToBits(bits);
+      }
     }
 
-    private void ShiftToBitsSmall(long bits) {
-      knownBitLength = 64;
-      for (int i = 63; i >= 0; i++) {
-        if ((shiftedLong & (1L << i)) != 0) {
-          break;
-        } else {
-          knownBitLength--;
+    private void ShiftSmallToBits(int bits) {
+      if (this.knownBitLength != null) {
+        if (this.knownBitLength.CompareToInt(bits) <= 0) {
+          return;
         }
       }
-      if (knownBitLength == 0) knownBitLength++;
+      if (this.knownBitLength == null) {
+        this.knownBitLength = this.GetDigitLength();
+      }
+      if (this.knownBitLength.CompareToInt(bits) <= 0) {
+        return;
+      }
+      int kbl = this.knownBitLength.AsInt32();
       // Shift by the difference in bit length
-      if (knownBitLength > bits) {
-        long bitShift = knownBitLength - bits;
+      if (kbl > bits) {
+        int bitShift = kbl - (int)bits;
         int shift = (int)bitShift;
-        knownBitLength = bits;
-        discardedBitCount.Add(bitShift);
-        bitsAfterLeftmost |= bitLeftmost;
+        this.knownBitLength = new FastInteger(bits);
+        this.discardedBitCount.AddInt(bitShift);
+        this.bitsAfterLeftmost |= this.bitLeftmost;
         // Get the bottommost shift minus 1 bits
-        bitsAfterLeftmost |= (((shiftedLong << (65 - shift)) != 0) ? 1 : 0);
+        this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
         // Get the bit just above that bit
-        bitLeftmost = (int)((shiftedLong >> (((int)shift) - 1)) & 0x01);
-        bitsAfterLeftmost = (bitsAfterLeftmost != 0) ? 1 : 0;
-        shiftedLong >>= shift;
+        this.bitLeftmost = (int)((this.shiftedSmall >> (shift - 1)) & 0x01);
+        this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+        this.shiftedSmall >>= shift;
+      } else {
+        this.knownBitLength = new FastInteger(kbl);
       }
     }
   }

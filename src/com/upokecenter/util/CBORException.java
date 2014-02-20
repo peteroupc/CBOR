@@ -1,41 +1,37 @@
 package com.upokecenter.util;
 /*
-Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://upokecenter.com/d/
+at: http://peteroupc.github.io/CBOR/
  */
-
-
 
     /**
      * Exception thrown for errors involving CBOR data.
      */
-    
     public class CBORException extends RuntimeException {
+private static final long serialVersionUID=1L;
     /**
-     * 
+     * Initializes a new instance of the CBORException class.
      */
-    public CBORException() {
+    public CBORException () {
     }
+
     /**
-     * 
+     * Initializes a new instance of the CBORException class.
      * @param message A string object.
      */
-    public CBORException(String message){
+    public CBORException (String message) {
  super(message);
     }
+
     /**
-     * 
+     * Initializes a new instance of the CBORException class. Not documented
+     * yet.
      * @param message A string object.
-     * @param innerException A Exception object.
+     * @param innerException An Exception object.
      */
-    public CBORException(String message, Throwable innerException){
- super(message, innerException);
+    public CBORException (String message, Throwable innerException) {
+ super(message,innerException);
     }
-    /**
-     * @param context A StreamingContext object.
-     */
-    private static final long serialVersionUID=1;
   }

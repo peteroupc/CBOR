@@ -4,67 +4,69 @@ package com.upokecenter.test;
  * User: Peter
  * Date: 11/11/2013
  * Time: 1:13 PM
- * 
+ *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
-
     /**
-     * The system's random number generator will be called many times during
-     * testing. Unfortunately it can be very slow. So we use this wrapper
+     * The system&apos;s random number generator will be called many times
+     * during testing. Unfortunately it can be very slow. So we use this wrapper
      * class.
      */
   public class FastRandom
   {
     private static final int ReseedCount = 10000;
-    
-    java.util.Random rand;
-    int count;
-    
-    int m_w = 521288629;
-    int m_z = 362436069;
-    
-    public FastRandom()
-    {
-      rand=new java.util.Random();
-      count=ReseedCount;
+
+    private java.util.Random rand;
+    private int count;
+
+    private int w = 521288629;
+    private int z = 362436069;
+
+    public FastRandom () {
+      this.rand = new java.util.Random();
+      this.count = ReseedCount;
     }
-    
+
     private int NextValueInternal() {
-      int w = m_w, z = m_z;
+      int w = this.w, z = this.z;
       // Use George Marsaglia's multiply-with-carry
       // algorithm.
-      m_z = z = (36969 * (z & 65535) + ((z >> 16)&0xFFFF));
-      m_w = w = (18000 * (w & 65535) + ((z >> 16)&0xFFFF));
-      return ((z << 16) | (w & 65535))&0x7FFFFFFF;
+      this.z = z = ((36969 * (z & 65535)) + ((z >> 16) & 0xFFFF));
+      this.w = w = ((18000 * (w & 65535)) + ((z >> 16) & 0xFFFF));
+      return ((z << 16) | (w & 65535)) & 0x7FFFFFFF;
     }
-    
+
     /**
-     * 
-     * @param v A 32-bit signed integer.
+     * Not documented yet.
+     * @param v A 32-bit signed integer. (2).
+     * @return A 32-bit signed integer.
      */
-public int NextValue(int v) {
-      if((v)<0)throw new IllegalArgumentException(
-        "v"+" not greater or equal to "+"0"+" ("+
-        Integer.toString((int)v)+")");
-      if(v<=1)return 0;
-      if(count>=ReseedCount){
+    public int NextValue(int v) {
+      if (v <= 0) {
+ throw new IllegalArgumentException("v (" + Long.toString((long)v) + ") is not greater than " + "0");
+}
+      if (v <= 1) {
+        return 0;
+      }
+      if (this.count >= ReseedCount) {
         // Call the default random number generator
         // every once in a while, to reseed
-        count=0;
-        if(rand!=null){
-          int seed=rand.nextInt(0x10000);
-          seed|=(rand.nextInt(0x10000))<<16;
-          m_z^=seed;
-          return rand.nextInt(v);
+        this.count = 0;
+        if (this.rand != null) {
+          int seed = this.rand.nextInt(0x10000);
+          seed |= this.rand.nextInt(0x10000) << 16;
+          this.z ^= seed;
+          return this.rand.nextInt(v);
         }
       }
-      count+=1;
-      int maxExclusive=(Integer.MAX_VALUE/v)*v;
-      while(true){
-        int vi=NextValueInternal();
-        if(vi<maxExclusive)
-          return vi%v;
+      ++this.count;
+      int maxExclusive = (Integer.MAX_VALUE / v) * v;
+      while (true) {
+        int vi = this.NextValueInternal();
+        if (vi < maxExclusive) {
+          return vi % v;
+        }
       }
     }
   }

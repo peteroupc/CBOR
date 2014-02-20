@@ -1,16 +1,26 @@
 using System;
-//using System.Numerics;
-
+// using System.Numerics;
 namespace PeterO {
-  interface IShiftAccumulator {
+    /// <summary>Common interface for classes that shift a number of digits
+    /// and record information on whether a non-zero digit was discarded
+    /// this way.</summary>
+  internal interface IShiftAccumulator {
     BigInteger ShiftedInt { get; }
-    long DigitLength { get; }
+
+    FastInteger GetDigitLength();
+
     int OlderDiscardedDigits { get; }
+
     int LastDiscardedDigit { get; }
-    long ShiftedIntSmall { get; }
+
+    FastInteger ShiftedIntFast { get; }
+
     FastInteger DiscardedDigitCount { get; }
+
     void ShiftRight(FastInteger bits);
-    void ShiftRight(long bits);
-    void ShiftToDigits(long bits);
+
+    void ShiftRightInt(int bits);
+
+    void ShiftToDigits(FastInteger bits);
   }
 }
