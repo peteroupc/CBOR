@@ -155,17 +155,26 @@ namespace Test {
     }
 
     private enum AByte : byte {
+    /// <summary>Not documented yet.</summary>
       A = 254,
+
+    /// <summary>Not documented yet.</summary>
       B
     }
 
     private enum AInt : int {
+    /// <summary>Not documented yet.</summary>
       A = 256,
+
+    /// <summary>Not documented yet.</summary>
       B
     }
 
     private enum AULong : ulong {
+    /// <summary>Not documented yet.</summary>
       A = 999999,
+
+    /// <summary>Not documented yet.</summary>
       B
     }
 
@@ -204,8 +213,12 @@ namespace Test {
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
       TestCommon.AssertRoundTrip(obj);
-      obj = CBORObject.FromObject(new String[] { "a", "b", "c","d","e"});
-      obj = CBORObject.FromObject(new String[2, 3, 4]);
+      obj = CBORObject.FromObject(new String[] { "a", "b", "c", "d", "e" });
+      Assert.AreEqual("[\"a\",\"b\",\"c\",\"d\",\"e\"]", obj.ToJSONString());
+      TestCommon.AssertRoundTrip(obj);
+      obj = CBORObject.FromObject(new int[2, 3, 2]);
+      Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]", obj.ToJSONString());
+      TestCommon.AssertRoundTrip(obj);
     }
 
     private static string DateTimeToString(DateTime bi) {

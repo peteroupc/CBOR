@@ -17,26 +17,30 @@ namespace PeterO
     private sealed class PropertyData {
       private string name;
 
-    /// <summary>Gets a value not documented yet.</summary>
+    /// <summary>Gets or sets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
-public string Name {
+      public string Name {
         get {
- return this.name;
-}
+          return this.name;
+        }
 
-        set { this.name = value; }
+        set {
+          this.name = value;
+        }
       }
 
       private PropertyInfo prop;
 
-    /// <summary>Gets a value not documented yet.</summary>
+    /// <summary>Gets or sets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
-public PropertyInfo Prop {
+      public PropertyInfo Prop {
         get {
- return this.prop;
-}
+          return this.prop;
+        }
 
-        set { this.prop = value; }
+        set {
+          this.prop = value;
+        }
       }
     }
 
@@ -103,8 +107,8 @@ public PropertyInfo Prop {
       Array arr = (Array)arrObj;
       int rank = arr.Rank;
       if (rank == 0) {
- return CBORObject.NewArray();
-}
+        return CBORObject.NewArray();
+      }
       CBORObject obj = null;
       if (rank == 1) {
         // Most common case: the array is one-dimensional

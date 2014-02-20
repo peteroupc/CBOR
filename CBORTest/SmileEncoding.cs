@@ -23,9 +23,9 @@ namespace PeterO
     }
 
     public static void WriteTo(CBORObject obj, Stream stream) {
-      stream.Write(new byte[] { 0x3a, 0x29, 0x0a, 0x04}, 0, 4);
+      stream.Write(new byte[] { 0x3a, 0x29, 0x0a, 0x04 }, 0, 4);
        switch (obj.Type) {
-          case CBORType.Number:{
+          case CBORType.Number: {
             if (obj.CanFitInInt64()) {
               long val = obj.AsInt64();
               if (val >= -16 && val <= 15) {
