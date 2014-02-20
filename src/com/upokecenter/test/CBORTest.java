@@ -27,6 +27,7 @@ import com.upokecenter.util.*;
       }
       d = bf.ToDouble();
       Assert.assertEquals((double)oldd,d,0);
+      if(!(CBORObject.FromObject(bf).CanFitInDouble()))Assert.fail();
       TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
@@ -39,6 +40,7 @@ import com.upokecenter.util.*;
       }
       d = bf.ToSingle();
       Assert.assertEquals((float)oldd,d,0f);
+      if(!(CBORObject.FromObject(bf).CanFitInSingle()))Assert.fail();
       TestCommon.AssertRoundTrip(CBORObject.FromObject(bf));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
@@ -6960,11 +6962,13 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
+        if(!(dbl1.CanFitInInt32()))Assert.fail();
         dbl1.AsInt32();
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
+        if(!(dbl1.CanFitInInt64()))Assert.fail();
         dbl1.AsInt64();
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
@@ -7210,6 +7214,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),
           String.format(java.util.Locale.US,"%s", bi));
+        if(!(CBORObject.FromObject(bi).isIntegral()))Assert.fail();
         TestCommon.AssertRoundTrip(CBORObject.FromObject(bi));
         TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.Create(bi, BigInteger.ONE)));
         bi=bi.multiply(negseven);
@@ -7238,6 +7243,47 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       }
     }
 
+    public static class User {
+    	public enum Gender { MALE, FEMALE };
+       public static class Name {
+          private String _first, _last;
+     
+           public String getFirst() { return _first; }
+           public String getLast() { return _last; }
+     
+          public void setFirst(String s) { _first = s; }
+          public void setLast(String s) { _last = s; }
+        }
+    
+        private Gender _gender;
+        private Name _name;
+       private boolean _isVerified;
+       private byte[] _userImage;
+    
+       public Name getName() { return _name; }
+        public boolean isVerified() { return _isVerified; }
+        public Gender getGender() { return _gender; }
+        public byte[] getUserImage() { return _userImage; }
+    
+        public void setName(Name n) { _name = n; }
+        public void setVerified(boolean b) { _isVerified = b; }
+        public void setGender(Gender g) { _gender = g; }
+        public void setUserImage(byte[] b) { _userImage = b; }
+    }
+    
+    @Test
+    public void TestPojo(){
+    	User u=new User();
+    	User.Name un=new User.Name();
+    	un.setFirst("Joe");
+    	un.setLast("Sixpack");
+    	u.setName(un);
+    	u.setGender(User.Gender.MALE);
+    	u.setVerified(false);
+    	u.setUserImage(new byte[]{2,3,4,5});
+    	System.out.println(CBORObject.FromObject(u).ToJSONString());
+    }
+    
     /**
      * Not documented yet.
      */
@@ -7252,6 +7298,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       for (int i = 0; i < ranges.length; i += 2) {
         long j = ranges[i];
         while (true) {
+          if(!(CBORObject.FromObject(j).isIntegral()))Assert.fail();
+          if(!(CBORObject.FromObject(j).CanFitInInt64()))Assert.fail();
+          if(!(CBORObject.FromObject(j).CanTruncatedIntFitInInt64()))Assert.fail();
           TestCommon.AssertSer(
             CBORObject.FromObject(j),
             String.format(java.util.Locale.US,"%s", j));
@@ -7364,6 +7413,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       CBORObject oldobj = null;
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = CBORObject.FromObject((double)i);
+        if(!(o.CanFitInDouble()))Assert.fail();
+        if(!(o.CanFitInInt32()))Assert.fail();
+        if(!(o.isIntegral()))Assert.fail();
         TestCommon.AssertSer(
           o,
           String.format(java.util.Locale.US,"%s", i));

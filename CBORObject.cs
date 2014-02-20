@@ -13,44 +13,44 @@ using System.IO;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Represents an object in Concise Binary Object Representation
-    /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-    /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
-    /// including from bytes, objects, streams and JSON, as described below.</para>
-    /// <para> <b>To and from byte arrays:</b>
-    /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
-    /// format to a CBOR object. The EncodeToBytes method converts a CBOR
-    /// object to its corresponding byte array in CBOR format. </para>
-    /// <para> <b>To and from data streams:</b>
-    /// The CBORObject.Write methods write many kinds of objects to a data
-    /// stream, including numbers, CBOR objects, strings, and arrays of
-    /// numbers and strings. The CBORObject.Read method reads a CBOR object
-    /// from a data stream. </para>
-    /// <para> <b>To and from other objects:</b>
-    /// The CBORObject.FromObject methods converts many kinds of objects
-    /// to a CBOR object, including numbers, strings, and arrays and maps
-    /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
-    /// convert a CBOR object to different types of object. </para>
-    /// <para> <b>To and from JSON:</b>
-    /// This class also doubles as a reader and writer of JavaScript Object
-    /// Notation (JSON). The CBORObject.FromJSONString method converts
-    /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
-    /// object to a JSON string. </para>
-    /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
-    /// and text strings are immutable (their values can't be changed), so
-    /// they are inherently safe for use by multiple threads. CBOR objects
-    /// that are arrays, maps, and byte strings are mutable, but this class
-    /// doesn't attempt to synchronize reads and writes to those objects
-    /// by multiple threads, so those objects are not thread safe without
-    /// such synchronization. </para>
-    /// <para> One kind of CBOR object is called a map, or a list of key-value
-    /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
-    /// arrays, and maps. However, since byte strings, arrays, and maps are
-    /// mutable, it is not advisable to use these three kinds of object as keys;
-    /// they are much better used as map values instead, keeping in mind that
-    /// they are not thread safe without synchronizing reads and writes to
-    /// them. </para>
-    /// </summary>
+  /// <summary>Represents an object in Concise Binary Object Representation
+  /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
+  /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
+  /// including from bytes, objects, streams and JSON, as described below.</para>
+  /// <para> <b>To and from byte arrays:</b>
+  /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
+  /// format to a CBOR object. The EncodeToBytes method converts a CBOR
+  /// object to its corresponding byte array in CBOR format. </para>
+  /// <para> <b>To and from data streams:</b>
+  /// The CBORObject.Write methods write many kinds of objects to a data
+  /// stream, including numbers, CBOR objects, strings, and arrays of
+  /// numbers and strings. The CBORObject.Read method reads a CBOR object
+  /// from a data stream. </para>
+  /// <para> <b>To and from other objects:</b>
+  /// The CBORObject.FromObject methods converts many kinds of objects
+  /// to a CBOR object, including numbers, strings, and arrays and maps
+  /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
+  /// convert a CBOR object to different types of object. </para>
+  /// <para> <b>To and from JSON:</b>
+  /// This class also doubles as a reader and writer of JavaScript Object
+  /// Notation (JSON). The CBORObject.FromJSONString method converts
+  /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
+  /// object to a JSON string. </para>
+  /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
+  /// and text strings are immutable (their values can't be changed), so
+  /// they are inherently safe for use by multiple threads. CBOR objects
+  /// that are arrays, maps, and byte strings are mutable, but this class
+  /// doesn't attempt to synchronize reads and writes to those objects
+  /// by multiple threads, so those objects are not thread safe without
+  /// such synchronization. </para>
+  /// <para> One kind of CBOR object is called a map, or a list of key-value
+  /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
+  /// arrays, and maps. However, since byte strings, arrays, and maps are
+  /// mutable, it is not advisable to use these three kinds of object as keys;
+  /// they are much better used as map values instead, keeping in mind that
+  /// they are not thread safe without synchronizing reads and writes to
+  /// them. </para>
+  /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject> {
     internal int ItemType {
       get {
@@ -1669,11 +1669,11 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not an array.</exception>
-    /// <exception cref='System.ArgumentNullException'>Value is null
-    /// (as opposed to CBORObject.Null).</exception>
+      /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not an array.</exception>
+      /// <exception cref='System.ArgumentNullException'>Value is null
+      /// (as opposed to CBORObject.Null).</exception>
       set {
         if (this.ItemType == CBORObjectTypeArray) {
           if (value == null) {
@@ -1726,12 +1726,12 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1764,12 +1764,12 @@ namespace PeterO {
         return this[objkey];
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a string
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a string
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1958,8 +1958,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Converts this object to a decimal fraction.</summary>
-    /// <returns>A decimal fraction for this object's value.</returns>
+    /// <summary>Converts this object to a decimal number.</summary>
+    /// <returns>A decimal number for this object's value.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public ExtendedDecimal AsExtendedDecimal() {
@@ -1986,7 +1986,7 @@ namespace PeterO {
     /// <summary>Converts this object to an arbitrary-precision binary
     /// floating point number.</summary>
     /// <returns>An arbitrary-precision binary floating point number
-    /// for this object's value. Note that if this object is a decimal fraction
+    /// for this object's value. Note that if this object is a decimal number
     /// with a fractional part, the conversion may lose information depending
     /// on the number.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
@@ -2160,6 +2160,355 @@ namespace PeterO {
           }
         default:
           throw new InvalidOperationException("Not a number type");
+      }
+    }
+
+    /// <summary>Returns whether this object's value can be converted to
+    /// a 32-bit floating point number without loss of its numerical value.</summary>
+    /// <returns>A Boolean value. Returns true if this is a not-a-number
+    /// value, even if the value's diagnostic information can't fit in a 32-bit
+    /// floating point number.</returns>
+    public bool CanFitInSingle() {
+      object thisItem = this.ThisItem;
+      int type = this.ItemType;
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            long intItem = (long)thisItem;
+            if (intItem == Int64.MinValue) {
+              return true;
+            }
+            intItem = Math.Abs(intItem);
+            while (intItem >= (1L << 24) && (intItem & 1) == 0) {
+              intItem >>= 1;
+            }
+            return intItem < (1L << 24);
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)thisItem;
+            ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
+            ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
+            return ef.CompareTo(ef2) == 0;
+          }
+          case CBORObjectTypeSingle: {
+            return true;
+          }
+          case CBORObjectTypeDouble: {
+            double fltItem = (double)thisItem;
+            if (Double.IsNaN(fltItem)) {
+              return true;
+            }
+            float sing = (float)fltItem;
+            return (double)sing == fltItem;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (this.IsNaN()) {
+              return true;
+            }
+            if (this.IsInfinity()) {
+              return true;
+            }
+            ExtendedDecimal ed = (ExtendedDecimal)this.ThisItem;
+            ExtendedDecimal ed2 = ExtendedDecimal.FromSingle(ed.ToSingle());
+            return ed.CompareTo(ed2) == 0;
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (this.IsNaN()) {
+              return true;
+            }
+            if (this.IsInfinity()) {
+              return true;
+            }
+            ExtendedFloat ef = (ExtendedFloat)this.ThisItem;
+            ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
+            return ef.CompareTo(ef2) == 0;
+          }
+        default:
+          return false;
+      }
+    }
+
+    /// <summary>Returns whether this object's value can be converted to
+    /// a 64-bit floating point number without loss of its numerical value.</summary>
+    /// <returns>A Boolean value. Returns true if this is a not-a-number
+    /// value, even if the value's diagnostic information can't fit in a 64-bit
+    /// floating point number.</returns>
+    public bool CanFitInDouble() {
+      object thisItem = this.ThisItem;
+      int type = this.ItemType;
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            long intItem = (long)thisItem;
+            if (intItem == Int64.MinValue || intItem == 0) {
+              return true;
+            }
+            intItem = Math.Abs(intItem);
+            while (intItem >= (1L << 53) && (intItem & 1) == 0) {
+              intItem >>= 1;
+            }
+            return intItem < (1L << 53);
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)thisItem;
+            ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
+            ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
+            return ef.CompareTo(ef2) == 0;
+          }
+        case CBORObjectTypeSingle:
+          case CBORObjectTypeDouble: {
+            return true;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (this.IsNaN()) {
+              return true;
+            }
+            if (this.IsInfinity()) {
+              return true;
+            }
+            ExtendedDecimal ed = (ExtendedDecimal)this.ThisItem;
+            ExtendedDecimal ed2 = ExtendedDecimal.FromDouble(ed.ToDouble());
+            return ed.CompareTo(ed2) == 0;
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (this.IsNaN()) {
+              return true;
+            }
+            if (this.IsInfinity()) {
+              return true;
+            }
+            ExtendedFloat ef = (ExtendedFloat)this.ThisItem;
+            ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
+            return ef.CompareTo(ef2) == 0;
+          }
+        default:
+          return false;
+      }
+    }
+
+    /// <summary>Returns whether this object's value is an integral value,
+    /// is -(2^32) or greater, and is less than 2^32.</summary>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInInt32() {
+      if (!this.CanFitInInt64()) {
+        return false;
+      }
+      long v = this.AsInt64();
+      return v >= Int32.MinValue && v <= Int32.MaxValue;
+    }
+
+    /// <summary>Returns whether this object's value is an integral value,
+    /// is -(2^63) or greater, and is less than 2^63.</summary>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInInt64() {
+      object thisItem = this.ThisItem;
+      int type = this.ItemType;
+      long minValue = Int64.MinValue;
+      long maxValue = Int64.MaxValue;
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            return true;
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)thisItem;
+            return bigintItem.CompareTo(Int64MaxValue) <= 0 &&
+              bigintItem.CompareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeSingle: {
+            float fltItem = (float)thisItem;
+            if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
+              return false;
+            }
+            float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+            return fltItem2 == fltItem && fltItem2 >= minValue && fltItem2 <= maxValue;
+          }
+          case CBORObjectTypeDouble: {
+            double fltItem = (double)thisItem;
+            if (Double.IsNaN(fltItem)) {
+              return false;
+            }
+            double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+            return fltItem2 == fltItem && fltItem >= minValue && fltItem <= maxValue;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (!this.IsIntegral) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
+            return bi.CompareTo(Int64MaxValue) <= 0 &&
+              bi.CompareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (!this.IsIntegral) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
+            return bi.CompareTo(Int64MaxValue) <= 0 &&
+              bi.CompareTo(Int64MinValue) >= 0;
+          }
+        default:
+          return false;
+      }
+    }
+
+    /// <summary>Returns whether this object's value, truncated to an integer,
+    /// would be -(2^63) or greater, and less than 2^63.</summary>
+    /// <returns>A Boolean object.</returns>
+    public bool CanTruncatedIntFitInInt64() {
+      int type = this.ItemType;
+      object thisItem = this.ThisItem;
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            return true;
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)this.ThisItem;
+            return bigintItem.CompareTo(Int64MaxValue) <= 0 &&
+              bigintItem.CompareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeSingle: {
+            float fltItem = (float)this.ThisItem;
+            if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
+              return false;
+            }
+            fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+            return fltItem >= Int64.MinValue && fltItem <= Int64.MaxValue;
+          }
+          case CBORObjectTypeDouble: {
+            double fltItem = (double)this.ThisItem;
+            if (Double.IsNaN(fltItem)) {
+              return false;
+            }
+            fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+            return fltItem >= Int64.MinValue && fltItem <= Int64.MaxValue;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (!((ExtendedDecimal)thisItem).IsFinite) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
+            return bi.CompareTo(Int64MaxValue) <= 0 &&
+              bi.CompareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (!((ExtendedFloat)thisItem).IsFinite) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
+            return bi.CompareTo(Int64MaxValue) <= 0 &&
+              bi.CompareTo(Int64MinValue) >= 0;
+          }
+        default:
+          return false;
+      }
+    }
+
+    /// <summary>Returns whether this object's value, truncated to an integer,
+    /// would be -(2^31) or greater, and less than 2^31.</summary>
+    /// <returns>A Boolean object.</returns>
+    public bool CanTruncatedIntFitInInt32() {
+      object thisItem = this.ThisItem;
+      int type = this.ItemType;
+      int minValue = Int32.MinValue;
+      int maxValue = Int32.MaxValue;
+      switch (type) {
+          case CBORObjectTypeInteger: {
+            long longItem = (long)thisItem;
+            return longItem <= maxValue && longItem >= minValue;
+          }
+          case CBORObjectTypeBigInteger: {
+            BigInteger bigintItem = (BigInteger)thisItem;
+            return bigintItem.CompareTo((BigInteger)maxValue) <= 0 &&
+                    bigintItem.CompareTo((BigInteger)minValue) >= 0;
+          }
+          case CBORObjectTypeSingle: {
+            float fltItem = (float)thisItem;
+            if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
+              return false;
+            }
+            fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+            return fltItem >= minValue && fltItem <= maxValue;
+          }
+          case CBORObjectTypeDouble: {
+            double fltItem = (double)thisItem;
+            if (Double.IsNaN(fltItem)) {
+              return false;
+            }
+            fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+            return fltItem >= minValue && fltItem <= maxValue;
+          }
+          case CBORObjectTypeExtendedDecimal: {
+            if (!((ExtendedDecimal)thisItem).IsFinite) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
+            return (bi.CompareTo((BigInteger)maxValue) <= 0 &&
+                    bi.CompareTo((BigInteger)minValue) >= 0);
+          }
+          case CBORObjectTypeExtendedFloat: {
+            if (!((ExtendedFloat)thisItem).IsFinite) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
+            return bi.CompareTo((BigInteger)maxValue) <= 0 &&
+                    bi.CompareTo((BigInteger)minValue) >= 0;
+          }
+        default:
+          return false;
+      }
+    }
+
+    /// <summary>Gets a value indicating whether this object represents
+    /// an integral number, that is, a number without a fractional part.
+    /// Infinity and not-a-number are not considered integral.</summary>
+    /// <value>Whether this object represents an integral number, that
+    /// is, a number without a fractional part.</value>
+    public bool IsIntegral {
+      get {
+        object thisItem = this.ThisItem;
+        int type = this.ItemType;
+        switch (type) {
+          case CBORObjectTypeInteger:
+            case CBORObjectTypeBigInteger: {
+              return true;
+            }
+            case CBORObjectTypeSingle: {
+              float fltItem = (float)thisItem;
+              if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
+                return false;
+              }
+              return Math.Floor(fltItem) == fltItem;
+            }
+            case CBORObjectTypeDouble: {
+              double fltItem = (double)thisItem;
+              if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+                return false;
+              }
+              return Math.Floor(fltItem) == fltItem;
+            }
+            case CBORObjectTypeExtendedDecimal: {
+              ExtendedDecimal ed = (ExtendedDecimal)this.ThisItem;
+              if (!ed.IsFinite) {
+                return false;
+              }
+              if (ed.Exponent.Sign >= 0) {
+                return true;
+              }
+              ExtendedDecimal ed2 = ExtendedDecimal.FromBigInteger(ed.ToBigInteger());
+              return ed2.CompareTo(ed) == 0;
+            }
+            case CBORObjectTypeExtendedFloat: {
+              ExtendedFloat ef = (ExtendedFloat)this.ThisItem;
+              if (!ef.IsFinite) {
+                return false;
+              }
+              if (ef.Exponent.Sign >= 0) {
+                return true;
+              }
+              ExtendedFloat ef2 = ExtendedFloat.FromBigInteger(ef.ToBigInteger());
+              return ef2.CompareTo(ef) == 0;
+            }
+          default:
+            return false;
+        }
       }
     }
 
@@ -2530,7 +2879,7 @@ namespace PeterO {
     /// <item>If the value has an exponent of zero, writes the value as an unsigned
     /// integer or signed integer if the number can fit either type or as a big
     /// integer otherwise.</item>
-    /// <item>In all other cases, writes the value as a decimal fraction.</item>
+    /// <item>In all other cases, writes the value as a decimal number.</item>
     /// </list>
     /// </summary>
     /// <param name='bignum'>Decimal fraction to write. Can be null.</param>
@@ -3770,7 +4119,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Generates a CBOR object from a decimal fraction.</summary>
+    /// <summary>Generates a CBOR object from a decimal number.</summary>
     /// <param name='otherValue'>An arbitrary-precision decimal number.</param>
     /// <returns>A CBOR number object.</returns>
     /// <exception cref='System.ArgumentException'>The value's exponent
@@ -3995,12 +4344,11 @@ namespace PeterO {
     /// arrays, <code>string</code>
     /// maps to <code>CBORObject</code>
     /// , and <code>CBORObject</code>
-    /// maps to <code>CBORObject</code>
+    /// maps to <code>CBORObject</code>.
+    /// <para>In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type).  Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased).  If the property name begins with the word "Is", that word is deleted from the name.</para>
+    /// <para>In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found.  For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased).</para>
     /// </summary>
-    /// <param name='obj'>An arbitrary object. In the .NET version, if this
-    /// is a type not specially handled by this method, returns a CBOR map with
-    /// the values of each of its read/write properties (or all properties
-    /// in the case of an anonymous type).</param>
+    /// <param name='obj'>An arbitrary object. </param>
     /// <returns>A CBOR object corresponding to the given object. Returns
     /// CBORObject.Null if the object is null.</returns>
     /// <exception cref='System.ArgumentException'>The object's type
@@ -4068,9 +4416,6 @@ namespace PeterO {
       if (obj is double) {
         return FromObject((double)obj);
       }
-      if (obj is IList<CBORObject>) {
-        return FromObject((IList<CBORObject>)obj);
-      }
       byte[] bytearr = obj as byte[];
       if (bytearr != null) {
         return FromObject(bytearr);
@@ -4080,7 +4425,7 @@ namespace PeterO {
         // IDictionary appears first because IDictionary includes IEnumerable
         objret = CBORObject.NewMap();
         System.Collections.IDictionary objdic = (System.Collections.IDictionary)obj;
-        foreach (object key in objdic) {
+        foreach (object key in (System.Collections.IDictionary)objdic) {
           objret[CBORObject.FromObject(key)] = CBORObject.FromObject(objdic[key]);
         }
         return objret;
