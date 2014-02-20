@@ -10,6 +10,7 @@ at: http://peteroupc.github.io/CBOR/
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Array;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,6 +75,19 @@ class PropertyMap
 			propertyLists.put(t, ret);
 			return ret;
 		}
+	}
+  
+  private CBORObject FromArray(Object arr){
+   int length=Array.getLength(arr);
+   CBORObject obj=CBORObject.NewArray();
+   for(int i=0;i<length;i++){
+    obj.Add(CBORObject.FromObject(Array.get(arr,i));
+   }
+   return obj;
+  }
+	
+	public static Object EnumToObject(Enum<?> value){
+		return value.toString();
 	}
 
 	public static Iterable<Map.Entry<String, Object>> GetProperties(Object o) {

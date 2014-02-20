@@ -2266,7 +2266,7 @@ public void set(String key, CBORObject value) {
             ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
             return ef.compareTo(ef2) == 0;
           }
-          case CBORObjectTypeSingle:
+        case CBORObjectTypeSingle:
           case CBORObjectTypeDouble: {
             return true;
           }
@@ -2327,7 +2327,7 @@ public void set(String key, CBORObject value) {
           case CBORObjectTypeBigInteger: {
             BigInteger bigintItem = (BigInteger)thisItem;
             return bigintItem.compareTo(Int64MaxValue) <= 0 &&
-                    bigintItem.compareTo(Int64MinValue) >= 0;
+              bigintItem.compareTo(Int64MinValue) >= 0;
           }
           case CBORObjectTypeSingle: {
             float fltItem = ((Float)thisItem).floatValue();
@@ -2351,7 +2351,7 @@ public void set(String key, CBORObject value) {
             }
             BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
             return bi.compareTo(Int64MaxValue) <= 0 &&
-                    bi.compareTo(Int64MinValue) >= 0;
+              bi.compareTo(Int64MinValue) >= 0;
           }
           case CBORObjectTypeExtendedFloat: {
             if (!this.isIntegral()) {
@@ -2359,7 +2359,7 @@ public void set(String key, CBORObject value) {
             }
             BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
             return bi.compareTo(Int64MaxValue) <= 0 &&
-                    bi.compareTo(Int64MinValue) >= 0;
+              bi.compareTo(Int64MinValue) >= 0;
           }
         default:
           return false;
@@ -2381,7 +2381,7 @@ public void set(String key, CBORObject value) {
           case CBORObjectTypeBigInteger: {
             BigInteger bigintItem = (BigInteger)this.getThisItem();
             return bigintItem.compareTo(Int64MaxValue) <= 0 &&
-                    bigintItem.compareTo(Int64MinValue) >= 0;
+              bigintItem.compareTo(Int64MinValue) >= 0;
           }
           case CBORObjectTypeSingle: {
             float fltItem = ((Float)this.getThisItem()).floatValue();
@@ -2405,7 +2405,7 @@ public void set(String key, CBORObject value) {
             }
             BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
             return bi.compareTo(Int64MaxValue) <= 0 &&
-                    bi.compareTo(Int64MinValue) >= 0;
+              bi.compareTo(Int64MinValue) >= 0;
           }
           case CBORObjectTypeExtendedFloat: {
             if (!((ExtendedFloat)thisItem).isFinite()) {
@@ -2413,7 +2413,7 @@ public void set(String key, CBORObject value) {
             }
             BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
             return bi.compareTo(Int64MaxValue) <= 0 &&
-                    bi.compareTo(Int64MinValue) >= 0;
+              bi.compareTo(Int64MinValue) >= 0;
           }
         default:
           return false;
@@ -2437,8 +2437,8 @@ public void set(String key, CBORObject value) {
           }
           case CBORObjectTypeBigInteger: {
             BigInteger bigintItem = (BigInteger)thisItem;
-            return (bigintItem.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
-                    bigintItem.compareTo(BigInteger.valueOf(minValue)) >= 0);
+            return bigintItem.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
+              bigintItem.compareTo(BigInteger.valueOf(minValue)) >= 0;
           }
           case CBORObjectTypeSingle: {
             float fltItem = ((Float)thisItem).floatValue();
@@ -2461,16 +2461,16 @@ public void set(String key, CBORObject value) {
               return false;
             }
             BigInteger bi = ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
-            return (bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
-                    bi.compareTo(BigInteger.valueOf(minValue)) >= 0);
+            return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
+              bi.compareTo(BigInteger.valueOf(minValue)) >= 0;
           }
           case CBORObjectTypeExtendedFloat: {
             if (!((ExtendedFloat)thisItem).isFinite()) {
               return false;
             }
             BigInteger bi = ((ExtendedFloat)this.getThisItem()).ToBigInteger();
-            return (bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
-                    bi.compareTo(BigInteger.valueOf(minValue)) >= 0);
+            return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
+              bi.compareTo(BigInteger.valueOf(minValue)) >= 0;
           }
         default:
           return false;
@@ -4422,21 +4422,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
-     * Generates a CBORObject from an arbitrary object. The following types
-     * are specially handled by this method: <code>null</code> , primitive
-     * types, strings, <code>CBORObject</code> , <code>ExtendedDecimal</code>
-     * , <code>ExtendedFloat</code> , the custom <code>BigInteger</code>
-     * , lists, <code>byte</code> arrays, <code>int</code> arrays, <code>long</code>
-     * arrays, <code>CBORObject</code> arrays, <code>string</code>
-     * maps to <code>CBORObject</code> , and <code>CBORObject</code>
-     * maps to <code>CBORObject</code>
-     * @param obj An arbitrary object. In the .NET version, if this is a type
-     * not specially handled by this method, returns a CBOR map with the values
-     * of each of its read/write properties (or all properties in the case
-     * of an anonymous type).
-     * @return A CBOR object corresponding to the given object. Returns
-     * CBORObject.Null if the object is null.
-     * @throws java.lang.IllegalArgumentException The object's type is not supported.
+     *
      */
     @SuppressWarnings("unchecked")
 public static CBORObject FromObject(Object obj) {
@@ -4482,6 +4468,9 @@ public static CBORObject FromObject(Object obj) {
         return FromObject(((Float)obj).floatValue());
       }
 
+       if(obj instanceof Enum<?>) {
+        return FromObject(PropertyMap.EnumToObject((Enum<?>)obj));
+      }
       if(obj instanceof Double) {
         return FromObject(((Double)obj).doubleValue());
       }
@@ -4494,10 +4483,13 @@ public static CBORObject FromObject(Object obj) {
         // Map appears first because Map includes Iterable
         objret = CBORObject.NewMap();
         Map<?,?> objdic = (Map<?,?>)obj;
-        for(Object key : objdic.keySet()) {
+        for(Object key : (Map<?,?>)objdic) {
           objret.set(CBORObject.FromObject(key),CBORObject.FromObject(objdic.get(key)));
         }
         return objret;
+      }
+      if(obj.getClass().isArray()) {
+        return PropertyMap.FromArray(obj);
       }
       if(obj instanceof Iterable<?>) {
         objret = CBORObject.NewArray();
@@ -4505,17 +4497,6 @@ public static CBORObject FromObject(Object obj) {
           objret.Add(CBORObject.FromObject(element));
         }
         return objret;
-      }
-      int[] intarr = ((obj instanceof int[]) ? (int[])obj : null);
-      if (intarr != null) {
-        return FromObject(intarr);
-      }
-      long[] longarr = ((obj instanceof long[]) ? (long[])obj : null);
-      if (longarr != null) {
-        return FromObject(longarr);
-      }
-      if(obj instanceof CBORObject[]) {
-        return FromObject((CBORObject[])obj);
       }
       objret = CBORObject.NewMap();
       for(Map.Entry<String, Object> key : PropertyMap.GetProperties(obj)) {
