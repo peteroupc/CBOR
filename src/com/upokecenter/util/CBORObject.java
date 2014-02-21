@@ -79,6 +79,7 @@ import java.io.*;
     static final int CBORObjectTypeExtendedDecimal = 9;
     static final int CBORObjectTypeTagged = 10;
     static final int CBORObjectTypeExtendedFloat = 11;
+    static final int CBORObjectTypeExtendedRational = 12;
     private static final BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
     private static final BigInteger Int64MinValue = BigInteger.valueOf(Long.MIN_VALUE);
 
@@ -2894,6 +2895,33 @@ public void set(String key, CBORObject value) {
     }
 
     /**
+     * Writes a rational number in CBOR format to a data stream.
+     * @param rational An ExtendedRational object.
+     * @param stream A writable data stream.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null.
+     * @throws java.io.IOException An I/O error occurred.
+     */
+    public static void Write(ExtendedRational rational, OutputStream stream) throws IOException {
+      if (stream == null) {
+        throw new NullPointerException("stream");
+      }
+      if (rational == null) {
+        stream.write(0xf6);
+        return;
+      }
+      if (rational.getDenominator().equals(BigInteger.ONE)) {
+        Write(rational.getNumerator(), stream);
+        return;
+      }
+      stream.write(0xd8);  // tag 5
+      stream.write(0x1e);  // tag 5
+      stream.write(0x82);  // array, length 2
+      Write(rational.getNumerator(), stream);
+      Write(rational.getDenominator(), stream);
+    }
+
+    /**
      * Writes a decimal floating-point number in CBOR format to a data stream,
      * as follows: <ul> <li>If the value is null, writes the byte 0xF6.</li>
      * <li>If the value is negative zero, infinity, or NaN, converts the
@@ -3071,6 +3099,9 @@ public void set(String key, CBORObject value) {
         Write(dec, stream);
       } else if (type == CBORObjectTypeExtendedFloat) {
         ExtendedFloat flo = (ExtendedFloat)this.getThisItem();
+        Write(flo, stream);
+      } else if (type == CBORObjectTypeExtendedRational) {
+        ExtendedRational flo = (ExtendedRational)this.getThisItem();
         Write(flo, stream);
       } else if (type == CBORObjectTypeMap) {
         WriteObjectMap(this.AsMap(), stream);
@@ -3895,6 +3926,19 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           case CBORObjectTypeBigInteger: {
             return CBORUtilities.BigIntToString((BigInteger)this.getThisItem());
           }
+          case CBORObjectTypeExtendedRational: {
+            ExtendedRational dec = (ExtendedRational)this.getThisItem();
+            // TODO: Use a better conversion
+            double f = dec.ToDouble();
+            if (((f)==Double.NEGATIVE_INFINITY) ||
+                ((f)==Double.POSITIVE_INFINITY) ||
+                Double.isNaN(f)) {
+              return "null";
+            } else {
+              return TrimDotZero(
+                Double.toString((double)f));
+            }
+          }
           case CBORObjectTypeExtendedDecimal: {
             ExtendedDecimal dec = (ExtendedDecimal)this.getThisItem();
             if (dec.IsInfinity() || dec.IsNaN()) {
@@ -4468,7 +4512,7 @@ public static CBORObject FromObject(Object obj) {
         return FromObject(((Float)obj).floatValue());
       }
 
-       if(obj instanceof Enum<?>) {
+      if(obj instanceof Enum<?>) {
         return FromObject(PropertyMap.EnumToObject((Enum<?>)obj));
       }
       if(obj instanceof Double) {
@@ -4766,6 +4810,11 @@ public static CBORObject FromObject(Object obj) {
           return ((ExtendedDecimal)this.getThisItem()).toString();
         }
         sb.append(((ExtendedDecimal)this.getThisItem()).toString());
+      } else if (type == CBORObjectTypeExtendedRational) {
+        if (sb == null) {
+          return ((ExtendedRational)this.getThisItem()).toString();
+        }
+        sb.append(((ExtendedRational)this.getThisItem()).toString());
       } else if (type == CBORObjectTypeExtendedFloat) {
         if (sb == null) {
           return ((ExtendedFloat)this.getThisItem()).toString();
@@ -4915,7 +4964,34 @@ public static CBORObject FromObject(Object obj) {
       return newObject;
     }
 
-    private static CBORObject ConvertToDecimalFrac(CBORObject o, Boolean isDecimal) {
+    private static CBORObject ConvertToRationalNumber(CBORObject o) {
+      if (o.getItemType() != CBORObjectTypeArray) {
+        throw new CBORException("Rational number must be an array");
+      }
+      if (o.size() != 2) {
+        throw new CBORException("Rational number requires exactly 2 items");
+      }
+      List<CBORObject> list = o.AsList();
+      if (list.get(0).getItemType() != CBORObjectTypeInteger &&
+          list.get(0).getItemType() != CBORObjectTypeBigInteger) {
+        throw new CBORException("Rational number requires integer numerator");
+      }
+      if (list.get(1).getItemType() != CBORObjectTypeInteger &&
+          list.get(1).getItemType() != CBORObjectTypeBigInteger) {
+        throw new CBORException("Rational number requires integer denominator");
+      }
+      if (list.get(1).signum() <= 0) {
+        throw new CBORException("Rational number requires denominator greater than 0");
+      }
+      CBORObject objectToWrap = new CBORObject(
+        CBORObjectTypeExtendedRational,
+        new ExtendedRational(list.get(0).AsBigInteger(), list.get(1).AsBigInteger()));
+      return RewrapObject(
+        o,
+        objectToWrap);
+    }
+
+    private static CBORObject ConvertToDecimalFrac(CBORObject o, boolean isDecimal) {
       if (o.getItemType() != CBORObjectTypeArray) {
         throw new CBORException("Big fraction must be an array");
       }
@@ -5290,6 +5366,16 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             };
             o = Read(s, depth + 1, false, -1, subFlags, 0);
             return ConvertToDecimalFrac(o, uadditional == 4);
+          } else if (uadditional == 30) {
+            // Requires an array with two elements of
+            // a valid type
+            int[] subFlags = new int[] {
+              (1 << 4),  // array
+              (1 << 0) | (1 << 1) | (1 << 6),  // numerator
+              (1 << 0) | (1 << 6)  // denominator
+            };
+            o = Read(s, depth + 1, false, -1, subFlags, 0);
+            return ConvertToRationalNumber(o);
           } else {
             o = Read(s, depth + 1, false, -1, null, 0);
           }
