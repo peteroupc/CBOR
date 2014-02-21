@@ -88,6 +88,7 @@ namespace PeterO {
     internal const int CBORObjectTypeExtendedDecimal = 9;
     internal const int CBORObjectTypeTagged = 10;
     internal const int CBORObjectTypeExtendedFloat = 11;
+    internal const int CBORObjectTypeExtendedRational = 12;
     private static readonly BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
     private static readonly BigInteger Int64MinValue = (BigInteger)Int64.MinValue;
 
@@ -2868,6 +2869,31 @@ namespace PeterO {
       }
     }
 
+    /// <summary>Writes a rational number in CBOR format to a data stream.</summary>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
+    /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
+    /// <param name='rational'>An ExtendedRational object.</param>
+    /// <param name='stream'>A writable data stream.</param>
+    public static void Write(ExtendedRational rational, Stream stream) {
+      if (stream == null) {
+        throw new ArgumentNullException("stream");
+      }
+      if (rational == null) {
+        stream.WriteByte(0xf6);
+        return;
+      }
+      if (rational.Denominator.Equals(BigInteger.One)) {
+        Write(rational.Numerator, stream);
+        return;
+      }
+      stream.WriteByte(0xd8);  // tag 5
+      stream.WriteByte(0x1e);  // tag 5
+      stream.WriteByte(0x82);  // array, length 2
+      Write(rational.Numerator, stream);
+      Write(rational.Denominator, stream);
+    }
+
     /// <summary>Writes a decimal floating-point number in CBOR format
     /// to a data stream, as follows: <list type=''> <item>If the value is
     /// null, writes the byte 0xF6.</item>
@@ -3044,6 +3070,9 @@ namespace PeterO {
         Write(dec, stream);
       } else if (type == CBORObjectTypeExtendedFloat) {
         ExtendedFloat flo = (ExtendedFloat)this.ThisItem;
+        Write(flo, stream);
+      } else if (type == CBORObjectTypeExtendedRational) {
+        ExtendedRational flo = (ExtendedRational)this.ThisItem;
         Write(flo, stream);
       } else if (type == CBORObjectTypeMap) {
         WriteObjectMap(this.AsMap(), stream);
@@ -3854,6 +3883,21 @@ namespace PeterO {
           case CBORObjectTypeBigInteger: {
             return CBORUtilities.BigIntToString((BigInteger)this.ThisItem);
           }
+          case CBORObjectTypeExtendedRational: {
+            ExtendedRational dec = (ExtendedRational)this.ThisItem;
+            // TODO: Use a better conversion
+            double f = dec.ToDouble();
+            if (Double.IsNegativeInfinity(f) ||
+                Double.IsPositiveInfinity(f) ||
+                Double.IsNaN(f)) {
+              return "null";
+            } else {
+              return TrimDotZero(
+                Convert.ToString(
+                  (double)f,
+                  CultureInfo.InvariantCulture));
+            }
+          }
           case CBORObjectTypeExtendedDecimal: {
             ExtendedDecimal dec = (ExtendedDecimal)this.ThisItem;
             if (dec.IsInfinity() || dec.IsNaN()) {
@@ -4422,7 +4466,7 @@ namespace PeterO {
       if (obj is DateTime) {
         return FromObject((DateTime)obj);
       }
-       if (obj is Enum) {
+      if (obj is Enum) {
         return FromObject(PropertyMap.EnumToObject((Enum)obj));
       }
       if (obj is double) {
@@ -4715,6 +4759,11 @@ namespace PeterO {
           return ((ExtendedDecimal)this.ThisItem).ToString();
         }
         sb.Append(((ExtendedDecimal)this.ThisItem).ToString());
+      } else if (type == CBORObjectTypeExtendedRational) {
+        if (sb == null) {
+          return ((ExtendedRational)this.ThisItem).ToString();
+        }
+        sb.Append(((ExtendedRational)this.ThisItem).ToString());
       } else if (type == CBORObjectTypeExtendedFloat) {
         if (sb == null) {
           return ((ExtendedFloat)this.ThisItem).ToString();
@@ -4864,7 +4913,34 @@ namespace PeterO {
       return newObject;
     }
 
-    private static CBORObject ConvertToDecimalFrac(CBORObject o, Boolean isDecimal) {
+    private static CBORObject ConvertToRationalNumber(CBORObject o) {
+      if (o.ItemType != CBORObjectTypeArray) {
+        throw new CBORException("Rational number must be an array");
+      }
+      if (o.Count != 2) {
+        throw new CBORException("Rational number requires exactly 2 items");
+      }
+      IList<CBORObject> list = o.AsList();
+      if (list[0].ItemType != CBORObjectTypeInteger &&
+          list[0].ItemType != CBORObjectTypeBigInteger) {
+        throw new CBORException("Rational number requires integer numerator");
+      }
+      if (list[1].ItemType != CBORObjectTypeInteger &&
+          list[1].ItemType != CBORObjectTypeBigInteger) {
+        throw new CBORException("Rational number requires integer denominator");
+      }
+      if (list[1].Sign <= 0) {
+        throw new CBORException("Rational number requires denominator greater than 0");
+      }
+      CBORObject objectToWrap = new CBORObject(
+        CBORObjectTypeExtendedRational,
+        new ExtendedRational(list[0].AsBigInteger(), list[1].AsBigInteger()));
+      return RewrapObject(
+        o,
+        objectToWrap);
+    }
+
+    private static CBORObject ConvertToDecimalFrac(CBORObject o, bool isDecimal) {
       if (o.ItemType != CBORObjectTypeArray) {
         throw new CBORException("Big fraction must be an array");
       }
@@ -5227,6 +5303,16 @@ namespace PeterO {
             };
             o = Read(s, depth + 1, false, -1, subFlags, 0);
             return ConvertToDecimalFrac(o, uadditional == 4);
+          } else if (uadditional == 30) {
+            // Requires an array with two elements of
+            // a valid type
+            int[] subFlags = new int[] {
+              (1 << 4),  // array
+              (1 << 0) | (1 << 1) | (1 << 6),  // numerator
+              (1 << 0) | (1 << 6)  // denominator
+            };
+            o = Read(s, depth + 1, false, -1, subFlags, 0);
+            return ConvertToRationalNumber(o);
           } else {
             o = Read(s, depth + 1, false, -1, null, 0);
           }

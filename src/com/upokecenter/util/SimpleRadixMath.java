@@ -168,7 +168,7 @@ at: http://peteroupc.github.io/CBOR/
         return val;
       }
       int thisFlags = this.GetHelper().GetFlags(val);
-      if ((thisFlags&BigNumberFlags.FlagSpecial) != 0) {
+      if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         return val;
       }
       FastInteger fastPrecision = FastInteger.FromBig(ctx.getPrecision());
@@ -199,15 +199,15 @@ at: http://peteroupc.github.io/CBOR/
         }
       }
       if ((ctx2.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
-      //  System.out.println("Subnormal");
+      // System.out.println("Subnormal");
       }
       if ((ctx2.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
-      //  System.out.println("Underflow");
+      // System.out.println("Underflow");
       }
       if ((ctx2.getFlags() & PrecisionContext.FlagOverflow) != 0) {
-        boolean neg=(thisFlags&BigNumberFlags.FlagNegative) != 0;
+        boolean neg = (thisFlags & BigNumberFlags.FlagNegative) != 0;
         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagLostDigits));
-        return SignalOverflow2(ctx, neg);
+        return this.SignalOverflow2(ctx, neg);
       }
       return val;
     }
@@ -420,7 +420,6 @@ at: http://peteroupc.github.io/CBOR/
       }
     }
      */
-    /**/
     private T SignalOverflow2(PrecisionContext pc, boolean neg) {
       if (pc != null) {
         Rounding roundingOnOverflow = pc.getRounding();
@@ -443,7 +442,6 @@ at: http://peteroupc.github.io/CBOR/
       return this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly ?
         null : this.GetHelper().CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
-    /**/
     /*
 
     private T NegateRaw(T val) {

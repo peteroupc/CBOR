@@ -1873,10 +1873,8 @@ bigrem=divrem[1]; }
         ctx2 = ctx.WithRounding((cmp > 0) ? Rounding.Floor : Rounding.Ceiling).WithBlankFlags();
         val = this.Add(val, quantum, ctx2);
         if ((ctx2.getFlags() & (PrecisionContext.FlagOverflow | PrecisionContext.FlagUnderflow)) == 0) {
-          // Don't set flags except on overflow or underflow
-          // TODO: Pending clarification from Mike Cowlishaw,
-          // author of the Decimal Arithmetic test cases from
-          // speleotrove.com
+          // Don't set flags except on overflow or underflow,
+          // in accordance with the DecTest test cases
           ctx2.setFlags(0);
         }
         if ((ctx2.getFlags() & PrecisionContext.FlagUnderflow) != 0) {

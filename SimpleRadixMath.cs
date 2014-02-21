@@ -168,7 +168,7 @@ namespace PeterO {
         return val;
       }
       int thisFlags = this.GetHelper().GetFlags(val);
-      if ((thisFlags&BigNumberFlags.FlagSpecial) != 0) {
+      if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         return val;
       }
       FastInteger fastPrecision = FastInteger.FromBig(ctx.Precision);
@@ -203,15 +203,15 @@ namespace PeterO {
         }
       }
       if ((ctx2.Flags & PrecisionContext.FlagSubnormal) != 0) {
-      //  Console.WriteLine("Subnormal");
+      // Console.WriteLine("Subnormal");
       }
       if ((ctx2.Flags & PrecisionContext.FlagUnderflow) != 0) {
-      //  Console.WriteLine("Underflow");
+      // Console.WriteLine("Underflow");
       }
       if ((ctx2.Flags & PrecisionContext.FlagOverflow) != 0) {
-        bool neg=(thisFlags&BigNumberFlags.FlagNegative) != 0;
+        bool neg = (thisFlags & BigNumberFlags.FlagNegative) != 0;
         ctx.Flags |= PrecisionContext.FlagLostDigits;
-        return SignalOverflow2(ctx, neg);
+        return this.SignalOverflow2(ctx, neg);
       }
       return val;
     }
@@ -410,7 +410,6 @@ namespace PeterO {
       }
     }
      */
-    /**/
     private T SignalOverflow2(PrecisionContext pc, bool neg) {
       if (pc != null) {
         Rounding roundingOnOverflow = pc.Rounding;
@@ -433,7 +432,6 @@ namespace PeterO {
       return this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly ?
         default(T) : this.GetHelper().CreateNewWithFlags(BigInteger.Zero, BigInteger.Zero, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
-    /**/
     /*
 
     private T NegateRaw(T val) {
