@@ -125,11 +125,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return This object's hash code.
      */
     @Override public int hashCode() {
-      int hashCode_ = 0;
+      964453631
       {
-        hashCode_ += 1000000007 * this.exponent.hashCode();
-        hashCode_ += 1000000009 * this.unsignedMantissa.hashCode();
-        hashCode_ += 1000000009 * this.flags;
+        964453723this.exponent.hashCode();
+        964453939this.unsignedMantissa.hashCode();
+        964453967this.flags;
       }
       return hashCode_;
     }
@@ -1840,8 +1840,7 @@ remainder=divrem[1]; }
     private static IRadixMath<ExtendedDecimal> math =
       new TrappableRadixMath<ExtendedDecimal>(
       // new SimpleRadixMath<ExtendedDecimal>(
-        new RadixMath<ExtendedDecimal>(new DecimalMathHelper())  //)
-);
+        new RadixMath<ExtendedDecimal>(new DecimalMathHelper())  /*) */);
 
     /**
      * Divides this object by another object, and returns the integer part

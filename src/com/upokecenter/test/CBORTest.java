@@ -5907,33 +5907,33 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         ExtendedDecimal ed2;
         ed2 = ExtendedDecimal.FromDouble(ed.AsExtendedDecimal().ToDouble());
         if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.CanFitInDouble()) {
-          Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+          Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
         }
         ed2 = ExtendedDecimal.FromSingle(ed.AsExtendedDecimal().ToSingle());
         if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.CanFitInSingle()) {
-          Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+          Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
         }
         ed2 = ExtendedDecimal.FromBigInteger(ed.AsExtendedDecimal().ToBigInteger());
         if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.isIntegral()) {
-          Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+          Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
         }
         if (!ed.IsInfinity() && !ed.IsNaN()) {
           BigInteger bi = ed.AsBigInteger();
           if (ed.isIntegral()) {
             if (bi.canFitInInt() != ed.CanFitInInt32()) {
-              Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+              Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
             }
           }
           if (bi.canFitInInt() != ed.CanTruncatedIntFitInInt32()) {
-            Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+            Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
           }
           if (ed.isIntegral()) {
             if ((bi.bitLength() <= 63) != ed.CanFitInInt64()) {
-              Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+              Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
             }
           }
           if ((bi.bitLength() <= 63) != ed.CanTruncatedIntFitInInt64()) {
-            Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+            Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
           }
         }
       }
