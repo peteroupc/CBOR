@@ -52,14 +52,14 @@ namespace PeterO {
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       if (ctxDest != null && ctxSrc != null) {
         if (ctxDest.HasFlags) {
-          if ((ctxSrc.Flags & PrecisionContext.FlagUnderflow) != 0) {
-            ctxSrc.Flags &= ~PrecisionContext.FlagClamped;
-          }
+          // if ((ctxSrc.Flags & PrecisionContext.FlagUnderflow) != 0) {
+          ctxSrc.Flags &= ~PrecisionContext.FlagClamped;
+          // }
           ctxDest.Flags |= ctxSrc.Flags;
           if ((ctxSrc.Flags & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
             int newflags = PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |
-                              PrecisionContext.FlagRounded;
+              PrecisionContext.FlagRounded;
             ctxDest.Flags |= newflags;
           }
         }
@@ -167,7 +167,20 @@ namespace PeterO {
       if (ctx == null || !ctx.HasMaxPrecision) {
         return val;
       }
-      PrecisionContext ctx2 = ctx.WithUnlimitedExponents().WithBlankFlags().WithTraps(0);
+      int thisFlags = this.GetHelper().GetFlags(val);
+      if ((thisFlags&BigNumberFlags.FlagSpecial) != 0) {
+        return val;
+      }
+      FastInteger fastPrecision = FastInteger.FromBig(ctx.Precision);
+      BigInteger mant = BigInteger.Abs(this.GetHelper().GetMantissa(val));
+      FastInteger digits = this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
+      if (digits.CompareTo(fastPrecision) <= 0) {
+        // Rounding is only to be done if the digit count is
+        // too big (distinguishing this case is material
+        // if the value also has an exponent that's out of range)
+        return val;
+      }
+      PrecisionContext ctx2 = ctx/*.WithUnlimitedExponents()*/.WithBlankFlags().WithTraps(0);
       val = this.wrapper.RoundToPrecision(val, ctx2);
       // the only time rounding can signal an invalid
       // operation is if an operand is signaling NaN, but
@@ -188,6 +201,17 @@ namespace PeterO {
         if (ctx.HasFlags) {
           ctx.Flags |= PrecisionContext.FlagRounded;
         }
+      }
+      if ((ctx2.Flags & PrecisionContext.FlagSubnormal) != 0) {
+      //  Console.WriteLine("Subnormal");
+      }
+      if ((ctx2.Flags & PrecisionContext.FlagUnderflow) != 0) {
+      //  Console.WriteLine("Underflow");
+      }
+      if ((ctx2.Flags & PrecisionContext.FlagOverflow) != 0) {
+        bool neg=(thisFlags&BigNumberFlags.FlagNegative) != 0;
+        ctx.Flags |= PrecisionContext.FlagLostDigits;
+        return SignalOverflow2(ctx, neg);
       }
       return val;
     }
@@ -385,8 +409,8 @@ namespace PeterO {
         return this.wrapper.RoundToPrecision(r, ctx);
       }
     }
-*/
- /*
+     */
+    /**/
     private T SignalOverflow2(PrecisionContext pc, bool neg) {
       if (pc != null) {
         Rounding roundingOnOverflow = pc.Rounding;
@@ -409,7 +433,7 @@ namespace PeterO {
       return this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly ?
         default(T) : this.GetHelper().CreateNewWithFlags(BigInteger.Zero, BigInteger.Zero, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
-    */
+    /**/
     /*
 
     private T NegateRaw(T val) {
@@ -422,7 +446,7 @@ namespace PeterO {
         this.GetHelper().GetExponent(val),
         sign == 0 ? BigNumberFlags.FlagNegative : 0);
     }
-*/
+     */
 
     /// <summary>Not documented yet.</summary>
     /// <param name='thisValue'>A T object. (2).</param>
@@ -435,8 +459,10 @@ namespace PeterO {
         return ret;
       }
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      // Console.WriteLine("op was " + thisValue + ", "+pow);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       pow = this.RoundBeforeOp(pow, ctx2);
+      // Console.WriteLine("op now " + thisValue + ", "+pow);
       int powSign = this.GetHelper().GetSign(pow);
       if (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0) {
         thisValue = this.GetHelper().ValueOf(1);
@@ -450,6 +476,7 @@ namespace PeterO {
       }
       // Console.WriteLine("was " + thisValue);
       thisValue = this.PostProcessAfterDivision(thisValue, ctx, ctx2);
+      // Console.WriteLine("result was " + thisValue);
       // Console.WriteLine("now " + thisValue);
       return thisValue;
     }
@@ -518,8 +545,11 @@ namespace PeterO {
         return ret;
       }
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      // Console.WriteLine("op was " + thisValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      // Console.WriteLine("op now " + thisValue);
       thisValue = this.wrapper.SquareRoot(thisValue, ctx2);
+      // Console.WriteLine("result was " + thisValue);
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
@@ -750,9 +780,17 @@ namespace PeterO {
         return ret;
       }
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      // Console.WriteLine("was: "+thisValue+", "+otherValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      BigInteger oldExponent = this.GetHelper().GetExponent(otherValue);
+      // Console.WriteLine("now: "+thisValue+", "+otherValue);
       otherValue = this.RoundBeforeOp(otherValue, ctx2);
+      if (!oldExponent.Equals(this.GetHelper().GetExponent(otherValue))) {
+        // OtherValue's exponent changed in rounding
+        return this.SignalInvalid(ctx);
+      }
       thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);
+      // Console.WriteLine("result: "+thisValue);
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
@@ -769,7 +807,7 @@ namespace PeterO {
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentExact(thisValue, expOther, ctx);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -785,7 +823,7 @@ namespace PeterO {
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentSimple(thisValue, expOther, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -801,7 +839,7 @@ namespace PeterO {
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>

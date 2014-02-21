@@ -129,22 +129,22 @@ at: http://peteroupc.github.io/CBOR/
       int otherFlags = this.helper.GetFlags(otherValue);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         // Check this value then the other value for signaling NaN
-        if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagSignalingNaN) != 0) {
+        if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
           return this.SignalingNaNInvalid(thisValue, ctx);
         }
-        if ((this.helper.GetFlags(otherValue) & BigNumberFlags.FlagSignalingNaN) != 0) {
+        if ((otherFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
           return this.SignalingNaNInvalid(otherValue, ctx);
         }
         // Check this value then the other value for quiet NaN
-        if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagQuietNaN) != 0) {
-          if ((this.helper.GetFlags(otherValue) & BigNumberFlags.FlagQuietNaN) != 0) {
+        if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
+          if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
             // both values are quiet NaN
             return this.ReturnQuietNaN(thisValue, ctx);
           }
           // return "other" for being numeric
           return this.RoundToPrecision(otherValue, ctx);
         }
-        if ((this.helper.GetFlags(otherValue) & BigNumberFlags.FlagQuietNaN) != 0) {
+        if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
           // At this point, "thisValue" can't be NaN,
           // return "thisValue" for being numeric
           return this.RoundToPrecision(thisValue, ctx);
@@ -280,25 +280,25 @@ at: http://peteroupc.github.io/CBOR/
       int otherFlags = this.helper.GetFlags(other);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         // Check this value then the other value for signaling NaN
-        if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagSignalingNaN) != 0) {
+        if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
           return this.SignalingNaNInvalid(thisValue, ctx);
         }
-        if ((this.helper.GetFlags(other) & BigNumberFlags.FlagSignalingNaN) != 0) {
+        if ((otherFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
           return this.SignalingNaNInvalid(other, ctx);
         }
         if (treatQuietNansAsSignaling) {
-          if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagQuietNaN) != 0) {
+          if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
             return this.SignalingNaNInvalid(thisValue, ctx);
           }
-          if ((this.helper.GetFlags(other) & BigNumberFlags.FlagQuietNaN) != 0) {
+          if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
             return this.SignalingNaNInvalid(other, ctx);
           }
         } else {
           // Check this value then the other value for quiet NaN
-          if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagQuietNaN) != 0) {
+          if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
             return this.ReturnQuietNaN(thisValue, ctx);
           }
-          if ((this.helper.GetFlags(other) & BigNumberFlags.FlagQuietNaN) != 0) {
+          if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
             return this.ReturnQuietNaN(other, ctx);
           }
         }
@@ -328,21 +328,21 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private T SignalInvalid(PrecisionContext ctx) {
-      if (this.support == BigNumberFlags.FiniteOnly) {
-        throw new ArithmeticException("Invalid operation");
-      }
       if (ctx != null && ctx.getHasFlags()) {
         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInvalid));
+      }
+      if (this.support == BigNumberFlags.FiniteOnly) {
+        throw new ArithmeticException("Invalid operation");
       }
       return this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
     }
 
     private T SignalInvalidWithMessage(PrecisionContext ctx, String str) {
-      if (this.support == BigNumberFlags.FiniteOnly) {
-        throw new ArithmeticException(str);
-      }
       if (ctx != null && ctx.getHasFlags()) {
         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInvalid));
+      }
+      if (this.support == BigNumberFlags.FiniteOnly) {
+        throw new ArithmeticException(str);
       }
       return this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
     }
@@ -374,11 +374,11 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private T SignalDivideByZero(PrecisionContext ctx, boolean neg) {
-      if (this.support == BigNumberFlags.FiniteOnly) {
-        throw new ArithmeticException("Division by zero");
-      }
       if (ctx != null && ctx.getHasFlags()) {
         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagDivideByZero));
+      }
+      if (this.support == BigNumberFlags.FiniteOnly) {
+        throw new ArithmeticException("Division by zero");
       }
       return this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | (neg ? BigNumberFlags.FlagNegative : 0));
     }

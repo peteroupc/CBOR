@@ -52,14 +52,14 @@ at: http://peteroupc.github.io/CBOR/
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       if (ctxDest != null && ctxSrc != null) {
         if (ctxDest.getHasFlags()) {
-          if ((ctxSrc.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
-            ctxSrc.setFlags(ctxSrc.getFlags()&~(PrecisionContext.FlagClamped));
-          }
+          // if ((ctxSrc.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
+          ctxSrc.setFlags(ctxSrc.getFlags()&~(PrecisionContext.FlagClamped));
+          // }
           ctxDest.setFlags(ctxDest.getFlags()|(ctxSrc.getFlags()));
           if ((ctxSrc.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
             int newflags = PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |
-                              PrecisionContext.FlagRounded;
+              PrecisionContext.FlagRounded;
             ctxDest.setFlags(ctxDest.getFlags()|(newflags));
           }
         }
@@ -167,7 +167,20 @@ at: http://peteroupc.github.io/CBOR/
       if (ctx == null || !ctx.getHasMaxPrecision()) {
         return val;
       }
-      PrecisionContext ctx2 = ctx.WithUnlimitedExponents().WithBlankFlags().WithTraps(0);
+      int thisFlags = this.GetHelper().GetFlags(val);
+      if ((thisFlags&BigNumberFlags.FlagSpecial) != 0) {
+        return val;
+      }
+      FastInteger fastPrecision = FastInteger.FromBig(ctx.getPrecision());
+      BigInteger mant = (this.GetHelper().GetMantissa(val)).abs();
+      FastInteger digits = this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
+      if (digits.compareTo(fastPrecision) <= 0) {
+        // Rounding is only to be done if the digit count is
+        // too big (distinguishing this case is material
+        // if the value also has an exponent that's out of range)
+        return val;
+      }
+      PrecisionContext ctx2 = ctx/*.WithUnlimitedExponents()*/.WithBlankFlags().WithTraps(0);
       val = this.wrapper.RoundToPrecision(val, ctx2);
       // the only time rounding can signal an invalid
       // operation is if an operand is signaling NaN, but
@@ -184,6 +197,17 @@ at: http://peteroupc.github.io/CBOR/
         if (ctx.getHasFlags()) {
           ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
         }
+      }
+      if ((ctx2.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
+      //  System.out.println("Subnormal");
+      }
+      if ((ctx2.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
+      //  System.out.println("Underflow");
+      }
+      if ((ctx2.getFlags() & PrecisionContext.FlagOverflow) != 0) {
+        boolean neg=(thisFlags&BigNumberFlags.FlagNegative) != 0;
+        ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagLostDigits));
+        return SignalOverflow2(ctx, neg);
       }
       return val;
     }
@@ -395,8 +419,8 @@ at: http://peteroupc.github.io/CBOR/
         return this.wrapper.RoundToPrecision(r, ctx);
       }
     }
-*/
- /*
+     */
+    /**/
     private T SignalOverflow2(PrecisionContext pc, boolean neg) {
       if (pc != null) {
         Rounding roundingOnOverflow = pc.getRounding();
@@ -419,7 +443,7 @@ at: http://peteroupc.github.io/CBOR/
       return this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly ?
         null : this.GetHelper().CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
-    */
+    /**/
     /*
 
     private T NegateRaw(T val) {
@@ -432,7 +456,7 @@ at: http://peteroupc.github.io/CBOR/
         this.GetHelper().GetExponent(val),
         sign == 0 ? BigNumberFlags.FlagNegative : 0);
     }
-*/
+     */
 
     /**
      * Not documented yet.
@@ -447,8 +471,10 @@ at: http://peteroupc.github.io/CBOR/
         return ret;
       }
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      // System.out.println("op was " + thisValue + ", "+pow);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       pow = this.RoundBeforeOp(pow, ctx2);
+      // System.out.println("op now " + thisValue + ", "+pow);
       int powSign = this.GetHelper().GetSign(pow);
       if (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0) {
         thisValue = this.GetHelper().ValueOf(1);
@@ -462,6 +488,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       // System.out.println("was " + thisValue);
       thisValue = this.PostProcessAfterDivision(thisValue, ctx, ctx2);
+      // System.out.println("result was " + thisValue);
       // System.out.println("now " + thisValue);
       return thisValue;
     }
@@ -540,8 +567,11 @@ at: http://peteroupc.github.io/CBOR/
         return ret;
       }
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      // System.out.println("op was " + thisValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      // System.out.println("op now " + thisValue);
       thisValue = this.wrapper.SquareRoot(thisValue, ctx2);
+      // System.out.println("result was " + thisValue);
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
@@ -802,9 +832,17 @@ at: http://peteroupc.github.io/CBOR/
         return ret;
       }
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      // System.out.println("was: "+thisValue+", "+otherValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      BigInteger oldExponent = this.GetHelper().GetExponent(otherValue);
+      // System.out.println("now: "+thisValue+", "+otherValue);
       otherValue = this.RoundBeforeOp(otherValue, ctx2);
+      if (!oldExponent.equals(this.GetHelper().GetExponent(otherValue))) {
+        // OtherValue's exponent changed in rounding
+        return this.SignalInvalid(ctx);
+      }
       thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);
+      // System.out.println("result: "+thisValue);
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
@@ -823,7 +861,7 @@ at: http://peteroupc.github.io/CBOR/
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentExact(thisValue, expOther, ctx);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
     /**
@@ -841,7 +879,7 @@ at: http://peteroupc.github.io/CBOR/
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentSimple(thisValue, expOther, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
     /**
@@ -859,7 +897,7 @@ at: http://peteroupc.github.io/CBOR/
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       thisValue = this.wrapper.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
-      return this.PostProcess(thisValue, ctx, ctx2);
+      return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
     /**

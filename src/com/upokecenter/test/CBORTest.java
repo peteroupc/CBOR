@@ -873,6 +873,7 @@ int startingAvailable=ms.available();
               try {
                 if (o.getType() == CBORType.Array || o.getType() == CBORType.Map) {
                   jsonString = o.ToJSONString();
+                  // reread JSON String to test validity
                   CBORObject.FromJSONString(jsonString);
                 }
               } catch (Exception ex) {
@@ -1062,7 +1063,6 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     @Test
     public void TestJSON() {
       CBORObject o;
-      o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       try {
         CBORObject.FromJSONString("[\"\\ud800\"]"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
@@ -1082,18 +1082,18 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromJSONString("{,\"0\"=>0,\"1\"=>1}");
+        CBORObject.FromJSONString("{,\"0\":0,\"1\":1}");
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
-      try { CBORObject.FromJSONString("{\"0\"=>0,,\"1\"=>1}"); Assert.fail("Should have failed");
+      try { CBORObject.FromJSONString("{\"0\":0,,\"1\":1}"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
-      try { CBORObject.FromJSONString("{\"0\"=>0,\"1\"=>1,}"); Assert.fail("Should have failed");
+      try { CBORObject.FromJSONString("{\"0\":0,\"1\":1,}"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
@@ -1122,6 +1122,159 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
+      try {
+        CBORObject.FromJSONString("[0001]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{a:true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\"://comment\ntrue}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":/*comment*/true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{'a':true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":'b'}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\t\":true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\r\":true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\n\":true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("['a']");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":\"a\t\"}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"a\\'\"]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[NaN]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[+Infinity]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[-Infinity]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[Infinity]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":\"a\r\"}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":\"a\n\"}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"a\t\"]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       Assert.assertEquals(6, o.size());
       Assert.assertEquals(1, o.get(0).AsInt32());
       Assert.assertEquals(2, o.get(1).AsInt32());

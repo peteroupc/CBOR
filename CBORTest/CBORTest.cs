@@ -874,6 +874,7 @@ namespace Test {
               try {
                 if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
                   jsonString = o.ToJSONString();
+                  // reread JSON string to test validity
                   CBORObject.FromJSONString(jsonString);
                 }
               } catch (Exception ex) {
@@ -1042,7 +1043,6 @@ namespace Test {
     [Test]
     public void TestJSON() {
       CBORObject o;
-      o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       try {
         CBORObject.FromJSONString("[\"\\ud800\"]"); Assert.Fail("Should have failed");
       } catch (CBORException) {
@@ -1062,18 +1062,18 @@ namespace Test {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromJSONString("{,\"0\"=>0,\"1\"=>1}");
+        CBORObject.FromJSONString("{,\"0\":0,\"1\":1}");
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
-      try { CBORObject.FromJSONString("{\"0\"=>0,,\"1\"=>1}"); Assert.Fail("Should have failed");
+      try { CBORObject.FromJSONString("{\"0\":0,,\"1\":1}"); Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
-      try { CBORObject.FromJSONString("{\"0\"=>0,\"1\"=>1,}"); Assert.Fail("Should have failed");
+      try { CBORObject.FromJSONString("{\"0\":0,\"1\":1,}"); Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
@@ -1102,6 +1102,159 @@ namespace Test {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
+      try {
+        CBORObject.FromJSONString("[0001]");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{a:true}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\"://comment\ntrue}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":/*comment*/true}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{'a':true}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":'b'}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\t\":true}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\r\":true}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\n\":true}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("['a']");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":\"a\t\"}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"a\\'\"]");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[NaN]");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[+Infinity]");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[-Infinity]");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[Infinity]");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":\"a\r\"}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":\"a\n\"}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"a\t\"]");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       Assert.AreEqual(6, o.Count);
       Assert.AreEqual(1, o[0].AsInt32());
       Assert.AreEqual(2, o[1].AsInt32());

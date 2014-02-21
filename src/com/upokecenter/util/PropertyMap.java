@@ -44,8 +44,7 @@ class PropertyMap
 					String methodName=pi.getName();
 					if(methodName.startsWith("get") && methodName.length()>3 && 
 							methodName.charAt(3)>='A' && methodName.charAt(3)<='Z' &&
-							!methodName.equals("getClass") &&
-							!methodName.equals("getDeclaringClass")
+							!methodName.equals("getClass")
 							){
 						MethodData md=new MethodData();
 						md.name=methodName.substring(3);
@@ -87,7 +86,7 @@ class PropertyMap
   }
 	
 	public static Object EnumToObject(Enum<?> value){
-		return value.toString();
+		return value.name();
 	}
 
 	public static Iterable<Map.Entry<String, Object>> GetProperties(Object o) {
