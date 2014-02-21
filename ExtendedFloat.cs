@@ -335,7 +335,12 @@ namespace PeterO {
     /// Any fractional part in this value will be discarded when converting
     /// to a big integer.</summary>
     /// <returns>A BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
     public BigInteger ToBigInteger() {
+      if (!this.IsFinite) {
+ throw new OverflowException("Value is infinity or NaN");
+}
       int expsign = this.Exponent.Sign;
       if (expsign == 0) {
         // Integer

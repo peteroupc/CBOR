@@ -953,8 +953,12 @@ bigrem=divrem[1]; }
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
+     * @throws ArithmeticException This object's value is infinity or NaN.
      */
     public BigInteger ToBigInteger() {
+      if (!this.isFinite()) {
+ throw new ArithmeticException("Value is infinity or NaN");
+}
       int sign = this.getExponent().signum();
       if (sign == 0) {
         BigInteger bigmantissa = this.getMantissa();
@@ -1538,9 +1542,9 @@ remainder=divrem[1]; }
      * @param divisor The divisor.
      * @return The quotient of the two numbers. Signals FlagDivideByZero
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
-     * Signals FlagInvalid and returns NaN if the divisor and the dividend
-     * are 0. Signals FlagInvalid and returns NaN if the result can't be exact
-     * because it would have a nonterminating decimal expansion.
+     * Returns NaN if the divisor and the dividend are 0. Returns NaN if the
+     * result can't be exact because it would have a nonterminating decimal
+     * expansion.
      */
     public ExtendedDecimal Divide(ExtendedDecimal divisor) {
       return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
@@ -1835,9 +1839,9 @@ remainder=divrem[1]; }
     //----------------------------------------------------------------
     private static IRadixMath<ExtendedDecimal> math =
       new TrappableRadixMath<ExtendedDecimal>(
-         new SimpleRadixMath<ExtendedDecimal>(
-        new RadixMath<ExtendedDecimal>(new DecimalMathHelper())
-));
+      // new SimpleRadixMath<ExtendedDecimal>(
+        new RadixMath<ExtendedDecimal>(new DecimalMathHelper())  //)
+);
 
     /**
      * Divides this object by another object, and returns the integer part

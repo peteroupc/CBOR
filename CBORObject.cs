@@ -1954,13 +1954,18 @@ namespace PeterO {
           case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.ThisItem).ToDouble();
           }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.ThisItem).ToDouble();
+          }
         default:
           throw new InvalidOperationException("Not a number type");
       }
     }
 
     /// <summary>Converts this object to a decimal number.</summary>
-    /// <returns>A decimal number for this object's value.</returns>
+    /// <returns>A decimal number for this object's value. If this object
+    /// is a rational number with a nonterminating decimal expansion, returns
+    /// a decimal number rounded to 34 digits.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public ExtendedDecimal AsExtendedDecimal() {
@@ -1979,6 +1984,10 @@ namespace PeterO {
           case CBORObjectTypeExtendedFloat: {
             return ExtendedDecimal.FromExtendedFloat((ExtendedFloat)this.ThisItem);
           }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.ThisItem).ToExtendedDecimalExactIfPossible(
+              PrecisionContext.ForPrecisionAndRounding(34, Rounding.HalfEven));
+          }
         default:
           throw new InvalidOperationException("Not a number type");
       }
@@ -1989,7 +1998,8 @@ namespace PeterO {
     /// <returns>An arbitrary-precision binary floating point number
     /// for this object's value. Note that if this object is a decimal number
     /// with a fractional part, the conversion may lose information depending
-    /// on the number.</returns>
+    /// on the number. If this object is a rational number with a nonterminating
+    /// binary expansion, returns a decimal number rounded to 113 digits.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public ExtendedFloat AsExtendedFloat() {
@@ -2007,6 +2017,10 @@ namespace PeterO {
           return ((ExtendedDecimal)this.ThisItem).ToExtendedFloat();
           case CBORObjectTypeExtendedFloat: {
             return (ExtendedFloat)this.ThisItem;
+          }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.ThisItem).ToExtendedFloatExactIfPossible(
+              PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven));
           }
         default:
           throw new InvalidOperationException("Not a number type");
@@ -2036,6 +2050,9 @@ namespace PeterO {
           case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.ThisItem).ToSingle();
           }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.ThisItem).ToSingle();
+          }
         default:
           throw new InvalidOperationException("Not a number type");
       }
@@ -2046,6 +2063,8 @@ namespace PeterO {
     /// <returns>The closest big integer to this object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or not-a-number (NaN).</exception>
     public BigInteger AsBigInteger() {
       int type = this.ItemType;
       switch (type) {
@@ -2062,6 +2081,9 @@ namespace PeterO {
           }
           case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.ThisItem).ToBigInteger();
+          }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.ThisItem).ToBigInteger();
           }
         default:
           throw new InvalidOperationException("Not a number type");
@@ -2144,20 +2166,34 @@ namespace PeterO {
             throw new OverflowException("This object's value is out of range");
           }
           case CBORObjectTypeExtendedDecimal: {
-            BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
-            if (bi.CompareTo(Int64MaxValue) > 0 ||
-                bi.CompareTo(Int64MinValue) < 0) {
-              throw new OverflowException("This object's value is out of range");
+            if (((ExtendedDecimal)this.ThisItem).IsFinite) {
+              BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
+              if (bi.CompareTo(Int64MaxValue) <= 0 &&
+                  bi.CompareTo(Int64MinValue) >= 0) {
+                return (long)bi;
+              }
             }
-            return (long)bi;
+            throw new OverflowException("This object's value is out of range");
           }
           case CBORObjectTypeExtendedFloat: {
-            BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
-            if (bi.CompareTo(Int64MaxValue) > 0 ||
-                bi.CompareTo(Int64MinValue) < 0) {
-              throw new OverflowException("This object's value is out of range");
+            if (((ExtendedFloat)this.ThisItem).IsFinite) {
+              BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
+              if (bi.CompareTo(Int64MaxValue) <= 0 &&
+                  bi.CompareTo(Int64MinValue) >= 0) {
+                return (long)bi;
+              }
             }
-            return (long)bi;
+            throw new OverflowException("This object's value is out of range");
+          }
+          case CBORObjectTypeExtendedRational: {
+            if (((ExtendedRational)this.ThisItem).IsFinite) {
+              BigInteger bi = ((ExtendedRational)this.ThisItem).ToBigInteger();
+              if (bi.CompareTo(Int64MaxValue) <= 0 &&
+                  bi.CompareTo(Int64MinValue) >= 0) {
+                return (long)bi;
+              }
+            }
+            throw new OverflowException("This object's value is out of range");
           }
         default:
           throw new InvalidOperationException("Not a number type");
@@ -4163,6 +4199,19 @@ namespace PeterO {
       }
     }
 
+    /// <summary>Generates a CBOR object from a rational number.</summary>
+    /// <param name='bigValue'>A rational number.</param>
+    /// <returns>A CBOR number object.</returns>
+    public static CBORObject FromObject(ExtendedRational bigValue) {
+      if ((object)bigValue == (object)null) {
+        return CBORObject.Null;
+      }
+      if (bigValue.Denominator.Equals(BigInteger.One)) {
+        return FromObject(bigValue.Numerator);
+      }
+      return new CBORObject(CBORObjectTypeExtendedRational, bigValue);
+    }
+
     /// <summary>Generates a CBOR object from a decimal number.</summary>
     /// <param name='otherValue'>An arbitrary-precision decimal number.</param>
     /// <returns>A CBOR number object.</returns>
@@ -4432,6 +4481,10 @@ namespace PeterO {
       ExtendedFloat bf = obj as ExtendedFloat;
       if (bf != null) {
         return FromObject(bf);
+      }
+      ExtendedRational rf = obj as ExtendedRational;
+      if (rf != null) {
+        return FromObject(rf);
       }
       if (obj is short) {
         return FromObject((short)obj);

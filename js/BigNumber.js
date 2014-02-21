@@ -6450,22 +6450,22 @@ var RadixMath = function(helper) {
         var otherFlags = this.helper.GetFlags(otherValue);
         if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
 
-            if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagSignalingNaN) != 0) {
+            if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
                 return this.SignalingNaNInvalid(thisValue, ctx);
             }
-            if ((this.helper.GetFlags(otherValue) & BigNumberFlags.FlagSignalingNaN) != 0) {
+            if ((otherFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
                 return this.SignalingNaNInvalid(otherValue, ctx);
             }
 
-            if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagQuietNaN) != 0) {
-                if ((this.helper.GetFlags(otherValue) & BigNumberFlags.FlagQuietNaN) != 0) {
+            if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
+                if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
 
                     return this.ReturnQuietNaN(thisValue, ctx);
                 }
 
                 return this.RoundToPrecision(otherValue, ctx);
             }
-            if ((this.helper.GetFlags(otherValue) & BigNumberFlags.FlagQuietNaN) != 0) {
+            if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
 
                 return this.RoundToPrecision(thisValue, ctx);
             }
@@ -6589,25 +6589,25 @@ var RadixMath = function(helper) {
         var otherFlags = this.helper.GetFlags(other);
         if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
 
-            if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagSignalingNaN) != 0) {
+            if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
                 return this.SignalingNaNInvalid(thisValue, ctx);
             }
-            if ((this.helper.GetFlags(other) & BigNumberFlags.FlagSignalingNaN) != 0) {
+            if ((otherFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
                 return this.SignalingNaNInvalid(other, ctx);
             }
             if (treatQuietNansAsSignaling) {
-                if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagQuietNaN) != 0) {
+                if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
                     return this.SignalingNaNInvalid(thisValue, ctx);
                 }
-                if ((this.helper.GetFlags(other) & BigNumberFlags.FlagQuietNaN) != 0) {
+                if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
                     return this.SignalingNaNInvalid(other, ctx);
                 }
             } else {
 
-                if ((this.helper.GetFlags(thisValue) & BigNumberFlags.FlagQuietNaN) != 0) {
+                if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
                     return this.ReturnQuietNaN(thisValue, ctx);
                 }
-                if ((this.helper.GetFlags(other) & BigNumberFlags.FlagQuietNaN) != 0) {
+                if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
                     return this.ReturnQuietNaN(other, ctx);
                 }
             }
@@ -6635,20 +6635,20 @@ var RadixMath = function(helper) {
         return this.ReturnQuietNaN(value, ctx);
     };
     prototype.SignalInvalid = function(ctx) {
-        if (this.support == BigNumberFlags.FiniteOnly) {
-            throw new Error("Invalid operation");
-        }
         if (ctx != null && ctx.getHasFlags()) {
             ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid));
+        }
+        if (this.support == BigNumberFlags.FiniteOnly) {
+            throw new Error("Invalid operation");
         }
         return this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
     };
     prototype.SignalInvalidWithMessage = function(ctx, str) {
-        if (this.support == BigNumberFlags.FiniteOnly) {
-            throw new Error(str);
-        }
         if (ctx != null && ctx.getHasFlags()) {
             ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid));
+        }
+        if (this.support == BigNumberFlags.FiniteOnly) {
+            throw new Error(str);
         }
         return this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
     };
@@ -6674,11 +6674,11 @@ var RadixMath = function(helper) {
         return this.SignalOverflow(neg);
     };
     prototype.SignalDivideByZero = function(ctx, neg) {
-        if (this.support == BigNumberFlags.FiniteOnly) {
-            throw new Error("Division by zero");
-        }
         if (ctx != null && ctx.getHasFlags()) {
             ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagDivideByZero));
+        }
+        if (this.support == BigNumberFlags.FiniteOnly) {
+            throw new Error("Division by zero");
         }
         return this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | (neg ? BigNumberFlags.FlagNegative : 0));
     };
@@ -10425,6 +10425,9 @@ function() {
     };
 
     prototype['ToBigInteger'] = prototype.ToBigInteger = function() {
+        if (!this.isFinite()) {
+            throw new Error("Value is infinity or NaN");
+        }
         var sign = this.getExponent().signum();
         if (sign == 0) {
             var bigmantissa = this.getMantissa();
@@ -11134,6 +11137,9 @@ function() {
     })(ExtendedFloat.BinaryMathHelper,ExtendedFloat.BinaryMathHelper.prototype);
 
     prototype['ToBigInteger'] = prototype.ToBigInteger = function() {
+        if (!this.isFinite()) {
+            throw new Error("Value is infinity or NaN");
+        }
         var expsign = this.getExponent().signum();
         if (expsign == 0) {
 

@@ -361,8 +361,12 @@ at: http://peteroupc.github.io/CBOR/
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
+     * @throws ArithmeticException This object's value is infinity or NaN.
      */
     public BigInteger ToBigInteger() {
+      if (!this.isFinite()) {
+ throw new ArithmeticException("Value is infinity or NaN");
+}
       int expsign = this.getExponent().signum();
       if (expsign == 0) {
         // Integer
