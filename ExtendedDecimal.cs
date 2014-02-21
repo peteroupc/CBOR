@@ -127,11 +127,11 @@ namespace PeterO {
     /// <summary>Calculates this object&apos;s hash code.</summary>
     /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
-      int hashCode = 0;
+      int hashCode = 964453631;
       unchecked {
-        hashCode += 1000000007 * this.exponent.GetHashCode();
-        hashCode += 1000000009 * this.unsignedMantissa.GetHashCode();
-        hashCode += 1000000009 * this.flags;
+        hashCode += 964453723 * this.exponent.GetHashCode();
+        hashCode += 964453939 * this.unsignedMantissa.GetHashCode();
+        hashCode += 964453967 * this.flags;
       }
       return hashCode;
     }
@@ -1753,8 +1753,7 @@ namespace PeterO {
     private static IRadixMath<ExtendedDecimal> math =
       new TrappableRadixMath<ExtendedDecimal>(
       // new SimpleRadixMath<ExtendedDecimal>(
-        new RadixMath<ExtendedDecimal>(new DecimalMathHelper())  //)
-);
+        new RadixMath<ExtendedDecimal>(new DecimalMathHelper())  /*) */);
 
     /// <summary>Divides this object by another object, and returns the
     /// integer part of the result, with the preferred exponent set to this

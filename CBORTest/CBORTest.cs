@@ -5841,7 +5841,6 @@ namespace Test {
         Assert.Fail("otherValue double -795058316.9186492185346968\nExpected: -7.950583169186492E8d\nWas: " + ExtendedDecimal.FromString("-795058316.9186492185346968").ToDouble());
       }
     }
-  
 
     [Test]
     public void TestCanFitIn() {
@@ -5851,33 +5850,33 @@ namespace Test {
         ExtendedDecimal ed2;
         ed2 = ExtendedDecimal.FromDouble(ed.AsExtendedDecimal().ToDouble());
         if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) != ed.CanFitInDouble()) {
-          Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+          Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
         }
         ed2 = ExtendedDecimal.FromSingle(ed.AsExtendedDecimal().ToSingle());
         if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) != ed.CanFitInSingle()) {
-          Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+          Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
         }
         ed2 = ExtendedDecimal.FromBigInteger(ed.AsExtendedDecimal().ToBigInteger());
         if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) != ed.IsIntegral) {
-          Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+          Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
         }
         if (!ed.IsInfinity() && !ed.IsNaN()) {
           BigInteger bi = ed.AsBigInteger();
           if (ed.IsIntegral) {
             if (bi.canFitInInt() != ed.CanFitInInt32()) {
-              Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+              Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
             }
           }
           if (bi.canFitInInt() != ed.CanTruncatedIntFitInInt32()) {
-            Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+            Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
           }
           if (ed.IsIntegral) {
             if ((bi.bitLength() <= 63) != ed.CanFitInInt64()) {
-              Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+              Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
             }
           }
           if ((bi.bitLength() <= 63) != ed.CanTruncatedIntFitInInt64()) {
-            Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+            Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
           }
         }
       }

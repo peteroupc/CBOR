@@ -102,11 +102,11 @@ namespace PeterO {
     /// <summary>Calculates this object&apos;s hash code.</summary>
     /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
-      int hashCode = 0;
+      int hashCode = 403796923;
       unchecked {
-        hashCode += 1000000007 * this.exponent.GetHashCode();
-        hashCode += 1000000009 * this.unsignedMantissa.GetHashCode();
-        hashCode += 1000000009 * this.flags;
+        hashCode += 403797019 * this.exponent.GetHashCode();
+        hashCode += 403797059 * this.unsignedMantissa.GetHashCode();
+        hashCode += 403797127 * this.flags;
       }
       return hashCode;
     }

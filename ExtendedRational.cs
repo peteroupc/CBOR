@@ -10,7 +10,7 @@ using System;
 namespace PeterO
 {
     /// <summary>Arbitrary-precision rational number.</summary>
-  public class ExtendedRational
+  public class ExtendedRational : IComparable<ExtendedRational>, IEquatable<ExtendedRational>
   {
     private BigInteger numerator;
 
@@ -31,29 +31,31 @@ namespace PeterO
         return this.denominator;
       }
     }
-    
-    #region Equals and GetHashCode implementation
-    public override bool Equals(object obj)
-  {
-    ExtendedRational other = obj as ExtendedRational;
-    if (other == null)
-      return false;
-    return object.Equals(this.numerator, other.numerator) && object.Equals(this.denominator, other.denominator);
-  }
-    
-  public override int GetHashCode()
-  {
-    int hashCode = 0;
-    unchecked {
-      if (numerator != null)
-        hashCode += 1000000007 * numerator.GetHashCode();
-      if (denominator != null)
-        hashCode += 1000000009 * denominator.GetHashCode();
-    }
-    return hashCode;
-  }
-    #endregion
 
+    #region Equals and GetHashCode implementation
+    public override bool Equals(object obj) {
+      ExtendedRational other = obj as ExtendedRational;
+      if (other == null) {
+        return false;
+      }
+      return object.Equals(this.numerator, other.numerator) && object.Equals(this.denominator, other.denominator);
+    }
+
+    /// <summary>Returns the hash code for this instance.</summary>
+    /// <returns>A 32-bit hash code.</returns>
+    public override int GetHashCode() {
+      int hashCode = 456865663;
+      unchecked {
+        if (this.numerator != null) {
+          hashCode += 456865807 * this.numerator.GetHashCode();
+        }
+        if (this.denominator != null) {
+          hashCode += 456865823 * this.denominator.GetHashCode();
+        }
+      }
+      return hashCode;
+    }
+    #endregion
 
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
       if (numerator == null) {
@@ -79,6 +81,11 @@ namespace PeterO
       if (denNegative) {
         denominator = -denominator;
       }
+      #if DEBUG
+      if (!(denominator.Sign > 0)) {
+        throw new ArgumentException("doesn't satisfy denominator.Sign>0");
+      }
+      #endif
       this.numerator = numerator;
       this.denominator = denominator;
     }
@@ -110,7 +117,7 @@ namespace PeterO
     }
 
     /// <summary>Converts this rational number to a decimal number, but
-    /// if the result would be a nonterminating decimal expansion, rounds
+    /// if the result would have a nonterminating decimal expansion, rounds
     /// that result to the given precision.</summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
@@ -142,8 +149,8 @@ namespace PeterO
     }
 
     /// <summary>Converts this rational number to a binary number, but if
-    /// the result would be a nonterminating binary expansion, rounds that
-    /// result to the given precision.</summary>
+    /// the result would have a nonterminating binary expansion, rounds
+    /// that result to the given precision.</summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
@@ -159,7 +166,7 @@ namespace PeterO
 
     /// <summary>Gets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
-public bool IsFinite {
+    public bool IsFinite {
       get {
         return true;
       }
@@ -195,8 +202,72 @@ public bool IsFinite {
     /// <returns>The closest 32-bit floating-point number to this value.
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 32-bit floating point number.</returns>
-     public float ToSingle() {
+    public float ToSingle() {
       return this.ToExtendedFloat(PrecisionContext.Binary32).ToSingle();
+    }
+
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+    public bool IsZero {
+      get {
+        return this.numerator.IsZero;
+      }
+    }
+
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+    public int Sign {
+      get {
+        return this.numerator.Sign;
+      }
+    }
+
+    /// <summary>Compares a ExtendedRational object with this instance.</summary>
+    /// <param name='other'>An ExtendedRational object.</param>
+    /// <returns>Zero if the values are equal; a negative number if this instance
+    /// is less, or a positive number if this instance is greater.</returns>
+    public int CompareTo(ExtendedRational other) {
+      if (other == null) {
+        return 1;
+      }
+      if (this == other) {
+        return 0;
+      }
+      int signA = this.numerator.Sign;
+      int signB = other.numerator.Sign;
+      if (signA != signB) {
+        return (signA < signB) ? -1 : 1;
+      }
+      if (signB == 0 || signA == 0) {
+        // Special case: Either operand is zero
+        return 0;
+      }
+      int dencmp = this.denominator.CompareTo(other.denominator);
+      // At this point, the signs are equal so we can compare
+      // their absolute values instead
+      int numcmp = BigInteger.Abs(this.numerator).CompareTo(BigInteger.Abs(other.numerator));
+      if (signA < 0) {
+        numcmp = -numcmp;
+      }
+      if (numcmp == 0) {
+        // Special case: numerators are equal, so the
+        // number with the lower denominator is greater
+        return signA < 0 ? dencmp : -dencmp;
+      }
+      if (dencmp == 0) {
+        // denominators are equal
+        return numcmp;
+      }
+      BigInteger ad = this.numerator*(BigInteger)(other.denominator);
+      BigInteger bc = this.denominator*(BigInteger)(other.numerator);
+      return ad.CompareTo(bc);
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='other'>An ExtendedRational object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool Equals(ExtendedRational other) {
+      return this.Equals((object)other);
     }
   }
 }

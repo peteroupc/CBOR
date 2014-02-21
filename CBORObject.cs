@@ -1253,7 +1253,7 @@ namespace PeterO {
     /// <summary>Calculates the hash code of this object.</summary>
     /// <returns>A 32-bit hash code.</returns>
     public override int GetHashCode() {
-      int hashCode = 13;
+      int hashCode = 651869431;
       unchecked {
         if (this.itemValue != null) {
           int itemHashCode = 0;
@@ -1271,9 +1271,9 @@ namespace PeterO {
               itemHashCode = this.itemValue.GetHashCode();
               break;
           }
-          hashCode += 17 * itemHashCode;
+          hashCode += 651869479 * itemHashCode;
         }
-        hashCode += 19 * (this.itemtypeValue.GetHashCode() + this.tagLow + this.tagHigh);
+        hashCode += 651869483 * (this.itemtypeValue.GetHashCode() + this.tagLow + this.tagHigh);
       }
       return hashCode;
     }
@@ -1986,7 +1986,7 @@ namespace PeterO {
           }
           case CBORObjectTypeExtendedRational: {
             return ((ExtendedRational)this.ThisItem).ToExtendedDecimalExactIfPossible(
-              PrecisionContext.ForPrecisionAndRounding(34, Rounding.HalfEven));
+              PrecisionContext.Decimal128.WithUnlimitedExponents());
           }
         default:
           throw new InvalidOperationException("Not a number type");
@@ -2020,7 +2020,7 @@ namespace PeterO {
           }
           case CBORObjectTypeExtendedRational: {
             return ((ExtendedRational)this.ThisItem).ToExtendedFloatExactIfPossible(
-              PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven));
+              PrecisionContext.Binary128.WithUnlimitedExponents());
           }
         default:
           throw new InvalidOperationException("Not a number type");
@@ -2476,7 +2476,7 @@ namespace PeterO {
             if (!((ExtendedDecimal)thisItem).IsFinite) {
               return false;
             }
-            BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
+            BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
             return bi.CompareTo((BigInteger)maxValue) <= 0 &&
               bi.CompareTo((BigInteger)minValue) >= 0;
           }
@@ -2484,7 +2484,15 @@ namespace PeterO {
             if (!((ExtendedFloat)thisItem).IsFinite) {
               return false;
             }
-            BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
+            BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
+            return bi.CompareTo((BigInteger)maxValue) <= 0 &&
+              bi.CompareTo((BigInteger)minValue) >= 0;
+          }
+          case CBORObjectTypeExtendedRational: {
+            if (!((ExtendedRational)thisItem).IsFinite) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
             return bi.CompareTo((BigInteger)maxValue) <= 0 &&
               bi.CompareTo((BigInteger)minValue) >= 0;
           }
@@ -2541,6 +2549,17 @@ namespace PeterO {
                 return true;
               }
               ExtendedFloat ef2 = ExtendedFloat.FromBigInteger(ef.ToBigInteger());
+              return ef2.CompareTo(ef) == 0;
+            }
+            case CBORObjectTypeExtendedRational: {
+              ExtendedRational ef = (ExtendedRational)this.ThisItem;
+              if (!ef.IsFinite) {
+                return false;
+              }
+              if (ef.Denominator.Equals(BigInteger.One)) {
+                return true;
+              }
+              ExtendedRational ef2 = ExtendedRational.FromBigInteger(ef.ToBigInteger());
               return ef2.CompareTo(ef) == 0;
             }
           default:
@@ -3921,17 +3940,12 @@ namespace PeterO {
           }
           case CBORObjectTypeExtendedRational: {
             ExtendedRational dec = (ExtendedRational)this.ThisItem;
-            // TODO: Use a better conversion
-            double f = dec.ToDouble();
-            if (Double.IsNegativeInfinity(f) ||
-                Double.IsPositiveInfinity(f) ||
-                Double.IsNaN(f)) {
+            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
+              PrecisionContext.Decimal128.WithUnlimitedExponents());
+            if (!f.IsFinite) {
               return "null";
             } else {
-              return TrimDotZero(
-                Convert.ToString(
-                  (double)f,
-                  CultureInfo.InvariantCulture));
+              return f.ToString();
             }
           }
           case CBORObjectTypeExtendedDecimal: {

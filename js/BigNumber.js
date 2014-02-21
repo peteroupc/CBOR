@@ -9311,28 +9311,28 @@ var RadixMath = function(helper) {
             return -1;
         }
 
-        var s = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);
-        if (s <= 1) {
-            return s;
+        var signA = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);
+        if (signA <= 1) {
+            return signA;
         }
-        s = this.helper.GetSign(thisValue);
-        var ds = this.helper.GetSign(otherValue);
-        if (s != ds) {
-            return (s < ds) ? -1 : 1;
+        signA = this.helper.GetSign(thisValue);
+        var signB = this.helper.GetSign(otherValue);
+        if (signA != signB) {
+            return (signA < signB) ? -1 : 1;
         }
-        if (ds == 0 || s == 0) {
+        if (signB == 0 || signA == 0) {
 
             return 0;
         }
         var expcmp = this.helper.GetExponent(thisValue).compareTo(this.helper.GetExponent(otherValue));
 
         var mantcmp = (this.helper.GetMantissa(thisValue)).abs().compareTo((this.helper.GetMantissa(otherValue)).abs());
-        if (s < 0) {
+        if (signA < 0) {
             mantcmp = -mantcmp;
         }
         if (mantcmp == 0) {
 
-            return s < 0 ? -expcmp : expcmp;
+            return signA < 0 ? -expcmp : expcmp;
         }
         if (expcmp == 0) {
             return mantcmp;
@@ -9367,7 +9367,7 @@ var RadixMath = function(helper) {
                             var newDiff = FastInteger.Copy(tmp).Subtract(fastOp2Exp).Abs();
                             if (newDiff.compareTo(expdiff) < 0) {
 
-                                return (s < 0) ? 1 : -1;
+                                return (signA < 0) ? 1 : -1;
                             }
                         }
                     }
@@ -9381,7 +9381,7 @@ var RadixMath = function(helper) {
                             var newDiff = FastInteger.Copy(tmp).Subtract(fastOp1Exp).Abs();
                             if (newDiff.compareTo(expdiff) < 0) {
 
-                                return (s < 0) ? -1 : 1;
+                                return (signA < 0) ? -1 : 1;
                             }
                         }
                     }
@@ -9394,13 +9394,13 @@ var RadixMath = function(helper) {
             var othermant = (this.helper.GetMantissa(otherValue)).abs();
             newmant = (newmant).abs();
             mantcmp = newmant.compareTo(othermant);
-            return (s < 0) ? -mantcmp : mantcmp;
+            return (signA < 0) ? -mantcmp : mantcmp;
         } else {
             var newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(otherValue), op1Exponent, op2Exponent);
             var othermant = (this.helper.GetMantissa(thisValue)).abs();
             newmant = (newmant).abs();
             mantcmp = othermant.compareTo(newmant);
-            return (s < 0) ? -mantcmp : mantcmp;
+            return (signA < 0) ? -mantcmp : mantcmp;
         }
     };
 
@@ -9760,11 +9760,11 @@ function() {
         return this.EqualsInternal((obj.constructor==ExtendedDecimal) ? obj : null);
     };
     prototype['hashCode'] = prototype.hashCode = function() {
-        var hashCode_ = 0;
+        var hashCode_ = 1332304451;
         {
-            hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
-            hashCode_ = hashCode_ + (1000000009 * this.unsignedMantissa.hashCode());
-            hashCode_ = hashCode_ + (1000000009 * this.flags);
+            hashCode_ = hashCode_ + (1878054163 * this.exponent.hashCode());
+            hashCode_ = hashCode_ + (434706967 * this.unsignedMantissa.hashCode());
+            hashCode_ = hashCode_ + (907125871 * this.flags);
         }
         return hashCode_;
     };
@@ -10997,11 +10997,11 @@ function() {
         return this.EqualsInternal((obj.constructor==ExtendedFloat) ? obj : null);
     };
     prototype['hashCode'] = prototype.hashCode = function() {
-        var hashCode_ = 0;
+        var hashCode_ = 2064591259;
         {
-            hashCode_ = hashCode_ + (1000000007 * this.exponent.hashCode());
-            hashCode_ = hashCode_ + (1000000009 * this.unsignedMantissa.hashCode());
-            hashCode_ = hashCode_ + (1000000009 * this.flags);
+            hashCode_ = hashCode_ + (1255106299 * this.exponent.hashCode());
+            hashCode_ = hashCode_ + (466389811 * this.unsignedMantissa.hashCode());
+            hashCode_ = hashCode_ + (1504835599 * this.flags);
         }
         return hashCode_;
     };

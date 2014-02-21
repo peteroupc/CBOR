@@ -154,10 +154,10 @@ namespace CBOR
       }
 
       public override int GetHashCode() {
-        int hashCode = 0;
+        int hashCode = 703582279;
         unchecked {
           if (this.ed != null) {
-            hashCode += 1000000007 * this.ed.GetHashCode();
+            hashCode += 703582387 * this.ed.GetHashCode();
           }
         }
         return hashCode;
@@ -532,10 +532,10 @@ namespace CBOR
       }
 
       public override int GetHashCode() {
-        int hashCode = 0;
+        int hashCode = 703582379;
         unchecked {
           if (this.ef != null) {
-            hashCode += 1000000007 * this.ef.GetHashCode();
+            hashCode += 703582447 * this.ef.GetHashCode();
           }
         }
         return hashCode;

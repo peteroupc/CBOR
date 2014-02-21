@@ -1226,7 +1226,7 @@ public boolean equals(CBORObject other) {
      * @return A 32-bit hash code.
      */
     @Override public int hashCode() {
-      int hashCode_ = 13;
+      651869431
       {
         if (this.itemValue != null) {
           int itemHashCode = 0;
@@ -1244,9 +1244,9 @@ public boolean equals(CBORObject other) {
               itemHashCode = this.itemValue.hashCode();
               break;
           }
-          hashCode_ += 17 * itemHashCode;
+          651869479itemHashCode;
         }
-        hashCode_ += 19 * (this.itemtypeValue + this.tagLow + this.tagHigh);
+        651869483(this.itemtypeValue + this.tagLow + this.tagHigh);
       }
       return hashCode_;
     }
@@ -1981,7 +1981,7 @@ public void set(String key, CBORObject value) {
           }
           case CBORObjectTypeExtendedRational: {
             return ((ExtendedRational)this.getThisItem()).ToExtendedDecimalExactIfPossible(
-              PrecisionContext.ForPrecisionAndRounding(34, Rounding.HalfEven));
+              PrecisionContext.Decimal128.WithUnlimitedExponents());
           }
         default:
           throw new IllegalStateException("Not a number type");
@@ -2017,7 +2017,7 @@ public void set(String key, CBORObject value) {
           }
           case CBORObjectTypeExtendedRational: {
             return ((ExtendedRational)this.getThisItem()).ToExtendedFloatExactIfPossible(
-              PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven));
+              PrecisionContext.Binary128.WithUnlimitedExponents());
           }
         default:
           throw new IllegalStateException("Not a number type");
@@ -2509,6 +2509,14 @@ public void set(String key, CBORObject value) {
             return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
               bi.compareTo(BigInteger.valueOf(minValue)) >= 0;
           }
+          case CBORObjectTypeExtendedRational: {
+            if (!((ExtendedRational)thisItem).isFinite()) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
+            return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
+              bi.compareTo(BigInteger.valueOf(maxValue)) >= 0;
+          }
         default:
           return false;
       }
@@ -2563,6 +2571,17 @@ public void set(String key, CBORObject value) {
                 return true;
               }
               ExtendedFloat ef2 = ExtendedFloat.FromBigInteger(ef.ToBigInteger());
+              return ef2.compareTo(ef) == 0;
+            }
+            case CBORObjectTypeExtendedRational: {
+              ExtendedRational ef = (ExtendedRational)this.getThisItem();
+              if (!ef.isFinite()) {
+                return false;
+              }
+              if (ef.getDenominator().equals(BigInteger.ONE)) {
+                return true;
+              }
+              ExtendedRational ef2 = ExtendedRational.FromBigInteger(ef.ToBigInteger());
               return ef2.compareTo(ef) == 0;
             }
           default:
@@ -3964,8 +3983,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           }
           case CBORObjectTypeExtendedRational: {
             ExtendedRational dec = (ExtendedRational)this.getThisItem();
-            // TODO: Use a better conversion
-            double f = dec.ToDouble();
+            double f = dec.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
             if (((f)==Double.NEGATIVE_INFINITY) ||
                 ((f)==Double.POSITIVE_INFINITY) ||
                 Double.isNaN(f)) {
