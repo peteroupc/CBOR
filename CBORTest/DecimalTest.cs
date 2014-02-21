@@ -61,7 +61,7 @@ namespace Test
         input2 = valueQuotes.Replace(input2, String.Empty);
         input3 = valueQuotes.Replace(input3, String.Empty);
         output = valueQuotes.Replace(output, String.Empty);
-        if (GetKeyOrDefault(context, "extended", "1").Equals("1")) {
+        if (GetKeyOrDefault(context, "extended", "1").Equals("0")) {
           return;
         }
         bool clamp = GetKeyOrDefault(context, "clamp", "0").Equals("1");

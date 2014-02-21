@@ -62,6 +62,27 @@ namespace Test {
       }
     }
 
+    public static CBORObject RandomNumberOrRational(FastRandom rand) {
+      switch (rand.NextValue(7)) {
+        case 0:
+          return CBORObject.FromObject(RandomDouble(rand, Int32.MaxValue));
+        case 1:
+          return CBORObject.FromObject(RandomSingle(rand, Int32.MaxValue));
+        case 2:
+          return CBORObject.FromObject(RandomBigInteger(rand));
+        case 3:
+          return CBORObject.FromObject(RandomExtendedFloat(rand));
+        case 4:
+          return CBORObject.FromObject(RandomExtendedDecimal(rand));
+        case 5:
+          return CBORObject.FromObject(RandomInt64(rand));
+        case 6:
+          return CBORObject.FromObject(RandomRational(rand));
+        default:
+          throw new ArgumentException();
+      }
+    }
+
     private static CBORObject RandomCBORByteString(FastRandom rand) {
       int x = rand.NextValue(0x2000);
       byte[] bytes = new byte[x];
@@ -146,6 +167,15 @@ namespace Test {
       return cborRet;
     }
 
+    private static ExtendedRational RandomRational(FastRandom rand) {
+      BigInteger bigintA = RandomBigInteger(rand);
+      BigInteger bigintB = RandomBigInteger(rand);
+      if (bigintB.IsZero) {
+ bigintB = BigInteger.One;
+}
+      return new ExtendedRational(bigintA, bigintB);
+    }
+
     private static CBORObject RandomCBORObject(FastRandom rand) {
       return RandomCBORObject(rand, 0);
     }
@@ -157,7 +187,7 @@ namespace Test {
         case 1:
         case 2:
         case 3:
-          return RandomNumber(rand);
+          return RandomNumberOrRational(rand);
         case 4:
           return rand.NextValue(2) == 0 ? CBORObject.True : CBORObject.False;
         case 5:
@@ -326,6 +356,25 @@ namespace Test {
         CBORObject o2 = RandomNumber(r);
         ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
         ExtendedDecimal cmpCobj = CBORObject.Addition(o1, o2).AsExtendedDecimal();
+        if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
+          Assert.AreEqual(
+            0,
+            cmpDecFrac.CompareTo(cmpCobj),
+            ObjectMessages(o1, o2, "Results don't match"));
+        }
+        TestCommon.AssertRoundTrip(o1);
+        TestCommon.AssertRoundTrip(o2);
+      }
+    }
+
+    [Test]
+    public void TestMultiply() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 3000; ++i) {
+        CBORObject o1 = RandomNumber(r);
+        CBORObject o2 = RandomNumber(r);
+        ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Multiply(o2.AsExtendedDecimal());
+        ExtendedDecimal cmpCobj = CBORObject.Multiply(o1, o2).AsExtendedDecimal();
         if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
           Assert.AreEqual(
             0,
@@ -539,7 +588,7 @@ namespace Test {
       }
       for (int i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
-        CBORObject o2 = RandomNumber(r);
+        CBORObject o2 = RandomNumberOrRational(r);
         CompareTestLess(o1, o2);
         o1 = CBORObject.FromObject(Double.NegativeInfinity);
         CompareTestLess(o1, o2);
@@ -5792,12 +5841,13 @@ namespace Test {
         Assert.Fail("otherValue double -795058316.9186492185346968\nExpected: -7.950583169186492E8d\nWas: " + ExtendedDecimal.FromString("-795058316.9186492185346968").ToDouble());
       }
     }
+  
 
     [Test]
     public void TestCanFitIn() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        CBORObject ed = RandomNumber(r);
+        CBORObject ed = RandomNumberOrRational(r);
         ExtendedDecimal ed2;
         ed2 = ExtendedDecimal.FromDouble(ed.AsExtendedDecimal().ToDouble());
         if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) != ed.CanFitInDouble()) {
@@ -6299,6 +6349,9 @@ namespace Test {
       for (int i = 0; i < ranges.Length; i += 2) {
         BigInteger bigintTemp = ranges[i];
         while (true) {
+          if (bigintTemp.Equals((BigInteger)30)) {
+ continue;
+}
           CBORObject obj = CBORObject.FromObjectAndTag(0, bigintTemp);
           Assert.IsTrue(obj.IsTagged, "obj not tagged");
           BigInteger[] tags = obj.GetTags();

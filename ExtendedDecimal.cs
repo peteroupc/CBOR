@@ -927,7 +927,12 @@ namespace PeterO {
     /// Any fractional part in this value will be discarded when converting
     /// to a big integer.</summary>
     /// <returns>A BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
     public BigInteger ToBigInteger() {
+      if (!this.IsFinite) {
+ throw new OverflowException("Value is infinity or NaN");
+}
       int sign = this.Exponent.Sign;
       if (sign == 0) {
         BigInteger bigmantissa = this.Mantissa;
@@ -1479,9 +1484,9 @@ namespace PeterO {
     /// <param name='divisor'>The divisor.</param>
     /// <returns>The quotient of the two numbers. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
-    /// Signals FlagInvalid and returns NaN if the divisor and the dividend
-    /// are 0. Signals FlagInvalid and returns NaN if the result can't be exact
-    /// because it would have a nonterminating decimal expansion.</returns>
+    /// Returns NaN if the divisor and the dividend are 0. Returns NaN if the
+    /// result can't be exact because it would have a nonterminating decimal
+    /// expansion.</returns>
     public ExtendedDecimal Divide(ExtendedDecimal divisor) {
       return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
@@ -1747,9 +1752,9 @@ namespace PeterO {
     //----------------------------------------------------------------
     private static IRadixMath<ExtendedDecimal> math =
       new TrappableRadixMath<ExtendedDecimal>(
-         new SimpleRadixMath<ExtendedDecimal>(
-        new RadixMath<ExtendedDecimal>(new DecimalMathHelper())
-));
+      // new SimpleRadixMath<ExtendedDecimal>(
+        new RadixMath<ExtendedDecimal>(new DecimalMathHelper())  //)
+);
 
     /// <summary>Divides this object by another object, and returns the
     /// integer part of the result, with the preferred exponent set to this

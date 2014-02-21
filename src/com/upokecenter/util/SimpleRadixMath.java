@@ -180,7 +180,7 @@ at: http://peteroupc.github.io/CBOR/
         // if the value also has an exponent that's out of range)
         return val;
       }
-      PrecisionContext ctx2 = ctx/*.WithUnlimitedExponents()*/.WithBlankFlags().WithTraps(0);
+      PrecisionContext ctx2 = ctx.WithBlankFlags().WithTraps(0);
       val = this.wrapper.RoundToPrecision(val, ctx2);
       // the only time rounding can signal an invalid
       // operation is if an operand is signaling NaN, but

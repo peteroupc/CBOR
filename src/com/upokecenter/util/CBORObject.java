@@ -1947,6 +1947,9 @@ public void set(String key, CBORObject value) {
           case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.getThisItem()).ToDouble();
           }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.getThisItem()).ToDouble();
+          }
         default:
           throw new IllegalStateException("Not a number type");
       }
@@ -1954,7 +1957,9 @@ public void set(String key, CBORObject value) {
 
     /**
      * Converts this object to a decimal number.
-     * @return A decimal number for this object's value.
+     * @return A decimal number for this object's value. If this object is
+     * a rational number with a nonterminating decimal expansion, returns
+     * a decimal number rounded to 34 digits.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
      */
@@ -1974,6 +1979,10 @@ public void set(String key, CBORObject value) {
           case CBORObjectTypeExtendedFloat: {
             return ExtendedDecimal.FromExtendedFloat((ExtendedFloat)this.getThisItem());
           }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.getThisItem()).ToExtendedDecimalExactIfPossible(
+              PrecisionContext.ForPrecisionAndRounding(34, Rounding.HalfEven));
+          }
         default:
           throw new IllegalStateException("Not a number type");
       }
@@ -1985,7 +1994,8 @@ public void set(String key, CBORObject value) {
      * @return An arbitrary-precision binary floating point number for
      * this object's value. Note that if this object is a decimal number with
      * a fractional part, the conversion may lose information depending
-     * on the number.
+     * on the number. If this object is a rational number with a nonterminating
+     * binary expansion, returns a decimal number rounded to 113 digits.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
      */
@@ -2004,6 +2014,10 @@ public void set(String key, CBORObject value) {
           return ((ExtendedDecimal)this.getThisItem()).ToExtendedFloat();
           case CBORObjectTypeExtendedFloat: {
             return (ExtendedFloat)this.getThisItem();
+          }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.getThisItem()).ToExtendedFloatExactIfPossible(
+              PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven));
           }
         default:
           throw new IllegalStateException("Not a number type");
@@ -2035,6 +2049,9 @@ public void set(String key, CBORObject value) {
           case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.getThisItem()).ToSingle();
           }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.getThisItem()).ToSingle();
+          }
         default:
           throw new IllegalStateException("Not a number type");
       }
@@ -2046,6 +2063,8 @@ public void set(String key, CBORObject value) {
      * @return The closest big integer to this object.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
+     * @throws ArithmeticException This object's value is infinity or not-a-number
+     * (NaN).
      */
     public BigInteger AsBigInteger() {
       int type = this.getItemType();
@@ -2063,6 +2082,9 @@ public void set(String key, CBORObject value) {
           }
           case CBORObjectTypeExtendedFloat: {
             return ((ExtendedFloat)this.getThisItem()).ToBigInteger();
+          }
+          case CBORObjectTypeExtendedRational: {
+            return ((ExtendedRational)this.getThisItem()).ToBigInteger();
           }
         default:
           throw new IllegalStateException("Not a number type");
@@ -2153,20 +2175,34 @@ public void set(String key, CBORObject value) {
             throw new ArithmeticException("This Object's value is out of range");
           }
           case CBORObjectTypeExtendedDecimal: {
-            BigInteger bi = ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
-            if (bi.compareTo(Int64MaxValue) > 0 ||
-                bi.compareTo(Int64MinValue) < 0) {
-              throw new ArithmeticException("This Object's value is out of range");
+            if (((ExtendedDecimal)this.getThisItem()).isFinite()) {
+              BigInteger bi = ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
+              if (bi.compareTo(Int64MaxValue) <= 0 &&
+                  bi.compareTo(Int64MinValue) >= 0) {
+                return bi.longValue();
+              }
             }
-            return bi.longValue();
+            throw new ArithmeticException("This Object's value is out of range");
           }
           case CBORObjectTypeExtendedFloat: {
-            BigInteger bi = ((ExtendedFloat)this.getThisItem()).ToBigInteger();
-            if (bi.compareTo(Int64MaxValue) > 0 ||
-                bi.compareTo(Int64MinValue) < 0) {
-              throw new ArithmeticException("This Object's value is out of range");
+            if (((ExtendedFloat)this.getThisItem()).isFinite()) {
+              BigInteger bi = ((ExtendedFloat)this.getThisItem()).ToBigInteger();
+              if (bi.compareTo(Int64MaxValue) <= 0 &&
+                  bi.compareTo(Int64MinValue) >= 0) {
+                return bi.longValue();
+              }
             }
-            return bi.longValue();
+            throw new ArithmeticException("This Object's value is out of range");
+          }
+          case CBORObjectTypeExtendedRational: {
+            if (((ExtendedRational)this.getThisItem()).isFinite()) {
+              BigInteger bi = ((ExtendedRational)this.getThisItem()).ToBigInteger();
+              if (bi.compareTo(Int64MaxValue) <= 0 &&
+                  bi.compareTo(Int64MinValue) >= 0) {
+                return bi.longValue();
+              }
+            }
+            throw new ArithmeticException("This Object's value is out of range");
           }
         default:
           throw new IllegalStateException("Not a number type");
@@ -4224,6 +4260,21 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
+     * Generates a CBOR object from a rational number.
+     * @param bigValue A rational number.
+     * @return A CBOR number object.
+     */
+    public static CBORObject FromObject(ExtendedRational bigValue) {
+      if ((Object)bigValue == (Object)null) {
+        return CBORObject.Null;
+      }
+      if (bigValue.getDenominator().equals(BigInteger.ONE)) {
+        return FromObject(bigValue.getNumerator());
+      }
+      return new CBORObject(CBORObjectTypeExtendedRational, bigValue);
+    }
+
+    /**
      * Generates a CBOR object from a decimal number.
      * @param otherValue An arbitrary-precision decimal number.
      * @return A CBOR number object.
@@ -4495,6 +4546,10 @@ public static CBORObject FromObject(Object obj) {
       ExtendedFloat bf = ((obj instanceof ExtendedFloat) ? (ExtendedFloat)obj : null);
       if (bf != null) {
         return FromObject(bf);
+      }
+      ExtendedRational rf = ((obj instanceof ExtendedRational) ? (ExtendedRational)obj : null);
+      if (rf != null) {
+        return FromObject(rf);
       }
       if(obj instanceof Short) {
         return FromObject(((Short)obj).shortValue());
