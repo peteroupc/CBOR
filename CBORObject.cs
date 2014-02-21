@@ -4345,7 +4345,7 @@ namespace PeterO {
     /// names (meaning if a name starts with A to Z, that letter is lower-cased).
     /// If the property name begins with the word "Is", that word is deleted
     /// from the name. Also, .NET <code>Enum</code>
-    /// will be converted to their integer values, and a multidimensional
+    /// objects will be converted to their integer values, and a multidimensional
     /// array is converted to an array of arrays.</para>
     /// <para>In the Java version, if the object is a type not specially handled
     /// by this method, this method checks the CBOR object for methods starting
@@ -4354,7 +4354,7 @@ namespace PeterO {
     /// the starting word "get" or "is" is deleted from its name, and the name
     /// is converted to camel case (meaning if a name starts with A to Z, that
     /// letter is lower-cased). Also, Java <code>Enum</code>
-    /// will be converted to the result of their <code>toString</code>
+    /// objects will be converted to the result of their <code>name</code>
     /// method.</para>
     /// </summary>
     /// <param name='obj'>An arbitrary object.</param>

@@ -1747,9 +1747,9 @@ namespace PeterO {
     //----------------------------------------------------------------
     private static IRadixMath<ExtendedDecimal> math =
       new TrappableRadixMath<ExtendedDecimal>(
-        // new SimpleRadixMath<ExtendedDecimal>(
+         new SimpleRadixMath<ExtendedDecimal>(
         new RadixMath<ExtendedDecimal>(new DecimalMathHelper())
-        /*)*/);
+));
 
     /// <summary>Divides this object by another object, and returns the
     /// integer part of the result, with the preferred exponent set to this

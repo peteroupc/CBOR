@@ -1835,9 +1835,9 @@ remainder=divrem[1]; }
     //----------------------------------------------------------------
     private static IRadixMath<ExtendedDecimal> math =
       new TrappableRadixMath<ExtendedDecimal>(
-        // new SimpleRadixMath<ExtendedDecimal>(
+         new SimpleRadixMath<ExtendedDecimal>(
         new RadixMath<ExtendedDecimal>(new DecimalMathHelper())
-        /*)*/);
+));
 
     /**
      * Divides this object by another object, and returns the integer part

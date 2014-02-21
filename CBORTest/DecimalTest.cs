@@ -39,14 +39,14 @@ namespace Test
 
     public void ParseDecTest(string ln, IDictionary<string, string> context) {
       Match match;
+      if (ln.Contains("-- ")) {
+        ln = ln.Substring(0, ln.IndexOf("-- ", StringComparison.Ordinal));
+      }
       match = (!ln.Contains(":")) ? null : valuePropertyLine.Match(ln);
       if (match != null && match.Success) {
         context[match.Groups[1].ToString().ToLowerInvariant()] =
           match.Groups[2].ToString();
         return;
-      }
-      if (ln.Contains("-- ")) {
-        ln = ln.Substring(0, ln.IndexOf("-- ", StringComparison.Ordinal));
       }
       match = valueTestLine.Match(ln);
       if (match.Success) {
@@ -61,7 +61,7 @@ namespace Test
         input2 = valueQuotes.Replace(input2, String.Empty);
         input3 = valueQuotes.Replace(input3, String.Empty);
         output = valueQuotes.Replace(output, String.Empty);
-        if (GetKeyOrDefault(context, "extended", "1").Equals("0")) {
+        if (GetKeyOrDefault(context, "extended", "1").Equals("1")) {
           return;
         }
         bool clamp = GetKeyOrDefault(context, "clamp", "0").Equals("1");
