@@ -207,16 +207,21 @@ namespace PeterO
       return this.ToExtendedFloat(PrecisionContext.Binary32).ToSingle();
     }
 
-    public ExtendedRational Abs(){
-      return this.Sign<0 ? new ExtendedRational(-(BigInteger)numerator,denominator) : this;
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+public ExtendedRational Abs() {
+      return this.Sign < 0 ? new ExtendedRational(-(BigInteger)this.numerator, this.denominator) : this;
     }
-    
-    public ExtendedRational Negate(){
-      return new ExtendedRational(-(BigInteger)numerator,denominator);
+
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+public ExtendedRational Negate() {
+      return new ExtendedRational(-(BigInteger)this.numerator, this.denominator);
     }
-    
-    /// <summary>Gets a value indicating whether this object's value equals 0.</summary>
-    /// <value>A value not documented yet.</value>
+
+    /// <summary>Gets a value indicating whether this object's value equals
+    /// 0.</summary>
+    /// <value>Whether this object&apos;s value equals 0.</value>
     public bool IsZero {
       get {
         return this.numerator.IsZero;

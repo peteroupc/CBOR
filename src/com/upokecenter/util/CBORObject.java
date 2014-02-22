@@ -134,6 +134,7 @@ import java.io.*;
           case CBORObjectTypeDouble:
           case CBORObjectTypeExtendedDecimal:
           case CBORObjectTypeExtendedFloat:
+          case CBORObjectTypeExtendedRational:
             return CBORType.Number;
           case CBORObjectTypeSimpleValue:
             if (((Integer)this.getThisItem()).intValue() == 21 || ((Integer)this.getThisItem()).intValue() == 20) {
@@ -204,6 +205,8 @@ import java.io.*;
             return ((ExtendedDecimal)this.getThisItem()).signum()==0;
           case CBORObject.CBORObjectTypeExtendedFloat:
             return ((ExtendedFloat)this.getThisItem()).signum()==0;
+          case CBORObject.CBORObjectTypeExtendedRational:
+            return ((ExtendedRational)this.getThisItem()).signum()==0;
           default:
             return false;
         }
@@ -271,9 +274,25 @@ import java.io.*;
             return (int)((value==0) ? 0 : ((value<0) ? -1 : 1));
           }
         case CBORObject.CBORObjectTypeExtendedDecimal:
+          if (((ExtendedDecimal)obj).IsNaN()) {
+              if (returnOnNaN) {
+                return 2;
+              } else {
+                throw new IllegalStateException("This Object is not a number.");
+              }
+          }
           return ((ExtendedDecimal)obj).signum();
         case CBORObject.CBORObjectTypeExtendedFloat:
+          if (((ExtendedFloat)obj).IsNaN()) {
+              if (returnOnNaN) {
+                return 2;
+              } else {
+                throw new IllegalStateException("This Object is not a number.");
+              }
+          }
           return ((ExtendedFloat)obj).signum();
+        case CBORObject.CBORObjectTypeExtendedRational:
+          return ((ExtendedRational)obj).signum();
         default:
           if (returnOnNaN) {
             return 2;  // not a number type
@@ -503,6 +522,11 @@ public int compareTo(CBORObject other) {
             case CBORObjectTypeExtendedFloat: {
               cmp = ((ExtendedFloat)objA).compareTo(
                 (ExtendedFloat)objB);
+              break;
+            }
+            case CBORObjectTypeExtendedRational: {
+              cmp = ((ExtendedRational)objA).compareTo(
+                (ExtendedRational)objB);
               break;
             }
             case CBORObjectTypeByteString: {
@@ -1643,7 +1667,7 @@ private List<CBORObject> AsList() {
 
     /**
      * Gets the value of a CBOR object by integer index in this array.
-     * @param index A 32-bit signed integer.
+     * @param index Zero-based index of the element.
      * @return A CBORObject object.
      * @throws java.lang.IllegalStateException This object is not an
      * array.
@@ -1738,7 +1762,7 @@ public void set(CBORObject key, CBORObject value) {
 
     /**
      * Gets the value of a CBOR object in this map, using a string as the key.
-     * @param key A string object.
+     * @param key A key that points to the desired value.
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The key is null.
      * @throws java.lang.IllegalStateException This object is not a map.
@@ -1818,8 +1842,10 @@ public void set(String key, CBORObject value) {
 
     /**
      * Converts an object to a CBOR object and adds it to this map.
-     * @param key A string representing the key.
-     * @param valueOb An arbitrary object.
+     * @param key A string representing the key. Can be null, in which case
+     * this value is converted to CBORObject.Null.
+     * @param valueOb An arbitrary object. Can be null, in which case this
+     * value is converted to CBORObject.Null.
      * @return This object.
      * @throws java.lang.IllegalArgumentException The parameter {@code key} or
      * "value" has an unsupported type.
@@ -2398,6 +2424,14 @@ public void set(String key, CBORObject value) {
             return bi.compareTo(Int64MaxValue) <= 0 &&
               bi.compareTo(Int64MinValue) >= 0;
           }
+          case CBORObjectTypeExtendedRational: {
+            if (!this.isIntegral()) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
+            return bi.compareTo(Int64MaxValue) <= 0 &&
+              bi.compareTo(Int64MinValue) >= 0;
+          }
         default:
           return false;
       }
@@ -2449,6 +2483,14 @@ public void set(String key, CBORObject value) {
               return false;
             }
             BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
+            return bi.compareTo(Int64MaxValue) <= 0 &&
+              bi.compareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeExtendedRational: {
+            if (!((ExtendedRational)thisItem).isFinite()) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
             return bi.compareTo(Int64MaxValue) <= 0 &&
               bi.compareTo(Int64MinValue) >= 0;
           }
@@ -2581,8 +2623,11 @@ public void set(String key, CBORObject value) {
               if (ef.getDenominator().equals(BigInteger.ONE)) {
                 return true;
               }
-              ExtendedRational ef2 = ExtendedRational.FromBigInteger(ef.ToBigInteger());
-              return ef2.compareTo(ef) == 0;
+              // A rational number is integral if the remainder
+              // of the numerator divided by the denominator is 0
+              BigInteger denom = ef.getDenominator();
+              BigInteger rem = ef.getNumerator().remainder(denom);
+              return rem.signum()==0;
             }
           default:
             return false;
