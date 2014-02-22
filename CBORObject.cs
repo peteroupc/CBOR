@@ -13,44 +13,44 @@ using System.IO;
 using System.Text;
 
 namespace PeterO {
-  /// <summary>Represents an object in Concise Binary Object Representation
-  /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-  /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
-  /// including from bytes, objects, streams and JSON, as described below.</para>
-  /// <para> <b>To and from byte arrays:</b>
-  /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
-  /// format to a CBOR object. The EncodeToBytes method converts a CBOR
-  /// object to its corresponding byte array in CBOR format. </para>
-  /// <para> <b>To and from data streams:</b>
-  /// The CBORObject.Write methods write many kinds of objects to a data
-  /// stream, including numbers, CBOR objects, strings, and arrays of
-  /// numbers and strings. The CBORObject.Read method reads a CBOR object
-  /// from a data stream. </para>
-  /// <para> <b>To and from other objects:</b>
-  /// The CBORObject.FromObject methods converts many kinds of objects
-  /// to a CBOR object, including numbers, strings, and arrays and maps
-  /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
-  /// convert a CBOR object to different types of object. </para>
-  /// <para> <b>To and from JSON:</b>
-  /// This class also doubles as a reader and writer of JavaScript Object
-  /// Notation (JSON). The CBORObject.FromJSONString method converts
-  /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
-  /// object to a JSON string. </para>
-  /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
-  /// and text strings are immutable (their values can't be changed), so
-  /// they are inherently safe for use by multiple threads. CBOR objects
-  /// that are arrays, maps, and byte strings are mutable, but this class
-  /// doesn't attempt to synchronize reads and writes to those objects
-  /// by multiple threads, so those objects are not thread safe without
-  /// such synchronization. </para>
-  /// <para> One kind of CBOR object is called a map, or a list of key-value
-  /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
-  /// arrays, and maps. However, since byte strings, arrays, and maps are
-  /// mutable, it is not advisable to use these three kinds of object as keys;
-  /// they are much better used as map values instead, keeping in mind that
-  /// they are not thread safe without synchronizing reads and writes to
-  /// them. </para>
-  /// </summary>
+    /// <summary>Represents an object in Concise Binary Object Representation
+    /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
+    /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
+    /// including from bytes, objects, streams and JSON, as described below.</para>
+    /// <para> <b>To and from byte arrays:</b>
+    /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
+    /// format to a CBOR object. The EncodeToBytes method converts a CBOR
+    /// object to its corresponding byte array in CBOR format. </para>
+    /// <para> <b>To and from data streams:</b>
+    /// The CBORObject.Write methods write many kinds of objects to a data
+    /// stream, including numbers, CBOR objects, strings, and arrays of
+    /// numbers and strings. The CBORObject.Read method reads a CBOR object
+    /// from a data stream. </para>
+    /// <para> <b>To and from other objects:</b>
+    /// The CBORObject.FromObject methods converts many kinds of objects
+    /// to a CBOR object, including numbers, strings, and arrays and maps
+    /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
+    /// convert a CBOR object to different types of object. </para>
+    /// <para> <b>To and from JSON:</b>
+    /// This class also doubles as a reader and writer of JavaScript Object
+    /// Notation (JSON). The CBORObject.FromJSONString method converts
+    /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
+    /// object to a JSON string. </para>
+    /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
+    /// and text strings are immutable (their values can't be changed), so
+    /// they are inherently safe for use by multiple threads. CBOR objects
+    /// that are arrays, maps, and byte strings are mutable, but this class
+    /// doesn't attempt to synchronize reads and writes to those objects
+    /// by multiple threads, so those objects are not thread safe without
+    /// such synchronization. </para>
+    /// <para> One kind of CBOR object is called a map, or a list of key-value
+    /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
+    /// arrays, and maps. However, since byte strings, arrays, and maps are
+    /// mutable, it is not advisable to use these three kinds of object as keys;
+    /// they are much better used as map values instead, keeping in mind that
+    /// they are not thread safe without synchronizing reads and writes to
+    /// them. </para>
+    /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject> {
     internal int ItemType {
       get {
@@ -92,7 +92,7 @@ namespace PeterO {
     internal static readonly BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
     internal static readonly BigInteger Int64MinValue = (BigInteger)Int64.MinValue;
 
-    private static readonly ICBORNumber[] NumberInterfaces=new ICBORNumber[]{
+    private static readonly ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
       new CBORInteger(),
       new CBORBigInteger(),
       null,
@@ -107,7 +107,7 @@ namespace PeterO {
       new CBORExtendedFloat(),
       new CBORExtendedRational()
     };
-    
+
     /// <summary>Represents the value false.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -246,8 +246,8 @@ namespace PeterO {
     /// <value>Whether this object&apos;s value equals 0.</value>
     public bool IsZero {
       get {
-        ICBORNumber cn=NumberInterfaces[this.ItemType];
-        return cn==null ? false : cn.IsZero(this.ThisItem);
+        ICBORNumber cn = NumberInterfaces[this.ItemType];
+        return cn == null ? false : cn.IsZero(this.ThisItem);
       }
     }
 
@@ -256,33 +256,28 @@ namespace PeterO {
     /// type is not a number type.</exception>
     /// <returns>A CBORObject object.</returns>
     public CBORObject Negate() {
-      switch (this.ItemType) {
-        case CBORObject.CBORObjectTypeInteger:
-          if (((long)this.ThisItem) == Int64.MinValue) {
-            return CBORObject.FromObject(valueOneShift63);
-          }
-          return CBORObject.FromObject(-((long)this.ThisItem));
-          case CBORObject.CBORObjectTypeBigInteger: {
-            BigInteger bigint = (BigInteger)this.ThisItem;
-            bigint = -bigint;
-            return CBORObject.FromObject(bigint);
-          }
-        case CBORObject.CBORObjectTypeSingle:
-          return CBORObject.FromObject(-((float)this.ThisItem));
-        case CBORObject.CBORObjectTypeDouble:
-          return CBORObject.FromObject(-((double)this.ThisItem));
-        case CBORObject.CBORObjectTypeExtendedDecimal:
-          return CBORObject.FromObject(((ExtendedDecimal)this.ThisItem).Negate());
-        case CBORObject.CBORObjectTypeExtendedFloat:
-          return CBORObject.FromObject(((ExtendedFloat)this.ThisItem).Negate());
-        default:
-          throw new InvalidOperationException("This object is not a number.");
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        throw new InvalidOperationException("This object is not a number.");
       }
+      return CBORObject.FromObject(cn.Negate(this.ThisItem));
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A CBORObject object.</returns>
+    public CBORObject Abs() {
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        throw new InvalidOperationException("This object is not a number.");
+      }
+      object oldItem = this.ThisItem;
+      object newItem = cn.Abs(oldItem);
+      return (oldItem == newItem) ? this : CBORObject.FromObject(newItem);
     }
 
     private static int GetSignInternal(int type, object obj) {
-        ICBORNumber cn=NumberInterfaces[type];
-        return cn==null ? 2 : cn.Sign(obj);
+      ICBORNumber cn = NumberInterfaces[type];
+      return cn == null ? 2 : cn.Sign(obj);
     }
 
     /// <summary>Gets this value&apos;s sign: -1 if negative; 1 if positive;
@@ -294,9 +289,10 @@ namespace PeterO {
     /// zero.</value>
     public int Sign {
       get {
-        int ret=GetSignInternal(this.ItemType, this.ThisItem);
-        if(ret==2)
+        int ret = GetSignInternal(this.ItemType, this.ThisItem);
+        if (ret == 2) {
           throw new InvalidOperationException("This object is not a number.");
+        }
         return ret;
       }
     }
@@ -305,24 +301,24 @@ namespace PeterO {
     /// positive infinity.</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsPositiveInfinity() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      return cn==null ? false : cn.IsPositiveInfinity(this.ThisItem);
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      return cn == null ? false : cn.IsPositiveInfinity(this.ThisItem);
     }
 
     /// <summary>Gets a value indicating whether this CBOR object represents
     /// infinity.</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsInfinity() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      return cn==null ? false : cn.IsInfinity(this.ThisItem);
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      return cn == null ? false : cn.IsInfinity(this.ThisItem);
     }
 
     /// <summary>Gets a value indicating whether this CBOR object represents
     /// negative infinity.</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsNegativeInfinity() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      return cn==null ? false : cn.IsNegativeInfinity(this.ThisItem);
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      return cn == null ? false : cn.IsNegativeInfinity(this.ThisItem);
     }
 
     /// <summary>Gets a value indicating whether this CBOR object represents
@@ -330,8 +326,8 @@ namespace PeterO {
     /// is not a number type).</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsNaN() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      return cn==null ? false : cn.IsNaN(this.ThisItem);
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      return cn == null ? false : cn.IsNaN(this.ThisItem);
     }
 
     /// <summary>Compares two CBOR objects.<para> In this implementation:</para>
@@ -1606,11 +1602,11 @@ namespace PeterO {
         }
       }
 
-      /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
-      /// <exception cref='System.InvalidOperationException'>This object
-      /// is not an array.</exception>
-      /// <exception cref='System.ArgumentNullException'>Value is null
-      /// (as opposed to CBORObject.Null).</exception>
+    /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
+    /// <exception cref='System.InvalidOperationException'>This object
+    /// is not an array.</exception>
+    /// <exception cref='System.ArgumentNullException'>Value is null
+    /// (as opposed to CBORObject.Null).</exception>
       set {
         if (this.ItemType == CBORObjectTypeArray) {
           if (value == null) {
@@ -1663,12 +1659,12 @@ namespace PeterO {
         }
       }
 
-      /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
-      /// as the key.</summary>
-      /// <exception cref='System.ArgumentNullException'>The key or value
-      /// is null (as opposed to CBORObject.Null).</exception>
-      /// <exception cref='System.InvalidOperationException'>This object
-      /// is not a map.</exception>
+    /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
+    /// as the key.</summary>
+    /// <exception cref='System.ArgumentNullException'>The key or value
+    /// is null (as opposed to CBORObject.Null).</exception>
+    /// <exception cref='System.InvalidOperationException'>This object
+    /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1701,12 +1697,12 @@ namespace PeterO {
         return this[objkey];
       }
 
-      /// <summary>Sets the value of a CBOR object in this map, using a string
-      /// as the key.</summary>
-      /// <exception cref='System.ArgumentNullException'>The key or value
-      /// is null (as opposed to CBORObject.Null).</exception>
-      /// <exception cref='System.InvalidOperationException'>This object
-      /// is not a map.</exception>
+    /// <summary>Sets the value of a CBOR object in this map, using a string
+    /// as the key.</summary>
+    /// <exception cref='System.ArgumentNullException'>The key or value
+    /// is null (as opposed to CBORObject.Null).</exception>
+    /// <exception cref='System.InvalidOperationException'>This object
+    /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1876,9 +1872,10 @@ namespace PeterO {
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public double AsDouble() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
         throw new InvalidOperationException("Not a number type");
+      }
       return cn.AsDouble(this.ThisItem);
     }
 
@@ -1889,9 +1886,10 @@ namespace PeterO {
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public ExtendedDecimal AsExtendedDecimal() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
         throw new InvalidOperationException("Not a number type");
+      }
       return cn.AsExtendedDecimal(this.ThisItem);
     }
 
@@ -1905,9 +1903,10 @@ namespace PeterO {
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public ExtendedFloat AsExtendedFloat() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
         throw new InvalidOperationException("Not a number type");
+      }
       return cn.AsExtendedFloat(this.ThisItem);
     }
 
@@ -1918,9 +1917,10 @@ namespace PeterO {
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public float AsSingle() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
         throw new InvalidOperationException("Not a number type");
+      }
       return cn.AsSingle(this.ThisItem);
     }
 
@@ -1932,9 +1932,10 @@ namespace PeterO {
     /// <exception cref='OverflowException'>This object's value is infinity
     /// or not-a-number (NaN).</exception>
     public BigInteger AsBigInteger() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
         throw new InvalidOperationException("Not a number type");
+      }
       return cn.AsBigInteger(this.ThisItem);
     }
 
@@ -1979,9 +1980,10 @@ namespace PeterO {
     /// <exception cref='System.OverflowException'>This object's value
     /// exceeds the range of a 64-bit signed integer.</exception>
     public long AsInt64() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
         throw new InvalidOperationException("Not a number type");
+      }
       return cn.AsInt64(this.ThisItem);
     }
 
@@ -1991,8 +1993,10 @@ namespace PeterO {
     /// value, even if the value's diagnostic information can't fit in a 32-bit
     /// floating point number.</returns>
     public bool CanFitInSingle() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)return false;
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        return false;
+      }
       return cn.CanFitInInt64(this.ThisItem);
     }
 
@@ -2002,8 +2006,10 @@ namespace PeterO {
     /// value, even if the value's diagnostic information can't fit in a 64-bit
     /// floating point number.</returns>
     public bool CanFitInDouble() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)return false;
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        return false;
+      }
       return cn.CanFitInDouble(this.ThisItem);
     }
 
@@ -2022,8 +2028,10 @@ namespace PeterO {
     /// is -(2^63) or greater, and is less than 2^63.</summary>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInInt64() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)return false;
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        return false;
+      }
       return cn.CanFitInInt64(this.ThisItem);
     }
 
@@ -2031,8 +2039,10 @@ namespace PeterO {
     /// would be -(2^63) or greater, and less than 2^63.</summary>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt64() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)return false;
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        return false;
+      }
       return cn.CanTruncatedIntFitInInt64(this.ThisItem);
     }
 
@@ -2040,8 +2050,10 @@ namespace PeterO {
     /// would be -(2^31) or greater, and less than 2^31.</summary>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt32() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)return false;
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        return false;
+      }
       return cn.CanTruncatedIntFitInInt32(this.ThisItem);
     }
 
@@ -2052,16 +2064,20 @@ namespace PeterO {
     /// is, a number without a fractional part.</value>
     public bool IsIntegral {
       get {
-        ICBORNumber cn=NumberInterfaces[this.ItemType];
-        if(cn==null)return false;
+        ICBORNumber cn = NumberInterfaces[this.ItemType];
+        if (cn == null) {
+          return false;
+        }
         return cn.IsIntegral(this.ThisItem);
       }
     }
 
     private int AsInt32(int minValue, int maxValue) {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)throw new InvalidOperationException("not a number type");
-      return cn.AsInt32(this.ThisItem,minValue,maxValue);
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        throw new InvalidOperationException("not a number type");
+      }
+      return cn.AsInt32(this.ThisItem, minValue, maxValue);
     }
 
     /// <summary>Converts this object to a 32-bit signed integer. Floating
@@ -4370,8 +4386,10 @@ namespace PeterO {
     }
 
     private bool CanFitInTypeZeroOrOne() {
-      ICBORNumber cn=NumberInterfaces[this.ItemType];
-      if(cn==null)return false;
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        return false;
+      }
       return cn.CanFitInTypeZeroOrOne(this.ThisItem);
     }
     // Wrap a new object in another one to retain its tags

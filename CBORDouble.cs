@@ -1,10 +1,9 @@
-﻿/*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 2/21/2014
- * Time: 9:26 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+/*
+Written in 2014 by Peter O.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://peteroupc.github.io/CBOR/
  */
 using System;
 
@@ -12,54 +11,73 @@ namespace PeterO
 {
   internal class CBORDouble : ICBORNumber
   {
-    
-    public bool IsPositiveInfinity(object obj)
-    {
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsPositiveInfinity(object obj) {
       return Double.IsPositiveInfinity((double)obj);
     }
-    
-    public bool IsInfinity(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsInfinity(object obj) {
       return Double.IsInfinity((double)obj);
     }
-    
-    public bool IsNegativeInfinity(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsNegativeInfinity(object obj) {
       return Double.IsNegativeInfinity((double)obj);
     }
-    
-    public bool IsNaN(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsNaN(object obj) {
       return Double.IsNaN((double)obj);
     }
-    
-    public double AsDouble(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 64-bit floating-point number.</returns>
+    public double AsDouble(object obj) {
       return (double)obj;
     }
-    
-    public ExtendedDecimal AsExtendedDecimal(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedDecimal AsExtendedDecimal(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public ExtendedFloat AsExtendedFloat(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat AsExtendedFloat(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public float AsSingle(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 32-bit floating-point number.</returns>
+    public float AsSingle(object obj) {
       return (float)(double)obj;
     }
-    
-    public BigInteger AsBigInteger(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A BigInteger object.</returns>
+    public BigInteger AsBigInteger(object obj) {
       return CBORUtilities.BigIntegerFromDouble((double)obj);
     }
-    
-    public long AsInt64(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 64-bit signed integer.</returns>
+    public long AsInt64(object obj) {
       double fltItem = (double)obj;
       if (Double.IsNaN(fltItem)) {
         throw new OverflowException("This object's value is out of range");
@@ -70,60 +88,100 @@ namespace PeterO
       }
       throw new OverflowException("This object's value is out of range");
     }
-    
-    public bool CanFitInSingle(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInSingle(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool CanFitInDouble(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInDouble(object obj) {
       return true;
     }
-    
-    public bool CanFitInInt32(object obj)
-    {
-      return IsIntegral(obj) && CanTruncatedIntFitInInt32(obj);
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInInt32(object obj) {
+      return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt32(obj);
     }
-    
-    public bool CanFitInInt64(object obj)
-    {
-      return IsIntegral(obj) && CanTruncatedIntFitInInt64(obj);
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInInt64(object obj) {
+      return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
-    
-    public bool CanTruncatedIntFitInInt64(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanTruncatedIntFitInInt64(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool CanTruncatedIntFitInInt32(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanTruncatedIntFitInInt32(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public int AsInt32(object obj, int minValue, int maxValue)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <param name='minValue'>A 32-bit signed integer. (2).</param>
+    /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
+    /// <returns>A 32-bit signed integer.</returns>
+    public int AsInt32(object obj, int minValue, int maxValue) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool IsZero(object obj)
-    {
-      return ((double)obj)==0.0;
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsZero(object obj) {
+      return ((double)obj) == 0.0;
     }
-    
-    public int Sign(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 32-bit signed integer.</returns>
+    public int Sign(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool IsIntegral(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsIntegral(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-  public bool CanFitInTypeZeroOrOne(object obj)
-  {
-    throw new NotImplementedException();  // TODO: Implement
-  }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInTypeZeroOrOne(object obj) {
+      throw new NotImplementedException();  // TODO: Implement
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object. (2).</param>
+    /// <returns>An arbitrary object.</returns>
+public object Negate(object obj) {
+      double val = (double)obj;
+      return -val;
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object. (2).</param>
+    /// <returns>An arbitrary object.</returns>
+public object Abs(object obj) {
+      double val = (double)obj;
+      return (val < 0) ? -val : obj;
+    }
   }
 }

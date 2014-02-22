@@ -80,8 +80,24 @@ import java.io.*;
     static final int CBORObjectTypeTagged = 10;
     static final int CBORObjectTypeExtendedFloat = 11;
     static final int CBORObjectTypeExtendedRational = 12;
-    private static final BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
-    private static final BigInteger Int64MinValue = BigInteger.valueOf(Long.MIN_VALUE);
+    static final BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
+    static final BigInteger Int64MinValue = BigInteger.valueOf(Long.MIN_VALUE);
+
+    private static final ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
+      new CBORInteger(),
+      new CBORBigInteger(),
+      null,
+      null,
+      null,
+      null,
+      null,
+      new CBORSingle(),
+      new CBORDouble(),
+      new CBORExtendedDecimal(),
+      null,
+      new CBORExtendedFloat(),
+      new CBORExtendedRational()
+    };
 
     /**
      * Represents the value false.
@@ -192,24 +208,8 @@ import java.io.*;
      * @return Whether this object's value equals 0.
      */
     public boolean isZero() {
-        switch (this.getItemType()) {
-          case CBORObject.CBORObjectTypeInteger:
-            return ((((Long)this.getThisItem()).longValue())) == 0;
-          case CBORObject.CBORObjectTypeBigInteger:
-            return ((BigInteger)this.getThisItem()).signum()==0;
-          case CBORObject.CBORObjectTypeSingle:
-            return (((Float)this.getThisItem()).floatValue()) == 0;
-          case CBORObject.CBORObjectTypeDouble:
-            return (((Double)this.getThisItem()).doubleValue()) == 0;
-          case CBORObject.CBORObjectTypeExtendedDecimal:
-            return ((ExtendedDecimal)this.getThisItem()).signum()==0;
-          case CBORObject.CBORObjectTypeExtendedFloat:
-            return ((ExtendedFloat)this.getThisItem()).signum()==0;
-          case CBORObject.CBORObjectTypeExtendedRational:
-            return ((ExtendedRational)this.getThisItem()).signum()==0;
-          default:
-            return false;
-        }
+        ICBORNumber cn = NumberInterfaces[this.getItemType()];
+        return cn == null ? false : cn.IsZero(this.getThisItem());
       }
 
     /**
@@ -219,87 +219,30 @@ import java.io.*;
      * not a number type.
      */
     public CBORObject Negate() {
-      switch (this.getItemType()) {
-        case CBORObject.CBORObjectTypeInteger:
-          if (((((Long)this.getThisItem()).longValue())) == Long.MIN_VALUE) {
-            return CBORObject.FromObject(valueOneShift63);
-          }
-          return CBORObject.FromObject(-((((Long)this.getThisItem()).longValue())));
-          case CBORObject.CBORObjectTypeBigInteger: {
-            BigInteger bigint = (BigInteger)this.getThisItem();
-            bigint=bigint.negate();
-            return CBORObject.FromObject(bigint);
-          }
-        case CBORObject.CBORObjectTypeSingle:
-          return CBORObject.FromObject(-(((Float)this.getThisItem()).floatValue()));
-        case CBORObject.CBORObjectTypeDouble:
-          return CBORObject.FromObject(-(((Double)this.getThisItem()).doubleValue()));
-        case CBORObject.CBORObjectTypeExtendedDecimal:
-          return CBORObject.FromObject(((ExtendedDecimal)this.getThisItem()).Negate());
-        case CBORObject.CBORObjectTypeExtendedFloat:
-          return CBORObject.FromObject(((ExtendedFloat)this.getThisItem()).Negate());
-        default:
-          throw new IllegalStateException("This Object is not a number.");
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        throw new IllegalStateException("This Object is not a number.");
       }
+      return CBORObject.FromObject(cn.Negate(this.getThisItem()));
     }
 
-    private static int GetSignInternal(int type, Object obj, boolean returnOnNaN) {
-      switch (type) {
-          case CBORObject.CBORObjectTypeInteger: {
-            long value = (((Long)obj).longValue());
-            return (value == 0) ? 0 : ((value < 0) ? -1 : 1);
-          }
-        case CBORObject.CBORObjectTypeBigInteger:
-          return ((BigInteger)obj).signum();
-          case CBORObject.CBORObjectTypeSingle: {
-            float value = ((Float)obj).floatValue();
-            if (Float.isNaN(value)) {
-              if (returnOnNaN) {
-                return 2;
-              } else {
-                throw new IllegalStateException("This Object is not a number.");
-              }
-            }
-            return (int)((value==0) ? 0 : ((value<0) ? -1 : 1));
-          }
-          case CBORObject.CBORObjectTypeDouble: {
-            double value = ((Double)obj).doubleValue();
-            if (Double.isNaN(value)) {
-              if (returnOnNaN) {
-                return 2;
-              } else {
-                throw new IllegalStateException("This Object is not a number.");
-              }
-            }
-            return (int)((value==0) ? 0 : ((value<0) ? -1 : 1));
-          }
-        case CBORObject.CBORObjectTypeExtendedDecimal:
-          if (((ExtendedDecimal)obj).IsNaN()) {
-              if (returnOnNaN) {
-                return 2;
-              } else {
-                throw new IllegalStateException("This Object is not a number.");
-              }
-          }
-          return ((ExtendedDecimal)obj).signum();
-        case CBORObject.CBORObjectTypeExtendedFloat:
-          if (((ExtendedFloat)obj).IsNaN()) {
-              if (returnOnNaN) {
-                return 2;
-              } else {
-                throw new IllegalStateException("This Object is not a number.");
-              }
-          }
-          return ((ExtendedFloat)obj).signum();
-        case CBORObject.CBORObjectTypeExtendedRational:
-          return ((ExtendedRational)obj).signum();
-        default:
-          if (returnOnNaN) {
-            return 2;  // not a number type
-          } else {
-            throw new IllegalStateException("This Object is not a number.");
-          }
+    /**
+     * Not documented yet.
+     * @return A CBORObject object.
+     */
+    public CBORObject Abs() {
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        throw new IllegalStateException("This Object is not a number.");
       }
+      Object oldItem = this.getThisItem();
+      Object newItem = cn.Abs(oldItem);
+      return (oldItem == newItem) ? this : CBORObject.FromObject(newItem);
+    }
+
+    private static int GetSignInternal(int type, Object obj) {
+      ICBORNumber cn = NumberInterfaces[type];
+      return cn == null ? 2 : cn.Sign(obj);
     }
 
     /**
@@ -309,7 +252,11 @@ import java.io.*;
      * not a number type, including the special not-a-number value (NaN).
      */
     public int signum() {
-        return GetSignInternal(this.getItemType(), this.getThisItem(), false);
+        int ret = GetSignInternal(this.getItemType(), this.getThisItem());
+        if (ret == 2) {
+          throw new IllegalStateException("This Object is not a number.");
+        }
+        return ret;
       }
 
     /**
@@ -318,22 +265,8 @@ import java.io.*;
      * @return A Boolean object.
      */
     public boolean IsPositiveInfinity() {
-      switch (this.getItemType()) {
-          case CBORObject.CBORObjectTypeSingle: {
-            float value = ((Float)this.getThisItem()).floatValue();
-            return ((Float)(value)).isInfinite() && value > 0;
-          }
-          case CBORObject.CBORObjectTypeDouble: {
-            double value = ((Double)this.getThisItem()).doubleValue();
-            return ((Double)(value)).isInfinite() && value > 0;
-          }
-        case CBORObject.CBORObjectTypeExtendedDecimal:
-          return ((ExtendedDecimal)this.getThisItem()).IsPositiveInfinity();
-        case CBORObject.CBORObjectTypeExtendedFloat:
-          return ((ExtendedFloat)this.getThisItem()).IsPositiveInfinity();
-        default:
-          return false;
-      }
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      return cn == null ? false : cn.IsPositiveInfinity(this.getThisItem());
     }
 
     /**
@@ -341,7 +274,8 @@ import java.io.*;
      * @return A Boolean object.
      */
     public boolean IsInfinity() {
-      return this.IsPositiveInfinity() || this.IsNegativeInfinity();
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      return cn == null ? false : cn.IsInfinity(this.getThisItem());
     }
 
     /**
@@ -350,22 +284,8 @@ import java.io.*;
      * @return A Boolean object.
      */
     public boolean IsNegativeInfinity() {
-      switch (this.getItemType()) {
-          case CBORObject.CBORObjectTypeSingle: {
-            float value = ((Float)this.getThisItem()).floatValue();
-            return ((Float)(value)).isInfinite() && value < 0;
-          }
-          case CBORObject.CBORObjectTypeDouble: {
-            double value = ((Double)this.getThisItem()).doubleValue();
-            return ((Double)(value)).isInfinite() && value < 0;
-          }
-        case CBORObject.CBORObjectTypeExtendedDecimal:
-          return ((ExtendedDecimal)this.getThisItem()).IsNegativeInfinity();
-        case CBORObject.CBORObjectTypeExtendedFloat:
-          return ((ExtendedFloat)this.getThisItem()).IsNegativeInfinity();
-        default:
-          return false;
-      }
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      return cn == null ? false : cn.IsNegativeInfinity(this.getThisItem());
     }
 
     /**
@@ -375,18 +295,8 @@ import java.io.*;
      * @return A Boolean object.
      */
     public boolean IsNaN() {
-      switch (this.getItemType()) {
-        case CBORObject.CBORObjectTypeSingle:
-          return Float.isNaN(((Float)this.getThisItem()).floatValue());
-        case CBORObject.CBORObjectTypeDouble:
-          return Double.isNaN(((Double)this.getThisItem()).doubleValue());
-        case CBORObject.CBORObjectTypeExtendedDecimal:
-          return ((ExtendedDecimal)this.getThisItem()).IsNaN();
-        case CBORObject.CBORObjectTypeExtendedFloat:
-          return ((ExtendedFloat)this.getThisItem()).IsNaN();
-        default:
-          return false;
-      }
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      return cn == null ? false : cn.IsNaN(this.getThisItem());
     }
 
     /**
@@ -566,8 +476,8 @@ public int compareTo(CBORObject other) {
         }
       } else {
         int combo = (typeA << 4) | typeB;
-        int s1 = GetSignInternal(typeA, objA, true);
-        int s2 = GetSignInternal(typeB, objB, true);
+        int s1 = GetSignInternal(typeA, objA);
+        int s2 = GetSignInternal(typeB, objB);
         if (s1 != s2 && s1 != 2 && s2 != 2) {
           // if both types are numbers
           // and their signs are different
@@ -1957,28 +1867,11 @@ public void set(String key, CBORObject value) {
      * not a number type.
      */
     public double AsDouble() {
-      int type = this.getItemType();
-      switch (type) {
-        case CBORObjectTypeInteger:
-          return ((Long)this.getThisItem()).doubleValue();
-        case CBORObjectTypeBigInteger:
-          return ExtendedFloat.FromBigInteger((BigInteger)this.getThisItem()).ToDouble();
-        case CBORObjectTypeSingle:
-          return ((Float)this.getThisItem()).doubleValue();
-        case CBORObjectTypeDouble:
-          return ((Double)this.getThisItem()).doubleValue();
-          case CBORObjectTypeExtendedDecimal: {
-            return ((ExtendedDecimal)this.getThisItem()).ToDouble();
-          }
-          case CBORObjectTypeExtendedFloat: {
-            return ((ExtendedFloat)this.getThisItem()).ToDouble();
-          }
-          case CBORObjectTypeExtendedRational: {
-            return ((ExtendedRational)this.getThisItem()).ToDouble();
-          }
-        default:
-          throw new IllegalStateException("Not a number type");
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        throw new IllegalStateException("Not a number type");
       }
+      return cn.AsDouble(this.getThisItem());
     }
 
     /**
@@ -1990,28 +1883,11 @@ public void set(String key, CBORObject value) {
      * not a number type.
      */
     public ExtendedDecimal AsExtendedDecimal() {
-      int type = this.getItemType();
-      switch (type) {
-        case CBORObjectTypeInteger:
-          return ExtendedDecimal.FromInt64((((Long)this.getThisItem()).longValue()));
-        case CBORObjectTypeBigInteger:
-          return ExtendedDecimal.FromBigInteger((BigInteger)this.getThisItem());
-        case CBORObjectTypeSingle:
-          return ExtendedDecimal.FromSingle(((Float)this.getThisItem()).floatValue());
-        case CBORObjectTypeDouble:
-          return ExtendedDecimal.FromDouble(((Double)this.getThisItem()).doubleValue());
-        case CBORObjectTypeExtendedDecimal:
-          return (ExtendedDecimal)this.getThisItem();
-          case CBORObjectTypeExtendedFloat: {
-            return ExtendedDecimal.FromExtendedFloat((ExtendedFloat)this.getThisItem());
-          }
-          case CBORObjectTypeExtendedRational: {
-            return ((ExtendedRational)this.getThisItem()).ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
-          }
-        default:
-          throw new IllegalStateException("Not a number type");
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        throw new IllegalStateException("Not a number type");
       }
+      return cn.AsExtendedDecimal(this.getThisItem());
     }
 
     /**
@@ -2026,28 +1902,11 @@ public void set(String key, CBORObject value) {
      * not a number type.
      */
     public ExtendedFloat AsExtendedFloat() {
-      int type = this.getItemType();
-      switch (type) {
-        case CBORObjectTypeInteger:
-          return ExtendedFloat.FromInt64((((Long)this.getThisItem()).longValue()));
-        case CBORObjectTypeBigInteger:
-          return ExtendedFloat.FromBigInteger((BigInteger)this.getThisItem());
-        case CBORObjectTypeSingle:
-          return ExtendedFloat.FromSingle(((Float)this.getThisItem()).floatValue());
-        case CBORObjectTypeDouble:
-          return ExtendedFloat.FromDouble(((Double)this.getThisItem()).doubleValue());
-        case CBORObjectTypeExtendedDecimal:
-          return ((ExtendedDecimal)this.getThisItem()).ToExtendedFloat();
-          case CBORObjectTypeExtendedFloat: {
-            return (ExtendedFloat)this.getThisItem();
-          }
-          case CBORObjectTypeExtendedRational: {
-            return ((ExtendedRational)this.getThisItem()).ToExtendedFloatExactIfPossible(
-              PrecisionContext.Binary128.WithUnlimitedExponents());
-          }
-        default:
-          throw new IllegalStateException("Not a number type");
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        throw new IllegalStateException("Not a number type");
       }
+      return cn.AsExtendedFloat(this.getThisItem());
     }
 
     /**
@@ -2059,28 +1918,11 @@ public void set(String key, CBORObject value) {
      * not a number type.
      */
     public float AsSingle() {
-      int type = this.getItemType();
-      switch (type) {
-        case CBORObjectTypeInteger:
-          return ((Long)this.getThisItem()).floatValue();
-        case CBORObjectTypeBigInteger:
-          return ExtendedFloat.FromBigInteger((BigInteger)this.getThisItem()).ToSingle();
-        case CBORObjectTypeSingle:
-          return ((Float)this.getThisItem()).floatValue();
-        case CBORObjectTypeDouble:
-          return ((Double)this.getThisItem()).floatValue();
-          case CBORObjectTypeExtendedDecimal: {
-            return ((ExtendedDecimal)this.getThisItem()).ToSingle();
-          }
-          case CBORObjectTypeExtendedFloat: {
-            return ((ExtendedFloat)this.getThisItem()).ToSingle();
-          }
-          case CBORObjectTypeExtendedRational: {
-            return ((ExtendedRational)this.getThisItem()).ToSingle();
-          }
-        default:
-          throw new IllegalStateException("Not a number type");
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        throw new IllegalStateException("Not a number type");
       }
+      return cn.AsSingle(this.getThisItem());
     }
 
     /**
@@ -2093,28 +1935,11 @@ public void set(String key, CBORObject value) {
      * (NaN).
      */
     public BigInteger AsBigInteger() {
-      int type = this.getItemType();
-      switch (type) {
-        case CBORObjectTypeInteger:
-          return BigInteger.valueOf((((Long)this.getThisItem()).longValue()));
-        case CBORObjectTypeBigInteger:
-          return (BigInteger)this.getThisItem();
-        case CBORObjectTypeSingle:
-          return CBORUtilities.BigIntegerFromSingle(((Float)this.getThisItem()).floatValue());
-        case CBORObjectTypeDouble:
-          return CBORUtilities.BigIntegerFromDouble(((Double)this.getThisItem()).doubleValue());
-          case CBORObjectTypeExtendedDecimal: {
-            return ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
-          }
-          case CBORObjectTypeExtendedFloat: {
-            return ((ExtendedFloat)this.getThisItem()).ToBigInteger();
-          }
-          case CBORObjectTypeExtendedRational: {
-            return ((ExtendedRational)this.getThisItem()).ToBigInteger();
-          }
-        default:
-          throw new IllegalStateException("Not a number type");
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        throw new IllegalStateException("Not a number type");
       }
+      return cn.AsBigInteger(this.getThisItem());
     }
 
     /**
@@ -2166,73 +1991,11 @@ public void set(String key, CBORObject value) {
      * the range of a 64-bit signed integer.
      */
     public long AsInt64() {
-      int type = this.getItemType();
-      switch (type) {
-          case CBORObjectTypeInteger: {
-            return (((Long)this.getThisItem()).longValue());
-          }
-          case CBORObjectTypeBigInteger: {
-            if (((BigInteger)this.getThisItem()).compareTo(Int64MaxValue) > 0 ||
-                ((BigInteger)this.getThisItem()).compareTo(Int64MinValue) < 0) {
-              throw new ArithmeticException("This Object's value is out of range");
-            }
-            return ((BigInteger)this.getThisItem()).longValue();
-          }
-          case CBORObjectTypeSingle: {
-            float fltItem = ((Float)this.getThisItem()).floatValue();
-            if (Float.isNaN(fltItem)) {
-              throw new ArithmeticException("This Object's value is out of range");
-            }
-            fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-            if (fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE) {
-              return (long)fltItem;
-            }
-            throw new ArithmeticException("This Object's value is out of range");
-          }
-          case CBORObjectTypeDouble: {
-            double fltItem = ((Double)this.getThisItem()).doubleValue();
-            if (Double.isNaN(fltItem)) {
-              throw new ArithmeticException("This Object's value is out of range");
-            }
-            fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
-            if (fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE) {
-              return (long)fltItem;
-            }
-            throw new ArithmeticException("This Object's value is out of range");
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            if (((ExtendedDecimal)this.getThisItem()).isFinite()) {
-              BigInteger bi = ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
-              if (bi.compareTo(Int64MaxValue) <= 0 &&
-                  bi.compareTo(Int64MinValue) >= 0) {
-                return bi.longValue();
-              }
-            }
-            throw new ArithmeticException("This Object's value is out of range");
-          }
-          case CBORObjectTypeExtendedFloat: {
-            if (((ExtendedFloat)this.getThisItem()).isFinite()) {
-              BigInteger bi = ((ExtendedFloat)this.getThisItem()).ToBigInteger();
-              if (bi.compareTo(Int64MaxValue) <= 0 &&
-                  bi.compareTo(Int64MinValue) >= 0) {
-                return bi.longValue();
-              }
-            }
-            throw new ArithmeticException("This Object's value is out of range");
-          }
-          case CBORObjectTypeExtendedRational: {
-            if (((ExtendedRational)this.getThisItem()).isFinite()) {
-              BigInteger bi = ((ExtendedRational)this.getThisItem()).ToBigInteger();
-              if (bi.compareTo(Int64MaxValue) <= 0 &&
-                  bi.compareTo(Int64MinValue) >= 0) {
-                return bi.longValue();
-              }
-            }
-            throw new ArithmeticException("This Object's value is out of range");
-          }
-        default:
-          throw new IllegalStateException("Not a number type");
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        throw new IllegalStateException("Not a number type");
       }
+      return cn.AsInt64(this.getThisItem());
     }
 
     /**
@@ -2243,62 +2006,11 @@ public void set(String key, CBORObject value) {
      * point number.
      */
     public boolean CanFitInSingle() {
-      Object thisItem = this.getThisItem();
-      int type = this.getItemType();
-      switch (type) {
-          case CBORObjectTypeInteger: {
-            long intItem = (((Long)thisItem).longValue());
-            if (intItem == Long.MIN_VALUE) {
-              return true;
-            }
-            intItem = Math.abs(intItem);
-            while (intItem >= (1L << 24) && (intItem & 1) == 0) {
-              intItem >>= 1;
-            }
-            return intItem < (1L << 24);
-          }
-          case CBORObjectTypeBigInteger: {
-            BigInteger bigintItem = (BigInteger)thisItem;
-            ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
-            ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
-            return ef.compareTo(ef2) == 0;
-          }
-          case CBORObjectTypeSingle: {
-            return true;
-          }
-          case CBORObjectTypeDouble: {
-            double fltItem = ((Double)thisItem).doubleValue();
-            if (Double.isNaN(fltItem)) {
-              return true;
-            }
-            float sing = (float)fltItem;
-            return (double)sing == fltItem;
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            if (this.IsNaN()) {
-              return true;
-            }
-            if (this.IsInfinity()) {
-              return true;
-            }
-            ExtendedDecimal ed = (ExtendedDecimal)this.getThisItem();
-            ExtendedDecimal ed2 = ExtendedDecimal.FromSingle(ed.ToSingle());
-            return ed.compareTo(ed2) == 0;
-          }
-          case CBORObjectTypeExtendedFloat: {
-            if (this.IsNaN()) {
-              return true;
-            }
-            if (this.IsInfinity()) {
-              return true;
-            }
-            ExtendedFloat ef = (ExtendedFloat)this.getThisItem();
-            ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
-            return ef.compareTo(ef2) == 0;
-          }
-        default:
-          return false;
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        return false;
       }
+      return cn.CanFitInInt64(this.getThisItem());
     }
 
     /**
@@ -2309,55 +2021,11 @@ public void set(String key, CBORObject value) {
      * point number.
      */
     public boolean CanFitInDouble() {
-      Object thisItem = this.getThisItem();
-      int type = this.getItemType();
-      switch (type) {
-          case CBORObjectTypeInteger: {
-            long intItem = (((Long)thisItem).longValue());
-            if (intItem == Long.MIN_VALUE || intItem == 0) {
-              return true;
-            }
-            intItem = Math.abs(intItem);
-            while (intItem >= (1L << 53) && (intItem & 1) == 0) {
-              intItem >>= 1;
-            }
-            return intItem < (1L << 53);
-          }
-          case CBORObjectTypeBigInteger: {
-            BigInteger bigintItem = (BigInteger)thisItem;
-            ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
-            ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
-            return ef.compareTo(ef2) == 0;
-          }
-        case CBORObjectTypeSingle:
-          case CBORObjectTypeDouble: {
-            return true;
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            if (this.IsNaN()) {
-              return true;
-            }
-            if (this.IsInfinity()) {
-              return true;
-            }
-            ExtendedDecimal ed = (ExtendedDecimal)this.getThisItem();
-            ExtendedDecimal ed2 = ExtendedDecimal.FromDouble(ed.ToDouble());
-            return ed.compareTo(ed2) == 0;
-          }
-          case CBORObjectTypeExtendedFloat: {
-            if (this.IsNaN()) {
-              return true;
-            }
-            if (this.IsInfinity()) {
-              return true;
-            }
-            ExtendedFloat ef = (ExtendedFloat)this.getThisItem();
-            ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
-            return ef.compareTo(ef2) == 0;
-          }
-        default:
-          return false;
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        return false;
       }
+      return cn.CanFitInDouble(this.getThisItem());
     }
 
     /**
@@ -2379,62 +2047,11 @@ public void set(String key, CBORObject value) {
      * @return A Boolean object.
      */
     public boolean CanFitInInt64() {
-      Object thisItem = this.getThisItem();
-      int type = this.getItemType();
-      long minValue = Long.MIN_VALUE;
-      long maxValue = Long.MAX_VALUE;
-      switch (type) {
-          case CBORObjectTypeInteger: {
-            return true;
-          }
-          case CBORObjectTypeBigInteger: {
-            BigInteger bigintItem = (BigInteger)thisItem;
-            return bigintItem.compareTo(Int64MaxValue) <= 0 &&
-              bigintItem.compareTo(Int64MinValue) >= 0;
-          }
-          case CBORObjectTypeSingle: {
-            float fltItem = ((Float)thisItem).floatValue();
-            if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
-              return false;
-            }
-            float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-            return fltItem2 == fltItem && fltItem2 >= minValue && fltItem2 <= maxValue;
-          }
-          case CBORObjectTypeDouble: {
-            double fltItem = ((Double)thisItem).doubleValue();
-            if (Double.isNaN(fltItem)) {
-              return false;
-            }
-            double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
-            return fltItem2 == fltItem && fltItem >= minValue && fltItem <= maxValue;
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            if (!this.isIntegral()) {
-              return false;
-            }
-            BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
-            return bi.compareTo(Int64MaxValue) <= 0 &&
-              bi.compareTo(Int64MinValue) >= 0;
-          }
-          case CBORObjectTypeExtendedFloat: {
-            if (!this.isIntegral()) {
-              return false;
-            }
-            BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
-            return bi.compareTo(Int64MaxValue) <= 0 &&
-              bi.compareTo(Int64MinValue) >= 0;
-          }
-          case CBORObjectTypeExtendedRational: {
-            if (!this.isIntegral()) {
-              return false;
-            }
-            BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
-            return bi.compareTo(Int64MaxValue) <= 0 &&
-              bi.compareTo(Int64MinValue) >= 0;
-          }
-        default:
-          return false;
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        return false;
       }
+      return cn.CanFitInInt64(this.getThisItem());
     }
 
     /**
@@ -2443,60 +2060,11 @@ public void set(String key, CBORObject value) {
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt64() {
-      int type = this.getItemType();
-      Object thisItem = this.getThisItem();
-      switch (type) {
-          case CBORObjectTypeInteger: {
-            return true;
-          }
-          case CBORObjectTypeBigInteger: {
-            BigInteger bigintItem = (BigInteger)this.getThisItem();
-            return bigintItem.compareTo(Int64MaxValue) <= 0 &&
-              bigintItem.compareTo(Int64MinValue) >= 0;
-          }
-          case CBORObjectTypeSingle: {
-            float fltItem = ((Float)this.getThisItem()).floatValue();
-            if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
-              return false;
-            }
-            fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-            return fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE;
-          }
-          case CBORObjectTypeDouble: {
-            double fltItem = ((Double)this.getThisItem()).doubleValue();
-            if (Double.isNaN(fltItem)) {
-              return false;
-            }
-            fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
-            return fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE;
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            if (!((ExtendedDecimal)thisItem).isFinite()) {
-              return false;
-            }
-            BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
-            return bi.compareTo(Int64MaxValue) <= 0 &&
-              bi.compareTo(Int64MinValue) >= 0;
-          }
-          case CBORObjectTypeExtendedFloat: {
-            if (!((ExtendedFloat)thisItem).isFinite()) {
-              return false;
-            }
-            BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
-            return bi.compareTo(Int64MaxValue) <= 0 &&
-              bi.compareTo(Int64MinValue) >= 0;
-          }
-          case CBORObjectTypeExtendedRational: {
-            if (!((ExtendedRational)thisItem).isFinite()) {
-              return false;
-            }
-            BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
-            return bi.compareTo(Int64MaxValue) <= 0 &&
-              bi.compareTo(Int64MinValue) >= 0;
-          }
-        default:
-          return false;
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        return false;
       }
+      return cn.CanTruncatedIntFitInInt64(this.getThisItem());
     }
 
     /**
@@ -2505,63 +2073,11 @@ public void set(String key, CBORObject value) {
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt32() {
-      Object thisItem = this.getThisItem();
-      int type = this.getItemType();
-      int minValue = Integer.MIN_VALUE;
-      int maxValue = Integer.MAX_VALUE;
-      switch (type) {
-          case CBORObjectTypeInteger: {
-            long longItem = (((Long)thisItem).longValue());
-            return longItem <= maxValue && longItem >= minValue;
-          }
-          case CBORObjectTypeBigInteger: {
-            BigInteger bigintItem = (BigInteger)thisItem;
-            return bigintItem.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
-              bigintItem.compareTo(BigInteger.valueOf(minValue)) >= 0;
-          }
-          case CBORObjectTypeSingle: {
-            float fltItem = ((Float)thisItem).floatValue();
-            if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
-              return false;
-            }
-            fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-            return fltItem >= minValue && fltItem <= maxValue;
-          }
-          case CBORObjectTypeDouble: {
-            double fltItem = ((Double)thisItem).doubleValue();
-            if (Double.isNaN(fltItem)) {
-              return false;
-            }
-            fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
-            return fltItem >= minValue && fltItem <= maxValue;
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            if (!((ExtendedDecimal)thisItem).isFinite()) {
-              return false;
-            }
-            BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
-            return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
-              bi.compareTo(BigInteger.valueOf(minValue)) >= 0;
-          }
-          case CBORObjectTypeExtendedFloat: {
-            if (!((ExtendedFloat)thisItem).isFinite()) {
-              return false;
-            }
-            BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
-            return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
-              bi.compareTo(BigInteger.valueOf(minValue)) >= 0;
-          }
-          case CBORObjectTypeExtendedRational: {
-            if (!((ExtendedRational)thisItem).isFinite()) {
-              return false;
-            }
-            BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
-            return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
-              bi.compareTo(BigInteger.valueOf(minValue)) >= 0;
-          }
-        default:
-          return false;
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        return false;
       }
+      return cn.CanTruncatedIntFitInInt32(this.getThisItem());
     }
 
     /**
@@ -2572,128 +2088,19 @@ public void set(String key, CBORObject value) {
      * is, a number without a fractional part.
      */
     public boolean isIntegral() {
-        Object thisItem = this.getThisItem();
-        int type = this.getItemType();
-        switch (type) {
-          case CBORObjectTypeInteger:
-            case CBORObjectTypeBigInteger: {
-              return true;
-            }
-            case CBORObjectTypeSingle: {
-              float fltItem = ((Float)thisItem).floatValue();
-              if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
-                return false;
-              }
-              return Math.floor(fltItem) == fltItem;
-            }
-            case CBORObjectTypeDouble: {
-              double fltItem = ((Double)thisItem).doubleValue();
-              if (Double.isNaN(fltItem) || ((Double)(fltItem)).isInfinite()) {
-                return false;
-              }
-              return Math.floor(fltItem) == fltItem;
-            }
-            case CBORObjectTypeExtendedDecimal: {
-              ExtendedDecimal ed = (ExtendedDecimal)this.getThisItem();
-              if (!ed.isFinite()) {
-                return false;
-              }
-              if (ed.getExponent().signum() >= 0) {
-                return true;
-              }
-              ExtendedDecimal ed2 = ExtendedDecimal.FromBigInteger(ed.ToBigInteger());
-              return ed2.compareTo(ed) == 0;
-            }
-            case CBORObjectTypeExtendedFloat: {
-              ExtendedFloat ef = (ExtendedFloat)this.getThisItem();
-              if (!ef.isFinite()) {
-                return false;
-              }
-              if (ef.getExponent().signum() >= 0) {
-                return true;
-              }
-              ExtendedFloat ef2 = ExtendedFloat.FromBigInteger(ef.ToBigInteger());
-              return ef2.compareTo(ef) == 0;
-            }
-            case CBORObjectTypeExtendedRational: {
-              ExtendedRational ef = (ExtendedRational)this.getThisItem();
-              if (!ef.isFinite()) {
-                return false;
-              }
-              if (ef.getDenominator().equals(BigInteger.ONE)) {
-                return true;
-              }
-              // A rational number is integral if the remainder
-              // of the numerator divided by the denominator is 0
-              BigInteger denom = ef.getDenominator();
-              BigInteger rem = ef.getNumerator().remainder(denom);
-              return rem.signum()==0;
-            }
-          default:
-            return false;
+        ICBORNumber cn = NumberInterfaces[this.getItemType()];
+        if (cn == null) {
+          return false;
         }
+        return cn.IsIntegral(this.getThisItem());
       }
 
     private int AsInt32(int minValue, int maxValue) {
-      Object thisItem = this.getThisItem();
-      int type = this.getItemType();
-      switch (type) {
-          case CBORObjectTypeInteger: {
-            long longItem = (((Long)thisItem).longValue());
-            if (longItem > maxValue || longItem < minValue) {
-              throw new ArithmeticException("This Object's value is out of range");
-            }
-            return (int)longItem;
-          }
-          case CBORObjectTypeBigInteger: {
-            BigInteger bigintItem = (BigInteger)thisItem;
-            if (bigintItem.compareTo(BigInteger.valueOf(maxValue)) > 0 ||
-                bigintItem.compareTo(BigInteger.valueOf(minValue)) < 0) {
-              throw new ArithmeticException("This Object's value is out of range");
-            }
-            return bigintItem.intValue();
-          }
-          case CBORObjectTypeSingle: {
-            float fltItem = ((Float)thisItem).floatValue();
-            if (Float.isNaN(fltItem)) {
-              throw new ArithmeticException("This Object's value is out of range");
-            }
-            fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-            if (fltItem >= minValue && fltItem <= maxValue) {
-              return (int)fltItem;
-            }
-            throw new ArithmeticException("This Object's value is out of range");
-          }
-          case CBORObjectTypeDouble: {
-            double fltItem = ((Double)thisItem).doubleValue();
-            if (Double.isNaN(fltItem)) {
-              throw new ArithmeticException("This Object's value is out of range");
-            }
-            fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
-            if (fltItem >= minValue && fltItem <= maxValue) {
-              return (int)fltItem;
-            }
-            throw new ArithmeticException("This Object's value is out of range");
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            BigInteger bi = ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
-            if (bi.compareTo(BigInteger.valueOf(maxValue)) > 0 ||
-                bi.compareTo(BigInteger.valueOf(minValue)) < 0) {
-              throw new ArithmeticException("This Object's value is out of range");
-            }
-            return bi.intValue();
-          }
-          case CBORObjectTypeExtendedFloat: {
-            BigInteger bi = ((ExtendedFloat)this.getThisItem()).ToBigInteger();
-            if (bi.compareTo(BigInteger.valueOf(maxValue)) > 0 ||
-                bi.compareTo(BigInteger.valueOf(minValue)) < 0) {
-              throw new ArithmeticException("This Object's value is out of range");
-            }
-            return bi.intValue();
-          }
-        default:
-          throw new IllegalStateException("Not a number type");
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        throw new IllegalStateException("not a number type");
       }
+      return cn.AsInt32(this.getThisItem(), minValue, maxValue);
     }
 
     /**
@@ -5036,37 +4443,11 @@ public static CBORObject FromObject(Object obj) {
     }
 
     private boolean CanFitInTypeZeroOrOne() {
-      switch (this.getItemType()) {
-        case CBORObjectTypeInteger:
-          return true;
-          case CBORObjectTypeBigInteger: {
-            BigInteger bigint = (BigInteger)this.getThisItem();
-            return bigint.compareTo(valueLowestMajorType1) >= 0 &&
-              bigint.compareTo(valueUInt64MaxValue) <= 0;
-          }
-          case CBORObjectTypeSingle: {
-            float value = ((Float)this.getThisItem()).floatValue();
-            return value >= -18446744073709551616.0f &&
-              value <= 18446742974197923840.0f;  // Highest float less or eq. to ULong.MAX_VALUE
-          }
-          case CBORObjectTypeDouble: {
-            double value = ((Double)this.getThisItem()).doubleValue();
-            return value >= -18446744073709551616.0 &&
-              value <= 18446744073709549568.0;  // Highest double less or eq. to ULong.MAX_VALUE
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            ExtendedDecimal value = (ExtendedDecimal)this.getThisItem();
-            return value.compareTo(ExtendedDecimal.FromBigInteger(valueLowestMajorType1)) >= 0 &&
-              value.compareTo(ExtendedDecimal.FromBigInteger(valueUInt64MaxValue)) <= 0;
-          }
-          case CBORObjectTypeExtendedFloat: {
-            ExtendedFloat value = (ExtendedFloat)this.getThisItem();
-            return value.compareTo(ExtendedFloat.FromBigInteger(valueLowestMajorType1)) >= 0 &&
-              value.compareTo(ExtendedFloat.FromBigInteger(valueUInt64MaxValue)) <= 0;
-          }
-        default:
-          return false;
+      ICBORNumber cn = NumberInterfaces[this.getItemType()];
+      if (cn == null) {
+        return false;
       }
+      return cn.CanFitInTypeZeroOrOne(this.getThisItem());
     }
     // Wrap a new Object in another one to retain its tags
     private static CBORObject RewrapObject(CBORObject original, CBORObject newObject) {
