@@ -186,33 +186,6 @@ namespace PeterO {
     }
 
     private static BigInteger valueBigShiftIteration = (BigInteger)1000000;
-    private static int valueShiftIteration = 1000000;
-
-    private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
-      if (val.IsZero) {
-        return val;
-      }
-      while (bigShift.CompareTo(valueBigShiftIteration) > 0) {
-        val <<= 1000000;
-        bigShift -= (BigInteger)valueBigShiftIteration;
-      }
-      int lastshift = (int)bigShift;
-      val <<= lastshift;
-      return val;
-    }
-
-    private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
-      if (val.IsZero) {
-        return val;
-      }
-      while (shift > valueShiftIteration) {
-        val <<= 1000000;
-        shift -= valueShiftIteration;
-      }
-      int lastshift = (int)shift;
-      val <<= lastshift;
-      return val;
-    }
 
     private sealed class BinaryMathHelper : IRadixMathHelper<ExtendedFloat> {
     /// <summary>Not documented yet.</summary>
@@ -285,18 +258,18 @@ namespace PeterO {
         if (bigint.Sign < 0) {
           bigint = -bigint;
           if (power.CanFitInInt32()) {
-            bigint = ShiftLeftInt(bigint, power.AsInt32());
+            bigint = DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
             bigint = -bigint;
           } else {
-            bigint = ShiftLeft(bigint, power.AsBigInteger());
+            bigint = DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
             bigint = -bigint;
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return ShiftLeftInt(bigint, power.AsInt32());
+            return DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
           } else {
-            return ShiftLeft(bigint, power.AsBigInteger());
+            return DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
           }
         }
       }
@@ -356,7 +329,7 @@ namespace PeterO {
         if (neg) {
           bigmantissa = -bigmantissa;
         }
-        bigmantissa = ShiftLeft(bigmantissa, curexp);
+        bigmantissa = DecimalUtility.ShiftLeft(bigmantissa, curexp);
         if (neg) {
           bigmantissa = -bigmantissa;
         }

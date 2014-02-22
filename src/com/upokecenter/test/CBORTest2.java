@@ -21,22 +21,30 @@ import com.upokecenter.util.*;
         BigInteger num = CBORTest.RandomBigInteger(fr);
         BigInteger den = CBORTest.RandomBigInteger(fr);
         if (den.signum()==0) {
- den = BigInteger.ONE;
-}
+          den = BigInteger.ONE;
+        }
         ExtendedRational rat = new ExtendedRational(num, den);
         for (int j = 0; j < 10; ++j) {
           BigInteger num2 = num;
           BigInteger den2 = den;
           BigInteger mult = CBORTest.RandomBigInteger(fr);
           if (mult.signum()==0 || mult.equals(BigInteger.ONE)) {
- mult = BigInteger.valueOf(2);
-}
+            mult = BigInteger.valueOf(2);
+          }
           num2=num2.multiply(mult);
           den2=den2.multiply(mult);
           ExtendedRational rat2 = new ExtendedRational(num2, den2);
           Assert.assertEquals(0, rat.compareTo(rat2));
         }
       }
+    }
+
+    @Test
+    public void TestExtendedNaNZero() {
+      if(ExtendedDecimal.NaN.signum()==0)Assert.fail();
+      if(ExtendedDecimal.SignalingNaN.signum()==0)Assert.fail();
+      if(ExtendedFloat.NaN.signum()==0)Assert.fail();
+      if(ExtendedFloat.SignalingNaN.signum()==0)Assert.fail();
     }
 
     @Test

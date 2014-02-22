@@ -598,7 +598,15 @@ at: http://peteroupc.github.io/CBOR/
      * @return A T object.
      */
     public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      T ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
+      if ((Object)ret != (Object)null) {
+        return ret;
+      }
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      otherValue = this.RoundBeforeOp(otherValue, ctx2);
+      thisValue = this.wrapper.NextToward(thisValue, otherValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /**

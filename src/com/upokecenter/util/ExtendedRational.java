@@ -108,6 +108,38 @@ at: http://peteroupc.github.io/CBOR/
       return this.ToExtendedDecimal(null);
     }
 
+    public static ExtendedRational FromSingle(float flt) {
+      return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
+    }
+
+    public static ExtendedRational FromDouble(double flt) {
+      return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
+    }
+
+    public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
+      if (ef == null) {
+ throw new NullPointerException("ef");
+}
+      if (!ef.isFinite()) {
+ throw new ArithmeticException("Infinity and NaN not supported yet.");
+}
+      BigInteger num = ef.getMantissa();
+      BigInteger exp = ef.getExponent();
+      if (exp.signum()==0) {
+ return FromBigInteger(num);
+}
+      boolean neg = num.signum() < 0;
+      num = (num).abs();
+      BigInteger den = BigInteger.ONE;
+      if (exp.signum() < 0) {
+        exp=(exp).negate();
+        den = DecimalUtility.ShiftLeft(den, exp);
+      } else {
+        num = DecimalUtility.ShiftLeft(num, exp);
+      }
+      return new ExtendedRational(num, den);
+    }
+
     /**
      * Converts this rational number to a decimal number and rounds the result
      * to the given precision.

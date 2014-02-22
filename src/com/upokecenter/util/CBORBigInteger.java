@@ -60,7 +60,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal AsExtendedDecimal(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      return ExtendedDecimal.FromBigInteger((BigInteger)obj);
     }
 
     /**
@@ -96,7 +96,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 64-bit signed integer.
      */
     public long AsInt64(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      BigInteger bi = (BigInteger)obj;
+      if (bi.compareTo(CBORObject.Int64MaxValue) > 0 ||
+          bi.compareTo(CBORObject.Int64MinValue) < 0) {
+        throw new ArithmeticException("This Object's value is out of range");
+      }
+      return bi.longValue();
     }
 
     /**
@@ -105,7 +110,10 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInSingle(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      BigInteger bigintItem = (BigInteger)obj;
+      ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
+      ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
+      return ef.compareTo(ef2) == 0;
     }
 
     /**
@@ -114,7 +122,10 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInDouble(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      BigInteger bigintItem = (BigInteger)obj;
+      ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
+      ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
+      return ef.compareTo(ef2) == 0;
     }
 
     /**
@@ -123,7 +134,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      BigInteger bi = (BigInteger)obj;
+      return bi.canFitInInt();
     }
 
     /**
@@ -132,7 +144,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInInt64(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      BigInteger bi = (BigInteger)obj;
+      return bi.bitLength() <= 63;
     }
 
     /**
@@ -151,15 +164,6 @@ at: http://peteroupc.github.io/CBOR/
      */
     public boolean CanTruncatedIntFitInInt32(Object obj) {
       return this.CanFitInInt32(obj);
-    }
-
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit signed integer.
-     */
-    public int AsInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
     }
 
     /**
@@ -207,7 +211,14 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int AsInt32(Object obj, int minValue, int maxValue) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      BigInteger bi = (BigInteger)obj;
+      if (bi.canFitInInt()) {
+        int ret = bi.intValue();
+        if (ret >= minValue && ret <= maxValue) {
+          return ret;
+        }
+      }
+      throw new ArithmeticException("This Object's value is out of range");
     }
 
     /**
@@ -215,7 +226,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param obj An arbitrary object. (2).
      * @return An arbitrary object.
      */
-public Object Negate(Object obj) {
+    public Object Negate(Object obj) {
       return.subtract(BigInteger.valueOf(obj));
     }
 
@@ -224,7 +235,7 @@ public Object Negate(Object obj) {
      * @param obj An arbitrary object. (2).
      * @return An arbitrary object.
      */
-public Object Abs(Object obj) {
+    public Object Abs(Object obj) {
       return ((BigInteger)obj).abs();
     }
   }

@@ -136,6 +136,36 @@ private DecimalUtility() {
       }
     }
 
+    private static BigInteger valueBigShiftIteration = BigInteger.valueOf(1000000);
+
+    static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
+
+      if (val.signum()==0) {
+        return val;
+      }
+      while (bigShift.compareTo(valueBigShiftIteration) > 0) {
+        val=val.shiftLeft(1000000);
+        bigShift=bigShift.subtract(valueBigShiftIteration);
+      }
+      int lastshift = bigShift.intValue();
+      val=val.shiftLeft(lastshift);
+      return val;
+    }
+
+    static BigInteger ShiftLeftInt(BigInteger val, int shift) {
+
+      if (val.signum()==0) {
+        return val;
+      }
+      while (shift > 1000000) {
+        val=val.shiftLeft(1000000);
+        shift -= 1000000;
+      }
+      int lastshift = (int)shift;
+      val=val.shiftLeft(lastshift);
+      return val;
+    }
+
     static boolean HasBitSet(int[] arr, int bit) {
       return (bit >> 5) < arr.length && (arr[bit >> 5] & (1 << (bit & 31))) != 0;
     }

@@ -50,14 +50,14 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal AsExtendedDecimal(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      return ExtendedDecimal.FromDouble((double)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat AsExtendedFloat(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      return ExtendedFloat.FromDouble((double)obj);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -93,7 +93,12 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInSingle(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem)) {
+        return true;
+      }
+      float sing = (float)fltItem;
+      return (double)sing == fltItem;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -121,14 +126,24 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt64(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+        return false;
+      }
+      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      return fltItem2 >= Int64.MinValue && fltItem2 <= Int64.MaxValue;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt32(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+        return false;
+      }
+      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      return fltItem2 >= Int32.MinValue && fltItem2 <= Int32.MaxValue;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -137,7 +152,16 @@ namespace PeterO
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32(object obj, int minValue, int maxValue) {
-      throw new NotImplementedException();  // TODO: Implement
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem)) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      if (fltItem >= minValue && fltItem <= maxValue) {
+        int ret = (int)fltItem;
+        return ret;
+      }
+      throw new OverflowException("This object's value is out of range");
     }
 
     /// <summary>Not documented yet.</summary>
@@ -151,27 +175,38 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int Sign(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      double flt = (double)obj;
+      if (Double.IsNaN(flt)) {
+        return 2;
+      }
+      return flt == 0.0f ? 0 : (flt < 0.0f ? -1 : 1);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsIntegral(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+        return false;
+      }
+      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      return fltItem2 == fltItem;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInTypeZeroOrOne(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      double value = (double)obj;
+      return value >= -18446744073709551616.0 &&
+        value <= 18446744073709549568.0;  // Highest double less or eq. to UInt64.MaxValue
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
-public object Negate(object obj) {
+    public object Negate(object obj) {
       double val = (double)obj;
       return -val;
     }
@@ -179,7 +214,7 @@ public object Negate(object obj) {
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
-public object Abs(object obj) {
+    public object Abs(object obj) {
       double val = (double)obj;
       return (val < 0) ? -val : obj;
     }

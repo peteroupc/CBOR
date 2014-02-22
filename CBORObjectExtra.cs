@@ -191,10 +191,10 @@ namespace PeterO {
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       BigInteger bigint = this.AsBigInteger();
-      if (bigint.Sign < 0 || bigint.CompareTo(valueUInt64MaxValue) > 0) {
+      if (bigint.Sign < 0 || bigint.CompareTo(UInt64MaxValue) > 0) {
         throw new OverflowException("This object's value is out of range");
       }
-      return (ulong)BigIntegerToDecimal((BigInteger)this.ThisItem);
+      return (ulong)BigIntegerToDecimal(bigint);
     }
 
     /// <summary>Not documented yet.</summary>

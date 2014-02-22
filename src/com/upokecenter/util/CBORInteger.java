@@ -8,9 +8,9 @@ at: http://peteroupc.github.io/CBOR/
  */
 
     /**
-     *
+     * Not documented yet.
      */
-public class CBORInteger implements ICBORNumber
+  public class CBORInteger implements ICBORNumber
   {
     /**
      * Not documented yet.
@@ -81,7 +81,7 @@ public class CBORInteger implements ICBORNumber
      * @return A 32-bit floating-point number.
      */
     public float AsSingle(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      return ((Long)obj).floatValue();
     }
 
     /**
@@ -125,7 +125,15 @@ public class CBORInteger implements ICBORNumber
      * @return A Boolean object.
      */
     public boolean CanFitInDouble(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      long intItem = (((Long)obj).longValue());
+      if (intItem == Long.MIN_VALUE) {
+        return true;
+      }
+      intItem = Math.abs(intItem);
+      while (intItem >= (1L << 53) && (intItem & 1) == 0) {
+        intItem >>= 1;
+      }
+      return intItem < (1L << 53);
     }
 
     /**
@@ -134,7 +142,8 @@ public class CBORInteger implements ICBORNumber
      * @return A Boolean object.
      */
     public boolean CanFitInInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      long val = (((Long)obj).longValue());
+      return val >= Integer.MIN_VALUE && val <= Integer.MAX_VALUE;
     }
 
     /**
@@ -173,16 +182,8 @@ public class CBORInteger implements ICBORNumber
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
-    }
-
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit signed integer.
-     */
-    public int AsInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      long val = (((Long)obj).longValue());
+      return val >= Integer.MIN_VALUE && val <= Integer.MAX_VALUE;
     }
 
     /**
@@ -230,7 +231,11 @@ public class CBORInteger implements ICBORNumber
      * @return A 32-bit signed integer.
      */
     public int AsInt32(Object obj, int minValue, int maxValue) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      long val = (((Long)obj).longValue());
+      if (val >= minValue && val <= maxValue) {
+        return (int)val;
+      }
+      throw new ArithmeticException("This Object's value is out of range");
     }
 
     /**
