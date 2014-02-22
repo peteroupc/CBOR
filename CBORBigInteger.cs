@@ -50,7 +50,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal AsExtendedDecimal(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      return ExtendedDecimal.FromBigInteger((BigInteger)obj);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -78,35 +78,48 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 64-bit signed integer.</returns>
     public long AsInt64(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      BigInteger bi = (BigInteger)obj;
+      if (bi.CompareTo(CBORObject.Int64MaxValue) > 0 ||
+          bi.CompareTo(CBORObject.Int64MinValue) < 0) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      return (long)bi;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInSingle(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      BigInteger bigintItem = (BigInteger)obj;
+      ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
+      ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
+      return ef.CompareTo(ef2) == 0;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInDouble(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      BigInteger bigintItem = (BigInteger)obj;
+      ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
+      ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
+      return ef.CompareTo(ef2) == 0;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInInt32(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      BigInteger bi = (BigInteger)obj;
+      return bi.canFitInInt();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInInt64(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      BigInteger bi = (BigInteger)obj;
+      return bi.bitLength() <= 63;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -121,13 +134,6 @@ namespace PeterO
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt32(object obj) {
       return this.CanFitInInt32(obj);
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
-    public int AsInt32(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
     }
 
     /// <summary>Not documented yet.</summary>
@@ -167,20 +173,27 @@ namespace PeterO
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32(object obj, int minValue, int maxValue) {
-      throw new NotImplementedException();  // TODO: Implement
+      BigInteger bi = (BigInteger)obj;
+      if (bi.canFitInInt()) {
+        int ret = (int)bi;
+        if (ret >= minValue && ret <= maxValue) {
+          return ret;
+        }
+      }
+      throw new OverflowException("This object's value is out of range");
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
-public object Negate(object obj) {
+    public object Negate(object obj) {
       return -(BigInteger)obj;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
-public object Abs(object obj) {
+    public object Abs(object obj) {
       return BigInteger.Abs((BigInteger)obj);
     }
   }

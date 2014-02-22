@@ -188,33 +188,6 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private static BigInteger valueBigShiftIteration = BigInteger.valueOf(1000000);
-    private static int valueShiftIteration = 1000000;
-
-    private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
-      if (val.signum()==0) {
-        return val;
-      }
-      while (bigShift.compareTo(valueBigShiftIteration) > 0) {
-        val=val.shiftLeft(1000000);
-        bigShift=bigShift.subtract(valueBigShiftIteration);
-      }
-      int lastshift = bigShift.intValue();
-      val=val.shiftLeft(lastshift);
-      return val;
-    }
-
-    private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
-      if (val.signum()==0) {
-        return val;
-      }
-      while (shift > valueShiftIteration) {
-        val=val.shiftLeft(1000000);
-        shift -= valueShiftIteration;
-      }
-      int lastshift = (int)shift;
-      val=val.shiftLeft(lastshift);
-      return val;
-    }
 
     private static final class BinaryMathHelper implements IRadixMathHelper<ExtendedFloat> {
     /**
@@ -303,18 +276,18 @@ at: http://peteroupc.github.io/CBOR/
         if (bigint.signum() < 0) {
           bigint=bigint.negate();
           if (power.CanFitInInt32()) {
-            bigint = ShiftLeftInt(bigint, power.AsInt32());
+            bigint = DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
             bigint=bigint.negate();
           } else {
-            bigint = ShiftLeft(bigint, power.AsBigInteger());
+            bigint = DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
             bigint=bigint.negate();
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return ShiftLeftInt(bigint, power.AsInt32());
+            return DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
           } else {
-            return ShiftLeft(bigint, power.AsBigInteger());
+            return DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
           }
         }
       }
@@ -382,7 +355,7 @@ at: http://peteroupc.github.io/CBOR/
         if (neg) {
           bigmantissa=bigmantissa.negate();
         }
-        bigmantissa = ShiftLeft(bigmantissa, curexp);
+        bigmantissa = DecimalUtility.ShiftLeft(bigmantissa, curexp);
         if (neg) {
           bigmantissa=bigmantissa.negate();
         }

@@ -10,8 +10,8 @@ using System;
 
 namespace PeterO
 {
-    /// <summary/>
-public class CBORInteger : ICBORNumber
+    /// <summary>Not documented yet.</summary>
+  public class CBORInteger : ICBORNumber
   {
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
@@ -66,7 +66,7 @@ public class CBORInteger : ICBORNumber
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 32-bit floating-point number.</returns>
     public float AsSingle(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      return (float)(long)obj;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -102,14 +102,23 @@ public class CBORInteger : ICBORNumber
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInDouble(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      long intItem = (long)obj;
+      if (intItem == Int64.MinValue) {
+        return true;
+      }
+      intItem = Math.Abs(intItem);
+      while (intItem >= (1L << 53) && (intItem & 1) == 0) {
+        intItem >>= 1;
+      }
+      return intItem < (1L << 53);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInInt32(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      long val = (long)obj;
+      return val >= Int32.MinValue && val <= Int32.MaxValue;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -140,14 +149,8 @@ public class CBORInteger : ICBORNumber
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt32(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
-    public int AsInt32(object obj) {
-      throw new NotImplementedException();  // TODO: Implement
+      long val = (long)obj;
+      return val >= Int32.MinValue && val <= Int32.MaxValue;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -185,7 +188,11 @@ public class CBORInteger : ICBORNumber
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32(object obj, int minValue, int maxValue) {
-      throw new NotImplementedException();  // TODO: Implement
+      long val = (long)obj;
+      if (val >= minValue && val <= maxValue) {
+        return (int)val;
+      }
+      throw new OverflowException("This object's value is out of range");
     }
 
     /// <summary>Not documented yet.</summary>

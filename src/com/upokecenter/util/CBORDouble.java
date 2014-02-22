@@ -60,7 +60,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal AsExtendedDecimal(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      return ExtendedDecimal.FromDouble(((Double)obj).doubleValue());
     }
 
     /**
@@ -69,7 +69,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat AsExtendedFloat(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      return ExtendedFloat.FromDouble(((Double)obj).doubleValue());
     }
 
     /**
@@ -113,7 +113,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInSingle(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      double fltItem = ((Double)obj).doubleValue();
+      if (Double.isNaN(fltItem)) {
+        return true;
+      }
+      float sing = (float)fltItem;
+      return (double)sing == fltItem;
     }
 
     /**
@@ -149,7 +154,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt64(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      double fltItem = ((Double)obj).doubleValue();
+      if (Double.isNaN(fltItem) || ((Double)(fltItem)).isInfinite()) {
+        return false;
+      }
+      double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+      return fltItem2 >= Long.MIN_VALUE && fltItem2 <= Long.MAX_VALUE;
     }
 
     /**
@@ -158,7 +168,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      double fltItem = ((Double)obj).doubleValue();
+      if (Double.isNaN(fltItem) || ((Double)(fltItem)).isInfinite()) {
+        return false;
+      }
+      double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+      return fltItem2 >= Integer.MIN_VALUE && fltItem2 <= Integer.MAX_VALUE;
     }
 
     /**
@@ -169,7 +184,16 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int AsInt32(Object obj, int minValue, int maxValue) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      double fltItem = ((Double)obj).doubleValue();
+      if (Double.isNaN(fltItem)) {
+        throw new ArithmeticException("This Object's value is out of range");
+      }
+      fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+      if (fltItem >= minValue && fltItem <= maxValue) {
+        int ret = (int)fltItem;
+        return ret;
+      }
+      throw new ArithmeticException("This Object's value is out of range");
     }
 
     /**
@@ -187,7 +211,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int Sign(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      double flt = ((Double)obj).doubleValue();
+      if (Double.isNaN(flt)) {
+        return 2;
+      }
+      return flt == 0.0f ? 0 : (flt < 0.0f ? -1 : 1);
     }
 
     /**
@@ -196,7 +224,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsIntegral(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      double fltItem = ((Double)obj).doubleValue();
+      if (Double.isNaN(fltItem) || ((Double)(fltItem)).isInfinite()) {
+        return false;
+      }
+      double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+      return fltItem2 == fltItem;
     }
 
     /**
@@ -205,7 +238,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInTypeZeroOrOne(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      double value = ((Double)obj).doubleValue();
+      return value >= -18446744073709551616.0 &&
+        value <= 18446744073709549568.0;  // Highest double less or eq. to ULong.MAX_VALUE
     }
 
     /**
@@ -213,7 +248,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param obj An arbitrary object. (2).
      * @return An arbitrary object.
      */
-public Object Negate(Object obj) {
+    public Object Negate(Object obj) {
       double val = ((Double)obj).doubleValue();
       return -val;
     }
@@ -223,7 +258,7 @@ public Object Negate(Object obj) {
      * @param obj An arbitrary object. (2).
      * @return An arbitrary object.
      */
-public Object Abs(Object obj) {
+    public Object Abs(Object obj) {
       double val = ((Double)obj).doubleValue();
       return (val < 0) ? -val : obj;
     }

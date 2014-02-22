@@ -173,8 +173,8 @@ import com.upokecenter.util.*;
       BigInteger bigintA = RandomBigInteger(rand);
       BigInteger bigintB = RandomBigInteger(rand);
       if (bigintB.signum()==0) {
- bigintB = BigInteger.ONE;
-}
+        bigintB = BigInteger.ONE;
+      }
       return new ExtendedRational(bigintA, bigintB);
     }
 
@@ -588,6 +588,52 @@ import com.upokecenter.util.*;
         CompareTestLess(o2, o1);
         o1 = CBORObject.FromObject(Double.NaN);
         CompareTestLess(o2, o1);
+      }
+      CBORObject[] sortedObjects = new CBORObject[] {
+        CBORObject.Undefined,
+        CBORObject.Null,
+        CBORObject.False,
+        CBORObject.True,
+        CBORObject.FromObject(Double.NEGATIVE_INFINITY),
+        CBORObject.FromObject(ExtendedDecimal.FromString("-1E+5000")),
+        CBORObject.FromObject(Long.MIN_VALUE),
+        CBORObject.FromObject(Integer.MIN_VALUE),
+        CBORObject.FromObject(-2),
+        CBORObject.FromObject(-1),
+        CBORObject.FromObject(0),
+        CBORObject.FromObject(1),
+        CBORObject.FromObject(-2),
+        CBORObject.FromObject(Long.MAX_VALUE),
+        CBORObject.FromObject(ExtendedDecimal.FromString("1E+5000")),
+        CBORObject.FromObject(Double.POSITIVE_INFINITY),
+        CBORObject.FromObject(Double.NaN),
+        CBORObject.FromSimpleValue(0),
+        CBORObject.FromSimpleValue(19),
+        CBORObject.FromSimpleValue(32),
+        CBORObject.FromSimpleValue(255),
+        CBORObject.FromObject(new byte[] {  0, 1 }),
+        CBORObject.FromObject(new byte[] {  0, 2 }),
+        CBORObject.FromObject(new byte[] {  0, 2, 0 }),
+        CBORObject.FromObject(new byte[] {  1, 1 }),
+        CBORObject.FromObject(new byte[] {  1, 1, 4 }),
+        CBORObject.FromObject(new byte[] {  1, 2 }),
+        CBORObject.FromObject(new byte[] {  1, 2, 6 }),
+        CBORObject.FromObject("aa"),
+        CBORObject.FromObject("ab"),
+        CBORObject.FromObject("abc"),
+        CBORObject.FromObject("ba"),
+        CBORObject.FromObject(CBORObject.NewArray()),
+        CBORObject.FromObject(CBORObject.NewMap()),
+      };
+      for (int i = 0;i < sortedObjects.length; ++i) {
+        for (int j = i;j < sortedObjects.length; ++j) {
+          if (i == j) {
+            CompareTestEqual(sortedObjects[i], sortedObjects[j]);
+          } else {
+            CompareTestLess(sortedObjects[i], sortedObjects[j]);
+          }
+        }
+        Assert.assertEquals(1, sortedObjects[i].compareTo(null));
       }
       CBORObject sp = CBORObject.FromObject(Float.POSITIVE_INFINITY);
       CBORObject sn = CBORObject.FromObject(Float.NEGATIVE_INFINITY);
@@ -5900,6 +5946,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     }
 
     @Test
+    public void TestCanFitInSpecificCases() {
+      if(CBORObject.FromObject(2554895343).CanFitInSingle())Assert.fail();
+    }
+
+    @Test
     public void TestCanFitIn() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -5907,33 +5958,35 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         ExtendedDecimal ed2;
         ed2 = ExtendedDecimal.FromDouble(ed.AsExtendedDecimal().ToDouble());
         if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.CanFitInDouble()) {
-          Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
+          Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
         }
         ed2 = ExtendedDecimal.FromSingle(ed.AsExtendedDecimal().ToSingle());
         if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.CanFitInSingle()) {
-          Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
+          Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
         }
-        ed2 = ExtendedDecimal.FromBigInteger(ed.AsExtendedDecimal().ToBigInteger());
-        if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.isIntegral()) {
-          Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
+        if (!ed.IsInfinity() && !ed.IsNaN()) {
+          ed2 = ExtendedDecimal.FromBigInteger(ed.AsExtendedDecimal().ToBigInteger());
+          if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.isIntegral()) {
+            Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
+          }
         }
         if (!ed.IsInfinity() && !ed.IsNaN()) {
           BigInteger bi = ed.AsBigInteger();
           if (ed.isIntegral()) {
             if (bi.canFitInInt() != ed.CanFitInInt32()) {
-              Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
+              Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
             }
           }
           if (bi.canFitInInt() != ed.CanTruncatedIntFitInInt32()) {
-            Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
+            Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
           }
           if (ed.isIntegral()) {
             if ((bi.bitLength() <= 63) != ed.CanFitInInt64()) {
-              Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
+              Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
             }
           }
           if ((bi.bitLength() <= 63) != ed.CanTruncatedIntFitInInt64()) {
-            Assert.fail(ToByteArrayString(ed) + "/" + "/ " + ed.ToJSONString());
+            Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
           }
         }
       }
@@ -6436,8 +6489,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         BigInteger bigintTemp = ranges[i];
         while (true) {
           if (bigintTemp.equals(BigInteger.valueOf(30))) {
- continue;
-}
+            continue;
+          }
           CBORObject obj = CBORObject.FromObjectAndTag(0, bigintTemp);
           if(!(obj.isTagged()))Assert.fail( "obj not tagged");
           BigInteger[] tags = obj.GetTags();

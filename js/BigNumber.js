@@ -5630,6 +5630,31 @@ var DecimalUtility = function() {
             }
         }
     };
+    constructor.valueBigShiftIteration = BigInteger.valueOf(1000000);
+    constructor.ShiftLeft = function(val, bigShift) {
+        if (val.signum() == 0) {
+            return val;
+        }
+        while (bigShift.compareTo(DecimalUtility.valueBigShiftIteration) > 0) {
+            val = val.shiftLeft(1000000);
+            bigShift = bigShift.subtract(DecimalUtility.valueBigShiftIteration);
+        }
+        var lastshift = bigShift.intValue();
+        val = val.shiftLeft(lastshift);
+        return val;
+    };
+    constructor.ShiftLeftInt = function(val, shift) {
+        if (val.signum() == 0) {
+            return val;
+        }
+        while (shift > 1000000) {
+            val = val.shiftLeft(1000000);
+            shift -= 1000000;
+        }
+        var lastshift = (shift|0);
+        val = val.shiftLeft(lastshift);
+        return val;
+    };
     constructor.HasBitSet = function(arr, bit) {
         return (bit >> 5) < arr.length && (arr[bit >> 5] & (1 << (bit & 31))) != 0;
     };
@@ -11032,31 +11057,6 @@ function() {
         return ExtendedDecimal.FromString(str, ctx).ToExtendedFloat();
     };
     constructor['valueBigShiftIteration'] = constructor.valueBigShiftIteration = BigInteger.valueOf(1000000);
-    constructor['valueShiftIteration'] = constructor.valueShiftIteration = 1000000;
-    constructor['ShiftLeft'] = constructor.ShiftLeft = function(val, bigShift) {
-        if (val.signum() == 0) {
-            return val;
-        }
-        while (bigShift.compareTo(ExtendedFloat.valueBigShiftIteration) > 0) {
-            val = val.shiftLeft(1000000);
-            bigShift = bigShift.subtract(ExtendedFloat.valueBigShiftIteration);
-        }
-        var lastshift = bigShift.intValue();
-        val = val.shiftLeft(lastshift);
-        return val;
-    };
-    constructor['ShiftLeftInt'] = constructor.ShiftLeftInt = function(val, shift) {
-        if (val.signum() == 0) {
-            return val;
-        }
-        while (shift > ExtendedFloat.valueShiftIteration) {
-            val = val.shiftLeft(1000000);
-            shift -= ExtendedFloat.valueShiftIteration;
-        }
-        var lastshift = (shift|0);
-        val = val.shiftLeft(lastshift);
-        return val;
-    };
     constructor['BinaryMathHelper'] = constructor.BinaryMathHelper = function ExtendedFloat$BinaryMathHelper(){};
     (function(constructor,prototype){
 
@@ -11103,18 +11103,18 @@ function() {
             if (bigint.signum() < 0) {
                 bigint = bigint.negate();
                 if (power.CanFitInInt32()) {
-                    bigint = ExtendedFloat.ShiftLeftInt(bigint, power.AsInt32());
+                    bigint = DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
                     bigint = bigint.negate();
                 } else {
-                    bigint = ExtendedFloat.ShiftLeft(bigint, power.AsBigInteger());
+                    bigint = DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
                     bigint = bigint.negate();
                 }
                 return bigint;
             } else {
                 if (power.CanFitInInt32()) {
-                    return ExtendedFloat.ShiftLeftInt(bigint, power.AsInt32());
+                    return DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
                 } else {
-                    return ExtendedFloat.ShiftLeft(bigint, power.AsBigInteger());
+                    return DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
                 }
             }
         };
@@ -11155,7 +11155,7 @@ function() {
             if (neg) {
                 bigmantissa = bigmantissa.negate();
             }
-            bigmantissa = ExtendedFloat.ShiftLeft(bigmantissa, curexp);
+            bigmantissa = DecimalUtility.ShiftLeft(bigmantissa, curexp);
             if (neg) {
                 bigmantissa = bigmantissa.negate();
             }

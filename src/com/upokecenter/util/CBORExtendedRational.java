@@ -51,7 +51,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 64-bit floating-point number.
      */
     public double AsDouble(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational er = (ExtendedRational)obj;
+      return er.ToDouble();
     }
 
     /**
@@ -60,7 +61,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal AsExtendedDecimal(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational er = (ExtendedRational)obj;
+      return er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
     }
 
     /**
@@ -69,7 +71,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat AsExtendedFloat(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational er = (ExtendedRational)obj;
+      return er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
     }
 
     /**
@@ -78,7 +81,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit floating-point number.
      */
     public float AsSingle(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational er = (ExtendedRational)obj;
+      return er.ToSingle();
     }
 
     /**
@@ -87,7 +91,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public BigInteger AsBigInteger(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational er = (ExtendedRational)obj;
+      return er.ToBigInteger();
     }
 
     /**
@@ -96,7 +101,14 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 64-bit signed integer.
      */
     public long AsInt64(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational ef = (ExtendedRational)obj;
+      if (ef.isFinite()) {
+        BigInteger bi = ef.ToBigInteger();
+        if (bi.bitLength() <= 63) {
+          return bi.longValue();
+        }
+      }
+      throw new ArithmeticException("This Object's value is out of range");
     }
 
     /**
@@ -105,7 +117,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInSingle(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational ef = (ExtendedRational)obj;
+      if (!ef.isFinite()) {
+        return true;
+      }
+      return ef.compareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0;
     }
 
     /**
@@ -114,7 +130,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInDouble(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational ef = (ExtendedRational)obj;
+      if (!ef.isFinite()) {
+        return true;
+      }
+      return ef.compareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0;
     }
 
     /**
@@ -123,7 +143,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt32(obj);
     }
 
     /**
@@ -132,7 +152,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInInt64(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
 
     /**
@@ -141,7 +161,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt64(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational ef = (ExtendedRational)obj;
+      if (!ef.isFinite()) {
+        return false;
+      }
+      BigInteger bi = ef.ToBigInteger();
+      return bi.bitLength() <= 63;
     }
 
     /**
@@ -150,16 +175,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
-    }
-
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit signed integer.
-     */
-    public int AsInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational ef = (ExtendedRational)obj;
+      if (!ef.isFinite()) {
+        return false;
+      }
+      BigInteger bi = ef.ToBigInteger();
+      return bi.canFitInInt();
     }
 
     /**
@@ -168,7 +189,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsZero(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational ef = (ExtendedRational)obj;
+      return ef.signum()==0;
     }
 
     /**
@@ -177,7 +199,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int Sign(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedRational ef = (ExtendedRational)obj;
+      return ef.signum();
     }
 
     /**
@@ -206,7 +229,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInTypeZeroOrOne(Object obj) {
-      throw new UnsupportedOperationException();
+      ExtendedRational ef = (ExtendedRational)obj;
+      if (!ef.isFinite()) {
+        return false;
+      }
+      return ef.compareTo(ExtendedRational.FromBigInteger(CBORObject.LowestMajorType1)) >= 0 &&
+        ef.compareTo(ExtendedRational.FromBigInteger(CBORObject.UInt64MaxValue)) <= 0;
     }
 
     /**
@@ -217,7 +245,17 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int AsInt32(Object obj, int minValue, int maxValue) {
-      throw new UnsupportedOperationException();
+      ExtendedRational ef = (ExtendedRational)obj;
+      if (ef.isFinite()) {
+        BigInteger bi = ef.ToBigInteger();
+        if (bi.canFitInInt()) {
+          int ret = bi.intValue();
+          if (ret >= minValue && ret <= maxValue) {
+            return ret;
+          }
+        }
+      }
+      throw new ArithmeticException("This Object's value is out of range");
     }
 
     /**
@@ -225,8 +263,9 @@ at: http://peteroupc.github.io/CBOR/
      * @param obj An arbitrary object. (2).
      * @return An arbitrary object.
      */
-public Object Negate(Object obj) {
-      throw new UnsupportedOperationException();
+    public Object Negate(Object obj) {
+      ExtendedRational ed = (ExtendedRational)obj;
+      return ed.Negate();
     }
 
     /**
@@ -234,7 +273,8 @@ public Object Negate(Object obj) {
      * @param obj An arbitrary object. (2).
      * @return An arbitrary object.
      */
-public Object Abs(Object obj) {
-      throw new UnsupportedOperationException();
+    public Object Abs(Object obj) {
+      ExtendedRational ed = (ExtendedRational)obj;
+      return ed.Abs();
     }
   }

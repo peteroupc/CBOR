@@ -91,6 +91,13 @@ namespace PeterO {
     internal const int CBORObjectTypeExtendedRational = 12;
     internal static readonly BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
     internal static readonly BigInteger Int64MinValue = (BigInteger)Int64.MinValue;
+    internal static readonly BigInteger LowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
+
+    internal static readonly BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
+
+    private static int[] valueNumberTypeOrder = new int[] {
+      0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0
+    };
 
     private static readonly ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
       new CBORInteger(),
@@ -331,16 +338,18 @@ namespace PeterO {
     }
 
     /// <summary>Compares two CBOR objects.<para> In this implementation:</para>
-    /// <list type=''> <item> If either value is true, it is treated as the
-    /// number 1.</item>
-    /// <item> If either value is false, CBORObject.Null, or the undefined
-    /// value, it is treated as the number 0.</item>
+    /// <list type=''> <item>The null pointer (null reference) is considered
+    /// less than any other object.</item>
+    /// <item> If either object is true, false, CBORObject.Null, or the undefined
+    /// value, it is treated as less than the other value. If both objects have
+    /// one of these four values, then undefined is less than CBORObject.Null,
+    /// which is less than false, which is less than true.</item>
     /// <item> If both objects are numbers, their mathematical values are
     /// compared. Here, NaN (not-a-number) is considered greater than any
     /// number.</item>
-    /// <item> If both objects are simple values other than true, false, null,
-    /// and undefined, the objects are compared according to their ordinal
-    /// numbers.</item>
+    /// <item> If both objects are simple values other than true, false, CBORObject.Null,
+    /// and the undefined value, the objects are compared according to their
+    /// ordinal numbers.</item>
     /// <item> If both objects are arrays, each element is compared. If one
     /// array is shorter than the other and the other array begins with that
     /// array (for the purposes of comparison), the shorter array is considered
@@ -511,6 +520,14 @@ namespace PeterO {
             throw new ArgumentException("Unexpected data type");
         }
       } else {
+        int typeOrderA = valueNumberTypeOrder[typeA];
+        int typeOrderB = valueNumberTypeOrder[typeB];
+        if (typeOrderA != typeOrderB) {
+          return (typeOrderA < typeOrderB) ? -1 : 1;
+        }
+        // At this point, both types should be number types.
+        // DebugAssert.IsTrue(typeOrderA == 0)
+        // DebugAssert.IsTrue(typeOrderB == 0)
         int combo = (typeA << 4) | typeB;
         int s1 = GetSignInternal(typeA, objA);
         int s2 = GetSignInternal(typeB, objB);
@@ -836,90 +853,6 @@ namespace PeterO {
               cmp = decfracXa.CompareTo(decfracXb);
               break;
             }
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeMap:
-            return -1;
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeExtendedFloat:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeExtendedFloat:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeExtendedFloat:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeExtendedFloat:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeExtendedFloat:
-            return 1;
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeMap:
-            return -1;
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeArray:
-            return 1;
           default:
             throw new ArgumentException("Unexpected data type");
         }
@@ -1997,7 +1930,7 @@ namespace PeterO {
       if (cn == null) {
         return false;
       }
-      return cn.CanFitInInt64(this.ThisItem);
+      return cn.CanFitInSingle(this.ThisItem);
     }
 
     /// <summary>Returns whether this object's value can be converted to
@@ -2322,10 +2255,6 @@ namespace PeterO {
     }
 
     private static BigInteger valueOneShift63 = BigInteger.One << 63;
-
-    private static BigInteger valueLowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
-
-    private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     /// <summary>Writes a binary floating-point number in CBOR format to
     /// a data stream as follows: <list type=''> <item>If the value is null,
@@ -3768,7 +3697,8 @@ namespace PeterO {
     }
 
     /// <summary>Generates a CBOR object from a byte array. The byte array
-    /// is copied to a new byte array.</summary>
+    /// is copied to a new byte array. (This method can't be used to decode CBOR
+    /// data from a byte array; for that, use the DecodeFromBytes method instead.).</summary>
     /// <param name='bytes'>A byte array. Can be null.</param>
     /// <returns>A CBOR byte string object where each byte of the given byte
     /// array is copied to a new array, or CBORObject.Null if the value is null.</returns>
@@ -4044,7 +3974,7 @@ namespace PeterO {
       if (bigintTag.Sign < 0) {
         throw new ArgumentException("bigintTag's sign (" + Convert.ToString((long)bigintTag.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
       }
-      if (bigintTag.CompareTo(valueUInt64MaxValue) > 0) {
+      if (bigintTag.CompareTo(UInt64MaxValue) > 0) {
         throw new ArgumentException("tag not less or equal to 18446744073709551615 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       CBORObject c = FromObject(valueOb);
@@ -4059,6 +3989,8 @@ namespace PeterO {
         return ConvertToDecimalFrac(c, true);
       } else if (bigintTag.CompareTo((BigInteger)5) == 0) {
         return ConvertToDecimalFrac(c, false);
+      } else if (bigintTag.CompareTo((BigInteger)30) == 0) {
+        return ConvertToRationalNumber(c);
       } else {
         int tagLow = 0;
         int tagHigh = 0;
@@ -4101,6 +4033,9 @@ namespace PeterO {
       }
       if (smallTag == 4 || smallTag == 5) {
         return ConvertToDecimalFrac(c, smallTag == 4);
+      }
+      if (smallTag == 30) {
+        return ConvertToRationalNumber(c);
       }
       return new CBORObject(c, smallTag, 0);
     }
@@ -4271,21 +4206,6 @@ namespace PeterO {
           sb.Append(this.AsString());
           sb.Append('\"');
         }
-      } else if (type == CBORObjectTypeExtendedDecimal) {
-        if (sb == null) {
-          return ((ExtendedDecimal)this.ThisItem).ToString();
-        }
-        sb.Append(((ExtendedDecimal)this.ThisItem).ToString());
-      } else if (type == CBORObjectTypeExtendedRational) {
-        if (sb == null) {
-          return ((ExtendedRational)this.ThisItem).ToString();
-        }
-        sb.Append(((ExtendedRational)this.ThisItem).ToString());
-      } else if (type == CBORObjectTypeExtendedFloat) {
-        if (sb == null) {
-          return ((ExtendedFloat)this.ThisItem).ToString();
-        }
-        sb.Append(((ExtendedFloat)this.ThisItem).ToString());
       } else if (type == CBORObjectTypeArray) {
         if (sb == null) {
           sb = new StringBuilder();
@@ -4322,6 +4242,11 @@ namespace PeterO {
           first = false;
         }
         sb.Append("}");
+      } else {
+        if (sb == null) {
+          return this.ThisItem.ToString();
+        }
+        sb.Append(this.ThisItem.ToString());
       }
       if (this.IsTagged) {
         this.AppendClosingTags(sb);
@@ -4377,9 +4302,9 @@ namespace PeterO {
     private static bool BigIntFits(BigInteger bigint) {
       int sign = bigint.Sign;
       if (sign < 0) {
-        return bigint.CompareTo(valueLowestMajorType1) >= 0;
+        return bigint.CompareTo(LowestMajorType1) >= 0;
       } else if (sign > 0) {
-        return bigint.CompareTo(valueUInt64MaxValue) <= 0;
+        return bigint.CompareTo(UInt64MaxValue) <= 0;
       } else {
         return true;
       }

@@ -82,6 +82,13 @@ import java.io.*;
     static final int CBORObjectTypeExtendedRational = 12;
     static final BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
     static final BigInteger Int64MinValue = BigInteger.valueOf(Long.MIN_VALUE);
+    static final BigInteger LowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
+
+    static final BigInteger UInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
+
+    private static int[] valueNumberTypeOrder = new int[] {
+      0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0
+    };
 
     private static final ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
       new CBORInteger(),
@@ -301,12 +308,15 @@ import java.io.*;
 
     /**
      * Compares two CBOR objects.<p> In this implementation:</p> <ul>
-     * <li> If either value is true, it is treated as the number 1.</li> <li>
-     * If either value is false, CBORObject.Null, or the undefined value,
-     * it is treated as the number 0.</li> <li> If both objects are numbers,
-     * their mathematical values are compared. Here, NaN (not-a-number)
-     * is considered greater than any number.</li> <li> If both objects
-     * are simple values other than true, false, null, and undefined, the
+     * <li>The null pointer (null reference) is considered less than any
+     * other object.</li> <li> If either object is true, false, CBORObject.Null,
+     * or the undefined value, it is treated as less than the other value.
+     * If both objects have one of these four values, then undefined is less
+     * than CBORObject.Null, which is less than false, which is less than
+     * true.</li> <li> If both objects are numbers, their mathematical
+     * values are compared. Here, NaN (not-a-number) is considered greater
+     * than any number.</li> <li> If both objects are simple values other
+     * than true, false, CBORObject.Null, and the undefined value, the
      * objects are compared according to their ordinal numbers.</li> <li>
      * If both objects are arrays, each element is compared. If one array
      * is shorter than the other and the other array begins with that array
@@ -475,6 +485,14 @@ public int compareTo(CBORObject other) {
             throw new IllegalArgumentException("Unexpected data type");
         }
       } else {
+        int typeOrderA = valueNumberTypeOrder[typeA];
+        int typeOrderB = valueNumberTypeOrder[typeB];
+        if (typeOrderA != typeOrderB) {
+          return (typeOrderA < typeOrderB) ? -1 : 1;
+        }
+        // At this point, both types should be number types.
+        // Debugif(!(typeOrderA == 0))Assert.fail()
+        // Debugif(!(typeOrderB == 0))Assert.fail()
         int combo = (typeA << 4) | typeB;
         int s1 = GetSignInternal(typeA, objA);
         int s2 = GetSignInternal(typeB, objB);
@@ -800,90 +818,6 @@ public int compareTo(CBORObject other) {
               cmp = decfracXa.compareTo(decfracXb);
               break;
             }
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeMap:
-            return -1;
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeExtendedFloat:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeExtendedFloat:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeExtendedFloat:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeExtendedFloat:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeExtendedFloat:
-            return 1;
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeInteger << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeSingle << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeDouble << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeArray:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeMap:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeMap:
-            return -1;
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeSimpleValue << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeByteString << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeTextString << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeArray << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeInteger:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeBigInteger:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeSingle:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeDouble:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeExtendedDecimal:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeSimpleValue:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeByteString:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeTextString:
-          case (CBORObjectTypeMap << 4) | CBORObjectTypeArray:
-            return 1;
           default:
             throw new IllegalArgumentException("Unexpected data type");
         }
@@ -2010,7 +1944,7 @@ public void set(String key, CBORObject value) {
       if (cn == null) {
         return false;
       }
-      return cn.CanFitInInt64(this.getThisItem());
+      return cn.CanFitInSingle(this.getThisItem());
     }
 
     /**
@@ -2352,10 +2286,6 @@ public void set(String key, CBORObject value) {
     }
 
     private static BigInteger valueOneShift63 = BigInteger.ONE.shiftLeft(63);
-
-    private static BigInteger valueLowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
-
-    private static BigInteger valueUInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
     /**
      * Writes a binary floating-point number in CBOR format to a data stream
@@ -3852,7 +3782,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a byte array. The byte array is copied
-     * to a new byte array.
+     * to a new byte array. (This method can't be used to decode CBOR data from
+     * a byte array; for that, use the DecodeFromBytes method instead.).
      * @param bytes A byte array. Can be null.
      * @return A CBOR byte string object where each byte of the given byte
      * array is copied to a new array, or CBORObject.Null if the value is null.
@@ -4098,7 +4029,7 @@ public static CBORObject FromObject(Object obj) {
       if (bigintTag.signum() < 0) {
         throw new IllegalArgumentException("bigintTag's sign (" + Long.toString((long)bigintTag.signum()) + ") is not greater or equal to " + "0");
       }
-      if (bigintTag.compareTo(valueUInt64MaxValue) > 0) {
+      if (bigintTag.compareTo(UInt64MaxValue) > 0) {
         throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 (" + (bigintTag) + ")");
       }
       CBORObject c = FromObject(valueOb);
@@ -4113,6 +4044,8 @@ public static CBORObject FromObject(Object obj) {
         return ConvertToDecimalFrac(c, true);
       } else if (bigintTag.compareTo(BigInteger.valueOf(5)) == 0) {
         return ConvertToDecimalFrac(c, false);
+      } else if (bigintTag.compareTo(BigInteger.valueOf(30)) == 0) {
+        return ConvertToRationalNumber(c);
       } else {
         int tagLow = 0;
         int tagHigh = 0;
@@ -4156,6 +4089,9 @@ public static CBORObject FromObject(Object obj) {
       }
       if (smallTag == 4 || smallTag == 5) {
         return ConvertToDecimalFrac(c, smallTag == 4);
+      }
+      if (smallTag == 30) {
+        return ConvertToRationalNumber(c);
       }
       return new CBORObject(c, smallTag, 0);
     }
@@ -4328,21 +4264,6 @@ public static CBORObject FromObject(Object obj) {
           sb.append(this.AsString());
           sb.append('\"');
         }
-      } else if (type == CBORObjectTypeExtendedDecimal) {
-        if (sb == null) {
-          return ((ExtendedDecimal)this.getThisItem()).toString();
-        }
-        sb.append(((ExtendedDecimal)this.getThisItem()).toString());
-      } else if (type == CBORObjectTypeExtendedRational) {
-        if (sb == null) {
-          return ((ExtendedRational)this.getThisItem()).toString();
-        }
-        sb.append(((ExtendedRational)this.getThisItem()).toString());
-      } else if (type == CBORObjectTypeExtendedFloat) {
-        if (sb == null) {
-          return ((ExtendedFloat)this.getThisItem()).toString();
-        }
-        sb.append(((ExtendedFloat)this.getThisItem()).toString());
       } else if (type == CBORObjectTypeArray) {
         if (sb == null) {
           sb = new StringBuilder();
@@ -4379,6 +4300,11 @@ public static CBORObject FromObject(Object obj) {
           first = false;
         }
         sb.append("}");
+      } else {
+        if (sb == null) {
+          return this.getThisItem().toString();
+        }
+        sb.append(this.getThisItem().toString());
       }
       if (this.isTagged()) {
         this.AppendClosingTags(sb);
@@ -4434,9 +4360,9 @@ public static CBORObject FromObject(Object obj) {
     private static boolean BigIntFits(BigInteger bigint) {
       int sign = bigint.signum();
       if (sign < 0) {
-        return bigint.compareTo(valueLowestMajorType1) >= 0;
+        return bigint.compareTo(LowestMajorType1) >= 0;
       } else if (sign > 0) {
-        return bigint.compareTo(valueUInt64MaxValue) <= 0;
+        return bigint.compareTo(UInt64MaxValue) <= 0;
       } else {
         return true;
       }

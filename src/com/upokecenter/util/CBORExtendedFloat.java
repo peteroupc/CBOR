@@ -122,7 +122,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInSingle(Object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new UnsupportedOperationException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.isFinite()) {
+        return true;
+      }
+      return ef.compareTo(ExtendedFloat.FromSingle(ef.ToSingle())) == 0;
     }
 
     /**
@@ -131,7 +135,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInDouble(Object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new UnsupportedOperationException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.isFinite()) {
+        return true;
+      }
+      return ef.compareTo(ExtendedFloat.FromDouble(ef.ToDouble())) == 0;
     }
 
     /**
@@ -158,7 +166,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt64(Object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new UnsupportedOperationException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.isFinite()) {
+        return false;
+      }
+      BigInteger bi = ef.ToBigInteger();
+      return bi.bitLength() <= 63;
     }
 
     /**
@@ -167,16 +180,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt32(Object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit signed integer.
-     */
-    public int AsInt32(Object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new UnsupportedOperationException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.isFinite()) {
+        return false;
+      }
+      BigInteger bi = ef.ToBigInteger();
+      return bi.canFitInInt();
     }
 
     /**
@@ -185,7 +194,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsZero(Object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new UnsupportedOperationException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      return ef.signum()==0;
     }
 
     /**
@@ -194,7 +204,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int Sign(Object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new UnsupportedOperationException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (ef.IsNaN()) {
+ return 2;
+}
+      return ef.signum();
     }
 
     /**
@@ -220,7 +234,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInTypeZeroOrOne(Object obj) {
-      throw new UnsupportedOperationException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.isFinite()) {
+        return false;
+      }
+      return ef.compareTo(ExtendedFloat.FromBigInteger(CBORObject.LowestMajorType1)) >= 0 &&
+        ef.compareTo(ExtendedFloat.FromBigInteger(CBORObject.UInt64MaxValue)) <= 0;
     }
 
     /**
@@ -231,7 +250,17 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int AsInt32(Object obj, int minValue, int maxValue) {
-      throw new UnsupportedOperationException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (ef.isFinite()) {
+        BigInteger bi = ef.ToBigInteger();
+        if (bi.canFitInInt()) {
+          int ret = bi.intValue();
+          if (ret >= minValue && ret <= maxValue) {
+            return ret;
+          }
+        }
+      }
+      throw new ArithmeticException("This Object's value is out of range");
     }
 
     /**
@@ -239,16 +268,18 @@ at: http://peteroupc.github.io/CBOR/
      * @param obj An arbitrary object. (2).
      * @return An arbitrary object.
      */
-public Object Negate(Object obj) {
-    throw new UnsupportedOperationException();
-  }
+    public Object Negate(Object obj) {
+      ExtendedFloat ed = (ExtendedFloat)obj;
+      return ed.Negate();
+    }
 
     /**
      * Not documented yet.
      * @param obj An arbitrary object. (2).
      * @return An arbitrary object.
      */
-public Object Abs(Object obj) {
-    throw new UnsupportedOperationException();
-  }
+    public Object Abs(Object obj) {
+      ExtendedFloat ed = (ExtendedFloat)obj;
+      return ed.Abs();
+    }
   }

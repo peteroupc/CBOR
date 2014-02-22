@@ -572,7 +572,15 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
-      throw new NotImplementedException();  // TODO: Implement
+      T ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      otherValue = this.RoundBeforeOp(otherValue, ctx2);
+      thisValue = this.wrapper.NextToward(thisValue, otherValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>

@@ -102,14 +102,22 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInSingle(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new NotImplementedException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.IsFinite) {
+        return true;
+      }
+      return ef.CompareTo(ExtendedFloat.FromSingle(ef.ToSingle())) == 0;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInDouble(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new NotImplementedException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.IsFinite) {
+        return true;
+      }
+      return ef.CompareTo(ExtendedFloat.FromDouble(ef.ToDouble())) == 0;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -130,35 +138,43 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt64(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new NotImplementedException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.IsFinite) {
+        return false;
+      }
+      BigInteger bi = ef.ToBigInteger();
+      return bi.bitLength() <= 63;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt32(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new NotImplementedException();
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
-    public int AsInt32(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new NotImplementedException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.IsFinite) {
+        return false;
+      }
+      BigInteger bi = ef.ToBigInteger();
+      return bi.canFitInInt();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsZero(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new NotImplementedException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      return ef.IsZero;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int Sign(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj; throw new NotImplementedException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (ef.IsNaN()) {
+ return 2;
+}
+      return ef.Sign;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -180,7 +196,12 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInTypeZeroOrOne(object obj) {
-      throw new NotImplementedException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (!ef.IsFinite) {
+        return false;
+      }
+      return ef.CompareTo(ExtendedFloat.FromBigInteger(CBORObject.LowestMajorType1)) >= 0 &&
+        ef.CompareTo(ExtendedFloat.FromBigInteger(CBORObject.UInt64MaxValue)) <= 0;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -189,21 +210,33 @@ namespace PeterO
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32(object obj, int minValue, int maxValue) {
-      throw new NotImplementedException();
+      ExtendedFloat ef = (ExtendedFloat)obj;
+      if (ef.IsFinite) {
+        BigInteger bi = ef.ToBigInteger();
+        if (bi.canFitInInt()) {
+          int ret = (int)bi;
+          if (ret >= minValue && ret <= maxValue) {
+            return ret;
+          }
+        }
+      }
+      throw new OverflowException("This object's value is out of range");
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
-public object Negate(object obj) {
-    throw new NotImplementedException();
-  }
+    public object Negate(object obj) {
+      ExtendedFloat ed = (ExtendedFloat)obj;
+      return ed.Negate();
+    }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
-public object Abs(object obj) {
-    throw new NotImplementedException();
-  }
+    public object Abs(object obj) {
+      ExtendedFloat ed = (ExtendedFloat)obj;
+      return ed.Abs();
+    }
   }
 }

@@ -108,6 +108,38 @@ namespace PeterO
       return this.ToExtendedDecimal(null);
     }
 
+    public static ExtendedRational FromSingle(float flt) {
+      return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
+    }
+
+    public static ExtendedRational FromDouble(double flt) {
+      return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
+    }
+
+    public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
+      if (ef == null) {
+ throw new ArgumentNullException("ef");
+}
+      if (!ef.IsFinite) {
+ throw new OverflowException("Infinity and NaN not supported yet.");
+}
+      BigInteger num = ef.Mantissa;
+      BigInteger exp = ef.Exponent;
+      if (exp.IsZero) {
+ return FromBigInteger(num);
+}
+      bool neg = num.Sign < 0;
+      num = BigInteger.Abs(num);
+      BigInteger den = BigInteger.One;
+      if (exp.Sign < 0) {
+        exp = -(BigInteger)exp;
+        den = DecimalUtility.ShiftLeft(den, exp);
+      } else {
+        num = DecimalUtility.ShiftLeft(num, exp);
+      }
+      return new ExtendedRational(num, den);
+    }
+
     /// <summary>Converts this rational number to a decimal number and rounds
     /// the result to the given precision.</summary>
     /// <param name='ctx'>A PrecisionContext object.</param>

@@ -15,7 +15,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsPositiveInfinity(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.IsPositiveInfinity();
     }
 
     /**
@@ -24,7 +25,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsInfinity(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.IsInfinity();
     }
 
     /**
@@ -33,7 +35,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsNegativeInfinity(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.IsNegativeInfinity();
     }
 
     /**
@@ -42,7 +45,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsNaN(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.IsNaN();
     }
 
     /**
@@ -51,7 +55,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 64-bit floating-point number.
      */
     public double AsDouble(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.ToDouble();
     }
 
     /**
@@ -60,7 +65,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal AsExtendedDecimal(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed;
     }
 
     /**
@@ -69,7 +75,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat AsExtendedFloat(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.ToExtendedFloat();
     }
 
     /**
@@ -78,7 +85,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit floating-point number.
      */
     public float AsSingle(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.ToSingle();
     }
 
     /**
@@ -87,7 +95,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public BigInteger AsBigInteger(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.ToBigInteger();
     }
 
     /**
@@ -96,7 +105,14 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 64-bit signed integer.
      */
     public long AsInt64(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      if (ef.isFinite()) {
+        BigInteger bi = ef.ToBigInteger();
+        if (bi.bitLength() <= 63) {
+          return bi.longValue();
+        }
+      }
+      throw new ArithmeticException("This Object's value is out of range");
     }
 
     /**
@@ -105,7 +121,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInSingle(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      if (!ef.isFinite()) {
+        return true;
+      }
+      return ef.compareTo(ExtendedDecimal.FromSingle(ef.ToSingle())) == 0;
     }
 
     /**
@@ -114,7 +134,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInDouble(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      if (!ef.isFinite()) {
+        return true;
+      }
+      return ef.compareTo(ExtendedDecimal.FromDouble(ef.ToDouble())) == 0;
     }
 
     /**
@@ -123,7 +147,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt32(obj);
     }
 
     /**
@@ -132,7 +156,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInInt64(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
 
     /**
@@ -141,7 +165,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt64(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      if (!ef.isFinite()) {
+        return false;
+      }
+      BigInteger bi = ef.ToBigInteger();
+      return bi.bitLength() <= 63;
     }
 
     /**
@@ -150,16 +179,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanTruncatedIntFitInInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
-    }
-
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit signed integer.
-     */
-    public int AsInt32(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      if (!ef.isFinite()) {
+        return false;
+      }
+      BigInteger bi = ef.ToBigInteger();
+      return bi.canFitInInt();
     }
 
     /**
@@ -168,7 +193,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsZero(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.signum()==0;
     }
 
     /**
@@ -177,7 +203,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int Sign(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      if (ed.IsNaN()) {
+        return 2;
+      }
+      return ed.signum();
     }
 
     /**
@@ -186,7 +216,14 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsIntegral(Object obj) {
-      throw new UnsupportedOperationException();  // TODO: Implement
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      if (!ed.isFinite()) {
+        return false;
+      }
+      if (ed.getExponent().signum() >= 0) {
+        return true;
+      }
+      return ed.compareTo(ExtendedDecimal.FromBigInteger(ed.ToBigInteger())) == 0;
     }
 
     /**
@@ -195,7 +232,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean CanFitInTypeZeroOrOne(Object obj) {
-      throw new UnsupportedOperationException();
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      if (!ef.isFinite()) {
+        return false;
+      }
+      return ef.compareTo(ExtendedDecimal.FromBigInteger(CBORObject.LowestMajorType1)) >= 0 &&
+        ef.compareTo(ExtendedDecimal.FromBigInteger(CBORObject.UInt64MaxValue)) <= 0;
     }
 
     /**
@@ -206,7 +248,17 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit signed integer.
      */
     public int AsInt32(Object obj, int minValue, int maxValue) {
-      throw new UnsupportedOperationException();
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      if (ef.isFinite()) {
+        BigInteger bi = ef.ToBigInteger();
+        if (bi.canFitInInt()) {
+          int ret = bi.intValue();
+          if (ret >= minValue && ret <= maxValue) {
+            return ret;
+          }
+        }
+      }
+      throw new ArithmeticException("This Object's value is out of range");
     }
 
     /**
@@ -215,7 +267,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return An arbitrary object.
      */
     public Object Negate(Object obj) {
-      throw new UnsupportedOperationException();
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.Negate();
     }
 
     /**
@@ -224,6 +277,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return An arbitrary object.
      */
     public Object Abs(Object obj) {
-      throw new UnsupportedOperationException();
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.Abs();
     }
   }
