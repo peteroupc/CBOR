@@ -168,6 +168,7 @@ namespace PeterO {
           case CBORObjectTypeDouble:
           case CBORObjectTypeExtendedDecimal:
           case CBORObjectTypeExtendedFloat:
+          case CBORObjectTypeExtendedRational:
             return CBORType.Number;
           case CBORObjectTypeSimpleValue:
             if ((int)this.ThisItem == 21 || (int)this.ThisItem == 20) {
@@ -242,6 +243,8 @@ namespace PeterO {
             return ((ExtendedDecimal)this.ThisItem).IsZero;
           case CBORObject.CBORObjectTypeExtendedFloat:
             return ((ExtendedFloat)this.ThisItem).IsZero;
+          case CBORObject.CBORObjectTypeExtendedRational:
+            return ((ExtendedRational)this.ThisItem).IsZero;
           default:
             return false;
         }
@@ -308,9 +311,25 @@ namespace PeterO {
             return (int)Math.Sign(value);
           }
         case CBORObject.CBORObjectTypeExtendedDecimal:
+          if(((ExtendedDecimal)obj).IsNaN()){
+              if (returnOnNaN) {
+                return 2;
+              } else {
+                throw new InvalidOperationException("This object is not a number.");
+              }
+          }           
           return ((ExtendedDecimal)obj).Sign;
         case CBORObject.CBORObjectTypeExtendedFloat:
+          if(((ExtendedFloat)obj).IsNaN()){
+              if (returnOnNaN) {
+                return 2;
+              } else {
+                throw new InvalidOperationException("This object is not a number.");
+              }
+          }           
           return ((ExtendedFloat)obj).Sign;
+        case CBORObject.CBORObjectTypeExtendedRational:
+          return ((ExtendedRational)obj).Sign;
         default:
           if (returnOnNaN) {
             return 2;  // not a number type
@@ -541,6 +560,11 @@ namespace PeterO {
             case CBORObjectTypeExtendedFloat: {
               cmp = ((ExtendedFloat)objA).CompareTo(
                 (ExtendedFloat)objB);
+              break;
+            }
+            case CBORObjectTypeExtendedRational: {
+              cmp = ((ExtendedRational)objA).CompareTo(
+                (ExtendedRational)objB);
               break;
             }
             case CBORObjectTypeByteString: {
@@ -1659,7 +1683,7 @@ namespace PeterO {
     /// <exception cref='System.InvalidOperationException'>This object
     /// is not an array.</exception>
     /// <returns>A CBORObject object.</returns>
-    /// <param name='index'>A 32-bit signed integer.</param>
+    /// <param name='index'>Zero-based index of the element.</param>
     public CBORObject this[int index] {
       get {
         if (this.ItemType == CBORObjectTypeArray) {
@@ -1755,7 +1779,7 @@ namespace PeterO {
     /// <exception cref='System.InvalidOperationException'>This object
     /// is not a map.</exception>
     /// <returns>A CBORObject object.</returns>
-    /// <param name='key'>A string object.</param>
+    /// <param name='key'>A key that points to the desired value.</param>
     public CBORObject this[string key] {
       get {
         if (key == null) {
@@ -1832,7 +1856,7 @@ namespace PeterO {
     }
 
     /// <summary>Converts an object to a CBOR object and adds it to this map.</summary>
-    /// <param name='key'>A string representing the key.</param>
+    /// <param name='key'>A string representing the key.  Can be null, in which case this value is converted to CBORObject.Null.</param>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='key'/> or "value" has an unsupported type.</exception>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
@@ -1840,7 +1864,7 @@ namespace PeterO {
     /// <exception cref='InvalidOperationException'>This object is
     /// not a map.</exception>
     /// <returns>This object.</returns>
-    /// <param name='valueOb'>An arbitrary object.</param>
+    /// <param name='valueOb'>An arbitrary object.  Can be null, in which case this value is converted to CBORObject.Null.</param>
     public CBORObject Add(object key, object valueOb) {
       return this.Add(CBORObject.FromObject(key), CBORObject.FromObject(valueOb));
     }
@@ -2381,6 +2405,14 @@ namespace PeterO {
             return bi.CompareTo(Int64MaxValue) <= 0 &&
               bi.CompareTo(Int64MinValue) >= 0;
           }
+          case CBORObjectTypeExtendedRational: {
+            if (!this.IsIntegral) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
+            return bi.CompareTo(Int64MaxValue) <= 0 &&
+              bi.CompareTo(Int64MinValue) >= 0;
+          }
         default:
           return false;
       }
@@ -2430,6 +2462,14 @@ namespace PeterO {
               return false;
             }
             BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
+            return bi.CompareTo(Int64MaxValue) <= 0 &&
+              bi.CompareTo(Int64MinValue) >= 0;
+          }
+          case CBORObjectTypeExtendedRational: {
+            if (!((ExtendedRational)thisItem).IsFinite) {
+              return false;
+            }
+            BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
             return bi.CompareTo(Int64MaxValue) <= 0 &&
               bi.CompareTo(Int64MinValue) >= 0;
           }
@@ -2559,8 +2599,11 @@ namespace PeterO {
               if (ef.Denominator.Equals(BigInteger.One)) {
                 return true;
               }
-              ExtendedRational ef2 = ExtendedRational.FromBigInteger(ef.ToBigInteger());
-              return ef2.CompareTo(ef) == 0;
+              // A rational number is integral if the remainder
+              // of the numerator divided by the denominator is 0
+              BigInteger denom=ef.Denominator;
+              BigInteger rem=ef.Numerator % (BigInteger)denom;
+              return rem.IsZero;
             }
           default:
             return false;

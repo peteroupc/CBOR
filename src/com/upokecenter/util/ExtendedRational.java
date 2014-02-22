@@ -45,13 +45,13 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit hash code.
      */
     @Override public int hashCode() {
-      456865663
+      int hashCode_ = 456865663;
       {
         if (this.numerator != null) {
-          456865807this.numerator.hashCode();
+          hashCode_ += 456865807 * this.numerator.hashCode();
         }
         if (this.denominator != null) {
-          456865823this.denominator.hashCode();
+          hashCode_ += 456865823 * this.denominator.hashCode();
         }
       }
       return hashCode_;

@@ -142,7 +142,7 @@ namespace Test {
 
     private static CBORObject RandomCBORTaggedObject(FastRandom rand, int depth) {
       int tag = rand.NextValue(0x1000000);
-      if (tag == 2 || tag == 3 || tag == 4 || tag == 5) {
+      if (tag == 2 || tag == 3 || tag == 4 || tag == 5 || tag == 30) {
         tag = 0;
       }
       return CBORObject.FromObjectAndTag(RandomCBORObject(rand, depth + 1), tag);
@@ -5846,7 +5846,7 @@ namespace Test {
     public void TestCanFitIn() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        CBORObject ed = RandomNumberOrRational(r);
+        CBORObject ed = RandomNumber(r);
         ExtendedDecimal ed2;
         ed2 = ExtendedDecimal.FromDouble(ed.AsExtendedDecimal().ToDouble());
         if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) != ed.CanFitInDouble()) {

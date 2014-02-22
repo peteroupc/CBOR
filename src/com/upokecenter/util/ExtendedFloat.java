@@ -103,11 +103,11 @@ at: http://peteroupc.github.io/CBOR/
      * @return This object's hash code.
      */
     @Override public int hashCode() {
-      403796923
+      int hashCode_ = 403796923;
       {
-        403797019this.exponent.hashCode();
-        403797059this.unsignedMantissa.hashCode();
-        403797127this.flags;
+        hashCode_ += 403797019 * this.exponent.hashCode();
+        hashCode_ += 403797059 * this.unsignedMantissa.hashCode();
+        hashCode_ += 403797127 * this.flags;
       }
       return hashCode_;
     }

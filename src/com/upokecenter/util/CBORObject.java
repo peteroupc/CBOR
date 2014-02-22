@@ -1226,7 +1226,7 @@ public boolean equals(CBORObject other) {
      * @return A 32-bit hash code.
      */
     @Override public int hashCode() {
-      651869431
+      int hashCode_ = 651869431;
       {
         if (this.itemValue != null) {
           int itemHashCode = 0;
@@ -1244,9 +1244,9 @@ public boolean equals(CBORObject other) {
               itemHashCode = this.itemValue.hashCode();
               break;
           }
-          651869479itemHashCode;
+          hashCode_ += 651869479 * itemHashCode;
         }
-        651869483(this.itemtypeValue + this.tagLow + this.tagHigh);
+        hashCode_ += 651869483 * (this.itemtypeValue + this.tagLow + this.tagHigh);
       }
       return hashCode_;
     }
@@ -2497,7 +2497,7 @@ public void set(String key, CBORObject value) {
             if (!((ExtendedDecimal)thisItem).isFinite()) {
               return false;
             }
-            BigInteger bi = ((ExtendedDecimal)this.getThisItem()).ToBigInteger();
+            BigInteger bi = ((ExtendedDecimal)thisItem).ToBigInteger();
             return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
               bi.compareTo(BigInteger.valueOf(minValue)) >= 0;
           }
@@ -2505,7 +2505,7 @@ public void set(String key, CBORObject value) {
             if (!((ExtendedFloat)thisItem).isFinite()) {
               return false;
             }
-            BigInteger bi = ((ExtendedFloat)this.getThisItem()).ToBigInteger();
+            BigInteger bi = ((ExtendedFloat)thisItem).ToBigInteger();
             return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
               bi.compareTo(BigInteger.valueOf(minValue)) >= 0;
           }
@@ -2515,7 +2515,7 @@ public void set(String key, CBORObject value) {
             }
             BigInteger bi = ((ExtendedRational)thisItem).ToBigInteger();
             return bi.compareTo(BigInteger.valueOf(maxValue)) <= 0 &&
-              bi.compareTo(BigInteger.valueOf(maxValue)) >= 0;
+              bi.compareTo(BigInteger.valueOf(minValue)) >= 0;
           }
         default:
           return false;
@@ -3983,14 +3983,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           }
           case CBORObjectTypeExtendedRational: {
             ExtendedRational dec = (ExtendedRational)this.getThisItem();
-            double f = dec.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
-            if (((f)==Double.NEGATIVE_INFINITY) ||
-                ((f)==Double.POSITIVE_INFINITY) ||
-                Double.isNaN(f)) {
+            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
+              PrecisionContext.Decimal128.WithUnlimitedExponents());
+            if (!f.isFinite()) {
               return "null";
             } else {
-              return TrimDotZero(
-                Double.toString((double)f));
+              return f.toString();
             }
           }
           case CBORObjectTypeExtendedDecimal: {

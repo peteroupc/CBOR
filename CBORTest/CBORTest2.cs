@@ -16,6 +16,28 @@ namespace Test
   public class CBORTest2
   {
     [Test]
+    public void TestRationalCompare(){
+      FastRandom fr=new FastRandom();
+      for(int i=0;i<100;i++){
+        BigInteger num=CBORTest.RandomBigInteger(fr);
+        BigInteger den=CBORTest.RandomBigInteger(fr);
+        if(den.IsZero)den=BigInteger.One;
+        ExtendedRational rat=new ExtendedRational(num,den);
+        for(int j=0;j<10;j++){
+          BigInteger num2=num;
+          BigInteger den2=den;
+          BigInteger mult=CBORTest.RandomBigInteger(fr);
+          if(mult.IsZero || mult.Equals(BigInteger.One))
+            mult=(BigInteger)2;
+          num2*=(BigInteger)mult;
+          den2*=(BigInteger)mult;
+          ExtendedRational rat2=new ExtendedRational(num2,den2);
+          Assert.AreEqual(0,rat.CompareTo(rat2));
+        }
+      }
+    }
+    
+    [Test]
     public void TestToBigIntegerNonFinite() {
       try {
         ExtendedDecimal.PositiveInfinity.ToBigInteger();
