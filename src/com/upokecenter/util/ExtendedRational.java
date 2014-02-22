@@ -175,8 +175,9 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Gets a value indicating whether this object is finite (not infinity
+     * or NaN).
+     * @return Whether this object is finite (not infinity or NaN).
      */
     public boolean isFinite() {
         return true;
@@ -222,8 +223,24 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Not documented yet.
+     * @return An ExtendedRational object.
+     */
+public ExtendedRational Abs() {
+      return this.signum() < 0 ? new ExtendedRational((this.numerator).negate(), this.denominator) : this;
+    }
+
+    /**
+     * Not documented yet.
+     * @return An ExtendedRational object.
+     */
+public ExtendedRational Negate() {
+      return new ExtendedRational((this.numerator).negate(), this.denominator);
+    }
+
+    /**
+     * Gets a value indicating whether this object's value equals 0.
+     * @return Whether this object's value equals 0.
      */
     public boolean isZero() {
         return this.numerator.signum()==0;

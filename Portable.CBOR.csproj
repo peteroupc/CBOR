@@ -63,11 +63,18 @@
     <Compile Include="BigIntegerExtra.cs" />
     <Compile Include="BigNumberFlags.cs" />
     <Compile Include="BitShiftAccumulator.cs" />
+    <Compile Include="CBORBigInteger.cs" />
     <Compile Include="CBORDataUtilities.cs" />
+    <Compile Include="CBORDouble.cs" />
     <Compile Include="CBORException.cs" />
+    <Compile Include="CBORExtendedDecimal.cs" />
+    <Compile Include="CBORExtendedFloat.cs" />
+    <Compile Include="CBORExtendedRational.cs" />
+    <Compile Include="CBORInteger.cs" />
     <Compile Include="CBORObject.cs" />
     <Compile Include="CBORObjectExtra.cs" />
     <Compile Include="CBORObjectMath.cs" />
+    <Compile Include="CBORSingle.cs" />
     <Compile Include="CBORType.cs" />
     <Compile Include="CBORUtilities.cs" />
     <Compile Include="CharacterReader.cs" />
@@ -79,6 +86,7 @@
     <Compile Include="ExtendedRational.cs" />
     <Compile Include="FastInteger.cs" />
     <Compile Include="Extras.cs" />
+    <Compile Include="ICBORNumber.cs" />
     <Compile Include="IRadixMath.cs" />
     <Compile Include="IRadixMathHelper.cs" />
     <Compile Include="IShiftAccumulator.cs" />
