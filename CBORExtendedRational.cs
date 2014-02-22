@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2014 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -12,104 +12,143 @@ namespace PeterO
 {
   internal class CBORExtendedRational : ICBORNumber
   {
-    
-    public bool IsPositiveInfinity(object obj)
-    {
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsPositiveInfinity(object obj) {
       return false;
     }
-    
-    public bool IsInfinity(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsInfinity(object obj) {
       return false;
     }
-    
-    public bool IsNegativeInfinity(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsNegativeInfinity(object obj) {
       return false;
     }
-    
-    public bool IsNaN(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsNaN(object obj) {
       return false;
     }
-    
-    public double AsDouble(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 64-bit floating-point number.</returns>
+    public double AsDouble(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public ExtendedDecimal AsExtendedDecimal(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedDecimal AsExtendedDecimal(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public ExtendedFloat AsExtendedFloat(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat AsExtendedFloat(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public float AsSingle(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 32-bit floating-point number.</returns>
+    public float AsSingle(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public BigInteger AsBigInteger(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A BigInteger object.</returns>
+    public BigInteger AsBigInteger(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public long AsInt64(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 64-bit signed integer.</returns>
+    public long AsInt64(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool CanFitInSingle(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInSingle(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool CanFitInDouble(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInDouble(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool CanFitInInt32(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInInt32(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool CanFitInInt64(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInInt64(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool CanTruncatedIntFitInInt64(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanTruncatedIntFitInInt64(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool CanTruncatedIntFitInInt32(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanTruncatedIntFitInInt32(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public int AsInt32(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 32-bit signed integer.</returns>
+    public int AsInt32(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool IsZero(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsZero(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public int Sign(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 32-bit signed integer.</returns>
+    public int Sign(object obj) {
       throw new NotImplementedException();  // TODO: Implement
     }
-    
-    public bool IsIntegral(object obj)
-    {
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsIntegral(object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (!ef.IsFinite) {
         return false;
@@ -123,15 +162,35 @@ namespace PeterO
       BigInteger rem = ef.Numerator % (BigInteger)denom;
       return rem.IsZero;
     }
-    
-  public bool CanFitInTypeZeroOrOne(object obj)
-  {
-    throw new NotImplementedException();
-  }
-    
-  public int AsInt32(object obj, int minValue, int maxValue)
-  {
-    throw new NotImplementedException();
-  }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool CanFitInTypeZeroOrOne(object obj) {
+      throw new NotImplementedException();
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <param name='minValue'>A 32-bit signed integer. (2).</param>
+    /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
+    /// <returns>A 32-bit signed integer.</returns>
+    public int AsInt32(object obj, int minValue, int maxValue) {
+      throw new NotImplementedException();
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object. (2).</param>
+    /// <returns>An arbitrary object.</returns>
+public object Negate(object obj) {
+      throw new NotImplementedException();
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object. (2).</param>
+    /// <returns>An arbitrary object.</returns>
+public object Abs(object obj) {
+      throw new NotImplementedException();
+    }
   }
 }
