@@ -164,8 +164,9 @@ namespace PeterO
       return ed;
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets a value indicating whether this object is finite (not
+    /// infinity or NaN).</summary>
+    /// <value>Whether this object is finite (not infinity or NaN).</value>
     public bool IsFinite {
       get {
         return true;
@@ -206,7 +207,15 @@ namespace PeterO
       return this.ToExtendedFloat(PrecisionContext.Binary32).ToSingle();
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
+    public ExtendedRational Abs(){
+      return this.Sign<0 ? new ExtendedRational(-(BigInteger)numerator,denominator) : this;
+    }
+    
+    public ExtendedRational Negate(){
+      return new ExtendedRational(-(BigInteger)numerator,denominator);
+    }
+    
+    /// <summary>Gets a value indicating whether this object's value equals 0.</summary>
     /// <value>A value not documented yet.</value>
     public bool IsZero {
       get {
@@ -258,8 +267,8 @@ namespace PeterO
         // denominators are equal
         return numcmp;
       }
-      BigInteger ad = this.numerator*(BigInteger)(other.denominator);
-      BigInteger bc = this.denominator*(BigInteger)(other.numerator);
+      BigInteger ad = this.numerator * (BigInteger)other.denominator;
+      BigInteger bc = this.denominator * (BigInteger)other.numerator;
       return ad.CompareTo(bc);
     }
 

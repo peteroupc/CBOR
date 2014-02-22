@@ -9760,11 +9760,11 @@ function() {
         return this.EqualsInternal((obj.constructor==ExtendedDecimal) ? obj : null);
     };
     prototype['hashCode'] = prototype.hashCode = function() {
-        var hashCode_ = 1332304451;
+        var hashCode_ = 964453631;
         {
-            hashCode_ = hashCode_ + (1878054163 * this.exponent.hashCode());
-            hashCode_ = hashCode_ + (434706967 * this.unsignedMantissa.hashCode());
-            hashCode_ = hashCode_ + (907125871 * this.flags);
+            hashCode_ = hashCode_ + (964453723 * this.exponent.hashCode());
+            hashCode_ = hashCode_ + (964453939 * this.unsignedMantissa.hashCode());
+            hashCode_ = hashCode_ + (964453967 * this.flags);
         }
         return hashCode_;
     };
@@ -10997,11 +10997,11 @@ function() {
         return this.EqualsInternal((obj.constructor==ExtendedFloat) ? obj : null);
     };
     prototype['hashCode'] = prototype.hashCode = function() {
-        var hashCode_ = 2064591259;
+        var hashCode_ = 403796923;
         {
-            hashCode_ = hashCode_ + (1255106299 * this.exponent.hashCode());
-            hashCode_ = hashCode_ + (466389811 * this.unsignedMantissa.hashCode());
-            hashCode_ = hashCode_ + (1504835599 * this.flags);
+            hashCode_ = hashCode_ + (403797019 * this.exponent.hashCode());
+            hashCode_ = hashCode_ + (403797059 * this.unsignedMantissa.hashCode());
+            hashCode_ = hashCode_ + (403797127 * this.flags);
         }
         return hashCode_;
     };
