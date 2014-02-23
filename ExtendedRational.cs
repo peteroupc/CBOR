@@ -418,9 +418,6 @@ namespace PeterO
       }
     }
 
-    // TODO: Create an efficient comparison function
-    // for decimals
-
     /// <summary>Compares a ExtendedRational object with this instance.</summary>
     /// <param name='other'>An ExtendedRational object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
@@ -477,6 +474,89 @@ namespace PeterO
       }
       BigInteger ad = this.Numerator * (BigInteger)other.Denominator;
       BigInteger bc = this.Denominator * (BigInteger)other.Numerator;
+      return ad.CompareTo(bc);
+    }
+
+    /// <summary>Compares a ExtendedDecimal object with this instance.</summary>
+    /// <param name='other'>An ExtendedDecimal object.</param>
+    /// <returns>Zero if the values are equal; a negative number if this instance
+    /// is less, or a positive number if this instance is greater.</returns>
+public int CompareToDecimal(ExtendedDecimal other) {
+      if (other == null) {
+        return 1;
+      }
+      if (this.IsNaN()) {
+        if (other.IsNaN()) {
+          return 0;
+        }
+        return 1;
+      }
+      int signA = this.Sign;
+      int signB = other.Sign;
+      if (signA != signB) {
+        return (signA < signB) ? -1 : 1;
+      }
+      if (signB == 0 || signA == 0) {
+        // Special case: Either operand is zero
+        return 0;
+      }
+      if (this.IsInfinity()) {
+        if (other.IsInfinity()) {
+          // if we get here, this only means that
+          // both are positive infinity or both
+          // are negative infinity
+          return 0;
+        }
+        return this.IsNegative ? -1 : 1;
+      }
+      if (other.IsInfinity()) {
+        return other.IsNegative ? 1 : -1;
+      }
+      if (other.Exponent.IsZero) {
+        // Special case: other has exponent 0
+        BigInteger bcx = this.Denominator * (BigInteger)other.Mantissa;
+        return this.Numerator.CompareTo(bcx);
+      }
+      if (BigInteger.Abs(other.Exponent).CompareTo((BigInteger)50) >0) {
+        // Other has a high absolute value of exponent, so try different approaches to
+        // comparison
+        BigInteger thisRem;
+        BigInteger thisInt = BigInteger.DivRem(this.UnsignedNumerator, this.Denominator, out thisRem);
+        ExtendedDecimal otherAbs = other.Abs();
+        ExtendedDecimal thisIntDec = ExtendedDecimal.FromBigInteger(thisInt);
+        if (thisRem.IsZero) {
+          // This object's value is an integer
+          // Console.WriteLine("Shortcircuit IV");
+          int ret = thisIntDec.CompareTo(otherAbs);
+          return this.IsNegative ? -ret : ret;
+        }
+        if (thisIntDec.CompareTo(otherAbs) >0) {
+          // Truncated absolute value is greater than other's untruncated absolute value
+          // Console.WriteLine("Shortcircuit I");
+          return this.IsNegative ? -1 : 1;
+        }
+        // Round up
+        thisInt += BigInteger.One;
+        thisIntDec = ExtendedDecimal.FromBigInteger(thisInt);
+        if (thisIntDec.CompareTo(otherAbs) <0) {
+          // Absolute value rounded up is less than other's unrounded absolute value
+          // Console.WriteLine("Shortcircuit II");
+          return this.IsNegative ? 1 : -1;
+        }
+        thisIntDec = ExtendedDecimal.FromBigInteger(this.UnsignedNumerator).Divide(
+          ExtendedDecimal.FromBigInteger(this.Denominator),
+          PrecisionContext.ForPrecisionAndRounding(20, Rounding.Down));
+        if (thisIntDec.CompareTo(otherAbs) >0) {
+          // Truncated absolute value is greater than other's untruncated absolute value
+          // Console.WriteLine("Shortcircuit III");
+          return this.IsNegative ? -1 : 1;
+        }
+      }
+      // Convert to rational number and use usual rational number
+      // comparison
+      ExtendedRational otherRational = ExtendedRational.FromExtendedDecimal(other);
+      BigInteger ad = this.Numerator * (BigInteger)otherRational.Denominator;
+      BigInteger bc = this.Denominator * (BigInteger)otherRational.Numerator;
       return ad.CompareTo(bc);
     }
 
@@ -935,9 +1015,7 @@ namespace PeterO
     /// <summary>A not-a-number value.</summary>
     public static readonly ExtendedRational NaN = CreateWithFlags(BigInteger.Zero, BigInteger.One, BigNumberFlags.FlagQuietNaN);
 
-    /// <summary>A not-a-number value that signals an invalid operation
-    /// flag when it&apos;s passed as an argument to any arithmetic operation
-    /// in ExtendedRational.</summary>
+    /// <summary>A signaling not-a-number value.</summary>
     public static readonly ExtendedRational SignalingNaN = CreateWithFlags(BigInteger.Zero, BigInteger.One, BigNumberFlags.FlagSignalingNaN);
 
     /// <summary>Positive infinity, greater than any other number.</summary>

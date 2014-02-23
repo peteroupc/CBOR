@@ -169,7 +169,7 @@ import com.upokecenter.util.*;
       return cborRet;
     }
 
-    private static ExtendedRational RandomRational(FastRandom rand) {
+    public static ExtendedRational RandomRational(FastRandom rand) {
       BigInteger bigintA = RandomBigInteger(rand);
       BigInteger bigintB = RandomBigInteger(rand);
       if (bigintB.signum()==0) {
