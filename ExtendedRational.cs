@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-  /// <summary>Arbitrary-precision rational number.</summary>
+    /// <summary>Arbitrary-precision rational number.</summary>
   public class ExtendedRational : IComparable<ExtendedRational>, IEquatable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
@@ -41,7 +41,7 @@ namespace PeterO
       }
     }
 
-    int flags;
+    private int flags;
 
     #region Equals and GetHashCode implementation
     public override bool Equals(object obj) {
@@ -57,13 +57,13 @@ namespace PeterO
     public override int GetHashCode() {
       int hashCode = 1857066527;
       unchecked {
-        if (unsignedNumerator != null) {
-          hashCode += 1857066539 * unsignedNumerator.GetHashCode();
+        if (this.unsignedNumerator != null) {
+          hashCode += 1857066539 * this.unsignedNumerator.GetHashCode();
         }
-        if (denominator != null) {
-          hashCode += 1857066551 * denominator.GetHashCode();
+        if (this.denominator != null) {
+          hashCode += 1857066551 * this.denominator.GetHashCode();
         }
-        hashCode += 1857066623 * flags;
+        hashCode += 1857066623 * this.flags;
       }
       return hashCode;
     }
@@ -81,12 +81,12 @@ namespace PeterO
       }
       bool numNegative = numerator.Sign < 0;
       bool denNegative = denominator.Sign < 0;
-      this.flags=(numNegative == denNegative) ? BigNumberFlags.FlagNegative : 0;
+      this.flags = (numNegative != denNegative) ? BigNumberFlags.FlagNegative : 0;
       if (numNegative) {
-        numerator=-numerator;
+        numerator = -numerator;
       }
       if (denNegative) {
-        denominator=-denominator;
+        denominator = -denominator;
       }
       this.unsignedNumerator = numerator;
       this.denominator = denominator;
@@ -95,7 +95,7 @@ namespace PeterO
     /// <summary>Converts this object to a text string.</summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
-      return "(" + this.unsignedNumerator + "/" + this.denominator + ")";
+      return "(" + this.Numerator + "/" + this.Denominator + ")";
     }
 
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
@@ -117,24 +117,22 @@ namespace PeterO
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }
-    
-    
 
     public static ExtendedRational CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false);
     }
-    
-    private static ExtendedRational CreateWithFlags(BigInteger numerator, BigInteger denominator, int flags){
-      ExtendedRational er=new ExtendedRational(numerator,denominator);
-      er.flags=flags;
+
+    private static ExtendedRational CreateWithFlags(BigInteger numerator, BigInteger denominator, int flags) {
+      ExtendedRational er = new ExtendedRational(numerator, denominator);
+      er.flags = flags;
       return er;
     }
 
     public static ExtendedRational CreateNaN(BigInteger diag, bool signaling, bool negative) {
-      if ((diag) == null) {
+      if (diag == null) {
         throw new ArgumentNullException("diag");
       }
-      if (diag.Sign<0) {
+      if (diag.Sign < 0) {
         throw new ArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
       }
       if (diag.IsZero && !negative) {
@@ -142,9 +140,9 @@ namespace PeterO
       }
       int flags = 0;
       if (negative) {
-        flags|=BigNumberFlags.FlagNegative;
+        flags |= BigNumberFlags.FlagNegative;
       }
-      flags|=(signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN);
+      flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
       ExtendedRational er = new ExtendedRational(diag, BigInteger.Zero);
       er.flags = flags;
       return er;
@@ -158,16 +156,16 @@ namespace PeterO
         ExtendedRational er = new ExtendedRational(ef.Mantissa, BigInteger.One);
         int flags = 0;
         if (ef.IsNegative) {
-          flags|=BigNumberFlags.FlagNegative;
+          flags |= BigNumberFlags.FlagNegative;
         }
         if (ef.IsInfinity()) {
-          flags|=BigNumberFlags.FlagInfinity;
+          flags |= BigNumberFlags.FlagInfinity;
         }
         if (ef.IsSignalingNaN()) {
-          flags|=BigNumberFlags.FlagSignalingNaN;
+          flags |= BigNumberFlags.FlagSignalingNaN;
         }
         if (ef.IsQuietNaN()) {
-          flags|=BigNumberFlags.FlagQuietNaN;
+          flags |= BigNumberFlags.FlagQuietNaN;
         }
         er.flags = flags;
         return er;
@@ -200,16 +198,16 @@ namespace PeterO
         ExtendedRational er = new ExtendedRational(ef.Mantissa, BigInteger.One);
         int flags = 0;
         if (ef.IsNegative) {
-          flags|=BigNumberFlags.FlagNegative;
+          flags |= BigNumberFlags.FlagNegative;
         }
         if (ef.IsInfinity()) {
-          flags|=BigNumberFlags.FlagInfinity;
+          flags |= BigNumberFlags.FlagInfinity;
         }
         if (ef.IsSignalingNaN()) {
-          flags|=BigNumberFlags.FlagSignalingNaN;
+          flags |= BigNumberFlags.FlagSignalingNaN;
         }
         if (ef.IsQuietNaN()) {
-          flags|=BigNumberFlags.FlagQuietNaN;
+          flags |= BigNumberFlags.FlagQuietNaN;
         }
         er.flags = flags;
         return er;
@@ -240,7 +238,7 @@ namespace PeterO
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal ToExtendedDecimal(PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.IsNegative, ctx);
+        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.IsNegative, ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedDecimal.PositiveInfinity;
@@ -260,7 +258,7 @@ namespace PeterO
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal ToExtendedDecimalExactIfPossible(PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.IsNegative, ctx);
+        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.IsNegative, ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedDecimal.PositiveInfinity;
@@ -296,7 +294,7 @@ namespace PeterO
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat ToExtendedFloat(PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedFloat.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.IsNegative, ctx);
+        return ExtendedFloat.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.IsNegative, ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedFloat.PositiveInfinity;
@@ -316,7 +314,7 @@ namespace PeterO
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedFloat.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.IsNegative, ctx);
+        return ExtendedFloat.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.IsNegative, ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedFloat.PositiveInfinity;
@@ -343,7 +341,7 @@ namespace PeterO
     /// <value>Whether this object is finite (not infinity or NaN).</value>
     public bool IsFinite {
       get {
-        return !IsNaN() && !IsInfinity();
+        return !this.IsNaN() && !this.IsInfinity();
       }
     }
 
@@ -402,7 +400,7 @@ namespace PeterO
     /// <value>Whether this object&apos;s value equals 0.</value>
     public bool IsZero {
       get {
-        if ((this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNaN)) != 0) {
+        if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
           return false;
         }
         return this.unsignedNumerator.IsZero;
@@ -416,7 +414,7 @@ namespace PeterO
         if (this.IsZero) {
           return 0;
         }
-        return (this.IsNegative) ? -1 : 1;
+        return this.IsNegative ? -1 : 1;
       }
     }
 
@@ -434,7 +432,7 @@ namespace PeterO
       if (this == other) {
         return 0;
       }
-      if (IsNaN()) {
+      if (this.IsNaN()) {
         if (other.IsNaN()) {
           return 0;
         }
@@ -449,7 +447,7 @@ namespace PeterO
         // Special case: Either operand is zero
         return 0;
       }
-      if (IsInfinity()) {
+      if (this.IsInfinity()) {
         if (other.IsInfinity()) {
           // if we get here, this only means that
           // both are positive infinity or both
@@ -458,10 +456,13 @@ namespace PeterO
         }
         return this.IsNegative ? -1 : 1;
       }
+      if (other.IsInfinity()) {
+        return other.IsNegative ? 1 : -1;
+      }
       int dencmp = this.denominator.CompareTo(other.denominator);
       // At this point, the signs are equal so we can compare
       // their absolute values instead
-      int numcmp = this.unsignedNumerator.CompareTo(this.unsignedNumerator);
+      int numcmp = this.unsignedNumerator.CompareTo(other.unsignedNumerator);
       if (signA < 0) {
         numcmp = -numcmp;
       }
@@ -489,47 +490,47 @@ namespace PeterO
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsNegativeInfinity() {
-      return (flags&(BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
+      return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsPositiveInfinity() {
-      return (flags&(BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
-        (BigNumberFlags.FlagInfinity);
+      return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
+        BigNumberFlags.FlagInfinity;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsNaN() {
-      return (flags&(BigNumberFlags.FlagNaN)) != 0;
+      return (this.flags & BigNumberFlags.FlagNaN) != 0;
     }
 
     /// <summary>Gets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
     public bool IsNegative {
       get {
-        return (flags&(BigNumberFlags.FlagNegative)) != 0;
+        return (this.flags & BigNumberFlags.FlagNegative) != 0;
       }
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsInfinity() {
-      return (flags&(BigNumberFlags.FlagInfinity)) != 0;
+      return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsQuietNaN() {
-      return (flags&(BigNumberFlags.FlagQuietNaN)) != 0;
+      return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
     public bool IsSignalingNaN() {
-      return (flags&(BigNumberFlags.FlagSignalingNaN)) != 0;
+      return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
     }
 
     /// <summary>Divides this instance by the value of a ExtendedRational
@@ -932,19 +933,17 @@ namespace PeterO
     }
 
     /// <summary>A not-a-number value.</summary>
-    public static readonly ExtendedRational NaN = CreateWithFlags(BigInteger.Zero, BigInteger.Zero, BigNumberFlags.FlagQuietNaN);
+    public static readonly ExtendedRational NaN = CreateWithFlags(BigInteger.Zero, BigInteger.One, BigNumberFlags.FlagQuietNaN);
 
     /// <summary>A not-a-number value that signals an invalid operation
     /// flag when it&apos;s passed as an argument to any arithmetic operation
     /// in ExtendedRational.</summary>
-    public static readonly ExtendedRational SignalingNaN = CreateWithFlags(BigInteger.Zero, BigInteger.Zero, BigNumberFlags.FlagSignalingNaN);
+    public static readonly ExtendedRational SignalingNaN = CreateWithFlags(BigInteger.Zero, BigInteger.One, BigNumberFlags.FlagSignalingNaN);
 
     /// <summary>Positive infinity, greater than any other number.</summary>
-    public static readonly ExtendedRational PositiveInfinity = CreateWithFlags(BigInteger.Zero, BigInteger.Zero, BigNumberFlags.FlagInfinity);
+    public static readonly ExtendedRational PositiveInfinity = CreateWithFlags(BigInteger.Zero, BigInteger.One, BigNumberFlags.FlagInfinity);
 
     /// <summary>Negative infinity, less than any other number.</summary>
-    public static readonly ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.Zero, BigInteger.Zero, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
-
+    public static readonly ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.Zero, BigInteger.One, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
   }
-
 }

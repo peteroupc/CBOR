@@ -19,6 +19,22 @@ import com.upokecenter.util.*;
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
         BigInteger num = CBORTest.RandomBigInteger(fr);
+        num = (num).abs();
+        ExtendedRational rat = new ExtendedRational(num, BigInteger.ONE);
+        ExtendedRational rat2 = new ExtendedRational(num, BigInteger.valueOf(2));
+        if (rat2.compareTo(rat) !=-1) {
+ Assert.assertEquals(-1, rat2.compareTo(rat), rat + ", " + rat2);
+}
+        if (rat.compareTo(rat2) != 1) {
+ Assert.assertEquals(1, rat.compareTo(rat2), rat + ", " + rat2);
+}
+      }
+      Assert.assertEquals(
+-1,
+                      new ExtendedRational(BigInteger.ONE, BigInteger.valueOf(2)).compareTo(
+                        new ExtendedRational(BigInteger.valueOf(4), BigInteger.ONE)));
+      for (int i = 0; i < 100; ++i) {
+        BigInteger num = CBORTest.RandomBigInteger(fr);
         BigInteger den = CBORTest.RandomBigInteger(fr);
         if (den.signum()==0) {
           den = BigInteger.ONE;
@@ -34,7 +50,11 @@ import com.upokecenter.util.*;
           num2=num2.multiply(mult);
           den2=den2.multiply(mult);
           ExtendedRational rat2 = new ExtendedRational(num2, den2);
-          Assert.assertEquals(0, rat.compareTo(rat2));
+          if (rat.compareTo(rat2) != 0) {
+            Assert.assertEquals(
+0, rat.compareTo(rat2), rat + ", " + rat2 + ", " +
+                            rat.ToDouble() + ", " + rat2.ToDouble());
+          }
         }
       }
     }
@@ -45,6 +65,8 @@ import com.upokecenter.util.*;
       if(ExtendedDecimal.SignalingNaN.signum()==0)Assert.fail();
       if(ExtendedFloat.NaN.signum()==0)Assert.fail();
       if(ExtendedFloat.SignalingNaN.signum()==0)Assert.fail();
+      if(ExtendedRational.NaN.signum()==0)Assert.fail();
+      if(ExtendedRational.SignalingNaN.signum()==0)Assert.fail();
     }
 
     @Test

@@ -20,6 +20,22 @@ namespace Test
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
         BigInteger num = CBORTest.RandomBigInteger(fr);
+        num = BigInteger.Abs(num);
+        ExtendedRational rat = new ExtendedRational(num, BigInteger.One);
+        ExtendedRational rat2 = new ExtendedRational(num, (BigInteger)2);
+        if (rat2.CompareTo(rat) !=-1) {
+ Assert.AreEqual(-1, rat2.CompareTo(rat), rat + ", " + rat2);
+}
+        if (rat.CompareTo(rat2) != 1) {
+ Assert.AreEqual(1, rat.CompareTo(rat2), rat + ", " + rat2);
+}
+      }
+      Assert.AreEqual(
+-1,
+                      new ExtendedRational(BigInteger.One, (BigInteger)2).CompareTo(
+                        new ExtendedRational((BigInteger)4, BigInteger.One)));
+      for (int i = 0; i < 100; ++i) {
+        BigInteger num = CBORTest.RandomBigInteger(fr);
         BigInteger den = CBORTest.RandomBigInteger(fr);
         if (den.IsZero) {
           den = BigInteger.One;
@@ -35,7 +51,11 @@ namespace Test
           num2 *= (BigInteger)mult;
           den2 *= (BigInteger)mult;
           ExtendedRational rat2 = new ExtendedRational(num2, den2);
-          Assert.AreEqual(0, rat.CompareTo(rat2));
+          if (rat.CompareTo(rat2) != 0) {
+            Assert.AreEqual(
+0, rat.CompareTo(rat2), rat + ", " + rat2 + ", " +
+                            rat.ToDouble() + ", " + rat2.ToDouble());
+          }
         }
       }
     }
@@ -46,6 +66,8 @@ namespace Test
       Assert.IsFalse(ExtendedDecimal.SignalingNaN.IsZero);
       Assert.IsFalse(ExtendedFloat.NaN.IsZero);
       Assert.IsFalse(ExtendedFloat.SignalingNaN.IsZero);
+      Assert.IsFalse(ExtendedRational.NaN.IsZero);
+      Assert.IsFalse(ExtendedRational.SignalingNaN.IsZero);
     }
 
     [Test]

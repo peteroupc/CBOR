@@ -41,7 +41,7 @@ at: http://peteroupc.github.io/CBOR/
         return this.denominator;
       }
 
-    int flags;
+    private int flags;
 
     @Override public boolean equals(Object obj) {
       ExtendedRational other = ((obj instanceof ExtendedRational) ? (ExtendedRational)obj : null);
@@ -58,13 +58,13 @@ at: http://peteroupc.github.io/CBOR/
     @Override public int hashCode() {
       int hashCode_ = 1857066527;
       {
-        if (unsignedNumerator != null) {
-          hashCode_ += 1857066539 * unsignedNumerator.hashCode();
+        if (this.unsignedNumerator != null) {
+          hashCode_ += 1857066539 * this.unsignedNumerator.hashCode();
         }
-        if (denominator != null) {
-          hashCode_ += 1857066551 * denominator.hashCode();
+        if (this.denominator != null) {
+          hashCode_ += 1857066551 * this.denominator.hashCode();
         }
-        hashCode_ += 1857066623 * flags;
+        hashCode_ += 1857066623 * this.flags;
       }
       return hashCode_;
     }
@@ -81,7 +81,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       boolean numNegative = numerator.signum() < 0;
       boolean denNegative = denominator.signum() < 0;
-      this.flags=(numNegative == denNegative) ? BigNumberFlags.FlagNegative : 0;
+      this.flags = (numNegative != denNegative) ? BigNumberFlags.FlagNegative : 0;
       if (numNegative) {
         numerator=numerator.negate();
       }
@@ -97,7 +97,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A string representation of this object.
      */
     @Override public String toString() {
-      return "(" + this.unsignedNumerator + "/" + this.denominator + ")";
+      return "(" + this.getNumerator() + "/" + this.getDenominator() + ")";
     }
 
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
@@ -126,21 +126,27 @@ at: http://peteroupc.github.io/CBOR/
       return CreateNaN(diag, false, false);
     }
 
+    private static ExtendedRational CreateWithFlags(BigInteger numerator, BigInteger denominator, int flags) {
+      ExtendedRational er = new ExtendedRational(numerator, denominator);
+      er.flags = flags;
+      return er;
+    }
+
     public static ExtendedRational CreateNaN(BigInteger diag, boolean signaling, boolean negative) {
-      // if ((diag) == null) {
- throw new NullPointerException("diag");
-}
-      if (diag.signum()<0) {
+      if (diag == null) {
+        throw new NullPointerException("diag");
+      }
+      if (diag.signum() < 0) {
         throw new IllegalArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
       }
-      // if (diag.signum()==0 && !negative) {
-  //  return signaling ? SignalingNaN : NaN;
-}
+      if (diag.signum()==0 && !negative) {
+        return signaling ? SignalingNaN : NaN;
+      }
       int flags = 0;
       if (negative) {
- flags|=BigNumberFlags.FlagNegative;
-}
-      flags|=(signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN);
+        flags |= BigNumberFlags.FlagNegative;
+      }
+      flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
       ExtendedRational er = new ExtendedRational(diag, BigInteger.ZERO);
       er.flags = flags;
       return er;
@@ -154,16 +160,16 @@ at: http://peteroupc.github.io/CBOR/
         ExtendedRational er = new ExtendedRational(ef.getMantissa(), BigInteger.ONE);
         int flags = 0;
         if (ef.isNegative()) {
-          flags|=BigNumberFlags.FlagNegative;
+          flags |= BigNumberFlags.FlagNegative;
         }
         if (ef.IsInfinity()) {
-          flags|=BigNumberFlags.FlagInfinity;
+          flags |= BigNumberFlags.FlagInfinity;
         }
         if (ef.IsSignalingNaN()) {
-          flags|=BigNumberFlags.FlagSignalingNaN;
+          flags |= BigNumberFlags.FlagSignalingNaN;
         }
         if (ef.IsQuietNaN()) {
-          flags|=BigNumberFlags.FlagQuietNaN;
+          flags |= BigNumberFlags.FlagQuietNaN;
         }
         er.flags = flags;
         return er;
@@ -196,16 +202,16 @@ at: http://peteroupc.github.io/CBOR/
         ExtendedRational er = new ExtendedRational(ef.getMantissa(), BigInteger.ONE);
         int flags = 0;
         if (ef.isNegative()) {
-          flags|=BigNumberFlags.FlagNegative;
+          flags |= BigNumberFlags.FlagNegative;
         }
         if (ef.IsInfinity()) {
-          flags|=BigNumberFlags.FlagInfinity;
+          flags |= BigNumberFlags.FlagInfinity;
         }
         if (ef.IsSignalingNaN()) {
-          flags|=BigNumberFlags.FlagSignalingNaN;
+          flags |= BigNumberFlags.FlagSignalingNaN;
         }
         if (ef.IsQuietNaN()) {
-          flags|=BigNumberFlags.FlagQuietNaN;
+          flags |= BigNumberFlags.FlagQuietNaN;
         }
         er.flags = flags;
         return er;
@@ -238,7 +244,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public ExtendedDecimal ToExtendedDecimal(PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.isNegative(), ctx);
+        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedDecimal.PositiveInfinity;
@@ -260,7 +266,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public ExtendedDecimal ToExtendedDecimalExactIfPossible(PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.isNegative(), ctx);
+        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedDecimal.PositiveInfinity;
@@ -300,7 +306,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public ExtendedFloat ToExtendedFloat(PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedFloat.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.isNegative(), ctx);
+        return ExtendedFloat.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedFloat.PositiveInfinity;
@@ -322,7 +328,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedFloat.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.isNegative(), ctx);
+        return ExtendedFloat.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedFloat.PositiveInfinity;
@@ -350,7 +356,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return Whether this object is finite (not infinity or NaN).
      */
     public boolean isFinite() {
-        return !IsNaN() && !IsInfinity();
+        return !this.IsNaN() && !this.IsInfinity();
       }
 
     /**
@@ -417,9 +423,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return Whether this object's value equals 0.
      */
     public boolean isZero() {
-        if ((this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNaN)) != 0) {
- return false;
-}
+        if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
+          return false;
+        }
         return this.unsignedNumerator.signum()==0;
       }
 
@@ -431,7 +437,7 @@ at: http://peteroupc.github.io/CBOR/
         if (this.signum()==0) {
           return 0;
         }
-        return (this.isNegative()) ? -1 : 1;
+        return this.isNegative() ? -1 : 1;
       }
 
     // TODO: Create an efficient comparison function
@@ -450,7 +456,7 @@ at: http://peteroupc.github.io/CBOR/
       if (this == other) {
         return 0;
       }
-      if (IsNaN()) {
+      if (this.IsNaN()) {
         if (other.IsNaN()) {
           return 0;
         }
@@ -465,7 +471,7 @@ at: http://peteroupc.github.io/CBOR/
         // Special case: Either operand is zero
         return 0;
       }
-      if (IsInfinity()) {
+      if (this.IsInfinity()) {
         if (other.IsInfinity()) {
           // if we get here, this only means that
           // both are positive infinity or both
@@ -474,10 +480,13 @@ at: http://peteroupc.github.io/CBOR/
         }
         return this.isNegative() ? -1 : 1;
       }
+      if (other.IsInfinity()) {
+        return other.isNegative() ? 1 : -1;
+      }
       int dencmp = this.denominator.compareTo(other.denominator);
       // At this point, the signs are equal so we can compare
       // their absolute values instead
-      int numcmp = this.unsignedNumerator.compareTo(this.unsignedNumerator);
+      int numcmp = this.unsignedNumerator.compareTo(other.unsignedNumerator);
       if (signA < 0) {
         numcmp = -numcmp;
       }
@@ -509,7 +518,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsNegativeInfinity() {
-      return (flags&(BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
+      return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
@@ -518,8 +527,8 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsPositiveInfinity() {
-      return (flags&(BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
-        (BigNumberFlags.FlagInfinity);
+      return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
+        BigNumberFlags.FlagInfinity;
     }
 
     /**
@@ -527,7 +536,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsNaN() {
-      return (flags&(BigNumberFlags.FlagNaN)) != 0;
+      return (this.flags & BigNumberFlags.FlagNaN) != 0;
     }
 
     /**
@@ -535,7 +544,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A value not documented yet.
      */
     public boolean isNegative() {
-        return (flags&(BigNumberFlags.FlagNegative)) != 0;
+        return (this.flags & BigNumberFlags.FlagNegative) != 0;
       }
 
     /**
@@ -543,7 +552,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsInfinity() {
-      return (flags&(BigNumberFlags.FlagInfinity)) != 0;
+      return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     }
 
     /**
@@ -551,7 +560,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsQuietNaN() {
-      return (flags&(BigNumberFlags.FlagQuietNaN)) != 0;
+      return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
     /**
@@ -559,7 +568,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsSignalingNaN() {
-      return (flags&(BigNumberFlags.FlagSignalingNaN)) != 0;
+      return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
     }
 
     /**
@@ -1060,4 +1069,25 @@ at: http://peteroupc.github.io/CBOR/
     public ExtendedRational Pow(int exponentSmall) {
       throw new UnsupportedOperationException();
     }
+
+    /**
+     * A not-a-number value.
+     */
+    public static final ExtendedRational NaN = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagQuietNaN);
+
+    /**
+     * A not-a-number value that signals an invalid operation flag when
+     * it&apos;s passed as an argument to any arithmetic operation in ExtendedRational.
+     */
+    public static final ExtendedRational SignalingNaN = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagSignalingNaN);
+
+    /**
+     * Positive infinity, greater than any other number.
+     */
+    public static final ExtendedRational PositiveInfinity = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagInfinity);
+
+    /**
+     * Negative infinity, less than any other number.
+     */
+    public static final ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
   }
