@@ -67,16 +67,16 @@ at: http://peteroupc.github.io/CBOR/
      * if the exponent is positive or zero.
      */
     public BigInteger getExponent() {
- return this.exponent;
-}
+        return this.exponent;
+      }
 
     /**
      * Gets the absolute value of this object&apos;s un-scaled value.
      * @return The absolute value of this object's un-scaled value.
      */
     public BigInteger getUnsignedMantissa() {
- return this.unsignedMantissa;
-}
+        return this.unsignedMantissa;
+      }
 
     /**
      * Gets this object&apos;s un-scaled value.
@@ -84,8 +84,8 @@ at: http://peteroupc.github.io/CBOR/
      * value is negative (including a negative NaN).
      */
     public BigInteger getMantissa() {
- return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
-}
+        return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
+      }
 
     /**
      * Determines whether this object&apos;s mantissa and exponent are
@@ -149,27 +149,27 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     public static ExtendedDecimal CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
-      // if ((diag) == null) {
- throw new NullPointerException("diag");
-}
-      if (diag.signum()<0) {
+      if (diag == null) {
+        throw new NullPointerException("diag");
+      }
+      if (diag.signum() < 0) {
         throw new IllegalArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
       }
       if (diag.signum()==0 && !negative) {
- return signaling ? SignalingNaN : NaN;
-}
+        return signaling ? SignalingNaN : NaN;
+      }
       int flags = 0;
       if (negative) {
- flags|=BigNumberFlags.FlagNegative;
-}
+        flags |= BigNumberFlags.FlagNegative;
+      }
       if (ctx != null && ctx.getHasMaxPrecision()) {
-        flags|=BigNumberFlags.FlagQuietNaN;
+        flags |= BigNumberFlags.FlagQuietNaN;
         ExtendedDecimal ef = CreateWithFlags(diag, BigInteger.ZERO, flags).RoundToPrecision(ctx);
-        ef.flags&=~BigNumberFlags.FlagQuietNaN;
-        ef.flags|=(signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN);
+        ef.flags &= ~BigNumberFlags.FlagQuietNaN;
+        ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
         return ef;
       } else {
-        flags|=(signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN);
+        flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
         return CreateWithFlags(diag, BigInteger.ZERO, flags);
       }
     }
@@ -1099,9 +1099,9 @@ remainder=divrem[1]; }
       }
       if (this.isNegative() && this.signum()==0) {
         return Extras.IntegersToDouble(new int[] {
-          ((int)(1 << 31)),
-          0
-        });
+                                         ((int)(1 << 31)),
+                                         0
+                                       });
       }
       return this.ToExtendedFloat().ToDouble();
     }
@@ -1428,8 +1428,8 @@ remainder=divrem[1]; }
      * @return Whether this object is finite (not infinity or NaN).
      */
     public boolean isFinite() {
- return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
-}
+        return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
+      }
 
     /**
      * Gets a value indicating whether this object is negative, including
@@ -1437,8 +1437,8 @@ remainder=divrem[1]; }
      * @return Whether this object is negative, including negative zero.
      */
     public boolean isNegative() {
- return (this.flags & BigNumberFlags.FlagNegative) != 0;
-}
+        return (this.flags & BigNumberFlags.FlagNegative) != 0;
+      }
 
     /**
      * Gets a value indicating whether this object is a quiet not-a-number
@@ -1463,8 +1463,8 @@ remainder=divrem[1]; }
      * @return This value's sign: -1 if negative; 1 if positive; 0 if zero.
      */
     public int signum() {
- return (((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0) ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
-}
+        return (((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0) ? 0 : (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
+      }
 
     /**
      * Gets a value indicating whether this object&apos;s value equals
@@ -1472,8 +1472,8 @@ remainder=divrem[1]; }
      * @return Whether this object's value equals 0.
      */
     public boolean isZero() {
- return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0;
-}
+        return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0;
+      }
 
     /**
      * Gets the absolute value of this object.
@@ -1769,8 +1769,7 @@ remainder=divrem[1]; }
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    // new SimpleRadixMath<ExtendedDecimal>(
-      /*) */    private static IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(new RadixMath<ExtendedDecimal>(new DecimalMathHelper()))    ;
+    private static IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(new RadixMath<ExtendedDecimal>(new DecimalMathHelper())) ;
 
     /**
      * Divides this object by another object, and returns the integer part
