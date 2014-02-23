@@ -77,7 +77,8 @@ namespace Test
           if (rat.CompareTo(rat2) != 0) {
             Assert.AreEqual(
 
-              0, rat.CompareTo(rat2), rat + ", " + rat2 + ", " +
+              0, rat.CompareTo(
+rat2), rat + ", " + rat2 + ", " +
               rat.ToDouble() + ", " + rat2.ToDouble());
           }
         }

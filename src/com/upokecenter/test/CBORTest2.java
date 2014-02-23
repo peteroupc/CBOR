@@ -76,7 +76,8 @@ import com.upokecenter.util.*;
           if (rat.compareTo(rat2) != 0) {
             Assert.assertEquals(
 
-              0, rat.compareTo(rat2), rat + ", " + rat2 + ", " +
+              0, rat.compareTo(
+rat2), rat + ", " + rat2 + ", " +
               rat.ToDouble() + ", " + rat2.ToDouble());
           }
         }
