@@ -538,7 +538,7 @@ public int CompareToDecimal(ExtendedDecimal other) {
         // Round up
         thisInt += BigInteger.One;
         thisIntDec = ExtendedDecimal.FromBigInteger(thisInt);
-        if (thisIntDec.CompareTo(otherAbs) <0) {
+        if (thisIntDec.CompareTo(otherAbs) < 0) {
           // Absolute value rounded up is less than other's unrounded absolute value
           // Console.WriteLine("Shortcircuit II");
           return this.IsNegative ? 1 : -1;
@@ -546,7 +546,7 @@ public int CompareToDecimal(ExtendedDecimal other) {
         thisIntDec = ExtendedDecimal.FromBigInteger(this.UnsignedNumerator).Divide(
           ExtendedDecimal.FromBigInteger(this.Denominator),
           PrecisionContext.ForPrecisionAndRounding(20, Rounding.Down));
-        if (thisIntDec.CompareTo(otherAbs) >0) {
+        if (thisIntDec.CompareTo(otherAbs) > 0) {
           // Truncated absolute value is greater than other's untruncated absolute value
           // Console.WriteLine("Shortcircuit III");
           return this.IsNegative ? -1 : 1;
@@ -587,7 +587,7 @@ public int CompareToDecimal(ExtendedDecimal other) {
       return (this.flags & BigNumberFlags.FlagNaN) != 0;
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
+    /// <summary>Gets a value indicating whether this object's value is negative.</summary>
     /// <value>A value not documented yet.</value>
     public bool IsNegative {
       get {

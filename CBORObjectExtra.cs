@@ -124,6 +124,26 @@ namespace PeterO {
       return bigint;
     }
 
+    private static decimal ExtendedRationalToDecimal(ExtendedRational extendedNumber) {
+      if (extendedNumber.IsInfinity() || extendedNumber.IsNaN()) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      try {
+        ExtendedDecimal newDecimal =
+          ExtendedDecimal.FromBigInteger(extendedNumber.Numerator)
+          .Divide(ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
+                  PrecisionContext.ForPrecisionAndRounding(29,Rounding.HalfEven)
+                  .WithTraps(PrecisionContext.FlagOverflow))
+          .RoundToBinaryPrecision(PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
+        return EncodeDecimal(
+          BigInteger.Abs(newDecimal.Mantissa),
+          -((int)newDecimal.Exponent),
+          newDecimal.Mantissa.Sign < 0);
+      } catch (TrapException ex) {
+        throw new OverflowException("This object's value is out of range", ex);
+      }
+    }
+
     private static decimal ExtendedDecimalToDecimal(ExtendedDecimal extendedNumber) {
       if (extendedNumber.IsInfinity() || extendedNumber.IsNaN()) {
         throw new OverflowException("This object's value is out of range");
@@ -176,6 +196,8 @@ namespace PeterO {
       } else if (this.ItemType == CBORObjectTypeExtendedFloat) {
         return ExtendedDecimalToDecimal(
           ExtendedDecimal.FromExtendedFloat((ExtendedFloat)this.ThisItem));
+      } else if (this.ItemType == CBORObjectTypeExtendedRational) {
+        return ExtendedRationalToDecimal((ExtendedRational)this.ThisItem);
       } else {
         throw new InvalidOperationException("Not a number type");
       }
@@ -265,7 +287,7 @@ namespace PeterO {
         }
         return FromObjectAndTag(
           new CBORObject[] { FromObject(-scale),
-          FromObject(mantissa) },
+            FromObject(mantissa) },
           4);
       }
     }
