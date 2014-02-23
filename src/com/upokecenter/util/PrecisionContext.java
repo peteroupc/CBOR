@@ -357,6 +357,27 @@ at: http://peteroupc.github.io/CBOR/
       return pc;
     }
 
+    private boolean simplified;
+
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+public boolean isSimplified() {
+        return this.simplified;
+      }
+
+    /**
+     * Not documented yet.
+     * @param simplified A Boolean object.
+     * @return A PrecisionContext object.
+     */
+public PrecisionContext WithSimplified(boolean simplified) {
+      PrecisionContext pc = this.Copy();
+      pc.simplified = simplified;
+      return pc;
+    }
+
     /**
      * Copies this PrecisionContext with an unlimited exponent range.
      * @return A PrecisionContext object.
@@ -414,6 +435,7 @@ at: http://peteroupc.github.io/CBOR/
         0,
         this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
+      pcnew.simplified = this.simplified;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
       pcnew.exponentMin = this.exponentMin;

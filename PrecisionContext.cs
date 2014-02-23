@@ -325,6 +325,25 @@ namespace PeterO {
       return pc;
     }
 
+    private bool simplified;
+
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+public bool IsSimplified {
+      get {
+        return this.simplified;
+      }
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='simplified'>A Boolean object.</param>
+    /// <returns>A PrecisionContext object.</returns>
+public PrecisionContext WithSimplified(bool simplified) {
+      PrecisionContext pc = this.Copy();
+      pc.simplified = simplified;
+      return pc;
+    }
+
     /// <summary>Copies this PrecisionContext with an unlimited exponent
     /// range.</summary>
     /// <returns>A PrecisionContext object.</returns>
@@ -377,6 +396,7 @@ namespace PeterO {
         0,
         this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
+      pcnew.simplified = this.simplified;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
       pcnew.exponentMin = this.exponentMin;

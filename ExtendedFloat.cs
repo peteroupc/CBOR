@@ -1227,7 +1227,7 @@ namespace PeterO {
     }
     //----------------------------------------------------------------
     private static IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
-      new RadixMath<ExtendedFloat>(new BinaryMathHelper()));
+      new ExtendedOrSimpleRadixMath<ExtendedFloat>(new BinaryMathHelper()));
 
     /// <summary>Divides this object by another object, and returns the
     /// integer part of the result, with the preferred exponent set to this
