@@ -62,6 +62,27 @@ namespace Test {
       }
     }
 
+    public static CBORObject RandomNumberOrRational(FastRandom rand) {
+      switch (rand.NextValue(7)) {
+        case 0:
+          return CBORObject.FromObject(RandomDouble(rand, Int32.MaxValue));
+        case 1:
+          return CBORObject.FromObject(RandomSingle(rand, Int32.MaxValue));
+        case 2:
+          return CBORObject.FromObject(RandomBigInteger(rand));
+        case 3:
+          return CBORObject.FromObject(RandomExtendedFloat(rand));
+        case 4:
+          return CBORObject.FromObject(RandomExtendedDecimal(rand));
+        case 5:
+          return CBORObject.FromObject(RandomInt64(rand));
+        case 6:
+          return CBORObject.FromObject(RandomRational(rand));
+        default:
+          throw new ArgumentException();
+      }
+    }
+
     private static CBORObject RandomCBORByteString(FastRandom rand) {
       int x = rand.NextValue(0x2000);
       byte[] bytes = new byte[x];
@@ -121,7 +142,7 @@ namespace Test {
 
     private static CBORObject RandomCBORTaggedObject(FastRandom rand, int depth) {
       int tag = rand.NextValue(0x1000000);
-      if (tag == 2 || tag == 3 || tag == 4 || tag == 5) {
+      if (tag == 2 || tag == 3 || tag == 4 || tag == 5 || tag == 30) {
         tag = 0;
       }
       return CBORObject.FromObjectAndTag(RandomCBORObject(rand, depth + 1), tag);
@@ -146,6 +167,15 @@ namespace Test {
       return cborRet;
     }
 
+    private static ExtendedRational RandomRational(FastRandom rand) {
+      BigInteger bigintA = RandomBigInteger(rand);
+      BigInteger bigintB = RandomBigInteger(rand);
+      if (bigintB.IsZero) {
+        bigintB = BigInteger.One;
+      }
+      return new ExtendedRational(bigintA, bigintB);
+    }
+
     private static CBORObject RandomCBORObject(FastRandom rand) {
       return RandomCBORObject(rand, 0);
     }
@@ -157,7 +187,7 @@ namespace Test {
         case 1:
         case 2:
         case 3:
-          return RandomNumber(rand);
+          return RandomNumberOrRational(rand);
         case 4:
           return rand.NextValue(2) == 0 ? CBORObject.True : CBORObject.False;
         case 5:
@@ -337,6 +367,25 @@ namespace Test {
       }
     }
 
+    [Test]
+    public void TestMultiply() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 3000; ++i) {
+        CBORObject o1 = RandomNumber(r);
+        CBORObject o2 = RandomNumber(r);
+        ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Multiply(o2.AsExtendedDecimal());
+        ExtendedDecimal cmpCobj = CBORObject.Multiply(o1, o2).AsExtendedDecimal();
+        if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
+          Assert.AreEqual(
+            0,
+            cmpDecFrac.CompareTo(cmpCobj),
+            ObjectMessages(o1, o2, "Results don't match"));
+        }
+        TestCommon.AssertRoundTrip(o1);
+        TestCommon.AssertRoundTrip(o2);
+      }
+    }
+
     /// <summary>Not documented yet.</summary>
     [Test]
     public void TestSubtract() {
@@ -464,6 +513,15 @@ namespace Test {
     [Test]
     public void TestCompareB() {
       AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xD8, 0x1E, (byte)0x82, (byte)0xC2, 0x58, 0x28, 0x77, 0x24, 0x73, (byte)0x84, (byte)0xBD, 0x72, (byte)0x82, 0x7C, (byte)0xD6, (byte)0x93, 0x18, 0x44, (byte)0x8A, (byte)0x88, 0x43, 0x67, (byte)0xA2, (byte)0xEB, 0x11, 0x00, 0x15, 0x1B, 0x1D, 0x5D, (byte)0xDC, (byte)0xEB, 0x39, 0x17, 0x72, 0x11, 0x5B, 0x03, (byte)0xFA, (byte)0xA8, 0x3F, (byte)0xD2, 0x75, (byte)0xF8, 0x36, (byte)0xC8, 0x1A, 0x00, 0x2E, (byte)0x8C, (byte)0x8D}),
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00}));
+      CompareTestLess(
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xD8, 0x1E, (byte)0x82, (byte)0xC2, 0x58, 0x28, 0x77, 0x24, 0x73, (byte)0x84, (byte)0xBD, 0x72, (byte)0x82, 0x7C, (byte)0xD6, (byte)0x93, 0x18, 0x44, (byte)0x8A, (byte)0x88, 0x43, 0x67, (byte)0xA2, (byte)0xEB, 0x11, 0x00, 0x15, 0x1B, 0x1D, 0x5D, (byte)0xDC, (byte)0xEB, 0x39, 0x17, 0x72, 0x11, 0x5B, 0x03, (byte)0xFA, (byte)0xA8, 0x3F, (byte)0xD2, 0x75, (byte)0xF8, 0x36, (byte)0xC8, 0x1A, 0x00, 0x2E, (byte)0x8C, (byte)0x8D}),
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00}));
+      AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xFB, 0x7F, (byte)0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}),
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00}));
+      AddSubCompare(
         CBORObject.DecodeFromBytes(new byte[] { 0x1A, (byte)0xFC, 0x1A, (byte)0xB0, 0x52 }),
         CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x38, 0x5F, (byte)0xC2, 0x50, 0x08, 0x70, (byte)0xF3, (byte)0xC4, (byte)0x90, 0x4C, 0x14, (byte)0xBA, 0x59, (byte)0xF0, (byte)0xC6, (byte)0xCB, (byte)0x8C, (byte)0x8D, 0x40, (byte)0x80 }));
       AddSubCompare(
@@ -539,7 +597,10 @@ namespace Test {
       }
       for (int i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
-        CBORObject o2 = RandomNumber(r);
+        CBORObject o2 = RandomNumberOrRational(r);
+        if (o2.IsInfinity() || o2.IsNaN()) {
+          continue;
+        }
         CompareTestLess(o1, o2);
         o1 = CBORObject.FromObject(Double.NegativeInfinity);
         CompareTestLess(o1, o2);
@@ -551,6 +612,52 @@ namespace Test {
         CompareTestLess(o2, o1);
         o1 = CBORObject.FromObject(Double.NaN);
         CompareTestLess(o2, o1);
+      }
+      CBORObject[] sortedObjects = new CBORObject[] {
+        CBORObject.Undefined,
+        CBORObject.Null,
+        CBORObject.False,
+        CBORObject.True,
+        CBORObject.FromObject(Double.NegativeInfinity),
+        CBORObject.FromObject(ExtendedDecimal.FromString("-1E+5000")),
+        CBORObject.FromObject(Int64.MinValue),
+        CBORObject.FromObject(Int32.MinValue),
+        CBORObject.FromObject(-2),
+        CBORObject.FromObject(-1),
+        CBORObject.FromObject(0),
+        CBORObject.FromObject(1),
+        CBORObject.FromObject(2),
+        CBORObject.FromObject(Int64.MaxValue),
+        CBORObject.FromObject(ExtendedDecimal.FromString("1E+5000")),
+        CBORObject.FromObject(Double.PositiveInfinity),
+        CBORObject.FromObject(Double.NaN),
+        CBORObject.FromSimpleValue(0),
+        CBORObject.FromSimpleValue(19),
+        CBORObject.FromSimpleValue(32),
+        CBORObject.FromSimpleValue(255),
+        CBORObject.FromObject(new byte[] { 0, 1 }),
+        CBORObject.FromObject(new byte[] { 0, 2 }),
+        CBORObject.FromObject(new byte[] { 0, 2, 0 }),
+        CBORObject.FromObject(new byte[] { 1, 1 }),
+        CBORObject.FromObject(new byte[] { 1, 1, 4 }),
+        CBORObject.FromObject(new byte[] { 1, 2 }),
+        CBORObject.FromObject(new byte[] { 1, 2, 6 }),
+        CBORObject.FromObject("aa"),
+        CBORObject.FromObject("ab"),
+        CBORObject.FromObject("abc"),
+        CBORObject.FromObject("ba"),
+        CBORObject.FromObject(CBORObject.NewArray()),
+        CBORObject.FromObject(CBORObject.NewMap()),
+      };
+      for (int i = 0; i < sortedObjects.Length; ++i) {
+        for (int j = i; j < sortedObjects.Length; ++j) {
+          if (i == j) {
+            CompareTestEqual(sortedObjects[i], sortedObjects[j]);
+          } else {
+            CompareTestLess(sortedObjects[i], sortedObjects[j]);
+          }
+        }
+        Assert.AreEqual(1, sortedObjects[i].CompareTo(null));
       }
       CBORObject sp = CBORObject.FromObject(Single.PositiveInfinity);
       CBORObject sn = CBORObject.FromObject(Single.NegativeInfinity);
@@ -844,9 +951,15 @@ namespace Test {
     [Test]
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
+      String badString = null;
+      CBORObject badobj = null;
       for (int i = 0; i < 2000; ++i) {
         CBORObject obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
+      }
+      if (badobj != null) {
+        Console.WriteLine(badString);
+        Console.WriteLine(ToByteArrayString(badobj));
       }
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {
@@ -5794,6 +5907,11 @@ namespace Test {
     }
 
     [Test]
+    public void TestCanFitInSpecificCases() {
+      Assert.IsFalse(CBORObject.FromObject(2554895343).CanFitInSingle());
+    }
+
+    [Test]
     public void TestCanFitIn() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -5801,33 +5919,35 @@ namespace Test {
         ExtendedDecimal ed2;
         ed2 = ExtendedDecimal.FromDouble(ed.AsExtendedDecimal().ToDouble());
         if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) != ed.CanFitInDouble()) {
-          Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+          Assert.Fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
         }
         ed2 = ExtendedDecimal.FromSingle(ed.AsExtendedDecimal().ToSingle());
         if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) != ed.CanFitInSingle()) {
-          Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+          Assert.Fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
         }
-        ed2 = ExtendedDecimal.FromBigInteger(ed.AsExtendedDecimal().ToBigInteger());
-        if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) != ed.IsIntegral) {
-          Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+        if (!ed.IsInfinity() && !ed.IsNaN()) {
+          ed2 = ExtendedDecimal.FromBigInteger(ed.AsExtendedDecimal().ToBigInteger());
+          if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) != ed.IsIntegral) {
+            Assert.Fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
+          }
         }
         if (!ed.IsInfinity() && !ed.IsNaN()) {
           BigInteger bi = ed.AsBigInteger();
           if (ed.IsIntegral) {
             if (bi.canFitInInt() != ed.CanFitInInt32()) {
-              Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+              Assert.Fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
             }
           }
           if (bi.canFitInInt() != ed.CanTruncatedIntFitInInt32()) {
-            Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+            Assert.Fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
           }
           if (ed.IsIntegral) {
             if ((bi.bitLength() <= 63) != ed.CanFitInInt64()) {
-              Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+              Assert.Fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
             }
           }
           if ((bi.bitLength() <= 63) != ed.CanTruncatedIntFitInInt64()) {
-            Assert.Fail(ToByteArrayString(ed) + "/" + "/ " + ed);
+            Assert.Fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
           }
         }
       }
@@ -5990,7 +6110,16 @@ namespace Test {
 
     [Test]
     public void TestMapInMap() {
-      CBORObject oo = CBORObject.NewArray();
+      CBORObject oo;
+      oo = CBORObject.NewArray()
+        .Add(CBORObject.NewMap()
+             .Add(
+new ExtendedRational(BigInteger.One, (BigInteger)2),
+3)
+             .Add(4, false))
+        .Add(true);
+      TestCommon.AssertRoundTrip(oo);
+      oo = CBORObject.NewArray();
       oo.Add(CBORObject.FromObject(0));
       CBORObject oo2 = CBORObject.NewMap();
       oo2.Add(CBORObject.FromObject(1), CBORObject.FromObject(1368));
@@ -6299,6 +6428,11 @@ namespace Test {
       for (int i = 0; i < ranges.Length; i += 2) {
         BigInteger bigintTemp = ranges[i];
         while (true) {
+          if (bigintTemp.Equals((BigInteger)30) ||
+              bigintTemp.Equals((BigInteger)29)) {
+            bigintTemp += BigInteger.One;
+            continue;
+          }
           CBORObject obj = CBORObject.FromObjectAndTag(0, bigintTemp);
           Assert.IsTrue(obj.IsTagged, "obj not tagged");
           BigInteger[] tags = obj.GetTags();

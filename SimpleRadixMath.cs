@@ -9,7 +9,12 @@ using System;
 
 namespace PeterO {
     /// <summary>Implements the simplified arithmetic in Appendix A of
-    /// the General Decimal Arithmetic Specification.</summary>
+    /// the General Decimal Arithmetic Specification. Unfortunately,
+    /// it doesn't pass all the test cases, since some aspects of the spec are
+    /// left open. For example: in which cases is the Clamped flag set? The
+    /// test cases set the Clamped flag in only a handful of test cases, all
+    /// within the <code>exp</code>
+    /// operation.</summary>
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
   internal sealed class SimpleRadixMath<T> : IRadixMath<T> {
@@ -180,7 +185,7 @@ namespace PeterO {
         // if the value also has an exponent that's out of range)
         return val;
       }
-      PrecisionContext ctx2 = ctx/*.WithUnlimitedExponents()*/.WithBlankFlags().WithTraps(0);
+      PrecisionContext ctx2 = ctx.WithBlankFlags().WithTraps(0);
       val = this.wrapper.RoundToPrecision(val, ctx2);
       // the only time rounding can signal an invalid
       // operation is if an operand is signaling NaN, but
@@ -572,7 +577,15 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
-      throw new NotImplementedException();
+      T ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      otherValue = this.RoundBeforeOp(otherValue, ctx2);
+      thisValue = this.wrapper.NextToward(thisValue, otherValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /// <summary>Not documented yet.</summary>

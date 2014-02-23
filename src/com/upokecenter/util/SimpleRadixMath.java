@@ -9,7 +9,11 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Implements the simplified arithmetic in Appendix A of the General
-     * Decimal Arithmetic Specification.
+     * Decimal Arithmetic Specification. Unfortunately, it doesn't pass
+     * all the test cases, since some aspects of the spec are left open. For
+     * example: in which cases is the Clamped flag set? The test cases set
+     * the Clamped flag in only a handful of test cases, all within the <code>exp</code>
+     * operation.
      * @param <T> Data type for a numeric value in a particular radix.
      */
   final class SimpleRadixMath<T> implements IRadixMath<T> {
@@ -180,7 +184,7 @@ at: http://peteroupc.github.io/CBOR/
         // if the value also has an exponent that's out of range)
         return val;
       }
-      PrecisionContext ctx2 = ctx/*.WithUnlimitedExponents()*/.WithBlankFlags().WithTraps(0);
+      PrecisionContext ctx2 = ctx.WithBlankFlags().WithTraps(0);
       val = this.wrapper.RoundToPrecision(val, ctx2);
       // the only time rounding can signal an invalid
       // operation is if an operand is signaling NaN, but
@@ -598,7 +602,15 @@ at: http://peteroupc.github.io/CBOR/
      * @return A T object.
      */
     public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
-      throw new UnsupportedOperationException();
+      T ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
+      if ((Object)ret != (Object)null) {
+        return ret;
+      }
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      thisValue = this.RoundBeforeOp(thisValue, ctx2);
+      otherValue = this.RoundBeforeOp(otherValue, ctx2);
+      thisValue = this.wrapper.NextToward(thisValue, otherValue, ctx2);
+      return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     /**

@@ -148,6 +148,7 @@ namespace PeterO {
     /// exceeds the range of a .NET decimal.</exception>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
+      // TODO: Use ICBORNumber
       if (this.ItemType == CBORObjectTypeInteger) {
         return (decimal)(long)this.ThisItem;
       } else if (this.ItemType == CBORObjectTypeBigInteger) {
@@ -189,54 +190,11 @@ namespace PeterO {
     /// exceeds the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
-      if (this.ItemType == CBORObjectTypeInteger) {
-        if ((long)this.ThisItem < 0) {
-          throw new OverflowException("This object's value is out of range");
-        }
-        return (ulong)(long)this.ThisItem;
-      } else if (this.ItemType == CBORObjectTypeBigInteger) {
-        if (((BigInteger)this.ThisItem).CompareTo(valueUInt64MaxValue) > 0 ||
-            ((BigInteger)this.ThisItem).Sign < 0) {
-          throw new OverflowException("This object's value is out of range");
-        }
-        return (ulong)BigIntegerToDecimal((BigInteger)this.ThisItem);
-      } else if (this.ItemType == CBORObjectTypeSingle) {
-        float fltItem = (float)this.ThisItem;
-        if (Single.IsNaN(fltItem)) {
-          throw new OverflowException("This object's value is out of range");
-        }
-        fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
-        if (fltItem >= 0 && fltItem <= UInt64.MaxValue) {
-          return (ulong)fltItem;
-        }
+      BigInteger bigint = this.AsBigInteger();
+      if (bigint.Sign < 0 || bigint.CompareTo(UInt64MaxValue) > 0) {
         throw new OverflowException("This object's value is out of range");
-      } else if (this.ItemType == CBORObjectTypeDouble) {
-        double fltItem = (double)this.ThisItem;
-        if (Double.IsNaN(fltItem)) {
-          throw new OverflowException("This object's value is out of range");
-        }
-        fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
-        if (fltItem >= 0 && fltItem <= UInt64.MaxValue) {
-          return (ulong)fltItem;
-        }
-        throw new OverflowException("This object's value is out of range");
-      } else if (this.ItemType == CBORObjectTypeExtendedDecimal) {
-        BigInteger bi = ((ExtendedDecimal)this.ThisItem).ToBigInteger();
-        if (((BigInteger)this.ThisItem).CompareTo(valueUInt64MaxValue) > 0 ||
-            bi.Sign < 0) {
-          throw new OverflowException("This object's value is out of range");
-        }
-        return (ulong)BigIntegerToDecimal(bi);
-      } else if (this.ItemType == CBORObjectTypeExtendedFloat) {
-        BigInteger bi = ((ExtendedFloat)this.ThisItem).ToBigInteger();
-        if (((BigInteger)this.ThisItem).CompareTo(valueUInt64MaxValue) > 0 ||
-            bi.Sign < 0) {
-          throw new OverflowException("This object's value is out of range");
-        }
-        return (ulong)BigIntegerToDecimal(bi);
-      } else {
-        throw new InvalidOperationException("Not a number type");
       }
+      return (ulong)BigIntegerToDecimal(bigint);
     }
 
     /// <summary>Not documented yet.</summary>

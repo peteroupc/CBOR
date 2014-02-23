@@ -135,6 +135,49 @@ namespace PeterO
       }
     }
 
+    private static BigInteger valueBigShiftIteration = (BigInteger)1000000;
+
+    internal static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
+      #if DEBUG
+      if (val == null) {
+        throw new ArgumentNullException("val");
+      }
+      if (bigShift == null) {
+        throw new ArgumentNullException("bigShift");
+      }
+      #endif
+
+      if (val.IsZero) {
+        return val;
+      }
+      while (bigShift.CompareTo(valueBigShiftIteration) > 0) {
+        val <<= 1000000;
+        bigShift -= (BigInteger)valueBigShiftIteration;
+      }
+      int lastshift = (int)bigShift;
+      val <<= lastshift;
+      return val;
+    }
+
+    internal static BigInteger ShiftLeftInt(BigInteger val, int shift) {
+      #if DEBUG
+      if (val == null) {
+        throw new ArgumentNullException("val");
+      }
+      #endif
+
+      if (val.IsZero) {
+        return val;
+      }
+      while (shift > 1000000) {
+        val <<= 1000000;
+        shift -= 1000000;
+      }
+      int lastshift = (int)shift;
+      val <<= lastshift;
+      return val;
+    }
+
     internal static bool HasBitSet(int[] arr, int bit) {
       return (bit >> 5) < arr.Length && (arr[bit >> 5] & (1 << (bit & 31))) != 0;
     }
