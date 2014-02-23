@@ -3189,7 +3189,7 @@ namespace PeterO {
     /// <param name='other'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T Add(T thisValue, T other, PrecisionContext ctx) {
+    public T Add(T thisValue, T other, PrecisionContext ctx) {
       return this.AddEx(thisValue, other, ctx, false);
     }
 

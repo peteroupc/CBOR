@@ -132,8 +132,8 @@ namespace PeterO {
         ExtendedDecimal newDecimal =
           ExtendedDecimal.FromBigInteger(extendedNumber.Numerator)
           .Divide(
-ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
-PrecisionContext.ForPrecisionAndRounding(29, Rounding.HalfEven) .WithTraps(PrecisionContext.FlagOverflow))
+            ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
+            PrecisionContext.ForPrecisionAndRounding(29, Rounding.HalfEven).WithTraps(PrecisionContext.FlagOverflow))
           .RoundToBinaryPrecision(PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
         return EncodeDecimal(
           BigInteger.Abs(newDecimal.Mantissa),

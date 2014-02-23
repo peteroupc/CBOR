@@ -77,7 +77,7 @@ import com.upokecenter.util.*;
             Assert.assertEquals(
 
               0, rat.compareTo(
-rat2), rat + ", " + rat2 + ", " +
+ rat2), rat + ", " + rat2 + ", " +
               rat.ToDouble() + ", " + rat2.ToDouble());
           }
         }

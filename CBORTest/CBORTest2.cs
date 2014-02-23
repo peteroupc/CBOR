@@ -78,7 +78,7 @@ namespace Test
             Assert.AreEqual(
 
               0, rat.CompareTo(
-rat2), rat + ", " + rat2 + ", " +
+ rat2), rat + ", " + rat2 + ", " +
               rat.ToDouble() + ", " + rat2.ToDouble());
           }
         }

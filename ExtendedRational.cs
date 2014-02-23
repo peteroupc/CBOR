@@ -517,7 +517,7 @@ public int CompareToDecimal(ExtendedDecimal other) {
         BigInteger bcx = this.Denominator * (BigInteger)other.Mantissa;
         return this.Numerator.CompareTo(bcx);
       }
-      if (BigInteger.Abs(other.Exponent).CompareTo((BigInteger)50) >0) {
+      if (BigInteger.Abs(other.Exponent).CompareTo((BigInteger)50) > 0) {
         // Other has a high absolute value of exponent, so try different approaches to
         // comparison
         BigInteger thisRem;
@@ -530,7 +530,7 @@ public int CompareToDecimal(ExtendedDecimal other) {
           int ret = thisIntDec.CompareTo(otherAbs);
           return this.IsNegative ? -ret : ret;
         }
-        if (thisIntDec.CompareTo(otherAbs) >0) {
+        if (thisIntDec.CompareTo(otherAbs) > 0) {
           // Truncated absolute value is greater than other's untruncated absolute value
           // Console.WriteLine("Shortcircuit I");
           return this.IsNegative ? -1 : 1;

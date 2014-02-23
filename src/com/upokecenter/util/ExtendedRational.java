@@ -543,7 +543,7 @@ public int CompareToDecimal(ExtendedDecimal other) {
         BigInteger bcx = this.getDenominator().multiply(BigInteger.valueOf(other.getMantissa()));
         return this.getNumerator().compareTo(bcx);
       }
-      if ((other.getExponent()).abs().compareTo(BigInteger.valueOf(50)) >0) {
+      if ((other.getExponent()).abs().compareTo(BigInteger.valueOf(50)) > 0) {
         // Other has a high absolute value of exponent, so try different approaches to
         // comparison
         BigInteger thisRem;
@@ -560,7 +560,7 @@ thisRem=divrem[1]; }
           int ret = thisIntDec.compareTo(otherAbs);
           return this.isNegative() ? -ret : ret;
         }
-        if (thisIntDec.compareTo(otherAbs) >0) {
+        if (thisIntDec.compareTo(otherAbs) > 0) {
           // Truncated absolute value is greater than other's untruncated absolute value
           // System.out.println("Shortcircuit I");
           return this.isNegative() ? -1 : 1;

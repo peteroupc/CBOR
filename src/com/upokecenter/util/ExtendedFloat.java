@@ -1305,7 +1305,7 @@ at: http://peteroupc.github.io/CBOR/
     }
     //----------------------------------------------------------------
     private static IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
-      new RadixMath<ExtendedFloat>(new BinaryMathHelper()));
+      new ExtendedOrSimpleRadixMath<ExtendedFloat>(new BinaryMathHelper()));
 
     /**
      * Divides this object by another object, and returns the integer part
