@@ -1769,7 +1769,7 @@ remainder=divrem[1]; }
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(new RadixMath<ExtendedDecimal>(new DecimalMathHelper())) ;
+    private static IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(new RadixMath<ExtendedDecimal>(new DecimalMathHelper()));
 
     /**
      * Divides this object by another object, and returns the integer part

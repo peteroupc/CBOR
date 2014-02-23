@@ -131,9 +131,9 @@ namespace PeterO {
       try {
         ExtendedDecimal newDecimal =
           ExtendedDecimal.FromBigInteger(extendedNumber.Numerator)
-          .Divide(ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
-                  PrecisionContext.ForPrecisionAndRounding(29,Rounding.HalfEven)
-                  .WithTraps(PrecisionContext.FlagOverflow))
+          .Divide(
+ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
+PrecisionContext.ForPrecisionAndRounding(29, Rounding.HalfEven) .WithTraps(PrecisionContext.FlagOverflow))
           .RoundToBinaryPrecision(PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
         return EncodeDecimal(
           BigInteger.Abs(newDecimal.Mantissa),
@@ -287,7 +287,7 @@ namespace PeterO {
         }
         return FromObjectAndTag(
           new CBORObject[] { FromObject(-scale),
-            FromObject(mantissa) },
+          FromObject(mantissa) },
           4);
       }
     }
