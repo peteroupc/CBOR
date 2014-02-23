@@ -10,6 +10,7 @@ using System;
 namespace PeterO
 {
     /// <summary>Description of ExtendedOrSimpleRadixMath.</summary>
+    /// <typeparam name='T'>Number data type.</typeparam>
   internal class ExtendedOrSimpleRadixMath<T> : IRadixMath<T>
   {
     private RadixMath<T> ext;

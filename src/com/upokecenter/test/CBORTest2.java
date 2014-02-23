@@ -21,7 +21,7 @@ import com.upokecenter.util.*;
       // System.Diagnostics.Stopwatch sw2 = new System.Diagnostics.Stopwatch();
       for (int i = 0; i < 100; ++i) {
         ExtendedRational er = CBORTest.RandomRational(fr);
-        int exp = fr.NextValue(200000) -100000;
+        int exp = -100000 + fr.NextValue(200000);
         ExtendedDecimal ed = ExtendedDecimal.Create(
           CBORTest.RandomBigInteger(fr),
           BigInteger.valueOf(exp));
@@ -45,7 +45,7 @@ import com.upokecenter.util.*;
         num = (num).abs();
         ExtendedRational rat = new ExtendedRational(num, BigInteger.ONE);
         ExtendedRational rat2 = new ExtendedRational(num, BigInteger.valueOf(2));
-        if (rat2.compareTo(rat) !=-1) {
+        if (rat2.compareTo(rat) != -1) {
           Assert.assertEquals(-1, rat2.compareTo(rat), rat + ", " + rat2);
         }
         if (rat.compareTo(rat2) != 1) {
@@ -75,10 +75,7 @@ import com.upokecenter.util.*;
           ExtendedRational rat2 = new ExtendedRational(num2, den2);
           if (rat.compareTo(rat2) != 0) {
             Assert.assertEquals(
-
-              0, rat.compareTo(
- rat2), rat + ", " + rat2 + ", " +
-              rat.ToDouble() + ", " + rat2.ToDouble());
+              0, rat.compareTo(rat2), rat + ", " + rat2 + ", " + rat.ToDouble() + ", " + rat2.ToDouble());
           }
         }
       }

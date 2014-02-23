@@ -22,7 +22,7 @@ namespace Test
       // System.Diagnostics.Stopwatch sw2 = new System.Diagnostics.Stopwatch();
       for (int i = 0; i < 100; ++i) {
         ExtendedRational er = CBORTest.RandomRational(fr);
-        int exp = fr.NextValue(200000) -100000;
+        int exp = -100000 + fr.NextValue(200000);
         ExtendedDecimal ed = ExtendedDecimal.Create(
           CBORTest.RandomBigInteger(fr),
           (BigInteger)exp);
@@ -46,7 +46,7 @@ namespace Test
         num = BigInteger.Abs(num);
         ExtendedRational rat = new ExtendedRational(num, BigInteger.One);
         ExtendedRational rat2 = new ExtendedRational(num, (BigInteger)2);
-        if (rat2.CompareTo(rat) !=-1) {
+        if (rat2.CompareTo(rat) != -1) {
           Assert.AreEqual(-1, rat2.CompareTo(rat), rat + ", " + rat2);
         }
         if (rat.CompareTo(rat2) != 1) {
@@ -76,10 +76,7 @@ namespace Test
           ExtendedRational rat2 = new ExtendedRational(num2, den2);
           if (rat.CompareTo(rat2) != 0) {
             Assert.AreEqual(
-
-              0, rat.CompareTo(
- rat2), rat + ", " + rat2 + ", " +
-              rat.ToDouble() + ", " + rat2.ToDouble());
+              0, rat.CompareTo(rat2), rat + ", " + rat2 + ", " + rat.ToDouble() + ", " + rat2.ToDouble());
           }
         }
       }

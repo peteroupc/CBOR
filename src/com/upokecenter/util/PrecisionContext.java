@@ -360,8 +360,8 @@ at: http://peteroupc.github.io/CBOR/
     private boolean simplified;
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Gets a value indicating whether to use a "simplified" arithmetic.
+     * @return Whether to use a "simplified" arithmetic.
      */
 public boolean isSimplified() {
         return this.simplified;

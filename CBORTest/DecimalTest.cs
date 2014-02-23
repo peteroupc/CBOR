@@ -101,8 +101,7 @@ namespace Test
              name.Equals("sqtx2487") ||
              name.Equals("sqtx2591") ||
              name.Equals("sqtx2711") ||
-             name.Equals("sqtx2847")
-) {
+             name.Equals("sqtx2847")) {
             return;
           }
         }
