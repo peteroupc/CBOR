@@ -16,6 +16,29 @@ namespace Test
   public class CBORTest2
   {
     [Test]
+    public void TestRationalCompareDecimal() {
+      FastRandom fr = new FastRandom();
+      // System.Diagnostics.Stopwatch sw1 = new System.Diagnostics.Stopwatch();
+      // System.Diagnostics.Stopwatch sw2 = new System.Diagnostics.Stopwatch();
+      for (int i = 0; i < 100; ++i) {
+        ExtendedRational er = CBORTest.RandomRational(fr);
+        int exp = fr.NextValue(200000) -100000;
+        ExtendedDecimal ed = ExtendedDecimal.Create(
+          CBORTest.RandomBigInteger(fr),
+          (BigInteger)exp);
+        ExtendedRational er2 = ExtendedRational.FromExtendedDecimal(ed);
+        // sw1.Start();
+        int c2r = er.CompareTo(er2);
+        // sw1.Stop();sw2.Start();
+        int c2d = er.CompareToDecimal(ed);
+        // sw2.Stop();
+        Assert.AreEqual(c2r, c2d);
+      }
+      // Console.WriteLine("CompareTo: " + (sw1.ElapsedMilliseconds/1000.0) + " s");
+      // Console.WriteLine("CompareToDecimal: " + (sw2.ElapsedMilliseconds/1000.0) + " s");
+    }
+
+    [Test]
     public void TestRationalCompare() {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
@@ -24,16 +47,16 @@ namespace Test
         ExtendedRational rat = new ExtendedRational(num, BigInteger.One);
         ExtendedRational rat2 = new ExtendedRational(num, (BigInteger)2);
         if (rat2.CompareTo(rat) !=-1) {
- Assert.AreEqual(-1, rat2.CompareTo(rat), rat + ", " + rat2);
-}
+          Assert.AreEqual(-1, rat2.CompareTo(rat), rat + ", " + rat2);
+        }
         if (rat.CompareTo(rat2) != 1) {
- Assert.AreEqual(1, rat.CompareTo(rat2), rat + ", " + rat2);
-}
+          Assert.AreEqual(1, rat.CompareTo(rat2), rat + ", " + rat2);
+        }
       }
       Assert.AreEqual(
--1,
-                      new ExtendedRational(BigInteger.One, (BigInteger)2).CompareTo(
-                        new ExtendedRational((BigInteger)4, BigInteger.One)));
+        -1,
+        new ExtendedRational(BigInteger.One, (BigInteger)2).CompareTo(
+          new ExtendedRational((BigInteger)4, BigInteger.One)));
       for (int i = 0; i < 100; ++i) {
         BigInteger num = CBORTest.RandomBigInteger(fr);
         BigInteger den = CBORTest.RandomBigInteger(fr);
@@ -53,8 +76,9 @@ namespace Test
           ExtendedRational rat2 = new ExtendedRational(num2, den2);
           if (rat.CompareTo(rat2) != 0) {
             Assert.AreEqual(
-0, rat.CompareTo(rat2), rat + ", " + rat2 + ", " +
-                            rat.ToDouble() + ", " + rat2.ToDouble());
+
+              0, rat.CompareTo(rat2), rat + ", " + rat2 + ", " +
+              rat.ToDouble() + ", " + rat2.ToDouble());
           }
         }
       }

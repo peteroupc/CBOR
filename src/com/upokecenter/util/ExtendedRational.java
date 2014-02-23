@@ -440,9 +440,6 @@ at: http://peteroupc.github.io/CBOR/
         return this.isNegative() ? -1 : 1;
       }
 
-    // TODO: Create an efficient comparison function
-    // for decimals
-
     /**
      * Compares a ExtendedRational object with this instance.
      * @param other An ExtendedRational object.
@@ -501,6 +498,95 @@ at: http://peteroupc.github.io/CBOR/
       }
       BigInteger ad = this.getNumerator().multiply(other.getDenominator());
       BigInteger bc = this.getDenominator().multiply(other.getNumerator());
+      return ad.compareTo(bc);
+    }
+
+    /**
+     * Compares a ExtendedDecimal object with this instance.
+     * @param other An ExtendedDecimal object.
+     * @return Zero if the values are equal; a negative number if this instance
+     * is less, or a positive number if this instance is greater.
+     */
+public int CompareToDecimal(ExtendedDecimal other) {
+      if (other == null) {
+        return 1;
+      }
+      if (this.IsNaN()) {
+        if (other.IsNaN()) {
+          return 0;
+        }
+        return 1;
+      }
+      int signA = this.signum();
+      int signB = other.signum();
+      if (signA != signB) {
+        return (signA < signB) ? -1 : 1;
+      }
+      if (signB == 0 || signA == 0) {
+        // Special case: Either operand is zero
+        return 0;
+      }
+      if (this.IsInfinity()) {
+        if (other.IsInfinity()) {
+          // if we get here, this only means that
+          // both are positive infinity or both
+          // are negative infinity
+          return 0;
+        }
+        return this.isNegative() ? -1 : 1;
+      }
+      if (other.IsInfinity()) {
+        return other.isNegative() ? 1 : -1;
+      }
+      if (other.getExponent().signum()==0) {
+        // Special case: other has exponent 0
+        BigInteger bcx = this.getDenominator().multiply(BigInteger.valueOf(other.getMantissa()));
+        return this.getNumerator().compareTo(bcx);
+      }
+      if ((other.getExponent()).abs().compareTo(BigInteger.valueOf(50)) >0) {
+        // Other has a high absolute value of exponent, so try different approaches to
+        // comparison
+        BigInteger thisRem;
+        BigInteger thisInt;
+{
+BigInteger[] divrem=(this.getUnsignedNumerator()).divideAndRemainder(this.getDenominator());
+thisInt=divrem[0];
+thisRem=divrem[1]; }
+        ExtendedDecimal otherAbs = other.Abs();
+        ExtendedDecimal thisIntDec = ExtendedDecimal.FromBigInteger(thisInt);
+        if (thisRem.signum()==0) {
+          // This Object's value is an integer
+          // System.out.println("Shortcircuit IV");
+          int ret = thisIntDec.compareTo(otherAbs);
+          return this.isNegative() ? -ret : ret;
+        }
+        if (thisIntDec.compareTo(otherAbs) >0) {
+          // Truncated absolute value is greater than other's untruncated absolute value
+          // System.out.println("Shortcircuit I");
+          return this.isNegative() ? -1 : 1;
+        }
+        // Round up
+        thisInt=thisInt.add(BigInteger.ONE);
+        thisIntDec = ExtendedDecimal.FromBigInteger(thisInt);
+        if (thisIntDec.compareTo(otherAbs) <0) {
+          // Absolute value rounded up is less than other's unrounded absolute value
+          // System.out.println("Shortcircuit II");
+          return this.isNegative() ? 1 : -1;
+        }
+        thisIntDec = ExtendedDecimal.FromBigInteger(this.getUnsignedNumerator()).Divide(
+          ExtendedDecimal.FromBigInteger(this.getDenominator()),
+          PrecisionContext.ForPrecisionAndRounding(20, Rounding.Down));
+        if (thisIntDec.compareTo(otherAbs) >0) {
+          // Truncated absolute value is greater than other's untruncated absolute value
+          // System.out.println("Shortcircuit III");
+          return this.isNegative() ? -1 : 1;
+        }
+      }
+      // Convert to rational number and use usual rational number
+      // comparison
+      ExtendedRational otherRational = ExtendedRational.FromExtendedDecimal(other);
+      BigInteger ad = this.getNumerator().multiply(otherRational.getDenominator());
+      BigInteger bc = this.getDenominator().multiply(otherRational.getNumerator());
       return ad.compareTo(bc);
     }
 
@@ -1076,8 +1162,7 @@ at: http://peteroupc.github.io/CBOR/
     public static final ExtendedRational NaN = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagQuietNaN);
 
     /**
-     * A not-a-number value that signals an invalid operation flag when
-     * it&apos;s passed as an argument to any arithmetic operation in ExtendedRational.
+     * A signaling not-a-number value.
      */
     public static final ExtendedRational SignalingNaN = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagSignalingNaN);
 

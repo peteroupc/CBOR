@@ -12,40 +12,40 @@ import java.util.*;
 import java.io.*;
 // import java.math.*;
 
-  /**
-   * Represents an object in Concise Binary Object Representation (CBOR)
-   * and contains methods for reading and writing CBOR data. CBOR is defined
-   * in RFC 7049. <p>There are many ways to get a CBOR object, including
-   * from bytes, objects, streams and JSON, as described below.</p> <p>
-   * <b>To and from byte arrays:</b> The CBORObject.DecodeToBytes method
-   * converts a byte array in CBOR format to a CBOR object. The EncodeToBytes
-   * method converts a CBOR object to its corresponding byte array in CBOR
-   * format. </p> <p> <b>To and from data streams:</b> The CBORObject.Write
-   * methods write many kinds of objects to a data stream, including numbers,
-   * CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read
-   * method reads a CBOR object from a data stream. </p> <p> <b>To and from
-   * other objects:</b> The CBORObject.FromObject methods converts
-   * many kinds of objects to a CBOR object, including numbers, strings,
-   * and arrays and maps of numbers and strings. Methods like AsDouble,
-   * AsByte, and AsString convert a CBOR object to different types of object.
-   * </p> <p> <b>To and from JSON:</b> This class also doubles as a reader
-   * and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString
-   * method converts JSON to a CBOR object, and the ToJSONString method
-   * converts a CBOR object to a JSON string. </p> <p> Thread Safety: CBOR
-   * objects that are numbers, "simple values", and text strings are immutable
-   * (their values can't be changed), so they are inherently safe for use
-   * by multiple threads. CBOR objects that are arrays, maps, and byte
-   * strings are mutable, but this class doesn't attempt to synchronize
-   * reads and writes to those objects by multiple threads, so those objects
-   * are not thread safe without such synchronization. </p> <p> One kind
-   * of CBOR object is called a map, or a list of key-value pairs. Keys can
-   * be any kind of CBOR object, including numbers, strings, arrays, and
-   * maps. However, since byte strings, arrays, and maps are mutable,
-   * it is not advisable to use these three kinds of object as keys; they
-   * are much better used as map values instead, keeping in mind that they
-   * are not thread safe without synchronizing reads and writes to them.
-   * </p>
-   */
+    /**
+     * Represents an object in Concise Binary Object Representation (CBOR)
+     * and contains methods for reading and writing CBOR data. CBOR is defined
+     * in RFC 7049. <p>There are many ways to get a CBOR object, including
+     * from bytes, objects, streams and JSON, as described below.</p> <p>
+     * <b>To and from byte arrays:</b> The CBORObject.DecodeToBytes method
+     * converts a byte array in CBOR format to a CBOR object. The EncodeToBytes
+     * method converts a CBOR object to its corresponding byte array in CBOR
+     * format. </p> <p> <b>To and from data streams:</b> The CBORObject.Write
+     * methods write many kinds of objects to a data stream, including numbers,
+     * CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read
+     * method reads a CBOR object from a data stream. </p> <p> <b>To and from
+     * other objects:</b> The CBORObject.FromObject methods converts
+     * many kinds of objects to a CBOR object, including numbers, strings,
+     * and arrays and maps of numbers and strings. Methods like AsDouble,
+     * AsByte, and AsString convert a CBOR object to different types of object.
+     * </p> <p> <b>To and from JSON:</b> This class also doubles as a reader
+     * and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString
+     * method converts JSON to a CBOR object, and the ToJSONString method
+     * converts a CBOR object to a JSON string. </p> <p> Thread Safety: CBOR
+     * objects that are numbers, "simple values", and text strings are immutable
+     * (their values can't be changed), so they are inherently safe for use
+     * by multiple threads. CBOR objects that are arrays, maps, and byte
+     * strings are mutable, but this class doesn't attempt to synchronize
+     * reads and writes to those objects by multiple threads, so those objects
+     * are not thread safe without such synchronization. </p> <p> One kind
+     * of CBOR object is called a map, or a list of key-value pairs. Keys can
+     * be any kind of CBOR object, including numbers, strings, arrays, and
+     * maps. However, since byte strings, arrays, and maps are mutable,
+     * it is not advisable to use these three kinds of object as keys; they
+     * are much better used as map values instead, keeping in mind that they
+     * are not thread safe without synchronizing reads and writes to them.
+     * </p>
+     */
   public final class CBORObject implements Comparable<CBORObject> {
     int getItemType(){
         CBORObject curobject = this;
@@ -509,11 +509,14 @@ public int compareTo(CBORObject other) {
           // second Object is NaN
           return -1;
         } else {
-          if (typeA == CBORObjectTypeExtendedRational ||
-              typeB == CBORObjectTypeExtendedRational) {
+          if (typeA == CBORObjectTypeExtendedRational) {
             ExtendedRational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
+            ExtendedDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
+            cmp = e1.CompareToDecimal(e2);
+          } else if (typeB == CBORObjectTypeExtendedRational) {
+            ExtendedDecimal e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
             ExtendedRational e2 = NumberInterfaces[typeB].AsExtendedRational(objB);
-            cmp = e1.compareTo(e2);
+            cmp = -e2.CompareToDecimal(e1);
           } else if (typeA == CBORObjectTypeExtendedDecimal ||
                      typeB == CBORObjectTypeExtendedDecimal) {
             ExtendedDecimal e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
@@ -1236,13 +1239,13 @@ private List<CBORObject> AsList() {
         }
       }
 
-      /**
-       * Sets the value of a CBOR object by integer index in this array.
-       * @throws java.lang.IllegalStateException This object is not an
-       * array.
-       * @throws java.lang.NullPointerException Value is null (as opposed
-       * to CBORObject.Null).
-       */
+    /**
+     * Sets the value of a CBOR object by integer index in this array.
+     * @throws java.lang.IllegalStateException This object is not an
+     * array.
+     * @throws java.lang.NullPointerException Value is null (as opposed
+     * to CBORObject.Null).
+     */
 public void set(int index, CBORObject value) {
         if (this.getItemType() == CBORObjectTypeArray) {
           if (value == null) {
@@ -1293,13 +1296,13 @@ public void set(int index, CBORObject value) {
         }
       }
 
-      /**
-       * Sets the value of a CBOR object in this map, using a CBOR object as the
-       * key.
-       * @throws java.lang.NullPointerException The key or value is null (as
-       * opposed to CBORObject.Null).
-       * @throws java.lang.IllegalStateException This object is not a map.
-       */
+    /**
+     * Sets the value of a CBOR object in this map, using a CBOR object as the
+     * key.
+     * @throws java.lang.NullPointerException The key or value is null (as
+     * opposed to CBORObject.Null).
+     * @throws java.lang.IllegalStateException This object is not a map.
+     */
 public void set(CBORObject key, CBORObject value) {
         if (key == null) {
           throw new NullPointerException("key");
@@ -1330,12 +1333,12 @@ public void set(CBORObject key, CBORObject value) {
         return this.get(objkey);
       }
 
-      /**
-       * Sets the value of a CBOR object in this map, using a string as the key.
-       * @throws java.lang.NullPointerException The key or value is null (as
-       * opposed to CBORObject.Null).
-       * @throws java.lang.IllegalStateException This object is not a map.
-       */
+    /**
+     * Sets the value of a CBOR object in this map, using a string as the key.
+     * @throws java.lang.NullPointerException The key or value is null (as
+     * opposed to CBORObject.Null).
+     * @throws java.lang.IllegalStateException This object is not a map.
+     */
 public void set(String key, CBORObject value) {
         if (key == null) {
           throw new NullPointerException("key");

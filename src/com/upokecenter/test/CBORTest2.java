@@ -15,6 +15,29 @@ import com.upokecenter.util.*;
   public class CBORTest2
   {
     @Test
+    public void TestRationalCompareDecimal() {
+      FastRandom fr = new FastRandom();
+      // System.Diagnostics.Stopwatch sw1 = new System.Diagnostics.Stopwatch();
+      // System.Diagnostics.Stopwatch sw2 = new System.Diagnostics.Stopwatch();
+      for (int i = 0; i < 100; ++i) {
+        ExtendedRational er = CBORTest.RandomRational(fr);
+        int exp = fr.NextValue(200000) -100000;
+        ExtendedDecimal ed = ExtendedDecimal.Create(
+          CBORTest.RandomBigInteger(fr),
+          BigInteger.valueOf(exp));
+        ExtendedRational er2 = ExtendedRational.FromExtendedDecimal(ed);
+        // sw1.Start();
+        int c2r = er.compareTo(er2);
+        // sw1.Stop();sw2.Start();
+        int c2d = er.CompareToDecimal(ed);
+        // sw2.Stop();
+        Assert.assertEquals(c2r, c2d);
+      }
+      // System.out.println("compareTo: " + (sw1.getElapsedMilliseconds()/1000.0) + " s");
+      // System.out.println("CompareToDecimal: " + (sw2.getElapsedMilliseconds()/1000.0) + " s");
+    }
+
+    @Test
     public void TestRationalCompare() {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
@@ -23,16 +46,16 @@ import com.upokecenter.util.*;
         ExtendedRational rat = new ExtendedRational(num, BigInteger.ONE);
         ExtendedRational rat2 = new ExtendedRational(num, BigInteger.valueOf(2));
         if (rat2.compareTo(rat) !=-1) {
- Assert.assertEquals(-1, rat2.compareTo(rat), rat + ", " + rat2);
-}
+          Assert.assertEquals(-1, rat2.compareTo(rat), rat + ", " + rat2);
+        }
         if (rat.compareTo(rat2) != 1) {
- Assert.assertEquals(1, rat.compareTo(rat2), rat + ", " + rat2);
-}
+          Assert.assertEquals(1, rat.compareTo(rat2), rat + ", " + rat2);
+        }
       }
       Assert.assertEquals(
--1,
-                      new ExtendedRational(BigInteger.ONE, BigInteger.valueOf(2)).compareTo(
-                        new ExtendedRational(BigInteger.valueOf(4), BigInteger.ONE)));
+        -1,
+        new ExtendedRational(BigInteger.ONE, BigInteger.valueOf(2)).compareTo(
+          new ExtendedRational(BigInteger.valueOf(4), BigInteger.ONE)));
       for (int i = 0; i < 100; ++i) {
         BigInteger num = CBORTest.RandomBigInteger(fr);
         BigInteger den = CBORTest.RandomBigInteger(fr);
@@ -52,8 +75,9 @@ import com.upokecenter.util.*;
           ExtendedRational rat2 = new ExtendedRational(num2, den2);
           if (rat.compareTo(rat2) != 0) {
             Assert.assertEquals(
-0, rat.compareTo(rat2), rat + ", " + rat2 + ", " +
-                            rat.ToDouble() + ", " + rat2.ToDouble());
+
+              0, rat.compareTo(rat2), rat + ", " + rat2 + ", " +
+              rat.ToDouble() + ", " + rat2.ToDouble());
           }
         }
       }
