@@ -711,8 +711,8 @@ at: http://peteroupc.github.io/CBOR/
       // the only time the first operand to the addition can be
       // 0 is if either thisValue rounded or multiplicand
       // rounded is 0
-      boolean zeroA = (this.GetHelper().GetSign(thisValue) == 0 ||
-                    this.GetHelper().GetSign(multiplicand) == 0);
+      boolean zeroA = this.GetHelper().GetSign(thisValue) == 0 ||
+                    this.GetHelper().GetSign(multiplicand) == 0;
       boolean zeroB = this.GetHelper().GetSign(augend) == 0;
       if (zeroA) {
         thisValue = zeroB ? this.GetHelper().ValueOf(0) : augend;

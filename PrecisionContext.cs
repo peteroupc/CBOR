@@ -327,8 +327,8 @@ namespace PeterO {
 
     private bool simplified;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets a value indicating whether to use a "simplified" arithmetic.</summary>
+    /// <value>Whether to use a &quot;simplified&quot; arithmetic.</value>
 public bool IsSimplified {
       get {
         return this.simplified;
