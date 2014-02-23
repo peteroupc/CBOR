@@ -234,5 +234,12 @@ namespace PeterO
       ExtendedRational ed = (ExtendedRational)obj;
       return ed.Abs();
     }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>An ExtendedRational object.</returns>
+public ExtendedRational AsExtendedRational(object obj) {
+      return (ExtendedRational)obj;
+    }
   }
 }

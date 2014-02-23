@@ -3433,12 +3433,12 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
         if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
           return 0;
         }
-        return 1;
         // Treat NaN as greater
+        return 1;
       }
       if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
-        return -1;
         // Treat as less than NaN
+        return -1;
       }
       int signA = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);
       if (signA <= 1) {

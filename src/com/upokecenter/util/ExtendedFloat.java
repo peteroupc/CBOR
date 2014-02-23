@@ -57,7 +57,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets this object&apos;s un-scaled value.
-     * @return This object's un-scaled value.
+     * @return This object's un-scaled value. Will be negative if this object's
+     * value is negative (including a negative NaN).
      */
     public BigInteger getMantissa() {
         return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
@@ -110,6 +111,36 @@ at: http://peteroupc.github.io/CBOR/
         hashCode_ += 403797127 * this.flags;
       }
       return hashCode_;
+    }
+
+    public static ExtendedFloat CreateNaN(BigInteger diag) {
+      return CreateNaN(diag, false, false, null);
+    }
+
+    public static ExtendedFloat CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
+      // if ((diag) == null) {
+ throw new NullPointerException("diag");
+}
+      if (diag.signum()<0) {
+        throw new IllegalArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
+      }
+      if (diag.signum()==0 && !negative) {
+ return signaling ? SignalingNaN : NaN;
+}
+      int flags = 0;
+      if (negative) {
+ flags|=BigNumberFlags.FlagNegative;
+}
+      if (ctx != null && ctx.getHasMaxPrecision()) {
+        flags|=BigNumberFlags.FlagQuietNaN;
+        ExtendedFloat ef = CreateWithFlags(diag, BigInteger.ZERO, flags).RoundToPrecision(ctx);
+        ef.flags&=~BigNumberFlags.FlagQuietNaN;
+        ef.flags|=(signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN);
+        return ef;
+      } else {
+        flags|=(signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN);
+        return CreateWithFlags(diag, BigInteger.ZERO, flags);
+      }
     }
 
     /**
@@ -338,8 +369,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public BigInteger ToBigInteger() {
       if (!this.isFinite()) {
- throw new ArithmeticException("Value is infinity or NaN");
-}
+        throw new ArithmeticException("Value is infinity or NaN");
+      }
       int expsign = this.getExponent().signum();
       if (expsign == 0) {
         // Integer

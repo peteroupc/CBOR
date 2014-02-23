@@ -10,16 +10,25 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Arbitrary-precision rational number.
      */
-  public class ExtendedRational implements Comparable<ExtendedRational>
-  {
-    private BigInteger numerator;
+  public class ExtendedRational implements Comparable<ExtendedRational> {
+    private BigInteger unsignedNumerator;
+
+    /**
+     * Gets this object's numerator.
+     * @return This object's numerator. If this object is a not-a-number
+     * value, returns the diagnostic information (which will be negative
+     * if this object is negative).
+     */
+    public BigInteger getNumerator() {
+        return this.isNegative() ? ((this.unsignedNumerator).negate()) : this.unsignedNumerator;
+      }
 
     /**
      * Gets a value not documented yet.
      * @return A value not documented yet.
      */
-    public BigInteger getNumerator() {
-        return this.numerator;
+    public BigInteger getUnsignedNumerator() {
+        return this.unsignedNumerator;
       }
 
     private BigInteger denominator;
@@ -32,12 +41,14 @@ at: http://peteroupc.github.io/CBOR/
         return this.denominator;
       }
 
+    int flags;
+
     @Override public boolean equals(Object obj) {
       ExtendedRational other = ((obj instanceof ExtendedRational) ? (ExtendedRational)obj : null);
       if (other == null) {
         return false;
       }
-      return (((this.numerator)==null) ? ((other.numerator)==null) : (this.numerator).equals(other.numerator)) && (((this.denominator)==null) ? ((other.denominator)==null) : (this.denominator).equals(other.denominator));
+      return (((this.unsignedNumerator)==null) ? ((other.unsignedNumerator)==null) : (this.unsignedNumerator).equals(other.unsignedNumerator)) && (((this.denominator)==null) ? ((other.denominator)==null) : (this.denominator).equals(other.denominator)) && this.flags == other.flags;
     }
 
     /**
@@ -45,14 +56,15 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit hash code.
      */
     @Override public int hashCode() {
-      int hashCode_ = 456865663;
+      int hashCode_ = 1857066527;
       {
-        if (this.numerator != null) {
-          hashCode_ += 456865807 * this.numerator.hashCode();
+        if (unsignedNumerator != null) {
+          hashCode_ += 1857066539 * unsignedNumerator.hashCode();
         }
-        if (this.denominator != null) {
-          hashCode_ += 456865823 * this.denominator.hashCode();
+        if (denominator != null) {
+          hashCode_ += 1857066551 * denominator.hashCode();
         }
+        hashCode_ += 1857066623 * flags;
       }
       return hashCode_;
     }
@@ -69,20 +81,14 @@ at: http://peteroupc.github.io/CBOR/
       }
       boolean numNegative = numerator.signum() < 0;
       boolean denNegative = denominator.signum() < 0;
-      if (numNegative == denNegative) {
-        if (numNegative) {
-          numerator=numerator.negate();
-        }
-      } else {
-        if (!numNegative) {
-          numerator=numerator.negate();
-        }
+      this.flags=(numNegative == denNegative) ? BigNumberFlags.FlagNegative : 0;
+      if (numNegative) {
+        numerator=numerator.negate();
       }
       if (denNegative) {
         denominator=denominator.negate();
       }
-
-      this.numerator = numerator;
+      this.unsignedNumerator = numerator;
       this.denominator = denominator;
     }
 
@@ -91,7 +97,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A string representation of this object.
      */
     @Override public String toString() {
-      return "(" + this.numerator + "/" + this.denominator + ")";
+      return "(" + this.unsignedNumerator + "/" + this.denominator + ")";
     }
 
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
@@ -116,18 +122,57 @@ at: http://peteroupc.github.io/CBOR/
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }
 
+    public static ExtendedRational CreateNaN(BigInteger diag) {
+      return CreateNaN(diag, false, false);
+    }
+
+    public static ExtendedRational CreateNaN(BigInteger diag, boolean signaling, boolean negative) {
+      // if ((diag) == null) {
+ throw new NullPointerException("diag");
+}
+      if (diag.signum()<0) {
+        throw new IllegalArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
+      }
+      // if (diag.signum()==0 && !negative) {
+  //  return signaling ? SignalingNaN : NaN;
+}
+      int flags = 0;
+      if (negative) {
+ flags|=BigNumberFlags.FlagNegative;
+}
+      flags|=(signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN);
+      ExtendedRational er = new ExtendedRational(diag, BigInteger.ZERO);
+      er.flags = flags;
+      return er;
+    }
+
     public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
       if (ef == null) {
- throw new NullPointerException("ef");
-}
+        throw new NullPointerException("ef");
+      }
       if (!ef.isFinite()) {
- throw new ArithmeticException("Infinity and NaN not supported yet.");
-}
+        ExtendedRational er = new ExtendedRational(ef.getMantissa(), BigInteger.ONE);
+        int flags = 0;
+        if (ef.isNegative()) {
+          flags|=BigNumberFlags.FlagNegative;
+        }
+        if (ef.IsInfinity()) {
+          flags|=BigNumberFlags.FlagInfinity;
+        }
+        if (ef.IsSignalingNaN()) {
+          flags|=BigNumberFlags.FlagSignalingNaN;
+        }
+        if (ef.IsQuietNaN()) {
+          flags|=BigNumberFlags.FlagQuietNaN;
+        }
+        er.flags = flags;
+        return er;
+      }
       BigInteger num = ef.getMantissa();
       BigInteger exp = ef.getExponent();
       if (exp.signum()==0) {
- return FromBigInteger(num);
-}
+        return FromBigInteger(num);
+      }
       boolean neg = num.signum() < 0;
       num = (num).abs();
       BigInteger den = BigInteger.ONE;
@@ -136,6 +181,51 @@ at: http://peteroupc.github.io/CBOR/
         den = DecimalUtility.ShiftLeft(den, exp);
       } else {
         num = DecimalUtility.ShiftLeft(num, exp);
+      }
+      if (neg) {
+        num=(num).negate();
+      }
+      return new ExtendedRational(num, den);
+    }
+
+    public static ExtendedRational FromExtendedDecimal(ExtendedDecimal ef) {
+      if (ef == null) {
+        throw new NullPointerException("ef");
+      }
+      if (!ef.isFinite()) {
+        ExtendedRational er = new ExtendedRational(ef.getMantissa(), BigInteger.ONE);
+        int flags = 0;
+        if (ef.isNegative()) {
+          flags|=BigNumberFlags.FlagNegative;
+        }
+        if (ef.IsInfinity()) {
+          flags|=BigNumberFlags.FlagInfinity;
+        }
+        if (ef.IsSignalingNaN()) {
+          flags|=BigNumberFlags.FlagSignalingNaN;
+        }
+        if (ef.IsQuietNaN()) {
+          flags|=BigNumberFlags.FlagQuietNaN;
+        }
+        er.flags = flags;
+        return er;
+      }
+      BigInteger num = ef.getMantissa();
+      BigInteger exp = ef.getExponent();
+      if (exp.signum()==0) {
+        return FromBigInteger(num);
+      }
+      boolean neg = num.signum() < 0;
+      num = (num).abs();
+      BigInteger den = BigInteger.ONE;
+      if (exp.signum() < 0) {
+        exp=(exp).negate();
+        den = DecimalUtility.FindPowerOfTenFromBig(exp);
+      } else {
+        num *= DecimalUtility.FindPowerOfTenFromBig(exp);
+      }
+      if (neg) {
+        num=(num).negate();
       }
       return new ExtendedRational(num, den);
     }
@@ -147,7 +237,18 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal ToExtendedDecimal(PrecisionContext ctx) {
-      return ExtendedDecimal.FromBigInteger(this.numerator).Divide(ExtendedDecimal.FromBigInteger(this.denominator), ctx);
+      if (this.IsNaN()) {
+        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.isNegative(), ctx);
+      }
+      if (this.IsPositiveInfinity()) {
+        return ExtendedDecimal.PositiveInfinity;
+      }
+      if (this.IsNegativeInfinity()) {
+        return ExtendedDecimal.NegativeInfinity;
+      }
+      ExtendedDecimal ef = (this.isNegative() && this.signum()==0) ?
+        ExtendedDecimal.NegativeZero : ExtendedDecimal.FromBigInteger(this.getNumerator());
+      return ef.Divide(ExtendedDecimal.FromBigInteger(this.getDenominator()), ctx);
     }
 
     /**
@@ -158,8 +259,21 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal ToExtendedDecimalExactIfPossible(PrecisionContext ctx) {
-      ExtendedDecimal valueEdNum = ExtendedDecimal.FromBigInteger(this.numerator);
-      ExtendedDecimal valueEdDen = ExtendedDecimal.FromBigInteger(this.denominator);
+      if (this.IsNaN()) {
+        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.isNegative(), ctx);
+      }
+      if (this.IsPositiveInfinity()) {
+        return ExtendedDecimal.PositiveInfinity;
+      }
+      if (this.IsNegativeInfinity()) {
+        return ExtendedDecimal.NegativeInfinity;
+      }
+      if (this.isNegative() && this.signum()==0) {
+        return ExtendedDecimal.NegativeZero;
+      }
+      ExtendedDecimal valueEdNum = (this.isNegative() && this.signum()==0) ?
+        ExtendedDecimal.NegativeZero : ExtendedDecimal.FromBigInteger(this.getNumerator());
+      ExtendedDecimal valueEdDen = ExtendedDecimal.FromBigInteger(this.getDenominator());
       ExtendedDecimal ed = valueEdNum.Divide(valueEdDen, null);
       if (ed.IsNaN()) {
         // Result would be inexact, try again using the precision context
@@ -185,7 +299,18 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat ToExtendedFloat(PrecisionContext ctx) {
-      return ExtendedFloat.FromBigInteger(this.numerator).Divide(ExtendedFloat.FromBigInteger(this.denominator), ctx);
+      if (this.IsNaN()) {
+        return ExtendedFloat.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.isNegative(), ctx);
+      }
+      if (this.IsPositiveInfinity()) {
+        return ExtendedFloat.PositiveInfinity;
+      }
+      if (this.IsNegativeInfinity()) {
+        return ExtendedFloat.NegativeInfinity;
+      }
+      ExtendedFloat ef = (this.isNegative() && this.signum()==0) ?
+        ExtendedFloat.NegativeZero : ExtendedFloat.FromBigInteger(this.getNumerator());
+      return ef.Divide(ExtendedFloat.FromBigInteger(this.getDenominator()), ctx);
     }
 
     /**
@@ -196,8 +321,21 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
-      ExtendedFloat valueEdNum = ExtendedFloat.FromBigInteger(this.numerator);
-      ExtendedFloat valueEdDen = ExtendedFloat.FromBigInteger(this.denominator);
+      if (this.IsNaN()) {
+        return ExtendedFloat.CreateNaN(this.unsignedNumerator, IsSignalingNaN(), this.isNegative(), ctx);
+      }
+      if (this.IsPositiveInfinity()) {
+        return ExtendedFloat.PositiveInfinity;
+      }
+      if (this.IsNegativeInfinity()) {
+        return ExtendedFloat.NegativeInfinity;
+      }
+      if (this.isNegative() && this.signum()==0) {
+        return ExtendedFloat.NegativeZero;
+      }
+      ExtendedFloat valueEdNum = (this.isNegative() && this.signum()==0) ?
+        ExtendedFloat.NegativeZero : ExtendedFloat.FromBigInteger(this.getNumerator());
+      ExtendedFloat valueEdDen = ExtendedFloat.FromBigInteger(this.getDenominator());
       ExtendedFloat ed = valueEdNum.Divide(valueEdDen, null);
       if (ed.IsNaN()) {
         // Result would be inexact, try again using the precision context
@@ -212,7 +350,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return Whether this object is finite (not infinity or NaN).
      */
     public boolean isFinite() {
-        return true;
+        return !IsNaN() && !IsInfinity();
       }
 
     /**
@@ -221,11 +359,15 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public BigInteger ToBigInteger() {
-      return this.numerator.divide(this.denominator);
+      return this.getNumerator().divide(this.denominator);
     }
 
     public static ExtendedRational FromInt32(int smallint) {
       return new ExtendedRational(BigInteger.valueOf(smallint), BigInteger.ONE);
+    }
+
+    public static ExtendedRational FromInt64(long longInt) {
+      return new ExtendedRational(BigInteger.valueOf(longInt), BigInteger.ONE);
     }
 
     public static final ExtendedRational Zero = FromBigInteger(BigInteger.ZERO);
@@ -258,16 +400,16 @@ at: http://peteroupc.github.io/CBOR/
      * Not documented yet.
      * @return An ExtendedRational object.
      */
-public ExtendedRational Abs() {
-      return this.signum() < 0 ? new ExtendedRational((this.numerator).negate(), this.denominator) : this;
+    public ExtendedRational Abs() {
+      return this.signum() < 0 ? new ExtendedRational((BigInteger.valueOf(this.getNumerator)).negate()(), this.getDenominator()) : this;
     }
 
     /**
      * Not documented yet.
      * @return An ExtendedRational object.
      */
-public ExtendedRational Negate() {
-      return new ExtendedRational((this.numerator).negate(), this.denominator);
+    public ExtendedRational Negate() {
+      return new ExtendedRational((BigInteger.valueOf(this.getNumerator)).negate()(), this.getDenominator());
     }
 
     /**
@@ -275,7 +417,10 @@ public ExtendedRational Negate() {
      * @return Whether this object's value equals 0.
      */
     public boolean isZero() {
-        return this.numerator.signum()==0;
+        if ((this.flags&(BigNumberFlags.FlagInfinity|BigNumberFlags.FlagNaN)) != 0) {
+ return false;
+}
+        return this.unsignedNumerator.signum()==0;
       }
 
     /**
@@ -283,8 +428,14 @@ public ExtendedRational Negate() {
      * @return A value not documented yet.
      */
     public int signum() {
-        return this.numerator.signum();
+        if (this.signum()==0) {
+          return 0;
+        }
+        return (this.isNegative()) ? -1 : 1;
       }
+
+    // TODO: Create an efficient comparison function
+    // for decimals
 
     /**
      * Compares a ExtendedRational object with this instance.
@@ -299,8 +450,14 @@ public ExtendedRational Negate() {
       if (this == other) {
         return 0;
       }
-      int signA = this.numerator.signum();
-      int signB = other.numerator.signum();
+      if (IsNaN()) {
+        if (other.IsNaN()) {
+          return 0;
+        }
+        return 1;
+      }
+      int signA = this.signum();
+      int signB = other.signum();
       if (signA != signB) {
         return (signA < signB) ? -1 : 1;
       }
@@ -308,10 +465,19 @@ public ExtendedRational Negate() {
         // Special case: Either operand is zero
         return 0;
       }
+      if (IsInfinity()) {
+        if (other.IsInfinity()) {
+          // if we get here, this only means that
+          // both are positive infinity or both
+          // are negative infinity
+          return 0;
+        }
+        return this.isNegative() ? -1 : 1;
+      }
       int dencmp = this.denominator.compareTo(other.denominator);
       // At this point, the signs are equal so we can compare
       // their absolute values instead
-      int numcmp = (this.numerator).abs().compareTo((other.numerator).abs());
+      int numcmp = this.unsignedNumerator.compareTo(this.unsignedNumerator);
       if (signA < 0) {
         numcmp = -numcmp;
       }
@@ -324,8 +490,8 @@ public ExtendedRational Negate() {
         // denominators are equal
         return numcmp;
       }
-      BigInteger ad = this.numerator.multiply(other.denominator);
-      BigInteger bc = this.denominator.multiply(other.numerator);
+      BigInteger ad = this.getNumerator().multiply(other.getDenominator());
+      BigInteger bc = this.getDenominator().multiply(other.getNumerator());
       return ad.compareTo(bc);
     }
 
@@ -336,5 +502,562 @@ public ExtendedRational Negate() {
      */
     public boolean equals(ExtendedRational other) {
       return this.equals((Object)other);
+    }
+
+    /**
+     * Not documented yet.
+     * @return A Boolean object.
+     */
+    public boolean IsNegativeInfinity() {
+      return (flags&(BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
+        (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
+    }
+
+    /**
+     * Not documented yet.
+     * @return A Boolean object.
+     */
+    public boolean IsPositiveInfinity() {
+      return (flags&(BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
+        (BigNumberFlags.FlagInfinity);
+    }
+
+    /**
+     * Not documented yet.
+     * @return A Boolean object.
+     */
+    public boolean IsNaN() {
+      return (flags&(BigNumberFlags.FlagNaN)) != 0;
+    }
+
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+    public boolean isNegative() {
+        return (flags&(BigNumberFlags.FlagNegative)) != 0;
+      }
+
+    /**
+     * Not documented yet.
+     * @return A Boolean object.
+     */
+    public boolean IsInfinity() {
+      return (flags&(BigNumberFlags.FlagInfinity)) != 0;
+    }
+
+    /**
+     * Not documented yet.
+     * @return A Boolean object.
+     */
+    public boolean IsQuietNaN() {
+      return (flags&(BigNumberFlags.FlagQuietNaN)) != 0;
+    }
+
+    /**
+     * Not documented yet.
+     * @return A Boolean object.
+     */
+    public boolean IsSignalingNaN() {
+      return (flags&(BigNumberFlags.FlagSignalingNaN)) != 0;
+    }
+
+    /**
+     * Divides this instance by the value of a ExtendedRational object.
+     * @param divisor An ExtendedRational object.
+     * @return The quotient of the two objects.
+     */
+    public ExtendedRational Divide(ExtendedRational divisor) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @param rounding A Rounding object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational DivideToSameExponent(ExtendedRational divisor, Rounding rounding) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational DivideToIntegerNaturalScale(ExtendedRational divisor) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Reduce(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RemainderNaturalScale(ExtendedRational divisor) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RemainderNaturalScale(ExtendedRational divisor, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @param desiredExponentSmall A 64-bit signed integer.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational DivideToExponent(ExtendedRational divisor, long desiredExponentSmall, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Divides two ExtendedRational objects.
+     * @param divisor An ExtendedRational object.
+     * @param ctx A PrecisionContext object.
+     * @return The quotient of the two objects.
+     */
+    public ExtendedRational Divide(ExtendedRational divisor, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @param desiredExponentSmall A 64-bit signed integer.
+     * @param rounding A Rounding object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational DivideToExponent(ExtendedRational divisor, long desiredExponentSmall, Rounding rounding) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @param exponent A BigInteger object.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational DivideToExponent(ExtendedRational divisor, BigInteger exponent, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @param desiredExponent A BigInteger object.
+     * @param rounding A Rounding object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational DivideToExponent(ExtendedRational divisor, BigInteger desiredExponent, Rounding rounding) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param context A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Abs(PrecisionContext context) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param context A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Negate(PrecisionContext context) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param otherValue An ExtendedRational object. (2).
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Add(ExtendedRational otherValue) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Subtracts a ExtendedRational object from this instance.
+     * @param otherValue An ExtendedRational object.
+     * @return The difference of the two objects.
+     */
+    public ExtendedRational Subtract(ExtendedRational otherValue) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Subtracts a ExtendedRational object from another ExtendedRational
+     * object.
+     * @param otherValue An ExtendedRational object.
+     * @param ctx A PrecisionContext object.
+     * @return The difference of the two objects.
+     */
+    public ExtendedRational Subtract(ExtendedRational otherValue, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Multiplies this instance by the value of a ExtendedRational object.
+     * @param otherValue An ExtendedRational object.
+     * @return The product of the two objects.
+     */
+    public ExtendedRational Multiply(ExtendedRational otherValue) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param multiplicand An ExtendedRational object. (2).
+     * @param augend An ExtendedRational object. (3).
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational MultiplyAndAdd(ExtendedRational multiplicand, ExtendedRational augend) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational DivideToIntegerNaturalScale(ExtendedRational divisor, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational DivideToIntegerZeroScale(ExtendedRational divisor, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Finds the remainder that results when dividing two ExtendedRational
+     * objects.
+     * @param divisor An ExtendedRational object.
+     * @param ctx A PrecisionContext object.
+     * @return The remainder of the two objects.
+     */
+    public ExtendedRational Remainder(ExtendedRational divisor, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param divisor An ExtendedRational object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RemainderNear(ExtendedRational divisor, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational NextMinus(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational NextPlus(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param otherValue An ExtendedRational object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational NextToward(ExtendedRational otherValue, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Compares a ExtendedRational object with this instance.
+     * @param other An ExtendedRational object.
+     * @param ctx A PrecisionContext object.
+     * @return Zero if the values are equal; a negative number if this instance
+     * is less, or a positive number if this instance is greater.
+     */
+    public ExtendedRational CompareToWithContext(ExtendedRational other, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Compares a ExtendedRational object with this instance.
+     * @param other An ExtendedRational object.
+     * @param ctx A PrecisionContext object.
+     * @return Zero if the values are equal; a negative number if this instance
+     * is less, or a positive number if this instance is greater.
+     */
+    public ExtendedRational CompareToSignal(ExtendedRational other, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Adds two ExtendedRational objects.
+     * @param otherValue An ExtendedRational object.
+     * @param ctx A PrecisionContext object.
+     * @return The sum of the two objects.
+     */
+    public ExtendedRational Add(ExtendedRational otherValue, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param desiredExponent A BigInteger object.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Quantize(BigInteger desiredExponent, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param desiredExponentSmall A 32-bit signed integer.
+     * @param rounding A Rounding object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Quantize(int desiredExponentSmall, Rounding rounding) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param desiredExponentSmall A 32-bit signed integer.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Quantize(int desiredExponentSmall, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param otherValue An ExtendedRational object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Quantize(ExtendedRational otherValue, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RoundToIntegralExact(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RoundToIntegralNoRoundedFlag(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param exponent A BigInteger object.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RoundToExponentExact(BigInteger exponent, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param exponent A BigInteger object.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RoundToExponent(BigInteger exponent, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param exponentSmall A 32-bit signed integer.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RoundToExponentExact(int exponentSmall, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param exponentSmall A 32-bit signed integer.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RoundToExponent(int exponentSmall, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Multiplies two ExtendedRational objects.
+     * @param op An ExtendedRational object.
+     * @param ctx A PrecisionContext object.
+     * @return The product of the two objects.
+     */
+    public ExtendedRational Multiply(ExtendedRational op, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param op An ExtendedRational object. (2).
+     * @param augend An ExtendedRational object. (3).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational MultiplyAndAdd(ExtendedRational op, ExtendedRational augend, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param op An ExtendedRational object. (2).
+     * @param subtrahend An ExtendedRational object. (3).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational MultiplyAndSubtract(ExtendedRational op, ExtendedRational subtrahend, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RoundToPrecision(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Plus(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational RoundToBinaryPrecision(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational SquareRoot(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Exp(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Log(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Log10(PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param exponent An ExtendedRational object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Pow(ExtendedRational exponent, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param exponentSmall A 32-bit signed integer.
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Pow(int exponentSmall, PrecisionContext ctx) {
+      throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Not documented yet.
+     * @param exponentSmall A 32-bit signed integer.
+     * @return An ExtendedRational object.
+     */
+    public ExtendedRational Pow(int exponentSmall) {
+      throw new UnsupportedOperationException();
     }
   }

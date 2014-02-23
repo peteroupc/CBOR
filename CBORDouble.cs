@@ -218,5 +218,12 @@ namespace PeterO
       double val = (double)obj;
       return (val < 0) ? -val : obj;
     }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>An ExtendedRational object.</returns>
+public ExtendedRational AsExtendedRational(object obj) {
+      return ExtendedRational.FromDouble((double)obj);
+    }
   }
 }
