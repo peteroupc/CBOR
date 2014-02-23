@@ -238,4 +238,13 @@ at: http://peteroupc.github.io/CBOR/
     public Object Abs(Object obj) {
       return ((BigInteger)obj).abs();
     }
+
+    /**
+     * Not documented yet.
+     * @param obj An arbitrary object.
+     * @return An ExtendedRational object.
+     */
+public ExtendedRational AsExtendedRational(Object obj) {
+      return ExtendedRational.FromBigInteger((BigInteger)obj);
+    }
   }

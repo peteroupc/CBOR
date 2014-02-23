@@ -196,5 +196,12 @@ namespace PeterO
     public object Abs(object obj) {
       return BigInteger.Abs((BigInteger)obj);
     }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>An ExtendedRational object.</returns>
+public ExtendedRational AsExtendedRational(object obj) {
+      return ExtendedRational.FromBigInteger((BigInteger)obj);
+    }
   }
 }

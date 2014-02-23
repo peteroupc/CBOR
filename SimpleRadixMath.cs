@@ -9,7 +9,8 @@ using System;
 
 namespace PeterO {
     /// <summary>Implements the simplified arithmetic in Appendix A of
-    /// the General Decimal Arithmetic Specification.</summary>
+    /// the General Decimal Arithmetic Specification.
+    /// Unfortunately, it doesn't pass all the test cases, since some aspects of the spec are left open. For example: in which cases is the Clamped set?  The test cases set the Clamped flag in only a handful of test cases, all within the <code>exp</code> operation.</summary>
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
   internal sealed class SimpleRadixMath<T> : IRadixMath<T> {

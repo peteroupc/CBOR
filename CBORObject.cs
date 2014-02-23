@@ -526,8 +526,15 @@ namespace PeterO {
           return (typeOrderA < typeOrderB) ? -1 : 1;
         }
         // At this point, both types should be number types.
-        // DebugAssert.IsTrue(typeOrderA == 0)
-        // DebugAssert.IsTrue(typeOrderB == 0)
+        #if DEBUG
+        if (!(typeOrderA == 0)) {
+          throw new ArgumentException("doesn't satisfy typeOrderA == 0");
+        }
+        if (!(typeOrderB == 0)) {
+          throw new ArgumentException("doesn't satisfy typeOrderB == 0");
+        }
+        #endif
+
         int combo = (typeA << 4) | typeB;
         int s1 = GetSignInternal(typeA, objA);
         int s2 = GetSignInternal(typeB, objB);
@@ -535,326 +542,37 @@ namespace PeterO {
           // if both types are numbers
           // and their signs are different
           return (s1 < s2) ? -1 : 1;
-        }
-        BigInteger bigintXa;
-        BigInteger bigintXb;
-        ExtendedFloat bigfloatXa;
-        ExtendedFloat bigfloatXb;
-        ExtendedDecimal decfracXa;
-        ExtendedDecimal decfracXb;
-        switch (combo) {
-            case (CBORObjectTypeInteger << 4) | CBORObjectTypeBigInteger: {
-              bigintXa = (BigInteger)(long)objA;
-              bigintXb = (BigInteger)objB;
-              cmp = bigintXa.CompareTo(bigintXb);
-              break;
-            }
-            case (CBORObjectTypeInteger << 4) | CBORObjectTypeSingle: {
-              float sf = (float)objB;
-              if (Single.IsInfinity(sf)) {
-                return sf < 0 ? 1 : -1;
-              }
-              if (Single.IsNaN(sf)) {
-                return -1;
-              }
-              bigfloatXa = ExtendedFloat.FromInt64((long)objA);
-              bigfloatXb = ExtendedFloat.FromSingle(sf);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeInteger << 4) | CBORObjectTypeDouble: {
-              double sf = (double)objB;
-              if (Double.IsInfinity(sf)) {
-                return sf < 0 ? 1 : -1;
-              }
-              if (Double.IsNaN(sf)) {
-                return -1;
-              }
-              bigfloatXa = ExtendedFloat.FromInt64((long)objA);
-              bigfloatXb = ExtendedFloat.FromDouble(sf);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeInteger << 4) | CBORObjectTypeExtendedDecimal: {
-              decfracXa = ExtendedDecimal.FromInt64((long)objA);
-              decfracXb = (ExtendedDecimal)objB;
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-            case (CBORObjectTypeInteger << 4) | CBORObjectTypeExtendedFloat: {
-              bigfloatXa = ExtendedFloat.FromInt64((long)objA);
-              bigfloatXb = (ExtendedFloat)objB;
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeInteger: {
-              bigintXa = (BigInteger)objA;
-              bigintXb = (BigInteger)(long)objB;
-              cmp = bigintXa.CompareTo(bigintXb);
-              break;
-            }
-            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeSingle: {
-              float sf = (float)objB;
-              if (Single.IsInfinity(sf)) {
-                return sf < 0 ? 1 : -1;
-              }
-              if (Single.IsNaN(sf)) {
-                return -1;
-              }
-              bigfloatXa = ExtendedFloat.FromBigInteger((BigInteger)objA);
-              bigfloatXb = ExtendedFloat.FromSingle(sf);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeDouble: {
-              double sf = (double)objB;
-              if (Double.IsInfinity(sf)) {
-                return sf < 0 ? 1 : -1;
-              }
-              if (Double.IsNaN(sf)) {
-                return -1;
-              }
-              bigfloatXa = ExtendedFloat.FromBigInteger((BigInteger)objA);
-              bigfloatXb = ExtendedFloat.FromDouble(sf);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeExtendedDecimal: {
-              decfracXa = ExtendedDecimal.FromBigInteger((BigInteger)objA);
-              decfracXb = (ExtendedDecimal)objB;
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-            case (CBORObjectTypeBigInteger << 4) | CBORObjectTypeExtendedFloat: {
-              bigfloatXa = ExtendedFloat.FromBigInteger((BigInteger)objA);
-              bigfloatXb = (ExtendedFloat)objB;
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeSingle << 4) | CBORObjectTypeInteger: {
-              float sf = (float)objA;
-              if (Single.IsInfinity(sf)) {
-                return sf < 0 ? -1 : 1;
-              }
-              if (Single.IsNaN(sf)) {
-                return 1;
-              }
-              bigfloatXa = ExtendedFloat.FromSingle(sf);
-              bigfloatXb = ExtendedFloat.FromInt64((long)objB);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeSingle << 4) | CBORObjectTypeBigInteger: {
-              float sf = (float)objA;
-              if (Single.IsInfinity(sf)) {
-                return sf < 0 ? -1 : 1;
-              }
-              if (Single.IsNaN(sf)) {
-                return 1;
-              }
-              bigfloatXa = ExtendedFloat.FromSingle(sf);
-              bigfloatXb = ExtendedFloat.FromBigInteger((BigInteger)objB);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeSingle << 4) | CBORObjectTypeDouble: {
-              double a = (double)(float)objA;
-              double b = (double)objB;
-              // Treat NaN as greater than all other numbers
-              if (Double.IsNaN(a)) {
-                cmp = Double.IsNaN(b) ? 0 : 1;
-              } else if (Double.IsNaN(b)) {
-                cmp = -1;
-              } else if (a == b) {
-                cmp = 0;
-              } else {
-                cmp = (a < b) ? -1 : 1;
-              }
-              break;
-            }
-            case (CBORObjectTypeSingle << 4) | CBORObjectTypeExtendedDecimal: {
-              float sf = (float)objA;
-              if (Single.IsInfinity(sf)) {
-                return sf < 0 ? -1 : 1;
-              }
-              if (Single.IsNaN(sf)) {
-                return 1;
-              }
-              decfracXa = ExtendedDecimal.FromSingle(sf);
-              decfracXb = (ExtendedDecimal)objB;
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-            case (CBORObjectTypeSingle << 4) | CBORObjectTypeExtendedFloat: {
-              float sf = (float)objA;
-              if (Single.IsInfinity(sf)) {
-                return sf < 0 ? -1 : 1;
-              }
-              if (Single.IsNaN(sf)) {
-                return 1;
-              }
-              bigfloatXa = ExtendedFloat.FromSingle(sf);
-              bigfloatXb = (ExtendedFloat)objB;
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeDouble << 4) | CBORObjectTypeInteger: {
-              double sf = (double)objA;
-              if (Double.IsInfinity(sf)) {
-                return sf < 0 ? -1 : 1;
-              }
-              if (Double.IsNaN(sf)) {
-                return 1;
-              }
-              bigfloatXa = ExtendedFloat.FromDouble(sf);
-              bigfloatXb = ExtendedFloat.FromInt64((long)objB);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeDouble << 4) | CBORObjectTypeBigInteger: {
-              double sf = (double)objA;
-              if (Double.IsInfinity(sf)) {
-                return sf < 0 ? -1 : 1;
-              }
-              if (Double.IsNaN(sf)) {
-                return 1;
-              }
-              bigfloatXa = ExtendedFloat.FromDouble(sf);
-              bigfloatXb = ExtendedFloat.FromBigInteger((BigInteger)objB);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeDouble << 4) | CBORObjectTypeSingle: {
-              double a = (double)objA;
-              double b = (double)(float)objB;
-              // Treat NaN as greater than all other numbers
-              if (Double.IsNaN(a)) {
-                cmp = Double.IsNaN(b) ? 0 : 1;
-              } else if (Double.IsNaN(b)) {
-                cmp = -1;
-              } else if (a == b) {
-                cmp = 0;
-              } else {
-                cmp = (a < b) ? -1 : 1;
-              }
-              break;
-            }
-            case (CBORObjectTypeDouble << 4) | CBORObjectTypeExtendedDecimal: {
-              double sf = (double)objA;
-              if (Double.IsInfinity(sf)) {
-                return sf < 0 ? -1 : 1;
-              }
-              if (Double.IsNaN(sf)) {
-                return 1;
-              }
-              decfracXa = ExtendedDecimal.FromDouble(sf);
-              decfracXb = (ExtendedDecimal)objB;
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-            case (CBORObjectTypeDouble << 4) | CBORObjectTypeExtendedFloat: {
-              double sf = (double)objA;
-              if (Double.IsInfinity(sf)) {
-                return sf < 0 ? -1 : 1;
-              }
-              if (Double.IsNaN(sf)) {
-                return 1;
-              }
-              bigfloatXa = ExtendedFloat.FromDouble(sf);
-              bigfloatXb = (ExtendedFloat)objB;
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeInteger: {
-              decfracXa = (ExtendedDecimal)objA;
-              decfracXb = ExtendedDecimal.FromInt64((long)objB);
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeBigInteger: {
-              decfracXa = (ExtendedDecimal)objA;
-              decfracXb = ExtendedDecimal.FromBigInteger((BigInteger)objB);
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeSingle: {
-              float sf = (float)objB;
-              if (Single.IsInfinity(sf)) {
-                return sf < 0 ? 1 : -1;
-              }
-              if (Single.IsNaN(sf)) {
-                return -1;
-              }
-              decfracXa = (ExtendedDecimal)objA;
-              decfracXb = ExtendedDecimal.FromSingle(sf);
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeDouble: {
-              double sf = (double)objB;
-              if (Double.IsInfinity(sf)) {
-                return sf < 0 ? 1 : -1;
-              }
-              if (Double.IsNaN(sf)) {
-                return -1;
-              }
-              decfracXa = (ExtendedDecimal)objA;
-              decfracXb = ExtendedDecimal.FromDouble(sf);
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedDecimal << 4) | CBORObjectTypeExtendedFloat: {
-              decfracXa = (ExtendedDecimal)objA;
-              decfracXb = ExtendedDecimal.FromExtendedFloat((ExtendedFloat)objB);
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeInteger: {
-              bigfloatXa = (ExtendedFloat)objA;
-              bigfloatXb = ExtendedFloat.FromInt64((long)objB);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeBigInteger: {
-              bigfloatXa = (ExtendedFloat)objA;
-              bigfloatXb = ExtendedFloat.FromBigInteger((BigInteger)objB);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeSingle: {
-              float sf = (float)objB;
-              if (Single.IsInfinity(sf)) {
-                return sf < 0 ? 1 : -1;
-              }
-              if (Single.IsNaN(sf)) {
-                return -1;
-              }
-              bigfloatXa = (ExtendedFloat)objA;
-              bigfloatXb = ExtendedFloat.FromSingle(sf);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeDouble: {
-              double sf = (double)objB;
-              if (Double.IsInfinity(sf)) {
-                return sf < 0 ? 1 : -1;
-              }
-              if (Double.IsNaN(sf)) {
-                return -1;
-              }
-              bigfloatXa = (ExtendedFloat)objA;
-              bigfloatXb = ExtendedFloat.FromDouble(sf);
-              cmp = bigfloatXa.CompareTo(bigfloatXb);
-              break;
-            }
-            case (CBORObjectTypeExtendedFloat << 4) | CBORObjectTypeExtendedDecimal: {
-              decfracXa = ExtendedDecimal.FromExtendedFloat((ExtendedFloat)objA);
-              decfracXb = (ExtendedDecimal)objB;
-              cmp = decfracXa.CompareTo(decfracXb);
-              break;
-            }
-          default:
-            throw new ArgumentException("Unexpected data type");
+        } else if (s1 == 2 && s2 == 2) {
+          // both are NaN
+          cmp = 0;
+        } else if (s1 == 2) {
+          // first object is NaN
+          return 1;
+        } else if (s2 == 2) {
+          // second object is NaN
+          return -1;
+        } else {
+          if (typeA == CBORObjectTypeExtendedRational ||
+              typeB == CBORObjectTypeExtendedRational) {
+            ExtendedRational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
+            ExtendedRational e2 = NumberInterfaces[typeB].AsExtendedRational(objB);
+            cmp = e1.CompareTo(e2);
+          } else if (typeA == CBORObjectTypeExtendedDecimal ||
+                     typeB == CBORObjectTypeExtendedDecimal) {
+            ExtendedDecimal e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
+            ExtendedDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
+            cmp = e1.CompareTo(e2);
+          } else if (typeA == CBORObjectTypeExtendedFloat || typeB == CBORObjectTypeExtendedFloat ||
+                     typeA == CBORObjectTypeDouble || typeB == CBORObjectTypeDouble ||
+                     typeA == CBORObjectTypeSingle || typeB == CBORObjectTypeSingle) {
+            ExtendedFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
+            ExtendedFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
+            cmp = e1.CompareTo(e2);
+          } else {
+            BigInteger b1 = NumberInterfaces[typeA].AsBigInteger(objA);
+            BigInteger b2 = NumberInterfaces[typeB].AsBigInteger(objB);
+            cmp = b1.CompareTo(b2);
+          }
         }
       }
       if (cmp == 0) {
@@ -1228,6 +946,7 @@ namespace PeterO {
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 7
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1
     };
+
     // Generate a CBOR object for head bytes with fixed length.
     // Note that this function assumes that the length of the data
     // was already checked.
@@ -1824,6 +1543,20 @@ namespace PeterO {
         throw new InvalidOperationException("Not a number type");
       }
       return cn.AsExtendedDecimal(this.ThisItem);
+    }
+
+    /// <summary>Converts this object to a decimal number.</summary>
+    /// <returns>A decimal number for this object's value. If this object
+    /// is a rational number with a nonterminating decimal expansion, returns
+    /// a decimal number rounded to 34 digits.</returns>
+    /// <exception cref='System.InvalidOperationException'>This object's
+    /// type is not a number type.</exception>
+    public ExtendedRational AsExtendedRational() {
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        throw new InvalidOperationException("Not a number type");
+      }
+      return cn.AsExtendedRational(this.ThisItem);
     }
 
     /// <summary>Converts this object to an arbitrary-precision binary
@@ -3529,9 +3262,11 @@ namespace PeterO {
         throw new ArgumentException("Simple value is from 24 to 31: " + simpleValue);
       }
       if (simpleValue < 32) {
-        return GetFixedLengthObject(0xE0 + simpleValue, new byte[] { });
+        return valueFixedObjects[0xE0 + simpleValue];
       } else {
-        return GetFixedLengthObject(0xF8, new byte[] { (byte)simpleValue });
+        return new CBORObject(
+          CBORObjectTypeSimpleValue,
+          simpleValue);
       }
     }
 

@@ -34,6 +34,8 @@ namespace PeterO
 
     ExtendedFloat AsExtendedFloat(Object obj);
 
+    ExtendedRational AsExtendedRational(Object obj);
+
     float AsSingle(Object obj);
 
     BigInteger AsBigInteger(Object obj);

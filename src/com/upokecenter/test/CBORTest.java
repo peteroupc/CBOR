@@ -501,6 +501,12 @@ import com.upokecenter.util.*;
 
     @Test
     public void TestCompareB() {
+      AddSubCompare(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xD8, 0x1E, (byte)0x82, (byte)0xC2, 0x58, 0x28, 0x77, 0x24, 0x73, (byte)0x84, (byte)0xBD, 0x72, (byte)0x82, 0x7C, (byte)0xD6, (byte)0x93, 0x18, 0x44, (byte)0x8A, (byte)0x88, 0x43, 0x67, (byte)0xA2, (byte)0xEB, 0x11, 0x00, 0x15, 0x1B, 0x1D, 0x5D, (byte)0xDC, (byte)0xEB, 0x39, 0x17, 0x72, 0x11, 0x5B, 0x03, (byte)0xFA, (byte)0xA8, 0x3F, (byte)0xD2, 0x75, (byte)0xF8, 0x36, (byte)0xC8, 0x1A, 0x00, 0x2E, (byte)0x8C, (byte)0x8D }),
+                    CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00 }));
+      CompareTestLess(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xD8, 0x1E, (byte)0x82, (byte)0xC2, 0x58, 0x28, 0x77, 0x24, 0x73, (byte)0x84, (byte)0xBD, 0x72, (byte)0x82, 0x7C, (byte)0xD6, (byte)0x93, 0x18, 0x44, (byte)0x8A, (byte)0x88, 0x43, 0x67, (byte)0xA2, (byte)0xEB, 0x11, 0x00, 0x15, 0x1B, 0x1D, 0x5D, (byte)0xDC, (byte)0xEB, 0x39, 0x17, 0x72, 0x11, 0x5B, 0x03, (byte)0xFA, (byte)0xA8, 0x3F, (byte)0xD2, 0x75, (byte)0xF8, 0x36, (byte)0xC8, 0x1A, 0x00, 0x2E, (byte)0x8C, (byte)0x8D }),
+                    CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00 }));
+      AddSubCompare(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFB, 0x7F, (byte)0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }),
+                    CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00 }));
       AddSubCompare(
         CBORObject.DecodeFromBytes(new byte[] {  0x1A, (byte)0xFC, 0x1A, (byte)0xB0, 0x52  }),
         CBORObject.DecodeFromBytes(new byte[] {  (byte)0xC5, (byte)0x82, 0x38, 0x5F, (byte)0xC2, 0x50, 0x08, 0x70, (byte)0xF3, (byte)0xC4, (byte)0x90, 0x4C, 0x14, (byte)0xBA, 0x59, (byte)0xF0, (byte)0xC6, (byte)0xCB, (byte)0x8C, (byte)0x8D, 0x40, (byte)0x80  }));
@@ -577,6 +583,9 @@ import com.upokecenter.util.*;
       for (int i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Float.NEGATIVE_INFINITY);
         CBORObject o2 = RandomNumberOrRational(r);
+        if (o2.IsInfinity() || o2.IsNaN()) {
+ continue;
+}
         CompareTestLess(o1, o2);
         o1 = CBORObject.FromObject(Double.NEGATIVE_INFINITY);
         CompareTestLess(o1, o2);
@@ -602,7 +611,7 @@ import com.upokecenter.util.*;
         CBORObject.FromObject(-1),
         CBORObject.FromObject(0),
         CBORObject.FromObject(1),
-        CBORObject.FromObject(-2),
+        CBORObject.FromObject(2),
         CBORObject.FromObject(Long.MAX_VALUE),
         CBORObject.FromObject(ExtendedDecimal.FromString("1E+5000")),
         CBORObject.FromObject(Double.POSITIVE_INFINITY),
@@ -611,13 +620,13 @@ import com.upokecenter.util.*;
         CBORObject.FromSimpleValue(19),
         CBORObject.FromSimpleValue(32),
         CBORObject.FromSimpleValue(255),
-        CBORObject.FromObject(new byte[] {  0, 1 }),
-        CBORObject.FromObject(new byte[] {  0, 2 }),
-        CBORObject.FromObject(new byte[] {  0, 2, 0 }),
-        CBORObject.FromObject(new byte[] {  1, 1 }),
-        CBORObject.FromObject(new byte[] {  1, 1, 4 }),
-        CBORObject.FromObject(new byte[] {  1, 2 }),
-        CBORObject.FromObject(new byte[] {  1, 2, 6 }),
+        CBORObject.FromObject(new byte[] {  0, 1  }),
+        CBORObject.FromObject(new byte[] {  0, 2  }),
+        CBORObject.FromObject(new byte[] {  0, 2, 0  }),
+        CBORObject.FromObject(new byte[] {  1, 1  }),
+        CBORObject.FromObject(new byte[] {  1, 1, 4  }),
+        CBORObject.FromObject(new byte[] {  1, 2  }),
+        CBORObject.FromObject(new byte[] {  1, 2, 6  }),
         CBORObject.FromObject("aa"),
         CBORObject.FromObject("ab"),
         CBORObject.FromObject("abc"),
@@ -625,8 +634,8 @@ import com.upokecenter.util.*;
         CBORObject.FromObject(CBORObject.NewArray()),
         CBORObject.FromObject(CBORObject.NewMap()),
       };
-      for (int i = 0;i < sortedObjects.length; ++i) {
-        for (int j = i;j < sortedObjects.length; ++j) {
+      for (int i = 0; i < sortedObjects.length; ++i) {
+        for (int j = i; j < sortedObjects.length; ++j) {
           if (i == j) {
             CompareTestEqual(sortedObjects[i], sortedObjects[j]);
           } else {

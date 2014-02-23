@@ -9,7 +9,11 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Implements the simplified arithmetic in Appendix A of the General
-     * Decimal Arithmetic Specification.
+     * Decimal Arithmetic Specification. Unfortunately, it doesn't pass
+     * all the test cases, since some aspects of the spec are left open. For
+     * example: in which cases is the Clamped set? The test cases set the Clamped
+     * flag in only a handful of test cases, all within the <code>exp</code>
+     * operation.
      * @param <T> Data type for a numeric value in a particular radix.
      */
   final class SimpleRadixMath<T> implements IRadixMath<T> {

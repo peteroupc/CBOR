@@ -280,4 +280,13 @@ at: http://peteroupc.github.io/CBOR/
       ExtendedDecimal ed = (ExtendedDecimal)obj;
       return ed.Abs();
     }
+
+    /**
+     * Not documented yet.
+     * @param obj An arbitrary object.
+     * @return An ExtendedRational object.
+     */
+public ExtendedRational AsExtendedRational(Object obj) {
+      return ExtendedRational.FromExtendedDecimal((ExtendedDecimal)obj);
+    }
   }
