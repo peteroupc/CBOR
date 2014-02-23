@@ -3486,23 +3486,24 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
         if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
           return 0;
         }
-        return 1;
-        // Treat NaN as greater
+        // Treat ((NaN instanceof greater
+        return 1) ? (greater
+        return 1)NaN : null);
       }
       if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
-        return -1;
         // Treat as less than NaN
+        return -1;
       }
-      int s = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);
-      if (s <= 1) {
-        return s;
+      int signA = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);
+      if (signA <= 1) {
+        return signA;
       }
-      s = this.helper.GetSign(thisValue);
-      int ds = this.helper.GetSign(otherValue);
-      if (s != ds) {
-        return (s < ds) ? -1 : 1;
+      signA = this.helper.GetSign(thisValue);
+      int signB = this.helper.GetSign(otherValue);
+      if (signA != signB) {
+        return (signA < signB) ? -1 : 1;
       }
-      if (ds == 0 || s == 0) {
+      if (signB == 0 || signA == 0) {
         // Special case: Either operand is zero
         return 0;
       }
@@ -3510,12 +3511,12 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
       // At this point, the signs are equal so we can compare
       // their absolute values instead
       int mantcmp = (this.helper.GetMantissa(thisValue)).abs().compareTo((this.helper.GetMantissa(otherValue)).abs());
-      if (s < 0) {
+      if (signA < 0) {
         mantcmp = -mantcmp;
       }
       if (mantcmp == 0) {
         // Special case: Mantissas are equal
-        return s < 0 ? -expcmp : expcmp;
+        return signA < 0 ? -expcmp : expcmp;
       }
       if (expcmp == 0) {
         return mantcmp;
@@ -3548,8 +3549,6 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
               // and second operand isn't zero
               // second mantissa will be shifted by the exponent
               // difference
-              // 111111111111|
-              // 222222222222222|
               FastInteger digitLength1 = this.helper.CreateShiftAccumulator(op1MantAbs).GetDigitLength();
               if (FastInteger.Copy(fastOp1Exp).Add(digitLength1).AddInt(2).compareTo(fastOp2Exp) < 0) {
                 // first operand's mantissa can't reach the
@@ -3559,7 +3558,7 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
                 FastInteger newDiff = FastInteger.Copy(tmp).Subtract(fastOp2Exp).Abs();
                 if (newDiff.compareTo(expdiff) < 0) {
                   // At this point, both operands have the same sign
-                  return (s < 0) ? 1 : -1;
+                  return (signA < 0) ? 1 : -1;
                 }
               }
             }
@@ -3569,8 +3568,6 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
               // and second operand isn't zero
               // first mantissa will be shifted by the exponent
               // difference
-              // 111111111111|
-              // 222222222222222|
               FastInteger digitLength2 = this.helper.CreateShiftAccumulator(op2MantAbs).GetDigitLength();
               if (FastInteger.Copy(fastOp2Exp).Add(digitLength2).AddInt(2).compareTo(fastOp1Exp) < 0) {
                 // second operand's mantissa can't reach the
@@ -3580,7 +3577,7 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
                 FastInteger newDiff = FastInteger.Copy(tmp).Subtract(fastOp1Exp).Abs();
                 if (newDiff.compareTo(expdiff) < 0) {
                   // At this point, both operands have the same sign
-                  return (s < 0) ? -1 : 1;
+                  return (signA < 0) ? -1 : 1;
                 }
               }
             }
@@ -3593,13 +3590,13 @@ public T Add(T thisValue, T other, PrecisionContext ctx) {
         BigInteger othermant = (this.helper.GetMantissa(otherValue)).abs();
         newmant = (newmant).abs();
         mantcmp = newmant.compareTo(othermant);
-        return (s < 0) ? -mantcmp : mantcmp;
+        return (signA < 0) ? -mantcmp : mantcmp;
       } else {
         BigInteger newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(otherValue), op1Exponent, op2Exponent);
         BigInteger othermant = (this.helper.GetMantissa(thisValue)).abs();
         newmant = (newmant).abs();
         mantcmp = othermant.compareTo(newmant);
-        return (s < 0) ? -mantcmp : mantcmp;
+        return (signA < 0) ? -mantcmp : mantcmp;
       }
     }
 

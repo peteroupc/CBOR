@@ -62,7 +62,8 @@ namespace PeterO {
     }
 
     /// <summary>Gets this object&apos;s un-scaled value.</summary>
-    /// <value>This object&apos;s un-scaled value.</value>
+    /// <value>This object&apos;s un-scaled value. Will be negative if
+    /// this object&apos;s value is negative (including a negative NaN).</value>
     public BigInteger Mantissa {
       get {
         return this.IsNegative ? (-(BigInteger)this.unsignedMantissa) : this.unsignedMantissa;
@@ -102,15 +103,45 @@ namespace PeterO {
     /// <summary>Calculates this object&apos;s hash code.</summary>
     /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
-      int hashCode = 0;
+      int hashCode = 403796923;
       unchecked {
-        hashCode += 1000000007 * this.exponent.GetHashCode();
-        hashCode += 1000000009 * this.unsignedMantissa.GetHashCode();
-        hashCode += 1000000009 * this.flags;
+        hashCode += 403797019 * this.exponent.GetHashCode();
+        hashCode += 403797059 * this.unsignedMantissa.GetHashCode();
+        hashCode += 403797127 * this.flags;
       }
       return hashCode;
     }
     #endregion
+
+    public static ExtendedFloat CreateNaN(BigInteger diag) {
+      return CreateNaN(diag, false, false, null);
+    }
+
+    public static ExtendedFloat CreateNaN(BigInteger diag, bool signaling, bool negative, PrecisionContext ctx) {
+      if (diag == null) {
+        throw new ArgumentNullException("diag");
+      }
+      if (diag.Sign < 0) {
+        throw new ArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
+      }
+      if (diag.IsZero && !negative) {
+        return signaling ? SignalingNaN : NaN;
+      }
+      int flags = 0;
+      if (negative) {
+        flags |= BigNumberFlags.FlagNegative;
+      }
+      if (ctx != null && ctx.HasMaxPrecision) {
+        flags |= BigNumberFlags.FlagQuietNaN;
+        ExtendedFloat ef = CreateWithFlags(diag, BigInteger.Zero, flags).RoundToPrecision(ctx);
+        ef.flags &= ~BigNumberFlags.FlagQuietNaN;
+        ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return ef;
+      } else {
+        flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return CreateWithFlags(diag, BigInteger.Zero, flags);
+      }
+    }
 
     /// <summary>Creates a number with the value exponent*2^mantissa.</summary>
     /// <param name='mantissaSmall'>The un-scaled value.</param>
@@ -186,33 +217,6 @@ namespace PeterO {
     }
 
     private static BigInteger valueBigShiftIteration = (BigInteger)1000000;
-    private static int valueShiftIteration = 1000000;
-
-    private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
-      if (val.IsZero) {
-        return val;
-      }
-      while (bigShift.CompareTo(valueBigShiftIteration) > 0) {
-        val <<= 1000000;
-        bigShift -= (BigInteger)valueBigShiftIteration;
-      }
-      int lastshift = (int)bigShift;
-      val <<= lastshift;
-      return val;
-    }
-
-    private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
-      if (val.IsZero) {
-        return val;
-      }
-      while (shift > valueShiftIteration) {
-        val <<= 1000000;
-        shift -= valueShiftIteration;
-      }
-      int lastshift = (int)shift;
-      val <<= lastshift;
-      return val;
-    }
 
     private sealed class BinaryMathHelper : IRadixMathHelper<ExtendedFloat> {
     /// <summary>Not documented yet.</summary>
@@ -285,18 +289,18 @@ namespace PeterO {
         if (bigint.Sign < 0) {
           bigint = -bigint;
           if (power.CanFitInInt32()) {
-            bigint = ShiftLeftInt(bigint, power.AsInt32());
+            bigint = DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
             bigint = -bigint;
           } else {
-            bigint = ShiftLeft(bigint, power.AsBigInteger());
+            bigint = DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
             bigint = -bigint;
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return ShiftLeftInt(bigint, power.AsInt32());
+            return DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
           } else {
-            return ShiftLeft(bigint, power.AsBigInteger());
+            return DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
           }
         }
       }
@@ -335,7 +339,12 @@ namespace PeterO {
     /// Any fractional part in this value will be discarded when converting
     /// to a big integer.</summary>
     /// <returns>A BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
     public BigInteger ToBigInteger() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
       int expsign = this.Exponent.Sign;
       if (expsign == 0) {
         // Integer
@@ -351,7 +360,7 @@ namespace PeterO {
         if (neg) {
           bigmantissa = -bigmantissa;
         }
-        bigmantissa = ShiftLeft(bigmantissa, curexp);
+        bigmantissa = DecimalUtility.ShiftLeft(bigmantissa, curexp);
         if (neg) {
           bigmantissa = -bigmantissa;
         }

@@ -57,7 +57,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets this object&apos;s un-scaled value.
-     * @return This object's un-scaled value.
+     * @return This object's un-scaled value. Will be negative if this object's
+     * value is negative (including a negative NaN).
      */
     public BigInteger getMantissa() {
         return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
@@ -103,13 +104,43 @@ at: http://peteroupc.github.io/CBOR/
      * @return This object's hash code.
      */
     @Override public int hashCode() {
-      int hashCode_ = 0;
+      int hashCode_ = 403796923;
       {
-        hashCode_ += 1000000007 * this.exponent.hashCode();
-        hashCode_ += 1000000009 * this.unsignedMantissa.hashCode();
-        hashCode_ += 1000000009 * this.flags;
+        hashCode_ += 403797019 * this.exponent.hashCode();
+        hashCode_ += 403797059 * this.unsignedMantissa.hashCode();
+        hashCode_ += 403797127 * this.flags;
       }
       return hashCode_;
+    }
+
+    public static ExtendedFloat CreateNaN(BigInteger diag) {
+      return CreateNaN(diag, false, false, null);
+    }
+
+    public static ExtendedFloat CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
+      if (diag == null) {
+        throw new NullPointerException("diag");
+      }
+      if (diag.signum() < 0) {
+        throw new IllegalArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
+      }
+      if (diag.signum()==0 && !negative) {
+        return signaling ? SignalingNaN : NaN;
+      }
+      int flags = 0;
+      if (negative) {
+        flags |= BigNumberFlags.FlagNegative;
+      }
+      if (ctx != null && ctx.getHasMaxPrecision()) {
+        flags |= BigNumberFlags.FlagQuietNaN;
+        ExtendedFloat ef = CreateWithFlags(diag, BigInteger.ZERO, flags).RoundToPrecision(ctx);
+        ef.flags &= ~BigNumberFlags.FlagQuietNaN;
+        ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return ef;
+      } else {
+        flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return CreateWithFlags(diag, BigInteger.ZERO, flags);
+      }
     }
 
     /**
@@ -188,33 +219,6 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private static BigInteger valueBigShiftIteration = BigInteger.valueOf(1000000);
-    private static int valueShiftIteration = 1000000;
-
-    private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
-      if (val.signum()==0) {
-        return val;
-      }
-      while (bigShift.compareTo(valueBigShiftIteration) > 0) {
-        val=val.shiftLeft(1000000);
-        bigShift=bigShift.subtract(valueBigShiftIteration);
-      }
-      int lastshift = bigShift.intValue();
-      val=val.shiftLeft(lastshift);
-      return val;
-    }
-
-    private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
-      if (val.signum()==0) {
-        return val;
-      }
-      while (shift > valueShiftIteration) {
-        val=val.shiftLeft(1000000);
-        shift -= valueShiftIteration;
-      }
-      int lastshift = (int)shift;
-      val=val.shiftLeft(lastshift);
-      return val;
-    }
 
     private static final class BinaryMathHelper implements IRadixMathHelper<ExtendedFloat> {
     /**
@@ -303,18 +307,18 @@ at: http://peteroupc.github.io/CBOR/
         if (bigint.signum() < 0) {
           bigint=bigint.negate();
           if (power.CanFitInInt32()) {
-            bigint = ShiftLeftInt(bigint, power.AsInt32());
+            bigint = DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
             bigint=bigint.negate();
           } else {
-            bigint = ShiftLeft(bigint, power.AsBigInteger());
+            bigint = DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
             bigint=bigint.negate();
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return ShiftLeftInt(bigint, power.AsInt32());
+            return DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
           } else {
-            return ShiftLeft(bigint, power.AsBigInteger());
+            return DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
           }
         }
       }
@@ -361,8 +365,12 @@ at: http://peteroupc.github.io/CBOR/
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
+     * @throws ArithmeticException This object's value is infinity or NaN.
      */
     public BigInteger ToBigInteger() {
+      if (!this.isFinite()) {
+        throw new ArithmeticException("Value is infinity or NaN");
+      }
       int expsign = this.getExponent().signum();
       if (expsign == 0) {
         // Integer
@@ -378,7 +386,7 @@ at: http://peteroupc.github.io/CBOR/
         if (neg) {
           bigmantissa=bigmantissa.negate();
         }
-        bigmantissa = ShiftLeft(bigmantissa, curexp);
+        bigmantissa = DecimalUtility.ShiftLeft(bigmantissa, curexp);
         if (neg) {
           bigmantissa=bigmantissa.negate();
         }
