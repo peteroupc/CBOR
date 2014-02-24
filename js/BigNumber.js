@@ -6288,6 +6288,15 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
         pc.flags = 0;
         return pc;
     };
+    prototype['simplified'] = prototype.simplified = null;
+    prototype['isSimplified'] = prototype.isSimplified = function() {
+        return this.simplified;
+    };
+    prototype['WithSimplified'] = prototype.WithSimplified = function(simplified) {
+        var pc = this.Copy();
+        pc.simplified = simplified;
+        return pc;
+    };
     prototype['WithUnlimitedExponents'] = prototype.WithUnlimitedExponents = function() {
         var pc = this.Copy();
         pc.hasExponentRange = false;
@@ -6315,6 +6324,7 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
     prototype['Copy'] = prototype.Copy = function() {
         var pcnew = new PrecisionContext(0, this.rounding, 0, 0, this.clampNormalExponents);
         pcnew.hasFlags = this.hasFlags;
+        pcnew.simplified = this.simplified;
         pcnew.flags = this.flags;
         pcnew.exponentMax = this.exponentMax;
         pcnew.exponentMin = this.exponentMin;
@@ -9329,13 +9339,13 @@ var RadixMath = function(helper) {
             if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
                 return 0;
             }
+
             return 1;
         }
-
         if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
+
             return -1;
         }
-
         var signA = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);
         if (signA <= 1) {
             return signA;
@@ -9756,6 +9766,832 @@ var TrappableRadixMath = function(math) {
     };
 })(TrappableRadixMath,TrappableRadixMath.prototype);
 
+var SimpleRadixMath = function(wrapper) {
+
+    this.wrapper = wrapper;
+};
+(function(constructor,prototype){
+    prototype.wrapper = null;
+    constructor.GetContextWithFlags = function(ctx) {
+        if (ctx == null) {
+            return ctx;
+        }
+        return ctx.WithBlankFlags();
+    };
+    prototype.SignalInvalid = function(ctx) {
+        if (this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly) {
+            throw new Error("Invalid operation");
+        }
+        if (ctx != null && ctx.getHasFlags()) {
+            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid));
+        }
+        return this.GetHelper().CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
+    };
+    prototype.PostProcess = function(thisValue, ctxDest, ctxSrc) {
+        return this.PostProcessEx(thisValue, ctxDest, ctxSrc, false, false);
+    };
+    prototype.PostProcessAfterDivision = function(thisValue, ctxDest, ctxSrc) {
+        return this.PostProcessEx(thisValue, ctxDest, ctxSrc, true, false);
+    };
+    prototype.PostProcessAfterQuantize = function(thisValue, ctxDest, ctxSrc) {
+        return this.PostProcessEx(thisValue, ctxDest, ctxSrc, false, true);
+    };
+    prototype.PostProcessEx = function(thisValue, ctxDest, ctxSrc, afterDivision, afterQuantize) {
+        var thisFlags = this.GetHelper().GetFlags(thisValue);
+        if (ctxDest != null && ctxSrc != null) {
+            if (ctxDest.getHasFlags()) {
+
+                ctxSrc.setFlags(ctxSrc.getFlags() & ~(PrecisionContext.FlagClamped));
+
+                ctxDest.setFlags(ctxDest.getFlags() | (ctxSrc.getFlags()));
+                if ((ctxSrc.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
+
+                    var newflags = PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
+                    ctxDest.setFlags(ctxDest.getFlags() | (newflags));
+                }
+            }
+        }
+        if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
+            if (ctxDest.getFlags() == 0) {
+                return this.SignalInvalid(ctxDest);
+            }
+            return thisValue;
+        }
+        var mant = (this.GetHelper().GetMantissa(thisValue)).abs();
+        if (mant.signum() == 0) {
+            if (afterQuantize) {
+                return this.GetHelper().CreateNewWithFlags(mant, this.GetHelper().GetExponent(thisValue), 0);
+            }
+            return this.GetHelper().ValueOf(0);
+        }
+        if (afterQuantize) {
+            return thisValue;
+        }
+        var exp = this.GetHelper().GetExponent(thisValue);
+        if (exp.signum() > 0) {
+            var fastExp = FastInteger.FromBig(exp);
+            if (ctxDest == null || !ctxDest.getHasMaxPrecision()) {
+                mant = this.GetHelper().MultiplyByRadixPower(mant, fastExp);
+                return this.GetHelper().CreateNewWithFlags(mant, BigInteger.ZERO, thisFlags);
+            }
+            if (!ctxDest.ExponentWithinRange(exp)) {
+                return thisValue;
+            }
+            var prec = FastInteger.FromBig(ctxDest.getPrecision());
+            var digits = this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
+            prec.Subtract(digits);
+            if (prec.signum() > 0 && prec.compareTo(fastExp) >= 0) {
+                mant = this.GetHelper().MultiplyByRadixPower(mant, fastExp);
+                return this.GetHelper().CreateNewWithFlags(mant, BigInteger.ZERO, thisFlags);
+            }
+            if (afterDivision) {
+                mant = DecimalUtility.ReduceTrailingZeros(mant, fastExp, this.GetHelper().GetRadix(), null, null, null);
+                thisValue = this.GetHelper().CreateNewWithFlags(mant, fastExp.AsBigInteger(), thisFlags);
+            }
+        } else if (afterDivision && exp.signum() < 0) {
+            var fastExp = FastInteger.FromBig(exp);
+            mant = DecimalUtility.ReduceTrailingZeros(mant, fastExp, this.GetHelper().GetRadix(), null, null, new FastInteger(0));
+            thisValue = this.GetHelper().CreateNewWithFlags(mant, fastExp.AsBigInteger(), thisFlags);
+        }
+        return thisValue;
+    };
+    prototype.ReturnQuietNaN = function(thisValue, ctx) {
+        var mant = (this.GetHelper().GetMantissa(thisValue)).abs();
+        var mantChanged = false;
+        if (mant.signum() != 0 && ctx != null && ctx.getHasMaxPrecision()) {
+            var limit = this.GetHelper().MultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
+            if (mant.compareTo(limit) >= 0) {
+                mant = mant.remainder(limit);
+                mantChanged = true;
+            }
+        }
+        var flags = this.GetHelper().GetFlags(thisValue);
+        if (!mantChanged && (flags & BigNumberFlags.FlagQuietNaN) != 0) {
+            return thisValue;
+        }
+        flags &= BigNumberFlags.FlagNegative;
+        flags |= BigNumberFlags.FlagQuietNaN;
+        return this.GetHelper().CreateNewWithFlags(mant, BigInteger.ZERO, flags);
+    };
+    prototype.HandleNotANumber = function(thisValue, other, ctx) {
+        var thisFlags = this.GetHelper().GetFlags(thisValue);
+        var otherFlags = this.GetHelper().GetFlags(other);
+
+        if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
+            return this.SignalingNaNInvalid(thisValue, ctx);
+        }
+        if ((otherFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
+            return this.SignalingNaNInvalid(other, ctx);
+        }
+
+        if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
+            return this.ReturnQuietNaN(thisValue, ctx);
+        }
+        if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
+            return this.ReturnQuietNaN(other, ctx);
+        }
+        return null;
+    };
+    prototype.CheckNotANumber3 = function(thisValue, other, other2, ctx) {
+        var thisFlags = this.GetHelper().GetFlags(thisValue);
+        var otherFlags = this.GetHelper().GetFlags(other);
+        var other2Flags = this.GetHelper().GetFlags(other2);
+
+        if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
+            return this.SignalingNaNInvalid(thisValue, ctx);
+        }
+        if ((otherFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
+            return this.SignalingNaNInvalid(other, ctx);
+        }
+        if ((other2Flags & BigNumberFlags.FlagSignalingNaN) != 0) {
+            return this.SignalingNaNInvalid(other, ctx);
+        }
+
+        if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
+            return this.ReturnQuietNaN(thisValue, ctx);
+        }
+        if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
+            return this.ReturnQuietNaN(other, ctx);
+        }
+        if ((other2Flags & BigNumberFlags.FlagQuietNaN) != 0) {
+            return this.ReturnQuietNaN(other, ctx);
+        }
+        return null;
+    };
+    prototype.SignalingNaNInvalid = function(value, ctx) {
+        if (ctx != null && ctx.getHasFlags()) {
+            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid));
+        }
+        return this.ReturnQuietNaN(value, ctx);
+    };
+    prototype.CheckNotANumber1 = function(val, ctx) {
+        return this.HandleNotANumber(val, val, ctx);
+    };
+    prototype.CheckNotANumber2 = function(val, val2, ctx) {
+        return this.HandleNotANumber(val, val2, ctx);
+    };
+    prototype.RoundBeforeOp = function(val, ctx) {
+        if (ctx == null || !ctx.getHasMaxPrecision()) {
+            return val;
+        }
+        var thisFlags = this.GetHelper().GetFlags(val);
+        if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
+            return val;
+        }
+        var fastPrecision = FastInteger.FromBig(ctx.getPrecision());
+        var mant = (this.GetHelper().GetMantissa(val)).abs();
+        var digits = this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
+        var ctx2 = ctx.WithBlankFlags().WithTraps(0);
+        if (digits.compareTo(fastPrecision) <= 0) {
+
+            return val;
+        }
+        val = this.wrapper.RoundToPrecision(val, ctx2);
+
+        if ((ctx2.getFlags() & PrecisionContext.FlagInexact) != 0) {
+            if (ctx.getHasFlags()) {
+                var newflags = PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
+                ctx.setFlags(ctx.getFlags() | (newflags));
+            }
+        }
+        if ((ctx2.getFlags() & PrecisionContext.FlagRounded) != 0) {
+            if (ctx.getHasFlags()) {
+                ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagRounded));
+            }
+        }
+        if ((ctx2.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
+        }
+
+        if ((ctx2.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
+        }
+
+        if ((ctx2.getFlags() & PrecisionContext.FlagOverflow) != 0) {
+            var neg = (thisFlags & BigNumberFlags.FlagNegative) != 0;
+            ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagLostDigits));
+            return this.SignalOverflow2(ctx, neg);
+        }
+        return val;
+    };
+
+    prototype.DivideToIntegerNaturalScale = function(thisValue, divisor, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, divisor, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        divisor = this.RoundBeforeOp(divisor, ctx2);
+        thisValue = this.wrapper.DivideToIntegerNaturalScale(thisValue, divisor, ctx2);
+        return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
+    };
+
+    prototype.DivideToIntegerZeroScale = function(thisValue, divisor, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, divisor, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        divisor = this.RoundBeforeOp(divisor, ctx2);
+        thisValue = this.wrapper.DivideToIntegerZeroScale(thisValue, divisor, ctx2);
+        return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
+    };
+
+    prototype.Abs = function(value, ctx) {
+        var ret = this.CheckNotANumber1(value, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        value = this.RoundBeforeOp(value, ctx2);
+        value = this.wrapper.Abs(value, ctx2);
+        return this.PostProcess(value, ctx, ctx2);
+    };
+
+    prototype.Negate = function(value, ctx) {
+        var ret = this.CheckNotANumber1(value, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        value = this.RoundBeforeOp(value, ctx2);
+        value = this.wrapper.Negate(value, ctx2);
+        return this.PostProcess(value, ctx, ctx2);
+    };
+
+    prototype.Remainder = function(thisValue, divisor, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, divisor, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        divisor = this.RoundBeforeOp(divisor, ctx2);
+        thisValue = this.wrapper.Remainder(thisValue, divisor, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.RemainderNear = function(thisValue, divisor, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, divisor, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        divisor = this.RoundBeforeOp(divisor, ctx2);
+        thisValue = this.wrapper.RemainderNear(thisValue, divisor, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.Pi = function(ctx) {
+        return this.wrapper.Pi(ctx);
+    };
+    prototype.SignalOverflow2 = function(pc, neg) {
+        if (pc != null) {
+            var roundingOnOverflow = pc.getRounding();
+            if (pc.getHasFlags()) {
+                pc.setFlags(pc.getFlags() | (PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+            }
+            if (pc.getHasMaxPrecision() && pc.getHasExponentRange() && (roundingOnOverflow == Rounding.Down || roundingOnOverflow == Rounding.ZeroFiveUp || (roundingOnOverflow == Rounding.Ceiling && neg) || (roundingOnOverflow == Rounding.Floor && !neg))) {
+
+                var overflowMant = BigInteger.ZERO;
+                var fastPrecision = FastInteger.FromBig(pc.getPrecision());
+                overflowMant = this.GetHelper().MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
+                overflowMant = overflowMant.subtract(BigInteger.ONE);
+                var clamp = FastInteger.FromBig(pc.getEMax()).Increment().Subtract(fastPrecision);
+                return this.GetHelper().CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
+            }
+        }
+        return this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly ? null : this.GetHelper().CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
+    };
+
+    prototype.Power = function(thisValue, pow, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, pow, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        pow = this.RoundBeforeOp(pow, ctx2);
+
+        var powSign = this.GetHelper().GetSign(pow);
+        if (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0) {
+            thisValue = this.GetHelper().ValueOf(1);
+        } else {
+
+            {
+                thisValue = this.wrapper.Power(thisValue, pow, ctx2);
+            }
+        }
+
+        thisValue = this.PostProcessAfterDivision(thisValue, ctx, ctx2);
+
+        return thisValue;
+    };
+
+    prototype.Log10 = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.Log10(thisValue, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.Ln = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+
+        thisValue = this.wrapper.Ln(thisValue, ctx2);
+
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.GetHelper = function() {
+        return this.wrapper.GetHelper();
+    };
+
+    prototype.Exp = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.Exp(thisValue, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.SquareRoot = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+
+        thisValue = this.wrapper.SquareRoot(thisValue, ctx2);
+
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.NextMinus = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.NextMinus(thisValue, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.NextToward = function(thisValue, otherValue, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        otherValue = this.RoundBeforeOp(otherValue, ctx2);
+        thisValue = this.wrapper.NextToward(thisValue, otherValue, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.NextPlus = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.NextPlus(thisValue, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.DivideToExponent = function(thisValue, divisor, desiredExponent, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, divisor, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        divisor = this.RoundBeforeOp(divisor, ctx2);
+        thisValue = this.wrapper.DivideToExponent(thisValue, divisor, desiredExponent, ctx2);
+        return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
+    };
+
+    prototype.Divide = function(thisValue, divisor, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, divisor, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        divisor = this.RoundBeforeOp(divisor, ctx2);
+        thisValue = this.wrapper.Divide(thisValue, divisor, ctx2);
+        return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
+    };
+
+    prototype.MinMagnitude = function(a, b, ctx) {
+        var ret = this.CheckNotANumber2(a, b, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        a = this.RoundBeforeOp(a, ctx2);
+        b = this.RoundBeforeOp(b, ctx2);
+        a = this.wrapper.MinMagnitude(a, b, ctx2);
+        return this.PostProcess(a, ctx, ctx2);
+    };
+
+    prototype.MaxMagnitude = function(a, b, ctx) {
+        var ret = this.CheckNotANumber2(a, b, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        a = this.RoundBeforeOp(a, ctx2);
+        b = this.RoundBeforeOp(b, ctx2);
+        a = this.wrapper.MaxMagnitude(a, b, ctx2);
+        return this.PostProcess(a, ctx, ctx2);
+    };
+
+    prototype.Max = function(a, b, ctx) {
+        var ret = this.CheckNotANumber2(a, b, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        a = this.RoundBeforeOp(a, ctx2);
+        b = this.RoundBeforeOp(b, ctx2);
+
+        a = (this.compareTo(a, b) >= 0) ? a : b;
+        return this.PostProcess(a, ctx, ctx2);
+    };
+
+    prototype.Min = function(a, b, ctx) {
+        var ret = this.CheckNotANumber2(a, b, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        a = this.RoundBeforeOp(a, ctx2);
+        b = this.RoundBeforeOp(b, ctx2);
+
+        a = (this.compareTo(a, b) <= 0) ? a : b;
+        return this.PostProcess(a, ctx, ctx2);
+    };
+
+    prototype.Multiply = function(thisValue, other, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, other, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        other = this.RoundBeforeOp(other, ctx2);
+        thisValue = this.wrapper.Multiply(thisValue, other, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.MultiplyAndAdd = function(thisValue, multiplicand, augend, ctx) {
+        var ret = this.CheckNotANumber3(thisValue, multiplicand, augend, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        multiplicand = this.RoundBeforeOp(multiplicand, ctx2);
+        augend = this.RoundBeforeOp(augend, ctx2);
+
+        var zeroA = this.GetHelper().GetSign(thisValue) == 0 || this.GetHelper().GetSign(multiplicand) == 0;
+        var zeroB = this.GetHelper().GetSign(augend) == 0;
+        if (zeroA) {
+            thisValue = zeroB ? this.GetHelper().ValueOf(0) : augend;
+            thisValue = this.RoundToPrecision(thisValue, ctx2);
+        } else if (!zeroB) {
+            thisValue = this.wrapper.MultiplyAndAdd(thisValue, multiplicand, augend, ctx2);
+        } else {
+
+            thisValue = this.wrapper.Multiply(thisValue, multiplicand, ctx2);
+        }
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.RoundToBinaryPrecision = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.RoundToBinaryPrecision(thisValue, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.Plus = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.Plus(thisValue, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.RoundToPrecision = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.RoundToPrecision(thisValue, ctx2);
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.Quantize = function(thisValue, otherValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        var oldExponent = this.GetHelper().GetExponent(otherValue);
+
+        otherValue = this.RoundBeforeOp(otherValue, ctx2);
+
+        var ctx3 = ctx2 == null ? null : ctx2.WithBlankFlags();
+        var valx = this.wrapper.RoundToPrecision(otherValue, ctx3);
+        if ((ctx3.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
+            return this.SignalInvalid(ctx);
+        }
+        thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);
+
+        return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
+    };
+
+    prototype.RoundToExponentExact = function(thisValue, expOther, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.RoundToExponentExact(thisValue, expOther, ctx);
+        return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
+    };
+
+    prototype.RoundToExponentSimple = function(thisValue, expOther, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.RoundToExponentSimple(thisValue, expOther, ctx2);
+        return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
+    };
+
+    prototype.RoundToExponentNoRoundedFlag = function(thisValue, exponent, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
+        return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
+    };
+
+    prototype.Reduce = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        thisValue = this.wrapper.Reduce(thisValue, ctx);
+        return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
+    };
+
+    prototype.Add = function(thisValue, other, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, other, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.RoundBeforeOp(thisValue, ctx2);
+        other = this.RoundBeforeOp(other, ctx2);
+        var zeroA = this.GetHelper().GetSign(thisValue) == 0;
+        var zeroB = this.GetHelper().GetSign(other) == 0;
+        if (zeroA) {
+            thisValue = zeroB ? this.GetHelper().ValueOf(0) : other;
+            thisValue = this.RoundToPrecision(thisValue, ctx2);
+        } else if (!zeroB) {
+            thisValue = this.wrapper.AddEx(thisValue, other, ctx2, true);
+        } else {
+            thisValue = this.RoundToPrecision(thisValue, ctx2);
+        }
+        return this.PostProcess(thisValue, ctx, ctx2);
+    };
+
+    prototype.AddEx = function(thisValue, other, ctx, roundToOperandPrecision) {
+
+        return this.Add(thisValue, other, ctx);
+    };
+
+    prototype.CompareToWithContext = function(thisValue, otherValue, treatQuietNansAsSignaling, ctx) {
+        var ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        thisValue = this.RoundBeforeOp(thisValue, ctx);
+        otherValue = this.RoundBeforeOp(otherValue, ctx);
+        return this.wrapper.CompareToWithContext(thisValue, otherValue, treatQuietNansAsSignaling, ctx);
+    };
+
+    prototype.compareTo = function(thisValue, otherValue) {
+        return this.wrapper.compareTo(thisValue, otherValue);
+    };
+
+    prototype.RoundToPrecisionRaw = function(thisValue, ctx) {
+
+        return this.wrapper.RoundToPrecisionRaw(thisValue, ctx);
+    };
+})(SimpleRadixMath,SimpleRadixMath.prototype);
+
+var ExtendedOrSimpleRadixMath = function(helper) {
+
+    this.ext = new RadixMath(helper);
+    this.simp = new SimpleRadixMath(this.ext);
+};
+(function(constructor,prototype){
+    prototype.ext = null;
+    prototype.simp = null;
+
+    prototype.GetHelper = function() {
+
+        return this.ext.GetHelper();
+    };
+
+    prototype.DivideToIntegerNaturalScale = function(thisValue, divisor, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.DivideToIntegerNaturalScale(thisValue, divisor, ctx) : this.simp.DivideToIntegerNaturalScale(thisValue, divisor, ctx);
+    };
+
+    prototype.DivideToIntegerZeroScale = function(thisValue, divisor, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.DivideToIntegerZeroScale(thisValue, divisor, ctx) : this.simp.DivideToIntegerZeroScale(thisValue, divisor, ctx);
+    };
+
+    prototype.Abs = function(value, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Abs(value, ctx) : this.simp.Abs(value, ctx);
+    };
+
+    prototype.Negate = function(value, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Negate(value, ctx) : this.simp.Negate(value, ctx);
+    };
+
+    prototype.Remainder = function(thisValue, divisor, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Remainder(thisValue, divisor, ctx) : this.simp.Remainder(thisValue, divisor, ctx);
+    };
+
+    prototype.RemainderNear = function(thisValue, divisor, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.RemainderNear(thisValue, divisor, ctx) : this.simp.RemainderNear(thisValue, divisor, ctx);
+    };
+
+    prototype.Pi = function(ctx) {
+        return (!ctx.isSimplified()) ? this.ext.Pi(ctx) : this.simp.Pi(ctx);
+    };
+
+    prototype.Power = function(thisValue, pow, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Power(thisValue, pow, ctx) : this.simp.Power(thisValue, pow, ctx);
+    };
+
+    prototype.Log10 = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Log10(thisValue, ctx) : this.simp.Log10(thisValue, ctx);
+    };
+
+    prototype.Ln = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Ln(thisValue, ctx) : this.simp.Ln(thisValue, ctx);
+    };
+
+    prototype.Exp = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Exp(thisValue, ctx) : this.simp.Exp(thisValue, ctx);
+    };
+
+    prototype.SquareRoot = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.SquareRoot(thisValue, ctx) : this.simp.SquareRoot(thisValue, ctx);
+    };
+
+    prototype.NextMinus = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.NextMinus(thisValue, ctx) : this.simp.NextMinus(thisValue, ctx);
+    };
+
+    prototype.NextToward = function(thisValue, otherValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.NextToward(thisValue, otherValue, ctx) : this.simp.NextToward(thisValue, otherValue, ctx);
+    };
+
+    prototype.NextPlus = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.NextPlus(thisValue, ctx) : this.simp.NextPlus(thisValue, ctx);
+    };
+
+    prototype.DivideToExponent = function(thisValue, divisor, desiredExponent, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.DivideToExponent(thisValue, divisor, desiredExponent, ctx) : this.simp.DivideToExponent(thisValue, divisor, desiredExponent, ctx);
+    };
+
+    prototype.Divide = function(thisValue, divisor, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Divide(thisValue, divisor, ctx) : this.simp.Divide(thisValue, divisor, ctx);
+    };
+
+    prototype.MinMagnitude = function(a, b, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.MinMagnitude(a, b, ctx) : this.simp.MinMagnitude(a, b, ctx);
+    };
+
+    prototype.MaxMagnitude = function(a, b, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.MaxMagnitude(a, b, ctx) : this.simp.MaxMagnitude(a, b, ctx);
+    };
+
+    prototype.Max = function(a, b, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Max(a, b, ctx) : this.simp.Max(a, b, ctx);
+    };
+
+    prototype.Min = function(a, b, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Min(a, b, ctx) : this.simp.Min(a, b, ctx);
+    };
+
+    prototype.Multiply = function(thisValue, other, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Multiply(thisValue, other, ctx) : this.simp.Multiply(thisValue, other, ctx);
+    };
+
+    prototype.MultiplyAndAdd = function(thisValue, multiplicand, augend, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.MultiplyAndAdd(thisValue, multiplicand, augend, ctx) : this.simp.MultiplyAndAdd(thisValue, multiplicand, augend, ctx);
+    };
+
+    prototype.RoundToBinaryPrecision = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToBinaryPrecision(thisValue, ctx) : this.simp.RoundToBinaryPrecision(thisValue, ctx);
+    };
+
+    prototype.Plus = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Plus(thisValue, ctx) : this.simp.Plus(thisValue, ctx);
+    };
+
+    prototype.RoundToPrecision = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToPrecision(thisValue, ctx) : this.simp.RoundToPrecision(thisValue, ctx);
+    };
+
+    prototype.RoundToPrecisionRaw = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToPrecisionRaw(thisValue, ctx) : this.simp.RoundToPrecisionRaw(thisValue, ctx);
+    };
+
+    prototype.Quantize = function(thisValue, otherValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Quantize(thisValue, otherValue, ctx) : this.simp.Quantize(thisValue, otherValue, ctx);
+    };
+
+    prototype.RoundToExponentExact = function(thisValue, expOther, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToExponentExact(thisValue, expOther, ctx) : this.simp.RoundToExponentExact(thisValue, expOther, ctx);
+    };
+
+    prototype.RoundToExponentSimple = function(thisValue, expOther, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToExponentSimple(thisValue, expOther, ctx) : this.simp.RoundToExponentSimple(thisValue, expOther, ctx);
+    };
+
+    prototype.RoundToExponentNoRoundedFlag = function(thisValue, exponent, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx) : this.simp.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
+    };
+
+    prototype.Reduce = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Reduce(thisValue, ctx) : this.simp.Reduce(thisValue, ctx);
+    };
+
+    prototype.Add = function(thisValue, other, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.Add(thisValue, other, ctx) : this.simp.Add(thisValue, other, ctx);
+    };
+
+    prototype.AddEx = function(thisValue, other, ctx, roundToOperandPrecision) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.AddEx(thisValue, other, ctx, roundToOperandPrecision) : this.simp.AddEx(thisValue, other, ctx, roundToOperandPrecision);
+    };
+
+    prototype.CompareToWithContext = function(thisValue, otherValue, treatQuietNansAsSignaling, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.CompareToWithContext(thisValue, otherValue, treatQuietNansAsSignaling, ctx) : this.simp.CompareToWithContext(thisValue, otherValue, treatQuietNansAsSignaling, ctx);
+    };
+
+    prototype.compareTo = function(thisValue, otherValue) {
+        return this.ext.compareTo(thisValue, otherValue);
+    };
+})(ExtendedOrSimpleRadixMath,ExtendedOrSimpleRadixMath.prototype);
+
 var ExtendedDecimal =
 
 function() {
@@ -9792,6 +10628,31 @@ function() {
             hashCode_ = hashCode_ + (964453967 * this.flags);
         }
         return hashCode_;
+    };
+    constructor['CreateNaN'] = constructor.CreateNaN = function(diag, signaling, negative, ctx) {
+        if (diag == null) {
+            throw new Error("diag");
+        }
+        if (diag.signum() < 0) {
+            throw new Error("Diagnostic information must be 0 or greater, was: " + diag);
+        }
+        if (diag.signum() == 0 && !negative) {
+            return signaling ? ExtendedDecimal.SignalingNaN : ExtendedDecimal.NaN;
+        }
+        var flags = 0;
+        if (negative) {
+            flags |= BigNumberFlags.FlagNegative;
+        }
+        if (ctx != null && ctx.getHasMaxPrecision()) {
+            flags |= BigNumberFlags.FlagQuietNaN;
+            var ef = ExtendedDecimal.CreateWithFlags(diag, BigInteger.ZERO, flags).RoundToPrecision(ctx);
+            ef.flags &= ~BigNumberFlags.FlagQuietNaN;
+            ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+            return ef;
+        } else {
+            flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+            return ExtendedDecimal.CreateWithFlags(diag, BigInteger.ZERO, flags);
+        }
     };
     constructor['Create'] = constructor.Create = function(mantissa, exponent) {
         if (mantissa == null) {
@@ -10852,7 +11713,7 @@ function() {
         }
         return this.Add(negated, ctx);
     };
-    constructor['math'] = constructor.math = new TrappableRadixMath(new RadixMath(new ExtendedDecimal.DecimalMathHelper()));
+    constructor['math'] = constructor.math = new TrappableRadixMath(new ExtendedOrSimpleRadixMath(new ExtendedDecimal.DecimalMathHelper()));
 
     prototype['DivideToIntegerNaturalScale'] = prototype.DivideToIntegerNaturalScale = function(divisor, ctx) {
         return ExtendedDecimal.math.DivideToIntegerNaturalScale(this, divisor, ctx);
@@ -11029,6 +11890,31 @@ function() {
             hashCode_ = hashCode_ + (403797127 * this.flags);
         }
         return hashCode_;
+    };
+    constructor['CreateNaN'] = constructor.CreateNaN = function(diag, signaling, negative, ctx) {
+        if (diag == null) {
+            throw new Error("diag");
+        }
+        if (diag.signum() < 0) {
+            throw new Error("Diagnostic information must be 0 or greater, was: " + diag);
+        }
+        if (diag.signum() == 0 && !negative) {
+            return signaling ? ExtendedFloat.SignalingNaN : ExtendedFloat.NaN;
+        }
+        var flags = 0;
+        if (negative) {
+            flags |= BigNumberFlags.FlagNegative;
+        }
+        if (ctx != null && ctx.getHasMaxPrecision()) {
+            flags |= BigNumberFlags.FlagQuietNaN;
+            var ef = ExtendedFloat.CreateWithFlags(diag, BigInteger.ZERO, flags).RoundToPrecision(ctx);
+            ef.flags &= ~BigNumberFlags.FlagQuietNaN;
+            ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+            return ef;
+        } else {
+            flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+            return ExtendedFloat.CreateWithFlags(diag, BigInteger.ZERO, flags);
+        }
     };
     constructor['Create'] = constructor.Create = function(mantissa, exponent) {
         if (mantissa == null) {
@@ -11594,7 +12480,7 @@ function() {
         }
         return this.Add(negated, ctx);
     };
-    constructor['math'] = constructor.math = new TrappableRadixMath(new RadixMath(new ExtendedFloat.BinaryMathHelper()));
+    constructor['math'] = constructor.math = new TrappableRadixMath(new ExtendedOrSimpleRadixMath(new ExtendedFloat.BinaryMathHelper()));
 
     prototype['DivideToIntegerNaturalScale'] = prototype.DivideToIntegerNaturalScale = function(divisor, ctx) {
         return ExtendedFloat.math.DivideToIntegerNaturalScale(this, divisor, ctx);

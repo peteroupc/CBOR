@@ -187,7 +187,9 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
     public object Negate(object obj) {
-      return -(BigInteger)obj;
+      BigInteger bigobj = (BigInteger)obj;
+      bigobj = -(BigInteger)bigobj;
+      return bigobj;
     }
 
     /// <summary>Not documented yet.</summary>

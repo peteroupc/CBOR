@@ -76,7 +76,7 @@ class PropertyMap
 		}
 	}
   
-  private CBORObject FromArray(Object arr){
+  public CBORObject FromArray(Object arr){
    int length=Array.getLength(arr);
    CBORObject obj=CBORObject.NewArray();
    for(int i=0;i<length;i++){
