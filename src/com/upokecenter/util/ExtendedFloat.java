@@ -218,8 +218,6 @@ at: http://peteroupc.github.io/CBOR/
       return FromString(str, null);
     }
 
-    private static BigInteger valueBigShiftIteration = BigInteger.valueOf(1000000);
-
     private static final class BinaryMathHelper implements IRadixMathHelper<ExtendedFloat> {
     /**
      * Not documented yet.

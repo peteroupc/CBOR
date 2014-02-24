@@ -47,10 +47,10 @@ namespace Test
         ExtendedRational rat = new ExtendedRational(num, BigInteger.One);
         ExtendedRational rat2 = new ExtendedRational(num, (BigInteger)2);
         if (rat2.CompareTo(rat) != -1) {
-          Assert.AreEqual(-1, rat2.CompareTo(rat), rat + ", " + rat2);
+          Assert.Fail(rat + "; " + rat2);
         }
         if (rat.CompareTo(rat2) != 1) {
-          Assert.AreEqual(1, rat.CompareTo(rat2), rat + ", " + rat2);
+          Assert.Fail(rat + "; " + rat2);
         }
       }
       Assert.AreEqual(
@@ -76,7 +76,9 @@ namespace Test
           ExtendedRational rat2 = new ExtendedRational(num2, den2);
           if (rat.CompareTo(rat2) != 0) {
             Assert.AreEqual(
-              0, rat.CompareTo(rat2), rat + ", " + rat2 + ", " + rat.ToDouble() + ", " + rat2.ToDouble());
+              0,
+              rat.CompareTo(rat2),
+              rat + "; " + rat2 + "; " + rat.ToDouble() + "; " + rat2.ToDouble());
           }
         }
       }

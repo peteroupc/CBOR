@@ -216,8 +216,6 @@ namespace PeterO {
       return FromString(str, null);
     }
 
-    private static BigInteger valueBigShiftIteration = (BigInteger)1000000;
-
     private sealed class BinaryMathHelper : IRadixMathHelper<ExtendedFloat> {
     /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>

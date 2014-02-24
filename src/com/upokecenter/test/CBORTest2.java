@@ -46,10 +46,10 @@ import com.upokecenter.util.*;
         ExtendedRational rat = new ExtendedRational(num, BigInteger.ONE);
         ExtendedRational rat2 = new ExtendedRational(num, BigInteger.valueOf(2));
         if (rat2.compareTo(rat) != -1) {
-          Assert.assertEquals(-1, rat2.compareTo(rat), rat + ", " + rat2);
+          Assert.fail(rat + "; " + rat2);
         }
         if (rat.compareTo(rat2) != 1) {
-          Assert.assertEquals(1, rat.compareTo(rat2), rat + ", " + rat2);
+          Assert.fail(rat + "; " + rat2);
         }
       }
       Assert.assertEquals(
@@ -74,8 +74,7 @@ import com.upokecenter.util.*;
           den2=den2.multiply(mult);
           ExtendedRational rat2 = new ExtendedRational(num2, den2);
           if (rat.compareTo(rat2) != 0) {
-            Assert.assertEquals(
-              0, rat.compareTo(rat2), rat + ", " + rat2 + ", " + rat.ToDouble() + ", " + rat2.ToDouble());
+            Assert.assertEquals(rat + "; " + rat2 + "; " + rat.ToDouble() + "; " + rat2.ToDouble(),0,rat.compareTo(rat2));
           }
         }
       }
