@@ -227,7 +227,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return An arbitrary object.
      */
     public Object Negate(Object obj) {
-      return.subtract(BigInteger.valueOf(obj));
+      return BigInteger.ONE.subtract(BigInteger.valueOf(obj));
     }
 
     /**
