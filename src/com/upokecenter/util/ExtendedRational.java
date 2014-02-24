@@ -228,7 +228,8 @@ at: http://peteroupc.github.io/CBOR/
         exp=(exp).negate();
         den = DecimalUtility.FindPowerOfTenFromBig(exp);
       } else {
-        num *= DecimalUtility.FindPowerOfTenFromBig(exp);
+        BigInteger powerOfTen = DecimalUtility.FindPowerOfTenFromBig(exp);
+        num=num.multiply(powerOfTen);
       }
       if (neg) {
         num=(num).negate();
@@ -547,7 +548,8 @@ public int CompareToDecimal(ExtendedDecimal other) {
       }
       if (other.getExponent().signum()==0) {
         // Special case: other has exponent 0
-        BigInteger bcx = this.getDenominator().multiply(BigInteger.valueOf(other.getMantissa()));
+        BigInteger otherMant = other.getMantissa();
+        BigInteger bcx = this.getDenominator().multiply(otherMant);
         return this.getNumerator().compareTo(bcx);
       }
       if ((other.getExponent()).abs().compareTo(BigInteger.valueOf(50)) > 0) {

@@ -224,7 +224,8 @@ namespace PeterO
         exp = -(BigInteger)exp;
         den = DecimalUtility.FindPowerOfTenFromBig(exp);
       } else {
-        num *= DecimalUtility.FindPowerOfTenFromBig(exp);
+        BigInteger powerOfTen = DecimalUtility.FindPowerOfTenFromBig(exp);
+        num *= (BigInteger)powerOfTen;
       }
       if (neg) {
         num = -(BigInteger)num;
@@ -386,13 +387,20 @@ namespace PeterO
     /// <summary>Not documented yet.</summary>
     /// <returns>An ExtendedRational object.</returns>
     public ExtendedRational Abs() {
-      return this.Sign < 0 ? new ExtendedRational(-(BigInteger)this.Numerator, this.Denominator) : this;
+      if (this.IsNegative) {
+        ExtendedRational er = new ExtendedRational(this.unsignedNumerator, this.denominator);
+        er.flags = this.flags & ~BigNumberFlags.FlagNegative;
+        return er;
+      }
+      return this;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>An ExtendedRational object.</returns>
     public ExtendedRational Negate() {
-      return new ExtendedRational(-(BigInteger)this.Numerator, this.Denominator);
+        ExtendedRational er = new ExtendedRational(this.unsignedNumerator, this.denominator);
+        er.flags = this.flags ^ BigNumberFlags.FlagNegative;
+        return er;
     }
 
     /// <summary>Gets a value indicating whether this object's value equals
@@ -514,7 +522,8 @@ public int CompareToDecimal(ExtendedDecimal other) {
       }
       if (other.Exponent.IsZero) {
         // Special case: other has exponent 0
-        BigInteger bcx = this.Denominator * (BigInteger)other.Mantissa;
+        BigInteger otherMant = other.Mantissa;
+        BigInteger bcx = this.Denominator * (BigInteger)otherMant;
         return this.Numerator.CompareTo(bcx);
       }
       if (BigInteger.Abs(other.Exponent).CompareTo((BigInteger)50) > 0) {

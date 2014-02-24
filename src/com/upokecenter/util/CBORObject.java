@@ -3716,7 +3716,7 @@ public static CBORObject FromObject(Object obj) {
         // Map appears first because Map includes Iterable
         objret = CBORObject.NewMap();
         Map<?,?> objdic = (Map<?,?>)obj;
-        for(Object key : (Map<?,?>)objdic) {
+        for(Object key : objdic.keySet()) {
           objret.set(CBORObject.FromObject(key),CBORObject.FromObject(objdic.get(key)));
         }
         return objret;
