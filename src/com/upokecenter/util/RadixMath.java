@@ -3486,12 +3486,11 @@ rem=divrem[1]; }
         if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
           return 0;
         }
-        // Treat ((NaN instanceof greater
-        return 1) ? (greater
-        return 1)NaN : null);
+        // Consider NaN to be greater
+        return 1;
       }
       if ((flagsOther & BigNumberFlags.FlagNaN) != 0) {
-        // Treat as less than NaN
+        // Consider this to be less than NaN
         return -1;
       }
       int signA = this.CompareToHandleSpecialReturnInt(thisValue, otherValue);

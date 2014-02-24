@@ -407,7 +407,12 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedRational object.
      */
     public ExtendedRational Abs() {
-      return this.signum() < 0 ? new ExtendedRational((BigInteger.valueOf(this.getNumerator)).negate()(), this.getDenominator()) : this;
+      if (this.isNegative()) {
+        ExtendedRational er = new ExtendedRational(this.unsignedNumerator, this.denominator);
+        er.flags = this.flags & ~BigNumberFlags.FlagNegative;
+        return er;
+      }
+      return this;
     }
 
     /**
@@ -415,7 +420,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return An ExtendedRational object.
      */
     public ExtendedRational Negate() {
-      return new ExtendedRational((BigInteger.valueOf(this.getNumerator)).negate()(), this.getDenominator());
+        ExtendedRational er = new ExtendedRational(this.unsignedNumerator, this.denominator);
+        er.flags = this.flags ^ BigNumberFlags.FlagNegative;
+        return er;
     }
 
     /**
