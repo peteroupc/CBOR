@@ -792,14 +792,13 @@ at: http://peteroupc.github.io/CBOR/
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
      // System.out.println("was: "+thisValue+", "+otherValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
-      BigInteger oldExponent = this.GetHelper().GetExponent(otherValue);
      // System.out.println("now: "+thisValue+", "+otherValue);
       otherValue = this.RoundBeforeOp(otherValue, ctx2);
       // Apparently, subnormal values of "otherValue" raise
       // an invalid operation flag, according to the test cases
       PrecisionContext ctx3 = ctx2 == null ? null : ctx2.WithBlankFlags();
-      T valx = this.wrapper.RoundToPrecision(otherValue, ctx3);
-      if ((ctx3.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
+      this.wrapper.RoundToPrecision(otherValue, ctx3);
+      if (ctx3 != null && (ctx3.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
         return this.SignalInvalid(ctx);
       }
       thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);

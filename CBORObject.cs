@@ -534,8 +534,6 @@ namespace PeterO {
           throw new ArgumentException("doesn't satisfy typeOrderB == 0");
         }
         #endif
-
-        int combo = (typeA << 4) | typeB;
         int s1 = GetSignInternal(typeA, objA);
         int s2 = GetSignInternal(typeB, objB);
         if (s1 != s2 && s1 != 2 && s2 != 2) {
@@ -1989,8 +1987,6 @@ namespace PeterO {
         WriteStreamedString(str, stream);
       }
     }
-
-    private static BigInteger valueOneShift63 = BigInteger.One << 63;
 
     /// <summary>Writes a binary floating-point number in CBOR format to
     /// a data stream as follows: <list type=''> <item>If the value is null,

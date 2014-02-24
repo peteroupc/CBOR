@@ -43,9 +43,13 @@ import com.upokecenter.util.*;
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
-          Assert.assertEquals(bigintB, bigintA << j);
+          BigInteger ba = bigintA;
+          ba=ba.shiftLeft(j);
+          Assert.assertEquals(bigintB, ba);
           int negj = -j;
-          Assert.assertEquals(bigintB, bigintA >> negj);
+          ba = bigintA;
+          ba=ba.shiftRight(negj);
+          Assert.assertEquals(bigintB, ba);
           bigintB=bigintB.multiply(BigInteger.valueOf(2));
         }
       }
@@ -68,9 +72,13 @@ import com.upokecenter.util.*;
         bigintA = (bigintA).abs();
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
-          Assert.assertEquals(bigintB, bigintA >> j);
+          BigInteger ba = bigintA;
+          ba=ba.shiftRight(j);
+          Assert.assertEquals(bigintB, ba);
           int negj = -j;
-          Assert.assertEquals(bigintB, bigintA << negj);
+          ba = bigintA;
+          ba=ba.shiftLeft(negj);
+          Assert.assertEquals(bigintB, ba);
           bigintB=bigintB.divide(BigInteger.valueOf(2));
         }
       }

@@ -44,9 +44,13 @@ namespace Test
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
-          Assert.AreEqual(bigintB, bigintA << j);
+          BigInteger ba = bigintA;
+          ba <<= j;
+          Assert.AreEqual(bigintB, ba);
           int negj = -j;
-          Assert.AreEqual(bigintB, bigintA >> negj);
+          ba = bigintA;
+          ba >>= negj;
+          Assert.AreEqual(bigintB, ba);
           bigintB *= (BigInteger)2;
         }
       }
@@ -69,9 +73,13 @@ namespace Test
         bigintA = BigInteger.Abs(bigintA);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
-          Assert.AreEqual(bigintB, bigintA >> j);
+          BigInteger ba = bigintA;
+          ba >>= j;
+          Assert.AreEqual(bigintB, ba);
           int negj = -j;
-          Assert.AreEqual(bigintB, bigintA << negj);
+          ba = bigintA;
+          ba <<= negj;
+          Assert.AreEqual(bigintB, ba);
           bigintB /= (BigInteger)2;
         }
       }

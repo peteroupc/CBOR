@@ -950,15 +950,9 @@ namespace Test {
     [Test]
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
-      String badString = null;
-      CBORObject badobj = null;
       for (int i = 0; i < 2000; ++i) {
         CBORObject obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
-      }
-      if (badobj != null) {
-        Console.WriteLine(badString);
-        Console.WriteLine(ToByteArrayString(badobj));
       }
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {
@@ -5907,7 +5901,7 @@ namespace Test {
 
     [Test]
     public void TestCanFitInSpecificCases() {
-      Assert.IsFalse(CBORObject.FromObject(2554895343).CanFitInSingle());
+      Assert.IsFalse(CBORObject.FromObject(2554895343L).CanFitInSingle());
     }
 
     [Test]

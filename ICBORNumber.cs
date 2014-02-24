@@ -6,11 +6,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-// using System.Numerics;
-using System.Text;
 
 namespace PeterO
 {

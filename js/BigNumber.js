@@ -10329,13 +10329,12 @@ var SimpleRadixMath = function(wrapper) {
         var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
 
         thisValue = this.RoundBeforeOp(thisValue, ctx2);
-        var oldExponent = this.GetHelper().GetExponent(otherValue);
 
         otherValue = this.RoundBeforeOp(otherValue, ctx2);
 
         var ctx3 = ctx2 == null ? null : ctx2.WithBlankFlags();
-        var valx = this.wrapper.RoundToPrecision(otherValue, ctx3);
-        if ((ctx3.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
+        this.wrapper.RoundToPrecision(otherValue, ctx3);
+        if (ctx3 != null && (ctx3.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
             return this.SignalInvalid(ctx);
         }
         thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);
@@ -11942,7 +11941,6 @@ function() {
         }
         return ExtendedDecimal.FromString(str, ctx).ToExtendedFloat();
     };
-    constructor['valueBigShiftIteration'] = constructor.valueBigShiftIteration = BigInteger.valueOf(1000000);
     constructor['BinaryMathHelper'] = constructor.BinaryMathHelper = function ExtendedFloat$BinaryMathHelper(){};
     (function(constructor,prototype){
 

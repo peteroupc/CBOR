@@ -492,7 +492,6 @@ public int compareTo(CBORObject other) {
         }
         // At this point, both types should be number types.
 
-        int combo = (typeA << 4) | typeB;
         int s1 = GetSignInternal(typeA, objA);
         int s2 = GetSignInternal(typeB, objB);
         if (s1 != s2 && s1 != 2 && s2 != 2) {
@@ -2014,8 +2013,6 @@ public void set(String key, CBORObject value) {
         WriteStreamedString(str, stream);
       }
     }
-
-    private static BigInteger valueOneShift63 = BigInteger.ONE.shiftLeft(63);
 
     /**
      * Writes a binary floating-point number in CBOR format to a data stream
@@ -3653,8 +3650,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      *
      */
-    @SuppressWarnings("unchecked")
-public static CBORObject FromObject(Object obj) {
+    public static CBORObject FromObject(Object obj) {
       if (obj == null) {
         return CBORObject.Null;
       }

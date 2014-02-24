@@ -7,11 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-import java.util.*;
-
-import java.io.*;
-// import java.math.*;
-
   interface ICBORNumber
   {
     boolean IsPositiveInfinity(Object obj);

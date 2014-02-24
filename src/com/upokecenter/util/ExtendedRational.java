@@ -442,7 +442,10 @@ at: http://peteroupc.github.io/CBOR/
      * @return A value not documented yet.
      */
     public int signum() {
-        if (this.signum()==0) {
+        if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
+          return this.isNegative() ? -1 : 1;
+        }
+        if (this.unsignedNumerator.signum()==0) {
           return 0;
         }
         return this.isNegative() ? -1 : 1;

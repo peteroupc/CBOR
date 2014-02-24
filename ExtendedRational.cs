@@ -419,7 +419,10 @@ namespace PeterO
     /// <value>A value not documented yet.</value>
     public int Sign {
       get {
-        if (this.IsZero) {
+        if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
+          return this.IsNegative ? -1 : 1;
+        }
+        if (this.unsignedNumerator.IsZero) {
           return 0;
         }
         return this.IsNegative ? -1 : 1;

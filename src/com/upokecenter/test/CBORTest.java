@@ -942,15 +942,9 @@ import com.upokecenter.util.*;
     @Test
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
-      String badString = null;
-      CBORObject badobj = null;
       for (int i = 0; i < 2000; ++i) {
         CBORObject obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
-      }
-      if (badobj != null) {
-        System.out.println(badString);
-        System.out.println(ToByteArrayString(badobj));
       }
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {
@@ -5964,7 +5958,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     @Test
     public void TestCanFitInSpecificCases() {
-      if(CBORObject.FromObject(2554895343).CanFitInSingle())Assert.fail();
+      if(CBORObject.FromObject(2554895343L).CanFitInSingle())Assert.fail();
     }
 
     @Test
