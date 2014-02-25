@@ -10,8 +10,8 @@ using System.Globalization;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Contains methods useful for reading and writing data,
-    /// with a focus on CBOR.</summary>
+  /// <summary>Contains methods useful for reading and writing data,
+  /// with a focus on CBOR.</summary>
   public static class CBORDataUtilities {
     private const int MaxSafeInt = 214748363;
 
@@ -78,8 +78,8 @@ namespace PeterO {
         ++i;
         haveDigits = true;
         if (i == str.Length) {
- return CBORObject.FromObject(0);
-}
+          return CBORObject.FromObject(0);
+        }
         if (!integersOnly) {
           if (str[i] == '.') {
             haveDecimalPoint = true;
@@ -223,20 +223,20 @@ namespace PeterO {
       }
       if (negative) {
         if (mant == null) {
- mantInt = -mantInt;
-  } else {
- mant.Negate();
-}
+          mantInt = -mantInt;
+        } else {
+          mant.Negate();
+        }
       }
       if ((newScale == null && newScaleInt == 0) || (newScale != null && newScale.Sign == 0)) {
         // No fractional part
         if (mant == null) {
- return CBORObject.FromObject(mantInt);
-  } else if (mant.CanFitInInt32()) {
- return CBORObject.FromObject(mant.AsInt32());
-  } else {
- return CBORObject.FromObject(mant.AsBigInteger());
-}
+          return CBORObject.FromObject(mantInt);
+        } else if (mant.CanFitInInt32()) {
+          return CBORObject.FromObject(mant.AsInt32());
+        } else {
+          return CBORObject.FromObject(mant.AsBigInteger());
+        }
       } else {
         BigInteger bigmant = (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger();
         BigInteger bigexp = (newScale == null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger();
