@@ -522,6 +522,8 @@ namespace PeterO {
       } else {
         int typeOrderA = valueNumberTypeOrder[typeA];
         int typeOrderB = valueNumberTypeOrder[typeB];
+        // Check whether general types are different
+        // (treating number types the same)
         if (typeOrderA != typeOrderB) {
           return (typeOrderA < typeOrderB) ? -1 : 1;
         }
@@ -1388,10 +1390,10 @@ namespace PeterO {
     }
 
     /// <summary>Adds a new object to this map.</summary>
-    /// <param name='key'>A CBOR object representing the key.</param>
-    /// <param name='value'>A CBOR object representing the value.</param>
-    /// <exception cref='System.ArgumentNullException'>Key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
+    /// <param name='key'>A CBOR object representing the key. Can be null,
+    /// in which case this value is converted to CBORObject.Null.</param>
+    /// <param name='value'>A CBOR object representing the value. Can be
+    /// null, in which case this value is converted to CBORObject.Null.</param>
     /// <exception cref='System.ArgumentException'>Key already exists
     /// in this map.</exception>
     /// <exception cref='InvalidOperationException'>This object is
@@ -1399,10 +1401,10 @@ namespace PeterO {
     /// <returns>This object.</returns>
     public CBORObject Add(CBORObject key, CBORObject value) {
       if (key == null) {
-        throw new ArgumentNullException("key");
+        key = CBORObject.Null;
       }
       if (value == null) {
-        throw new ArgumentNullException("value");
+        value = CBORObject.Null;
       }
       if (this.ItemType == CBORObjectTypeMap) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();

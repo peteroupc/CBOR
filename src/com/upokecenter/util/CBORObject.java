@@ -487,6 +487,8 @@ public int compareTo(CBORObject other) {
       } else {
         int typeOrderA = valueNumberTypeOrder[typeA];
         int typeOrderB = valueNumberTypeOrder[typeB];
+        // Check whether general types are different
+        // (treating number types the same)
         if (typeOrderA != typeOrderB) {
           return (typeOrderA < typeOrderB) ? -1 : 1;
         }

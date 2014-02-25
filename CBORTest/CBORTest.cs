@@ -13,8 +13,8 @@ using NUnit.Framework;
 using PeterO;
 
 namespace Test {
-    /// <summary>Contains CBOR tests.</summary>
-    /// <returns/><param name='r'> A FastRandom object.</param>
+  /// <summary>Contains CBOR tests.</summary>
+  /// <returns/><param name='r'> A FastRandom object.</param>
   [TestFixture]
   public class CBORTest {
     private static void TestExtendedFloatDoubleCore(double d, string s) {
@@ -1374,6 +1374,12 @@ namespace Test {
       Assert.AreEqual("true", CBORObject.True.ToJSONString());
       Assert.AreEqual("false", CBORObject.False.ToJSONString());
       Assert.AreEqual("null", CBORObject.Null.ToJSONString());
+      Assert.AreEqual("null",CBORObject.FromObject(Single.PositiveInfinity).ToJSONString());
+      Assert.AreEqual("null",CBORObject.FromObject(Single.NegativeInfinity).ToJSONString());
+      Assert.AreEqual("null",CBORObject.FromObject(Single.NaN).ToJSONString());
+      Assert.AreEqual("null",CBORObject.FromObject(Double.PositiveInfinity).ToJSONString());
+      Assert.AreEqual("null",CBORObject.FromObject(Double.NegativeInfinity).ToJSONString());
+      Assert.AreEqual("null",CBORObject.FromObject(Double.NaN).ToJSONString());
     }
 
     [Test]
@@ -1606,91 +1612,91 @@ namespace Test {
     public void TestReadUtf8() {
       this.DoTestReadUtf8(
         new byte[] { 0x21,
-        0x21,
-        0x21 },
+          0x21,
+          0x21 },
         0,
         "!!!",
         0,
         "!!!");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0x80 },
+          0xc2,
+          0x80 },
         0,
         " \u0080",
         0,
         " \u0080");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0x80,
-        0x20 },
+          0xc2,
+          0x80,
+          0x20 },
         0,
         " \u0080 ",
         0,
         " \u0080 ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0x80,
-        0xc2 },
+          0xc2,
+          0x80,
+          0xc2 },
         0,
         " \u0080\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0x21,
-        0x21 },
+          0xc2,
+          0x21,
+          0x21 },
         0,
         " \ufffd!!",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xc2,
-        0xff,
-        0x20 },
+          0xc2,
+          0xff,
+          0x20 },
         0,
         " \ufffd\ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xa0,
-        0x80 },
+          0xe0,
+          0xa0,
+          0x80 },
         0,
         " \u0800",
         0,
         " \u0800");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xa0,
-        0x80,
-        0x20 },
+          0xe0,
+          0xa0,
+          0x80,
+          0x20 },
         0,
         " \u0800 ",
         0,
         " \u0800 ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0x80 },
+          0xf0,
+          0x90,
+          0x80,
+          0x80 },
         0,
         " \ud800\udc00",
         0,
         " \ud800\udc00");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0x80 },
+          0xf0,
+          0x90,
+          0x80,
+          0x80 },
         3,
         0,
         " \ufffd",
@@ -1698,8 +1704,8 @@ namespace Test {
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90 },
+          0xf0,
+          0x90 },
         5,
         -2,
         null,
@@ -1707,8 +1713,8 @@ namespace Test {
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0x20,
-        0x20 },
+          0x20,
+          0x20 },
         5,
         -2,
         null,
@@ -1716,83 +1722,83 @@ namespace Test {
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0x80,
-        0x20 },
+          0xf0,
+          0x90,
+          0x80,
+          0x80,
+          0x20 },
         0,
         " \ud800\udc00 ",
         0,
         " \ud800\udc00 ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0x20 },
+          0xf0,
+          0x90,
+          0x80,
+          0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x20 },
+          0xf0,
+          0x90,
+          0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0x80,
-        0xff },
+          0xf0,
+          0x90,
+          0x80,
+          0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xf0,
-        0x90,
-        0xff },
+          0xf0,
+          0x90,
+          0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xa0,
-        0x20 },
+          0xe0,
+          0xa0,
+          0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0x20 },
+          0xe0,
+          0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xa0,
-        0xff },
+          0xe0,
+          0xa0,
+          0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-        0xe0,
-        0xff },
+          0xe0,
+          0xff },
         0,
         " \ufffd\ufffd",
         -1,
@@ -1865,11 +1871,11 @@ namespace Test {
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
-        0x61,
-        0x2e,
-        0x61,
-        0x2e,
-        0xFF });
+          0x61,
+          0x2e,
+          0x61,
+          0x2e,
+          0xFF });
       Assert.AreEqual("..", cbor.AsString());
       // Test streaming of long strings
       string longString = Repeat('x', 200000);
@@ -1899,25 +1905,25 @@ namespace Test {
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
-        0x61,
-        0x20,
-        0xC0,
-        0x61,
-        0x20,
-        0xFF });
+          0x61,
+          0x20,
+          0xC0,
+          0x61,
+          0x20,
+          0xFF });
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
-        0x61,
-        0x20,
-        0x7F,
-        0x61,
-        0x20,
-        0xFF,
-        0xFF });
+          0x61,
+          0x20,
+          0x7F,
+          0x61,
+          0x20,
+          0xFF,
+          0xFF });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -1925,23 +1931,23 @@ namespace Test {
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F,
-        0x41,
-        0x20,
-        0x41,
-        0x20,
-        0xFF });
+          0x41,
+          0x20,
+          0x41,
+          0x20,
+          0xFF });
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestByteStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F,
-        0x41,
-        0x20,
-        0xC2,
-        0x41,
-        0x20,
-        0xFF });
+          0x41,
+          0x20,
+          0xC2,
+          0x41,
+          0x20,
+          0xFF });
     }
 
     public static void AssertDecimalsEquivalent(string a, string b) {
@@ -5019,13 +5025,13 @@ namespace Test {
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F,
-        0x41,
-        0x20,
-        0x5F,
-        0x41,
-        0x20,
-        0xFF,
-        0xFF });
+          0x41,
+          0x20,
+          0x5F,
+          0x41,
+          0x20,
+          0xFF,
+          0xFF });
     }
 
     [Test]
@@ -5134,6 +5140,156 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+    }
+
+    [Test]
+    public void TestExtendedMiscellaneous() {
+      Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromExtendedFloat(ExtendedFloat.Zero));
+      Assert.AreEqual(ExtendedDecimal.NegativeZero, ExtendedDecimal.FromExtendedFloat(ExtendedFloat.NegativeZero));
+      Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromInt32(0));
+      Assert.AreEqual(ExtendedDecimal.One, ExtendedDecimal.FromInt32(1));
+      Assert.AreEqual("sNaN", ExtendedDecimal.SignalingNaN.ToString());
+      Assert.AreEqual("sNaN", ExtendedDecimal.SignalingNaN.ToEngineeringString());
+      Assert.AreEqual("sNaN", ExtendedDecimal.SignalingNaN.ToPlainString());
+      Assert.AreEqual(ExtendedFloat.Zero, ExtendedDecimal.Zero.ToExtendedFloat());
+      Assert.AreEqual(ExtendedFloat.NegativeZero, ExtendedDecimal.NegativeZero.ToExtendedFloat());
+      Assert.AreEqual(0.0f, ExtendedDecimal.Zero.ToSingle());
+      Assert.AreEqual(0.0, ExtendedDecimal.Zero.ToDouble());
+      Assert.AreEqual(0.0f, ExtendedFloat.Zero.ToSingle());
+      Assert.AreEqual(0.0, ExtendedFloat.Zero.ToDouble());
+      try {
+        CBORObject.FromSimpleValue(-1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromSimpleValue(256);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromSimpleValue(24);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromSimpleValue(31);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, BigInteger.Zero-BigInteger.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      BigInteger bigvalue = BigInteger.One << 100;
+      try {
+        CBORObject.FromObjectAndTag(2, bigvalue);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, -1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      Assert.AreEqual("simple(50)",CBORObject.FromSimpleValue(50));
+      try {
+        CBORObject.FromObject(CBORObject.FromObject(Double.NaN).Sign);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      CBORObject cbor = CBORObject.True;
+      try {
+        CBORObject.FromObject(cbor[0]);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        cbor[0]=CBORObject.False;
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(CBORObject.False.Keys);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(CBORObject.NewArray().Keys);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(CBORObject.NewArray().Sign);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(CBORObject.NewMap().Sign);
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      Assert.AreEqual(CBORObject.FromObject(0.1), CBORObject.FromObjectAndTag(0.1, 999999).Untag());
+      Assert.AreEqual(-1, CBORObject.FromObject(0.1));
+      Assert.AreEqual(-1, CBORObject.NewArray());
+      Assert.AreEqual(false, CBORObject.NewArray().ContainsKey(CBORObject.True));
+      Assert.AreEqual(0, CBORObject.FromObject(0.1).CompareTo(CBORObject.FromObject(0.1)));
+      Assert.AreEqual(0, CBORObject.FromObject(0.1f).CompareTo(CBORObject.FromObject(0.1f)));
+      Assert.AreEqual(CBORObject.FromObject(2), CBORObject.FromObject(-2).Negate());
+      Assert.AreEqual(CBORObject.FromObject(-2), CBORObject.FromObject(2).Negate());
+      Assert.AreEqual(CBORObject.FromObject(2), CBORObject.FromObject(-2).Abs());
+      Assert.AreEqual(CBORObject.FromObject(2), CBORObject.FromObject(2).Abs());
     }
 
     [Test]
@@ -5269,6 +5425,62 @@ namespace Test {
         ExtendedFloat.MaxMagnitude(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.Zero.Subtract(null, PrecisionContext.Unlimited);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.Zero.Subtract(null, PrecisionContext.Unlimited);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.Zero.Add(null, PrecisionContext.Unlimited);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.Zero.Add(null, PrecisionContext.Unlimited);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromExtendedFloat(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -5951,28 +6163,28 @@ namespace Test {
     public void TestDecimalFrac() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-        0x82,
-        0x3,
-        0x1a,
-        1,
-        2,
-        3,
-        4 });
+          0x82,
+          0x3,
+          0x1a,
+          1,
+          2,
+          3,
+          4 });
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExponentMustNotBeBignum() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-        0x82,
-        0xc2,
-        0x41,
-        1,
-        0x1a,
-        1,
-        2,
-        3,
-        4 });
+          0x82,
+          0xc2,
+          0x41,
+          1,
+          0x1a,
+          1,
+          2,
+          3,
+          4 });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -6048,10 +6260,10 @@ namespace Test {
     public void TestDecimalFracExactlyTwoElements() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-        0x82,
-        0xc2,
-        0x41,
-        1 });
+          0x82,
+          0xc2,
+          0x41,
+          1 });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -6059,11 +6271,11 @@ namespace Test {
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-        0x82,
-        0x3,
-        0xc2,
-        0x41,
-        1 });
+          0x82,
+          0x3,
+          0xc2,
+          0x41,
+          1 });
       Assert.AreEqual(
         ExtendedDecimal.Create(BigInteger.One, (BigInteger)3),
         o.AsExtendedDecimal());
@@ -6107,8 +6319,8 @@ namespace Test {
       oo = CBORObject.NewArray()
         .Add(CBORObject.NewMap()
              .Add(
-new ExtendedRational(BigInteger.One, (BigInteger)2),
-3)
+               new ExtendedRational(BigInteger.One, (BigInteger)2),
+               3)
              .Add(4, false))
         .Add(true);
       TestCommon.AssertRoundTrip(oo);

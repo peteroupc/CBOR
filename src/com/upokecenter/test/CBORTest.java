@@ -5192,6 +5192,17 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     }
 
     @Test
+    public void TestExtendedMiscellaneous() {
+      Assert.assertEquals(ExtendedFloat.Zero, ExtendedDecimal.FromExtendedFloat(ExtendedFloat.Zero));
+      Assert.assertEquals(ExtendedFloat.NegativeZero, ExtendedDecimal.FromExtendedFloat(ExtendedFloat.NegativeZero));
+      Assert.assertEquals(ExtendedDecimal.Zero, ExtendedDecimal.FromInt32(0));
+      Assert.assertEquals(ExtendedDecimal.One, ExtendedDecimal.FromInt32(1));
+      Assert.assertEquals("sNaN", ExtendedDecimal.SignalingNaN.toString());
+      Assert.assertEquals("sNaN", ExtendedDecimal.SignalingNaN.ToEngineeringString());
+      Assert.assertEquals("sNaN", ExtendedDecimal.SignalingNaN.ToPlainString());
+    }
+
+    @Test
     public void TestExtendedDecimalExceptions() {
       try {
         ExtendedDecimal.Min(null, ExtendedDecimal.One);
@@ -5328,6 +5339,46 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
+      try {
+ ExtendedDecimal.Zero.Subtract(null, PrecisionContext.Unlimited);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ ExtendedFloat.Zero.Subtract(null, PrecisionContext.Unlimited);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ ExtendedDecimal.Zero.Add(null, PrecisionContext.Unlimited);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ ExtendedFloat.Zero.Add(null, PrecisionContext.Unlimited);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ ExtendedDecimal.FromExtendedFloat(null);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
     }
 
     /**
@@ -6176,8 +6227,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       oo = CBORObject.NewArray()
         .Add(CBORObject.NewMap()
              .Add(
-new ExtendedRational(BigInteger.ONE, BigInteger.valueOf(2)),
-3)
+               new ExtendedRational(BigInteger.ONE, BigInteger.valueOf(2)),
+               3)
              .Add(4, false))
         .Add(true);
       TestCommon.AssertRoundTrip(oo);

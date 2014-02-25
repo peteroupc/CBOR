@@ -9,9 +9,9 @@ using System;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Encapsulates radix-independent arithmetic.</summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+  /// <summary>Encapsulates radix-independent arithmetic.</summary>
+  /// <typeparam name='T'>Data type for a numeric value in a particular
+  /// radix.</typeparam>
   internal class RadixMath<T> : IRadixMath<T> {
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;
@@ -3190,6 +3190,12 @@ namespace PeterO {
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
     public T Add(T thisValue, T other, PrecisionContext ctx) {
+      if (thisValue == null) {
+        throw new ArgumentNullException("thisValue");
+      }
+      if (other == null) {
+        throw new ArgumentNullException("other");
+      }
       return this.AddEx(thisValue, other, ctx, false);
     }
 
