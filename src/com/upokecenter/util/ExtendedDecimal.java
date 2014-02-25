@@ -259,17 +259,26 @@ at: http://peteroupc.github.io/CBOR/
       int i = offset;
       if (i + 8 == str.length()) {
         if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f') && (str.charAt(i + 3) == 'I' || str.charAt(i + 3) == 'i') && (str.charAt(i + 4) == 'N' || str.charAt(i + 4) == 'n') && (str.charAt(i + 5) == 'I' || str.charAt(i + 5) == 'i') && (str.charAt(i + 6) == 'T' || str.charAt(i + 6) == 't') && (str.charAt(i + 7) == 'Y' || str.charAt(i + 7) == 'y')) {
+          if (ctx != null && ctx.isSimplified() && i < str.length()) {
+            throw new NumberFormatException("Infinity not allowed");
+          }
           return negative ? NegativeInfinity : PositiveInfinity;
         }
       }
       if (i + 3 == str.length()) {
         if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f')) {
+          if (ctx != null && ctx.isSimplified() && i < str.length()) {
+            throw new NumberFormatException("Infinity not allowed");
+          }
           return negative ? NegativeInfinity : PositiveInfinity;
         }
       }
       if (i + 3 <= str.length()) {
         // Quiet NaN
         if ((str.charAt(i) == 'N' || str.charAt(i) == 'n') && (str.charAt(i + 1) == 'A' || str.charAt(i + 1) == 'a') && (str.charAt(i + 2) == 'N' || str.charAt(i + 2) == 'n')) {
+          if (ctx != null && ctx.isSimplified() && i < str.length()) {
+            throw new NumberFormatException("NaN not allowed");
+          }
           if (i + 3 == str.length()) {
             if (!negative) {
               return NaN;
@@ -331,6 +340,9 @@ at: http://peteroupc.github.io/CBOR/
       if (i + 4 <= str.length()) {
         // Signaling NaN
         if ((str.charAt(i) == 'S' || str.charAt(i) == 's') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'A' || str.charAt(i + 2) == 'a') && (str.charAt(i + 3) == 'N' || str.charAt(i + 3) == 'n')) {
+          if (ctx != null && ctx.isSimplified() && i < str.length()) {
+            throw new NumberFormatException("NaN not allowed");
+          }
           if (i + 4 == str.length()) {
             if (!negative) {
               return SignalingNaN;
@@ -522,7 +534,7 @@ at: http://peteroupc.github.io/CBOR/
       ret.exponent = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
       ret.flags = negative ? BigNumberFlags.FlagNegative : 0;
       if (ctx != null) {
-        ret = math.RoundToPrecisionRaw(ret, ctx);
+        ret = math.RoundAfterConversion(ret, ctx);
       }
       return ret;
     }

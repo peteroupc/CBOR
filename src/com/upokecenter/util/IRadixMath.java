@@ -63,7 +63,7 @@ at: http://peteroupc.github.io/CBOR/
 
     T RoundToPrecision(T thisValue, PrecisionContext ctx);
 
-    T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx);
+    T RoundAfterConversion(T thisValue, PrecisionContext ctx);
 
     T Quantize(T thisValue, T otherValue, PrecisionContext ctx);
 

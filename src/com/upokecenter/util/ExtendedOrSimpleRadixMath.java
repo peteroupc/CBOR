@@ -333,9 +333,9 @@ public T RoundToPrecision(T thisValue, PrecisionContext ctx) {
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
-      return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToPrecisionRaw(thisValue, ctx) :
-        this.simp.RoundToPrecisionRaw(thisValue, ctx);
+public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
+      return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundAfterConversion(thisValue, ctx) :
+        this.simp.RoundAfterConversion(thisValue, ctx);
     }
 
     /**

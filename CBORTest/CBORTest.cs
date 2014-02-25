@@ -5288,7 +5288,7 @@ throw new InvalidOperationException(String.Empty, ex);
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      Assert.AreEqual("simple(50)", CBORObject.FromSimpleValue(50));
+      Assert.AreEqual("simple(50)", CBORObject.FromSimpleValue(50).ToString());
       try {
         CBORObject.FromObject(CBORObject.FromObject(Double.NaN).Sign);
         Assert.Fail("Should have failed");
@@ -5347,7 +5347,6 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       Assert.AreEqual(CBORObject.FromObject(0.1), CBORObject.FromObjectAndTag(0.1, 999999).Untag());
-      Assert.AreEqual(-1, CBORObject.FromObject(0.1));
       Assert.AreEqual(-1, CBORObject.NewArray());
       Assert.AreEqual(false, CBORObject.NewArray().ContainsKey(CBORObject.True));
       Assert.AreEqual(0, CBORObject.FromObject(0.1).CompareTo(CBORObject.FromObject(0.1)));

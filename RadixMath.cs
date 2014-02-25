@@ -3562,8 +3562,8 @@ namespace PeterO {
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
-      // Console.WriteLine("RM RoundToPrecisionRaw");
+    public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
+      // Console.WriteLine("RM RoundAfterConversion");
       return this.RoundToPrecision(thisValue, ctx);
     }
   }

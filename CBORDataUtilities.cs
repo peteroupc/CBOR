@@ -13,9 +13,10 @@ namespace PeterO {
     /// <summary>Contains methods useful for reading and writing data,
     /// with a focus on CBOR.</summary>
   public static class CBORDataUtilities {
+    private const int MaxSafeInt = 214748363;
+
     private static BigInteger valueLowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
     private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
-    private const int MaxSafeInt = 214748363;
 
     /// <summary>Parses a number whose format follows the JSON specification.
     /// See #ParseJSONNumber(String, integersOnly, parseOnly) for more

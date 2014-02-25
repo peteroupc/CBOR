@@ -80,7 +80,7 @@ namespace PeterO {
         if (afterQuantize) {
           return this.GetHelper().CreateNewWithFlags(mant, this.GetHelper().GetExponent(thisValue), 0);
         }
-        return this.GetHelper().ValueOf(0);
+        return this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctxDest);
       }
       if (afterQuantize) {
         return thisValue;
@@ -393,7 +393,7 @@ namespace PeterO {
       // Console.WriteLine("op now " + thisValue + ", "+pow);
       int powSign = this.GetHelper().GetSign(pow);
       if (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0) {
-        thisValue = this.GetHelper().ValueOf(1);
+        thisValue = this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(1), ctx2);
       } else {
         // Console.WriteLine("was " + thisValue);
         // BigInteger powExponent = this.GetHelper().GetExponent(pow);
@@ -672,7 +672,7 @@ namespace PeterO {
                     this.GetHelper().GetSign(multiplicand) == 0;
       bool zeroB = this.GetHelper().GetSign(augend) == 0;
       if (zeroA) {
-        thisValue = zeroB ? this.GetHelper().ValueOf(0) : augend;
+        thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : augend;
         thisValue = this.RoundToPrecision(thisValue, ctx2);
       } else if (!zeroB) {
         thisValue = this.wrapper.MultiplyAndAdd(thisValue, multiplicand, augend, ctx2);
@@ -834,7 +834,7 @@ namespace PeterO {
       bool zeroA = this.GetHelper().GetSign(thisValue) == 0;
       bool zeroB = this.GetHelper().GetSign(other) == 0;
       if (zeroA) {
-        thisValue = zeroB ? this.GetHelper().ValueOf(0) : other;
+        thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : other;
         thisValue = this.RoundToPrecision(thisValue, ctx2);
       } else if (!zeroB) {
         thisValue = this.wrapper.AddEx(thisValue, other, ctx2, true);
@@ -889,9 +889,17 @@ namespace PeterO {
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
-      // Console.WriteLine("toprecraw " + thisValue);
-      return this.wrapper.RoundToPrecisionRaw(thisValue, ctx);
+    public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
+      T ret = this.CheckNotANumber1(thisValue, ctx);
+      if ((object)ret != (object)default(T)) {
+        return ret;
+      }
+      if (this.GetHelper().GetSign(thisValue) == 0) {
+        return this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx);
+      }
+      PrecisionContext ctx2 = GetContextWithFlags(ctx);
+      thisValue = this.wrapper.RoundToPrecision(thisValue, ctx2);
+      return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
   }
 }

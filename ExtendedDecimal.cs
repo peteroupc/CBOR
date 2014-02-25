@@ -262,17 +262,26 @@ namespace PeterO
       int i = offset;
       if (i + 8 == str.Length) {
         if ((str[i] == 'I' || str[i] == 'i') && (str[i + 1] == 'N' || str[i + 1] == 'n') && (str[i + 2] == 'F' || str[i + 2] == 'f') && (str[i + 3] == 'I' || str[i + 3] == 'i') && (str[i + 4] == 'N' || str[i + 4] == 'n') && (str[i + 5] == 'I' || str[i + 5] == 'i') && (str[i + 6] == 'T' || str[i + 6] == 't') && (str[i + 7] == 'Y' || str[i + 7] == 'y')) {
+          if (ctx != null && ctx.IsSimplified && i < str.Length) {
+            throw new FormatException("Infinity not allowed");
+          }
           return negative ? NegativeInfinity : PositiveInfinity;
         }
       }
       if (i + 3 == str.Length) {
         if ((str[i] == 'I' || str[i] == 'i') && (str[i + 1] == 'N' || str[i + 1] == 'n') && (str[i + 2] == 'F' || str[i + 2] == 'f')) {
+          if (ctx != null && ctx.IsSimplified && i < str.Length) {
+            throw new FormatException("Infinity not allowed");
+          }
           return negative ? NegativeInfinity : PositiveInfinity;
         }
       }
       if (i + 3 <= str.Length) {
         // Quiet NaN
         if ((str[i] == 'N' || str[i] == 'n') && (str[i + 1] == 'A' || str[i + 1] == 'a') && (str[i + 2] == 'N' || str[i + 2] == 'n')) {
+          if (ctx != null && ctx.IsSimplified && i < str.Length) {
+            throw new FormatException("NaN not allowed");
+          }
           if (i + 3 == str.Length) {
             if (!negative) {
               return NaN;
@@ -334,6 +343,9 @@ namespace PeterO
       if (i + 4 <= str.Length) {
         // Signaling NaN
         if ((str[i] == 'S' || str[i] == 's') && (str[i + 1] == 'N' || str[i + 1] == 'n') && (str[i + 2] == 'A' || str[i + 2] == 'a') && (str[i + 3] == 'N' || str[i + 3] == 'n')) {
+          if (ctx != null && ctx.IsSimplified && i < str.Length) {
+            throw new FormatException("NaN not allowed");
+          }
           if (i + 4 == str.Length) {
             if (!negative) {
               return SignalingNaN;
@@ -525,7 +537,7 @@ namespace PeterO
       ret.exponent = (newScale == null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger();
       ret.flags = negative ? BigNumberFlags.FlagNegative : 0;
       if (ctx != null) {
-        ret = math.RoundToPrecisionRaw(ret, ctx);
+        ret = math.RoundAfterConversion(ret, ctx);
       }
       return ret;
     }
