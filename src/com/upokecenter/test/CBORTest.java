@@ -5343,7 +5343,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      Assert.assertEquals("simple(50)", CBORObject.FromSimpleValue(50));
+      Assert.assertEquals("simple(50)", CBORObject.FromSimpleValue(50).toString());
       try {
         CBORObject.FromObject(CBORObject.FromObject(Double.NaN).signum());
         Assert.fail("Should have failed");
@@ -5402,7 +5402,6 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new IllegalStateException("", ex);
       }
       Assert.assertEquals(CBORObject.FromObject(0.1), CBORObject.FromObjectAndTag(0.1, 999999).Untag());
-      Assert.assertEquals(-1, CBORObject.FromObject(0.1));
       Assert.assertEquals(-1, CBORObject.NewArray());
       Assert.assertEquals(false, CBORObject.NewArray().containsKey(CBORObject.True));
       Assert.assertEquals(0, CBORObject.FromObject(0.1).compareTo(CBORObject.FromObject(0.1)));

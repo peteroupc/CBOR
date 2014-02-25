@@ -14,9 +14,10 @@ at: http://peteroupc.github.io/CBOR/
   public final class CBORDataUtilities {
 private CBORDataUtilities() {
 }
+    private static final int MaxSafeInt = 214748363;
+
     private static BigInteger valueLowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
     private static BigInteger valueUInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
-    private static final int MaxSafeInt = 214748363;
 
     /**
      * Parses a number whose format follows the JSON specification. See

@@ -9449,7 +9449,7 @@ var RadixMath = function(helper) {
         return this.helper;
     };
 
-    prototype.RoundToPrecisionRaw = function(thisValue, ctx) {
+    prototype.RoundAfterConversion = function(thisValue, ctx) {
 
         return this.RoundToPrecision(thisValue, ctx);
     };
@@ -9759,9 +9759,9 @@ var TrappableRadixMath = function(math) {
         return this.math.compareTo(thisValue, otherValue);
     };
 
-    prototype.RoundToPrecisionRaw = function(thisValue, ctx) {
+    prototype.RoundAfterConversion = function(thisValue, ctx) {
         var tctx = TrappableRadixMath.GetTrappableContext(ctx);
-        var result = this.math.RoundToPrecisionRaw(thisValue, tctx);
+        var result = this.math.RoundAfterConversion(thisValue, tctx);
         return this.TriggerTraps(result, tctx, ctx);
     };
 
@@ -9828,7 +9828,7 @@ var SimpleRadixMath = function(wrapper) {
             if (afterQuantize) {
                 return this.GetHelper().CreateNewWithFlags(mant, this.GetHelper().GetExponent(thisValue), 0);
             }
-            return this.GetHelper().ValueOf(0);
+            return this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctxDest);
         }
         if (afterQuantize) {
             return thisValue;
@@ -10083,7 +10083,7 @@ var SimpleRadixMath = function(wrapper) {
 
         var powSign = this.GetHelper().GetSign(pow);
         if (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0) {
-            thisValue = this.GetHelper().ValueOf(1);
+            thisValue = this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(1), ctx2);
         } else {
 
             {
@@ -10283,7 +10283,7 @@ var SimpleRadixMath = function(wrapper) {
         var zeroA = this.GetHelper().GetSign(thisValue) == 0 || this.GetHelper().GetSign(multiplicand) == 0;
         var zeroB = this.GetHelper().GetSign(augend) == 0;
         if (zeroA) {
-            thisValue = zeroB ? this.GetHelper().ValueOf(0) : augend;
+            thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : augend;
             thisValue = this.RoundToPrecision(thisValue, ctx2);
         } else if (!zeroB) {
             thisValue = this.wrapper.MultiplyAndAdd(thisValue, multiplicand, augend, ctx2);
@@ -10403,7 +10403,7 @@ var SimpleRadixMath = function(wrapper) {
         var zeroA = this.GetHelper().GetSign(thisValue) == 0;
         var zeroB = this.GetHelper().GetSign(other) == 0;
         if (zeroA) {
-            thisValue = zeroB ? this.GetHelper().ValueOf(0) : other;
+            thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : other;
             thisValue = this.RoundToPrecision(thisValue, ctx2);
         } else if (!zeroB) {
             thisValue = this.wrapper.AddEx(thisValue, other, ctx2, true);
@@ -10432,9 +10432,17 @@ var SimpleRadixMath = function(wrapper) {
         return this.wrapper.compareTo(thisValue, otherValue);
     };
 
-    prototype.RoundToPrecisionRaw = function(thisValue, ctx) {
-
-        return this.wrapper.RoundToPrecisionRaw(thisValue, ctx);
+    prototype.RoundAfterConversion = function(thisValue, ctx) {
+        var ret = this.CheckNotANumber1(thisValue, ctx);
+        if (ret != null) {
+            return ret;
+        }
+        if (this.GetHelper().GetSign(thisValue) == 0) {
+            return this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx);
+        }
+        var ctx2 = SimpleRadixMath.GetContextWithFlags(ctx);
+        thisValue = this.wrapper.RoundToPrecision(thisValue, ctx2);
+        return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     };
 })(SimpleRadixMath,SimpleRadixMath.prototype);
 
@@ -10556,8 +10564,8 @@ var ExtendedOrSimpleRadixMath = function(helper) {
         return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToPrecision(thisValue, ctx) : this.simp.RoundToPrecision(thisValue, ctx);
     };
 
-    prototype.RoundToPrecisionRaw = function(thisValue, ctx) {
-        return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToPrecisionRaw(thisValue, ctx) : this.simp.RoundToPrecisionRaw(thisValue, ctx);
+    prototype.RoundAfterConversion = function(thisValue, ctx) {
+        return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundAfterConversion(thisValue, ctx) : this.simp.RoundAfterConversion(thisValue, ctx);
     };
 
     prototype.Quantize = function(thisValue, otherValue, ctx) {
@@ -10706,17 +10714,26 @@ function() {
         var i = offset;
         if (i + 8 == str.length) {
             if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f') && (str.charAt(i + 3) == 'I' || str.charAt(i + 3) == 'i') && (str.charAt(i + 4) == 'N' || str.charAt(i + 4) == 'n') && (str.charAt(i + 5) == 'I' || str.charAt(i + 5) == 'i') && (str.charAt(i + 6) == 'T' || str.charAt(i + 6) == 't') && (str.charAt(i + 7) == 'Y' || str.charAt(i + 7) == 'y')) {
+                if (ctx != null && ctx.isSimplified() && i < str.length) {
+                    throw new Error("Infinity not allowed");
+                }
                 return negative ? ExtendedDecimal.NegativeInfinity : ExtendedDecimal.PositiveInfinity;
             }
         }
         if (i + 3 == str.length) {
             if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f')) {
+                if (ctx != null && ctx.isSimplified() && i < str.length) {
+                    throw new Error("Infinity not allowed");
+                }
                 return negative ? ExtendedDecimal.NegativeInfinity : ExtendedDecimal.PositiveInfinity;
             }
         }
         if (i + 3 <= str.length) {
 
             if ((str.charAt(i) == 'N' || str.charAt(i) == 'n') && (str.charAt(i + 1) == 'A' || str.charAt(i + 1) == 'a') && (str.charAt(i + 2) == 'N' || str.charAt(i + 2) == 'n')) {
+                if (ctx != null && ctx.isSimplified() && i < str.length) {
+                    throw new Error("NaN not allowed");
+                }
                 if (i + 3 == str.length) {
                     if (!negative) {
                         return ExtendedDecimal.NaN;
@@ -10778,6 +10795,9 @@ function() {
         if (i + 4 <= str.length) {
 
             if ((str.charAt(i) == 'S' || str.charAt(i) == 's') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'A' || str.charAt(i + 2) == 'a') && (str.charAt(i + 3) == 'N' || str.charAt(i + 3) == 'n')) {
+                if (ctx != null && ctx.isSimplified() && i < str.length) {
+                    throw new Error("NaN not allowed");
+                }
                 if (i + 4 == str.length) {
                     if (!negative) {
                         return ExtendedDecimal.SignalingNaN;
@@ -10969,7 +10989,7 @@ function() {
         ret.exponent = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
         ret.flags = negative ? BigNumberFlags.FlagNegative : 0;
         if (ctx != null) {
-            ret = ExtendedDecimal.math.RoundToPrecisionRaw(ret, ctx);
+            ret = ExtendedDecimal.math.RoundAfterConversion(ret, ctx);
         }
         return ret;
     };

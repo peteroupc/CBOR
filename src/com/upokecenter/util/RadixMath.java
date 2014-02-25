@@ -3619,8 +3619,8 @@ rem=divrem[1]; }
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
-      // System.out.println("RM RoundToPrecisionRaw");
+    public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
+      // System.out.println("RM RoundAfterConversion");
       return this.RoundToPrecision(thisValue, ctx);
     }
   }

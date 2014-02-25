@@ -339,8 +339,8 @@ namespace Test
             }
           }
           if (del) {
- File.Delete(f);
-}
+            File.Delete(f);
+          }
         }
       }
       if (failures > 0) {

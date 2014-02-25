@@ -515,9 +515,9 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+    public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
-      T result = this.math.RoundToPrecisionRaw(thisValue, tctx);
+      T result = this.math.RoundAfterConversion(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 

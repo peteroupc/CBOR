@@ -277,9 +277,9 @@ public T RoundToPrecision(T thisValue, PrecisionContext ctx) {
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
-      return (ctx == null || !ctx.IsSimplified) ? this.ext.RoundToPrecisionRaw(thisValue, ctx) :
-        this.simp.RoundToPrecisionRaw(thisValue, ctx);
+public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
+      return (ctx == null || !ctx.IsSimplified) ? this.ext.RoundAfterConversion(thisValue, ctx) :
+        this.simp.RoundAfterConversion(thisValue, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
