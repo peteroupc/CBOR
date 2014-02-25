@@ -1372,20 +1372,20 @@ public void set(String key, CBORObject value) {
 
     /**
      * Adds a new object to this map.
-     * @param key A CBOR object representing the key.
-     * @param value A CBOR object representing the value.
+     * @param key A CBOR object representing the key. Can be null, in which
+     * case this value is converted to CBORObject.Null.
+     * @param value A CBOR object representing the value. Can be null, in
+     * which case this value is converted to CBORObject.Null.
      * @return This object.
-     * @throws java.lang.NullPointerException Key or value is null (as opposed
-     * to CBORObject.Null).
      * @throws java.lang.IllegalArgumentException Key already exists in this map.
      * @throws IllegalStateException This object is not a map.
      */
     public CBORObject Add(CBORObject key, CBORObject value) {
       if (key == null) {
-        throw new NullPointerException("key");
+        key = CBORObject.Null;
       }
       if (value == null) {
-        throw new NullPointerException("value");
+        value = CBORObject.Null;
       }
       if (this.getItemType() == CBORObjectTypeMap) {
         Map<CBORObject, CBORObject> map = this.AsMap();
@@ -2831,7 +2831,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         str = sb.toString();
         obj = CBORDataUtilities.ParseJSONNumber(str);
         if (obj == null) {
-          throw reader.NewError("JSON number can't be parsed.");
+          throw reader.NewError("JSON number can't be parsed. " + str);
         }
         if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
           nextChar[0] = c;
@@ -4091,14 +4091,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     private static boolean BigIntFits(BigInteger bigint) {
-      int sign = bigint.signum();
-      if (sign < 0) {
-        return bigint.compareTo(LowestMajorType1) >= 0;
-      } else if (sign > 0) {
-        return bigint.compareTo(UInt64MaxValue) <= 0;
-      } else {
-        return true;
-      }
+      return bigint.bitLength() <= 64;
     }
 
     private boolean CanFitInTypeZeroOrOne() {

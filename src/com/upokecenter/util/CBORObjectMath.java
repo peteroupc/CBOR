@@ -16,6 +16,7 @@ at: http://peteroupc.github.io/CBOR/
   final class CBORObjectMath {
 private CBORObjectMath() {
 }
+    // TODO: Support rational numbers
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");

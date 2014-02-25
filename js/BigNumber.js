@@ -9129,6 +9129,12 @@ var RadixMath = function(helper) {
     };
 
     prototype.Add = function(thisValue, other, ctx) {
+        if (thisValue == null) {
+            throw new Error("thisValue");
+        }
+        if (other == null) {
+            throw new Error("other");
+        }
         return this.AddEx(thisValue, other, ctx, false);
     };
 
@@ -10860,7 +10866,7 @@ function() {
                         if (newScale == null) {
                             newScale = new FastInteger(newScaleInt);
                         }
-                        newScale.AddInt(-1);
+                        newScale.Decrement();
                     } else {
                         --newScaleInt;
                     }
@@ -11112,7 +11118,7 @@ function() {
         var builderLength = new FastInteger(mantissaString.length);
         var adjustedExponent = FastInteger.FromBig(this.exponent);
         var thisExponent = FastInteger.Copy(adjustedExponent);
-        adjustedExponent.Add(builderLength).AddInt(-1);
+        adjustedExponent.Add(builderLength).Decrement();
         var decimalPointAdjust = new FastInteger(1);
         var threshold = new FastInteger(-6);
         if (mode == 1) {
@@ -11143,7 +11149,7 @@ function() {
                 if (intphase == 1) {
                     if (!adjExponentNegative) {
                         decimalPointAdjust.Increment();
-                        newExponent.AddInt(-1);
+                        newExponent.Decrement();
                     } else {
                         decimalPointAdjust.AddInt(2);
                         newExponent.AddInt(-2);
@@ -11151,7 +11157,7 @@ function() {
                 } else if (intphase == 2) {
                     if (adjExponentNegative) {
                         decimalPointAdjust.Increment();
-                        newExponent.AddInt(-1);
+                        newExponent.Decrement();
                     } else {
                         decimalPointAdjust.AddInt(2);
                         newExponent.AddInt(-2);
@@ -11249,7 +11255,7 @@ function() {
                 }
                 builder.append(mantissaString);
                 builder.append('.');
-                ExtendedDecimal.AppendString(builder, '0', FastInteger.Copy(decimalPointAdjust).AddInt(-1));
+                ExtendedDecimal.AppendString(builder, '0', FastInteger.Copy(decimalPointAdjust).Decrement());
             } else {
                 var tmp = FastInteger.Copy(decimalPointAdjust);
                 var cmp = tmp.CompareToInt(mantissaString.length);

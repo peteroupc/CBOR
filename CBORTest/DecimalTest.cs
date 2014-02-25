@@ -85,23 +85,23 @@ namespace Test
         // (all simplified arithmetic test cases)
         if (!extended) {
           if (name.Equals("ln116") ||
-             name.Equals("qua530") || // assumes that the input will underflow to 0
-             name.Equals("qua531") || // assumes that the input will underflow to 0
-             name.Equals("rpow068") ||
-             name.Equals("rpow159") ||
-             name.Equals("rpow217") ||
-             name.Equals("rpow272") ||
-             name.Equals("rpow324") ||
-             name.Equals("rpow327") ||
-             name.Equals("sqtx2207") || // following cases incorrectly remove trailing zeros
-             name.Equals("sqtx2231") ||
-             name.Equals("sqtx2271") ||
-             name.Equals("sqtx2327") ||
-             name.Equals("sqtx2399") ||
-             name.Equals("sqtx2487") ||
-             name.Equals("sqtx2591") ||
-             name.Equals("sqtx2711") ||
-             name.Equals("sqtx2847")) {
+              name.Equals("qua530") || // assumes that the input will underflow to 0
+              name.Equals("qua531") || // assumes that the input will underflow to 0
+              name.Equals("rpow068") ||
+              name.Equals("rpow159") ||
+              name.Equals("rpow217") ||
+              name.Equals("rpow272") ||
+              name.Equals("rpow324") ||
+              name.Equals("rpow327") ||
+              name.Equals("sqtx2207") || // following cases incorrectly remove trailing zeros
+              name.Equals("sqtx2231") ||
+              name.Equals("sqtx2271") ||
+              name.Equals("sqtx2327") ||
+              name.Equals("sqtx2399") ||
+              name.Equals("sqtx2487") ||
+              name.Equals("sqtx2591") ||
+              name.Equals("sqtx2711") ||
+              name.Equals("sqtx2847")) {
             return;
           }
         }
@@ -298,10 +298,10 @@ namespace Test
         // some of them have no flags in teir
         // result.
         if (!name.Equals("pow118") &&
-           !name.Equals("pow119") &&
-           !name.Equals("pow120") &&
-           !name.Equals("pow121") &&
-           !name.Equals("pow122")) {
+            !name.Equals("pow119") &&
+            !name.Equals("pow120") &&
+            !name.Equals("pow121") &&
+            !name.Equals("pow122")) {
           TestCommon.AssertFlags(expectedFlags, ctx.Flags, name);
         }
       }
@@ -321,6 +321,34 @@ namespace Test
     }
 
     [Test]
+    public void TestParserJSON() {
+      long failures = 0;
+      for (int i = 0; i < 1; ++i) {
+        foreach (var f in Directory.GetFiles(".")) {
+          if (!Path.GetFileName(f).Contains(".json")) {
+            continue;
+          }
+          bool del = false;
+          using (Stream w = new FileStream(f, FileMode.Open)) {
+            try {
+              CBORObject o = CBORObject.ReadJSON(w);
+            } catch (CBORException ex) {
+              Console.WriteLine("//" + f);
+              del = true;
+              Console.WriteLine(ex.Message);
+            }
+          }
+          if (del) {
+ File.Delete(f);
+}
+        }
+      }
+      if (failures > 0) {
+        Assert.Fail(failures + " failure(s)");
+      }
+    }
+
+    [Test]
     public void TestParser() {
       long failures = 0;
       for (int i = 0; i < 1; ++i) {
@@ -329,12 +357,6 @@ namespace Test
         foreach (var f in Directory.GetFiles(".")) {
           if (!Path.GetFileName(f).Contains(".decTest")) {
             continue;
-          }
-          if (Path.GetFileName(f).Contains("base")) {
-            continue;
-          }
-          if (!Path.GetFileName(f).Contains("power")) {
-            // continue;
           }
           Console.WriteLine("//" + f);
           IDictionary<string, string> context = new Dictionary<string, string>();
