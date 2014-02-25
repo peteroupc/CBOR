@@ -2789,7 +2789,7 @@ namespace PeterO {
         str = sb.ToString();
         obj = CBORDataUtilities.ParseJSONNumber(str);
         if (obj == null) {
-          throw reader.NewError("JSON number can't be parsed.");
+          throw reader.NewError("JSON number can't be parsed. " + str);
         }
         if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
           nextChar[0] = c;
@@ -4039,14 +4039,7 @@ namespace PeterO {
     }
 
     private static bool BigIntFits(BigInteger bigint) {
-      int sign = bigint.Sign;
-      if (sign < 0) {
-        return bigint.CompareTo(LowestMajorType1) >= 0;
-      } else if (sign > 0) {
-        return bigint.CompareTo(UInt64MaxValue) <= 0;
-      } else {
-        return true;
-      }
+      return bigint.bitLength() <= 64;
     }
 
     private bool CanFitInTypeZeroOrOne() {

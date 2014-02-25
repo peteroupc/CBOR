@@ -107,6 +107,7 @@
     <Content Include="ProfilingSessions\Session20140205_131343.sdps" />
     <Content Include="ProfilingSessions\Session20140205_131805.sdps" />
     <Content Include="ProfilingSessions\Session20140205_161255.sdps" />
+    <Content Include="ProfilingSessions\Session20140224_214225.sdps" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />

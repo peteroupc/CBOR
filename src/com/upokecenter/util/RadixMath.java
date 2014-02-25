@@ -3237,6 +3237,12 @@ rem=divrem[1]; }
      * @return A T object.
      */
     public T Add(T thisValue, T other, PrecisionContext ctx) {
+      if (thisValue == null) {
+        throw new NullPointerException("thisValue");
+      }
+      if (other == null) {
+        throw new NullPointerException("other");
+      }
       return this.AddEx(thisValue, other, ctx, false);
     }
 

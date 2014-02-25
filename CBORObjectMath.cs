@@ -13,6 +13,7 @@ namespace PeterO {
     /// <param name='a'>A CBORObject object. (2).</param>
     /// <param name='b'>A CBORObject object. (3).</param>
   internal static class CBORObjectMath {
+    // TODO: Support rational numbers
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new ArgumentNullException("a");

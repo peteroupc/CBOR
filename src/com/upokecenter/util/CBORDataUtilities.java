@@ -16,6 +16,7 @@ private CBORDataUtilities() {
 }
     private static BigInteger valueLowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
     private static BigInteger valueUInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
+    private static final int MaxSafeInt = 214748363;
 
     /**
      * Parses a number whose format follows the JSON specification. See
@@ -57,165 +58,216 @@ private CBORDataUtilities() {
       if (((str)==null || (str).length()==0)) {
         return null;
       }
-      char c = str.charAt(0);
+      int offset = 0;
       boolean negative = false;
-      int index = 0;
-      if (index >= str.length()) {
-        return null;
-      }
-      c = str.charAt(index);
-      if (c == '-' && !positiveOnly) {
+      if (str.charAt(0) == '-' && !positiveOnly) {
         negative = true;
-        ++index;
+        ++offset;
       }
-      if (index >= str.length()) {
-        return null;
-      }
-      c = str.charAt(index);
-      ++index;
-      boolean negExp = false;
-      FastInteger fastNumber = new FastInteger(0);
-      FastInteger exponentAdjust = new FastInteger(0);
-      FastInteger fastExponent = new FastInteger(0);
-      if (c >= '1' && c <= '9') {
-        fastNumber.AddInt((int)(c - '0'));
-        while (index < str.length()) {
-          c = str.charAt(index);
-          if (c >= '0' && c <= '9') {
-            ++index;
-            fastNumber.Multiply(10);
-            fastNumber.AddInt((int)(c - '0'));
+      int mantInt = 0;
+      FastInteger mant = null;
+      int mantBuffer = 0;
+      int mantBufferMult = 1;
+      int expBuffer = 0;
+      int expBufferMult = 1;
+      boolean haveDecimalPoint = false;
+      boolean haveDigits = false;
+      boolean haveExponent = false;
+      int newScaleInt = 0;
+      FastInteger newScale = null;
+      int i = offset;
+      // Ordinary number
+      if (i < str.length() && str.charAt(i) == '0') {
+        ++i;
+        haveDigits = true;
+        if (i == str.length()) {
+ return CBORObject.FromObject(0);
+}
+        if (!integersOnly) {
+          if (str.charAt(i) == '.') {
+            haveDecimalPoint = true;
+            ++i;
+          } else if (str.charAt(i) == 'E' || str.charAt(i) == 'e') {
+            haveExponent = true;
           } else {
-            break;
-          }
-        }
-      } else if (c != '0') {
-        return null;
-      }
-      if (!integersOnly) {
-        if (index < str.length() && str.charAt(index) == '.') {
-          // Fraction
-          ++index;
-          if (index >= str.length()) {
             return null;
           }
-          c = str.charAt(index);
-          ++index;
-          if (c >= '0' && c <= '9') {
-            // Adjust the exponent for this
-            // fractional digit
-            exponentAdjust.AddInt(-1);
-            fastNumber.Multiply(10);
-            fastNumber.AddInt((int)(c - '0'));
-            while (index < str.length()) {
-              c = str.charAt(index);
-              if (c >= '0' && c <= '9') {
-                ++index;
-                // Adjust the exponent for this
-                // fractional digit
-                exponentAdjust.AddInt(-1);
-                fastNumber.Multiply(10);
-                fastNumber.AddInt((int)(c - '0'));
+        } else {
+          return null;
+        }
+      }
+      for (; i < str.length(); ++i) {
+        if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+          int thisdigit = (int)(str.charAt(i) - '0');
+          if (mantInt > MaxSafeInt) {
+            if (mant == null) {
+              mant = new FastInteger(mantInt);
+              mantBuffer = thisdigit;
+              mantBufferMult = 10;
+            } else {
+              if (mantBufferMult >= 1000000000) {
+                mant.Multiply(mantBufferMult).AddInt(mantBuffer);
+                mantBuffer = thisdigit;
+                mantBufferMult = 10;
               } else {
-                break;
+                mantBufferMult *= 10;
+                mantBuffer = (mantBuffer << 3) + (mantBuffer << 1);
+                mantBuffer += thisdigit;
               }
             }
           } else {
-            // Not a fraction
-            return null;
+            mantInt *= 10;
+            mantInt += thisdigit;
           }
-        }
-        if (index < str.length() && (str.charAt(index) == 'e' || str.charAt(index) == 'E')) {
-          // Exponent
-          ++index;
-          if (index >= str.length()) {
-            return null;
-          }
-          c = str.charAt(index);
-          if (c == '-') {
-            negExp = true;
-            ++index;
-          }
-          if (c == '+') {
-            ++index;
-          }
-          if (index >= str.length()) {
-            return null;
-          }
-          c = str.charAt(index);
-          ++index;
-          if (c >= '0' && c <= '9') {
-            fastExponent.AddInt((int)(c - '0'));
-            while (index < str.length()) {
-              c = str.charAt(index);
-              if (c >= '0' && c <= '9') {
-                ++index;
-                fastExponent.Multiply(10);
-                fastExponent.AddInt((int)(c - '0'));
-              } else {
-                break;
+          haveDigits = true;
+          if (haveDecimalPoint) {
+            if (newScaleInt == Integer.MIN_VALUE) {
+              if (newScale == null) {
+                newScale = new FastInteger(newScaleInt);
               }
+              newScale.AddInt(-1);
+            } else {
+              --newScaleInt;
+            }
+          }
+        } else if (!integersOnly && str.charAt(i) == '.') {
+          if (haveDecimalPoint) {
+            return null;
+          }
+          haveDecimalPoint = true;
+        } else if (!integersOnly && (str.charAt(i) == 'E' || str.charAt(i) == 'e')) {
+          haveExponent = true;
+          ++i;
+          break;
+        } else {
+          return null;
+        }
+      }
+      if (!haveDigits) {
+        return null;
+      }
+      if (mant != null && (mantBufferMult != 1 || mantBuffer != 0)) {
+        mant.Multiply(mantBufferMult).AddInt(mantBuffer);
+      }
+      if (haveExponent) {
+        FastInteger exp = null;
+        int expInt = 0;
+        offset = 1;
+        haveDigits = false;
+        if (i == str.length()) {
+          return null;
+        }
+        if (str.charAt(i) == '+' || str.charAt(i) == '-') {
+          if (str.charAt(i) == '-') {
+            offset = -1;
+          }
+          ++i;
+        }
+        for (; i < str.length(); ++i) {
+          if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+            haveDigits = true;
+            int thisdigit = (int)(str.charAt(i) - '0');
+            if (expInt > MaxSafeInt) {
+              if (exp == null) {
+                exp = new FastInteger(expInt);
+                expBuffer = thisdigit;
+                expBufferMult = 10;
+              } else {
+                if (expBufferMult >= 1000000000) {
+                  exp.Multiply(expBufferMult).AddInt(expBuffer);
+                  expBuffer = thisdigit;
+                  expBufferMult = 10;
+                } else {
+                  // multiply expBufferMult and expBuffer each by 10
+                  expBufferMult = (expBufferMult << 3) + (expBufferMult << 1);
+                  expBuffer = (expBuffer << 3) + (expBuffer << 1);
+                  expBuffer += thisdigit;
+                }
+              }
+            } else {
+              expInt *= 10;
+              expInt += thisdigit;
             }
           } else {
-            // Not an exponent
             return null;
           }
         }
+        if (!haveDigits) {
+          return null;
+        }
+        if (exp != null && (expBufferMult != 1 || expBuffer != 0)) {
+          exp.Multiply(expBufferMult).AddInt(expBuffer);
+        }
+        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
+          newScaleInt = expInt;
+        } else if (exp == null) {
+          if (newScale == null) {
+            newScale = new FastInteger(newScaleInt);
+          }
+          if (offset < 0) {
+            newScale.SubtractInt(expInt);
+          } else if (expInt != 0) {
+            newScale.AddInt(expInt);
+          }
+        } else {
+          if (newScale == null) {
+            newScale = new FastInteger(newScaleInt);
+          }
+          if (offset < 0) {
+            newScale.Subtract(exp);
+          } else {
+            newScale.Add(exp);
+          }
+        }
       }
-      if (negExp) {
-        fastExponent.Negate();
-      }
-      if (negative) {
-        fastNumber.Negate();
-      }
-      fastExponent.Add(exponentAdjust);
-      if (index != str.length()) {
+      if (i != str.length()) {
         // End of the String wasn't reached, so isn't a number
         return null;
       }
-      // No fractional part
-      if (fastExponent.signum() == 0) {
-        if (fastNumber.CanFitInInt32()) {
-          return CBORObject.FromObject(fastNumber.AsInt32());
-        } else {
-          return CBORObject.FromObject(fastNumber.AsBigInteger());
-        }
+      if (negative) {
+        if (mant == null) {
+ mantInt = -mantInt;
+  } else {
+ mant.Negate();
+}
+      }
+      if ((newScale == null && newScaleInt == 0) || (newScale != null && newScale.signum() == 0)) {
+        // No fractional part
+        if (mant == null) {
+ return CBORObject.FromObject(mantInt);
+  } else if (mant.CanFitInInt32()) {
+ return CBORObject.FromObject(mant.AsInt32());
+  } else {
+ return CBORObject.FromObject(mant.AsBigInteger());
+}
       } else {
-        if (fastNumber.signum() == 0) {
-          return CBORObject.FromObject(0);
-        }
-        if (fastNumber.CanFitInInt32() && fastExponent.CanFitInInt32()) {
-          return CBORObject.FromObject(ExtendedDecimal.Create(
-            fastNumber.AsBigInteger(),
-            fastExponent.AsBigInteger()));
-        } else {
-          BigInteger bigintExponent = fastExponent.AsBigInteger();
-          if (!fastExponent.CanFitInInt32()) {
-            if (bigintExponent.compareTo(valueUInt64MaxValue) > 0) {
-              // Exponent is higher than the highest representable
-              // integer of major type 0
-              if (failOnExponentOverflow) {
-                return null;
-              } else {
-                return (fastExponent.signum() < 0) ?
-                  CBORObject.FromObject(Double.NEGATIVE_INFINITY) :
-                  CBORObject.FromObject(Double.POSITIVE_INFINITY);
-              }
-            }
-            if (bigintExponent.compareTo(valueLowestMajorType1) < 0) {
-              // Exponent is lower than the lowest representable
-              // integer of major type 1
-              if (failOnExponentOverflow) {
-                return null;
-              } else {
-                return CBORObject.FromObject(0);
-              }
+        BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
+        BigInteger bigexp = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
+        if (newScale != null && !newScale.CanFitInInt32()) {
+          if (bigexp.compareTo(valueUInt64MaxValue) > 0) {
+            // Exponent is higher than the highest representable
+            // integer of major type 0
+            if (failOnExponentOverflow) {
+              return null;
+            } else {
+              return (bigexp.signum() < 0) ?
+                CBORObject.FromObject(Double.NEGATIVE_INFINITY) :
+                CBORObject.FromObject(Double.POSITIVE_INFINITY);
             }
           }
-          return CBORObject.FromObject(ExtendedDecimal.Create(
-            fastNumber.AsBigInteger(),
-            bigintExponent));
+          if (bigexp.compareTo(valueLowestMajorType1) < 0) {
+            // Exponent is lower than the lowest representable
+            // integer of major type 1
+            if (failOnExponentOverflow) {
+              return null;
+            } else {
+              return CBORObject.FromObject(0);
+            }
+          }
         }
+        return CBORObject.FromObject(ExtendedDecimal.Create(
+          bigmant,
+          bigexp));
       }
     }
   }

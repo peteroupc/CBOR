@@ -419,7 +419,7 @@ at: http://peteroupc.github.io/CBOR/
               if (newScale == null) {
                 newScale = new FastInteger(newScaleInt);
               }
-              newScale.AddInt(-1);
+              newScale.Decrement();
             } else {
               --newScaleInt;
             }
@@ -736,7 +736,7 @@ bigrem=divrem[1]; }
       FastInteger builderLength = new FastInteger(mantissaString.length());
       FastInteger adjustedExponent = FastInteger.FromBig(this.exponent);
       FastInteger thisExponent = FastInteger.Copy(adjustedExponent);
-      adjustedExponent.Add(builderLength).AddInt(-1);
+      adjustedExponent.Add(builderLength).Decrement();
       FastInteger decimalPointAdjust = new FastInteger(1);
       FastInteger threshold = new FastInteger(-6);
       if (mode == 1) {
@@ -767,7 +767,7 @@ bigrem=divrem[1]; }
           if (intphase == 1) {
             if (!adjExponentNegative) {
               decimalPointAdjust.Increment();
-              newExponent.AddInt(-1);
+              newExponent.Decrement();
             } else {
               decimalPointAdjust.AddInt(2);
               newExponent.AddInt(-2);
@@ -775,7 +775,7 @@ bigrem=divrem[1]; }
           } else if (intphase == 2) {
             if (adjExponentNegative) {
               decimalPointAdjust.Increment();
-              newExponent.AddInt(-1);
+              newExponent.Decrement();
             } else {
               decimalPointAdjust.AddInt(2);
               newExponent.AddInt(-2);
@@ -873,7 +873,7 @@ bigrem=divrem[1]; }
           }
           builder.append(mantissaString);
           builder.append('.');
-          AppendString(builder, '0', FastInteger.Copy(decimalPointAdjust).AddInt(-1));
+          AppendString(builder, '0', FastInteger.Copy(decimalPointAdjust).Decrement());
         } else {
           FastInteger tmp = FastInteger.Copy(decimalPointAdjust);
           int cmp = tmp.CompareToInt(mantissaString.length());
