@@ -10,7 +10,7 @@ using System.IO;
 
 namespace PeterO
 {
-    /// <summary>Description of CharacterReader.</summary>
+  /// <summary>Description of CharacterReader.</summary>
   internal class CharacterReader
   {
     private string str;
@@ -34,7 +34,7 @@ namespace PeterO
     /// <summary>Not documented yet.</summary>
     /// <param name='str'>A string object.</param>
     /// <returns>A CBORException object.</returns>
-public CBORException NewError(string str) {
+    public CBORException NewError(string str) {
       return new CBORException(str + " (offset " + this.offset + ")");
     }
 
