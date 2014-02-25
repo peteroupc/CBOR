@@ -398,9 +398,9 @@ namespace PeterO
     /// <summary>Not documented yet.</summary>
     /// <returns>An ExtendedRational object.</returns>
     public ExtendedRational Negate() {
-        ExtendedRational er = new ExtendedRational(this.unsignedNumerator, this.denominator);
-        er.flags = this.flags ^ BigNumberFlags.FlagNegative;
-        return er;
+      ExtendedRational er = new ExtendedRational(this.unsignedNumerator, this.denominator);
+      er.flags = this.flags ^ BigNumberFlags.FlagNegative;
+      return er;
     }
 
     /// <summary>Gets a value indicating whether this object's value equals
@@ -492,7 +492,7 @@ namespace PeterO
     /// <param name='other'>An ExtendedDecimal object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-public int CompareToDecimal(ExtendedDecimal other) {
+    public int CompareToDecimal(ExtendedDecimal other) {
       if (other == null) {
         return 1;
       }
@@ -637,5 +637,96 @@ public int CompareToDecimal(ExtendedDecimal other) {
 
     /// <summary>Negative infinity, less than any other number.</summary>
     public static readonly ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.Zero, BigInteger.One, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
+
+    public ExtendedRational Add(ExtendedRational otherValue) {
+      if (this.IsSignalingNaN()) {
+        return CreateNaN(this.unsignedNumerator, false, this.IsNegative);
+      }
+      if (otherValue.IsSignalingNaN()) {
+        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.IsNegative);
+      }
+      if (this.IsQuietNaN()) {
+        return this;
+      }
+      if (otherValue.IsQuietNaN()) {
+        return this;
+      }
+      // TODO: Handle infinity
+      BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
+      BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
+      BigInteger bd = this.Denominator * (BigInteger)otherValue.Denominator;
+      ad += (BigInteger)bc;
+      return new ExtendedRational(ad, bd);
+    }
+
+    /// <summary>Subtracts a ExtendedRational object from this instance.</summary>
+    /// <param name='otherValue'>An ExtendedRational object.</param>
+    /// <returns>The difference of the two objects.</returns>
+public ExtendedRational Subtract(ExtendedRational otherValue) {
+      if (this.IsSignalingNaN()) {
+        return CreateNaN(this.unsignedNumerator, false, this.IsNegative);
+      }
+      if (otherValue.IsSignalingNaN()) {
+        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.IsNegative);
+      }
+      if (this.IsQuietNaN()) {
+        return this;
+      }
+      if (otherValue.IsQuietNaN()) {
+        return this;
+      }
+      // TODO: Handle infinity
+      BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
+      BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
+      BigInteger bd = this.Denominator * (BigInteger)otherValue.Denominator;
+      ad -= (BigInteger)bc;
+      return new ExtendedRational(ad, bd);
+    }
+
+    /// <summary>Multiplies this instance by the value of a ExtendedRational
+    /// object.</summary>
+    /// <param name='otherValue'>An ExtendedRational object.</param>
+    /// <returns>The product of the two objects.</returns>
+public ExtendedRational Multiply(ExtendedRational otherValue) {
+      if (this.IsSignalingNaN()) {
+        return CreateNaN(this.unsignedNumerator, false, this.IsNegative);
+      }
+      if (otherValue.IsSignalingNaN()) {
+        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.IsNegative);
+      }
+      if (this.IsQuietNaN()) {
+        return this;
+      }
+      if (otherValue.IsQuietNaN()) {
+        return this;
+      }
+      // TODO: Handle infinity
+      BigInteger ac = this.Numerator * (BigInteger)otherValue.Numerator;
+      BigInteger bd = this.Denominator * (BigInteger)otherValue.Denominator;
+      return new ExtendedRational(ac, bd);
+    }
+
+    /// <summary>Divides this instance by the value of a ExtendedRational
+    /// object.</summary>
+    /// <param name='otherValue'>An ExtendedRational object.</param>
+    /// <returns>The quotient of the two objects.</returns>
+public ExtendedRational Divide(ExtendedRational otherValue) {
+      if (this.IsSignalingNaN()) {
+        return CreateNaN(this.unsignedNumerator, false, this.IsNegative);
+      }
+      if (otherValue.IsSignalingNaN()) {
+        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.IsNegative);
+      }
+      if (this.IsQuietNaN()) {
+        return this;
+      }
+      if (otherValue.IsQuietNaN()) {
+        return this;
+      }
+      // TODO: Handle infinity
+      BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
+      BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
+      return new ExtendedRational(ad, bc);
+    }
   }
 }
