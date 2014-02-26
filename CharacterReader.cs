@@ -10,7 +10,7 @@ using System.IO;
 
 namespace PeterO
 {
-  /// <summary>Description of CharacterReader.</summary>
+    /// <summary>Description of CharacterReader.</summary>
   internal class CharacterReader
   {
     private string str;

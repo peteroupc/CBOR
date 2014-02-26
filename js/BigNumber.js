@@ -9806,9 +9806,9 @@ var SimpleRadixMath = function(wrapper) {
         var thisFlags = this.GetHelper().GetFlags(thisValue);
         if (ctxDest != null && ctxSrc != null) {
             if (ctxDest.getHasFlags()) {
-
-                ctxSrc.setFlags(ctxSrc.getFlags() & ~(PrecisionContext.FlagClamped));
-
+                if (!ctxSrc.getClampNormalExponents()) {
+                    ctxSrc.setFlags(ctxSrc.getFlags() & ~(PrecisionContext.FlagClamped));
+                }
                 ctxDest.setFlags(ctxDest.getFlags() | (ctxSrc.getFlags()));
                 if ((ctxSrc.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
 
@@ -10634,13 +10634,13 @@ function() {
         return this.EqualsInternal((obj.constructor==ExtendedDecimal) ? obj : null);
     };
     prototype['hashCode'] = prototype.hashCode = function() {
-        var hashCode_ = 964453631;
+        var valueHashCode = 964453631;
         {
-            hashCode_ = hashCode_ + (964453723 * this.exponent.hashCode());
-            hashCode_ = hashCode_ + (964453939 * this.unsignedMantissa.hashCode());
-            hashCode_ = hashCode_ + (964453967 * this.flags);
+            valueHashCode = valueHashCode + (964453723 * this.exponent.hashCode());
+            valueHashCode = valueHashCode + (964453939 * this.unsignedMantissa.hashCode());
+            valueHashCode = valueHashCode + (964453967 * this.flags);
         }
-        return hashCode_;
+        return valueHashCode;
     };
     constructor['CreateNaN'] = constructor.CreateNaN = function(diag, signaling, negative, ctx) {
         if (diag == null) {
@@ -11908,13 +11908,13 @@ function() {
         return this.EqualsInternal((obj.constructor==ExtendedFloat) ? obj : null);
     };
     prototype['hashCode'] = prototype.hashCode = function() {
-        var hashCode_ = 403796923;
+        var valueHashCode = 403796923;
         {
-            hashCode_ = hashCode_ + (403797019 * this.exponent.hashCode());
-            hashCode_ = hashCode_ + (403797059 * this.unsignedMantissa.hashCode());
-            hashCode_ = hashCode_ + (403797127 * this.flags);
+            valueHashCode = valueHashCode + (403797019 * this.exponent.hashCode());
+            valueHashCode = valueHashCode + (403797059 * this.unsignedMantissa.hashCode());
+            valueHashCode = valueHashCode + (403797127 * this.flags);
         }
-        return hashCode_;
+        return valueHashCode;
     };
     constructor['CreateNaN'] = constructor.CreateNaN = function(diag, signaling, negative, ctx) {
         if (diag == null) {

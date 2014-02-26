@@ -82,8 +82,8 @@ private CBORDataUtilities() {
         ++i;
         haveDigits = true;
         if (i == str.length()) {
- return CBORObject.FromObject(0);
-}
+          return CBORObject.FromObject(0);
+        }
         if (!integersOnly) {
           if (str.charAt(i) == '.') {
             haveDecimalPoint = true;
@@ -227,20 +227,20 @@ private CBORDataUtilities() {
       }
       if (negative) {
         if (mant == null) {
- mantInt = -mantInt;
-  } else {
- mant.Negate();
-}
+          mantInt = -mantInt;
+        } else {
+          mant.Negate();
+        }
       }
       if ((newScale == null && newScaleInt == 0) || (newScale != null && newScale.signum() == 0)) {
         // No fractional part
         if (mant == null) {
- return CBORObject.FromObject(mantInt);
-  } else if (mant.CanFitInInt32()) {
- return CBORObject.FromObject(mant.AsInt32());
-  } else {
- return CBORObject.FromObject(mant.AsBigInteger());
-}
+          return CBORObject.FromObject(mantInt);
+        } else if (mant.CanFitInInt32()) {
+          return CBORObject.FromObject(mant.AsInt32());
+        } else {
+          return CBORObject.FromObject(mant.AsBigInteger());
+        }
       } else {
         BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
         BigInteger bigexp = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();

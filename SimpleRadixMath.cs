@@ -57,9 +57,9 @@ namespace PeterO {
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       if (ctxDest != null && ctxSrc != null) {
         if (ctxDest.HasFlags) {
-          // if ((ctxSrc.Flags & PrecisionContext.FlagUnderflow) != 0) {
-          ctxSrc.Flags &= ~PrecisionContext.FlagClamped;
-          // }
+          if (!ctxSrc.ClampNormalExponents) {
+            ctxSrc.Flags &= ~PrecisionContext.FlagClamped;
+          }
           ctxDest.Flags |= ctxSrc.Flags;
           if ((ctxSrc.Flags & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
@@ -669,7 +669,7 @@ namespace PeterO {
       // 0 is if either thisValue rounded or multiplicand
       // rounded is 0
       bool zeroA = this.GetHelper().GetSign(thisValue) == 0 ||
-                    this.GetHelper().GetSign(multiplicand) == 0;
+        this.GetHelper().GetSign(multiplicand) == 0;
       bool zeroB = this.GetHelper().GetSign(augend) == 0;
       if (zeroA) {
         thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : augend;
@@ -739,9 +739,9 @@ namespace PeterO {
         return ret;
       }
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
-     // Console.WriteLine("was: "+thisValue+", "+otherValue);
+      // Console.WriteLine("was: "+thisValue+", "+otherValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
-     // Console.WriteLine("now: "+thisValue+", "+otherValue);
+      // Console.WriteLine("now: "+thisValue+", "+otherValue);
       otherValue = this.RoundBeforeOp(otherValue, ctx2);
       // Apparently, subnormal values of "otherValue" raise
       // an invalid operation flag, according to the test cases
@@ -751,7 +751,7 @@ namespace PeterO {
         return this.SignalInvalid(ctx);
       }
       thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);
-     // Console.WriteLine("result: "+thisValue);
+      // Console.WriteLine("result: "+thisValue);
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 

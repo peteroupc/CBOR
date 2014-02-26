@@ -11,6 +11,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using PeterO;
+using Newtonsoft.Json;
 
 namespace Test
 {
@@ -318,34 +319,6 @@ namespace Test
       ExtendedDecimal.PI(PrecisionContext.ForPrecision(1000)).ToString();
       sw.Stop();
       PrintTime(sw);
-    }
-
-    [Test]
-    public void TestParserJSON() {
-      long failures = 0;
-      for (int i = 0; i < 1; ++i) {
-        foreach (var f in Directory.GetFiles(".")) {
-          if (!Path.GetFileName(f).Contains(".json")) {
-            continue;
-          }
-          bool del = false;
-          using (Stream w = new FileStream(f, FileMode.Open)) {
-            try {
-              CBORObject o = CBORObject.ReadJSON(w);
-            } catch (CBORException ex) {
-              Console.WriteLine("//" + f);
-              del = true;
-              Console.WriteLine(ex.Message);
-            }
-          }
-          if (del) {
-            File.Delete(f);
-          }
-        }
-      }
-      if (failures > 0) {
-        Assert.Fail(failures + " failure(s)");
-      }
     }
 
     [Test]

@@ -56,17 +56,17 @@ at: http://peteroupc.github.io/CBOR/
      * @return A 32-bit hash code.
      */
     @Override public int hashCode() {
-      int hashCode_ = 1857066527;
+      int valueHashCode = 1857066527;
       {
         if (this.unsignedNumerator != null) {
-          hashCode_ += 1857066539 * this.unsignedNumerator.hashCode();
+          valueHashCode += 1857066539 * this.unsignedNumerator.hashCode();
         }
         if (this.denominator != null) {
-          hashCode_ += 1857066551 * this.denominator.hashCode();
+          valueHashCode += 1857066551 * this.denominator.hashCode();
         }
-        hashCode_ += 1857066623 * this.flags;
+        valueHashCode += 1857066623 * this.flags;
       }
-      return hashCode_;
+      return valueHashCode;
     }
 
     public ExtendedRational (BigInteger numerator, BigInteger denominator) {
@@ -452,7 +452,7 @@ at: http://peteroupc.github.io/CBOR/
       }
 
     /**
-     * Compares a ExtendedRational object with this instance.
+     * Compares an ExtendedRational object with this instance.
      * @param other An ExtendedRational object.
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
@@ -513,7 +513,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
-     * Compares a ExtendedDecimal object with this instance.
+     * Compares an ExtendedDecimal object with this instance.
      * @param other An ExtendedDecimal object.
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
@@ -711,7 +711,7 @@ thisRem=divrem[1]; }
     }
 
     /**
-     * Subtracts a ExtendedRational object from this instance.
+     * Subtracts an ExtendedRational object from this instance.
      * @param otherValue An ExtendedRational object.
      * @return The difference of the two objects.
      */
@@ -737,7 +737,7 @@ public ExtendedRational Subtract(ExtendedRational otherValue) {
     }
 
     /**
-     * Multiplies this instance by the value of a ExtendedRational object.
+     * Multiplies this instance by the value of an ExtendedRational object.
      * @param otherValue An ExtendedRational object.
      * @return The product of the two objects.
      */
@@ -761,7 +761,7 @@ public ExtendedRational Multiply(ExtendedRational otherValue) {
     }
 
     /**
-     * Divides this instance by the value of a ExtendedRational object.
+     * Divides this instance by the value of an ExtendedRational object.
      * @param otherValue An ExtendedRational object.
      * @return The quotient of the two objects.
      */

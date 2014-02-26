@@ -104,13 +104,13 @@ at: http://peteroupc.github.io/CBOR/
      * @return This object's hash code.
      */
     @Override public int hashCode() {
-      int hashCode_ = 403796923;
+      int valueHashCode = 403796923;
       {
-        hashCode_ += 403797019 * this.exponent.hashCode();
-        hashCode_ += 403797059 * this.unsignedMantissa.hashCode();
-        hashCode_ += 403797127 * this.flags;
+        valueHashCode += 403797019 * this.exponent.hashCode();
+        valueHashCode += 403797059 * this.unsignedMantissa.hashCode();
+        valueHashCode += 403797127 * this.flags;
       }
-      return hashCode_;
+      return valueHashCode;
     }
 
     public static ExtendedFloat CreateNaN(BigInteger diag) {
