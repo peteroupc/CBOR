@@ -56,9 +56,9 @@ at: http://peteroupc.github.io/CBOR/
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       if (ctxDest != null && ctxSrc != null) {
         if (ctxDest.getHasFlags()) {
-          // if ((ctxSrc.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
-          ctxSrc.setFlags(ctxSrc.getFlags()&~(PrecisionContext.FlagClamped));
-          // }
+          if (!ctxSrc.getClampNormalExponents()) {
+            ctxSrc.setFlags(ctxSrc.getFlags()&~(PrecisionContext.FlagClamped));
+          }
           ctxDest.setFlags(ctxDest.getFlags()|(ctxSrc.getFlags()));
           if ((ctxSrc.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
@@ -712,7 +712,7 @@ at: http://peteroupc.github.io/CBOR/
       // 0 is if either thisValue rounded or multiplicand
       // rounded is 0
       boolean zeroA = this.GetHelper().GetSign(thisValue) == 0 ||
-                    this.GetHelper().GetSign(multiplicand) == 0;
+        this.GetHelper().GetSign(multiplicand) == 0;
       boolean zeroB = this.GetHelper().GetSign(augend) == 0;
       if (zeroA) {
         thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : augend;
@@ -790,9 +790,9 @@ at: http://peteroupc.github.io/CBOR/
         return ret;
       }
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
-     // System.out.println("was: "+thisValue+", "+otherValue);
+      // System.out.println("was: "+thisValue+", "+otherValue);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
-     // System.out.println("now: "+thisValue+", "+otherValue);
+      // System.out.println("now: "+thisValue+", "+otherValue);
       otherValue = this.RoundBeforeOp(otherValue, ctx2);
       // Apparently, subnormal values of "otherValue" raise
       // an invalid operation flag, according to the test cases
@@ -802,7 +802,7 @@ at: http://peteroupc.github.io/CBOR/
         return this.SignalInvalid(ctx);
       }
       thisValue = this.wrapper.Quantize(thisValue, otherValue, ctx2);
-     // System.out.println("result: "+thisValue);
+      // System.out.println("result: "+thisValue);
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 

@@ -37,7 +37,7 @@ import java.io.*;
      * @param str A string object.
      * @return A CBORException object.
      */
-public CBORException NewError(String str) {
+    public CBORException NewError(String str) {
       return new CBORException(str + " (offset " + this.offset + ")");
     }
 

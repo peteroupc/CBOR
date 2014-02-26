@@ -16,7 +16,7 @@ at: http://peteroupc.github.io/CBOR/
   final class CBORObjectMath {
 private CBORObjectMath() {
 }
-    // TODO: Support rational numbers
+    // TODO: Implement division and remainder
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
@@ -24,37 +24,45 @@ private CBORObjectMath() {
       if (b == null) {
         throw new NullPointerException("b");
       }
-      int combo = (a.getItemType() << 4) | b.getItemType();
-      BigInteger bvalueA;
-      BigInteger bvalueB;
-      switch (combo) {
-          case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeInteger: {
-            long valueA = (((Long)a.getThisItem()).longValue());
-            long valueB = (((Long)b.getThisItem()).longValue());
-            if ((valueA < 0 && valueB < Long.MIN_VALUE - valueA) ||
-                (valueA > 0 && valueB > Long.MAX_VALUE - valueA)) {
-              // would overflow, convert to BigInteger
-              return CBORObject.FromObject((BigInteger.valueOf(valueA)).add(BigInteger.valueOf(valueB)));
-            }
-            return CBORObject.FromObject(valueA + valueB);
-          }
-          case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
-            bvalueA = BigInteger.valueOf(((Long)a.getThisItem()).longValue());
-            bvalueB = (BigInteger)b.getThisItem();
-            return CBORObject.FromObject(bvalueA.add(bvalueB));
-          }
-          case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeInteger: {
-            bvalueA = (BigInteger)a.getThisItem();
-            bvalueB = BigInteger.valueOf(((Long)b.getThisItem()).longValue());
-            return CBORObject.FromObject(bvalueA.add(bvalueB));
-          }
-          case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
-            bvalueA = (BigInteger)a.getThisItem();
-            bvalueB = (BigInteger)b.getThisItem();
-            return CBORObject.FromObject(bvalueA.add(bvalueB));
-          }
-        default:
-          return CBORObject.FromObject(a.AsExtendedDecimal().Add(b.AsExtendedDecimal()));
+      if (a.getType() != CBORType.Number) {
+        throw new IllegalArgumentException("a.Type (" + a.getType() + ") is not equal to " + CBORType.Number);
+      }
+      if (b.getType() != CBORType.Number) {
+        throw new IllegalArgumentException("b.Type (" + b.getType() + ") is not equal to " + CBORType.Number);
+      }
+      Object objA = a.getThisItem();
+      Object objB = b.getThisItem();
+      int typeA = a.getItemType();
+      int typeB = b.getItemType();
+      if (typeA == CBORObject.CBORObjectTypeInteger && typeB == CBORObject.CBORObjectTypeInteger) {
+        long valueA = (((Long)objA).longValue());
+        long valueB = (((Long)objB).longValue());
+        if ((valueA < 0 && valueB < Long.MIN_VALUE - valueA) ||
+            (valueA > 0 && valueB > Long.MAX_VALUE - valueA)) {
+          // would overflow, convert to BigInteger
+          return CBORObject.FromObject((BigInteger.valueOf(valueA)).add(BigInteger.valueOf(valueB)));
+        }
+        return CBORObject.FromObject(valueA + valueB);
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
+                 typeB == CBORObject.CBORObjectTypeExtendedRational) {
+        ExtendedRational e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedRational(objA);
+        ExtendedRational e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedRational(objB);
+        return CBORObject.FromObject(e1.Add(e2));
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedDecimal ||
+                 typeB == CBORObject.CBORObjectTypeExtendedDecimal) {
+        ExtendedDecimal e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedDecimal(objA);
+        ExtendedDecimal e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedDecimal(objB);
+        return CBORObject.FromObject(e1.Add(e2));
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB == CBORObject.CBORObjectTypeExtendedFloat ||
+                 typeA == CBORObject.CBORObjectTypeDouble || typeB == CBORObject.CBORObjectTypeDouble ||
+                 typeA == CBORObject.CBORObjectTypeSingle || typeB == CBORObject.CBORObjectTypeSingle) {
+        ExtendedFloat e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedFloat(objA);
+        ExtendedFloat e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedFloat(objB);
+        return CBORObject.FromObject(e1.Add(e2));
+      } else {
+        BigInteger b1 = CBORObject.NumberInterfaces.get(typeA).AsBigInteger(objA);
+        BigInteger b2 = CBORObject.NumberInterfaces.get(typeB).AsBigInteger(objB);
+        return CBORObject.FromObject(b1.add(b2));
       }
     }
 
@@ -65,37 +73,45 @@ private CBORObjectMath() {
       if (b == null) {
         throw new NullPointerException("b");
       }
-      int combo = (a.getItemType() << 4) | b.getItemType();
-      BigInteger bvalueA;
-      BigInteger bvalueB;
-      switch (combo) {
-          case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeInteger: {
-            long valueA = (((Long)a.getThisItem()).longValue());
-            long valueB = (((Long)b.getThisItem()).longValue());
-            if ((valueB < 0 && Long.MAX_VALUE + valueB < valueA) ||
-                (valueB > 0 && Long.MIN_VALUE + valueB > valueA)) {
-              // would overflow, convert to BigInteger
-              return CBORObject.FromObject((BigInteger.valueOf(valueA)).subtract(BigInteger.valueOf(valueB)));
-            }
-            return CBORObject.FromObject(valueA - valueB);
-          }
-          case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
-            bvalueA = BigInteger.valueOf(((Long)a.getThisItem()).longValue());
-            bvalueB = (BigInteger)b.getThisItem();
-            return CBORObject.FromObject(bvalueA.subtract(bvalueB));
-          }
-          case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeInteger: {
-            bvalueA = (BigInteger)a.getThisItem();
-            bvalueB = BigInteger.valueOf(((Long)b.getThisItem()).longValue());
-            return CBORObject.FromObject(bvalueA.subtract(bvalueB));
-          }
-          case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
-            bvalueA = (BigInteger)a.getThisItem();
-            bvalueB = (BigInteger)b.getThisItem();
-            return CBORObject.FromObject(bvalueA.subtract(bvalueB));
-          }
-        default:
-          return CBORObject.FromObject(a.AsExtendedDecimal().Subtract(b.AsExtendedDecimal()));
+      if (a.getType() != CBORType.Number) {
+        throw new IllegalArgumentException("a.Type (" + a.getType() + ") is not equal to " + CBORType.Number);
+      }
+      if (b.getType() != CBORType.Number) {
+        throw new IllegalArgumentException("b.Type (" + b.getType() + ") is not equal to " + CBORType.Number);
+      }
+      Object objA = a.getThisItem();
+      Object objB = b.getThisItem();
+      int typeA = a.getItemType();
+      int typeB = b.getItemType();
+      if (typeA == CBORObject.CBORObjectTypeInteger && typeB == CBORObject.CBORObjectTypeInteger) {
+        long valueA = (((Long)objA).longValue());
+        long valueB = (((Long)objB).longValue());
+        if ((valueB < 0 && Long.MAX_VALUE + valueB < valueA) ||
+            (valueB > 0 && Long.MIN_VALUE + valueB > valueA)) {
+          // would overflow, convert to BigInteger
+          return CBORObject.FromObject((BigInteger.valueOf(valueA)).subtract(BigInteger.valueOf(valueB)));
+        }
+        return CBORObject.FromObject(valueA - valueB);
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
+                 typeB == CBORObject.CBORObjectTypeExtendedRational) {
+        ExtendedRational e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedRational(objA);
+        ExtendedRational e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedRational(objB);
+        return CBORObject.FromObject(e1.Subtract(e2));
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedDecimal ||
+                 typeB == CBORObject.CBORObjectTypeExtendedDecimal) {
+        ExtendedDecimal e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedDecimal(objA);
+        ExtendedDecimal e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedDecimal(objB);
+        return CBORObject.FromObject(e1.Subtract(e2));
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB == CBORObject.CBORObjectTypeExtendedFloat ||
+                 typeA == CBORObject.CBORObjectTypeDouble || typeB == CBORObject.CBORObjectTypeDouble ||
+                 typeA == CBORObject.CBORObjectTypeSingle || typeB == CBORObject.CBORObjectTypeSingle) {
+        ExtendedFloat e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedFloat(objA);
+        ExtendedFloat e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedFloat(objB);
+        return CBORObject.FromObject(e1.Subtract(e2));
+      } else {
+        BigInteger b1 = CBORObject.NumberInterfaces.get(typeA).AsBigInteger(objA);
+        BigInteger b2 = CBORObject.NumberInterfaces.get(typeB).AsBigInteger(objB);
+        return CBORObject.FromObject(b1.subtract(b2));
       }
     }
 
@@ -106,45 +122,53 @@ private CBORObjectMath() {
       if (b == null) {
         throw new NullPointerException("b");
       }
-      int combo = (a.getItemType() << 4) | b.getItemType();
-      BigInteger bvalueA;
-      BigInteger bvalueB;
-      switch (combo) {
-          case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeInteger: {
-            long valueA = (((Long)a.getThisItem()).longValue());
-            long valueB = (((Long)b.getThisItem()).longValue());
-            boolean apos = valueA > 0L;
-            boolean bpos = valueB > 0L;
-            if (
-              (apos && ((!bpos && (Long.MIN_VALUE / valueA) > valueB) ||
-                        (bpos && valueA > (Long.MAX_VALUE / valueB)))) ||
-              (!apos && ((!bpos && valueA != 0L &&
-                          (Long.MAX_VALUE / valueA) > valueB) ||
-                         (bpos && valueA < (Long.MIN_VALUE / valueB))))) {
-              // would overflow, convert to BigInteger
-              bvalueA = BigInteger.valueOf(valueA);
-              bvalueB = BigInteger.valueOf(valueB);
-              return CBORObject.FromObject(bvalueA.multiply(bvalueB));
-            }
-            return CBORObject.FromObject(valueA * valueB);
-          }
-          case (CBORObject.CBORObjectTypeInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
-            bvalueA = BigInteger.valueOf(((Long)a.getThisItem()).longValue());
-            bvalueB = (BigInteger)b.getThisItem();
-            return CBORObject.FromObject(bvalueA.multiply(bvalueB));
-          }
-          case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeInteger: {
-            bvalueA = (BigInteger)a.getThisItem();
-            bvalueB = BigInteger.valueOf(((Long)b.getThisItem()).longValue());
-            return CBORObject.FromObject(bvalueA.multiply(bvalueB));
-          }
-          case (CBORObject.CBORObjectTypeBigInteger << 4) | CBORObject.CBORObjectTypeBigInteger: {
-            bvalueA = (BigInteger)a.getThisItem();
-            bvalueB = (BigInteger)b.getThisItem();
-            return CBORObject.FromObject(bvalueA.multiply(bvalueB));
-          }
-        default:
-          return CBORObject.FromObject(a.AsExtendedDecimal().Multiply(b.AsExtendedDecimal()));
+      if (a.getType() != CBORType.Number) {
+        throw new IllegalArgumentException("a.Type (" + a.getType() + ") is not equal to " + CBORType.Number);
+      }
+      if (b.getType() != CBORType.Number) {
+        throw new IllegalArgumentException("b.Type (" + b.getType() + ") is not equal to " + CBORType.Number);
+      }
+      Object objA = a.getThisItem();
+      Object objB = b.getThisItem();
+      int typeA = a.getItemType();
+      int typeB = b.getItemType();
+      if (typeA == CBORObject.CBORObjectTypeInteger && typeB == CBORObject.CBORObjectTypeInteger) {
+        long valueA = (((Long)objA).longValue());
+        long valueB = (((Long)objB).longValue());
+        boolean apos = valueA > 0L;
+        boolean bpos = valueB > 0L;
+        if (
+          (apos && ((!bpos && (Long.MIN_VALUE / valueA) > valueB) ||
+                    (bpos && valueA > (Long.MAX_VALUE / valueB)))) ||
+          (!apos && ((!bpos && valueA != 0L &&
+                      (Long.MAX_VALUE / valueA) > valueB) ||
+                     (bpos && valueA < (Long.MIN_VALUE / valueB))))) {
+          // would overflow, convert to BigInteger
+          BigInteger bvalueA = BigInteger.valueOf(valueA);
+          BigInteger bvalueB = BigInteger.valueOf(valueB);
+          return CBORObject.FromObject(bvalueA.multiply(bvalueB));
+        }
+        return CBORObject.FromObject(valueA * valueB);
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
+                 typeB == CBORObject.CBORObjectTypeExtendedRational) {
+        ExtendedRational e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedRational(objA);
+        ExtendedRational e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedRational(objB);
+        return CBORObject.FromObject(e1.Multiply(e2));
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedDecimal ||
+                 typeB == CBORObject.CBORObjectTypeExtendedDecimal) {
+        ExtendedDecimal e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedDecimal(objA);
+        ExtendedDecimal e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedDecimal(objB);
+        return CBORObject.FromObject(e1.Multiply(e2));
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB == CBORObject.CBORObjectTypeExtendedFloat ||
+                 typeA == CBORObject.CBORObjectTypeDouble || typeB == CBORObject.CBORObjectTypeDouble ||
+                 typeA == CBORObject.CBORObjectTypeSingle || typeB == CBORObject.CBORObjectTypeSingle) {
+        ExtendedFloat e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedFloat(objA);
+        ExtendedFloat e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedFloat(objB);
+        return CBORObject.FromObject(e1.Multiply(e2));
+      } else {
+        BigInteger b1 = CBORObject.NumberInterfaces.get(typeA).AsBigInteger(objA);
+        BigInteger b2 = CBORObject.NumberInterfaces.get(typeB).AsBigInteger(objB);
+        return CBORObject.FromObject(b1.subtract(b2));
       }
     }
   }

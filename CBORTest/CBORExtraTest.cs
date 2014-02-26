@@ -213,12 +213,6 @@ namespace Test {
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
       TestCommon.AssertRoundTrip(obj);
-      obj = CBORObject.FromObject(new String[] { "a", "b", "c", "d", "e" });
-      Assert.AreEqual("[\"a\",\"b\",\"c\",\"d\",\"e\"]", obj.ToJSONString());
-      TestCommon.AssertRoundTrip(obj);
-      obj = CBORObject.FromObject(new int[2, 3, 2]);
-      Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]", obj.ToJSONString());
-      TestCommon.AssertRoundTrip(obj);
     }
 
     private static string DateTimeToString(DateTime bi) {
@@ -4324,30 +4318,6 @@ namespace Test {
             Assert.AreEqual(expected, actual, "Dividing " + x + " by " + y);
           }
         }
-        /*
-        for (int i = 0; i < 20; ++i) {
-          ulong x=(ulong)fr.NextValue(0x10000);
-          x|=((ulong)fr.NextValue(0x10000)) << 16;
-          x|=((ulong)fr.NextValue(0x10000)) << 32;
-          x|=((ulong)fr.NextValue(0x10000)) << 48;
-          long dx=(long)x;
-          uint y=(uint)fr.NextValue(0x10000);
-          y|=((uint)fr.NextValue(0x10000)) << 16;
-          y&=~(1U << 31);
-          int dy=(int)y;
-          if (dy == 0) {
- continue;
-}
-          long dxrem = dx/dy;
-          ulong udxrem=(ulong)dxrem;
-          Console.WriteLine(
-            "result=new ILong("+((uint)x) + ","+((uint)(x>>32)) + ").divideUnsigned("+y+");\n"+
-            "if (result.lo!="+((uint)dxrem) + " || result.hi!="+((uint)(dxrem>>32)) + ")\n"+
-            "console.log(\""+dx+"/"+dy+", expected: "+
-            ((uint)dxrem) + ", "+(dxrem>>32) + ", was \"+[result.lo,result.hi]+\","+
-            " remainder="+((ulong)(dx%dy)) + "\");");
-        }
-         */
       }
     }
 

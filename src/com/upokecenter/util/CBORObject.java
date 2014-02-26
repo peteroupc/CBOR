@@ -90,7 +90,7 @@ import java.io.*;
       0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0
     };
 
-    private static final ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
+    static final ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
       new CBORInteger(),
       new CBORBigInteger(),
       null,
@@ -808,7 +808,7 @@ public boolean equals(CBORObject other) {
      * @return A 32-bit hash code.
      */
     @Override public int hashCode() {
-      int hashCode_ = 651869431;
+      int valueHashCode = 651869431;
       {
         if (this.itemValue != null) {
           int itemHashCode = 0;
@@ -826,11 +826,11 @@ public boolean equals(CBORObject other) {
               itemHashCode = this.itemValue.hashCode();
               break;
           }
-          hashCode_ += 651869479 * itemHashCode;
+          valueHashCode += 651869479 * itemHashCode;
         }
-        hashCode_ += 651869483 * (this.itemtypeValue + this.tagLow + this.tagHigh);
+        valueHashCode += 651869483 * (this.itemtypeValue + this.tagLow + this.tagHigh);
       }
-      return hashCode_;
+      return valueHashCode;
     }
 
     private static void CheckCBORLength(long expectedLength, long actualLength) {
@@ -1260,7 +1260,7 @@ public void set(int index, CBORObject value) {
       }
 
     /**
-     * Gets a collection of the keys of this CBOR object.
+     * Gets a collection of the keys of this CBOR object in an undefined order.
      * @return A collection of the keys of this CBOR object.
      * @throws java.lang.IllegalStateException This object is not a map.
      */
@@ -1270,6 +1270,27 @@ public void set(int index, CBORObject value) {
           return dict.keySet();
         } else {
           throw new IllegalStateException("Not a map");
+        }
+      }
+
+    /**
+     * Gets a collection of the values of this CBOR object. If this object
+     * is a map, returns one value for each key in the map in an undefined order.
+     * If this is an array, returns all the values of the array in the order
+     * they are listed.
+     * @return A collection of the values of this CBOR object.
+     * @throws java.lang.IllegalStateException This object is not a map
+     * or an array.
+     */
+    public Collection<CBORObject> getValues() {
+        if (this.getItemType() == CBORObjectTypeMap) {
+          Map<CBORObject, CBORObject> dict = this.AsMap();
+          return dict.values();
+        } else if (this.getItemType() == CBORObjectTypeArray) {
+          List<CBORObject> list = this.AsList();
+          return java.util.Collections.unmodifiableCollection(list);
+        } else {
+          throw new IllegalStateException("Not a map or array");
         }
       }
 
@@ -2844,9 +2865,15 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    private static CBORObject ParseJSONObjectOrArray(CharacterReader reader, boolean noDuplicates) {
+    private static CBORObject ParseJSONObjectOrArray(CharacterReader reader, boolean noDuplicates, boolean skipByteOrderMark) {
       int c;
       c = SkipWhitespaceJSON(reader);
+      if (skipByteOrderMark && c == (char)0xFEFF) {
+        // Skip the Unicode byte order mark
+        c = SkipWhitespaceJSON(reader);
+      } else if (c == (char)0xFEFF) {
+        throw reader.NewError("JSON Object began with a byte order mark (U+FEFF)");
+      }
       if (c == '[') {
         return ParseJSONArray(reader, noDuplicates);
       }
@@ -2948,7 +2975,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from a string in JavaScript Object Notation
      * (JSON) format. This function only accepts maps and arrays. <p>If
      * a JSON object has the same key, only the last given value will be used
-     * for each duplicated key.</p>
+     * for each duplicated key. The JSON string may not begin with a byte order
+     * mark (U + FEFF).</p>
      * @param str A string in JSON format.
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The parameter {@code str}
@@ -2957,7 +2985,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject FromJSONString(String str) {
       CharacterReader reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONObjectOrArray(reader, false);
+      CBORObject obj = ParseJSONObjectOrArray(reader, false, false);
       if (SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of String not reached");
       }
@@ -2967,8 +2995,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR object from a data stream in JavaScript Object Notation
      * (JSON) format and UTF-8 encoding. This function only accepts maps
-     * and arrays. <p>If a JSON object has the same key, only the last given
-     * value will be used for each duplicated key.</p>
+     * and arrays. The JSON stream may begin with a byte order mark (U + FEFF);
+     * however, this implementation's ToJSONString method will not place
+     * this character at the beginning of a JSON text, since doing so is forbidden
+     * under the revision to RFC 4627. <p>If a JSON object has the same key,
+     * only the last given value will be used for each duplicated key.</p>
      * @param stream A readable data stream.
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -2980,7 +3011,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public static CBORObject ReadJSON(InputStream stream) throws IOException {
       CharacterReader reader = new CharacterReader(stream);
       try {
-        CBORObject obj = ParseJSONObjectOrArray(reader, false);
+        CBORObject obj = ParseJSONObjectOrArray(reader, false, true);
         if (SkipWhitespaceJSON(reader) != -1) {
           throw reader.NewError("End of data stream not reached");
         }

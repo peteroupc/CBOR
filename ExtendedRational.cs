@@ -429,7 +429,7 @@ namespace PeterO
       }
     }
 
-    /// <summary>Compares a ExtendedRational object with this instance.</summary>
+    /// <summary>Compares an ExtendedRational object with this instance.</summary>
     /// <param name='other'>An ExtendedRational object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
@@ -488,7 +488,7 @@ namespace PeterO
       return ad.CompareTo(bc);
     }
 
-    /// <summary>Compares a ExtendedDecimal object with this instance.</summary>
+    /// <summary>Compares an ExtendedDecimal object with this instance.</summary>
     /// <param name='other'>An ExtendedDecimal object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
@@ -659,7 +659,7 @@ namespace PeterO
       return new ExtendedRational(ad, bd);
     }
 
-    /// <summary>Subtracts a ExtendedRational object from this instance.</summary>
+    /// <summary>Subtracts an ExtendedRational object from this instance.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The difference of the two objects.</returns>
 public ExtendedRational Subtract(ExtendedRational otherValue) {
@@ -683,7 +683,7 @@ public ExtendedRational Subtract(ExtendedRational otherValue) {
       return new ExtendedRational(ad, bd);
     }
 
-    /// <summary>Multiplies this instance by the value of a ExtendedRational
+    /// <summary>Multiplies this instance by the value of an ExtendedRational
     /// object.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The product of the two objects.</returns>
@@ -706,7 +706,7 @@ public ExtendedRational Multiply(ExtendedRational otherValue) {
       return new ExtendedRational(ac, bd);
     }
 
-    /// <summary>Divides this instance by the value of a ExtendedRational
+    /// <summary>Divides this instance by the value of an ExtendedRational
     /// object.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The quotient of the two objects.</returns>

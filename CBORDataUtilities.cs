@@ -10,8 +10,8 @@ using System.Globalization;
 using System.Text;
 
 namespace PeterO {
-  /// <summary>Contains methods useful for reading and writing data,
-  /// with a focus on CBOR.</summary>
+    /// <summary>Contains methods useful for reading and writing data,
+    /// with a focus on CBOR.</summary>
   public static class CBORDataUtilities {
     private const int MaxSafeInt = 214748363;
 

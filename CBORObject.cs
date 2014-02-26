@@ -99,7 +99,7 @@ namespace PeterO {
       0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0
     };
 
-    private static readonly ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
+    internal static readonly ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
       new CBORInteger(),
       new CBORBigInteger(),
       null,
@@ -1275,7 +1275,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a collection of the keys of this CBOR object.</summary>
+    /// <summary>Gets a collection of the keys of this CBOR object in an undefined
+    /// order.</summary>
     /// <exception cref='System.InvalidOperationException'>This object
     /// is not a map.</exception>
     /// <value>A collection of the keys of this CBOR object.</value>
@@ -1286,6 +1287,27 @@ namespace PeterO {
           return dict.Keys;
         } else {
           throw new InvalidOperationException("Not a map");
+        }
+      }
+    }
+
+    /// <summary>Gets a collection of the values of this CBOR object. If this
+    /// object is a map, returns one value for each key in the map in an undefined
+    /// order. If this is an array, returns all the values of the array in the
+    /// order they are listed.</summary>
+    /// <exception cref='System.InvalidOperationException'>This object
+    /// is not a map or an array.</exception>
+    /// <value>A collection of the values of this CBOR object.</value>
+    public ICollection<CBORObject> Values {
+      get {
+        if (this.ItemType == CBORObjectTypeMap) {
+          IDictionary<CBORObject, CBORObject> dict = this.AsMap();
+          return dict.Values;
+        } else if (this.ItemType == CBORObjectTypeArray) {
+          IList<CBORObject> list = this.AsList();
+          return new System.Collections.ObjectModel.ReadOnlyCollection<CBORObject>(list);
+        } else {
+          throw new InvalidOperationException("Not a map or array");
         }
       }
     }
@@ -2802,9 +2824,15 @@ namespace PeterO {
       }
     }
 
-    private static CBORObject ParseJSONObjectOrArray(CharacterReader reader, bool noDuplicates) {
+    private static CBORObject ParseJSONObjectOrArray(CharacterReader reader, bool noDuplicates, bool skipByteOrderMark) {
       int c;
       c = SkipWhitespaceJSON(reader);
+      if (skipByteOrderMark && c == (char)0xFEFF) {
+        // Skip the Unicode byte order mark
+        c = SkipWhitespaceJSON(reader);
+      } else if (c == (char)0xFEFF) {
+        throw reader.NewError("JSON object began with a byte order mark (U+FEFF)");
+      }
       if (c == '[') {
         return ParseJSONArray(reader, noDuplicates);
       }
@@ -2905,7 +2933,8 @@ namespace PeterO {
     /// <summary>Generates a CBOR object from a string in JavaScript Object
     /// Notation (JSON) format. This function only accepts maps and arrays.
     /// <para>If a JSON object has the same key, only the last given value will
-    /// be used for each duplicated key.</para>
+    /// be used for each duplicated key. The JSON string may not begin with
+    /// a byte order mark (U + FEFF).</para>
     /// </summary>
     /// <param name='str'>A string in JSON format.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
@@ -2914,7 +2943,7 @@ namespace PeterO {
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromJSONString(string str) {
       CharacterReader reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONObjectOrArray(reader, false);
+      CBORObject obj = ParseJSONObjectOrArray(reader, false, false);
       if (SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of string not reached");
       }
@@ -2923,8 +2952,12 @@ namespace PeterO {
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format and UTF-8 encoding. This function
-    /// only accepts maps and arrays. <para>If a JSON object has the same key,
-    /// only the last given value will be used for each duplicated key.</para>
+    /// only accepts maps and arrays. The JSON stream may begin with a byte
+    /// order mark (U + FEFF); however, this implementation's ToJSONString
+    /// method will not place this character at the beginning of a JSON text,
+    /// since doing so is forbidden under the revision to RFC 4627. <para>If
+    /// a JSON object has the same key, only the last given value will be used
+    /// for each duplicated key.</para>
     /// </summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
@@ -2936,7 +2969,7 @@ namespace PeterO {
     public static CBORObject ReadJSON(Stream stream) {
       CharacterReader reader = new CharacterReader(stream);
       try {
-        CBORObject obj = ParseJSONObjectOrArray(reader, false);
+        CBORObject obj = ParseJSONObjectOrArray(reader, false, true);
         if (SkipWhitespaceJSON(reader) != -1) {
           throw reader.NewError("End of data stream not reached");
         }
