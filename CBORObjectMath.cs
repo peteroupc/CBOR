@@ -165,7 +165,7 @@ namespace PeterO {
       } else {
         BigInteger b1 = CBORObject.NumberInterfaces[typeA].AsBigInteger(objA);
         BigInteger b2 = CBORObject.NumberInterfaces[typeB].AsBigInteger(objB);
-        return CBORObject.FromObject(b1 - (BigInteger)b2);
+        return CBORObject.FromObject(b1 * (BigInteger)b2);
       }
     }
   }
