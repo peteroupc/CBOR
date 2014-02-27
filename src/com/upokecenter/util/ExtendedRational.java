@@ -7,9 +7,9 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-    /**
-     * Arbitrary-precision rational number.
-     */
+  /**
+   * Arbitrary-precision rational number.
+   */
   public class ExtendedRational implements Comparable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
@@ -378,6 +378,8 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     public static final ExtendedRational Zero = FromBigInteger(BigInteger.ZERO);
+    // TODO: Not correct
+    public static final ExtendedRational NegativeZero = FromBigInteger(BigInteger.ZERO);
     public static final ExtendedRational One = FromBigInteger(BigInteger.ONE);
     public static final ExtendedRational Ten = FromBigInteger(BigInteger.TEN);
 
@@ -491,6 +493,9 @@ at: http://peteroupc.github.io/CBOR/
       if (other.IsInfinity()) {
         return other.isNegative() ? 1 : -1;
       }
+      // At this point, both numbers are finite and
+      // have the same sign
+
       int dencmp = this.denominator.compareTo(other.denominator);
       // At this point, the signs are equal so we can compare
       // their absolute values instead
@@ -549,6 +554,9 @@ at: http://peteroupc.github.io/CBOR/
       if (other.IsInfinity()) {
         return other.isNegative() ? 1 : -1;
       }
+      // At this point, both numbers are finite and
+      // have the same sign
+
       if (other.getExponent().signum()==0) {
         // Special case: other has exponent 0
         BigInteger otherMant = other.getMantissa();
@@ -581,7 +589,7 @@ thisRem=divrem[1]; }
         thisInt=thisInt.add(BigInteger.ONE);
         thisIntDec = ExtendedDecimal.FromBigInteger(thisInt);
         if (thisIntDec.compareTo(otherAbs) < 0) {
-          // Absolute value rounded up is less than other's unrounded absolute vanlue
+          // Absolute value rounded up is less than other's unrounded absolute value
           // System.out.println("Shortcircuit II");
           return this.isNegative() ? 1 : -1;
         }
@@ -689,6 +697,23 @@ thisRem=divrem[1]; }
      */
     public static final ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
+    private ExtendedRational Simplify() {
+      if ((this.flags & BigNumberFlags.FlagSpecial) == 0) {
+        int lowBit = this.unsignedNumerator.getLowestSetBit();
+        lowBit = Math.min(lowBit, this.denominator.getLowestSetBit());
+        if (lowBit > 0) {
+          this.unsignedNumerator=unsignedNumerator.shiftRight(lowBit);
+          this.denominator=denominator.shiftRight(lowBit);
+        }
+      }
+      return this;
+    }
+
+    /**
+     * Not documented yet.
+     * @param otherValue An ExtendedRational object. (2).
+     * @return An ExtendedRational object.
+     */
     public ExtendedRational Add(ExtendedRational otherValue) {
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
@@ -700,14 +725,14 @@ thisRem=divrem[1]; }
         return this;
       }
       if (otherValue.IsQuietNaN()) {
-        return this;
+        return otherValue;
       }
       // TODO: Handle infinity
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
       ad=ad.add(bc);
-      return new ExtendedRational(ad, bd);
+      return new ExtendedRational(ad, bd).Simplify();
     }
 
     /**
@@ -715,7 +740,7 @@ thisRem=divrem[1]; }
      * @param otherValue An ExtendedRational object.
      * @return The difference of the two objects.
      */
-public ExtendedRational Subtract(ExtendedRational otherValue) {
+    public ExtendedRational Subtract(ExtendedRational otherValue) {
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
@@ -726,14 +751,14 @@ public ExtendedRational Subtract(ExtendedRational otherValue) {
         return this;
       }
       if (otherValue.IsQuietNaN()) {
-        return this;
+        return otherValue;
       }
       // TODO: Handle infinity
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
       ad=ad.subtract(bc);
-      return new ExtendedRational(ad, bd);
+      return new ExtendedRational(ad, bd).Simplify();
     }
 
     /**
@@ -741,7 +766,7 @@ public ExtendedRational Subtract(ExtendedRational otherValue) {
      * @param otherValue An ExtendedRational object.
      * @return The product of the two objects.
      */
-public ExtendedRational Multiply(ExtendedRational otherValue) {
+    public ExtendedRational Multiply(ExtendedRational otherValue) {
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
@@ -752,12 +777,16 @@ public ExtendedRational Multiply(ExtendedRational otherValue) {
         return this;
       }
       if (otherValue.IsQuietNaN()) {
-        return this;
+        return otherValue;
       }
       // TODO: Handle infinity
       BigInteger ac = this.getNumerator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
-      return new ExtendedRational(ac, bd);
+      if (ac.signum()==0) {
+        return (this.isNegative() ^ otherValue.isNegative()) ? NegativeZero : Zero;
+      }
+      // TODO: Set sign correctly
+      return new ExtendedRational(ac, bd).Simplify();
     }
 
     /**
@@ -765,7 +794,7 @@ public ExtendedRational Multiply(ExtendedRational otherValue) {
      * @param otherValue An ExtendedRational object.
      * @return The quotient of the two objects.
      */
-public ExtendedRational Divide(ExtendedRational otherValue) {
+    public ExtendedRational Divide(ExtendedRational otherValue) {
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
@@ -776,11 +805,15 @@ public ExtendedRational Divide(ExtendedRational otherValue) {
         return this;
       }
       if (otherValue.IsQuietNaN()) {
-        return this;
+        return otherValue;
       }
       // TODO: Handle infinity
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
-      return new ExtendedRational(ad, bc);
+      if (ad.signum()==0) {
+        return (this.isNegative() ^ otherValue.isNegative()) ? NegativeZero : Zero;
+      }
+      // TODO: Set sign correctly
+      return new ExtendedRational(ad, bc).Simplify();
     }
   }

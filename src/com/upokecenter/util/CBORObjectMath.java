@@ -168,7 +168,7 @@ private CBORObjectMath() {
       } else {
         BigInteger b1 = CBORObject.NumberInterfaces.get(typeA).AsBigInteger(objA);
         BigInteger b2 = CBORObject.NumberInterfaces.get(typeB).AsBigInteger(objB);
-        return CBORObject.FromObject(b1.subtract(b2));
+        return CBORObject.FromObject(b1.multiply(b2));
       }
     }
   }
