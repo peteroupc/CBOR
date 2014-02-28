@@ -10,7 +10,8 @@ at: http://peteroupc.github.io/CBOR/
 import java.util.*;
 
 import java.io.*;
-// import java.math.*;
+
+using PeterO.Cbor;
 
     /**
      * Represents an object in Concise Binary Object Representation (CBOR)
@@ -86,6 +87,33 @@ import java.io.*;
 
     static final BigInteger UInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
+    private static final class ConverterInfo {
+      private Object toObject;
+
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+      public Object getToObject() {
+          return this.toObject;
+        }
+public void setToObject(Object value) { this.toObject = value; }
+
+      private Object converter;
+
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+      public Object getConverter() {
+          return this.converter;
+        }
+public void setConverter(Object value) { this.converter = value; }
+    }
+
+    private static Map<Type, ConverterInfo> converters = new HashMap<Type, ConverterInfo>();
+    private static Map<BigInteger, ICBORTag> tagHandlers = new HashMap<BigInteger, ICBORTag>();
+
     private static int[] valueNumberTypeOrder = new int[] {
       0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0
     };
@@ -137,6 +165,65 @@ import java.io.*;
  this(CBORObjectTypeTagged,obj);
       this.tagLow = tagLow;
       this.tagHigh = tagHigh;
+    }
+
+    public static <T> void AddConverter(Type type, ICBORConverter<T> converter) {
+      if (type == null) {
+        throw new NullPointerException("type");
+      }
+      if (converter == null) {
+        throw new NullPointerException("converter");
+      }
+      ConverterInfo ci = new CBORObject.ConverterInfo();
+      ci.setConverter(converter);
+      ci.setToObject(PropertyMap.FindMethod(converter, "ToCBORObject"));
+      synchronized(converters) {
+        converters.set(typeof(T),ci);
+      }
+    }
+
+    private static boolean TagHandlersEmpty() {
+      synchronized(tagHandlers) {
+        return tagHandlers.size() == 0;
+      }
+    }
+
+    public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
+      if (bigintTag == null) {
+        throw new NullPointerException("bigintTag");
+      }
+      if (handler == null) {
+        throw new NullPointerException("handler");
+      }
+      if (bigintTag.signum() < 0) {
+        throw new IllegalArgumentException("bigintTag.signum() (" + Long.toString((long)bigintTag.signum()) + ") is not greater or equal to " + "0");
+      }
+      if (bigintTag.bitLength() > 64) {
+        throw new IllegalArgumentException("bigintTag.bitLength (" + Long.toString((long)bigintTag.bitLength()) + ") is not less or equal to " + "64");
+      }
+      synchronized(tagHandlers) {
+        tagHandlers.set(bigintTag,handler);
+      }
+    }
+
+    private static CBORObject ConvertWithConverter(Object obj) {
+
+      Type type = obj.GetType();
+      ConverterInfo convinfo = null;
+      synchronized(converters) {
+        if (converters.containsKey(type)) {
+          convinfo = converters.get(type);
+        } else {
+          return null;
+        }
+      }
+      if (convinfo == null) {
+        return null;
+      }
+      return (CBORObject)PropertyMap.InvokeOneArgumentMethod(
+        convinfo.getToObject(),
+        convinfo.getConverter(),
+        obj);
     }
 
     private CBORObject(int type, Object item) {
@@ -1829,7 +1916,7 @@ public void set(String key, CBORObject value) {
      */
     public static CBORObject Read(InputStream stream) {
       try {
-        return Read(stream, 0, false, -1, null, 0);
+        return Read(stream, 0, false, -1, null);
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -3760,6 +3847,10 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         }
         return objret;
       }
+      objret = ConvertWithConverter(obj);
+      if (objret != null) {
+        return objret;
+      }
       objret = CBORObject.NewMap();
       for(Map.Entry<String, Object> key : PropertyMap.GetProperties(obj)) {
         objret.set(key.getKey(),CBORObject.FromObject(key.getValue()));
@@ -3797,20 +3888,18 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 (" + (bigintTag) + ")");
       }
       CBORObject c = FromObject(valueOb);
-      if (bigintTag.compareTo(valueBigInt65536) < 0) {
+      if (bigintTag.bitLength() <= 16) {
         // Low-numbered, commonly used tags
-        return new CBORObject(c, bigintTag.intValue(), 0);
-      } else if (bigintTag.compareTo(BigInteger.valueOf(2)) == 0) {
-        return ConvertToBigNum(c, false);
-      } else if (bigintTag.compareTo(BigInteger.valueOf(3)) == 0) {
-        return ConvertToBigNum(c, true);
-      } else if (bigintTag.compareTo(BigInteger.valueOf(4)) == 0) {
-        return ConvertToDecimalFrac(c, true);
-      } else if (bigintTag.compareTo(BigInteger.valueOf(5)) == 0) {
-        return ConvertToDecimalFrac(c, false);
-      } else if (bigintTag.compareTo(BigInteger.valueOf(30)) == 0) {
-        return ConvertToRationalNumber(c);
+        return FromObjectAndTag(c, bigintTag.intValue());
       } else {
+        ICBORTag tagconv = FindTagConverter(bigintTag);
+        if (tagconv != null) {
+          CBORObject c2 = tagconv.ValidateObject(c);
+          if (c.isTagged() && c != c2) {
+            c2 = RewrapObject(c, c2);
+          }
+          return c2;
+        }
         int tagLow = 0;
         int tagHigh = 0;
         byte[] bytes = bigintTag.toByteArray(true);
@@ -3823,6 +3912,31 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           tagHigh = (tagHigh | (((int)b) << (i * 8)));
         }
         return new CBORObject(c, tagLow, tagHigh);
+      }
+    }
+
+    private static ICBORTag FindTagConverter(int tag) {
+      return FindTagConverter(BigInteger.valueOf(tag));
+    }
+
+    private static ICBORTag FindTagConverter(long tag) {
+      return FindTagConverter(BigInteger.valueOf(tag));
+    }
+
+    private static ICBORTag FindTagConverter(BigInteger bigintTag) {
+      if (TagHandlersEmpty()) {
+        AddTagHandler(BigInteger.valueOf(2), new CBORTag2());
+        AddTagHandler(BigInteger.valueOf(3), new CBORTag3());
+        AddTagHandler(BigInteger.valueOf(5), new CBORTag5());
+        AddTagHandler(BigInteger.valueOf(4), new CBORTag4());
+        AddTagHandler(BigInteger.valueOf(30), new CBORTag30());
+      }
+      synchronized(tagHandlers) {
+        if (tagHandlers.containsKey(bigintTag)) {
+          return tagHandlers.get(bigintTag);
+        }
+
+        return null;
       }
     }
 
@@ -3847,15 +3961,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (smallTag < 0) {
         throw new IllegalArgumentException("smallTag (" + Long.toString((long)smallTag) + ") is not greater or equal to " + "0");
       }
+      ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
-      if (smallTag == 2 || smallTag == 3) {
-        return ConvertToBigNum(c, smallTag == 3);
-      }
-      if (smallTag == 4 || smallTag == 5) {
-        return ConvertToDecimalFrac(c, smallTag == 4);
-      }
-      if (smallTag == 30) {
-        return ConvertToRationalNumber(c);
+      if (tagconv != null) {
+        CBORObject c2 = tagconv.ValidateObject(c);
+        if (c.isTagged() && c != c2) {
+          c2 = RewrapObject(c, c2);
+        }
+        return c2;
       }
       return new CBORObject(c, smallTag, 0);
     }
@@ -4076,64 +4189,17 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return sb.toString();
     }
 
-    private static CBORObject ConvertToBigNum(CBORObject o, boolean negative) {
-      if (o.getItemType() != CBORObjectTypeByteString) {
-        throw new CBORException("Byte array expected");
-      }
-      byte[] data = (byte[])o.getThisItem();
-      if (data.length <= 7) {
-        long x = 0;
-        for (int i = 0; i < data.length; ++i) {
-          x <<= 8;
-          x |= ((long)data[i]) & 0xFF;
-        }
-        if (negative) {
-          x = -x;
-        }
-        return FromObject(x);
-      }
-      int neededLength = data.length;
-      byte[] bytes;
-      boolean extended = false;
-      if (((data[0] >> 7) & 1) != 0) {
-        // Increase the needed length
-        // if the highest bit is set, to
-        // distinguish negative and positive
-        // values
-        ++neededLength;
-        extended = true;
-      }
-      bytes = new byte[neededLength];
-      for (int i = 0; i < data.length; ++i) {
-        bytes[i] = data[data.length - 1 - i];
-        if (negative) {
-          bytes[i] = (byte)((~((int)bytes[i])) & 0xFF);
-        }
-      }
-      if (extended) {
-        if (negative) {
-          bytes[bytes.length - 1] = (byte)0xFF;
-        } else {
-          bytes[bytes.length - 1] = 0;
-        }
-      }
-      BigInteger bi = BigInteger.fromByteArray((byte[])bytes,true);
-      return RewrapObject(o, FromObject(bi));
-    }
-
     private static boolean BigIntFits(BigInteger bigint) {
       return bigint.bitLength() <= 64;
     }
 
-    private boolean CanFitInTypeZeroOrOne() {
-      ICBORNumber cn = NumberInterfaces[this.getItemType()];
-      if (cn == null) {
-        return false;
-      }
-      return cn.CanFitInTypeZeroOrOne(this.getThisItem());
-    }
     // Wrap a new Object in another one to retain its tags
+    // TODO: Decide on a rewrapping approach with ICBORTag
     private static CBORObject RewrapObject(CBORObject original, CBORObject newObject) {
+      if (original == newObject) {
+        // Object is the same as this one
+        return newObject;
+      }
       if (!original.isTagged()) {
         return newObject;
       }
@@ -4144,87 +4210,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return newObject;
     }
 
-    private static CBORObject ConvertToRationalNumber(CBORObject o) {
-      if (o.getItemType() != CBORObjectTypeArray) {
-        throw new CBORException("Rational number must be an array");
-      }
-      if (o.size() != 2) {
-        throw new CBORException("Rational number requires exactly 2 items");
-      }
-      List<CBORObject> list = o.AsList();
-      if (list.get(0).getItemType() != CBORObjectTypeInteger &&
-          list.get(0).getItemType() != CBORObjectTypeBigInteger) {
-        throw new CBORException("Rational number requires integer numerator");
-      }
-      if (list.get(1).getItemType() != CBORObjectTypeInteger &&
-          list.get(1).getItemType() != CBORObjectTypeBigInteger) {
-        throw new CBORException("Rational number requires integer denominator");
-      }
-      if (list.get(1).signum() <= 0) {
-        throw new CBORException("Rational number requires denominator greater than 0");
-      }
-      CBORObject objectToWrap = new CBORObject(
-        CBORObjectTypeExtendedRational,
-        new ExtendedRational(list.get(0).AsBigInteger(), list.get(1).AsBigInteger()));
-      return RewrapObject(
-        o,
-        objectToWrap);
-    }
-
-    private static CBORObject ConvertToDecimalFrac(CBORObject o, boolean isDecimal) {
-      if (o.getItemType() != CBORObjectTypeArray) {
-        throw new CBORException("Big fraction must be an array");
-      }
-      if (o.size() != 2) {
-        throw new CBORException("Big fraction requires exactly 2 items");
-      }
-      List<CBORObject> list = o.AsList();
-      if (!list.get(0).CanFitInTypeZeroOrOne()) {
-        throw new CBORException("Exponent is too big");
-      }
-      // check type of mantissa
-      if (list.get(1).getItemType() != CBORObjectTypeInteger &&
-          list.get(1).getItemType() != CBORObjectTypeBigInteger) {
-        throw new CBORException("Big fraction requires mantissa to be an integer or big integer");
-      }
-      if (list.get(0).isZero()) {
-        // Exponent is 0, so return mantissa instead
-        return RewrapObject(o, list.get(1));
-      }
-      if (isDecimal) {
-        CBORObject objectToWrap = new CBORObject(
-          CBORObjectTypeExtendedDecimal,
-          ExtendedDecimal.Create(list.get(1).AsBigInteger(), list.get(0).AsBigInteger()));
-        return RewrapObject(
-          o,
-          objectToWrap);
-      } else {
-        CBORObject objectToWrap = new CBORObject(
-          CBORObjectTypeExtendedFloat,
-          ExtendedFloat.Create(list.get(1).AsBigInteger(), list.get(0).AsBigInteger()));
-        return RewrapObject(
-          o,
-          objectToWrap);
-      }
-    }
-
-    private static boolean CheckMajorTypeIndex(int type, int index, int[] validTypeFlags) {
-      if (validTypeFlags == null || index < 0 || index >= validTypeFlags.length) {
-        return false;
-      }
-      if (type < 0 || type > 7) {
-        return false;
-      }
-      return (validTypeFlags[index] & (1 << type)) != 0;
-    }
-
     private static CBORObject Read(
       InputStream s,
       int depth,
       boolean allowBreak,
       int allowOnlyType,
-      int[] validTypeFlags,
-      int validTypeIndex) throws IOException {
+      CBORTypeFilter filter) throws IOException {
       if (depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
@@ -4260,10 +4251,15 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           throw new CBORException("Unexpected data encountered");
         }
       }
-      if (validTypeFlags != null) {
+      if (filter != null) {
         // Check for valid major types if asked
-        if (!CheckMajorTypeIndex(type, validTypeIndex, validTypeFlags)) {
+        if (!filter.MajorTypeMatches(type)) {
           throw new CBORException("Unexpected data type encountered");
+        }
+        if (firstbyte >= 0xE0 && firstbyte <= 0xFF && firstbyte != 0xF9 && firstbyte != 0xFA && firstbyte != 0xFB) {
+          if (!filter.NonFPSimpleValueAllowed()) {
+            throw new CBORException("Unexpected data type encountered");
+          }
         }
       }
       // Check if this represents a fixed Object
@@ -4362,9 +4358,8 @@ try {
 ms=new ByteArrayOutputStream();
 
             // Requires same type as this one
-            int[] subFlags = new int[] { (1 << type) };
             while (true) {
-              CBORObject o = Read(s, depth + 1, true, type, subFlags, 0);
+              CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.ByteString);
               // break if the "break" code was read
               if (o == null) {
                 break;
@@ -4432,7 +4427,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           // Requires same type as this one
           int[] subFlags = new int[] { (1 << type) };
           while (true) {
-            CBORObject o = Read(s, depth + 1, true, type, subFlags, 0);
+            CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.TextString);
             if (o == null) {
               // break if the "break" code was read
               break;
@@ -4468,7 +4463,13 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         int vtindex = 1;
         if (additional == 31) {
           while (true) {
-            CBORObject o = Read(s, depth + 1, true, -1, validTypeFlags, vtindex);
+            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
+              throw new CBORException("Array is too long");
+            }
+            CBORObject o = Read(
+
+              s, depth + 1, true, -1,
+              filter == null ? null : filter.GetSubFilter(vtindex));
             // break if the "break" code was read
             if (o == null) {
               break;
@@ -4487,8 +4488,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
                                     Long.toString((long)uadditional) +
                                     " is bigger than supported");
           }
+          if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
+            throw new CBORException("Array is too long");
+          }
           for (long i = 0; i < uadditional; ++i) {
-            list.add(Read(s, depth + 1, false, -1, validTypeFlags, vtindex));
+            list.add(Read(s, depth + 1, false, -1, filter == null ? null : filter.GetSubFilter(i)));
             ++vtindex;
           }
           return new CBORObject(CBORObjectTypeArray, list);
@@ -4497,12 +4501,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         HashMap<CBORObject, CBORObject> dict=new HashMap<CBORObject, CBORObject>();
         if (additional == 31) {
           while (true) {
-            CBORObject key = Read(s, depth + 1, true, -1, null, 0);
+            CBORObject key = Read(s, depth + 1, true, -1, null);
             if (key == null) {
               // break if the "break" code was read
               break;
             }
-            CBORObject value = Read(s, depth + 1, false, -1, null, 0);
+            CBORObject value = Read(s, depth + 1, false, -1, null);
             dict.put(key,value);
           }
           return new CBORObject(CBORObjectTypeMap, dict);
@@ -4517,8 +4521,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
                                     " is bigger than supported");
           }
           for (long i = 0; i < uadditional; ++i) {
-            CBORObject key = Read(s, depth + 1, false, -1, null, 0);
-            CBORObject value = Read(s, depth + 1, false, -1, null, 0);
+            CBORObject key = Read(s, depth + 1, false, -1, null);
+            CBORObject value = Read(s, depth + 1, false, -1, null);
             dict.put(key,value);
           }
           return new CBORObject(CBORObjectTypeMap, dict);
@@ -4526,41 +4530,27 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       } else if (type == 6) {  // Tagged item
         CBORObject o;
         if (!hasBigAdditional) {
-          if (uadditional == 0) {
-            // Requires a text String
-            int[] subFlags = new int[] { (1 << 3) };
-            o = Read(s, depth + 1, false, -1, subFlags, 0);
-          } else if (uadditional == 2 || uadditional == 3) {
-            // Big number
-            // Requires a byte String
-            int[] subFlags = new int[] { (1 << 2) };
-            o = Read(s, depth + 1, false, -1, subFlags, 0);
-            return ConvertToBigNum(o, uadditional == 3);
-          } else if (uadditional == 4 || uadditional == 5) {
-            // Requires an array with two elements of
-            // a valid type
-            int[] subFlags = new int[] {
-              (1 << 4),  // array
-              (1 << 0) | (1 << 1),  // exponent
-              (1 << 0) | (1 << 1) | (1 << 6)  // mantissa
-            };
-            o = Read(s, depth + 1, false, -1, subFlags, 0);
-            return ConvertToDecimalFrac(o, uadditional == 4);
-          } else if (uadditional == 30) {
-            // Requires an array with two elements of
-            // a valid type
-            int[] subFlags = new int[] {
-              (1 << 4),  // array
-              (1 << 0) | (1 << 1) | (1 << 6),  // numerator
-              (1 << 0) | (1 << 6)  // denominator
-            };
-            o = Read(s, depth + 1, false, -1, subFlags, 0);
-            return ConvertToRationalNumber(o);
+          if (filter != null && !filter.TagAllowed(uadditional)) {
+            throw new CBORException("Unexpected tag encountered: " + uadditional);
+          }
+          ICBORTag taginfo = FindTagConverter(uadditional);
+          if (taginfo != null) {
+            o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
+            return RewrapObject(o, taginfo.ValidateObject(o));
           } else {
-            o = Read(s, depth + 1, false, -1, null, 0);
+            o = Read(s, depth + 1, false, -1, null);
           }
         } else {
-          o = Read(s, depth + 1, false, -1, null, 0);
+          if (filter != null && !filter.TagAllowed(bigintAdditional)) {
+            throw new CBORException("Unexpected tag encountered: " + uadditional);
+          }
+          ICBORTag taginfo = FindTagConverter(bigintAdditional);
+          if (taginfo != null) {
+            o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
+            return RewrapObject(o, taginfo.ValidateObject(o));
+          } else {
+            o = Read(s, depth + 1, false, -1, null);
+          }
         }
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);

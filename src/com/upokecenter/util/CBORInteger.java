@@ -217,15 +217,6 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
-    public boolean CanFitInTypeZeroOrOne(Object obj) {
-      return true;
-    }
-
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
      * @param minValue A 32-bit signed integer. (2).
      * @param maxValue A 32-bit signed integer. (3).
      * @return A 32-bit signed integer.

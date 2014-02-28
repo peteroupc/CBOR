@@ -149,6 +149,14 @@ namespace PeterO
       }
     }
 
+    public static object FindMethod(object obj, string name) {
+      return obj.GetType().GetMethod(name);
+    }
+
+    public static object InvokeOneArgumentMethod(object methodInfo, object obj, object argument) {
+      return ((MethodInfo)methodInfo).Invoke(obj, new object[] { argument });
+    }
+
     public static IEnumerable<KeyValuePair<string, object>> GetProperties(Object o) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
         yield return new KeyValuePair<string, object>(key.Name, key.Prop.GetValue(o, null));

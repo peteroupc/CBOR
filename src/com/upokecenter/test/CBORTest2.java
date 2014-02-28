@@ -81,6 +81,264 @@ import com.upokecenter.util.*;
     }
 
     @Test
+    public void TestBuiltInTags() {
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc2, 0x00  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc2, 0x20  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc2, 0x60  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc2, (byte)0x80  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc2, (byte)0xA0  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc2, (byte)0xE0  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x00  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x20  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x60  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, (byte)0x80  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, (byte)0xA0  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, (byte)0xE0  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, 0x00  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, 0x20  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, 0x40  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, 0x60  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x80  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x81, 0x00  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0xA0  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0xE0  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, 0x00  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, 0x20  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, 0x40  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, 0x60  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x80  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x81, 0x00  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0xA0  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0xE0  });
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+
+      Assert.assertEquals(BigInteger.ZERO, CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc2, 0x40  }).AsBigInteger());
+      Assert.assertEquals(BigInteger.ZERO.subtract(BigInteger.ONE), CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x41, 0x00  }).AsBigInteger());
+      Assert.assertEquals(BigInteger.ZERO.subtract(BigInteger.ONE), CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x40  }).AsBigInteger());
+    }
+
+    @Test
+    public void TestNegativeBigInts() {
+      BigInteger minusone = BigInteger.ZERO.subtract(BigInteger.ONE);
+      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(8)),
+                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x42, 1, 0  }).AsBigInteger());
+      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(16)),
+                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x43, 1, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(24)),
+                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x44, 1, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(32)),
+                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x45, 1, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(40)),
+                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x46, 1, 0, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(48)),
+                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x47, 1, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(56)),
+                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x48, 1, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(64)),
+                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x49, 1, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(72)),
+                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+    }
+
+    @Test
     public void TestExtendedNaNZero() {
       if(ExtendedDecimal.NaN.signum()==0)Assert.fail();
       if(ExtendedDecimal.SignalingNaN.signum()==0)Assert.fail();

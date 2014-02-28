@@ -229,20 +229,6 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
-    public boolean CanFitInTypeZeroOrOne(Object obj) {
-      ExtendedDecimal ef = (ExtendedDecimal)obj;
-      if (!ef.isFinite()) {
-        return false;
-      }
-      return ef.compareTo(ExtendedDecimal.FromBigInteger(CBORObject.LowestMajorType1)) >= 0 &&
-        ef.compareTo(ExtendedDecimal.FromBigInteger(CBORObject.UInt64MaxValue)) <= 0;
-    }
-
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
      * @param minValue A 32-bit signed integer. (2).
      * @param maxValue A 32-bit signed integer. (3).
      * @return A 32-bit signed integer.
@@ -286,7 +272,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param obj An arbitrary object.
      * @return An ExtendedRational object.
      */
-public ExtendedRational AsExtendedRational(Object obj) {
+    public ExtendedRational AsExtendedRational(Object obj) {
       return ExtendedRational.FromExtendedDecimal((ExtendedDecimal)obj);
     }
   }

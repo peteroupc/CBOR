@@ -190,18 +190,6 @@ namespace PeterO
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A Boolean object.</returns>
-    public bool CanFitInTypeZeroOrOne(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
-      if (!ef.IsFinite) {
-        return false;
-      }
-      return ef.CompareTo(ExtendedRational.FromBigInteger(CBORObject.LowestMajorType1)) >= 0 &&
-        ef.CompareTo(ExtendedRational.FromBigInteger(CBORObject.UInt64MaxValue)) <= 0;
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
     /// <param name='minValue'>A 32-bit signed integer. (2).</param>
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>
@@ -238,7 +226,7 @@ namespace PeterO
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedRational object.</returns>
-public ExtendedRational AsExtendedRational(object obj) {
+    public ExtendedRational AsExtendedRational(object obj) {
       return (ExtendedRational)obj;
     }
   }
